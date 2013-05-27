@@ -1,0 +1,156 @@
+
+body,html {
+width:100%;
+}
+
+body {
+padding-top:40px;
+}
+
+body p {
+font-size:14px;
+}
+
+body p a {
+font-size:16px;
+}
+
+h1 {
+color:#E05E00;
+font-style:italic;
+}
+
+a {
+color:#E05E00;
+text-decoration:none;
+display:block;
+}
+
+a:hover {
+text-decoration:underline;
+}
+
+.clear {
+clear:both;
+}
+
+.brand {
+color:#E05E00!important;
+font-style:italic;
+}
+
+#org {
+background-color:#FFF;
+margin:10px;
+padding:10px;
+}
+
+#show-list {
+cursor:pointer;
+}
+
+.alert-message {
+margin:2px 0;
+}
+
+.topbar {
+position:absolute;
+}
+
+.jOrgChart {
+margin:10px;
+padding:20px;
+  -webkit-user-select: none;  
+  -moz-user-select: none;    
+  -ms-user-select: none;      
+  user-select: none;
+}
+
+.jOrgChart .node {
+font-size:14px;
+border:5px solid #FFF;
+box-shadow:0 0 5px -1px #000;
+position:relative;
+}
+
+.jOrgChart .ddi {
+background-color:#099 !important;
+-moz-border-radius:8px;
+border-radius:8px;
+color: white;
+}
+
+.jOrgChart .ivr {
+background-color:#C36 !important;
+border-bottom-left-radius:8px;
+border-top-right-radius:8px;
+-moz-border-bottom-left-radius:8px;
+-moz-border-top-right-radius:8px;
+color: white;
+}
+
+.jOrgChart .inb {
+background-color:#9CF !important;
+border-top-left-radius:8px;
+border-bottom-right-radius:8px;
+-moz-border-top-left-radius:8px;
+-moz-border-bottom-right-radius:8px;
+color: black;
+}
+.jOrgChart .agent {
+background-color:#FF4848 !important;
+border-bottom-right-radius:8px;
+-moz-border-bottom-right-radius:8px;
+color: black;
+}
+
+.jOrgChart .vm {
+background-color:#59955C !important;
+border-top-left-radius:8px;
+-moz-border-top-left-radius:8px;
+color: white;
+}
+
+.jOrgChart .phone {
+background-color:#DFDF00 !important;
+border-top-right-radius:8px;
+-moz-border-top-right-radius:8px;
+color: black;
+}
+
+.node p {
+font-size:10px;
+line-height:11px;
+padding:2px;
+}
+
+.node > .tools {
+bottom:-3px;
+cursor:pointer;
+position:absolute;
+right:1px;
+
+}
+
+.node > .tools > img {
+  position: relative;  
+}
+.node > .tools > img:active {
+top: 1px !important;
+}
+
+.node > .tools > img:hover {
+top: -1px;
+}
+
+.node > .title {
+float: right;
+font-weight: bold;
+margin-right: 5px;
+}
+
+.node > .icon {
+bottom: 0px;
+left: 1px;
+position: absolute;
+}

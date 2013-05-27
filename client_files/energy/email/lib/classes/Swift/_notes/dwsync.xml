@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="SendmailTransport.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="Attachment.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129987518710000000" remote="129987518710000000" />
+<file name="Image.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="FileSpool.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="CharacterReaderFactory.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129987519030000000" remote="129987519030000000" />
+<file name="SpoolTransport.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="Encoder.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129987519090000000" remote="129987519090000000" />
+<file name="OutputByteStream.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="Encoding.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129987519100000000" remote="129987519100000000" />
+<file name="DependencyException.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129987519060000000" remote="129987519060000000" />
+<file name="EmbeddedFile.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129987519070000000" remote="129987519070000000" />
+<file name="SwiftException.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="ReplacementFilterFactory.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="ConfigurableSpool.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129987519050000000" remote="129987519050000000" />
+<file name="CharacterReader.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129987519010000000" remote="129987519010000000" />
+<file name="FileStream.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="SmtpTransport.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="RfcComplianceException.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="MimePart.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="IoException.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="Filterable.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="StreamFilter.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="CharacterStream.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129987519050000000" remote="129987519050000000" />
+<file name="NullTransport.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="Mailer.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="LoadBalancedTransport.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="Preferences.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="FailoverTransport.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="Transport.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="Message.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="Spool.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="TransportException.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="Validate.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="MailTransport.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="DependencyContainer.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129987519060000000" remote="129987519060000000" />
+<file name="MemorySpool.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="KeyCache.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+<file name="InputByteStream.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129956274560000000" remote="129956274560000000" />
+</dwsync>

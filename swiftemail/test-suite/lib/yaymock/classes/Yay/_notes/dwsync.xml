@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="InvocationHandler.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746250000000" remote="129972746250000000" />
+<file name="Expectations.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746250000000" remote="129972746250000000" />
+<file name="StateMachine.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746230000000" remote="129972746230000000" />
+<file name="Action.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746230000000" remote="129972746230000000" />
+<file name="ExpectationProvider.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746240000000" remote="129972746240000000" />
+<file name="InvocationRecorder.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746230000000" remote="129972746230000000" />
+<file name="MockObject.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746230000000" remote="129972746230000000" />
+<file name="SimpleDescription.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746240000000" remote="129972746240000000" />
+<file name="InvocationProxy.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746250000000" remote="129972746250000000" />
+<file name="Mockery.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746230000000" remote="129972746230000000" />
+<file name="SimpleState.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746240000000" remote="129972746240000000" />
+<file name="Sequence.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746230000000" remote="129972746230000000" />
+<file name="SimpleInvocation.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746240000000" remote="129972746240000000" />
+<file name="Expectation.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746230000000" remote="129972746230000000" />
+<file name="MockGenerator.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746250000000" remote="129972746250000000" />
+<file name="NotSatisfiedException.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746230000000" remote="129972746230000000" />
+<file name="SimpleStatePredicate.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746230000000" remote="129972746230000000" />
+<file name="Invocation.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746250000000" remote="129972746250000000" />
+<file name="State.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746240000000" remote="129972746240000000" />
+<file name="States.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746240000000" remote="129972746240000000" />
+<file name="StatePredicate.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746240000000" remote="129972746240000000" />
+<file name="SimpleSequence.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746250000000" remote="129972746250000000" />
+<file name="Matcher.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746230000000" remote="129972746230000000" />
+<file name="SelfDescribing.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746240000000" remote="129972746240000000" />
+<file name="Description.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746230000000" remote="129972746230000000" />
+</dwsync>

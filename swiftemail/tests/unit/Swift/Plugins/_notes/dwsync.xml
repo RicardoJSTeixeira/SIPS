@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="LoggerPluginTest.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746200000000" remote="129972746200000000" />
+<file name="ThrottlerPluginTest.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746200000000" remote="129972746200000000" />
+<file name="ReporterPluginTest.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746200000000" remote="129972746200000000" />
+<file name="PopBeforeSmtpPluginTest.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746190000000" remote="129972746190000000" />
+<file name="AntiFloodPluginTest.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746200000000" remote="129972746200000000" />
+<file name="RedirectingPluginTest.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746200000000" remote="129972746200000000" />
+<file name="BandwidthMonitorPluginTest.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746200000000" remote="129972746200000000" />
+<file name="DecoratorPluginTest.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746190000000" remote="129972746190000000" />
+</dwsync>

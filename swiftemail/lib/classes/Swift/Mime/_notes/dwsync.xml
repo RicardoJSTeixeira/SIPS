@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="Attachment.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746040000000" remote="129972746040000000" />
+<file name="HeaderFactory.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746040000000" remote="129972746040000000" />
+<file name="EmbeddedFile.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746060000000" remote="129972746060000000" />
+<file name="ParameterizedHeader.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746040000000" remote="129972746040000000" />
+<file name="SimpleHeaderFactory.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746050000000" remote="129972746050000000" />
+<file name="Grammar.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746040000000" remote="129972746040000000" />
+<file name="CharsetObserver.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746050000000" remote="129972746050000000" />
+<file name="MimePart.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746040000000" remote="129972746040000000" />
+<file name="Header.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746040000000" remote="129972746040000000" />
+<file name="MimeEntity.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746050000000" remote="129972746050000000" />
+<file name="SimpleMessage.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746030000000" remote="129972746030000000" />
+<file name="HeaderEncoder.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746040000000" remote="129972746040000000" />
+<file name="Message.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746040000000" remote="129972746040000000" />
+<file name="ContentEncoder.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746060000000" remote="129972746060000000" />
+<file name="EncodingObserver.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746040000000" remote="129972746040000000" />
+<file name="SimpleHeaderSet.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746050000000" remote="129972746050000000" />
+<file name="HeaderSet.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746040000000" remote="129972746040000000" />
+<file name="SimpleMimeEntity.php" server="sipsam.dyndns.org:22249//srv/www/htdocs/" local="129972746050000000" remote="129972746050000000" />
+</dwsync>
