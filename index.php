@@ -85,7 +85,7 @@ if(isset($_POST['reset_login'])){$navigation='';}
 
 
 if ($navigation=='') {	
-echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=images/pictures/sipslogo_agentlog.png />";
+echo "<center><img style='margin-top:150px; margin-bottom:32px;' src='images/pictures/go_logo_35.png'>";
 echo "<div id=work-area style='width:40%; min-height:0px; min-width:500px'>";
 
 echo "<div class=cc-mstyle style='border:none; margin-top:32px;'>";
@@ -130,7 +130,7 @@ echo "<center>
 }
 if($navigation=='fail')
 {
-echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=images/pictures/sipslogo_agentlog.png />";
+echo "<center><img style='margin-top:150px; margin-bottom:32px;' src='images/pictures/go_logo_35.png'>";
 echo "<div id=work-area style='width:40%; min-height:0px; min-width:500px'>";
 
 echo "<div class=cc-mstyle style='border:none; margin-top:32px;'>";
