@@ -142,5 +142,5 @@ if ($ADD==21111111111)
 		{
 		echo "<script type=text/javascript> alert('Não tem permissão para visualizar esta página.'); </script>";
 		exit;
-		}//yellow
+		}
 ?>
