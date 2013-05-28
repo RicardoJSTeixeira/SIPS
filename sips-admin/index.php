@@ -107,7 +107,7 @@ if (mysql_num_rows($query)) {
                 <DIV id="menu-content">
                 <div class='cc-menu'>
                     <div class="grid-title">
-                        <div class="pull-left  tooltip-top offset1" data-t="tooltip" title="SIPS.Menu">Menu</div>
+                        <div class="pull-left  tooltip-top offset1" data-t="tooltip" title="Menu">Menu</div>
                         <div class="pull-right"><img class='cc-menu-img' id='img1'  src='/images/icons/headphone_mic_16.png' /></div>
                         <div class="clear"></div>   
                     </div>
