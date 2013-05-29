@@ -60,6 +60,12 @@ if ($_FILES["audio-file"]["error"] > 0) {
                 die();
             }
 
+            $stmt = "UPDATE servers SET sounds_update='Y' where server_ip NOT like '$_SERVER[SERVER_ADDR]';";
+            $rslt = mysql_query($stmt, $link);
+            if (!$rslt) {
+                echo "Log Error: " . mysql_error() . " Whole query:" . $stmt;
+            }
+            
             log_admin("UPLOAD", "Sucess: File moved and converted to gsm", "", "");
             echo json_encode(array("path" => "upload/" . preg_replace('"\.(ogg|wav|mp3|gsm|sln)$"', ".gsm",$_FILES["audio-file"]["name"])));
             
