@@ -47,14 +47,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        foreach ($file_list as $key => $value) {
-                            echo "<tr>\n
-                                        \t<td>".basename($value)."</td>\n
-                                        \t<td><div class='btn-group'> <a href='#' class='btn playaudio' file='$key'><i class='icon-play'></i></a><a href='#' class='btn addaudio' file='".preg_replace("/.(gsm|sln|wav)/i","",$key)."'><i class='icon-plus-sign'></i></div></td>\n
-                                 </tr>\n";
-                        }
-                        ?>
+                        <?php foreach ($file_list as $key => $value) { ?>
+                                 <tr>
+                                        <td><?=basename($value)?></td>
+                                        <td><div class='btn-group'> <a href='#' class='btn playaudio' file='<?=$key?>'><i class='icon-play'></i></a><a href='#' class='btn addaudio' file='<?=preg_replace("/.(gsm|sln|wav)/i","",$key)?>'><i class='icon-plus-sign'></i></div></td>
+                                 </tr>
+                       <?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -173,8 +171,8 @@ $(function(){
                 });
                 
                 $('#audio-table').dataTable( {
-                    "sDom": 'f<"top">rt<"bottom">p<"clear">',
-                    "iDisplayLength": 6,
+                    "sDom": 'frtp',
+                    "iDisplayLength": 5,
                     "aaSorting": [[ 0, "desc" ]],
                     "oLanguage": {
                         "sLengthMenu": "Mostrar _MENU_ registos por pagina",
