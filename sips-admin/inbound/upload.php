@@ -28,7 +28,7 @@ function changespecialchars($string) {
         'é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e', 'í' => 'i', 'ì' => 'i', 'î' => 'i', 'ï' => 'i', 'ð' => 'eth',
         'ñ' => 'n', 'ó' => 'o', 'ò' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o',
         'ú' => 'u', 'ù' => 'u', 'û' => 'u', 'ü' => 'u', 'ý' => 'y',
-        'ß' => 'sz', 'þ' => 'thorn', 'ÿ' => 'y','\''=>''));
+        'ß' => 'sz', 'þ' => 'thorn', 'ÿ' => 'y','\''=>'',' '=>'','('=>'',')'=>''));
     return $string;
 }
 
@@ -57,7 +57,7 @@ if ($_FILES["audio-file"]["error"] > 0) {
             die();
             
         } else {
-            $filename=  changespecialchars($_FILES["audio-file"]["name"]);
+            $filename=  changespecialchars(strtolower($_FILES["audio-file"]["name"]));
             move_uploaded_file($_FILES["audio-file"]["tmp_name"], $ast_sounds_path . "upload/" .$filename);
             $original = $ast_sounds_path . "upload/" . $filename;
             $new = preg_replace('"\.(ogg|wav|mp3)$"', ".gsm", $ast_sounds_path . "upload/" . $filename);
