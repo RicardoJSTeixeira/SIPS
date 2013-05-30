@@ -11,7 +11,7 @@ $file=$_POST["file"];
 $original=$ast_sounds_path.$file;
 $new=  preg_replace('"\.(gsm|wav|sln)$"', ".ogg", $apache_path."sips-admin/inbound/tmp/".basename($file));
 
- $soxCommand="sox '".escapeshellcmd($original)."' '".escapeshellcmd($new)."' pad 0 0.25";
+ $soxCommand="sox ".escapeshellarg($original)." ".escapeshellarg($new)." pad 0 0.25";
  exec($soxCommand, $output, $result);
 
             //  Deal with result
