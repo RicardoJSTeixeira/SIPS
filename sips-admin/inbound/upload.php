@@ -55,6 +55,7 @@ if ($_FILES["audio-file"]["error"] > 0) {
             unlink($ast_sounds_path . "upload/" . $_FILES["audio-file"]["name"]);
             //  Deal with result
             if ($result != 0) {
+                header('HTTP/1.1 500 Internal Server Error');
                 echo json_encode(array("error" => "c_e"));
                 log_admin("UPLOAD", "Fail: Error $result", "", "");
                 die();
