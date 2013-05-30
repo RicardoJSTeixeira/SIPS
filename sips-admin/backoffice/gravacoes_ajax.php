@@ -144,7 +144,7 @@ While ($curRecord = mysql_fetch_assoc($recordList)) {
     //$lenghtInMin = secondsToTime($curRecord['length_in_sec']);
     $lenghtInMin = date("i:s",$curRecord[length_in_sec]);
 
-    $gravacoes['aaData'][] = array($curRecord['start_time'], $lenghtInMin, $curRecord['phone_number'], $curRecord['user'], "<a href='$mp3File' style='font-size: 12px;' >$audioPlayer</a>");
+    $gravacoes['aaData'][] = array( $curRecord['user'], $curRecord['phone_number'], $curRecord['start_time'], $lenghtInMin."<div class='view-button'><a href=# title='Editar e ver todo o estado desta lead' class='btn  btn-mini activator crm' data-lead_id='".$curRecord[lead_id]."' style='font-size: 12px;' ><i class='icon-pencil'></i><span>Editar</span></a></div>"."<div class='view-button'><a href='$mp3File' class='btn  btn-mini activator' style='font-size: 12px;' ><i class='icon-download'></i><span>$audioPlayer</span></a></div>");
 }
 echo json_encode($gravacoes);
 ?>

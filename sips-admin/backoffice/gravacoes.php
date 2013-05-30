@@ -44,6 +44,9 @@
             margin-left: -33px;
             margin-top: -33px;
         }
+        .view-button {
+            margin-left: 0.5em;
+        }
         </style>
         
     </head>
@@ -166,11 +169,10 @@ $users_regex = "AND user REGEXP '^$users_regex$'";
                             <table class="table table-mod-2" id="grav">
                                 <thead>
                                     <tr>
-                                        <th>Data Chamada</th>
-                                        <th>Duração</th>
-                                        <th>Telefone</th>
-                                        <th>User</th>
-                                        <th>Gravação</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -185,7 +187,17 @@ $users_regex = "AND user REGEXP '^$users_regex$'";
             </div>
         </div>
         <script>
-
+            function dadoscli(valor)
+                {
+                    var url = "../admin_modify_lead.php?lead_id=" + valor;
+                    window.open(url, '_blank');
+                }
+                
+                 $(document).on("click", ".crm", function() {
+                            var id = $(this).data("lead_id");
+                            dadoscli(id);
+                  });
+                
             var datainicio = $("#datainicio"), datafim = $("#datafim"), ntlf = $("#ntlf"), user = $("#user"), oTable;
             $(function() {
 
@@ -226,11 +238,10 @@ $users_regex = "AND user REGEXP '^$users_regex$'";
                         );
                     },
                     "aoColumns": [
-                        {"sTitle": "Hora de Inicio"},
-                        {"sTitle": "Duração"},
-                        {"sTitle": "Telefone"},
                         {"sTitle": "Utilizador"},
-                        {"sTitle": "Gravação"}
+                        {"sTitle": "Telefone"},
+                        {"sTitle": "Hora de Inicio"},
+                        {"sTitle": "Duração"}
                     ],
                     "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
                 });
