@@ -43,7 +43,14 @@
         <?php
         require("../dbconnect.php");
 
-
+function log_admin($topic, $event, $id, $query, $comments = "") {
+    global $link, $PHP_AUTH_USER;
+    $stmt = "INSERT INTO vicidial_admin_log set event_date=NOW(), user='$PHP_AUTH_USER', ip_address='$IP', event_section='$topic', event_type='MODIFY', record_id='$id', event_code='$event', event_sql='" . mysql_real_escape_string($query) . "', event_notes='$comments';";
+    $rslt = mysql_query($stmt, $link);
+    if (!$rslt) {
+        echo "Log Error: " . mysql_error() . " Whole query:" . $stmt;
+    }
+}
         $PHP_AUTH_USER = $_SERVER['PHP_AUTH_USER'];
         $PHP_AUTH_PW = $_SERVER['PHP_AUTH_PW'];
 
@@ -112,6 +119,7 @@
                 $contents = fread($file, filesize($fname));
                 echo $contents;
                 fclose($file);
+                log_admin("Files","Download",$fname,"");
                 exit();
             }
             if ($_POST['submit'] == "Save") {
@@ -121,10 +129,6 @@
                 if ($file != FALSE) {
                     fwrite($file, $data);
                     fclose($file);
-                    #system("/usr/share/goautodial/g_parse.pl '$fname'");
-
-                    exec("/usr/share/goautodial/goautodialc.pl '/usr/bin/nohup /bin/chmod 777 $fname'");
-                    exec("/usr/share/goautodial/goautodialc.pl '/usr/bin/nohup /usr/bin/dos2unix $fname'");
                     ?>
                     <script>
                         $(function() {
@@ -132,6 +136,7 @@
                         });
                     </script>
                     <?php
+                log_admin("Files","Save",$fname,"");
                 } else {
                     ?>
                     <script>
