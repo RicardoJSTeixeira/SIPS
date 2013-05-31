@@ -130,10 +130,10 @@ var a=0,b=0;
                                 user: "<?= $PHP_AUTH_USER ?>",
                                 pass:"<?= base64_encode($PHP_AUTH_PW) ?>"
                             }, function(data) {
-                        bord.text(data);
+                        bord.text(data.logs);
                         
                     setTimeout(update, intervalo);
-                    });
+                    },"json");
                 }
             }
             function start_realtime(){

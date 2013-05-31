@@ -37,10 +37,10 @@
             Header("WWW-Authenticate: Basic realm=\"GOAUTODIAL-PROJECTS\"");
             Header("HTTP/1.0 401 Unauthorized");
             echo "Invalid Username/Password: |$PHP_AUTH_USER|$PHP_AUTH_PW|\n";
-            echo "<html><head><title>GoAutoDial - Logout</title><script>function update(){top.location='../../index.php';}var refresh=setInterval('update()',1000);</script></head><body onload=refresh></body></html>";
+            echo "<html><head><title>GO CONTACT CENTER - Logout</title><script>function update(){top.location='../../index.php';}var refresh=setInterval('update()',1000);</script></head><body onload=refresh></body></html>";
             exit;
         }
+        exec('tail -n 100 /var/log/asterisk/messages', $log);
         
-        
-echo json_encode(array("logs"=>system('tail -n 100 /var/log/asterisk/messages')));
+echo json_encode(array("logs"=>implode("\n",$log)));
 ?>
