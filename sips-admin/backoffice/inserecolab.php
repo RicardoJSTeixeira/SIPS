@@ -6,28 +6,6 @@
 
         <?php
         $nome = $_POST['nome'];
-        $morada = $_POST['morada'];
-        $porta = $_POST['porta'];
-        $andar = $_POST['andar'];
-        $codpostal = $_POST['codpostal'];
-        $codrua = $_POST['codrua'];
-        $local = $_POST['local'];
-        $tlf = $_POST['tlf'];
-        $tlml = $_POST['tlml'];
-        $email = $_POST['email'];
-        $bi = $_POST['bi'];
-        $nif = $_POST['nif'];
-        $segsocial = $_POST['segsocial'];
-        $datanasc = $_POST['datanasc'];
-        $hablit = $_POST['hablit'];
-        $banco = $_POST['banco'];
-        $nib = $_POST['nib'];
-        $estcivil = $_POST['estcivil'];
-        $dependentes = $_POST['dependentes'];
-        $horario = $_POST['horario'];
-        $expcc = $_POST['expcc'];
-        $expvendas = $_POST['expvendas'];
-        $expzon = $_POST['expzon'];
         $data = $_POST['data'];
         $grupo = $_POST['usergroup'];
         $user = $_POST['user'];
@@ -105,55 +83,16 @@
 
         // user SIPS
 
-        mysql_select_db("sips", $con);
+        mysql_select_db("sips", $con); 
 
-        $uservici = $user;
 
         $insercolab = mysql_query("INSERT INTO t_colaborador (
 				nome,
-				morada,
-				codpostal,
-				telefone,
-				telemovel,
-				email,
-				bi,
-				nif,
-				segsocial,
-				datanasc,
-				hablit,
-				banco,
-				nib,
-				estcivil,
-				ndepend,
-				htrab,
-				ecc,
-				evendas,
-				ezon,
-				idintegra,
 				uservici,
 				datainsc) VALUES
 				
 				('$nome',
-				'$morada',
-				'$codpostal',
-				'$tlf',
-				'$tlml',
-				'$email',
-				'$bi',
-				'$nif',
-				'$segsocial',
-				'$datanasc',
-				'$hablit',
-				'$banco',
-				'$nib',
-				'$estcivil',
-				'$dependentes',
-				'$horario',
-				'$expcc',
-				'$expvendas',
-				'$expzon',
-				'$idintegra',
-				'$uservici',
+				'$user',
 				'$data');") or die(mysql_error());
 
         mysql_close($con);
