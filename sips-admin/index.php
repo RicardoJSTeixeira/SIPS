@@ -71,9 +71,6 @@ if (mysql_num_rows($query)) {
 	-webkit-box-shadow:none !important;
 	box-shadow:none !important;
 	text-shadow:none !important;
-	
-	
-	
 	} 
 	
 	.cc-submenu table tbody tr { border-color: #c0c0c0 !important; }
