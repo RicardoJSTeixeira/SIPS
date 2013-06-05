@@ -715,7 +715,7 @@ echo '
 <div class="table-title"><center>Chamadas realizadas para este Contacto</center></div>
 <div class="datagrid" style="width:90%">
 <table>
-<thead><th>Data</th><th>Hora</th><th>Duração</th><th>Número</th><th>Operador</th><th>Feedback</th><th>Campanha</th><th>Base de Dados</th></thead>';
+<thead><th>Data</th><th>Hora</th><th>Duração</th><th>Número</th><th>Operador</th><th>Feedback</th><th>Man/Auto</th><th>Campanha</th><th>Base de Dados</th></thead>';
 echo "<tbody>";
 for($i=0;$i<mysql_num_rows($chamadas_feitas);$i++){
 $row = mysql_fetch_assoc($chamadas_feitas);
@@ -731,6 +731,7 @@ echo "
 <td>$row[phone_number]</td>
 <td>$row[full_name]</td>
 <td>$status_name</td>
+<td>$row[comments]</td>
 <td>$row[campaign_name]</td>
 <td>$row[list_name]</td>
 </tr>
