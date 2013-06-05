@@ -7,7 +7,6 @@
 
         <style type="text/css">
             .cc-mstyle {
-
                 font-family: "Calibri";
                 font-size: 12px; 
                 background-color:#FFF;
@@ -15,8 +14,6 @@
                 border-right: 2px solid #90C0E8;
                 border-bottom: 2px solid #90C0E8;
                 border-radius: 15px;
-
-
                 margin-top:0;
                 cursor:default;
             }
@@ -32,9 +29,6 @@
                 border-collapse: collapse;
                 margin-left:auto;
                 margin-right:auto;
-            }
-            .cc-mstyle tr:hover td {
-                /* background-color:#e8edff; */
             }
             .cc-mstyle th {
                 color: #000;
@@ -84,17 +78,14 @@
                 margin:0;
                 height:28px;
                 background-color:#fff;
-
-
             }
+            
             .cc-mstyle input[type="password"] { 
                 width:396px;
                 border:1px solid #c0c0c0;
                 margin:0;
                 height:20px;
                 background-color:#fff;
-
-
             }
 
             .cc-mstyle input[type="email"] { 
@@ -103,10 +94,7 @@
                 margin:0;
                 height:20px;
                 background-color:#fff;
-
-
             }
-
 
             .cc-mstyle select { 
                 width:400px;
