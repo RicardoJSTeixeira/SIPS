@@ -163,7 +163,7 @@
             $movel=$lead_info[alt_phone];
         }else{
           $fixo=$lead_info[alt_phone];
-            $movel=$lead_info[phone_number]; 
+            $movel=$lead_info[phone_number];  
         }
         ?>
 
