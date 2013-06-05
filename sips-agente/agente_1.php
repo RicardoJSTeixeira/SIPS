@@ -603,10 +603,10 @@ if ($relogin == 'YES' )
 		
 	
 	$phone_pass = $result_phone_pass[0];
-echo "<title>SIPS Call-Center: Relogin</title>";
+echo "<title>Go Contact: Relogin</title>";
 echo "</head>";
 echo "<body>";
-echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/sipslogo_agentlog.png ALT=Logo />";
+echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/go_logo_35.png ALT=Logo />";
 echo "<div id=work-area style='width:40%; min-height:0px; min-width:500px'>";
 
 echo "<div class=cc-mstyle style='border:none; margin-top:32px;'>";
@@ -1800,7 +1800,7 @@ $phone_pass = $result_phone_pass[0];
 echo "<title>SIPS Call-Center: Login de Operador</title>";
 echo "</head>";
 echo "<body onload=login_allowable_campaigns();>";
-echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/sipslogo_agentlog.png />";
+echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/go_logo_35.png />";
 echo "<div id=work-area style='width:40%; min-height:0px; min-width:500px'>";
 
 echo "<div class=cc-mstyle style='border:none; margin-top:32px;'>";
@@ -2644,10 +2644,10 @@ exit;
 		else
 			{
 				
-			echo "<title>SIPS Call-Center: Erro no Login </title>";
+			echo "<title>Go Contact: Erro no Login </title>";
 echo "</head>";
 echo "<body id='ib'>";
-echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/sipslogo_agentlog.png />";
+echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/go_logo_35.png />";
 echo "<div id=work-area style='width:40%; min-height:0px;'>";
 	echo "<br>";
 echo "<div class=cc-mstyle style='border:none'>";	
@@ -2665,7 +2665,7 @@ echo "
 			}
 		if (strlen($session_id) < 1)
 			{
-			echo "<title>SIPS Call-Center Client: Campaign Login</title>\n";
+			echo "<title>Go Contact: Campaign Login</title>\n";
 			echo "</head>\n";
             echo "<body  id='ib' >\n";
 			if ($hide_timeclock_link < 1)
