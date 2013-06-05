@@ -512,10 +512,10 @@ if ($relogin == 'YES' )
 		
 	
 	$phone_pass = $result_phone_pass[0];
-echo "<title>SIPS Call-Center: Relogin</title>";
+echo "<title>Go Contact: Relogin</title>";
 echo "</head>";
 echo "<body>";
-echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/sipslogo_agentlog.png ALT=Logo />";
+echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/go_logo_35.png ALT=Logo />";
 echo "<div id=work-area style='width:40%; min-height:0px; min-width:500px'>";
 
 echo "<div class=cc-mstyle style='border:none; margin-top:32px;'>";
@@ -629,7 +629,7 @@ exit;
 	{
 	if ( (strlen($VD_login)<1) or (strlen($VD_pass)<1) or (strlen($VD_campaign)<1) )
 		{
-		echo "<title>SIPS Call-Center Operador: Escolha a Campanha</title>\n";
+		echo "<title>Go Contact: Escolha a Campanha</title>\n";
 		echo "</head>\n";
         echo "<body >\n";
 		if ($hide_timeclock_link < 1)
@@ -714,7 +714,7 @@ exit;
 
 			if ( (strlen($phone_login) < 1) or (strlen($phone_pass) < 1) )
 				{
-				echo "<title>SIPS Call-Center Client: Login</title>\n";
+				echo "<title>Go Contact: Login</title>\n";
 				echo "</head>\n";
                 echo "<body >\n";
 				if ($hide_timeclock_link < 1)
@@ -800,12 +800,12 @@ if ($phone_exists == 0)
 	{
 	$phone_pass = $result_phone_pass[0];
 	
-	echo "<title>SIPS Call-Center: Login de Operador</title>";
+	echo "<title>Go Contact: Login de Operador</title>";
 	echo "</head>";
     echo "<body>";
 
 
-    echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/sipslogo_agentlog.png />";
+    echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/go_logo_35.png />";
  	
 	echo "<div id=work-area style='width:40%; min-height:0px; min-width:500px;'>";
 	
@@ -1080,7 +1080,7 @@ else
 
 			if ( (!eregi("$VD_campaign",$LOGallowed_campaigns)) and (!eregi("ALL-CAMPAIGNS",$LOGallowed_campaigns)) )
 				{
-				echo "<title>SIPS Call-Center Operador: Login</title>\n";
+				echo "<title>Go Contact: Login</title>\n";
 				echo "</head>\n";
                 echo "<body>\n";
 				if ($hide_timeclock_link < 1)
@@ -1706,10 +1706,10 @@ if($val == 1) {
 
 			
 $phone_pass = $result_phone_pass[0];
-echo "<title>SIPS Call-Center: Login de Operador</title>";
+echo "<title>Go Contact: Login de Operador</title>";
 echo "</head>";
 echo "<body onload=login_allowable_campaigns();>";
-echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/sipslogo_agentlog.png />";
+echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/go_logo_35.png />";
 echo "<div id=work-area style='width:40%; min-height:0px; min-width:500px'>";
 
 echo "<div class=cc-mstyle style='border:none; margin-top:32px;'>";
@@ -1763,7 +1763,7 @@ exit;
 
 } else {
 
-echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/sipslogo_agentlog.png />";
+echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/go_logo_35.png />";
 echo "<div id=work-area style='width:40%; min-height:0px; min-width:500px'>";
 
 echo "<div class=cc-mstyle style='border:none; margin-top:32px;'>";
@@ -1887,7 +1887,7 @@ exit;
 	$authphone=$row[0];
 	if (!$authphone)
 		{
-		echo "<title>SIPS Call-Center Operador: Erro no Login de Licença</title>\n";
+		echo "<title>Go Contact: Erro no Login de Licença</title>\n";
 		echo "</head>\n";
         echo "<body id='ib'>\n";
 		if ($hide_timeclock_link < 1)
@@ -2011,7 +2011,7 @@ exit;
 				}
 			echo "<!-- Phones balance selection: $phone_login|$pb_server_ip|$past_minutes_date|     |$pb_log -->\n";
 			}
-		echo "<title>SIPS Call-Center</title>\n";
+		echo "<title>Go Contact</title>\n";
 		$stmt="SELECT extension,dialplan_number,voicemail_id,phone_ip,computer_ip,server_ip,login,pass,status,active,phone_type,fullname,company,picture,messages,old_messages,protocol,local_gmt,ASTmgrUSERNAME,ASTmgrSECRET,login_user,login_pass,login_campaign,park_on_extension,conf_on_extension,VICIDIAL_park_on_extension,VICIDIAL_park_on_filename,monitor_prefix,recording_exten,voicemail_exten,voicemail_dump_exten,ext_context,dtmf_send_extension,call_out_number_group,client_browser,install_directory,local_web_callerID_URL,VICIDIAL_web_URL,AGI_call_logging_enabled,user_switching_enabled,conferencing_enabled,admin_hangup_enabled,admin_hijack_enabled,admin_monitor_enabled,call_parking_enabled,updater_check_enabled,AFLogging_enabled,QUEUE_ACTION_enabled,CallerID_popup_enabled,voicemail_button_enabled,enable_fast_refresh,fast_refresh_rate,enable_persistant_mysql,auto_dial_next_number,VDstop_rec_after_each_call,DBX_server,DBX_database,DBX_user,DBX_pass,DBX_port,DBY_server,DBY_database,DBY_user,DBY_pass,DBY_port,outbound_cid,enable_sipsak_messages,email,template_id,conf_override,phone_context,phone_ring_timeout,conf_secret,is_webphone,use_external_server_ip,codecs_list,webphone_dialpad,phone_ring_timeout,on_hook_agent from phones where login='$phone_login' and pass='$phone_pass' and active = 'Y';";
 		if ($DB) {echo "|$stmt|\n";}
 		$rslt=mysql_query($stmt, $link);
@@ -2553,10 +2553,10 @@ exit;
 		else
 			{
 				
-			echo "<title>SIPS Call-Center: Erro no Login </title>";
+			echo "<title>Go Contact: Erro no Login </title>";
 echo "</head>";
 echo "<body id='ib'>";
-echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/sipslogo_agentlog.png />";
+echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/go_logo_35.png />";
 echo "<div id=work-area style='width:40%; min-height:0px;'>";
 	echo "<br>";
 echo "<div class=cc-mstyle style='border:none'>";	
@@ -2574,7 +2574,7 @@ echo "
 			}
 		if (strlen($session_id) < 1)
 			{
-			echo "<title>SIPS Call-Center Client: Campaign Login</title>\n";
+			echo "<title>Go Contact: Campaign Login</title>\n";
 			echo "</head>\n";
             echo "<body  id='ib' >\n";
 			if ($hide_timeclock_link < 1)
@@ -12809,6 +12809,52 @@ $zi=2;
 
 <!--################################ HEADER SIPS ####################################-->		
 		
+<style>
+#cc-header {
+		
+	background:0 !important;
+	border-bottom: 3px solid rgb(168, 168, 168) !important;
+	border-top:none !important;
+	border-left:none !important;
+	border-right:none !important;
+	border-radius: 0px !important;
+	-webkit-box-shadow:none !important;
+	box-shadow:none !important;
+	
+	}
+	
+	
+.cc-menu {
+	
+	color: rgb(105, 105, 105) !important;
+		background:0 !important;
+	border-bottom: 2px solid rgb(192, 192, 192) !important;
+	border-top:none !important;
+	border-left:none !important;
+	border-right:none !important;
+	border-radius: 0px !important;
+	-webkit-box-shadow:none !important;
+	box-shadow:none !important;
+	text-shadow:none !important;
+	
+	
+	
+	} 
+	
+	.cc-submenu table tbody tr { border-color: #c0c0c0 !important; }
+	.cc-submenu tr:hover { background-color: #e2e2e2 !important;  }
+	.cc-mstyle { border-color: #c0c0c0 !important; }
+	
+	body {
+		background:none !important; 
+	}	
+	
+	h2 { text-shadow:none !important; }
+	
+</style>
+
+
+        
 		
 <div style='padding:0px 10px;'>
 
@@ -12817,7 +12863,7 @@ $zi=2;
 		
 			<table height='65px' width="100%" border=0> 
 			<tr>
-			<td style='max-width: 45px;text-align: left;'><img src='../images/pictures/sipslogo_header.png' ALT=LOGO /></td>
+			<td style='max-width: 45px;text-align: left;'><img src='../images/pictures/go_logo_15.png' ALT=LOGO /></td>
 			<span style='display:none;' id="dataHeader"> 
 			<? 
 			
