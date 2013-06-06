@@ -421,7 +421,7 @@ $query="
 			vicidial_campaigns vdc 
 		ON 
 			vdc.campaign_id=vdlf.campaign_id
-		INNER JOIN 
+		LEFT JOIN 
 			vicidial_users vu 
 		ON 
 			vu.user=vdl.user
