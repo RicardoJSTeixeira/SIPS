@@ -535,7 +535,7 @@ $query = "SELECT
 			vl.phone_code,
 			vl.phone_number,
 			vl.user,
-			vl.comments,
+			ifnull(vl.comments,'AUTO') comments,
 			vl.processed,
 			vl.user_group,
 			vl.term_reason,
