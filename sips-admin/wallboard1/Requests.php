@@ -1,4 +1,4 @@
-<?php
+<?php
 
 error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
@@ -15,16 +15,16 @@ switch ($action) {
 
 
           case 'layout':
-                    $query = "SELECT * from WallBoard_Layout";
+                    $query = "SELECT * from WallBoard_Layout1";
                     $query = mysql_query($query, $link) or die(mysql_error());
                     while ($row = mysql_fetch_assoc($query)) {
-                              $js[] = array(id => $row["id"], name => $row["Name"]);
+                              $js[] = array(id => $row["id"], name => $row["name"]);
                     }
                     echo json_encode($js);
                     break;
 
           case 'get_layout':
-                    $query = "SELECT * from WallBoard_Layout where id=$id";
+                    $query = "SELECT * from WallBoard_Layout1 where id=$id";
                     $query = mysql_query($query, $link) or die(mysql_error());
                     while ($row = mysql_fetch_assoc($query)) {
                               $js[] = array(id => $row["id"], name => $row["Name"]);
@@ -33,77 +33,100 @@ switch ($action) {
                     break;
 
           case 'insert_Layout':
-                    $query = "INSERT INTO WallBoard_Layout (name) VALUES ('Layout Nova')";
+                    $query = "INSERT INTO WallBoard_Layout1 (name) VALUES ('Layout Nova')";
                     $query = mysql_query($query, $link) or die(mysql_error());
                     echo json_encode(array(1));
                     break;
 
           case 'remove_Layout':
-                    $query = "DELETE FROM WallBoard_Layout WHERE id=$layout_Id";
+                    $query = "DELETE FROM WallBoard_Layout1 WHERE id=$id_layout";
                     $query = mysql_query($query, $link) or die(mysql_error());
-                    $query = "DELETE FROM WallBoard WHERE layout_id=$layout_Id";
+                    $query = "DELETE FROM WallBoard1 WHERE id_layout=$id_layout";
                     $query = mysql_query($query, $link) or die(mysql_error());
+                    echo json_encode(array(1));
                     break;
 
           case 'edit_Layout':
-                    $query = "UPDATE WallBoard_Layout SET Name='$name'  WHERE id=$id";
+                    $query = "UPDATE WallBoard_Layout1 SET Name='$name'  WHERE id=$id";
                     $query = mysql_query($query, $link) or die(mysql_error());
-                       echo json_encode(array(1));
+                    echo json_encode(array(1));
                     break;
 
           case 'insert_wbe':
-                    $query = "INSERT INTO WallBoard (name, posX ,  posY ,  width ,  height ,  layout_id ,  query_text , opcao_query, update_time , graph_type, param1) VALUES ('$name',$posx,$posy,$width,$height,$layout_id,'$query_text','$opcao_query',$update_time,$graph_type,'$param1');";
+                    $query = "INSERT INTO WallBoard1 (name,pos_x,pos_y,width, height,id_layout, update_time,graph_type,param1,param2) VALUES ('$name',$pos_x,$pos_y,$width,$height,$id_layout,$update_time,$graph_type,$param1,$param2)";
                     $query = mysql_query($query, $link) or die(mysql_error());
-                       echo json_encode(array(1));
+                    echo json_encode(array(1));
                     break;
 
-          case 'edit_WBE':
-                    $query = "UPDATE WallBoard SET  posX=$posX, posY=$posY, width=$width,height=$height, layout_id=$layout_Id  WHERE id=$id";
+          case 'insert_dataset':
+                    $query = "INSERT INTO WallBoard_Dataset1 ( `id_wallboard`, `query_text`, `opcao_query`, `mode`,`param1`, `param2`, `param3`, `param4`) VALUES ($id_wallboard, $query_text, '$opcao_query','$mode' ,'$param1', '$param2', '$param3','$param4')";
+                     $round_numerator = 60 * 5;
+                    $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
+                    $rounded_time = date("Y-m-d H:i:s", $rounded_time);
+                    $query = str_replace("now()", "'" . $rounded_time . "'", $query);
                     $query = mysql_query($query, $link) or die(mysql_error());
-                       echo json_encode(array(1));
+                    echo json_encode(array(1));
+                    break;
+
+
+          case 'get_dataset':
+                  $query = " SELECT * FROM `WallBoard_Dataset1` WHERE `id_wallboard`=$id_wallboard";
+                    $query = mysql_query($query, $link) or die(mysql_error());
+                    while ($row = mysql_fetch_assoc($query)) {
+                              $js[] = array(id => $row["id"], query_text => $row["query_text"], opcao_query => $row["opcao_query"], type_query => $row["type_query"], codigo => $row["codigo"]);
+                    }
+                    echo json_encode($js);
+                    break;
+
+          
+          
+         
+
+
+          case 'edit_WBE':
+                    $query = "UPDATE WallBoard1 SET  pos_x=$pos_x, pos_y=$pos_y, width=$width,height=$height  WHERE id=$id";
+                    $query = mysql_query($query, $link) or die(mysql_error());
+                    echo json_encode(array(1));
                     break;
 
           case 'delete_WBE':
-                    $query = "DELETE FROM WallBoard WHERE id=$id";
+                    $query = "DELETE FROM WallBoard1 WHERE id=$id";
                     $query = mysql_query($query, $link) or die(mysql_error());
-                       echo json_encode(array(1));
+                    echo json_encode(array(1));
                     break;
 
           case 'wbe':
-                    $query = "SELECT * FROM  WallBoard  where layout_id=$layout_Id";
+                    $query = "SELECT * FROM  WallBoard1  where id_layout='$id_layout'";
                     $query = mysql_query($query, $link) or die(mysql_error());
                     while ($row = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                              $js[] = array(id => $row["id"], name => $row["name"], posX => $row["posX"], posY => $row["posY"], width => $row["width"], height => $row["height"], layout_Id => $row["layout_id"], query_text => $row["query_text"], opcao_query => $row["opcao_query"], update_time => $row["update_time"], graph_type => $row["graph_type"], param1 => $row["param1"]);
+                              $js[] = array(id => $row["id"], name => $row["name"], pos_x => $row["pos_x"], pos_y => $row["pos_y"], width => $row["width"], height => $row["height"], id_layout => $row["id_layout"], update_time => $row["update_time"], graph_type => $row["graph_type"], param1 => $row["param1"], param2 => $row["param2"]);
                     }
                     echo json_encode($js);
                     break;
 
           case 'get_query':
-                    $query = "SELECT * from WallBoard_Query where type_query=$graph_type ";
+                    $query = "SELECT * from WallBoard_Query1 where type_query=$graph_type ";
                     $query = mysql_query($query, $link) or die(mysql_error());
                     while ($row = mysql_fetch_assoc($query)) {
-                              $js[] = array(id => $row["id"], query_text => $row["query_text"], opcao_query => $row["opcao_query"], type_query => $row["type_query"]);
+                              $js[] = array(id => $row["id"], query_text => $row["query_text"], opcao_query => $row["opcao_query"], type_query => $row["type_query"], codigo => $row["codigo"]);
                     }
                     echo json_encode($js);
                     break;
 
           //graficos-----------------------------------------
-          case '1'://real time - total chamadas inbound/outbound
+          case '1'://real time - total chamadas
                     $round_numerator = 60 * 5;
                     $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
                     $rounded_time = date("Y-m-d H:i:s", $rounded_time);
                     $selected_query = str_replace("now()", "'" . $rounded_time . "'", $selected_query);
                     $query = $selected_query;
+
                     $query = mysql_query($query, $link) or die(mysql_error());
                     while ($row = mysql_fetch_assoc($query)) {
-                              $js[] = array(lead_id => $row["lead_id"], call_date => $row["call_date"]);
+                              $js[] = array(length_in_sec => $row["length_in_sec"], call_date => $row["call_date"]);
                     }
                     echo json_encode($js);
                     break;
-
-
-
-
 
           case '2'://barras - total vendas por user
                     $query = $selected_query;
@@ -164,7 +187,7 @@ switch ($action) {
 
 //graficos-----------------------------------------
 //flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS -------------- 
-          case 'campaign_id':
+          case 'campaign':
                     $query = "SELECT  a.campaign_id,b.campaign_name  FROM  vicidial_campaign_statuses a inner join vicidial_campaigns b on a.campaign_id=b.campaign_id and active='y'  group by  campaign_id ";
                     $query = mysql_query($query, $link) or die(mysql_error());
                     while ($row = mysql_fetch_assoc($query)) {
@@ -173,15 +196,15 @@ switch ($action) {
                     echo json_encode($js);
                     break;
 
-          case 'status_venda':
-                    $query = "SELECT status ,status_name  FROM vicidial_campaign_statuses  group by status";
+
+          case 'user':
+                    $query = "SELECT `user` FROM `vicidial_inbound_group_agents` where user is not null and user!='' group by user";
                     $query = mysql_query($query, $link) or die(mysql_error());
                     while ($row = mysql_fetch_assoc($query)) {
-                              $js[] = array(status_v => $row["status"], status_t => $row["status_name"]);
+                              $js[] = $row["user"];
                     }
                     echo json_encode($js);
                     break;
-
           case 'user_group':
                     $query = "SELECT  user_group  as ug FROM  vicidial_log  where call_date between date_sub(NOW(), INTERVAL $param1) and now() and user_group is not NUll group by  user_group ";
                     $query = mysql_query($query, $link) or die(mysql_error());
@@ -191,11 +214,22 @@ switch ($action) {
                     echo json_encode($js);
                     break;
 
-          case 'group_inbound':
+          case 'inbound':
                     $query = "SELECT group_id,group_name FROM vicidial_inbound_groups";
                     $query = mysql_query($query, $link) or die(mysql_error());
                     while ($row = mysql_fetch_assoc($query)) {
                               $js[] = array(id => $row["group_id"], name => $row["group_name"]);
+                    }
+                    echo json_encode($js);
+                    break;
+
+
+
+          case 'status_venda':
+                    $query = "SELECT status ,status_name  FROM vicidial_campaign_statuses  group by status";
+                    $query = mysql_query($query, $link) or die(mysql_error());
+                    while ($row = mysql_fetch_assoc($query)) {
+                              $js[] = array(status_v => $row["status"], status_t => $row["status_name"]);
                     }
                     echo json_encode($js);
                     break;

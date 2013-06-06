@@ -16,7 +16,6 @@ foreach ($_GET as $key => $value) {
                     <title>SIPS</title> 
                     <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css">
                     <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
-                    <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.css" />
                     <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
                     <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
                     <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
@@ -91,7 +90,7 @@ foreach ($_GET as $key => $value) {
                                        box-shadow: 5px 5px 13px -6px rgba(0, 0, 0, 0.3) ;
                               }
 
-                              .bla{
+                              .opções_layout{
                                         margin-left: -1px !important;
                                         border-top-right-radius: 3px !important;
                                         border-bottom-right-radius: 3px !important
@@ -102,46 +101,45 @@ foreach ($_GET as $key => $value) {
 
           <body>
                     <div class="grid-content">
-
                               <div class="row-fluid">
                                         <div class="grid span11 board" >
                                                   <div class="grid-title">
                                                             <div class="pull-left">
-                                                                      <button id="add_layout_button" data-t="tooltip-right" title="Adiciona um novo ecrã" class="btn btn-info  btn-large" > <i class="icon-plus "></i>Novo</button>
+                                                                      <button id="add_layout_button" data-t="tooltip-right" title="Adiciona um novo ecrã" class="btn btn-info  btn-large  " > <i class="icon-plus "></i>Novo</button>
                                                             </div>
                                                             <div class="pull-right">
-                                                                      <div class="input-prepend input-append"><span class="add-on">Layout</span>
-                                                                                <select id="LayoutSelector" onchange="layout_change();"></select> 
-                                                                                <button data-t="tooltip-right" title="Opções da Layout"  class="bla btn btn-warning icon-alone" id="opcao_layout_button"><i class="icon-cogs"></i></button>
+
+                                                                      <div class="input-prepend input-append"><span  class="add-on">Layout</span>
+                                                                                <select id="LayoutSelector" onchange="layout_change();"></select>
+                                                                                <button data-t="tooltip-right" title="Opções da Layout"  class="opções_layout  btn btn-warning icon-alone  toolbar_button" id="opcao_layout_button"><i class="icon-cogs"></i></button>
                                                                       </div>
+
                                                             </div>
                                                   </div>
 
+
+
                                                   <div class="grid-content ">
                                                             <div  style="position:relative;width:904px;height:512px; margin: 0 auto;">
-                                                                      <div id="MainLayout" class="ui-widget-header "  ></div>
+                                                                      <div id="MainLayout" class="ui-widget-header " style="position:relative;" ></div>
                                                             </div>
                                                             <div class="clear"></div>
                                                   </div>
                                         </div>  
 
-
-
-                                        <div class="grid toolBar_span">
+                                        <div class="grid toolBar_span" id="toolBar">
                                                   <div class="grid-title">
                                                             <div class="text-center"> 
                                                                       <div class="grid-title-text-2"><a href="#" ><i class="icon-cog "></i></a></div>
                                                             </div>
                                                   </div>
                                                   <div class="grid-content">
-
-                                                            <p><button id="remove_layout_button" data-t="tooltip" title="Remover  Layout" class="btn btn-danger icon-alone " ><i class="icon-remove "></i></button></p>
-                                                            <p><button  id="save_button" data-t="tooltip" title="Gravar layout e elementos" class="btn btn-success  icon-alone  "  ><i class="icon-save"></i></button></p>
-                                                            <p><button id="fullscreen_button" class="btn btn-inverse icon-alone"  data-t="tooltip" title="Fullscreen"  ><i class="icon-fullscreen"></i></button></p>
-                                                            <p><button  class=" btn btn-info diablog_opener icon-alone" onclick="selected_type_graph = 1;"  data-t="tooltip" title="Gráfico de Linhas"  ><i class="icon-picture "></i> </button></p>
-                                                            <p><button class ="btn btn-info diablog_opener icon-alone" onclick="selected_type_graph = 2;" data-t="tooltip" title="Gráfico de Barras"  ><i class="icon-bar-chart "></i></button></p>
-                                                            <p><button class="btn btn-info diablog_opener icon-alone" onclick="selected_type_graph = 3;" data-t="tooltip" title="Gráfico de Tarte"  > <i class="icon-adjust "></i></button></p>
-                                                            <p><button id="graph_inbound" class="btn btn-info icon-alone diablog_opener_inbound" onclick="selected_type_graph = 4;" data-t="tooltip" title="Gráfico de Inbound"  > <i class="icon-list-alt "></i></button></p>
+                                                            <p><button id="remove_layout_button" data-t="tooltip" title="Remover  Layout" class="btn btn-danger icon-alone toolbar_button " ><i class="icon-remove "></i></button></p>
+                                                            <p><button id="fullscreen_button" class="btn btn-inverse icon-alone toolbar_button "  data-t="tooltip" title="Fullscreen"  ><i class="icon-fullscreen"></i></button></p>
+                                                            <p><button id="linhas_button"  class=" btn btn-info diablog_opener icon-alone toolbar_button" onclick="selected_type_graph = 1;"  data-t="tooltip" title="Gráfico de Linhas"  ><i class="icon-picture "></i> </button></p>
+                                                            <p><button id="barras_button" class ="btn btn-info diablog_opener icon-alone toolbar_button" onclick="selected_type_graph = 2;" data-t="tooltip" title="Gráfico de Barras"  ><i class="icon-bar-chart "></i></button></p>
+                                                            <p><button id="pie_button" class="btn btn-info diablog_opener icon-alone toolbar_button" onclick="selected_type_graph = 3;" data-t="tooltip" title="Gráfico de Tarte"  > <i class="icon-adjust "></i></button></p>
+                                                            <p><button id="graph_inbound" class="btn btn-info icon-alone diablog_opener_inbound toolbar_button" onclick="selected_type_graph = 4;" data-t="tooltip" title="Gráfico de Inbound"  > <i class="icon-list-alt "></i></button></p>
                                                   </div>
                                         </div>
                               </div>
@@ -149,31 +147,24 @@ foreach ($_GET as $key => $value) {
 
                               <!-----------------------------------------------------------DIALOGS------------------------------------------------------------------------------>
                               <!--DIALOG Da Layout, muda nome e cor de background-->
-                              <div id="dialog_layout" title="Opções de Layout" >
+                              <div id="dialog_layout" title="Opções de Layout" style="display: none;" >
                                         <div id="table_name_layout">
-                                                  <form class="form-inline">
-
-                                                            <label class="label label-info">ID</label>
-                                                            <label id="label_layout_id"></label>
-                                                            <br>
-                                                            <label class="label label-info">Nome</label>
-                                                            <input id="Layout_Input_name" type="text" placeholder="Text input" />
-                                                  </form>
+                                                  <label class="label label-info">Nome</label>
+                                                  <input id="Layout_Input_name" type="text" placeholder="Text input" />
                                         </div>
                               </div>
                               <!--DIALOG de confirmação de delete de layout-->
-                              <div id="dialog_delete" title="Confirmação" >
+                              <div id="dialog_delete" title="Confirmação" style="display: none;" >
                                         Tem a certeza que quer eliminar este Layout?
                               </div>
                               <!--DIALOG DOS WALLBOARDS-->
-                              <div id="dialog" title="Criação de Wallboard" >
+                              <div id="dialog" title="Criação de Wallboard" style="display: none;">
                                         <label class="label label-info">Nome do Gráfico</label>
-                                        <input id='graph_name' type='text' value="Gráfico xpto" />
+                                        <input id='graph_name' type='text'  />
                                         <label class="label label-info">Opções</label>
                                         <select id="query_type" >            </select>
                                         <label class="label label-info">Tempo de actualização:</label>
                                         <select id="update_time">
-
                                                   <option value="5000" >5 sec</option>
                                                   <option value="10000" selected>10 sec</option>
                                                   <option value="20000">20 sec</option>
@@ -182,20 +173,24 @@ foreach ($_GET as $key => $value) {
                                                   <option value="120000" >2 min</option>
                                                   <option value="360000" >5 min</option>
                                         </select> 
-                                        <label class="label label-info">Data de Inicio</label>
-                                        <select id="time_span" onchange="flot_extra('user_group');">
-                                                  <option value="1" selected>Ultima Hora</option>
-                                                  <option value="2" >Dia-a-Dia</option>
-                                                  <option value="3" >Ultimas 12h</option>
-                                        </select> 
+
                                         <div id="gao_userGroup"  class="graph_advance_option"></div>
                                         <div id="gao_status" class="graph_advance_option" ></div>
                                         <div id="gao_campaign" class="graph_advance_option" ></div>
+                                        <div id="gao_update" class="graph_advance_option" ></div>
 
+                                        <div id="time_spana">
+                                                  <label  class="label label-info ">Data de Inicio</label>
+                                                  <select id="time_span"  onchange="flot_extra('user_group');">
+                                                            <option value="1" selected>Ultima Hora</option>
+                                                            <option value="2" >Dia-a-Dia</option>
+                                                            <option value="3" >Ultimas 12h</option>
+                                                  </select> 
+                                        </div>
 
                               </div>
                               <!--DIALOG DE INBOUND-->
-                              <div id="dialog_inbound" title="Criação de Wallboard Inbound" >
+                              <div id="dialog_inbound" title="Criação de Wallboard Inbound" style="display: none;" >
                                         <label class="label label-info">Grupo:</label>
                                         <select id="group_inbound_select">
                                         </select> 
@@ -204,13 +199,9 @@ foreach ($_GET as $key => $value) {
 
 
 
-
-
-
-
                     </div>
 
-                    <div id="jGrowl" class="top-right jGrowl" ><div class="jGrowl-notification" ></div></div>
+                    <div id="jGrowl" class="bottom-right jGrowl" ><div class="jGrowl-notification" ></div></div>
 
 
 
@@ -218,33 +209,17 @@ foreach ($_GET as $key => $value) {
 
 
 
+
+//TMA Nao Funcion's
+
+
+
+
+
+
+
                                                                                           var wbes = []; //wall board elements em array
                                                                                           var layouts = [];
-
-
-
-
-
-                                                                                          //real time graph ainda n testado 100%
-                                                                                          //to be looked at
-
-                                                                                          //real time vai actualiza os dados todos e nao só o ultimo
-                                                                                          ////pode n ser o mais leve, mas talvez seja o mais eficaz
-
-                                                                                          //STARTER!
-                                                                                          //http://sipsam.dyndns.org/sips-admin/wallboard/
-
-
-
-
-                                                                                          //inbound wallboard
-                                                                                          //(AM servidor)
-                                                                                          //_> vicidial_closer log
-                                                                                          //-> auto_calls
-                                                                                          //dragable sem overlap ->http://sourceforge.net/p/jquidragcollide/wiki/Home/#jquery-ui-draggable-collision
-
-
-
                                                                                           //  http://sipsam.dyndns.org:20000/mysqladmin
                                                                                           //sipsadmin 
                                                                                           //sipsadmin2012
@@ -257,8 +232,8 @@ foreach ($_GET as $key => $value) {
                                                                                           var graph = [];
                                                                                           var opcao_graph;
                                                                                           var queries = [];
+                                                                                          var layouts = [];
                                                                                           //FIM---VARIAVEIS GERAIS-----------------VARIAVEIS GERAIS--------VARIAVEIS GERAIS-----------------VARIAVEIS GERAIS-------FIM                 
-
 
 
                                                                                           //-----------------FUNÇÕES DOS BUTTONS----------------------------
@@ -268,16 +243,13 @@ foreach ($_GET as $key => $value) {
                                                                                           });
                                                                                           $("#add_layout_button").click(function()
                                                                                           {
+
                                                                                                     sql_basic("insert_Layout", 0, 0);
-                                                                                                    load_dados("layout", 0);
+
                                                                                           });
                                                                                           $("#remove_layout_button").click(function()
                                                                                           {
                                                                                                     $('#dialog_delete').dialog('open');
-                                                                                          });
-                                                                                          $("#save_button").click(function()
-                                                                                          {
-                                                                                                    save();
                                                                                           });
                                                                                           $("#fullscreen_button").click(function()
                                                                                           {
@@ -290,18 +262,17 @@ foreach ($_GET as $key => $value) {
                                                                                           // FUNÇÂO STARTER-----------------------------------------------------------------------------------------99999999----------------------------------------------------------------0000000000000000000000
                                                                                           $(function() {
 
+
+
                                                                                                     $(document).on("click", ".delete_button", function(e) {
                                                                                                               var id = $(this).data("wbe_id");
                                                                                                               sql_basic('delete_WBE', 0, id);
                                                                                                               $("#" + id + "WBE").remove();
                                                                                                               load_dados('wbe', idLayout);
-
-                                                                                                    });//inicia o botao de delete de todos os wallBoards
-
+                                                                                                    });
                                                                                                     //inicia os tooltips
                                                                                                     $("[data-t=tooltip]").tooltip({placement: "left", html: true});
                                                                                                     $("[data-t=tooltip-right]").tooltip({placement: "right", html: true});
-
                                                                                                     //DIALOGS
                                                                                                     $("#dialog_delete ").dialog({
                                                                                                               autoOpen: false,
@@ -310,14 +281,23 @@ foreach ($_GET as $key => $value) {
                                                                                                               height: 220,
                                                                                                               modal: true,
                                                                                                               buttons: {
+                                                                                                                        "Cancelar": function() {
+                                                                                                                                  $(this).dialog("close");
+                                                                                                                        },
                                                                                                                         "Sim": function() {
                                                                                                                                   sql_basic("remove_Layout", idLayout);
                                                                                                                                   $(this).dialog("close");
                                                                                                                                   load_dados("layout", 0);
-                                                                                                                        },
-                                                                                                                        "Cancelar": function() {
-                                                                                                                                  $(this).dialog("close");
+                                                                                                                                  var i = 0;
+                                                                                                                                  $.each(layouts, function(index, value)
+                                                                                                                                  {
+                                                                                                                                            if (layouts[i][0] === idLayout) {
+                                                                                                                                                      layouts.splice(i, 1);
+                                                                                                                                            }
+                                                                                                                                            i++;
+                                                                                                                                  });
                                                                                                                         }
+
                                                                                                               }
                                                                                                     });
                                                                                                     $("#dialog").dialog({
@@ -326,6 +306,9 @@ foreach ($_GET as $key => $value) {
                                                                                                               resizable: false,
                                                                                                               modal: true,
                                                                                                               buttons: {
+                                                                                                                        "Cancelar": function() {
+                                                                                                                                  $(this).dialog("close");
+                                                                                                                        },
                                                                                                                         "Criar": function() {
                                                                                                                                   var i = 0;
                                                                                                                                   $.each(queries, function(index, value) {
@@ -341,13 +324,15 @@ foreach ($_GET as $key => $value) {
                                                                                                                                   //preencher o param1-----------------------------------------------------------------------------------------------------------------------
                                                                                                                                   if (selected_type_graph == 1)
                                                                                                                                   {
+                                                                                                                                            if ($('#status_venda').val() != 1)
+                                                                                                                                                      param1 += ('and status="' + $('#status_venda').val() + '"');
                                                                                                                                   }
                                                                                                                                   if (selected_type_graph == 2)
                                                                                                                                   {
                                                                                                                                             if ($('#user_group').val() != 1)
                                                                                                                                                       param1 += ('and user_group="' + $('#user_group').val() + '"');
                                                                                                                                             if ($('#status_venda').val() != 1)
-                                                                                                                                                      param1 += ('and vl.status="' + $('#status_venda').val() + '"');
+                                                                                                                                                      param1 += ('and status="' + $('#status_venda').val() + '"');
                                                                                                                                   }
                                                                                                                                   if (selected_type_graph == 3)
                                                                                                                                   {
@@ -355,7 +340,6 @@ foreach ($_GET as $key => $value) {
                                                                                                                                   }
 
                                                                                                                                   query = query.replace("$param1", param1);
-
                                                                                                                                   time_span = $('#time_span');
                                                                                                                                   if (time_span.val() == 1)
                                                                                                                                             query = query.replace("INTERVAL 1 Day", "INTERVAL 1 Hour");
@@ -365,16 +349,17 @@ foreach ($_GET as $key => $value) {
                                                                                                                                             query = query.replace("INTERVAL 1 Day", "INTERVAL 12 Hour");
                                                                                                                                   //preencher o param1----------------FIM-----------------------------------FIM--------------------------------------FIM------------------------------------
 
+                                                                                                                                  if (selected_type_graph == 1) {
+                                                                                                                                            manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, query, opcao_graph, $("#update_time").val(), selected_type_graph, $('#status_venda :selected').text());
+                                                                                                                                  }
+                                                                                                                                  if (selected_type_graph == 2) {
+                                                                                                                                            manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, query, opcao_graph, $("#update_time").val(), selected_type_graph, $('#status_venda :selected').text());
+                                                                                                                                  }
+                                                                                                                                  if (selected_type_graph == 3) {
+                                                                                                                                            manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, query, opcao_graph, $("#update_time").val(), selected_type_graph, $('#campaign_id :selected').text());
+                                                                                                                                  }
 
 
-                                                                                                                                  manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.floor((Math.random() * 300) + 1), Math.floor((Math.random() * 300) + 1), 250, 250, idLayout, query, opcao_graph, $("#update_time").val(), selected_type_graph);
-                                                                                                                                  load_dados("wbe", idLayout);
-
-                                                                                                                                  $(this).dialog("close");
-                                                                                                                        }
-                                                                                                                        ,
-                                                                                                                        "Cancelar"
-                                                                                                                                : function() {
                                                                                                                                   $(this).dialog("close");
                                                                                                                         }
                                                                                                               }
@@ -387,12 +372,12 @@ foreach ($_GET as $key => $value) {
                                                                                                               height: 200,
                                                                                                               modal: true,
                                                                                                               buttons: {
-                                                                                                                        "Gravar": function() {
-
-                                                                                                                                  save();
+                                                                                                                        "Cancelar": function() {
                                                                                                                                   $(this).dialog("close");
                                                                                                                         },
-                                                                                                                        "Cancelar": function() {
+                                                                                                                        "Gravar": function() {
+
+                                                                                                                                  save_layout();
                                                                                                                                   $(this).dialog("close");
                                                                                                                         }
                                                                                                               }
@@ -405,9 +390,11 @@ foreach ($_GET as $key => $value) {
                                                                                                               width: 310,
                                                                                                               modal: true,
                                                                                                               buttons: {
+                                                                                                                        "Cancelar": function() {
+                                                                                                                                  $(this).dialog("close");
+                                                                                                                        },
                                                                                                                         "Criar": function() {
                                                                                                                                   var i = 0;
-
                                                                                                                                   $.each(queries, function(index, value) {
 
                                                                                                                                             if (queries[i][3] == 4)
@@ -418,21 +405,15 @@ foreach ($_GET as $key => $value) {
 
                                                                                                                                             i++;
                                                                                                                                   });
-
-
                                                                                                                                   //o group_id vai no nome do inbound
-                                                                                                                                  manipulate_graph("insert_wbe", 0, $("#group_inbound_select option:selected").text(), Math.floor((Math.random() * 300) + 1), Math.floor((Math.random() * 300) + 1), 250, 250, idLayout, query, $("#group_inbound_select").val(), 10000, selected_type_graph);
-
-                                                                                                                                  load_dados("wbe", idLayout);
-                                                                                                                                  $(this).dialog("close");
-                                                                                                                        },
-                                                                                                                        "Cancelar": function() {
+                                                                                                                                  manipulate_graph("insert_wbe", 0, $("#group_inbound_select option:selected").text(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, query, $("#group_inbound_select").val(), 10000, selected_type_graph, 0);
+                                                                                                       
                                                                                                                                   $(this).dialog("close");
                                                                                                                         }
                                                                                                               }
                                                                                                     });
-                                                                                                    $("div.dialogButtons div button:nth-child(1)").addClass("btn btn-info");//classe dos botoes das dialogs
-                                                                                                    $("div.dialogButtons div button:nth-child(2)").addClass("btn btn-info");
+                                                                                                    $("div.dialogButtons div button:nth-child(1)").addClass("btn btn"); //classe dos botoes das dialogs
+                                                                                                    $("div.dialogButtons div button:nth-child(2)").addClass("btn btn-primary");
                                                                                                     $(".diablog_opener").click(function() {
                                                                                                               dialog_opener();
                                                                                                               $("#dialog").dialog("open");
@@ -441,15 +422,10 @@ foreach ($_GET as $key => $value) {
                                                                                                               dialog_opener();
                                                                                                               $("#dialog_inbound").dialog("open");
                                                                                                     });
-
                                                                                                     //loada da dropbox com os indices e do painel do layout
                                                                                                     load_dados("layout", 0);
-
                                                                                                     //para fazer load das options extra
                                                                                                     flot_extra_init();
-
-
-
                                                                                           });
                                                                                           // FUNÇÂO STARTER--------------------------------------------------------------------------------------------99999999------------------------------------------------------------- 00000000000000000000 
 
@@ -458,22 +434,27 @@ foreach ($_GET as $key => $value) {
                                                                                           //"""""""""""""""""FUNÇÔES BASICAS"""""""""""""""""FUNÇÔES BASICAS"""""""""""""""""FUNÇÔES BASICAS"""""""""""""""""FUNÇÔES BASICAS"""""""""""""""""FUNÇÔES BASICAS"""""""""""""""""FUNÇÔES BASICAS
                                                                                           function dialog_opener()
                                                                                           {
+
+                                                                                                    $("#graph_name").val("Gráfico Novo");
+                                                                                                    $(".graph_advance_option").hide(); //esconde a classe e so mostra por id(em baixo)
+                                                                                                    $("#time_spana").show();
                                                                                                     //linhas
+
                                                                                                     if (selected_type_graph === 1) {
+                                                                                                              $("#time_spana").hide();
                                                                                                               manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, selected_type_graph);
-                                                                                                              $(".graph_advance_option").hide();
+                                                                                                              $("#gao_update").show();
+                                                                                                              $("#gao_status").show();
                                                                                                     }
                                                                                                     //bar
                                                                                                     if (selected_type_graph === 2) {
                                                                                                               manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, selected_type_graph);
-                                                                                                              $(".graph_advance_option").hide();
                                                                                                               $("#gao_status").show();
                                                                                                               $("#gao_userGroup").show();
                                                                                                     }
                                                                                                     //pie
                                                                                                     if (selected_type_graph === 3) {
                                                                                                               manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, selected_type_graph);
-                                                                                                              $(".graph_advance_option").hide();
                                                                                                               $("#gao_campaign").show();
                                                                                                     }
                                                                                                     //inbound
@@ -484,14 +465,28 @@ foreach ($_GET as $key => $value) {
 
                                                                                           function fullScreen()
                                                                                           {
-                                                                                                    window_slave = window.open("/sips-admin/wallboard/full_screen_render.php", idLayout + ";" + $("#MainLayout").width() + ";" + $("#MainLayout").height(), ' fullscreen=yes');
+                                                                                                    window_slave = window.open("/sips-admin/wallboard/full_screen_render.php", idLayout + ";" + $("#MainLayout").width() + ";" + $("#MainLayout").height());
+                                                                                          }
+
+                                                                                          function check_save()
+                                                                                          {
+                                                                                                    save();
+                                                                                          }
+
+                                                                                          function save_layout()
+                                                                                          {
+                                                                                                    var a = get_indice_layout(idLayout);
+                                                                                                    layouts[a][1] = $("#Layout_Input_name").val();
+                                                                                                    manipulate_dados("edit_Layout", idLayout, layouts[a][1], 0, 0, 0, 0, 0, 0);
+                                                                                                    update_dropbox_layout();
+                                                                                                    $('#label_layout_id').text(layouts[a][0]);
+                                                                                                    $("#Layout_Input_name").val(layouts[a][1]);
+                                                                                                    $("#warning_save").hide();
                                                                                           }
 
                                                                                           function save()//guarda tuto
                                                                                           {
                                                                                                     var a = get_indice_layout(idLayout);
-                                                                                                    layouts[a][1] = $("#Layout_Input_name").val();
-                                                                                                    manipulate_dados("edit_Layout", idLayout, layouts[a][1], 0, 0, 0, 0, 0, 0);
                                                                                                     for (var i = 0; i < wbes.length; i++)
                                                                                                     {
                                                                                                               //para fazer update a 1 elemento do wallboard, actualiza no array,nas labels de informação e na Base dadoss
@@ -506,6 +501,7 @@ foreach ($_GET as $key => $value) {
                                                                                                     update_dropbox_layout();
                                                                                                     $('#label_layout_id').text(layouts[a][0]);
                                                                                                     $("#Layout_Input_name").val(layouts[a][1]);
+                                                                                                    $("#warning_save").hide();
                                                                                           }
 
                                                                                           function get_indice_layout(id)//pega no id do WallBoardElement e passa para indice de array
@@ -523,7 +519,7 @@ foreach ($_GET as $key => $value) {
 
                                                                                           function layout_change()
                                                                                           {
-                                                                                                    $(".PanelWB").remove();
+                                                                                                    $("#MainLayout .PanelWB").remove();
                                                                                                     idLayout = $('#LayoutSelector').val();
                                                                                                     var a = get_indice_layout(idLayout);
                                                                                                     $('#label_layout_id').text(layouts[a][0]);
@@ -560,13 +556,25 @@ foreach ($_GET as $key => $value) {
                                                                                                                       .append($("<div>").addClass("pull-right")
                                                                                                                       .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0])
                                                                                                                       .append($("<i>").addClass("icon-remove"))))));
-                                                                                                              var painel = $("#" + wbes[i][0] + "WBE");
-                                                                                                              painel.draggable({containment: "#MainLayout"});
-                                                                                                              painel.resizable({
-                                                                                                                        maxHeight: 480,
-                                                                                                                        maxWidth: 880,
-                                                                                                                        minHeight: 240,
-                                                                                                                        minWidth: 245});
+                                                                                                              var painel = $("#MainLayout  #" + wbes[i][0] + "WBE");
+                                                                                                              painel.draggable({containment: "#MainLayout", stop: check_save});
+                                                                                                              if (wbes[i][10] == "4") {
+                                                                                                                        painel.resizable({
+                                                                                                                                  containment: "#MainLayout",
+                                                                                                                                  aspectRatio: 16 / 9,
+                                                                                                                                  maxHeight: 480,
+                                                                                                                                  maxWidth: 880,
+                                                                                                                                  minHeight: 240,
+                                                                                                                                  minWidth: 245, stop: check_save});
+                                                                                                              } else
+                                                                                                              {
+                                                                                                                        painel.resizable({
+                                                                                                                                  containment: "#MainLayout",
+                                                                                                                                  maxHeight: 480,
+                                                                                                                                  maxWidth: 880,
+                                                                                                                                  minHeight: 240,
+                                                                                                                                  minWidth: 245, stop: check_save});
+                                                                                                              }
                                                                                                               var grafico;
                                                                                                               if (wbes[i][10] == 1)
                                                                                                                         grafico = "Linhas";
@@ -596,17 +604,18 @@ foreach ($_GET as $key => $value) {
                                                                                                     );
                                                                                           }
 
-                                                                                          function update_dropbox_layout() {
+                                                                                          function update_dropbox_layout()
+                                                                                          {
+
                                                                                                     var layoutSelector = $('#LayoutSelector');
+                                                                                                    idLayout = layoutSelector.val();
                                                                                                     layoutSelector.empty();
                                                                                                     var i = 0;
                                                                                                     $.each(layouts, function(index, value) {
-
                                                                                                               if (layouts[i][0] == idLayout)
                                                                                                                         layoutSelector.append("<option selected value=" + layouts[i][0] + ">" + layouts[i][1] + "</option>");
                                                                                                               else
                                                                                                                         layoutSelector.append("<option value=" + layouts[i][0] + ">" + layouts[i][1] + "</option>");
-
                                                                                                               i++;
                                                                                                     });
                                                                                           }
@@ -620,14 +629,27 @@ foreach ($_GET as $key => $value) {
                                                                                                     {
                                                                                                               if (data === null)
                                                                                                               {
-                                                                                                                        $(".PanelWB").remove();
+
+                                                                                                                        $("#MainLayout .PanelWB").remove();
                                                                                                                         wbes = []; //limpa o array dos wallboards, senao dps de se passar de uma layout com elementos para esta, como o wbes ainda contem os elementos do layout anterior, eles sao criados outra vez
-                                                                                                                        $.jGrowl('Layout/Wallboard inexistente');
+                                                                                                                        if (layouts.length <= 0)//se n ha layout, bloqueia os botoes e limpa a dropbox
+                                                                                                                        {
+                                                                                                                                  $('#LayoutSelector').empty();
+                                                                                                                                  $(" .toolbar_button").prop("disabled", true);
+                                                                                                                                  $.jGrowl('Layout inexistente', {life: 6000});
+                                                                                                                        }
+                                                                                                                        else
+                                                                                                                        {
+                                                                                                                                  $.jGrowl('Wallboard inexistente');
+                                                                                                                                  $("#toolBar .toolbar_button").prop("disabled", false);
+                                                                                                                        }
+
                                                                                                                         return false;
                                                                                                               }
 
                                                                                                               if (opcao === "layout")//Load dados layout
                                                                                                               {
+
                                                                                                                         layouts = [];
                                                                                                                         $.each(data, function(index, value) {
                                                                                                                                   layouts.push([this.id, this.name]);
@@ -637,18 +659,16 @@ foreach ($_GET as $key => $value) {
                                                                                                                         update_dropbox_layout();
                                                                                                                         layout_change();
                                                                                                               }
-                                                                                                              if (opcao === 'wbe')//load dados WBElement
+                                                                                                              if (opcao === "wbe")//load dados WBElement
                                                                                                               {
                                                                                                                         wbes = [];
-
                                                                                                                         $.each(data, function(index, value) {
                                                                                                                                   wbes.push([this.id, this.name, this.posX, this.posY, this.width, this.height, this.layout_Id, this.query_text, this.opcao_query, this.update_time, this.graph_type]);
                                                                                                                         });
                                                                                                                         update_wbe();
                                                                                                               }
+
                                                                                                     }, "json");
-
-
                                                                                           }
                                                                                           function sql_basic(opcao, layout_Id, id_wbe)
                                                                                           {
@@ -658,24 +678,15 @@ foreach ($_GET as $key => $value) {
                                                                                                               if (opcao === "insert_Layout")
                                                                                                               {
                                                                                                                         load_dados("layout", 0);
-                                                                                                                        idLayout = $("#LayoutSelector").val();
-                                                                                                                        layout_change();
                                                                                                               }
-
                                                                                                               if (opcao === "remove_Layout")
                                                                                                               {
-
                                                                                                                         var i = get_indice_layout(idLayout);
                                                                                                                         $('#label_layout_id').text(layouts[i][0]);
                                                                                                                         $("#Layout_Input_name").val(layouts[i][1]);
                                                                                                                         load_dados('layout', 0);
-                                                                                                                        layout_change();
-
                                                                                                                         $(this).dialog("close");
-
                                                                                                               }
-
-
                                                                                                     }, "json");
                                                                                           }
                                                                                           //wallboard
@@ -690,21 +701,24 @@ foreach ($_GET as $key => $value) {
                                                                                                     }, "json");
                                                                                           }
                                                                                           //graphs
-                                                                                          function manipulate_graph(Opcao, Id, Name, PosX, PosY, Width, Height, Layout_id, Query_text, Opcao_query, Update_time, Graph_type)
+                                                                                          function manipulate_graph(Opcao, Id, Name, PosX, PosY, Width, Height, Layout_id, Query_text, Opcao_query, Update_time, Graph_type, Param1)
                                                                                           {
-                                                                                                    $.post("Requests.php", {action: Opcao, id: Id, name: Name, posx: PosX, posy: PosY, width: Width, height: Height, layout_id: Layout_id, query_text: Query_text, opcao_query: Opcao_query, update_time: Update_time, graph_type: Graph_type},
+                                                                                                    $.post("Requests.php", {action: Opcao, id: Id, name: Name, posx: PosX, posy: PosY, width: Width, height: Height, layout_id: Layout_id, query_text: Query_text, opcao_query: Opcao_query, update_time: Update_time, graph_type: Graph_type, param1: Param1},
                                                                                                     function(data)
                                                                                                     {
                                                                                                               if (Opcao == 'get_query')
                                                                                                               {
                                                                                                                         var qt = $("#query_type");
                                                                                                                         qt.empty();
-
                                                                                                                         $.each(data, function(index, value) {
                                                                                                                                   qt.append($('<option></option>').val(this.id).html(this.opcao_query));
                                                                                                                                   queries.push([this.id, this.query_text, this.opcao_query, this.type_query]);
                                                                                                                         });
+                                                                                                              }
 
+                                                                                                              if (Opcao === "insert_wbe")
+                                                                                                              {
+                                                                                                                        load_dados("wbe", idLayout);
                                                                                                               }
 
 
@@ -718,14 +732,12 @@ foreach ($_GET as $key => $value) {
                                                                                                     var gao_ug = $("#gao_userGroup");
                                                                                                     var gao_s = $("#gao_status");
                                                                                                     var gao_c = $("#gao_campaign");
-
                                                                                                     gao_ug.append("<label class='label label-info'>Grupos</label");
                                                                                                     gao_ug.append("<select id='user_group'> </select> ");
                                                                                                     gao_s.append("<label class='label label-info'>Status</label");
                                                                                                     gao_s.append("<select id='status_venda'> </select> ");
                                                                                                     gao_c.append("<label class='label label-info'>Campanha</label");
                                                                                                     gao_c.append("<select id='campaign_id'> </select> ");
-
                                                                                                     flot_extra("user_group");
                                                                                                     flot_extra("status_venda");
                                                                                                     flot_extra("campaign_id");
@@ -741,7 +753,6 @@ foreach ($_GET as $key => $value) {
                                                                                                               Param1 = "1 day";
                                                                                                     if (time_span.val() == 3)
                                                                                                               Param1 = "12 hour";
-
                                                                                                     $.post("Requests.php", {action: opcao, param1: Param1},
                                                                                                     function(data)
                                                                                                     {
@@ -751,7 +762,7 @@ foreach ($_GET as $key => $value) {
                                                                                                                         var db = document.getElementById("user_group");
                                                                                                                         var opt = document.createElement("option");
                                                                                                                         opt.value = "1";
-                                                                                                                        opt.text = "all";
+                                                                                                                        opt.text = "Todos os grupos";
                                                                                                                         db.options.add(opt);
                                                                                                                         $.each(data, function(index, value) {
                                                                                                                                   var opt1 = document.createElement("option");
@@ -765,7 +776,7 @@ foreach ($_GET as $key => $value) {
                                                                                                                         var db = document.getElementById("status_venda");
                                                                                                                         var opt = document.createElement("option");
                                                                                                                         opt.value = "1";
-                                                                                                                        opt.text = "all";
+                                                                                                                        opt.text = "Todos os Status";
                                                                                                                         db.options.add(opt);
                                                                                                                         $.each(data, function(index, value) {
                                                                                                                                   var opt1 = document.createElement("option");

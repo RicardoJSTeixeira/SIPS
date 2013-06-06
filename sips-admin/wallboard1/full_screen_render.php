@@ -1,4 +1,3 @@
-
 <?php
 require("../../ini/dbconnect.php");
 foreach ($_POST as $key => $value) {
@@ -28,10 +27,9 @@ foreach ($_GET as $key => $value) {
                     <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
                     <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
                     <script type="text/javascript" src="/bootstrap/js/jquery.flot.min.js"></script>
-                    <script type="text/javascript" src="/bootstrap/js/jquery.flot.pie.min.js"></script>
-                    <script type="text/javascript" src="/bootstrap/js/jquery.flot.resize.min.js"></script>
-                    <script type="text/javascript" src="/bootstrap/js/jquery.flot.time.min.js"></script>
-
+                    <script type="text/javascript" src="/bootstrap/js/jquery.flot.pie.js"></script>
+                    <script type="text/javascript" src="/bootstrap/js/jquery.flot.resize.js"></script>
+                    <script type="text/javascript" src="/bootstrap/js/jquery.flot.orderBars.js"></script>
                     <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
 
                     <style>
@@ -74,9 +72,6 @@ foreach ($_GET as $key => $value) {
                                         padding-bottom:0.8%;
                                         background-color:rgb(38, 52, 109);
                               }
-                              .legend {
-                                        display:block!important;
-                              }
                     </style>
           </head>    
 
@@ -86,7 +81,14 @@ foreach ($_GET as $key => $value) {
                               <div id="jGrowl" class="top-right jGrowl" ><div class="jGrowl-notification" ></div></div>
                     </div>
 
+
+
+
+
                     <script language="javascript">
+
+
+
 
                               var wbes;
                               var layout;
@@ -103,6 +105,9 @@ foreach ($_GET as $key => $value) {
                               //       9      update_time, 
                               //       10    graph_type;
                               //       11    Param1    
+
+
+
 
                               $(document).ready(function() {
 
@@ -235,32 +240,23 @@ foreach ($_GET as $key => $value) {
                               function plot_update(data)
                               {
 
-                                        var max_y = 0;
+                                        var max_y = 100;
                                         var plot;
                                         var updation;
                                         var wbe = data;
                                         var painel = $("#" + wbe[0] + "WBE");
                                         var result;
-                                        var result2;
-                                        var soma_result = [];
                                         var data1;
                                         var dates = [];
-
-//teste
-//SELECT count(lead_id) FROM `vicidial_log` where campaign_id="c00095" and call_date between "2013-05-29 17:15:00" and "2013-05-29 17:20:00"
-
 
 
 
                                         get_values_update();
                                         function get_values_update()
                                         {
-                                                                               
-
-                                                  $.post("Requests.php", {action: wbe[10], selected_query: wbe[7]},
+                                                  $.post("Requests.php", {action: wbe[10], selected_query: wbe[7] + " limit 150"},
                                                   function(data)
                                                   {
-//////////////////////////////////////////////////////////////////////////////////////////INBOUND////////////////////////////////////////////////////////////////////////////////////////////////
                                                             if (data === null)
                                                             {
                                                                       clearTimeout(updation);
@@ -273,92 +269,50 @@ foreach ($_GET as $key => $value) {
                                                             {
                                                                       data1 = [];
                                                                       dates = [];
-                                                                      soma_result = []
-                                                                      result = [];
-                                                                      result2 = [];
                                                                       $.each(data, function(index, value) {
-                                                                                data1.push(data[index].lead_id);
+                                                                                data1.push(data[index].length_in_sec);
                                                                                 var temp = new Date(data[index].call_date);
                                                                                 temp.setHours(temp.getHours() + 1);
                                                                                 dates.push(temp);
                                                                       });
-
+                                                                      result = [];
                                                                       for (var i = 0; i < data1.length; ++i) {
                                                                                 result.push([new Date(dates[i]).getTime(), data1[i]]);
-                                                                                soma_result.push([new Date(dates[i]).getTime(), data1[i]]);
                                                                       }
+                                                                      var num = 0;
+                                                                      for (var a = 0; a < data1.length; a++)
+                                                                      {
+                                                                                if (+data1[a] > num)
+                                                                                          num = +data1[a];
+                                                                      }
+                                                                      max_y = num;
                                                             }
 
-//fazer replace da query vicidial_log para vicidial_closer_log
-                                                            var query = wbe[7].replace("vicidial_log", "vicidial_closer_log");
-                                                            $.post("Requests.php", {action: wbe[10], selected_query: query},
-                                                            function(data)
-                                                            {
-//////////////////////////////////////////////////////////////////////////////////////////OUTBOUND////////////////////////////////////////////////////////////////////////////////////////////////
-                                                                      if (data === null)
-                                                                      {
-                                                                                clearTimeout(updation);
-                                                                                painel.remove();
-                                                                                $("#" + wbe[0] + "Main").remove();
-                                                                                $.jGrowl("O gráfico de Linhas " + wbe[1] + " não apresenta resultados", {life: 10000});
-                                                                                return false;
+
+
+                                                            var options = {
+                                                                      series: {shadowSize: 0}, // drawing is faster without shadows
+                                                                      yaxis: {min: 0, max: max_y},
+                                                                      xaxis: {mode: "time", timeformat: "%H:%M", minTickSize: [5, "minute"],
+                                                                                min: (new Date(dates[0]).getTime()),
+                                                                                max: (new Date(dates[dates.length - 1]).getTime())
+                                                                      },
+                                                                      colors: ["#2686d2"],
+                                                                      series: {
+                                                                                lines: {
+                                                                                          lineWidth: 1,
+                                                                                          fill: true,
+                                                                                          fillColor: {colors: [{opacity: 0.5}, {opacity: 1.0}]},
+                                                                                          steps: false,
+                                                                                          show: true
+
+                                                                                }, points: {show: false}
                                                                       }
-                                                                      if (wbe[8] === "Feedbacks por campanha")
-                                                                      {
-                                                                                data1 = [];
-                                                                                $.each(data, function(index, value) {
-                                                                                          data1.push(data[index].lead_id);
-
-                                                                                });
-                                                                                for (var i = 0; i < data1.length; ++i) {
-                                                                                          result2.push([new Date(dates[i]).getTime(), data1[i]]);
-                                                                                          soma_result[i][1] = parseInt(soma_result[i][1], 10) + parseInt(data1[i], 10);
-                                                                                }
-                                                                                for (var a = 0; a < soma_result.length; a++)
-                                                                                {
-                                                                                          if (soma_result[a][1] > max_y)
-                                                                                                    max_y = soma_result[a][1];
-                                                                                }
-                                                                      }
-                                                                      var information = [{
-                                                                                          data: result,
-                                                                                          label: "Outbound",
-                                                                                          color: "#00FF00"
-                                                                                },
-                                                                                {
-                                                                                          data: result2,
-                                                                                          label: "Inbound",
-                                                                                          color: "#0000FF"
-                                                                                },
-                                                                                {
-                                                                                          data: soma_result,
-                                                                                          label: "Soma",
-                                                                                          color: "#FF0000"
-                                                                                }];
-
-                                                                      var options = {
-                                                                                series: {shadowSize: 0}, // drawing is faster without shadows
-                                                                                yaxis: {min: 0, max: max_y+10},
-                                                                                xaxis: {mode: "time", timeformat: "%H:%M", minTickSize: [5, "minute"],
-                                                                                          min: (dates[0]),
-                                                                                          max: (dates[dates.length - 1])
-
-                                                                                },
-                                                                                series: {
-                                                                                          lines: {
-                                                                                                    lineWidth: 1,
-                                                                                                    steps: false,
-                                                                                                    show: true
-                                                                                          }
-                                                                                }
-                                                                      };
+                                                            };
+                                                            plot = $.plot(painel, [result], options);
 
 
-                                                                      plot = $.plot(painel, information, options);
-
-
-                                                                      updation = setTimeout(get_values_update, wbe[9]);
-                                                            }, "json");
+                                                            updation = setTimeout(get_values_update, wbe[9]);
                                                   }, "json");
                                         }
                               }
@@ -386,6 +340,7 @@ foreach ($_GET as $key => $value) {
                                                             }
                                                             if (wbe[8] == "total de feedbacks por campanha")
                                                             {
+
                                                                       var i = 0;
                                                                       $.each(data, function(index, value) {
                                                                                 data1.push({label: (this.status_name), data: +this.count});
@@ -406,7 +361,7 @@ foreach ($_GET as $key => $value) {
                                                                                                               formatter: function(label, series) {
                                                                                                                         return '<div style="font-size:11px;text-align:center;padding:2px;color:black;">' + label + '<br/>' + Math.round(series.percent) + '%</div>';
                                                                                                               },
-                                                                                                              threshold: 0.05
+                                                                                                              threshold: 0.02
                                                                                                     }
                                                                                           }
                                                                                 },
@@ -657,8 +612,8 @@ foreach ($_GET as $key => $value) {
                                                                                 sla2.innerHTML = 0;
                                                                       var painel = $("#plot_inbound" + id);
                                                                       var data = [
-                                                                                {label: '% Cumprida', data: [[1, PCThold_sec_stat_one], [2, PCThold_sec_stat_two]], color: "#0000FF"},
-                                                                                {label: 'SLA', data: [[1, answer_sec_pct_rt_stat_one], [2, answer_sec_pct_rt_stat_two]], color: "#FF8000"}];
+                                                                                {label: 'Cumprido', data: [[1, PCThold_sec_stat_one], [2, PCThold_sec_stat_two]]},
+                                                                                {label: 'bar', data: [[1, answer_sec_pct_rt_stat_one], [2, answer_sec_pct_rt_stat_two]]}];
                                                                       if (first_time_plot)
                                                                       {
                                                                                 var options = {
