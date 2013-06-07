@@ -394,8 +394,7 @@ if(($_POST['stage'])=='modify_status')
 	
 }
 ### Dados da Lead
-$query="
-		SELECT 
+$query="SELECT 
 			vdlf.campaign_id,
 			vdc.campaign_name, 
 			vdlf.list_id, 
@@ -435,8 +434,7 @@ $query="
 			vdcs.status=vdl.status
 		WHERE 
 			lead_id='$lead_id'
-		LIMIT 1
-	";
+		LIMIT 1";
 			
 $query=mysql_query($query,$link) or die(mysql_error());
 $lead_info=mysql_fetch_assoc($query);
@@ -455,8 +453,8 @@ $query="SELECT
 		WHERE
 			campaign_id='$lead_info[campaign_id]'
 		AND
-			active=1
-		";
+			active=1";
+            
 $query=mysql_query($query,$link) or die(mysql_error());
 $fields_count = mysql_num_rows($query);
 for ($i=0;$i<$fields_count;$i++)
@@ -488,6 +486,7 @@ $query="SELECT
 		WHERE
 			lead_id='$lead_id' 
 		LIMIT 1";
+        
 $query=mysql_query($query,$link);
 $fields = mysql_fetch_row($query);
 

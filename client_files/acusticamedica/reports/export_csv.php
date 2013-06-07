@@ -526,7 +526,7 @@ if (isset($report_desm_remarc_inb)) {
         }
     }
 }
-/*if (isset($report_marc_inbound)) {
+if (isset($report_marc_inbound)) {
     $curTime = date("Y-m-d H:i:s");
     $filename = "marc_inbound_" . $curTime;
     header("Content-Disposition: attachment; filename=" . $filename . ".csv");
@@ -649,7 +649,7 @@ if (isset($report_desm_remarc_inb)) {
                     ), ";");
         }
     }
-}*/
+}/*
 if (isset($report_marc_inbound)) {
     $curTime = date("Y-m-d H:i:s");
     $filename = "marc_inbound_" . $curTime;
@@ -767,119 +767,7 @@ if (isset($report_marc_inbound)) {
                     ), ";");
         }
     }
-}
-/* if (isset($report_marc_inbound)) {
-  $curTime = date("Y-m-d H:i:s");
-  $filename = "marc_inbound_".$curTime;
-  header("Content-Disposition: attachment; filename=".$filename.".csv");
-
-  $output = fopen('php://output', 'w');
-  fputcsv($output, array('Title',
-  'Campaign No.',
-  'First Name',
-  'Middle Name',
-  'Surname',
-  'Address 1',
-  'Address 2',
-  'Address 3',
-  'County',
-  'Post Code',
-  'Area Code',
-  'No. Porta',
-  'City',
-  'Concelho',
-  'Country Code',
-  'Phone No.',
-  'Mobile Phone No.',
-  'Work Phone No.',
-  'Date of Birth',
-  'No.',
-  'Update contact',
-  'Service Request',
-  'Territory Code',
-  'Salesperson Code',
-  'On Hold',
-  'Exclude Reason Code',
-  'Pensionner',
-  'Want Info from other companies',
-  'Appointment time',
-  'Appointment date',
-  'Visit Location',
-  'Branch',
-  'Comments',
-  'Salesperson Team',
-  'Tipo Cliente',
-  'Operador',
-  'Feedback',
-  'Campanha',
-  'Data da Chamada',
-  'Avisos'),";");
-  foreach ($camp_options as $currentCamp) {
-
-
-  $query_log = "SELECT a.lead_id,a.campaign_id AS linhainbound,a.call_date AS data,a.status AS resultado,a.user as utilizador, b.*, c.*, d.campaign_name AS campanha FROM vicidial_closer_log a JOIN vicidial_agent_log b ON a.uniqueid = b.uniqueid JOIN vicidial_list c ON a.lead_id = c.lead_id JOIN vicidial_campaigns d ON b.campaign_id = d.campaign_id where a.status IN ('MARC', 'NOVOCL') AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' AND a.campaign_id LIKE '$currentCamp'";
-  $query_log = mysql_query($query_log, $link) or die(mysql_error());
-
-  for ($i=0;$i<mysql_num_rows($query_log);$i++) {
-  $row = mysql_fetch_assoc($query_log);
-
-  $custom_row = mysql_query("SELECT * FROM custom_".$row['linhainbound']." where lead_id LIKE '$row[lead_id]' ");
-  if(mysql_num_rows($custom_row)==0){continue;}
-  $custom_row = mysql_fetch_assoc($custom_row) or die(mysql_error());
-
-  $cod = "";
-  if ($row['tipoconsulta'] == 'CATOS') { $cod = $row['consultorio']; } else { if($row['tipoconsulta'] == 'Branch') { $cod = $row['consultoriodois']; }}
-
-  $campid=$row['extra1'];
-  $no=$row['extra2'];
-  $c_message = "Sem Campanha/Inbound/Chamada Manual";
-  if($row['tipoconsulta']==null || $row['tipoconsulta']=="" || $row['tipoconsulta']=="semconsulta") { $c_message = "Lead Duplicada - Ignorar/Dados Incompletos"; }
-  if(		(preg_match("/", $row['consultorio'])===1) 	) {$c_message = "bom";}
-  fputcsv($output, array(
-
-  $row['title'],
-  $campid,
-  $row['first_name'],
-  $row['middle_initial'],
-  $row['last_name'],
-  $row['address1'],
-  $row['address2'],
-  $row['address3'],
-  $row['state'],
-  $row['postal_code'],
-  $row['extra3'],
-  $row['extra10'],
-  $row['city'],
-  $row['province'],
-  $row['country_code'],
-  $row['phone_number'],
-  $row['alt_phone'],
-  "",
-  $row['date_of_birth'],
-  $no,
-  "",
-  "",
-  "",
-  $cod,
-  "",
-  "",
-  "",
-  "",
-  $custom_row['marchora'],
-  $custom_row['marcdata'],
-  $custom_row['tipoconsulta'],
-  "",
-  $custom_row['obs'],
-  "",
-  "",
-  $row['utilizador'],
-  $row['resultado'],
-  $row['linhainbound'],
-  $row['data']
-
-  ),";");
-  } }
-  } */
+}*/
 
 if (isset($report_feedback_inbound)) {
     $curTime = date("Y-m-d H:i:s");
