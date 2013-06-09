@@ -9,7 +9,7 @@
           
 <?php    
 
-	require("ini/dbconnect.php");
+    require("ini/dbconnect.php");
 	
 
 	
@@ -23,10 +23,14 @@
 		
 		Header("WWW-Authenticate: Basic realm=\"SIPS Call-Center\"");
 		Header("HTTP/1.0 401 Unauthorized");
-	
-	echo "You have now logged out. Thank you\n";
-	echo "<html><head><title>SIPS Call-Center Logout</title><script>function update(){top.location='index.php';}var refresh=setInterval('update()',1000);</script></head><body onload=refresh></body></html>";
-	unset($_GET['logout']);
+	?>
+    
+	You have now logged out. Thank you
+	<script>
+    $(function(){top.location='index.php';})
+    </script>
+	<?php
+    unset($_GET['logout']);
 	exit;                                  
 			
 	} else {
