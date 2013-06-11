@@ -6,7 +6,7 @@ print'
 <html>
 <head>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
-<title>SIPS</title>
+<title>Go Contact Center</title>
 <link type="text/css" rel="stylesheet" title="sipsdefault" href="'.$path.'css/style.css" />
 <link rel="stylesheet" type="text/css" title="SBPO" href="https://www.icenter.com.pt/AppGlobal/Css/sips_css/style.css">
 <link type="text/css" rel="stylesheet" href="'.$path.'jquery/themes/flick/flick.css" />
