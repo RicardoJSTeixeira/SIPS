@@ -129,7 +129,7 @@ foreach ($_GET as $key => $value) {
                         </select>
                     </div>
                 </div>
-                <table  class="table table-bordered table-mod">
+                <table  class="table table-mod">
                     <thead>
                         <tr>
                             <th>Canal</th>
