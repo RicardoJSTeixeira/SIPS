@@ -113,18 +113,17 @@ switch ($action) {
 
                     $t = strtotime($begin_time);
                     $t2 = strtotime('+5 minutes', $t);
-                    $efnd_time = date("Y-m-d H:i:s", $t2);
+                    $end_time = date("Y-m-d H:i:s", $t2);
 
-                    $leads = 0;
 
                     for ($i = 0; $i < 60; $i = $i + 5) {
-                              foreach ($temp as $kev => $aaa) {
-                                        if ($aaa["call_date"] >= $begin_time && $aaa["call_date"] <= $end_time)
-                                                  $leads = $leads + 1;
+                    $leads = 0;
+                              foreach ($temp as $kev => $row) {
+                                        if ($row["call_date"] >= $begin_time && $row["call_date"] <= $end_time)
+                                                  $leads = $row["lead_id"];
                               }
 
-                              $js[] = array(lead_id => $leads, call_date => $begin_time);
-                              $leads = 0;
+                              $js[] = array(leads => $leads, call_date => $begin_time);
 
                               $t = strtotime($rounded_time);
                               $t2 = strtotime('+5 minutes', $t);

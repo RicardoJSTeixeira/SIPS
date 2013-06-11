@@ -277,7 +277,7 @@ foreach ($_GET as $key => $value) {
                                                                       result = [];
                                                                       result2 = [];
                                                                       $.each(data, function(index, value) {
-                                                                                data1.push(data[index].lead_id);
+                                                                                data1.push(data[index].leads);
                                                                                 var temp = new Date(data[index].call_date);
                                                                                 temp.setHours(temp.getHours() + 1);
                                                                                 dates.push(temp);
@@ -307,7 +307,7 @@ foreach ($_GET as $key => $value) {
                                                                       {
                                                                                 data1 = [];
                                                                                 $.each(data, function(index, value) {
-                                                                                          data1.push(data[index].lead_id);
+                                                                                          data1.push(data[index].leads);
 
                                                                                 });
                                                                                 for (var i = 0; i < data1.length; ++i) {
