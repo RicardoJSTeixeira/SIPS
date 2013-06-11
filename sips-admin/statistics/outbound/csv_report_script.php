@@ -37,11 +37,11 @@ if (isset($_POST["usar_sistema"])) {
 
 $end_date = date('Y-m-d', strtotime(date("Y-m-d", strtotime($end_date)) . " +1 day"));
 
-$stmt="SELECT Name, Display_name FROM vicidial_list_ref WHERE Campaign_id = '$campanha_id' ORDER BY indice ASC";
+$stmt="SELECT Name, Display_name FROM vicidial_list_ref WHERE Campaign_id = '$campanha_id' AND active=1  ORDER BY field_order ASC";
 $rslt=mysql_query($stmt, $link) or die(mysql_error());
 for ($i=0; $i < mysql_num_rows($rslt); $i++) { 
 	$row=mysql_fetch_row($rslt);
-	$campos .= (($i != 0) ? "," : "")."  A.`$row[0]` as '$row[1]' ";
+	$campos .= (($i != 0) ? "," : "")."  A.`$row[0]` as '".mysql_real_escape_string($row[1])."' ";
 }
 
 $stmt="SHOW tables LIKE 'custom_$campanha_id';";
@@ -53,7 +53,7 @@ if (mysql_num_rows($rslt)>0){
 	$rslt=mysql_query($stmt, $link) or die(mysql_error());
 	for ($i=0; $i < mysql_num_rows($rslt); $i++) { 
 		$row=mysql_fetch_row($rslt);
-		$campos .= ",  B.`$row[0]` as '$row[1]' ";	 
+		$campos .= ",  B.`$row[0]` as '".mysql_real_escape_string($row[1])."' ";	 
 	}
 } 
 
