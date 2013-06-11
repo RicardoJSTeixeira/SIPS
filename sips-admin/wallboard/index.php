@@ -7,7 +7,7 @@ foreach ($_GET as $key => $value) {
           ${$key} = $value;
 }
 ?>
-
+ 
 
 <!DOCTYPE HTML>
 <html>

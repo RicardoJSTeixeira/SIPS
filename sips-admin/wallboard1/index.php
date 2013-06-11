@@ -1,6 +1,4 @@
 <?php
-error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
-ini_set('display_errors', '1');
 require("../../ini/dbconnect.php");
 foreach ($_POST as $key => $value) {
           ${$key} = $value;
@@ -10,7 +8,7 @@ foreach ($_GET as $key => $value) {
 }
 ?>
 
-
+ 
 <!DOCTYPE HTML>
 <html>
           <head>
@@ -92,7 +90,7 @@ foreach ($_GET as $key => $value) {
                                        box-shadow: 5px 5px 13px -6px rgba(0, 0, 0, 0.3) ;
                               }
 
-                              .opcoes_layout{
+                              .opções_layout{
                                         margin-left: -1px !important;
                                         border-top-right-radius: 3px !important;
                                         border-bottom-right-radius: 3px !important
@@ -108,13 +106,12 @@ foreach ($_GET as $key => $value) {
                                                   <div class="grid-title">
                                                             <div class="pull-left">
                                                                       <button id="add_layout_button" data-t="tooltip-right" title="Adiciona um novo ecrã" class="btn btn-info  btn-large" > <i class="icon-plus "></i>Novo</button>
-                                                                      <button id="add_layout_button" data-t="tooltip-right" title="Adiciona um novo ecrã" class="btn btn-info  btn-large" > <i class="icon-plus "></i>Novo</button>
                                                             </div>
                                                             <div class="pull-right">
 
                                                                       <div class="input-prepend input-append"><span  class="add-on">Layout</span>
                                                                                 <select id="LayoutSelector" onchange="layout_change();"></select>
-                                                                                <button data-t="tooltip-right" title="Opções da Layout"  class="opcoes_layout  btn btn-warning icon-alone" id="opcao_layout_button"><i class="icon-cogs"></i></button>
+                                                                                <button data-t="tooltip-right" title="Opções da Layout"  class="opções_layout  btn btn-warning icon-alone" id="opcao_layout_button"><i class="icon-cogs"></i></button>
                                                                       </div>
 
                                                             </div>
@@ -194,10 +191,6 @@ foreach ($_GET as $key => $value) {
 
                     <!--DIALOG Dataset->LINHAS-->
                     <div id="dialog_dataset_linhas" title="Criação de dataset" style="display: none;">
-                              <label class="label label-info">Nome do data_set</label>
-                              <input id='dataset_name' type='text'  />
-
-
                               <table>
                                         <tr>
                                                   <td colspan="2">
@@ -285,7 +278,6 @@ foreach ($_GET as $key => $value) {
 
 
 
-
                                                                                           var wbes = [];
                                                                                           var layouts = [];
 
@@ -310,8 +302,7 @@ foreach ($_GET as $key => $value) {
                                                                                           });
                                                                                           $("#add_layout_button").click(function()
                                                                                           {
-                                                                                   
-                                                                                           sql_basic("insert_Layout", 0, 0);
+                                                                                                    sql_basic("insert_Layout", 0, 0);
                                                                                                     load_dados("layout", 0);
                                                                                           });
                                                                                           $("#remove_layout_button").click(function()
@@ -372,10 +363,22 @@ foreach ($_GET as $key => $value) {
                                                                                                               load_dados('wbe', idLayout);
                                                                                                     });
                                                                                                     $(document).on("click", ".add_dataset_button", function(e) {
-                                                                                                              id_wallboard = $(this).data("wbe_id");
-
-                                                                                                              manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 1);
+                     id_wallboard = $(this).data("wbe_id");                                                                                          
+                    manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 1);
                                                                                                               $("#dialog_dataset_linhas").dialog("open");
+                                                                                                    });
+                                                                                                    $(document).on("click", ".edit_dataset_button", function(e) {
+                                                                                                              id_dataset = $(this).data("dataset_id");
+                                                                                                              
+                                                                                                              $("#dialog_dataset_linhas").dialog("open");
+
+
+
+
+                                                                                                    });
+                                                                                                    $(document).on("click", ".delete_dataset_button", function(e) {
+                                                                                                              manipulate_dataset("remove_dataset", $(this).data("dataset_id"), 0, 0, 0, 0, 0, 0, 0, 1);
+                                                                                                              load_dados("wbe", idLayout);
 
                                                                                                     });
 
@@ -428,36 +431,33 @@ foreach ($_GET as $key => $value) {
                                                                                                                                                                           case "1":
                                                                                                                                                                                     //Chamadas atendidas por user
                                                                                                                                                                                     querie = get_query(1);
-                                                                                                                                                                                    querie[1] = '"' + querie[1] + '"';
                                                                                                                                                                                     querie[1] = querie[1].replace("$hour", 1);
                                                                                                                                                                                     querie[1] = querie[1].replace("$user", $("#user").val());
-                                                                                                                                                                                    manipulate_dataset("insert_dataset", 0, id_wallboard, querie[1], querie[2], "inbound", "1", $("#user").val(), 0, 0);
+                                                                                                                                                                                    manipulate_dataset("insert_dataset", 0, id_wallboard, querie[1], querie[2], "inbound", "1", $("#user option:selected").text(), 0, 0);
                                                                                                                                                                                     break;
                                                                                                                                                                           case "2":
                                                                                                                                                                                     //Chamadas perdidas por user   
                                                                                                                                                                                     querie = get_query(2);
-                                                                                                                                                                                    querie[1] = '"' + querie[1] + '"';
                                                                                                                                                                                     querie[1] = querie[1].replace("$hour", 1);
                                                                                                                                                                                     querie[1] = querie[1].replace("$user", $("#user").val());
-                                                                                                                                                                                    manipulate_dataset("insert_dataset", 0, id_wallboard, querie[1], querie[2], "inbound", "1", $("#user").val(), 0, 0);
+                                                                                                                                                                                    manipulate_dataset("insert_dataset", 0, id_wallboard, querie[1], querie[2], "inbound", "1", $("#user  option:selected").text(), 0, 0);
                                                                                                                                                                                     break;
                                                                                                                                                                           case "3":
                                                                                                                                                                                     //Chamadas feitas por user 
                                                                                                                                                                                     querie = get_query(3);
-                                                                                                                                                                                    querie[1] = '"' + querie[1] + '"';
                                                                                                                                                                                     querie[1] = querie[1].replace("$hour", 1);
                                                                                                                                                                                     querie[1] = querie[1].replace("$user", $("#user").val());
-                                                                                                                                                                                    manipulate_dataset("insert_dataset", 0, id_wallboard, querie[1], querie[2], "inbound", "1", $("#user").val(), 0, 0);
+                                                                                                                                                                                    manipulate_dataset("insert_dataset", 0, id_wallboard, querie[1], querie[2], "inbound", "1", $("#user  option:selected").text(), 0, 0);
                                                                                                                                                                                     break;
                                                                                                                                                                 }
-
+                                                                                                                                                                break;
                                                                                                                                                       case "2":
+
                                                                                                                                                                 switch ($("#chamadas").val())
                                                                                                                                                                 {
                                                                                                                                                                           case "1":
                                                                                                                                                                                     //Chamadas atendidas por user_group
                                                                                                                                                                                     querie = get_query(4);
-                                                                                                                                                                                    querie[1] = '"' + querie[1] + '"';
                                                                                                                                                                                     querie[1] = querie[1].replace("$hour", 1);
                                                                                                                                                                                     querie[1] = querie[1].replace("$user_group", $("#user_group").val());
                                                                                                                                                                                     manipulate_dataset("insert_dataset", 0, id_wallboard, querie[1], querie[2], "inbound", "1", $("#user_group").val(), 0, 0);
@@ -465,7 +465,6 @@ foreach ($_GET as $key => $value) {
                                                                                                                                                                           case "2":
                                                                                                                                                                                     //Chamadas perdidas por user_group   
                                                                                                                                                                                     querie = get_query(5);
-                                                                                                                                                                                    querie[1] = '"' + querie[1] + '"';
                                                                                                                                                                                     querie[1] = querie[1].replace("$hour", 1);
                                                                                                                                                                                     querie[1] = querie[1].replace("$user_group", $("#user_group").val());
                                                                                                                                                                                     manipulate_dataset("insert_dataset", 0, id_wallboard, querie[1], querie[2], "inbound", "1", $("#user_group").val(), 0, 0);
@@ -473,20 +472,18 @@ foreach ($_GET as $key => $value) {
                                                                                                                                                                           case "3":
                                                                                                                                                                                     //Chamadas feitas por user_group 
                                                                                                                                                                                     querie = get_query(6);
-                                                                                                                                                                                    querie[1] = '"' + querie[1] + '"';
                                                                                                                                                                                     querie[1] = querie[1].replace("$hour", 1);
                                                                                                                                                                                     querie[1] = querie[1].replace("$user_group", $("#user_group").val());
                                                                                                                                                                                     manipulate_dataset("insert_dataset", 0, id_wallboard, querie[1], querie[2], "inbound", "1", $("#user_group").val(), 0, 0);
                                                                                                                                                                                     break;
                                                                                                                                                                 }
-
+                                                                                                                                                                break;
                                                                                                                                                       case "3":
                                                                                                                                                                 switch ($("#chamadas").val())
                                                                                                                                                                 {
                                                                                                                                                                           case "1":
                                                                                                                                                                                     //Chamadas atendidas por campanha
                                                                                                                                                                                     querie = get_query(7);
-                                                                                                                                                                                    querie[1] = '"' + querie[1] + '"';
                                                                                                                                                                                     querie[1] = querie[1].replace("$hour", 1);
                                                                                                                                                                                     querie[1] = querie[1].replace("$campaign_id", $("#campaign").val());
                                                                                                                                                                                     manipulate_dataset("insert_dataset", 0, id_wallboard, querie[1], querie[2], "inbound", "1", $("#campaign").val(), 0, 0);
@@ -494,7 +491,6 @@ foreach ($_GET as $key => $value) {
                                                                                                                                                                           case "2":
                                                                                                                                                                                     //Chamadas perdidas por campanha   
                                                                                                                                                                                     querie = get_query(8);
-                                                                                                                                                                                    querie[1] = '"' + querie[1] + '"';
                                                                                                                                                                                     querie[1] = querie[1].replace("$hour", 1);
                                                                                                                                                                                     querie[1] = querie[1].replace("$campaign_id", $("#campaign").val());
                                                                                                                                                                                     manipulate_dataset("insert_dataset", 0, id_wallboard, querie[1], querie[2], "inbound", "1", $("#campaign").val(), 0, 0);
@@ -502,39 +498,35 @@ foreach ($_GET as $key => $value) {
                                                                                                                                                                           case "3":
                                                                                                                                                                                     //Chamadas feitas por campanha 
                                                                                                                                                                                     querie = get_query(9);
-                                                                                                                                                                                    querie[1] = '"' + querie[1] + '"';
                                                                                                                                                                                     querie[1] = querie[1].replace("$hour", 1);
                                                                                                                                                                                     querie[1] = querie[1].replace("$campaign_id", $("#campaign").val());
                                                                                                                                                                                     manipulate_dataset("insert_dataset", 0, id_wallboard, querie[1], querie[2], "inbound", "1", $("#campaign").val(), 0, 0);
                                                                                                                                                                                     break;
                                                                                                                                                                 }
-
+                                                                                                                                                                break;
                                                                                                                                                       case "4":
                                                                                                                                                                 switch ($("#chamadas").val())
                                                                                                                                                                 {
                                                                                                                                                                           case "1":
                                                                                                                                                                                     //Chamadas atendidas por Total CallCenter
                                                                                                                                                                                     querie = get_query(10);
-                                                                                                                                                                                    querie[1] = '"' + querie[1] + '"';
                                                                                                                                                                                     querie[1] = querie[1].replace("$hour", 1);
                                                                                                                                                                                     manipulate_dataset("insert_dataset", 0, id_wallboard, querie[1], querie[2], "inbound", "1", 0, 0, 0);
                                                                                                                                                                                     break;
                                                                                                                                                                           case "2":
                                                                                                                                                                                     //Chamadas perdidas por Total CallCenter  
                                                                                                                                                                                     querie = get_query(11);
-                                                                                                                                                                                    querie[1] = '"' + querie[1] + '"';
                                                                                                                                                                                     querie[1] = querie[1].replace("$hour", 1);
                                                                                                                                                                                     manipulate_dataset("insert_dataset", 0, id_wallboard, querie[1], querie[2], "inbound", "1", 0, 0, 0);
                                                                                                                                                                                     break;
                                                                                                                                                                           case "3":
                                                                                                                                                                                     //Chamadas feitas por Total CallCenter 
                                                                                                                                                                                     querie = get_query(12);
-                                                                                                                                                                                    querie[1] = '"' + querie[1] + '"';
                                                                                                                                                                                     querie[1] = querie[1].replace("$hour", 1);
                                                                                                                                                                                     manipulate_dataset("insert_dataset", 0, id_wallboard, querie[1], querie[2], "inbound", "1", 0, 0, 0);
                                                                                                                                                                                     break;
                                                                                                                                                                 }
-
+                                                                                                                                                                break;
                                                                                                                                                       case "5":
                                                                                                                                                                 switch ($("#chamadas").val())
                                                                                                                                                                 {
@@ -548,7 +540,7 @@ foreach ($_GET as $key => $value) {
                                                                                                                                                                                     //Chamadas feitas por Inbound 
                                                                                                                                                                                     break;
                                                                                                                                                                 }
-
+                                                                                                                                                                break;
                                                                                                                                             }
 
                                                                                                                                   if ($("#linhas_filtro").val() === "2")
@@ -589,9 +581,6 @@ foreach ($_GET as $key => $value) {
                                                                                                                                                                 //feedback por linha inbound
                                                                                                                                                                 break;
                                                                                                                                             }
-
-
-
 
 
 
@@ -791,6 +780,18 @@ foreach ($_GET as $key => $value) {
                                                                                                     });
                                                                                                     return indice;
                                                                                           }
+                                                                                          function get_indice_wbe(id)//pega no id do WallBoardElement e passa para indice de array
+                                                                                          {
+                                                                                                    var i = 0;
+                                                                                                    var indice = 0;
+                                                                                                    $.each(wbes, function(index, value) {
+                                                                                                              if (wbes[i][0] == id) {
+                                                                                                                        indice = i;
+                                                                                                              }
+                                                                                                              i++;
+                                                                                                    });
+                                                                                                    return indice;
+                                                                                          }
 
                                                                                           function layout_change()
                                                                                           {
@@ -820,6 +821,15 @@ foreach ($_GET as $key => $value) {
                                                                                                     //       8      graph_type;
                                                                                                     //       9      param1;
                                                                                                     //       10    param2;
+                                                                                                    //   11      Array[8]
+                                                                                                    //0: id
+                                                                                                    //1: query_Text
+                                                                                                    //2: opcao_query
+                                                                                                    //3: mode
+                                                                                                    //4: param1
+                                                                                                    //5: param2
+                                                                                                    //6: param3
+                                                                                                    //7: param4
                                                                                                     $.each(wbes, function(index, value) {
                                                                                                               var ml = $("#MainLayout");
 
@@ -836,7 +846,25 @@ foreach ($_GET as $key => $value) {
                                                                                                                       .append($("<i>").addClass("icon-plus-sign")))
                                                                                                                       .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0])
                                                                                                                       .append($("<i>").addClass("icon-remove")))
-                                                                                                                      )));
+                                                                                                                      ))
+                                                                                                                      .append($("<div>").addClass("grid-content").attr("id", "grid_content")));
+
+                                                                                                              var banana = $("#" + wbes[i][0] + "WBE #grid_content");
+                                                                                                              var a = 0;
+                                                                                                              $.each(wbes[i][11], function(index, value) {
+
+                                                                                                                        banana.append($("<div>")
+                                                                                                                                .append($("<table>").append($("<tr>").append($("<td>")
+                                                                                                                                .append($("<label>").text(wbes[i][11][a].opcao_query))
+                                                                                                                                .append($("<button>").addClass("btn icon-alone btn-info edit_dataset_button").data("dataset_id", wbes[i][11][a].id)
+                                                                                                                                .append($("<i>").addClass("icon-edit")))
+                                                                                                                                .append($("<button>").addClass("btn icon-alone btn-danger delete_dataset_button").data("dataset_id", wbes[i][11][a].id)
+                                                                                                                                .append($("<i>").addClass("icon-remove"))))))
+                                                                                                                                );
+                                                                                                                        a++;
+
+                                                                                                              });
+
                                                                                                               var painel = $("#MainLayout  #" + wbes[i][0] + "WBE");
                                                                                                               painel.draggable({containment: "#MainLayout", stop: check_save});
                                                                                                               if (wbes[i][8] == "4") {
@@ -861,6 +889,7 @@ foreach ($_GET as $key => $value) {
                                                                                                     }
 
                                                                                                     );
+
                                                                                           }
 
                                                                                           function update_dropbox_layout()
@@ -886,11 +915,13 @@ foreach ($_GET as $key => $value) {
                                                                                                     $.post("Requests.php", {action: Opcao, id: Id, id_wallboard: id_Wallboard, query_text: Query_text, opcao_query: Opcao_query, mode: Mode, param1: Param1, param2: Param2, param3: Param3, param4: Param4},
                                                                                                     function(data)
                                                                                                     {
+                                                                                                              if (Opcao === "insert_dataset")
+                                                                                                              {
+                                                                                                                        load_dados("wbe", idLayout);
 
+                                                                                                              }
                                                                                                     }, "json");
-
                                                                                           }
-
                                                                                           function load_dados(opcao, id_layouT)
                                                                                           {
                                                                                                     $.post("Requests.php", {action: opcao, id_layout: id_layouT},
@@ -914,7 +945,6 @@ foreach ($_GET as $key => $value) {
                                                                                                                         }
                                                                                                                         return false;
                                                                                                               }
-
                                                                                                               if (opcao === "layout")//Load dados layout
                                                                                                               {
                                                                                                                         layouts = [];
@@ -929,8 +959,7 @@ foreach ($_GET as $key => $value) {
                                                                                                               {
                                                                                                                         wbes = [];
                                                                                                                         $.each(data, function(index, value) {
-                                                                                                                                  wbes.push([this.id, this.name, this.pos_x, this.pos_y, this.width, this.height, this.id_layout, this.update_time, this.graph_type, this.param1, this.param2]);
-
+                                                                                                                                  wbes.push([this.id, this.name, this.pos_x, this.pos_y, this.width, this.height, this.id_layout, this.update_time, this.graph_type, this.param1, this.param2, this.dataset]);
                                                                                                                         });
                                                                                                                         update_wbe();
                                                                                                               }

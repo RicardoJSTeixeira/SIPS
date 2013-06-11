@@ -1,4 +1,4 @@
-<?php
+<?php
 
 error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
@@ -58,29 +58,49 @@ switch ($action) {
                     echo json_encode(array(1));
                     break;
 
-          case 'insert_dataset':
-                    $query = "INSERT INTO WallBoard_Dataset1 ( `id_wallboard`, `query_text`, `opcao_query`, `mode`,`param1`, `param2`, `param3`, `param4`) VALUES ($id_wallboard, $query_text, '$opcao_query','$mode' ,'$param1', '$param2', '$param3','$param4')";
-                     $round_numerator = 60 * 5;
-                    $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
-                    $rounded_time = date("Y-m-d H:i:s", $rounded_time);
-                    $query = str_replace("now()", "'" . $rounded_time . "'", $query);
+
+          case 'remove_dataset':
+                    $query = "Delete from WallBoard_Dataset1 where id='$id' ";
                     $query = mysql_query($query, $link) or die(mysql_error());
                     echo json_encode(array(1));
                     break;
 
 
+          case 'insert_dataset':
+                    $query = "INSERT INTO WallBoard_Dataset1 ( `id_wallboard`,`query_text`,`opcao_query`, `mode`,`param1`, `param2`, `param3`, `param4`) VALUES ($id_wallboard, '" . mysql_real_escape_string($query_text) . "','$opcao_query','$mode','$param1','$param2','$param3','$param4')";
+                    echo ($query);
+                    $query = mysql_query($query, $link) or die(mysql_error());
+                    //  echo json_encode(array(1));
+                    break;
+
+
           case 'get_dataset':
-                  $query = " SELECT * FROM `WallBoard_Dataset1` WHERE `id_wallboard`=$id_wallboard";
+                    $query = "SELECT * FROM `WallBoard_Dataset1` WHERE `id_wallboard`=$id_wallboard";
                     $query = mysql_query($query, $link) or die(mysql_error());
                     while ($row = mysql_fetch_assoc($query)) {
-                              $js[] = array(id => $row["id"], query_text => $row["query_text"], opcao_query => $row["opcao_query"], type_query => $row["type_query"], codigo => $row["codigo"]);
+                              $js[] = array(id => $row["id"], query_text => $row["query_text"], opcao_query => $row["opcao_query"], mode => $row["mode"], param1 => $row["param1"], param2 => $row["param2"], param3 => $row["param3"], param4 => $row["param4"]);
                     }
                     echo json_encode($js);
                     break;
 
-          
-          
-         
+
+          case 'get_dataset_single':
+                    $query = "SELECT * FROM `WallBoard_Dataset1` WHERE `id`=$id";
+                    $query = mysql_query($query, $link) or die(mysql_error());
+                    while ($row = mysql_fetch_assoc($query)) {
+                              $js[] = array(id => $row["id"], query_text => $row["query_text"], opcao_query => $row["opcao_query"], mode => $row["mode"], param1 => $row["param1"], param2 => $row["param2"], param3 => $row["param3"], param4 => $row["param4"]);
+                    }
+                    echo json_encode($js);
+                    break;
+
+          case 'edit_dataset':
+                    $query = "UPDATE`WallBoard_Dataset1` set       WHERE `id`=$id";
+                    $query = mysql_query($query, $link) or die(mysql_error());
+                    while ($row = mysql_fetch_assoc($query)) {
+                              $js[] = array(id => $row["id"], query_text => $row["query_text"], opcao_query => $row["opcao_query"], mode => $row["mode"], param1 => $row["param1"], param2 => $row["param2"], param3 => $row["param3"], param4 => $row["param4"]);
+                    }
+                    echo json_encode($js);
+                    break;
 
 
           case 'edit_WBE':
@@ -98,8 +118,15 @@ switch ($action) {
           case 'wbe':
                     $query = "SELECT * FROM  WallBoard1  where id_layout='$id_layout'";
                     $query = mysql_query($query, $link) or die(mysql_error());
-                    while ($row = mysql_fetch_array($query, MYSQL_ASSOC)) {
-                              $js[] = array(id => $row["id"], name => $row["name"], pos_x => $row["pos_x"], pos_y => $row["pos_y"], width => $row["width"], height => $row["height"], id_layout => $row["id_layout"], update_time => $row["update_time"], graph_type => $row["graph_type"], param1 => $row["param1"], param2 => $row["param2"]);
+
+                    while ($row = mysql_fetch_assoc($query)) {
+                              $query_dataset = "SELECT * FROM `WallBoard_Dataset1` WHERE `id_wallboard`='$row[id]'";
+                              $query_dataset = mysql_query($query_dataset, $link) or die(mysql_error());
+                              $dataset = array();
+                              while ($row1 = mysql_fetch_assoc($query_dataset)) {
+                                        $dataset[] = array(id => $row1["id"], query_text => $row1["query_text"], opcao_query => $row1["opcao_query"], mode => $row1["mode"], param1 => $row1["param1"], param2 => $row1["param2"], param3 => $row1["param3"], param4 => $row1["param4"]);
+                              }
+                              $js[] = array(id => $row["id"], name => $row["name"], pos_x => $row["pos_x"], pos_y => $row["pos_y"], width => $row["width"], height => $row["height"], id_layout => $row["id_layout"], update_time => $row["update_time"], graph_type => $row["graph_type"], param1 => $row["param1"], param2 => $row["param2"], dataset => $dataset);
                     }
                     echo json_encode($js);
                     break;
@@ -120,12 +147,12 @@ switch ($action) {
                     $rounded_time = date("Y-m-d H:i:s", $rounded_time);
                     $selected_query = str_replace("now()", "'" . $rounded_time . "'", $selected_query);
                     $query = $selected_query;
-
+          
                     $query = mysql_query($query, $link) or die(mysql_error());
                     while ($row = mysql_fetch_assoc($query)) {
                               $js[] = array(length_in_sec => $row["length_in_sec"], call_date => $row["call_date"]);
                     }
-                    echo json_encode($js);
+                     echo json_encode($js);
                     break;
 
           case '2'://barras - total vendas por user

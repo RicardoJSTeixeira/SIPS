@@ -10,7 +10,7 @@ foreach ($_GET as $key => $value) {
           ${$key} = $value;
 }
 
-
+          
 switch ($action) {
 
 
@@ -48,25 +48,25 @@ switch ($action) {
           case 'edit_Layout':
                     $query = "UPDATE WallBoard_Layout SET Name='$name'  WHERE id=$id";
                     $query = mysql_query($query, $link) or die(mysql_error());
-                       echo json_encode(array(1));
+                    echo json_encode(array(1));
                     break;
 
           case 'insert_wbe':
                     $query = "INSERT INTO WallBoard (name, posX ,  posY ,  width ,  height ,  layout_id ,  query_text , opcao_query, update_time , graph_type, param1) VALUES ('$name',$posx,$posy,$width,$height,$layout_id,'$query_text','$opcao_query',$update_time,$graph_type,'$param1');";
                     $query = mysql_query($query, $link) or die(mysql_error());
-                       echo json_encode(array(1));
+                    echo json_encode(array(1));
                     break;
 
           case 'edit_WBE':
                     $query = "UPDATE WallBoard SET  posX=$posX, posY=$posY, width=$width,height=$height, layout_id=$layout_Id  WHERE id=$id";
                     $query = mysql_query($query, $link) or die(mysql_error());
-                       echo json_encode(array(1));
+                    echo json_encode(array(1));
                     break;
 
           case 'delete_WBE':
                     $query = "DELETE FROM WallBoard WHERE id=$id";
                     $query = mysql_query($query, $link) or die(mysql_error());
-                       echo json_encode(array(1));
+                    echo json_encode(array(1));
                     break;
 
           case 'wbe':
@@ -94,10 +94,56 @@ switch ($action) {
                     $rounded_time = date("Y-m-d H:i:s", $rounded_time);
                     $selected_query = str_replace("now()", "'" . $rounded_time . "'", $selected_query);
                     $query = $selected_query;
+
+
                     $query = mysql_query($query, $link) or die(mysql_error());
+
                     while ($row = mysql_fetch_assoc($query)) {
-                              $js[] = array(lead_id => $row["lead_id"], call_date => $row["call_date"]);
+
+                              $temp[] = array(lead_id => $row["lead_id"], call_date => $row["call_date"]);
                     }
+
+
+                    $t = strtotime($rounded_time);
+                    $t2 = strtotime('-1 hours', $t);
+                    $begin_time = date("Y-m-d H:i:s", $t2);
+
+
+
+
+                    $t = strtotime($begin_time);
+                    $t2 = strtotime('+5 minutes', $t);
+                    $efnd_time = date("Y-m-d H:i:s", $t2);
+
+                    $leads = 0;
+
+                    for ($i = 0; $i < 60; $i = $i + 5) {
+                              foreach ($temp as $kev => $aaa) {
+                                        if ($aaa["call_date"] >= $begin_time && $aaa["call_date"] <= $end_time)
+                                                  $leads = $leads + 1;
+                              }
+
+                              $js[] = array(lead_id => $leads, call_date => $begin_time);
+                              $leads = 0;
+
+                              $t = strtotime($rounded_time);
+                              $t2 = strtotime('+5 minutes', $t);
+                              $rounded_time = date("Y-m-d H:i:s", $t2);
+
+
+
+                              $t = strtotime($rounded_time);
+                              $t2 = strtotime('-1 hours', $t);
+                              $begin_time = date("Y-m-d H:i:s", $t2);
+
+                              $t = strtotime($begin_time);
+                              $t2 = strtotime('+5 minutes', $t);
+                              $end_time = date("Y-m-d H:i:s", $t2);
+                    }
+
+
+
+
                     echo json_encode($js);
                     break;
 
