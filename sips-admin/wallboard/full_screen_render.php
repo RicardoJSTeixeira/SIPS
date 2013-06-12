@@ -117,7 +117,7 @@ foreach ($_GET as $key => $value) {
                                         {
                                                   wbes = [];
                                                   $.each(data, function(index, value) {
-                                                            wbes.push([this.id, this.name, this.posX, this.posY, this.width, this.height, this.layout_Id, this.query_text, this.opcao_query, this.update_time, this.graph_type, this.param1]);
+                                                            wbes.push([this.id, this.id_layout, this.name, this.pos_x, this.pos_y, this.width, this.height, this.update_time, this.graph_type, this.dataset]);
                                                   });
                                                   var i = 0;
                                                   var temp_window = $(window);
@@ -273,7 +273,7 @@ foreach ($_GET as $key => $value) {
                                                             {
                                                                       data1 = [];
                                                                       dates = [];
-                                                                      soma_result = []
+                                                                      soma_result = [];
                                                                       result = [];
                                                                       result2 = [];
                                                                       $.each(data, function(index, value) {
