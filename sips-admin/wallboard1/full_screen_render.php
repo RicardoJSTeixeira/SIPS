@@ -74,6 +74,9 @@ foreach ($_GET as $key => $value) {
                 padding-bottom:0.8%;
                 background-color:rgb(38, 52, 109);
             }
+            .legend {
+                display:block!important;
+            }
         </style>
     </head>    
 
@@ -227,10 +230,7 @@ foreach ($_GET as $key => $value) {
                 var updation;
                 var wbe = data;
                 var painel = $("#" + wbe[0] + "WBE");
-
                 var result = [];
-
-                var data1 = [];
                 var information = [];
                 var dates = [];
 
@@ -265,8 +265,11 @@ foreach ($_GET as $key => $value) {
                 function get_values_update()
                 {
                     $.post("Requests.php", {action: "1", datasets: wbe[9]},
-                    function(data)
+                    function(dataBase)
                     {
+
+                        var data = dataBase;
+
                         if (data === null)
                         {
                             clearTimeout(updation);
@@ -278,44 +281,45 @@ foreach ($_GET as $key => $value) {
 
 
 
+                        var aux = 0;
+                        for (var key in data) {
+                            var obj = data[key];
+                            for (var prop in obj) {
 
-                        $.each(data, function(index, value) {
-                            data1.push(data[index].leads);
-                            if (data[index].leads > max_y)
-                            {
-                                max_y = +data[index].leads;
 
+                                if (obj.hasOwnProperty(prop)) {
+
+                                    for (var k = 0; k < obj[prop].length; k++)
+                                    {
+                                        if (obj[prop][k].leads > max_y)
+                                        {
+                                            max_y = +obj[prop][k].leads;
+                                        }
+
+
+
+                                        //  alert(prop + " = " + obj[prop][0].leads);
+                                        //data1.push(obj[prop][k].leads);
+
+                                        var temp = new Date(obj[prop][k].call_date);
+                                        temp.setHours(temp.getHours() + 1);
+                                        dates.push(temp);
+
+                                        result.push([new Date(temp).getTime(), obj[prop][k].leads]);
+                                    }
+
+                     
+
+                                    information.push({data: result, label: wbe[9][aux].opcao_query, color: wbe[9][aux].color});
+                                    result = [];
+                                }
+                                aux++;
                             }
-
-                            var temp = new Date(data[index].call_date);
-                            temp.setHours(temp.getHours() + 1);
-                            dates.push(temp);
-                        });
-
-                        var line = 0;
-                        var linha_count_leads = 0;
-                        for (var i = 0; i < data1.length; ++i) {
-                            result.push([new Date(dates[i]).getTime(), data1[i]]);
-                            linha_count_leads += +data1[i];
-
-
-
-                            line++;
-                            if (line >= 12)
-                            {
-                                if (linha_count_leads <= 0) 
-               
-                                    $.jGrowl("A Linha " + wbe[2] + " não apresenta resultados", {life: 10000});
-                                 else
-                                    linha_count_leads = 0;
-
-                                line = 0;
-                                information.push({data: result, label: "vajeijei" + i, color: "#00FF" + i + "0"});
-                                result = [];
-
-                            }
-
                         }
+
+
+
+
 
 
 
@@ -331,7 +335,7 @@ foreach ($_GET as $key => $value) {
                             },
                             series: {
                                 lines: {
-                                    lineWidth: 1,
+                                    lineWidth: 3,
                                     steps: false,
                                     show: true
                                 }
