@@ -398,11 +398,12 @@ foreach ($_GET as $key => $value) {
                                                 if (wbes[id_wallboard][9][a].id == id_dataset)
                                                 {
                                                     //Inbound,Outbound,Blended
+
                                                     if (wbes[id_wallboard][9][a].mode === "1")
                                                         $("#in_out_bound").val(1);
                                                     if (wbes[id_wallboard][9][a].mode === "2")
                                                         $("#in_out_bound").val(2);
-                                                    else
+                                                    if (wbes[id_wallboard][9][a].mode === "3")
                                                         $("#in_out_bound").val(3);
                                                     //PARAMETROS
                                                     if (wbes[id_wallboard][9][a].user != 0)
@@ -481,7 +482,7 @@ foreach ($_GET as $key => $value) {
                                                 "Criar": function() {
                                                     //preencher o param1----------------FIM-----------------------------------FIM--------------------------------------FIM------------------------------------
                                                     manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, $("#update_time").val(), selected_type_graph);
-                                                    load_dados("wbe", idLayout);
+                                                   
                                                     $(this).dialog("close");
                                                 }
                                             }
@@ -519,7 +520,7 @@ foreach ($_GET as $key => $value) {
                                                         opcao = "insert_dataset";
                                                     }
                                                     var querie = [];
-                                                    alert(opcao);
+
                                                     if ($("#linhas_filtro").val() === "1")
                                                         switch ($("#linhas_serie").val())
                                                         {
@@ -530,17 +531,17 @@ foreach ($_GET as $key => $value) {
                                                                     case "1":
                                                                         //Chamadas atendidas por user
                                                                         querie = get_query(1);
-                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "atendidas", get_random_color());
+                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "atendidas", get_random_color());
                                                                         break;
                                                                     case "2":
                                                                         //Chamadas perdidas por user   
                                                                         querie = get_query(2);
-                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "perdidas", get_random_color());
+                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "perdidas", get_random_color());
                                                                         break;
                                                                     case "3":
                                                                         //Chamadas feitas por user 
                                                                         querie = get_query(3);
-                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "feitas", get_random_color());
+                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "feitas", get_random_color());
                                                                         break;
                                                                 }
                                                                 break;
@@ -551,17 +552,17 @@ foreach ($_GET as $key => $value) {
                                                                     case "1":
                                                                         //Chamadas atendidas por user_group
                                                                         querie = get_query(4);
-                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "atendidas", get_random_color());
+                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "atendidas", get_random_color());
                                                                         break;
                                                                     case "2":
                                                                         //Chamadas perdidas por user_group   
                                                                         querie = get_query(5);
-                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "perdidas", get_random_color());
+                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "perdidas", get_random_color());
                                                                         break;
                                                                     case "3":
                                                                         //Chamadas feitas por user_group 
                                                                         querie = get_query(6);
-                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "feitas", get_random_color());
+                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "feitas", get_random_color());
                                                                         break;
                                                                 }
                                                                 break;
@@ -571,17 +572,17 @@ foreach ($_GET as $key => $value) {
                                                                     case "1":
                                                                         //Chamadas atendidas por campanha
                                                                         querie = get_query(7);
-                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "atendidas", get_random_color());
+                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "atendidas", get_random_color());
                                                                         break;
                                                                     case "2":
                                                                         //Chamadas perdidas por campanha   
                                                                         querie = get_query(8);
-                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "perdidas", get_random_color());
+                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "perdidas", get_random_color());
                                                                         break;
                                                                     case "3":
                                                                         //Chamadas feitas por campanha 
                                                                         querie = get_query(9);
-                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "feitas", get_random_color());
+                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "feitas", get_random_color());
                                                                         break;
                                                                 }
                                                                 break;
@@ -591,17 +592,17 @@ foreach ($_GET as $key => $value) {
                                                                     case "1":
                                                                         //Chamadas atendidas por Total CallCenter
                                                                         querie = get_query(10);
-                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "atendidas", get_random_color());
+                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "atendidas", get_random_color());
                                                                         break;
                                                                     case "2":
                                                                         //Chamadas perdidas por Total CallCenter  
                                                                         querie = get_query(11);
-                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "perdidas", get_random_color());
+                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "perdidas", get_random_color());
                                                                         break;
                                                                     case "3":
                                                                         //Chamadas feitas por Total CallCenter 
                                                                         querie = get_query(12);
-                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "feitas", get_random_color());
+                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "feitas", get_random_color());
                                                                         break;
                                                                 }
                                                                 break;
@@ -610,18 +611,18 @@ foreach ($_GET as $key => $value) {
                                                                 {
                                                                     case "1":
                                                                         //Chamadas atendidas por Inbound
-                                                                        querie = get_query(17);
-                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "atendidas", get_random_color());
+                                                                        querie = get_query(18);
+                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "atendidas", get_random_color());
                                                                         break;
                                                                     case "2":
                                                                         //Chamadas perdidas por Inbound   
-                                                                        querie = get_query(18);
-                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "atendidas", get_random_color());
+                                                                        querie = get_query(19);
+                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "atendidas", get_random_color());
                                                                         break;
                                                                     case "3":
                                                                         //Chamadas feitas por Inbound 
-                                                                        querie = get_query(19);
-                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "atendidas", get_random_color());
+                                                                        querie = get_query(20);
+                                                                        manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "atendidas", get_random_color());
                                                                         break;
                                                                 }
                                                                 break;
@@ -633,28 +634,28 @@ foreach ($_GET as $key => $value) {
                                                             case "1":
                                                                 //feedback por user
                                                                 querie = get_query(13);
-                                                                manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, get_random_color());
+                                                                manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, get_random_color());
                                                                 break;
                                                             case "2":
                                                                 //feedback por user_group
                                                                 querie = get_query(14);
-                                                                manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, get_random_color());
+                                                                manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, get_random_color());
                                                                 break;
                                                             case "3":
                                                                 //feedback por campanha
                                                                 querie = get_query(15);
 
-                                                                manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, get_random_color());
+                                                                manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, get_random_color());
                                                                 break;
                                                             case "4":
                                                                 //feedback por call center
                                                                 querie = get_query(16);
-                                                                manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", 0, 0, 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, get_random_color());
+                                                                manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, get_random_color());
                                                                 break;
                                                             case "5":
                                                                 //feedback por linha inbound
                                                                 querie = get_query(17);
-                                                                manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[3], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), $("#status_venda").val(), 0, get_random_color());
+                                                                manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), $("#status_venda").val(), 0, get_random_color());
 
                                                                 break;
                                                         }
@@ -722,7 +723,7 @@ foreach ($_GET as $key => $value) {
                                                 "Criar": function() {
                                                     var i = 0;
                                                     $.each(queries, function(index, value) {
-                                                        if (queries[i][3] == 4)
+                                                        if (queries[i][4] == 4)
                                                         {
                                                             query = queries[i][1] + ' where campaign_id ="' + $("#group_inbound_select").val() + '"';
                                                             opcao_graph = queries[i][2];
@@ -761,8 +762,9 @@ foreach ($_GET as $key => $value) {
                                         var querie;
                                         $.each(queries, function(index, value) {
 
-                                            if (queries[i][5] == codigo)
+                                            if (queries[i][6] == codigo)
                                             {
+
                                                 querie = queries[i];
                                                 return false;
                                             }
@@ -1075,12 +1077,17 @@ foreach ($_GET as $key => $value) {
                                         $.post("Requests.php", {action: Opcao, id: Id, name: Name, pos_x: Pos_x, pos_y: Pos_y, width: Width, height: Height, id_layout: id_Layout, update_time: Update_time, graph_type: Graph_type},
                                         function(data)
                                         {
-                                            if (Opcao == 'get_query')
+                                            if (Opcao === 'get_query')
                                             {
                                                 $.each(data, function(index, value) {
-                                                    queries.push([this.id, this.query_text_inbound, this.query_outbound, this.opcao_query, this.type_query, this.codigo]);
+                                                    queries.push([this.id, this.query_text_inbound, this.query_text_outbound, this.query_text_blended, this.opcao_query, this.type_query, this.codigo]);
                                                 });
+
                                             }
+                                            
+                                            if(Opcao==="insert_wbe")
+                                                 load_dados("wbe", idLayout);
+                                            
                                         }, "json");
                                     }
                                     //---Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados---

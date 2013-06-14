@@ -149,7 +149,7 @@ switch ($action) {
 
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], query_text_inbound => $row["query_text_inbound"], query_text_outbound => $row["query_text_outbound"], opcao_query => $row["opcao_query"], type_query => $row["type_query"], codigo => $row["codigo"]);
+            $js[] = array(id => $row["id"], query_text_inbound => $row["query_text_inbound"], query_text_outbound => $row["query_text_outbound"],query_text_blended => $row["query_text_blended"], opcao_query => $row["opcao_query"], type_query => $row["type_query"], codigo => $row["codigo"]);
         }
         echo json_encode($js);
         break;
@@ -159,7 +159,7 @@ switch ($action) {
 
 //graficos-----------------------------------------
     case '1'://real time - total chamadas inbound/outbound
-
+//falta blended(inbound+outbound)
 
 
 
@@ -182,20 +182,17 @@ switch ($action) {
                         $selected_query = $row2["query_text_inbound"];
                     if ($row["mode"] == 2)
                         $selected_query = $row2["query_text_outbound"];
+                     if ($row["mode"] == 3)
+                        $selected_query = $row2["query_text_blended"];
 
-                    if ($row["mode"] == 3)
+                //    if ($row["mode"] == 3)
                         
-                        
-                        
+                                               
                         
                         $round_numerator = 60 * 5;
                     $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
                     $rounded_time = date("Y-m-d H:i:s", $rounded_time);
                     $selected_query = str_replace("now()", "'" . $rounded_time . "'", $selected_query);
-
-
-
-
 
 
                     //SUbstituição das variaveis
@@ -206,8 +203,6 @@ switch ($action) {
                     $selected_query = str_replace('$linha_inbound', $row["linha_inbound"], $selected_query);
                     $selected_query = str_replace('$status', $row["status_feedback"], $selected_query);
                     $selected_query = str_replace('$chamadas', $row["chamadas"], $selected_query);
-
-
 
 
 
