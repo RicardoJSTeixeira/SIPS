@@ -90,7 +90,7 @@ foreach ($_GET as $key => $value) {
 
 
 
-        <script language="javascript">
+        <script>
 
 
 
@@ -121,7 +121,7 @@ foreach ($_GET as $key => $value) {
                         var height = (wbes[i][6] * temp_window.height()) / windheight;
                         $("#MainLayout").append($("<div>").addClass("PanelWB ui-widget-content").attr("style", "position: absolute;    left:" + left + "px;top:" + top + "px; width:" + width + "px;height:" + height + "px;").attr("id", wbes[i][0] + "Main").draggable({containment: '#MainLayout'})
                                 .append($("<div>").addClass("grid-title")
-                                .append($("<div>").addClass("pull-left").text(wbes[i][1]))
+                                .append($("<div>").addClass("pull-left").text(wbes[i][2]))
                                 )
                                 .append($("<div>").addClass("grid-content").attr("id", wbes[i][0] + "WBEGD")
                                 .append($("<div>").attr("id", wbes[i][0] + "WBE").attr("style", "width:" + (width - 20) + "px;height:" + (height - 75) + "px;padding: 0px;").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbes[i][7] / 1000) + " seg.")))
@@ -278,40 +278,40 @@ foreach ($_GET as $key => $value) {
                             $.jGrowl("A Linha " + wbe[2] + " não apresenta resultados", {life: 10000});
                             return false;
                         }
-
-
-
+                        var verifier = 0;//verifica se o dataset tem algum lead_id>0
                         var aux = 0;
                         for (var key in data) {
                             var obj = data[key];
                             for (var prop in obj) {
-
-
                                 if (obj.hasOwnProperty(prop)) {
-
                                     for (var k = 0; k < obj[prop].length; k++)
                                     {
                                         if (obj[prop][k].leads > max_y)
                                         {
                                             max_y = +obj[prop][k].leads;
                                         }
-
-
-
-                                        //  alert(prop + " = " + obj[prop][0].leads);
-                                        //data1.push(obj[prop][k].leads);
-
+                                        verifier += +obj[prop][k].leads;
                                         var temp = new Date(obj[prop][k].call_date);
                                         temp.setHours(temp.getHours() + 1);
                                         dates.push(temp);
-
                                         result.push([new Date(temp).getTime(), obj[prop][k].leads]);
                                     }
+                                    console.log(verifier);
+                                    if (verifier > 0) {
+                                        information.push({data: result, label: wbe[9][aux].opcao_query, color: wbe[9][aux].color});
+                                        result = [];
+                                        verifier = 0;
+                                    }
+                                    else
+                                    {
+                                        result = [];
+                                        information.push({data: result, label: "Sem resultados", color: wbe[9][aux].color});
+                                        $.jGrowl("A Linha " + wbe[9][aux].opcao_query + " do grafico " + wbe[2] + " não apresenta resultados", {life: 3000});
+                                        verifier = 0;
 
-                     
 
-                                    information.push({data: result, label: wbe[9][aux].opcao_query, color: wbe[9][aux].color});
-                                    result = [];
+                                    }
+
                                 }
                                 aux++;
                             }
@@ -320,14 +320,10 @@ foreach ($_GET as $key => $value) {
 
 
 
-
-
-
-
-
                         var options = {
+                       
                             series: {shadowSize: 0}, // drawing is faster without shadows
-                            yaxis: {min: 0, max: max_y + 10},
+                            yaxis: {min: 0, max: max_y + 50, tickSize: 10},
                             xaxis: {mode: "time", timeformat: "%H:%M", minTickSize: [5, "minute"],
                                 min: (dates[0]),
                                 max: (dates[dates.length - 1])
@@ -339,7 +335,7 @@ foreach ($_GET as $key => $value) {
                                     steps: false,
                                     show: true
                                 }
-                            }
+                            }                            
                         };
 
                         plot = $.plot(painel, information, options);
