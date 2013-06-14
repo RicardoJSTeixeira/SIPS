@@ -1,1 +1,1 @@
-Hello this is SIPS
+Hello this is Go Contact Center
