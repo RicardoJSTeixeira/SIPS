@@ -268,11 +268,33 @@ foreach ($_GET as $key => $value) {
 //top man tem q ser maior
 //status, tma, chamadas
 
+                                    //--------------wbes
+                                    //0      id,
+                                    // 1       id_layout,
+                                    //   2      name,
+                                    //     3     pos_x, 
+                                    //       4   pos_y,
+                                    //       5    width, 
+                                    //       6    height,
+                                    //       7      update_time, 
+                                    //       8      graph_type;
+                                    //   9      Array[8]
+                                    //0: id
+                                    //1: id_wallboard
+                                    //2: codigo_query
+                                    //3: opcao_query
+                                    //4: tempo
+                                    //5: user
+                                    //6: user_group
+                                    //7: campaign_id
+                                    //8:linha_inbound
+                                    //9: mode
+                                    //10: status_feedback
+                                    //11: chamadas
 
 
 
 
-//falta fazer a 2ª parte do editar dataset
 
 
 
@@ -385,35 +407,34 @@ foreach ($_GET as $key => $value) {
                                                     {
                                                         $("#linhas_serie").val(1);
                                                         $("#gao_user").show();
-
+                                                        $("#user").val(wbes[id_wallboard][9][a].user);
                                                     }
                                                     else if (wbes[id_wallboard][9][a].user_group != 0)
                                                     {
                                                         $("#gao_userGroup").show();
                                                         $("#linhas_serie").val(2);
+                                                        $("#user_group").val(wbes[id_wallboard][9][a].user_group);
                                                     }
                                                     else if (wbes[id_wallboard][9][a].campaign_id != 0)
                                                     {
                                                         $("#gao_campaign").show();
                                                         $("#linhas_serie").val(3);
+                                                        $("#campaign").val(wbes[id_wallboard][9][a].campaign_id);
                                                     }
                                                     else if (wbes[id_wallboard][9][a].linha_inbound != 0)
                                                     {
                                                         $("#gao_inbound").show();
                                                         $("#linhas_serie").val(5);
+                                                        $("#inbound").val(wbes[id_wallboard][9][a].linha_inbound);
                                                     }
                                                     else
                                                         $("#linhas_serie").val(4);
-
-
 //FILTRO
-
                                                     if (wbes[id_wallboard][9][a].status_feedback != 0)
                                                     {
-
                                                         $("#gao_status").show();
                                                         $("#linhas_filtro").val(2);
-
+                                                        $("#status_venda").val(wbes[id_wallboard][9][a].status_feedback);
                                                     }
                                                     else if (wbes[id_wallboard][9][a].chamadas != 0)
                                                     {
@@ -427,12 +448,11 @@ foreach ($_GET as $key => $value) {
                                                             $("#chamadas").val(3);
 
                                                     }
-
                                                 }
-
                                                 a++;
                                             });
-
+                                            manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 1);
+                                         
                                             $("#dialog_dataset_linhas").dialog("open");
                                         });
                                         $(document).on("click", ".delete_dataset_button", function(e) {
@@ -866,9 +886,10 @@ foreach ($_GET as $key => $value) {
                                         //5: user
                                         //6: user_group
                                         //7: campaign_id
-                                        //8: mode
-                                        //9: status_feedback
-                                        //10: chamadas
+                                        //8:linha_inbound
+                                        //9: mode
+                                        //10: status_feedback
+                                        //11: chamadas
                                         $.each(wbes, function(index, value) {
                                             var ml = $("#MainLayout");
                                             ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")

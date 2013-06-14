@@ -129,7 +129,11 @@ switch ($action) {
         echo json_encode($js);
         break;
 
-
+    case 'edit_dataset':
+        $query = "UPDATE WallBoard_Dataset1 SET  codigo_query=$codigo_query,user=$user,user_group=$user_group,campaign_id=$campaign_id,linha_inbound=$linha_inbound,mode=$mode,status_feedback=$status_feedback,chamadas=$chamadas  WHERE id=$id";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        echo json_encode(array(1));
+        break;
 
 
 
@@ -252,7 +256,7 @@ switch ($action) {
                 }
             }
         }
-        echo json_encode(array("datasets"=>$js));
+        echo json_encode(array("datasets" => $js));
         break;
 
 
