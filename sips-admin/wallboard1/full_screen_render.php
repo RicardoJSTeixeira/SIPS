@@ -235,28 +235,28 @@ foreach ($_GET as $key => $value) {
                 var dates = [];
 
                 //--------------wbes
-                                    //0      id,
-                                    // 1       id_layout,
-                                    //   2      name,
-                                    //     3     pos_x, 
-                                    //       4   pos_y,
-                                    //       5    width, 
-                                    //       6    height,
-                                    //       7      update_time, 
-                                    //       8      graph_type;
-                                    //   9      Array[8]
-                                    //0: id
-                                    //1: id_wallboard
-                                    //2: codigo_query
-                                    //3: opcao_query
-                                    //4: tempo
-                                    //5: user
-                                    //6: user_group
-                                    //7: campaign_id
-                                    //8:linha_inbound
-                                    //9: mode
-                                    //10: status_feedback
-                                    //11: chamadas
+                //0      id,
+                // 1       id_layout,
+                //   2      name,
+                //     3     pos_x, 
+                //       4   pos_y,
+                //       5    width, 
+                //       6    height,
+                //       7      update_time, 
+                //       8      graph_type;
+                //   9      Array[8]
+                //0: id
+                //1: id_wallboard
+                //2: codigo_query
+                //3: opcao_query
+                //4: tempo
+                //5: user
+                //6: user_group
+                //7: campaign_id
+                //8:linha_inbound
+                //9: mode
+                //10: status_feedback
+                //11: chamadas
                 get_values_update();
 
 
@@ -297,16 +297,15 @@ foreach ($_GET as $key => $value) {
                                         dates.push(temp);
                                         result.push([new Date(temp).getTime(), obj[prop][k].leads]);
                                     }
-                                    console.log(verifier);
                                     if (verifier > 0) {
-                                        information.push({data: result, label: wbe[9][aux].opcao_query, color: wbe[9][aux].color});
+                                        information.push({data: result, label: wbe[9][aux].opcao_query});
                                         result = [];
                                         verifier = 0;
                                     }
                                     else
                                     {
                                         result = [];
-                                        information.push({data: result, label: "Sem resultados", color: wbe[9][aux].color});
+                                        information.push({data: result, label: "Sem resultados"});
                                         $.jGrowl("A Linha " + wbe[9][aux].opcao_query + " do grafico " + wbe[2] + " não apresenta resultados", {life: 3000});
                                         verifier = 0;
 
