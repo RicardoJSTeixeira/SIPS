@@ -1,5 +1,4 @@
-<?
-foreach ($_POST as $key => $value) { 
+<? foreach ($_POST as $key => $value) { 
 	${$key} = $value;
 }
 foreach ($_GET as $key => $value) {
@@ -7,20 +6,13 @@ foreach ($_GET as $key => $value) {
 }
 ini_set("display_errors", "1");
 
-
-// DEFAULT UPLOAD
-
 $Timestamp = date("dmY-His");
-$UploadedFile = $Timestamp."_".preg_replace("/[^-\.\_0-9a-zA-Z]/" , "_" , $_FILES['fileToUpload']['name']);
+$UploadedFile = $Timestamp."_".preg_replace("/[^-\.\_0-9a-zA-Z]/" , "_" , $_FILES['input-db-wizard-upload']['name']);
 $ConvertedFile = preg_replace("/\.csv$|\.xls$|\.xlsx$|\.ods$|\.sxc$/i", '.txt', $UploadedFile);
+move_uploaded_file($_FILES['input-db-wizard-upload']['tmp_name'], "/tmp/".$UploadedFile);
+$ConvertCommand = "/srv/www/htdocs/sips-admin/campaigns/extras/upload/sheet2tab.pl /tmp/$UploadedFile /tmp/$ConvertedFile";
+passthru("$ConvertCommand");
 echo $ConvertedFile;
-
-move_uploaded_file($_FILES['fileToUpload']['tmp_name'], "/tmp/".$UploadedFile);
-
-
-$ConvertCommand = "/srv/www/htdocs/sips-admin/campaigns/sheet2tab.pl /tmp/$UploadedFile /tmp/$ConvertedFile";
-echo passthru("$ConvertCommand");
-
 
 
 

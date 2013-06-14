@@ -1,0 +1,17 @@
+{
+	"sProcessing": "A Processar...",
+	"sLengthMenu": "_MENU_ Registos",
+	"sZeroRecords": "Não foram encontrados registos.",
+	"sInfo": "_START_ a _END_ de _TOTAL_ Registos",
+	"sInfoEmpty": "0 a 0 de 0 Entradas",
+	"sInfoFiltered": "(filtrada de _MAX_  Registos)",
+	"sInfoPostFix": "",
+	"sSearch": "<div><img class='dataTables-find-img' src='icons/mono_search_16.png'></div>",
+	"sUrl": "",
+	"oPaginate": {
+		"sFirst":    "Inicio",
+		"sPrevious": "Anterior",
+		"sNext":     "Seguinte",
+		"sLast":     "Último"
+	}
+}
