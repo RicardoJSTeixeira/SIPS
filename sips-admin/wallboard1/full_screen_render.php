@@ -94,11 +94,6 @@ foreach ($_GET as $key => $value) {
 
             var wbes;
             var layout;
-
-
-
-
-
             $(document).ready(function() {
 
                 $("#MainLayout").attr("style", "width:100%;height:100%;position:absolute;background-color:#F5F5F5;");
@@ -107,8 +102,6 @@ foreach ($_GET as $key => $value) {
                 var windheight = +parameters[2]; //parameter;
                 layout = +parameters[0]; //parameter
                 $("[data-t=tooltip]").tooltip({placement: "left", html: true});
-
-
                 $.post("Requests.php", {action: "wbe", id_layout: layout},
                 function(data)
                 {
@@ -116,8 +109,6 @@ foreach ($_GET as $key => $value) {
                     $.each(data, function(index, value) {
                         wbes.push([this.id, this.id_layout, this.name, this.pos_x, this.pos_y, this.width, this.height, this.update_time, this.graph_type, this.dataset]);
                     });
-
-
                     var i = 0;
                     var temp_window = $(window);
                     $.each(wbes, function(index, value) {
@@ -132,9 +123,6 @@ foreach ($_GET as $key => $value) {
                                 .append($("<div>").addClass("grid-content").attr("id", wbes[i][0] + "WBEGD")
                                 .append($("<div>").attr("id", wbes[i][0] + "WBE").attr("style", "width:" + (width - 20) + "px;height:" + (height - 75) + "px;padding: 0px;").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbes[i][7] / 1000) + " seg.")))
                                 );
-
-
-
                         if (wbes[i][8] == 1)//update
                         {
                             plot_update(wbes[i]);
@@ -239,14 +227,12 @@ foreach ($_GET as $key => $value) {
                 var updation;
                 var wbe = data;
                 var painel = $("#" + wbe[0] + "WBE");
-                var result;
-                var result2;
-                var soma_result = [];
-                var data1;
-                var dates = [];
 
-//teste
-//SELECT count(lead_id) FROM `vicidial_log` where campaign_id="c00095" and call_date between "2013-05-29 17:15:00" and "2013-05-29 17:20:00"
+                var result = [];
+
+                var data1 = [];
+                var information = [];
+                var dates = [];
 
                 //--------------wbes
                 //0      id,
@@ -270,110 +256,103 @@ foreach ($_GET as $key => $value) {
                 //8: mode
                 //9: status_feedback
                 //10: chamadas
-
-
                 get_values_update();
+
+
+
+
+
                 function get_values_update()
                 {
-
-//falta um ciclo de repetição aqui para iterar com os varios datasets de 1 wallboard
-
-                    var count = 0;
-
-                    $.post("Requests.php", {action: "get_query", codigo: wbe[9][count].codigo_query},
-                    function(data1)
+                    $.post("Requests.php", {action: "1", datasets: wbe[9]},
+                    function(data)
                     {
-                        $.each(data1, function(index, value) {
-                            queries.push([this.id, this.query_text_inbound, this.query_outbound, this.opcao_query, this.type_query, this.codigo]);
+                        if (data === null)
+                        {
+                            clearTimeout(updation);
+                            painel.remove();
+                            $("#" + wbe[0] + "Main").remove();
+                            $.jGrowl("A Linha " + wbe[2] + " não apresenta resultados", {life: 10000});
+                            return false;
+                        }
+
+
+
+
+                        $.each(data, function(index, value) {
+                            data1.push(data[index].leads);
+                            if (data[index].leads > max_y)
+                            {
+                                max_y = +data[index].leads;
+
+                            }
+
+                            var temp = new Date(data[index].call_date);
+                            temp.setHours(temp.getHours() + 1);
+                            dates.push(temp);
                         });
 
+                        var line = 0;
+                        var linha_count_leads = 0;
+                        for (var i = 0; i < data1.length; ++i) {
+                            result.push([new Date(dates[i]).getTime(), data1[i]]);
+                            linha_count_leads += +data1[i];
 
 
-var query;
-if(wbe[9][count].mode==1)//inbound
-    query=queries[1];
-if(wbe[9][count].mode==2)//outbound
-    query=queries[2]; 
-    
-        //blended ou seja, faz o inbound e outbound somados
-            
 
-                        $.post("Requests.php", {action: a, selected_query: query},
-                        function(data)
-                        {
-                            if (data === null)
+                            line++;
+                            if (line >= 12)
                             {
-                                clearTimeout(updation);
-                                painel.remove();
-                                $("#" + wbe[0] + "Main").remove();
-                                $.jGrowl("A Linha " + wbe[1] + " não apresenta resultados", {life: 10000});
-                                return false;
+                                if (linha_count_leads <= 0) 
+               
+                                    $.jGrowl("A Linha " + wbe[2] + " não apresenta resultados", {life: 10000});
+                                 else
+                                    linha_count_leads = 0;
+
+                                line = 0;
+                                information.push({data: result, label: "vajeijei" + i, color: "#00FF" + i + "0"});
+                                result = [];
+
                             }
 
-                            data1 = [];
-                            $.each(data, function(index, value) {
-                                data1.push(data[index].lead_id);
+                        }
 
-                            });
-                            for (var i = 0; i < data1.length; ++i) {
-                                result2.push([new Date(dates[i]).getTime(), data1[i]]);
-                                soma_result[i][1] = parseInt(soma_result[i][1], 10) + parseInt(data1[i], 10);
-                            }
-                            for (var a = 0; a < soma_result.length; a++)
-                            {
-                                if (soma_result[a][1] > max_y)
-                                    max_y = soma_result[a][1];
-                            }
 
-                        }, "json");
+
+
+
+                        var options = {
+                            series: {shadowSize: 0}, // drawing is faster without shadows
+                            yaxis: {min: 0, max: max_y + 10},
+                            xaxis: {mode: "time", timeformat: "%H:%M", minTickSize: [5, "minute"],
+                                min: (dates[0]),
+                                max: (dates[dates.length - 1])
+
+                            },
+                            series: {
+                                lines: {
+                                    lineWidth: 1,
+                                    steps: false,
+                                    show: true
+                                }
+                            }
+                        };
+
+                        plot = $.plot(painel, information, options);
+
+                        information = [];
+                        result = [];
+                        data1 = [];
+                        dates = [];
+
+                        updation = setTimeout(get_values_update, wbe[7]);
+
+
                     }, "json");
 
 
 
 
-
-
-
-
-
-
-                    var information = [{
-                            data: result,
-                            label: "Outbound",
-                            color: "#00FF00"
-                        },
-                        {
-                            data: result2,
-                            label: "Inbound",
-                            color: "#0000FF"
-                        },
-                        {
-                            data: soma_result,
-                            label: "Soma",
-                            color: "#FF0000"
-                        }];
-
-
-                    var options = {
-                        series: {shadowSize: 0}, // drawing is faster without shadows
-                        yaxis: {min: 0, max: max_y + 10},
-                        xaxis: {mode: "time", timeformat: "%H:%M", minTickSize: [5, "minute"],
-                            min: (dates[0]),
-                            max: (dates[dates.length - 1])
-
-                        },
-                        series: {
-                            lines: {
-                                lineWidth: 1,
-                                steps: false,
-                                show: true
-                            }
-                        }
-                    };
-
-
-                    plot = $.plot(painel, information, options);
-                    updation = setTimeout(get_values_update, wbe[7]);
                 }
             }
             //øøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøø
@@ -566,7 +545,6 @@ if(wbe[9][count].mode==2)//outbound
                         var callsToday;
                         var dropsToday;
                         var answersToday;
-
                         var hold_sec_stat_one;
                         var hold_sec_stat_two;
                         var hold_sec_answer_calls;

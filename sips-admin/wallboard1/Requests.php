@@ -130,21 +130,15 @@ switch ($action) {
         break;
 
 
-    case 'get_query_ny_code':
-        $query = "SELECT * FROM  WallBoard_Query1  where codigo=$codigo";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], query_text_inbound => $row["query_text_inbound"], query_text_outbound => $row["query_text_outbound"], opcao_query => $row["opcao_query"], type_query => $row["type_query"], codigo => $row["codigo"]);
-        }
-        echo json_encode($js);
-        break;
+ 
 
 
 
 
 
     case 'get_query':
-        $query = "SELECT * from WallBoard_Query1 where type_query=$graph_type ";
+        $query = "SELECT * from WallBoard_Query1 where type_query=$graph_type";
+
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array(id => $row["id"], query_text_inbound => $row["query_text_inbound"], query_text_outbound => $row["query_text_outbound"], opcao_query => $row["opcao_query"], type_query => $row["type_query"], codigo => $row["codigo"]);
@@ -152,62 +146,110 @@ switch ($action) {
         echo json_encode($js);
         break;
 
-    //graficos-----------------------------------------
+        
+
+
+//graficos-----------------------------------------
     case '1'://real time - total chamadas inbound/outbound
-        $round_numerator = 60 * 5;
-        $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
-        $rounded_time = date("Y-m-d H:i:s", $rounded_time);
-        $selected_query = str_replace("now()", "'" . $rounded_time . "'", $selected_query);
-        $query = $selected_query;
+//falta blended(inbound+outbound)
+        
 
 
-        $query = mysql_query($query, $link) or die(mysql_error());
-
-        while ($row = mysql_fetch_assoc($query)) {
-
-            $temp[] = array(lead_id => $row["lead_id"], call_date => $row["call_date"]);
-        }
+        for ($i = 0; $i < count($datasets); $i++) {
 
 
-        $t = strtotime($rounded_time);
-        $t2 = strtotime('-1 hours', $t);
-        $begin_time = date("Y-m-d H:i:s", $t2);
+            $query = "SELECT * FROM `WallBoard_Dataset1` WHERE `id`=" . $datasets[$i]["id"];
+
+            $query = mysql_query($query, $link) or die(mysql_error());
+            while ($row = mysql_fetch_assoc($query)) {
+
+                $temp = array();
+                $query2 = "SELECT * from WallBoard_Query1 where codigo=" . $row['codigo_query'];
+
+                $query2 = mysql_query($query2, $link) or die(mysql_error());
+                while ($row2 = mysql_fetch_assoc($query2)) {
+
+
+                    if ($row["mode"] == 1)
+                        $selected_query = $row2["query_text_inbound"];
+                    if ($row["mode"] == 2)
+                        $selected_query = $row2["query_text_outbound"];
 
 
 
 
-        $t = strtotime($begin_time);
-        $t2 = strtotime('+5 minutes', $t);
-        $end_time = date("Y-m-d H:i:s", $t2);
+                    $round_numerator = 60 * 5;
+                    $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
+                    $rounded_time = date("Y-m-d H:i:s", $rounded_time);
+                    $selected_query = str_replace("now()", "'" . $rounded_time . "'", $selected_query);
 
 
-        for ($i = 0; $i < 60; $i = $i + 5) {
-            $leads = 0;
-            foreach ($temp as $kev => $row) {
-                if ($row["call_date"] >= $begin_time && $row["call_date"] <= $end_time)
-                    $leads = $row["lead_id"];
+
+
+
+
+                    //SUbstituição das variaveis
+                    $selected_query = str_replace('$hour', $row["tempo"], $selected_query);
+                    $selected_query = str_replace('$user', $row["user"], $selected_query);
+                    $selected_query = str_replace('$user_group', $row["user_group"], $selected_query);
+                    $selected_query = str_replace('$campaign_id', $row["campaign_id"], $selected_query);
+                    $selected_query = str_replace('$linha_inbound', $row["linha_inbound"], $selected_query);
+                    $selected_query = str_replace('$status', $row["status_feedback"], $selected_query);
+                    $selected_query = str_replace('$chamadas', $row["chamadas"], $selected_query);
+
+
+
+
+
+                    $query3 = $selected_query;
+
+                    $query3 = mysql_query($query3, $link) or die(mysql_error());
+
+                    while ($row3 = mysql_fetch_assoc($query3)) {
+
+                        $temp[] = array(lead_id => $row3["lead_id"], call_date => $row3["call_date"]);
+                    }
+
+
+                    $t = strtotime($rounded_time);
+                    $t2 = strtotime('-1 hours', $t);
+                    $begin_time = date("Y-m-d H:i:s", $t2);
+
+
+
+
+                    $t = strtotime($begin_time);
+                    $t2 = strtotime('+5 minutes', $t);
+                    $end_time = date("Y-m-d H:i:s", $t2);
+
+
+                    for ($k = 0; $k < 60; $k = $k + 5) {
+                        $leads = 0;
+
+                        foreach ($temp as $kev => $row) {
+                            if ($row["call_date"] >= $begin_time && $row["call_date"] <= $end_time)
+                                $leads = $row["lead_id"];
+                        }
+
+                        $js[] = array(leads => $leads, call_date => $begin_time);
+
+                        $t = strtotime($rounded_time);
+                        $t2 = strtotime('+5 minutes', $t);
+                        $rounded_time = date("Y-m-d H:i:s", $t2);
+
+
+
+                        $t = strtotime($rounded_time);
+                        $t2 = strtotime('-1 hours', $t);
+                        $begin_time = date("Y-m-d H:i:s", $t2);
+
+                        $t = strtotime($begin_time);
+                        $t2 = strtotime('+5 minutes', $t);
+                        $end_time = date("Y-m-d H:i:s", $t2);
+                    }
+                }
             }
-
-            $js[] = array(leads => $leads, call_date => $begin_time);
-
-            $t = strtotime($rounded_time);
-            $t2 = strtotime('+5 minutes', $t);
-            $rounded_time = date("Y-m-d H:i:s", $t2);
-
-
-
-            $t = strtotime($rounded_time);
-            $t2 = strtotime('-1 hours', $t);
-            $begin_time = date("Y-m-d H:i:s", $t2);
-
-            $t = strtotime($begin_time);
-            $t2 = strtotime('+5 minutes', $t);
-            $end_time = date("Y-m-d H:i:s", $t2);
         }
-
-
-
-
         echo json_encode($js);
         break;
 

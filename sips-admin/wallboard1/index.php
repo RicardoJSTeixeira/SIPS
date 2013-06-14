@@ -531,17 +531,17 @@ foreach ($_GET as $key => $value) {
                                                                     case "1":
                                                                         //Chamadas atendidas por campanha
                                                                         querie = get_query(7);
-                                                                        manipulate_dataset("insert_dataset", 0, id_wallboard, querie[5], querie[3], "1", 0, 0, $("#campaign_id option:selected").val(), 0, $("#in_out_bound").val(), 0, "atendidas");
+                                                                        manipulate_dataset("insert_dataset", 0, id_wallboard, querie[5], querie[3], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "atendidas");
                                                                         break;
                                                                     case "2":
                                                                         //Chamadas perdidas por campanha   
                                                                         querie = get_query(8);
-                                                                        manipulate_dataset("insert_dataset", 0, id_wallboard, querie[5], querie[3], "1", 0, 0, $("#campaign_id option:selected").val(), 0, $("#in_out_bound").val(), 0, "perdidas");
+                                                                        manipulate_dataset("insert_dataset", 0, id_wallboard, querie[5], querie[3], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "perdidas");
                                                                         break;
                                                                     case "3":
                                                                         //Chamadas feitas por campanha 
                                                                         querie = get_query(9);
-                                                                        manipulate_dataset("insert_dataset", 0, id_wallboard, querie[5], querie[3], "1", 0, 0, $("#campaign_id option:selected").val(), 0, $("#in_out_bound").val(), 0, "feitas");
+                                                                        manipulate_dataset("insert_dataset", 0, id_wallboard, querie[5], querie[3], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "feitas");
                                                                         break;
                                                                 }
                                                                 break;
@@ -604,7 +604,7 @@ foreach ($_GET as $key => $value) {
                                                                 //feedback por campanha
                                                                 querie = get_query(15);
 
-                                                                manipulate_dataset("insert_dataset", 0, id_wallboard, querie[5], querie[3], "1", 0, 0, $("#campaign_id option:selected").val(), 0, $("#in_out_bound").val(), $("#status_venda").val(), 0);
+                                                                manipulate_dataset("insert_dataset", 0, id_wallboard, querie[5], querie[3], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), $("#status_venda").val(), 0);
                                                                 break;
                                                             case "4":
                                                                 //feedback por call center
@@ -1035,6 +1035,7 @@ foreach ($_GET as $key => $value) {
                                                 $.each(data, function(index, value) {
                                                     queries.push([this.id, this.query_text_inbound, this.query_outbound, this.opcao_query, this.type_query, this.codigo]);
                                                 });
+                                                console.log(queries);
                                             }
                                         }, "json");
                                     }
