@@ -184,7 +184,6 @@ if (!empty($_GET['cmd'])) {
 
                     <div class="search-item c_bg-2" id="outt" >
                         <?= $hostn . '*CLI>'; ?>
-                        <div class="clear"></div>
                     </div>
                     <div class="search-item c_bg-1" id="input-conteiner">
                         <input tabindex="1" onkeyup="keyE(event);" class="span" id="cmd" type="text" />
