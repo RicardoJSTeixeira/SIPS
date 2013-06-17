@@ -343,36 +343,6 @@ echo "<head>\n";
 echo "<!-- VERSION: $version     BUILD: $build -->\n";
 echo "<!-- SEED TIME  $secX:   $year-$mon-$mday $hour:$min:$sec  LOCAL GMT OFFSET NOW: $LOCAL_GMT_OFF  DST: $isdst -->\n";
 
-function macfontfix($fontsize) 
-	{
-	$browser = getenv("HTTP_USER_AGENT");
-	$pctype = explode("(", $browser);
-	if (ereg("Mac",$pctype[1])) 
-		{
-		/* Browser is a Mac.  If not Netscape 6, raise fonts */
-		$blownbrowser = explode('/', $browser);
-		$ver = explode(' ', $blownbrowser[1]);
-		$ver = $ver[0];
-		if ($ver >= 5.0) return $fontsize; else return ($fontsize+2);
-		} 
-	else return $fontsize;	/* Browser is not a Mac - don't touch fonts */
-	}
-
-echo "<style type=\"text/css\">\n
-<!--\n
-.title {  font-family: Arial, Helvetica, sans-serif; font-size: ".macfontfix(18)."pt}\n
-.standard {  font-family: Arial, Helvetica, sans-serif; font-size: ".macfontfix(10)."pt}\n
-.small_standard {  font-family: Arial, Helvetica, sans-serif; font-size: ".macfontfix(8)."pt}\n
-.tiny_standard {  font-family: Arial, Helvetica, sans-serif; font-size: ".macfontfix(6)."pt}\n
-.standard_bold {  font-family: Arial, Helvetica, sans-serif; font-size: ".macfontfix(10)."pt; font-weight: bold}\n
-.standard_header {  font-family: Arial, Helvetica, sans-serif; font-size: ".macfontfix(14)."pt; font-weight: bold}\n
-.standard_bold_highlight {  font-family: Arial, Helvetica, sans-serif; font-size: ".macfontfix(10)."pt; font-weight: bold; color: white; BACKGROUND-COLOR: black}\n
-.standard_bold_blue_highlight {  font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: bold; BACKGROUND-COLOR: blue}\n
-A.employee_standard {  font-family: garamond, sans-serif; font-size: ".macfontfix(10)."pt; font-style: normal; font-variant: normal; font-weight: bold; text-decoration: none}\n
-.employee_standard {  font-family: garamond, sans-serif; font-size: ".macfontfix(10)."pt; font-weight: bold}\n
-.employee_title {  font-family: Garamond, sans-serif; font-size: ".macfontfix(14)."pt; font-weight: bold}\n
-\\\\-->\n
-</style>\n";
 
 ?>
 
@@ -406,7 +376,7 @@ function ParseFileName()
 <title>ADMINISTRATION: Lead Loader</title>
 <link href="../css/style.css" rel="stylesheet" type="text/css" />
 </head>
-<BODY BGCOLOR=WHITE marginheight=0 marginwidth=0 leftmargin=0 topmargin=0>
+<BODY>
 
 <?php
 $short_header=1;
@@ -432,9 +402,9 @@ if ( (!$OK_to_process) or ( ($leadfile) and ($file_layout!="standard") ) )
 	<br><br>
 	
 	
-	<form action=<?php echo $PHP_SELF ?> method=post onSubmit="ParseFileName()" enctype="multipart/form-data">
-	<input type=hidden name='leadfile_name' value="<?php echo $leadfile_name ?>">
-	<input type=hidden name='DB' value="<?php echo $DB ?>">
+	<form action="<?=$PHP_SELF?>" method="post" onSubmit="ParseFileName()" enctype="multipart/form-data">
+	<input type=hidden name='leadfile_name' value="<?=$leadfile_name ?>">
+	<input type=hidden name='DB' value="<?= $DB ?>">
 	<?php 
 	if ($file_layout!="custom") 
 		{
@@ -443,7 +413,7 @@ if ( (!$OK_to_process) or ( ($leadfile) and ($file_layout!="standard") ) )
 		<table>
 		<tr>
 			<td style='min-width:225px'> <div class=cc-mstyle style='height:28px; '><p> Escolher Ficheiro  </p></div></td>
-			<td><input type=file name="leadfile" id="leadfile" size=50 value="<?php echo $leadfile ?>"><td style='width:30px'><?php echo "$NWB#vicidial_list_loader$NWE"; ?></td>
+			<td><input type=file name="leadfile" id="leadfile" size=50 value="<?=$leadfile ?>"><td style='width:30px'><?php echo "$NWB#vicidial_list_loader$NWE"; ?></td>
 		  </tr>
 		  <tr>
 			
@@ -501,8 +471,7 @@ if ( (!$OK_to_process) or ( ($leadfile) and ($file_layout!="standard") ) )
 			</td>
 		  </tr>
 		  <tr>
-			<!-- <td><div class=cc-mstyle style='height:28px; '><p> Formato de Ficheiro a Usar  </p></div></td> -->
-			<td><input type=hidden name="file_layout" value="standard"><!--Normal&nbsp;&nbsp;&nbsp;&nbsp; --><input type=hidden name="file_layout" value="custom" checked><!--Personalizado --></td>
+			<td><input type=hidden name="file_layout" value="standard"><input type=hidden name="file_layout" value="custom" checked></td>
 		  </tr>
 			<tr>
 			<td><div class=cc-mstyle style='height:28px; '><p> Verificação de Duplicados  </p></div></td>
@@ -512,14 +481,7 @@ if ( (!$OK_to_process) or ( ($leadfile) and ($file_layout!="standard") ) )
 			
 			<option value="DUPCAMP">Verificar números duplicados em todas as Campanhas</option>
 			<option value="DUPSYS">Verificar números duplicados no sistema todo</option>
-			
-			<!-- <option value="DUPTITLEALTPHONELIST">CHECK FOR DUPLICATES BY TITLE/ALT-PHONE IN LIST ID</option>
-			<option value="DUPTITLEALTPHONESYS">CHECK FOR DUPLICATES BY TITLE/ALT-PHONE IN ENTIRE SYSTEM</option> -->
 			</select></td>
-		  </tr>
-		  <tr>
-		<!--	<td><div class=cc-mstyle style='height:28px; '><p> Hora Local  </p></div></td>
-			<td><select style=width:400px size=1 name=postalgmt><option selected value="AREA">COUNTRY CODE AND AREA CODE ONLY</option><option value="POSTAL">POSTAL CODE FIRST</option><option value="TZCODE">OWNER TIME ZONE CODE FIRST</option></select></td> -->
 		  </tr>
 	
 		
@@ -543,38 +505,6 @@ if ( (!$OK_to_process) or ( ($leadfile) and ($file_layout!="standard") ) )
 	</table>
 	</div>
 	
-	
-<!--	<table align=center width="700" border=0 cellpadding=5 cellspacing=0 bgcolor=#efefef>
-	<tr>
-	<td align=right width="35%"><B><font face="arial, helvetica" size=2>Lead file:</font></B></td>
-	<td align=left width="75%"><font face="arial, helvetica" size=2><?php #echo $leadfile_name ?></font></td>
-	</tr>
-	<tr>
-	<td align=right width="35%"><B><font face="arial, helvetica" size=2>List ID Override:</font></B></td>
-	<td align=left width="75%"><font face="arial, helvetica" size=2><?php #echo $list_id_override ?></font></td>
-	</tr>
-	<tr>
-	<td align=right width="35%"><B><font face="arial, helvetica" size=2>Phone Code Override:</font></B></td>
-	<td align=left width="75%"><font face="arial, helvetica" size=2><?php #echo $phone_code_override ?></font></td>
-	</tr>
-	<tr>
-	<td align=right width="35%"><B><font face="arial, helvetica" size=2>Lead Duplicate Check:</font></B></td>
-	<td align=left width="75%"><font face="arial, helvetica" size=2><?php #echo $dupcheck ?></font></td>
-	</tr>
-	<tr>
-	<td align=right width="35%"><B><font face="arial, helvetica" size=2>Lead Time Zone Lookup:</font></B></td>
-	<td align=left width="75%"><font face="arial, helvetica" size=2><?php #echo $postalgmt ?></font></td>
-	</tr>
-
-	<tr>
-	<td align=center colspan=2><B><font face="arial, helvetica" size=2>
-	<form action=<?php #echo $PHP_SELF ?> method=post onSubmit="ParseFileName()" enctype="multipart/form-data">
-	<input type=hidden name='leadfile_name' value="<?php #echo $leadfile_name ?>">
-	<input type=hidden name='DB' value="<?php #echo $DB ?>">
-	<a href="admin_listloader_third_gen.php">Load Another Lead File</a> &nbsp; &nbsp; &nbsp; &nbsp;</font></B> <font size=1>VERSION: <?php echo $version ?> &nbsp; &nbsp; BUILD: <?php #echo $build ?>
-	</font></td>
-	</tr></table>
-	<BR><BR><BR><BR> -->
 	<?php
 	}
 
@@ -603,17 +533,7 @@ if ($OK_to_process)
 		{
 		flush();
 		$file=fopen("$lead_file", "r");
-		print "<center><font face='arial, helvetica' size=3 color='#009900'><B>\n"; # processing
-
-		if (strlen($list_id_override)>0) 
-			{
-			print ""; #<BR><BR>LIST ID OVERRIDE FOR THIS FILE: $list_id_override<BR><BR>
-			}
-
-		if (strlen($phone_code_override)>0) 
-			{
-			print ""; #<BR><BR>PHONE CODE OVERRIDE FOR THIS FILE: $phone_code_override<BR><BR>
-			}
+		print "<center><font face='arial, helvetica' size=3 color='#009900'><B>\n"; 
 
 		if ($custom_fields_enabled > 0)
 			{
@@ -660,11 +580,6 @@ if ($OK_to_process)
 			$buffer=rtrim(fgets($file, 4096));
 			$buffer=stripslashes($buffer);
 			
-			//$buffer=utf8_encode($buffer);
-			# passa aqui
-			
-			
-
 			if (strlen($buffer)>0) 
 				{
 				$row=explode($delimiter, eregi_replace("[\'\"]", "", $buffer));
@@ -765,7 +680,6 @@ if ($OK_to_process)
 
 				if (strlen($list_id_override)>0) 
 					{
-				#	print "<BR><BR>LIST ID OVERRIDE FOR THIS FILE: $list_id_override<BR><BR>";
 					$list_id = $list_id_override;
 					}
 				if (strlen($phone_code_override)>0) 
@@ -786,8 +700,6 @@ if ($OK_to_process)
 								{
 								$A_field_value[$o] =	'';
 								$field_name_id = $A_field_label[$o] . "_field";
-
-							#	if ($DB>0) {echo "$A_field_label[$o]|$A_field_type[$o]\n";}
 
 								if ( ($A_field_type[$o]!='DISPLAY') and ($A_field_type[$o]!='SCRIPT') )
 									{
@@ -951,7 +863,7 @@ if ($OK_to_process)
 					else
 						{$phone_list .= "$phone_number$US$list_id|";}
 
-					$gmt_offset = lookup_gmt($phone_code,$USarea,$state,$LOCAL_GMT_OFF_STD,$Shour,$Smin,$Ssec,$Smon,$Smday,$Syear,$postalgmt,$postal_code,$owner);
+					$gmt_offset = 0;
 
 					if (strlen($custom_SQL)>3)
 						{
@@ -991,17 +903,6 @@ if ($OK_to_process)
 					}
 				else
 					{
-					if ($bad < 1000000)
-						{
-						if ( $list_id < 100 )
-							{
-							print ""; # <BR></b><font size=1 color=red>record $total BAD- PHONE: $phone_number ROW: |$row[0]| INVALID LIST ID</font><b>\n
-							}
-						else
-							{
-							print ""; # <BR></b><font size=1 color=red>record $total BAD- PHONE: $phone_number ROW: |$row[0]| DUP: $dup_lead  $dup_lead_list</font><b>\n
-							}
-						}
 					$bad++;
 					}
 				$total++;
@@ -1031,7 +932,6 @@ if ($OK_to_process)
 		
 		echo "<div class=cc-mstyle style='border:none; width:70%'>";
 		#debug
-		//print $stmtZ; echo "<br><br> $extra2 <br><br> $extra2_field <br><br>"; print_r($_POST);
 		print "
 		
 		<table>
@@ -1057,10 +957,7 @@ if ($OK_to_process)
 		
 		</table></div>";
 		} 
-	else 
-		{
-		print ""; #<center><font face='arial, helvetica' size=3 color='#990000'><B>ERROR: The file does not have the required number of fields to process it.</B></font></center>
-		}
+	
 	}
 ##### END custom fields submission #####
 
@@ -1137,14 +1034,7 @@ if (($leadfile) && ($LF_path))
 					
 			$total=0; $good=0; $bad=0; $dup=0; $post=0; $phone_list='';
 			print "<center><font face='arial, helvetica' size=3 color='#009900'><B>"; #Processing $delim_name file... ($tab_count|$pipe_count)\n
-			if (strlen($list_id_override)>0) 
-				{
-				print ""; #<BR><BR>LIST ID OVERRIDE FOR THIS FILE: $list_id_override<BR><BR>
-				}
-			if (strlen($phone_code_override)>0) 
-				{
-				print ""; #<BR><BR>PHONE CODE OVERRIDE FOR THIS FILE: $phone_code_override<BR><BR>\n
-				}
+			
 			while (!feof($file)) 
 				{
 				$record++; $testing++;
@@ -1398,7 +1288,7 @@ if (($leadfile) && ($LF_path))
 						else
 							{$phone_list .= "$phone_number$US$list_id|";}
 
-						$gmt_offset = lookup_gmt($phone_code,$USarea,$state,$LOCAL_GMT_OFF_STD,$Shour,$Smin,$Ssec,$Smon,$Smday,$Syear,$postalgmt,$postal_code,$owner);
+						$gmt_offset = 0;
 
 						if ($multi_insert_counter > 8) 
 							{
@@ -1592,19 +1482,14 @@ if (($leadfile) && ($LF_path))
 		$file=fopen("$lead_file", "r");
 		print "<center><font face='arial, helvetica' size=3 color='#009900'>"; # <B>Processing $delim_name file...\n
 
-		if (strlen($list_id_override)>0) 
-			{
-			print ""; #<BR><BR>LIST ID OVERRIDE FOR THIS FILE: $list_id_override<BR><BR>
-			}
-		if (strlen($phone_code_override)>0) 
-			{
-			print ""; #<BR><BR>PHONE CODE OVERRIDE FOR THIS FILE: $phone_code_override<BR><BR>
-			}
 		$buffer=rtrim(fgets($file, 4096));
 		$buffer=stripslashes($buffer);
 		$row=explode($delimiter, eregi_replace("[\'\"]", "", $buffer));
 		
-		
+                $q="Select `dial_method` from vicidial_campaigns a inner join vicidial_lists b on a.campaign_id=b.campaign_id WHERE b.list_id='$list_id_override';";
+                $is_inbound_man=mysql_fetch_assoc(mysql_query($q,$link));
+		$is_inbound_man=$is_inbound_man[dial_method]=="INBOUND_MAN";
+                
 		$q="Select Name,Display_name,a.active from vicidial_list_ref a inner join vicidial_lists b on a.campaign_id=b.campaign_id WHERE b.list_id='$list_id_override' ORDER BY field_order asc;";
 		$sips_fields_brute=mysql_query($q,$link);
 		$sips_fields=array();
@@ -1622,7 +1507,7 @@ if (($leadfile) && ($LF_path))
                     print "<!-- skipping " . mysql_field_name($rslt, $index) . " -->\n";
                     $a = false;
                     break;
-                } elseif (strtoupper($sips_fields[$i]['Name']) == strtoupper(mysql_field_name($rslt, $index))) {
+                } elseif ((strtoupper($sips_fields[$i]['Name']) == strtoupper(mysql_field_name($rslt, $index))) or (strtoupper($sips_fields[$i]['Name'])=="OWNER" and $is_inbound_man)) {
                     print "  <tr>";
                     print "    <td style='min-width:225px'> <div class=cc-mstyle style='height:28px; '><p>" . $sips_fields[$i]['Display_name'] . "</p></div></td>";
                     print "    <td><select style='width:400px' name='" . mysql_field_name($rslt, $index) . "_field'>";
@@ -1683,799 +1568,4 @@ if (($leadfile) && ($LF_path))
 </html>
 
 
-
-
-
-<?php
-
-exit;
-
-
-
-function lookup_gmt($phone_code,$USarea,$state,$LOCAL_GMT_OFF_STD,$Shour,$Smin,$Ssec,$Smon,$Smday,$Syear,$postalgmt,$postal_code,$owner)
-	{
-	global $link;
-
-	$postalgmt_found=0;
-	if ( (eregi("POSTAL",$postalgmt)) && (strlen($postal_code)>4) )
-		{
-		if (preg_match('/^1$/', $phone_code))
-			{
-			$stmt="select postal_code,state,GMT_offset,DST,DST_range,country,country_code from vicidial_postal_codes where country_code='$phone_code' and postal_code LIKE \"$postal_code%\";";
-			$rslt=mysql_query($stmt, $link);
-			$pc_recs = mysql_num_rows($rslt);
-			if ($pc_recs > 0)
-				{
-				$row=mysql_fetch_row($rslt);
-				$gmt_offset =	$row[2];	 $gmt_offset = eregi_replace("\+","",$gmt_offset);
-				$dst =			$row[3];
-				$dst_range =	$row[4];
-				$PC_processed++;
-				$postalgmt_found++;
-				$post++;
-				}
-			}
-		}
-	if ( ($postalgmt=="TZCODE") && (strlen($owner)>1) )
-		{
-		$dst_range='';
-		$dst='N';
-		$gmt_offset=0;
-
-		$stmt="select GMT_offset from vicidial_phone_codes where tz_code='$owner' and country_code='$phone_code' limit 1;";
-		$rslt=mysql_query($stmt, $link);
-		$pc_recs = mysql_num_rows($rslt);
-		if ($pc_recs > 0)
-			{
-			$row=mysql_fetch_row($rslt);
-			$gmt_offset =	$row[0];	 $gmt_offset = eregi_replace("\+","",$gmt_offset);
-			$PC_processed++;
-			$postalgmt_found++;
-			$post++;
-			}
-
-		$stmt = "select distinct DST_range from vicidial_phone_codes where tz_code='$owner' and country_code='$phone_code' order by DST_range desc limit 1;";
-		$rslt=mysql_query($stmt, $link);
-		$pc_recs = mysql_num_rows($rslt);
-		if ($pc_recs > 0)
-			{
-			$row=mysql_fetch_row($rslt);
-			$dst_range =	$row[0];
-			if (strlen($dst_range)>2) {$dst = 'Y';}
-			}
-		}
-
-	if ($postalgmt_found < 1)
-		{
-		$PC_processed=0;
-		### UNITED STATES ###
-		if ($phone_code =='1')
-			{
-			$stmt="select country_code,country,areacode,state,GMT_offset,DST,DST_range,geographic_description from vicidial_phone_codes where country_code='$phone_code' and areacode='$USarea';";
-			$rslt=mysql_query($stmt, $link);
-			$pc_recs = mysql_num_rows($rslt);
-			if ($pc_recs > 0)
-				{
-				$row=mysql_fetch_row($rslt);
-				$gmt_offset =	$row[4];	 $gmt_offset = eregi_replace("\+","",$gmt_offset);
-				$dst =			$row[5];
-				$dst_range =	$row[6];
-				$PC_processed++;
-				}
-			}
-		### MEXICO ###
-		if ($phone_code =='52')
-			{
-			$stmt="select country_code,country,areacode,state,GMT_offset,DST,DST_range,geographic_description from vicidial_phone_codes where country_code='$phone_code' and areacode='$USarea';";
-			$rslt=mysql_query($stmt, $link);
-			$pc_recs = mysql_num_rows($rslt);
-			if ($pc_recs > 0)
-				{
-				$row=mysql_fetch_row($rslt);
-				$gmt_offset =	$row[4];	 $gmt_offset = eregi_replace("\+","",$gmt_offset);
-				$dst =			$row[5];
-				$dst_range =	$row[6];
-				$PC_processed++;
-				}
-			}
-		### AUSTRALIA ###
-		if ($phone_code =='61')
-			{
-			$stmt="select country_code,country,areacode,state,GMT_offset,DST,DST_range,geographic_description from vicidial_phone_codes where country_code='$phone_code' and state='$state';";
-			$rslt=mysql_query($stmt, $link);
-			$pc_recs = mysql_num_rows($rslt);
-			if ($pc_recs > 0)
-				{
-				$row=mysql_fetch_row($rslt);
-				$gmt_offset =	$row[4];	 $gmt_offset = eregi_replace("\+","",$gmt_offset);
-				$dst =			$row[5];
-				$dst_range =	$row[6];
-				$PC_processed++;
-				}
-			}
-		### ALL OTHER COUNTRY CODES ###
-		if (!$PC_processed)
-			{
-			$PC_processed++;
-			$stmt="select country_code,country,areacode,state,GMT_offset,DST,DST_range,geographic_description from vicidial_phone_codes where country_code='$phone_code';";
-			$rslt=mysql_query($stmt, $link);
-			$pc_recs = mysql_num_rows($rslt);
-			if ($pc_recs > 0)
-				{
-				$row=mysql_fetch_row($rslt);
-				$gmt_offset =	$row[4];	 $gmt_offset = eregi_replace("\+","",$gmt_offset);
-				$dst =			$row[5];
-				$dst_range =	$row[6];
-				$PC_processed++;
-				}
-			}
-		}
-
-	### Find out if DST to raise the gmt offset ###
-	$AC_GMT_diff = ($gmt_offset - $LOCAL_GMT_OFF_STD);
-	$AC_localtime = mktime(($Shour + $AC_GMT_diff), $Smin, $Ssec, $Smon, $Smday, $Syear);
-		$hour = date("H",$AC_localtime);
-		$min = date("i",$AC_localtime);
-		$sec = date("s",$AC_localtime);
-		$mon = date("m",$AC_localtime);
-		$mday = date("d",$AC_localtime);
-		$wday = date("w",$AC_localtime);
-		$year = date("Y",$AC_localtime);
-	$dsec = ( ( ($hour * 3600) + ($min * 60) ) + $sec );
-
-	$AC_processed=0;
-	if ( (!$AC_processed) and ($dst_range == 'SSM-FSN') )
-		{
-		if ($DBX) {print "     Second Sunday March to First Sunday November\n";}
-		#**********************************************************************
-		# SSM-FSN
-		#     This is returns 1 if Daylight Savings Time is in effect and 0 if 
-		#       Standard time is in effect.
-		#     Based on Second Sunday March to First Sunday November at 2 am.
-		#     INPUTS:
-		#       mm              INTEGER       Month.
-		#       dd              INTEGER       Day of the month.
-		#       ns              INTEGER       Seconds into the day.
-		#       dow             INTEGER       Day of week (0=Sunday, to 6=Saturday)
-		#     OPTIONAL INPUT:
-		#       timezone        INTEGER       hour difference UTC - local standard time
-		#                                      (DEFAULT is blank)
-		#                                     make calculations based on UTC time, 
-		#                                     which means shift at 10:00 UTC in April
-		#                                     and 9:00 UTC in October
-		#     OUTPUT: 
-		#                       INTEGER       1 = DST, 0 = not DST
-		#
-		# S  M  T  W  T  F  S
-		# 1  2  3  4  5  6  7
-		# 8  9 10 11 12 13 14
-		#15 16 17 18 19 20 21
-		#22 23 24 25 26 27 28
-		#29 30 31
-		# 
-		# S  M  T  W  T  F  S
-		#    1  2  3  4  5  6
-		# 7  8  9 10 11 12 13
-		#14 15 16 17 18 19 20
-		#21 22 23 24 25 26 27
-		#28 29 30 31
-		# 
-		#**********************************************************************
-
-			$USACAN_DST=0;
-			$mm = $mon;
-			$dd = $mday;
-			$ns = $dsec;
-			$dow= $wday;
-
-			if ($mm < 3 || $mm > 11) {
-			$USACAN_DST=0;   
-			} elseif ($mm >= 4 and $mm <= 10) {
-			$USACAN_DST=1;   
-			} elseif ($mm == 3) {
-			if ($dd > 13) {
-				$USACAN_DST=1;   
-			} elseif ($dd >= ($dow+8)) {
-				if ($timezone) {
-				if ($dow == 0 and $ns < (7200+$timezone*3600)) {
-					$USACAN_DST=0;   
-				} else {
-					$USACAN_DST=1;   
-				}
-				} else {
-				if ($dow == 0 and $ns < 7200) {
-					$USACAN_DST=0;   
-				} else {
-					$USACAN_DST=1;   
-				}
-				}
-			} else {
-				$USACAN_DST=0;   
-			}
-			} elseif ($mm == 11) {
-			if ($dd > 7) {
-				$USACAN_DST=0;   
-			} elseif ($dd < ($dow+1)) {
-				$USACAN_DST=1;   
-			} elseif ($dow == 0) {
-				if ($timezone) { # UTC calculations
-				if ($ns < (7200+($timezone-1)*3600)) {
-					$USACAN_DST=1;   
-				} else {
-					$USACAN_DST=0;   
-				}
-				} else { # local time calculations
-				if ($ns < 7200) {
-					$USACAN_DST=1;   
-				} else {
-					$USACAN_DST=0;   
-				}
-				}
-			} else {
-				$USACAN_DST=0;   
-			}
-			} # end of month checks
-		if ($DBX) {print "     DST: $USACAN_DST\n";}
-		if ($USACAN_DST) {$gmt_offset++;}
-		$AC_processed++;
-		}
-
-	if ( (!$AC_processed) and ($dst_range == 'FSA-LSO') )
-		{
-		if ($DBX) {print "     First Sunday April to Last Sunday October\n";}
-		#**********************************************************************
-		# FSA-LSO
-		#     This is returns 1 if Daylight Savings Time is in effect and 0 if 
-		#       Standard time is in effect.
-		#     Based on first Sunday in April and last Sunday in October at 2 am.
-		#**********************************************************************
-			
-			$USA_DST=0;
-			$mm = $mon;
-			$dd = $mday;
-			$ns = $dsec;
-			$dow= $wday;
-
-			if ($mm < 4 || $mm > 10) {
-			$USA_DST=0;
-			} elseif ($mm >= 5 and $mm <= 9) {
-			$USA_DST=1;
-			} elseif ($mm == 4) {
-			if ($dd > 7) {
-				$USA_DST=1;
-			} elseif ($dd >= ($dow+1)) {
-				if ($timezone) {
-				if ($dow == 0 and $ns < (7200+$timezone*3600)) {
-					$USA_DST=0;
-				} else {
-					$USA_DST=1;
-				}
-				} else {
-				if ($dow == 0 and $ns < 7200) {
-					$USA_DST=0;
-				} else {
-					$USA_DST=1;
-				}
-				}
-			} else {
-				$USA_DST=0;
-			}
-			} elseif ($mm == 10) {
-			if ($dd < 25) {
-				$USA_DST=1;
-			} elseif ($dd < ($dow+25)) {
-				$USA_DST=1;
-			} elseif ($dow == 0) {
-				if ($timezone) { # UTC calculations
-				if ($ns < (7200+($timezone-1)*3600)) {
-					$USA_DST=1;
-				} else {
-					$USA_DST=0;
-				}
-				} else { # local time calculations
-				if ($ns < 7200) {
-					$USA_DST=1;
-				} else {
-					$USA_DST=0;
-				}
-				}
-			} else {
-				$USA_DST=0;
-			}
-			} # end of month checks
-
-		if ($DBX) {print "     DST: $USA_DST\n";}
-		if ($USA_DST) {$gmt_offset++;}
-		$AC_processed++;
-		}
-
-	if ( (!$AC_processed) and ($dst_range == 'LSM-LSO') )
-		{
-		if ($DBX) {print "     Last Sunday March to Last Sunday October\n";}
-		#**********************************************************************
-		#     This is s 1 if Daylight Savings Time is in effect and 0 if 
-		#       Standard time is in effect.
-		#     Based on last Sunday in March and last Sunday in October at 1 am.
-		#**********************************************************************
-			
-			$GBR_DST=0;
-			$mm = $mon;
-			$dd = $mday;
-			$ns = $dsec;
-			$dow= $wday;
-
-			if ($mm < 3 || $mm > 10) {
-			$GBR_DST=0;
-			} elseif ($mm >= 4 and $mm <= 9) {
-			$GBR_DST=1;
-			} elseif ($mm == 3) {
-			if ($dd < 25) {
-				$GBR_DST=0;
-			} elseif ($dd < ($dow+25)) {
-				$GBR_DST=0;
-			} elseif ($dow == 0) {
-				if ($timezone) { # UTC calculations
-				if ($ns < (3600+($timezone-1)*3600)) {
-					$GBR_DST=0;
-				} else {
-					$GBR_DST=1;
-				}
-				} else { # local time calculations
-				if ($ns < 3600) {
-					$GBR_DST=0;
-				} else {
-					$GBR_DST=1;
-				}
-				}
-			} else {
-				$GBR_DST=1;
-			}
-			} elseif ($mm == 10) {
-			if ($dd < 25) {
-				$GBR_DST=1;
-			} elseif ($dd < ($dow+25)) {
-				$GBR_DST=1;
-			} elseif ($dow == 0) {
-				if ($timezone) { # UTC calculations
-				if ($ns < (3600+($timezone-1)*3600)) {
-					$GBR_DST=1;
-				} else {
-					$GBR_DST=0;
-				}
-				} else { # local time calculations
-				if ($ns < 3600) {
-					$GBR_DST=1;
-				} else {
-					$GBR_DST=0;
-				}
-				}
-			} else {
-				$GBR_DST=0;
-			}
-			} # end of month checks
-			if ($DBX) {print "     DST: $GBR_DST\n";}
-		if ($GBR_DST) {$gmt_offset++;}
-		$AC_processed++;
-		}
-	if ( (!$AC_processed) and ($dst_range == 'LSO-LSM') )
-		{
-		if ($DBX) {print "     Last Sunday October to Last Sunday March\n";}
-		#**********************************************************************
-		#     This is s 1 if Daylight Savings Time is in effect and 0 if 
-		#       Standard time is in effect.
-		#     Based on last Sunday in October and last Sunday in March at 1 am.
-		#**********************************************************************
-			
-			$AUS_DST=0;
-			$mm = $mon;
-			$dd = $mday;
-			$ns = $dsec;
-			$dow= $wday;
-
-			if ($mm < 3 || $mm > 10) {
-			$AUS_DST=1;
-			} elseif ($mm >= 4 and $mm <= 9) {
-			$AUS_DST=0;
-			} elseif ($mm == 3) {
-			if ($dd < 25) {
-				$AUS_DST=1;
-			} elseif ($dd < ($dow+25)) {
-				$AUS_DST=1;
-			} elseif ($dow == 0) {
-				if ($timezone) { # UTC calculations
-				if ($ns < (3600+($timezone-1)*3600)) {
-					$AUS_DST=1;
-				} else {
-					$AUS_DST=0;
-				}
-				} else { # local time calculations
-				if ($ns < 3600) {
-					$AUS_DST=1;
-				} else {
-					$AUS_DST=0;
-				}
-				}
-			} else {
-				$AUS_DST=0;
-			}
-			} elseif ($mm == 10) {
-			if ($dd < 25) {
-				$AUS_DST=0;
-			} elseif ($dd < ($dow+25)) {
-				$AUS_DST=0;
-			} elseif ($dow == 0) {
-				if ($timezone) { # UTC calculations
-				if ($ns < (3600+($timezone-1)*3600)) {
-					$AUS_DST=0;
-				} else {
-					$AUS_DST=1;
-				}
-				} else { # local time calculations
-				if ($ns < 3600) {
-					$AUS_DST=0;
-				} else {
-					$AUS_DST=1;
-				}
-				}
-			} else {
-				$AUS_DST=1;
-			}
-			} # end of month checks						
-		if ($DBX) {print "     DST: $AUS_DST\n";}
-		if ($AUS_DST) {$gmt_offset++;}
-		$AC_processed++;
-		}
-
-	if ( (!$AC_processed) and ($dst_range == 'FSO-LSM') )
-		{
-		if ($DBX) {print "     First Sunday October to Last Sunday March\n";}
-		#**********************************************************************
-		#   TASMANIA ONLY
-		#     This is s 1 if Daylight Savings Time is in effect and 0 if 
-		#       Standard time is in effect.
-		#     Based on first Sunday in October and last Sunday in March at 1 am.
-		#**********************************************************************
-			
-			$AUST_DST=0;
-			$mm = $mon;
-			$dd = $mday;
-			$ns = $dsec;
-			$dow= $wday;
-
-			if ($mm < 3 || $mm > 10) {
-			$AUST_DST=1;
-			} elseif ($mm >= 4 and $mm <= 9) {
-			$AUST_DST=0;
-			} elseif ($mm == 3) {
-			if ($dd < 25) {
-				$AUST_DST=1;
-			} elseif ($dd < ($dow+25)) {
-				$AUST_DST=1;
-			} elseif ($dow == 0) {
-				if ($timezone) { # UTC calculations
-				if ($ns < (3600+($timezone-1)*3600)) {
-					$AUST_DST=1;
-				} else {
-					$AUST_DST=0;
-				}
-				} else { # local time calculations
-				if ($ns < 3600) {
-					$AUST_DST=1;
-				} else {
-					$AUST_DST=0;
-				}
-				}
-			} else {
-				$AUST_DST=0;
-			}
-			} elseif ($mm == 10) {
-			if ($dd > 7) {
-				$AUST_DST=1;
-			} elseif ($dd >= ($dow+1)) {
-				if ($timezone) {
-				if ($dow == 0 and $ns < (7200+$timezone*3600)) {
-					$AUST_DST=0;
-				} else {
-					$AUST_DST=1;
-				}
-				} else {
-				if ($dow == 0 and $ns < 3600) {
-					$AUST_DST=0;
-				} else {
-					$AUST_DST=1;
-				}
-				}
-			} else {
-				$AUST_DST=0;
-			}
-			} # end of month checks						
-		if ($DBX) {print "     DST: $AUST_DST\n";}
-		if ($AUST_DST) {$gmt_offset++;}
-		$AC_processed++;
-		}
-
-	if ( (!$AC_processed) and ($dst_range == 'FSO-FSA') )
-		{
-		if ($DBX) {print "     Sunday in October to First Sunday in April\n";}
-		#**********************************************************************
-		# FSO-FSA
-		#   2008+ AUSTRALIA ONLY (country code 61)
-		#     This is returns 1 if Daylight Savings Time is in effect and 0 if 
-		#       Standard time is in effect.
-		#     Based on first Sunday in October and first Sunday in April at 1 am.
-		#**********************************************************************
-		
-		$AUSE_DST=0;
-		$mm = $mon;
-		$dd = $mday;
-		$ns = $dsec;
-		$dow= $wday;
-
-		if ($mm < 4 or $mm > 10) {
-		$AUSE_DST=1;   
-		} elseif ($mm >= 5 and $mm <= 9) {
-		$AUSE_DST=0;   
-		} elseif ($mm == 4) {
-		if ($dd > 7) {
-			$AUSE_DST=0;   
-		} elseif ($dd >= ($dow+1)) {
-			if ($timezone) {
-			if ($dow == 0 and $ns < (3600+$timezone*3600)) {
-				$AUSE_DST=1;   
-			} else {
-				$AUSE_DST=0;   
-			}
-			} else {
-			if ($dow == 0 and $ns < 7200) {
-				$AUSE_DST=1;   
-			} else {
-				$AUSE_DST=0;   
-			}
-			}
-		} else {
-			$AUSE_DST=1;   
-		}
-		} elseif ($mm == 10) {
-		if ($dd >= 8) {
-			$AUSE_DST=1;   
-		} elseif ($dd >= ($dow+1)) {
-			if ($timezone) {
-			if ($dow == 0 and $ns < (7200+$timezone*3600)) {
-				$AUSE_DST=0;   
-			} else {
-				$AUSE_DST=1;   
-			}
-			} else {
-			if ($dow == 0 and $ns < 3600) {
-				$AUSE_DST=0;   
-			} else {
-				$AUSE_DST=1;   
-			}
-			}
-		} else {
-			$AUSE_DST=0;   
-		}
-		} # end of month checks
-		if ($DBX) {print "     DST: $AUSE_DST\n";}
-		if ($AUSE_DST) {$gmt_offset++;}
-		$AC_processed++;
-		}
-
-	if ( (!$AC_processed) and ($dst_range == 'FSO-TSM') )
-		{
-		if ($DBX) {print "     First Sunday October to Third Sunday March\n";}
-		#**********************************************************************
-		#     This is s 1 if Daylight Savings Time is in effect and 0 if 
-		#       Standard time is in effect.
-		#     Based on first Sunday in October and third Sunday in March at 1 am.
-		#**********************************************************************
-			
-			$NZL_DST=0;
-			$mm = $mon;
-			$dd = $mday;
-			$ns = $dsec;
-			$dow= $wday;
-
-			if ($mm < 3 || $mm > 10) {
-			$NZL_DST=1;
-			} elseif ($mm >= 4 and $mm <= 9) {
-			$NZL_DST=0;
-			} elseif ($mm == 3) {
-			if ($dd < 14) {
-				$NZL_DST=1;
-			} elseif ($dd < ($dow+14)) {
-				$NZL_DST=1;
-			} elseif ($dow == 0) {
-				if ($timezone) { # UTC calculations
-				if ($ns < (3600+($timezone-1)*3600)) {
-					$NZL_DST=1;
-				} else {
-					$NZL_DST=0;
-				}
-				} else { # local time calculations
-				if ($ns < 3600) {
-					$NZL_DST=1;
-				} else {
-					$NZL_DST=0;
-				}
-				}
-			} else {
-				$NZL_DST=0;
-			}
-			} elseif ($mm == 10) {
-			if ($dd > 7) {
-				$NZL_DST=1;
-			} elseif ($dd >= ($dow+1)) {
-				if ($timezone) {
-				if ($dow == 0 and $ns < (7200+$timezone*3600)) {
-					$NZL_DST=0;
-				} else {
-					$NZL_DST=1;
-				}
-				} else {
-				if ($dow == 0 and $ns < 3600) {
-					$NZL_DST=0;
-				} else {
-					$NZL_DST=1;
-				}
-				}
-			} else {
-				$NZL_DST=0;
-			}
-			} # end of month checks						
-		if ($DBX) {print "     DST: $NZL_DST\n";}
-		if ($NZL_DST) {$gmt_offset++;}
-		$AC_processed++;
-		}
-
-	if ( (!$AC_processed) and ($dst_range == 'LSS-FSA') )
-		{
-		if ($DBX) {print "     Last Sunday in September to First Sunday in April\n";}
-		#**********************************************************************
-		# LSS-FSA
-		#   2007+ NEW ZEALAND (country code 64)
-		#     This is returns 1 if Daylight Savings Time is in effect and 0 if 
-		#       Standard time is in effect.
-		#     Based on last Sunday in September and first Sunday in April at 1 am.
-		#**********************************************************************
-		
-		$NZLN_DST=0;
-		$mm = $mon;
-		$dd = $mday;
-		$ns = $dsec;
-		$dow= $wday;
-
-		if ($mm < 4 || $mm > 9) {
-		$NZLN_DST=1;   
-		} elseif ($mm >= 5 && $mm <= 9) {
-		$NZLN_DST=0;   
-		} elseif ($mm == 4) {
-		if ($dd > 7) {
-			$NZLN_DST=0;   
-		} elseif ($dd >= ($dow+1)) {
-			if ($timezone) {
-			if ($dow == 0 && $ns < (3600+$timezone*3600)) {
-				$NZLN_DST=1;   
-			} else {
-				$NZLN_DST=0;   
-			}
-			} else {
-			if ($dow == 0 && $ns < 7200) {
-				$NZLN_DST=1;   
-			} else {
-				$NZLN_DST=0;   
-			}
-			}
-		} else {
-			$NZLN_DST=1;   
-		}
-		} elseif ($mm == 9) {
-		if ($dd < 25) {
-			$NZLN_DST=0;   
-		} elseif ($dd < ($dow+25)) {
-			$NZLN_DST=0;   
-		} elseif ($dow == 0) {
-			if ($timezone) { # UTC calculations
-			if ($ns < (3600+($timezone-1)*3600)) {
-				$NZLN_DST=0;   
-			} else {
-				$NZLN_DST=1;   
-			}
-			} else { # local time calculations
-			if ($ns < 3600) {
-				$NZLN_DST=0;   
-			} else {
-				$NZLN_DST=1;   
-			}
-			}
-		} else {
-			$NZLN_DST=1;   
-		}
-		} # end of month checks
-		if ($DBX) {print "     DST: $NZLN_DST\n";}
-		if ($NZLN_DST) {$gmt_offset++;}
-		$AC_processed++;
-		}
-
-	if ( (!$AC_processed) and ($dst_range == 'TSO-LSF') )
-		{
-		if ($DBX) {print "     Third Sunday October to Last Sunday February\n";}
-		#**********************************************************************
-		# TSO-LSF
-		#     This is returns 1 if Daylight Savings Time is in effect and 0 if 
-		#       Standard time is in effect. Brazil
-		#     Based on Third Sunday October to Last Sunday February at 1 am.
-		#**********************************************************************
-			
-			$BZL_DST=0;
-			$mm = $mon;
-			$dd = $mday;
-			$ns = $dsec;
-			$dow= $wday;
-
-			if ($mm < 2 || $mm > 10) {
-			$BZL_DST=1;   
-			} elseif ($mm >= 3 and $mm <= 9) {
-			$BZL_DST=0;   
-			} elseif ($mm == 2) {
-			if ($dd < 22) {
-				$BZL_DST=1;   
-			} elseif ($dd < ($dow+22)) {
-				$BZL_DST=1;   
-			} elseif ($dow == 0) {
-				if ($timezone) { # UTC calculations
-				if ($ns < (3600+($timezone-1)*3600)) {
-					$BZL_DST=1;   
-				} else {
-					$BZL_DST=0;   
-				}
-				} else { # local time calculations
-				if ($ns < 3600) {
-					$BZL_DST=1;   
-				} else {
-					$BZL_DST=0;   
-				}
-				}
-			} else {
-				$BZL_DST=0;   
-			}
-			} elseif ($mm == 10) {
-			if ($dd < 22) {
-				$BZL_DST=0;   
-			} elseif ($dd < ($dow+22)) {
-				$BZL_DST=0;   
-			} elseif ($dow == 0) {
-				if ($timezone) { # UTC calculations
-				if ($ns < (3600+($timezone-1)*3600)) {
-					$BZL_DST=0;   
-				} else {
-					$BZL_DST=1;   
-				}
-				} else { # local time calculations
-				if ($ns < 3600) {
-					$BZL_DST=0;   
-				} else {
-					$BZL_DST=1;   
-				}
-				}
-			} else {
-				$BZL_DST=1;   
-			}
-			} # end of month checks
-		if ($DBX) {print "     DST: $BZL_DST\n";}
-		if ($BZL_DST) {$gmt_offset++;}
-		$AC_processed++;
-		}
-
-	if (!$AC_processed)
-		{
-		if ($DBX) {print "     No DST Method Found\n";}
-		if ($DBX) {print "     DST: 0\n";}
-		$AC_processed++;
-		}
-	$gmt_offset="1.00";
-	return $gmt_offset;
-	}
-
-?>
 </TD></TR></TABLE>
