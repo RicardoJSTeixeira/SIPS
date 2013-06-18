@@ -1503,11 +1503,11 @@ if (($leadfile) && ($LF_path))
             $a = true;
             for ($index = 0; $index < count($sips_fields); $index++) {
 
-                if (($sips_fields[$i]['Name'] == "list_id" and $list_id_override != "") or ($sips_fields[$i]['Name'] == "phone_code" and $phone_code_override != "") or (strtoupper($sips_fields[$i]['Name']) == strtoupper(mysql_field_name($rslt, $index)) AND $sips_fields[$i]['active'] == 0)) {
+                if (($sips_fields[$i]['Name'] == "list_id" and $list_id_override != "") or ($sips_fields[$i]['Name'] == "phone_code" and $phone_code_override != "") or (strtoupper($sips_fields[$i]['Name']) == strtoupper(mysql_field_name($rslt, $index)) AND $sips_fields[$i]['active'] == 0 AND strtoupper($sips_fields[$i]['Name'])!="OWNER")) {
                     print "<!-- skipping " . mysql_field_name($rslt, $index) . " -->\n";
                     $a = false;
                     break;
-                } elseif ((strtoupper($sips_fields[$i]['Name']) == strtoupper(mysql_field_name($rslt, $index))) or (strtoupper($sips_fields[$i]['Name'])=="OWNER" and $is_inbound_man)) {
+                } elseif ((strtoupper($sips_fields[$i]['Name']) == strtoupper(mysql_field_name($rslt, $index))) or (strtoupper(mysql_field_name($rslt, $index))=="OWNER" and strtoupper($sips_fields[$i]['Name'])==strtoupper(mysql_field_name($rslt, $index)) and $is_inbound_man)) {
                     print "  <tr>";
                     print "    <td style='min-width:225px'> <div class=cc-mstyle style='height:28px; '><p>" . $sips_fields[$i]['Display_name'] . "</p></div></td>";
                     print "    <td><select style='width:400px' name='" . mysql_field_name($rslt, $index) . "_field'>";

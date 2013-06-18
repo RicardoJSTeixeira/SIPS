@@ -720,7 +720,7 @@ exit;
 	{
 	if ( (strlen($VD_login)<1) or (strlen($VD_pass)<1) or (strlen($VD_campaign)<1) )
 		{
-		echo "<title>SIPS Call-Center Operador: Escolha a Campanha</title>\n";
+		echo "<title>Go Contact Center Operador: Escolha a Campanha</title>\n";
 		echo "</head>\n";
         echo "<body >\n";
 		if ($hide_timeclock_link < 1)
@@ -805,7 +805,7 @@ exit;
 
 			if ( (strlen($phone_login) < 1) or (strlen($phone_pass) < 1) )
 				{
-				echo "<title>SIPS Call-Center Client: Login</title>\n";
+				echo "<title>Go Contact Center Client: Login</title>\n";
 				echo "</head>\n";
                 echo "<body >\n";
 				if ($hide_timeclock_link < 1)
@@ -891,7 +891,7 @@ if ($phone_exists == 0)
 	{
 	$phone_pass = $result_phone_pass[0];
 	
-	echo "<title>SIPS Call-Center: Login de Operador</title>";
+	echo "<title>Go Contact Center: Login de Operador</title>";
 	echo "</head>";
     echo "<body>";
 
@@ -1171,7 +1171,7 @@ else
 
 			if ( (!eregi("$VD_campaign",$LOGallowed_campaigns)) and (!eregi("ALL-CAMPAIGNS",$LOGallowed_campaigns)) )
 				{
-				echo "<title>SIPS Call-Center Operador: Login</title>\n";
+				echo "<title>Go Contact Center Operador: Login</title>\n";
 				echo "</head>\n";
                 echo "<body>\n";
 				if ($hide_timeclock_link < 1)
@@ -1797,7 +1797,7 @@ if($val == 1) {
 
 			
 $phone_pass = $result_phone_pass[0];
-echo "<title>SIPS Call-Center: Login de Operador</title>";
+echo "<title>Go Contact Center: Login de Operador</title>";
 echo "</head>";
 echo "<body onload=login_allowable_campaigns();>";
 echo "<center><img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/go_logo_35.png />";
@@ -1978,7 +1978,7 @@ exit;
 	$authphone=$row[0];
 	if (!$authphone)
 		{
-		echo "<title>SIPS Call-Center Operador: Erro no Login de Licença</title>\n";
+		echo "<title>Go Contact Center Operador: Erro no Login de Licença</title>\n";
 		echo "</head>\n";
         echo "<body id='ib'>\n";
 		if ($hide_timeclock_link < 1)
@@ -2102,7 +2102,7 @@ exit;
 				}
 			echo "<!-- Phones balance selection: $phone_login|$pb_server_ip|$past_minutes_date|     |$pb_log -->\n";
 			}
-		echo "<title>SIPS Call-Center</title>\n";
+		echo "<title>Go Contact Center</title>\n";
 		$stmt="SELECT extension,dialplan_number,voicemail_id,phone_ip,computer_ip,server_ip,login,pass,status,active,phone_type,fullname,company,picture,messages,old_messages,protocol,local_gmt,ASTmgrUSERNAME,ASTmgrSECRET,login_user,login_pass,login_campaign,park_on_extension,conf_on_extension,VICIDIAL_park_on_extension,VICIDIAL_park_on_filename,monitor_prefix,recording_exten,voicemail_exten,voicemail_dump_exten,ext_context,dtmf_send_extension,call_out_number_group,client_browser,install_directory,local_web_callerID_URL,VICIDIAL_web_URL,AGI_call_logging_enabled,user_switching_enabled,conferencing_enabled,admin_hangup_enabled,admin_hijack_enabled,admin_monitor_enabled,call_parking_enabled,updater_check_enabled,AFLogging_enabled,QUEUE_ACTION_enabled,CallerID_popup_enabled,voicemail_button_enabled,enable_fast_refresh,fast_refresh_rate,enable_persistant_mysql,auto_dial_next_number,VDstop_rec_after_each_call,DBX_server,DBX_database,DBX_user,DBX_pass,DBX_port,DBY_server,DBY_database,DBY_user,DBY_pass,DBY_port,outbound_cid,enable_sipsak_messages,email,template_id,conf_override,phone_context,phone_ring_timeout,conf_secret,is_webphone,use_external_server_ip,codecs_list,webphone_dialpad,phone_ring_timeout,on_hook_agent from phones where login='$phone_login' and pass='$phone_pass' and active = 'Y';";
 		if ($DB) {echo "|$stmt|\n";}
 		$rslt=mysql_query($stmt, $link);
@@ -2899,135 +2899,6 @@ if ($webphone_location == 'bar')
 	}
 $AVTheight = '0';
 if ($is_webphone) {$AVTheight = '20';}
-
-
-################################################################
-### BEGIN - build the callback calendar (12 months)          ###
-################################################################
-/*define ('ADAY', (60*60*24));
-$CdayARY = getdate();
-$Cmon = $CdayARY['mon'];
-$Cyear = $CdayARY['year'];
-$CTODAY = date("Y-m");
-$CTODAYmday = date("j");
-$CINC=0;
-
-$Cmonths = Array('January','February','March','April','May','June',
-				'July','August','September','October','November','December');
-$Cdays = Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
-
-$CCAL_OUT = '';
-
-$CCAL_OUT .= "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">";
-
-while ($CINC < 12)
-{
-if ( ($CINC == 0) || ($CINC == 4) ||($CINC == 8) )
-	{$CCAL_OUT .= "<tr>";}
-
-$CCAL_OUT .= "<td valign=\"top\">";
-
-$CYyear = $Cyear;
-$Cmonth=	($Cmon + $CINC);
-if ($Cmonth > 12)
-	{
-	$Cmonth = ($Cmonth - 12);
-	$CYyear++;
-	}
-$Cstart= mktime(11,0,0,$Cmonth,1,$CYyear);
-$CfirstdayARY = getdate($Cstart);
-#echo "|$Cmon|$Cmonth|$CINC|\n";
-$CPRNTDAY = date("Y-m", $Cstart);
-
-$CCAL_OUT .= "<table border=\"1\" cellpadding=\"5\" bordercolor=\"000000\" cellspacing=\"0\" bgcolor=\"white\">";
-$CCAL_OUT .= "<tr>";
-$CCAL_OUT .= "<td colspan=\"7\" bordercolor=\"#ffffff\" bgcolor=\"#FFFFCC\">";
-$CCAL_OUT .= "<div align=\"center\">";
-$CCAL_OUT .= "$CfirstdayARY[month] $CfirstdayARY[year]";
-$CCAL_OUT .= "</div>";
-$CCAL_OUT .= "</td>";
-$CCAL_OUT .= "</tr>";
-
-foreach($Cdays as $Cday)
-{
-	$CDCLR="#ffffff";
-$CCAL_OUT .= "<td bordercolor=\"$CDCLR\" style='background-color:#FFFFCC'>";
-$CCAL_OUT .= "<div align=\"center\">";
-$CCAL_OUT .= "$Cday";
-$CCAL_OUT .= "</div>";
-$CCAL_OUT .= "</td>";
-}
-
-for( $Ccount=0;$Ccount<(6*7);$Ccount++)
-{
-	$Cdayarray = getdate($Cstart);
-	if((($Ccount) % 7) == 0)
-	{
-		if($Cdayarray['mon'] != $CfirstdayARY['mon'])
-			break;
-		$CCAL_OUT .= "</tr><tr>";
-	}
-	if($Ccount < $CfirstdayARY['wday'] || $Cdayarray['mon'] != $Cmonth)
-	{
-		$CCAL_OUT .= "<td bordercolor=\"#ffffff\" style='background-color:#999'>&nbsp;</td>";
-	}
-	else
-	{
-		if( ($Cdayarray['mday'] == $CTODAYmday) and ($CPRNTDAY == $CTODAY) )
-		{
-		$CPRNTmday = $Cdayarray['mday'];
-		if ($CPRNTmday < 10) {$CPRNTmday = "0$CPRNTmday";}
-		$CBL = "<a href=\"#\" onclick=\"CB_date_pick('$CPRNTDAY-$CPRNTmday');return false;\">";
-		$CEL = "</a>";
-
-		$CCAL_OUT .= "<td style='background-color:#FFF; font-size:9x;' bordercolor=\"#FFCCCC\">";
-        $CCAL_OUT .= "<div align=\"center\">";
-		$CCAL_OUT .= "$CBL$Cdayarray[mday]$CEL";
-		$CCAL_OUT .= "</div>";
-		$CCAL_OUT .= "</td>";
-			$Cstart += ADAY;
-		}
-		else
-		{
-	$CDCLR="#ffffff";
-	if ( ($Cdayarray['mday'] < $CTODAYmday) and ($CPRNTDAY == $CTODAY) )
-		{
-		$CDCLR="$MAIN_COLOR";
-		$CBL = '';
-		$CEL = '';
-		}
-	else
-		{
-		$CPRNTmday = $Cdayarray['mday'];
-		if ($CPRNTmday < 10) {$CPRNTmday = "0$CPRNTmday";}
-		$CBL = "<a href=\"#\" onclick=\"CB_date_pick('$CPRNTDAY-$CPRNTmday');return false;\">";
-		$CEL = "</a>";
-		}
-
-	$CCAL_OUT .= "<td style='background-color:#FFF; font-size:9x;' bordercolor=\"#FFCCCC\">";
-    $CCAL_OUT .= "<div align=\"center\">";
-	$CCAL_OUT .= "$CBL$Cdayarray[mday]$CEL";
-	$CCAL_OUT .= "</div>";
-	$CCAL_OUT .= "</td>";
-		$Cstart += ADAY;
-		}
-	}
-}
-$CCAL_OUT .= "</tr>";
-$CCAL_OUT .= "</table>";
-$CCAL_OUT .= "</td>";
-
-if ( ($CINC == 3) || ($CINC == 7) ||($CINC == 11) )
-	{$CCAL_OUT .= "</tr>";}
-$CINC++;
-}
-
-$CCAL_OUT .= "</table>";*/
-
-#echo "$CCAL_OUT\n";
-################################################################
-### END - build the callback calendar (12 months)            ###
-################################################################
 
 
 ?>
@@ -6493,7 +6364,8 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 			else
 				{auto_dial_level=starting_dial_level;}
 
-            $("#DiaLControl").html("<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><img src=\"./images/vdc_LB_resume_OFF.gif\" border=\"0\" alt=\"Resume\" /><br /><img src=\"./images/vdc_LB_dialnextnumber_OFF.gif\" border=\"0\" alt=\"Dial Next Number\" />");
+            //$("#DiaLControl").html("<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><img src=\"./images/vdc_LB_resume_OFF.gif\" border=\"0\" alt=\"Resume\" /><td><img src='/images/icons/control_end.png' /></td><td>Marcar Seguinte</td>");
+	$("#DiaLControl").html("<td><img src='/images/icons/control_end.png' /></td><td>Marcar Seguinte</td>");
 			
 			}
 		else
@@ -6558,12 +6430,6 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 			//$('#inline_timer').html('25');
 			
 			
-			
-			in_timer = setInterval(function(){
-			in_curtime = in_curtime - 1;
-			$("#inline_timer").html(in_curtime);
-			if (in_curtime < 1) { clearInterval(in_timer);$('#inline_timer').html('25');ManualDialSkip();AutoDial_ReSume_PauSe('VDADpause'); }
-			},1000);
 			 
 			var man_status = "<a href=\"#\" onclick=\"ManualDialOnly('" + manual_dial_only_type_flag + "')\" style='font-size:14px; font-weight: bold; text-decoration:underline'>Marcar Principal</a> ou <a href=\"#\" onclick=\"ManualDialOnly('ALTPhonE')\" style='font-size:14px; font-weight: bold; text-decoration:underline'>Marcar Alternativo</a> ou <a href=\"#\" onclick=\"ManualDialOnly('AddresS3')\" style='font-size:14px; font-weight: bold; text-decoration:underline'>Marcar Alternativo 2</a> ou <a href=\"#\" onclick=\"clearInterval(in_timer);$('#inline_timer').html('25');clearInterval(cm_timer);$('#timeoutcm').html('25');cm_timer = undefined;ManualDialSkip();AutoDial_ReSume_PauSe('VDADpause');\" style='font-size:14px; font-weight: bold; text-decoration:underline'>Cancelar Ligação</a> - <span id='inline_timer' style='font-size:14px; font-weight: bold;'>25</span>"; 
 			if (manual_preview_dial=='PREVIEW_ONLY')
@@ -6657,8 +6523,10 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 						if (alert_displayed==0)						
 							{alert_box("Erro não especificado:\n" + mdnPhonENumbeR + "|" + MDnextCID);   alert_displayed=1;}
 						if (alert_displayed)						
-							{return false;}
+							{in_lead_preview_state=0;return false;}
 
+
+			
 						if (starting_dial_level == 0)
 							{
                             $("#DiaLControl").html("<td><img src='/images/icons/control_end_blue.png' /></td><td><a href='#' onclick=\"ManualDialNext('','','','','','0');\">Marcar Seguinte</a></td>");
@@ -6670,7 +6538,8 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 								{
 								auto_dial_level=starting_dial_level;
 
-                                $("#DiaLControl").html("<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><a href=\"#\" onclick=\"AutoDial_ReSume_PauSe('VDADready');\"><img src=\"./images/vdc_LB_resume.gif\" border=\"0\" alt=\"Resume\" /></a><br /><a href=\"#\" onclick=\"ManualDialNext('','','','','','0');\"><img src=\"./images/vdc_LB_dialnextnumber.gif\" border=\"0\" alt=\"Dial Next Number\" /></a>");
+                                //$("#DiaLControl").html("<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><a href=\"#\" onclick=\"AutoDial_ReSume_PauSe('VDADready');\"><img src=\"./images/vdc_LB_resume.gif\" border=\"0\" alt=\"Resume\" /></a><br /><a href=\"#\" onclick=\"ManualDialNext('','','','','','0');\"><img src=\"./images/vdc_LB_dialnextnumber.gif\" border=\"0\" alt=\"Dial Next Number\" /></a>");
+				$("#DiaLControl").html("<td><img src='/images/icons/control_end_blue.png' /></td><td><a href='#' onclick=\"ManualDialNext('','','','','','0');\">Marcar Seguinte</a></td>");
 								}
 							else
 								{
@@ -6684,6 +6553,16 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 						}
 					else
 						{
+                                                
+                                                
+			in_timer = setInterval(function(){
+			in_curtime = in_curtime - 1;
+			$("#inline_timer").html(in_curtime);
+			if (in_curtime < 1) { clearInterval(in_timer);$('#inline_timer').html('25');ManualDialSkip();AutoDial_ReSume_PauSe('VDADpause'); }
+			},1000);
+                        
+                                                
+                                                
 						fronter = user;
 						LasTCID						= MDnextResponse_array[0];
 						document.vicidial_form.lead_id.value		= MDnextResponse_array[1];
@@ -6944,7 +6823,8 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 				{
 				auto_dial_level=starting_dial_level;
 
-                document.getElementById("DiaLControl").innerHTML = "<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><img src=\"./images/vdc_LB_resume_OFF.gif\" border=\"0\" alt=\"Resume\" /><br /><img src=\"./images/vdc_LB_dialnextnumber_OFF.gif\" border=\"0\" alt=\"Dial Next Number\" />";
+                //document.getElementById("DiaLControl").innerHTML = "<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><img src=\"./images/vdc_LB_resume_OFF.gif\" border=\"0\" alt=\"Resume\" /><br /><img src=\"./images/vdc_LB_dialnextnumber_OFF.gif\" border=\"0\" alt=\"Dial Next Number\" />";
+		document.getElementById("DiaLControl").innerHTML = "<td><img src='/images/icons/control_end.png' /></td><td>Marcar Seguinte</td>";
 				}
 			else
 				{
@@ -7058,7 +6938,8 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 
 							if (dial_method == "INBOUND_MAN")
 								{
-                                document.getElementById("DiaLControl").innerHTML = "<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><a href=\"#\" onclick=\"AutoDial_ReSume_PauSe('VDADready');\"><img src=\"./images/vdc_LB_resume.gif\" border=\"0\" alt=\"Resume\" /></a><br /><a href=\"#\" onclick=\"ManualDialNext('','','','','','0');\"><img src=\"./images/vdc_LB_dialnextnumber.gif\" border=\"0\" alt=\"Dial Next Number\" /></a>";
+                                //document.getElementById("DiaLControl").innerHTML = "<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><a href=\"#\" onclick=\"AutoDial_ReSume_PauSe('VDADready');\"><img src=\"./images/vdc_LB_resume.gif\" border=\"0\" alt=\"Resume\" /></a><br /><a href=\"#\" onclick=\"ManualDialNext('','','','','','0');\"><img src=\"./images/vdc_LB_dialnextnumber.gif\" border=\"0\" alt=\"Dial Next Number\" /></a>";
+				document.getElementById("DiaLControl").innerHTML = "<td><img src='/images/icons/control_end_blue.png' /></td><td><a href='#' onclick=\"ManualDialNext('','','','','','0');\">Marcar Seguinte</a></td>";
 								}
 							else
 								{
@@ -7299,7 +7180,8 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 				{
 				auto_dial_level=starting_dial_level;
 
-                document.getElementById("DiaLControl").innerHTML = "<a href=\"#\" onclick=\"AutoDial_ReSume_PauSe('VDADpause');\"><img src=\"./images/vdc_LB_pause.gif\" border=\"0\" alt=\" Pause \" /></a><img src=\"./images/vdc_LB_resume_OFF.gif\" border=\"0\" alt=\"Resume\" /></a><br /><a href=\"#\" onclick=\"ManualDialNext('','','','','','0');\"><img src=\"./images/vdc_LB_dialnextnumber.gif\" border=\"0\" alt=\"Dial Next Number\" /></a>";
+                //document.getElementById("DiaLControl").innerHTML = "<a href=\"#\" onclick=\"AutoDial_ReSume_PauSe('VDADpause');\"><img src=\"./images/vdc_LB_pause.gif\" border=\"0\" alt=\" Pause \" /></a><img src=\"./images/vdc_LB_resume_OFF.gif\" border=\"0\" alt=\"Resume\" /></a><br /><a href=\"#\" onclick=\"ManualDialNext('','','','','','0');\"><img src=\"./images/vdc_LB_dialnextnumber.gif\" border=\"0\" alt=\"Dial Next Number\" /></a>";
+		document.getElementById("DiaLControl").innerHTML = "<td><img src='/images/icons/control_end_blue.png' /></td><td><a href='#' onclick=\"ManualDialNext('','','','','','0');\">Marcar Seguinte</a></td>";
 				}
 			else
 				{
@@ -7318,7 +7200,8 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 				{
 				auto_dial_level=starting_dial_level;
 
-                document.getElementById("DiaLControl").innerHTML = "<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><a href=\"#\" onclick=\"AutoDial_ReSume_PauSe('VDADready');\"><img src=\"./images/vdc_LB_resume.gif\" border=\"0\" alt=\"Resume\" /></a><br /><a href=\"#\" onclick=\"ManualDialNext('','','','','','0');\"><img src=\"./images/vdc_LB_dialnextnumber.gif\" border=\"0\" alt=\"Dial Next Number\" /></a>";
+                //document.getElementById("DiaLControl").innerHTML = "<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><a href=\"#\" onclick=\"AutoDial_ReSume_PauSe('VDADready');\"><img src=\"./images/vdc_LB_resume.gif\" border=\"0\" alt=\"Resume\" /></a><br /><a href=\"#\" onclick=\"ManualDialNext('','','','','','0');\"><img src=\"./images/vdc_LB_dialnextnumber.gif\" border=\"0\" alt=\"Dial Next Number\" /></a>";
+		document.getElementById("DiaLControl").innerHTML = "<td><img src='/images/icons/control_end_blue.png' /></td><td><a href='#' onclick=\"ManualDialNext('','','','','','0');\">Marcar Seguinte</a></td>";
 				}
 			else
 				{
@@ -7358,7 +7241,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 			}
 		if (xmlhttp) 
 			{ 
-			autoDiaLready_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=" + taskaction + "&user=" + user + "&pass=" + pass + "&stage=" + VDRP_stage + "&agent_log_id=" + agent_log_id + "&agent_log=" + taskagentlog + "&wrapup=" + taskwrapup + "&campaign=" + campaign + "&dial_method" + dial_method + "&comments=" + taskstatuschange + add_pause_code;
+			autoDiaLready_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=" + taskaction + "&user=" + user + "&pass=" + pass + "&stage=" + VDRP_stage + "&agent_log_id=" + agent_log_id + "&agent_log=" + taskagentlog + "&wrapup=" + taskwrapup + "&campaign=" + campaign + "&dial_method=" + dial_method + "&comments=" + taskstatuschange + add_pause_code;
 			xmlhttp.open('POST', 'vdc_db_query.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 			xmlhttp.send(autoDiaLready_query); 
@@ -7903,7 +7786,8 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 
 							if (dial_method == "INBOUND_MAN")
 								{
-                                document.getElementById("DiaLControl").innerHTML = "<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><img src=\"./images/vdc_LB_resume_OFF.gif\" border=\"0\" alt=\"Resume\" /><br /><img src=\"./images/vdc_LB_dialnextnumber_OFF.gif\" border=\"0\" alt=\"Dial Next Number\" />";
+                                //document.getElementById("DiaLControl").innerHTML = "<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><img src=\"./images/vdc_LB_resume_OFF.gif\" border=\"0\" alt=\"Resume\" /><br /><img src=\"./images/vdc_LB_dialnextnumber_OFF.gif\" border=\"0\" alt=\"Dial Next Number\" />";
+				document.getElementById("DiaLControl").innerHTML = "<td><img src='/images/icons/control_end.png' /></td><td>Marcar Seguinte</td>";
 								}
 							else
 								{
@@ -8413,7 +8297,8 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 								document.getElementById("MainStatuSSpan").innerHTML = '';
 								if (dial_method == "INBOUND_MAN")
 									{
-                                    document.getElementById("DiaLControl").innerHTML = "<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><img src=\"./images/vdc_LB_resume_OFF.gif\" border=\"0\" alt=\"Resume\" /><br /><img src=\"./images/vdc_LB_dialnextnumber_OFF.gif\" border=\"0\" alt=\"Dial Next Number\" />";
+                                    //document.getElementById("DiaLControl").innerHTML = "<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><img src=\"./images/vdc_LB_resume_OFF.gif\" border=\"0\" alt=\"Resume\" /><br /><img src=\"./images/vdc_LB_dialnextnumber_OFF.gif\" border=\"0\" alt=\"Dial Next Number\" />";
+				document.getElementById("DiaLControl").innerHTML = "<td><img src='/images/icons/control_end.png' /></td><td>Marcar Seguinte</td>";
 									}
 								else
 									{
@@ -8430,7 +8315,8 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 					document.getElementById("MainStatuSSpan").style.background = panel_bgcolor;
 					if (dial_method == "INBOUND_MAN")
 						{
-                        document.getElementById("DiaLControl").innerHTML = "<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><img src=\"./images/vdc_LB_resume_OFF.gif\" border=\"0\" alt=\"Resume\" /><br /><img src=\"./images/vdc_LB_dialnextnumber_OFF.gif\" border=\"0\" alt=\"Dial Next Number\" />";
+                        //document.getElementById("DiaLControl").innerHTML = "<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><img src=\"./images/vdc_LB_resume_OFF.gif\" border=\"0\" alt=\"Resume\" /><br /><img src=\"./images/vdc_LB_dialnextnumber_OFF.gif\" border=\"0\" alt=\"Dial Next Number\" />";
+			document.getElementById("DiaLControl").innerHTML = "<td><img src='/images/icons/control_end.png' /></td><td>Marcar Seguinte</td>";
 						}
 					else
 						{
@@ -12032,7 +11918,7 @@ function MsgReader(){
 			if (is_webphone=='Y')
 				{
 				NoneInSession();
-                                console.log("11918");
+                                //console.log("11918");
 				document.getElementById("NoneInSessionLink").innerHTML = "<a href=\"#\" onclick=\"NoneInSessionCalL();return false;\">Call Agent Webphone -></a>";
 				
 				var WebPhonEtarget = 'webphonewindow';
@@ -12119,7 +12005,7 @@ function MsgReader(){
 			if (logout_stop_timeouts==1)	{WaitingForNextStep=1;}
 			if ( (custchannellive < -30) && (lastcustchannel.length > 3) && (no_empty_session_warnings < 1) ) {CustomerChanneLGone();}
 			if ( (custchannellive < -10) && (lastcustchannel.length > 3) ) {ReChecKCustoMerChaN();}
-			if ( (nochannelinsession > 16) && (check_n > 15) && (no_empty_session_warnings < 1) ) {NoneInSession();console.log("12005");}
+			if ( (nochannelinsession > 16) && (check_n > 15) && (no_empty_session_warnings < 1) ) {NoneInSession();/*console.log("12005");*/}
 			if (WaitingForNextStep==0)
 				{
 				if (trigger_ready > 0)
@@ -12754,7 +12640,8 @@ function MsgReader(){
 				{
 				if (dial_method == "INBOUND_MAN")
 					{
-                    document.getElementById("DiaLControl").innerHTML = "<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><a href=\"#\" onclick=\"AutoDial_ReSume_PauSe('VDADready');\"><img src=\"./images/vdc_LB_resume.gif\" border=\"0\" alt=\"Resume\" /></a><br /><a href=\"#\" onclick=\"ManualDialNext('','','','','','0');\"><img src=\"./images/vdc_LB_dialnextnumber.gif\" border=\"0\" alt=\"Dial Next Number\" /></a>";
+                    //document.getElementById("DiaLControl").innerHTML = "<img src=\"./images/vdc_LB_pause_OFF.gif\" border=\"0\" alt=\" Pause \" /><a href=\"#\" onclick=\"AutoDial_ReSume_PauSe('VDADready');\"><img src=\"./images/vdc_LB_resume.gif\" border=\"0\" alt=\"Resume\" /></a><br /><a href=\"#\" onclick=\"ManualDialNext('','','','','','0');\"><img src=\"./images/vdc_LB_dialnextnumber.gif\" border=\"0\" alt=\"Dial Next Number\" /></a>";
+			document.getElementById("DiaLControl").innerHTML = "<td><img src='/images/icons/control_end_blue.png' /></td><td><a href='#' onclick=\"ManualDialNext('','','','','','0');\">Marcar Seguinte</a></td>";
 					
 					
 					
@@ -13066,7 +12953,51 @@ $zi=2;
 
 
 <!--################################ HEADER SIPS ####################################-->		
+			
+<style>
+#cc-header {
 		
+	background:0 !important;
+	border-bottom: 3px solid rgb(168, 168, 168) !important;
+	border-top:none !important;
+	border-left:none !important;
+	border-right:none !important;
+	border-radius: 0px !important;
+	-webkit-box-shadow:none !important;
+	box-shadow:none !important;
+	
+	}
+	
+	
+.cc-menu {
+	
+	color: rgb(105, 105, 105) !important;
+		background:0 !important;
+	border-bottom: 2px solid rgb(192, 192, 192) !important;
+	border-top:none !important;
+	border-left:none !important;
+	border-right:none !important;
+	border-radius: 0px !important;
+	-webkit-box-shadow:none !important;
+	box-shadow:none !important;
+	text-shadow:none !important;
+	
+	
+	
+	} 
+	
+	.cc-submenu table tbody tr { border-color: #c0c0c0 !important; }
+	.cc-submenu tr:hover { background-color: #e2e2e2 !important;  }
+	.cc-mstyle { border-color: #c0c0c0 !important; }
+	
+	body {
+		background:none !important; 
+	}	
+	
+	h2 { text-shadow:none !important; }
+	
+</style>
+
 		
 <div style='padding:0px 10px;'>
 
@@ -13075,7 +13006,7 @@ $zi=2;
 		
 			<table height='65px' width="100%" border=0> 
 			<tr>
-			<td style='min-width:100px;float:left;' align=center><img src='../images/pictures/sipslogo_header.png' ALT=LOGO /></td>
+			<td style='min-width:100px;float:left;' align=center><img src='../images/pictures/go_logo_15.png' ALT=LOGO /></td>
 			<span style='display:none;' id="dataHeader"> 
 			<? 
 			
@@ -13136,7 +13067,7 @@ $zi=2;
 		
         <div class='cc-submenu' style="display:block;">
 		<table border="0">
-		<tr id="DiaLControl" <? if ($auto_dial_level > 0) { echo "style='display:none'"; } ?>>
+		<tr id="DiaLControl" <? if ($dial_method != "INBOUND_MAN") { echo "style='display:none'"; } ?>>
 			<td height='35px'><img src='/images/icons/control_end_blue.png' /></td>
 			<td height='35px'>
 				<a href="#" onClick="ManualDialNext('','','','','','0');">Marcar Seguinte</a>
