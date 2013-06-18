@@ -59,8 +59,18 @@ switch ($action) {
 
 
     case 'insert_wbe':
-        $query = "INSERT INTO WallBoard1 (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
-        $query = mysql_query($query, $link) or die(mysql_error());
+        if ($graph_type == "4") {
+            $query = "INSERT INTO WallBoard1 (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,10000,4)";
+            $query = mysql_query($query, $link) or die(mysql_error());
+            $query = "INSERT INTO `asterisk`.`WallBoard_Dataset1` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas) VALUES (LAST_INSERT_ID(), 20,1,0,0,0,'$update_time',2,0,0)";
+            $query = mysql_query($query, $link) or die(mysql_error());
+        } else {
+
+
+            $query = "INSERT INTO WallBoard1 (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
+            $query = mysql_query($query, $link) or die(mysql_error());
+        }
+
         echo json_encode(array(1));
         break;
 
@@ -156,6 +166,19 @@ switch ($action) {
         echo json_encode($js);
         break;
 
+        
+        
+        
+         case 'get_query_by_code':
+             
+        $query = "SELECT * from WallBoard_Query1 where codigo=$codigo";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(id => $row["id"], query_text_inbound => $row["query_text_inbound"], query_text_outbound => $row["query_text_outbound"], opcao_query => $row["opcao_query"], type_query => $row["type_query"], codigo => $row["codigo"]);
+        }
+        echo json_encode($js);
+        break;
+        
 
 
 
@@ -165,34 +188,22 @@ switch ($action) {
 
 
         for ($i = 0; $i < count($datasets); $i++) {
-
-
             $query = "SELECT * FROM `WallBoard_Dataset1` WHERE `id`=" . $datasets[$i]["id"];
-
             $query = mysql_query($query, $link) or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
-          
-
-
                 $query2 = "SELECT * from WallBoard_Query1 where codigo=" . $row['codigo_query'];
-
                 $query2 = mysql_query($query2, $link) or die(mysql_error());
                 while ($row2 = mysql_fetch_assoc($query2)) {
                     $temp = array();
- $temp2 = array();
-
+                    $temp2 = array();
                     $round_numerator = 60 * 5;
                     $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
                     $rounded_time = date("Y-m-d H:i:s", $rounded_time);
-
-
                     if ($row["mode"] == 1 || $row["mode"] == 2) {//INBOUND E OUTBOUND------------------------------------
                         if ($row["mode"] == 1)
                             $selected_query = $row2["query_text_inbound"];
                         if ($row["mode"] == 2)
                             $selected_query = $row2["query_text_outbound"];
-
-
                         //SUbstituição das variaveis
                         $selected_query = str_replace("now()", "'" . $rounded_time . "'", $selected_query);
                         $selected_query = str_replace('$hour', $row["tempo"], $selected_query);
@@ -202,19 +213,13 @@ switch ($action) {
                         $selected_query = str_replace('$linha_inbound', $row["linha_inbound"], $selected_query);
                         $selected_query = str_replace('$status', $row["status_feedback"], $selected_query);
                         $selected_query = str_replace('$chamadas', $row["chamadas"], $selected_query);
-
-
-
                         $selected_query = mysql_query($selected_query, $link) or die(mysql_error());
-
                         while ($row3 = mysql_fetch_assoc($selected_query)) {
-
                             $temp[] = array(lead_id => $row3["lead_id"], call_date => $row3["call_date"]);
                         }
                     } else {//BLENDED-----------------------------------------------------------
                         $inbound = $row2["query_text_inbound"];
                         $outbound = $row2["query_text_outbound"];
-
                         //SUbstituição das variaveis
                         $inbound = str_replace("now()", "'" . $rounded_time . "'", $inbound);
                         $inbound = str_replace('$hour', $row["tempo"], $inbound);
@@ -224,7 +229,6 @@ switch ($action) {
                         $inbound = str_replace('$linha_inbound', $row["linha_inbound"], $inbound);
                         $inbound = str_replace('$status', $row["status_feedback"], $inbound);
                         $inbound = str_replace('$chamadas', $row["chamadas"], $inbound);
-
                         //SUbstituição das variaveis
                         $outbound = str_replace("now()", "'" . $rounded_time . "'", $outbound);
                         $outbound = str_replace('$hour', $row["tempo"], $outbound);
@@ -234,71 +238,38 @@ switch ($action) {
                         $outbound = str_replace('$linha_inbound', $row["linha_inbound"], $outbound);
                         $outbound = str_replace('$status', $row["status_feedback"], $outbound);
                         $outbound = str_replace('$chamadas', $row["chamadas"], $outbound);
-
-
-
                         $inbound = mysql_query($inbound, $link) or die(mysql_error());
-
                         while ($row3 = mysql_fetch_assoc($inbound)) {
-
                             $temp[] = array(lead_id => $row3["lead_id"], call_date => $row3["call_date"]);
                         }
-
                         $outbound = mysql_query($outbound, $link) or die(mysql_error());
-
                         while ($row4 = mysql_fetch_assoc($outbound)) {
-
                             $temp2[] = array(lead_id => $row4["lead_id"], call_date => $row4["call_date"]);
                         }
-
-
-
                         for ($a = 0; $a < count($temp); $a++) {
                             $temp[$a]["lead_id"] = $temp[$a]["lead_id"] + $temp2[$a]["lead_id"];
                         }
                     }
-
-
-
-
-
-
-
-
-
                     $t = strtotime($rounded_time);
                     $t2 = strtotime('-1 hours', $t);
                     $begin_time = date("Y-m-d H:i:s", $t2);
-
-
-
-
                     $t = strtotime($begin_time);
                     $t2 = strtotime('+5 minutes', $t);
                     $end_time = date("Y-m-d H:i:s", $t2);
-
                     $jc = array();
                     for ($k = 0; $k < 60; $k = $k + 5) {
-
                         $leads = 0;
-
                         foreach ($temp as $kev => $row) {
                             if ($row["call_date"] >= $begin_time && $row["call_date"] <= $end_time)
                                 $leads = $row["lead_id"];
                         }
-
                         $jc[] = array(leads => $leads, call_date => $begin_time);
-
                         $t = strtotime($rounded_time);
                         $t2 = strtotime('+5 minutes', $t);
                         $rounded_time = date("Y-m-d H:i:s", $t2);
-
-
-
                         $t = strtotime($rounded_time);
                         $t2 = strtotime('-1 hours', $t);
                         $begin_time = date("Y-m-d H:i:s", $t2);
-
                         $t = strtotime($begin_time);
                         $t2 = strtotime('+5 minutes', $t);
                         $end_time = date("Y-m-d H:i:s", $t2);
@@ -332,6 +303,7 @@ switch ($action) {
         break;
 
     case '4'://inbound
+        $selected_query = str_replace('$linha_inbound', $group_id , $selected_query);
         $query = $selected_query;
 
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -348,6 +320,7 @@ switch ($action) {
                 inGroupDetail => $row[8],
                 agent_non_pause_sec => $row[9]);
         }
+        
         echo json_encode($js);
         break;
 

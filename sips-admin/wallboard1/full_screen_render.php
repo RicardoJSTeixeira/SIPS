@@ -258,7 +258,7 @@ foreach ($_GET as $key => $value) {
                 //10: status_feedback
                 //11: chamadas
 
-        get_values_update();
+                get_values_update();
 
 
 
@@ -419,7 +419,29 @@ foreach ($_GET as $key => $value) {
             //INBOUND WALLBOARD  »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»˛»»»»»»»»»»»»»»»»»»»»»»˛»»»»»»»»»»»»»˛»»»»»»»»»»»»»»»»»»
             function   inbound_wallboard(data)
             {
-
+                //--------------wbes
+                //0      id,
+                // 1       id_layout,
+                //   2      name,
+                //     3     pos_x, 
+                //       4   pos_y,
+                //       5    width, 
+                //       6    height,
+                //       7      update_time, 
+                //       8      graph_type;
+                //   9      Array[8]
+                //0: id
+                //1: id_wallboard
+                //2: codigo_query
+                //3: opcao_query
+                //4: tempo
+                //5: user
+                //6: user_group
+                //7: campaign_id
+                //8:linha_inbound
+                //9: mode
+                //10: status_feedback
+                //11: chamadas
                 var ready = 0;
                 var queue = 0;
                 var paused = 0;
@@ -430,13 +452,14 @@ foreach ($_GET as $key => $value) {
                 var first_time_plot = true;
                 var plot;
                 //carregar a dropbox com as campanhas do group especificado
+
                 var panel = $("#" + wbe[0] + "Main");
                 var font_size = ((panel.width() / 50) + (panel.height() / 100));
                 panel.empty();
-                panel.append($("<div>").attr("style", "height:98%;font-size:" + font_size + "px;background-color: rgb(210, 215, 215); padding-left:1%;padding-right:1%;padding-top:1%;").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbe[9] / 1000) + " seg.")
+                panel.append($("<div>").attr("style", "height:98%;font-size:" + font_size + "px;background-color: rgb(210, 215, 215); padding-left:1%;padding-right:1%;padding-top:1%;").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbe[7] / 1000) + " seg.")
 
 
-                        .append($("<div>").append($("<label>").addClass("inbound_title").text(wbe[1])))//titulo do inbound
+                        .append($("<div>").append($("<label>").addClass("inbound_title").text(wbe[2])))//titulo do inbound
 
 
 
@@ -508,7 +531,7 @@ foreach ($_GET as $key => $value) {
                 get_values_inbound();
                 function get_values_inbound()
                 {
-                    var querie = 'SELECT a.status  FROM `vicidial_live_agents` a left join vicidial_live_inbound_agents b on a.user=b.user where closer_campaigns  like "% ' + wbe[8] + ' %"';
+                    var querie = 'SELECT a.status  FROM `vicidial_live_agents` a left join vicidial_live_inbound_agents b on a.user=b.user where closer_campaigns  like "% ' + wbe[9][0].linha_inbound + ' %"';
                     $.post("Requests.php", {action: "get_agents", query_text: querie},
                     function(data)
                     {
@@ -537,7 +560,16 @@ foreach ($_GET as $key => $value) {
                             a++;
                         });
                     }, "json");
-                    $.post("Requests.php", {action: wbe[10], selected_query: wbe[7]},
+
+
+                  
+                    $.post("Requests.php", {action: "get_query_by_code", codigo: wbe[9][0].codigo_query},
+                    function(data)
+                    {
+                        
+                           
+
+                    $.post("Requests.php", {action: wbe[8], selected_query:data[0].query_text_outbound, group_id: wbe[9][0].linha_inbound },
                     function(data)
                     {
                         var i = 0;
@@ -564,7 +596,7 @@ foreach ($_GET as $key => $value) {
                         hold_sec_queue_calls = +data[0].hold_sec_queue_calls;
                         inGroupDetail = +data[0].inGroupDetail;
                         agent_non_pause_sec = +data[0].agent_non_pause_sec;
-                        $.post("Requests.php", {action: "inbound_groups_info", group_id: wbe[8]},
+                        $.post("Requests.php", {action: "inbound_groups_info", group_id: wbe[9][0].linha_inbound},
                         function(data1)
                         {
                             answer_sec_pct_rt_stat_one = data1[0].answer_sec_pct_rt_stat_one;
@@ -672,8 +704,9 @@ foreach ($_GET as $key => $value) {
 
 
                         }, "json");
-                        updation = setTimeout(get_values_inbound, wbe[9]);
+                        updation = setTimeout(get_values_inbound, wbe[7]);
                     }, "json");
+                     }, "json");
                 }
 
 
