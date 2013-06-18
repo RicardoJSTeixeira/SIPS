@@ -293,8 +293,9 @@ foreach ($_GET as $key => $value) {
                                     //11: chamadas
 
 
-//adicionar um wallboard novo a uma layout nova da barrote, n actualiza
+//verificar todas as queries
 
+//depois de apagar uma layout ainda aparece mensagesns
 
 
                                     var wbes = [];
@@ -318,6 +319,7 @@ foreach ($_GET as $key => $value) {
                                     //-----------------FUNÇÕES DOS BUTTONS----------------------------
                                     $("#opcao_layout_button").click(function()
                                     {
+                                        $("div.dialogButtons div button:nth-child(2)").text("gravar");//alterar texto do botao;
                                         $("#dialog_layout").dialog("open");
                                     });
                                     $("#add_layout_button").click(function()
@@ -379,10 +381,16 @@ foreach ($_GET as $key => $value) {
                                             load_dados('wbe', idLayout);
                                         });
                                         $(document).on("click", ".add_dataset_button", function(e) {
-
-                                            id_wallboard = $(this).data("wbe_id");
-                                            manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 1);
-                                            $("#dialog_dataset_linhas").dialog("open");
+                                            $("div.dialogButtons div button:nth-child(2)").text("criar");//alterar texto do botao;                                 
+                                            if (wbes[ get_indice_wbe($(this).data("id"))][9].length >= 5)
+                                            {
+                                                $.jGrowl('Capacidade de datasets por wallboard atingida (5 max).', {life: 6000});
+                                            }
+                                            else {
+                                                id_wallboard = $(this).data("wbe_id");
+                                                manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 1);
+                                                $("#dialog_dataset_linhas").dialog("open");
+                                            }
                                         });
                                         $(document).on("click", ".edit_dataset_button", function(e) {
                                             edit_dataset = true;
@@ -390,6 +398,7 @@ foreach ($_GET as $key => $value) {
                                             id_wallboard = get_indice_wbe($(this).data("id"));
                                             $("div.dialogButtons div button:nth-child(2)").text("gravar alterações");//alterar texto do botao;
                                             var a = 0;
+
                                             $(".graph_advance_option").hide();
                                             $(".option_filtro").hide();
 
@@ -409,7 +418,7 @@ foreach ($_GET as $key => $value) {
                                                     if (wbes[id_wallboard][9][a].user != 0)
                                                     {
                                                         $("#linhas_serie").val(1);
-                                                        $("#gao_user").show();
+
                                                         $("#user").val(wbes[id_wallboard][9][a].user);
                                                     }
                                                     else if (wbes[id_wallboard][9][a].user_group != 0)
@@ -482,7 +491,7 @@ foreach ($_GET as $key => $value) {
                                                 "Criar": function() {
                                                     //preencher o param1----------------FIM-----------------------------------FIM--------------------------------------FIM------------------------------------
                                                     manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, $("#update_time").val(), selected_type_graph);
-                                                   
+
                                                     $(this).dialog("close");
                                                 }
                                             }
@@ -775,7 +784,7 @@ foreach ($_GET as $key => $value) {
 
                                     function dialog_opener()
                                     {
-
+                                        $("div.dialogButtons div button:nth-child(2)").text("Criar");//alterar texto do botao;                  
                                         $("#graph_name").val("Gráfico Novo");
                                         $(".graph_advance_option").hide(); //esconde a classe e so mostra por id(em baixo)
 
@@ -785,7 +794,6 @@ foreach ($_GET as $key => $value) {
                                             $("#gao_user").show();
                                             $("#gao_chamadas").show();
                                         }
-
                                         //bar
                                         if (selected_type_graph === 2) {
                                             manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, selected_type_graph);
@@ -914,9 +922,9 @@ foreach ($_GET as $key => $value) {
                                                     .append($("<div>").addClass("pull-left")
                                                     .text(wbes[i][2]))
                                                     .append($("<div>").addClass("pull-right")
-                                                    .append($("<button>").addClass("btn icon-alone btn-info add_dataset_button").data("wbe_id", wbes[i][0])
+                                                    .append($("<button>").addClass("btn icon-alone btn-info add_dataset_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Adicionar dataset")
                                                     .append($("<i>").addClass("icon-plus-sign")))
-                                                    .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0])
+                                                    .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
                                                     .append($("<i>").addClass("icon-remove")))
                                                     ))
                                                     .append($("<div>").addClass("grid-content").attr("id", "grid_content")));
@@ -925,13 +933,19 @@ foreach ($_GET as $key => $value) {
                                             $.each(wbes[i][9], function(index, value) {
 
                                                 banana.append($("<div>")
-                                                        .append($("<table>").append($("<tr>").append($("<td>")
-                                                        .append($("<label>").text(wbes[i][9][a].opcao_query))
-                                                        .append($("<button>").addClass("btn icon-alone btn-info edit_dataset_button").data("dataset_id", wbes[i][9][a].id).data("id", wbes[i][0])
-                                                        .append($("<i>").addClass("icon-edit")))
-                                                        .append($("<button>").addClass("btn icon-alone btn-danger delete_dataset_button").data("dataset_id", wbes[i][9][a].id)
-                                                        .append($("<i>").addClass("icon-remove"))))))
-                                                        );
+                                                        .append($("<div>").addClass("btn-group")
+                                                        .append($("<label>").addClass("btn btn-mini dropdown-toggle icon-cog").attr("data-toggle", "dropdown").text(" " + wbes[i][9][a].opcao_query).append($("<span>").addClass("caret")))
+                                                        .append($("<div>").addClass("dropdown-menu")
+                                                        .append($("<ul>")
+                                                        .append($("<li>")
+                                                        .append($("<a>").attr("href", "#").addClass("edit_dataset_button").data("dataset_id", wbes[i][9][a].id).data("id", wbes[i][0])
+                                                        .append($("<i>").addClass("icon-edit").text(" Editar dataset"))))
+                                                        .append($("<li>")
+                                                        .append($("<a>").attr("href", "#").addClass("delete_dataset_button").data("dataset_id", wbes[i][9][a].id)
+                                                        .append($("<i>").addClass("icon-trash").text(" Eliminar dataset"))))
+                                                        ))));
+
+
                                                 a++;
                                             });
                                             var painel = $("#MainLayout  #" + wbes[i][0] + "WBE");
@@ -1084,10 +1098,10 @@ foreach ($_GET as $key => $value) {
                                                 });
 
                                             }
-                                            
-                                            if(Opcao==="insert_wbe")
-                                                 load_dados("wbe", idLayout);
-                                            
+
+                                            if (Opcao === "insert_wbe")
+                                                load_dados("wbe", idLayout);
+
                                         }, "json");
                                     }
                                     //---Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados---
