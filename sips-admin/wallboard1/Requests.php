@@ -240,44 +240,43 @@ switch ($action) {
                         $outbound = str_replace('$chamadas', $row["chamadas"], $outbound);
                         $inbound = mysql_query($inbound, $link) or die(mysql_error());
                         while ($row3 = mysql_fetch_assoc($inbound)) {
-                            $temp[] = array(lead_id => $row3["lead_id"], call_date => $row3["call_date"]);
+                            $temp1[] = array(lead_id => $row3["lead_id"], call_date => $row3["call_date"]);
                         }
                         $outbound = mysql_query($outbound, $link) or die(mysql_error());
                         while ($row4 = mysql_fetch_assoc($outbound)) {
                             $temp2[] = array(lead_id => $row4["lead_id"], call_date => $row4["call_date"]);
                         }
-                        for ($a = 0; $a < count($temp); $a++) {
-                            $temp[$a]["lead_id"] = $temp[$a]["lead_id"] + $temp2[$a]["lead_id"];
-                        }
+                        $temp= array_merge($temp1,$temp2);
                     }
                     $t = strtotime($rounded_time);
                     $t2 = strtotime('-1 hours', $t);
                     $begin_time = date("Y-m-d H:i:s", $t2);
                     $t = strtotime($begin_time);
-                    $t2 = strtotime('+5 minutes', $t);
+                    $t2 = strtotime('+1 minutes', $t);
                     $end_time = date("Y-m-d H:i:s", $t2);
                     $jc = array();
-                    for ($k = 0; $k < 60; $k = $k + 5) {
+                    for ($k = 0; $k < 60; $k++) {
                         $leads = 0;
                         foreach ($temp as $kev => $row) {
                             if ($row["call_date"] >= $begin_time && $row["call_date"] <= $end_time)
-                                $leads = $row["lead_id"];
+                                $leads =$leads+1 ;
                         }
                         $jc[] = array(leads => $leads, call_date => $begin_time);
                         $t = strtotime($rounded_time);
-                        $t2 = strtotime('+5 minutes', $t);
+                        $t2 = strtotime('+1 minutes', $t);
                         $rounded_time = date("Y-m-d H:i:s", $t2);
                         $t = strtotime($rounded_time);
                         $t2 = strtotime('-1 hours', $t);
                         $begin_time = date("Y-m-d H:i:s", $t2);
                         $t = strtotime($begin_time);
-                        $t2 = strtotime('+5 minutes', $t);
+                        $t2 = strtotime('+1 minutes', $t);
                         $end_time = date("Y-m-d H:i:s", $t2);
                     }
                     $js[] = $jc;
                 }
             }
         }
+      
         echo json_encode(array("datasets" => $js));
         break;
 

@@ -271,7 +271,7 @@ foreach ($_GET as $key => $value) {
                     {
 
                         var data = dataBase;
-
+console.log(data);
                         if (data === null)
                         {
                             clearTimeout(updation);
@@ -323,7 +323,7 @@ foreach ($_GET as $key => $value) {
 
                         var options = {
                             series: {shadowSize: 0}, // drawing is faster without shadows
-                            yaxis: {min: 0, max: max_y + 50, tickSize: 10},
+                            yaxis: {min: 0, max: max_y + 35, tickSize: 10},
                             xaxis: {mode: "time", timeformat: "%H:%M", minTickSize: [5, "minute"],
                                 min: (dates[0]),
                                 max: (dates[dates.length - 1])
@@ -331,8 +331,8 @@ foreach ($_GET as $key => $value) {
                             },
                             series: {
                                 lines: {
-                                    lineWidth: 4,
-                                    steps: true,
+                                    lineWidth: 2,
+                                    steps: false,
                                     show: true
                                 }
                             }
