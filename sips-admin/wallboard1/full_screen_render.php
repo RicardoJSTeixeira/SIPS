@@ -257,7 +257,8 @@ foreach ($_GET as $key => $value) {
                 //9: mode
                 //10: status_feedback
                 //11: chamadas
-                get_values_update();
+
+        get_values_update();
 
 
 
@@ -330,8 +331,8 @@ foreach ($_GET as $key => $value) {
                             },
                             series: {
                                 lines: {
-                                    lineWidth: 3,
-                                    steps: false,
+                                    lineWidth: 4,
+                                    steps: true,
                                     show: true
                                 }
                             }

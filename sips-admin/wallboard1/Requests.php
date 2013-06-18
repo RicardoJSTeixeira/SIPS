@@ -39,12 +39,14 @@ switch ($action) {
         break;
 
     case 'remove_Layout':
-        $query = "DELETE FROM WallBoard_Layout1 WHERE id=$id_layout";
+        $query = "DELETE  WallBoard_Dataset1 FROM WallBoard_Dataset1 inner join WallBoard1 on WallBoard_Dataset1.id_wallboard=WallBoard1.id WHERE WallBoard1.id_layout=$id_layout";
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "DELETE FROM WallBoard1 WHERE id_layout=$id_layout";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "DELETE  WallBoard_Dataset1 FROM WallBoard_Dataset1 inner join WallBoard1 on WallBoard_Dataset1.id_wallboard=WallBoard1.id WHERE WallBoard1.id_layout=$id_layout";
+        $query = "DELETE FROM WallBoard_Layout1 WHERE id=$id_layout";
         $query = mysql_query($query, $link) or die(mysql_error());
+
+
         echo json_encode(array(1));
         break;
 
@@ -149,7 +151,7 @@ switch ($action) {
 
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], query_text_inbound => $row["query_text_inbound"], query_text_outbound => $row["query_text_outbound"],query_text_blended => $row["query_text_blended"], opcao_query => $row["opcao_query"], type_query => $row["type_query"], codigo => $row["codigo"]);
+            $js[] = array(id => $row["id"], query_text_inbound => $row["query_text_inbound"], query_text_outbound => $row["query_text_outbound"], opcao_query => $row["opcao_query"], type_query => $row["type_query"], codigo => $row["codigo"]);
         }
         echo json_encode($js);
         break;
@@ -162,7 +164,6 @@ switch ($action) {
 //falta blended(inbound+outbound)
 
 
-
         for ($i = 0; $i < count($datasets); $i++) {
 
 
@@ -170,50 +171,99 @@ switch ($action) {
 
             $query = mysql_query($query, $link) or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
+          
 
-                $temp = array();
+
                 $query2 = "SELECT * from WallBoard_Query1 where codigo=" . $row['codigo_query'];
 
                 $query2 = mysql_query($query2, $link) or die(mysql_error());
                 while ($row2 = mysql_fetch_assoc($query2)) {
+                    $temp = array();
+ $temp2 = array();
 
-
-                    if ($row["mode"] == 1)
-                        $selected_query = $row2["query_text_inbound"];
-                    if ($row["mode"] == 2)
-                        $selected_query = $row2["query_text_outbound"];
-                     if ($row["mode"] == 3)
-                        $selected_query = $row2["query_text_blended"];
-
-                //    if ($row["mode"] == 3)
-                        
-                                               
-                        
-                        $round_numerator = 60 * 5;
+                    $round_numerator = 60 * 5;
                     $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
                     $rounded_time = date("Y-m-d H:i:s", $rounded_time);
-                    $selected_query = str_replace("now()", "'" . $rounded_time . "'", $selected_query);
 
 
-                    //SUbstituição das variaveis
-                    $selected_query = str_replace('$hour', $row["tempo"], $selected_query);
-                    $selected_query = str_replace('$user', $row["user"], $selected_query);
-                    $selected_query = str_replace('$user_group', $row["user_group"], $selected_query);
-                    $selected_query = str_replace('$campaign_id', $row["campaign_id"], $selected_query);
-                    $selected_query = str_replace('$linha_inbound', $row["linha_inbound"], $selected_query);
-                    $selected_query = str_replace('$status', $row["status_feedback"], $selected_query);
-                    $selected_query = str_replace('$chamadas', $row["chamadas"], $selected_query);
+                    if ($row["mode"] == 1 || $row["mode"] == 2) {//INBOUND E OUTBOUND------------------------------------
+                        if ($row["mode"] == 1)
+                            $selected_query = $row2["query_text_inbound"];
+                        if ($row["mode"] == 2)
+                            $selected_query = $row2["query_text_outbound"];
+
+
+                        //SUbstituição das variaveis
+                        $selected_query = str_replace("now()", "'" . $rounded_time . "'", $selected_query);
+                        $selected_query = str_replace('$hour', $row["tempo"], $selected_query);
+                        $selected_query = str_replace('$user', $row["user"], $selected_query);
+                        $selected_query = str_replace('$user_group', $row["user_group"], $selected_query);
+                        $selected_query = str_replace('$campaign_id', $row["campaign_id"], $selected_query);
+                        $selected_query = str_replace('$linha_inbound', $row["linha_inbound"], $selected_query);
+                        $selected_query = str_replace('$status', $row["status_feedback"], $selected_query);
+                        $selected_query = str_replace('$chamadas', $row["chamadas"], $selected_query);
 
 
 
-                    $query3 = $selected_query;
+                        $selected_query = mysql_query($selected_query, $link) or die(mysql_error());
 
-                    $query3 = mysql_query($query3, $link) or die(mysql_error());
+                        while ($row3 = mysql_fetch_assoc($selected_query)) {
 
-                    while ($row3 = mysql_fetch_assoc($query3)) {
+                            $temp[] = array(lead_id => $row3["lead_id"], call_date => $row3["call_date"]);
+                        }
+                    } else {//BLENDED-----------------------------------------------------------
+                        $inbound = $row2["query_text_inbound"];
+                        $outbound = $row2["query_text_outbound"];
 
-                        $temp[] = array(lead_id => $row3["lead_id"], call_date => $row3["call_date"]);
+                        //SUbstituição das variaveis
+                        $inbound = str_replace("now()", "'" . $rounded_time . "'", $inbound);
+                        $inbound = str_replace('$hour', $row["tempo"], $inbound);
+                        $inbound = str_replace('$user', $row["user"], $inbound);
+                        $inbound = str_replace('$user_group', $row["user_group"], $inbound);
+                        $inbound = str_replace('$campaign_id', $row["campaign_id"], $inbound);
+                        $inbound = str_replace('$linha_inbound', $row["linha_inbound"], $inbound);
+                        $inbound = str_replace('$status', $row["status_feedback"], $inbound);
+                        $inbound = str_replace('$chamadas', $row["chamadas"], $inbound);
+
+                        //SUbstituição das variaveis
+                        $outbound = str_replace("now()", "'" . $rounded_time . "'", $outbound);
+                        $outbound = str_replace('$hour', $row["tempo"], $outbound);
+                        $outbound = str_replace('$user', $row["user"], $outbound);
+                        $outbound = str_replace('$user_group', $row["user_group"], $outbound);
+                        $outbound = str_replace('$campaign_id', $row["campaign_id"], $outbound);
+                        $outbound = str_replace('$linha_inbound', $row["linha_inbound"], $outbound);
+                        $outbound = str_replace('$status', $row["status_feedback"], $outbound);
+                        $outbound = str_replace('$chamadas', $row["chamadas"], $outbound);
+
+
+
+                        $inbound = mysql_query($inbound, $link) or die(mysql_error());
+
+                        while ($row3 = mysql_fetch_assoc($inbound)) {
+
+                            $temp[] = array(lead_id => $row3["lead_id"], call_date => $row3["call_date"]);
+                        }
+
+                        $outbound = mysql_query($outbound, $link) or die(mysql_error());
+
+                        while ($row4 = mysql_fetch_assoc($outbound)) {
+
+                            $temp2[] = array(lead_id => $row4["lead_id"], call_date => $row4["call_date"]);
+                        }
+
+
+
+                        for ($a = 0; $a < count($temp); $a++) {
+                            $temp[$a]["lead_id"] = $temp[$a]["lead_id"] + $temp2[$a]["lead_id"];
+                        }
                     }
+
+
+
+
+
+
+
 
 
                     $t = strtotime($rounded_time);
