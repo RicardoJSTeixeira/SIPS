@@ -37,7 +37,7 @@ if( ($("#tbl-feeds tr").length == 0 && Flag == "ALL") || (Flag == "REFRESH") || 
                 
                 $.each(data.status, function(index, value){
                     
-                if(Flag == "EDIT")
+                if(Flag == "EDIT" || Flag == "NEW")
                 {
                     if(data.selectable[index] == "Y")
                     {
