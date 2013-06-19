@@ -804,6 +804,7 @@ foreach ($_GET as $key => $value) {
                                     <option <?= ($after_hours_action == 'EXTENSION') ? "SELECTED" : "" ?> value="EXTENSION">Extensão</option>
                                     <option <?= ($after_hours_action == 'VOICEMAIL') ? "SELECTED" : "" ?> value="VOICEMAIL">VoiceMail</option>
                                     <option <?= ($after_hours_action == 'IN_GROUP') ? "SELECTED" : "" ?> value="IN_GROUP">Grupo Inbound</option>
+                                    <option <?= ($after_hours_action == 'CALLMENU') ? "SELECTED" : "" ?> value="CALLMENU">IVR</option>
                                 </select>
                             </div>
                         </div> 
