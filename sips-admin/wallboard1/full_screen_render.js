@@ -1,98 +1,4 @@
 
-<?php
-require("../../ini/dbconnect.php");
-foreach ($_POST as $key => $value) {
-    ${$key} = $value;
-}
-foreach ($_GET as $key => $value) {
-    ${$key} = $value;
-}
-?>
-
-<!DOCTYPE HTML>
-<html>
-
-    <head>
-        <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
-        <title>SIPS</title> 
-        <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css">
-        <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
-        <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
-        <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.css" />
-        <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
-        <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
-
-        <script type="text/javascript" src="/jquery/jquery-1.9.1.js"></script>
-        <script type="text/javascript" src="/jquery/jqueryUI/jquery-ui-1.10.2.custom.min.js"></script>
-        <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
-        <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
-        <script type="text/javascript" src="/bootstrap/js/jquery.flot.min.js"></script>
-        <script type="text/javascript" src="/bootstrap/js/jquery.flot.pie.min.js"></script>
-        <script type="text/javascript" src="/bootstrap/js/jquery.flot.resize.min.js"></script>
-        <script type="text/javascript" src="/bootstrap/js/jquery.flot.time.min.js"></script>
-
-        <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
-
-        <style>
-            .PanelWB{position:absolute;
-                     -webkit-border-radius: 3px;
-                     -moz-border-radius: 3px;
-                     border-radius: 3px;
-                     box-shadow: 5px 5px 13px -6px rgba(0, 0, 0, 0.3) ;
-            }
-            .ui-widget-header{background: none !important;}
-
-            .inbound_grid_title{
-                border-bottom:3px solid #FFFFFF;
-                background-color: #050430;
-                font-size: 0.7em;
-                color: #FFFFFF;
-                padding-top:2%;
-                padding-bottom: 0.3%;
-                text-align: center; 
-            }
-            .inbound_grid_content{
-                vertical-align: middle;
-                text-align: center;
-                color: #000000;
-                font-size: 2.2em;
-                padding-top:0.4em;
-            }
-            .inbound_grid_div{
-                border:3px solid rgb(43, 80, 38);
-                box-shadow: 5px 5px 13px -6px rgba(0, 0, 0, 0.3) ;
-                width:7.5em;
-                height:4em;
-                background-color: rgb(228, 228, 228);
-            }
-            .inbound_title{
-                border:3px solid rgb(43, 80, 38);
-                text-align: center; 
-                color: #FFFFFF;
-                padding-top:0.8%;
-                padding-bottom:0.8%;
-                background-color:rgb(38, 52, 109);
-            }
-            .legend {
-                display:block!important;
-            }
-        </style>
-    </head>    
-
-    <body>
-        <div style="width:100%;height:100%">
-            <div id="MainLayout" class="ui-widget-header"></div>
-            <div id="jGrowl" class="top-right jGrowl" ><div class="jGrowl-notification" ></div></div>
-        </div>
-
-
-
-
-
-        <script>
-
-
 
 
             var wbes;
@@ -148,6 +54,9 @@ foreach ($_GET as $key => $value) {
             });
             //LOAD DOS GRAFICOS
             //BASE DADOS
+
+
+//Linha 212 por um if para as situaçoes em q n ha param1
 
 
             //BAR GRAPh ««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««
@@ -266,12 +175,13 @@ foreach ($_GET as $key => $value) {
 
                 function get_values_update()
                 {
+
+             
                     $.post("Requests.php", {action: "1", datasets: wbe[9]},
                     function(dataBase)
                     {
 
                         var data = dataBase;
-console.log(data);
                         if (data === null)
                         {
                             clearTimeout(updation);
@@ -299,7 +209,11 @@ console.log(data);
                                         result.push([new Date(temp).getTime(), obj[prop][k].leads]);
                                     }
                                     if (verifier > 0) {
-                                        information.push({data: result, label: wbe[9][aux].opcao_query});
+                                          if(wbe[9][aux].param1!=="0")
+                                           information.push({data: result, label: wbe[9][aux].opcao_query+" -> "+wbe[9][aux].param1});
+                                     else
+                                           information.push({data: result, label: wbe[9][aux].opcao_query});
+                                     
                                         result = [];
                                         verifier = 0;
                                     }
@@ -562,151 +476,151 @@ console.log(data);
                     }, "json");
 
 
-                  
+
                     $.post("Requests.php", {action: "get_query_by_code", codigo: wbe[9][0].codigo_query},
                     function(data)
                     {
-                        
-                           
 
-                    $.post("Requests.php", {action: wbe[8], selected_query:data[0].query_text_outbound, group_id: wbe[9][0].linha_inbound },
-                    function(data)
-                    {
-                        var i = 0;
-                        var callsToday;
-                        var dropsToday;
-                        var answersToday;
-                        var hold_sec_stat_one;
-                        var hold_sec_stat_two;
-                        var hold_sec_answer_calls;
-                        var hold_sec_drop_calls;
-                        var hold_sec_queue_calls;
-                        var inGroupDetail;
-                        var agent_non_pause_sec;
-                        var answer_sec_pct_rt_stat_one;
-                        var answer_sec_pct_rt_stat_two;
-                        var AVG_ANSWERagent_non_pause_sec = 0;
-                        callsToday = +data[0].callsToday;
-                        dropsToday = +data[0].dropsToday;
-                        answersToday = +data[0].answersToday;
-                        hold_sec_stat_one = +data[0].hold_sec_stat_one;
-                        hold_sec_stat_two = +data[0].hold_sec_stat_two;
-                        hold_sec_answer_calls = +data[0].hold_sec_answer_calls;
-                        hold_sec_drop_calls = +data[0].hold_sec_drop_calls;
-                        hold_sec_queue_calls = +data[0].hold_sec_queue_calls;
-                        inGroupDetail = +data[0].inGroupDetail;
-                        agent_non_pause_sec = +data[0].agent_non_pause_sec;
-                        $.post("Requests.php", {action: "inbound_groups_info", group_id: wbe[9][0].linha_inbound},
-                        function(data1)
+
+
+                        $.post("Requests.php", {action: wbe[8], selected_query: data[0].query_text_outbound, group_id: wbe[9][0].linha_inbound},
+                        function(data)
                         {
-                            answer_sec_pct_rt_stat_one = data1[0].answer_sec_pct_rt_stat_one;
-                            answer_sec_pct_rt_stat_two = data1[0].answer_sec_pct_rt_stat_two;
-                            if ((dropsToday > 0) && (answersToday > 0))
+                            var i = 0;
+                            var callsToday;
+                            var dropsToday;
+                            var answersToday;
+                            var hold_sec_stat_one;
+                            var hold_sec_stat_two;
+                            var hold_sec_answer_calls;
+                            var hold_sec_drop_calls;
+                            var hold_sec_queue_calls;
+                            var inGroupDetail;
+                            var agent_non_pause_sec;
+                            var answer_sec_pct_rt_stat_one;
+                            var answer_sec_pct_rt_stat_two;
+                            var AVG_ANSWERagent_non_pause_sec = 0;
+                            callsToday = +data[0].callsToday;
+                            dropsToday = +data[0].dropsToday;
+                            answersToday = +data[0].answersToday;
+                            hold_sec_stat_one = +data[0].hold_sec_stat_one;
+                            hold_sec_stat_two = +data[0].hold_sec_stat_two;
+                            hold_sec_answer_calls = +data[0].hold_sec_answer_calls;
+                            hold_sec_drop_calls = +data[0].hold_sec_drop_calls;
+                            hold_sec_queue_calls = +data[0].hold_sec_queue_calls;
+                            inGroupDetail = +data[0].inGroupDetail;
+                            agent_non_pause_sec = +data[0].agent_non_pause_sec;
+                            $.post("Requests.php", {action: "inbound_groups_info", group_id: wbe[9][0].linha_inbound},
+                            function(data1)
                             {
-                                drpctToday = ((dropsToday / callsToday) * 100);
-                                drpctToday = (drpctToday).toFixed(2);
-                            }
-                            else
-                            {
-                                drpctToday = 0;
-                            }
-                            if (callsToday > 0)
-                            {
-                                AVGhold_sec_queue_calls = (hold_sec_queue_calls / callsToday);
-                                AVGhold_sec_queue_calls = (AVGhold_sec_queue_calls).toFixed();
-                            }
-                            else
-                            {
-                                AVGhold_sec_queue_calls = 0;
-                            }
-                            if (dropsToday > 0)
-                            {
-                                AVGhold_sec_drop_calls = (hold_sec_drop_calls / dropsToday);
-                                AVGhold_sec_drop_calls = (AVGhold_sec_drop_calls).toFixed();
-                            }
-                            else
-                            {
-                                AVGhold_sec_drop_calls = 0;
-                            }
-                            if (answersToday > 0)
-                            {
-                                PCThold_sec_stat_one = ((hold_sec_stat_one / answersToday) * 100);
-                                PCThold_sec_stat_one = (PCThold_sec_stat_one).toFixed(2);
-                                PCThold_sec_stat_two = ((hold_sec_stat_two / answersToday) * 100);
-                                PCThold_sec_stat_two = (PCThold_sec_stat_two).toFixed(2);
-                                AVGhold_sec_answer_calls = (hold_sec_answer_calls / answersToday);
-                                AVGhold_sec_answer_calls = (AVGhold_sec_answer_calls).toFixed();
-                                if (agent_non_pause_sec > 0)
+                                answer_sec_pct_rt_stat_one = data1[0].answer_sec_pct_rt_stat_one;
+                                answer_sec_pct_rt_stat_two = data1[0].answer_sec_pct_rt_stat_two;
+                                if ((dropsToday > 0) && (answersToday > 0))
                                 {
-                                    $AVG_ANSWERagent_non_pause_sec = (($answersTODAY / agent_non_pause_sec) * 60);
-                                    $AVG_ANSWERagent_non_pause_sec = Math.round($AVG_ANSWERagent_non_pause_sec).toFixed(2);
+                                    drpctToday = ((dropsToday / callsToday) * 100);
+                                    drpctToday = (drpctToday).toFixed(2);
                                 }
                                 else
                                 {
-                                    $AVG_ANSWERagent_non_pause_sec = 0;
+                                    drpctToday = 0;
                                 }
+                                if (callsToday > 0)
+                                {
+                                    AVGhold_sec_queue_calls = (hold_sec_queue_calls / callsToday);
+                                    AVGhold_sec_queue_calls = (AVGhold_sec_queue_calls).toFixed();
+                                }
+                                else
+                                {
+                                    AVGhold_sec_queue_calls = 0;
+                                }
+                                if (dropsToday > 0)
+                                {
+                                    AVGhold_sec_drop_calls = (hold_sec_drop_calls / dropsToday);
+                                    AVGhold_sec_drop_calls = (AVGhold_sec_drop_calls).toFixed();
+                                }
+                                else
+                                {
+                                    AVGhold_sec_drop_calls = 0;
+                                }
+                                if (answersToday > 0)
+                                {
+                                    PCThold_sec_stat_one = ((hold_sec_stat_one / answersToday) * 100);
+                                    PCThold_sec_stat_one = (PCThold_sec_stat_one).toFixed(2);
+                                    PCThold_sec_stat_two = ((hold_sec_stat_two / answersToday) * 100);
+                                    PCThold_sec_stat_two = (PCThold_sec_stat_two).toFixed(2);
+                                    AVGhold_sec_answer_calls = (hold_sec_answer_calls / answersToday);
+                                    AVGhold_sec_answer_calls = (AVGhold_sec_answer_calls).toFixed();
+                                    if (agent_non_pause_sec > 0)
+                                    {
+                                        $AVG_ANSWERagent_non_pause_sec = (($answersTODAY / agent_non_pause_sec) * 60);
+                                        $AVG_ANSWERagent_non_pause_sec = Math.round($AVG_ANSWERagent_non_pause_sec).toFixed(2);
+                                    }
+                                    else
+                                    {
+                                        $AVG_ANSWERagent_non_pause_sec = 0;
+                                    }
 
-                            }
-                            else
-                            {
-                                PCThold_sec_stat_one = 0;
-                                PCThold_sec_stat_two = 0;
-                                AVGhold_sec_answer_calls = 0;
-                            }
+                                }
+                                else
+                                {
+                                    PCThold_sec_stat_one = 0;
+                                    PCThold_sec_stat_two = 0;
+                                    AVGhold_sec_answer_calls = 0;
+                                }
 //update dos valores na table 
 
 
 
-                            var tma1 = document.getElementById("tma1" + id);
-                            tma1.innerHTML = AVG_ANSWERagent_non_pause_sec;
-                            var agente_total = document.getElementById("agente_total" + id);
-                            agente_total.innerHTML = (ready + queue + paused + incall);
-                            var agente_espera = document.getElementById("agente_espera" + id);
-                            agente_espera.innerHTML = queue;
-                            var agente_disponivel = document.getElementById("agente_dispo" + id);
-                            agente_disponivel.innerHTML = ready;
-                            var agente_pause = document.getElementById("agente_pause" + id);
-                            agente_pause.innerHTML = paused;
-                            var agente_incall = document.getElementById("agente_incall" + id);
-                            agente_incall.innerHTML = incall;
-                            var sla1 = document.getElementById("sla1" + id);
-                            if (PCThold_sec_stat_one > 0)
-                                sla1.innerHTML = Math.round((answer_sec_pct_rt_stat_one * 100) / PCThold_sec_stat_one).toFixed() + "%";
-                            else
-                                sla1.innerHTML = 0;
-                            var sla2 = document.getElementById("sla2" + id);
-                            if (PCThold_sec_stat_two > 0)
-                                sla2.innerHTML = Math.round((answer_sec_pct_rt_stat_two * 100) / PCThold_sec_stat_two).toFixed() + "%";
-                            else
-                                sla2.innerHTML = 0;
-                            var painel = $("#plot_inbound" + id);
-                            var data = [
-                                {label: 'Cumprido', data: [[1, PCThold_sec_stat_one], [2, PCThold_sec_stat_two]]},
-                                {label: 'bar', data: [[1, answer_sec_pct_rt_stat_one], [2, answer_sec_pct_rt_stat_two]]}];
-                            if (first_time_plot)
-                            {
-                                var options = {
-                                    series: {stack: 0,
-                                        lines: {show: false, steps: false},
-                                        bars: {show: true, barWidth: 0.9, align: 'center'}},
-                                    xaxis: {tickLength: 0, ticks: [[1, 'SLA1->' + answer_sec_pct_rt_stat_one + 'segs'], [2, 'SLA2->' + answer_sec_pct_rt_stat_two + 'segs']]},
-                                };
-                                plot = $.plot(painel, data, options);
-                                first_time = false;
-                            }
-                            else
-                            {
+                                var tma1 = document.getElementById("tma1" + id);
+                                tma1.innerHTML = AVG_ANSWERagent_non_pause_sec;
+                                var agente_total = document.getElementById("agente_total" + id);
+                                agente_total.innerHTML = (ready + queue + paused + incall);
+                                var agente_espera = document.getElementById("agente_espera" + id);
+                                agente_espera.innerHTML = queue;
+                                var agente_disponivel = document.getElementById("agente_dispo" + id);
+                                agente_disponivel.innerHTML = ready;
+                                var agente_pause = document.getElementById("agente_pause" + id);
+                                agente_pause.innerHTML = paused;
+                                var agente_incall = document.getElementById("agente_incall" + id);
+                                agente_incall.innerHTML = incall;
+                                var sla1 = document.getElementById("sla1" + id);
+                                if (PCThold_sec_stat_one > 0)
+                                    sla1.innerHTML = Math.round((answer_sec_pct_rt_stat_one * 100) / PCThold_sec_stat_one).toFixed() + "%";
+                                else
+                                    sla1.innerHTML = 0;
+                                var sla2 = document.getElementById("sla2" + id);
+                                if (PCThold_sec_stat_two > 0)
+                                    sla2.innerHTML = Math.round((answer_sec_pct_rt_stat_two * 100) / PCThold_sec_stat_two).toFixed() + "%";
+                                else
+                                    sla2.innerHTML = 0;
+                                var painel = $("#plot_inbound" + id);
+                                var data = [
+                                    {label: 'Cumprido', data: [[1, PCThold_sec_stat_one], [2, PCThold_sec_stat_two]]},
+                                    {label: 'bar', data: [[1, answer_sec_pct_rt_stat_one], [2, answer_sec_pct_rt_stat_two]]}];
+                                if (first_time_plot)
+                                {
+                                    var options = {
+                                        series: {stack: 0,
+                                            lines: {show: false, steps: false},
+                                            bars: {show: true, barWidth: 0.9, align: 'center'}},
+                                        xaxis: {tickLength: 0, ticks: [[1, 'SLA1->' + answer_sec_pct_rt_stat_one + 'segs'], [2, 'SLA2->' + answer_sec_pct_rt_stat_two + 'segs']]},
+                                    };
+                                    plot = $.plot(painel, data, options);
+                                    first_time = false;
+                                }
+                                else
+                                {
 
-                                plot.setData(data);
-                                plot.draw();
-                            }
+                                    plot.setData(data);
+                                    plot.draw();
+                                }
 
 
 
+                            }, "json");
+                            updation = setTimeout(get_values_inbound, wbe[7]);
                         }, "json");
-                        updation = setTimeout(get_values_inbound, wbe[7]);
                     }, "json");
-                     }, "json");
                 }
 
 
@@ -723,16 +637,3 @@ console.log(data);
             $(window).bind('beforeunload', function() {
                 $("#MainLayout .PanelWB").remove();
             });
-
-        </script>
-
-
-
-    </body>
-
-
-</html>
-
-
-
-

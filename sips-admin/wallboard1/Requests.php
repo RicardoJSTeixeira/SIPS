@@ -62,7 +62,7 @@ switch ($action) {
         if ($graph_type == "4") {
             $query = "INSERT INTO WallBoard1 (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,10000,4)";
             $query = mysql_query($query, $link) or die(mysql_error());
-            $query = "INSERT INTO `asterisk`.`WallBoard_Dataset1` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas) VALUES (LAST_INSERT_ID(), 20,1,0,0,0,'$update_time',2,0,0)";
+            $query = "INSERT INTO `asterisk`.`WallBoard_Dataset1` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1) VALUES (LAST_INSERT_ID(), 20,1,0,0,0,'$update_time',2,0,0,0)";
             $query = mysql_query($query, $link) or die(mysql_error());
         } else {
 
@@ -101,7 +101,7 @@ switch ($action) {
                 $query2 = "SELECT * FROM  WallBoard_Query1  where codigo=$row1[codigo_query]";
                 $query2 = mysql_query($query2, $link) or die(mysql_error());
                 $row2 = mysql_fetch_assoc($query2);
-                $dataset[] = array(id => $row1["id"], id_wallboard => $row1["id_wallboard"], codigo_query => $row1["codigo_query"], opcao_query => $row2["opcao_query"], tempo => $row1["tempo"], user => $row1["user"], user_group => $row1["user_group"], campaign_id => $row1["campaign_id"], linha_inbound => $row1["linha_inbound"], mode => $row1["mode"], status_feedback => $row1["status_feedback"], chamadas => $row1["chamadas"]);
+                $dataset[] = array(id => $row1["id"], id_wallboard => $row1["id_wallboard"], codigo_query => $row1["codigo_query"], opcao_query => $row2["opcao_query"], tempo => $row1["tempo"], user => $row1["user"], user_group => $row1["user_group"], campaign_id => $row1["campaign_id"], linha_inbound => $row1["linha_inbound"], mode => $row1["mode"], status_feedback => $row1["status_feedback"], chamadas => $row1["chamadas"],param1=>$row1["param1"]);
             }
             $js[] = array(id => $row["id"], id_layout => $row["id_layout"], name => $row["name"], pos_x => $row["pos_x"], pos_y => $row["pos_y"], width => $row["width"], height => $row["height"], update_time => $row["update_time"], graph_type => $row["graph_type"], dataset => $dataset);
         }
@@ -120,7 +120,7 @@ switch ($action) {
 
 
     case 'insert_dataset':
-        $query = "INSERT INTO `asterisk`.`WallBoard_Dataset1` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas) VALUES ($id_wallboard, $codigo_query,$tempo,'$user','$user_group','$campaign_id','$linha_inbound',$mode,'$status_feedback','$chamadas')";
+        $query = "INSERT INTO `asterisk`.`WallBoard_Dataset1` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1) VALUES ($id_wallboard, $codigo_query,$tempo,'$user','$user_group','$campaign_id','$linha_inbound',$mode,'$status_feedback','$chamadas','$param1')";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
@@ -130,7 +130,7 @@ switch ($action) {
         $query = "SELECT * FROM `WallBoard_Dataset1` WHERE `id_wallboard`=$id_wallboard";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], codigo_query => $row["codigo_query"], id_wallboard => $row["id_wallboard"], tempo => $row["tempo"], user => $row["user"], user_group => $row["user_group"], campaign_id => $row["campaign_id"], linha_inbound => $row["linha_inbound"], mode => $row["mode"], status_feedback => $row["status_feedback"], chamadas => $row["chamadas"]);
+            $js[] = array(id => $row["id"], codigo_query => $row["codigo_query"], id_wallboard => $row["id_wallboard"], tempo => $row["tempo"], user => $row["user"], user_group => $row["user_group"], campaign_id => $row["campaign_id"], linha_inbound => $row["linha_inbound"], mode => $row["mode"], status_feedback => $row["status_feedback"], chamadas => $row["chamadas"],param1=>$row1["param1"]);
         }
         echo json_encode($js);
         break;
@@ -140,13 +140,13 @@ switch ($action) {
         $query = "SELECT * FROM `WallBoard_Dataset1` WHERE `id`=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], codigo_query => $row["codigo_query"], id_wallboard => $row["id_wallboard"], tempo => $row["tempo"], user => $row["user"], user_group => $row["user_group"], campaign_id => $row["campaign_id"], linha_inbound => $row["linha_inbound"], mode => $row["mode"], status_feedback => $row["status_feedback"], chamadas => $row["chamadas"]);
+            $js[] = array(id => $row["id"], codigo_query => $row["codigo_query"], id_wallboard => $row["id_wallboard"], tempo => $row["tempo"], user => $row["user"], user_group => $row["user_group"], campaign_id => $row["campaign_id"], linha_inbound => $row["linha_inbound"], mode => $row["mode"], status_feedback => $row["status_feedback"], chamadas => $row["chamadas"],param1=>$row1["param1"]);
         }
         echo json_encode($js);
         break;
 
     case 'edit_dataset':
-        $query = "UPDATE WallBoard_Dataset1 SET  codigo_query=$codigo_query,user='$user',user_group='$user_group',campaign_id='$campaign_id',linha_inbound='$linha_inbound',mode=$mode,status_feedback='$status_feedback',chamadas='$chamadas'  WHERE id=$id";
+        $query = "UPDATE WallBoard_Dataset1 SET  codigo_query=$codigo_query,user='$user',user_group='$user_group',campaign_id='$campaign_id',linha_inbound='$linha_inbound',mode=$mode,status_feedback='$status_feedback',chamadas='$chamadas',param1='$param1'  WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
@@ -166,11 +166,11 @@ switch ($action) {
         echo json_encode($js);
         break;
 
-        
-        
-        
-         case 'get_query_by_code':
-             
+
+
+
+    case 'get_query_by_code':
+
         $query = "SELECT * from WallBoard_Query1 where codigo=$codigo";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
@@ -178,13 +178,13 @@ switch ($action) {
         }
         echo json_encode($js);
         break;
-        
+
 
 
 
 //graficos-----------------------------------------
     case '1'://real time - total chamadas inbound/outbound
-//falta blended(inbound+outbound)
+
 
 
         for ($i = 0; $i < count($datasets); $i++) {
@@ -195,6 +195,7 @@ switch ($action) {
                 $query2 = mysql_query($query2, $link) or die(mysql_error());
                 while ($row2 = mysql_fetch_assoc($query2)) {
                     $temp = array();
+                      $temp1 = array();
                     $temp2 = array();
                     $round_numerator = 60 * 5;
                     $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
@@ -246,7 +247,7 @@ switch ($action) {
                         while ($row4 = mysql_fetch_assoc($outbound)) {
                             $temp2[] = array(lead_id => $row4["lead_id"], call_date => $row4["call_date"]);
                         }
-                        $temp= array_merge($temp1,$temp2);
+                        $temp = array_merge($temp1, $temp2);
                     }
                     $t = strtotime($rounded_time);
                     $t2 = strtotime('-1 hours', $t);
@@ -259,7 +260,7 @@ switch ($action) {
                         $leads = 0;
                         foreach ($temp as $kev => $row) {
                             if ($row["call_date"] >= $begin_time && $row["call_date"] <= $end_time)
-                                $leads =$leads+1 ;
+                                $leads = $leads + 1;
                         }
                         $jc[] = array(leads => $leads, call_date => $begin_time);
                         $t = strtotime($rounded_time);
@@ -276,8 +277,8 @@ switch ($action) {
                 }
             }
         }
-      
-        echo json_encode(array("datasets" => $js));
+
+         echo json_encode(array("datasets" => $js));
         break;
 
 
@@ -302,7 +303,7 @@ switch ($action) {
         break;
 
     case '4'://inbound
-        $selected_query = str_replace('$linha_inbound', $group_id , $selected_query);
+        $selected_query = str_replace('$linha_inbound', $group_id, $selected_query);
         $query = $selected_query;
 
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -319,7 +320,7 @@ switch ($action) {
                 inGroupDetail => $row[8],
                 agent_non_pause_sec => $row[9]);
         }
-        
+
         echo json_encode($js);
         break;
 
@@ -390,6 +391,10 @@ switch ($action) {
         }
         echo json_encode($js);
         break;
+        
+        
+       
+      
 //flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------
 }
 ?>
