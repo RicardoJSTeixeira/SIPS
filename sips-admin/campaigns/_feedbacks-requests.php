@@ -50,13 +50,14 @@ function FeedListBuilder($CampaignID, $AllowedCampaigns, $FeedName, $Human, $Cal
 			$js['status_name'][] = $FeedName;
 			$js['human'][] = $Human;
 			$js['callback'][] = $Callback;
+                        $js['selectable'][] = "Y";
 			
 			
 			mysql_query("UPDATE sips_campaign_stats SET feedbacks = feedbacks + 1 WHERE campaign_id='$CampaignID'") or die(mysql_error());
 					
 			foreach($AllowedCampaigns as $key=>$value)
 			{
-				if($value = $CampaignID)
+				if($value == $CampaignID)
 				{
 					$selectable = "Y";
 				}
