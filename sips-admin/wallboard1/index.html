@@ -166,79 +166,88 @@
                         </select> 
                   </div>
 
-           
 
 
 
-            <!--DIALOG DOS dataTables-->
-            <div id="dialog_dataTable" title="Criação de Tabelas Top" style="display: none;">
-                  <label class="label label-info">Nome do Gráfico</label>
-                  <input id='graph_name_dataTable' type='text'/>
-              
-                  
-                  
-            </div>
 
+                  <!--DIALOG DOS dataTables-->
+                  <div id="dialog_dataTable" title="Criação de Tabelas Top" style="display: none;">
 
+                        <select id="dataTable_opcao">
+                              <option value="1" >Campanha</option>
+                              <option value="2" >Grupo_inbound</option>
+                              <option value="3">Grupo_User</option>
+                        </select> 
 
-            <!--DIALOG Dataset->LINHAS-->
-            <div id="dialog_dataset_linhas" title="Criação de dataset" style="display: none;">
-                  <table>
-                        <tr>
-                              <td colspan="2">
-                                    <label class="label label-info">Tipo de dados</label>
-                                    <select id="in_out_bound">
-                                          <option value="1" >Inbound</option>
-                                          <option value="2" >Outbound</option>
-                                          <option value="3">Blended</option>
-                                    </select> 
-                              </td>
-                        </tr>
-                        <tr>
-                              <td>
-                                    <label class="label label-success">Série:</label>
-                                    <select id="linhas_serie">
-                                          <option value="1" >user</option>
-                                          <option value="2" >User_group</option>
-                                          <option value="3">campanha</option>
-                                          <option value="4">total cc</option>   
-                                          <option value="5" >linha inbound</option>
-                                    </select> 
-                              </td>
-                              <td>
-                                    <label class="label label-info">Filtro:</label>
-                                    <select id="linhas_filtro">
-                                          <option value="1" >Chamadas</option>
-                                          <option value="2" >Feedback</option>
-                                    </select>
-                              </td>
-                        </tr>
-                        <tr>
-                              <td>
-                                    <div id="gao_user"  class="graph_advance_option"></div>
-                                    <div id="gao_userGroup"  class="graph_advance_option" style="display: none;"></div>
-                                    <div id="gao_campaign" class="graph_advance_option" style="display: none;" ></div>
-                                    <div id="gao_inbound"  class="graph_advance_option" style="display: none;"></div>
-                              </td>
-                              <td>
-                                    <div id="gao_chamadas" class="option_filtro" ></div>
-                                    <div id="gao_status" class="option_filtro"  style="display: none;"></div>    
-                              </td>
-                        </tr>
-                  </table>
-            </div>
+                        <div class="dataTable_select" >
+                              <select  id="campaign_id_dataTable"></select>
 
-            <!--DIALOG DE INBOUND-->
-            <div id="dialog_inbound" title="Criação de Wallboard Inbound" style="display: none;" >
-                  <label class="label label-info">Grupo:</label>
-                  <select id="group_inbound_select">
-                  </select> 
-            </div>
-            <!-----------------------------------------------------------DIALOGS------------------------------------------------------------------------------>
+                              <select id="grupo_inbound_dataTable"></select>
+
+                              <select id="grupo_user_dataTable"></select>
                         </div>
+                  </div>
 
 
-            
+
+                  <!--DIALOG Dataset->LINHAS-->
+                  <div id="dialog_dataset_linhas" title="Criação de dataset" style="display: none;">
+                        <table>
+                              <tr>
+                                    <td colspan="2">
+                                          <label class="label label-info">Tipo de dados</label>
+                                          <select id="in_out_bound">
+                                                <option value="1" >Inbound</option>
+                                                <option value="2" >Outbound</option>
+                                                <option value="3">Blended</option>
+                                          </select> 
+                                    </td>
+                              </tr>
+                              <tr>
+                                    <td>
+                                          <label class="label label-success">Série:</label>
+                                          <select id="linhas_serie">
+                                                <option value="1" >user</option>
+                                                <option value="2" >User_group</option>
+                                                <option value="3">campanha</option>
+                                                <option value="4">total cc</option>   
+                                                <option value="5" >linha inbound</option>
+                                          </select> 
+                                    </td>
+                                    <td>
+                                          <label class="label label-info">Filtro:</label>
+                                          <select id="linhas_filtro">
+                                                <option value="1" >Chamadas</option>
+                                                <option value="2" >Feedback</option>
+                                          </select>
+                                    </td>
+                              </tr>
+                              <tr>
+                                    <td>
+                                          <div id="gao_user"  class="graph_advance_option"></div>
+                                          <div id="gao_userGroup"  class="graph_advance_option" style="display: none;"></div>
+                                          <div id="gao_campaign" class="graph_advance_option" style="display: none;" ></div>
+                                          <div id="gao_inbound"  class="graph_advance_option" style="display: none;"></div>
+                                    </td>
+                                    <td>
+                                          <div id="gao_chamadas" class="option_filtro" ></div>
+                                          <div id="gao_status" class="option_filtro"  style="display: none;"></div>    
+                                    </td>
+                              </tr>
+                        </table>
+                  </div>
+
+                  <!--DIALOG DE INBOUND-->
+                  <div id="dialog_inbound" title="Criação de Wallboard Inbound" style="display: none;" >
+                        <label class="label label-info">Grupo:</label>
+                        <select id="group_inbound_select">
+                        </select> 
+                  </div>
+                  <!-----------------------------------------------------------DIALOGS------------------------------------------------------------------------------>
+            </div>
+
+
+
 
 
 

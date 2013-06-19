@@ -3,23 +3,23 @@
 
 
 /*dataTable
-// top 
-//5 ou 10
-//top man tem q ser maior
-
-
-escolher feedback, ou soma de feedbacks
-
-user/resultado/tma/nºchamadas
-
-
-
-escolher por
-campanha
-ou
-grupo inbound
+ // top 
+ //5 ou 10
+ //top man tem q ser maior
+ 
+ 
+ escolher feedback, ou soma de feedbacks
+ 
+ user/resultado/tma/nºchamadas
+ 
+ 
+ 
+ escolher por
+ campanha
  ou
-grupo user
+ grupo inbound
+ ou
+ grupo user
  **/
 
 
@@ -48,7 +48,7 @@ grupo user
 //11: chamadas
 
 
-//verificar todas as queries
+//maneira de fazer multiselect no dataSet é pra ser optimizado
 
 
 
@@ -121,12 +121,55 @@ $("#linhas_filtro").change(function()
                   break;
       }
 });
+
+
+
+
+
+
+
+
+
+$("#dataTable_opcao").change(function()
+{
+      var select = $("#dataTable_opcao");
+
+      var campaing = $("#campaign_id_dataTable");
+      var grupo_inbound = $("#grupo_inbound_dataTable");
+      var grupo_user = $("#grupo_user_dataTable");
+
+      $("#campaign_id_dataTable").show();
+      if (select.val() === "1")
+      {
+            campaing.show();
+            grupo_inbound.hide();
+            grupo_user.hide();
+      }
+      if (select.val() === "2")
+      {
+            campaing.hide();
+            grupo_inbound.show();
+            grupo_user.hide();
+      }
+      if (select.val() === "3")
+      {
+            campaing.hide();
+            grupo_inbound.hide();
+            grupo_user.show();
+      }
+
+});
 //-----------------FUNÇÕES DOS BUTTONS----------------------------
 
 
 
 // FUNÇÂO STARTER-----------------------------------------------------------------------------------------99999999----------------------------------------------------------------0000000000000000000000
 $(function() {
+
+      $("#campaign_id_dataTable").show();
+      $("#grupo_inbound_dataTable").hide();
+      $("#grupo_user_dataTable").hide();
+      
       $(document).on("click", ".delete_button", function(e) {
 
             var id = $(this).data("wbe_id");
@@ -486,7 +529,7 @@ $(function() {
             dialogClass: 'dialogButtons',
             autoOpen: false,
             resizable: false,
-            height: 270,
+            height: 350,
             width: 310,
             modal: true,
             buttons: {
@@ -949,16 +992,21 @@ function flot_extra(opcao)
             if (opcao === "user_group")
             {
                   var object = $("#user_group");
+                  var object1 = $("#grupo_user_dataTable");
                   object.empty();
                   $.each(data, function(index, value) {
                         object.append(new Option(value, value));
+                        object1.append(new Option(value, value));
                   });
             }
+
             if (opcao === "campaign")
             {
                   var object = $("#campaign");
+                  var object1 = $("#campaign_id_dataTable");
                   $.each(data, function(index, value) {
                         object.append(new Option(this.campaign_id, this.campaign_name));
+                        object1.append(new Option(this.campaign_id, this.campaign_name));
                   });
             }
             if (opcao === "status_venda")
@@ -972,7 +1020,7 @@ function flot_extra(opcao)
 
             if (opcao === "inbound")
             {
-                  var object = $([]).add($("#group_inbound_select")).add($("#inbound"));
+                  var object = $([]).add($("#group_inbound_select")).add($("#inbound")).add($("#grupo_inbound_dataTable"));
 
                   $.each(data, function(index, value) {
                         object.append(new Option(this.name, this.id));
