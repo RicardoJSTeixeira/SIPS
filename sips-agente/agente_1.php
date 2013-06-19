@@ -14276,8 +14276,8 @@ Available Agents Transfer: <span id="AgentXferViewSelect"></span></center></font
 	<td>
     
     <table style='width:100%;' class="radio-container">
-    	<tr><td><input style="float:right; cursor:pointer;" type="radio" id="cb_pessoal" checked="checked" name="tipo_callback" /><td style=" text-align:left; "><label style="cursor:pointer" for="cb_pessoal">Callback Pessoal</label></td></tr>
-    	<tr><td><input style="float:right; cursor:pointer;" type="radio" id="cb_geral" name="tipo_callback" /><td style=" text-align:left; "><label style="cursor:pointer" for="cb_geral">Callback Geral</label></td></tr>
+    	<tr><td><input style="float:right; cursor:pointer;" type="radio" id="cb_pessoal" <?=($my_callback_option=="CHECKED")?"checked='checked'":""?> name="tipo_callback" /><td style=" text-align:left; "><label style="cursor:pointer" for="cb_pessoal">Callback Pessoal</label></td></tr>
+    	<tr><td><input style="float:right; cursor:pointer;" type="radio" id="cb_geral" <?=($my_callback_option!="CHECKED")?"checked='checked'":""?> name="tipo_callback" /><td style=" text-align:left; "><label style="cursor:pointer" for="cb_geral">Callback Geral</label></td></tr>
     </table>
 </tr>
 <tr>
