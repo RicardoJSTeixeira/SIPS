@@ -1,0 +1,260 @@
+<!DOCTYPE HTML>
+<html>
+      <head>
+            <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+            <title>SIPS</title> 
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css">
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
+            <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
+
+
+            <script type="text/javascript" src="/jquery/jquery-1.9.1.js"></script>
+            <script type="text/javascript" src="/jquery/jqueryUI/jquery-ui-1.10.2.custom.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
+
+
+            <style>
+
+
+
+                  .draggablePanel{ width: auto; height: auto; margin: 0 auto; overflow: hidden;}
+                  /* Default color for links inside the tabbed box */ 
+                  .ui-widget-content a, .ui-widget-content a:hover, .ui-widget-content a:visited, .ui-widget-content a:active {
+                        color: #2954d1 !important; 
+                        text-decoration: underline !important; 
+                  }
+                  /* Default styling for selected tab titles */ 
+                  .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
+                        color: #212121 !important;
+                        text-decoration: none !important;
+                        cursor: text !important;
+                  }
+                  /* Default styling for unselected tab titles */ 
+                  .ui-state-default a:hover, .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+                        color: #555555 !important;
+                        text-decoration: none !important;
+                        cursor: text !important;
+                  }
+
+                  .row-fluid .toolBar_span{
+                        margin-top: 50px;
+                        width: 51px;
+                        margin-left: 0;
+                        border-bottom-left-radius: 0;
+                        border-top-left-radius: 0;
+                        border-left: 0;
+                  }
+                  .board
+                  {
+                        min-width: 926px;
+                  }
+                  #MainLayout
+                  {
+                        position:absolute;
+                        width:904px;
+                        height:512px;
+                        background-color: #F2F2F2;
+                        border: 1px solid #ccc;
+                        border: 1px solid rgba(0, 0, 0, 0.15);
+                        -webkit-border-radius: 4px;
+                        -moz-border-radius: 4px;
+                        border-radius: 6px;
+                        color: #333333;
+                        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+                        -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+                        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+                  }
+                  .PanelWB{position:absolute;
+                           -webkit-border-radius: 3px;
+                           -moz-border-radius: 3px;
+
+                           border-radius: 3px;
+                           box-shadow: 5px 5px 13px -6px rgba(0, 0, 0, 0.3) ;
+                  }
+
+                  .opções_layout{
+                        margin-left: -1px !important;
+                        border-top-right-radius: 3px !important;
+                        border-bottom-right-radius: 3px !important
+                  }
+
+            </style>  
+      </head>
+
+      <body>
+            <div class="grid-content">
+                  <div class="row-fluid">
+                        <div class="grid span11 board" >
+                              <div class="grid-title">
+                                    <div class="pull-left">
+                                          <button id="add_layout_button" data-t="tooltip-right" title="Adiciona um novo ecrã" class="btn btn-info  btn-large" > <i class="icon-plus "></i>Novo</button>
+                                    </div>
+                                    <div class="pull-right">
+
+                                          <div class="input-prepend input-append"><span  class="add-on">Layout</span>
+                                                <select id="LayoutSelector" onchange="layout_change();"></select>
+                                                <button data-t="tooltip-right" title="Opções da Layout"  class="opções_layout  btn btn-warning icon-alone" id="opcao_layout_button"><i class="icon-cogs"></i></button>
+                                          </div>
+
+                                    </div>
+                              </div>
+
+
+
+                              <div class="grid-content ">
+                                    <div  style="position:relative;width:904px;height:512px; margin: 0 auto;">
+                                          <div id="MainLayout" class="ui-widget-header " style="position:relative;" ></div>
+                                    </div>
+                                    <div class="clear"></div>
+                              </div>
+                        </div>  
+
+                        <div class="grid toolBar_span" id="toolBar">
+                              <div class="grid-title">
+                                    <div class="text-center"> 
+                                          <div class="grid-title-text-2"><a href="#" ><i class="icon-cog "></i></a></div>
+                                    </div>
+                              </div>
+                              <div class="grid-content">
+                                    <p><button id="remove_layout_button" data-t="tooltip" title="Remover  Layout" class="btn btn-danger icon-alone toolbar_button " ><i class="icon-remove "></i></button></p>
+                                    <p><button id="fullscreen_button" class="btn btn-inverse icon-alone toolbar_button "  data-t="tooltip" title="Fullscreen"  ><i class="icon-fullscreen"></i></button></p>
+                                    <p><button id="linhas_button"  class=" btn btn-info diablog_opener icon-alone toolbar_button" onclick="selected_type_graph = 1;"  data-t="tooltip" title="Gráfico de Linhas"  ><i class="icon-picture "></i> </button></p>
+                                    <p><button id="barras_button" class ="btn btn-info diablog_opener icon-alone toolbar_button" onclick="selected_type_graph = 2;" data-t="tooltip" title="Gráfico de Barras"  ><i class="icon-bar-chart "></i></button></p>
+                                    <p><button id="pie_button" class="btn btn-info diablog_opener icon-alone toolbar_button" onclick="selected_type_graph = 3;" data-t="tooltip" title="Gráfico de Tarte"  > <i class="icon-adjust "></i></button></p>
+                                    <p><button id="topTable_button" class="btn btn-info diablog_opener_dataTable icon-alone toolbar_button" onclick="selected_type_graph = 5;" data-t="tooltip" title="tabela top agente"  > <i class="icon-th-list "></i></button></p>
+                                    <p><button id="graph_inbound" class="btn btn-info icon-alone diablog_opener_inbound toolbar_button" onclick="selected_type_graph = 4;" data-t="tooltip" title="Gráfico de Inbound"  > <i class="icon-list-alt "></i></button></p>
+                              </div>
+                        </div>
+                  </div>
+
+
+                  <!-----------------------------------------------------------DIALOGS------------------------------------------------------------------------------>
+                  <!--DIALOG Da Layout, muda nome -->
+                  <div id="dialog_layout" title="Opções de Layout" style="display: none;" >
+                        <div id="table_name_layout">
+                              <label class="label label-info">Nome</label>
+                              <input id="Layout_Input_name" type="text" placeholder="Text input" />
+                        </div>
+                  </div>
+                  <!--DIALOG de confirmação de delete de layout-->
+                  <div id="dialog_delete" title="Confirmação" style="display: none;" >
+                        Tem a certeza que quer eliminar este Layout?
+                  </div>
+
+
+
+                  <!--DIALOG DOS WALLBOARDS-->
+                  <div id="dialog" title="Criação de Wallboard" style="display: none;">
+                        <label class="label label-info">Nome do Gráfico</label>
+                        <input id='graph_name' type='text'  />
+                        <label class="label label-info">Tempo de actualização:</label>
+                        <select id="update_time">
+                              <option value="5000" >5 sec</option>
+                              <option value="10000" selected>10 sec</option>
+                              <option value="20000">20 sec</option>
+                              <option value="40000">40 sec</option>   
+                              <option value="60000" >1 min</option>
+                              <option value="120000" >2 min</option>
+                              <option value="360000" >5 min</option>
+                        </select> 
+                  </div>
+
+
+
+
+
+                  <!--DIALOG DOS dataTables-->
+                  <div id="dialog_dataTable" title="Criação de Tabelas Top" style="display: none;">
+
+                        <select id="dataTable_opcao">
+                              <option value="1" >Campanha</option>
+                              <option value="2" >Grupo_inbound</option>
+                              <option value="3">Grupo_User</option>
+                        </select> 
+
+                        <div class="dataTable_select" >
+                              <select  id="campaign_id_dataTable"></select>
+
+                              <select id="grupo_inbound_dataTable"></select>
+
+                              <select id="grupo_user_dataTable"></select>
+                        </div>
+                  </div>
+
+
+
+                  <!--DIALOG Dataset->LINHAS-->
+                  <div id="dialog_dataset_linhas" title="Criação de dataset" style="display: none;">
+                        <table>
+                              <tr>
+                                    <td colspan="2">
+                                          <label class="label label-info">Tipo de dados</label>
+                                          <select id="in_out_bound">
+                                                <option value="1" >Inbound</option>
+                                                <option value="2" >Outbound</option>
+                                                <option value="3">Blended</option>
+                                          </select> 
+                                    </td>
+                              </tr>
+                              <tr>
+                                    <td>
+                                          <label class="label label-success">Série:</label>
+                                          <select id="linhas_serie">
+                                                <option value="1" >user</option>
+                                                <option value="2" >User_group</option>
+                                                <option value="3">campanha</option>
+                                                <option value="4">total cc</option>   
+                                                <option value="5" >linha inbound</option>
+                                          </select> 
+                                    </td>
+                                    <td>
+                                          <label class="label label-info">Filtro:</label>
+                                          <select id="linhas_filtro">
+                                                <option value="1" >Chamadas</option>
+                                                <option value="2" >Feedback</option>
+                                          </select>
+                                    </td>
+                              </tr>
+                              <tr>
+                                    <td>
+                                          <div id="gao_user"  class="graph_advance_option"></div>
+                                          <div id="gao_userGroup"  class="graph_advance_option" style="display: none;"></div>
+                                          <div id="gao_campaign" class="graph_advance_option" style="display: none;" ></div>
+                                          <div id="gao_inbound"  class="graph_advance_option" style="display: none;"></div>
+                                    </td>
+                                    <td>
+                                          <div id="gao_chamadas" class="option_filtro" ></div>
+                                          <div id="gao_status" class="option_filtro"  style="display: none;"></div>    
+                                    </td>
+                              </tr>
+                        </table>
+                  </div>
+
+                  <!--DIALOG DE INBOUND-->
+                  <div id="dialog_inbound" title="Criação de Wallboard Inbound" style="display: none;" >
+                        <label class="label label-info">Grupo:</label>
+                        <select id="group_inbound_select">
+                        </select> 
+                  </div>
+                  <!-----------------------------------------------------------DIALOGS------------------------------------------------------------------------------>
+            </div>
+
+
+
+
+
+
+
+
+            <div id="jGrowl" class="top-right jGrowl" ><div class="jGrowl-notification" ></div></div>
+
+            <script type="text/javascript" src="wizard.js"></script>
+      </body>
+</html>

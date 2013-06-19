@@ -57,7 +57,7 @@ function MiscOptionsBuilder(Flag)
                             $("#table-groups-1").append("<tr><td width=10px><input class='groups-checkbox' "+Checked+" type='checkbox' value='" + data.user_groups_id[index] + "' name='" + data.user_groups_id[index] + "' id='" + data.user_groups_id[index] + "'></td><td style='padding-top:1px'><label style='display:inline;' for='" + data.user_groups_id[index] + "'>" + data.user_groups_name[index] + "</label></td></tr>")
                         }
                     })
-                    $               
+                                   
                     $(".groups-checkbox").uniform();
                     
 					CampaignID = data.new_campaign_id; 
