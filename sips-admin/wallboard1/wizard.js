@@ -2,11 +2,26 @@
 //aduarte@finesource.pt
 
 
-//dataTable
+/*dataTable
 // top 
 //5 ou 10
 //top man tem q ser maior
-//status, tma, chamadas
+
+
+escolher feedback, ou soma de feedbacks
+
+user/resultado/tma/nºchamadas
+
+
+
+escolher por
+campanha
+ou
+grupo inbound
+ ou
+grupo user
+ **/
+
 
 //--------------wbes
 //0      id,
@@ -35,7 +50,6 @@
 
 //verificar todas as queries
 
-//depois de apagar uma layout ainda aparece mensagesns
 
 
 var wbes = [];
@@ -426,17 +440,9 @@ $(function() {
                   },
                   "Sim": function() {
                         sql_basic("remove_Layout", idLayout);
-                        $(this).dialog("close");
-                        load_dados("layout", 0);
-                        var i = 0;
-                        $.each(layouts, function(index, value)
-                        {
 
-                              if (layouts[i][0] === idLayout) {
-                                    layouts.splice(i, 1);
-                              }
-                              i++;
-                        });
+
+                        $(this).dialog("close");
                   }
 
             }
@@ -470,8 +476,25 @@ $(function() {
                         $(this).dialog("close");
                   },
                   "Criar": function() {
-                        manipulate_graph("insert_wbe", $("#group_inbound_select option:selected").text(), $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, $("#group_inbound_select").val(), 4);
+                        manipulate_graph("insert_wbe", $("#group_inbound_select option:selected").text(), "Estatistica", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, $("#group_inbound_select").val(), 4);
 
+                        $(this).dialog("close");
+                  }
+            }
+      });
+      $("#dialog_dataTable").dialog({
+            dialogClass: 'dialogButtons',
+            autoOpen: false,
+            resizable: false,
+            height: 270,
+            width: 310,
+            modal: true,
+            buttons: {
+                  "Cancelar": function() {
+                        $(this).dialog("close");
+                  },
+                  "Criar": function() {
+                        manipulate_graph("insert_wbe", 0, $("#graph_name_dataTable").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 5);
                         $(this).dialog("close");
                   }
             }
@@ -483,8 +506,10 @@ $(function() {
             $("#dialog").dialog("open");
       });
       $(".diablog_opener_inbound").click(function() {
-            dialog_opener();
             $("#dialog_inbound").dialog("open");
+      });
+      $(".diablog_opener_dataTable").click(function() {
+            $("#dialog_dataTable").dialog("open");
       });
       //loada da dropbox com os indices e do painel do layout
       load_dados("layout", 0);
@@ -536,7 +561,7 @@ function dialog_opener()
             manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, selected_type_graph);
             $("#gao_campaign").show();
       }
-    
+
 }
 
 function fullScreen()
@@ -641,8 +666,25 @@ function update_wbe()
       //11: chamadas
       $.each(wbes, function(index, value) {
             var ml = $("#MainLayout");
+            if (wbes[i][8] === "4" || wbes[i][8] === "5")//Todos menos Inbound
+            {
+                  ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
+                          .css("left", wbes[i][3] + "px")
+                          .css("top", wbes[i][4] + "px")
+                          .css("width", wbes[i][5] + "px")
+                          .css("height", wbes[i][6] + "px")
+                          .append($("<div>").addClass("grid-title")
+                          .append($("<div>").addClass("pull-left")
+                          .text(wbes[i][2] + " de " + wbes[i][9][0].param1))
+                          .append($("<div>").addClass("pull-right")
+                          .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
+                          .append($("<i>").addClass("icon-remove")))
+                          ))
+                          .append($("<div>").addClass("grid-content").attr("id", "grid_content")));
 
-            if (wbes[i][8] !== "4") {//Todos menos Inbound
+            }
+            else//Inbound
+            {
                   ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
                           .css("left", wbes[i][3] + "px")
                           .css("top", wbes[i][4] + "px")
@@ -679,24 +721,7 @@ function update_wbe()
                         a++;
                   });
             }
-            else//Inbound
-            {
-                  ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
-                          .css("left", wbes[i][3] + "px")
-                          .css("top", wbes[i][4] + "px")
-                          .css("width", wbes[i][5] + "px")
-                          .css("height", wbes[i][6] + "px")
-                          .append($("<div>").addClass("grid-title")
-                          .append($("<div>").addClass("pull-left")
-                          .text(wbes[i][2]))
-                          .append($("<div>").addClass("pull-right")
 
-                          .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
-                          .append($("<i>").addClass("icon-remove")))
-                          ))
-                          .append($("<div>").addClass("grid-content").attr("id", "grid_content")));
-
-            }
 
 
 
@@ -818,14 +843,18 @@ function sql_basic(opcao, id_layout, id_wbe)
 
             if (opcao === "remove_Layout")
             {
-                  load_dados('layout', 0);
-                  layout_change();
-                  var i = get_indice_layout(idLayout);
-                  $('#label_id_layout').text(layouts[i][0]);
-                  $("#Layout_Input_name").val(layouts[i][1]);
-                  load_dados('layout', 0);
-                  layout_change();
-                  $(this).dialog("close");
+                  load_dados("layout", 0);
+                  var i = 0;
+                  $.each(layouts, function(index, value)
+                  {
+
+                        if (layouts[i][0] === idLayout) {
+                              layouts.splice(i, 1);
+                        }
+                        i++;
+                  });
+
+
             }
       }, "json");
 }
@@ -961,4 +990,4 @@ function flot_extra(opcao)
       }, "json");
 }
 //FLOT EXTRA HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHh
- 
+

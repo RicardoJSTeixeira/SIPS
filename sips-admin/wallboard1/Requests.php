@@ -65,8 +65,6 @@ switch ($action) {
             $query = "INSERT INTO `asterisk`.`WallBoard_Dataset1` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1) VALUES (LAST_INSERT_ID(), 0,1,0,0,0,'$update_time',2,0,0,'$id')";
             $query = mysql_query($query, $link) or die(mysql_error());
         } else {
-
-
             $query = "INSERT INTO WallBoard1 (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
             $query = mysql_query($query, $link) or die(mysql_error());
         }
@@ -306,146 +304,154 @@ switch ($action) {
         $stmtB = "select calls_today,drops_today,answers_today,status_category_1,status_category_count_1,status_category_2,status_category_count_2,status_category_3,status_category_count_3,status_category_4,status_category_count_4,hold_sec_stat_one,hold_sec_stat_two,hold_sec_answer_calls,hold_sec_drop_calls,hold_sec_queue_calls,campaign_id from vicidial_campaign_stats where campaign_id='$group_id'";
 
         $rslt = mysql_query($stmtB, $link);
-        while ($row = mysql_fetch_row($rslt)) { 
+        while ($row = mysql_fetch_row($rslt)) {
 
-                $callsTODAY = $row[0];
-                $dropsTODAY = $row[1];
-                $answersTODAY = $row[2];
-                $VSCcat1 = $row[3];
-                $VSCcat1tally = $row[4];
-                $VSCcat2 = $row[5];
-                $VSCcat2tally = $row[6];
-                $VSCcat3 = $row[7];
-                $VSCcat3tally = $row[8];
-                $VSCcat4 = $row[9];
-                $VSCcat4tally = $row[10];
-                $hold_sec_stat_one = $row[11];
-                $hold_sec_stat_two = $row[12];
-                $hold_sec_answer_calls = $row[13];
-                $hold_sec_drop_calls = $row[14];
-                $hold_sec_queue_calls = $row[15];
-                $ingroupdetail = $row[16];
-                if (($dropsTODAY > 0) and ($answersTODAY > 0)) {
-                    $drpctTODAY = ( ($dropsTODAY / $callsTODAY) * 100);
-                    $drpctTODAY = round($drpctTODAY, 2);
-                    $drpctTODAY = sprintf("%01.2f", $drpctTODAY);
-                } else {
-                    $drpctTODAY = 0;
-                }
+            $callsTODAY = $row[0];
+            $dropsTODAY = $row[1];
+            $answersTODAY = $row[2];
+            $VSCcat1 = $row[3];
+            $VSCcat1tally = $row[4];
+            $VSCcat2 = $row[5];
+            $VSCcat2tally = $row[6];
+            $VSCcat3 = $row[7];
+            $VSCcat3tally = $row[8];
+            $VSCcat4 = $row[9];
+            $VSCcat4tally = $row[10];
+            $hold_sec_stat_one = $row[11];
+            $hold_sec_stat_two = $row[12];
+            $hold_sec_answer_calls = $row[13];
+            $hold_sec_drop_calls = $row[14];
+            $hold_sec_queue_calls = $row[15];
+            $ingroupdetail = $row[16];
+            if (($dropsTODAY > 0) and ($answersTODAY > 0)) {
+                $drpctTODAY = ( ($dropsTODAY / $callsTODAY) * 100);
+                $drpctTODAY = round($drpctTODAY, 2);
+                $drpctTODAY = sprintf("%01.2f", $drpctTODAY);
+            } else {
+                $drpctTODAY = 0;
+            }
 
-                if ($callsTODAY > 0) {
-                    $AVGhold_sec_queue_calls = ($hold_sec_queue_calls / $callsTODAY);
-                    $AVGhold_sec_queue_calls = round($AVGhold_sec_queue_calls, 0);
-                } else {
-                    $AVGhold_sec_queue_calls = 0;
-                }
+            if ($callsTODAY > 0) {
+                $AVGhold_sec_queue_calls = ($hold_sec_queue_calls / $callsTODAY);
+                $AVGhold_sec_queue_calls = round($AVGhold_sec_queue_calls, 0);
+            } else {
+                $AVGhold_sec_queue_calls = 0;
+            }
 
-                if ($dropsTODAY > 0) {
-                    $AVGhold_sec_drop_calls = ($hold_sec_drop_calls / $dropsTODAY);
-                    $AVGhold_sec_drop_calls = round($AVGhold_sec_drop_calls, 0);
-                } else {
-                    $AVGhold_sec_drop_calls = 0;
-                }
+            if ($dropsTODAY > 0) {
+                $AVGhold_sec_drop_calls = ($hold_sec_drop_calls / $dropsTODAY);
+                $AVGhold_sec_drop_calls = round($AVGhold_sec_drop_calls, 0);
+            } else {
+                $AVGhold_sec_drop_calls = 0;
+            }
 
-                if ($answersTODAY > 0) {
-                    $PCThold_sec_stat_one = ( ($hold_sec_stat_one / $answersTODAY) * 100);
-                    $PCThold_sec_stat_one = round($PCThold_sec_stat_one, 2);
-                    $PCThold_sec_stat_one = sprintf("%01.2f", $PCThold_sec_stat_one);
-                    $PCThold_sec_stat_two = ( ($hold_sec_stat_two / $answersTODAY) * 100);
-                    $PCThold_sec_stat_two = round($PCThold_sec_stat_two, 2);
-                    $PCThold_sec_stat_two = sprintf("%01.2f", $PCThold_sec_stat_two);
-                    $AVGhold_sec_answer_calls = ($hold_sec_answer_calls / $answersTODAY);
-                    $AVGhold_sec_answer_calls = round($AVGhold_sec_answer_calls, 0);
-                    if ($agent_non_pause_sec > 0) {
-                        $AVG_ANSWERagent_non_pause_sec = (($answersTODAY / $agent_non_pause_sec) * 60);
-                        $AVG_ANSWERagent_non_pause_sec = round($AVG_ANSWERagent_non_pause_sec, 2);
-                        $AVG_ANSWERagent_non_pause_sec = sprintf("%01.2f", $AVG_ANSWERagent_non_pause_sec);
-                    } else {
-                        $AVG_ANSWERagent_non_pause_sec = 0;
-                    }
+            if ($answersTODAY > 0) {
+                $PCThold_sec_stat_one = ( ($hold_sec_stat_one / $answersTODAY) * 100);
+                $PCThold_sec_stat_one = round($PCThold_sec_stat_one, 2);
+                $PCThold_sec_stat_one = sprintf("%01.2f", $PCThold_sec_stat_one);
+                $PCThold_sec_stat_two = ( ($hold_sec_stat_two / $answersTODAY) * 100);
+                $PCThold_sec_stat_two = round($PCThold_sec_stat_two, 2);
+                $PCThold_sec_stat_two = sprintf("%01.2f", $PCThold_sec_stat_two);
+                $AVGhold_sec_answer_calls = ($hold_sec_answer_calls / $answersTODAY);
+                $AVGhold_sec_answer_calls = round($AVGhold_sec_answer_calls, 0);
+                if ($agent_non_pause_sec > 0) {
+                    $AVG_ANSWERagent_non_pause_sec = (($answersTODAY / $agent_non_pause_sec) * 60);
+                    $AVG_ANSWERagent_non_pause_sec = round($AVG_ANSWERagent_non_pause_sec, 2);
+                    $AVG_ANSWERagent_non_pause_sec = sprintf("%01.2f", $AVG_ANSWERagent_non_pause_sec);
                 } else {
-                    $PCThold_sec_stat_one = 0;
-                    $PCThold_sec_stat_two = 0;
-                    $AVGhold_sec_answer_calls = 0;
                     $AVG_ANSWERagent_non_pause_sec = 0;
                 }
- $js[] = array(chamadas_efectuadas => $callsTODAY, chamadas_perdidas => $dropsTODAY,chamadas_atendidas => $answersTODAY,tma1=>$PCThold_sec_stat_one,tma2=>$PCThold_sec_stat_two,tme_chamadas_atendidas=>$AVGhold_sec_answer_calls,tme_chamadas_perdidas=>$AVGhold_sec_drop_calls,tme_todas_chamadas=>$AVGhold_sec_queue_calls);
-                      
+            } else {
+                $PCThold_sec_stat_one = 0;
+                $PCThold_sec_stat_two = 0;
+                $AVGhold_sec_answer_calls = 0;
+                $AVG_ANSWERagent_non_pause_sec = 0;
             }
-            echo json_encode($js);
-            break;
+            $js[] = array(chamadas_efectuadas => $callsTODAY, chamadas_perdidas => $dropsTODAY, chamadas_atendidas => $answersTODAY, tma1 => $PCThold_sec_stat_one, tma2 => $PCThold_sec_stat_two, tme_chamadas_atendidas => $AVGhold_sec_answer_calls, tme_chamadas_perdidas => $AVGhold_sec_drop_calls, tme_todas_chamadas => $AVGhold_sec_queue_calls);
+        }
+        echo json_encode($js);
+        break;
 
-            case 'get_agents':// Inbound agentes,campaign,status
-            $query = $query_text;
-            $query = mysql_query($query, $link) or die(mysql_error());
-            while ($row = mysql_fetch_assoc($query)) {
-                $js[] = $row["status"];
-            }
-            echo json_encode($js);
-            break;
+    case 'get_agents':// Inbound agentes,campaign,status
+        $query = $query_text;
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = $row["status"];
+        }
+        echo json_encode($js);
+        break;
 
-            case 'inbound_groups_info':// Inbound agentes,campaign,status
-            $query = " SELECT answer_sec_pct_rt_stat_one,answer_sec_pct_rt_stat_two FROM vicidial_inbound_groups WHERE group_id='$group_id'";
-            $query = mysql_query($query, $link) or die(mysql_error());
-            while ($row = mysql_fetch_assoc($query)) {
-                $js[] = array(answer_sec_pct_rt_stat_one => $row["answer_sec_pct_rt_stat_one"], answer_sec_pct_rt_stat_two => $row["answer_sec_pct_rt_stat_two"]);
-            }
-            echo json_encode($js);
-            break;
+    case 'inbound_groups_info':// Inbound agentes,campaign,status
+        $query = " SELECT answer_sec_pct_rt_stat_one,answer_sec_pct_rt_stat_two FROM vicidial_inbound_groups WHERE group_id='$group_id'";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(answer_sec_pct_rt_stat_one => $row["answer_sec_pct_rt_stat_one"], answer_sec_pct_rt_stat_two => $row["answer_sec_pct_rt_stat_two"]);
+        }
+        echo json_encode($js);
+        break;
 
+
+    case '5':// DataTable
+        $query = $selected_query;
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(status_name => $row["var1"], count => $row["var2"]);
+        }
+        echo json_encode($js);
+        break;
 
 //graficos-----------------------------------------
 //flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS -------------- 
-            case 'campaign':
-            $query = "SELECT  a.campaign_id,b.campaign_name  FROM  vicidial_campaign_statuses a inner join vicidial_campaigns b on a.campaign_id=b.campaign_id and active='y'  group by  campaign_id ";
-            $query = mysql_query($query, $link) or die(mysql_error());
-            while ($row = mysql_fetch_assoc($query)) {
-                $js[] = array(campaign_id => $row["campaign_id"], campaign_name => $row["campaign_name"]);
-            }
-            echo json_encode($js);
-            break;
+    case 'campaign':
+        $query = "SELECT  a.campaign_id,b.campaign_name  FROM  vicidial_campaign_statuses a inner join vicidial_campaigns b on a.campaign_id=b.campaign_id and active='y'  group by  campaign_id ";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(campaign_id => $row["campaign_id"], campaign_name => $row["campaign_name"]);
+        }
+        echo json_encode($js);
+        break;
 
 
-            case 'user':
-            $query = "SELECT `user` FROM `vicidial_inbound_group_agents` where user is not null and user!='' group by user";
-            $query = mysql_query($query, $link) or die(mysql_error());
-            while ($row = mysql_fetch_assoc($query)) {
-                $js[] = $row["user"];
-            }
-            echo json_encode($js);
-            break;
-            case 'user_group':
-            $query = "SELECT  user_group  as ug FROM  vicidial_log  where call_date between date_sub(NOW(), INTERVAL $param1) and now() and user_group is not NUll group by  user_group ";
-            $query = mysql_query($query, $link) or die(mysql_error());
-            while ($row = mysql_fetch_assoc($query)) {
-                $js[] = $row["ug"];
-            }
-            echo json_encode($js);
-            break;
+    case 'user':
+        $query = "SELECT `user` FROM `vicidial_inbound_group_agents` where user is not null and user!='' group by user";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = $row["user"];
+        }
+        echo json_encode($js);
+        break;
+    case 'user_group':
+        $query = "SELECT  user_group  as ug FROM  vicidial_log  where call_date between date_sub(NOW(), INTERVAL $param1) and now() and user_group is not NUll group by  user_group ";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = $row["ug"];
+        }
+        echo json_encode($js);
+        break;
 
-            case 'inbound':
-            $query = "SELECT group_id,group_name FROM vicidial_inbound_groups";
-            $query = mysql_query($query, $link) or die(mysql_error());
-            while ($row = mysql_fetch_assoc($query)) {
-                $js[] = array(id => $row["group_id"], name => $row["group_name"]);
-            }
-            echo json_encode($js);
-            break;
+    case 'inbound':
+        $query = "SELECT group_id,group_name FROM vicidial_inbound_groups";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(id => $row["group_id"], name => $row["group_name"]);
+        }
+        echo json_encode($js);
+        break;
 
 
 
-            case 'status_venda':
-            $query = "SELECT status ,status_name  FROM vicidial_campaign_statuses  group by status";
-            $query = mysql_query($query, $link) or die(mysql_error());
-            while ($row = mysql_fetch_assoc($query)) {
-                $js[] = array(status_v => $row["status"], status_t => $row["status_name"]);
-            }
-            echo json_encode($js);
-            break;
+    case 'status_venda':
+        $query = "SELECT status ,status_name  FROM vicidial_campaign_statuses  group by status";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(status_v => $row["status"], status_t => $row["status_name"]);
+        }
+        echo json_encode($js);
+        break;
 
 
 
 
 //flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------
-        }
+}
 ?> 

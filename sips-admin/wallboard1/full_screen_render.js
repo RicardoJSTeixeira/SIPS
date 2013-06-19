@@ -56,8 +56,6 @@ $(document).ready(function() {
 //BASE DADOS
 
 
-//Linha 212 por um if para as situaçoes em q n ha param1
-
 
 //BAR GRAPh ««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««
 function plot_bar(data)
@@ -373,7 +371,7 @@ function   inbound_wallboard(data)
       panel.append($("<div>").attr("style", "height:98%;font-size:" + font_size + "px;background-color: rgb(210, 215, 215); padding-left:1%;padding-right:1%;padding-top:1%;").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbe[7] / 1000) + " seg.")
 
 
-              .append($("<div>").append($("<label>").addClass("inbound_title").text(wbe[2]+" -> "+wbe[9][0].param1)))//titulo do inbound
+              .append($("<div>").append($("<label>").addClass("inbound_title").text(wbe[9][0].param1)))//titulo do inbound
 
 
 
@@ -474,13 +472,6 @@ function   inbound_wallboard(data)
                         a++;
                   });
             }, "json");
-
-
-
-
-
-
-
             $.post("Requests.php", {action: wbe[8], group_id: wbe[9][0].linha_inbound},
             function(data)
             {
@@ -502,9 +493,6 @@ function   inbound_wallboard(data)
                         answer_sec_pct_rt_stat_two = data1[0].answer_sec_pct_rt_stat_two;
 
 //update dos valores na table 
-
-
-
                         var tma1_element = document.getElementById("tma1" + id);
                         tma1_element.innerHTML = tme_todas_chamadas + "s";
                         var agente_total = document.getElementById("agente_total" + id);
@@ -544,30 +532,17 @@ function   inbound_wallboard(data)
                         }
                         else
                         {
-
                               plot.setData(data);
                               plot.draw();
                         }
-
-
-
                   }, "json");
                   updation = setTimeout(get_values_inbound, wbe[7]);
             }, "json");
-
       }
-
-
-
-
-
-
-
 }
 //øøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøø
 
 //window exit
-//clean updaters
 $(window).bind('beforeunload', function() {
       $("#MainLayout .PanelWB").remove();
 });
