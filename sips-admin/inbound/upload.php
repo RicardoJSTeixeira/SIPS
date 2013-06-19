@@ -62,7 +62,7 @@ if ($_FILES["audio-file"]["error"] > 0) {
             $original = $ast_sounds_path . "upload/" . $filename;
             $new = preg_replace('"\.(ogg|wav|mp3)$"', ".gsm", $ast_sounds_path . "upload/" . $filename);
 
-            $soxCommand = "sox ".escapeshellarg($original)." -r 8000 -c1 ".escapeshellarg($new)." lowpass 4000 compand 0.02,0.05 -60,-60,-30,-10,-20,-8,-5,-8,-2,-8 -8 -7 0.05 resample -ql";
+            $soxCommand = "sox ".escapeshellarg($original)." -r 8000 -c1 ".escapeshellarg($new);
 
             //  run SOX command
             exec($soxCommand, $output, $result);
