@@ -470,7 +470,7 @@ $(function() {
                         $(this).dialog("close");
                   },
                   "Criar": function() {
-                        manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, $("#inbound").val(), 4);
+                        manipulate_graph("insert_wbe", $("#group_inbound_select option:selected").text(), $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, $("#group_inbound_select").val(), 4);
 
                         $(this).dialog("close");
                   }
@@ -536,10 +536,7 @@ function dialog_opener()
             manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, selected_type_graph);
             $("#gao_campaign").show();
       }
-      //inbound
-      if (selected_type_graph === 4) {
-            manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, selected_type_graph);
-      }
+    
 }
 
 function fullScreen()
@@ -964,3 +961,4 @@ function flot_extra(opcao)
       }, "json");
 }
 //FLOT EXTRA HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHh
+ 
