@@ -75,16 +75,31 @@ if($action == "get_table_data")
 	
 
 
-$aColumns = array( 'first_name', 'phone_number', 'address1', 'last_local_call_time');
-$sQuery = "
-		SELECT first_name, phone_number, address1 ,last_local_call_time, lead_id
-		FROM   vicidial_list
-		WHERE list_id IN($list_IN)
-		$data_QUERY
-		$operador_QUERY
-		$feedback_QUERY
-		LIMIT 3000
-		";
+$aColumns = array('lead_id',  'first_name', 'phone_number', 'address1', 'last_local_call_time');
+
+
+if($contact_id == "" || $contact_id == null)
+{
+    $sQuery = "
+            SELECT first_name, phone_number, address1 ,last_local_call_time, lead_id
+            FROM   vicidial_list
+            WHERE list_id IN($list_IN)
+            $data_QUERY
+            $operador_QUERY
+            $feedback_QUERY
+            LIMIT 3000
+            ";
+} else {
+        $sQuery = "
+            SELECT first_name, phone_number, address1 ,last_local_call_time, lead_id
+            FROM   vicidial_list
+            WHERE lead_id= '$contact_id'
+            LIMIT 1
+            ";
+}
+
+
+
 		//echo $sQuery;
 $rResult = mysql_query( $sQuery, $link ) or die(mysql_error());
 $output = array("aaData" => array()	);
@@ -104,7 +119,9 @@ while ( $aRow = mysql_fetch_array( $rResult ) )
 				}
 			$aRow['first_name'] = $aRow['first_name']." ...";
 			}  
-			$row[] = "<a onclick='LoadHTML($aRow[lead_id]);' style='cursor:pointer'>".$aRow['first_name']."<img style='float:left' src='../../images/icons/livejournal_16.png'></a>"; } else {$row[] = $aRow[ $aColumns[$i] ];}
+			$row[] = "<a onclick='LoadHTML($aRow[lead_id]);' style='cursor:pointer'>".$aRow['first_name']."<img style='float:left' src='../../images/icons/livejournal_16.png'></a>"; } else {$row[] = $aRow[ $aColumns[$i] ];
+                        
+                        }
 		
 	}
 	$output['aaData'][] = $row;

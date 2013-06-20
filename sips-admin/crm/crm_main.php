@@ -126,7 +126,7 @@ div.ui-datepicker{
 <div id="work-area">
 <br><br>
 <div class="cc-mstyle" style="border:none"> 
-<table border=0>
+<table>
 <tr>
 	<td style='text-align:right'>Data Inicial:</td>
     <td style='text-align:left'><input readonly="readonly" class="datepicker-input" type="text" id="datai" value="<?php echo $daystart; ?>"></td>
@@ -156,6 +156,9 @@ div.ui-datepicker{
 
     <td style='text-align:right'>Feedback:</td>
     <td style='text-align:left'><select style="width:275px" id='filtro_feedback'><?php echo $select_feedback; ?></select></td>
+</tr>
+<tr>
+    <td></td><td></td><td style='text-align:right'>ID do Contacto:</td></td><td style='text-align:left'><input type="text" id='crm-contact-id' style="width:263px"><span style="color:grey"><i>(O uso desta opção invalída os outros filtros)</i></span></td>
 </tr>
 
 </table>
@@ -267,7 +270,7 @@ $(".pesquisa").click( function() {
 
 	var oTable = $('#contact_list').dataTable( {
 		"bSortClasses": false,
-		"bJQueryUI": true,
+		"bJQueryUI": true, 
 		"bProcessing": true,
 		"bDestroy": true,
 		"sPaginationType": "full_numbers",
@@ -281,9 +284,10 @@ $(".pesquisa").click( function() {
 							{ "name": "filtro_dbs", "value": filtro_dbs },
 							{ "name": "filtro_operador", "value": filtro_operador },
 							{ "name": "filtro_feedback", "value": filtro_feedback },
-							{ "name": "dataflag", "value": dataflag }
+							{ "name": "dataflag", "value": dataflag },
+                                                                                                                                                           {"name": "contact_id", "value": $("#crm-contact-id").val()}
 						)},
-		"aoColumns": [ { "sTitle": "Nome", "sWidth": "250px"}, { "sTitle": "Telefone", "sWidth": "50px"}, { "sTitle": "Morada", "sWidth": "350px"}, { "sTitle": "Ultima Chamda", "sWidth": "100px"} ], 
+		"aoColumns": [ { "sTitle": "ID", "sWidth": "100px"}, { "sTitle": "Nome", "sWidth": "250px"}, { "sTitle": "Telefone", "sWidth": "50px"}, { "sTitle": "Morada", "sWidth": "350px"}, { "sTitle": "Ultima Chamada", "sWidth": "100px"} ], 
 		"fnDrawCallback": function(oSettings, json){ $('#contact_list').show(); $('#contact_list').css({"width":"100%"}) },
 
 			
