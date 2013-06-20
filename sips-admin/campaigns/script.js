@@ -11,7 +11,7 @@ var editedDB, editedDBName, tableEditDB, editedDBFeed, tableDbsContactDetails, e
 $(function()
 {
 	ConstructCampaignMonitor();
-})
+});
 
 function ConstructCampaignMonitor()
 {

@@ -60,7 +60,8 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
 			manual_dial_list_id,
 			status_display_fields,
 			use_auto_hopper,
-			auto_trim_hopper
+			auto_trim_hopper,
+                                                                  my_callback_option
 			)
 			VALUES      (
 			'$js[new_campaign_id]',
@@ -94,7 +95,8 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
 			'998$campaign_number', 
 			'NONE',
 			'Y',
-			'Y'); ";
+			'Y',
+                                                                    'CHECKED'); ";
 		mysql_query($query, $link) or die(mysql_error());
 	
 	

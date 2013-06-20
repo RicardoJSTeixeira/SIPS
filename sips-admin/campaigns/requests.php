@@ -41,7 +41,7 @@ if($action == "dT_campaign-monitor")
 	$js['allowed_campaigns'] = explode(" ", trim(preg_replace("/ -/", '', $query['allowed_campaigns'])));
 
     $sQuery = "
-            SELECT A.campaign_id, A.campaign_name, A.active, A.dial_method, A.auto_dial_level, B.pauses, B.feedbacks, B.recycle, B.fields, DATE_FORMAT(B.creation_date, '%H:%i:%s <br> %e/%c/%Y') as creation_date
+            SELECT A.campaign_id, A.campaign_name, A.active, A.dial_method, A.auto_dial_level, B.pauses, B.feedbacks, B.recycle, B.dynamic_fields, DATE_FORMAT(B.creation_date, '%H:%i:%s <br> %e/%c/%Y') as creation_date
             FROM   vicidial_campaigns A
 			INNER JOIN sips_campaign_stats B ON A.campaign_id=B.campaign_id
 			WHERE A.campaign_id IN('". implode("','", $js['allowed_campaigns'] ). "') AND A.campaign_id LIKE 'W%'
@@ -63,7 +63,7 @@ if($action == "dT_campaign-monitor")
 				case "pauses": {if($aRow[$aColumns[$i]] == 0){$row[] = "<b><span style='color:red'>Não</span></b>";} else { $row[] = $aRow[$aColumns[$i]]; } break;}
 				case "feedbacks": {if($aRow[$aColumns[$i]] == 0){$row[] = "<b><span style='color:red'>Não</span></b>";} else { $row[] = $aRow[$aColumns[$i]]; } break;}
 				case "script": { $query = mysql_query("SELECT campaign_id FROM vicidial_lists_fields WHERE campaign_id='$aRow[campaign_id]'") or die(mysql_query()); if(mysql_num_rows($query) > 0){ $row[] = "Sim"; } else { $row[] = "Não"; } break;  }
-				case "fields": { if($aRow['fields'] > 0){  $row[] = $aRow['fields']; } else { $row[] = "<b><span style='color:red'>Não</span></b>";}   break;}
+				case "fields": { if($aRow['dynamic_fields'] > 0){  $row[] = $aRow['dynamic_fields']; } else { $row[] = "<b><span style='color:red'>Não</span></b>";}   break;}
 				case "recycle": { $user_recycle = $aRow[$aColumns[$i]] - 7; $row[] = "<b>7</b> + ".$user_recycle; break;}
 				case "db-count": { $query = mysql_query("SELECT SUM(list_description) FROM vicidial_lists WHERE campaign_id = '$aRow[campaign_id]'") or die(mysql_error); $query = mysql_fetch_row($query); if(mysql_num_rows($query) > 0) { $row[] = $query[0]; } else { $row[] = 0; } break;   }
 				default: $row[] = $aRow[ $aColumns[$i] ];

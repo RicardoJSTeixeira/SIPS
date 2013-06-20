@@ -55,7 +55,7 @@ function FieldsListBuilder($CampaignID, $AllFields, $FieldID, $FieldDisplayName,
 				}
 				
 				mysql_query("INSERT INTO vicidial_list_ref (Name, Display_name, readonly, active, campaign_id, field_order) VALUES ('$value', '$displayname', '0', '$active', '$CampaignID', '$order')");
-				mysql_query("UPDATE sips_campaign_stats SET fields = 8 WHERE campaign_id='$CampaignID'") or die(mysql_error());
+				mysql_query("UPDATE sips_campaign_stats SET dynamic_fields = 8 WHERE campaign_id='$CampaignID'") or die(mysql_error());
 			}	
 		}
 
@@ -69,7 +69,7 @@ function FieldsListBuilder($CampaignID, $AllFields, $FieldID, $FieldDisplayName,
 		{
 			mysql_query("UPDATE vicidial_list_ref SET field_order = field_order+1 WHERE campaign_id='$CampaignID' AND field_order > 0") or die(mysql_error());
 			mysql_query("UPDATE vicidial_list_ref SET Display_name='$FieldDisplayName', readonly='$FieldReadOnly', active=1, campaign_id='$CampaignID', field_order=1 WHERE campaign_ID='$CampaignID' AND Name='$FieldID'") or die(mysql_error());
-			mysql_query("UPDATE sips_campaign_stats SET fields = fields + 1 WHERE campaign_id='$CampaignID'") or die(mysql_query());
+			mysql_query("UPDATE sips_campaign_stats SET dynamic_fields = dynamic_fields + 1 WHERE campaign_id='$CampaignID'") or die(mysql_query());
 			$js['name'][] = $FieldID;
 			$js['displayname'][] = $FieldDisplayName;
 			$js['readonly'][] = $FieldReadOnly;
@@ -114,7 +114,7 @@ function RemoveField($CampaignID, $FieldID, $link)
 	$result = mysql_fetch_row(mysql_query("SELECT field_order FROM vicidial_list_ref WHERE campaign_id='$CampaignID' AND Name ='$FieldID'")) or die(mysql_error());
 	mysql_query("UPDATE vicidial_list_ref SET field_order = field_order - 1 WHERE field_order > $result[0] AND campaign_id='$CampaignID'") or die(mysql_error());
 	mysql_query("UPDATE vicidial_list_ref SET Display_name = Name, readonly=0, active=0, field_order=0 WHERE campaign_id='$CampaignID' AND Name='$FieldID'") or die(mysql_error());
-	mysql_query("UPDATE sips_campaign_stats SET fields = fields - 1 WHERE campaign_id='$CampaignID'") or die(mysql_query());
+	mysql_query("UPDATE sips_campaign_stats SET dynamic_fields = dynamic_fields - 1 WHERE campaign_id='$CampaignID'") or die(mysql_query());
 }
 
 function DialogFieldsEditOnSave($CampaignID, $FieldID, $FieldName, $link)
@@ -144,7 +144,7 @@ function DialogFieldsApplyToAllCampaignsOnSave($CampaignID, $AllowedCampaigns, $
 		if($row['active'] == 1){$count++;}
 		mysql_query("UPDATE vicidial_list_ref SET Display_name = '$row[Display_name]', readonly = '$row[readonly]', active = '$row[active]', field_order = '$row[field_order]' WHERE campaign_id IN ('".implode("','", $AllowedCampaigns)."') AND Name = '$row[Name]'") or die(mysql_error());
 	}
-	mysql_query("UPDATE sips_campaign_stats SET fields = $count") or die(mysql_query());
+	mysql_query("UPDATE sips_campaign_stats SET dynamic_fields = $count") or die(mysql_query());
 }
 
 function DialogFieldsCopyOnOpen($CampaignID, $ModAllowedCampaigns, $link)
@@ -168,7 +168,7 @@ function BtnCopyFields($CampaignID, $CopyCampaignID, $link)
 		if($row['active'] == 1) $count++;
 		mysql_query("UPDATE vicidial_list_ref SET Display_name = '$row[Display_name]', readonly = '$row[readonly]', active = '$row[active]', field_order = '$row[field_order]' WHERE campaign_id = '$CampaignID' AND Name = '$row[Name]'") or die(mysql_error());
 	}
-	mysql_query("UPDATE sips_campaign_stats SET fields = $count WHERE campaign_id='$CampaignID'") or die(mysql_query());
+	mysql_query("UPDATE sips_campaign_stats SET dynamic_fields = $count WHERE campaign_id='$CampaignID'") or die(mysql_query());
 }
 
 
@@ -220,37 +220,3 @@ switch($action)
 
 
 
-/* CAMPOS DINAMICOS */
-if($action== "submit_dfields")
-{
-    mysql_query("DELETE FROM vicidial_list_ref WHERE campaign_id='$sent_campaign_id'") or die(mysql_error());
-    
-    for($i=0; $i<count($sent_sortedIDs); $i++)
-    {
-    	mysql_query("INSERT INTO vicidial_list_ref (Name, Display_name, readonly, active, campaign_id, field_order) VALUES ('$sent_sortedIDs[$i]', '$sent_sortedLabels[$i]', '$sent_sortedReadOnly[$i]', '1', '$sent_campaign_id', '$sent_sortedOrder[$i]')") or die(mysql_error());    
-    }
-    for($i=0; $i<count($sent_fillers); $i++)
-    {
-        $sent_fillers[$i] = strtoupper($sent_fillers[$i]);
-        mysql_query("INSERT INTO vicidial_list_ref (Name, active, campaign_id) VALUES ('$sent_fillers[$i]', '0', '$sent_campaign_id')") or die(mysql_error());  
-
-    }
-    
-}
-
-if($action == "copy_dfields")
-{
-	$query = "SELECT Name, Display_name, readonly, active FROM vicidial_list_ref WHERE campaign_id='$sent_campaign_id_copy' and active=1 ORDER by field_order";
-	$query = mysql_query($query, $link);
-	while($row = mysql_fetch_assoc($query))
-	{
-		$js['name'][] = $row['Name'];
-		$js['display_name'][] = $row['Display_name'];
-		$js['readonly'][] = $row['readonly'];
-		$js['active'][] = $row['active'];
-	}
-	
-	echo json_encode($js);
-}
-/* BASES DE DADOS */
-?>
