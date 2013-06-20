@@ -306,6 +306,7 @@ if ($_POST['nc_flag'] == "nc_post") {
                             <option value="B/CAC"> Consultório Cacém </option>
                             <option value="B/CDR"> Consultório Caldas da Rainha </option>
                             <option value="B/CAS"> Consultório Cascais </option>
+                            <option value="B/CHV"> Consultório Chaves </option>
                             <option value="B/CED"> Consultório Porto - Cedofeita </option>
                             <option value="B/COI"> Consultório Coimbra </option>
                             <option value="B/COP"> Consultório Porto - Bolhão </option>

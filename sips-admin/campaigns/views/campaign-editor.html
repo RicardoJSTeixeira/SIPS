@@ -125,12 +125,27 @@
                     </tr>
                     </table>
                     <br />
+                    <div class="div-title">Definições<span class='css-orange-caret'>></span>Callbacks</div>
+                     <table>
+                    <tr class="tr-options">
+                        <td>Tipo de Callback (valor defeito)</td>
+                        <td class="tright">
+                        <input type="radio" class="campaign-callback-type" id="campaign_callback_type_user" name="campaign-callback-type" /><label for="campaign_callback_type_user">Pessoal</label>
+                        <input type="radio" class="campaign-callback-type" id="campaign_callback_type_global" name="campaign-callback-type" /><label for="campaign_recording_type_global">Geral</label>
+                        </td>
+                    </tr>
+                     </table>
                     
                     <div class="div-title">Definições<span class='css-orange-caret'>></span>Acções</div>           
                     <table>
                         <tr>
                         <td class="td-action"><button class="btn-action" id="btn-config-dial-status"><img class="img-action" src='icons/mono_wrench_plus_16.png'></button></td>
                         <td>Configurar os Feedbacks que a Campanha está autorizada a chamar.</td>
+                        </tr>
+                        
+                          <tr>
+                        <td class="td-action td-action-next"><button class="btn-action" id="btn-config-inbound"><img class="img-action" src='icons/mono_phone_16.png'></button></td>
+                        <td class="td-action-next">Configurar definições de Inbound da Campanha.</td>
                         </tr>
 						
 
@@ -1067,7 +1082,25 @@
                 </tr>
             </table>
             </div>
-        </div> 
+        </div>
+        
+        <div id="dialog-config-inbound" style='display:none'>
+            <div class="div-title">Inbound<span class='css-orange-caret'>></span>Editar</div>
+            
+            
+            <div class="div-title">Feedbacks Autorizados<span class='css-orange-caret'>></span>Configuração</div>
+            <div style='height:232px; overflow:auto;'>
+            <table id="table-config-dial-status">
+                <tr>
+                    <td width="50%" valign="top"><table id="table-config-dial-status-1"></table></td>
+                    <td width="50%" valign="top"><table id="table-config-dial-status-2"></table></td>             
+                </tr>
+            </table>
+            </div>
+        </div>
+        
+        
+        
  		<!-- tab2 -->
         <div id="dialog-edit-pause"  style='display:none'>
             <div class="div-title">Editar Pausa<span class='css-orange-caret'>></span>Nome e Tempo</div>

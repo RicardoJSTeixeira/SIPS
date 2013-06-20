@@ -12780,6 +12780,10 @@ function mail(user)
 	<!-- NEW CODE 	-->
 <script>
 
+// To disable f5
+function disableF5(e) { if ((e.which || e.keyCode) == 116) e.preventDefault(); };
+$(document).bind("keydown", disableF5);
+
 var CallHistoryMode = "lostcalls";
 var CallHistoryUser = "<?php echo $VD_login; ?>";
 var CallHistoryCampaign = "<?php echo $VD_campaign; ?>";
@@ -13149,14 +13153,20 @@ $zi=2;
 				</div>
 			</td>
 		</tr>
-		
-		
-		
-					<!-- NEW CODE -->
-			<tr id="CallHistoryStart">
-				<td ><img src='/images/icons/small_tiles_32.png'></td><td>Histórico de Chamadas</td>
-			</tr>
-			<!-- END N CODE -->
+                <tr id="CallHistoryStart">
+                        <td ><img src='/images/icons/small_tiles_32.png'></td><td>Histórico de Chamadas</td>
+                </tr>
+                <?php $query="SELECT id_calendar,cal_type FROM `sips_sd_agent_ref` WHERE user='$user'";
+                      $result=mysql_query($query);
+                              
+                      while ($row = mysql_fetch_assoc($result)) { 
+                          $calendar_name=mysql_fetch_array(mysql_query("SELECT display_text FROM ".(($row[cal_type]=="RESOURCE")?"sips_sd_resources WHERE id_resource=":"sips_sd_schedulers WHERE id_scheduler=")."'$row[id_calendar]';"));
+                          $calendar_name=$calendar_name[0];
+                                  ?>
+                <tr class="calendar_ref" data-type="<?=$row[cal_type]?>" data-id="<?=$row[id_calendar]?>">
+                    <td><img src="/images/icons/calendar_32.png"></td><td><?=$calendar_name?></td>
+                </tr>
+                     <?php } ?>
 		
 		
 		
@@ -13184,6 +13194,20 @@ $zi=2;
 			</tr>
 		</table>
 		</div>
+            
+            <script>
+            $(".calendar_ref").on("click",function(){
+                var calendar;
+                if($(this).data().type==="RESOURCE"){
+                    calendar="rsc=";
+                }else{
+                    calendar="sch=";
+                }
+                calendar+=encodeURIComponent($(this).data().id);
+                    window.open("../sips-admin/reservas/views/calendar_container.php?"+calendar);
+            });
+            </script>
+            
 		<?php 
 		
 		$query="SELECT url,imgpath,label FROM sips_agent_links where grupo='$VU_user_group';";
@@ -14276,8 +14300,8 @@ Available Agents Transfer: <span id="AgentXferViewSelect"></span></center></font
 	<td>
     
     <table style='width:100%;' class="radio-container">
-    	<tr><td><input style="float:right; cursor:pointer;" type="radio" id="cb_pessoal" checked="checked" name="tipo_callback" /><td style=" text-align:left; "><label style="cursor:pointer" for="cb_pessoal">Callback Pessoal</label></td></tr>
-    	<tr><td><input style="float:right; cursor:pointer;" type="radio" id="cb_geral" name="tipo_callback" /><td style=" text-align:left; "><label style="cursor:pointer" for="cb_geral">Callback Geral</label></td></tr>
+    	<tr><td><input style="float:right; cursor:pointer;" type="radio" id="cb_pessoal" <?=($my_callback_option=="CHECKED")?"checked='checked'":""?> name="tipo_callback" /><td style=" text-align:left; "><label style="cursor:pointer" for="cb_pessoal">Callback Pessoal</label></td></tr>
+    	<tr><td><input style="float:right; cursor:pointer;" type="radio" id="cb_geral" <?=($my_callback_option!="CHECKED")?"checked='checked'":""?> name="tipo_callback" /><td style=" text-align:left; "><label style="cursor:pointer" for="cb_geral">Callback Geral</label></td></tr>
     </table>
 </tr>
 <tr>
