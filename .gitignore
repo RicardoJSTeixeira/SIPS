@@ -2,6 +2,7 @@
 nbproject/
 /sips-admin/inbound/tmp/*
 /sips-agente/vdc_form_display.php
+/sips-agente/functions.php
 
 # Compiled source #
 ###################
