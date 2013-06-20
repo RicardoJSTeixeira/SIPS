@@ -75,6 +75,7 @@ function MiscOptionsBuilder(Flag)
                     if(data.c_recording == "ALLFORCE"){ $("#campaign_recording_yes").parent().addClass("checked"); } else { $("#campaign_recording_no").parent().addClass("checked"); }
                     if(data.c_lead_order == "RANDOM"){ $("#campaign_lead_order_random").parent().addClass("checked"); } else { $("#campaign_lead_order_ordered").parent().addClass("checked"); }
                     if(data.c_next_agent_call == "longest_wait_time"){ $("#campaign_atrib_calls").val("Maior Tempo em Espera") } else if(data.c_next_agent_call == "random") { $("#campaign_atrib_calls").val("Aleatória") } else { $("#campaign_atrib_calls").val("Menos Chamadas Recebidas") }
+                    if(data.c_my_callback_option == "UNCHECKED"){ console.log("unchecked");  $("#campaign_callback_type_global").parent().addClass("checked");  } else { $("#campaign_callback_type_user").parent().addClass("checked"); }
                     
                     $.each(data.user_groups_id, function(index, value)
                     {
@@ -551,6 +552,20 @@ function EditCampaignDescription(event)
 	
 }
 
+function CampaignCallbackType()
+{
+    var Type;
+    if($(this).prop("id") === "campaign_callback_type_user")
+        {
+            Type = "CHECKED";
+        }
+        else
+        {
+            Type = "UNCHECKED";
+        }
+        $.post("_opcoes_gerais-requests.php", {action: "CampaignCallbackType", CampaignID: CampaignID, Type: Type }, function(){}, "json");
+}
+
 $("body")
 .on("click", ".groups-checkbox", GroupsSwitch)
 .on("click", "#btn-check-all-groups", GroupsCheckAll)
@@ -562,6 +577,7 @@ $("body")
 .on("click", "#btn-config-dial-status", { dialog: "#dialog-config-dial-status" }, DialogOpen)
 .on("focusin focusout keydown", "#campaign-name", EditCampaignName)
 .on("focusin focusout", "#campaign-description", EditCampaignDescription)
+.on("click", ".campaign-callback-type", CampaignCallbackType);
 
 
 

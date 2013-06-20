@@ -152,7 +152,7 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
 	}
 	else
 	{
-		$query = mysql_query("SELECT campaign_name, campaign_description, active, dial_method, auto_dial_level, campaign_recording, lead_order, next_agent_call FROM vicidial_campaigns WHERE campaign_id='$CampaignID' LIMIT 1", $link) or die(mysql_error());
+		$query = mysql_query("SELECT campaign_name, campaign_description, active, dial_method, auto_dial_level, campaign_recording, lead_order, next_agent_call, my_callback_option FROM vicidial_campaigns WHERE campaign_id='$CampaignID' LIMIT 1", $link) or die(mysql_error());
 		$result = mysql_fetch_assoc($query) or die(mysql_error());
 		
 		$js['c_name'] = $result['campaign_name'];
@@ -163,6 +163,7 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
 		$js['c_recording'] = $result['campaign_recording'];
 		$js['c_lead_order'] = $result['lead_order'];
 		$js['c_next_agent_call'] = $result['next_agent_call'];
+                                            $js['c_my_callback_option'] = $result['my_callback_option'];
 		
 		$query = mysql_query("SELECT user_group FROM vicidial_user_groups WHERE allowed_campaigns LIKE '%$CampaignID%'") or die(mysql_error());
 		while($result = mysql_fetch_row($query))
@@ -338,22 +339,27 @@ function EditCampaignDescription($CampaignID, $CampaignDescription, $link)
 	mysql_query("UPDATE vicidial_campaigns SET campaign_description='$CampaignDescription' WHERE campaign_id='$CampaignID'", $link) or die(mysql_error());
 }
 
+function CampaignCallbackType($CampaignID, $Type, $link){
+    mysql_query("UPDATE vicidial_campaigns SET my_callback_option = '$Type' WHERE campaign_id = '$CampaignID'", $link) or die(mysql_error());
+}
+
 switch($action)
 {
-	case "MiscOptionsBuilder": MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $Flag, $link); break;
-	case "EditCampaignRatio": EditCampaignRatio($CampaignID, $Ratio, $link); break;
-	case "EditCallAtrib": EditCallAtrib($CampaignID, $Value, $link); break;
-	case "GetCampaignDialStatuses": GetCampaignDialStatuses($CampaignID, $link); break;
-	case "SaveCampaignDialStatus": SaveCampaignDialStatus($CampaignID, $EditedDialStatus, $link); break;
-	case "EditCampaignAllowedGroups": EditCampaignAllowedGroups($CampaignID, $EditedUserGroup, $AddOrRemove, $link); break;	
-	case "EditCampaignAllowedGroupsALL": EditCampaignAllowedGroupsALL($CampaignID, $AllGroups, $link); break;	
-	case "EditCampaignAllowedGroupsNONE": EditCampaignAllowedGroupsNONE($CampaignID, $NoGroups, $link); break;	
-	case "EditCampaignActive": EditCampaignActive($CampaignID, $CampaignActive, $link); break;	
-	case "EditCampaignType": EditCampaignType($CampaignID, $CampaignType, $TempRatio, $link); break;	
-	case "EditCampaignRecording": EditCampaignRecording($CampaignID, $CampaignRecording, $link); break;	
-	case "EditLeadOrder": EditLeadOrder($CampaignID, $LeadOrder, $link); break;	
-	case "EditCampaignName": EditCampaignName($CampaignID, $CampaignName, $link); break;
-	case "EditCampaignDescription": EditCampaignDescription($CampaignID, $CampaignDescription, $link); break;
+    case "MiscOptionsBuilder": MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $Flag, $link); break;
+    case "EditCampaignRatio": EditCampaignRatio($CampaignID, $Ratio, $link); break;
+    case "EditCallAtrib": EditCallAtrib($CampaignID, $Value, $link); break;
+    case "GetCampaignDialStatuses": GetCampaignDialStatuses($CampaignID, $link); break;
+    case "SaveCampaignDialStatus": SaveCampaignDialStatus($CampaignID, $EditedDialStatus, $link); break;
+    case "EditCampaignAllowedGroups": EditCampaignAllowedGroups($CampaignID, $EditedUserGroup, $AddOrRemove, $link); break;	
+    case "EditCampaignAllowedGroupsALL": EditCampaignAllowedGroupsALL($CampaignID, $AllGroups, $link); break;	
+    case "EditCampaignAllowedGroupsNONE": EditCampaignAllowedGroupsNONE($CampaignID, $NoGroups, $link); break;	
+    case "EditCampaignActive": EditCampaignActive($CampaignID, $CampaignActive, $link); break;	
+    case "EditCampaignType": EditCampaignType($CampaignID, $CampaignType, $TempRatio, $link); break;	
+    case "EditCampaignRecording": EditCampaignRecording($CampaignID, $CampaignRecording, $link); break;	
+    case "EditLeadOrder": EditLeadOrder($CampaignID, $LeadOrder, $link); break;	
+    case "EditCampaignName": EditCampaignName($CampaignID, $CampaignName, $link); break;
+    case "EditCampaignDescription": EditCampaignDescription($CampaignID, $CampaignDescription, $link); break;
+    case "CampaignCallbackType": CampaignCallbackType($CampaignID, $Type, $link); break;
 }
 
 ?>
