@@ -59,10 +59,21 @@ switch ($action) {
 
 
     case 'insert_wbe':
-        if ($graph_type == "4") {
+        if ($graph_type === "4") {
             $query = "INSERT INTO WallBoard1 (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,10000,4)";
             $query = mysql_query($query, $link) or die(mysql_error());
-            $query = "INSERT INTO `asterisk`.`WallBoard_Dataset1` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1) VALUES (LAST_INSERT_ID(), 0,1,0,0,0,'$update_time',2,0,0,'$id')";
+            $query = "INSERT INTO `asterisk`.`WallBoard_Dataset1` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1) VALUES (LAST_INSERT_ID(), 0,1,0,0,0,'$param1',2,0,0,'$param2')";
+            $query = mysql_query($query, $link) or die(mysql_error());
+        } elseif ($graph_type === "5") {
+            $query = "INSERT INTO WallBoard1 (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,10000,5)";
+            $query = mysql_query($query, $link) or die(mysql_error());
+
+            if ($id === "1")
+                $query = "INSERT INTO `asterisk`.`WallBoard_Dataset1` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1) VALUES (LAST_INSERT_ID(), 0,$param2,0,0,'$param1',0,2,$param4,0,'$param3')";
+            if ($id === "2")
+                $query = "INSERT INTO `asterisk`.`WallBoard_Dataset1` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1) VALUES (LAST_INSERT_ID(), 0,$param2,0,0,0,'$param1',2,$param4,0,'$param3')";
+            if ($id === "3")
+                $query = "INSERT INTO `asterisk`.`WallBoard_Dataset1` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1) VALUES (LAST_INSERT_ID(), 0,$param2,0,'$param1',0,0,2,$param4,0,'$param3')";
             $query = mysql_query($query, $link) or die(mysql_error());
         } else {
             $query = "INSERT INTO WallBoard1 (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
@@ -370,6 +381,39 @@ switch ($action) {
             $js[] = array(chamadas_efectuadas => $callsTODAY, chamadas_perdidas => $dropsTODAY, chamadas_atendidas => $answersTODAY, tma1 => $PCThold_sec_stat_one, tma2 => $PCThold_sec_stat_two, tme_chamadas_atendidas => $AVGhold_sec_answer_calls, tme_chamadas_perdidas => $AVGhold_sec_drop_calls, tme_todas_chamadas => $AVGhold_sec_queue_calls);
         }
         echo json_encode($js);
+        break;
+
+
+    case '5':
+
+
+
+        if ($opcao === "1")
+        //$query = "select   user,wait_sec,talk_sec,dispo_sec,pause_sec,lead_id,status,dead_sec from vicidial_agent_log where campaign_id='$campaign_id' and event_time between date_sub(now(), INTERVAL time_span hour) and now() group by user";
+            $query = "select user,sum(talk_sec) as talk_sec,count(status) as total_feedback,sum(dead_sec) as dead_sec from vicidial_agent_log where event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by user";
+        if ($opcao === "2")
+            $query = "select user,wait_sec,talk_sec,dispo_sec,pause_sec,lead_id,status,dead_sec from vicidial_agent_log where user_group='$user_group' and event_time between date_sub(now(), INTERVAL time_span hour) and now()";
+        if ($opcao === "3")//linha inbound-> not done
+            $query = "select user,wait_sec,talk_sec,dispo_sec,pause_sec,lead_id,status,dead_sec from vicidial_agent_log where campaign_id='$campaign_id' and event_time between date_sub(now(), INTERVAL time_span hour) and now()";
+
+//muda as horas para ver os resultados desde "agora" ate a altura especificada aquando da criação do dataset
+        $round_numerator = 60 * 5;
+        $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
+        $rounded_time = date("Y-m-d H:i:s", $rounded_time);
+        $query = str_replace("now()", "'" . $rounded_time . "'", $query);
+        $query = str_replace("time_span", $tempo, $query);
+echo($query);
+        $query = mysql_query($query) or die(mysql_error());
+
+
+        $tma_call = 0;
+        while ($row = mysql_fetch_assoc($query)) {
+            $tma_call = ($row["talk_sec"] - $row["dead_sec"]);
+            $js[] = array(user => $row["user"], tma => $tma_call, count_feedbacks => $row["total_feedback"]);
+        }
+
+
+      //  echo json_encode($js);
         break;
 
     case 'get_agents':// Inbound agentes,campaign,status

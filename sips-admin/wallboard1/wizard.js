@@ -2,25 +2,6 @@
 //aduarte@finesource.pt
 
 
-/*dataTable
- // top 
- //5 ou 10
- //top man tem q ser maior
- 
- 
- escolher feedback, ou soma de feedbacks
- 
- user/resultado/tma/nºchamadas
- 
- 
- 
- escolher por
- campanha
- ou
- grupo inbound
- ou
- grupo user
- **/
 
 
 //--------------wbes
@@ -47,9 +28,9 @@
 //10: status_feedback
 //11: chamadas
 
-
+//optimizar o window.open(mandar as cenas por array)
 //maneira de fazer multiselect no dataSet é pra ser optimizado
-
+//adicionar lista de items selecionados no dataSet
 
 
 var wbes = [];
@@ -122,14 +103,6 @@ $("#linhas_filtro").change(function()
       }
 });
 
-
-
-
-
-
-
-
-
 $("#dataTable_opcao").change(function()
 {
       var select = $("#dataTable_opcao");
@@ -169,7 +142,7 @@ $(function() {
       $("#campaign_id_dataTable").show();
       $("#grupo_inbound_dataTable").hide();
       $("#grupo_user_dataTable").hide();
-      
+
       $(document).on("click", ".delete_button", function(e) {
 
             var id = $(this).data("wbe_id");
@@ -185,7 +158,7 @@ $(function() {
             }
             else {
                   id_wallboard = $(this).data("wbe_id");
-                  manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 1);
+                  manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
                   $("#dialog_dataset_linhas").dialog("open");
             }
       });
@@ -262,7 +235,7 @@ $(function() {
                   a++;
             });
 
-            manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 1);
+            manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
 
             $("#dialog_dataset_linhas").dialog("open");
 
@@ -286,9 +259,7 @@ $(function() {
                         $(this).dialog("close");
                   },
                   "Criar": function() {
-                        //preencher o param1----------------FIM-----------------------------------FIM--------------------------------------FIM------------------------------------
-                        manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, $("#update_time").val(), selected_type_graph);
-
+                        manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, $("#update_time").val(), selected_type_graph, 0, 0, 0);
                         $(this).dialog("close");
                   }
             }
@@ -519,7 +490,8 @@ $(function() {
                         $(this).dialog("close");
                   },
                   "Criar": function() {
-                        manipulate_graph("insert_wbe", $("#group_inbound_select option:selected").text(), "Estatistica", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, $("#group_inbound_select").val(), 4);
+
+                        manipulate_graph("insert_wbe", 0, "Estatistica", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 4, $("#group_inbound_select").val(), $("#group_inbound_select option:selected").text(), 0);
 
                         $(this).dialog("close");
                   }
@@ -529,15 +501,33 @@ $(function() {
             dialogClass: 'dialogButtons',
             autoOpen: false,
             resizable: false,
-            height: 350,
-            width: 310,
+            height: 480,
+            width: 280,
             modal: true,
             buttons: {
                   "Cancelar": function() {
                         $(this).dialog("close");
                   },
                   "Criar": function() {
-                        manipulate_graph("insert_wbe", 0, $("#graph_name_dataTable").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 5);
+
+
+
+                        var feedbacks = $("#dataTable_feedback").val();
+                        feedbacks = "'" + feedbacks + "'";
+
+
+                        switch ($("#dataTable_opcao").val())
+                        {
+                              case "1":
+                                    manipulate_graph("insert_wbe", 1, "Top users", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 5, $("#campaign_id_dataTable").val(), $("#dataTable_timespan").val(), $("#campaign_id_dataTable option:selected").text(), feedbacks);
+                                    break;
+                              case "2":
+                                    manipulate_graph("insert_wbe", 2, "Top users", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 5, $("#grupo_inbound_dataTable").val(), $("#dataTable_timespan").val(), $("#grupo_inbound_dataTable option:selected").text(), feedbacks);
+                                    break;
+                              case "3":
+                                    manipulate_graph("insert_wbe", 3, "Top users", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 5, $("#grupo_user_dataTable").val(), $("#dataTable_timespan").val(), $("#grupo_user_dataTable option:selected").text(), feedbacks);
+                                    break;
+                        }
                         $(this).dialog("close");
                   }
             }
@@ -588,20 +578,19 @@ function dialog_opener()
       $(".graph_advance_option").hide(); //esconde a classe e so mostra por id(em baixo)
 
       //linhas
-
       if (selected_type_graph === 1) {
             $("#gao_user").show();
             $("#gao_chamadas").show();
       }
       //bar
       if (selected_type_graph === 2) {
-            manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, selected_type_graph);
+            manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, selected_type_graph, 0, 0, 0);
             $("#gao_status").show();
             $("#gao_userGroup").show();
       }
       //pie
       if (selected_type_graph === 3) {
-            manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, selected_type_graph);
+            manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, selected_type_graph, 0, 0, 0);
             $("#gao_campaign").show();
       }
 
@@ -910,10 +899,10 @@ function manipulate_dados(opcao, Id, Name, Pos_x, Pos_y, Width, Height, id_layou
       }, "json");
 }
 //graphs
-function manipulate_graph(Opcao, Id, Name, Pos_x, Pos_y, Width, Height, id_Layout, Update_time, Graph_type)
+function manipulate_graph(Opcao, Id, Name, Pos_x, Pos_y, Width, Height, id_Layout, Update_time, Graph_type, Param1, Param2, Param3, Param4)
 {
 
-      $.post("Requests.php", {action: Opcao, id: Id, name: Name, pos_x: Pos_x, pos_y: Pos_y, width: Width, height: Height, id_layout: id_Layout, update_time: Update_time, graph_type: Graph_type},
+      $.post("Requests.php", {action: Opcao, id: Id, name: Name, pos_x: Pos_x, pos_y: Pos_y, width: Width, height: Height, id_layout: id_Layout, update_time: Update_time, graph_type: Graph_type, param1: Param1, param2: Param2, param3: Param3, param4: Param4},
       function(data)
       {
             if (Opcao === 'get_query')
@@ -1005,15 +994,17 @@ function flot_extra(opcao)
                   var object = $("#campaign");
                   var object1 = $("#campaign_id_dataTable");
                   $.each(data, function(index, value) {
-                        object.append(new Option(this.campaign_id, this.campaign_name));
-                        object1.append(new Option(this.campaign_id, this.campaign_name));
+                        object.append(new Option(this.campaign_name, this.campaign_id));
+                        object1.append(new Option(this.campaign_name, this.campaign_id));
                   });
             }
             if (opcao === "status_venda")
             {
                   var object = $("#status_venda");
+                  var object1 = $("#dataTable_feedback");
                   $.each(data, function(index, value) {
                         object.append(new Option(this.status_t, this.status_v));
+                        object1.append(new Option(this.status_t, this.status_v));
                   });
             }
 

@@ -32,21 +32,25 @@ $(document).ready(function() {
                           .append($("<div>").addClass("grid-content").attr("id", wbes[i][0] + "WBEGD")
                           .append($("<div>").attr("id", wbes[i][0] + "WBE").attr("style", "width:" + (width - 20) + "px;height:" + (height - 75) + "px;padding: 0px;").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbes[i][7] / 1000) + " seg.")))
                           );
-                  if (wbes[i][8] == 1)//update
+                  if (wbes[i][8] === "1")//update
                   {
                         plot_update(wbes[i]);
                   }
-                  if (wbes[i][8] == 2)//bar
+                  if (wbes[i][8] === "2")//bar
                   {
                         plot_bar(wbes[i]);
                   }
-                  if (wbes[i][8] == 3)//pie
+                  if (wbes[i][8] === "3")//pie
                   {
                         plot_pie(wbes[i]);
                   }
-                  if (wbes[i][8] == 4)//Inbound stuff
+                  if (wbes[i][8] === "4")//Inbound stuff
                   {
                         inbound_wallboard(wbes[i]);
+                  }
+                  if (wbes[i][8] === "5")//DataTable top
+                  {
+                        dataTable_top(wbes[i]);
                   }
                   i++;
             });
@@ -541,6 +545,115 @@ function   inbound_wallboard(data)
       }
 }
 //øøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøø
+
+function   dataTable_top(data)
+{
+      //--------------wbes
+      //0      id,
+      // 1       id_layout,
+      //   2      name,
+      //     3     pos_x, 
+      //       4   pos_y,
+      //       5    width, 
+      //       6    height,
+      //       7      update_time, 
+      //       8      graph_type;
+      //   9      Array[8]
+      //0: id
+      //1: id_wallboard
+      //2: codigo_query
+      //3: opcao_query
+      //4: tempo
+      //5: user
+      //6: user_group
+      //7: campaign_id
+      //8:linha_inbound
+      //9: mode
+      //10: status_feedback
+      //11: chamadas
+      var wbe = data;
+      var feedbacks = wbe[9][0].status_feedback.split(',');
+
+      var panel = $("#" + wbe[0] + "Main");
+      panel.empty();
+      panel.append($("<div>")
+              .append($("<table>").css("width", "100%").css("heigth", "100%")
+              .append($("<thead>")
+              .append($("<tr>").append($("<td>").text("aa")))
+
+
+              )//fim do thead
+              .append($("<tbody>").attr("id", "tbody_id")
+              )//fim do tbody
+              )//fim da table
+              );//fim da div
+
+      var Opcao = 0;
+      if (wbe[9][0].campaign_id != "0")
+            Opcao = 1;
+      if (wbe[9][0].user_group != "0")
+            Opcao = 2;
+      if (wbe[9][0].linha_inbound != "0")
+            Opcao = 3;
+
+      var feedbacks_string = "";
+      if (feedbacks.length > 1) {
+            feedbacks_string = "status='" + feedbacks[0] + "'";
+            for (var i = 1; i < feedbacks.length; i++) {
+                  feedbacks_string = feedbacks_string + " or status='" + feedbacks[i] + "'";
+            }
+      }
+      else
+            feedbacks_string = "status='" + feedbacks[0] + "'";
+
+
+      $.post("Requests.php", {action: "5", status: feedbacks_string, opcao: Opcao, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campaign_id, user_group: wbe[9][0].user_group, linha_inbound: wbe[9][0].linha_inbound},
+      function(data)
+      {
+            if (data === null)
+            {
+                  clearTimeout(updation);
+                  painel.remove();
+                  $("#" + wbe[0] + "Main").remove();
+                  $.jGrowl("O LALALALALALA gráfico de Barras " + wbe[1] + " não apresenta resultados", {life: 10000});
+                  return false;
+            }
+
+            console.log(data);
+
+      }
+      , "json");
+      /*dataTable
+       // top 
+       //5 ou 10
+       //top man tem q ser maior
+       
+       
+       escolher feedback, ou soma de feedbacks
+       
+       user/resultado/tma/nºchamadas
+       
+       tma=> tempo medio em chamada
+       
+       escolher por
+       campanha
+       ou
+       grupo inbound
+       ou
+       grupo user
+       **/
+
+
+
+//vicidial_users tem o nome completo do user e as closer_campaigns(linha_inbound)
+
+
+
+
+
+
+
+}
 
 //window exit
 $(window).bind('beforeunload', function() {
