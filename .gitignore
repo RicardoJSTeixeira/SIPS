@@ -1,7 +1,7 @@
-crm/
+/crm/
 nbproject/
-sips-admin/inbound/tmp/*
-sips-agente/vdc_form_display.php
+/sips-admin/inbound/tmp/*
+/sips-agente/vdc_form_display.php
 
 # Compiled source #
 ###################
