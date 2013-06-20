@@ -12608,31 +12608,16 @@ function mail(user)
 	
 }
 
-
+// To disable f5
+function disableF5(e) { if ((e.which || e.keyCode) == 116) e.preventDefault(); };
+$(document).bind("keydown", disableF5);
 
 		
 	</script>
 
 
 <style type="text/css">
-/*
-	div.scroll_calllog {height: <?php echo $CQheight ?>px; width: <?php echo $MNwidth ?>px; overflow: scroll;}
-	div.scroll_callback {height: 300px; width: <?php echo $MNwidth ?>px; overflow: scroll;}
-	div.scroll_list {height: 400px; width: 140px; overflow: scroll;}
-	div.scroll_script {height: <?php echo $SSheight+8 ?>px; width: <?php echo $SDwidth-40 ?>px;
-	background: #e8edff;
-	overflow: auto;
-	font-size: 12px;
-	font-family: sans-serif;
-}
-	div.noscroll_script {height: <?php echo $SSheight+8 ?>px; width: <?php echo $SDwidth-40 ?>px;
-	background: #e8edff;
-	overflow: hidden;
-	font-size: 12px;
-	font-family: sans-serif;
-}
-	
-*/
+
 .one-edge-shadow {
 	-webkit-box-shadow: 0 8px 6px -6px black;
 	   -moz-box-shadow: 0 8px 6px -6px black;
@@ -12877,6 +12862,18 @@ $zi=2;
 				</div>
 			</td>
 		</tr>
+                
+                <?php $query="SELECT id_calendar,cal_type FROM `sips_sd_agent_ref` WHERE user='$user'";
+                      $result=mysql_query($query);
+                              
+                      while ($row = mysql_fetch_assoc($result)) { 
+                          $calendar_name=mysql_fetch_array(mysql_query("SELECT display_text FROM ".(($row[cal_type]=="RESOURCE")?"sips_sd_resources WHERE id_resource=":"sips_sd_schedulers WHERE id_scheduler=")."'$row[id_calendar]';"));
+                          $calendar_name=$calendar_name[0];
+                                  ?>
+                <tr class="calendar_ref" data-type="<?=$row[cal_type]?>" data-id="<?=$row[id_calendar]?>">
+                    <td><img src="/images/icons/calendar_32.png"></td><td><?=$calendar_name?></td>
+                </tr>
+                     <?php } ?>
 		<?php if ($on_hook_agent=="Y"){ ?>
                 
 		<tr id='cbacks' style='cursor:pointer' onclick="NoneInSessionCalL();return false;">
@@ -12900,6 +12897,21 @@ $zi=2;
 			</tr>
 		</table>
 		</div>
+            
+              
+            <script>
+            $(".calendar_ref").on("click",function(){
+                var calendar;
+                if($(this).data().type==="RESOURCE"){
+                    calendar="rsc=";
+                }else{
+                    calendar="sch=";
+                }
+                calendar+=encodeURIComponent($(this).data().id);
+                    window.open("../sips-admin/reservas/views/calendar_container.php?"+calendar);
+            });
+            </script>
+            
 		<?php 
 		
 		$query="SELECT url,imgpath,label FROM sips_agent_links where grupo='$VU_user_group';";
@@ -13011,7 +13023,8 @@ $zi=2;
 			
 		}
 	
-		?>		
+		?>
+            
 		</div> 
 
 </td>
