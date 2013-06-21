@@ -76,8 +76,9 @@ function MiscOptionsBuilder(Flag)
                     if(data.c_recording == "ALLFORCE"){ $("#campaign_recording_yes").parent().addClass("checked"); } else { $("#campaign_recording_no").parent().addClass("checked"); }
                     if(data.c_lead_order == "RANDOM"){ $("#campaign_lead_order_random").parent().addClass("checked"); } else { $("#campaign_lead_order_ordered").parent().addClass("checked"); }
                     if(data.c_next_agent_call == "longest_wait_time"){ $("#campaign_atrib_calls").val("Maior Tempo em Espera") } else if(data.c_next_agent_call == "random") { $("#campaign_atrib_calls").val("Aleatória") } else { $("#campaign_atrib_calls").val("Menos Chamadas Recebidas") }
-                    if(data.c_my_callback_option == "UNCHECKED"){ console.log("unchecked");  $("#campaign_callback_type_global").parent().addClass("checked");  } else { $("#campaign_callback_type_user").parent().addClass("checked"); }
-                    
+                    if(data.c_my_callback_option == "UNCHECKED"){ $("#campaign_callback_type_global").parent().addClass("checked");  } else { $("#campaign_callback_type_user").parent().addClass("checked"); }
+                    if(data.c_campaign_allow_inbound == "Y"){ $("#campaign_inbound_yes").parent().addClass("checked");  } else { $("#campaign_inbound_no").parent().addClass("checked"); }
+
                     $.each(data.user_groups_id, function(index, value)
                     {
                         Checked = "";
@@ -227,7 +228,7 @@ $("#dialog-config-inbound").dialog({
     height: 580,
     width: 550,
     resizable: false,
-    buttons: 	{ 	"Gravar": DialogConfigInboundBtnSave,
+    buttons: 	{ 	
                 	"Fechar": DialogClose
             	},
     open: DialogConfigInboundOnOpen
@@ -328,7 +329,50 @@ function DialogConfigInboundBtnSave()
 {}
 
 function DialogConfigInboundOnOpen()
-{}
+{
+     $.ajax({
+                    type: "POST",
+                    url: "_opcoes_gerais-requests.php",
+                    dataType: "JSON",
+                    data:
+                    { 
+                            action: "GetCampaignInboundGroups",
+                            CampaignID: CampaignID
+                    },
+                    success: function(data) 
+                    {
+                            $("#table-config-inbound-campaigns-1").empty();
+                            $("#table-config-inbound-campaigns-2").empty();                   
+                            $.each(data.group_id, function(index, value)
+                            {
+                                
+                                $.each(data.closer_campaigns, function(index1, value1){
+                                  
+                                   if(value1 == data.group_id[index]){
+                                       Checked = "checked=checked";
+                                       return false;
+                                   }
+                                   else{
+                                       Checked = "";
+                                      
+                                   }
+                                });
+                                
+                                
+                                    if( ((index/2) % 1) != 0 )
+                                    {
+                                            $("#table-config-inbound-campaigns-2").append("<tr><td width=10px><input "+Checked+" class='checkbox-edit-inbound-groups' type='checkbox' value='"+data.group_id[index]+"' name='"+data.group_id[index]+"' id='"+data.group_id[index]+"'></td><td style='padding-top:1px'><label style='display:inline;' for='"+data.group_id[index]+"'>"+data.group_name[index]+"</label></td></tr>")
+                                    }
+                                    else
+                                    {
+                                            $("#table-config-inbound-campaigns-1").append("<tr><td width=10px><input "+Checked+" class='checkbox-edit-inbound-groups' type='checkbox' value='"+data.group_id[index]+"' name='"+data.group_id[index]+"' id='"+data.group_id[index]+"'></td><td style='padding-top:1px'><label style='display:inline;' for='"+data.group_id[index]+"'>"+data.group_name[index]+"</label></td></tr>")
+                                    }
+
+                            }) 
+                    $(".checkbox-edit-inbound-groups").uniform();
+                    }
+		});
+}
 
 function GroupsSwitch()
 {
@@ -585,6 +629,72 @@ function CampaignCallbackType()
         $.post("_opcoes_gerais-requests.php", {action: "CampaignCallbackType", CampaignID: CampaignID, Type: Type }, function(){}, "json");
 }
 
+function InboundSwitch()
+{
+    var YesNo;
+    if($(this).attr("id") == "campaign_inbound_yes") 
+    { 
+        YesNo = "Y";
+        $(".div-grupos-inbound").show();
+        $(".checkbox-edit-inbound-groups").parent().removeClass("checked");
+        $(".checkbox-edit-inbound-groups").removeAttr("checked");
+        $(".div-no-groups-inbound").hide();
+    } 
+    else 
+    { 
+        YesNo = "N";
+        $(".div-grupos-inbound").hide();
+        $(".checkbox-edit-inbound-groups").parent().removeClass("checked");
+        $(".checkbox-edit-inbound-groups").removeAttr("checked");
+        $(".div-no-groups-inbound").show();
+        
+    }
+    $.uniform.update(".checkbox-edit-inbound-groups");
+    $.ajax({
+                    type: "POST",
+                    url: "_opcoes_gerais-requests.php",
+                    dataType: "JSON",
+                    data:
+                    { 
+                            action: "InboundSwitch",
+                            CampaignID: CampaignID,
+                            YesNo: YesNo
+                    },
+                    success: function(data) 
+                    {}
+		});
+}
+
+function InboundGroupsSwitch()
+{
+    var Checked;
+    if($(this).parent().hasClass("checked")){
+        Checked = 1;
+    }
+    else{
+        Checked = 0;
+    }
+
+    
+    
+    $.ajax({
+                    type: "POST",
+                    url: "_opcoes_gerais-requests.php",
+                    dataType: "JSON",
+                    data:
+                    { 
+                            action: "InboundGroupsSwitch",
+                            CampaignID: CampaignID,
+                            GroupID: $(this).prop("id"),
+                            Checked: Checked
+                    },
+                    success: function(data) 
+                    {
+                        
+                    }
+    }); 
+}
+
 $("body")
 .on("click", ".groups-checkbox", GroupsSwitch)
 .on("click", "#btn-check-all-groups", GroupsCheckAll)
@@ -597,7 +707,9 @@ $("body")
 .on("focusin focusout keydown", "#campaign-name", EditCampaignName)
 .on("focusin focusout", "#campaign-description", EditCampaignDescription)
 .on("click", ".campaign-callback-type", CampaignCallbackType)
-.on("click", "#btn-config-inbound", { dialog: "#dialog-config-inbound" }, DialogOpen);
+.on("click", "#btn-config-inbound", { dialog: "#dialog-config-inbound" }, DialogOpen)
+.on("click", ".campaign-inbound-switch", InboundSwitch)
+.on("click", ".checkbox-edit-inbound-groups", InboundGroupsSwitch);
 
 
 

@@ -258,7 +258,7 @@ if ($stage=='SUBMIT')
 	echo "<html>\n";
 	echo "<head>\n";
 	echo "<!-- VERSION: $version     BUILD: $build    USER: $user   server_ip: $server_ip-->\n";
-	echo "<title>ViciDial Form Display Script";
+	echo "<title>Go Contact Center";
 	echo "</title>\n";
 	
 	echo "<script language=\"JavaScript\" src=\"../calendar/calendar_db.js\"></script>\n";
@@ -432,7 +432,7 @@ else
 	echo "<html>\n";
 	echo "<head>\n";
 	echo "<!-- VERSION: $version     BUILD: $build    USER: $user   server_ip: $server_ip-->\n";
-	echo "<title>ViciDial Form Display Script";
+	echo "<title>Go Contact Center";
 	echo "</title>\n";
 	
 	echo "<script language=\"JavaScript\" src=\"../calendar/calendar_db.js\"></script>\n";
