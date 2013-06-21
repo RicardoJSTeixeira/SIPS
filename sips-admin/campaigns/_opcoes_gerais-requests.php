@@ -154,7 +154,7 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
 	}
 	else
 	{
-		$query = mysql_query("SELECT campaign_name, campaign_description, active, dial_method, auto_dial_level, campaign_recording, lead_order, next_agent_call, my_callback_option FROM vicidial_campaigns WHERE campaign_id='$CampaignID' LIMIT 1", $link) or die(mysql_error());
+		$query = mysql_query("SELECT campaign_name, campaign_description, active, dial_method, auto_dial_level, campaign_recording, lead_order, next_agent_call, my_callback_option, campaign_allow_inbound FROM vicidial_campaigns WHERE campaign_id='$CampaignID' LIMIT 1", $link) or die(mysql_error());
 		$result = mysql_fetch_assoc($query) or die(mysql_error());
 		
 		$js['c_name'] = $result['campaign_name'];
@@ -165,7 +165,8 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
 		$js['c_recording'] = $result['campaign_recording'];
 		$js['c_lead_order'] = $result['lead_order'];
 		$js['c_next_agent_call'] = $result['next_agent_call'];
-                                            $js['c_my_callback_option'] = $result['my_callback_option'];
+                $js['c_my_callback_option'] = $result['my_callback_option'];
+                $js['c_campaign_allow_inbound'] = $result['campaign_allow_inbound'];
 		
 		$query = mysql_query("SELECT user_group FROM vicidial_user_groups WHERE allowed_campaigns LIKE '%$CampaignID%'") or die(mysql_error());
 		while($result = mysql_fetch_row($query))
@@ -345,6 +346,45 @@ function CampaignCallbackType($CampaignID, $Type, $link){
     mysql_query("UPDATE vicidial_campaigns SET my_callback_option = '$Type' WHERE campaign_id = '$CampaignID'", $link) or die(mysql_error());
 }
 
+function GetCampaignInboundGroups($CampaignID, $link)
+{
+    
+    $query = mysql_query("SELECT closer_campaigns FROM vicidial_campaigns WHERE campaign_id='$CampaignID'", $link) or die(mysql_query());
+    
+    $row = mysql_fetch_assoc($query);
+    
+    
+    
+    $explode = explode(" ", $row['closer_campaigns']);
+    
+    $js['closer_campaigns'] = $explode;
+    
+    $query = mysql_query("SELECT group_id, group_name FROM vicidial_inbound_groups", $link) or die(mysql_error());
+    while($row = mysql_fetch_assoc($query))
+    {
+        $js['group_id'][] = $row['group_id'];
+        $js['group_name'][] = $row['group_name'];
+    }
+    echo json_encode($js);
+}
+
+function InboundSwitch($CampaignID, $YesNo, $link)
+{   
+    mysql_query("UPDATE vicidial_campaigns SET campaign_allow_inbound = '$YesNo' , closer_campaigns = ' -' WHERE campaign_id='$CampaignID'", $link) or die (mysql_error());
+}
+
+function InboundGroupsSwitch($CampaignID, $GroupID, $Checked, $link)
+{
+    if($Checked){
+        mysql_query("UPDATE vicidial_campaigns SET closer_campaigns = CONCAT(' $GroupID', closer_campaigns) WHERE campaign_id = '$CampaignID'") or die(mysql_error());
+    }
+    else
+    {
+       mysql_query("UPDATE vicidial_campaigns SET closer_campaigns = REPLACE(closer_campaigns, ' $GroupID', '') WHERE campaign_id = '$CampaignID'") or die(mysql_error());
+    }
+    
+}
+
 switch($action)
 {
     case "MiscOptionsBuilder": MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $Flag, $link); break;
@@ -362,6 +402,9 @@ switch($action)
     case "EditCampaignName": EditCampaignName($CampaignID, $CampaignName, $link); break;
     case "EditCampaignDescription": EditCampaignDescription($CampaignID, $CampaignDescription, $link); break;
     case "CampaignCallbackType": CampaignCallbackType($CampaignID, $Type, $link); break;
+    case "GetCampaignInboundGroups": GetCampaignInboundGroups($CampaignID, $link); break;
+    case "InboundSwitch": InboundSwitch($CampaignID, $YesNo, $link); break;
+    case "InboundGroupsSwitch": InboundGroupsSwitch($CampaignID, $GroupID, $Checked, $link); break;
 }
 
 ?>

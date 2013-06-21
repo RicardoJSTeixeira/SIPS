@@ -1086,14 +1086,24 @@
         
         <div id="dialog-config-inbound" style='display:none'>
             <div class="div-title">Inbound<span class='css-orange-caret'>></span>Editar</div>
+            <table>
+                    <tr class="tr-options">
+                        <td>Campanha com Inbound:</td>
+                        <td class="tright">
+                        <input type="radio" class="campaign-inbound-switch" id="campaign_inbound_yes" name="campaign-inbound-switch-name" /><label for="campaign_inbound_yes">Sim</label>
+                        <input type="radio" class="campaign-inbound-switch" id="campaign_inbound_no" name="campaign-inbound-switch-name" /><label for="campaign_inbound_no">Não</label>
+                        </td>
+                    </tr>
+           </table>             
             
             
-            <div class="div-title">Feedbacks Autorizados<span class='css-orange-caret'>></span>Configuração</div>
-            <div style='height:232px; overflow:auto;'>
-            <table id="table-config-dial-status">
+            <div class="div-title">Inbound<span class='css-orange-caret'>></span>Grupos de Inbound</div>
+            <div class='div-no-groups-inbound' style='display:none'><i>A Campanha não tem acesso a Grupos de Inbound.</i></div>
+            <div class="div-grupos-inbound" style='height:232px; overflow:auto;'>
+            <table id="table-config-inbound-campaigns">
                 <tr>
-                    <td width="50%" valign="top"><table id="table-config-dial-status-1"></table></td>
-                    <td width="50%" valign="top"><table id="table-config-dial-status-2"></table></td>             
+                    <td width="50%" valign="top"><table id="table-config-inbound-campaigns-1"></table></td>
+                    <td width="50%" valign="top"><table id="table-config-inbound-campaigns-2"></table></td>             
                 </tr>
             </table>
             </div>
