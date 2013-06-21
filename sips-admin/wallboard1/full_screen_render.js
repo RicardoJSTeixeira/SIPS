@@ -173,8 +173,6 @@ function plot_update(data)
 
 
 
-
-
       function get_values_update()
       {
 
@@ -223,7 +221,7 @@ function plot_update(data)
                                     {
                                           result = [];
                                           information.push({data: result, label: "Sem resultados"});
-                                          $.jGrowl("A Linha " + wbe[9][aux].opcao_query + " do grafico " + wbe[2] + " não apresenta resultados", {life: 3000});
+                                          $.jGrowl("A Linha " + wbe[9][aux].opcao_query + " do grafico " + wbe[2] + " não apresenta resultados", {life: 5000});
                                           verifier = 0;
 
 
@@ -572,18 +570,44 @@ function   dataTable_top(data)
       //10: status_feedback
       //11: chamadas
       var wbe = data;
+
+
+      $.post("Requests.php", //get data top info
+              {action: "get_status_name", status: feedbacks_string},
+      function(data)
+      {
+
+      }
+      , "json");
+
+
+
+
+
+
       var feedbacks = wbe[9][0].status_feedback.split(',');
 
       var panel = $("#" + wbe[0] + "Main");
       panel.empty();
       panel.append($("<div>")
-              .append($("<table>").css("width", "100%").css("heigth", "100%")
+              .append($("<div>").addClass("grid-title")
+              .append($("<div>").addClass("pull-left")
+              .text(feedbacks)))
+              .append($("<table>").css("heigth", "100%").css("width", "100%").addClass("table table-striped table-mod")
               .append($("<thead>")
-              .append($("<tr>").append($("<td>").text("aa")))
+              .append($("<tr>")
+              .append($("<td>").text("Nome"))
+              .append($("<td>").text("Total Feedback"))
+              .append($("<td>").text("TMA"))
+
+
+              )
 
 
               )//fim do thead
-              .append($("<tbody>").attr("id", "tbody_id")
+              .append($("<tbody>").attr("id", "tbody_id" + wbe[0])
+
+
               )//fim do tbody
               )//fim da table
               );//fim da div
@@ -607,22 +631,54 @@ function   dataTable_top(data)
             feedbacks_string = "status='" + feedbacks[0] + "'";
 
 
-      $.post("Requests.php", {action: "5", status: feedbacks_string, opcao: Opcao, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campaign_id, user_group: wbe[9][0].user_group, linha_inbound: wbe[9][0].linha_inbound},
+      $.post("Requests.php",
+              {action: "get_status_name", status: feedbacks_string},
       function(data)
       {
-            if (data === null)
+
+
+
+
+            $.post("Requests.php",
+                    {action: "5", status: feedbacks_string, opcao: Opcao, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campaign_id, user_group: wbe[9][0].user_group, linha_inbound: wbe[9][0].linha_inbound, limit: wbe[9][0].param2},
+            function(data)
             {
-                  clearTimeout(updation);
-                  painel.remove();
-                  $("#" + wbe[0] + "Main").remove();
-                  $.jGrowl("O LALALALALALA gráfico de Barras " + wbe[1] + " não apresenta resultados", {life: 10000});
-                  return false;
+                  if (data === null)
+                  {
+                        clearTimeout(updation);
+                        painel.remove();
+                        $("#" + wbe[0] + "Main").remove();
+                        $.jGrowl("O LALALALALALA gráfico de Barras " + wbe[1] + " não apresenta resultados", {life: 10000});
+                        return false;
+                  }
+
+
+
+                  var tbody = $("#tbody_id" + wbe[0]);
+
+
+                  var letter_size = 18;
+                  $.each(data, function(index, value) {
+
+
+                        var minutes = Math.floor(data[index].tma / 60);
+                        var seconds = data[index].tma - minutes * 60;
+
+
+                        tbody.append($("<tr>").css("font-size", letter_size + "px")
+                                .append($("<td>").text(data[index].user))//fim do td)
+                                .append($("<td>").text(data[index].count_feedbacks))
+                                .append($("<td>").text(minutes + ":" + seconds))
+                                );//fim do tr 
+                        letter_size--;
+
+
+                  });
             }
-
-            console.log(data);
-
+            , "json");
       }
       , "json");
+
       /*dataTable
        // top 
        //5 ou 10
@@ -658,5 +714,6 @@ function   dataTable_top(data)
 //window exit
 $(window).bind('beforeunload', function() {
       $("#MainLayout .PanelWB").remove();
-});
+}
+);
 

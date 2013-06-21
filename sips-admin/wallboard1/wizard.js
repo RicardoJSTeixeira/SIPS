@@ -138,6 +138,22 @@ $("#dataTable_opcao").change(function()
 
 // FUNÇÂO STARTER-----------------------------------------------------------------------------------------99999999----------------------------------------------------------------0000000000000000000000
 $(function() {
+$("#aaa").chosen();
+
+
+
+$html = '<select name="items" id="items" multiple="multiple" size="1" class="chosenElement">';
+    $html += '<option value="foo">foo</option>';
+    $html += '<option value="bar">bar</option>';
+    $html += '<option value="baz">baz</option>';
+    $html += '<option value="qux">qux</option>';    
+    $html += '</select>';
+$('.modal-body').html($html);
+$('#items').chosen();
+
+
+
+
 
       $("#campaign_id_dataTable").show();
       $("#grupo_inbound_dataTable").hide();
@@ -245,6 +261,18 @@ $(function() {
 
             load_dados("wbe", idLayout);
       });
+
+      $(document).on("click", ".add_dataTop_button", function(e) {
+                 id_wallboard = $(this).data("wbe_id");
+            $("#dialog_dataTable").dialog("open");
+      });
+
+
+
+
+
+
+
       //inicia os tooltips
       $("[data-t=tooltip]").tooltip({placement: "left", html: true});
       $("[data-t=tooltip-right]").tooltip({placement: "right", html: true});
@@ -259,7 +287,7 @@ $(function() {
                         $(this).dialog("close");
                   },
                   "Criar": function() {
-                        manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, $("#update_time").val(), selected_type_graph, 0, 0, 0);
+                        manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, $("#update_time").val(), selected_type_graph, 0, 0);
                         $(this).dialog("close");
                   }
             }
@@ -491,7 +519,7 @@ $(function() {
                   },
                   "Criar": function() {
 
-                        manipulate_graph("insert_wbe", 0, "Estatistica", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 4, $("#group_inbound_select").val(), $("#group_inbound_select option:selected").text(), 0);
+                        manipulate_graph("insert_wbe", 0, "Estatistica", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 4, $("#group_inbound_select").val(), $("#group_inbound_select option:selected").text());
 
                         $(this).dialog("close");
                   }
@@ -519,13 +547,13 @@ $(function() {
                         switch ($("#dataTable_opcao").val())
                         {
                               case "1":
-                                    manipulate_graph("insert_wbe", 1, "Top users", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 5, $("#campaign_id_dataTable").val(), $("#dataTable_timespan").val(), $("#campaign_id_dataTable option:selected").text(), feedbacks);
+                                    manipulate_dataTable_top("insert_wbe", id_wallboard, "Top users", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 5, $("#campaign_id_dataTable").val(), $("#dataTable_timespan").val(), $("#campaign_id_dataTable option:selected").text(), feedbacks, $("#dataTable_top_limit").val());
                                     break;
                               case "2":
-                                    manipulate_graph("insert_wbe", 2, "Top users", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 5, $("#grupo_inbound_dataTable").val(), $("#dataTable_timespan").val(), $("#grupo_inbound_dataTable option:selected").text(), feedbacks);
+                                    manipulate_dataTable_top("insert_wbe", id_wallboard, "Top users", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 5, $("#grupo_inbound_dataTable").val(), $("#dataTable_timespan").val(), $("#grupo_inbound_dataTable option:selected").text(), feedbacks, $("#dataTable_top_limit").val());
                                     break;
                               case "3":
-                                    manipulate_graph("insert_wbe", 3, "Top users", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 5, $("#grupo_user_dataTable").val(), $("#dataTable_timespan").val(), $("#grupo_user_dataTable option:selected").text(), feedbacks);
+                                    manipulate_dataTable_top("insert_wbe", id_wallboard, "Top users", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 5, $("#grupo_user_dataTable").val(), $("#dataTable_timespan").val(), $("#grupo_user_dataTable option:selected").text(), feedbacks$("#dataTable_top_limit").val());
                                     break;
                         }
                         $(this).dialog("close");
@@ -698,7 +726,7 @@ function update_wbe()
       //11: chamadas
       $.each(wbes, function(index, value) {
             var ml = $("#MainLayout");
-            if (wbes[i][8] === "4" || wbes[i][8] === "5")//Todos menos Inbound
+            if (wbes[i][8] === "4")//Todos menos Inbound e datatop
             {
                   ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
                           .css("left", wbes[i][3] + "px")
@@ -715,7 +743,28 @@ function update_wbe()
                           .append($("<div>").addClass("grid-content").attr("id", "grid_content")));
 
             }
-            else//Inbound
+            else if (wbes[i][8] === "5")//dataTop
+            {
+                  ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
+                          .css("left", wbes[i][3] + "px")
+                          .css("top", wbes[i][4] + "px")
+                          .css("width", wbes[i][5] + "px")
+                          .css("height", wbes[i][6] + "px")
+                          .append($("<div>").addClass("grid-title")
+                          .append($("<div>").addClass("pull-left")
+                          .text(wbes[i][2]))
+                          .append($("<div>").addClass("pull-right")
+                          .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
+                          .append($("<i>").addClass("icon-remove")))
+                          ))
+                          .append($("<div>").addClass("grid-content").attr("id", "grid_content")
+
+                          .append($("<button>").addClass("btn icon-alone btn-info add_dataTop_button").css("width", "100%").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Adicionar DataTop")
+                          .append($("<i>").addClass("icon-plus-sign")))
+                          ));
+
+            }
+            else//Resto
             {
                   ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
                           .css("left", wbes[i][3] + "px")
@@ -899,10 +948,10 @@ function manipulate_dados(opcao, Id, Name, Pos_x, Pos_y, Width, Height, id_layou
       }, "json");
 }
 //graphs
-function manipulate_graph(Opcao, Id, Name, Pos_x, Pos_y, Width, Height, id_Layout, Update_time, Graph_type, Param1, Param2, Param3, Param4)
+function manipulate_graph(Opcao, Id, Name, Pos_x, Pos_y, Width, Height, id_Layout, Update_time, Graph_type, Param1, Param2)
 {
 
-      $.post("Requests.php", {action: Opcao, id: Id, name: Name, pos_x: Pos_x, pos_y: Pos_y, width: Width, height: Height, id_layout: id_Layout, update_time: Update_time, graph_type: Graph_type, param1: Param1, param2: Param2, param3: Param3, param4: Param4},
+      $.post("Requests.php", {action: Opcao, id: Id, name: Name, pos_x: Pos_x, pos_y: Pos_y, width: Width, height: Height, id_layout: id_Layout, update_time: Update_time, graph_type: Graph_type, param1: Param1, param2: Param2},
       function(data)
       {
             if (Opcao === 'get_query')
@@ -918,6 +967,22 @@ function manipulate_graph(Opcao, Id, Name, Pos_x, Pos_y, Width, Height, id_Layou
 
       }, "json");
 }
+
+
+function manipulate_dataTable_top(Opcao, Id_wallboard, Tempo, Campanha, Grupo_inbound, Grupo_user, Status_feedback, Limit, Custom_colum_name)
+{
+
+      $.post("Requests.php", {action: Opcao, id_wallboard: Id_wallboard, tempo: Tempo, campanha: Campanha, grupo_inbound: Grupo_inbound, grupo_user: Grupo_user, status_feedback: Status_feedback, limit: Limit, custom_colum_name: Custom_colum_name},
+      function(data)
+      {
+
+
+
+      }, "json");
+}
+
+
+
 //---Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados---
 
 //FLOT EXTRA HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHh
@@ -1001,7 +1066,7 @@ function flot_extra(opcao)
             if (opcao === "status_venda")
             {
                   var object = $("#status_venda");
-                  var object1 = $("#dataTable_feedback");
+                  var object1 = $("#aaa");
                   $.each(data, function(index, value) {
                         object.append(new Option(this.status_t, this.status_v));
                         object1.append(new Option(this.status_t, this.status_v));
