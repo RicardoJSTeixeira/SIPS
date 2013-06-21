@@ -55,7 +55,7 @@ if($action == "dT_campaign-monitor")
         {
             switch($aColumns[$i]) 
             { 
-				case "campaign_name": { if($aRow['pauses'] == 0 || $aRow['feedbacks'] == 0 || $aRow['fields'] == 0){ $camp_warning_text = "style='color:red'"; $camp_warning = "<img class='mono-icon' title='Campanha com erros na configuração, por favor edite a Campanha e corrija estes erros.' src='icons/mono_alert_16.png'>";} else {$camp_warning = ""; $camp_warning_text = "";} $row[] = "<div style='float:left'><span $camp_warning_text>$aRow[campaign_name]</div><div  style='float:left; top:-3px'>$camp_warning</div></span>";  break;} 
+				case "campaign_name": { if($aRow['pauses'] == 0 || $aRow['feedbacks'] == 0 || $aRow['dynamic_fields'] == 0){ $camp_warning_text = "style='color:red'"; $camp_warning = "<img class='mono-icon' title='Campanha com erros na configuração, por favor edite a Campanha e corrija estes erros.' src='icons/mono_alert_16.png'>";} else {$camp_warning = ""; $camp_warning_text = "";} $row[] = "<div style='float:left'><span $camp_warning_text>$aRow[campaign_name]</div><div  style='float:left; top:-3px'>$camp_warning</div></span>";  break;} 
                 case "campaign_id": { $row[] = "<img id='img-campaign-edit' class='icon pointer' html-campaign-id='$aRow[campaign_id]' src='/images/icons/mono_wrench_16.png'>"; break; }
                 case "dial_method": if($aRow[ $aColumns[$i] ] == "RATIO"){ $row[] = "Automática"; } else { $row[] = "Manual"; }; break;
 				case "auto_dial_level": { $row[] = "x".$aRow['auto_dial_level']; } ; break;
