@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE HTML>
 <html>
       <head>
@@ -89,6 +91,13 @@
       </head>
 
       <body>
+
+
+
+
+
+
+
             <div class="grid-content">
                   <div class="row-fluid">
                         <div class="grid span11 board" >
@@ -128,7 +137,7 @@
                                     <p><button id="linhas_button"  class=" btn btn-info diablog_opener icon-alone toolbar_button" onclick="selected_type_graph = 1;"  data-t="tooltip" title="Gráfico de Linhas"  ><i class="icon-picture "></i> </button></p>
                                     <p><button id="barras_button" class ="btn btn-info diablog_opener icon-alone toolbar_button" onclick="selected_type_graph = 2;" data-t="tooltip" title="Gráfico de Barras"  ><i class="icon-bar-chart "></i></button></p>
                                     <p><button id="pie_button" class="btn btn-info diablog_opener icon-alone toolbar_button" onclick="selected_type_graph = 3;" data-t="tooltip" title="Gráfico de Tarte"  > <i class="icon-adjust "></i></button></p>
-                                    <p><button id="topTable_button" class="btn btn-info diablog_opener icon-alone toolbar_button" onclick="selected_type_graph = 5;" data-t="tooltip" title="tabela top agente"  > <i class="icon-th-list "></i></button></p>
+                                    <p><button id="topTable_button" class="btn btn-info add_dataTop_button icon-alone toolbar_button" onclick="selected_type_graph = 5;" data-t="tooltip" title="tabela top agente"  > <i class="icon-th-list "></i></button></p>
                                     <p><button id="graph_inbound" class="btn btn-info icon-alone diablog_opener_inbound toolbar_button" onclick="selected_type_graph = 4;" data-t="tooltip" title="Gráfico de Inbound"  > <i class="icon-list-alt "></i></button></p>
                               </div>
                         </div>
@@ -171,8 +180,8 @@
 
 
                   <!--DIALOG DOS dataTables-->
-                  <div id="dialog_dataTable" title="Criação de Tabelas Top" style="display: none;">
-
+                  <div id="dialog_dataTable" title="Criação de Tabelas Top" >
+                        <label class="label label-info">Escolher por:</label>
                         <select id="dataTable_opcao">
                               <option value="1" >Campanha</option>
                               <option value="2" >Grupo_inbound</option>
@@ -189,16 +198,14 @@
 
 
 
-
-                        <div class="formRow">
-                              <label>Multiple select:</label>
-                              <select id="aaa" multiple="multiple" class="chzn-select"></select>
-                              <div class="modal-body"></div>
-                        </div>
+                        <label class="label label-info">Filtro de Feedbacks</label>
+                        <select id="dataTable_status_select" multiple="multiple" class="chosenElement" >
+                        </select> 
 
 
 
-
+             <label class="label label-info">Nome da Coluna de Feedbacks</label>
+             <input id='coluna_feedback' type='text' value="FeedBacks" />
 
                         <label class="label label-info">Resultados</label>
                         <select id="dataTable_top_limit">

@@ -557,32 +557,17 @@ function   dataTable_top(data)
       //       7      update_time, 
       //       8      graph_type;
       //   9      Array[8]
+
       //0: id
       //1: id_wallboard
-      //2: codigo_query
-      //3: opcao_query
-      //4: tempo
-      //5: user
-      //6: user_group
-      //7: campaign_id
-      //8:linha_inbound
-      //9: mode
-      //10: status_feedback
-      //11: chamadas
+      //tempo
+      //campanha
+      //grupo_inbound
+      //grupo_user
+      //status_feedback
+      //limit
+      //custom_colum_name
       var wbe = data;
-
-
-      $.post("Requests.php", //get data top info
-              {action: "get_status_name", status: feedbacks_string},
-      function(data)
-      {
-
-      }
-      , "json");
-
-
-
-
 
 
       var feedbacks = wbe[9][0].status_feedback.split(',');
@@ -592,12 +577,12 @@ function   dataTable_top(data)
       panel.append($("<div>")
               .append($("<div>").addClass("grid-title")
               .append($("<div>").addClass("pull-left")
-              .text(feedbacks)))
+              .text(wbe[2])))
               .append($("<table>").css("heigth", "100%").css("width", "100%").addClass("table table-striped table-mod")
               .append($("<thead>")
               .append($("<tr>")
               .append($("<td>").text("Nome"))
-              .append($("<td>").text("Total Feedback"))
+              .append($("<td>").text(wbe[9][0].custom_colum_name))
               .append($("<td>").text("TMA"))
 
 
@@ -613,11 +598,11 @@ function   dataTable_top(data)
               );//fim da div
 
       var Opcao = 0;
-      if (wbe[9][0].campaign_id != "0")
+      if (wbe[9][0].campanha != "0")
             Opcao = 1;
-      if (wbe[9][0].user_group != "0")
+      if (wbe[9][0].grupo_user != "0")
             Opcao = 2;
-      if (wbe[9][0].linha_inbound != "0")
+      if (wbe[9][0].grupo_inbound != "0")
             Opcao = 3;
 
       var feedbacks_string = "";
@@ -631,53 +616,59 @@ function   dataTable_top(data)
             feedbacks_string = "status='" + feedbacks[0] + "'";
 
 
+
+
       $.post("Requests.php",
-              {action: "get_status_name", status: feedbacks_string},
+              {action: "5", status: feedbacks_string, opcao: Opcao, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campanha, user_group: wbe[9][0].grupo_user, linha_inbound: wbe[9][0].grupo_inbound, limit: wbe[9][0].limit},
       function(data)
       {
-
-
-
-
-            $.post("Requests.php",
-                    {action: "5", status: feedbacks_string, opcao: Opcao, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campaign_id, user_group: wbe[9][0].user_group, linha_inbound: wbe[9][0].linha_inbound, limit: wbe[9][0].param2},
-            function(data)
+            if (data === null)
             {
-                  if (data === null)
-                  {
-                        clearTimeout(updation);
-                        painel.remove();
-                        $("#" + wbe[0] + "Main").remove();
-                        $.jGrowl("O LALALALALALA gráfico de Barras " + wbe[1] + " não apresenta resultados", {life: 10000});
-                        return false;
-                  }
-
-
-
-                  var tbody = $("#tbody_id" + wbe[0]);
-
-
-                  var letter_size = 18;
-                  $.each(data, function(index, value) {
-
-
-                        var minutes = Math.floor(data[index].tma / 60);
-                        var seconds = data[index].tma - minutes * 60;
-
-
-                        tbody.append($("<tr>").css("font-size", letter_size + "px")
-                                .append($("<td>").text(data[index].user))//fim do td)
-                                .append($("<td>").text(data[index].count_feedbacks))
-                                .append($("<td>").text(minutes + ":" + seconds))
-                                );//fim do tr 
-                        letter_size--;
-
-
-                  });
+                  clearTimeout(updation);
+                  painel.remove();
+                  $("#" + wbe[0] + "Main").remove();
+                  $.jGrowl("O LALALALALALA gráfico de Barras " + wbe[1] + " não apresenta resultados", {life: 10000});
+                  return false;
             }
-            , "json");
+
+
+
+            var tbody = $("#tbody_id" + wbe[0]);
+
+
+            var letter_size = 18;
+            $.each(data, function(index, value) {
+
+
+
+
+//calculo do TMA de segundos para hora:minuto:segundo
+                  var totalSec = data[index].tma;
+                  var hours = parseInt(totalSec / 3600) % 24;
+                  var minutes = parseInt(totalSec / 60) % 60;
+                  var seconds = totalSec % 60;
+                  if (hours === 0)
+                        var result = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+                  else if (minutes === 0 && hours === 0)
+                        var result = (seconds < 10 ? "0" + seconds : seconds);
+                  else
+                        var result = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+
+
+
+
+                  tbody.append($("<tr>").css("font-size", letter_size + "px")
+                          .append($("<td>").text(data[index].user))//fim do td)
+                          .append($("<td>").text(data[index].count_feedbacks))
+                          .append($("<td>").text(result))
+                          );//fim do tr 
+                  letter_size--;
+
+
+            });
       }
       , "json");
+
 
       /*dataTable
        // top 

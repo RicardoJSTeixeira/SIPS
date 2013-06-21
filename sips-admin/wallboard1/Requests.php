@@ -41,6 +41,8 @@ switch ($action) {
     case 'remove_Layout':
         $query = "DELETE  WallBoard_Dataset1 FROM WallBoard_Dataset1 inner join WallBoard1 on WallBoard_Dataset1.id_wallboard=WallBoard1.id WHERE WallBoard1.id_layout=$id_layout";
         $query = mysql_query($query, $link) or die(mysql_error());
+        $query = "DELETE  WallBoard_DataTop1 FROM WallBoard_DataTop1 inner join WallBoard1 on WallBoard_DataTop1.id_wallboard=WallBoard1.id WHERE WallBoard1.id_layout=$id_layout";
+        $query = mysql_query($query, $link) or die(mysql_error());
         $query = "DELETE FROM WallBoard1 WHERE id_layout=$id_layout";
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "DELETE FROM WallBoard_Layout1 WHERE id=$id_layout";
@@ -75,16 +77,17 @@ switch ($action) {
 
 
 
-    case 'insert_wbe':
-
+    case 'insert_dataTop':
+        $query = "INSERT INTO WallBoard1 (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('Tabela de Top',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
+        $query = mysql_query($query, $link) or die(mysql_error());
         $query = "INSERT INTO `asterisk`.`WallBoard_DataTop1` (`id`, `id_wallboard`, `tempo`, `campanha`, `grupo_inbound`, `grupo_user`, `status_feedback`, `limit`, `custom_colum_name`)
-            VALUES(NULL, $id_wallboard, $tempo, '$campanha', '$grupo_inbound', '$grupo_user', '$status_feedback', '$limit', '$custom_colum_name')";
+            VALUES(NULL,LAST_INSERT_ID() , $tempo, '$campanha', '$grupo_inbound', '$grupo_user', $status_feedback, '$limit', '$custom_colum_name')";
         $query = mysql_query($query, $link) or die(mysql_error());
 
         echo json_encode(array(1));
         break;
 
-        
+
 
 
     case 'edit_WBE':
@@ -94,10 +97,13 @@ switch ($action) {
         break;
 
     case 'delete_WBE':
-        $query = "DELETE FROM WallBoard1 WHERE id=$id";
-        $query = mysql_query($query, $link) or die(mysql_error());
         $query = "DELETE FROM WallBoard_Dataset1 WHERE id_wallboard=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
+        $query = "DELETE FROM WallBoard_DataTop1 WHERE id_wallboard=$id";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        $query = "DELETE FROM WallBoard1 WHERE id=$id";
+        $query = mysql_query($query, $link) or die(mysql_error());
+
         echo json_encode(array(1));
         break;
 
@@ -106,17 +112,29 @@ switch ($action) {
         $query = "SELECT * FROM  WallBoard1  where id_layout='$id_layout'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $query_dataset = "SELECT * FROM `WallBoard_Dataset1` WHERE `id_wallboard`='$row[id]'";
-            $query_dataset = mysql_query($query_dataset, $link) or die(mysql_error());
-            $dataset = array();
-            while ($row1 = mysql_fetch_assoc($query_dataset)) {
-                $query2 = "SELECT * FROM  WallBoard_Query1  where codigo=$row1[codigo_query]";
-                $query2 = mysql_query($query2, $link) or die(mysql_error());
-                $row2 = mysql_fetch_assoc($query2);
-                $dataset[] = array(id => $row1["id"], id_wallboard => $row1["id_wallboard"], codigo_query => $row1["codigo_query"], opcao_query => $row2["opcao_query"], tempo => $row1["tempo"], user => $row1["user"], user_group => $row1["user_group"], campaign_id => $row1["campaign_id"], linha_inbound => $row1["linha_inbound"], mode => $row1["mode"], status_feedback => $row1["status_feedback"], chamadas => $row1["chamadas"], param1 => $row1["param1"], param2 => $row1["param2"]);
+            if ($row["graph_type"] == "5") {
+                $query_dataset = "SELECT * FROM `WallBoard_DataTop1` WHERE `id_wallboard`='$row[id]'";
+                $query_dataset = mysql_query($query_dataset, $link) or die(mysql_error());
+                $dataset = array();
+                while ($row1 = mysql_fetch_assoc($query_dataset)) {
+                    $dataset[] = array(id => $row1["id"], id_wallboard => $row1["id_wallboard"], tempo => $row1["tempo"], campanha => $row1["campanha"], grupo_inbound => $row1["grupo_inbound"], grupo_user => $row1["grupo_user"], status_feedback => $row1["status_feedback"], limit => $row1["limit"], custom_colum_name => $row1["custom_colum_name"]);
+                }
+                $js[] = array(id => $row["id"], id_layout => $row["id_layout"], name => $row["name"], pos_x => $row["pos_x"], pos_y => $row["pos_y"], width => $row["width"], height => $row["height"], update_time => $row["update_time"], graph_type => $row["graph_type"], dataset => $dataset);
+            } else {
+                $query_dataset = "SELECT * FROM `WallBoard_Dataset1` WHERE `id_wallboard`='$row[id]'";
+                $query_dataset = mysql_query($query_dataset, $link) or die(mysql_error());
+                $dataset = array();
+                while ($row1 = mysql_fetch_assoc($query_dataset)) {
+                    $query2 = "SELECT * FROM  WallBoard_Query1  where codigo=$row1[codigo_query]";
+                    $query2 = mysql_query($query2, $link) or die(mysql_error());
+                    $row2 = mysql_fetch_assoc($query2);
+                    $dataset[] = array(id => $row1["id"], id_wallboard => $row1["id_wallboard"], codigo_query => $row1["codigo_query"], opcao_query => $row2["opcao_query"], tempo => $row1["tempo"], user => $row1["user"], user_group => $row1["user_group"], campaign_id => $row1["campaign_id"], linha_inbound => $row1["linha_inbound"], mode => $row1["mode"], status_feedback => $row1["status_feedback"], chamadas => $row1["chamadas"], param1 => $row1["param1"], param2 => $row1["param2"]);
+                }
+                $js[] = array(id => $row["id"], id_layout => $row["id_layout"], name => $row["name"], pos_x => $row["pos_x"], pos_y => $row["pos_y"], width => $row["width"], height => $row["height"], update_time => $row["update_time"], graph_type => $row["graph_type"], dataset => $dataset);
             }
-            $js[] = array(id => $row["id"], id_layout => $row["id_layout"], name => $row["name"], pos_x => $row["pos_x"], pos_y => $row["pos_y"], width => $row["width"], height => $row["height"], update_time => $row["update_time"], graph_type => $row["graph_type"], dataset => $dataset);
         }
+
+
         echo json_encode($js);
         break;
 
@@ -393,39 +411,6 @@ switch ($action) {
         echo json_encode($js);
         break;
 
-
-    case '5':
-
-
-
-        if ($opcao === "1")
-        //$query = "select   user,wait_sec,talk_sec,dispo_sec,pause_sec,lead_id,status,dead_sec from vicidial_agent_log where campaign_id='$campaign_id' and event_time between date_sub(now(), INTERVAL time_span hour) and now() group by user";
-            $query = "select user,sum(talk_sec) as talk_sec,count(status) as total_feedback,sum(dead_sec) as dead_sec from vicidial_agent_log where event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
-        if ($opcao === "2")
-            $query = "select user,wait_sec,talk_sec,dispo_sec,pause_sec,lead_id,status,dead_sec from vicidial_agent_log where user_group='$user_group' and event_time between date_sub(now(), INTERVAL time_span hour) and now()";
-        if ($opcao === "3")//linha inbound-> not done
-            $query = "select user,wait_sec,talk_sec,dispo_sec,pause_sec,lead_id,status,dead_sec from vicidial_agent_log where campaign_id='$campaign_id' and event_time between date_sub(now(), INTERVAL time_span hour) and now()";
-
-//muda as horas para ver os resultados desde "agora" ate a altura especificada aquando da criação do dataset
-        $round_numerator = 60 * 5;
-        $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
-        $rounded_time = date("Y-m-d H:i:s", $rounded_time);
-        $query = str_replace("now()", "'" . $rounded_time . "'", $query);
-        $query = str_replace("time_span", $tempo, $query);
-
-        $query = mysql_query($query) or die(mysql_error());
-
-
-        $tma_call = 0;
-        while ($row = mysql_fetch_assoc($query)) {
-            $tma_call = ($row["talk_sec"] - $row["dead_sec"]);
-            $js[] = array(user => $row["user"], tma => $tma_call, count_feedbacks => $row["total_feedback"]);
-        }
-
-
-        echo json_encode($js);
-        break;
-
     case 'get_agents':// Inbound agentes,campaign,status
         $query = $query_text;
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -445,14 +430,50 @@ switch ($action) {
         break;
 
 
-    case '5':// DataTable
-        $query = $selected_query;
-        $query = mysql_query($query, $link) or die(mysql_error());
+
+    case '5':
+
+
+
+        if ($opcao === "1")
+        //$query = "select   user,wait_sec,talk_sec,dispo_sec,pause_sec,lead_id,status,dead_sec from vicidial_agent_log where campaign_id='$campaign_id' and event_time between date_sub(now(), INTERVAL time_span hour) and now() group by user";
+            $query = "select user,sum(talk_sec) as talk_sec,count(status) as total_feedback,sum(dead_sec) as dead_sec from vicidial_agent_log where event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
+        if ($opcao === "2")
+            $query = "select user,sum(talk_sec) as talk_sec,count(status) as total_feedback,sum(dead_sec) as dead_sec from vicidial_agent_log where event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
+        if ($opcao === "3")//linha inbound-> not done
+            $query = "select user,sum(talk_sec) as talk_sec,count(status) as total_feedback,sum(dead_sec) as dead_sec from vicidial_agent_log where event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
+
+//muda as horas para ver os resultados desde "agora" ate a altura especificada aquando da criação do dataset
+        $round_numerator = 60 * 5;
+        $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
+        $rounded_time = date("Y-m-d H:i:s", $rounded_time);
+        $query = str_replace("now()", "'" . $rounded_time . "'", $query);
+        $query = str_replace("time_span", $tempo, $query);
+
+        $query = mysql_query($query) or die(mysql_error());
+
+
+
+        $tma_call = 0;
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(status_name => $row["var1"], count => $row["var2"]);
+
+
+            $query1 = "SELECT full_name FROM vicidial_users WHERE user='$row[user]'";
+
+            $query1 = mysql_query($query1) or die(mysql_error());
+            $row1 = mysql_fetch_assoc($query1);
+
+            $tma_call = ($row["talk_sec"] - $row["dead_sec"]);
+            $js[] = array(user => $row1["full_name"], tma => $tma_call, count_feedbacks => $row["total_feedback"]);
         }
+
+
         echo json_encode($js);
         break;
+
+
+
+
 
 //graficos-----------------------------------------
 //flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS -------------- 
@@ -503,14 +524,7 @@ switch ($action) {
         echo json_encode($js);
         break;
 
-    case 'get_status_name':
-        $query = "SELECT status_name FROM `vicidial_campaign_statuses` where $status group by status";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            $js[] = $row["status_name"];
-        }
-        echo json_encode($js);
-        break;
+
 
 
 //flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------
