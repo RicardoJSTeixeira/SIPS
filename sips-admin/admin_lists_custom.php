@@ -1316,24 +1316,19 @@ for ($h=1;$max_rank[0]+1>=$h;$h++)
 		
 		$selected = "";
 		$selected1 = "";
-                
-                
-		if ($A_multi_position[$o] == "HORIZONTAL") {$selected = "selected";} else {$selected1 = "selected";} 
+
 		
-		echo "<tr><td>Posição da Opção asdasdasdasdasd</td><td colspan=4><select size=1 name=multi_position>\n";
+		if ($A_multi_position[$o] == "HORIZONTAL") {$selected = "selected";} else {$selected1 = "selected";}
+		
+		echo "<tr><td>Posição da Opção </td><td colspan=4><select size=1 name=multi_position>\n";
 		echo "<option $selected value=\"HORIZONTAL\">Horizontal</option>\n";
-		echo "<option $selected1 value=\"VERTICAL\">Vertical</option>\n";   
+		echo "<option $selected1 value=\"VERTICAL\">Vertical</option>\n";
 		echo "</select><td style=width:30px;>  $NWB#vicidial_lists_fields-multi_position$NWE </td></tr>\n";
-                
-                echo "<tr><td>Funcionalidades da Opção</td><td colspan=4><select size=1 name=multi_position>\n";
-		echo "<option value=\"\">&nbsp</option>\n";
-                echo "<option $selected value=\"HORIZONTAL\">Esconde o elemento abaixo</option>\n";
-		echo "</select><td style=width:30px;>  $NWB#vicidial_lists_fields-multi_position$NWE </td></tr>\n"; 
 		
 		echo "<tr><td>Opções do Campo</td><td colspan=4><textarea style=height:125px name=field_options ROWS=5 COLS=60>$A_field_options[$o]</textarea><td style=width:30px;>  $NWB#vicidial_lists_fields-field_options$NWE </td></tr>\n";
 		
 		echo "<tr><td>Tamanho do Campo</td><td colspan=4><input type=text name=field_size size=5 maxlength=3 value=\"$A_field_size[$o]\"><td style=width:30px;>  $NWB#vicidial_lists_fields-field_size$NWE </td></tr>\n";
-                
+		
 		echo "<tr><td>Tamanho Máximo</td><td colspan=4><input type=text name=field_max size=5 maxlength=3 value=\"$A_field_max[$o]\"><td style=width:30px;>  $NWB#vicidial_lists_fields-field_max$NWE </td></tr>\n";
 		
 		echo "<tr><td>Valor por Defeito</td><td colspan=4><input type=text name=field_default size=50 maxlength=255 value=\"$A_field_default[$o]\"><td style=width:30px;>  $NWB#vicidial_lists_fields-field_default$NWE </td></tr>\n";
@@ -1469,10 +1464,7 @@ if ($navigation == "novo")
 	echo "<option value=\"VERTICAL\">Vertical</option>\n";
 	echo "</select><td style=width:30px;>  $NWB#vicidial_lists_fields-multi_position$NWE </td></tr>\n";
 	
-	echo "<tr><td>Funcionalidades da Opção</td><td colspan=4><select size=1 name=multi_position>\n";
-		echo "<option value=\"\">&nbsp</option>\n";
-                echo "<option $selected value=\"HORIZONTAL\">Esconde o elemento abaixo</option>\n";
-		echo "</select><td style=width:30px;>  $NWB#vicidial_lists_fields-multi_position$NWE </td></tr>\n";
+	
 	
 	
 	
