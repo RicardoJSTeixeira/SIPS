@@ -568,7 +568,7 @@ function   dataTable_top(data)
       //limit
       //custom_colum_name
       var wbe = data;
-
+   var updation;
 
       var feedbacks = wbe[9][0].status_feedback.split(',');
 
@@ -615,61 +615,67 @@ function   dataTable_top(data)
       else
             feedbacks_string = "status='" + feedbacks[0] + "'";
 
+//////////TESTAR MANDAR STATUS A 1 CASO SEJA ALL DO OUTRO LADO
 
-
-
-      $.post("Requests.php",
-              {action: "5", status: feedbacks_string, opcao: Opcao, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campanha, user_group: wbe[9][0].grupo_user, linha_inbound: wbe[9][0].grupo_inbound, limit: wbe[9][0].limit},
-      function(data)
+      get_values_inbound();
+      function get_values_inbound()
       {
-            if (data === null)
+            $.post("Requests.php",
+                    {action: "5", status: feedbacks_string, opcao: Opcao, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campanha, user_group: wbe[9][0].grupo_user, linha_inbound: wbe[9][0].grupo_inbound, limit: wbe[9][0].limit},
+            function(data)
             {
-                  clearTimeout(updation);
-                  painel.remove();
-                  $("#" + wbe[0] + "Main").remove();
-                  $.jGrowl("O LALALALALALA gráfico de Barras " + wbe[1] + " não apresenta resultados", {life: 10000});
-                  return false;
-            }
+                  if (data === null)
+                  {
+                     if(updation!="")
+                        clearTimeout(updation);
+                        panel.remove();
+                        $("#" + wbe[0] + "Main").remove();
+                        $.jGrowl("A tabela" + wbe[2] + " não apresenta resultados", {life: 10000});
+                        return false;
+                  }
 
 
 
-            var tbody = $("#tbody_id" + wbe[0]);
+                  var tbody = $("#tbody_id" + wbe[0]);
+                  tbody.empty();
 
-
-            var letter_size = 18;
-            $.each(data, function(index, value) {
+                  var letter_size = 18;
+                  $.each(data, function(index, value) {
 
 
 
 
 //calculo do TMA de segundos para hora:minuto:segundo
-                  var totalSec = data[index].tma;
-                  var hours = parseInt(totalSec / 3600) % 24;
-                  var minutes = parseInt(totalSec / 60) % 60;
-                  var seconds = totalSec % 60;
-                  if (hours === 0)
-                        var result = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
-                  else if (minutes === 0 && hours === 0)
-                        var result = (seconds < 10 ? "0" + seconds : seconds);
-                  else
-                        var result = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+                        var totalSec = data[index].tma;
+                        var hours = parseInt(totalSec / 3600) % 24;
+                        var minutes = parseInt(totalSec / 60) % 60;
+                        var seconds = totalSec % 60;
+                        if (hours === 0)
+                              var result = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+                        else if (minutes === 0 && hours === 0)
+                              var result = (seconds < 10 ? "0" + seconds : seconds);
+                        else
+                              var result = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
 
 
 
 
-                  tbody.append($("<tr>").css("font-size", letter_size + "px")
-                          .append($("<td>").text(data[index].user))//fim do td)
-                          .append($("<td>").text(data[index].count_feedbacks))
-                          .append($("<td>").text(result))
-                          );//fim do tr 
-                  letter_size--;
+                        tbody.append($("<tr>").css("font-size", letter_size + "px")
+                                .append($("<td>").text(data[index].user))//fim do td)
+                                .append($("<td>").text(data[index].count_feedbacks))
+                                .append($("<td>").text(result))
+                                );//fim do tr 
+                        letter_size--;
 
 
-            });
+                  });
+            }
+            , "json");
+
+            updation = setTimeout(get_values_inbound, wbe[7]);
+
+
       }
-      , "json");
-
-
       /*dataTable
        // top 
        //5 ou 10

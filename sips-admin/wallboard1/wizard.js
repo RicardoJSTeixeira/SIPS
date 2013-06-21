@@ -156,7 +156,7 @@ $(function() {
             var id = $(this).data("wbe_id");
             sql_basic('delete_WBE', 0, id);
             $("#" + id + "WBE").remove();
-            load_dados('wbe', idLayout);
+
       });
       $(document).on("click", ".add_dataset_button", function(e) {
             $("div.dialogButtons div button:nth-child(2)").text("criar");//alterar texto do botao;                                 
@@ -254,7 +254,28 @@ $(function() {
             load_dados("wbe", idLayout);
       });
 
+
+
+      $(document).on("click", "#checkbox_feedback", function(e) {
+
+            if (this.checked)
+            {
+                  $("#dataTable_status_select_div").css("display", "none");
+
+            }
+            else
+                  $("#dataTable_status_select_div").css("display", "inline-block");
+      });
+
+
+
+
+
+
+
       $(document).on("click", ".add_dataTop_button", function(e) {
+
+            $('#dataTop_name').val('Tabela Top');
             $('.chosenElement').val('').trigger('liszt:updated');
             $("#dialog_dataTable").dialog("open");
       });
@@ -530,23 +551,33 @@ $(function() {
                   },
                   "Criar": function() {
 
-                        var feedbacks = $("#dataTable_status_select").val();
-                        if (!$("#dataTable_status_select").val())
+
+
+
+                        if (!$("#dataTable_status_select").val() && !($("#checkbox_feedback").prop('checked')))
                               alert("Não escolheu nenhum feedback");
                         else
                         {
-                            
+
+                              if ($("#checkbox_feedback").prop('checked'))
+                                    var feedbacks = 1;
+                              else
+                                    var feedbacks = $("#dataTable_status_select").val();
+
                               feedbacks = "'" + feedbacks + "'";
+
+
+
                               switch ($("#dataTable_opcao").val())
                               {
                                     case "1":
-                                          manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), $("#campaign_id_dataTable").val(), 0, 0, feedbacks, $("#dataTable_top_limit").val(), $("#coluna_feedback").val(), 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, 0, 0);
+                                          manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), $("#campaign_id_dataTable").val(), 0, 0, feedbacks, $("#dataTable_top_limit").val(), $("#coluna_feedback").val(), 0, $("#dataTop_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, 0, 0);
                                           break;
                                     case "2":
-                                          manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), 0, $("#grupo_inbound_dataTable").val(), 0, feedbacks, $("#dataTable_top_limit").val(), $("#coluna_feedback").val(), 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, 0, 0);
+                                          manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), 0, $("#grupo_inbound_dataTable").val(), 0, feedbacks, $("#dataTable_top_limit").val(), $("#coluna_feedback").val(), 0, $("#dataTop_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, 0, 0);
                                           break;
                                     case "3":
-                                          manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), 0, 0, $("#grupo_user_dataTable").val(), feedbacks, $("#dataTable_top_limit").val(), $("#coluna_feedback").val(), 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, 0, 0);
+                                          manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), 0, 0, $("#grupo_user_dataTable").val(), feedbacks, $("#dataTable_top_limit").val(), $("#coluna_feedback").val(), 0, $("#dataTop_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, 0, 0);
                                           break;
                               }
 
@@ -769,7 +800,7 @@ function update_wbe()
                           .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
                           .append($("<i>").addClass("icon-remove")))
                           ))
-                          .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0])
+                          .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0]).text(wbes[i][9][0].custom_colum_name)
 
 
                           ));
@@ -948,6 +979,15 @@ function sql_basic(opcao, id_layout, id_wbe)
 
 
             }
+
+            if (opcao === "delete_WBE")
+            {
+                  load_dados('wbe', idLayout);
+
+            }
+
+
+
       }, "json");
 }
 //wallboard

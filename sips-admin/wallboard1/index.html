@@ -57,6 +57,12 @@
                   {
                         min-width: 926px;
                   }
+
+                  .visible
+                  {
+                        display:inline-block!important;
+                  }
+
                   #MainLayout
                   {
                         position:absolute;
@@ -181,6 +187,10 @@
 
                   <!--DIALOG DOS dataTables-->
                   <div id="dialog_dataTable" title="Criação de Tabelas Top" >
+
+                        <label class="label label-info">Nome da tabela</label>
+                        <input id='dataTop_name' type='text' value="Tabela Top"  />
+
                         <label class="label label-info">Escolher por:</label>
                         <select id="dataTable_opcao">
                               <option value="1" >Campanha</option>
@@ -195,24 +205,21 @@
 
                               <select id="grupo_user_dataTable"></select>
                         </div>
-
-
-
                         <label class="label label-info">Filtro de Feedbacks</label>
+                        <input type="checkbox" name="checkbox" id="checkbox_feedback" value="1" class="visible" />Todos os feedbacks
+                        <div id="dataTable_status_select_div">
                         <select id="dataTable_status_select" multiple="multiple" class="chosenElement" >
                         </select> 
+</div>
+                        
 
 
-
-             <label class="label label-info">Nome da Coluna de Feedbacks</label>
-             <input id='coluna_feedback' type='text' value="FeedBacks" />
-
+                        <label class="label label-info">Nome da Coluna de Feedbacks</label>
+                        <input id='coluna_feedback' type='text' value="FeedBacks" />
                         <label class="label label-info">Resultados</label>
                         <select id="dataTable_top_limit">
                               <option value="5" >Top 5</option>
                               <option value="10" selected>Top 10</option>
-
-
                         </select> 
 
                         <label class="label label-info">Mostrar dados até:</label>
