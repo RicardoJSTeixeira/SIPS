@@ -455,7 +455,7 @@ else
 	echo "	</script>\n";
 	echo "	<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\">\n";
 	echo "</head>\n";
-	#echo "<BODY BGCOLOR=\"#" . $bgcolor . "\" marginheight=0 marginwidth=0 leftmargin=0 topmargin=0 onload=\"parent.document.getElementById('FORM_LOADED').value='1';\">";
+	echo "<BODY BGCOLOR=\"#" . $bgcolor . "\" marginheight=0 marginwidth=0 leftmargin=0 topmargin=0 onload=\"parent.document.getElementById('FORM_LOADED').value='1';\">";
 	echo "\n"; 
 	echo "<form action=./vdc_form_display.php method=POST name=form_custom_fields id=form_custom_fields>\n";
 	echo "<input type=hidden name=lead_id id=lead_id value=\"$lead_id\">\n";
