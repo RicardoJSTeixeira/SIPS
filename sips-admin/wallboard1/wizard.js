@@ -30,7 +30,29 @@
 
 //optimizar o window.open(mandar as cenas por array)
 //maneira de fazer multiselect no dataSet é pra ser optimizado
-//adicionar lista de items selecionados no dataSet
+
+
+
+/*
+ * 
+ * tarte
+ * divisao por feedbacks
+ * feedback por agentes(mostra agentes)
+ * 
+ *barras
+ * igual ao de linhas
+ * 
+ * 
+ */
+
+
+
+
+
+
+
+
+
 
 
 var wbes = [];
@@ -47,14 +69,13 @@ var layouts = [];
 var id_wallboard;
 var id_dataset;
 var edit_dataset = false;
-
 //FIM---VARIAVEIS GERAIS-----------------VARIAVEIS GERAIS--------VARIAVEIS GERAIS-----------------VARIAVEIS GERAIS-------FIM                 
 
 
 //-----------------FUNÇÕES DOS BUTTONS----------------------------
 $("#opcao_layout_button").click(function()
 {
-      $("div.dialogButtons div button:nth-child(2)").text("gravar");//alterar texto do botao;
+      $("div.dialogButtons div button:nth-child(2)").text("gravar"); //alterar texto do botao;
       $("#dialog_layout").dialog("open");
 });
 $("#add_layout_button").click(function()
@@ -102,15 +123,12 @@ $("#linhas_filtro").change(function()
                   break;
       }
 });
-
 $("#dataTable_opcao").change(function()
 {
       var select = $("#dataTable_opcao");
-
       var campaing = $("#campaign_id_dataTable");
       var grupo_inbound = $("#grupo_inbound_dataTable");
       var grupo_user = $("#grupo_user_dataTable");
-
       $("#campaign_id_dataTable").show();
       if (select.val() === "1")
       {
@@ -132,6 +150,45 @@ $("#dataTable_opcao").change(function()
       }
 
 });
+$("#pie_opcao").change(function()
+{
+      var select = $("#pie_opcao");
+      var campaing = $("#campaign_id_pie");
+      var grupo_inbound = $("#grupo_inbound_pie");
+      var grupo_user = $("#grupo_user_pie");
+      var user = $("#user_pie");
+      $("#campaign_id_pie").show();
+      if (select.val() === "1")
+      {
+            campaing.show();
+            grupo_inbound.hide();
+            grupo_user.hide();
+            user.hide();
+      }
+      if (select.val() === "3")
+      {
+            campaing.hide();
+            grupo_inbound.show();
+            grupo_user.hide();
+            user.hide();
+      }
+      if (select.val() === "2")
+      {
+            campaing.hide();
+            grupo_inbound.hide();
+            grupo_user.show();
+            user.hide();
+      }
+
+      if (select.val() === "4")
+      {
+            campaing.hide();
+            grupo_inbound.hide();
+            grupo_user.hide();
+            user.show();
+      }
+
+});
 //-----------------FUNÇÕES DOS BUTTONS----------------------------
 
 
@@ -139,27 +196,21 @@ $("#dataTable_opcao").change(function()
 // FUNÇÂO STARTER-----------------------------------------------------------------------------------------99999999----------------------------------------------------------------0000000000000000000000
 $(function() {
 
-
-
-
-
-
-      $('.chosenElement').chosen();
-
-
       $("#campaign_id_dataTable").show();
       $("#grupo_inbound_dataTable").hide();
       $("#grupo_user_dataTable").hide();
-
+      $("#campaign_id_pie").show();
+      $("#grupo_inbound_pie").hide();
+      $("#grupo_user_pie").hide();
+      $("#user_pie").hide();
       $(document).on("click", ".delete_button", function(e) {
 
             var id = $(this).data("wbe_id");
             sql_basic('delete_WBE', 0, id);
             $("#" + id + "WBE").remove();
-
       });
       $(document).on("click", ".add_dataset_button", function(e) {
-            $("div.dialogButtons div button:nth-child(2)").text("criar");//alterar texto do botao;                                 
+            $("div.dialogButtons div button:nth-child(2)").text("criar"); //alterar texto do botao;                                 
             if (wbes[ get_indice_wbe($(this).data("id"))][9].length >= 5)
             {
                   $.jGrowl('Capacidade de datasets por wallboard atingida (5 max).', {life: 6000});
@@ -174,17 +225,15 @@ $(function() {
             edit_dataset = true;
             id_dataset = $(this).data("dataset_id");
             id_wallboard = get_indice_wbe($(this).data("id"));
-            $("div.dialogButtons div button:nth-child(2)").text("gravar alterações");//alterar texto do botao;
+            $("div.dialogButtons div button:nth-child(2)").text("gravar alterações"); //alterar texto do botao;
             var a = 0;
-
             $(".graph_advance_option").hide();
             $(".option_filtro").hide();
-
             $.each(wbes[id_wallboard][9], function(index, value)
             {
                   if (wbes[id_wallboard][9][a].id == id_dataset)
                   {
-                        //Inbound,Outbound,Blended
+//Inbound,Outbound,Blended
 
                         if (wbes[id_wallboard][9][a].mode === "1")
                               $("#in_out_bound").val(1);
@@ -196,7 +245,6 @@ $(function() {
                         if (wbes[id_wallboard][9][a].user != 0)
                         {
                               $("#linhas_serie").val(1);
-
                               $("#user").val(wbes[id_wallboard][9][a].user);
                         }
                         else if (wbes[id_wallboard][9][a].user_group != 0)
@@ -236,56 +284,59 @@ $(function() {
                                     $("#chamadas").val(2);
                               if (wbes[id_wallboard][9][a].chamadas == "feitas")
                                     $("#chamadas").val(3);
-
                         }
                   }
 
                   a++;
             });
-
             manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
-
             $("#dialog_dataset_linhas").dialog("open");
-
       });
       $(document).on("click", ".delete_dataset_button", function(e) {
             manipulate_dataset("remove_dataset", $(this).data("dataset_id"), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
             load_dados("wbe", idLayout);
       });
-
-
-
       $(document).on("click", "#checkbox_feedback", function(e) {
 
             if (this.checked)
             {
                   $("#dataTable_status_select_div").css("display", "none");
-
             }
             else
                   $("#dataTable_status_select_div").css("display", "inline-block");
       });
+      $(document).on("click", "#checkbox_feedback_pie", function(e) {
 
-
-
-
-
-
-
+            if (this.checked)
+            {
+                  $("#pie_status_select_div").css("display", "none");
+            }
+            else
+                  $("#pie_status_select_div").css("display", "inline-block");
+      });
       $(document).on("click", ".add_dataTop_button", function(e) {
 
+            $('#coluna_feedback').val('Feedbacks');
             $('#dataTop_name').val('Tabela Top');
-            $('.chosenElement').val('').trigger('liszt:updated');
+            $('#dataTable_status_select').val('').trigger('liszt:updated');
             $("#dialog_dataTable").dialog("open");
       });
+      $(document).on("click", ".add_inbound_button", function(e) {
 
 
+            $("#dialog_inbound").dialog("open");
+      });
+      $(document).on("click", ".add_pie_button", function(e) {
 
-
-
-
-
+            $('#pie_name').val('Gráfico de Tarte');
+            $("#dialog_pie").dialog("open");
+      });
+      $(document).on("click", ".add_linhas_button", function(e) {
+            $("div.dialogButtons div button:nth-child(2)").text("Criar"); //alterar texto do botao;           
+            $("#graph_name").val("Gráfico Novo");
+            $("#dialog").dialog("open");
+      });
+ 
       //inicia os tooltips
       $("[data-t=tooltip]").tooltip({placement: "left", html: true});
       $("[data-t=tooltip-right]").tooltip({placement: "right", html: true});
@@ -314,7 +365,7 @@ $(function() {
             modal: true,
             buttons: {
                   "Cancelar": function() {
-                        $("div.dialogButtons div button:nth-child(2)").text("Criar");//alterar texto do botao;
+                        $("div.dialogButtons div button:nth-child(2)").text("Criar"); //alterar texto do botao;
                         $(this).dialog("close");
                   },
                   "Criar": function() {
@@ -327,18 +378,16 @@ $(function() {
                               return color;
                         }
                         var opcao = "insert_dataset";
-
                         if (edit_dataset) {
                               edit_dataset = false;
                               opcao = "edit_dataset";
-                              $("div.dialogButtons div button:nth-child(2)").text("Criar");//alterar texto do botao;
+                              $("div.dialogButtons div button:nth-child(2)").text("Criar"); //alterar texto do botao;
                         }
                         else
                         {
                               opcao = "insert_dataset";
                         }
                         var querie = [];
-
                         if ($("#linhas_filtro").val() === "1")
                               switch ($("#linhas_serie").val())
                               {
@@ -349,17 +398,17 @@ $(function() {
                                                 case "1":
                                                       //Chamadas atendidas por user
                                                       querie = get_query(1);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "atendidas", 0, 0);
+                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "atendidas", $("#user option:selected").text(), 0);
                                                       break;
                                                 case "2":
                                                       //Chamadas perdidas por user   
                                                       querie = get_query(2);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "perdidas", 0, 0);
+                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "perdidas", $("#user option:selected").text(), 0);
                                                       break;
                                                 case "3":
                                                       //Chamadas feitas por user 
                                                       querie = get_query(3);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "feitas", 0, 0);
+                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "feitas", $("#user option:selected").text(), 0);
                                                       break;
                                           }
                                           break;
@@ -370,17 +419,17 @@ $(function() {
                                                 case "1":
                                                       //Chamadas atendidas por user_group
                                                       querie = get_query(4);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "atendidas", 0, 0);
+                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "atendidas", $("#user_group option:selected").text(), 0);
                                                       break;
                                                 case "2":
                                                       //Chamadas perdidas por user_group   
                                                       querie = get_query(5);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "perdidas", 0, 0);
+                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "perdidas", $("#user_group option:selected").text(), 0);
                                                       break;
                                                 case "3":
                                                       //Chamadas feitas por user_group 
                                                       querie = get_query(6);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "feitas", 0, 0);
+                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "feitas", $("#user_group option:selected").text(), 0);
                                                       break;
                                           }
                                           break;
@@ -390,17 +439,17 @@ $(function() {
                                                 case "1":
                                                       //Chamadas atendidas por campanha
                                                       querie = get_query(7);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "atendidas", 0, 0);
+                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "atendidas",  $("#campaign option:selected").text(), 0);
                                                       break;
                                                 case "2":
                                                       //Chamadas perdidas por campanha   
                                                       querie = get_query(8);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "perdidas", 0, 0);
+                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "perdidas", $("#campaign option:selected").text(), 0);
                                                       break;
                                                 case "3":
                                                       //Chamadas feitas por campanha 
                                                       querie = get_query(9);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "feitas", 0, 0);
+                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "feitas", $("#campaign option:selected").text(), 0);
                                                       break;
                                           }
                                           break;
@@ -410,17 +459,17 @@ $(function() {
                                                 case "1":
                                                       //Chamadas atendidas por Total CallCenter
                                                       querie = get_query(10);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "atendidas", 0, 0);
+                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "atendidas", "total call center", 0);
                                                       break;
                                                 case "2":
                                                       //Chamadas perdidas por Total CallCenter  
                                                       querie = get_query(11);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "perdidas", 0, 0);
+                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "perdidas", "total call center", 0);
                                                       break;
                                                 case "3":
                                                       //Chamadas feitas por Total CallCenter 
                                                       querie = get_query(12);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "feitas", 0, 0);
+                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "feitas", "total call center", 0);
                                                       break;
                                           }
                                           break;
@@ -430,17 +479,17 @@ $(function() {
                                                 case "1":
                                                       //Chamadas atendidas por Inbound
                                                       querie = get_query(18);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "atendidas", 0, 0);
+                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "atendidas",  $("#inbound option:selected").text(), 0);
                                                       break;
                                                 case "2":
                                                       //Chamadas perdidas por Inbound   
                                                       querie = get_query(19);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "atendidas", 0, 0);
+                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "atendidas", $("#inbound option:selected").text(), 0);
                                                       break;
                                                 case "3":
                                                       //Chamadas feitas por Inbound 
                                                       querie = get_query(20);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "atendidas", 0, 0);
+                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "atendidas", $("#inbound option:selected").text(), 0);
                                                       break;
                                           }
                                           break;
@@ -462,7 +511,6 @@ $(function() {
                                     case "3":
                                           //feedback por campanha
                                           querie = get_query(15);
-
                                           manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
                                           break;
                                     case "4":
@@ -474,7 +522,6 @@ $(function() {
                                           //feedback por linha inbound
                                           querie = get_query(17);
                                           manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
-
                                           break;
                               }
 
@@ -495,8 +542,6 @@ $(function() {
                   },
                   "Sim": function() {
                         sql_basic("remove_Layout", idLayout);
-
-
                         $(this).dialog("close");
                   }
 
@@ -533,7 +578,6 @@ $(function() {
                   "Criar": function() {
 
                         manipulate_graph("insert_wbe", 0, "Estatistica", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 4, $("#group_inbound_select").val(), $("#group_inbound_select option:selected").text());
-
                         $(this).dialog("close");
                   }
             }
@@ -542,7 +586,7 @@ $(function() {
             dialogClass: 'dialogButtons',
             autoOpen: false,
             resizable: false,
-            height: 500,
+            height: 650,
             width: 280,
             modal: true,
             buttons: {
@@ -563,11 +607,7 @@ $(function() {
                                     var feedbacks = 1;
                               else
                                     var feedbacks = $("#dataTable_status_select").val();
-
                               feedbacks = "'" + feedbacks + "'";
-
-
-
                               switch ($("#dataTable_opcao").val())
                               {
                                     case "1":
@@ -586,11 +626,58 @@ $(function() {
                   }
             }
       });
+      $("#dialog_pie").dialog({
+            dialogClass: 'dialogButtons',
+            autoOpen: false,
+            resizable: false,
+            height: 450,
+            width: 280,
+            modal: true,
+            buttons: {
+                  "Cancelar": function() {
+                        $(this).dialog("close");
+                  },
+                  "Criar": function() {
+
+
+                        var feedbacks = "";
+                        if (!$("#pie_status_select").val() && !($("#checkbox_feedback_pie").prop('checked')))
+                              alert("Não escolheu nenhum feedback");
+                        else
+                        {
+
+                              if ($("#checkbox_feedback_pie").prop('checked'))
+                                    feedbacks = 1;
+                              else
+                                    feedbacks = $("#pie_status_select").val();
+                              feedbacks = "'" + feedbacks + "'";
+
+                              switch ($("#pie_opcao").val())
+                              {
+                                    case "1":
+                                          manipulate_pie("insert_pie", 0, 0, 1, "Gráfico de Tarte", $("#pie_timespan").val(), 0, 0, $("#campaign_id_pie option:selected").val(), 0, 0, feedbacks, 0, $("#campaign_id_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 4450, 242, idLayout, 10000, 3);
+                                          break;
+                                    case "2":
+                                          manipulate_pie("insert_pie", 0, 0, 2, "Gráfico de Tarte", $("#pie_timespan").val(), 0, $("#grupo_user_pie option:selected").val(), 0, 0, 0, feedbacks, 0, $("#grupo_user_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
+                                          break;
+                                    case "3":
+                                          manipulate_pie("insert_pie", 0, 0, 3, "Gráfico de Tarte", $("#pie_timespan").val(), 0, 0, 0, $("#grupo_inbound_pie option:selected").val(), 0, feedbacks, 0, $("#group_inbound_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
+                                          break;
+                                    case "4":
+                                          manipulate_pie("insert_pie", 0, 0, 4, "Gráfico de Tarte", $("#pie_timespan").val(), $("#user_pie option:selected").val(), 0, 0, 0, 0, feedbacks, 0, $("#user_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
+                                          break;
+                              }
+                              ;
+                              $(this).dialog("close");
+                        }
+                  }
+            }
+      });
       $("div.dialogButtons div button:nth-child(1)").addClass("btn btn"); //classe dos botoes das dialogs
       $("div.dialogButtons div button:nth-child(2)").addClass("btn btn-primary");
       $(".diablog_opener").click(function() {
-            dialog_opener();
-            $("#dialog").dialog("open");
+
+
       });
       $(".diablog_opener_inbound").click(function() {
             $("#dialog_inbound").dialog("open");
@@ -625,30 +712,6 @@ function get_query(codigo)
       return querie;
 }
 
-function dialog_opener()
-{
-      $("div.dialogButtons div button:nth-child(2)").text("Criar");//alterar texto do botao;                  
-      $("#graph_name").val("Gráfico Novo");
-      $(".graph_advance_option").hide(); //esconde a classe e so mostra por id(em baixo)
-
-      //linhas
-      if (selected_type_graph === 1) {
-            $("#gao_user").show();
-            $("#gao_chamadas").show();
-      }
-      //bar
-      if (selected_type_graph === 2) {
-            manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, selected_type_graph, 0, 0, 0);
-            $("#gao_status").show();
-            $("#gao_userGroup").show();
-      }
-      //pie
-      if (selected_type_graph === 3) {
-            manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, selected_type_graph, 0, 0, 0);
-            $("#gao_campaign").show();
-      }
-
-}
 
 function fullScreen()
 {
@@ -784,7 +847,6 @@ function update_wbe()
                           .append($("<i>").addClass("icon-remove")))
                           ))
                           .append($("<div>").addClass("grid-content").attr("id", "grid_content")));
-
             }
             else if (wbes[i][8] === "5")//dataTop
             {
@@ -804,7 +866,25 @@ function update_wbe()
 
 
                           ));
+            }
+            else if (wbes[i][8] === "3")//Pie
+            {
+                  ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
+                          .css("left", wbes[i][3] + "px")
+                          .css("top", wbes[i][4] + "px")
+                          .css("width", wbes[i][5] + "px")
+                          .css("height", wbes[i][6] + "px")
+                          .append($("<div>").addClass("grid-title")
+                          .append($("<div>").addClass("pull-left")
+                          .text(wbes[i][2]))
+                          .append($("<div>").addClass("pull-right")
+                          .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
+                          .append($("<i>").addClass("icon-remove")))
+                          ))
+                          .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0]).text(wbes[i][9][0].param1)
 
+
+                          ));
             }
             else//Resto
             {
@@ -839,8 +919,6 @@ function update_wbe()
                                 .append($("<a>").attr("href", "#").addClass("delete_dataset_button").data("dataset_id", wbes[i][9][a].id)
                                 .append($("<i>").addClass("icon-trash").text(" Eliminar dataset"))))
                                 ))));
-
-
                         a++;
                   });
             }
@@ -859,7 +937,7 @@ function update_wbe()
                         maxWidth: 880,
                         minHeight: 240,
                         minWidth: 245, stop: check_save});
-            } else
+            } else if (wbes[i][8] == "3")
             {
 
                   painel.resizable({
@@ -868,6 +946,16 @@ function update_wbe()
                         maxWidth: 880,
                         minHeight: 240,
                         minWidth: 245, stop: check_save});
+            }
+            else
+            {
+                  painel.resizable({
+                        containment: "#MainLayout",
+                        maxHeight: 480,
+                        maxWidth: 880,
+                        minHeight: 240,
+                        minWidth: 450, stop: check_save});
+
             }
             i++;
       }
@@ -893,7 +981,7 @@ function update_dropbox_layout()
 
 //---Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados---
 
-function manipulate_dataset(Opcao, Id, id_Wallboard, Codigo_query, Opcao_query, Tempo, User, User_group, Campaign_id, Linha_inbound, Mode, Status_feedback, Chamadas, Param1)
+function manipulate_dataset(Opcao, Id, id_Wallboard, Codigo_query, Opcao_query, Tempo, User, User_group, Campaign_id, Linha_inbound, Mode, Status_feedback, Chamadas, Param1, Param2)
 {
       $.post("Requests.php", {action: Opcao, id: Id, id_wallboard: id_Wallboard, codigo_query: Codigo_query, opcao_query: Opcao_query, tempo: Tempo, user: User, user_group: User_group, campaign_id: Campaign_id, linha_inbound: Linha_inbound, mode: Mode, status_feedback: Status_feedback, chamadas: Chamadas, param1: Param1},
       function(data)
@@ -976,14 +1064,11 @@ function sql_basic(opcao, id_layout, id_wbe)
                         }
                         i++;
                   });
-
-
             }
 
             if (opcao === "delete_WBE")
             {
                   load_dados('wbe', idLayout);
-
             }
 
 
@@ -1010,12 +1095,10 @@ function manipulate_graph(Opcao, Id, Name, Pos_x, Pos_y, Width, Height, id_Layou
                   $.each(data, function(index, value) {
                         queries.push([this.id, this.query_text_inbound, this.query_text_outbound, this.query_text_blended, this.opcao_query, this.type_query, this.codigo]);
                   });
-
             }
 
             if (Opcao === "insert_wbe")
                   load_dados("wbe", idLayout);
-
       }, "json");
 }
 
@@ -1028,7 +1111,39 @@ function manipulate_dataTable_top(Opcao, Id_wallboard, Tempo, Campanha, Grupo_in
       {
             if (Opcao === "insert_dataTop")
                   load_dados("wbe", idLayout);
+      }, "json");
+}
 
+function manipulate_pie(Opcao, Id, id_Wallboard, Codigo_query, Opcao_query, Tempo, User, User_group, Campaign_id, Linha_inbound, Mode, Status_feedback, Chamadas, Param1, Param2, Name, Pos_x, Pos_y, Width, Height, id_Layout, Update_time, Graph_type)
+{
+
+      $.post("Requests.php", {action: Opcao,
+            id: Id,
+            id_wallboard: id_Wallboard,
+            codigo_query: Codigo_query,
+            opcao_query: Opcao_query,
+            tempo: Tempo,
+            user: User,
+            user_group: User_group,
+            campaign_id: Campaign_id,
+            linha_inbound: Linha_inbound,
+            mode: Mode,
+            status_feedback: Status_feedback,
+            chamadas: Chamadas,
+            param1: Param1,
+            param2: Param2,
+            name: Name,
+            pos_x: Pos_x,
+            pos_y: Pos_y,
+            width: Width,
+            height: Height,
+            id_layout: id_Layout,
+            update_time: Update_time,
+            graph_type: Graph_type},
+      function(data)
+      {
+            if (Opcao === "insert_pie")
+                  load_dados("wbe", idLayout);
       }, "json");
 }
 
@@ -1088,62 +1203,55 @@ function flot_extra(opcao)
       {
             if (opcao === "user")
             {
-                  var object = $("#user");
-                  object.empty();
+
+                  var object = $([]).add($("#user")).add($("#user_pie"));
                   $.each(data, function(index, value) {
                         object.append(new Option(value, value));
                   });
             }
             if (opcao === "user_group")
             {
-                  var object = $("#user_group");
-                  var object1 = $("#grupo_user_dataTable");
-                  object.empty();
+
+
+                  var object = $([]).add($("#user_group")).add($("#grupo_user_dataTable")).add($("#grupo_user_pie"));
                   $.each(data, function(index, value) {
-                        object.append(new Option(value, value));
-                        object1.append(new Option(value, value));
+                        if (value !== "") {
+                              object.append(new Option(value, value));
+                        }
                   });
             }
 
             if (opcao === "campaign")
             {
-                  var object = $("#campaign");
-                  var object1 = $("#campaign_id_dataTable");
+
+
+                  var object = $([]).add($("#campaign")).add($("#campaign_id_dataTable")).add($("#campaign_id_pie"));
                   $.each(data, function(index, value) {
                         object.append(new Option(this.campaign_name, this.campaign_id));
-                        object1.append(new Option(this.campaign_name, this.campaign_id));
                   });
             }
             if (opcao === "status_venda")
             {
+
                   var object = $("#status_venda");
                   var object1 = $("#dataTable_status_select");
-
+                  var object2 = $("#pie_status_select");
                   $.each(data, function(index, value) {
                         object.append(new Option(this.status_t, this.status_v));
                         object1.append('<option value="' + this.status_v + '">' + this.status_t + '</option>');
-
+                        object2.append('<option value="' + this.status_v + '">' + this.status_t + '</option>');
                   });
-                  object1.trigger('liszt:updated');
+                  object1.chosen({no_results_text: "Não foi encontrado."});
+                  object2.chosen({no_results_text: "Não foi encontrado."});
             }
 
 
             if (opcao === "inbound")
             {
-                  var object = $([]).add($("#group_inbound_select")).add($("#inbound")).add($("#grupo_inbound_dataTable"));
-
+                  var object = $([]).add($("#group_inbound_select")).add($("#inbound")).add($("#grupo_inbound_dataTable")).add($("#grupo_inbound_pie"));
                   $.each(data, function(index, value) {
                         object.append(new Option(this.name, this.id));
                   });
-
-
-
-
-
-
-
-
-
             }
       }, "json");
 }
