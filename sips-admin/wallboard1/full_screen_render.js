@@ -32,21 +32,25 @@ $(document).ready(function() {
                           .append($("<div>").addClass("grid-content").attr("id", wbes[i][0] + "WBEGD")
                           .append($("<div>").attr("id", wbes[i][0] + "WBE").attr("style", "width:" + (width - 20) + "px;height:" + (height - 75) + "px;padding: 0px;").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbes[i][7] / 1000) + " seg.")))
                           );
-                  if (wbes[i][8] == 1)//update
+                  if (wbes[i][8] === "1")//update
                   {
                         plot_update(wbes[i]);
                   }
-                  if (wbes[i][8] == 2)//bar
+                  if (wbes[i][8] === "2")//bar
                   {
                         plot_bar(wbes[i]);
                   }
-                  if (wbes[i][8] == 3)//pie
+                  if (wbes[i][8] === "3")//pie
                   {
                         plot_pie(wbes[i]);
                   }
-                  if (wbes[i][8] == 4)//Inbound stuff
+                  if (wbes[i][8] === "4")//Inbound stuff
                   {
                         inbound_wallboard(wbes[i]);
+                  }
+                  if (wbes[i][8] === "5")//DataTable top
+                  {
+                        dataTable_top(wbes[i]);
                   }
                   i++;
             });
@@ -169,8 +173,6 @@ function plot_update(data)
 
 
 
-
-
       function get_values_update()
       {
 
@@ -219,7 +221,7 @@ function plot_update(data)
                                     {
                                           result = [];
                                           information.push({data: result, label: "Sem resultados"});
-                                          $.jGrowl("A Linha " + wbe[9][aux].opcao_query + " do grafico " + wbe[2] + " não apresenta resultados", {life: 3000});
+                                          $.jGrowl("A Linha " + wbe[9][aux].opcao_query + " do grafico " + wbe[2] + " não apresenta resultados", {life: 5000});
                                           verifier = 0;
 
 
@@ -542,8 +544,173 @@ function   inbound_wallboard(data)
 }
 //øøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøø
 
+function   dataTable_top(data)
+{
+      //--------------wbes
+      //0      id,
+      // 1       id_layout,
+      //   2      name,
+      //     3     pos_x, 
+      //       4   pos_y,
+      //       5    width, 
+      //       6    height,
+      //       7      update_time, 
+      //       8      graph_type;
+      //   9      Array[8]
+
+      //0: id
+      //1: id_wallboard
+      //tempo
+      //campanha
+      //grupo_inbound
+      //grupo_user
+      //status_feedback
+      //limit
+      //custom_colum_name
+      var wbe = data;
+   var updation;
+
+      var feedbacks = wbe[9][0].status_feedback.split(',');
+
+      var panel = $("#" + wbe[0] + "Main");
+      panel.empty();
+      panel.append($("<div>")
+              .append($("<div>").addClass("grid-title")
+              .append($("<div>").addClass("pull-left")
+              .text(wbe[2])))
+              .append($("<table>").css("heigth", "100%").css("width", "100%").addClass("table table-striped table-mod")
+              .append($("<thead>")
+              .append($("<tr>")
+              .append($("<td>").text("Nome"))
+              .append($("<td>").text(wbe[9][0].custom_colum_name))
+              .append($("<td>").text("TMA"))
+
+
+              )
+
+
+              )//fim do thead
+              .append($("<tbody>").attr("id", "tbody_id" + wbe[0])
+
+
+              )//fim do tbody
+              )//fim da table
+              );//fim da div
+
+      var Opcao = 0;
+      if (wbe[9][0].campanha != "0")
+            Opcao = 1;
+      if (wbe[9][0].grupo_user != "0")
+            Opcao = 2;
+      if (wbe[9][0].grupo_inbound != "0")
+            Opcao = 3;
+
+      var feedbacks_string = "";
+      if (feedbacks.length > 1) {
+            feedbacks_string = "status='" + feedbacks[0] + "'";
+            for (var i = 1; i < feedbacks.length; i++) {
+                  feedbacks_string = feedbacks_string + " or status='" + feedbacks[i] + "'";
+            }
+      }
+      else
+            feedbacks_string = "status='" + feedbacks[0] + "'";
+
+//////////TESTAR MANDAR STATUS A 1 CASO SEJA ALL DO OUTRO LADO
+
+      get_values_inbound();
+      function get_values_inbound()
+      {
+            $.post("Requests.php",
+                    {action: "5", status: feedbacks_string, opcao: Opcao, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campanha, user_group: wbe[9][0].grupo_user, linha_inbound: wbe[9][0].grupo_inbound, limit: wbe[9][0].limit},
+            function(data)
+            {
+                  if (data === null)
+                  {
+                     if(updation!="")
+                        clearTimeout(updation);
+                        panel.remove();
+                        $("#" + wbe[0] + "Main").remove();
+                        $.jGrowl("A tabela" + wbe[2] + " não apresenta resultados", {life: 10000});
+                        return false;
+                  }
+
+
+
+                  var tbody = $("#tbody_id" + wbe[0]);
+                  tbody.empty();
+
+                  var letter_size = 18;
+                  $.each(data, function(index, value) {
+
+
+
+
+//calculo do TMA de segundos para hora:minuto:segundo
+                        var totalSec = data[index].tma;
+                        var hours = parseInt(totalSec / 3600) % 24;
+                        var minutes = parseInt(totalSec / 60) % 60;
+                        var seconds = totalSec % 60;
+                        if (hours === 0)
+                              var result = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+                        else if (minutes === 0 && hours === 0)
+                              var result = (seconds < 10 ? "0" + seconds : seconds);
+                        else
+                              var result = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+
+
+
+
+                        tbody.append($("<tr>").css("font-size", letter_size + "px")
+                                .append($("<td>").text(data[index].user))//fim do td)
+                                .append($("<td>").text(data[index].count_feedbacks))
+                                .append($("<td>").text(result))
+                                );//fim do tr 
+                        letter_size--;
+
+
+                  });
+            }
+            , "json");
+
+            updation = setTimeout(get_values_inbound, wbe[7]);
+
+
+      }
+      /*dataTable
+       // top 
+       //5 ou 10
+       //top man tem q ser maior
+       
+       
+       escolher feedback, ou soma de feedbacks
+       
+       user/resultado/tma/nºchamadas
+       
+       tma=> tempo medio em chamada
+       
+       escolher por
+       campanha
+       ou
+       grupo inbound
+       ou
+       grupo user
+       **/
+
+
+
+//vicidial_users tem o nome completo do user e as closer_campaigns(linha_inbound)
+
+
+
+
+
+
+
+}
+
 //window exit
 $(window).bind('beforeunload', function() {
       $("#MainLayout .PanelWB").remove();
-});
+}
+);
 

@@ -361,27 +361,27 @@ echo "</tbody>";
 echo '
 </table>
 </div>
-';
+'; 
 ### Gravações associadas ao Contacto
 echo '
 <br>
 <div class="table-title"><center>Gravações deste Contacto</center></div>
 <div class="datagrid" style="width:90%">
 <table>
-<thead> <th>Data</th> <th>Inicio da Gravação</th> <th>Fim da Gravação</th> <th>Duração</th> <th>Ouvir Gravação</th> <th>Operador</th> </thead>';
+<thead> <th>Data</th> <th>Inicio da Gravação</th> <th>Fim da Gravação</th> <th>Duração</th> <th>Ouvir Gravação</th> <th>Operador</th> <th>Script</th></thead>';
 echo "<tbody>";
 for($i=0;$i<mysql_num_rows($gravacoes);$i++){
 $row = mysql_fetch_assoc($gravacoes);
 $duracao = sec_convert($row['length_in_sec'],"H");
 echo "
-<tr>
+<tr> 
 <td>$row[data]</td>
 <td>$row[hora_inicio]</td>
 <td>$row[hora_fim]</td>
 <td>$duracao</td>
 <td><a href='$row[location]'><img src='../images/icons/sound_add_16.png'></a></td>
 <td>$row[full_name]</td>
-
+<td><a target='_new' href='http://goimr.dyndns.org/sips-agente/vdc_form_display.php?lead_id=$lead_id&list_id=$lead_info[campaign_id]&user=galpenergia&pass=galpenergia'>Script</a></td>
 </tr>
 ";
 }
@@ -492,7 +492,7 @@ $("#feedback_list").change(function()
 	
 	  }
 	  });	
-	
+	 
 });
 
 

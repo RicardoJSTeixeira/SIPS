@@ -782,7 +782,7 @@ echo "	<tr>
 		<th>Em Chamada</th>
 		<th>Em Espera</th>
 		<th>Em Feedback</th>
-		<th>Em Chamadas Mortas<img title='Tempo entre o cliente desligar e o operador clikar no botão \"Desligar Chamada\" e entrar no menu de Feedbacks' src='../images/icons/info_rhombus_16.png'></th>
+		<th>Em Chamadas Mortas<img title='Tempo entre o cliente desligar e o operador clicar no botão \"Desligar Chamada\" e entrar no menu de Feedbacks' src='../images/icons/info_rhombus_16.png'></th>
 		<th>Em Pausa</th>
 		<th>Tempo Médio em Chamada</th>
 		<th>Tempo Médio em Espera</th>
