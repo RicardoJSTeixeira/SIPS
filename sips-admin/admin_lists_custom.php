@@ -1329,7 +1329,7 @@ for ($h=1;$max_rank[0]+1>=$h;$h++)
 
 		
 
-		echo "<tr><td>Posição da Opção</td><td colspan=4><select size=1 name=multi_position>\n";
+		
 
 		if ($A_multi_position[$o] == "HORIZONTAL") {$selected = "selected";} else {$selected1 = "selected";}
 		
