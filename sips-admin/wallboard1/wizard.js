@@ -945,7 +945,7 @@ function update_wbe()
                         maxHeight: 480,
                         maxWidth: 880,
                         minHeight: 240,
-                        minWidth: 245, stop: check_save});
+                        minWidth: 355, stop: check_save});
             }
             else
             {
@@ -954,7 +954,7 @@ function update_wbe()
                         maxHeight: 480,
                         maxWidth: 880,
                         minHeight: 240,
-                        minWidth: 450, stop: check_save});
+                        minWidth: 250, stop: check_save});
 
             }
             i++;
