@@ -82,6 +82,12 @@ if (isset($_GET["SUBMIT"]))						{$SUBMIT=$_GET["SUBMIT"];}
 	elseif (isset($_POST["navigation"]))			{$navigation=$_POST["navigation"];}
 	if (isset($_GET["id_campo"]))						{$id_campo=$_GET["id_campo"];}
 	elseif (isset($_POST["id_campo"]))			{$id_campo=$_POST["id_campo"];}
+        
+        
+        
+        if (isset($_GET["field_action"]))				{$field_action=$_GET["field_action"];}
+	elseif (isset($_POST["field_action"]))		{$field_action=$_POST["field_action"];}
+        
 
 	
 	/*print_r($_GET); echo "<br><br>";
@@ -578,7 +584,7 @@ if ( ($action == "COPY_FIELDS_SUBMIT") and (strlen($copy_option) > 2) )
 					if ($new_field_exists < 1)
 						{
 						### add field function
-						add_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$A_field_id[$o],$list_id,$A_field_label[$o],$A_field_name[$o],$A_field_description[$o],$A_field_rank[$o],$A_field_help[$o],$A_field_type[$o],$A_field_options[$o],$A_field_size[$o],$A_field_max[$o],$A_field_default[$o],$A_field_required[$o],$A_field_cost[$o],$A_multi_position[$o],$A_name_position[$o],$A_field_order[$o],$vicidial_list_fields);
+						add_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$A_field_id[$o],$list_id,$A_field_label[$o],$A_field_name[$o],$A_field_description[$o],$A_field_rank[$o],$A_field_help[$o],$A_field_type[$o],$A_field_options[$o],$A_field_size[$o],$A_field_max[$o],$A_field_default[$o],$A_field_required[$o],$A_field_cost[$o],$A_multi_position[$o],$A_name_position[$o],$A_field_order[$o],$vicidial_list_fields, trim($A_field_order[$o]));
 
 						echo "SUCCESS: Custom Field Added - $list_id|$A_field_label[$o]\n<BR>";
 
@@ -635,7 +641,7 @@ if ( ($action == "COPY_FIELDS_SUBMIT") and (strlen($copy_option) > 2) )
 							$current_field_id =	$rowx[0];
 
 							### modify field function
-							modify_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$current_field_id,$list_id,$A_field_label[$o],$A_field_name[$o],$A_field_description[$o],$A_field_rank[$o],$A_field_help[$o],$A_field_type[$o],$A_field_options[$o],$A_field_size[$o],$A_field_max[$o],$A_field_default[$o],$A_field_required[$o],$A_field_cost[$o],$A_multi_position[$o],$A_name_position[$o],$A_field_order[$o],$vicidial_list_fields);
+							modify_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$current_field_id,$list_id,$A_field_label[$o],$A_field_name[$o],$A_field_description[$o],$A_field_rank[$o],$A_field_help[$o],$A_field_type[$o],$A_field_options[$o],$A_field_size[$o],$A_field_max[$o],$A_field_default[$o],$A_field_required[$o],$A_field_cost[$o],$A_multi_position[$o],$A_name_position[$o],$A_field_order[$o],$vicidial_list_fields, trim($A_field_action[$o]));
 
 							echo "SUCCESS: Custom Field Modified - $list_id|$A_field_label[$o]\n<BR>";
 							}
@@ -810,7 +816,7 @@ if ( ($action == "ADD_CUSTOM_FIELD") )
 				if ($DB>0) {echo "$stmt|$tablecount_to_print|$table_exists";}
 			
 				### add field function
-				add_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$field_id,$list_id,$field_label,$field_name,$field_description,$field_rank,$field_help,$field_type,$field_options,$field_size,$field_max,$field_default,$field_required,$field_cost,$multi_position,$name_position,$field_order,$vicidial_list_fields);
+				add_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$field_id,$list_id,$field_label,$field_name,$field_description,$field_rank,$field_help,$field_type,$field_options,$field_size,$field_max,$field_default,$field_required,$field_cost,$multi_position,$name_position,$field_order,$vicidial_list_fields, trim($field_action));
 
 				echo "<script type=text/javascript>alert('Campo Adicionado com Sucesso.'); window.location='admin_lists_custom.php?action=MODIFY_CUSTOM_FIELDS&navigation=resumo&list_id=$list_id';</script>"; #SUCCESS: Custom Field Added - $list_id|$field_label\n<BR>
 				}
@@ -844,7 +850,7 @@ if ( ($action == "MODIFY_CUSTOM_FIELD_SUBMIT") and ($field_id > 0) )
 		}
 	$list_id=strtoupper($list_id);
 	$stmt="SHOW TABLES LIKE \"custom_$list_id\";";
-	echo $stmt;
+
 	
 	
 	
@@ -897,7 +903,7 @@ if ( ($action == "MODIFY_CUSTOM_FIELD_SUBMIT") and ($field_id > 0) )
 			else
 				{
 				### modify field function
-				modify_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$field_id,$list_id,$field_label,$field_name,$field_description,$field_rank,$field_help,$field_type,$field_options,$field_size,$field_max,$field_default,$field_required,$field_cost,$multi_position,$name_position,$field_order,$vicidial_list_fields);
+				modify_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$field_id,$list_id,$field_label,$field_name,$field_description,$field_rank,$field_help,$field_type,$field_options,$field_size,$field_max,$field_default,$field_required,$field_cost,$multi_position,$name_position,$field_order,$vicidial_list_fields, trim($field_action));
 
 				echo "<script type=text/javascript>alert('Campo Editado com Sucesso.'); window.location = 'admin_lists_custom.php?list_id=$list_id&navigation=resumo&action=MODIFY_CUSTOM_FIELDS';</script>"; #SUCCESS: Custom Field Modified - $list_id|$field_label\n<BR>
 				}
@@ -1116,7 +1122,7 @@ $stmt = "SELECT MAX(field_rank) FROM vicidial_lists_fields where campaign_id='$l
 $rslt=mysql_query($stmt, $link);
 $max_rank=mysql_fetch_row($rslt);
 
-$stmt="SELECT field_id,field_label,field_name,field_description,field_rank,field_help,field_type,field_options,field_size,field_max,field_default,field_cost,field_required,multi_position,name_position,field_order from vicidial_lists_fields where campaign_id='$list_id' AND field_label='$id_campo' order by field_rank,field_order,field_label;";
+$stmt="SELECT field_id,field_label,field_name,field_description,field_rank,field_help,field_type,field_options,field_size,field_max,field_default,field_cost,field_required,multi_position,name_position,field_order, action from vicidial_lists_fields where campaign_id='$list_id' AND field_label='$id_campo' order by field_rank,field_order,field_label;";
 	$rslt=mysql_query($stmt, $link);
 	#$fields_to_print = mysql_num_rows($rslt);
 	
@@ -1128,6 +1134,8 @@ $stmt="SELECT field_id,field_label,field_name,field_description,field_rank,field
 	#while ($fields_to_print > $o) 
 		#{
 		$rowx=mysql_fetch_row($rslt);
+                
+         
         
                
 		$A_field_id[$o] =			$rowx[0];
@@ -1146,7 +1154,7 @@ $stmt="SELECT field_id,field_label,field_name,field_description,field_rank,field
 		$A_multi_position[$o] =		$rowx[13];
 		$A_name_position[$o] =		$rowx[14];
 		$A_field_order[$o] =		$rowx[15];
-
+                $A_field_action[$o] =           $rowx[16];
 		
 		#$o++;
 
@@ -1191,6 +1199,8 @@ for ($h=1;$max_rank[0]+1>=$h;$h++)
 
 	echo "<div id=work-area>";
 	echo "<br><br>";
+        
+       
 	
 	
 	
@@ -1318,9 +1328,13 @@ for ($h=1;$max_rank[0]+1>=$h;$h++)
 		$selected1 = "";
 
 		
+
+		
+
 		if ($A_multi_position[$o] == "HORIZONTAL") {$selected = "selected";} else {$selected1 = "selected";}
 		
 		echo "<tr><td>Posição da Opção </td><td colspan=4><select size=1 name=multi_position>\n";
+
 		echo "<option $selected value=\"HORIZONTAL\">Horizontal</option>\n";
 		echo "<option $selected1 value=\"VERTICAL\">Vertical</option>\n";
 		echo "</select><td style=width:30px;>  $NWB#vicidial_lists_fields-multi_position$NWE </td></tr>\n";
@@ -1344,7 +1358,9 @@ for ($h=1;$max_rank[0]+1>=$h;$h++)
 		echo "<option $selected1 value=\"N\">Não</option>\n";
 		echo "</select><td style=width:30px>  $NWB#vicidial_lists_fields-field_required$NWE </td></tr>\n";
 		
-		
+                
+                
+		echo "<tr><td><b>Opções Especiais</b></td><td colspan=4><textarea style='height:125px' name=field_action rows=2 cols=60>$A_field_action[$o]</textarea>\n";
 		
 		echo "<tr><td>Ajuda do Campo</td><td colspan=4><textarea style='height:125px' name=field_help rows=2 cols=60>$A_field_help[$o]</textarea> <td style=width:32px>$NWB#vicidial_lists_fields-field_help$NWE </td></tr>\n";
 		
@@ -1464,7 +1480,12 @@ if ($navigation == "novo")
 	echo "<option value=\"VERTICAL\">Vertical</option>\n";
 	echo "</select><td style=width:30px;>  $NWB#vicidial_lists_fields-multi_position$NWE </td></tr>\n";
 	
-	
+
+	/*echo "<tr><td>Funcionalidades da Opção</td><td colspan=4><select size=1 name=multi_position>\n";
+		echo "<option value=\"\">&nbsp</option>\n";
+                echo "<option $selected value=\"HORIZONTAL\">Esconde o elemento abaixo</option>\n";
+		echo "</select><td style=width:30px;>  $NWB#vicidial_lists_fields-multi_position$NWE </td></tr>\n"; */
+
 	
 	
 	
@@ -1482,6 +1503,8 @@ if ($navigation == "novo")
 	echo "<option value=\"Y\">Sim</option>\n";
 	echo "<option value=\"N\" SELECTED>Não</option>\n";
 	echo "</select><td style=width:30px>  $NWB#vicidial_lists_fields-field_required$NWE </td></tr>\n";
+        
+        echo "<tr><td><b>Opções Especiais</b></td><td colspan=4><textarea style='height:125px' name=field_action rows=2 cols=60>$A_field_action[$o]</textarea>\n";
 	
 		echo "<tr><td style='min-width:175px'> <div class=cc-mstyle style='height:28px;  '><p>Ajuda do Campo</p></div></td><td colspan=4><textarea name=field_help style=height:125px></textarea><td style=width:30px;> $NWB#vicidial_lists_fields-field_help$NWE </td></tr>\n";
 	
@@ -1727,7 +1750,7 @@ echo "</TD></TR></TABLE>\n";
 
 ################################################################################
 ##### BEGIN add field function
-function add_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$field_id,$list_id,$field_label,$field_name,$field_description,$field_rank,$field_help,$field_type,$field_options,$field_size,$field_max,$field_default,$field_required,$field_cost,$multi_position,$name_position,$field_order,$vicidial_list_fields)
+function add_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$field_id,$list_id,$field_label,$field_name,$field_description,$field_rank,$field_help,$field_type,$field_options,$field_size,$field_max,$field_default,$field_required,$field_cost,$multi_position,$name_position,$field_order,$vicidial_list_fields, $mod_action)
 	{
 	$table_exists=0;
 	$stmt="SHOW TABLES LIKE \"custom_$list_id\";"; 
@@ -1859,7 +1882,7 @@ function add_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$field
 	$field_options = utf8_decode($field_options); */
 	
 
-	$stmt="INSERT INTO vicidial_lists_fields set field_label='$field_label',field_name='$field_name',field_description='$field_description',field_rank='$field_rank',field_help='$field_help',field_type='$field_type',field_options='$field_options',field_size='$field_size',field_max='$field_max',field_default='$field_default',field_required='$field_required',field_cost='$field_cost',campaign_id='$list_id',multi_position='$multi_position',name_position='$name_position',field_order='$field_order';";
+	$stmt="INSERT INTO vicidial_lists_fields set field_label='$field_label',field_name='$field_name',field_description='$field_description',field_rank='$field_rank',field_help='$field_help',field_type='$field_type',field_options='$field_options',field_size='$field_size',field_max='$field_max',field_default='$field_default',field_required='$field_required',field_cost='$field_cost',campaign_id='$list_id',multi_position='$multi_position',name_position='$name_position',field_order='$field_order', action='$mod_action';";
 	$rslt=mysql_query($stmt, $link);
 	
 	$field_update = mysql_affected_rows($link);
@@ -1882,7 +1905,7 @@ function add_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$field
 
 ################################################################################
 ##### BEGIN modify field function
-function modify_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$field_id,$list_id,$field_label,$field_name,$field_description,$field_rank,$field_help,$field_type,$field_options,$field_size,$field_max,$field_default,$field_required,$field_cost,$multi_position,$name_position,$field_order,$vicidial_list_fields)
+function modify_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$field_id,$list_id,$field_label,$field_name,$field_description,$field_rank,$field_help,$field_type,$field_options,$field_size,$field_max,$field_default,$field_required,$field_cost,$multi_position,$name_position,$field_order,$vicidial_list_fields, $mod_action)
 	{
 	$field_sql = "ALTER TABLE custom_$list_id MODIFY $field_label ";
 	$field_options_ENUM='';
@@ -1963,7 +1986,7 @@ function modify_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$fi
 		if (!$rsltCUSTOM) {echo('Could not execute: ' . mysql_error());}
 		}
 
-	$stmt="UPDATE vicidial_lists_fields set field_label='$field_label',field_name='$field_name',field_description='$field_description',field_rank='$field_rank',field_help='$field_help',field_type='$field_type',field_options='$field_options',field_size='$field_size',field_max='$field_max',field_default='$field_default',field_required='$field_required',field_cost='$field_cost',multi_position='$multi_position',name_position='$name_position',field_order='$field_order' where campaign_id='$list_id' and field_id='$field_id';";
+	$stmt="UPDATE vicidial_lists_fields set field_label='$field_label',field_name='$field_name',field_description='$field_description',field_rank='$field_rank',field_help='$field_help',field_type='$field_type',field_options='$field_options',field_size='$field_size',field_max='$field_max',field_default='$field_default',field_required='$field_required',field_cost='$field_cost',multi_position='$multi_position',name_position='$name_position',field_order='$field_order', action='$mod_action' where campaign_id='$list_id' and field_id='$field_id';";
 	$rslt=mysql_query($stmt, $link);
 	$field_update = mysql_affected_rows($link);
 	if ($DB) {echo "$field_update|$stmt\n";}
