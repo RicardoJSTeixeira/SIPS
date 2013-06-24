@@ -148,7 +148,7 @@ function query_pop_select($query) {
             </div>
             <div class="modal-footer">
                 <a href="#" onclick="$('#newRef-modal').modal('hide');"  class="btn">Fechar</a>
-                <a href="#" class="btn btn-primary">Criar</a>
+                <a href="#" class="btn btn-primary" id="newRef-confirm">Criar</a>
             </div>
         </div>
 
@@ -165,8 +165,8 @@ function query_pop_select($query) {
                 <p id="debug-url"></p>
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn btn-danger">Sim</a>
                 <a href="#" onclick="$('#modal-from-dom').modal('hide');" class="btn">Não</a>
+                <a href="#" class="btn btn-danger" id="del-confirm">Sim</a>
             </div>
         </div>
 
@@ -181,7 +181,6 @@ function query_pop_select($query) {
                         });
 
                         $('#modal-from-dom').on('show', function() {
-                            var id = $(this).data('id');
                             var user = $(this).data('user');
                             var cal = $(this).data('cal');
                             removeBtn = $(this).find('.danger');
@@ -200,6 +199,18 @@ function query_pop_select($query) {
                         var ref_dom_types= $([]).add($("#sch-row")).add($("#rsc-row"));
                         $("[name=type-modal]").on("click",function(){
                             ref_dom_types.toggle();
+                        });
+                        
+                        $("#del-confirm").on("click",function(){
+                            $.post("../ajax/agente_ref_do.php",{pedido:667,id:$('#modal-from-dom').data('id', id)},function(data){
+                                
+                            },"json");
+                        });
+                        
+                        $("#newRef-confirm").on("click",function(){
+                            $.post("../ajax/agente_ref_do.php",{pedido:128,id:$('#modal-from-dom').data('id', id)},function(data){
+                                
+                            },"json");
                         });
                     });
         </script>
