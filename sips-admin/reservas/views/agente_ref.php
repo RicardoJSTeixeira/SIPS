@@ -60,6 +60,12 @@ function query_pop_select($query) {
                 margin-left: -33px;
                 margin-top: -33px;
             }
+            #newRef-modal .modal-body{
+                height:360px;
+            }
+            .inline{
+                margin-right: 6px;
+            }
         </style>
     </head>
     <body>
@@ -69,7 +75,7 @@ function query_pop_select($query) {
             <div class="grid">
                 <div class="grid-title">
                     <div class="pull-left">Referencia de Calendários para Agentes</div>
-                    <div class="pull-right"><button class="btn btn-large btn-primary" data-toggle="modal" data-target="#newRef">Novo</button></div>
+                    <div class="pull-right"><button class="btn btn-large btn-primary" id="newRef">Novo</button></div>
                     <div class="clear"></div>
                 </div>
                 <table class="table table-mod">
@@ -98,34 +104,104 @@ function query_pop_select($query) {
                                 <td><?= $row[1] ?></td>
                                 <td><?= $row[2] ?></td>
                                 <td><?= strtr($row[3], array("RESOURCE" => "Recurso", "SCHEDULER" => "Calendário")) ?>
-                                    <div class="view-button"><a href="#" class="btn  btn-mini activator"> <i class="icon-trash"></i><span>Eliminar</span></a></div></td></tr>
+                                    <div class="view-button"><a href="#" class="btn  btn-mini activator confirm-delete" data-id="<?= $row[0] ?>" data-user="<?= $row[1] ?>" data-cal="<?= $row[2] ?>"> <i class="icon-trash"></i><span>Eliminar</span></a></div></td></tr>
                         <?php } ?>
                     </tbody>
                 </table>
             </div> 
         </div> 
 
-        <!-- Modal -->
-        <div id="newRef" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+
+        <div id="newRef-modal" class="modal hide fade">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 id="modalLabel">Nova Referência</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>Nova Referência</h3>
             </div>
             <div class="modal-body">
-                <select><?= query_pop_select("Select user,full_name From vicidial_users Where 1") ?></select>
-                <select><?= query_pop_select("Select id_scheduler,display_text From sips_sd_schedulers Where 1") ?></select>
-                <select><?= query_pop_select("Select id_resource,display_text From sips_sd_resources Where 1") ?></select>
+                <div class="formRow">
+                    <label class="control-label" for="user-modal">Utilizador</label>
+                    <div class="formRight">
+                        <select id="user-modal" class="chzn-select"><?= query_pop_select("Select user,full_name From vicidial_users Where 1") ?></select>
+                    </div>
+                </div>
+                <div class="formRow">
+                    <label class="control-label" for="type-modal">Tipo</label>
+                    <div class="formRight">
+                        <input type="radio" id="type_sch" name="type-modal" checked="checked">
+                        <label for="type_sch" class="inline"><span></span>Calendário</label>
+                        <input type="radio" id="type_rsc" name="type-modal" >
+                        <label for="type_rsc" class="inline"><span></span>Recurso</label>
+                    </div>
+                </div>
+                <div class="formRow" id="sch-row">
+                    <label class="control-label" for="sch-modal">Calendário</label>
+                    <div class="formRight">
+                        <select id="sch-modal" class="chzn-select"><?= query_pop_select("Select id_scheduler,display_text From sips_sd_schedulers Where 1") ?></select>
+                    </div>
+                </div>
+                <div class="formRow" id="rsc-row" style="display:none">
+                    <label class="control-label" for="rsc-modal">Recurso</label>
+                    <div class="formRight">
+                        <select id="rsc-odal" class="chzn-select"><?= query_pop_select("Select id_resource,display_text From sips_sd_resources Where 1") ?></select>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button>
-                <button class="btn btn-primary">Gravar</button>
+                <a href="#" onclick="$('#newRef-modal').modal('hide');"  class="btn">Fechar</a>
+                <a href="#" class="btn btn-primary">Criar</a>
+            </div>
+        </div>
+
+
+
+        <div id="modal-from-dom" class="modal hide fade">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>Eliminar referência</h3>
+            </div>
+            <div class="modal-body">
+                <p>Está prestes a eliminar uma referência de calendário.</p>
+                <p>Pretende continuar?</p>
+                <p id="debug-url"></p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-danger">Sim</a>
+                <a href="#" onclick="$('#modal-from-dom').modal('hide');" class="btn">Não</a>
             </div>
         </div>
 
         <script>
-            $(function() {
-                $("#loader").fadeOut("slow");
-            });
+                    $(function() {
+
+                        $(".chzn-select").chosen({no_results_text: "Não foi encontrado."});
+                        $("#loader").fadeOut("slow");
+
+                        $("#newRef").on("click", function() {
+                            $("#newRef-modal").modal('show');
+                        });
+
+                        $('#modal-from-dom').on('show', function() {
+                            var id = $(this).data('id');
+                            var user = $(this).data('user');
+                            var cal = $(this).data('cal');
+                            removeBtn = $(this).find('.danger');
+
+                            $('#debug-url').html('<p>Utilizador: <strong>' + user + '</strong></p><p>Descrição: <strong>' + cal + '</strong></p>');
+                        });
+
+                        $('.confirm-delete').on('click', function(e) {
+                            e.preventDefault();
+
+                            var id = $(this).data('id');
+                            var user = $(this).data('user');
+                            var cal = $(this).data('cal');
+                            $('#modal-from-dom').data('id', id).data('user', user).data('cal', cal).modal('show');
+                        });
+                        var ref_dom_types= $([]).add($("#sch-row")).add($("#rsc-row"));
+                        $("[name=type-modal]").on("click",function(){
+                            ref_dom_types.toggle();
+                        });
+                    });
         </script>
     </body>
 </html>
