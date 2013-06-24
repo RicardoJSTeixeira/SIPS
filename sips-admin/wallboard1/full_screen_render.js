@@ -1,6 +1,7 @@
 
 
 
+
 var wbes;
 var layout;
 $(document).ready(function() {
@@ -28,8 +29,9 @@ $(document).ready(function() {
                   $("#MainLayout").append($("<div>").addClass("PanelWB ui-widget-content").attr("style", "position: absolute;    left:" + left + "px;top:" + top + "px; width:" + width + "px;height:" + height + "px;").attr("id", wbes[i][0] + "Main").draggable({containment: '#MainLayout'})
                           .append($("<div>").addClass("grid-title")
                           .append($("<div>").addClass("pull-left").text(wbes[i][2]))
+                          .append($("<div>").addClass("pull-right").attr("id", "right_title" + wbes[i][0]))
                           )
-                          .append($("<div>").addClass("grid-content").attr("id", wbes[i][0] + "WBEGD")
+                          .append($("<div>").addClass("grid-content").attr("id", wbes[i][0] + "WBEGD").css("overflow-y", "auto").css("overflow-x", "hidden")
                           .append($("<div>").attr("id", wbes[i][0] + "WBE").attr("style", "width:" + (width - 20) + "px;height:" + (height - 75) + "px;padding: 0px;").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbes[i][7] / 1000) + " seg.")))
                           );
                   if (wbes[i][8] === "1")//update
@@ -71,12 +73,14 @@ function plot_bar(data)
       var wbe = data;
       var painel = $("#" + wbe[0] + "WBE");
       var first_time = true;
+      var information = [];
       get_values_bar();
       function get_values_bar()
       {
-            $.post("Requests.php", {action: wbe[10], selected_query: wbe[7]},
+            $.post("Requests.php", {action: "2", datasets: wbe[9]},
             function(data)
             {
+
                   if (data === null)
                   {
                         clearTimeout(updation);
@@ -85,48 +89,44 @@ function plot_bar(data)
                         $.jGrowl("O gráfico de Barras " + wbe[1] + " não apresenta resultados", {life: 10000});
                         return false;
                   }
-                  if (wbe[8] == "total de vendas por user")
-                  {
-                        data2 = [];
-                        $.each(data, function(index, value) {
-                              data2.push([this.user, +this.status_count]);
-                        });
-                        var data = [];
-                        ticksA = [];
-                        for (i = 0; i < data2.length; i++)
-                        {
-                              data.push([i, data2[i][1]]);
-                              ticksA.push([i, data2[i][0]]);
-                        }
-                  }
-                  if (wbe[8] == "total de cenas por user")
-                  {
-                        data2 = [];
-                        $.each(data, function(index, value) {
-                              data2.push([this.user, +this.status_count]);
-                        });
-                        var data = [];
-                        ticksA = [];
-                        for (i = 0; i < data2.length; i++)
-                        {
-                              data.push([i, data2[i][1] * 4]);
-                              ticksA.push([i, data2[i][0] * 5]);
-                        }
-                  }
+
+
+                  data2 = [];
+                  var i = 0;
+
+                  var label = "não definido";
+                  $.each(data, function(index, value) {
+                        if (wbe[9][i].chamadas === "0")
+                              label = wbe[9][i].status_feedback;
+                        else
+                              label = wbe[9][i].chamadas;
+
+                        ticksA.push([i, label]);
+                        data2.push([i, +data[i]]);
+
+                        information.push(
+                                {
+                                      label: label,
+                                      data: data2,
+                                      bars: {show: true, barWidth: 0.8, align: "center"}
+
+                                });
+                        i++;
+                  });
+
+
+
                   if (first_time)
                   {
-                        var dataset = [{label: "Operadores", data: data}];
-                        var options = {legend: {noColumns: 1, position: "nw"}, series: {bars: {show: true, barWidth: 0.2, order: 1, lineWidth: 2}}, bars: {align: "center", barWidth: 0.5}, xaxis: {axisLabel: "Operadores", axisLabelUseCanvas: true, axisLabelFontSizePixels: 3, axisLabelFontFamily: 'Verdana, Arial', axisLabelPadding: 10, ticks: ticksA}};
-                        plot = $.plot(painel, dataset, options);
+                        $.plot(painel, information, {xaxis: {ticks: ticksA}, legend: {show: false}});
                         first_time = false;
                   }
                   else
                   {
-                        var dataset = [{label: "Operadores", data: data}];
-                        plot.setData(dataset);
+                        plot.setData(information);
                         plot.draw();
                   }
-                  updation = setTimeout(get_values_bar, wbe[9]);
+                  updation = setTimeout(get_values_bar, wbe[7]);
             }, "json");
       }
 
@@ -271,15 +271,74 @@ function plot_update(data)
 //øøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøø
 //PIE GRAPh ««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««
 function plot_pie(data) {
+      //--------------wbes
+      //0      id,
+      // 1       id_layout,
+      //   2      name,
+      //     3     pos_x, 
+      //       4   pos_y,
+      //       5    width, 
+      //       6    height,
+      //       7      update_time, 
+      //       8      graph_type;
+      //   9      Array[8]
+      //0: id
+      //1: id_wallboard
+      //2: codigo_query
+      //3: opcao_query
+      //4: tempo
+      //5: user
+      //6: user_group
+      //7: campaign_id
+      //8:linha_inbound
+      //9: mode
+      //10: status_feedback
+      //11: chamadas
+
+
+
+
+
+
+
       var wbe = data;
       var updation;
       var painel = $("#" + wbe[0] + "WBE");
       var first_time = true;
+
+
+
+
+      if (wbe[9][0].status_feedback === "1")
+            var feedbacks_string = "1";
+      else
+      {
+            var feedbacks = wbe[9][0].status_feedback.split(',');
+            var feedbacks_string = "";
+            if (feedbacks.length > 1) {
+                  feedbacks_string = "status='" + feedbacks[0] + "'";
+                  for (var i = 1; i < feedbacks.length; i++) {
+                        feedbacks_string = feedbacks_string + " or status='" + feedbacks[i] + "'";
+                  }
+            }
+            else
+                  feedbacks_string = "status='" + feedbacks[0] + "'";
+      }
+      var right_title = $("#right_title" + wbe[0]);
+      right_title.text(wbe[9][0].param2);
+
+
       get_values_pie();
-      function get_values_pie(opcao, selectedQuery)
+
+
+
+
+
+      function get_values_pie()
       {
             var data1 = [];
-            $.post("Requests.php", {action: wbe[10], selected_query: wbe[7]},
+            $.post("Requests.php",
+                    {action: "3", status: feedbacks_string, opcao: wbe[9][0].codigo_query, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campaign_id, user_group: wbe[9][0].user_group, linha_inbound: wbe[9][0].linha_inbound, user: wbe[9][0].user},
             function(data)
             {
                   if (data === null)
@@ -290,16 +349,16 @@ function plot_pie(data) {
                         $.jGrowl("O gráfico de Tarte " + wbe[1] + " não apresenta resultados", {life: 10000});
                         return false;
                   }
-                  if (wbe[8] == "total de feedbacks por campanha")
-                  {
 
-                        var i = 0;
-                        $.each(data, function(index, value) {
-                              data1.push({label: (this.status_name), data: +this.count});
-                        });
-                        if (i == 0)//se so houver 1 resultado ele n faz render, entao adiciona-se 1 elemento infimo
-                              data1.push({label: ("zero"), data: 0.001});
-                  }
+
+                  var i = 0;
+                  $.each(data, function(index, value) {
+                        data1.push({label: (this.status_name), data: +this.count});
+                        i++;
+                  });
+                  if (i == 0)//se so houver 1 resultado ele n faz render, entao adiciona-se 1 elemento infimo
+                        data1.push({label: ("zero"), data: 0.001});
+
                   if (first_time)
                   {
                         $.plot(painel, data1, {
@@ -311,21 +370,21 @@ function plot_pie(data) {
                                                 show: true,
                                                 radius: 2 / 3,
                                                 formatter: function(label, series) {
-                                                      return '<div style="font-size:11px;text-align:center;padding:2px;color:black;">' + label + '<br/>' + Math.round(series.percent) + '%</div>';
+                                                      return '<div style="font-size:13px;text-align:center;color:black;">' + Math.round(series.percent) + '%</div>';
                                                 },
                                                 threshold: 0.02
                                           }
                                     }
                               },
                               legend: {
-                                    show: false
+                                    show: true
                               },
                               grid: {
                                     hoverable: false,
                                     clickable: false
                               }});
                   }
-                  updation = setTimeout(get_values_pie, wbe[9]);
+                  updation = setTimeout(get_values_pie, wbe[7]);
             }, "json");
       }
 }
@@ -568,9 +627,24 @@ function   dataTable_top(data)
       //limit
       //custom_colum_name
       var wbe = data;
-   var updation;
+      var updation;
 
-      var feedbacks = wbe[9][0].status_feedback.split(',');
+
+      if (wbe[9][0].status_feedback === "1")
+            var feedbacks_string = "1";
+      else
+      {
+            var feedbacks = wbe[9][0].status_feedback.split(',');
+            var feedbacks_string = "";
+            if (feedbacks.length > 1) {
+                  feedbacks_string = "status='" + feedbacks[0] + "'";
+                  for (var i = 1; i < feedbacks.length; i++) {
+                        feedbacks_string = feedbacks_string + " or status='" + feedbacks[i] + "'";
+                  }
+            }
+            else
+                  feedbacks_string = "status='" + feedbacks[0] + "'";
+      }
 
       var panel = $("#" + wbe[0] + "Main");
       panel.empty();
@@ -605,20 +679,11 @@ function   dataTable_top(data)
       if (wbe[9][0].grupo_inbound != "0")
             Opcao = 3;
 
-      var feedbacks_string = "";
-      if (feedbacks.length > 1) {
-            feedbacks_string = "status='" + feedbacks[0] + "'";
-            for (var i = 1; i < feedbacks.length; i++) {
-                  feedbacks_string = feedbacks_string + " or status='" + feedbacks[i] + "'";
-            }
-      }
-      else
-            feedbacks_string = "status='" + feedbacks[0] + "'";
 
-//////////TESTAR MANDAR STATUS A 1 CASO SEJA ALL DO OUTRO LADO
 
-      get_values_inbound();
-      function get_values_inbound()
+
+      get_values_dataTop();
+      function get_values_dataTop()
       {
             $.post("Requests.php",
                     {action: "5", status: feedbacks_string, opcao: Opcao, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campanha, user_group: wbe[9][0].grupo_user, linha_inbound: wbe[9][0].grupo_inbound, limit: wbe[9][0].limit},
@@ -626,11 +691,11 @@ function   dataTable_top(data)
             {
                   if (data === null)
                   {
-                     if(updation!="")
-                        clearTimeout(updation);
+                        if (updation != "")
+                              clearTimeout(updation);
                         panel.remove();
                         $("#" + wbe[0] + "Main").remove();
-                        $.jGrowl("A tabela" + wbe[2] + " não apresenta resultados", {life: 10000});
+                        $.jGrowl("A tabela " + wbe[2] + " não apresenta resultados", {life: 10000});
                         return false;
                   }
 
@@ -672,7 +737,7 @@ function   dataTable_top(data)
             }
             , "json");
 
-            updation = setTimeout(get_values_inbound, wbe[7]);
+            updation = setTimeout(get_values_dataTop, wbe[7]);
 
 
       }
