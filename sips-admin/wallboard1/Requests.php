@@ -94,7 +94,6 @@ switch ($action) {
         $query = "INSERT INTO `asterisk`.`WallBoard_DataTop1` (`id`, `id_wallboard`, `tempo`, `campanha`, `grupo_inbound`, `grupo_user`, `status_feedback`, `limit`, `custom_colum_name`)
             VALUES(NULL,LAST_INSERT_ID() , $tempo, '$campanha', '$grupo_inbound', '$grupo_user', $status_feedback, '$limit', '$custom_colum_name')";
         $query = mysql_query($query, $link) or die(mysql_error());
-
         echo json_encode(array(1));
         break;
 
@@ -356,7 +355,8 @@ switch ($action) {
                         $selected_query = str_replace('$linha_inbound', $row["linha_inbound"], $selected_query);
                         $selected_query = str_replace('$status', $row["status_feedback"], $selected_query);
                         $selected_query = str_replace('$chamadas', $row["chamadas"], $selected_query);
-                        $selected_query = mysql_query($selected_query, $link) or die(mysql_error());
+                        $c = $selected_query;
+                        $selected_query = mysql_query($selected_query, $link) or die(mysql_error() . $c);
                         while ($row3 = mysql_fetch_assoc($selected_query)) {
                             $temp[] = array(lead_id => $row3["lead_id"], call_date => $row3["call_date"]);
                         }
@@ -381,33 +381,31 @@ switch ($action) {
                         $outbound = str_replace('$linha_inbound', $row["linha_inbound"], $outbound);
                         $outbound = str_replace('$status', $row["status_feedback"], $outbound);
                         $outbound = str_replace('$chamadas', $row["chamadas"], $outbound);
-                        $inbound = mysql_query($inbound, $link) or die(mysql_error());
+                        $a = $inbound;
+                        $inbound = mysql_query($inbound, $link) or die(mysql_error() . $a);
                         while ($row3 = mysql_fetch_assoc($inbound)) {
                             $temp1[] = array(lead_id => $row3["lead_id"], call_date => $row3["call_date"]);
                         }
-                        $outbound = mysql_query($outbound, $link) or die(mysql_error());
+                        $b = $outbound;
+                        $outbound = mysql_query($outbound, $link) or die(mysql_error() . $b);
                         while ($row4 = mysql_fetch_assoc($outbound)) {
                             $temp2[] = array(lead_id => $row4["lead_id"], call_date => $row4["call_date"]);
                         }
                         $temp = array_merge($temp1, $temp2);
                     }
 
-      
+
 
                     $leads = 0;
                     foreach ($temp as $kev => $row) {
                         $leads = $leads + 1;
                     }
-               
 
-                 
-               
-                        $js[] =  $leads;
-                    
-                    
-           
+
+
+
+                    $js[] = $leads;
                 }
-                  
             }
         }
 
@@ -587,6 +585,7 @@ switch ($action) {
             $query1 = mysql_query($query1) or die(mysql_error());
             $row1 = mysql_fetch_assoc($query1);
             $tma_call = ($row["talk_sec"] - $row["dead_sec"]);
+            
             $js[] = array(user => $row1["full_name"], tma => $tma_call, count_feedbacks => $row["total_feedback"]);
         }
         echo json_encode($js);

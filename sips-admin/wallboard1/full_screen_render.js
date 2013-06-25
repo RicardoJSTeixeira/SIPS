@@ -7,7 +7,7 @@ var layout;
 $(document).ready(function() {
 
       $("#MainLayout").attr("style", "width:100%;height:100%;position:absolute;background-color:#F5F5F5;");
-      var parameters = window.name.split(";");
+      var parameters = window.name.split(",");
       var windwidth = +parameters[1]; //parameter;
       var windheight = +parameters[2]; //parameter;
       layout = +parameters[0]; //parameter
@@ -31,7 +31,7 @@ $(document).ready(function() {
                           .append($("<div>").addClass("pull-left").text(wbes[i][2]))
                           .append($("<div>").addClass("pull-right").attr("id", "right_title" + wbes[i][0]))
                           )
-                          .append($("<div>").addClass("grid-content").attr("id", wbes[i][0] + "WBEGD").css("overflow-y", "auto").css("overflow-x", "hidden")
+                          .append($("<div>").addClass("grid-content").attr("id", wbes[i][0] + "WBEGD")
                           .append($("<div>").attr("id", wbes[i][0] + "WBE").attr("style", "width:" + (width - 20) + "px;height:" + (height - 75) + "px;padding: 0px;").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbes[i][7] / 1000) + " seg.")))
                           );
                   if (wbes[i][8] === "1")//update
@@ -52,6 +52,7 @@ $(document).ready(function() {
                   }
                   if (wbes[i][8] === "5")//DataTable top
                   {
+                        $("#" + wbes[i][0] + "Main").css("height", "auto");
                         dataTable_top(wbes[i]);
                   }
                   i++;
@@ -74,6 +75,8 @@ function plot_bar(data)
       var painel = $("#" + wbe[0] + "WBE");
       var first_time = true;
       var information = [];
+      var colors = new Array("red", "green", "blue", "orange", "black");
+
       get_values_bar();
       function get_values_bar()
       {
@@ -94,24 +97,40 @@ function plot_bar(data)
                   data2 = [];
                   var i = 0;
 
+
+
+
+
                   var label = "não definido";
+
+                  var sum = 0;
                   $.each(data, function(index, value) {
                         if (wbe[9][i].chamadas === "0")
-                              label = wbe[9][i].status_feedback;
+                              label = wbe[9][i].param1;
                         else
                               label = wbe[9][i].chamadas;
+                        sum = +data[i];
 
-                        ticksA.push([i, label]);
-                        data2.push([i, +data[i]]);
+                        if (sum == "0")
+                        {
+                              $.jGrowl("A barra de " + label + " não apresenta resultados", {life: 5000});
 
-                        information.push(
-                                {
-                                      label: label,
-                                      data: data2,
-                                      bars: {show: true, barWidth: 0.8, align: "center"}
+                        }
+                        else
+                        {
+                              ticksA.push([i, label]);
+                              data2.push([i, +data[i]]);
 
-                                });
+                              information.push(
+                                      {
+                                            label: label,
+                                            data: data2,
+                                            bars: {show: true, barWidth: 0.8, align: "center"},
+                                            color: colors[i]
+                                      });
+                        }
                         i++;
+                        data2 = [];
                   });
 
 
@@ -209,7 +228,7 @@ function plot_update(data)
                                           result.push([new Date(temp).getTime(), obj[prop][k].leads]);
                                     }
                                     if (verifier > 0) {
-                                          if (wbe[9][aux].param1 !== "0")
+                                          if (wbe[9][aux].param1 !== "0" && wbe[9][aux].param1 !== "total call center")
                                                 information.push({data: result, label: wbe[9][aux].opcao_query + " -> " + wbe[9][aux].param1});
                                           else
                                                 information.push({data: result, label: wbe[9][aux].opcao_query});
@@ -307,7 +326,8 @@ function plot_pie(data) {
       var first_time = true;
 
 
-
+      var painer_content = $("#" + wbe[0] + "WBEGD");
+      painer_content.css("overflow-y", "auto").css("overflow-x", "hidden");
 
       if (wbe[9][0].status_feedback === "1")
             var feedbacks_string = "1";
@@ -652,7 +672,7 @@ function   dataTable_top(data)
               .append($("<div>").addClass("grid-title")
               .append($("<div>").addClass("pull-left")
               .text(wbe[2])))
-              .append($("<table>").css("heigth", "100%").css("width", "100%").addClass("table table-striped table-mod")
+              .append($("<table>").addClass("table table-striped table-mod").css("heigth", "100%").css("width", "100%")
               .append($("<thead>")
               .append($("<tr>")
               .append($("<td>").text("Nome"))
@@ -678,10 +698,6 @@ function   dataTable_top(data)
             Opcao = 2;
       if (wbe[9][0].grupo_inbound != "0")
             Opcao = 3;
-
-
-
-
       get_values_dataTop();
       function get_values_dataTop()
       {
@@ -711,7 +727,9 @@ function   dataTable_top(data)
 
 
 //calculo do TMA de segundos para hora:minuto:segundo
-                        var totalSec = data[index].tma;
+                        var totalSec = +data[index].tma;
+                        var total_feedbacks = +data[index].count_feedbacks;
+                        totalSec = Math.floor(totalSec / total_feedbacks);
                         var hours = parseInt(totalSec / 3600) % 24;
                         var minutes = parseInt(totalSec / 60) % 60;
                         var seconds = totalSec % 60;
@@ -741,36 +759,6 @@ function   dataTable_top(data)
 
 
       }
-      /*dataTable
-       // top 
-       //5 ou 10
-       //top man tem q ser maior
-       
-       
-       escolher feedback, ou soma de feedbacks
-       
-       user/resultado/tma/nºchamadas
-       
-       tma=> tempo medio em chamada
-       
-       escolher por
-       campanha
-       ou
-       grupo inbound
-       ou
-       grupo user
-       **/
-
-
-
-//vicidial_users tem o nome completo do user e as closer_campaigns(linha_inbound)
-
-
-
-
-
-
-
 }
 
 //window exit
