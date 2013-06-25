@@ -2,23 +2,50 @@
 error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
 
-$self = count(explode('/', $_SERVER['PHP_SELF']));
-for ($i = 0; $i < $self - 2; $i++) {
-    $header.="../";
-}
-define("ROOT", $header);
-
-require(ROOT . "ini/dbconnect.php");
+require_once('../func/reserve_utils.php');
 
 function query_pop_select($query) {
     global $link;
-    $result = mysql_query($query, $link);
+    $result = mysql_query($query, $link) or die(mysql_error());
     $options = "";
     while ($row = mysql_fetch_array($result)) {
         $options.="<option value='$row[0]'>$row[1]</option>";
     }
     return $options;
 }
+
+$user = $_SERVER['PHP_AUTH_USER'];
+
+        //Users INICIO
+        $query = "select a.user_group,allowed_campaigns,user_level from vicidial_users a inner join `vicidial_user_groups` b on a.user_group=b.user_group where user='$user'";
+        $result = mysql_query($query) or die(mysql_error());
+        $row = mysql_fetch_assoc($result);
+
+
+        $user_level = $row['user_level'];
+        $allowed_camps_regex = str_replace(" ", "|", trim(rtrim($row['allowed_campaigns'], " -")));
+
+        if ($row['user_group'] != "ADMIN") {
+            $ret = "WHERE allowed_campaigns REGEXP '$allowed_camps_regex'";
+
+
+            $user_groups = "";
+            $result = mysql_query("SELECT `user_group`, `allowed_campaigns` FROM `vicidial_user_groups` $ret ") or die(mysql_error());
+            while ($row1 = mysql_fetch_assoc($result)) {
+                $user_groups .= "'$row1[user_group]',";
+            }
+            $user_groups = rtrim($user_groups, ",");
+
+            $result = mysql_query("SELECT `user` FROM `vicidial_users` WHERE user_group in ($user_groups) AND user_level < $user_level") or die(mysql_error());
+            while ($rugroups = mysql_fetch_assoc($result)) {
+                $tmp .= "$rugroups[user]|";
+            }
+            $tmp = rtrim($tmp, "|");
+            $users_regex = "Where user REGEXP '^$tmp'";
+            $users_regexb = "and b.user REGEXP '^$tmp'";
+        }
+        
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -39,6 +66,7 @@ function query_pop_select($query) {
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/colorpicker.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/demo_table.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
         <style>
             .chzn-select{
@@ -60,8 +88,8 @@ function query_pop_select($query) {
                 margin-left: -33px;
                 margin-top: -33px;
             }
-            #newRef-modal .modal-body{
-                height:360px;
+            #newRef-modal .modal-body, #newRef-modal{
+                overflow:visible;
             }
             .inline{
                 margin-right: 6px;
@@ -78,17 +106,18 @@ function query_pop_select($query) {
                     <div class="pull-right"><button class="btn btn-large btn-primary" id="newRef">Novo</button></div>
                     <div class="clear"></div>
                 </div>
-                <table class="table table-mod">
-                    <thead>
-                        <tr>
-                            <th>Utilizador</th>
-                            <th>Descrição Calendário</th>
-                            <th>Tipo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $result = mysql_query("SELECT ref_id, full_name, display_text, cal_type FROM (
+                <div class="grid-content">
+                    <table class="table table-mod-2" id="ref-table">
+                        <thead>
+                            <tr>
+                                <th>Utilizador</th>
+                                <th>Descrição Calendário</th>
+                                <th>Tipo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $result = mysql_query("SELECT ref_id, full_name, display_text, cal_type FROM (
                                                 (SELECT  `ref_id` ,  `user` ,  `display_text` ,  `cal_type` 
                                                 FROM  `sips_sd_agent_ref` a
                                                 INNER JOIN sips_sd_schedulers b ON a.id_calendar = b.id_scheduler
@@ -97,17 +126,19 @@ function query_pop_select($query) {
                                                 FROM  `sips_sd_agent_ref` a
                                                 INNER JOIN sips_sd_resources b ON a.id_calendar = b.id_resource
                                                 WHERE cal_type =2))a
-                                                INNER JOIN vicidial_users b ON a.user = b.user", $link);
-                        while ($row = mysql_fetch_array($result)) {
-                            ?>
-                            <tr>
-                                <td><?= $row[1] ?></td>
-                                <td><?= $row[2] ?></td>
-                                <td><?= strtr($row[3], array("RESOURCE" => "Recurso", "SCHEDULER" => "Calendário")) ?>
-                                    <div class="view-button"><a href="#" class="btn  btn-mini activator confirm-delete" data-id="<?= $row[0] ?>" data-user="<?= $row[1] ?>" data-cal="<?= $row[2] ?>"> <i class="icon-trash"></i><span>Eliminar</span></a></div></td></tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
+                                                INNER JOIN vicidial_users b ON a.user = b.user $users_regexb", $link) or die(mysql_error());
+                            while ($row = mysql_fetch_array($result)) {
+                                ?>
+                                <tr>
+                                    <td><?= $row[1] ?></td>
+                                    <td><?= $row[2] ?></td>
+                                    <td><?= strtr($row[3], array("RESOURCE" => "Recurso", "SCHEDULER" => "Calendário")) ?>
+                                        <div class="view-button"><a href="#" class="btn  btn-mini activator confirm-delete" data-id="<?= $row[0] ?>" data-user="<?= $row[1] ?>" data-cal="<?= $row[2] ?>"> <i class="icon-trash"></i><span>Eliminar</span></a></div></td></tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                    <div class="clear"></div>
+                </div> 
             </div> 
         </div> 
 
@@ -118,33 +149,36 @@ function query_pop_select($query) {
                 <h3>Nova Referência</h3>
             </div>
             <div class="modal-body">
-                <div class="formRow">
-                    <label class="control-label" for="user-modal">Utilizador</label>
-                    <div class="formRight">
-                        <select id="user-modal" class="chzn-select"><?= query_pop_select("Select user,full_name From vicidial_users Where 1") ?></select>
+                <form id="newRef-form">
+                    <div class="formRow">
+                        <label class="control-label" for="user-modal">Utilizador</label>
+                        <div class="formRight">
+                            <select name="user" class="chzn-select"><?= query_pop_select("Select user,full_name From vicidial_users $users_regex") ?></select>
+                        </div>
                     </div>
-                </div>
-                <div class="formRow">
-                    <label class="control-label" for="type-modal">Tipo</label>
-                    <div class="formRight">
-                        <input type="radio" id="type_sch" name="type-modal" checked="checked">
-                        <label for="type_sch" class="inline"><span></span>Calendário</label>
-                        <input type="radio" id="type_rsc" name="type-modal" >
-                        <label for="type_rsc" class="inline"><span></span>Recurso</label>
+                    <div class="formRow">
+                        <label class="control-label" for="type-modal">Tipo</label>
+                        <div class="formRight">
+                            <input type="radio" id="type_sch" name="type" value="1" checked="checked">
+                            <label for="type_sch" class="inline"><span></span>Calendário</label>
+                            <input type="radio" id="type_rsc" name="type" value="2" >
+                            <label for="type_rsc" class="inline"><span></span>Recurso</label>
+                        </div>
                     </div>
-                </div>
-                <div class="formRow" id="sch-row">
-                    <label class="control-label" for="sch-modal">Calendário</label>
-                    <div class="formRight">
-                        <select id="sch-modal" class="chzn-select"><?= query_pop_select("Select id_scheduler,display_text From sips_sd_schedulers Where 1") ?></select>
+                    <div class="formRow" id="sch-row">
+                        <label class="control-label" for="sch-modal">Calendário</label>
+                        <div class="formRight">
+                            <select name="sch" id="sch-modal" class="chzn-select"><?= query_pop_select("Select id_scheduler,display_text From sips_sd_schedulers Where 1") ?></select>
+                        </div>
                     </div>
-                </div>
-                <div class="formRow" id="rsc-row" style="display:none">
-                    <label class="control-label" for="rsc-modal">Recurso</label>
-                    <div class="formRight">
-                        <select id="rsc-odal" class="chzn-select"><?= query_pop_select("Select id_resource,display_text From sips_sd_resources Where 1") ?></select>
+                    <div class="formRow" id="rsc-row" style="display:none">
+                        <label class="control-label" for="rsc-modal">Recurso</label>
+                        <div class="formRight">
+                            <select name="rsc" id="rsc-modal" class="chzn-select"><?= query_pop_select("Select id_resource,display_text From sips_sd_resources Where 1") ?></select>
+                        </div>
                     </div>
-                </div>
+                </form>
+                <div class="clear"></div>
             </div>
             <div class="modal-footer">
                 <a href="#" onclick="$('#newRef-modal').modal('hide');"  class="btn">Fechar</a>
@@ -171,7 +205,32 @@ function query_pop_select($query) {
         </div>
 
         <script>
+                    $.fn.serializeObject = function()
+                    {
+                        var o = {};
+                        var a = this.serializeArray();
+                        $.each(a, function() {
+                            if (o[this.name] !== undefined) {
+                                if (!o[this.name].push) {
+                                    o[this.name] = [o[this.name]];
+                                }
+                                o[this.name].push(this.value || '');
+                            } else {
+                                o[this.name] = this.value || '';
+                            }
+                        });
+                        return o;
+                    };
+                    var live_row
                     $(function() {
+                        
+                   var otable= $('#ref-table').dataTable({
+                    "sPaginationType": "full_numbers",
+                    "oLanguage": {
+                        "sUrl": "/jquery/jsdatatable/language/pt-pt.txt"
+                    }
+                });    
+                    
 
                         $(".chzn-select").chosen({no_results_text: "Não foi encontrado."});
                         $("#loader").fadeOut("slow");
@@ -188,29 +247,36 @@ function query_pop_select($query) {
                             $('#debug-url').html('<p>Utilizador: <strong>' + user + '</strong></p><p>Descrição: <strong>' + cal + '</strong></p>');
                         });
 
-                        $('.confirm-delete').on('click', function(e) {
+                        $(document).on("click", ".confirm-delete", function(e) {
                             e.preventDefault();
+
+                            live_row = otable.fnGetPosition($(this).closest('tr').get(0));
+                            console.log($(this));
 
                             var id = $(this).data('id');
                             var user = $(this).data('user');
                             var cal = $(this).data('cal');
                             $('#modal-from-dom').data('id', id).data('user', user).data('cal', cal).modal('show');
                         });
-                        var ref_dom_types= $([]).add($("#sch-row")).add($("#rsc-row"));
-                        $("[name=type-modal]").on("click",function(){
+                        var ref_dom_types = $([]).add($("#sch-row")).add($("#rsc-row"));
+                        $("[name=type]").on("click", function() {
                             ref_dom_types.toggle();
                         });
-                        
-                        $("#del-confirm").on("click",function(){
-                            $.post("../ajax/agente_ref_do.php",{pedido:667,id:$('#modal-from-dom').data('id', id)},function(data){
-                                
-                            },"json");
+
+                        $("#del-confirm").on("click", function() {
+                            $.post("../ajax/agente_ref_do.php", {pedido: 667, cr:'<?=$user?>', id: $('#modal-from-dom').data().id}, function(data) {
+                                otable.fnDeleteRow(live_row);
+                                $('#modal-from-dom').modal("hide");
+                            }, "json");
                         });
-                        
-                        $("#newRef-confirm").on("click",function(){
-                            $.post("../ajax/agente_ref_do.php",{pedido:128,id:$('#modal-from-dom').data('id', id)},function(data){
-                                
-                            },"json");
+
+                        $("#newRef-confirm").on("click", function() {
+                            var conf = $("#newRef-form").serializeObject(), cal_id;
+                            cal_id = (conf.type === "1") ? conf.sch : conf.rsc;
+                            $.post("../ajax/agente_ref_do.php", {pedido: 128, cr:'<?=$user?>', user: conf.user, type: conf.type, cal: cal_id}, function(data) {
+                                otable.dataTable().fnAddData([data.utilizador,data.desc_cal,data.tipo+'<div class="view-button"><a href="#" class="btn  btn-mini activator confirm-delete" data-id="'+data.last+'" data-user="'+data.utilizador+'" data-cal="'+data.desc_cal+'"> <i class="icon-trash"></i><span>Eliminar</span></a></div></div>']);					
+                                $("#newRef-modal").modal('hide');
+                            }, "json");
                         });
                     });
         </script>
