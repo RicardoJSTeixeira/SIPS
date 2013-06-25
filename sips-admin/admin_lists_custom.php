@@ -1882,7 +1882,7 @@ function add_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$field
 	$field_options = utf8_decode($field_options); */
 	
 
-	$stmt="INSERT INTO vicidial_lists_fields set field_label='$field_label',field_name='$field_name',field_description='$field_description',field_rank='$field_rank',field_help='$field_help',field_type='$field_type',field_options='$field_options',field_size='$field_size',field_max='$field_max',field_default='$field_default',field_required='$field_required',field_cost='$field_cost',campaign_id='$list_id',multi_position='$multi_position',name_position='$name_position',field_order='$field_order', action='$mod_action';";
+	$stmt="INSERT INTO vicidial_lists_fields set field_label='$field_label',field_name='$field_name',field_description='$field_description',field_rank='$field_rank',field_help='$field_help',field_type='$field_type',field_options='$field_options',field_size='$field_size',field_max='$field_max',field_default='$field_default',field_required='$field_required',field_cost='$field_cost',campaign_id='$list_id',multi_position='$multi_position',name_position='$name_position',field_order='$field_order', action='".mysql_real_escape_string($mod_action)."';";
 	$rslt=mysql_query($stmt, $link);
 	
 	$field_update = mysql_affected_rows($link);
@@ -1986,7 +1986,7 @@ function modify_field_function($DB,$link,$linkCUSTOM,$ip,$user,$table_exists,$fi
 		if (!$rsltCUSTOM) {echo('Could not execute: ' . mysql_error());}
 		}
 
-	$stmt="UPDATE vicidial_lists_fields set field_label='$field_label',field_name='$field_name',field_description='$field_description',field_rank='$field_rank',field_help='$field_help',field_type='$field_type',field_options='$field_options',field_size='$field_size',field_max='$field_max',field_default='$field_default',field_required='$field_required',field_cost='$field_cost',multi_position='$multi_position',name_position='$name_position',field_order='$field_order', action='$mod_action' where campaign_id='$list_id' and field_id='$field_id';";
+	$stmt="UPDATE vicidial_lists_fields set field_label='$field_label',field_name='$field_name',field_description='$field_description',field_rank='$field_rank',field_help='$field_help',field_type='$field_type',field_options='$field_options',field_size='$field_size',field_max='$field_max',field_default='$field_default',field_required='$field_required',field_cost='$field_cost',multi_position='$multi_position',name_position='$name_position',field_order='$field_order', action='".mysql_real_escape_string($mod_action)."' where campaign_id='$list_id' and field_id='$field_id';";
 	$rslt=mysql_query($stmt, $link);
 	$field_update = mysql_affected_rows($link);
 	if ($DB) {echo "$field_update|$stmt\n";}
