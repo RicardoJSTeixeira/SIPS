@@ -218,5 +218,12 @@ function gwsc() {
     }
 }
 
-
+function log_admin($topic, $event, $id, $query, $PHP_AUTH_USER,$IP, $comments = "") {
+    global $link;
+    $stmt = "INSERT INTO vicidial_admin_log set event_date=NOW(), user='$PHP_AUTH_USER', ip_address='$IP', event_section='$topic', event_type='ADD', record_id='$id', event_code='$event', event_sql='" . mysql_real_escape_string($query) . "', event_notes='$comments';";
+    $rslt = mysql_query($stmt, $link);
+    if (!$rslt) {
+        echo "Log Error: " . mysql_error() . " Whole query:" . $stmt;
+    }
+}
 ?>

@@ -1487,8 +1487,8 @@ if (($leadfile) && ($LF_path))
 		$row=explode($delimiter, eregi_replace("[\'\"]", "", $buffer));
 		
                 $q="Select `dial_method` from vicidial_campaigns a inner join vicidial_lists b on a.campaign_id=b.campaign_id WHERE b.list_id='$list_id_override';";
-                $is_inbound_man=mysql_fetch_assoc(mysql_query($q,$link));
-		$is_inbound_man=$is_inbound_man[dial_method]=="INBOUND_MAN";
+                $is_inbound_man=mysql_fetch_array(mysql_query($q,$link));
+		$is_inbound_man=($is_inbound_man[0]=="INBOUND_MAN");
                 
 		$q="Select Name,Display_name,a.active from vicidial_list_ref a inner join vicidial_lists b on a.campaign_id=b.campaign_id WHERE b.list_id='$list_id_override' ORDER BY field_order asc;";
 		$sips_fields_brute=mysql_query($q,$link);
@@ -1502,12 +1502,13 @@ if (($leadfile) && ($LF_path))
                     for ($i = 0; $i < mysql_num_fields($rslt); $i++) {
             $a = true;
             for ($index = 0; $index < count($sips_fields); $index++) {
-
-                if (($sips_fields[$i]['Name'] == "list_id" and $list_id_override != "") or ($sips_fields[$i]['Name'] == "phone_code" and $phone_code_override != "") or (strtoupper($sips_fields[$i]['Name']) == strtoupper(mysql_field_name($rslt, $index)) AND $sips_fields[$i]['active'] == 0 AND strtoupper($sips_fields[$i]['Name'])!="OWNER")) {
+if((strtoupper($sips_fields[$i]['Name']) == strtoupper(mysql_field_name($rslt, $index)))AND(strtoupper($sips_fields[$i]['Name'])=="OWNER" AND $is_inbound_man)){goto a;}
+                if (($sips_fields[$i]['Name'] == "list_id" and $list_id_override != "") or ($sips_fields[$i]['Name'] == "phone_code" and $phone_code_override != "") or ((strtoupper($sips_fields[$i]['Name']) == strtoupper(mysql_field_name($rslt, $index))) AND $sips_fields[$i]['active'] == 0 )) {
                     print "<!-- skipping " . mysql_field_name($rslt, $index) . " -->\n";
                     $a = false;
                     break;
-                } elseif ((strtoupper($sips_fields[$i]['Name']) == strtoupper(mysql_field_name($rslt, $index))) or (strtoupper(mysql_field_name($rslt, $index))=="OWNER" and strtoupper($sips_fields[$i]['Name'])==strtoupper(mysql_field_name($rslt, $index)) and $is_inbound_man)) {
+                } elseif ((strtoupper($sips_fields[$i]['Name']) == strtoupper(mysql_field_name($rslt, $index))) or ((strtoupper(mysql_field_name($rslt, $index))=="OWNER" and strtoupper($sips_fields[$i]['Name'])==strtoupper(mysql_field_name($rslt, $index))) and $is_inbound_man)) {
+                    a:
                     print "  <tr>";
                     print "    <td style='min-width:225px'> <div class=cc-mstyle style='height:28px; '><p>" . $sips_fields[$i]['Display_name'] . "</p></div></td>";
                     print "    <td><select style='width:400px' name='" . mysql_field_name($rslt, $index) . "_field'>";
