@@ -76,7 +76,6 @@ function plot_bar(data)
       var first_time = true;
       var information = [];
       var colors = new Array("red", "green", "blue", "orange", "black");
-
       get_values_bar();
       function get_values_bar()
       {
@@ -89,7 +88,10 @@ function plot_bar(data)
                         clearTimeout(updation);
                         painel.remove();
                         $("#" + wbe[0] + "Main").remove();
-                        $.jGrowl("O gráfico de Barras " + wbe[1] + " não apresenta resultados", {life: 10000});
+
+                        $.jGrowl("O gráfico de Barras " + wbe[2] + " não apresenta resultados", {sticky: 10000});
+
+
                         return false;
                   }
 
@@ -113,11 +115,16 @@ function plot_bar(data)
 
                         if (sum == "0")
                         {
-                              $.jGrowl("A barra de " + label + " não apresenta resultados", {life: 5000});
-
+                              if (wbe[9][i].hasData)
+                              {
+                                    $.jGrowl("A barra de " + label + " não apresenta resultados", {sticky: true});
+                                    wbe[9][i].hasData = false;
+                              }
                         }
                         else
                         {
+                             
+                   
                               ticksA.push([i, label]);
                               data2.push([i, +data[i]]);
 
@@ -187,6 +194,10 @@ function plot_update(data)
       //9: mode
       //10: status_feedback
       //11: chamadas
+      //12:param1
+      //13:param2
+      //14:hasData
+
 
       get_values_update();
 
@@ -194,12 +205,9 @@ function plot_update(data)
 
       function get_values_update()
       {
-
-
             $.post("Requests.php", {action: "1", datasets: wbe[9]},
             function(dataBase)
             {
-
                   var data = dataBase;
                   if (data === null)
                   {
@@ -238,9 +246,16 @@ function plot_update(data)
                                     }
                                     else
                                     {
+
+
                                           result = [];
                                           information.push({data: result, label: "Sem resultados"});
-                                          $.jGrowl("A Linha " + wbe[9][aux].opcao_query + " do grafico " + wbe[2] + " não apresenta resultados", {life: 5000});
+                                          
+                                          if (wbe[9][aux].hasData)
+                                          {
+                                                $.jGrowl("A Linha " + wbe[9][aux].opcao_query + " do grafico " + wbe[2] + " não apresenta resultados", {sticky: true});
+                                                wbe[9][aux].hasData = false;
+                                          }
                                           verifier = 0;
 
 
@@ -366,7 +381,9 @@ function plot_pie(data) {
                         clearTimeout(updation);
                         painel.remove();
                         $("#" + wbe[0] + "Main").remove();
-                        $.jGrowl("O gráfico de Tarte " + wbe[1] + " não apresenta resultados", {life: 10000});
+
+                        $.jGrowl("O gráfico de Tarte " + wbe[2] + " não apresenta resultados", {life: 20000});
+
                         return false;
                   }
 
@@ -711,7 +728,9 @@ function   dataTable_top(data)
                               clearTimeout(updation);
                         panel.remove();
                         $("#" + wbe[0] + "Main").remove();
-                        $.jGrowl("A tabela " + wbe[2] + " não apresenta resultados", {life: 10000});
+
+                        $.jGrowl("A tabela " + wbe[2] + " não apresenta resultados", {life: 5000});
+
                         return false;
                   }
 

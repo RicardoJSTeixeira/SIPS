@@ -127,7 +127,7 @@ switch ($action) {
                 $query_dataset = mysql_query($query_dataset, $link) or die(mysql_error());
                 $dataset = array();
                 while ($row1 = mysql_fetch_assoc($query_dataset)) {
-                    $dataset[] = array(id => $row1["id"], id_wallboard => $row1["id_wallboard"], tempo => $row1["tempo"], campanha => $row1["campanha"], grupo_inbound => $row1["grupo_inbound"], grupo_user => $row1["grupo_user"], status_feedback => $row1["status_feedback"], limit => $row1["limit"], custom_colum_name => $row1["custom_colum_name"]);
+                    $dataset[] = array(id => $row1["id"], id_wallboard => $row1["id_wallboard"], tempo => $row1["tempo"], campanha => $row1["campanha"], grupo_inbound => $row1["grupo_inbound"], grupo_user => $row1["grupo_user"], status_feedback => $row1["status_feedback"], limit => $row1["limit"], custom_colum_name => $row1["custom_colum_name"], hasData => true);
                 }
                 $js[] = array(id => $row["id"], id_layout => $row["id_layout"], name => $row["name"], pos_x => $row["pos_x"], pos_y => $row["pos_y"], width => $row["width"], height => $row["height"], update_time => $row["update_time"], graph_type => $row["graph_type"], dataset => $dataset);
             } else {
@@ -138,7 +138,7 @@ switch ($action) {
                     $query2 = "SELECT * FROM  WallBoard_Query1  where codigo=$row1[codigo_query]";
                     $query2 = mysql_query($query2, $link) or die(mysql_error());
                     $row2 = mysql_fetch_assoc($query2);
-                    $dataset[] = array(id => $row1["id"], id_wallboard => $row1["id_wallboard"], codigo_query => $row1["codigo_query"], opcao_query => $row2["opcao_query"], tempo => $row1["tempo"], user => $row1["user"], user_group => $row1["user_group"], campaign_id => $row1["campaign_id"], linha_inbound => $row1["linha_inbound"], mode => $row1["mode"], status_feedback => $row1["status_feedback"], chamadas => $row1["chamadas"], param1 => $row1["param1"], param2 => $row1["param2"]);
+                    $dataset[] = array(id => $row1["id"], id_wallboard => $row1["id_wallboard"], codigo_query => $row1["codigo_query"], opcao_query => $row2["opcao_query"], tempo => $row1["tempo"], user => $row1["user"], user_group => $row1["user_group"], campaign_id => $row1["campaign_id"], linha_inbound => $row1["linha_inbound"], mode => $row1["mode"], status_feedback => $row1["status_feedback"], chamadas => $row1["chamadas"], param1 => $row1["param1"], param2 => $row1["param2"], hasData => true);
                 }
                 $js[] = array(id => $row["id"], id_layout => $row["id_layout"], name => $row["name"], pos_x => $row["pos_x"], pos_y => $row["pos_y"], width => $row["width"], height => $row["height"], update_time => $row["update_time"], graph_type => $row["graph_type"], dataset => $dataset);
             }
@@ -254,6 +254,7 @@ switch ($action) {
                         $selected_query = str_replace('$linha_inbound', $row["linha_inbound"], $selected_query);
                         $selected_query = str_replace('$status', $row["status_feedback"], $selected_query);
                         $selected_query = str_replace('$chamadas', $row["chamadas"], $selected_query);
+                        echo($selected_query);
                         $selected_query = mysql_query($selected_query, $link) or die(mysql_error());
                         while ($row3 = mysql_fetch_assoc($selected_query)) {
                             $temp[] = array(lead_id => $row3["lead_id"], call_date => $row3["call_date"]);
@@ -355,8 +356,8 @@ switch ($action) {
                         $selected_query = str_replace('$linha_inbound', $row["linha_inbound"], $selected_query);
                         $selected_query = str_replace('$status', $row["status_feedback"], $selected_query);
                         $selected_query = str_replace('$chamadas', $row["chamadas"], $selected_query);
-                        $c = $selected_query;
-                        $selected_query = mysql_query($selected_query, $link) or die(mysql_error() . $c);
+                        $selected_query = mysql_query($selected_query, $link) or die(mysql_error());
+
                         while ($row3 = mysql_fetch_assoc($selected_query)) {
                             $temp[] = array(lead_id => $row3["lead_id"], call_date => $row3["call_date"]);
                         }
@@ -381,13 +382,11 @@ switch ($action) {
                         $outbound = str_replace('$linha_inbound', $row["linha_inbound"], $outbound);
                         $outbound = str_replace('$status', $row["status_feedback"], $outbound);
                         $outbound = str_replace('$chamadas', $row["chamadas"], $outbound);
-                        $a = $inbound;
-                        $inbound = mysql_query($inbound, $link) or die(mysql_error() . $a);
+                        $inbound = mysql_query($inbound, $link) or die(mysql_error());
                         while ($row3 = mysql_fetch_assoc($inbound)) {
                             $temp1[] = array(lead_id => $row3["lead_id"], call_date => $row3["call_date"]);
                         }
-                        $b = $outbound;
-                        $outbound = mysql_query($outbound, $link) or die(mysql_error() . $b);
+                        $outbound = mysql_query($outbound, $link) or die(mysql_error());
                         while ($row4 = mysql_fetch_assoc($outbound)) {
                             $temp2[] = array(lead_id => $row4["lead_id"], call_date => $row4["call_date"]);
                         }
@@ -418,8 +417,8 @@ switch ($action) {
     case '3':// tarte - total feedbacks por user
         if ($opcao === "1")
             $query = "select vicidial_users.full_name,count(status) as total_feedback from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user where vicidial_agent_log.campaign_id='$campaign_id' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by vicidial_agent_log.user order by total_feedback desc";
-        if ($opcao === "2")
-            $query = "select vicidial_users.full_name,count(status) as total_feedback from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user where vicidial_agent_log.user_group='$user_group' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by vicidial_agent_log.user order by total_feedback desc";
+      //  if ($opcao === "2")
+        //    $query = "select vicidial_users.full_name,count(status) as total_feedback from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user where vicidial_agent_log.user_group='$user_group' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by vicidial_agent_log.user order by total_feedback desc";
         if ($opcao === "3")
             $query = "select vicidial_users.full_name,count(status) as total_feedback from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user  where vicidial_users.closer_campaigns like '%$linha_inbound%' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by vicidial_agent_log.user order by total_feedback desc";
         if ($opcao === "4")
@@ -438,7 +437,7 @@ switch ($action) {
 
         if ($opcao === "4") {
             while ($row = mysql_fetch_assoc($query)) {
-                $query1 = " SELECT status_name FROM `vicidial_campaign_statuses` WHERE status='$row[status]'";
+                $query1 = " (SELECT status_name FROM `vicidial_campaign_statuses` WHERE status='$row[status]') union all (SELECT status_name FROM `vicidial_statuses` WHERE status='$row[status]')";
 
                 $query1 = mysql_query($query1) or die(mysql_error());
                 $row1 = mysql_fetch_assoc($query1);
@@ -585,7 +584,7 @@ switch ($action) {
             $query1 = mysql_query($query1) or die(mysql_error());
             $row1 = mysql_fetch_assoc($query1);
             $tma_call = ($row["talk_sec"] - $row["dead_sec"]);
-            
+
             $js[] = array(user => $row1["full_name"], tma => $tma_call, count_feedbacks => $row["total_feedback"]);
         }
         echo json_encode($js);
