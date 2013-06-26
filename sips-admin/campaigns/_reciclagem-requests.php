@@ -283,8 +283,8 @@ function DialogRecycleResetCallbacksOnSave($CampaignID, $link)
     {
         $js['lead_id'][] = $row['lead_id'];
         
-         mysql_query("UPDATE vicidial_list SET status='NEW', user='', called_since_last_reset ='N', called_count = 0, last_local_call_time ='2008-01-01 00:00:00' WHERE lead_id='$row[lead_id]'", $link);
-         mysql_query("DELETE FROM vicidial_callbacks WHERE lead_id='$row[lead_id]'", $link);
+         mysql_query("UPDATE vicidial_list SET status='NEW', user='', called_since_last_reset ='N', called_count = 0, last_local_call_time ='2008-01-01 00:00:00' WHERE lead_id='$row[lead_id]'", $link) or die(mysql_error());
+         mysql_query("DELETE FROM vicidial_callbacks WHERE lead_id='$row[lead_id]'", $link) or die(mysql_error());
         
     }
     
