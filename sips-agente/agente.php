@@ -248,6 +248,8 @@ header ("Pragma: no-cache");                          // HTTP/1.0?>
 <script type="text/javascript" src="/jquery/jqueryUI/plugins/datetimepicker.js"></script>
 <script type="text/javascript" src="/jquery/jqueryUI/language/pt-pt.js"></script>
 
+<script type="text/javascript" src="/jquery/scrollto/jquery.scrollTo-1.4.3.1-min.js"></script>
+
 <script language="JavaScript" src="funcoes.js"></script>
 <style>
 	div#tcal{
