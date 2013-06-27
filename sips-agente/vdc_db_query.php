@@ -658,8 +658,12 @@ if (isset($_GET["cp_4"]))	{$cp_4=$_GET["cp_4"];}
 	elseif (isset($_POST["cp_4"]))	{$cp_4=$_POST["cp_4"];}
 if (isset($_GET["cp_3"]))	{$cp_3=$_GET["cp_3"];}
 	elseif (isset($_POST["cp_3"]))	{$cp_3=$_POST["cp_3"];}
+        
+if (isset($_GET["cb_to_other_user"]))	{$cb_to_other_user=$_GET["cb_to_other_user"];}
+	elseif (isset($_POST["cb_to_other_user"]))	{$cb_to_other_user=$_POST["cb_to_other_user"];}
+if (isset($_GET["cb_to_other_username"]))	{$cb_to_other_username=$_GET["cb_to_other_username"];}
+	elseif (isset($_POST["cb_to_other_username"]))	{$cb_to_other_username=$_POST["cb_to_other_username"];}
 
-	
 header("Content-type: text/html; charset=utf-8");
 header("Cache-Control: no-cache, must-revalidate");
 // HTTP/1.1
@@ -6483,7 +6487,14 @@ if ($ACTION == 'updateDISPO') {
 		$comments = eregi_replace("'", '', $comments);
 		$comments = eregi_replace(';', '', $comments);
 		$comments = eregi_replace("\\\\", ' ', $comments);
-		$stmt = "INSERT INTO vicidial_callbacks (lead_id,list_id,campaign_id,status,entry_time,callback_time,user,recipient,comments,user_group,lead_status) values('$lead_id','$list_id','$campaign','ACTIVE','$NOW_TIME','$CallBackDatETimE','$user','$recipient','$comments','$user_group','$CallBackLeadStatus');";
+                if($cb_to_other_user=="true"){
+                $user_cb=$cb_to_other_username;
+                $user_group_cb=mysql_fetch_row(mysql_query("Select user_group from vicidial_users where user='$user_cb'"));
+                }else{
+                $user_cb=$user;
+                $user_group=$user_group;
+                }
+		$stmt = "INSERT INTO vicidial_callbacks (lead_id,list_id,campaign_id,status,entry_time,callback_time,user,recipient,comments,user_group,lead_status) values('$lead_id','$list_id','$campaign','ACTIVE','$NOW_TIME','$CallBackDatETimE','$user_cb','$recipient','$comments','$user_group_cb','$CallBackLeadStatus');";
 		if ($DB) {echo "$stmt\n";
 		}
 		$rslt = mysql_query($stmt, $link);
