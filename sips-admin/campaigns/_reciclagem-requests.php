@@ -272,6 +272,30 @@ function EditRecycleContactDetailsDisableSingle($LeadID, $link)
 	mysql_query("UPDATE vicidial_list SET called_since_last_reset = 'N', status = 'MRYS' WHERE lead_id='$LeadID'") or die(mysql_error());
 }
 
+function DialogRecycleResetCallbacksOnSave($CampaignID, $link)
+{
+    $query = "SELECT lead_id FROM vicidial_callbacks WHERE campaign_id='$CampaignID'";
+    $query = mysql_query($query, $link) or die(mysql_error());
+    
+    
+    
+    while($row = mysql_fetch_assoc($query))
+    {
+        $js['lead_id'][] = $row['lead_id'];
+        
+         mysql_query("UPDATE vicidial_list SET status='NEW', user='', called_since_last_reset ='N', called_count = 0, last_local_call_time ='2008-01-01 00:00:00' WHERE lead_id='$row[lead_id]'", $link) or die(mysql_error());
+         mysql_query("DELETE FROM vicidial_callbacks WHERE lead_id='$row[lead_id]'", $link) or die(mysql_error());
+        
+    }
+    
+    
+    
+    
+    
+    
+    echo json_encode($js);
+    
+}
 
 switch($action)
 {
@@ -288,5 +312,6 @@ switch($action)
 	case "EditRecycleContactDetailsDisableAll": EditRecycleContactDetailsDisableAll($RecycleID, $TryType, $CampaignLists, $link); break;
 	case "EditRecycleContactDetailsResetSingle": EditRecycleContactDetailsResetSingle($LeadID, $link); break;
 	case "EditRecycleContactDetailsDisableSingle": EditRecycleContactDetailsDisableSingle($LeadID, $link); break;
+        case "DialogRecycleResetCallbacksOnSave": DialogRecycleResetCallbacksOnSave($CampaignID, $link); break;
 }
 ?>

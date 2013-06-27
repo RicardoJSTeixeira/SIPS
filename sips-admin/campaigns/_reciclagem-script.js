@@ -132,7 +132,7 @@ $("#btn-edit-recycle-contact-details-disable-all").button();
 $("#btn-new-recycle").button();	
 $("#btn-recycle-apply-to-all-campaigns").button();	
 $("#btn-recycle-view-disabled").button();		
-	
+$("#btn-recycle-reset-callbacks").button();	
 	
 	
 $('#spinner-recycle-time').spinner({
@@ -196,7 +196,32 @@ $("#dialog-confirm-recycle-apply-to-all-campaigns").dialog({
     open: function(){}
 }); 
 
+$("#dialog-confirm-recycle-reset-callbacks").dialog({ 
+    title: ' <span style="font-size:13px; color:black">Alerta!</span> ',
+    autoOpen: false,
+    height: 250,
+    width: 300,
+    resizable: false,
+    buttons: { 	"OK" : DialogRecycleResetCallbacksOnSave, 
+    			"Cancelar": DialogClose
+	},
+    open: function(){}
+}); 
+
+
+
 }
+
+function DialogRecycleResetCallbacksOnSave()
+{
+    $.post("_reciclagem-requests.php", {action: "DialogRecycleResetCallbacksOnSave", CampaignID: CampaignID }, function(json){
+	
+	
+	
+	
+	}, "json");
+}
+
 
 function RecycleActiveSwitch()
 {
@@ -627,3 +652,4 @@ $("body")
 .on("click", "#btn-new-recycle", NewRecycle)
 .on("click", "#select-new-recycle", ClearRecycleErrorMsg)
 .on("click", "#btn-recycle-apply-to-all-campaigns", {dialog: "#dialog-confirm-recycle-apply-to-all-campaigns"}, DialogOpen )
+.on("click", "#btn-recycle-reset-callbacks", {dialog: "#dialog-confirm-recycle-reset-callbacks"}, DialogOpen );

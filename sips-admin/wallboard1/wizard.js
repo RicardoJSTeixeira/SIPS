@@ -28,22 +28,6 @@
 //10: status_feedback
 //11: chamadas
 
-//optimizar o window.open(mandar as cenas por array)
-//maneira de fazer multiselect no dataSet é pra ser optimizado
-
-
-
-/*
- * 
- * tarte
- * divisao por feedbacks
- * feedback por agentes(mostra agentes)
- * 
- *barras
- * igual ao de linhas
- * 
- * 
- */
 
 
 
@@ -53,17 +37,12 @@
 
 
 
-
-
+//VARIAVEIS GERAIS-----------------VARIAVEIS GERAIS--------VARIAVEIS GERAIS-----------------VARIAVEIS GERAIS--------
 var wbes = [];
 var layouts = [];
-//VARIAVEIS GERAIS-----------------VARIAVEIS GERAIS--------VARIAVEIS GERAIS-----------------VARIAVEIS GERAIS--------
 var idLayout = 0;
 var window_slave;
 var selected_type_graph = 0;
-var query = "";
-var graph = [];
-var opcao_graph;
 var queries = [];
 var layouts = [];
 var id_wallboard;
@@ -73,11 +52,7 @@ var edit_dataset = false;
 
 
 //-----------------FUNÇÕES DOS BUTTONS----------------------------
-$("#opcao_layout_button").click(function()
-{
-      $("div.dialogButtons div button:nth-child(2)").text("gravar"); //alterar texto do botao;
-      $("#dialog_layout").dialog("open");
-});
+
 $("#add_layout_button").click(function()
 {
       sql_basic("insert_Layout", 0, 0);
@@ -126,68 +101,48 @@ $("#linhas_filtro").change(function()
 $("#dataTable_opcao").change(function()
 {
       var select = $("#dataTable_opcao");
-      var campaing = $("#campaign_id_dataTable");
-      var grupo_inbound = $("#grupo_inbound_dataTable");
-      var grupo_user = $("#grupo_user_dataTable");
-      $("#campaign_id_dataTable").show();
-      if (select.val() === "1")
-      {
-            campaing.show();
-            grupo_inbound.hide();
-            grupo_user.hide();
-      }
-      if (select.val() === "2")
-      {
-            campaing.hide();
-            grupo_inbound.show();
-            grupo_user.hide();
-      }
-      if (select.val() === "3")
-      {
-            campaing.hide();
-            grupo_inbound.hide();
-            grupo_user.show();
-      }
+      var campaing = $("#campaign_id_dataTable_div");
+      var grupo_inbound = $("#grupo_inbound_dataTable_div");
+      var grupo_user = $("#grupo_user_dataTable_div");
 
+      $(".dataTable_options").hide();
+      switch (select.val())
+      {
+            case "1":
+                  campaing.show();
+                  break;
+            case "2":
+                  grupo_inbound.show();
+                  break;
+            case "3":
+                  grupo_user.show();
+                  break;
+      }
 });
 $("#pie_opcao").change(function()
 {
       var select = $("#pie_opcao");
-      var campaing = $("#campaign_id_pie");
-      var grupo_inbound = $("#grupo_inbound_pie");
-      var grupo_user = $("#grupo_user_pie");
-      var user = $("#user_pie");
-      $("#campaign_id_pie").show();
-      if (select.val() === "1")
-      {
-            campaing.show();
-            grupo_inbound.hide();
-            grupo_user.hide();
-            user.hide();
-      }
-      if (select.val() === "3")
-      {
-            campaing.hide();
-            grupo_inbound.show();
-            grupo_user.hide();
-            user.hide();
-      }
-      if (select.val() === "2")
-      {
-            campaing.hide();
-            grupo_inbound.hide();
-            grupo_user.show();
-            user.hide();
-      }
+      var campaing = $("#campaign_id_pie_div");
+      var grupo_inbound = $("#grupo_inbound_pie_div");
+      var grupo_user = $("#grupo_user_pie_div");
+      var user = $("#user_pie_div");
+      $(".pie_select").hide();
 
-      if (select.val() === "4")
+      switch (select.val())
       {
-            campaing.hide();
-            grupo_inbound.hide();
-            grupo_user.hide();
-            user.show();
+            case "1":
+                  campaing.show();
+                  break;
+            case "2":
+                  grupo_user.show();
+                  break;
+            case "3":
+                  grupo_inbound.show();
+                  break;
+            case "4":
+                  user.show();
+                  break;
       }
-
 });
 //-----------------FUNÇÕES DOS BUTTONS----------------------------
 
@@ -196,21 +151,22 @@ $("#pie_opcao").change(function()
 // FUNÇÂO STARTER-----------------------------------------------------------------------------------------99999999----------------------------------------------------------------0000000000000000000000
 $(function() {
 
-      $("#campaign_id_dataTable").show();
-      $("#grupo_inbound_dataTable").hide();
-      $("#grupo_user_dataTable").hide();
-      $("#campaign_id_pie").show();
-      $("#grupo_inbound_pie").hide();
-      $("#grupo_user_pie").hide();
-      $("#user_pie").hide();
-      $(document).on("click", ".delete_button", function(e) {
 
+
+
+
+
+      $(".dataTable_options").hide();
+      $(".pie_select").hide();
+      $("#campaign_id_dataTable_div").show();
+      $("#campaign_id_pie_div").show();
+      $(document).on("click", ".delete_button", function(e) {
             var id = $(this).data("wbe_id");
             sql_basic('delete_WBE', 0, id);
-            $("#" + id + "WBE").remove();
       });
+
       $(document).on("click", ".add_dataset_button", function(e) {
-            $("div.dialogButtons div button:nth-child(2)").text("criar"); //alterar texto do botao;                                 
+            $("#create_button_dataset").text("Criar");
             if (wbes[ get_indice_wbe($(this).data("id"))][9].length >= 5)
             {
                   $.jGrowl('Capacidade de datasets por wallboard atingida (5 max).', {life: 6000});
@@ -218,14 +174,17 @@ $(function() {
             else {
                   id_wallboard = $(this).data("wbe_id");
                   manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
-                  $("#dialog_dataset_linhas").dialog("open");
+
+                  $('#dialog_dataset_linhas').modal('show');
             }
       });
+
       $(document).on("click", ".edit_dataset_button", function(e) {
             edit_dataset = true;
+            $("#create_button_dataset").text("Gravar alterações");
             id_dataset = $(this).data("dataset_id");
             id_wallboard = get_indice_wbe($(this).data("id"));
-            $("div.dialogButtons div button:nth-child(2)").text("gravar alterações"); //alterar texto do botao;
+
             var a = 0;
             $(".graph_advance_option").hide();
             $(".option_filtro").hide();
@@ -234,7 +193,6 @@ $(function() {
                   if (wbes[id_wallboard][9][a].id == id_dataset)
                   {
 //Inbound,Outbound,Blended
-
                         if (wbes[id_wallboard][9][a].mode === "1")
                               $("#in_out_bound").val(1);
                         if (wbes[id_wallboard][9][a].mode === "2")
@@ -245,25 +203,26 @@ $(function() {
                         if (wbes[id_wallboard][9][a].user != 0)
                         {
                               $("#linhas_serie").val(1);
-                              $("#user").val(wbes[id_wallboard][9][a].user);
+                              $('#user').val(wbes[id_wallboard][9][a].user).trigger('liszt:updated');
+                              $("#gao_user").show();
                         }
                         else if (wbes[id_wallboard][9][a].user_group != 0)
                         {
                               $("#gao_userGroup").show();
                               $("#linhas_serie").val(2);
-                              $("#user_group").val(wbes[id_wallboard][9][a].user_group);
+                              $('#user_group').val(wbes[id_wallboard][9][a].user_group).trigger('liszt:updated');
                         }
                         else if (wbes[id_wallboard][9][a].campaign_id != 0)
                         {
                               $("#gao_campaign").show();
                               $("#linhas_serie").val(3);
-                              $("#campaign").val(wbes[id_wallboard][9][a].campaign_id);
+                              $('#campaign').val(wbes[id_wallboard][9][a].campaign_id).trigger('liszt:updated');
                         }
                         else if (wbes[id_wallboard][9][a].linha_inbound != 0)
                         {
                               $("#gao_inbound").show();
                               $("#linhas_serie").val(5);
-                              $("#inbound").val(wbes[id_wallboard][9][a].linha_inbound);
+                              $('#inbound').val(wbes[id_wallboard][9][a].linha_inbound).trigger('liszt:updated');
                         }
                         else
                               $("#linhas_serie").val(4);
@@ -272,30 +231,31 @@ $(function() {
                         {
                               $("#gao_status").show();
                               $("#linhas_filtro").val(2);
-                              $("#status_venda").val(wbes[id_wallboard][9][a].status_feedback);
+                              $('#status_venda').val(wbes[id_wallboard][9][a].status_feedback).trigger('liszt:updated');
                         }
                         else if (wbes[id_wallboard][9][a].chamadas != 0)
                         {
                               $("#gao_chamadas").show();
                               $("#linhas_filtro").val(1);
-                              if (wbes[id_wallboard][9][a].chamadas == "atendidas")
+                              if (wbes[id_wallboard][9][a].chamadas == "Atendidas")
                                     $("#chamadas").val(1);
-                              if (wbes[id_wallboard][9][a].chamadas == "perdidas")
+                              if (wbes[id_wallboard][9][a].chamadas == "Perdidas")
                                     $("#chamadas").val(2);
-                              if (wbes[id_wallboard][9][a].chamadas == "feitas")
+                              if (wbes[id_wallboard][9][a].chamadas == "Feitas")
                                     $("#chamadas").val(3);
                         }
                   }
-
                   a++;
             });
             manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
-            $("#dialog_dataset_linhas").dialog("open");
+            $('#dialog_dataset_linhas').modal('show');
       });
+
       $(document).on("click", ".delete_dataset_button", function(e) {
             manipulate_dataset("remove_dataset", $(this).data("dataset_id"), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             load_dados("wbe", idLayout);
       });
+
       $(document).on("click", "#checkbox_feedback", function(e) {
 
             if (this.checked)
@@ -305,6 +265,7 @@ $(function() {
             else
                   $("#dataTable_status_select_div").css("display", "inline-block");
       });
+
       $(document).on("click", "#checkbox_feedback_pie", function(e) {
 
             if (this.checked)
@@ -314,377 +275,279 @@ $(function() {
             else
                   $("#pie_status_select_div").css("display", "inline-block");
       });
-      $(document).on("click", ".add_dataTop_button", function(e) {
 
+      $(document).on("click", "#topTable_button", function(e) {
             $('#coluna_feedback').val('Feedbacks');
-            $('#dataTop_name').val('Tabela Top');
+            $('#dataTable_name').val('Tabela Top');
             $('#dataTable_status_select').val('').trigger('liszt:updated');
-            $("#dialog_dataTable").dialog("open");
+
       });
-      $(document).on("click", ".add_inbound_button", function(e) {
 
-
-            $("#dialog_inbound").dialog("open");
-      });
-      $(document).on("click", ".add_pie_button", function(e) {
-
+      $(document).on("click", "#pie_button", function(e) {//GRAFICO DE PIES
             $('#pie_name').val('Gráfico de Tarte');
-            $("#dialog_pie").dialog("open");
+            $('#pie_feedback_colum_name').val('Feedbacks');
+            $('#pie_status_select').val('').trigger('liszt:updated');
       });
-      $(document).on("click", ".add_linhas_button", function(e) {
-            $("div.dialogButtons div button:nth-child(2)").text("Criar"); //alterar texto do botao;           
-            $("#graph_name").val("Gráfico Novo");
-            $("#dialog").dialog("open");
+
+      $(document).on("click", "#linhas_button", function(e) {//GRÀFICO DE LINHAS
+            $('#graph_name').val('Novo Gráfico');
       });
- 
+
+      $(document).on("click", "#barras_button", function(e) {//GRAFICO DE BARRAS
+            $('#graph_name').val('Novo Gráfico');
+      });
+
+      $(document).on("click", "#save_button_layout", function(e) {//ALTERAR O NOME DA LAYOUT
+
+            if ($("#Layout_Input_name").val() == "")
+                  $.jGrowl('Preencha o nome para a layout', {life: 6000});
+            else
+            {
+                  save_layout();
+                  $('#dialog_layout').modal('hide');
+            }
+      });
+
+      $(document).on("click", "#delete_button_layout", function(e) {//APAGAR A LAYOUT E SEUS WALLBOARDS
+            sql_basic("remove_Layout", idLayout);
+      });
+
+      $(document).on("click", "#create_button_dialog", function(e) {//CRIAR OS WALLBOARDS PARA LINHAS E BARRAS
+            manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, $("#update_time").val(), selected_type_graph, 0, 0);
+      });
+
+      $(document).on("click", "#create_button_pie", function(e) {//CRIAR OS WALLBOARDS PARA LINHAS E BARRAS
+            var feedbacks = "";
+            if (!$("#pie_status_select").val() && !($("#checkbox_feedback_pie").prop('checked')))
+                  alert("Não escolheu nenhum feedback");
+            else
+            {
+
+                  if ($("#checkbox_feedback_pie").prop('checked'))
+                        feedbacks = 1;
+                  else
+                        feedbacks = $("#pie_status_select").val();
+                  feedbacks = "'" + feedbacks + "'";
+
+                  switch ($("#pie_opcao").val())
+                  {
+                        case "1":
+                              manipulate_pie("insert_pie", 0, 0, 1, "Gráfico de Tarte", $("#pie_timespan").val(), 0, 0, $("#campaign_id_pie option:selected").val(), 0, 0, feedbacks, 0, $("#campaign_id_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
+                              break;
+                        case "2":
+                              manipulate_pie("insert_pie", 0, 0, 2, "Gráfico de Tarte", $("#pie_timespan").val(), 0, $("#grupo_user_pie option:selected").val(), 0, 0, 0, feedbacks, 0, $("#grupo_user_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
+                              break;
+                        case "3":
+                              manipulate_pie("insert_pie", 0, 0, 3, "Gráfico de Tarte", $("#pie_timespan").val(), 0, 0, 0, $("#grupo_inbound_pie option:selected").val(), 0, feedbacks, 0, $("#grupo_inbound_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
+                              break;
+                        case "4":
+                              manipulate_pie("insert_pie", 0, 0, 4, "Gráfico de Tarte", $("#pie_timespan").val(), $("#user_pie option:selected").val(), 0, 0, 0, 0, feedbacks, 0, $("#user_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
+                              break;
+                  }
+                  ;
+                  $('#dialog_pie').modal('hide');
+            }
+      });
+
+      $(document).on("click", "#create_button_dataTable", function(e) {//CRIAR OS WALLBOARDS PARA LINHAS E BARRAS
+
+            if (!$("#dataTable_status_select").val() && !($("#checkbox_feedback").prop('checked')))
+                  alert("Não escolheu nenhum feedback");
+            else
+            {
+
+                  if ($("#checkbox_feedback").prop('checked'))
+                        var feedbacks = 1;
+                  else
+                        var feedbacks = $("#dataTable_status_select").val();
+                  feedbacks = "'" + feedbacks + "'";
+                  var limit = 10;
+                  if ($("#resultdado_datatable_1").prop('checked'))
+                        limit = 10;
+                  else
+                        limit = 5;
+                  switch ($("#dataTable_opcao").val())
+                  {
+                        case "1":
+                              manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), $("#campaign_id_dataTable").val(), 0, 0, feedbacks, limit, $("#coluna_feedback").val(), 0, $("#dataTable_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, 0, 0);
+                              break;
+                        case "2":
+                              manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), 0, $("#grupo_inbound_dataTable").val(), 0, feedbacks, limit, $("#coluna_feedback").val(), 0, $("#dataTable_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, 0, 0);
+                              break;
+                        case "3":
+                              manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), 0, 0, $("#grupo_user_dataTable").val(), feedbacks, limit, $("#coluna_feedback").val(), 0, $("#dataTable_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, 0, 0);
+                              break;
+                  }
+
+                  $('#dialog_dataTable').modal('hide');
+            }
+      });
+
+      $(document).on("click", "#create_button_inbound", function(e) {
+            manipulate_graph("insert_wbe", 0, "Estatistica", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 4, $("#group_inbound_select").val(), $("#group_inbound_select option:selected").text());
+      });
+
+      $(document).on("click", "#create_button_dataset", function(e) {
+
+            var opcao = "insert_dataset";
+            if (edit_dataset) {
+                  edit_dataset = false;
+                  opcao = "edit_dataset";
+                  $("div.dialogButtons div button:nth-child(2)").text("Criar"); //alterar texto do botao;
+            }
+            else
+            {
+                  opcao = "insert_dataset";
+            }
+            var querie = [];
+
+            if ($("#linhas_filtro").val() === "1")
+                  switch ($("#linhas_serie").val())
+                  {
+                        case "1":
+
+                              switch ($("#chamadas").val())
+                              {
+                                    case "1":
+                                          //Chamadas Atendidas por user
+                                          querie = get_query(1);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "Atendidas", $("#user option:selected").text(), 0);
+                                          break;
+                                    case "2":
+                                          //Chamadas Perdidas por user   
+                                          querie = get_query(2);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "Perdidas", $("#user option:selected").text(), 0);
+                                          break;
+                                    case "3":
+                                          //Chamadas Feitas por user 
+                                          querie = get_query(3);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "Feitas", $("#user option:selected").text(), 0);
+                                          break;
+                              }
+                              break;
+                        case "2":
+
+                              switch ($("#chamadas").val())
+                              {
+                                    case "1":
+                                          //Chamadas Atendidas por user_group
+                                          querie = get_query(4);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "Atendidas", $("#user_group option:selected").text(), 0);
+                                          break;
+                                    case "2":
+                                          //Chamadas Perdidas por user_group   
+                                          querie = get_query(5);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "Perdidas", $("#user_group option:selected").text(), 0);
+                                          break;
+                                    case "3":
+                                          //Chamadas Feitas por user_group 
+                                          querie = get_query(6);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "Feitas", $("#user_group option:selected").text(), 0);
+                                          break;
+                              }
+                              break;
+                        case "3":
+                              switch ($("#chamadas").val())
+                              {
+                                    case "1":
+                                          //Chamadas Atendidas por campanha
+                                          querie = get_query(7);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "Atendidas", $("#campaign option:selected").text(), 0);
+                                          break;
+                                    case "2":
+                                          //Chamadas Perdidas por campanha   
+                                          querie = get_query(8);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "Perdidas", $("#campaign option:selected").text(), 0);
+                                          break;
+                                    case "3":
+                                          //Chamadas Feitas por campanha 
+                                          querie = get_query(9);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "Feitas", $("#campaign option:selected").text(), 0);
+                                          break;
+                              }
+                              break;
+                        case "4":
+                              switch ($("#chamadas").val())
+                              {
+                                    case "1":
+                                          //Chamadas Atendidas por Total CallCenter
+                                          querie = get_query(10);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "Atendidas", "total call center", 0);
+                                          break;
+                                    case "2":
+                                          //Chamadas Perdidas por Total CallCenter  
+                                          querie = get_query(11);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "Perdidas", "total call center", 0);
+                                          break;
+                                    case "3":
+                                          //Chamadas Feitas por Total CallCenter 
+                                          querie = get_query(12);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "Feitas", "total call center", 0);
+                                          break;
+                              }
+                              break;
+                        case "5":
+                              switch ($("#chamadas").val())
+                              {
+                                    case "1":
+                                          //Chamadas Atendidas por Inbound
+                                          querie = get_query(18);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "Atendidas", $("#inbound option:selected").text(), 0);
+                                          break;
+                                    case "2":
+                                          //Chamadas Perdidas por Inbound   
+                                          querie = get_query(19);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "Perdidas", $("#inbound option:selected").text(), 0);
+                                          break;
+                                    case "3":
+                                          //Chamadas Feitas por Inbound 
+                                          querie = get_query(20);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "Feitas", $("#inbound option:selected").text(), 0);
+                                          break;
+                              }
+                              break;
+                  }
+
+            if ($("#linhas_filtro").val() === "2")
+                  switch ($("#linhas_serie").val())
+                  {
+                        case "1":
+                              //feedback por user
+                              querie = get_query(13);
+                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
+                              break;
+                        case "2":
+                              //feedback por user_group
+                              querie = get_query(14);
+                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
+                              break;
+                        case "3":
+                              //feedback por campanha
+                              querie = get_query(15);
+                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
+                              break;
+                        case "4":
+                              //feedback por call center
+                              querie = get_query(16);
+                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
+                              break;
+                        case "5":
+                              //feedback por linha inbound
+                              querie = get_query(17);
+                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
+                              break;
+                  }
+      });
+
+
+
       //inicia os tooltips
       $("[data-t=tooltip]").tooltip({placement: "left", html: true});
       $("[data-t=tooltip-right]").tooltip({placement: "right", html: true});
       //DIALOGS
-      $("#dialog").dialog({
-            dialogClass: 'dialogButtons',
-            autoOpen: false,
-            resizable: false,
-            modal: true,
-            buttons: {
-                  "Cancelar": function() {
-                        $(this).dialog("close");
-                  },
-                  "Criar": function() {
-                        manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, $("#update_time").val(), selected_type_graph, 0, 0);
-                        $(this).dialog("close");
-                  }
-            }
-
-      });
-      $("#dialog_dataset_linhas").dialog({
-            dialogClass: 'dialogButtons',
-            autoOpen: false,
-            resizable: false,
-            width: 470,
-            modal: true,
-            buttons: {
-                  "Cancelar": function() {
-                        $("div.dialogButtons div button:nth-child(2)").text("Criar"); //alterar texto do botao;
-                        $(this).dialog("close");
-                  },
-                  "Criar": function() {
-                        function get_random_color() {
-                              var letters = '0123456789ABCDEF'.split('');
-                              var color = '#';
-                              for (var i = 0; i < 6; i++) {
-                                    color += letters[Math.round(Math.random() * 15)];
-                              }
-                              return color;
-                        }
-                        var opcao = "insert_dataset";
-                        if (edit_dataset) {
-                              edit_dataset = false;
-                              opcao = "edit_dataset";
-                              $("div.dialogButtons div button:nth-child(2)").text("Criar"); //alterar texto do botao;
-                        }
-                        else
-                        {
-                              opcao = "insert_dataset";
-                        }
-                        var querie = [];
-                        if ($("#linhas_filtro").val() === "1")
-                              switch ($("#linhas_serie").val())
-                              {
-                                    case "1":
-
-                                          switch ($("#chamadas").val())
-                                          {
-                                                case "1":
-                                                      //Chamadas atendidas por user
-                                                      querie = get_query(1);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "atendidas", $("#user option:selected").text(), 0);
-                                                      break;
-                                                case "2":
-                                                      //Chamadas perdidas por user   
-                                                      querie = get_query(2);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "perdidas", $("#user option:selected").text(), 0);
-                                                      break;
-                                                case "3":
-                                                      //Chamadas feitas por user 
-                                                      querie = get_query(3);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "feitas", $("#user option:selected").text(), 0);
-                                                      break;
-                                          }
-                                          break;
-                                    case "2":
-
-                                          switch ($("#chamadas").val())
-                                          {
-                                                case "1":
-                                                      //Chamadas atendidas por user_group
-                                                      querie = get_query(4);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "atendidas", $("#user_group option:selected").text(), 0);
-                                                      break;
-                                                case "2":
-                                                      //Chamadas perdidas por user_group   
-                                                      querie = get_query(5);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "perdidas", $("#user_group option:selected").text(), 0);
-                                                      break;
-                                                case "3":
-                                                      //Chamadas feitas por user_group 
-                                                      querie = get_query(6);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "feitas", $("#user_group option:selected").text(), 0);
-                                                      break;
-                                          }
-                                          break;
-                                    case "3":
-                                          switch ($("#chamadas").val())
-                                          {
-                                                case "1":
-                                                      //Chamadas atendidas por campanha
-                                                      querie = get_query(7);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "atendidas",  $("#campaign option:selected").text(), 0);
-                                                      break;
-                                                case "2":
-                                                      //Chamadas perdidas por campanha   
-                                                      querie = get_query(8);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "perdidas", $("#campaign option:selected").text(), 0);
-                                                      break;
-                                                case "3":
-                                                      //Chamadas feitas por campanha 
-                                                      querie = get_query(9);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "feitas", $("#campaign option:selected").text(), 0);
-                                                      break;
-                                          }
-                                          break;
-                                    case "4":
-                                          switch ($("#chamadas").val())
-                                          {
-                                                case "1":
-                                                      //Chamadas atendidas por Total CallCenter
-                                                      querie = get_query(10);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "atendidas", "total call center", 0);
-                                                      break;
-                                                case "2":
-                                                      //Chamadas perdidas por Total CallCenter  
-                                                      querie = get_query(11);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "perdidas", "total call center", 0);
-                                                      break;
-                                                case "3":
-                                                      //Chamadas feitas por Total CallCenter 
-                                                      querie = get_query(12);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "feitas", "total call center", 0);
-                                                      break;
-                                          }
-                                          break;
-                                    case "5":
-                                          switch ($("#chamadas").val())
-                                          {
-                                                case "1":
-                                                      //Chamadas atendidas por Inbound
-                                                      querie = get_query(18);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "atendidas",  $("#inbound option:selected").text(), 0);
-                                                      break;
-                                                case "2":
-                                                      //Chamadas perdidas por Inbound   
-                                                      querie = get_query(19);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "atendidas", $("#inbound option:selected").text(), 0);
-                                                      break;
-                                                case "3":
-                                                      //Chamadas feitas por Inbound 
-                                                      querie = get_query(20);
-                                                      manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "atendidas", $("#inbound option:selected").text(), 0);
-                                                      break;
-                                          }
-                                          break;
-                              }
-
-                        if ($("#linhas_filtro").val() === "2")
-                              switch ($("#linhas_serie").val())
-                              {
-                                    case "1":
-                                          //feedback por user
-                                          querie = get_query(13);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
-                                          break;
-                                    case "2":
-                                          //feedback por user_group
-                                          querie = get_query(14);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
-                                          break;
-                                    case "3":
-                                          //feedback por campanha
-                                          querie = get_query(15);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
-                                          break;
-                                    case "4":
-                                          //feedback por call center
-                                          querie = get_query(16);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
-                                          break;
-                                    case "5":
-                                          //feedback por linha inbound
-                                          querie = get_query(17);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
-                                          break;
-                              }
-
-                        $(this).dialog("close");
-                  }
-            }
-
-      });
-      $("#dialog_delete ").dialog({
-            autoOpen: false,
-            dialogClass: 'dialogButtons',
-            resizable: false,
-            height: 220,
-            modal: true,
-            buttons: {
-                  "Cancelar": function() {
-                        $(this).dialog("close");
-                  },
-                  "Sim": function() {
-                        sql_basic("remove_Layout", idLayout);
-                        $(this).dialog("close");
-                  }
-
-            }
-      });
-      $("#dialog_layout").dialog({
-            dialogClass: 'dialogButtons',
-            autoOpen: false,
-            resizable: false,
-            height: 200,
-            modal: true,
-            buttons: {
-                  "Cancelar": function() {
-                        $(this).dialog("close");
-                  },
-                  "Gravar": function() {
-
-                        save_layout();
-                        $(this).dialog("close");
-                  }
-            }
-      });
-      $("#dialog_inbound").dialog({
-            dialogClass: 'dialogButtons',
-            autoOpen: false,
-            resizable: false,
-            height: 220,
-            width: 310,
-            modal: true,
-            buttons: {
-                  "Cancelar": function() {
-                        $(this).dialog("close");
-                  },
-                  "Criar": function() {
-
-                        manipulate_graph("insert_wbe", 0, "Estatistica", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 4, $("#group_inbound_select").val(), $("#group_inbound_select option:selected").text());
-                        $(this).dialog("close");
-                  }
-            }
-      });
-      $("#dialog_dataTable").dialog({
-            dialogClass: 'dialogButtons',
-            autoOpen: false,
-            resizable: false,
-            height: 650,
-            width: 280,
-            modal: true,
-            buttons: {
-                  "Cancelar": function() {
-                        $(this).dialog("close");
-                  },
-                  "Criar": function() {
 
 
 
-
-                        if (!$("#dataTable_status_select").val() && !($("#checkbox_feedback").prop('checked')))
-                              alert("Não escolheu nenhum feedback");
-                        else
-                        {
-
-                              if ($("#checkbox_feedback").prop('checked'))
-                                    var feedbacks = 1;
-                              else
-                                    var feedbacks = $("#dataTable_status_select").val();
-                              feedbacks = "'" + feedbacks + "'";
-                              switch ($("#dataTable_opcao").val())
-                              {
-                                    case "1":
-                                          manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), $("#campaign_id_dataTable").val(), 0, 0, feedbacks, $("#dataTable_top_limit").val(), $("#coluna_feedback").val(), 0, $("#dataTop_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, 0, 0);
-                                          break;
-                                    case "2":
-                                          manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), 0, $("#grupo_inbound_dataTable").val(), 0, feedbacks, $("#dataTable_top_limit").val(), $("#coluna_feedback").val(), 0, $("#dataTop_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, 0, 0);
-                                          break;
-                                    case "3":
-                                          manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), 0, 0, $("#grupo_user_dataTable").val(), feedbacks, $("#dataTable_top_limit").val(), $("#coluna_feedback").val(), 0, $("#dataTop_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, 0, 0);
-                                          break;
-                              }
-
-                              $(this).dialog("close");
-                        }
-                  }
-            }
-      });
-      $("#dialog_pie").dialog({
-            dialogClass: 'dialogButtons',
-            autoOpen: false,
-            resizable: false,
-            height: 450,
-            width: 280,
-            modal: true,
-            buttons: {
-                  "Cancelar": function() {
-                        $(this).dialog("close");
-                  },
-                  "Criar": function() {
-
-
-                        var feedbacks = "";
-                        if (!$("#pie_status_select").val() && !($("#checkbox_feedback_pie").prop('checked')))
-                              alert("Não escolheu nenhum feedback");
-                        else
-                        {
-
-                              if ($("#checkbox_feedback_pie").prop('checked'))
-                                    feedbacks = 1;
-                              else
-                                    feedbacks = $("#pie_status_select").val();
-                              feedbacks = "'" + feedbacks + "'";
-
-                              switch ($("#pie_opcao").val())
-                              {
-                                    case "1":
-                                          manipulate_pie("insert_pie", 0, 0, 1, "Gráfico de Tarte", $("#pie_timespan").val(), 0, 0, $("#campaign_id_pie option:selected").val(), 0, 0, feedbacks, 0, $("#campaign_id_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 4450, 242, idLayout, 10000, 3);
-                                          break;
-                                    case "2":
-                                          manipulate_pie("insert_pie", 0, 0, 2, "Gráfico de Tarte", $("#pie_timespan").val(), 0, $("#grupo_user_pie option:selected").val(), 0, 0, 0, feedbacks, 0, $("#grupo_user_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
-                                          break;
-                                    case "3":
-                                          manipulate_pie("insert_pie", 0, 0, 3, "Gráfico de Tarte", $("#pie_timespan").val(), 0, 0, 0, $("#grupo_inbound_pie option:selected").val(), 0, feedbacks, 0, $("#group_inbound_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
-                                          break;
-                                    case "4":
-                                          manipulate_pie("insert_pie", 0, 0, 4, "Gráfico de Tarte", $("#pie_timespan").val(), $("#user_pie option:selected").val(), 0, 0, 0, 0, feedbacks, 0, $("#user_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
-                                          break;
-                              }
-                              ;
-                              $(this).dialog("close");
-                        }
-                  }
-            }
-      });
-      $("div.dialogButtons div button:nth-child(1)").addClass("btn btn"); //classe dos botoes das dialogs
-      $("div.dialogButtons div button:nth-child(2)").addClass("btn btn-primary");
-      $(".diablog_opener").click(function() {
-
-
-      });
-      $(".diablog_opener_inbound").click(function() {
-            $("#dialog_inbound").dialog("open");
-      });
-      $(".diablog_opener_dataTable").click(function() {
-            $("#dialog_dataTable").dialog("open");
-      });
       //loada da dropbox com os indices e do painel do layout
       load_dados("layout", 0);
       //para fazer load das options extra
@@ -703,7 +566,6 @@ function get_query(codigo)
 
             if (queries[i][6] == codigo)
             {
-
                   querie = queries[i];
                   return false;
             }
@@ -715,7 +577,11 @@ function get_query(codigo)
 
 function fullScreen()
 {
-      window_slave = window.open("/sips-admin/wallboard1/full_screen_render.html", idLayout + ";" + $("#MainLayout").width() + ";" + $("#MainLayout").height());
+      var dados = [];
+      dados.push(idLayout);
+      dados.push($("#MainLayout").width());
+      dados.push($("#MainLayout").height());
+      window_slave = window.open("/sips-admin/wallboard1/full_screen_render.html", dados);
 }
 
 function check_save()
@@ -813,6 +679,9 @@ function update_wbe()
       //9: mode
       //10: status_feedback
       //11: chamadas
+      //12:param1
+      //13:param1
+      //14:hasData
       //
       //or
       //
@@ -825,6 +694,7 @@ function update_wbe()
       //status_feedback
       //limit
       //custom_colum_name
+      //hasData
 
 
 
@@ -832,95 +702,107 @@ function update_wbe()
 
       $.each(wbes, function(index, value) {
             var ml = $("#MainLayout");
-            if (wbes[i][8] === "4")//Todos menos Inbound e datatop
+            switch ((wbes[i][8]))
             {
-                  ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
-                          .css("left", wbes[i][3] + "px")
-                          .css("top", wbes[i][4] + "px")
-                          .css("width", wbes[i][5] + "px")
-                          .css("height", wbes[i][6] + "px")
-                          .append($("<div>").addClass("grid-title")
-                          .append($("<div>").addClass("pull-left")
-                          .text(wbes[i][2] + " de " + wbes[i][9][0].param1))
-                          .append($("<div>").addClass("pull-right")
-                          .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
-                          .append($("<i>").addClass("icon-remove")))
-                          ))
-                          .append($("<div>").addClass("grid-content").attr("id", "grid_content")));
-            }
-            else if (wbes[i][8] === "5")//dataTop
-            {
-                  ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
-                          .css("left", wbes[i][3] + "px")
-                          .css("top", wbes[i][4] + "px")
-                          .css("width", wbes[i][5] + "px")
-                          .css("height", wbes[i][6] + "px")
-                          .append($("<div>").addClass("grid-title")
-                          .append($("<div>").addClass("pull-left")
-                          .text(wbes[i][2]))
-                          .append($("<div>").addClass("pull-right")
-                          .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
-                          .append($("<i>").addClass("icon-remove")))
-                          ))
-                          .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0]).text(wbes[i][9][0].custom_colum_name)
+                  case "4"://Inbound
+                        ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
+                                .css("left", wbes[i][3] + "px")
+                                .css("top", wbes[i][4] + "px")
+                                .css("width", wbes[i][5] + "px")
+                                .css("height", wbes[i][6] + "px")
+                                .append($("<div>").addClass("grid-title")
+                                .append($("<div>").addClass("pull-left icon-list-alt ")
+                                .text(" " + wbes[i][2] + " de " + wbes[i][9][0].param1))
+                                .append($("<div>").addClass("pull-right")
+                                .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
+                                .append($("<i>").addClass("icon-remove")))
+                                ))
+                                .append($("<div>").addClass("grid-content").attr("id", "grid_content")));
+                        break;
+                  case "5"://dataTop
+
+                        ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
+                                .css("left", wbes[i][3] + "px")
+                                .css("top", wbes[i][4] + "px")
+                                .css("width", wbes[i][5] + "px")
+                                .css("height", wbes[i][6] + "px")
+                                .append($("<div>").addClass("grid-title")
+                                .append($("<div>").addClass("pull-left icon-th-list ")
+                                .text(" " + wbes[i][2]))
+                                .append($("<div>").addClass("pull-right")
+                                .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
+                                .append($("<i>").addClass("icon-remove")))
+                                ))
+                                .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0]))
+                                );
+                        $("#grid_content" + wbes[i][0])
+                                .append($("<div>").addClass("span12")
+                                .text("Nome da coluna-> " + wbes[i][9][0].custom_colum_name));
+                        break;
+                  case "3"://Pie
+
+                        ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
+                                .css("left", wbes[i][3] + "px")
+                                .css("top", wbes[i][4] + "px")
+                                .css("width", wbes[i][5] + "px")
+                                .css("height", wbes[i][6] + "px")
+                                .append($("<div>").addClass("grid-title")
+                                .append($("<div>").addClass("pull-left icon-adjust")
+                                .text(" " + wbes[i][2]))
+                                .append($("<div>").addClass("pull-right")
+                                .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
+                                .append($("<i>").addClass("icon-remove")))
+                                ))
+                                .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0])
+                                ));
+                        $("#grid_content" + wbes[i][0]).append($("<div>").addClass("span6")
+                                .text("Filtro-> " + wbes[i][9][0].param1))
 
 
-                          ));
-            }
-            else if (wbes[i][8] === "3")//Pie
-            {
-                  ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
-                          .css("left", wbes[i][3] + "px")
-                          .css("top", wbes[i][4] + "px")
-                          .css("width", wbes[i][5] + "px")
-                          .css("height", wbes[i][6] + "px")
-                          .append($("<div>").addClass("grid-title")
-                          .append($("<div>").addClass("pull-left")
-                          .text(wbes[i][2]))
-                          .append($("<div>").addClass("pull-right")
-                          .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
-                          .append($("<i>").addClass("icon-remove")))
-                          ))
-                          .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0]).text(wbes[i][9][0].param1)
+                                .append($("<div>").addClass("span6")
+                                .text("Nome da coluna-> " + wbes[i][9][0].param2));
+                        break;
+                  default:
+                        if(wbes[i][8]==="1")
+                        var icon = "icon-picture";
+                  else
+                        var icon = "icon-bar-chart";
 
 
-                          ));
-            }
-            else//Resto
-            {
-                  ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
-                          .css("left", wbes[i][3] + "px")
-                          .css("top", wbes[i][4] + "px")
-                          .css("width", wbes[i][5] + "px")
-                          .css("height", wbes[i][6] + "px")
-                          .append($("<div>").addClass("grid-title")
-                          .append($("<div>").addClass("pull-left")
-                          .text(wbes[i][2]))
-                          .append($("<div>").addClass("pull-right")
-                          .append($("<button>").addClass("btn icon-alone btn-info add_dataset_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Adicionar dataset")
-                          .append($("<i>").addClass("icon-plus-sign")))
-                          .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
-                          .append($("<i>").addClass("icon-remove")))
-                          ))
-                          .append($("<div>").addClass("grid-content").attr("id", "grid_content")));
-                  var banana = $("#" + wbes[i][0] + "WBE #grid_content");
-                  var a = 0;
-                  $.each(wbes[i][9], function(index, value) {
+                        ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
+                                .css("left", wbes[i][3] + "px")
+                                .css("top", wbes[i][4] + "px")
+                                .css("width", wbes[i][5] + "px")
+                                .css("height", wbes[i][6] + "px")
+                                .append($("<div>").addClass("grid-title")
+                                .append($("<div>").addClass("pull-left " + icon)
+                                .text(" "+wbes[i][2]))
+                                .append($("<div>").addClass("pull-right")
+                                .append($("<button>").addClass("btn icon-alone btn-info add_dataset_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Adicionar dataset")
+                                .append($("<i>").addClass("icon-plus-sign")))
+                                .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
+                                .append($("<i>").addClass("icon-remove")))
+                                ))
+                                .append($("<div>").addClass("grid-content").attr("id", "grid_content")));
+                        var banana = $("#" + wbes[i][0] + "WBE #grid_content");
+                        var a = 0;
+                        $.each(wbes[i][9], function(index, value) {
 
-                        banana.append($("<div>")
-                                .append($("<div>").addClass("btn-group")
-                                .append($("<label>").addClass("btn btn-mini dropdown-toggle icon-cog").attr("data-toggle", "dropdown").text(" " + wbes[i][9][a].opcao_query).append($("<span>").addClass("caret")))
-                                .append($("<div>").addClass("dropdown-menu")
-                                .append($("<ul>")
-                                .append($("<li>")
-                                .append($("<a>").attr("href", "#").addClass("edit_dataset_button").data("dataset_id", wbes[i][9][a].id).data("id", wbes[i][0])
-                                .append($("<i>").addClass("icon-edit").text(" Editar dataset"))))
-                                .append($("<li>")
-                                .append($("<a>").attr("href", "#").addClass("delete_dataset_button").data("dataset_id", wbes[i][9][a].id)
-                                .append($("<i>").addClass("icon-trash").text(" Eliminar dataset"))))
-                                ))));
-                        a++;
-                  });
+                              banana.append($("<div>")
+                                      .append($("<div>").addClass("btn-group")
+                                      .append($("<label>").addClass("btn btn-mini dropdown-toggle icon-cog").attr("data-toggle", "dropdown").text(" " + wbes[i][9][a].opcao_query).append($("<span>").addClass("caret")))
+                                      .append($("<div>").addClass("dropdown-menu")
+                                      .append($("<ul>")
+                                      .append($("<li>")
+                                      .append($("<a>").attr("href", "#").addClass("edit_dataset_button").data("dataset_id", wbes[i][9][a].id).data("id", wbes[i][0])
+                                      .append($("<i>").addClass("icon-edit").text(" Editar dataset"))))
+                                      .append($("<li>")
+                                      .append($("<a>").attr("href", "#").addClass("delete_dataset_button").data("dataset_id", wbes[i][9][a].id)
+                                      .append($("<i>").addClass("icon-trash").text(" Eliminar dataset"))))
+                                      ))));
+                              a++;
+                        });
+                        break;
             }
 
 
@@ -929,32 +811,46 @@ function update_wbe()
 
             var painel = $("#MainLayout  #" + wbes[i][0] + "WBE");
             painel.draggable({containment: "#MainLayout", stop: check_save});
-            if (wbes[i][8] == "4") {
-                  painel.resizable({
-                        containment: "#MainLayout",
-                        aspectRatio: 16 / 9,
-                        maxHeight: 480,
-                        maxWidth: 880,
-                        minHeight: 240,
-                        minWidth: 245, stop: check_save});
-            } else if (wbes[i][8] == "3")
-            {
 
-                  painel.resizable({
-                        containment: "#MainLayout",
-                        maxHeight: 480,
-                        maxWidth: 880,
-                        minHeight: 240,
-                        minWidth: 245, stop: check_save});
-            }
-            else
+            switch ((wbes[i][8]))
             {
-                  painel.resizable({
-                        containment: "#MainLayout",
-                        maxHeight: 480,
-                        maxWidth: 880,
-                        minHeight: 240,
-                        minWidth: 450, stop: check_save});
+                  case "4"://inbound
+                        painel.resizable({
+                              containment: "#MainLayout",
+                              aspectRatio: 16 / 9,
+                              maxHeight: 480,
+                              maxWidth: 880,
+                              minHeight: 240,
+                              minWidth: 245, stop: check_save});
+                        break;
+                  case "3"://Pie
+                        painel.resizable({
+                              containment: "#MainLayout",
+                              maxHeight: 480,
+                              maxWidth: 880,
+                              minHeight: 240,
+                              minWidth: 355, stop: check_save});
+                        break;
+                  case "5"://Pie
+                        painel.resizable({
+                              containment: "#MainLayout",
+                              maxHeight: 480,
+                              maxWidth: 880,
+                              minHeight: 240,
+                              minWidth: 225, stop: check_save});
+                        break;
+                  default:
+                        painel.resizable({
+                              containment: "#MainLayout",
+                              maxHeight: 480,
+                              maxWidth: 880,
+                              minHeight: 240,
+                              minWidth: 250, stop: check_save});
+                        break;
+
+
+
+
 
             }
             i++;
@@ -1068,6 +964,7 @@ function sql_basic(opcao, id_layout, id_wbe)
 
             if (opcao === "delete_WBE")
             {
+                  $("#" + id_wbe + "WBE").remove();
                   load_dados('wbe', idLayout);
             }
 
@@ -1165,28 +1062,28 @@ function flot_extra_init()
       var gao_i = $("#gao_inbound");
       var gao_sv = $("#gao_status");
       var gao_chamadas = $("#gao_chamadas");
-      gao_u.append("<label class='label label-success'>Users</label");
-      gao_u.append("<select id='user' > </select> ");
+
+      gao_u.append("<select id='user' class='chzn-select'> </select> ");
       flot_extra("user");
-      gao_ug.append("<label class='label label-success'>Grupos</label");
-      gao_ug.append("<select id='user_group' > </select> ");
+
+      gao_ug.append("<select id='user_group' class='chzn-select' > </select> ");
       flot_extra("user_group");
-      gao_c.append("<label class='label label-success'>Campanha</label");
-      gao_c.append("<select id='campaign' > </select> ");
+
+      gao_c.append("<select id='campaign' class='chzn-select' > </select> ");
       flot_extra("campaign");
-      gao_total_cc.append("<label class='label label-success'>total_cc</label");
-      gao_total_cc.append("<select id='total_cc' > </select> ");
-      gao_i.append("<label class='label label-success'>Inbound</label");
-      gao_i.append("<select id='inbound'> </select> ");
+
+      gao_total_cc.append("<select id='total_cc' class='chzn-select'> </select> ");
+
+      gao_i.append("<select id='inbound' class='chzn-select'> </select> ");
       flot_extra("inbound");
-      gao_sv.append("<label class='label label-info'>Feedback</label");
-      gao_sv.append("<select id='status_venda'> </select> ");
+
+      gao_sv.append("<select id='status_venda' class='chzn-select'> </select> ");
       flot_extra("status_venda");
-      gao_chamadas.append("<label class='label label-info'>Chamadas</label");
+
       gao_chamadas.append($("<select>").attr("id", "chamadas")
-              .append("<option value='1'>atendidas</option> ")
-              .append("<option value='2'>perdidas</option> ")
-              .append("<option value='3'>feitas</option>"));
+              .append("<option value='1'>Atendidas</option> ")
+              .append("<option value='2'>Perdidas</option> ")
+              .append("<option value='3'>Feitas</option>"));
 }
 function flot_extra(opcao)
 {
@@ -1203,55 +1100,47 @@ function flot_extra(opcao)
       {
             if (opcao === "user")
             {
-
                   var object = $([]).add($("#user")).add($("#user_pie"));
                   $.each(data, function(index, value) {
                         object.append(new Option(value, value));
                   });
+                  object.chosen({no_results_text: "Não foi encontrado."});
             }
             if (opcao === "user_group")
             {
-
-
                   var object = $([]).add($("#user_group")).add($("#grupo_user_dataTable")).add($("#grupo_user_pie"));
                   $.each(data, function(index, value) {
                         if (value !== "") {
                               object.append(new Option(value, value));
                         }
                   });
+                  object.chosen({no_results_text: "Não foi encontrado."});
             }
 
             if (opcao === "campaign")
             {
-
-
                   var object = $([]).add($("#campaign")).add($("#campaign_id_dataTable")).add($("#campaign_id_pie"));
                   $.each(data, function(index, value) {
                         object.append(new Option(this.campaign_name, this.campaign_id));
                   });
+                  object.chosen({no_results_text: "Não foi encontrado."});
             }
             if (opcao === "status_venda")
             {
-
-                  var object = $("#status_venda");
-                  var object1 = $("#dataTable_status_select");
-                  var object2 = $("#pie_status_select");
+                  var object = $([]).add($("#status_venda")).add($("#dataTable_status_select")).add($("#pie_status_select"));
                   $.each(data, function(index, value) {
                         object.append(new Option(this.status_t, this.status_v));
-                        object1.append('<option value="' + this.status_v + '">' + this.status_t + '</option>');
-                        object2.append('<option value="' + this.status_v + '">' + this.status_t + '</option>');
                   });
-                  object1.chosen({no_results_text: "Não foi encontrado."});
-                  object2.chosen({no_results_text: "Não foi encontrado."});
+                  object.chosen({no_results_text: "Não foi encontrado."});
+
             }
-
-
             if (opcao === "inbound")
             {
                   var object = $([]).add($("#group_inbound_select")).add($("#inbound")).add($("#grupo_inbound_dataTable")).add($("#grupo_inbound_pie"));
                   $.each(data, function(index, value) {
                         object.append(new Option(this.name, this.id));
                   });
+                  object.chosen({no_results_text: "Não foi encontrado."});
             }
       }, "json");
 }
