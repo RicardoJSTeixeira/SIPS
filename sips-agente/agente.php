@@ -11329,7 +11329,7 @@ var cb_to_other_user=false, cb_to_other_username="";
 			
                         cb_to_other_user=$("#cb_other_user").prop("checked");
                         cb_to_other_username=$("#cb_other_username").val();
-                        if(cb_to_other_user){$("#cb_other_user").click()}
+                        if(cb_to_other_user){$("#cb_other_user").click();}
                         
 			$('#data_callback').val(" ");
 			$('#comentarios_callback').val(" ");
@@ -14116,7 +14116,7 @@ $(function(){
                 $(".custom-combobox").show();
             }else{
                 $("#cb_geral").prop("disabled",false);
-                $("#cb_geral").prop("checked",true);
+                <?=($my_callback_option!="CHECKED")?"$('#cb_geral').prop('checked',true);":""?>
                 $(".custom-combobox").hide();
             }    
             });
