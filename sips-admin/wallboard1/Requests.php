@@ -254,7 +254,7 @@ switch ($action) {
                         $selected_query = str_replace('$linha_inbound', $row["linha_inbound"], $selected_query);
                         $selected_query = str_replace('$status', $row["status_feedback"], $selected_query);
                         $selected_query = str_replace('$chamadas', $row["chamadas"], $selected_query);
-                        echo($selected_query);
+
                         $selected_query = mysql_query($selected_query, $link) or die(mysql_error());
                         while ($row3 = mysql_fetch_assoc($selected_query)) {
                             $temp[] = array(lead_id => $row3["lead_id"], call_date => $row3["call_date"]);
@@ -417,7 +417,7 @@ switch ($action) {
     case '3':// tarte - total feedbacks por user
         if ($opcao === "1")
             $query = "select vicidial_users.full_name,count(status) as total_feedback from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user where vicidial_agent_log.campaign_id='$campaign_id' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by vicidial_agent_log.user order by total_feedback desc";
-      //  if ($opcao === "2")
+        //  if ($opcao === "2")
         //    $query = "select vicidial_users.full_name,count(status) as total_feedback from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user where vicidial_agent_log.user_group='$user_group' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by vicidial_agent_log.user order by total_feedback desc";
         if ($opcao === "3")
             $query = "select vicidial_users.full_name,count(status) as total_feedback from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user  where vicidial_users.closer_campaigns like '%$linha_inbound%' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by vicidial_agent_log.user order by total_feedback desc";
@@ -527,6 +527,21 @@ switch ($action) {
                 $AVGhold_sec_answer_calls = 0;
                 $AVG_ANSWERagent_non_pause_sec = 0;
             }
+
+
+            $today = date("o-m-d");
+            $tomorrow = date("o-m-d", strtotime("+1 day"));
+
+
+            $query = "select ifnull(sum(length_in_sec),0) as total_sec from vicidial_closer_log where call_date between '$today' and '$tomorrow' and campaign_id='$group_id'";
+
+            $query = mysql_query($query, $link);
+            $row2 = mysql_fetch_assoc($query);
+
+
+
+
+
             $js[] = array(chamadas_efectuadas => $callsTODAY,
                 chamadas_perdidas => $dropsTODAY,
                 chamadas_atendidas => $answersTODAY,
@@ -534,13 +549,14 @@ switch ($action) {
                 tma2 => $PCThold_sec_stat_two,
                 tme_chamadas_atendidas => $AVGhold_sec_answer_calls,
                 tme_chamadas_perdidas => $AVGhold_sec_drop_calls,
-                tme_todas_chamadas => $AVGhold_sec_queue_calls);
+                tme_todas_chamadas => $AVGhold_sec_queue_calls,
+                tma => $row2["total_sec"]);
         }
         echo json_encode($js);
         break;
 
     case 'get_agents':// Inbound agentes,campaign,status
-        $query = $query_text;
+        $query = "SELECT vla.status  FROM `vicidial_live_agents` vla inner join vicidial_live_inbound_agents vlia on vla.user=vlia.user where vlia.group_id ='$linha_inbound'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = $row["status"];
@@ -559,7 +575,7 @@ switch ($action) {
 
 
 
-    case '5':
+    case '5'://dataTop table
 
 
 
@@ -607,18 +623,18 @@ switch ($action) {
 
 
     case 'user':
-        $query = "SELECT `user` FROM `vicidial_inbound_group_agents` where user is not null and user!='' group by user";
+        $query = "SELECT vicidial_users.user as user, vicidial_users.full_name as full_name FROM `vicidial_inbound_group_agents` inner join vicidial_users on vicidial_inbound_group_agents.user=vicidial_users.user where vicidial_inbound_group_agents.user is not null and vicidial_inbound_group_agents.user!='' group by vicidial_inbound_group_agents.user";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = $row["user"];
+            $js[] = array(user => $row["user"], full_name => $row["full_name"]);
         }
         echo json_encode($js);
         break;
     case 'user_group':
-        $query = "SELECT  user_group  as ug FROM  vicidial_log  where call_date between date_sub(NOW(), INTERVAL $param1) and now() and user_group is not NUll group by  user_group ";
+        $query = "SELECT  vicidial_user_groups.user_group as user_group, vicidial_user_groups.group_name as group_name FROM  vicidial_log inner join vicidial_user_groups on vicidial_user_groups.user_group= vicidial_log.user_group  where call_date between date_sub(NOW(), INTERVAL $param1) and now() and vicidial_log.user_group is not NUll group by vicidial_log.user_group ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = $row["ug"];
+            $js[] = array(user_group => $row["user_group"], group_name => $row["group_name"]);
         }
         echo json_encode($js);
         break;

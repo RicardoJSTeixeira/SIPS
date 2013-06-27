@@ -1,8 +1,4 @@
 
-//aduarte@finesource.pt
-
-
-
 
 //--------------wbes
 //0      id,
@@ -30,14 +26,14 @@
 
 
 
+//criar uma layer nova, a seguir um grafico de linhas e a seguir um dataset n cria - dificil de recriar
+//tma do datatop parece cabenens
 
 
 
 
 
 
-
-//VARIAVEIS GERAIS-----------------VARIAVEIS GERAIS--------VARIAVEIS GERAIS-----------------VARIAVEIS GERAIS--------
 var wbes = [];
 var layouts = [];
 var idLayout = 0;
@@ -48,19 +44,15 @@ var layouts = [];
 var id_wallboard;
 var id_dataset;
 var edit_dataset = false;
-//FIM---VARIAVEIS GERAIS-----------------VARIAVEIS GERAIS--------VARIAVEIS GERAIS-----------------VARIAVEIS GERAIS-------FIM                 
 
 
-//-----------------FUNÇÕES DOS BUTTONS----------------------------
+
+
 
 $("#add_layout_button").click(function()
 {
       sql_basic("insert_Layout", 0, 0);
-      load_dados("layout", 0);
-});
-$("#remove_layout_button").click(function()
-{
-      $('#dialog_delete').dialog('open');
+
 });
 $("#fullscreen_button").click(function()
 {
@@ -144,17 +136,12 @@ $("#pie_opcao").change(function()
                   break;
       }
 });
-//-----------------FUNÇÕES DOS BUTTONS----------------------------
 
 
 
-// FUNÇÂO STARTER-----------------------------------------------------------------------------------------99999999----------------------------------------------------------------0000000000000000000000
+
+
 $(function() {
-
-
-
-
-
 
       $(".dataTable_options").hide();
       $(".pie_select").hide();
@@ -281,21 +268,21 @@ $(function() {
             $('#dataTable_name').val('Tabela Top');
             $('#dataTable_status_select').val('').trigger('liszt:updated');
 
-      });
+      });//GRAFICO DE TOP
 
-      $(document).on("click", "#pie_button", function(e) {//GRAFICO DE PIES
+      $(document).on("click", "#pie_button", function(e) {
             $('#pie_name').val('Gráfico de Tarte');
             $('#pie_feedback_colum_name').val('Feedbacks');
             $('#pie_status_select').val('').trigger('liszt:updated');
-      });
+      });//GRAFICO DE PIES
 
       $(document).on("click", "#linhas_button", function(e) {//GRÀFICO DE LINHAS
             $('#graph_name').val('Novo Gráfico');
-      });
+      });//GRAFICO DE LINHAS
 
       $(document).on("click", "#barras_button", function(e) {//GRAFICO DE BARRAS
             $('#graph_name').val('Novo Gráfico');
-      });
+      });//GRAFICO DE BARRAS
 
       $(document).on("click", "#save_button_layout", function(e) {//ALTERAR O NOME DA LAYOUT
 
@@ -393,7 +380,6 @@ $(function() {
             if (edit_dataset) {
                   edit_dataset = false;
                   opcao = "edit_dataset";
-                  $("div.dialogButtons div button:nth-child(2)").text("Criar"); //alterar texto do botao;
             }
             else
             {
@@ -541,16 +527,10 @@ $(function() {
 
 
 
-      //inicia os tooltips
+
       $("[data-t=tooltip]").tooltip({placement: "left", html: true});
       $("[data-t=tooltip-right]").tooltip({placement: "right", html: true});
-      //DIALOGS
-
-
-
-      //loada da dropbox com os indices e do painel do layout
       load_dados("layout", 0);
-      //para fazer load das options extra
       flot_extra_init();
 });
 // FUNÇÂO STARTER--------------------------------------------------------------------------------------------99999999------------------------------------------------------------- 00000000000000000000 
@@ -563,7 +543,6 @@ function get_query(codigo)
       var i = 0;
       var querie;
       $.each(queries, function(index, value) {
-
             if (queries[i][6] == codigo)
             {
                   querie = queries[i];
@@ -594,7 +573,7 @@ function save_layout()
       var a = get_indice_layout(idLayout);
       layouts[a][1] = $("#Layout_Input_name").val();
       manipulate_dados("edit_Layout", idLayout, layouts[a][1], 0, 0, 0, 0, 0, 0);
-      update_dropbox_layout();
+
       $('#label_id_layout').text(layouts[a][0]);
       $("#Layout_Input_name").val(layouts[a][1]);
 }
@@ -763,10 +742,10 @@ function update_wbe()
                                 .text("Nome da coluna-> " + wbes[i][9][0].param2));
                         break;
                   default:
-                        if(wbes[i][8]==="1")
-                        var icon = "icon-picture";
-                  else
-                        var icon = "icon-bar-chart";
+                        if (wbes[i][8] === "1")
+                              var icon = "icon-picture";
+                        else
+                              var icon = "icon-bar-chart";
 
 
                         ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
@@ -776,7 +755,7 @@ function update_wbe()
                                 .css("height", wbes[i][6] + "px")
                                 .append($("<div>").addClass("grid-title")
                                 .append($("<div>").addClass("pull-left " + icon)
-                                .text(" "+wbes[i][2]))
+                                .text(" " + wbes[i][2]))
                                 .append($("<div>").addClass("pull-right")
                                 .append($("<button>").addClass("btn icon-alone btn-info add_dataset_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Adicionar dataset")
                                 .append($("<i>").addClass("icon-plus-sign")))
@@ -831,7 +810,7 @@ function update_wbe()
                               minHeight: 240,
                               minWidth: 355, stop: check_save});
                         break;
-                  case "5"://Pie
+                  case "5"://Tabela Top
                         painel.resizable({
                               containment: "#MainLayout",
                               maxHeight: 480,
@@ -839,7 +818,7 @@ function update_wbe()
                               minHeight: 240,
                               minWidth: 225, stop: check_save});
                         break;
-                  default:
+                  default://Linhas e Barras
                         painel.resizable({
                               containment: "#MainLayout",
                               maxHeight: 480,
@@ -879,7 +858,7 @@ function update_dropbox_layout()
 
 function manipulate_dataset(Opcao, Id, id_Wallboard, Codigo_query, Opcao_query, Tempo, User, User_group, Campaign_id, Linha_inbound, Mode, Status_feedback, Chamadas, Param1, Param2)
 {
-      $.post("Requests.php", {action: Opcao, id: Id, id_wallboard: id_Wallboard, codigo_query: Codigo_query, opcao_query: Opcao_query, tempo: Tempo, user: User, user_group: User_group, campaign_id: Campaign_id, linha_inbound: Linha_inbound, mode: Mode, status_feedback: Status_feedback, chamadas: Chamadas, param1: Param1},
+      $.post("Requests.php", {action: Opcao, id: Id, id_wallboard: id_Wallboard, codigo_query: Codigo_query, opcao_query: Opcao_query, tempo: Tempo, user: User, user_group: User_group, campaign_id: Campaign_id, linha_inbound: Linha_inbound, mode: Mode, status_feedback: Status_feedback, chamadas: Chamadas, param1: Param1, param2: Param2},
       function(data)
       {
             if (Opcao === "insert_dataset")
@@ -907,7 +886,7 @@ function load_dados(opcao, id_layouT)
                   {
                         $('#LayoutSelector').empty();
                         $("#toolBar .toolbar_button").prop("disabled", true);
-                        $.jGrowl('Layout inexistente', {life: 6000});
+                        $.jGrowl('Layout inexistente', {life: 5000});
                   }
                   else
                   {
@@ -978,6 +957,8 @@ function manipulate_dados(opcao, Id, Name, Pos_x, Pos_y, Width, Height, id_layou
       $.post("Requests.php", {action: opcao, id: Id, name: Name, pos_x: Pos_x, pos_y: Pos_y, width: Width, height: Height, id_layout: id_layout},
       function(data)
       {
+            if (opcao === "edit_Layout")
+                  update_dropbox_layout();
       }, "json");
 }
 //graphs
@@ -1048,7 +1029,7 @@ function manipulate_pie(Opcao, Id, id_Wallboard, Codigo_query, Opcao_query, Temp
 
 //---Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados---
 
-//FLOT EXTRA HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHh
+
 function flot_extra_init()
 {
 
@@ -1102,7 +1083,7 @@ function flot_extra(opcao)
             {
                   var object = $([]).add($("#user")).add($("#user_pie"));
                   $.each(data, function(index, value) {
-                        object.append(new Option(value, value));
+                        object.append(new Option(data[index].full_name, data[index].user));
                   });
                   object.chosen({no_results_text: "Não foi encontrado."});
             }
@@ -1111,7 +1092,7 @@ function flot_extra(opcao)
                   var object = $([]).add($("#user_group")).add($("#grupo_user_dataTable")).add($("#grupo_user_pie"));
                   $.each(data, function(index, value) {
                         if (value !== "") {
-                              object.append(new Option(value, value));
+                                           object.append(new Option(data[index].group_name, data[index].user_group));
                         }
                   });
                   object.chosen({no_results_text: "Não foi encontrado."});
@@ -1144,5 +1125,5 @@ function flot_extra(opcao)
             }
       }, "json");
 }
-//FLOT EXTRA HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHh
+
 
