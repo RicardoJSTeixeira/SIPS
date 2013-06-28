@@ -1,39 +1,4 @@
 
-
-//--------------wbes
-//0      id,
-// 1       id_layout,
-//   2      name,
-//     3     pos_x, 
-//       4   pos_y,
-//       5    width, 
-//       6    height,
-//       7      update_time, 
-//       8      graph_type;
-//   9      Array[8]
-//0: id
-//1: id_wallboard
-//2: codigo_query
-//3: opcao_query
-//4: tempo
-//5: user
-//6: user_group
-//7: campaign_id
-//8:linha_inbound
-//9: mode
-//10: status_feedback
-//11: chamadas
-
-
-
-//criar uma layer nova, a seguir um grafico de linhas e a seguir um dataset n cria - dificil de recriar
-//tma do datatop parece cabenens
-
-
-
-
-
-
 var wbes = [];
 var layouts = [];
 var idLayout = 0;
@@ -44,15 +9,9 @@ var layouts = [];
 var id_wallboard;
 var id_dataset;
 var edit_dataset = false;
-
-
-
-
-
 $("#add_layout_button").click(function()
 {
       sql_basic("insert_Layout", 0, 0);
-
 });
 $("#fullscreen_button").click(function()
 {
@@ -96,7 +55,6 @@ $("#dataTable_opcao").change(function()
       var campaing = $("#campaign_id_dataTable_div");
       var grupo_inbound = $("#grupo_inbound_dataTable_div");
       var grupo_user = $("#grupo_user_dataTable_div");
-
       $(".dataTable_options").hide();
       switch (select.val())
       {
@@ -119,7 +77,6 @@ $("#pie_opcao").change(function()
       var grupo_user = $("#grupo_user_pie_div");
       var user = $("#user_pie_div");
       $(".pie_select").hide();
-
       switch (select.val())
       {
             case "1":
@@ -139,6 +96,35 @@ $("#pie_opcao").change(function()
 
 
 
+$("#in_out_bound").change(function()
+{
+
+      var select = $("#in_out_bound");
+
+      select.each(function() {
+            if ($(this).val() === "1") {
+
+                  if ($("#linhas_serie").val()==="3")
+                  {
+                        $("#linhas_serie").val(0);
+                        $(".graph_advance_option").hide();
+                        $("#gao_user").show();
+                  }
+                  $("#linhas_serie option[value='3']").prop('disabled', true);
+           }
+            else
+                  $("#linhas_serie option[value='3']").prop('disabled', false);
+      });
+
+
+
+
+
+
+
+});
+
+
 
 
 $(function() {
@@ -151,27 +137,23 @@ $(function() {
             var id = $(this).data("wbe_id");
             sql_basic('delete_WBE', 0, id);
       });
-
       $(document).on("click", ".add_dataset_button", function(e) {
             $("#create_button_dataset").text("Criar");
-            if (wbes[ get_indice_wbe($(this).data("id"))][9].length >= 5)
+            if (wbes[get_indice_wbe($(this).data("wbe_id"))][9].length >= 5)
             {
                   $.jGrowl('Capacidade de datasets por wallboard atingida (5 max).', {life: 6000});
             }
             else {
                   id_wallboard = $(this).data("wbe_id");
                   manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
-
                   $('#dialog_dataset_linhas').modal('show');
             }
       });
-
       $(document).on("click", ".edit_dataset_button", function(e) {
             edit_dataset = true;
             $("#create_button_dataset").text("Gravar alterações");
             id_dataset = $(this).data("dataset_id");
             id_wallboard = get_indice_wbe($(this).data("id"));
-
             var a = 0;
             $(".graph_advance_option").hide();
             $(".option_filtro").hide();
@@ -237,52 +219,54 @@ $(function() {
             manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
             $('#dialog_dataset_linhas').modal('show');
       });
-
       $(document).on("click", ".delete_dataset_button", function(e) {
             manipulate_dataset("remove_dataset", $(this).data("dataset_id"), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-            load_dados("wbe", idLayout);
       });
-
       $(document).on("click", "#checkbox_feedback", function(e) {
 
             if (this.checked)
             {
-                  $("#dataTable_status_select_div").css("display", "none");
+                  $(this).closest(".modal-body").css("overflow", "visible");
+                  $("#dataTable_status_select_div").hide();
             }
             else
-                  $("#dataTable_status_select_div").css("display", "inline-block");
+            {
+                  $("#dataTable_status_select_div").show();
+                  $(this).closest(".modal-body").css("overflow", "auto");
+            }
       });
-
       $(document).on("click", "#checkbox_feedback_pie", function(e) {
 
             if (this.checked)
             {
-                  $("#pie_status_select_div").css("display", "none");
+                  $(this).closest(".modal-body").css("overflow", "visible");
+                  $("#pie_status_select_div").hide();
             }
             else
-                  $("#pie_status_select_div").css("display", "inline-block");
+            {
+                  $(this).closest(".modal-body").css("overflow", "auto");
+                  $("#pie_status_select_div").show();
+            }
       });
-
       $(document).on("click", "#topTable_button", function(e) {
             $('#coluna_feedback').val('Feedbacks');
             $('#dataTable_name').val('Tabela Top');
             $('#dataTable_status_select').val('').trigger('liszt:updated');
-
-      });//GRAFICO DE TOP
+      }); //GRAFICO DE TOP
 
       $(document).on("click", "#pie_button", function(e) {
             $('#pie_name').val('Gráfico de Tarte');
             $('#pie_feedback_colum_name').val('Feedbacks');
             $('#pie_status_select').val('').trigger('liszt:updated');
-      });//GRAFICO DE PIES
+      }); //GRAFICO DE PIES
 
       $(document).on("click", "#linhas_button", function(e) {//GRÀFICO DE LINHAS
-            $('#graph_name').val('Novo Gráfico');
-      });//GRAFICO DE LINHAS
+            $('#graph_name').val('Gráfico de Linhas');
+      }); //GRAFICO DE LINHAS
 
       $(document).on("click", "#barras_button", function(e) {//GRAFICO DE BARRAS
-            $('#graph_name').val('Novo Gráfico');
-      });//GRAFICO DE BARRAS
+            $('#graph_name').val('Gráfico de Barras');
+      }); //GRAFICO DE BARRAS
 
       $(document).on("click", "#save_button_layout", function(e) {//ALTERAR O NOME DA LAYOUT
 
@@ -294,15 +278,12 @@ $(function() {
                   $('#dialog_layout').modal('hide');
             }
       });
-
       $(document).on("click", "#delete_button_layout", function(e) {//APAGAR A LAYOUT E SEUS WALLBOARDS
             sql_basic("remove_Layout", idLayout);
       });
-
       $(document).on("click", "#create_button_dialog", function(e) {//CRIAR OS WALLBOARDS PARA LINHAS E BARRAS
             manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, $("#update_time").val(), selected_type_graph, 0, 0);
       });
-
       $(document).on("click", "#create_button_pie", function(e) {//CRIAR OS WALLBOARDS PARA LINHAS E BARRAS
             var feedbacks = "";
             if (!$("#pie_status_select").val() && !($("#checkbox_feedback_pie").prop('checked')))
@@ -315,9 +296,11 @@ $(function() {
                   else
                         feedbacks = $("#pie_status_select").val();
                   feedbacks = "'" + feedbacks + "'";
-
                   switch ($("#pie_opcao").val())
                   {
+                        
+                       
+                        
                         case "1":
                               manipulate_pie("insert_pie", 0, 0, 1, "Gráfico de Tarte", $("#pie_timespan").val(), 0, 0, $("#campaign_id_pie option:selected").val(), 0, 0, feedbacks, 0, $("#campaign_id_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
                               break;
@@ -335,7 +318,6 @@ $(function() {
                   $('#dialog_pie').modal('hide');
             }
       });
-
       $(document).on("click", "#create_button_dataTable", function(e) {//CRIAR OS WALLBOARDS PARA LINHAS E BARRAS
 
             if (!$("#dataTable_status_select").val() && !($("#checkbox_feedback").prop('checked')))
@@ -369,11 +351,9 @@ $(function() {
                   $('#dialog_dataTable').modal('hide');
             }
       });
-
       $(document).on("click", "#create_button_inbound", function(e) {
             manipulate_graph("insert_wbe", 0, "Estatistica", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 4, $("#group_inbound_select").val(), $("#group_inbound_select option:selected").text());
       });
-
       $(document).on("click", "#create_button_dataset", function(e) {
 
             var opcao = "insert_dataset";
@@ -386,7 +366,6 @@ $(function() {
                   opcao = "insert_dataset";
             }
             var querie = [];
-
             if ($("#linhas_filtro").val() === "1")
                   switch ($("#linhas_serie").val())
                   {
@@ -500,44 +479,35 @@ $(function() {
                         case "1":
                               //feedback por user
                               querie = get_query(13);
-                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
+                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), $("#user option:selected").text());
                               break;
                         case "2":
                               //feedback por user_group
                               querie = get_query(14);
-                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
+                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), $("#user_group option:selected").text());
                               break;
                         case "3":
                               //feedback por campanha
                               querie = get_query(15);
-                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
+                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), $("#campaign option:selected").text());
                               break;
                         case "4":
                               //feedback por call center
                               querie = get_query(16);
-                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
+                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), "Total Call Center");
                               break;
                         case "5":
                               //feedback por linha inbound
                               querie = get_query(17);
-                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), 0);
+                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), $("#inbound option:selected").text());
                               break;
                   }
       });
-
-
-
-
       $("[data-t=tooltip]").tooltip({placement: "left", html: true});
       $("[data-t=tooltip-right]").tooltip({placement: "right", html: true});
       load_dados("layout", 0);
       flot_extra_init();
 });
-// FUNÇÂO STARTER--------------------------------------------------------------------------------------------99999999------------------------------------------------------------- 00000000000000000000 
-
-
-
-//"""""""""""""""""FUNÇÔES BASICAS"""""""""""""""""FUNÇÔES BASICAS"""""""""""""""""FUNÇÔES BASICAS"""""""""""""""""FUNÇÔES BASICAS"""""""""""""""""FUNÇÔES BASICAS"""""""""""""""""FUNÇÔES BASICAS
 function get_query(codigo)
 {
       var i = 0;
@@ -560,7 +530,7 @@ function fullScreen()
       dados.push(idLayout);
       dados.push($("#MainLayout").width());
       dados.push($("#MainLayout").height());
-      window_slave = window.open("/sips-admin/wallboard1/full_screen_render.html", dados);
+      window_slave = window.open("/sips-admin/wallboard/full_screen_render.html", dados);
 }
 
 function check_save()
@@ -573,7 +543,6 @@ function save_layout()
       var a = get_indice_layout(idLayout);
       layouts[a][1] = $("#Layout_Input_name").val();
       manipulate_dados("edit_Layout", idLayout, layouts[a][1], 0, 0, 0, 0, 0, 0);
-
       $('#label_id_layout').text(layouts[a][0]);
       $("#Layout_Input_name").val(layouts[a][1]);
 }
@@ -596,7 +565,7 @@ function save()//guarda tuto
       $("#Layout_Input_name").val(layouts[a][1]);
 }
 
-function get_indice_layout(id)//pega no id do WallBoardElement e passa para indice de array
+function get_indice_layout(id)
 {
       var i = 0;
       var indice = 0;
@@ -608,7 +577,7 @@ function get_indice_layout(id)//pega no id do WallBoardElement e passa para indi
       });
       return indice;
 }
-function get_indice_wbe(id)//pega no id do WallBoardElement e passa para indice de array
+function get_indice_wbe(id)
 {
       var i = 0;
       var indice = 0;
@@ -635,50 +604,6 @@ function update_wbe()
 {
       $(".PanelWB").remove();
       var i = 0;
-      //--------------wbes
-      //0      id,
-      // 1       id_layout,
-      //   2      name,
-      //     3     pos_x, 
-      //       4   pos_y,
-      //       5    width, 
-      //       6    height,
-      //       7      update_time, 
-      //       8      graph_type;
-      //   9      Array[8]
-      //0: id
-      //1: id_wallboard
-      //2: codigo_query
-      //3: opcao_query
-      //4: tempo
-      //5: user
-      //6: user_group
-      //7: campaign_id
-      //8:linha_inbound
-      //9: mode
-      //10: status_feedback
-      //11: chamadas
-      //12:param1
-      //13:param1
-      //14:hasData
-      //
-      //or
-      //
-      //0: id
-      //1: id_wallboard
-      //tempo
-      //campanha
-      //grupo_inbound
-      //grupo_user
-      //status_feedback
-      //limit
-      //custom_colum_name
-      //hasData
-
-
-
-
-
       $.each(wbes, function(index, value) {
             var ml = $("#MainLayout");
             switch ((wbes[i][8]))
@@ -746,8 +671,6 @@ function update_wbe()
                               var icon = "icon-picture";
                         else
                               var icon = "icon-bar-chart";
-
-
                         ml.append($("<div>").addClass("PanelWB ui-widget-content").attr("id", wbes[i][0] + "WBE")
                                 .css("left", wbes[i][3] + "px")
                                 .css("top", wbes[i][4] + "px")
@@ -790,7 +713,6 @@ function update_wbe()
 
             var painel = $("#MainLayout  #" + wbes[i][0] + "WBE");
             painel.draggable({containment: "#MainLayout", stop: check_save});
-
             switch ((wbes[i][8]))
             {
                   case "4"://inbound
@@ -826,11 +748,6 @@ function update_wbe()
                               minHeight: 240,
                               minWidth: 250, stop: check_save});
                         break;
-
-
-
-
-
             }
             i++;
       }
@@ -852,9 +769,11 @@ function update_dropbox_layout()
             i++;
       });
 }
-//"""""""""""""""""FUNÇÔES BASICAS"""""""""""""""""FUNÇÔES BASICAS"""""""""""""""""FUNÇÔES BASICAS"""""""""""""""""FUNÇÔES BASICAS"""""""""""""""""FUNÇÔES BASICAS"""""""""""""""""FUNÇÔES BASICAS
 
-//---Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados---
+
+
+
+
 
 function manipulate_dataset(Opcao, Id, id_Wallboard, Codigo_query, Opcao_query, Tempo, User, User_group, Campaign_id, Linha_inbound, Mode, Status_feedback, Chamadas, Param1, Param2)
 {
@@ -869,6 +788,12 @@ function manipulate_dataset(Opcao, Id, id_Wallboard, Codigo_query, Opcao_query, 
             {
                   load_dados("wbe", idLayout);
             }
+
+            if (Opcao === "remove_dataset")
+            {
+                  load_dados("wbe", idLayout);
+            }
+
 
       }, "json");
 }
@@ -886,11 +811,13 @@ function load_dados(opcao, id_layouT)
                   {
                         $('#LayoutSelector').empty();
                         $("#toolBar .toolbar_button").prop("disabled", true);
+                        $("#opcao_layout_button").prop("disabled", true);
                         $.jGrowl('Layout inexistente', {life: 5000});
                   }
                   else
                   {
                         $.jGrowl('Wallboard inexistente');
+                        $("#opcao_layout_button").prop("disabled", false);
                         $("#toolBar .toolbar_button").prop("disabled", false);
                   }
                   return false;
@@ -1027,15 +954,11 @@ function manipulate_pie(Opcao, Id, id_Wallboard, Codigo_query, Opcao_query, Temp
 
 
 
-//---Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados------Base de Dados---
+
 
 
 function flot_extra_init()
 {
-
-
-
-
       var gao_u = $("#gao_user");
       var gao_ug = $("#gao_userGroup");
       var gao_c = $("#gao_campaign");
@@ -1043,24 +966,17 @@ function flot_extra_init()
       var gao_i = $("#gao_inbound");
       var gao_sv = $("#gao_status");
       var gao_chamadas = $("#gao_chamadas");
-
-      gao_u.append("<select id='user' class='chzn-select'> </select> ");
+      gao_u.append("<select id='user' class='chzn-select chosen_select'> </select> ");
       flot_extra("user");
-
-      gao_ug.append("<select id='user_group' class='chzn-select' > </select> ");
+      gao_ug.append("<select id='user_group' class='chzn-select chosen_select' > </select> ");
       flot_extra("user_group");
-
-      gao_c.append("<select id='campaign' class='chzn-select' > </select> ");
+      gao_c.append("<select id='campaign' class='chzn-select chosen_select' > </select> ");
       flot_extra("campaign");
-
       gao_total_cc.append("<select id='total_cc' class='chzn-select'> </select> ");
-
-      gao_i.append("<select id='inbound' class='chzn-select'> </select> ");
+      gao_i.append("<select id='inbound' class='chzn-select chosen_select'> </select> ");
       flot_extra("inbound");
-
-      gao_sv.append("<select id='status_venda' class='chzn-select'> </select> ");
+      gao_sv.append("<select id='status_venda' class='chzn-select chosen_select'> </select> ");
       flot_extra("status_venda");
-
       gao_chamadas.append($("<select>").attr("id", "chamadas")
               .append("<option value='1'>Atendidas</option> ")
               .append("<option value='2'>Perdidas</option> ")
@@ -1081,7 +997,7 @@ function flot_extra(opcao)
       {
             if (opcao === "user")
             {
-                  var object = $([]).add($("#user")).add($("#user_pie"));
+                  var object = $([]).add($("#user"));
                   $.each(data, function(index, value) {
                         object.append(new Option(data[index].full_name, data[index].user));
                   });
@@ -1089,10 +1005,10 @@ function flot_extra(opcao)
             }
             if (opcao === "user_group")
             {
-                  var object = $([]).add($("#user_group")).add($("#grupo_user_dataTable")).add($("#grupo_user_pie"));
+                  var object = $([]).add($("#user_group")).add($("#grupo_user_dataTable"));
                   $.each(data, function(index, value) {
                         if (value !== "") {
-                                           object.append(new Option(data[index].group_name, data[index].user_group));
+                              object.append(new Option(data[index].group_name, data[index].user_group));
                         }
                   });
                   object.chosen({no_results_text: "Não foi encontrado."});
@@ -1113,7 +1029,6 @@ function flot_extra(opcao)
                         object.append(new Option(this.status_t, this.status_v));
                   });
                   object.chosen({no_results_text: "Não foi encontrado."});
-
             }
             if (opcao === "inbound")
             {

@@ -4,13 +4,42 @@
 
 var wbes;
 var layout;
+var letter_size_all = 1;
+
 $(document).ready(function() {
-      $("#MainLayout").attr("style", "width:100%;height:100%;position:absolute;background-color:#F5F5F5;");
+
+      $("[data-t=tooltip]").tooltip({placement: "left", html: true});
+
+      $("#MainLayout").css("width", "100%").css("height", "100%").css("position", "absolute").css("background-color", "#F5F5F5").addClass("letter_size");
       var parameters = window.name.split(",");
       var windwidth = +parameters[1]; //parameter;
       var windheight = +parameters[2]; //parameter;
       layout = +parameters[0]; //parameter
       $("[data-t=tooltip]").tooltip({placement: "left", html: true});
+
+
+
+
+
+
+
+
+      $("#MainLayout").append($("<div>")
+              .addClass("ui-widget-content PanelWB")
+              .css("position", "absolute")
+              .css("top", "87%")
+              .css("left", "90%")
+              .css("z-index", "50")
+              .data("data-t", "tooltip-right")
+              .attr("title", "Mudanças muito grandes só serão actualizadas quando o próprio grafico actualizar")
+              .append($("<label>").addClass("control-label label").text("Tamanho da Letra"))
+              .append($("<div>").addClass("grid-content")
+              .append($("<button>").attr("id", "increase_em").addClass("btn btn-primary icon-plus"))
+              .append($("<button>").attr("id", "decrease_em").addClass("btn icon-minus")))
+              .draggable({containment: '#MainLayout'}));
+
+
+
       $.post("Requests.php", {action: "wbe", id_layout: layout},
       function(data)
       {
@@ -25,7 +54,7 @@ $(document).ready(function() {
                   var top = (wbes[i][4] * temp_window.height()) / windheight;
                   var width = (wbes[i][5] * temp_window.width()) / windwidth;
                   var height = (wbes[i][6] * temp_window.height()) / windheight;
-                  $("#MainLayout").append($("<div>").addClass("PanelWB ui-widget-content").attr("style", "position: absolute;    left:" + left + "px;top:" + top + "px; width:" + width + "px;height:" + height + "px;").attr("id", wbes[i][0] + "Main").draggable({containment: '#MainLayout'})
+                  $("#MainLayout").append($("<div>").addClass("PanelWB ui-widget-content letter_size_all").attr("style", "position: absolute;    left:" + left + "px;top:" + top + "px; width:" + width + "px;height:" + height + "px;").attr("id", wbes[i][0] + "Main").draggable({containment: '#MainLayout'})
                           .append($("<div>").addClass("grid-title")
                           .append($("<div>").addClass("pull-left").text(wbes[i][2]))
                           .append($("<div>").addClass("pull-right").attr("id", "right_title" + wbes[i][0])))
@@ -57,6 +86,22 @@ $(document).ready(function() {
             });
       }, "json");
 });
+
+
+
+
+$(document).on("click", "#increase_em", function(e) {
+      letter_size_all = letter_size_all + 0.15;
+      $(".letter_size_all").css("font-size", letter_size_all + "em");
+
+});
+$(document).on("click", "#decrease_em", function(e) {
+      letter_size_all = letter_size_all - 0.15;
+      $(".letter_size_all").css("font-size", letter_size_all + "em");
+});
+
+
+
 //BAR GRAPh ««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««
 function plot_bar(data)
 {
@@ -68,6 +113,7 @@ function plot_bar(data)
       var painel = $("#" + wbe[0] + "WBE");
       var first_time = true;
       var information = [];
+      var max_y = 0;
       var colors = new Array("red", "green", "blue", "orange", "black");
       get_values_bar();
       function get_values_bar()
@@ -92,24 +138,31 @@ function plot_bar(data)
                   var sum = 0;
                   $.each(data, function(index, value) {
                         if (wbe[9][i].chamadas === "0")
-                              label = wbe[9][i].param1;
+                              label = wbe[9][i].param1 + " por " + wbe[9][i].param2;
                         else
-                              label = wbe[9][i].chamadas;
+                              label = "Chamadas " + wbe[9][i].chamadas + " por " + wbe[9][i].param1;
+                        
                         sum = +data[i];
 
                         if (sum == "0")
                         {
+                            
                               if (wbe[9][i].hasData)
                               {
                                     $.jGrowl("A barra de " + label + " não apresenta resultados", {sticky: true});
                                     wbe[9][i].hasData = false;
                               }
+
                         }
                         else
                         {
                               wbe[9][i].hasData = true;
-                              ticksA.push([i, label]);
+                              ticksA.push([i, +data[i]]);
                               data2.push([i, +data[i]]);
+                              if (+data[i] > max_y)
+                              {
+                                    max_y = +data[i];
+                              }
                               information.push(
                                       {
                                             label: label,
@@ -117,21 +170,21 @@ function plot_bar(data)
                                             bars: {show: true, barWidth: 0.8, align: "center"},
                                             color: colors[i]
                                       });
+                              sum = 0;
                         }
                         i++;
                         data2 = [];
                   });
-                  if (first_time)
-                  {
-                        $.plot(painel, information, {xaxis: {ticks: ticksA}, legend: {show: false}});
-                        first_time = false;
-                  }
-                  else
-                  {
-                        plot.setData(information);
-                        plot.draw();
-                  }
+
+                  max_y = (max_y * 100) / 75;
+                  $.plot(painel, information, {xaxis: {ticks: ticksA}, yaxis: {min: 0, max: max_y}, legend: {show: true}});
+                  max_y = 0;
+
+
+                  information = [];
+                  ticksA = [];
                   updation = setTimeout(get_values_bar, wbe[7]);
+
             }, "json");
       }
 
@@ -148,6 +201,7 @@ function plot_update(data)
       var result = [];
       var information = [];
       var dates = [];
+
 
       get_values_update();
       function get_values_update()
@@ -179,7 +233,6 @@ function plot_update(data)
                                                 max_y = +obj[prop][k].leads;
                                           }
                                           verifier += +obj[prop][k].leads;
-                                          console.log(verifier);
                                           var temp = new Date(obj[prop][k].call_date);
                                           temp.setHours(temp.getHours() + 1);
                                           dates.push(temp);
@@ -187,10 +240,10 @@ function plot_update(data)
                                     }
 
                                     if (verifier > 0) {
-                                          if (wbe[9][aux].param1 !== "0" && wbe[9][aux].param1 !== "total call center")
-                                                information.push({data: result, label: wbe[9][aux].opcao_query + " -> " + wbe[9][aux].param1});
+                                          if (wbe[9][aux].chamadas === "0")
+                                                information.push({data: result, label: wbe[9][aux].opcao_query + " -> " + wbe[9][aux].param2});
                                           else
-                                                information.push({data: result, label: wbe[9][aux].opcao_query});
+                                                information.push({data: result, label:"Chamadas "+  wbe[9][aux].chamadas + " por " + wbe[9][aux].param1 });
 
                                           result = [];
                                           verifier = 0;
@@ -208,27 +261,61 @@ function plot_update(data)
                                           }
                                           verifier = 0;
                                     }
+
                               }
+
                               aux++;
                         }
                   }
+
+
+                  max_y = (max_y * 100) / 65;
+
+                  var tick_size = max_y / 10;
+
+
                   var options = {
-                        series: {shadowSize: 0}, // drawing is faster without shadows
-                        yaxis: {min: 0, max: max_y + 35, tickSize: 10},
+                        series: {shadowSize: 0, steps: false, show: true}, // drawing is faster without shadows
+                        yaxis: {min: 0, max: max_y, tickSize: tick_size},
                         xaxis: {mode: "time", timeformat: "%H:%M", minTickSize: [5, "minute"],
                               min: (dates[0]),
                               max: (dates[dates.length - 1])
-                        },
-                        series: {
-                              lines: {
-                                    lineWidth: 2,
-                                    steps: false,
-                                    show: true
-                              }
                         }
+
                   };
 
                   plot = $.plot(painel, information, options);
+                  var temp = 9;
+
+                  switch (plot.getData().length)
+                  {
+                        case 1:
+                              temp=5;
+                              break;
+                        case 2:
+                                 temp=6;
+                              break;
+                        case 3:
+                                 temp=7;
+                              break;
+                        case 4:
+                                 temp=8;
+                              break;
+                        case 5:
+                                 temp=9;
+                              break;
+                  }
+
+
+                  for (var aa = 0; aa < plot.getData().length; aa++)
+                  {
+                        plot.getData()[aa].lines.lineWidth = temp;
+                        temp = temp - 3 + aa;
+
+                  }
+                  plot.draw();
+
+                  max_y = 0;
                   information = [];
                   result = [];
                   dates = [];
@@ -247,7 +334,7 @@ function plot_pie(data) {
       var wbe = data;
       var updation;
       var painel = $("#" + wbe[0] + "WBE");
-      var first_time = true;
+
       var painer_content = $("#" + wbe[0] + "WBEGD");
       painer_content.css("overflow-y", "auto").css("overflow-x", "hidden");
       if (wbe[9][0].status_feedback === "1")
@@ -291,31 +378,30 @@ function plot_pie(data) {
                   if (i == 0)//se so houver 1 resultado ele n faz render, entao adiciona-se 1 elemento infimo
                         data1.push({label: ("zero"), data: 0.001});
 
-                  if (first_time)
-                  {
-                        $.plot(painel, data1, {
-                              series: {
-                                    pie: {
+
+                  $.plot(painel, data1, {
+                        series: {
+                              pie: {
+                                    show: true,
+                                    radius: 1,
+                                    label: {
                                           show: true,
-                                          radius: 1,
-                                          label: {
-                                                show: true,
-                                                radius: 2 / 3,
-                                                formatter: function(label, series) {
-                                                      return '<div style="font-size:13px;text-align:center;color:black;">' + Math.round(series.percent) + '%</div>';
-                                                },
-                                                threshold: 0.02
-                                          }
+                                          radius: 2 / 3,
+                                          formatter: function(label, series) {
+                                                return '<div style="font-size:13px;text-align:center;color:black;">' + Math.round(series.percent) + '%</div>';
+                                          },
+                                          threshold: 0.02
                                     }
-                              },
-                              legend: {
-                                    show: true
-                              },
-                              grid: {
-                                    hoverable: false,
-                                    clickable: false
-                              }});
-                  }
+                              }
+                        },
+                        legend: {
+                              show: true
+                        },
+                        grid: {
+                              hoverable: false,
+                              clickable: false
+                        }});
+
                   updation = setTimeout(get_values_pie, wbe[7]);
             }, "json");
       }
@@ -498,11 +584,11 @@ function   inbound_wallboard(data)
 
 
                               if (tma1 > 0)
-                                    tma1 =(((100 - tma1) / 100) + 1) * answer_sec_pct_rt_stat_one;
+                                    tma1 = (((100 - tma1) / 100) + 1) * answer_sec_pct_rt_stat_one;
                               else
                               {
                                     tma1 = 0;
-                                    answer_sec_pct_rt_stat_one=0;
+                                    answer_sec_pct_rt_stat_one = 0;
                               }
 
                               if (tma2 > 0)
@@ -510,13 +596,13 @@ function   inbound_wallboard(data)
                               else
                               {
                                     tma2 = 0;
-                                    answer_sec_pct_rt_stat_two=0;
+                                    answer_sec_pct_rt_stat_two = 0;
                               }
 
 
                               var data = [
-                                    {label: 'Cumprido', data: [[1, tma1], [2, tma2]]},
-                                    {label: 'A Cumprir', data: [[1, answer_sec_pct_rt_stat_one], [2, answer_sec_pct_rt_stat_two]]}];
+                                    {label: 'Cumprido', data: [[1, tma1], [2, tma2]], color: "#DF7401"},
+                                    {label: 'A Cumprir', data: [[1, answer_sec_pct_rt_stat_one], [2, answer_sec_pct_rt_stat_two]], color: "#D8F6CE"}];
 
 
 
@@ -628,7 +714,7 @@ function   dataTable_top(data)
                         {
                               tbody.append($("<tr>").css("font-size", letter_size + "px")
                                       .append($("<td>").text(data[index].user))
-                                      .append($("<td>").text(data[index].count_feedbacks).css("text-align","center"))
+                                      .append($("<td>").text(data[index].count_feedbacks).css("text-align", "center"))
                                       .append($("<td>").text(result))
                                       );
                               letter_size--;
