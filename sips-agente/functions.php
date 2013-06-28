@@ -1,14 +1,5 @@
 <?php
 
-
-	
-	
-
-
-
-
-
-
 # 
 # functions.php    version 2.4
 #
@@ -21,9 +12,6 @@
 # 100629-1201 - First Build
 # 101124-0625 - Added lookup_gmt and dialable_gmt functions
 #
-
-
-
 ##### BEGIN gather values for display of custom list fields for a lead #####
 
 
@@ -142,13 +130,7 @@ function custom_list_fields_values($lead_id,$list_id,$uniqueid,$user)
 				{
 				if ($DB) {echo "ERROR: no custom data for this lead: $lead_id\n";}
 				}
-			##### END grab the data from custom table for the lead_id
-	#		<tr>
-#<td style='width:225px'> <div class=cc-mstyle style='height:28px; border-radius:8px;'><p> ID da Base de Dados </p></div></td>
-#<td><input type=text name=list_id size=8 maxlength=8></td><td style='width:30px'>$NWB#vicidial_lists-list_id$NWE</td>
-#</tr>
-
-
+		
 			$CFoutput .= "<input type=hidden name=stage id=stage value=\"SUBMIT\">\n";
 			$CFoutput .= "<div class='cf-style' style='border:none'><TABLE width=100%>\n";
 			if ($fields_to_print < 1) 
@@ -264,6 +246,11 @@ function custom_list_fields_values($lead_id,$list_id,$uniqueid,$user)
 					{
 					if ($A_field_default[$o]=='NULL') {$A_field_default[$o]='';}
 					$field_HTML .= "$A_field_options[$o]\n";
+					}
+				if ($A_field_type[$o]=='JSCRIPT')
+					{
+					if ($A_field_default[$o]=='NULL') {$A_field_default[$o]='';}
+					$field_HTML .= "<script>$A_field_options[$o]</script>\n";
 					}
 				if ($A_field_type[$o]=='DATE') 
 					{
