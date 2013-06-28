@@ -13204,7 +13204,7 @@ $zi=2;
                     calendar="sch=";
                 }
                 calendar+=encodeURIComponent($(this).data().id);
-                    window.open("../sips-admin/reservas/views/calendar_container.php?"+calendar);
+                    window.open("../sips-admin/reservas/views/calendar_container.php?"+calendar+"&user="+user+"&lead="+lead_id.value);
             });
             </script>
             

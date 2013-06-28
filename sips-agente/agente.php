@@ -248,6 +248,8 @@ header ("Pragma: no-cache");                          // HTTP/1.0?>
 <script type="text/javascript" src="/jquery/jqueryUI/plugins/datetimepicker.js"></script>
 <script type="text/javascript" src="/jquery/jqueryUI/language/pt-pt.js"></script>
 
+<script type="text/javascript" src="/jquery/scrollto/jquery.scrollTo-1.4.3.1-min.js"></script>
+
 <script language="JavaScript" src="funcoes.js"></script>
 <style>
 	div#tcal{
@@ -1256,7 +1258,7 @@ else
 				$HKstatusnames = substr("$HKstatusnames", 0, -1); 
 
 				##### grab the campaign settings
-				$stmt="SELECT park_ext,park_file_name,web_form_address,allow_closers,auto_dial_level,dial_timeout,dial_prefix,campaign_cid,campaign_vdad_exten,campaign_rec_exten,campaign_recording,campaign_rec_filename,campaign_script,get_call_launch,am_message_exten,xferconf_a_dtmf,xferconf_a_number,xferconf_b_dtmf,xferconf_b_number,alt_number_dialing,scheduled_callbacks,wrapup_seconds,wrapup_message,closer_campaigns,use_internal_dnc,allcalls_delay,omit_phone_code,agent_pause_codes_active,no_hopper_leads_logins,campaign_allow_inbound,manual_dial_list_id,default_xfer_group,xfer_groups,disable_alter_custphone,display_queue_count,manual_dial_filter,agent_clipboard_copy,use_campaign_dnc,three_way_call_cid,dial_method,three_way_dial_prefix,web_form_target,vtiger_screen_login,agent_allow_group_alias,default_group_alias,quick_transfer_button,prepopulate_transfer_preset,view_calls_in_queue,view_calls_in_queue_launch,call_requeue_button,pause_after_each_call,no_hopper_dialing,agent_dial_owner_only,agent_display_dialable_leads,web_form_address_two,agent_select_territories,crm_popup_login,crm_login_address,timer_action,timer_action_message,timer_action_seconds,start_call_url,dispo_call_url,xferconf_c_number,xferconf_d_number,xferconf_e_number,use_custom_cid,scheduled_callbacks_alert,scheduled_callbacks_count,manual_dial_override,blind_monitor_warning,blind_monitor_message,blind_monitor_filename,timer_action_destination,enable_xfer_presets,hide_xfer_number_to_dial,manual_dial_prefix,customer_3way_hangup_logging,customer_3way_hangup_seconds,customer_3way_hangup_action,ivr_park_call,manual_preview_dial,api_manual_dial,manual_dial_call_time_check,my_callback_option,per_call_notes,agent_lead_search,agent_lead_search_method,queuemetrics_phone_environment,auto_pause_precall,auto_pause_precall_code,auto_resume_precall,manual_dial_cid,campaign_name FROM vicidial_campaigns where campaign_id = '$VD_campaign';";
+				$stmt="SELECT park_ext,park_file_name,web_form_address,allow_closers,auto_dial_level,dial_timeout,dial_prefix,campaign_cid,campaign_vdad_exten,campaign_rec_exten,campaign_recording,campaign_rec_filename,campaign_script,get_call_launch,am_message_exten,xferconf_a_dtmf,xferconf_a_number,xferconf_b_dtmf,xferconf_b_number,alt_number_dialing,scheduled_callbacks,wrapup_seconds,wrapup_message,closer_campaigns,use_internal_dnc,allcalls_delay,omit_phone_code,agent_pause_codes_active,no_hopper_leads_logins,campaign_allow_inbound,manual_dial_list_id,default_xfer_group,xfer_groups,disable_alter_custphone,display_queue_count,manual_dial_filter,agent_clipboard_copy,use_campaign_dnc,three_way_call_cid,dial_method,three_way_dial_prefix,web_form_target,vtiger_screen_login,agent_allow_group_alias,default_group_alias,quick_transfer_button,prepopulate_transfer_preset,view_calls_in_queue,view_calls_in_queue_launch,call_requeue_button,pause_after_each_call,no_hopper_dialing,agent_dial_owner_only,agent_display_dialable_leads,web_form_address_two,agent_select_territories,crm_popup_login,crm_login_address,timer_action,timer_action_message,timer_action_seconds,start_call_url,dispo_call_url,xferconf_c_number,xferconf_d_number,xferconf_e_number,use_custom_cid,scheduled_callbacks_alert,scheduled_callbacks_count,manual_dial_override,blind_monitor_warning,blind_monitor_message,blind_monitor_filename,timer_action_destination,enable_xfer_presets,hide_xfer_number_to_dial,manual_dial_prefix,customer_3way_hangup_logging,customer_3way_hangup_seconds,customer_3way_hangup_action,ivr_park_call,manual_preview_dial,api_manual_dial,manual_dial_call_time_check,my_callback_option,per_call_notes,agent_lead_search,agent_lead_search_method,queuemetrics_phone_environment,auto_pause_precall,auto_pause_precall_code,auto_resume_precall,manual_dial_cid,campaign_name,callback_other_user FROM vicidial_campaigns where campaign_id = '$VD_campaign';";
 				$rslt=mysql_query($stmt, $link);
 				if ($mel > 0) {mysql_error_logging($NOW_TIME,$link,$mel,$stmt,'01013',$VD_login,$server_ip,$session_name,$one_mysql_log);}
 				if ($DB) {echo "$stmt\n";}
@@ -1355,7 +1357,7 @@ else
 				$auto_resume_precall =		$row[91];
 				$manual_dial_cid =			$row[92];
 				$campaign_name =			$row[93];
-
+                                $callback_other_user=$row[94];
 				if ( ($VU_agent_lead_search_override == 'ENABLED') or ($VU_agent_lead_search_override == 'DISABLED') )
 					{$agent_lead_search = $VU_agent_lead_search_override;}
 				$AllowManualQueueCalls=1;
@@ -8849,7 +8851,7 @@ $("#div-dispo-control").live("click", function(){
 					}
 				if (xmlhttp) 
 					{ 
-					DSupdate_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=updateDISPO&format=text&user=" + user + "&pass=" + pass + "&dispo_choice=" + DispoChoice + "&lead_id=" + document.vicidial_form.lead_id.value + "&campaign=" + campaign + "&auto_dial_level=" + auto_dial_level + "&agent_log_id=" + agent_log_id + "&CallBackDatETimE=" + CallBackDatETimE + "&list_id=" + document.vicidial_form.list_id.value + "&recipient=" + CallBackrecipient + "&use_internal_dnc=" + use_internal_dnc + "&use_campaign_dnc=" + use_campaign_dnc + "&MDnextCID=" + LasTCID + "&stage=" + group + "&vtiger_callback_id=" + vtiger_callback_id + "&phone_number=" + document.vicidial_form.phone_number.value + "&phone_code=" + document.vicidial_form.phone_code.value + "&dial_method" + dial_method + "&uniqueid=" + document.vicidial_form.uniqueid.value + "&CallBackLeadStatus=" + CallBackLeadStatus + "&comments="+ encodeURIComponent(CallBackCommenTs) + "&custom_field_names=" + custom_field_names + "&call_notes=" + document.vicidial_form.call_notes_dispo.value;
+					DSupdate_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=updateDISPO&format=text&user=" + user + "&pass=" + pass + "&dispo_choice=" + DispoChoice + "&lead_id=" + document.vicidial_form.lead_id.value + "&campaign=" + campaign + "&auto_dial_level=" + auto_dial_level + "&agent_log_id=" + agent_log_id + "&CallBackDatETimE=" + CallBackDatETimE + "&list_id=" + document.vicidial_form.list_id.value + "&recipient=" + CallBackrecipient + "&use_internal_dnc=" + use_internal_dnc + "&use_campaign_dnc=" + use_campaign_dnc + "&MDnextCID=" + LasTCID + "&stage=" + group + "&vtiger_callback_id=" + vtiger_callback_id + "&phone_number=" + document.vicidial_form.phone_number.value + "&phone_code=" + document.vicidial_form.phone_code.value + "&dial_method" + dial_method + "&uniqueid=" + document.vicidial_form.uniqueid.value + "&CallBackLeadStatus=" + CallBackLeadStatus + "&comments="+ encodeURIComponent(CallBackCommenTs) + "&custom_field_names=" + custom_field_names + "&call_notes=" + document.vicidial_form.call_notes_dispo.value+"&cb_to_other_user="+cb_to_other_user+"&cb_to_other_username="+cb_to_other_username;
 					xmlhttp.open('POST', 'vdc_db_query.php');
 					xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 					xmlhttp.send(DSupdate_query); 
@@ -11299,17 +11301,21 @@ function phone_number_format(formatphone) {
 		document.getElementById("CallBackDatEPrinT").innerHTML = taskdate;
 		}
 
-
+var cb_to_other_user=false, cb_to_other_username="";
 // ################################################################################
 // Submitting the callback date and time to the system
 	function CallBackDatE_submit()
 		{
 		
-			if(document.getElementById('data_callback').value.length < 3)
-			{ $('#NoDateSelected').html("Por favor preencha uma data para o Callback.").show().fadeOut(4000); }
-			else
-			{
-			
+			if(document.getElementById('data_callback').value.length < 3){ 
+                            $('#NoDateSelected').html("Por favor preencha uma data para o Callback.").show().fadeOut(4000);
+                            return false;
+                    }
+                    if($("#cb_other_user").prop("checked") && $("#cb_other_username").val()===""){ 
+                            $('#NoDateSelected').html("Por favor preencha o utilizador alternativo.").show().fadeOut(4000);
+                            return false;
+                    }
+						
 			var callback_date_time_temp = document.getElementById('data_callback').value.split("     ");
 			var callback_date_temp = callback_date_time_temp[0].split("/");
 			var data = callback_date_temp[2] + "-" + callback_date_temp[1] + "-" + callback_date_temp[0];
@@ -11323,6 +11329,10 @@ function phone_number_format(formatphone) {
 			CallBackLeadStatus = document.vicidial_form.DispoSelection.value;
 			document.vicidial_form.DispoSelection.value = 'CBHOLD';
 			
+                        cb_to_other_user=$("#cb_other_user").prop("checked");
+                        cb_to_other_username=$("#cb_other_username").val();
+                        if(cb_to_other_user){$("#cb_other_user").click();}
+                        
 			$('#data_callback').val(" ");
 			$('#comentarios_callback').val(" ");
 			
@@ -11330,7 +11340,7 @@ function phone_number_format(formatphone) {
 			hideDiv('CallBackSelectBox');
 			DispoSelect_submit();
 			
-			}
+			
 			
 		}
 
@@ -12908,7 +12918,7 @@ $zi=2;
                     calendar="sch=";
                 }
                 calendar+=encodeURIComponent($(this).data().id);
-                    window.open("../sips-admin/reservas/views/calendar_container.php?"+calendar);
+                    window.open("../sips-admin/reservas/views/calendar_container.php?"+calendar+"&user="+user+"&lead="+lead_id.value);
             });
             </script>
             
@@ -13968,6 +13978,23 @@ Available Agents Transfer: <span id="AgentXferViewSelect"></span></center></font
     	<tr><td><input style="float:right; cursor:pointer;" type="radio" id="cb_geral" <?=($my_callback_option!="CHECKED")?"checked='checked'":""?> name="tipo_callback" /><td style=" text-align:left; "><label style="cursor:pointer" for="cb_geral">Callback Geral</label></td></tr>
     </table>
 </tr>
+<?php
+    $userlist = "<option></option>";
+    $results = mysql_query("Select user From vicidial_users Where active='Y'");
+    while($result = mysql_fetch_array($results)) {
+        $userlist.= "<option>$result[0]</option>\n";
+    }
+?>
+
+<tr <?=($callback_other_user)?"":"style='display:none'"?>>
+        <td style='text-align:right'>User:</td>
+    <td style='text-align:left; width:225px;'><select style="width:170px" id="cb_other_username" disabled><?=$userlist?></select></td>
+    <td>
+    <table style='width:100%;' class="radio-container">
+    	<tr><td><input style="float:right; cursor:pointer;" type="checkbox" id="cb_other_user" name="cb_other_user" /><td style="text-align:left;"><label style="cursor:pointer" for="cb_other_user">Outro User</label></td></tr>
+    	</table>
+        </td>
+</tr>
 <tr>
 	<td style='text-align:right; vertical-align:top;'>Comentários do Callback:</td>
 	<td colspan="2"><textarea id="comentarios_callback" style="width:375px; height:150px"></textarea></td>
@@ -13980,9 +14007,126 @@ Available Agents Transfer: <span id="AgentXferViewSelect"></span></center></font
 
 </span>
 
+<script>
+        (function( $ ) {
+    $.widget( "custom.combobox", {
+      _create: function() {
+        this.wrapper = $( "<span>" )
+          .addClass( "custom-combobox" )
+          .hide()
+          .insertAfter( this.element );
+ 
+        this.element.hide();
+        this._createAutocomplete();
+      },
+ 
+      _createAutocomplete: function() {
+        var selected = this.element.children( ":selected" ),
+          value = selected.val() ? selected.text() : "";
+ 
+        this.input = $( "<input type='text'>" )
+          .appendTo( this.wrapper )
+          .val( value )
+          .addClass( "custom-combobox-input ui-widget ui-widget-content" )
+          .autocomplete({
+            delay: 300,
+            minLength: 3,
+            source: $.proxy( this, "_source" )
+          })
+          .tooltip({
+            tooltipClass: "ui-state-highlight"
+          });
+ 
+        this._on( this.input, {
+          autocompleteselect: function( event, ui ) {
+            ui.item.option.selected = true;
+            this._trigger( "select", event, {
+              item: ui.item.option
+            });
+          },
+ 
+          autocompletechange: "_removeIfInvalid"
+        });
+      },
+ 
+       
+      _source: function( request, response ) {
+        var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+        response( this.element.children( "option" ).map(function() {
+          var text = $( this ).text();
+          if ( this.value && ( !request.term || matcher.test(text) ) )
+            return {
+              label: text,
+              value: text,
+              option: this
+            };
+        }) );
+      },
+ 
+      _removeIfInvalid: function( event, ui ) {
+ 
+        // Selected an item, nothing to do
+        if ( ui.item ) {
+          return;
+        }
+ 
+        // Search for a match (case-insensitive)
+        var value = this.input.val(),
+          valueLowerCase = value.toLowerCase(),
+          valid = false;
+        this.element.children( "option" ).each(function() {
+          if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+            this.selected = valid = true;
+            return false;
+          }
+        });
+ 
+        // Found a match, nothing to do
+        if ( valid ) {
+          return;
+        }
+ 
+        // Remove invalid value
+        this.input
+          .val( "" )
+          .attr( "title", value + "não é nenhum utilizador valido." )
+          .tooltip( "open" );
+        this.element.val( "" );
+        this._delay(function() {
+          this.input.tooltip( "close" ).attr( "title", "" );
+        }, 2500 );
+        this.input.data( "ui-autocomplete" ).term = "";
+      },
+ 
+      _destroy: function() {
+        this.wrapper.remove();
+        this.element.show();
+      }
+    });
+  })( jQuery );
+                                
+                                
+$(function(){
+    
+    $("#cb_other_username").combobox().hide();
+    
+    $("#cb_other_user").on("change",
+            function(){
+            if ($(this).prop("checked")){
+                $("#cb_pessoal").prop("checked",true);
+                $("#cb_geral").prop("disabled",true);
+                $(".custom-combobox").show();
+            }else{
+                $("#cb_geral").prop("disabled",false);
+                <?=($my_callback_option!="CHECKED")?"$('#cb_geral').prop('checked',true);":""?>
+                $(".custom-combobox").hide();
+            }    
+            });
+});
+</script>
 
 <style>
-.ui-datepicker { z-index:3000 !important; }
+.ui-datepicker,.ui-autocomplete { z-index:3000 !important; }
 .radio-container {font-size:10px; }
 .ui-datepicker-trigger { cursor:pointer; }
 div.ui-datepicker{
