@@ -13156,7 +13156,7 @@ $zi=2;
                 <tr id="CallHistoryStart">
                         <td ><img src='/images/icons/small_tiles_32.png'></td><td>Histórico de Chamadas</td>
                 </tr>
-                <?php $query="SELECT id_calendar,cal_type FROM `sips_sd_agent_ref` WHERE user='$user'";
+                <?php /*$query="SELECT id_calendar,cal_type FROM `sips_sd_agent_ref` WHERE user='$user'";
                       $result=mysql_query($query);
                               
                       while ($row = mysql_fetch_assoc($result)) { 
@@ -13166,7 +13166,7 @@ $zi=2;
                 <tr class="calendar_ref" data-type="<?=$row[cal_type]?>" data-id="<?=$row[id_calendar]?>">
                     <td><img src="/images/icons/calendar_32.png"></td><td><?=$calendar_name?></td>
                 </tr>
-                     <?php } ?>
+                     <?php } */?>
 		
 		
 		

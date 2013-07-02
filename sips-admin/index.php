@@ -26,6 +26,17 @@ if (mysql_num_rows($query)) {
 } else {
     echo "<script> window.location='../index.php?logout=yes'</script>";
 }
+
+
+########################DB UPDATES######################
+$q = "SELECT * FROM `sips_admin_menu_groups` WHERE `title`='Suporte'";
+$r = mysql_query($q);
+if (!mysql_num_rows($r)) {
+    $q = "INSERT INTO `asterisk`.`sips_admin_menu_groups` (`id_menu_group`, `title`, `img`, `order`, `allowedgroups`, `active`) VALUES (NULL, 'Suporte', 'information_16.png', '10', '--ALL_GROUPS--', '1');";
+    $r = mysql_query($q);
+    $q = "INSERT INTO `asterisk`.`sips_admin_menu_links` (`id_menu_links`, `title`, `img`, `id_menu_groups`, `url`, `order`, `active`, `allowedgroups`) VALUES (NULL, 'Informações', 'information_32.png', '10', 'suporte.html', '1', '1', '--ALL_GROUPS--');";
+    $r = mysql_query($q);
+}
 ?>
 
 <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
@@ -44,45 +55,45 @@ if (mysql_num_rows($query)) {
     .cc-menu .pull-left{text-overflow: ellipsis;white-space: nowrap;overflow: hidden;max-width: 70%}
     .cc-menu .grid-title {padding: 4px 0px 0px 6px;}
     .cc-submenu{ width: 95%;margin-left:2.5%;margin-right:2.5%;}
-	
-	
-	#cc-header {
-		
-	background:0 !important;
-	border-bottom: 3px solid rgb(168, 168, 168) !important;
-	border-top:none !important;
-	border-left:none !important;
-	border-right:none !important;
-	border-radius: 0px !important;
-	-webkit-box-shadow:none !important;
-	box-shadow:none !important;
-	
-	}
-	
-	.cc-menu {
-	
-	color: rgb(105, 105, 105) !important;
-		background:0 !important;
-	border-bottom: 2px solid rgb(192, 192, 192) !important;
-	border-top:none !important;
-	border-left:none !important;
-	border-right:none !important;
-	border-radius: 0px !important;
-	-webkit-box-shadow:none !important;
-	box-shadow:none !important;
-	text-shadow:none !important;
-	} 
-	
-	.cc-submenu table tbody tr { border-color: #c0c0c0 !important; }
-	.cc-submenu tr:hover { background-color: #e2e2e2 !important;  }
-	.cc-mstyle { border-color: #c0c0c0 !important; }
-	
-	body {
-		background:none !important; 
-	}
-	
-	
-	
+
+
+    #cc-header {
+
+        background:0 !important;
+        border-bottom: 3px solid rgb(168, 168, 168) !important;
+        border-top:none !important;
+        border-left:none !important;
+        border-right:none !important;
+        border-radius: 0px !important;
+        -webkit-box-shadow:none !important;
+        box-shadow:none !important;
+
+    }
+
+    .cc-menu {
+
+        color: rgb(105, 105, 105) !important;
+        background:0 !important;
+        border-bottom: 2px solid rgb(192, 192, 192) !important;
+        border-top:none !important;
+        border-left:none !important;
+        border-right:none !important;
+        border-radius: 0px !important;
+        -webkit-box-shadow:none !important;
+        box-shadow:none !important;
+        text-shadow:none !important;
+    } 
+
+    .cc-submenu table tbody tr { border-color: #c0c0c0 !important; }
+    .cc-submenu tr:hover { background-color: #e2e2e2 !important;  }
+    .cc-mstyle { border-color: #c0c0c0 !important; }
+
+    body {
+        background:none !important; 
+    }
+
+
+
 </style>
 </head>
 <body id="ib">
@@ -100,46 +111,46 @@ if (mysql_num_rows($query)) {
 
         <div class="row-fluid">
             <div class="span2" id="menu"   style='margin-top:1px;'><!-- MENU -->
-                
+
                 <DIV id="menu-content">
-                <div class='cc-menu'>
-                    <div class="grid-title">
-                        <div class="pull-left  tooltip-top offset1" data-t="tooltip" title="Menu">Menu</div>
-                        <div class="pull-right"><img class='cc-menu-img' id='img1'  src='/images/icons/headphone_mic_16.png' /></div>
-                        <div class="clear"></div>   
+                    <div class='cc-menu'>
+                        <div class="grid-title">
+                            <div class="pull-left  tooltip-top offset1" data-t="tooltip" title="Menu">Menu</div>
+                            <div class="pull-right"><img class='cc-menu-img' id='img1'  src='/images/icons/headphone_mic_16.png' /></div>
+                            <div class="clear"></div>   
+                        </div>
                     </div>
-                </div>
-                <div class='cc-submenu' style='display:block'>
+                    <div class='cc-submenu' style='display:block'>
 
-                    <table>
-                        <tbody>
-                        <?php
-                        $query = "SELECT user_level, user_group FROM vicidial_users where user='$_SERVER[PHP_AUTH_USER]';";
-                        $query = mysql_query($query, $link);
-                        $row = mysql_fetch_assoc($query);
-                        $usrgrp = $row[user_group];
+                        <table>
+                            <tbody>
+                                <?php
+                                $query = "SELECT user_level, user_group FROM vicidial_users where user='$_SERVER[PHP_AUTH_USER]';";
+                                $query = mysql_query($query, $link);
+                                $row = mysql_fetch_assoc($query);
+                                $usrgrp = $row[user_group];
 
-                        $smt = "SELECT `url`, `imgpath`, `label`, `grupo` FROM sips_admin_links WHERE grupo = '$usrgrp'";
+                                $smt = "SELECT `url`, `imgpath`, `label`, `grupo` FROM sips_admin_links WHERE grupo = '$usrgrp'";
 
-                        $rslt = mysql_query($smt, $link) or die(mysql_error());
+                                $rslt = mysql_query($smt, $link) or die(mysql_error());
 
-                        if (!mysql_num_rows($rslt)) {
-                            $smt = "SELECT `url`, `imgpath`, `label`, `grupo` FROM sips_admin_links WHERE grupo = 'ALL_GROUPS'";
-                            $rslt = mysql_query($smt, $link) or die(mysql_error());
-                        }
-                        for ($i = 0; $i < mysql_num_rows($rslt); $i++) {
+                                if (!mysql_num_rows($rslt)) {
+                                    $smt = "SELECT `url`, `imgpath`, `label`, `grupo` FROM sips_admin_links WHERE grupo = 'ALL_GROUPS'";
+                                    $rslt = mysql_query($smt, $link) or die(mysql_error());
+                                }
+                                for ($i = 0; $i < mysql_num_rows($rslt); $i++) {
 
-                            $curLink = mysql_fetch_assoc($rslt);
-                            $admin_link=$curLink['url'];
-                            ?>
-                            <tr  onclick=open_page('<?=$admin_link?>'); >
-                                <td><img src='<?= $curLink[imgpath] ?>' /></td>
-                                <td><?= $curLink[label] ?></td>
-                            </tr>
-<?php } ?>
-                        </tbody>
-                    </table>
-                </div>
+                                    $curLink = mysql_fetch_assoc($rslt);
+                                    $admin_link = $curLink['url'];
+                                    ?>
+                                    <tr  onclick=open_page('<?= $admin_link ?>'); >
+                                        <td><img src='<?= $curLink[imgpath] ?>' /></td>
+                                        <td><?= $curLink[label] ?></td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
 
 
                     <?php
@@ -212,77 +223,79 @@ if (mysql_num_rows($query)) {
 
         <script>
 
-                                        function SetFrameHeight() {
+                                    function SetFrameHeight() {
 
-                                          $("#mbody").height($(window).height() - 90);
+                                        $("#mbody").height($(window).height() - 90);
 
+                                    }
+
+                                    window.onresize = function() {
+                                        SetFrameHeight();
+                                    };
+
+                                    function ConfirmDelete(Link, Href) {
+
+                                        var rsp = confirm('De certeza que quer eliminar este item ?');
+                                        if (rsp) {
+                                            Link.href = Href;
                                         }
+                                        ;
 
-                                        window.onresize=function(){SetFrameHeight();};
+                                    }
 
-                                        function ConfirmDelete(Link, Href) {
+                                    function open_page(url) {
+                                        $("#mbody").attr('src', url);
+                                    }
 
-                                            var rsp = confirm('De certeza que quer eliminar este item ?');
-                                            if (rsp) {
-                                                Link.href = Href;
-                                            }
-                                            ;
+                                    function setCookie(key, value) {
+                                        var expires = new Date();
+                                        expires.setTime(expires.getTime() + 31536000000); //1 year  
+                                        document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+                                    }
 
-                                        }
-                                        
-                                        function open_page(url) {
-                                            $("#mbody").attr('src', url);
-                                        }
-                                        
-                                        function setCookie(key, value) {  
-                                            var expires = new Date();  
-                                            expires.setTime(expires.getTime() + 31536000000); //1 year  
-                                            document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();  
-                                            }  
-
-                                         function getCookie(key) {  
-                                            var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');  
-                                            return keyValue ? keyValue[2] : null;  
-                                            }  
+                                    function getCookie(key) {
+                                        var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+                                        return keyValue ? keyValue[2] : null;
+                                    }
 
 
 
 
 
-                                        $(function() {
-                                            $('#menu-content > .cc-submenu').hide();
-                                            $('#menu-content > .cc-menu').click(function() {
+                                    $(function() {
+                                        $('#menu-content > .cc-submenu').hide();
+                                        $('#menu-content > .cc-menu').click(function() {
 
-                                                document.cookie = setCookie("separador",$("#menu-content > .cc-menu").index(this));
-
-
-                                                $(this).next('.cc-submenu').slideToggle('fast')
-                                                        .siblings('.cc-submenu:visible').slideUp('fast');
-                                            });
-
-                                            var checkCookie = getCookie("separador");
-
-                                            if (checkCookie !== "") {
-                                                $('#menu-content > .cc-menu:eq(' + checkCookie + ')').next().show();
-                                            }
+                                            document.cookie = setCookie("separador", $("#menu-content > .cc-menu").index(this));
 
 
-
-                                            $("#menu-hide").toggle(
-                                                    function() {
-                                                        $("#iframe-conteiner").removeClass("span10").addClass("span12");
-                                                        $("#menu").css("position", "absolute").stop(true, true).hide('slide', {direction: "left"});
-                                                    },
-                                                    function() {
-                                                        $("#menu").stop(true, true).show('slide', {direction: "left"}, function() {
-                                                            $(this).css("position", "static");
-                                                        });
-                                                        $("#iframe-conteiner").removeClass("span12").addClass("span10");
-                                                    });
-
-
-                                            SetFrameHeight();
+                                            $(this).next('.cc-submenu').slideToggle('fast')
+                                                    .siblings('.cc-submenu:visible').slideUp('fast');
                                         });
+
+                                        var checkCookie = getCookie("separador");
+
+                                        if (checkCookie !== "") {
+                                            $('#menu-content > .cc-menu:eq(' + checkCookie + ')').next().show();
+                                        }
+
+
+
+                                        $("#menu-hide").toggle(
+                                                function() {
+                                                    $("#iframe-conteiner").removeClass("span10").addClass("span12");
+                                                    $("#menu").css("position", "absolute").stop(true, true).hide('slide', {direction: "left"});
+                                                },
+                                                function() {
+                                                    $("#menu").stop(true, true).show('slide', {direction: "left"}, function() {
+                                                        $(this).css("position", "static");
+                                                    });
+                                                    $("#iframe-conteiner").removeClass("span12").addClass("span10");
+                                                });
+
+
+                                        SetFrameHeight();
+                                    });
 
 
         </script>

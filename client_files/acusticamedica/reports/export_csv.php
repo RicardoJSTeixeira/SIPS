@@ -978,7 +978,9 @@ $i = 0;
             (status), status_name from vicidial_campaign_statuses group by status UNION ALL select status, status_name from vicidial_statuses group by status) d ON c.status = d.status group by status";
         //fputcsv($output, array(" ", "Query1:", $query_global), ";");
         $query_global = mysql_query($query_global) or die(mysql_error());
-        
+        $tot_leads_2[$i]=0;
+        $agendamentos2[$i]=0;
+        $negativos[$i]=0;
         while ($row = mysql_fetch_row($query_global)) {
             $tot_leads_2[$i] += $row[1];
             ##############################################################
@@ -1176,7 +1178,7 @@ $i = 0;
                 $total_leads[$i] += $row[1];
             }
             if ($row[0] == 'NA' || $row[0] == 'NAT') {
-                $na2[$i] = $row[1];
+                $na2[$i] += $row[1];
                 $total_leads[$i] += $row[1];
             }
             /*if () {
@@ -1221,7 +1223,7 @@ $i = 0;
             if ($row[0] != 'MARC') {
                 fputcsv($output, array(" ", $row[2], $row[1], $row[0]), ";");
             } else {
-                fputcsv($output, array(" ", $row[2], $tot_marc, $row[0]), ";");
+                fputcsv($output, array(" ", $row[2], $tot_marc[$i], $row[0]), ";");
             }
         }
         
@@ -1285,7 +1287,7 @@ $i = 0;
         fputcsv($output, array(" "), ";");
         fputcsv($output, columnmakerwithtotal(array(" ", "Total Dificuldades: "), $dificuldades), ";");
         fputcsv($output, columnmakerwithtotal(array(" ", "  FAX : "), $status_count['FAX'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Não Atendeu : "), $status_count['NA'], false, false, $i), ";");
+        fputcsv($output, columnmakerwithtotal(array(" ", "  Não Atendeu : "), $na2, false, false, $i), ";");
         fputcsv($output, columnmakerwithtotal(array(" ", "  Número Inválido : "), joinarray($status_count['NAOEX'] , $status_count['I']), false, false, $i), ";");
         fputcsv($output, columnmakerwithtotal(array(" ", "  Número não pertence : "), $status_count['NNP'], false, false, $i), ";");
         fputcsv($output, columnmakerwithtotal(array(" ", "  Portabilidade : "), $status_count['P'], false, false, $i), ";");

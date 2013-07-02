@@ -51,7 +51,7 @@ $user = $_SERVER['PHP_AUTH_USER'];
 <html>
     <head>
         <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
-        <title>SIPS</title>
+        <title>Go Contact Center</title>
 
         <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
         <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>

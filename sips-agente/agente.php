@@ -2813,7 +2813,7 @@ if ($is_webphone) {$AVTheight = '20';}
 
 
 ?>
-	<script language="Javascript">
+	<script language="Javascript"> 
 	window.name='vicidial_window';
 	var MTvar;
 	var NOW_TIME = '<?php echo $NOW_TIME ?>';
@@ -7079,7 +7079,13 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 			else
 				{
 				//document.getElementById("DiaLControl").innerHTML = DiaLControl_auto_HTML;
-				document.getElementById("ResumeControl").innerHTML = ResumeControl_auto_ON_HTML;
+                                if ( (agent_pause_codes_active=='FORCE') && (temp_reason != 'LOGOUT') && (temp_reason != 'REQUEUE') && (temp_reason != 'DIALNEXT') && (temp_auto != '1') )
+				{
+                                    document.getElementById("ResumeControl").innerHTML = ResumeControl_auto_OFF_HTML;
+ 				}else
+                                {				
+                                    document.getElementById("ResumeControl").innerHTML = ResumeControl_auto_ON_HTML;
+                                }
 				document.getElementById("PauseControl").innerHTML = PauseControl_auto_OFF_HTML;
 				}
 
@@ -8451,7 +8457,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 			{
             document.getElementById("PerCallNotesContent").innerHTML = "<input type=\"hidden\" name=\"call_notes_dispo\" id=\"call_notes_dispo\" value=\"\" />";
 			}
-
+FecharCallbacks();
 		HidEGenDerPulldown();
 		AgentDispoing = 1;
 		var CBflag = '';
@@ -9078,7 +9084,6 @@ $("#div-dispo-control").live("click", function(){
 function FecharCallbacks()
 {
 hideDiv('CallBackSelectBox');
-showDiv('DispoSelectBox');
 }
 
 // ################################################################################
@@ -9124,8 +9129,12 @@ showDiv('DispoSelectBox');
 					var check_pause_code = xmlhttp.responseText;
 					var check_PC_array=check_pause_code.split("\n");
 					if (check_PC_array[1] == 'Next agent_log_id:')
-						{agent_log_id = check_PC_array[2];}
-						}
+						{
+                                                    agent_log_id = check_PC_array[2];
+                                                    				
+                                    document.getElementById("ResumeControl").innerHTML = ResumeControl_auto_ON_HTML;
+                                                }
+					}
 				}
 			delete xmlhttp;
 			}
@@ -9749,6 +9758,11 @@ showDiv('DispoSelectBox');
 					}
 				else
 					{
+                                            if(lead_id.value.length!=0){
+				alert("Termine a acção actual antes de fazer logout.\n");
+                                                
+                                            }else{
+                                                window.onbeforeunload ="";
 					var xmlhttp=false;
 					/*@cc_on @*/
 					/*@if (@_jscript_version >= 5)
@@ -9793,6 +9807,7 @@ showDiv('DispoSelectBox');
 							
 					}
 				}
+                                }
 			}
 		}
 <?php
@@ -12621,8 +12636,8 @@ function mail(user)
 // To disable f5
 function disableF5(e) { if ((e.which || e.keyCode) == 116) e.preventDefault(); };
 $(document).bind("keydown", disableF5);
-
-		
+   
+  	
 	</script>
 
 
@@ -14597,6 +14612,10 @@ echo $zi ?>;" id="AlertBox" class="popup_form" >
 
 </form>
 <div class="cc-mstyle" style="height: 4em; bottom: 0px; position: fixed; width: 90%; margin: 0px 5%; display: none; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; border-bottom: medium none; opacity: 0.9;" id="shoutbox"><img style="float:right;margin:5px;cursor:pointer;" onClick="$('#shout').slideUp()" src="/images/icons/cross_16.png"><p style="margin:15px 5px 0"></p></div>
-
+<script>
+        setTimeout(function(){window.onbeforeunload = function() {
+        return "Não feche a janela, faça logout primeiro se faz favor :-(.";
+};},500);
+   </script>
 </body>
 </html>

@@ -326,7 +326,7 @@ if ($stage=='SUBMIT')
 
 			$A_field_value[$o] = $form_field_value;
 
-			if ( ($A_field_type[$o]=='DISPLAY') or ($A_field_type[$o]=='SCRIPT') )
+			if ( ($A_field_type[$o]=='DISPLAY') or ($A_field_type[$o]=='SCRIPT') or ($A_field_type[$o]=='JSCRIPT') )
 				{
 				$A_field_value[$o]='----IGNORE----';
 				}
@@ -436,6 +436,7 @@ else
 	echo "</title>\n";
 	
 	echo "<script language=\"JavaScript\" src=\"../calendar/calendar_db.js\"></script>\n";
+	echo "<script language=\"JavaScript\" src=\"../jquery/jquery-1.9.1.js\"></script>\n";
 	echo "<script language=\"JavaScript\" src=\"funcoes.js\"></script>\n";
 	echo "	<link rel=\"stylesheet\" href=\"../calendar/calendar.css\">\n";
 	echo "	<link rel=\"stylesheet\" href=\"css/style.css\">\n"; 
