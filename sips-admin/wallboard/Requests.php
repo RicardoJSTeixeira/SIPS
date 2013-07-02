@@ -91,8 +91,8 @@ switch ($action) {
     case 'insert_dataTop':
         $query = "INSERT INTO WallBoard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "INSERT INTO `asterisk`.`WallBoard_DataTop` (`id`, `id_wallboard`, `tempo`, `campanha`, `grupo_inbound`, `grupo_user`, `status_feedback`, `limit`, `custom_colum_name`)
-            VALUES(NULL,LAST_INSERT_ID() , $tempo, '$campanha', '$grupo_inbound', '$grupo_user', $status_feedback, '$limit', '$custom_colum_name')";
+        $query = "INSERT INTO `asterisk`.`WallBoard_DataTop` (`id`, `id_wallboard`, `tempo`, `campanha`, `grupo_inbound`, `grupo_user`, `status_feedback`, `limit`, `custom_colum_name`,`param1`)
+            VALUES(NULL,LAST_INSERT_ID() , $tempo, '$campanha', '$grupo_inbound', '$grupo_user', $status_feedback, '$limit', '$custom_colum_name', '$param1')";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
@@ -127,7 +127,7 @@ switch ($action) {
                 $query_dataset = mysql_query($query_dataset, $link) or die(mysql_error());
                 $dataset = array();
                 while ($row1 = mysql_fetch_assoc($query_dataset)) {
-                    $dataset[] = array(id => $row1["id"], id_wallboard => $row1["id_wallboard"], tempo => $row1["tempo"], campanha => $row1["campanha"], grupo_inbound => $row1["grupo_inbound"], grupo_user => $row1["grupo_user"], status_feedback => $row1["status_feedback"], limit => $row1["limit"], custom_colum_name => $row1["custom_colum_name"], hasData => true);
+                    $dataset[] = array(id => $row1["id"], id_wallboard => $row1["id_wallboard"], tempo => $row1["tempo"], campanha => $row1["campanha"], grupo_inbound => $row1["grupo_inbound"], grupo_user => $row1["grupo_user"], status_feedback => $row1["status_feedback"], limit => $row1["limit"], custom_colum_name => $row1["custom_colum_name"], hasData => true,param1=>$row1["param1"]);
                 }
                 $js[] = array(id => $row["id"], id_layout => $row["id_layout"], name => $row["name"], pos_x => $row["pos_x"], pos_y => $row["pos_y"], width => $row["width"], height => $row["height"], update_time => $row["update_time"], graph_type => $row["graph_type"], dataset => $dataset);
             } else {
@@ -248,8 +248,10 @@ switch ($action) {
                         //SUbstituição das variaveis
                         $selected_query = str_replace("now()", "'" . $rounded_time . "'", $selected_query);
                         $selected_query = str_replace('$hour', $row["tempo"], $selected_query);
-                        $selected_query = str_replace('$user', $row["user"], $selected_query);
+
                         $selected_query = str_replace('$user_group', $row["user_group"], $selected_query);
+                        $selected_query = str_replace('$user', $row["user"], $selected_query);
+
                         $selected_query = str_replace('$campaign_id', $row["campaign_id"], $selected_query);
                         $selected_query = str_replace('$linha_inbound', $row["linha_inbound"], $selected_query);
                         $selected_query = str_replace('$status', $row["status_feedback"], $selected_query);
@@ -265,9 +267,9 @@ switch ($action) {
                         //SUbstituição das variaveis
                         $inbound = str_replace("now()", "'" . $rounded_time . "'", $inbound);
                         $inbound = str_replace('$hour', $row["tempo"], $inbound);
-                            $inbound = str_replace('$user_group', $row["user_group"], $inbound);
+                        $inbound = str_replace('$user_group', $row["user_group"], $inbound);
                         $inbound = str_replace('$user', $row["user"], $inbound);
-                  
+
                         $inbound = str_replace('$campaign_id', $row["campaign_id"], $inbound);
                         $inbound = str_replace('$linha_inbound', $row["linha_inbound"], $inbound);
                         $inbound = str_replace('$status', $row["status_feedback"], $inbound);
@@ -275,9 +277,9 @@ switch ($action) {
                         //SUbstituição das variaveis
                         $outbound = str_replace("now()", "'" . $rounded_time . "'", $outbound);
                         $outbound = str_replace('$hour', $row["tempo"], $outbound);
-                             $outbound = str_replace('$user_group', $row["user_group"], $outbound);
+                        $outbound = str_replace('$user_group', $row["user_group"], $outbound);
                         $outbound = str_replace('$user', $row["user"], $outbound);
-                   
+
                         $outbound = str_replace('$campaign_id', $row["campaign_id"], $outbound);
                         $outbound = str_replace('$linha_inbound', $row["linha_inbound"], $outbound);
                         $outbound = str_replace('$status', $row["status_feedback"], $outbound);
@@ -374,9 +376,9 @@ switch ($action) {
                         //SUbstituição das variaveis
                         $inbound = str_replace("now()", "'" . $rounded_time . "'", $inbound);
                         $inbound = str_replace('$hour', $row["tempo"], $inbound);
-                               $inbound = str_replace('$user_group', $row["user_group"], $inbound);
+                        $inbound = str_replace('$user_group', $row["user_group"], $inbound);
                         $inbound = str_replace('$user', $row["user"], $inbound);
-                 
+
                         $inbound = str_replace('$campaign_id', $row["campaign_id"], $inbound);
                         $inbound = str_replace('$linha_inbound', $row["linha_inbound"], $inbound);
                         $inbound = str_replace('$status', $row["status_feedback"], $inbound);
@@ -384,9 +386,9 @@ switch ($action) {
                         //SUbstituição das variaveis
                         $outbound = str_replace("now()", "'" . $rounded_time . "'", $outbound);
                         $outbound = str_replace('$hour', $row["tempo"], $outbound);
-                         $outbound = str_replace('$user_group', $row["user_group"], $outbound);
+                        $outbound = str_replace('$user_group', $row["user_group"], $outbound);
                         $outbound = str_replace('$user', $row["user"], $outbound);
-                 
+
                         $outbound = str_replace('$campaign_id', $row["campaign_id"], $outbound);
                         $outbound = str_replace('$linha_inbound', $row["linha_inbound"], $outbound);
                         $outbound = str_replace('$status', $row["status_feedback"], $outbound);
@@ -467,7 +469,7 @@ switch ($action) {
 
 
     case '4'://inbound
-        $stmtB = "select calls_today,drops_today,answers_today,status_category_1,status_category_count_1,status_category_2,status_category_count_2,status_category_3,status_category_count_3,status_category_4,status_category_count_4,hold_sec_stat_one,hold_sec_stat_two,hold_sec_answer_calls,hold_sec_drop_calls,hold_sec_queue_calls,campaign_id from vicidial_campaign_stats where campaign_id='$group_id'";
+        $stmtB = "select calls_today,drops_today,answers_today,status_category_1,status_category_count_1,status_category_2,status_category_count_2,status_category_3,status_category_count_3,status_category_4,status_category_count_4,hold_sec_stat_one,hold_sec_stat_two,hold_sec_answer_calls,hold_sec_drop_calls,hold_sec_queue_calls,campaign_id,drops_today_pct from vicidial_campaign_stats where campaign_id='$linha_inbound'";
 
         $rslt = mysql_query($stmtB, $link);
         while ($row = mysql_fetch_row($rslt)) {
@@ -489,6 +491,7 @@ switch ($action) {
             $hold_sec_drop_calls = $row[14];
             $hold_sec_queue_calls = $row[15];
             $ingroupdetail = $row[16];
+            $drops_today_pct = $row[17];
             if (($dropsTODAY > 0) and ($answersTODAY > 0)) {
                 $drpctTODAY = ( ($dropsTODAY / $callsTODAY) * 100);
                 $drpctTODAY = round($drpctTODAY, 2);
@@ -539,32 +542,50 @@ switch ($action) {
             $tomorrow = date("o-m-d", strtotime("+1 day"));
 
 
-            $query = "select ifnull(sum(length_in_sec),0) as total_sec from vicidial_closer_log where call_date between '$today' and '$tomorrow' and campaign_id='$group_id'";
+            $query = "select ifnull(sum(length_in_sec),0) as total_sec, ifnull(sum(queue_seconds),0) as queue_seconds from vicidial_closer_log where call_date between '$today' and '$tomorrow' and campaign_id='$linha_inbound'";
 
             $query = mysql_query($query, $link);
             $row2 = mysql_fetch_assoc($query);
 
-
-
-
-
             $js[] = array(chamadas_efectuadas => $callsTODAY,
                 chamadas_perdidas => $dropsTODAY,
+                chamadas_perdidas_percent => $drops_today_pct,
                 chamadas_atendidas => $answersTODAY,
                 tma1 => $PCThold_sec_stat_one,
                 tma2 => $PCThold_sec_stat_two,
                 tme_chamadas_atendidas => $AVGhold_sec_answer_calls,
                 tme_chamadas_perdidas => $AVGhold_sec_drop_calls,
                 tme_todas_chamadas => $AVGhold_sec_queue_calls,
-                tma => $row2["total_sec"]);
+                tma => $row2["total_sec"],
+                fila_espera => $row2["queue_seconds"]);
         }
         echo json_encode($js);
         break;
 
-    case 'get_agents':// Inbound agentes,campaign,status
-        $query = "SELECT vla.status  FROM `vicidial_live_agents` vla inner join vicidial_live_inbound_agents vlia on vla.user=vlia.user where vlia.group_id ='$linha_inbound'";
+
+
+
+
+    case 'get_agents_incall':// Inbound agentes,campaign,status
+       $js=array();
+        $query = "SELECT vcl.status as status  FROM vicidial_auto_calls vac inner join vicidial_closer_log vcl on vac.uniqueid=vcl.uniqueid where vcl.campaign_id='$linha_inbound'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
+            $js[] = $row["status"];
+        }
+        echo json_encode($js);
+        break;
+
+
+
+
+
+    case 'get_agents':// Inbound agentes,campaign,status
+       $js=array();
+        $query = "SELECT status  FROM `vicidial_live_agents` where status in('QUEUE','PAUSED','READY') and closer_campaigns like '% $linha_inbound %'";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+
             $js[] = $row["status"];
         }
         echo json_encode($js);

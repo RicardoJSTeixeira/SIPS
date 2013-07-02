@@ -2,9 +2,10 @@
 
 
 
-var wbes;
+
+var wbes = [];
 var layout;
-var letter_size_all = 1;
+var letter_size_all = 15;
 
 $(document).ready(function() {
 
@@ -19,25 +20,34 @@ $(document).ready(function() {
 
 
 
-
-
-
-
-
       $("#MainLayout").append($("<div>")
               .addClass("ui-widget-content PanelWB")
               .css("position", "absolute")
-              .css("top", "87%")
-              .css("left", "90%")
-              .css("z-index", "50")
+              .css("top", "77%")
+              .css("left", "80%")
               .data("data-t", "tooltip-right")
-              .attr("title", "Mudanças muito grandes só serão actualizadas quando o próprio grafico actualizar")
-              .append($("<label>").addClass("control-label label").text("Tamanho da Letra"))
-              .append($("<div>").addClass("grid-content")
+              .attr("title", "Mudanças muito grandes só serão actualizadas quando o próprio grafico actualizar").attr("id","letter_size_panel")
+
+              .append($("<div>").addClass("grid-title")
+              .append($("<div>").addClass("pull-left").text("Tamanho da Letra"))
+              .append($("<div>").addClass("pull-right").append($("<button>").addClass("icon-cog icon-alone btn").attr("id", "letter_size_button"))))
+
+
+              .append($("<div>").addClass("grid-content ").attr("id", "letter_size_grid")
+              .append($("<div>").addClass("input-prepend")
               .append($("<button>").attr("id", "increase_em").addClass("btn btn-primary icon-plus"))
-              .append($("<button>").attr("id", "decrease_em").addClass("btn icon-minus")))
+              .append($("<button>").attr("id", "decrease_em").addClass("btn icon-minus"))
+              .append($("<select>").attr("id", "wbes_select")))
+              )
               .draggable({containment: '#MainLayout'}));
 
+      $("#letter_size_grid").hide();
+
+      $(document).on("click", "#letter_size_button", function(e) {
+            $("#letter_size_grid").toggle();
+  $("#letter_size_panel").toggleClass("z_index_increase");
+
+      });
 
 
       $.post("Requests.php", {action: "wbe", id_layout: layout},
@@ -54,7 +64,7 @@ $(document).ready(function() {
                   var top = (wbes[i][4] * temp_window.height()) / windheight;
                   var width = (wbes[i][5] * temp_window.width()) / windwidth;
                   var height = (wbes[i][6] * temp_window.height()) / windheight;
-                  $("#MainLayout").append($("<div>").addClass("PanelWB ui-widget-content letter_size_all").attr("style", "position: absolute;    left:" + left + "px;top:" + top + "px; width:" + width + "px;height:" + height + "px;").attr("id", wbes[i][0] + "Main").draggable({containment: '#MainLayout'})
+                  $("#MainLayout").append($("<div>").addClass("PanelWB ui-widget-content letter_size_all").attr("letter_size", "15").attr("style", "position: absolute;    left:" + left + "px;top:" + top + "px; width:" + width + "px;height:" + height + "px;").attr("id", wbes[i][0] + "Main").draggable({containment: '#MainLayout'})
                           .append($("<div>").addClass("grid-title")
                           .append($("<div>").addClass("pull-left").text(wbes[i][2]))
                           .append($("<div>").addClass("pull-right").attr("id", "right_title" + wbes[i][0])))
@@ -84,20 +94,56 @@ $(document).ready(function() {
                   }
                   i++;
             });
+
+
+
+            var object = $([]).add($("#wbes_select"));
+            var i = 0;
+            object.append(new Option("Todos os Wallboards", 1));
+            $.each(wbes, function(index, value) {
+                  object.append(new Option(wbes[i][2], wbes[i][0]));
+                  i++;
+            });
+
+
       }, "json");
 });
 
 
 
 
+
 $(document).on("click", "#increase_em", function(e) {
-      letter_size_all = letter_size_all + 0.15;
-      $(".letter_size_all").css("font-size", letter_size_all + "em");
+
+
+      if ($("#wbes_select").val() === "1") {
+            letter_size_all = letter_size_all + 1;
+            $(".letter_size_all").css("font-size", letter_size_all + "px");
+      }
+      else
+      {
+            var letter = $("#" + $("#wbes_select").val() + "Main").attr("letter_size");
+            letter++;
+            $("#" + $("#wbes_select").val() + "Main").css("font-size", letter + "px");
+            $("#" + $("#wbes_select").val() + "Main").attr("letter_size", letter);
+      }
 
 });
 $(document).on("click", "#decrease_em", function(e) {
-      letter_size_all = letter_size_all - 0.15;
-      $(".letter_size_all").css("font-size", letter_size_all + "em");
+
+      if ($("#wbes_select").val() === "1")
+      {
+            letter_size_all = letter_size_all - 1;
+            $(".letter_size_all").css("font-size", letter_size_all + "px");
+      }
+      else
+      {
+            var letter = $("#" + $("#wbes_select").val() + "Main").attr("letter_size");
+            letter--;
+            $("#" + $("#wbes_select").val() + "Main").css("font-size", letter + "px");
+            $("#" + $("#wbes_select").val() + "Main").attr("letter_size", letter);
+      }
+
 });
 
 
@@ -111,8 +157,7 @@ function plot_bar(data)
       var updation;
       var wbe = data;
       var painel = $("#" + wbe[0] + "WBE");
-      var first_time = true;
-      var information = [];
+          var information = [];
       var max_y = 0;
       var colors = new Array("red", "green", "blue", "orange", "black");
       get_values_bar();
@@ -126,42 +171,45 @@ function plot_bar(data)
                         clearTimeout(updation);
                         painel.remove();
                         $("#" + wbe[0] + "Main").remove();
-
                         $.jGrowl("O gráfico de Barras " + wbe[2] + " não apresenta resultados", {sticky: 10000});
-
-
                         return false;
                   }
                   data2 = [];
                   var i = 0;
+
                   var label = "não definido";
                   var sum = 0;
                   $.each(data, function(index, value) {
-                        if (wbe[9][i].chamadas === "0")
-                              label = wbe[9][i].param1 + " por " + wbe[9][i].param2;
-                        else
-                              label = "Chamadas " + wbe[9][i].chamadas + " por " + wbe[9][i].param1;
-                        
-                        sum = +data[i];
 
-                        if (sum == "0")
+
+                        if (wbe[9][index].chamadas === "0")
+                              label = wbe[9][index].param1 + " por " + wbe[9][index].param2;
+                        else
+                              label = "Chamadas " + wbe[9][index].chamadas + " por " + wbe[9][index].param1;
+
+
+                        sum = +data[index];
+
+                        if (sum <= 0)
                         {
-                            
-                              if (wbe[9][i].hasData)
+
+                              if (wbe[9][index].hasData)
                               {
                                     $.jGrowl("A barra de " + label + " não apresenta resultados", {sticky: true});
-                                    wbe[9][i].hasData = false;
+                                    wbe[9][index].hasData = false;
                               }
 
                         }
                         else
                         {
-                              wbe[9][i].hasData = true;
-                              ticksA.push([i, +data[i]]);
-                              data2.push([i, +data[i]]);
-                              if (+data[i] > max_y)
+
+
+                              wbe[9][index].hasData = true;
+                              ticksA.push([i, +data[index]]);
+                              data2.push([i, +data[index]]);
+                              if (+data[index] > max_y)
                               {
-                                    max_y = +data[i];
+                                    max_y = +data[index];
                               }
                               information.push(
                                       {
@@ -171,18 +219,21 @@ function plot_bar(data)
                                             color: colors[i]
                                       });
                               sum = 0;
+                              i++;
                         }
-                        i++;
+
                         data2 = [];
                   });
 
                   max_y = (max_y * 100) / 75;
                   $.plot(painel, information, {xaxis: {ticks: ticksA}, yaxis: {min: 0, max: max_y}, legend: {show: true}});
+
+
+
                   max_y = 0;
-
-
                   information = [];
                   ticksA = [];
+                  data2 = [];
                   updation = setTimeout(get_values_bar, wbe[7]);
 
             }, "json");
@@ -243,7 +294,7 @@ function plot_update(data)
                                           if (wbe[9][aux].chamadas === "0")
                                                 information.push({data: result, label: wbe[9][aux].opcao_query + " -> " + wbe[9][aux].param2});
                                           else
-                                                information.push({data: result, label:"Chamadas "+  wbe[9][aux].chamadas + " por " + wbe[9][aux].param1 });
+                                                information.push({data: result, label: "Chamadas " + wbe[9][aux].chamadas + " por " + wbe[9][aux].param1});
 
                                           result = [];
                                           verifier = 0;
@@ -290,19 +341,19 @@ function plot_update(data)
                   switch (plot.getData().length)
                   {
                         case 1:
-                              temp=5;
+                              temp = 5;
                               break;
                         case 2:
-                                 temp=6;
+                              temp = 6;
                               break;
                         case 3:
-                                 temp=7;
+                              temp = 7;
                               break;
                         case 4:
-                                 temp=8;
+                              temp = 8;
                               break;
                         case 5:
-                                 temp=9;
+                              temp = 9;
                               break;
                   }
 
@@ -384,11 +435,14 @@ function plot_pie(data) {
                               pie: {
                                     show: true,
                                     radius: 1,
+                                    combine: {
+                                          color: '#999',
+                                          threshold: 0.01},
                                     label: {
                                           show: true,
                                           radius: 2 / 3,
                                           formatter: function(label, series) {
-                                                return '<div style="font-size:13px;text-align:center;color:black;">' + Math.round(series.percent) + '%</div>';
+                                                return '<div style="font-size:11px;text-align:center;color:black;">' + Math.round(series.percent) + '%</div>';
                                           },
                                           threshold: 0.02
                                     }
@@ -417,77 +471,62 @@ function   inbound_wallboard(data)
       var updation;
       var wbe = data;
       var id = data[0];
-      var first_time_plot = true;
+
       var plot;
       var panel = $("#" + wbe[0] + "Main");
-      var font_size = ((panel.width() / 50) + (panel.height() / 100));
+      var font_size = ((panel.width() / 50) + (panel.height() / 110));
       panel.empty();
       panel.append($("<div>").attr("style", "height:98%;font-size:" + font_size + "px;background-color: rgb(210, 215, 215); padding-left:1%;padding-right:1%;padding-top:1%;").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbe[7] / 1000) + " seg.")
 
 
               .append($("<div>").append($("<label>").addClass("inbound_title").text(wbe[9][0].param1)))//titulo do inbound
-              .append($("<table>").attr("style", "height:80%;")
+              .append($("<table>").css("height", "80%").css("width", "100%")
 
               //top                    
               .append($("<tr>")
 
               .append($("<td>")
               .append($("<div>").addClass(" inbound_grid_div")
-              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("Disponiveis")))
-              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "agente_dispo" + id)))))
+              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("Chamadas Atendidas")))
+              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "chamadas_atendidas" + id)))))
 
 
               .append($("<td>")
               .append($("<div>").addClass("inbound_grid_div ")
-              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("Espera")))
-              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "agente_espera" + id)))))
+              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("Chamadas Perdidas")))
+              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "chamadas_perdidas" + id)))))
 
 
               .append($("<td>")
               .append($("<div>").addClass("inbound_grid_div")
-              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("Pausa")))
-              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "agente_pause" + id)))))
+              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("Chamadas em Espera")))
+              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "chamadas_espera" + id)))))
 
 
               .append($("<td>")
               .append($("<div>").addClass("inbound_grid_div")
-              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("Em chamada")))
-              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "agente_incall" + id)))))
-
-
-              .append($("<td>")
-              .append($("<div>").addClass("inbound_grid_div")
-              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("Totais")))
-              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "agente_total" + id))))))
+              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("TMA")))
+              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "tma1" + id))))))
 
 
 
               //left/right    
               .append($("<tr>")
-
-              .append($("<td>")
-              .append($("<div>").addClass("inbound_grid_div")
-              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("TMA")))
-              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "tma1" + id)))))
-
               //graph
               .append($("<td>")
-              .append($("<div>").attr("style", "width:75%;height:50%;position:absolute; ").attr("id", "plot_inbound" + id))))
-
-
-              .append($("<tr>")
-
-              .append($("<td>")
               .append($("<div >").addClass("inbound_grid_div")
-              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("SLA1")))
-              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "sla1" + id))))))
+              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("SLA1").attr("id", "sla1_title" + id)))
+              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "sla1" + id)))))
+
+              .append($("<td>").css("vertical-align", "top")
+              .append($("<div>").attr("style", "width:70%;height:55%;position:absolute; ").attr("id", "plot_inbound" + id))))
 
 
               .append($("<tr>")
 
               .append($("<td>")
               .append($("<div>").addClass(" inbound_grid_div")
-              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("SLA2")))
+              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("SLA2").attr("id", "sla2_title" + id)))
               .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "sla2" + id))))))
               ));
       get_values_inbound();
@@ -495,16 +534,17 @@ function   inbound_wallboard(data)
       {
 
             $.post("Requests.php", {action: "get_agents", linha_inbound: wbe[9][0].linha_inbound},
-            function(data)
+            function(data1)
             {
                   ready = 0;
                   queue = 0;
                   paused = 0;
                   incall = 0;
                   var a = 0;
-                  $.each(data, function(index, value)
+                  $.each(data1, function(index, value)
                   {
-                        switch (data[a])
+
+                        switch (data1[a])
                         {
                               case "READY":
                                     ready++;
@@ -522,8 +562,12 @@ function   inbound_wallboard(data)
                         a++;
                   });
 
-                  $.post("Requests.php", {action: "4", group_id: wbe[9][0].linha_inbound},
-                  function(data)
+
+
+
+
+                  $.post("Requests.php", {action: "4", linha_inbound: wbe[9][0].linha_inbound},
+                  function(data3)
                   {
                         /* (chamadas_efectuadas => $callsTODAY, 
                          * chamadas_perdidas => $dropsTODAY
@@ -533,97 +577,136 @@ function   inbound_wallboard(data)
                          * tme_chamadas_atendidas=>$AVGhold_sec_answer_calls,
                          * tme_chamadas_perdidas=>$AVGhold_sec_drop_calls,
                          * tme_todas_chamadas=>$AVGhold_sec_queue_calls);*/
-                        var tma1 = data[0].tma1;
-                        var tma2 = data[0].tma2;
-
-
+                        var tma1 = data3[0].tma1;
+                        var tma2 = data3[0].tma2;
+                        var chamadas_atendidas_val = data3[0].chamadas_atendidas;
+                        var chamadas_perdidas_val = data3[0].chamadas_perdidas;
+                        var chamadas_perdidas_percent = data3[0].chamadas_perdidas_percent;
                         var tma_todas_chamadas = 0;
-                        if (+data[0].tma > 0)
+
+                        if (+data3[0].tma > 0)
                         {
-                              var totalSec = +data[0].tma;
-                              var total_chamadas = +data[0].chamadas_efectuadas;
-                              totalSec = Math.floor(totalSec / total_chamadas);
+                              var totalSec = +data3[0].tma;
+                              totalSec = Math.floor(totalSec / chamadas_atendidas_val);
                               var seconds = totalSec % 60;
                               tma_todas_chamadas = seconds;
                         }
-                        else
-                              tma_todas_chamadas = 0;
 
 
-
-                        $.post("Requests.php", {action: "inbound_groups_info", group_id: wbe[9][0].linha_inbound},
-                        function(data1)
+                        var tempo_espera_media_fila = 0;
+                        if (+data3[0].fila_espera > 0)
                         {
-                              answer_sec_pct_rt_stat_one = data1[0].answer_sec_pct_rt_stat_one;
-                              answer_sec_pct_rt_stat_two = data1[0].answer_sec_pct_rt_stat_two;
+                              var totalSec = +data3[0].fila_espera;
+                              totalSec = Math.floor(totalSec / chamadas_atendidas_val);
+                              var seconds = totalSec % 60;
+                              tempo_espera_media_fila = seconds;
+                        }
+
+
+                        $.post("Requests.php", {action: "get_agents_incall", linha_inbound: wbe[9][0].linha_inbound},
+                        function(data4)
+                        {
+
+                              var agentes_incall = 0;
+                              var chamadas_espera_val = 0;
+
+
+                              $.each(data4, function(index, value)
+                              {
+
+                                    if (data4[index] === "QUEUE")
+                                          chamadas_espera_val++;
+                                    if (data4[index] === "INCALL")
+                                          agentes_incall++;
+
+                              });
+
+
+
+                              $.post("Requests.php", {action: "inbound_groups_info", group_id: wbe[9][0].linha_inbound},
+                              function(data5)
+                              {
+                                    answer_sec_pct_rt_stat_one = data5[0].answer_sec_pct_rt_stat_one;
+                                    answer_sec_pct_rt_stat_two = data5[0].answer_sec_pct_rt_stat_two;
 
 //update dos valores na table 
-                              var tma1_element = document.getElementById("tma1" + id);
-                              tma1_element.innerHTML = tma_todas_chamadas + "s";
-                              var agente_total = document.getElementById("agente_total" + id);
-                              agente_total.innerHTML = (ready + queue + paused + incall);
-                              var agente_espera = document.getElementById("agente_espera" + id);
-                              agente_espera.innerHTML = queue;
-                              var agente_disponivel = document.getElementById("agente_dispo" + id);
-                              agente_disponivel.innerHTML = ready;
-                              var agente_pause = document.getElementById("agente_pause" + id);
-                              agente_pause.innerHTML = paused;
-                              var agente_incall = document.getElementById("agente_incall" + id);
-                              agente_incall.innerHTML = incall;
-                              var sla1 = document.getElementById("sla1" + id);
-                              if (tma1 > 0)
-                                    sla1.innerHTML = Math.floor(tma1) + "%";
-                              else
-                                    sla1.innerHTML = 0;
-                              var sla2 = document.getElementById("sla2" + id);
-                              if (tma2 > 0)
-                                    sla2.innerHTML = Math.floor(tma2) + "%";
-                              else
-                                    sla2.innerHTML = 0;
-                              var painel = $("#plot_inbound" + id);
 
 
-                              if (tma1 > 0)
-                                    tma1 = (((100 - tma1) / 100) + 1) * answer_sec_pct_rt_stat_one;
-                              else
-                              {
-                                    tma1 = 0;
-                                    answer_sec_pct_rt_stat_one = 0;
-                              }
-
-                              if (tma2 > 0)
-                                    tma2 = (((100 - tma2) / 100) + 1) * answer_sec_pct_rt_stat_two;
-                              else
-                              {
-                                    tma2 = 0;
-                                    answer_sec_pct_rt_stat_two = 0;
-                              }
+                                    var chamadas_atendidas = document.getElementById("chamadas_atendidas" + id);
+                                    chamadas_atendidas.innerHTML = chamadas_atendidas_val;
+                                    var chamadas_perdidas = document.getElementById("chamadas_perdidas" + id);
+                                    chamadas_perdidas.innerHTML = chamadas_perdidas_val + "-" + Math.floor(chamadas_perdidas_percent) + "%";
+                                    var chamadas_espera = document.getElementById("chamadas_espera" + id);
+                                    chamadas_espera.innerHTML = chamadas_espera_val;
 
 
-                              var data = [
-                                    {label: 'Cumprido', data: [[1, tma1], [2, tma2]], color: "#DF7401"},
-                                    {label: 'A Cumprir', data: [[1, answer_sec_pct_rt_stat_one], [2, answer_sec_pct_rt_stat_two]], color: "#D8F6CE"}];
+                                    var tma1_element = document.getElementById("tma1" + id);
+                                    tma1_element.innerHTML = tma_todas_chamadas + "sec";
+
+                                    var sla1 = document.getElementById("sla1" + id);
+                                    var sla1_title = document.getElementById("sla1_title" + id);
+                                    if (tma1 > 0)
+                                    {
+                                          sla1.innerHTML = Math.floor(tma1) + "%";
+                                          sla1_title.innerHTML = "SLA1->" + answer_sec_pct_rt_stat_one + "sec";
+                                    }
+                                    else
+                                          sla1.innerHTML = 0;
+                                    var sla2 = document.getElementById("sla2" + id);
+                                    var sla2_title = document.getElementById("sla2_title" + id);
+                                    if (tma2 > 0)
+                                    {
+                                          sla2.innerHTML = Math.floor(tma2) + "%";
+                                          sla2_title.innerHTML = "SLA2->" + answer_sec_pct_rt_stat_two + "sec";
+                                    }
+                                    else
+                                          sla2.innerHTML = 0;
+                                    var painel = $("#plot_inbound" + id);
 
 
+                                    var data_array = [];
+                                    data_array.push({label: ("Agentes Disponiveis"), data: ready});
+
+                                    data_array.push({label: ("Agentes Indisponiveis"), data: (queue + paused)});
+
+                                    data_array.push({label: ("Agentes em Chamada"), data: agentes_incall});
 
 
+                                    if ((ready + queue + paused + agentes_incall) == "0")
+                                    {
 
-                              if (first_time_plot)
-                              {
-                                    var options = {
-                                          series: {stack: 0,
-                                                lines: {show: false, steps: false},
-                                                bars: {show: true, barWidth: 0.9, align: 'center'}},
-                                          xaxis: {tickLength: 0, ticks: [[1, 'SLA1->' + answer_sec_pct_rt_stat_one + 'segs'], [2, 'SLA2->' + answer_sec_pct_rt_stat_two + 'segs']]}
-                                    };
-                                    plot = $.plot(painel, data, options);
-                                    first_time = false;
-                              }
-                              else
-                              {
-                                    plot.setData(data);
-                                    plot.draw();
-                              }
+                                          data_array = [];
+                                          data_array.push({label: ("Agentes"), data: 1});
+                                    }
+
+                                    var temp = 0;
+                                    $.plot(painel, data_array, {
+                                          series: {
+                                                pie: {innerRadius: 0.05,
+                                                      show: true,
+                                                      radius: ($("#MainLayout").width() - $("#MainLayout").height()) / 2,
+                                                      label: {
+                                                            show: true,
+                                                            radius: 3 / 4,
+                                                            formatter: function(label, series) {
+
+                                                                  return '<div style="font-size:20px;color:black;">' + series.data[0][1] + '/' + Math.floor(series.percent) + '%</div>';
+                                                            },
+                                                            background: {
+                                                                  opacity: 0.5,
+                                                                  color: '#FFFFFF'
+                                                            }
+                                                      }
+                                                }
+                                          },
+                                          legend: {
+                                                show: true
+                                          },
+                                          grid: {
+                                                hoverable: false,
+                                                clickable: false
+                                          }});
+                              }, "json");
                         }, "json");
                   }, "json");
                   updation = setTimeout(get_values_inbound, wbe[7]);
@@ -655,8 +738,8 @@ function   dataTable_top(data)
       panel.empty();
       panel.append($("<div>")
               .append($("<div>").addClass("grid-title")
-              .append($("<div>").addClass("pull-left")
-              .text(wbe[2])))
+              .append($("<div>").addClass("pull-right").text(wbe[9][0].param1))
+              .append($("<div>").addClass("pull-left").text(wbe[2])))
               .append($("<table>").addClass("table table-striped table-mod").css("heigth", "100%").css("width", "100%")
               .append($("<thead>")
               .append($("<tr>")
