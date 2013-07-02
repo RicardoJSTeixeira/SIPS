@@ -23,10 +23,10 @@ $(document).ready(function() {
       $("#MainLayout").append($("<div>")
               .addClass("ui-widget-content PanelWB")
               .css("position", "absolute")
-              .css("top", "77%")
-              .css("left", "80%")
+              .css("top", "47%")
+              .css("left", "47%")
               .data("data-t", "tooltip-right")
-              .attr("title", "Mudanças muito grandes só serão actualizadas quando o próprio grafico actualizar").attr("id","letter_size_panel")
+              .attr("title", "Mudanças muito grandes só serão actualizadas quando o próprio grafico actualizar").attr("id", "letter_size_panel")
 
               .append($("<div>").addClass("grid-title")
               .append($("<div>").addClass("pull-left").text("Tamanho da Letra"))
@@ -45,7 +45,7 @@ $(document).ready(function() {
 
       $(document).on("click", "#letter_size_button", function(e) {
             $("#letter_size_grid").toggle();
-  $("#letter_size_panel").toggleClass("z_index_increase");
+            $("#letter_size_panel").toggleClass("z_index_increase");
 
       });
 
@@ -157,7 +157,7 @@ function plot_bar(data)
       var updation;
       var wbe = data;
       var painel = $("#" + wbe[0] + "WBE");
-          var information = [];
+      var information = [];
       var max_y = 0;
       var colors = new Array("red", "green", "blue", "orange", "black");
       get_values_bar();
@@ -197,8 +197,15 @@ function plot_bar(data)
                               {
                                     $.jGrowl("A barra de " + label + " não apresenta resultados", {sticky: true});
                                     wbe[9][index].hasData = false;
+                                
                               }
-
+                                  information.push(
+                                            {
+                                                  label: "sem dados",
+                                                  data: 0,
+                                                  bars: {show: true, barWidth: 0.8, align: "center"},
+                                                  color: colors[index]
+                                            });
                         }
                         else
                         {
@@ -322,8 +329,7 @@ function plot_update(data)
 
                   max_y = (max_y * 100) / 65;
 
-                  var tick_size = max_y / 10;
-
+                  var tick_size = Math.floor(max_y / 10);
 
                   var options = {
                         series: {shadowSize: 0, steps: false, show: true}, // drawing is faster without shadows
@@ -476,7 +482,8 @@ function   inbound_wallboard(data)
       var panel = $("#" + wbe[0] + "Main");
       var font_size = ((panel.width() / 50) + (panel.height() / 110));
       panel.empty();
-      panel.append($("<div>").attr("style", "height:98%;font-size:" + font_size + "px;background-color: rgb(210, 215, 215); padding-left:1%;padding-right:1%;padding-top:1%;").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbe[7] / 1000) + " seg.")
+
+      panel.append($("<div>").attr("style", "height:98%;font-size:" + font_size + "px;background-color: rgb(210, 215, 215); padding-left:1%;padding-right:1%;padding-top:1%;").addClass("legend_inbound").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbe[7] / 1000) + " seg.")
 
 
               .append($("<div>").append($("<label>").addClass("inbound_title").text(wbe[9][0].param1)))//titulo do inbound
@@ -529,6 +536,8 @@ function   inbound_wallboard(data)
               .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("SLA2").attr("id", "sla2_title" + id)))
               .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "sla2" + id))))))
               ));
+
+
       get_values_inbound();
       function get_values_inbound()
       {
@@ -631,7 +640,6 @@ function   inbound_wallboard(data)
 
 //update dos valores na table 
 
-
                                     var chamadas_atendidas = document.getElementById("chamadas_atendidas" + id);
                                     chamadas_atendidas.innerHTML = chamadas_atendidas_val;
                                     var chamadas_perdidas = document.getElementById("chamadas_perdidas" + id);
@@ -684,13 +692,13 @@ function   inbound_wallboard(data)
                                           series: {
                                                 pie: {innerRadius: 0.05,
                                                       show: true,
-                                                      radius: ($("#MainLayout").width() - $("#MainLayout").height()) / 2,
+                                                      radius: ($("#MainLayout").width() - $("#MainLayout").height()) ,
                                                       label: {
                                                             show: true,
                                                             radius: 3 / 4,
                                                             formatter: function(label, series) {
 
-                                                                  return '<div style="font-size:20px;color:black;">' + series.data[0][1] + '/' + Math.floor(series.percent) + '%</div>';
+                                                                  return '<div style="font-size:18px;color:black;">' + series.data[0][1] + '/' + Math.floor(series.percent) + '%</div>';
                                                             },
                                                             background: {
                                                                   opacity: 0.5,
@@ -815,3 +823,4 @@ $(window).bind('beforeunload', function() {
 }
 );
 
+//vdcl e vdad e admin

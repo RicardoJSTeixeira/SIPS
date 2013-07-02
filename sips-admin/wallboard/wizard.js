@@ -1,3 +1,9 @@
+//mudar titulo das paginas
+
+
+
+
+
 
 var wbes = [];
 var layouts = [];
@@ -101,20 +107,49 @@ $("#in_out_bound").change(function()
 
       var select = $("#in_out_bound");
 
-      select.each(function() {
-            if ($(this).val() === "1") {
 
-                  if ($("#linhas_serie").val()==="3")
-                  {
-                        $("#linhas_serie").val(0);
-                        $(".graph_advance_option").hide();
-                        $("#gao_user").show();
-                  }
-                  $("#linhas_serie option[value='3']").prop('disabled', true);
-           }
-            else
-                  $("#linhas_serie option[value='3']").prop('disabled', false);
-      });
+      if (select.val() === "1") {
+
+            if ($("#linhas_serie").val() === "3")
+            {
+                  $("#linhas_serie").val(0);
+                  $(".graph_advance_option").hide();
+                  $("#gao_user").show();
+            }
+            $("#linhas_serie option[value='3']").prop('disabled', true);
+
+            if ($("#chamadas").val() === "3")
+            {
+                  $("#chamadas").val(0);
+            }
+            $("#chamadas option[value='3']").prop('disabled', true);
+      }
+      else
+      {
+            $("#linhas_serie option[value='3']").prop('disabled', false);
+            $("#chamadas option[value='3']").prop('disabled', false);
+      }
+
+      if (select.val() === "2") {
+
+
+            if ($("#chamadas").val() === "1")
+            {
+                  $("#chamadas").val(2);
+            }
+            $("#chamadas option[value='1']").prop('disabled', true);
+
+      }
+      else
+      {
+            $("#chamadas option[value='1']").prop('disabled', false);
+      }
+
+
+
+
+
+
 
 
 
@@ -216,7 +251,7 @@ $(function() {
                   }
                   a++;
             });
-            manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
+            manipulate_graph("get_query", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             $('#dialog_dataset_linhas').modal('show');
       });
       $(document).on("click", ".delete_dataset_button", function(e) {
@@ -290,7 +325,6 @@ $(function() {
                   alert("Não escolheu nenhum feedback");
             else
             {
-
                   if ($("#checkbox_feedback_pie").prop('checked'))
                         feedbacks = 1;
                   else
@@ -298,9 +332,6 @@ $(function() {
                   feedbacks = "'" + feedbacks + "'";
                   switch ($("#pie_opcao").val())
                   {
-                        
-                       
-                        
                         case "1":
                               manipulate_pie("insert_pie", 0, 0, 1, "Gráfico de Tarte", $("#pie_timespan").val(), 0, 0, $("#campaign_id_pie option:selected").val(), 0, 0, feedbacks, 0, $("#campaign_id_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
                               break;
@@ -344,7 +375,7 @@ $(function() {
                               manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), 0, $("#grupo_inbound_dataTable").val(), 0, feedbacks, limit, $("#coluna_feedback").val(), 0, $("#dataTable_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, $("#grupo_inbound_dataTable option:selected").text(), 0);
                               break;
                         case "3":
-                              manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), 0, 0, $("#grupo_user_dataTable").val(), feedbacks, limit, $("#coluna_feedback").val(), 0, $("#dataTable_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, $("#grupo_user_dataTable option:select").text(), 0);
+                              manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), 0, 0, $("#grupo_user_dataTable").val(), feedbacks, limit, $("#coluna_feedback").val(), 0, $("#dataTable_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, $("#grupo_user_dataTable option:selected").text(), 0);
                               break;
                   }
 
@@ -376,17 +407,18 @@ $(function() {
                                     case "1":
                                           //Chamadas Atendidas por user
                                           querie = get_query(1);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "Atendidas", $("#user option:selected").text(), 0);
+                            
+                                    manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "Atendidas", $("#user option:selected").text(), 0);
                                           break;
                                     case "2":
                                           //Chamadas Perdidas por user   
                                           querie = get_query(2);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "Perdidas", $("#user option:selected").text(), 0);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "Perdidas", $("#user option:selected").text(), 0);
                                           break;
                                     case "3":
                                           //Chamadas Feitas por user 
                                           querie = get_query(3);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "Feitas", $("#user option:selected").text(), 0);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), 0, "Feitas", $("#user option:selected").text(), 0);
                                           break;
                               }
                               break;
@@ -397,17 +429,17 @@ $(function() {
                                     case "1":
                                           //Chamadas Atendidas por user_group
                                           querie = get_query(4);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "Atendidas", $("#user_group option:selected").text(), 0);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "Atendidas", $("#user_group option:selected").text(), 0);
                                           break;
                                     case "2":
                                           //Chamadas Perdidas por user_group   
                                           querie = get_query(5);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "Perdidas", $("#user_group option:selected").text(), 0);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "Perdidas", $("#user_group option:selected").text(), 0);
                                           break;
                                     case "3":
                                           //Chamadas Feitas por user_group 
                                           querie = get_query(6);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "Feitas", $("#user_group option:selected").text(), 0);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), 0, "Feitas", $("#user_group option:selected").text(), 0);
                                           break;
                               }
                               break;
@@ -417,17 +449,17 @@ $(function() {
                                     case "1":
                                           //Chamadas Atendidas por campanha
                                           querie = get_query(7);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "Atendidas", $("#campaign option:selected").text(), 0);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "Atendidas", $("#campaign option:selected").text(), 0);
                                           break;
                                     case "2":
                                           //Chamadas Perdidas por campanha   
                                           querie = get_query(8);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "Perdidas", $("#campaign option:selected").text(), 0);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "Perdidas", $("#campaign option:selected").text(), 0);
                                           break;
                                     case "3":
                                           //Chamadas Feitas por campanha 
                                           querie = get_query(9);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "Feitas", $("#campaign option:selected").text(), 0);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), 0, "Feitas", $("#campaign option:selected").text(), 0);
                                           break;
                               }
                               break;
@@ -437,17 +469,17 @@ $(function() {
                                     case "1":
                                           //Chamadas Atendidas por Total CallCenter
                                           querie = get_query(10);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "Atendidas", "total call center", 0);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "Atendidas", "total call center", 0);
                                           break;
                                     case "2":
                                           //Chamadas Perdidas por Total CallCenter  
                                           querie = get_query(11);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "Perdidas", "total call center", 0);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "Perdidas", "total call center", 0);
                                           break;
                                     case "3":
                                           //Chamadas Feitas por Total CallCenter 
                                           querie = get_query(12);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "Feitas", "total call center", 0);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), 0, "Feitas", "total call center", 0);
                                           break;
                               }
                               break;
@@ -457,17 +489,17 @@ $(function() {
                                     case "1":
                                           //Chamadas Atendidas por Inbound
                                           querie = get_query(18);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "Atendidas", $("#inbound option:selected").text(), 0);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "Atendidas", $("#inbound option:selected").text(), 0);
                                           break;
                                     case "2":
                                           //Chamadas Perdidas por Inbound   
                                           querie = get_query(19);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "Perdidas", $("#inbound option:selected").text(), 0);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "Perdidas", $("#inbound option:selected").text(), 0);
                                           break;
                                     case "3":
                                           //Chamadas Feitas por Inbound 
                                           querie = get_query(20);
-                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "Feitas", $("#inbound option:selected").text(), 0);
+                                          manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), 0, "Feitas", $("#inbound option:selected").text(), 0);
                                           break;
                               }
                               break;
@@ -479,27 +511,27 @@ $(function() {
                         case "1":
                               //feedback por user
                               querie = get_query(13);
-                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), $("#user option:selected").text());
+                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", $("#user option:selected").val(), 0, 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), $("#user option:selected").text());
                               break;
                         case "2":
                               //feedback por user_group
                               querie = get_query(14);
-                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), $("#user_group option:selected").text());
+                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", 0, $("#user_group option:selected").val(), 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), $("#user_group option:selected").text());
                               break;
                         case "3":
                               //feedback por campanha
                               querie = get_query(15);
-                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), $("#campaign option:selected").text());
+                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", 0, 0, $("#campaign option:selected").val(), 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), $("#campaign option:selected").text());
                               break;
                         case "4":
                               //feedback por call center
                               querie = get_query(16);
-                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), "Total Call Center");
+                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", 0, 0, 0, 0, $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), "Total Call Center");
                               break;
                         case "5":
                               //feedback por linha inbound
                               querie = get_query(17);
-                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[6], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), $("#inbound option:selected").text());
+                              manipulate_dataset(opcao, id_dataset, id_wallboard, querie[5], querie[4], "1", 0, 0, 0, $("#inbound").val(), $("#in_out_bound").val(), $("#status_venda").val(), 0, $("#status_venda option:selected").text(), $("#inbound option:selected").text());
                               break;
                   }
       });
@@ -507,13 +539,15 @@ $(function() {
       $("[data-t=tooltip-right]").tooltip({placement: "right", html: true});
       load_dados("layout", 0);
       flot_extra_init();
+
 });
 function get_query(codigo)
 {
       var i = 0;
       var querie;
+
       $.each(queries, function(index, value) {
-            if (queries[i][6] == codigo)
+            if (queries[i][5] == codigo)
             {
                   querie = queries[i];
                   return false;
@@ -729,24 +763,24 @@ function update_wbe()
                               containment: "#MainLayout",
                               maxHeight: 480,
                               maxWidth: 880,
-                              minHeight: 240,
-                              minWidth: 355, stop: check_save});
+                              minHeight: 220,
+                              minWidth: 280, stop: check_save});
                         break;
                   case "5"://Tabela Top
                         painel.resizable({
                               containment: "#MainLayout",
                               maxHeight: 480,
                               maxWidth: 880,
-                              minHeight: 240,
-                              minWidth: 225, stop: check_save});
+                              minHeight: 230,
+                              minWidth: 215, stop: check_save});
                         break;
                   default://Linhas e Barras
                         painel.resizable({
                               containment: "#MainLayout",
                               maxHeight: 480,
                               maxWidth: 880,
-                              minHeight: 240,
-                              minWidth: 250, stop: check_save});
+                              minHeight: 220,
+                              minWidth: 230, stop: check_save});
                         break;
             }
             i++;
@@ -780,21 +814,7 @@ function manipulate_dataset(Opcao, Id, id_Wallboard, Codigo_query, Opcao_query, 
       $.post("Requests.php", {action: Opcao, id: Id, id_wallboard: id_Wallboard, codigo_query: Codigo_query, opcao_query: Opcao_query, tempo: Tempo, user: User, user_group: User_group, campaign_id: Campaign_id, linha_inbound: Linha_inbound, mode: Mode, status_feedback: Status_feedback, chamadas: Chamadas, param1: Param1, param2: Param2},
       function(data)
       {
-            if (Opcao === "insert_dataset")
-            {
-                  load_dados("wbe", idLayout);
-            }
-            if (Opcao === "edit_dataset")
-            {
-                  load_dados("wbe", idLayout);
-            }
-
-            if (Opcao === "remove_dataset")
-            {
-                  load_dados("wbe", idLayout);
-            }
-
-
+            load_dados("wbe", idLayout);
       }, "json");
 }
 function load_dados(opcao, id_layouT)
@@ -898,8 +918,9 @@ function manipulate_graph(Opcao, Id, Name, Pos_x, Pos_y, Width, Height, id_Layou
             if (Opcao === 'get_query')
             {
                   $.each(data, function(index, value) {
-                        queries.push([this.id, this.query_text_inbound, this.query_text_outbound, this.query_text_blended, this.opcao_query, this.type_query, this.codigo]);
+                        queries.push([this.id, this.query_text_inbound, this.query_text_outbound, this.query_text_blended, this.opcao_query, this.codigo]);
                   });
+
             }
 
             if (Opcao === "insert_wbe")
@@ -981,6 +1002,9 @@ function flot_extra_init()
               .append("<option value='1'>Atendidas</option> ")
               .append("<option value='2'>Perdidas</option> ")
               .append("<option value='3'>Feitas</option>"));
+
+      $("#linhas_serie option[value='3']").prop('disabled', true);
+      $("#chamadas option[value='3']").prop('disabled', true);
 }
 function flot_extra(opcao)
 {

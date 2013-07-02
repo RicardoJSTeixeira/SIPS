@@ -127,7 +127,7 @@ switch ($action) {
                 $query_dataset = mysql_query($query_dataset, $link) or die(mysql_error());
                 $dataset = array();
                 while ($row1 = mysql_fetch_assoc($query_dataset)) {
-                    $dataset[] = array(id => $row1["id"], id_wallboard => $row1["id_wallboard"], tempo => $row1["tempo"], campanha => $row1["campanha"], grupo_inbound => $row1["grupo_inbound"], grupo_user => $row1["grupo_user"], status_feedback => $row1["status_feedback"], limit => $row1["limit"], custom_colum_name => $row1["custom_colum_name"], hasData => true,param1=>$row1["param1"]);
+                    $dataset[] = array(id => $row1["id"], id_wallboard => $row1["id_wallboard"], tempo => $row1["tempo"], campanha => $row1["campanha"], grupo_inbound => $row1["grupo_inbound"], grupo_user => $row1["grupo_user"], status_feedback => $row1["status_feedback"], limit => $row1["limit"], custom_colum_name => $row1["custom_colum_name"], hasData => true, param1 => $row1["param1"]);
                 }
                 $js[] = array(id => $row["id"], id_layout => $row["id_layout"], name => $row["name"], pos_x => $row["pos_x"], pos_y => $row["pos_y"], width => $row["width"], height => $row["height"], update_time => $row["update_time"], graph_type => $row["graph_type"], dataset => $dataset);
             } else {
@@ -197,11 +197,11 @@ switch ($action) {
 
 
     case 'get_query':
-        $query = "SELECT * from WallBoard_Query where type_query=$graph_type";
+        $query = "SELECT * from WallBoard_Query";
 
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], query_text_inbound => $row["query_text_inbound"], query_text_outbound => $row["query_text_outbound"], opcao_query => $row["opcao_query"], type_query => $row["type_query"], codigo => $row["codigo"]);
+            $js[] = array(id => $row["id"], query_text_inbound => $row["query_text_inbound"], query_text_outbound => $row["query_text_outbound"], opcao_query => $row["opcao_query"],  codigo => $row["codigo"]);
         }
         echo json_encode($js);
         break;
@@ -214,7 +214,7 @@ switch ($action) {
         $query = "SELECT * from WallBoard_Query where codigo=$codigo";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], query_text_inbound => $row["query_text_inbound"], query_text_outbound => $row["query_text_outbound"], opcao_query => $row["opcao_query"], type_query => $row["type_query"], codigo => $row["codigo"]);
+            $js[] = array(id => $row["id"], query_text_inbound => $row["query_text_inbound"], query_text_outbound => $row["query_text_outbound"], opcao_query => $row["opcao_query"],  codigo => $row["codigo"]);
         }
         echo json_encode($js);
         break;
@@ -440,12 +440,7 @@ switch ($action) {
         $rounded_time = date("Y-m-d H:i:s", $rounded_time);
         $query = str_replace("now()", "'" . $rounded_time . "'", $query);
         $query = str_replace("time_span", $tempo, $query);
-
-
         $query = mysql_query($query) or die(mysql_error());
-
-
-
 
         while ($row = mysql_fetch_assoc($query)) {
             $query1 = " (SELECT status_name FROM `vicidial_campaign_statuses` WHERE status='$row[status]') union all (SELECT status_name FROM `vicidial_statuses` WHERE status='$row[status]')";
@@ -454,14 +449,6 @@ switch ($action) {
             $row1 = mysql_fetch_assoc($query1);
             $js[] = array(status_name => $row1["status_name"], count => $row["total_feedback"]);
         }
-
-
-
-
-
-
-
-
         echo json_encode($js);
         break;
 
@@ -567,7 +554,7 @@ switch ($action) {
 
 
     case 'get_agents_incall':// Inbound agentes,campaign,status
-       $js=array();
+        $js = array();
         $query = "SELECT vcl.status as status  FROM vicidial_auto_calls vac inner join vicidial_closer_log vcl on vac.uniqueid=vcl.uniqueid where vcl.campaign_id='$linha_inbound'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
@@ -581,7 +568,7 @@ switch ($action) {
 
 
     case 'get_agents':// Inbound agentes,campaign,status
-       $js=array();
+        $js = array();
         $query = "SELECT status  FROM `vicidial_live_agents` where status in('QUEUE','PAUSED','READY') and closer_campaigns like '% $linha_inbound %'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
