@@ -978,7 +978,9 @@ $i = 0;
             (status), status_name from vicidial_campaign_statuses group by status UNION ALL select status, status_name from vicidial_statuses group by status) d ON c.status = d.status group by status";
         //fputcsv($output, array(" ", "Query1:", $query_global), ";");
         $query_global = mysql_query($query_global) or die(mysql_error());
-        
+        $tot_leads_2[$i]=0;
+        $agendamentos2[$i]=0;
+        $negativos[$i]=0;
         while ($row = mysql_fetch_row($query_global)) {
             $tot_leads_2[$i] += $row[1];
             ##############################################################
@@ -1221,7 +1223,7 @@ $i = 0;
             if ($row[0] != 'MARC') {
                 fputcsv($output, array(" ", $row[2], $row[1], $row[0]), ";");
             } else {
-                fputcsv($output, array(" ", $row[2], $tot_marc, $row[0]), ";");
+                fputcsv($output, array(" ", $row[2], $tot_marc[$i], $row[0]), ";");
             }
         }
         
