@@ -43,7 +43,14 @@ switch ($action) {
         $query = "select b.user_group as uG from call_log a inner join vicidial_log b on b.uniqueid=a.uniqueid where start_time between '$dataInicio  00:00:00' and '$dataFim 23:59:59' and b.user_group IS NOT NULL group by uG ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-             $js[] = $row["uG"];
+       $query1 = "SELECT group_name FROM `vicidial_user_groups` WHERE user_group='$row[uG]'";
+
+            $query1 = mysql_query($query1) or die(mysql_error());
+            $row1 = mysql_fetch_assoc($query1);
+            
+            
+            
+            $js[] =  array(value => $row["uG"], name => $row1["group_name"]);
         };
         echo json_encode($js);
         break;

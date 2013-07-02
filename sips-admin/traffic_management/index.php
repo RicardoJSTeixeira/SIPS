@@ -30,6 +30,15 @@ foreach ($_GET as $key => $value) {
         <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
         <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
 
+        <style>
+            .table td{
+                text-align: center !important; 
+                vertical-align:middle !important;} 
+            .formRow .formRight
+            {
+                width:70%;
+            }
+        </style>
     </head>
     <body>
 
@@ -56,39 +65,49 @@ foreach ($_GET as $key => $value) {
                 <div class="grid-content">
 
 
-                    <div class="grid span10"><!--Calendario------------------------------------------------------->
-                        <div class="grid-title">
-                            <div class="pull-left">Calendário </div>
-                            <div class="pull-right"></div>
-                            <div class="clear"></div>
+                    <h3> <label class="control-label span">Calendário</label></h3>
+                    <div class="formRow">
+                        <label>Data de Inicio</label>
+                        <div class="formRight">
+                            <input type="text" id="from" name="from" />
                         </div>
-                        <div class="grid-content">
-                            <div class="grid-content">
-                                <label>Data de Inicio</label>
-                                <input type="text" id="from" name="from" />
-                                <label> Data final </label>
-                                <input type="text" id="to" name="to"/>
-                                <div class="clear"></div>
-                            </div>
-                            <div class="clear"></div>
-                        </div>    
-                    </div> <!--Calendario------------------------------------------------------------------------->
+                    </div>
 
 
-                    <div class="grid span7"><!--Tabela de Filtros----------------------------------------------------------->
-                        <div class="grid-title">
-                            <div class="pull-left">Tabela de Filtros</div>
-                            <div class="pull-right"></div>
-                            <div class="clear"></div>
+                    <div class="formRow">
+                        <label> Data final </label>
+                        <div class="formRight">
+                            <input type="text" id="to" name="to"/>
                         </div>
-                        <div class="grid-content">
-                            <label>Canal</label>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+                    <h3> <label class="control-label span">Filtros</label></h3>
+                    <div class="formRow">
+                        <label>Canal</label>
+                        <div class="formRight">
                             <select id="Mv2" class="chzn-select chosen_select" style="width:80%;" ><option value =1>Todos</option></select>
-                            <br>
-                            <label> Campanha</label>
+                        </div>
+                    </div>
+
+                    <div class="formRow">
+                        <label> Campanha</label>
+                        <div class="formRight">
                             <select id="Mv3" class="chzn-select chosen_select" style="width:80%;" ><option value =1>Todos</option></select>
-                            <br>
-                            <label> Operadora</label>
+                        </div>
+                    </div>
+
+                    <div class="formRow">
+                        <label> Operadora</label>
+                        <div class="formRight">
                             <select  id="Mv4" class="chzn-select chosen_select" style="width:80%;" >
                                 <option value =1>Todos</option> 
                                 <option value =0>Outros</option> 
@@ -97,22 +116,28 @@ foreach ($_GET as $key => $value) {
                                 <option value =92>Tmn</option> 
                                 <option value =93>Optimus</option> 
                             </select>
-                            <br>
-                            <label>User_Group</label>
+                        </div>
+                    </div>
+
+                    <div class="formRow">
+                        <label>Grupo de User</label>
+                        <div class="formRight">
                             <select  id="Mv5" class="chzn-select chosen_select" style="width:80%;" >
                                 <option value =1>Todos</option> 
 
                             </select>
-                            <div class="clear"></div>
-                        </div>    
-                    </div><!--Tabela de Filtros------------------------------------------------------------------------------------>
+                        </div>
+                    </div>
 
 
 
 
 
-                </div>    
+
+
+                </div>
             </div>
+
             <!--Style forms of validation  END-->
 
             <!--Form help text  Start-->
@@ -179,11 +204,6 @@ foreach ($_GET as $key => $value) {
 
 
 
-        <style>
-            .table td{
-                text-align: center !important; 
-                vertical-align:middle !important;} 
-        </style>
 
 
 
@@ -253,7 +273,7 @@ foreach ($_GET as $key => $value) {
                                     segTotal += value;
 
                                 });
-                                tbody.append("<tr><td style='text-align: center;' bgcolor='#6D7B8D'><h3>Total</h3></td><td style='text-align: center; vertical-align:middle;' bgcolor='#7D7B8D'>" + secondstotime(segTotal) + "</td></tr>");
+                                tbody.append("<tr><td style='text-align: center;' bgcolor='#6D7B8D'><h3>Total</h3></td><td bgcolor='#7D7B8D'>" + secondstotime(segTotal) + "</td></tr>");
                             }
                         }// Para corrigir a procura, ex: canal = fix 1, trazia o fix 1, fix 10, fix 14, fix 13453 etc porque procura do canal escolhido pra frente (%fix1%)
                         if (opcao === "fromTo" && $("#Mv2").val() !== '1')
@@ -316,13 +336,16 @@ foreach ($_GET as $key => $value) {
                             opt.value = 1;
                             opt.text = "Todos";
                             dB4.options.add(opt); //adiciona all
-
+                            var i = 0;
                             $.each(data, function(index, value) {
                                 var opt = document.createElement("option");
-                                console.log(value);
-                                opt.value = value;
-                                opt.text = value;
-                                dB4.options.add(opt); //adicionar a opção à dropbox
+                                if (data[i].value != "")
+                                {
+                                    opt.value = data[i].value;
+                                    opt.text = data[i].name;
+                                    dB4.options.add(opt); //adicionar a opção à dropbox
+                                }
+                                i++;
                             });
                         }
                     }
