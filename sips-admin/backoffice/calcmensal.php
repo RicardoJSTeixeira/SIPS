@@ -7,7 +7,7 @@
 $whereGrp = "";
 if (isset($_POST['datainicio'])) { $startDate = $_POST['datainicio']; }
 if (isset($_POST['datafim'])) { $endDate = $_POST['datafim']; }
-if (isset($_POST['usergroup'])) { $userGroup = $_POST['usergroup']; $whereGrp = "AND user_group LIKE '$userGroup'";} else { $userGroup = ""; }
+if (isset($_POST['usergroup'])) { $userGroup = $_POST['usergroup']; $whereGrp = "AND user_group LIKE '$userGroup'";} else { $whereGrp = ""; }
 ?>
 <form id='fchoose' target='_self' method='post' action='calcmensal.php'>
 <label for='datainicio'>Data Inicio</label><input type='date' id='datainicio' name='datainicio' selected value='<? echo $startDate; ?>' />
