@@ -41,8 +41,7 @@ $(document).ready(function() {
               )
               .draggable({containment: '#MainLayout'}));
 
-      $("#letter_size_grid").hide();
-
+      $("#letter_size_panel").toggleClass("z_index_increase");
       $(document).on("click", "#letter_size_button", function(e) {
             $("#letter_size_grid").toggle();
             $("#letter_size_panel").toggleClass("z_index_increase");
@@ -64,7 +63,17 @@ $(document).ready(function() {
                   var top = (wbes[i][4] * temp_window.height()) / windheight;
                   var width = (wbes[i][5] * temp_window.width()) / windwidth;
                   var height = (wbes[i][6] * temp_window.height()) / windheight;
-                  $("#MainLayout").append($("<div>").addClass("PanelWB ui-widget-content letter_size_all").attr("letter_size", "15").attr("style", "position: absolute;    left:" + left + "px;top:" + top + "px; width:" + width + "px;height:" + height + "px;").attr("id", wbes[i][0] + "Main").draggable({containment: '#MainLayout'})
+                  $("#MainLayout")
+                          .append($("<div>").addClass("PanelWB ui-widget-content letter_size_all")
+                          .attr("letter_size", "15")
+                          .css("position", "absolute")
+                          .css("left", left + "px")
+                          .css("top", top + "px")
+                          .css("height", height + "px")
+                          .css("width", width + "px")
+                          .attr("id", wbes[i][0] + "Main")
+                          .draggable({containment: '#MainLayout'})
+
                           .append($("<div>").addClass("grid-title")
                           .append($("<div>").addClass("pull-left").text(wbes[i][2]))
                           .append($("<div>").addClass("pull-right").attr("id", "right_title" + wbes[i][0])))
@@ -197,15 +206,15 @@ function plot_bar(data)
                               {
                                     $.jGrowl("A barra de " + label + " não apresenta resultados", {sticky: true});
                                     wbe[9][index].hasData = false;
-                                
+
                               }
-                                  information.push(
-                                            {
-                                                  label: "sem dados",
-                                                  data: 0,
-                                                  bars: {show: true, barWidth: 0.8, align: "center"},
-                                                  color: colors[index]
-                                            });
+                              information.push(
+                                      {
+                                            label: "sem dados",
+                                            data: 0,
+                                            bars: {show: true, barWidth: 0.8, align: "center"},
+                                            color: colors[index]
+                                      });
                         }
                         else
                         {
@@ -223,7 +232,7 @@ function plot_bar(data)
                                             label: label,
                                             data: data2,
                                             bars: {show: true, barWidth: 0.8, align: "center"},
-                                            color: colors[i]
+                                            color: colors[index]
                                       });
                               sum = 0;
                               i++;
@@ -297,11 +306,19 @@ function plot_update(data)
                                           result.push([new Date(temp).getTime(), obj[prop][k].leads]);
                                     }
 
+                                    var label_text = "";
+
                                     if (verifier > 0) {
-                                          if (wbe[9][aux].chamadas === "0")
-                                                information.push({data: result, label: wbe[9][aux].opcao_query + " -> " + wbe[9][aux].param2});
-                                          else
-                                                information.push({data: result, label: "Chamadas " + wbe[9][aux].chamadas + " por " + wbe[9][aux].param1});
+                                          if (wbe[9][aux].chamadas === "0") {
+                                                if (wbe[9][aux].status_feedback === "1")
+                                                      label_text = "Todos os feedbacks de " + wbe[9][aux].param1;
+                                                else
+                                                      label_text = wbe[9][aux].param1 + " de " + wbe[9][aux].param2;
+                                          } else
+                                                label_text = "Chamadas " + wbe[9][aux].chamadas + " de " + wbe[9][aux].param1;
+
+
+                                          information.push({data: result, label: label_text});
 
                                           result = [];
                                           verifier = 0;
@@ -310,7 +327,7 @@ function plot_update(data)
                                     else
                                     {
                                           result = [];
-                                          information.push({data: result, label: "Sem resultados"});
+                                          information.push({data: 0, label: "Sem resultados"});
 
                                           if (wbe[9][aux].hasData)
                                           {
@@ -332,7 +349,7 @@ function plot_update(data)
                   var tick_size = Math.floor(max_y / 10);
 
                   var options = {
-                        series: {shadowSize: 0, steps: false, show: true}, // drawing is faster without shadows
+                        series: {shadowSize: 0, show: true}, // drawing is faster without shadows
                         yaxis: {min: 0, max: max_y, tickSize: tick_size},
                         xaxis: {mode: "time", timeformat: "%H:%M", minTickSize: [5, "minute"],
                               min: (dates[0]),
@@ -414,6 +431,7 @@ function plot_pie(data) {
       get_values_pie();
       function get_values_pie()
       {
+  
             var data1 = [];
             $.post("Requests.php",
                     {action: "3", status: feedbacks_string, opcao: wbe[9][0].codigo_query, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campaign_id, user_group: wbe[9][0].user_group, linha_inbound: wbe[9][0].linha_inbound, user: wbe[9][0].user},
@@ -429,7 +447,7 @@ function plot_pie(data) {
                   }
                   var i = 0;
                   $.each(data, function(index, value) {
-                        data1.push({label: (this.status_name), data: +this.count});
+                        data1.push({label: ((this.count)+" -- "+this.status_name), data: +this.count});
                         i++;
                   });
                   if (i == 0)//se so houver 1 resultado ele n faz render, entao adiciona-se 1 elemento infimo
@@ -448,7 +466,7 @@ function plot_pie(data) {
                                           show: true,
                                           radius: 2 / 3,
                                           formatter: function(label, series) {
-                                                return '<div style="font-size:11px;text-align:center;color:black;">' + Math.round(series.percent) + '%</div>';
+                                                return '<div style="font-size:11px;text-align:center;color:black;"><label class="label label-info">' + Math.round(series.percent) + '%</label></div>';
                                           },
                                           threshold: 0.02
                                     }
@@ -483,7 +501,7 @@ function   inbound_wallboard(data)
       var font_size = ((panel.width() / 50) + (panel.height() / 110));
       panel.empty();
 
-      panel.append($("<div>").attr("style", "height:98%;font-size:" + font_size + "px;background-color: rgb(210, 215, 215); padding-left:1%;padding-right:1%;padding-top:1%;").addClass("legend_inbound").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbe[7] / 1000) + " seg.")
+      panel.append($("<div>").css("height", "98%").css("font-size", font_size + "px").css("background-color", "rgb(210, 215, 215)").css("padding-left", "1%").css("padding-right", "1%").css("padding-top", "1%").addClass("legend_inbound").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbe[7] / 1000) + " seg.")
 
 
               .append($("<div>").append($("<label>").addClass("inbound_title").text(wbe[9][0].param1)))//titulo do inbound
@@ -692,7 +710,7 @@ function   inbound_wallboard(data)
                                           series: {
                                                 pie: {innerRadius: 0.05,
                                                       show: true,
-                                                      radius: ($("#MainLayout").width() - $("#MainLayout").height()) ,
+                                                      radius: ($("#MainLayout").width() - $("#MainLayout").height()),
                                                       label: {
                                                             show: true,
                                                             radius: 3 / 4,
@@ -768,7 +786,7 @@ function   dataTable_top(data)
       function get_values_dataTop()
       {
             $.post("Requests.php",
-                    {action: "5", status: feedbacks_string, opcao: Opcao, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campanha, user_group: wbe[9][0].grupo_user, linha_inbound: wbe[9][0].grupo_inbound, limit: wbe[9][0].limit},
+                    {action: "5", status: feedbacks_string, opcao: Opcao, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campanha, user_group: wbe[9][0].grupo_user, linha_inbound: wbe[9][0].grupo_inbound, limit: wbe[9][0].limit,mode: wbe[9][0].mode},
             function(data)
             {
                   if (data === null)
