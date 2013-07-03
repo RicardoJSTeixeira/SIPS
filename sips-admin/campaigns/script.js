@@ -37,7 +37,7 @@ $.ajax({
                     {
                         aoData.push( 
                                     { "name": "action", "value": "dT_campaign-monitor" }
-                                   ) 
+                                   );
                     },
                     "aoColumns": [ 
                                     { "sTitle": "Editar", "sWidth":"16px", "sClass":"dataTables-column-center" },
@@ -48,15 +48,15 @@ $.ajax({
                                     { "sTitle": "Pausas Activas", "sClass": "dataTables-column-center", "sWidth": "16px" },
                                     { "sTitle": "Feedbacks Activos", "sClass": "dataTables-column-center", "sWidth": "16px" },
                                     { "sTitle": "Reciclagem", "sClass": "dataTables-column-center", "sWidth": "16px" },
-									{ "sTitle": "Script", "sClass": "dataTables-column-center", "sWidth": "16px" },
-									{ "sTitle": "Campos Dinâmicos", "sClass": "dataTables-column-center", "sWidth": "16px" },
-									{ "sTitle": "Nº de Contactos", "sClass": "dataTables-column-center", "sWidth": "16px" },
+                                    { "sTitle": "Script", "sClass": "dataTables-column-center", "sWidth": "16px" },
+                                    { "sTitle": "Campos Dinâmicos", "sClass": "dataTables-column-center", "sWidth": "16px" },
+                                    { "sTitle": "Nº de Contactos", "sClass": "dataTables-column-center", "sWidth": "16px" },
                                     { "sTitle": "Data de Criação", "sClass": "dataTables-column-center", "sWidth": "100px" }
                                  ], 
                     "oLanguage": { "sUrl": "extras/datatables/language.txt" },
                     "fnInitComplete": function(oSettings, json)
                     { 
-						CampaignMonitorElemInit()
+						CampaignMonitorElemInit();
                         User = json.user;
 						UserGroup = json.user_group;
                         AllowedCampaigns = json.allowed_campaigns;
@@ -257,9 +257,9 @@ function OddEvenRefresh(Flag, Table)
                 if(!$(this).hasClass("odd-even-ignore")){ $(this).addClass("odd-even-table-rows") }
             }
 
-        })
+        });
     
-    }) 
+    });
 
     
 }
@@ -271,15 +271,14 @@ function DialogClose()
 
 function DialogOpen(event)
 {
-	console.log();
 	if(typeof event.currentTarget.attributes["pause-to-edit"] != 'undefined') { editedPause = event.currentTarget.attributes["pause-to-edit"].value; }
 	if(typeof event.currentTarget.attributes["feed-to-edit"] != 'undefined') { editedFeed = event.currentTarget.attributes["feed-to-edit"].value; }
 	if(typeof event.currentTarget.attributes["recycle-to-edit"] != 'undefined') { editedRecycle = event.currentTarget.attributes["recycle-to-edit"].value; }
 	if(typeof event.currentTarget.attributes["inner-try-type"] != 'undefined') { editedTryType = event.currentTarget.attributes["inner-try-type"].value; }
 	if(typeof event.currentTarget.attributes["fields-edit"] != 'undefined') { editedField = event.currentTarget.attributes["fields-edit"].value; }
-	if(typeof event.data.editDB != 'undefined') { editedDB = event.currentTarget.parentNode.parentElement.attributes[0].value; }
+	if(typeof event.data.editDB != 'undefined') { editedDB = event.currentTarget.parentNode.parentElement.attributes["id"].value; }
 	if(typeof event.currentTarget.attributes["feedback-id"] != 'undefined') { editedDBFeed = event.currentTarget.attributes["feedback-id"].value; }
-	if(typeof event.data.dbwizardedit != 'undefined') { console.log(event.currentTarget.parentNode.parentElement.attributes[0].value);  editedDB = event.currentTarget.parentNode.parentElement.attributes[0].value; }
+	if(typeof event.data.dbwizardedit != 'undefined') { console.log(event.currentTarget.parentNode.parentElement.attributes["id"].value);  editedDB = event.currentTarget.parentNode.parentElement.attributes["id"].value; }
 	
 	$(event.data.dialog).dialog("open");
 }

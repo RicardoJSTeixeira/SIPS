@@ -66,7 +66,7 @@ if( ($("#tbl-pauses tr").length == 0 && Flag == "ALL") || (Flag == "REFRESH") ||
             
                             
                     $("#tbl-pauses").prepend("<tr class='tr-pause-rows' pause-id='"+ data.pause_code[index] + "' style='height:22px;'>"+PauseCheckBox+"<td style='padding:1px 0px 0px 3px; text-align:left;'><label class='label-pause-name' for='" + data.pause_code[index] + "'>"+ data.pause_code_name[index] + "</label></td><td class='td-icon'><img class='mono-icon' style='margin-top:-3px' title='Tempo de Pausa' src='icons/mono_cup_16.png'></td><td width='24px' style='text-align:left; padding:1px 0px 0px 3px;'><span><span id='span-pause-time-"+ data.pause_code[index] + "'>"+ data.max_time[index] + "</span></span>m</td><td width='24px'></td>"+PauseEnable+PauseConfig+"\n\</tr>")
-                })
+                });
 
                 $(".pause-checkbox").uniform(); 
                 OddEvenRefresh("", "tbl-pauses");
