@@ -91,8 +91,8 @@ switch ($action) {
     case 'insert_dataTop':
         $query = "INSERT INTO WallBoard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "INSERT INTO `asterisk`.`WallBoard_DataTop` (`id`, `id_wallboard`, `tempo`, `campanha`, `grupo_inbound`, `grupo_user`, `status_feedback`, `limit`, `custom_colum_name`,`param1`)
-            VALUES(NULL,LAST_INSERT_ID() , $tempo, '$campanha', '$grupo_inbound', '$grupo_user', $status_feedback, '$limit', '$custom_colum_name', '$param1')";
+        $query = "INSERT INTO `asterisk`.`WallBoard_DataTop` (`id`, `id_wallboard`, `tempo`, `campanha`, `grupo_inbound`, `grupo_user`, `status_feedback`, `limit`, `custom_colum_name`,`param1`,`mode`)
+            VALUES(NULL,LAST_INSERT_ID() , $tempo, '$campanha', '$grupo_inbound', '$grupo_user', $status_feedback, '$limit', '$custom_colum_name', '$param1',$mode)";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
@@ -127,7 +127,7 @@ switch ($action) {
                 $query_dataset = mysql_query($query_dataset, $link) or die(mysql_error());
                 $dataset = array();
                 while ($row1 = mysql_fetch_assoc($query_dataset)) {
-                    $dataset[] = array(id => $row1["id"], id_wallboard => $row1["id_wallboard"], tempo => $row1["tempo"], campanha => $row1["campanha"], grupo_inbound => $row1["grupo_inbound"], grupo_user => $row1["grupo_user"], status_feedback => $row1["status_feedback"], limit => $row1["limit"], custom_colum_name => $row1["custom_colum_name"], hasData => true, param1 => $row1["param1"]);
+                    $dataset[] = array(id => $row1["id"], id_wallboard => $row1["id_wallboard"], tempo => $row1["tempo"], campanha => $row1["campanha"], grupo_inbound => $row1["grupo_inbound"], grupo_user => $row1["grupo_user"], status_feedback => $row1["status_feedback"], limit => $row1["limit"], custom_colum_name => $row1["custom_colum_name"], hasData => true, param1 => $row1["param1"], mode => $row1["mode"]);
                 }
                 $js[] = array(id => $row["id"], id_layout => $row["id_layout"], name => $row["name"], pos_x => $row["pos_x"], pos_y => $row["pos_y"], width => $row["width"], height => $row["height"], update_time => $row["update_time"], graph_type => $row["graph_type"], dataset => $dataset);
             } else {
@@ -201,7 +201,7 @@ switch ($action) {
 
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], query_text_inbound => $row["query_text_inbound"], query_text_outbound => $row["query_text_outbound"], opcao_query => $row["opcao_query"],  codigo => $row["codigo"]);
+            $js[] = array(id => $row["id"], query_text_inbound => $row["query_text_inbound"], query_text_outbound => $row["query_text_outbound"], opcao_query => $row["opcao_query"], codigo => $row["codigo"]);
         }
         echo json_encode($js);
         break;
@@ -214,7 +214,7 @@ switch ($action) {
         $query = "SELECT * from WallBoard_Query where codigo=$codigo";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], query_text_inbound => $row["query_text_inbound"], query_text_outbound => $row["query_text_outbound"], opcao_query => $row["opcao_query"],  codigo => $row["codigo"]);
+            $js[] = array(id => $row["id"], query_text_inbound => $row["query_text_inbound"], query_text_outbound => $row["query_text_outbound"], opcao_query => $row["opcao_query"], codigo => $row["codigo"]);
         }
         echo json_encode($js);
         break;
@@ -426,12 +426,14 @@ switch ($action) {
 
 
     case '3':// tarte - total feedbacks por user
+
+
         if ($opcao === "1")
-            $query = "select status ,count(status) as total_feedback from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user where vicidial_agent_log.campaign_id='$campaign_id' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by vicidial_agent_log.status order by total_feedback desc";
+            $query = "select status ,count(status) as total_feedback from vicidial_log where campaign_id='$campaign_id' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by status order by total_feedback desc";
         //  if ($opcao === "2")
         //    $query = "select vicidial_users.full_name,count(status) as total_feedback from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user where vicidial_agent_log.user_group='$user_group' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by vicidial_agent_log.user order by total_feedback desc";
         if ($opcao === "3")
-            $query = "select status ,count(status) as total_feedback from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user  where vicidial_users.closer_campaigns like '%$linha_inbound%' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by vicidial_agent_log.status order by total_feedback desc";
+            $query = "select status ,count(status) as total_feedback from vicidial_closer_log where campaign_id = '$linha_inbound' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by status order by total_feedback desc";
         //  if ($opcao === "4")
         //   $query = "select status ,count(status) as total_feedback from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user  where vicidial_agent_log.user='$user' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by status order by total_feedback desc";
 //muda as horas para ver os resultados desde "agora" ate a altura especificada aquando da criação do dataset
@@ -591,32 +593,69 @@ switch ($action) {
 
     case '5'://dataTop table
 
-
-
-        if ($opcao === "1")
-            $query = "select user,sum(talk_sec) as talk_sec,count(status) as total_feedback,sum(dead_sec) as dead_sec from vicidial_agent_log where campaign_id='$campaign_id' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
-        if ($opcao === "2")
-            $query = "select user,sum(talk_sec) as talk_sec,count(status) as total_feedback,sum(dead_sec) as dead_sec from vicidial_agent_log where user_group='$user_group' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
-        if ($opcao === "3")
-            $query = "select vicidial_agent_log.user,sum(talk_sec) as talk_sec,count(status) as total_feedback,sum(dead_sec) as dead_sec from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user  where vicidial_users.closer_campaigns like '%$linha_inbound%' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
-
-//muda as horas para ver os resultados desde "agora" ate a altura especificada aquando da criação do dataset
         $round_numerator = 60 * 5;
         $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
         $rounded_time = date("Y-m-d H:i:s", $rounded_time);
-        $query = str_replace("now()", "'" . $rounded_time . "'", $query);
-        $query = str_replace("time_span", $tempo, $query);
+
+        if ($opcao === "1") {
+            $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_log where campaign_id='$campaign_id' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
+            $query = str_replace("now()", "'" . $rounded_time . "'", $query);
+            $query = str_replace("time_span", $tempo, $query);
+        }
+        if ($opcao === "2") {
+            switch ($mode) {
+                case 1:
+                    $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_closer_log where user_group='$user_group' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
+                    $query = str_replace("now()", "'" . $rounded_time . "'", $query);
+                    $query = str_replace("time_span", $tempo, $query);
+                    $opcao = 1;
+                    break;
+                case 2:
+                    $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_log where user_group='$user_group' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
+                    $query = str_replace("now()", "'" . $rounded_time . "'", $query);
+                    $query = str_replace("time_span", $tempo, $query);
+                    $opcao = 1;
+                    break;
+                case 3:
+
+                    $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from
+((select user,length_in_sec,status from vicidial_closer_log where user_group='$user_group' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null)
+union all
+(select user,length_in_sec,status from vicidial_log where user_group='$user_group' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null)) as inoutbound group by user order by total_feedback desc limit $limit";
+                    $query = str_replace("now()", "'" . $rounded_time . "'", $query);
+                    $query = str_replace("time_span", $tempo, $query);
+
+                    break;
+            }
+        }
+        if ($opcao === "3") {
+            $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_closer_log where campaign_id= '$linha_inbound' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
+            $query = str_replace("now()", "'" . $rounded_time . "'", $query);
+            $query = str_replace("time_span", $tempo, $query);
+        }
+//muda as horas para ver os resultados desde "agora" ate a altura especificada aquando da criação do dataset
+
+
+
+
+
 
         $query = mysql_query($query) or die(mysql_error());
         $tma_call = 0;
         while ($row = mysql_fetch_assoc($query)) {
-            $query1 = "SELECT closer_campaigns, full_name FROM vicidial_users WHERE user='$row[user]'";
+            $query1 = "SELECT full_name FROM vicidial_users WHERE user='$row[user]'";
             $query1 = mysql_query($query1) or die(mysql_error());
             $row1 = mysql_fetch_assoc($query1);
-            $tma_call = ($row["talk_sec"] - $row["dead_sec"]);
+            $tma_call = ($row["talk_sec"]);
 
             $js[] = array(user => $row1["full_name"], tma => $tma_call, count_feedbacks => $row["total_feedback"]);
         }
+
+
+
+
+
+
         echo json_encode($js);
         break;
 

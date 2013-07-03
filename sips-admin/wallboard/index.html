@@ -59,7 +59,7 @@
                   .modal-body, .modal{
                         overflow:visible;
                   }
-                
+
                   #dialog_pie .modal-body{
                         max-height: 425px;
                         overflow:auto;
@@ -104,7 +104,7 @@
                   .chosen_select{
                         width: 350px;
                   }
-                
+
 
                   .inline{
                         margin-right: 6px;
@@ -182,9 +182,9 @@
                                           <input maxlength="25" class="span" id="Layout_Input_name" type="text" placeholder="Novo nome da Layout" />
                                     </div>
                               </div>
-                                      <div class="clear"></div>
+                              <div class="clear"></div>
                         </div>
-                       
+
 
                         <div class="modal-footer">
                               <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
@@ -204,9 +204,9 @@
                         </div>
                         <div class="modal-body">
                               Tem a certeza que quer eliminar este Layout?
-                                    <div class="clear"></div>
+                              <div class="clear"></div>
                         </div>
-                         
+
 
                         <div class="modal-footer">
                               <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
@@ -247,9 +247,9 @@
                                           </select> 
                                     </div>
                               </div>
-                                       <div class="clear"></div>
+                              <div class="clear"></div>
                         </div>
-               
+
                         <div class="modal-footer">
                               <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
                               <button  data-dismiss="modal" id="create_button_dialog" class="btn btn-primary">Criar</button>
@@ -283,7 +283,7 @@
                                                 <option value="1" >Campanha</option>
                                                 <!--<option value="2">Grupo de User</option>-->
                                                 <option value="3" >Grupo de linha inbound</option>
-                                              <!--  <option value="4">Agente</option>-->
+                                                <!--  <option value="4">Agente</option>-->
                                           </select> 
                                     </div>
                               </div>
@@ -295,9 +295,9 @@
                                           <div class="pie_select" id="campaign_id_pie_div">
                                                 <select   id="campaign_id_pie" class="chzn-select  chosen_select"></select>
                                           </div>
-                                        <!--  <div class="pie_select" id="grupo_user_pie_div">
-                                                <select id="grupo_user_pie" class="chzn-select"></select>
-                                          </div> -->
+                                          <!--  <div class="pie_select" id="grupo_user_pie_div">
+                                                  <select id="grupo_user_pie" class="chzn-select"></select>
+                                            </div> -->
                                           <div class="pie_select" id="grupo_inbound_pie_div">
                                                 <select id="grupo_inbound_pie" class="chzn-select  chosen_select"></select>
                                           </div>
@@ -331,6 +331,7 @@
                               </div>
 
 
+
                               <div class="formRow">
                                     <label class="control-label label " for="pie_timespan">Mostrar dados até:</label>
                                     <div class="formRight">
@@ -344,9 +345,9 @@
                                           </select> 
                                     </div>
                               </div>
-                                     <div class="clear"></div>
+                              <div class="clear"></div>
                         </div>
-                 
+
                         <div class="modal-footer">
                               <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
                               <button  id="create_button_pie" class="btn btn-primary">Criar</button>
@@ -402,6 +403,22 @@
                                     </div>
                               </div>
 
+
+
+                              <div class="formRow dataTable_options" id="radio_datatable_div">
+                                    <label class="control-label label " for="checkbox_feedback">Tipo de dados:</label>
+                                    <div class="formRight">
+                                          <input type="radio" id="resultado_datatable_1_tipo" name="ra" checked="checked">
+                                          <label class="dataTable" for="resultado_datatable_1_tipo"><span></span>Inbound</label>
+                                          <input type="radio" id="resultado_datatable_2_tipo" name="ra">
+                                          <label class="dataTable" for="resultado_datatable_2_tipo"><span></span>Outbound</label>
+                                          <input type="radio" id="resultado_datatable_3_tipo" name="ra">
+                                          <label class="dataTable" for="resultado_datatable_3_tipo"><span></span>Blended</label>
+                                    </div>
+                              </div>
+
+
+
                               <div class="formRow">
                                     <label class="control-label label " for="checkbox_feedback">Filtro de Feedbacks:</label>
                                     <div class="formRight">
@@ -429,10 +446,10 @@
                               <div class="formRow">
                                     <label class="control-label label " >Resultados:</label>
                                     <div class="formRight">
-                                          <input type="radio" id="resultdado_datatable_1" name="rr" checked="checked">
-                                          <label class="inline" for="resultdado_datatable_1"><span></span>10</label>
-                                          <input type="radio" id="resultdado_datatable_2" name="rr">
-                                          <label class="inline" for="resultdado_datatable_2"><span></span>5</label>
+                                          <input type="radio" id="resultado_datatable_1" name="rr" checked="checked">
+                                          <label class="inline" for="resultado_datatable_1"><span></span>10</label>
+                                          <input type="radio" id="resultado_datatable_2" name="rr">
+                                          <label class="inline" for="resultado_datatable_2"><span></span>5</label>
                                     </div>
 
 
@@ -459,9 +476,9 @@
 
 
 
-   <div class="clear"></div>
+                              <div class="clear"></div>
                         </div>      
-                     
+
                         <div class="modal-footer">
                               <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
                               <button  id="create_button_dataTable" class="btn btn-primary">Criar</button>
@@ -482,9 +499,9 @@
                                           <select  id="group_inbound_select" class="chosen_select"></select>
                                     </div>
                               </div>
-                                            <div class="clear"></div>
+                              <div class="clear"></div>
                         </div>
-          
+
                         <div class="modal-footer">
                               <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
                               <button  data-dismiss="modal" id="create_button_inbound" class="btn btn-primary">Criar</button>
@@ -512,13 +529,14 @@
 
 
                               <div class="formRow">
-                                    <label class="control-label label " for="in_out_bound">Tipo de dados:</label>
+                                    <label class="control-label label">Tipo de Dados</label>
                                     <div class="formRight">
-                                          <select class="span" id="in_out_bound">
-                                                <option value="1" >Inbound</option>
-                                                <option value="2" >Outbound</option>
-                                                <option value="3">Blended</option>
-                                          </select> 
+                                          <input  type="radio" id="resultado_dataset_1" name="rd" checked="checked">
+                                          <label class="inline" for="resultado_dataset_1"><span></span>Inbound</label>
+                                          <input type="radio" id="resultado_dataset_2" name="rd">
+                                          <label class="inline" for="resultado_dataset_2"><span></span>Outbound</label>
+                                          <input type="radio" id="resultado_dataset_3" name="rd">
+                                          <label class="inline" for="resultado_dataset_3"><span></span>Blended</label>
                                     </div>
                               </div>
 
