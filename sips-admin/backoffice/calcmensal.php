@@ -4,13 +4,17 @@
 </head>
 <body>
 <?
+$whereGrp = "";
 if (isset($_POST['datainicio'])) { $startDate = $_POST['datainicio']; }
 if (isset($_POST['datafim'])) { $endDate = $_POST['datafim']; }
+if (isset($_POST['usergroup'])) { $userGroup = $_POST['usergroup']; $whereGrp = "AND user_group LIKE '$userGroup'";}
 ?>
 <form id='fchoose' target='_self' method='post' action='calcmensal.php'>
 <label for='datainicio'>Data Inicio</label><input type='date' id='datainicio' name='datainicio' selected value='<? echo $startDate; ?>' />
 <br>
 <label for='datafim'>Data Fim</label><input type='date' id='datafim' name='datafim' value='<? echo $endDate; ?>' />
+<br>
+<label for='usergroup'>User Group (ID)</label><input type='text' id='usergroup' name='usergroup' value='<? echo $userGroup; ?>' />
 <br>
 <input type='submit' value='submit' />
 <br>
@@ -22,8 +26,8 @@ if (isset($_POST['datafim'])) { $endDate = $_POST['datafim']; }
 					die('Não me consegui ligar' . mysql_error());
 				}
 				mysql_select_db("asterisk", $con);
-		
-		$dbusers = mysql_query("SELECT user, event, event_date, user_group user FROM vicidial_user_log WHERE event_date >= '$startDate' AND event_date < '$endDate' AND user <> 'admin' ORDER BY event_date ASC") or die(mysql_error());
+                                
+		$dbusers = mysql_query("SELECT user, event, event_date, user_group user FROM vicidial_user_log WHERE event_date >= '$startDate' AND event_date < '$endDate' AND user <> 'admin' $whereGrp ORDER BY event_date ASC") or die(mysql_error());
 		$loginArray = "";
 		$maxUsers = 0;
 		$perDayArray = "";
