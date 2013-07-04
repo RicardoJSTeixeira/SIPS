@@ -1,3 +1,5 @@
+//optimizar o crescimento de letra da tabela de top
+
 
 var wbes = [];
 var layouts = [];
@@ -159,11 +161,6 @@ function radio_checks()
 }
 
 
-$(".dataTable").change(function()
-
-{
-    alert("a");  
-});
 
 $("#resultado_dataset_1").change(function()
 {
@@ -229,7 +226,6 @@ $(function() {
                   if (wbes[id_wallboard][9][a].id == id_dataset)
                   {
 //Inbound,Outbound,Blended
-
                         if (wbes[id_wallboard][9][a].mode == "1") {
 
                               $("#resultado_dataset_1").attr("checked", "checked");
@@ -939,7 +935,7 @@ function sql_basic(opcao, id_layout, id_wbe)
             {
                   load_dados("layout", 0);
                   idLayout = $("#LayoutSelector").val();
-                  layout_change();
+           
             }
 
             if (opcao === "remove_Layout")

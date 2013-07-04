@@ -65,7 +65,7 @@ $(document).ready(function() {
                   var height = (wbes[i][6] * temp_window.height()) / windheight;
                   $("#MainLayout")
                           .append($("<div>").addClass("PanelWB ui-widget-content letter_size_all")
-                          .attr("letter_size", "15")
+                          .attr("letter_size", "18")
                           .css("position", "absolute")
                           .css("left", left + "px")
                           .css("top", top + "px")
@@ -231,7 +231,7 @@ function plot_bar(data)
                                       {
                                             label: label,
                                             data: data2,
-                                            bars: {show: true, barWidth: 0.8, align: "center"},
+                                            bars: {show: true, barWidth: 0.8, align: "center", fill: 0.6},
                                             color: colors[index]
                                       });
                               sum = 0;
@@ -692,11 +692,11 @@ function   inbound_wallboard(data)
 
 
                                     var data_array = [];
-                                    data_array.push({label: ready+ " -- Agentes Disponiveis", data: ready});
+                                    data_array.push({label: ready + " -- Agentes Disponiveis", data: ready});
 
-                                    data_array.push({label: (queue + paused)+ " -- Agentes Indisponiveis", data: (queue + paused)});
+                                    data_array.push({label: (queue + paused) + " -- Agentes Indisponiveis", data: (queue + paused)});
 
-                                    data_array.push({label: agentes_incall+" -- Agentes em Chamada", data: agentes_incall});
+                                    data_array.push({label: agentes_incall + " -- Agentes em Chamada", data: agentes_incall});
 
 
                                     if ((ready + queue + paused + agentes_incall) == "0")
@@ -803,7 +803,7 @@ function   dataTable_top(data)
                   }
                   var tbody = $("#tbody_id" + wbe[0]);
                   tbody.empty();
-                  var letter_size = 18;
+                  var letter_size = $("#" + wbe[0] + "Main").attr("letter_size");
                   $.each(data, function(index, value) {
 //calculo do TMA de segundos para hora:minuto:segundo
                         var totalSec = +data[index].tma;

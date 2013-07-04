@@ -27,7 +27,7 @@ switch ($action) {
         $query = "SELECT * from WallBoard_Layout where id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], name => $row["Name"]);
+            $js[] = array(id => $row["id"], name => $row["name"]);
         }
         echo json_encode($js);
         break;
@@ -166,33 +166,11 @@ switch ($action) {
         break;
 
 
-    case 'get_dataset':
-        $query = "SELECT * FROM `WallBoard_Dataset` WHERE `id_wallboard`=$id_wallboard";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], codigo_query => $row["codigo_query"], id_wallboard => $row["id_wallboard"], tempo => $row["tempo"], user => $row["user"], user_group => $row["user_group"], campaign_id => $row["campaign_id"], linha_inbound => $row["linha_inbound"], mode => $row["mode"], status_feedback => $row["status_feedback"], chamadas => $row["chamadas"], param1 => $row1["param1"], param2 => $row1["param2"]);
-        }
-        echo json_encode($js);
-        break;
-
-
-    case 'get_dataset_single':
-        $query = "SELECT * FROM `WallBoard_Dataset` WHERE `id`=$id";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], codigo_query => $row["codigo_query"], id_wallboard => $row["id_wallboard"], tempo => $row["tempo"], user => $row["user"], user_group => $row["user_group"], campaign_id => $row["campaign_id"], linha_inbound => $row["linha_inbound"], mode => $row["mode"], status_feedback => $row["status_feedback"], chamadas => $row["chamadas"], param1 => $row1["param1"], param2 => $row1["param2"]);
-        }
-        echo json_encode($js);
-        break;
-
     case 'edit_dataset':
         $query = "UPDATE WallBoard_Dataset SET  codigo_query=$codigo_query,user='$user',user_group='$user_group',campaign_id='$campaign_id',linha_inbound='$linha_inbound',mode=$mode,status_feedback='$status_feedback',chamadas='$chamadas',param1='$param1',param2='$param2'  WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
-
-
-
 
 
 
@@ -205,20 +183,6 @@ switch ($action) {
         }
         echo json_encode($js);
         break;
-
-
-
-
-    case 'get_query_by_code':
-
-        $query = "SELECT * from WallBoard_Query where codigo=$codigo";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], query_text_inbound => $row["query_text_inbound"], query_text_outbound => $row["query_text_outbound"], opcao_query => $row["opcao_query"], codigo => $row["codigo"]);
-        }
-        echo json_encode($js);
-        break;
-
 
 
 
@@ -403,17 +367,10 @@ switch ($action) {
                         }
                         $temp = array_merge($temp1, $temp2);
                     }
-
-
-
                     $leads = 0;
                     foreach ($temp as $kev => $row) {
                         $leads = $leads + 1;
                     }
-
-
-
-
                     $js[] = $leads;
                 }
             }
@@ -458,7 +415,7 @@ switch ($action) {
 
 
     case '4'://inbound
-        $stmtB = "select calls_today,drops_today,answers_today,status_category_1,status_category_count_1,status_category_2,status_category_count_2,status_category_3,status_category_count_3,status_category_4,status_category_count_4,hold_sec_stat_one,hold_sec_stat_two,hold_sec_answer_calls,hold_sec_drop_calls,hold_sec_queue_calls,campaign_id,drops_today_pct from vicidial_campaign_stats where campaign_id='$linha_inbound'";
+        $stmtB = "select calls_today,drops_today,answers_today,hold_sec_stat_one,hold_sec_stat_two,hold_sec_answer_calls,hold_sec_drop_calls,hold_sec_queue_calls,drops_today_pct from vicidial_campaign_stats where campaign_id='$linha_inbound'";
 
         $rslt = mysql_query($stmtB, $link);
         while ($row = mysql_fetch_row($rslt)) {
@@ -466,21 +423,13 @@ switch ($action) {
             $callsTODAY = $row[0];
             $dropsTODAY = $row[1];
             $answersTODAY = $row[2];
-            $VSCcat1 = $row[3];
-            $VSCcat1tally = $row[4];
-            $VSCcat2 = $row[5];
-            $VSCcat2tally = $row[6];
-            $VSCcat3 = $row[7];
-            $VSCcat3tally = $row[8];
-            $VSCcat4 = $row[9];
-            $VSCcat4tally = $row[10];
-            $hold_sec_stat_one = $row[11];
-            $hold_sec_stat_two = $row[12];
-            $hold_sec_answer_calls = $row[13];
-            $hold_sec_drop_calls = $row[14];
-            $hold_sec_queue_calls = $row[15];
-            $ingroupdetail = $row[16];
-            $drops_today_pct = $row[17];
+            $hold_sec_stat_one = $row[3];
+            $hold_sec_stat_two = $row[4];
+            $hold_sec_answer_calls = $row[5];
+            $hold_sec_drop_calls = $row[6];
+            $hold_sec_queue_calls = $row[7];
+            $drops_today_pct = $row[8];
+
             if (($dropsTODAY > 0) and ($answersTODAY > 0)) {
                 $drpctTODAY = ( ($dropsTODAY / $callsTODAY) * 100);
                 $drpctTODAY = round($drpctTODAY, 2);
@@ -512,18 +461,10 @@ switch ($action) {
                 $PCThold_sec_stat_two = sprintf("%01.2f", $PCThold_sec_stat_two);
                 $AVGhold_sec_answer_calls = ($hold_sec_answer_calls / $answersTODAY);
                 $AVGhold_sec_answer_calls = round($AVGhold_sec_answer_calls, 0);
-                if ($agent_non_pause_sec > 0) {
-                    $AVG_ANSWERagent_non_pause_sec = (($answersTODAY / $agent_non_pause_sec) * 60);
-                    $AVG_ANSWERagent_non_pause_sec = round($AVG_ANSWERagent_non_pause_sec, 2);
-                    $AVG_ANSWERagent_non_pause_sec = sprintf("%01.2f", $AVG_ANSWERagent_non_pause_sec);
-                } else {
-                    $AVG_ANSWERagent_non_pause_sec = 0;
-                }
             } else {
                 $PCThold_sec_stat_one = 0;
                 $PCThold_sec_stat_two = 0;
                 $AVGhold_sec_answer_calls = 0;
-                $AVG_ANSWERagent_non_pause_sec = 0;
             }
 
 
@@ -564,10 +505,6 @@ switch ($action) {
         }
         echo json_encode($js);
         break;
-
-
-
-
 
     case 'get_agents':// Inbound agentes,campaign,status
         $js = array();
@@ -635,11 +572,6 @@ union all
         }
 //muda as horas para ver os resultados desde "agora" ate a altura especificada aquando da criação do dataset
 
-
-
-
-
-
         $query = mysql_query($query) or die(mysql_error());
         $tma_call = 0;
         while ($row = mysql_fetch_assoc($query)) {
@@ -650,12 +582,6 @@ union all
 
             $js[] = array(user => $row1["full_name"], tma => $tma_call, count_feedbacks => $row["total_feedback"]);
         }
-
-
-
-
-
-
         echo json_encode($js);
         break;
 
@@ -673,8 +599,6 @@ union all
         }
         echo json_encode($js);
         break;
-
-
     case 'user':
         $query = "SELECT vicidial_users.user as user, vicidial_users.full_name as full_name FROM `vicidial_inbound_group_agents` inner join vicidial_users on vicidial_inbound_group_agents.user=vicidial_users.user where vicidial_inbound_group_agents.user is not null and vicidial_inbound_group_agents.user!='' and vicidial_users.active='y' group by vicidial_inbound_group_agents.user";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -700,9 +624,7 @@ union all
         }
         echo json_encode($js);
         break;
-
-
-
+                
     case 'status_venda':
         $query = "(SELECT status ,status_name  FROM vicidial_campaign_statuses where visible='1' group by status)
 union all
