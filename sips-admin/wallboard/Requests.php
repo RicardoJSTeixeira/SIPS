@@ -329,7 +329,7 @@ switch ($action) {
 
 
 
-    case '2'://real time - total chamadas inbound/outbound
+    case '2'://Barras- total chamadas inbound/outbound
 
 
 
@@ -598,20 +598,20 @@ switch ($action) {
         $rounded_time = date("Y-m-d H:i:s", $rounded_time);
 
         if ($opcao === "1") {
-            $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_log where campaign_id='$campaign_id' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
+            $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_log where campaign_id='$campaign_id' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and user not in('VDCL') and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
             $query = str_replace("now()", "'" . $rounded_time . "'", $query);
             $query = str_replace("time_span", $tempo, $query);
         }
         if ($opcao === "2") {
             switch ($mode) {
                 case 1:
-                    $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_closer_log where user_group='$user_group' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
+                    $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_closer_log where user_group='$user_group' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and user not in('VDAD') and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
                     $query = str_replace("now()", "'" . $rounded_time . "'", $query);
                     $query = str_replace("time_span", $tempo, $query);
                     $opcao = 1;
                     break;
                 case 2:
-                    $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_log where user_group='$user_group' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
+                    $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_log where user_group='$user_group' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and user not in('VDCL') and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
                     $query = str_replace("now()", "'" . $rounded_time . "'", $query);
                     $query = str_replace("time_span", $tempo, $query);
                     $opcao = 1;
@@ -619,9 +619,9 @@ switch ($action) {
                 case 3:
 
                     $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from
-((select user,length_in_sec,status from vicidial_closer_log where user_group='$user_group' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null)
+((select user,length_in_sec,status from vicidial_closer_log where user_group='$user_group' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and user not in('VDAD') and ($status) and lead_id is not null)
 union all
-(select user,length_in_sec,status from vicidial_log where user_group='$user_group' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null)) as inoutbound group by user order by total_feedback desc limit $limit";
+(select user,length_in_sec,status from vicidial_log where user_group='$user_group' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and user not in('VDCL') and ($status) and lead_id is not null)) as inoutbound group by user order by total_feedback desc limit $limit";
                     $query = str_replace("now()", "'" . $rounded_time . "'", $query);
                     $query = str_replace("time_span", $tempo, $query);
 
@@ -629,7 +629,7 @@ union all
             }
         }
         if ($opcao === "3") {
-            $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_closer_log where campaign_id= '$linha_inbound' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
+            $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_closer_log where campaign_id= '$linha_inbound' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and user not in('VDCL') and ($status) and lead_id is not null group by user order by total_feedback desc limit $limit";
             $query = str_replace("now()", "'" . $rounded_time . "'", $query);
             $query = str_replace("time_span", $tempo, $query);
         }
@@ -643,7 +643,7 @@ union all
         $query = mysql_query($query) or die(mysql_error());
         $tma_call = 0;
         while ($row = mysql_fetch_assoc($query)) {
-            $query1 = "SELECT full_name FROM vicidial_users WHERE user='$row[user]'";
+            $query1 = "SELECT ifnull(full_name,'não definido') as full_name FROM vicidial_users WHERE user='$row[user]'";
             $query1 = mysql_query($query1) or die(mysql_error());
             $row1 = mysql_fetch_assoc($query1);
             $tma_call = ($row["talk_sec"]);
