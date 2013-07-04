@@ -60,6 +60,7 @@ if( ($("#tbl-feeds tr").length == 0 && Flag == "ALL") || Flag == "DISABLED" || F
 						<tr id='"+json.db_id[index]+"' style='height:22px;'>\n\
 							"+DBCheckbox+"\n\
 							<td class='css-td-list-label'><label id=''>"+json.db_name[index]+"</label></td>\n\
+							<td class='css-td-list-label'>"+json.db_create[index]+"</td>\n\
 							<td class='css-td-list-icon'><img class='css-img-list-icon pointer add-more-leads' title='Nº de Leads' src='icons/mono_db_16.png'></td>\n\
 							<td class='css-td-list-text'>"+json.db_leads[index]+"</td>\n\
 							<td class='css-td-list-filler'></td>\n\
@@ -84,6 +85,7 @@ if( ($("#tbl-feeds tr").length == 0 && Flag == "ALL") || Flag == "DISABLED" || F
 						<tr id='"+json.db_id_manual+"' style='height:22px;'>\n\
 							<td class='css-td-list-check odd-even-ignore'><input disabled='disabled' checked='checked' class='db-checkbox-manual' type='checkbox' id=''></td>\n\
 							<td class='css-td-list-label'><label id=''><b>Chamadas Manuais da Campanha</b></label></td>\n\
+							<td class='css-td-list-label'></td>\n\
 							<td class='css-td-list-icon'><img class='css-img-list-icon' title='Nº de Leads' src='icons/mono_db_16.png'></td>\n\
 							<td class='css-td-list-text'>"+json.db_leads_manual+"</td>\n\
 							<td class='css-td-list-filler'></td>\n\

@@ -12,8 +12,9 @@ function DBListBuilder($CampaignID, $Flag, $link)
 	
 	if($Flag == "ALL" || $Flag == "REFRESH")
 	{
-		$result = mysql_query("SELECT list_id, list_name, list_description, active FROM vicidial_lists WHERE campaign_id = '$CampaignID' AND visible = 1") or die(mysql_error());
-		while($row = mysql_fetch_assoc($result))
+		$result = mysql_query("SELECT list_id, list_name, list_description, event_date create_date, active FROM vicidial_lists a Left Join (SELECT event_date,`record_id`  FROM `vicidial_admin_log` WHERE `event_type` LIKE 'ADD' AND event_section like 'LISTS') b ON a.list_id=record_id WHERE campaign_id = '$CampaignID' AND visible = 1") or die(mysql_error());
+		$js["bla"]="SELECT list_id, list_name, list_description, event_date create_date, active FROM vicidial_lists a Left Join (SELECT event_date,`record_id`  FROM `vicidial_admin_log` WHERE `event_type` LIKE 'ADD' AND event_section like 'LISTS') b ON a.list_id=record_id WHERE campaign_id = '$CampaignID' AND visible = 1";
+                while($row = mysql_fetch_assoc($result))
 		{
 			if(preg_match("/998/", $row['list_id']))
 			{
@@ -28,6 +29,7 @@ function DBListBuilder($CampaignID, $Flag, $link)
 				$js['db_id'][] = $row['list_id'];
 				$js['db_name'][] = $row['list_name'];
 				$js['db_leads'][] = $row['list_description'];
+                                $js['db_create'][] = date("t-m-o",strtotime($row['create_date']));
 				$js['db_active'][] = $row['active'];
 			}
 		}
@@ -37,12 +39,13 @@ function DBListBuilder($CampaignID, $Flag, $link)
 
 	if($Flag == "DISABLED")
 	{
-		$result = mysql_query("SELECT list_id, list_name, list_description, active FROM vicidial_lists WHERE campaign_id = '$CampaignID' AND visible = 0") or die(mysql_error());
+		$result = mysql_query("SELECT list_id, list_name, list_description, event_date create_date, active FROM vicidial_lists a Left Join (SELECT event_date,`record_id`  FROM `vicidial_admin_log` WHERE `event_type` LIKE 'ADD') b ON a.list_id=record_id WHERE campaign_id = '$CampaignID' AND visible = 0") or die(mysql_error());
 		while($row = mysql_fetch_assoc($result))
 		{
 			$js['db_id'][] = $row['list_id'];
 			$js['db_name'][] = $row['list_name'];
 			$js['db_leads'][] = $row['list_description'];
+			$js['db_create'][] = date("t-m-o",strtotime($row['create_date']));
 			$js['db_active'][] = $row['active'];
 		}
 		echo json_encode($js);
