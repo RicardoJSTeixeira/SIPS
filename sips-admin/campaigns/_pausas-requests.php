@@ -135,6 +135,7 @@ function GetPauseEditCampaigns($AllowedCampaigns, $PauseID, $link)
 		$js['c_name'][] = $row['campaign_name'];
 		$js['active'][] = $row['active'];
 	}
+        $js['query']=$query;
 	echo json_encode($js);
 	
 }

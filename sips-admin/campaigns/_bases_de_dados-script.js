@@ -60,14 +60,15 @@ if( ($("#tbl-feeds tr").length == 0 && Flag == "ALL") || Flag == "DISABLED" || F
 						<tr id='"+json.db_id[index]+"' style='height:22px;'>\n\
 							"+DBCheckbox+"\n\
 							<td class='css-td-list-label'><label id=''>"+json.db_name[index]+"</label></td>\n\
+							<td class='css-td-list-label'>"+json.db_create[index]+"</td>\n\
 							<td class='css-td-list-icon'><img class='css-img-list-icon pointer add-more-leads' title='Nº de Leads' src='icons/mono_db_16.png'></td>\n\
 							<td class='css-td-list-text'>"+json.db_leads[index]+"</td>\n\
 							<td class='css-td-list-filler'></td>\n\
 							"+DBTrash+"\n\
 							"+DBConfig+"\n\
 							</tr>\n\
-						")
-                })
+						");
+                });
 				
 			}	
 				
@@ -84,6 +85,7 @@ if( ($("#tbl-feeds tr").length == 0 && Flag == "ALL") || Flag == "DISABLED" || F
 						<tr id='"+json.db_id_manual+"' style='height:22px;'>\n\
 							<td class='css-td-list-check odd-even-ignore'><input disabled='disabled' checked='checked' class='db-checkbox-manual' type='checkbox' id=''></td>\n\
 							<td class='css-td-list-label'><label id=''><b>Chamadas Manuais da Campanha</b></label></td>\n\
+							<td class='css-td-list-label'></td>\n\
 							<td class='css-td-list-icon'><img class='css-img-list-icon' title='Nº de Leads' src='icons/mono_db_16.png'></td>\n\
 							<td class='css-td-list-text'>"+json.db_leads_manual+"</td>\n\
 							<td class='css-td-list-filler'></td>\n\
@@ -180,7 +182,6 @@ function DBElemInit()
 function DBSwitch()
 {
 	var Active;
-	console.log($(this).parent().hasClass("checked"))
 	if($(this).parent().hasClass("checked")) Active = "Y"; else Active = "N";
 	$.ajax({
         type: "POST",
@@ -227,7 +228,7 @@ function selectAllDBs()
 		
 		$("#btn-select-all-dbs").removeClass("ui-state-disabled").removeAttr("disabled");
 		$("#btn-select-no-dbs").removeClass("ui-state-disabled").removeAttr("disabled");
-		$("#span-dbs-active-inactive").html("inactivas")
+		$("#span-dbs-active-inactive").html("inactivas");
 
 	}
 }
@@ -235,7 +236,7 @@ function selectAllDBs()
 function DeactivateDB()
 {
 	var that = $(this);
-	$.post("_bases_de_dados-requests.php", {action: "DeactivateDB", DBID: $(this).closest("tr").attr("id")}, function(){ $("tr[id="+that.closest("tr").attr("id")+"]").remove(); OddEvenRefresh("", "tbl-dbs"); })
+	$.post("_bases_de_dados-requests.php", {action: "DeactivateDB", DBID: $(this).closest("tr").prop("id")}, function(){ $("tr[id="+that.closest("tr").prop("id")+"]").remove(); OddEvenRefresh("", "tbl-dbs"); });
 }
 
 function ActivateDB()
@@ -244,7 +245,7 @@ function ActivateDB()
 	$.post("_bases_de_dados-requests.php", {action: "ActivateDB", DBID: $(this).closest("tr").attr("id")}, function(){ 
 		$("tr[id="+that.closest("tr").attr("id")+"]").remove(); 
 		OddEvenRefresh("", "tbl-dbs"); 
-	})
+	});
 }
 
 // edit DB
@@ -268,7 +269,7 @@ function TableEditDBInit()
             aoData.push( 
                         { "name": "action", "value": "GetTableEditDB" },
                         { "name": "DBID", "value": editedDB }
-                       )
+                       );
         },
         "aoColumnDefs": [
                       /*  { "bSearchable": false, "bVisible": false, "aTargets": [ 4 ] },
@@ -305,9 +306,8 @@ function DialogDBEditOnOpen()
 		$.each(json.campaign_id, function(index, value)
 		{
 			if(json.selected[index].length > 1){ editedDBCampaign = json.campaign_id[index]; }
-			console.log(editedDBCampaign);
 			$("#sel-dbs-change-campaign").append("<option value='"+json.campaign_id[index]+"' "+json.selected[index]+">"+json.campaign_name[index]+"</option>")
-		})
+		});
 		if(tableEditDB === undefined)
 			{
 				TableEditDBInit();
@@ -318,7 +318,7 @@ function DialogDBEditOnOpen()
 				tableEditDB.fnReloadAjax();
 				$("#div-dbs-state-container").fadeIn(200);
 			}		 
-	}, "json")
+	}, "json");
 
 	
 }
@@ -437,7 +437,7 @@ function NewDB()
 		
 		DBListBuilder("REFRESH");
 		
-		}, "json")
+		}, "json");
 		
 	}
 
@@ -566,18 +566,18 @@ function DBMatchFields()
 	
 			$("#table-db-wizard-match-fields").append("<tr><td style='width:40%'>"+json.headers[index]+"</td><td class='td-db-wizard-middle-graf' style='width:20%; text-align:center'><img class='mono-icon' style='float:left' src='icons/mono_right_tag_16.png'></td><td style='width:40%'><select id='"+json.headers[index]+"' style='float:right; margin: 6px 0px; width:250px; margin-right:8px;' class='sel-db-wizard-fields'></select></td></tr>")
 		
-		})
+		});
 		
 		$.each(json.name, function(index, value){
 		
 			DBFieldNames.push(json.name[index]);
 			DBFieldDisplayNames.push(json.display_name[index]);
 			
-		})
+		});
 		
-		DBSelBuilder()
+		DBSelBuilder();
 		
-	}, "json")
+	}, "json");
 }
 
 function DBSelBuilder()
@@ -585,22 +585,22 @@ function DBSelBuilder()
 	$(".sel-db-wizard-fields").empty();
 	$(".sel-db-wizard-fields").append("<option value='---'>---</option>")
 	$.each(DBFieldNames, function(index, value){
-		$(".sel-db-wizard-fields").append("<option value='"+DBFieldNames[index]+"'>"+DBFieldDisplayNames[index]+"</option>")
-	})
+		$(".sel-db-wizard-fields").append("<option value='"+DBFieldNames[index]+"'>"+DBFieldDisplayNames[index]+"</option>");
+	});
 }
 
 function DBWizardFieldChange()
 {
 	
 	
-	$("#td-db-wizard-match-fields-error").html("")
-	$("#td-db-wizard-match-fields-error-icon").html("") 
+	$("#td-db-wizard-match-fields-error").html("");
+	$("#td-db-wizard-match-fields-error-icon").html("");
 	
 	var clickedSelect = $(this).attr("id");
-	console.log(clickedSelect)
+	console.log(clickedSelect);
 	
-	var chosenField = $(this).attr("value")
-	console.log(chosenField)
+	var chosenField = $(this).attr("value");
+	console.log(chosenField);
 
 	$.each($(".sel-db-wizard-fields"), function(index, value){
 
@@ -691,11 +691,11 @@ function DBWizardMatchFields()
 		arrayMatchFields.push($(this).attr("id"));
 		arrayListFields.push($(this)[0].selectedOptions[0].value)
 	
-		})
+		});
 
-		console.log(arrayMatchFields)
-		console.log(arrayListFields)
-		console.log(ConvertedFile)
+		console.log(arrayMatchFields);
+		console.log(arrayListFields);
+		console.log(ConvertedFile);
 		
 		
 		
@@ -769,7 +769,7 @@ function DBWizardMatchFields()
 
 		
 
-		}, "json") 
+		}, "json");
 		
 	}
 	
@@ -797,7 +797,7 @@ function DBWizardDenyLeads()
 	DBWizardRestart();
 	
 	
-	}, "json")
+	}, "json");
 }
 
 $("body")
@@ -818,4 +818,4 @@ $("body")
 .on("input focus", "#input-new-db", InputNewDBClearError)
 .on("click", "#btn-db-wizard-deny-leads", DBWizardDenyLeads)
 //.on("click", "#btn-db-wizard-view-details", {dialog: "#dialog-db-wizard-view-details"}, DialogOpen)
-.on("click", ".add-more-leads", {dialog: "#dialog-db-wizard", dbwizardedit: true}, DialogOpen)
+.on("click", ".add-more-leads", {dialog: "#dialog-db-wizard", dbwizardedit: true}, DialogOpen);
