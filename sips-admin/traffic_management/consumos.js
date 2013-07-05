@@ -1,218 +1,26 @@
 
-<?php
-require("../../ini/dbconnect.php");
-foreach ($_POST as $key => $value) {
-    ${$key} = $value;
-}
-foreach ($_GET as $key => $value) {
-    ${$key} = $value;
-}
-?>
+            /*
+             sip.conf
+            iax.conf
+            
+        
+            
+            vicidial_carrier_log com vicidial log
+             
+             
+             filtrar por campanha ou grupo de user
+            
+            
+            /oni/red1/red2/
+            fixo
+            vodafone
+            tmn
+             
+             */
 
 
 
 
-<!DOCTYPE html>
-<html>
-    <head>
-        <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
-        <title>SIPS</title>
-        <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
-        <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.css" />
-        <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
-        <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
-        <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
-        <link type="text/css" rel="stylesheet" href="/jquery-ui-1.10.2.custom/css/flick/jquery-ui-1.10.2.custom.min.css" />
-        <script src="/jquery-ui-1.10.2.custom/js/jquery-1.9.1.js"></script>
-        <script src="/jquery-ui-1.10.2.custom/js/jquery-ui-1.10.2.custom.js"></script>
-        <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>
-        <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
-        <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
-
-        <style>
-            .table td{
-                text-align: center !important; 
-                vertical-align:middle !important;} 
-            .formRow .formRight
-            {
-                width:70%;
-            }
-        </style>
-    </head>
-    <body>
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <div class="row-fluid">
-            <!--Style forms of validation  Start-->
-            <div class="grid span4"  >
-                <div class="grid-title">
-                    <div class="pull-left">Critérios de pesquisa</div>
-                    <div class="pull-right"> <button id="button1" class="btn btn-primary btn-large">Procurar</button></div>
-                    <div class="clear"></div>
-                </div>
-                <div class="grid-content">
-
-
-                    <h3> <label class="control-label span">Calendário</label></h3>
-                    <div class="formRow">
-                        <label>Data de Inicio</label>
-                        <div class="formRight">
-                            <input type="text" id="from" name="from" />
-                        </div>
-                    </div>
-
-
-                    <div class="formRow">
-                        <label> Data final </label>
-                        <div class="formRight">
-                            <input type="text" id="to" name="to"/>
-                        </div>
-                    </div>
-
-
-
-
-
-
-
-
-
-
-                    <h3> <label class="control-label span">Filtros</label></h3>
-                    <div class="formRow">
-                        <label>Canal</label>
-                        <div class="formRight">
-                            <select id="Mv2" class="chzn-select chosen_select" style="width:80%;" ><option value =1>Todos</option></select>
-                        </div>
-                    </div>
-
-                    <div class="formRow">
-                        <label> Campanha</label>
-                        <div class="formRight">
-                            <select id="Mv3" class="chzn-select chosen_select" style="width:80%;" ><option value =1>Todos</option></select>
-                        </div>
-                    </div>
-
-                    <div class="formRow">
-                        <label> Operadora</label>
-                        <div class="formRight">
-                            <select  id="Mv4" class="chzn-select chosen_select" style="width:80%;" >
-                                <option value =1>Todos</option> 
-                                <option value =0>Outros</option> 
-                                <option value =21>Fixo</option> 
-                                <option value =91>Vodafone</option> 
-                                <option value =92>Tmn</option> 
-                                <option value =93>Optimus</option> 
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="formRow">
-                        <label>Grupo de User</label>
-                        <div class="formRight">
-                            <select  id="Mv5" class="chzn-select chosen_select" style="width:80%;" >
-                                <option value =1>Todos</option> 
-
-                            </select>
-                        </div>
-                    </div>
-
-
-
-
-
-
-
-                </div>
-            </div>
-
-            <!--Style forms of validation  END-->
-
-            <!--Form help text  Start-->
-
-
-            <div class="grid Search span7 "><!-----------------------------Tabela de dados-->
-                <div class="grid-title">
-                    <div class="pull-left ">Tabela de Dados</div>
-                    <div class="pull-right   ">
-                        <select id="timeScale">
-                            <option value =1>Dias</option>
-                            <option value =2>Horas</option>
-                            <option value =3 selected>Minutos</option>
-                        </select>
-                    </div>
-                </div>
-                <table  class="table table-mod">
-                    <thead>
-                        <tr>
-                            <th>Canal</th>
-                            <th>Tráfego</th>
-                        </tr>
-                    </thead>
-                    <tbody id="Tabela_Trafego"> </tbody>
-                </table>
-            </div><!--Tabela de dados-------------------------------------------------------> 
-
-
-
-
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <!--Ajax loading div -->
-        <div id="Ajax_Loader"   style="display: none;    width:70px;    height: 70px;    position: fixed;    top: 46%;    left: 39%;    background:url(/images/icons/big-loader.gif) no-repeat center #fff;    text-align:center;    padding:10px;     margin-left: -50px;    margin-top: -50px;    z-index:2;    overflow: auto;"></div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <script>//SCRIPTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTVTVVTVTVTVT
 
 
             $(document).ready(function() {
@@ -367,30 +175,21 @@ foreach ($_GET as $key => $value) {
                     var numhours = Math.floor((seconds % 86400) / 3600);
                     var numminutes = Math.floor(((seconds % 86400) % 3600) / 60);
                     var numseconds = ((seconds % 86400) % 3600) % 60;
-
                     return numdays + " dias " + numhours + " horas " + numminutes + " minutos " + numseconds + " segundos";
                 }
 
 
                 if ($("#timeScale").val() === "2") {
-
                     var numhours = Math.floor((seconds) / 3600);
                     var numminutes = Math.floor(((seconds) % 3600) / 60);
                     var numseconds = ((seconds) % 3600) % 60;
-
                     return numhours + " horas " + numminutes + " minutos " + numseconds + " segundos";
                 }
-
                 if ($("#timeScale").val() === "3") {
-
                     var numminutes = Math.floor(((seconds)) / 60);
                     var numseconds = ((seconds)) % 60;
-
                     return numminutes + " minutos " + numseconds + " segundos";
                 }
-
-
-
             }
 
 
@@ -515,7 +314,3 @@ foreach ($_GET as $key => $value) {
                 }
             });
             //--------------------------------------̣̣̣̣̣̣̣̣̣···························································.
-
-        </script>
-    </body>
-</html>
