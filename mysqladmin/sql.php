@@ -67,19 +67,6 @@ if (isset($_REQUEST['printview'])) {
     $GLOBALS['printview'] = $_REQUEST['printview'];
 }
 
-if (isset($_SESSION['profiling'])) {
-    $response = PMA_Response::getInstance();
-    $header   = $response->getHeader();
-    $scripts  = $header->getScripts();
-    /* < IE 9 doesn't support canvas natively */
-    if (PMA_USR_BROWSER_AGENT == 'IE' && PMA_USR_BROWSER_VER < 9) {
-        $scripts->addFile('canvg/flashcanvas.js');
-    }
-    $scripts->addFile('jqplot/jquery.jqplot.js');
-    $scripts->addFile('jqplot/plugins/jqplot.pieRenderer.js');
-    $scripts->addFile('canvg/canvg.js');
-}
-
 if (!isset($_SESSION['is_multi_query'])) {
     $_SESSION['is_multi_query'] = false;
 }
@@ -786,7 +773,11 @@ if (isset($GLOBALS['show_as_php']) || ! empty($GLOBALS['validatequery'])) {
         ) {
             // "j u s t   b r o w s i n g"
             $justBrowsing = true;
-            $unlim_num_rows = PMA_Table::countRecords($db, $table);
+            $unlim_num_rows = PMA_Table::countRecords(
+                $db, 
+                $table, 
+                $force_exact = true
+            );
 
         } else { // n o t   " j u s t   b r o w s i n g "
 
@@ -1252,7 +1243,7 @@ if ((0 == $num_rows && 0 == $unlim_num_rows) || $is_affected) {
         && trim($analyzed_sql[0]['select_expr_clause']) == '*'
         && PMA_Table::isUpdatableView($db, $table);
     $editable = $resultSetContainsUniqueKey || $updatableView;
-    if (PMA_is_system_schema($db) || ! $editable) {
+    if (!empty($table) && (PMA_is_system_schema($db) || !$editable)) {
         $disp_mode = 'nnnn110111';
         $msg = PMA_message::notice(
             __(
