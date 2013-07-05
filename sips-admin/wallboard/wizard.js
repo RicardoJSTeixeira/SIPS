@@ -1,4 +1,4 @@
-//optimizar o crescimento de letra da tabela de top
+//passar o crescimento de letra para cada wallboard
 
 
 var wbes = [];
@@ -836,7 +836,7 @@ function update_wbe()
                               maxHeight: 480,
                               maxWidth: 880,
                               minHeight: 230,
-                              minWidth: 215, stop: check_save});
+                              minWidth: 240, stop: check_save});
                         break;
                   default://Linhas e Barras
                         painel.resizable({
@@ -844,7 +844,7 @@ function update_wbe()
                               maxHeight: 480,
                               maxWidth: 880,
                               minHeight: 220,
-                              minWidth: 230, stop: check_save});
+                              minWidth: 262, stop: check_save});
                         break;
             }
             i++;
