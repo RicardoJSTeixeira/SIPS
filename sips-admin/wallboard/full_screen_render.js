@@ -31,7 +31,6 @@ $(document).ready(function() {
                   $("#MainLayout")
                           .append($("<div>").addClass("PanelWB ui-widget-content")
                           .data("letter_size", "18")
-
                           .css("position", "absolute")
                           .css("left", left + "px")
                           .css("top", top + "px")
@@ -39,43 +38,14 @@ $(document).ready(function() {
                           .css("width", width + "px")
                           .attr("id", wbes[i][0] + "Main")
                           .draggable({containment: '#MainLayout'})
-
                           .append($("<div>").addClass("grid-title")
-
-                          .append($("<div>").addClass("pull-left")
-                          .text(wbes[i][2]))
-
-
-
+                          .append($("<div>").addClass("pull-left").text(wbes[i][2]))
                           .append($("<div>").addClass("pull-right-letter_button ").attr("data-t", "tooltip").attr("title", "Alteração do tamanho de letra")
-                          .append($("<a>")
-                          .addClass("btn btn-mini btn-info icon-text-height")
-                          .attr("id", "letter_size_popover" + wbes[i][0])
-                          .attr("data-toggle", "popover")
-
-                          .attr("data-content", "<div class='btn-group'><button class='btn btn-primary icon-plus increase_em'></button><button  class='btn icon-minus decrease_em'></button></div>")
-                          ))
-
-
-
-
-                          .append($("<div>").addClass("pull-right")
-                          .attr("id", "right_title" + wbes[i][0]))
-
-
-
-
-
-
-
-
-
-                          )
+                          .append($("<a>").addClass("btn btn-mini btn-info icon-text-height").attr("id", "letter_size_popover" + wbes[i][0]).attr("data-toggle", "popover")
+                          .attr("data-content", "<div class='btn-group'><button class='btn btn-primary icon-plus increase_em'></button><button  class='btn icon-minus decrease_em'></button></div>")))
+                          .append($("<div>").addClass("pull-right").attr("id", "right_title" + wbes[i][0])))
                           .append($("<div>").addClass("grid-content").attr("id", wbes[i][0] + "WBEGD")
                           .append($("<div>").attr("id", wbes[i][0] + "WBE").css("width", (width - 20) + "px").css("height", (height - 75) + "px").css("padding", "0px").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbes[i][7] / 1000) + " seg.")))
-
-
-
                           );
                   if (wbes[i][8] === "1")//update
                   {
@@ -180,8 +150,6 @@ function plot_bar(data)
                   var label = "não definido";
                   var sum = 0;
                   $.each(data, function(index, value) {
-
-
                         if (wbe[9][index].chamadas === "0")
                               label = wbe[9][index].param1 + " por " + wbe[9][index].param2;
                         else
@@ -189,7 +157,6 @@ function plot_bar(data)
                         sum = +data[index];
                         if (sum <= 0)
                         {
-
                               if (wbe[9][index].hasData)
                               {
                                     $.jGrowl("A barra de " + label + " não apresenta resultados", {sticky: true});
@@ -205,8 +172,6 @@ function plot_bar(data)
                         }
                         else
                         {
-
-
                               wbe[9][index].hasData = true;
                               ticksA.push([i, +data[index]]);
                               data2.push([i, +data[index]]);
@@ -285,7 +250,6 @@ function plot_update(data)
                                           dates.push(temp);
                                           result.push([new Date(temp).getTime(), obj[prop][k].leads]);
                                     }
-
                                     var label_text = "";
                                     if (verifier > 0) {
                                           if (wbe[9][aux].chamadas === "0") {
@@ -311,9 +275,7 @@ function plot_update(data)
                                           }
                                           verifier = 0;
                                     }
-
                               }
-
                               aux++;
                         }
                   }
@@ -394,7 +356,6 @@ function plot_pie(data) {
       get_values_pie();
       function get_values_pie()
       {
-
             var data1 = [];
             $.post("Requests.php",
                     {action: "3", status: feedbacks_string, opcao: wbe[9][0].codigo_query, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campaign_id, user_group: wbe[9][0].user_group, linha_inbound: wbe[9][0].linha_inbound, user: wbe[9][0].user},
@@ -413,7 +374,7 @@ function plot_pie(data) {
                         data1.push({label: ((this.count) + " -- " + this.status_name), data: +this.count});
                         i++;
                   });
-                  if (i == 0)//se so houver 1 resultado ele n faz render, entao adiciona-se 1 elemento infimo
+                  if (i === 0)//se so houver 1 resultado ele n faz render, entao adiciona-se 1 elemento infimo
                         data1.push({label: ("zero"), data: 0.001});
                   $.plot(painel, data1, {
                         series: {
@@ -462,13 +423,11 @@ function   inbound_wallboard(data)
       panel.empty();
       panel.append($("<div>").css("height", "98%").css("font-size", font_size + "px").css("background-color", "rgb(210, 215, 215)").css("padding-left", "1%").css("padding-right", "1%").css("padding-top", "1%").addClass("legend_inbound").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbe[7] / 1000) + " seg.")
 
-
               .append($("<div>").append($("<label>").addClass("inbound_title").text(wbe[9][0].param1)))//titulo do inbound
               .append($("<table>").css("height", "80%").css("width", "100%")
 
               //top                    
               .append($("<tr>")
-
               .append($("<td>")
               .append($("<div>").addClass(" inbound_grid_div")
               .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("Chamadas Atendidas")))
@@ -507,7 +466,6 @@ function   inbound_wallboard(data)
 
 
               .append($("<tr>")
-
               .append($("<td>")
               .append($("<div>").addClass(" inbound_grid_div")
               .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("SLA2").attr("id", "sla2_title" + id)))

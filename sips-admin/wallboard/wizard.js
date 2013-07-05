@@ -714,8 +714,7 @@ function update_wbe()
                                 .text(" " + wbes[i][2] + " de " + wbes[i][9][0].param1))
                                 .append($("<div>").addClass("pull-right")
                                 .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
-                                .append($("<i>").addClass("icon-remove")))
-                                ))
+                                .append($("<i>").addClass("icon-remove")))                                ))
                                 .append($("<div>").addClass("grid-content").attr("id", "grid_content")));
                         break;
                   case "5"://dataTop
@@ -730,14 +729,10 @@ function update_wbe()
                                 .text(" " + wbes[i][2]))
                                 .append($("<div>").addClass("pull-right")
                                 .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
-                                .append($("<i>").addClass("icon-remove")))
-                                ))
-                                .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0]))
-                                );
+                                .append($("<i>").addClass("icon-remove")))                                ))
+                                .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0]))                                );
                         $("#grid_content" + wbes[i][0]).append($("<div>").addClass("span12")
                                 .text("Filtro-> " + wbes[i][9][0].param1))
-
-
                                 .append($("<div>").addClass("span12")
                                 .text("Nome da coluna-> " + wbes[i][9][0].custom_colum_name));
                         break;
@@ -753,14 +748,10 @@ function update_wbe()
                                 .text(" " + wbes[i][2]))
                                 .append($("<div>").addClass("pull-right")
                                 .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
-                                .append($("<i>").addClass("icon-remove")))
-                                ))
-                                .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0])
-                                ));
+                                .append($("<i>").addClass("icon-remove")))                                ))
+                                .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0])                                ));
                         $("#grid_content" + wbes[i][0]).append($("<div>").addClass("span12")
                                 .text("Filtro-> " + wbes[i][9][0].param1))
-
-
                                 .append($("<div>").addClass("span12")
                                 .text("Nome da coluna-> " + wbes[i][9][0].param2));
                         break;
@@ -781,14 +772,13 @@ function update_wbe()
                                 .append($("<button>").addClass("btn icon-alone btn-info add_dataset_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Adicionar dataset")
                                 .append($("<i>").addClass("icon-plus-sign")))
                                 .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
-                                .append($("<i>").addClass("icon-remove")))
-                                ))
+                                .append($("<i>").addClass("icon-remove")))                               ))
                                 .append($("<div>").addClass("grid-content").attr("id", "grid_content")));
-                        var banana = $("#" + wbes[i][0] + "WBE #grid_content");
+                        var grid_content = $("#" + wbes[i][0] + "WBE #grid_content");
                         var a = 0;
                         $.each(wbes[i][9], function(index, value) {
 
-                              banana.append($("<div>")
+                              grid_content.append($("<div>")
                                       .append($("<div>").addClass("btn-group")
                                       .append($("<label>").addClass("btn btn-mini dropdown-toggle icon-cog").attr("data-toggle", "dropdown").text(" " + wbes[i][9][a].opcao_query).append($("<span>").addClass("caret")))
                                       .append($("<div>").addClass("dropdown-menu")
@@ -804,11 +794,6 @@ function update_wbe()
                         });
                         break;
             }
-
-
-
-
-
             var painel = $("#MainLayout  #" + wbes[i][0] + "WBE");
             painel.draggable({containment: "#MainLayout", stop: check_save});
             switch ((wbes[i][8]))
