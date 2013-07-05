@@ -1,3 +1,5 @@
+//optimizar o crescimento de letra da tabela de top
+
 
 var wbes = [];
 var layouts = [];
@@ -158,6 +160,8 @@ function radio_checks()
 
 }
 
+
+
 $("#resultado_dataset_1").change(function()
 {
       radio_checks();
@@ -183,8 +187,10 @@ $(function() {
             sql_basic('delete_WBE', 0, id);
       });
       $(document).on("click", ".add_dataset_button", function(e) {
+           edit_dataset = false;
             //reset dataset   
             $("#resultado_dataset_1").attr("checked", "checked");
+            radio_checks();
             $("#linhas_serie").val(1);
             $("#linhas_filtro").val(1);
             $("#chamadas").val(1);
@@ -220,7 +226,6 @@ $(function() {
                   if (wbes[id_wallboard][9][a].id == id_dataset)
                   {
 //Inbound,Outbound,Blended
-
                         if (wbes[id_wallboard][9][a].mode == "1") {
 
                               $("#resultado_dataset_1").attr("checked", "checked");
@@ -317,21 +322,17 @@ $(function() {
             $('#dataTable_name').val('Tabela Top');
             $('#dataTable_status_select').val('').trigger('liszt:updated');
       }); //GRAFICO DE TOP
-
       $(document).on("click", "#pie_button", function(e) {
             $('#pie_name').val('Gráfico de Tarte');
             $('#pie_feedback_colum_name').val('Feedbacks');
             $('#pie_status_select').val('').trigger('liszt:updated');
       }); //GRAFICO DE PIES
-
       $(document).on("click", "#linhas_button", function(e) {//GRÀFICO DE LINHAS
             $('#graph_name').val('Gráfico de Linhas');
       }); //GRAFICO DE LINHAS
-
       $(document).on("click", "#barras_button", function(e) {//GRAFICO DE BARRAS
             $('#graph_name').val('Gráfico de Barras');
       }); //GRAFICO DE BARRAS
-
       $(document).on("click", "#save_button_layout", function(e) {//ALTERAR O NOME DA LAYOUT
 
             if ($("#Layout_Input_name").val() == "")
@@ -733,11 +734,11 @@ function update_wbe()
                                 ))
                                 .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0]))
                                 );
-                        $("#grid_content" + wbes[i][0]).append($("<div>").addClass("span6")
+                        $("#grid_content" + wbes[i][0]).append($("<div>").addClass("span12")
                                 .text("Filtro-> " + wbes[i][9][0].param1))
 
 
-                                .append($("<div>").addClass("span6")
+                                .append($("<div>").addClass("span12")
                                 .text("Nome da coluna-> " + wbes[i][9][0].custom_colum_name));
                         break;
                   case "3"://Pie
@@ -756,11 +757,11 @@ function update_wbe()
                                 ))
                                 .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0])
                                 ));
-                        $("#grid_content" + wbes[i][0]).append($("<div>").addClass("span6")
+                        $("#grid_content" + wbes[i][0]).append($("<div>").addClass("span12")
                                 .text("Filtro-> " + wbes[i][9][0].param1))
 
 
-                                .append($("<div>").addClass("span6")
+                                .append($("<div>").addClass("span12")
                                 .text("Nome da coluna-> " + wbes[i][9][0].param2));
                         break;
                   default:
@@ -934,7 +935,7 @@ function sql_basic(opcao, id_layout, id_wbe)
             {
                   load_dados("layout", 0);
                   idLayout = $("#LayoutSelector").val();
-                  layout_change();
+           
             }
 
             if (opcao === "remove_Layout")

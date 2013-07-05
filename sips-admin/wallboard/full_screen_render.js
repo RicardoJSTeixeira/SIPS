@@ -65,7 +65,7 @@ $(document).ready(function() {
                   var height = (wbes[i][6] * temp_window.height()) / windheight;
                   $("#MainLayout")
                           .append($("<div>").addClass("PanelWB ui-widget-content letter_size_all")
-                          .attr("letter_size", "15")
+                          .attr("letter_size", "18")
                           .css("position", "absolute")
                           .css("left", left + "px")
                           .css("top", top + "px")
@@ -231,7 +231,7 @@ function plot_bar(data)
                                       {
                                             label: label,
                                             data: data2,
-                                            bars: {show: true, barWidth: 0.8, align: "center"},
+                                            bars: {show: true, barWidth: 0.8, align: "center", fill: 0.6},
                                             color: colors[index]
                                       });
                               sum = 0;
@@ -431,7 +431,7 @@ function plot_pie(data) {
       get_values_pie();
       function get_values_pie()
       {
-  
+
             var data1 = [];
             $.post("Requests.php",
                     {action: "3", status: feedbacks_string, opcao: wbe[9][0].codigo_query, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campaign_id, user_group: wbe[9][0].user_group, linha_inbound: wbe[9][0].linha_inbound, user: wbe[9][0].user},
@@ -447,7 +447,7 @@ function plot_pie(data) {
                   }
                   var i = 0;
                   $.each(data, function(index, value) {
-                        data1.push({label: ((this.count)+" -- "+this.status_name), data: +this.count});
+                        data1.push({label: ((this.count) + " -- " + this.status_name), data: +this.count});
                         i++;
                   });
                   if (i == 0)//se so houver 1 resultado ele n faz render, entao adiciona-se 1 elemento infimo
@@ -461,7 +461,8 @@ function plot_pie(data) {
                                     radius: 1,
                                     combine: {
                                           color: '#999',
-                                          threshold: 0.01},
+                                          threshold: 0.01,
+                                          label: "Outros"},
                                     label: {
                                           show: true,
                                           radius: 2 / 3,
@@ -691,11 +692,11 @@ function   inbound_wallboard(data)
 
 
                                     var data_array = [];
-                                    data_array.push({label: ("Agentes Disponiveis"), data: ready});
+                                    data_array.push({label: ready + " -- Agentes Disponiveis", data: ready});
 
-                                    data_array.push({label: ("Agentes Indisponiveis"), data: (queue + paused)});
+                                    data_array.push({label: (queue + paused) + " -- Agentes Indisponiveis", data: (queue + paused)});
 
-                                    data_array.push({label: ("Agentes em Chamada"), data: agentes_incall});
+                                    data_array.push({label: agentes_incall + " -- Agentes em Chamada", data: agentes_incall});
 
 
                                     if ((ready + queue + paused + agentes_incall) == "0")
@@ -708,7 +709,7 @@ function   inbound_wallboard(data)
                                     var temp = 0;
                                     $.plot(painel, data_array, {
                                           series: {
-                                                pie: {innerRadius: 0.05,
+                                                pie: {innerRadius: 0.06,
                                                       show: true,
                                                       radius: ($("#MainLayout").width() - $("#MainLayout").height()),
                                                       label: {
@@ -716,7 +717,7 @@ function   inbound_wallboard(data)
                                                             radius: 3 / 4,
                                                             formatter: function(label, series) {
 
-                                                                  return '<div style="font-size:18px;color:black;">' + series.data[0][1] + '/' + Math.floor(series.percent) + '%</div>';
+                                                                  return '<div style="font-size:18px;color:black;">' + Math.floor(series.percent) + '%</div>';
                                                             },
                                                             background: {
                                                                   opacity: 0.5,
@@ -786,7 +787,7 @@ function   dataTable_top(data)
       function get_values_dataTop()
       {
             $.post("Requests.php",
-                    {action: "5", status: feedbacks_string, opcao: Opcao, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campanha, user_group: wbe[9][0].grupo_user, linha_inbound: wbe[9][0].grupo_inbound, limit: wbe[9][0].limit,mode: wbe[9][0].mode},
+                    {action: "5", status: feedbacks_string, opcao: Opcao, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campanha, user_group: wbe[9][0].grupo_user, linha_inbound: wbe[9][0].grupo_inbound, limit: wbe[9][0].limit, mode: wbe[9][0].mode},
             function(data)
             {
                   if (data === null)
@@ -802,7 +803,7 @@ function   dataTable_top(data)
                   }
                   var tbody = $("#tbody_id" + wbe[0]);
                   tbody.empty();
-                  var letter_size = 18;
+                  var letter_size = $("#" + wbe[0] + "Main").attr("letter_size");
                   $.each(data, function(index, value) {
 //calculo do TMA de segundos para hora:minuto:segundo
                         var totalSec = +data[index].tma;
