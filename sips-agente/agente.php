@@ -13,7 +13,7 @@ if (isset($_GET["sips_login"])){$sips_login=$_GET["sips_login"];}
 if (isset($_GET["sips_pass"])){$sips_pass=$_GET["sips_pass"];}
         elseif (isset($_POST["sips_pass"])){$sips_pass=$_POST["sips_pass"];}
 
-
+$curLogo = $_POST['curlogo'];
 if (isset($_GET["DB"]))						    {$DB=$_GET["DB"];}
         elseif (isset($_POST["DB"]))            {$DB=$_POST["DB"];}
 if (isset($_GET["JS_browser_width"]))				{$JS_browser_width=$_GET["JS_browser_width"];}
@@ -523,6 +523,7 @@ echo "<div id=work-area style='width:40%; min-height:0px; min-width:500px'>";
 echo "<div class=cc-mstyle style='border:none; margin-top:32px;'>";
  echo "<form name=\"vicidial_form\" id=\"vicidial_form\" action=\"$agcPAGE\" method=\"post\">";
 		echo "<form name=\"vicidial_form\" id=\"vicidial_form\" action=\"$agcPAGE\" method=\"post\">\n";
+                echo "<input type=\"hidden\" name=\"curlogo\" value=\"$curLogo\" />";
 		echo "<input type=\"hidden\" name=\"DB\" id=\"DB\" value=\"$DB\" />\n";
 		echo "<input type=\"hidden\" name=\"JS_browser_height\" id=\"JS_browser_height\" value=\"\" />\n";
 		echo "<input type=\"hidden\" name=\"JS_browser_width\" id=\"JS_browser_width\" value=\"\" />\n";
@@ -571,9 +572,25 @@ echo "<tr>
 
 </tr>";
 
-echo "";
+$queryClient = "SELECT server_description from servers limit 1";
+$queryClient = mysql_query($queryClient, $link) or die(mysql_error());
+$curClient = mysql_fetch_row($queryClient);
+unset($curLogo);
+if (file_exists("../client_files/$curClient[0]/logo.gif")) {
+    $curLogo = "client_files/$curClient[0]/logo.gif";
+echo "<input type=hidden name=curlogo value=$curLogo />";    
+}
+
+
+
 echo "</form>";
 echo "</table><br><br></div></div>";
+
+
+if (isset($curLogo)) {
+      echo "<br><br><img style='width:600px;heigth:200px;float=center' src=../$curLogo />";
+  } 
+
 echo "</body>";
 echo "</html>";
 exit;
@@ -581,6 +598,7 @@ exit;
 	
 
     echo "<form name=\"vicidial_form\" id=\"vicidial_form\" action=\"$agcPAGE\" method=\"post\">\n";
+    echo "<input type=\"hidden\" name=\"curlogo\" value=\"$curLogo\" />";
     echo "<input type=\"hidden\" name=\"DB\" id=\"DB\" value=\"$DB\" />\n";
     echo "<input type=\"hidden\" name=\"JS_browser_height\" id=\"JS_browser_height\" value=\"\" />\n";
     echo "<input type=\"hidden\" name=\"JS_browser_width\" id=\"JS_browser_width\" value=\"\" />\n";
@@ -663,6 +681,7 @@ exit;
 	echo "        <td colspan=3 rowspan=3 background=images/dispo_r2_c2.jpg valign=top>\n";
 
         echo "<form name=\"vicidial_form\" id=\"vicidial_form\" action=\"$agcPAGE\" method=\"post\">\n";
+        echo "<input type=\"hidden\" name=\"curlogo\" value=\"$curLogo\" />";
         echo "<input type=\"hidden\" name=\"DB\" value=\"$DB\" />\n";
         echo "<input type=\"hidden\" name=\"JS_browser_height\" id=\"JS_browser_height\" value=\"\" />\n";
         echo "<input type=\"hidden\" name=\"JS_browser_width\" id=\"JS_browser_width\" value=\"\" />\n";
@@ -748,6 +767,7 @@ exit;
 		echo "        <td colspan=3 rowspan=3 >\n";
 
                 echo "<form  name=\"vicidial_form\" id=\"vicidial_form\" action=\"$agcPAGE\" method=\"post\">\n";
+                echo "<input type=\"hidden\" name=\"curlogo\" value=\"$curLogo\" />";
                 echo "<input type=\"hidden\" name=\"DB\" value=\"$DB\" />\n";
                 echo "<input type=\"hidden\" name=\"JS_browser_height\" id=\"JS_browser_height\" value=\"\" />\n";
                 echo "<input type=\"hidden\" name=\"JS_browser_width\" id=\"JS_browser_width\" value=\"\" />\n";
@@ -816,6 +836,7 @@ if ($phone_exists == 0)
 	echo "<div class=cc-mstyle style='border:none; margin-top:32px;'>";
 
     echo "<form name=\"vicidial_form\" id=\"vicidial_form\" action=\"$agcPAGE\" method=\"post\">";
+    echo "<input type=\"hidden\" name=\"curlogo\" value=\"$curLogo\" />";
     echo "<input type=\"hidden\" name=\"DB\" value=\"$DB\" />\n";
     echo "<input type=\"hidden\" name=\"JS_browser_height\" id=\"JS_browser_height\" value=\"\" />\n";
     echo "<input type=\"hidden\" name=\"JS_browser_width\" id=\"JS_browser_width\" value=\"\" />\n";
@@ -833,11 +854,19 @@ echo "<tr>
 
 </tr>";
 
+   
+
 
     echo "<span id=\"LogiNReseT\"></span>";
 	
 	echo "</form>";
 	echo "</table><br><br></div></div>";
+        $curLogo = $_POST['curlogo'];
+
+if (isset($curLogo)) {
+      echo "<br><br><img style='width:600px;heigth:200px;float=center' src=../$curLogo />";
+  } 
+
 	echo "<div class=cc-mstyle style=border:none;><center><br><br>".$pl_message."</div>";
 	echo "</body>";
 	echo "</html>";
@@ -1052,6 +1081,7 @@ else
                     $VDdisplayMESSAGE.= "<form action=\"$PHP_SELF\" method=\"post\">\n";
                     $VDdisplayMESSAGE.= "<input type=\"hidden\" name=\"MGR_override\" value=\"1\" />\n";
                     $VDdisplayMESSAGE.= "<input type=\"hidden\" name=\"relogin\" value=\"YES\" />\n";
+                    
                     $VDdisplayMESSAGE.= "<input type=\"hidden\" name=\"DB\" value=\"$DB\" />\n";
                     $VDdisplayMESSAGE.= "<input type=\"hidden\" name=\"phone_login\" value=\"$phone_login\" />\n";
                     $VDdisplayMESSAGE.= "<input type=\"hidden\" name=\"phone_pass\" value=\"$phone_pass\" />\n";
@@ -1716,7 +1746,8 @@ echo "<div id=work-area style='width:40%; min-height:0px; min-width:500px'>";
 
 echo "<div class=cc-mstyle style='border:none; margin-top:32px;'>";
  echo "<form name=\"vicidial_form\" id=\"vicidial_form\" action=\"$agcPAGE\" method=\"post\">";
-        echo "<input type=\"hidden\" name=\"DB\" value=\"$DB\" />";
+ echo "<input type=\"hidden\" name=\"curlogo\" value=\"$curLogo\" />";       
+ echo "<input type=\"hidden\" name=\"DB\" value=\"$DB\" />";
         echo "<input type=\"hidden\" name=\"JS_browser_height\" id=\"JS_browser_height\" value=\"\" />";
         echo "<input type=\"hidden\" name=\"JS_browser_width\" id=\"JS_browser_width\" value=\"\" />";
 
@@ -1756,7 +1787,14 @@ echo "<tr>
 
 echo "";
 echo "</form>";
-echo "</table><br><br></div></div><br><br><br>";
+echo "</table><br><br> </div>";
+echo"</div>";
+$curLogo = $_POST['curlogo'];
+
+if (isset($curLogo)) {
+      echo "<br><br><img style='width:600px;heigth:200px;float=center' src=../$curLogo />";
+  } 
+
 
 
 echo "</body>";
@@ -1908,6 +1946,7 @@ exit;
 	echo "        <td colspan=3 rowspan=3  valign=middle>\n";
 
         echo "<form name=\"vicidial_form\" id=\"vicidial_form\" action=\"$agcPAGE\" class='login-style' style='width:300px' method=\"post\">\n";
+        echo "<input type=\"hidden\" name=\"curlogo\" value=\"$curLogo\" />";
         echo "<input type=\"hidden\" name=\"DB\" value=\"$DB\">\n";
         echo "<input type=\"hidden\" name=\"JS_browser_height\" value=\"\" />\n";
         echo "<input type=\"hidden\" name=J\"S_browser_width\" value=\"\" />\n";
@@ -12658,6 +12697,7 @@ $zi=2;
 <body onLoad="begin_all_refresh(); SetFrameHeight();"  onunload="BrowserCloseLogout();" id="ib">
 
 <form name=vicidial_form id=vicidial_form onSubmit="return false;">
+    <input type="hidden" name="curlogo" value="<? echo $curLogo; ?>" />
     <input type="hidden" name="extension" id="extension" />
     <input type="hidden" name="custom_field_values" id="custom_field_values" value="" />
     <input type="hidden" name="FORM_LOADED" id="FORM_LOADED" value="0" />
@@ -12744,7 +12784,11 @@ $zi=2;
 		
 			<table height='65px' width="100%" border=0> 
 			<tr>
-			<td style='max-width: 45px;text-align: left;'><img src='../images/pictures/go_logo_15.png' ALT=LOGO /></td>
+			<td style='max-width: 45px;text-align: left;'>
+                          <?  if (isset($curLogo)) {
+      echo "<img style='width:400px;heigth:200px;float=center' src='../$curLogo' />";
+  } else { echo "<img src='../images/pictures/go_logo_15.png' ALT=LOGO />"; }
+               ?>  </td> 
 			<span style='display:none;' id="dataHeader"> 
 			<? 
 			

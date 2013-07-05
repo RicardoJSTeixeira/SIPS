@@ -13,7 +13,7 @@ if (!isset($_SERVER[PHP_AUTH_USER])) {
     echo "<script> window.location='../index.php'</script>";
 }
 
-
+$curlogo = $_POST['curlogo'];
 $username = $_SERVER[PHP_AUTH_USER];
 $password = $_SERVER[PHP_AUTH_PW];
 $query = "SELECT user_level FROM vicidial_users where user='$username' and pass='$password'";
@@ -102,8 +102,10 @@ if (!mysql_num_rows($r)) {
 
         <div id='cc-header' class="row-fluid">
             <div class="span3">
-                <img style='float:left' src='/images/pictures/go_logo_15.png' id="menu-hide" >
+                
+                <? if (isset($curlogo)) { ?> <img style='float:left;width:400px;heigth:200px' src='<? echo "../$curlogo"; ?>' id="menu-hide" > <? } else { echo "<img style='float:left' src='/images/pictures/go_logo_15.png' id='menu-hide' >"; } ?>
             </div>
+           
             <div class="span9">
                 <a href="../index.php?logout=yes" ><img style='height:75px;float:right;' src='/images/pictures/cute_cloud3.png' /></a>
             </div>
