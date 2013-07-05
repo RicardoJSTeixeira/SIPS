@@ -102,7 +102,7 @@ if (isset($report_marc_outbound)) {
         'Avisos'), ";");
 
     foreach ($camp_options as $currentCamp) {
-        $query_log = "SELECT a.lead_id,a.campaign_id,a.call_date AS data,a.status AS resultado, a.user as utilizador, b.*, c.*, d.campaign_name AS campanha FROM vicidial_log a JOIN custom_" . strtoupper($currentCamp) . " b ON a.lead_id = b.lead_id JOIN vicidial_list c ON a.lead_id = c.lead_id JOIN vicidial_campaigns d ON a.campaign_id = d.campaign_id where a.status IN ('MARC', 'NOVOCL') AND a.campaign_id LIKE '$currentCamp' AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00'";
+        $query_log = "SELECT a.lead_id,a.campaign_id,a.call_date AS data,a.status AS resultado, a.user as utilizador, b.*, c.*, d.campaign_name AS campanha FROM vicidial_log a JOIN custom_" . strtoupper($currentCamp) . " b ON a.lead_id = b.lead_id JOIN vicidial_list c ON a.lead_id = c.lead_id JOIN vicidial_campaigns d ON a.campaign_id = d.campaign_id where a.status IN ('MARC', 'NOVOCL','FL0001') AND a.campaign_id LIKE '$currentCamp' AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00'";
 
         $query_log = mysql_query($query_log, $link) or die(mysql_error());
 
@@ -575,7 +575,7 @@ if (isset($report_marc_inbound)) {
     foreach ($camp_options as $currentCamp) {
 
 
-        $query_log = "SELECT a.lead_id,a.campaign_id AS linhainbound,a.call_date AS data,a.status AS resultado,a.user as utilizador, b.*, c.*, d.campaign_name AS campanha FROM vicidial_closer_log a JOIN vicidial_agent_log b ON a.uniqueid = b.uniqueid JOIN vicidial_list c ON a.lead_id = c.lead_id JOIN vicidial_campaigns d ON b.campaign_id = d.campaign_id where a.status IN ('MARC', 'NOVOCL') AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' AND a.campaign_id LIKE '$currentCamp'";
+        $query_log = "SELECT a.lead_id,a.campaign_id AS linhainbound,a.call_date AS data,a.status AS resultado,a.user as utilizador, b.*, c.*, d.campaign_name AS campanha FROM vicidial_closer_log a JOIN vicidial_agent_log b ON a.uniqueid = b.uniqueid JOIN vicidial_list c ON a.lead_id = c.lead_id JOIN vicidial_campaigns d ON b.campaign_id = d.campaign_id where a.status IN ('MARC', 'NOVOCL','FL0001') AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' AND a.campaign_id LIKE '$currentCamp'";
         $query_log = mysql_query($query_log, $link) or die(mysql_error());
 
         for ($i = 0; $i < mysql_num_rows($query_log); $i++) {

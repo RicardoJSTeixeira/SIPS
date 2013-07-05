@@ -1,0 +1,11 @@
+{ "mysql": 
+    {"database":"gocc",
+    "username":"sipsadmin",
+    "password":"sipsadmin2012",
+    "server_ip":"10.30.2.90"},
+  "esl":
+    {"server_ip": "127.0.0.1",
+    "port": "8021",
+    "password": "ClueCon"    
+    }
+}

@@ -395,6 +395,8 @@ class PMA_Header
                 }
                 $retval .= '<div id="page_content">';
                 $retval .= $this->getMessage();
+            }
+            if ($this->_isEnabled && empty($_REQUEST['recent_table'])) {
                 $retval .= $this->_addRecentTable(
                     $GLOBALS['db'],
                     $GLOBALS['table']
@@ -448,9 +450,11 @@ class PMA_Header
         $GLOBALS['now'] = gmdate('D, d M Y H:i:s') . ' GMT';
         if (! defined('TESTSUITE')) {
             header(
-                "X-Content-Security-Policy: default-src 'self';"
+                "X-Content-Security-Policy: default-src 'self' "
+                . $GLOBALS['cfg']['CSPAllow'] . ';'
                 . "options inline-script eval-script;"
-                . "img-src 'self' data:"
+                . "img-src 'self' data: "
+                . $GLOBALS['cfg']['CSPAllow']
                 . ($https ? "" : $mapTilesUrls)
                 . ";"
             );
@@ -458,18 +462,24 @@ class PMA_Header
                 && PMA_USR_BROWSER_VER < '6.0.0'
             ) {
                 header(
-                    "X-WebKit-CSP: allow 'self';"
+                    "X-WebKit-CSP: allow 'self' "
+                    . $GLOBALS['cfg']['CSPAllow'] . ';'
                     . "options inline-script eval-script;"
-                    . "img-src 'self' data:"
+                    . "img-src 'self' data: "
+                    . $GLOBALS['cfg']['CSPAllow']
                     . ($https ? "" : $mapTilesUrls)
                     . ";"
                 );
             } else {
                 header(
-                    "X-WebKit-CSP: default-src 'self';"
-                    . "script-src 'self' 'unsafe-inline' 'unsafe-eval';"
+                    "X-WebKit-CSP: default-src 'self' "
+                    . $GLOBALS['cfg']['CSPAllow'] . ';'
+                    . "script-src 'self' "
+                    . $GLOBALS['cfg']['CSPAllow']
+                    . " 'unsafe-inline' 'unsafe-eval';"
                     . "style-src 'self' 'unsafe-inline';"
-                    . "img-src 'self' data:"
+                    . "img-src 'self' data: "
+                    . $GLOBALS['cfg']['CSPAllow']
                     . ($https ? "" : $mapTilesUrls)
                     . ";"
                 );
@@ -611,14 +621,6 @@ class PMA_Header
     {
         $retval = '';
         if ($this->_warningsEnabled) {
-            // message of "Cookies required" displayed for auth_type http or config
-            // note: here, the decoration won't work because without cookies,
-            // our standard CSS is not operational
-            if (empty($_COOKIE)) {
-                $retval .= PMA_Message::notice(
-                    __('Cookies must be enabled past this point.')
-                )->getDisplay();
-            }
             $retval .= "<noscript>";
             $retval .= PMA_message::error(
                 __("Javascript must be enabled past this point")

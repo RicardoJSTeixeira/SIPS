@@ -46,6 +46,16 @@ header('HTTP/1.0 401 Unauthorized');
 exit; }  
 }
 
+$queryClient = "SELECT server_description from servers limit 1";
+$queryClient = mysql_query($queryClient, $link) or die(mysql_error());
+$curClient = mysql_fetch_row($queryClient);
+unset($curLogo);
+if (file_exists("client_files/$curClient[0]/logo.gif")) {
+    $curLogo = "client_files/$curClient[0]/logo.gif";
+    
+}
+
+
 $query="SELECT user_level FROM vicidial_users where user='$user' and pass='$pass'";
 $query=mysql_query($query,$link) or die(mysql_error());
 $row=mysql_fetch_row($query);
@@ -67,6 +77,7 @@ elseif($row[0]>5) { ?>
   <form id='adminlogin' action='sips-admin/index.php' method='post'>
     <input type='hidden' name='useradmin' value='<?=$username?>' />
       <input type='hidden' name='passadmin' value='<?=$password?>' />
+      <? if (isset($curLogo)) { echo "<input type=hidden name=curlogo value=$curLogo />"; } ?>
   </form>
   
   <script>
@@ -77,6 +88,7 @@ elseif($row[0]>5) { ?>
   <form id='agentlogin' action='sips-agente/agente.php' method='post'>
     <input type='hidden' name='sips_login' value='<?=$username?>' />
       <input type='hidden' name='sips_pass' value='<?=$password?>' />
+      <? if (isset($curLogo)) { echo "<input type=hidden name=curlogo value=$curLogo />"; } ?>
   </form>
   
   <script>
@@ -93,6 +105,7 @@ if ($navigation=='') {    ?>
   <div id=work-area style='width:40%; min-height:0px; min-width:500px'>
     <div class=cc-mstyle style='border:none; margin-top:32px;'>
       <form name='sips_login' id=sips_login action='index.php' method=POST>
+          <? if (isset($curLogo)) { echo "<input type=hidden name=curlogo value=$curLogo />"; } ?>
         <input type=hidden value=go name=first_login>
         <table width=100%>
           <tr>
@@ -127,8 +140,12 @@ if ($navigation=='') {    ?>
         <br>
         <br>
       </form>
-    </div>
+    </div>    
   </div>
+  <? if (isset($curLogo)) {
+      echo "<br><br><img style='width:600px;heigth:200px' src=$curLogo />";
+  } 
+  ?>
   <?php } if($navigation=='second_login') { ?>
   
   <center>
@@ -163,6 +180,10 @@ if ($navigation=='') {    ?>
         <br>
       </div>
     </div>
+      <? if (isset($curLogo)) {
+      echo "<br><br><img style='width:600px;heigth:200px' src=$curLogo />";
+  } else { echo "not set";  }
+  ?>
   </center>
   <?php } if($navigation=='fail') { ?>
   <center>
@@ -171,6 +192,7 @@ if ($navigation=='') {    ?>
       
       <div class=cc-mstyle style='border:none; margin-top:32px;'>
         <form name=sips_login id=sips_login action=index.php method=POST>
+            <? if (isset($curLogo)) { echo "<input type=hidden name=curlogo value=$curLogo />"; } ?>
           <input type=hidden value=go name=reset_login>
           <table width=100% border=0>
             <tr>
@@ -193,6 +215,10 @@ if ($navigation=='') {    ?>
           <br>
         </div>
       </div>
+      <? if (isset($curLogo)) {
+      echo "<br><br><img style='width:600px;heigth:200px' src=$curLogo />";
+  } else { echo "not set";  }
+  ?>
     </form>
 <?php } ?>
     
