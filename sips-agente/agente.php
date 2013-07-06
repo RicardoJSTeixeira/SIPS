@@ -12785,7 +12785,7 @@ $zi=2;
 			<table height='65px' width="100%" border=0> 
 			<tr>
 			<td style='max-width: 45px;text-align: left;'>
-                          <?  if (isset($curLogo)) {
+                          <?  if (isset($cubrLogo)) {
       echo "<img style='width:400px;heigth:200px;float=center' src='../$curLogo' />";
   } else { echo "<img src='../images/pictures/go_logo_15.png' ALT=LOGO />"; }
                ?>  </td> 
