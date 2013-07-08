@@ -813,7 +813,7 @@ function update_wbe()
                               maxHeight: 480,
                               maxWidth: 880,
                               minHeight: 220,
-                              minWidth: 280, stop: check_save});
+                              minWidth: 325, stop: check_save});
                         break;
                   case "5"://Tabela Top
                         painel.resizable({

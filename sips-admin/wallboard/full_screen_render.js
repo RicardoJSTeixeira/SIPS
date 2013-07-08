@@ -41,7 +41,7 @@ $(document).ready(function() {
                           .append($("<div>").addClass("grid-title")
                           .append($("<div>").addClass("pull-left").text(wbes[i][2]))
                           .append($("<div>").addClass("pull-right-letter_button ").attr("data-t", "tooltip").attr("title", "Alteração do tamanho de letra")
-                          .append($("<a>").addClass("btn btn-mini btn-info icon-text-height").attr("id", "letter_size_popover" + wbes[i][0]).attr("data-toggle", "popover")
+                          .append($("<a>").addClass("btn btn-info icon-text-height").attr("id", "letter_size_popover" + wbes[i][0]).attr("data-toggle", "popover")
                           .attr("data-content", "<div class='btn-group'><button class='btn btn-primary icon-plus increase_em'></button><button  class='btn icon-minus decrease_em'></button></div>")))
                           .append($("<div>").addClass("pull-right").attr("id", "right_title" + wbes[i][0])))
                           .append($("<div>").addClass("grid-content").attr("id", wbes[i][0] + "WBEGD")
@@ -106,6 +106,11 @@ $(document).on("click", "#increase_em_datatop", function(e) {
 
 
 });
+
+
+
+
+
 $(document).on("click", "#decrease_em_datatop", function(e) {
 
       var b = $(this).closest(".PanelWB").closest("div");
@@ -119,6 +124,13 @@ $(document).on("click", "#decrease_em_datatop", function(e) {
 
 
 });
+
+
+
+$(document).on("hover", ".PanelWB", function(e) {
+        $(".pull-right-letter_button").toggle();
+});
+
 //BAR GRAPh ««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««
 function plot_bar(data)
 {
@@ -658,16 +670,12 @@ function   dataTable_top(data)
       panel.append($("<div>").css("overflow", "hidden")
               .append($("<div>").addClass("grid-title")
               .append($("<div>").addClass("pull-right").text(wbe[9][0].param1))
-
-
               .append($("<div>").addClass("pull-right-letter_button").attr("data-t", "tooltip").attr("title", "Alteração do tamanho de letra")
               .append($("<a>")
-              .addClass("btn btn-mini btn-info icon-text-height")
+              .addClass("btn btn-info  icon-text-height")
               .attr("id", "letter_size_popover" + wbe[0])
               .attr("data-toggle", "popover")
               .attr("data-content", "<div class='btn-group'><button id='increase_em_datatop' class='btn btn-primary icon-plus'></button><button id='decrease_em_datatop' class='btn icon-minus'></button></div>")))
-
-
               .append($("<div>").addClass("pull-left").text(wbe[2])))
               .append($("<table>").addClass("table table-striped table-mod").css("heigth", "100%").css("width", "100%")
               .append($("<thead>")
@@ -676,7 +684,7 @@ function   dataTable_top(data)
               .append($("<td>").text(wbe[9][0].custom_colum_name))
               .append($("<td>").text("TMA"))))
               .append($("<tbody>").attr("id", "tbody_id" + wbe[0])
-              ))).data("letter_size_datatop", "1.1");
+              ))).data("letter_size_datatop", "1.2");
       var Opcao = 0;
       if (wbe[9][0].campanha != "0")
             Opcao = 1;
