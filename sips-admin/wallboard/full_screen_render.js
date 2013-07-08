@@ -2,53 +2,18 @@
 
 
 
-
 var wbes = [];
 var layout;
 var letter_size_all = 15;
-
 $(document).ready(function() {
 
       $("[data-t=tooltip]").tooltip({placement: "left", html: true});
-
-      $("#MainLayout").css("width", "100%").css("height", "100%").css("position", "absolute").css("background-color", "#F5F5F5").addClass("letter_size");
+      $("#MainLayout").css("width", "100%").css("height", "100%").css("position", "absolute").css("background-color", "#F5F5F5").css("font-size", "1.35em");
       var parameters = window.name.split(",");
       var windwidth = +parameters[1]; //parameter;
       var windheight = +parameters[2]; //parameter;
       layout = +parameters[0]; //parameter
       $("[data-t=tooltip]").tooltip({placement: "left", html: true});
-
-
-
-      $("#MainLayout").append($("<div>")
-              .addClass("ui-widget-content PanelWB")
-              .css("position", "absolute")
-              .css("top", "47%")
-              .css("left", "47%")
-              .data("data-t", "tooltip-right")
-              .attr("title", "Mudanças muito grandes só serão actualizadas quando o próprio grafico actualizar").attr("id", "letter_size_panel")
-
-              .append($("<div>").addClass("grid-title")
-              .append($("<div>").addClass("pull-left").text("Tamanho da Letra"))
-              .append($("<div>").addClass("pull-right").append($("<button>").addClass("icon-cog icon-alone btn").attr("id", "letter_size_button"))))
-
-
-              .append($("<div>").addClass("grid-content ").attr("id", "letter_size_grid")
-              .append($("<div>").addClass("input-prepend")
-              .append($("<button>").attr("id", "increase_em").addClass("btn btn-primary icon-plus"))
-              .append($("<button>").attr("id", "decrease_em").addClass("btn icon-minus"))
-              .append($("<select>").attr("id", "wbes_select")))
-              )
-              .draggable({containment: '#MainLayout'}));
-
-      $("#letter_size_panel").toggleClass("z_index_increase");
-      $(document).on("click", "#letter_size_button", function(e) {
-            $("#letter_size_grid").toggle();
-            $("#letter_size_panel").toggleClass("z_index_increase");
-
-      });
-
-
       $.post("Requests.php", {action: "wbe", id_layout: layout},
       function(data)
       {
@@ -64,8 +29,8 @@ $(document).ready(function() {
                   var width = (wbes[i][5] * temp_window.width()) / windwidth;
                   var height = (wbes[i][6] * temp_window.height()) / windheight;
                   $("#MainLayout")
-                          .append($("<div>").addClass("PanelWB ui-widget-content letter_size_all")
-                          .attr("letter_size", "18")
+                          .append($("<div>").addClass("PanelWB ui-widget-content")
+                          .data("letter_size", "18")
                           .css("position", "absolute")
                           .css("left", left + "px")
                           .css("top", top + "px")
@@ -73,12 +38,14 @@ $(document).ready(function() {
                           .css("width", width + "px")
                           .attr("id", wbes[i][0] + "Main")
                           .draggable({containment: '#MainLayout'})
-
                           .append($("<div>").addClass("grid-title")
                           .append($("<div>").addClass("pull-left").text(wbes[i][2]))
+                          .append($("<div>").addClass("pull-right-letter_button ").attr("data-t", "tooltip").attr("title", "Alteração do tamanho de letra")
+                          .append($("<a>").addClass("btn btn-mini btn-info icon-text-height").attr("id", "letter_size_popover" + wbes[i][0]).attr("data-toggle", "popover")
+                          .attr("data-content", "<div class='btn-group'><button class='btn btn-primary icon-plus increase_em'></button><button  class='btn icon-minus decrease_em'></button></div>")))
                           .append($("<div>").addClass("pull-right").attr("id", "right_title" + wbes[i][0])))
                           .append($("<div>").addClass("grid-content").attr("id", wbes[i][0] + "WBEGD")
-                          .append($("<div>").attr("id", wbes[i][0] + "WBE").attr("style", "width:" + (width - 20) + "px;height:" + (height - 75) + "px;padding: 0px;").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbes[i][7] / 1000) + " seg.")))
+                          .append($("<div>").attr("id", wbes[i][0] + "WBE").css("width", (width - 20) + "px").css("height", (height - 75) + "px").css("padding", "0px").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbes[i][7] / 1000) + " seg.")))
                           );
                   if (wbes[i][8] === "1")//update
                   {
@@ -101,11 +68,9 @@ $(document).ready(function() {
                         $("#" + wbes[i][0] + "Main").css("height", "auto");
                         dataTable_top(wbes[i]);
                   }
+                  $('#letter_size_popover' + wbes[i][0]).popover({html: true});
                   i++;
             });
-
-
-
             var object = $([]).add($("#wbes_select"));
             var i = 0;
             object.append(new Option("Todos os Wallboards", 1));
@@ -113,50 +78,47 @@ $(document).ready(function() {
                   object.append(new Option(wbes[i][2], wbes[i][0]));
                   i++;
             });
-
-
       }, "json");
 });
+$(document).on("click", ".increase_em", function(e) {
+
+      var b = $(this).closest(".PanelWB");
+      b.data().letter_size = (+b.data().letter_size) + 1;
+      b.css("font-size", b.data().letter_size);
+});
+$(document).on("click", ".decrease_em", function(e) {
+
+      var b = $(this).closest(".PanelWB");
+      b.data().letter_size = (+b.data().letter_size) - 1;
+      b.css("font-size", b.data().letter_size);
+});
+$(document).on("click", "#increase_em_datatop", function(e) {
+
+      var b = $(this).closest(".PanelWB").closest("div");
+      b.data().letter_size_datatop = (+b.data().letter_size_datatop) + 0.07;
+      var temp = +b.data().letter_size_datatop;
+      b.find('tbody tr').each(function() {
+
+            $(this).css("font-size", temp + "em");
+            temp = temp + -0.1;
+      });
 
 
-
-
-
-$(document).on("click", "#increase_em", function(e) {
-
-
-      if ($("#wbes_select").val() === "1") {
-            letter_size_all = letter_size_all + 1;
-            $(".letter_size_all").css("font-size", letter_size_all + "px");
-      }
-      else
-      {
-            var letter = $("#" + $("#wbes_select").val() + "Main").attr("letter_size");
-            letter++;
-            $("#" + $("#wbes_select").val() + "Main").css("font-size", letter + "px");
-            $("#" + $("#wbes_select").val() + "Main").attr("letter_size", letter);
-      }
 
 });
-$(document).on("click", "#decrease_em", function(e) {
+$(document).on("click", "#decrease_em_datatop", function(e) {
 
-      if ($("#wbes_select").val() === "1")
-      {
-            letter_size_all = letter_size_all - 1;
-            $(".letter_size_all").css("font-size", letter_size_all + "px");
-      }
-      else
-      {
-            var letter = $("#" + $("#wbes_select").val() + "Main").attr("letter_size");
-            letter--;
-            $("#" + $("#wbes_select").val() + "Main").css("font-size", letter + "px");
-            $("#" + $("#wbes_select").val() + "Main").attr("letter_size", letter);
-      }
+      var b = $(this).closest(".PanelWB").closest("div");
+      b.data().letter_size_datatop = b.data().letter_size_datatop - 0.07;
+      var temp = +b.data().letter_size_datatop;
+      b.find('tbody tr').each(function() {
+
+            $(this).css("font-size", temp + "em");
+            temp = temp - 0.1;
+      });
+
 
 });
-
-
-
 //BAR GRAPh ««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««
 function plot_bar(data)
 {
@@ -185,28 +147,20 @@ function plot_bar(data)
                   }
                   data2 = [];
                   var i = 0;
-
                   var label = "não definido";
                   var sum = 0;
                   $.each(data, function(index, value) {
-
-
                         if (wbe[9][index].chamadas === "0")
                               label = wbe[9][index].param1 + " por " + wbe[9][index].param2;
                         else
                               label = "Chamadas " + wbe[9][index].chamadas + " por " + wbe[9][index].param1;
-
-
                         sum = +data[index];
-
                         if (sum <= 0)
                         {
-
                               if (wbe[9][index].hasData)
                               {
                                     $.jGrowl("A barra de " + label + " não apresenta resultados", {sticky: true});
                                     wbe[9][index].hasData = false;
-
                               }
                               information.push(
                                       {
@@ -218,8 +172,6 @@ function plot_bar(data)
                         }
                         else
                         {
-
-
                               wbe[9][index].hasData = true;
                               ticksA.push([i, +data[index]]);
                               data2.push([i, +data[index]]);
@@ -240,18 +192,13 @@ function plot_bar(data)
 
                         data2 = [];
                   });
-
                   max_y = (max_y * 100) / 75;
                   $.plot(painel, information, {xaxis: {ticks: ticksA}, yaxis: {min: 0, max: max_y}, legend: {show: true}});
-
-
-
                   max_y = 0;
                   information = [];
                   ticksA = [];
                   data2 = [];
                   updation = setTimeout(get_values_bar, wbe[7]);
-
             }, "json");
       }
 
@@ -268,8 +215,6 @@ function plot_update(data)
       var result = [];
       var information = [];
       var dates = [];
-
-
       get_values_update();
       function get_values_update()
       {
@@ -287,7 +232,7 @@ function plot_update(data)
                         return false;
                   }
 
-                  var verifier = 0;//verifica se o dataset tem algum lead_id>0
+                  var verifier = 0; //verifica se o dataset tem algum lead_id>0
                   var aux = 0;
                   for (var key in data) {
                         var obj = data[key];
@@ -305,9 +250,7 @@ function plot_update(data)
                                           dates.push(temp);
                                           result.push([new Date(temp).getTime(), obj[prop][k].leads]);
                                     }
-
                                     var label_text = "";
-
                                     if (verifier > 0) {
                                           if (wbe[9][aux].chamadas === "0") {
                                                 if (wbe[9][aux].status_feedback === "1")
@@ -316,10 +259,7 @@ function plot_update(data)
                                                       label_text = wbe[9][aux].param1 + " de " + wbe[9][aux].param2;
                                           } else
                                                 label_text = "Chamadas " + wbe[9][aux].chamadas + " de " + wbe[9][aux].param1;
-
-
                                           information.push({data: result, label: label_text});
-
                                           result = [];
                                           verifier = 0;
                                           wbe[9][aux].hasData = true;
@@ -328,7 +268,6 @@ function plot_update(data)
                                     {
                                           result = [];
                                           information.push({data: 0, label: "Sem resultados"});
-
                                           if (wbe[9][aux].hasData)
                                           {
                                                 $.jGrowl("A Linha " + wbe[9][aux].opcao_query + " do grafico " + wbe[2] + " não apresenta resultados", {sticky: true});
@@ -336,18 +275,14 @@ function plot_update(data)
                                           }
                                           verifier = 0;
                                     }
-
                               }
-
                               aux++;
                         }
                   }
 
 
                   max_y = (max_y * 100) / 65;
-
                   var tick_size = Math.floor(max_y / 10);
-
                   var options = {
                         series: {shadowSize: 0, show: true}, // drawing is faster without shadows
                         yaxis: {min: 0, max: max_y, tickSize: tick_size},
@@ -357,10 +292,8 @@ function plot_update(data)
                         }
 
                   };
-
                   plot = $.plot(painel, information, options);
                   var temp = 9;
-
                   switch (plot.getData().length)
                   {
                         case 1:
@@ -385,21 +318,14 @@ function plot_update(data)
                   {
                         plot.getData()[aa].lines.lineWidth = temp;
                         temp = temp - 3 + aa;
-
                   }
                   plot.draw();
-
                   max_y = 0;
                   information = [];
                   result = [];
                   dates = [];
                   updation = setTimeout(get_values_update, wbe[7]);
-
             }, "json");
-
-
-
-
       }
 }
 //øøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøø
@@ -408,7 +334,6 @@ function plot_pie(data) {
       var wbe = data;
       var updation;
       var painel = $("#" + wbe[0] + "WBE");
-
       var painer_content = $("#" + wbe[0] + "WBEGD");
       painer_content.css("overflow-y", "auto").css("overflow-x", "hidden");
       if (wbe[9][0].status_feedback === "1")
@@ -431,7 +356,6 @@ function plot_pie(data) {
       get_values_pie();
       function get_values_pie()
       {
-
             var data1 = [];
             $.post("Requests.php",
                     {action: "3", status: feedbacks_string, opcao: wbe[9][0].codigo_query, tempo: wbe[9][0].tempo, campaign_id: wbe[9][0].campaign_id, user_group: wbe[9][0].user_group, linha_inbound: wbe[9][0].linha_inbound, user: wbe[9][0].user},
@@ -450,10 +374,8 @@ function plot_pie(data) {
                         data1.push({label: ((this.count) + " -- " + this.status_name), data: +this.count});
                         i++;
                   });
-                  if (i == 0)//se so houver 1 resultado ele n faz render, entao adiciona-se 1 elemento infimo
+                  if (i === 0)//se so houver 1 resultado ele n faz render, entao adiciona-se 1 elemento infimo
                         data1.push({label: ("zero"), data: 0.001});
-
-
                   $.plot(painel, data1, {
                         series: {
                               pie: {
@@ -480,7 +402,6 @@ function plot_pie(data) {
                               hoverable: false,
                               clickable: false
                         }});
-
                   updation = setTimeout(get_values_pie, wbe[7]);
             }, "json");
       }
@@ -496,21 +417,17 @@ function   inbound_wallboard(data)
       var updation;
       var wbe = data;
       var id = data[0];
-
       var plot;
       var panel = $("#" + wbe[0] + "Main");
       var font_size = ((panel.width() / 50) + (panel.height() / 110));
       panel.empty();
-
       panel.append($("<div>").css("height", "98%").css("font-size", font_size + "px").css("background-color", "rgb(210, 215, 215)").css("padding-left", "1%").css("padding-right", "1%").css("padding-top", "1%").addClass("legend_inbound").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbe[7] / 1000) + " seg.")
-
 
               .append($("<div>").append($("<label>").addClass("inbound_title").text(wbe[9][0].param1)))//titulo do inbound
               .append($("<table>").css("height", "80%").css("width", "100%")
 
               //top                    
               .append($("<tr>")
-
               .append($("<td>")
               .append($("<div>").addClass(" inbound_grid_div")
               .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("Chamadas Atendidas")))
@@ -549,14 +466,11 @@ function   inbound_wallboard(data)
 
 
               .append($("<tr>")
-
               .append($("<td>")
               .append($("<div>").addClass(" inbound_grid_div")
               .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("SLA2").attr("id", "sla2_title" + id)))
               .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "sla2" + id))))))
               ));
-
-
       get_values_inbound();
       function get_values_inbound()
       {
@@ -589,11 +503,6 @@ function   inbound_wallboard(data)
                         }
                         a++;
                   });
-
-
-
-
-
                   $.post("Requests.php", {action: "4", linha_inbound: wbe[9][0].linha_inbound},
                   function(data3)
                   {
@@ -611,7 +520,6 @@ function   inbound_wallboard(data)
                         var chamadas_perdidas_val = data3[0].chamadas_perdidas;
                         var chamadas_perdidas_percent = data3[0].chamadas_perdidas_percent;
                         var tma_todas_chamadas = 0;
-
                         if (+data3[0].tma > 0)
                         {
                               var totalSec = +data3[0].tma;
@@ -637,8 +545,6 @@ function   inbound_wallboard(data)
 
                               var agentes_incall = 0;
                               var chamadas_espera_val = 0;
-
-
                               $.each(data4, function(index, value)
                               {
 
@@ -646,17 +552,12 @@ function   inbound_wallboard(data)
                                           chamadas_espera_val++;
                                     if (data4[index] === "INCALL")
                                           agentes_incall++;
-
                               });
-
-
-
                               $.post("Requests.php", {action: "inbound_groups_info", group_id: wbe[9][0].linha_inbound},
                               function(data5)
                               {
                                     answer_sec_pct_rt_stat_one = data5[0].answer_sec_pct_rt_stat_one;
                                     answer_sec_pct_rt_stat_two = data5[0].answer_sec_pct_rt_stat_two;
-
 //update dos valores na table 
 
                                     var chamadas_atendidas = document.getElementById("chamadas_atendidas" + id);
@@ -665,11 +566,8 @@ function   inbound_wallboard(data)
                                     chamadas_perdidas.innerHTML = chamadas_perdidas_val + "-" + Math.floor(chamadas_perdidas_percent) + "%";
                                     var chamadas_espera = document.getElementById("chamadas_espera" + id);
                                     chamadas_espera.innerHTML = chamadas_espera_val;
-
-
                                     var tma1_element = document.getElementById("tma1" + id);
                                     tma1_element.innerHTML = tma_todas_chamadas + "sec";
-
                                     var sla1 = document.getElementById("sla1" + id);
                                     var sla1_title = document.getElementById("sla1_title" + id);
                                     if (tma1 > 0)
@@ -689,16 +587,10 @@ function   inbound_wallboard(data)
                                     else
                                           sla2.innerHTML = 0;
                                     var painel = $("#plot_inbound" + id);
-
-
                                     var data_array = [];
                                     data_array.push({label: ready + " -- Agentes Disponiveis", data: ready});
-
                                     data_array.push({label: (queue + paused) + " -- Agentes Indisponiveis", data: (queue + paused)});
-
                                     data_array.push({label: agentes_incall + " -- Agentes em Chamada", data: agentes_incall});
-
-
                                     if ((ready + queue + paused + agentes_incall) == "0")
                                     {
 
@@ -763,9 +655,19 @@ function   dataTable_top(data)
       }
       var panel = $("#" + wbe[0] + "Main");
       panel.empty();
-      panel.append($("<div>")
+      panel.append($("<div>").css("overflow", "hidden")
               .append($("<div>").addClass("grid-title")
               .append($("<div>").addClass("pull-right").text(wbe[9][0].param1))
+
+
+              .append($("<div>").addClass("pull-right-letter_button").attr("data-t", "tooltip").attr("title", "Alteração do tamanho de letra")
+              .append($("<a>")
+              .addClass("btn btn-mini btn-info icon-text-height")
+              .attr("id", "letter_size_popover" + wbe[0])
+              .attr("data-toggle", "popover")
+              .attr("data-content", "<div class='btn-group'><button id='increase_em_datatop' class='btn btn-primary icon-plus'></button><button id='decrease_em_datatop' class='btn icon-minus'></button></div>")))
+
+
               .append($("<div>").addClass("pull-left").text(wbe[2])))
               .append($("<table>").addClass("table table-striped table-mod").css("heigth", "100%").css("width", "100%")
               .append($("<thead>")
@@ -774,8 +676,7 @@ function   dataTable_top(data)
               .append($("<td>").text(wbe[9][0].custom_colum_name))
               .append($("<td>").text("TMA"))))
               .append($("<tbody>").attr("id", "tbody_id" + wbe[0])
-              )));
-
+              ))).data("letter_size_datatop", "1.1");
       var Opcao = 0;
       if (wbe[9][0].campanha != "0")
             Opcao = 1;
@@ -783,6 +684,7 @@ function   dataTable_top(data)
             Opcao = 2;
       if (wbe[9][0].grupo_inbound != "0")
             Opcao = 3;
+      $('#letter_size_popover' + wbe[0]).popover({html: true});
       get_values_dataTop();
       function get_values_dataTop()
       {
@@ -796,14 +698,13 @@ function   dataTable_top(data)
                               clearTimeout(updation);
                         panel.remove();
                         $("#" + wbe[0] + "Main").remove();
-
                         $.jGrowl("A tabela " + wbe[2] + " não apresenta resultados", {life: 5000});
-
                         return false;
                   }
                   var tbody = $("#tbody_id" + wbe[0]);
                   tbody.empty();
-                  var letter_size = $("#" + wbe[0] + "Main").attr("letter_size");
+                  var letter_size = +panel.data().letter_size_datatop;
+
                   $.each(data, function(index, value) {
 //calculo do TMA de segundos para hora:minuto:segundo
                         var totalSec = +data[index].tma;
@@ -818,16 +719,15 @@ function   dataTable_top(data)
                               var result = (seconds < 10 ? "0" + seconds : seconds);
                         else
                               var result = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
-
-
                         if (+data[index].count_feedbacks > 0)
                         {
-                              tbody.append($("<tr>").css("font-size", letter_size + "px")
+
+                              tbody.append($("<tr>").css("font-size", letter_size + "em")
                                       .append($("<td>").text(data[index].user))
                                       .append($("<td>").text(data[index].count_feedbacks).css("text-align", "center"))
-                                      .append($("<td>").text(result))
-                                      );
-                              letter_size--;
+                                      .append($("<td>").text(result)));
+                              letter_size = letter_size - 0.07;
+
                         }
                   });
             }
@@ -841,5 +741,11 @@ $(window).bind('beforeunload', function() {
       $("#MainLayout .PanelWB").remove();
 }
 );
-
 //vdcl e vdad e admin
+
+
+
+
+
+
+                          

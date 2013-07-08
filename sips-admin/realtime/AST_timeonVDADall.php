@@ -1022,7 +1022,9 @@ if ($campaign_allow_inbound == "1"  ) #($ALLINGROUPstats > 0) or ( (ereg('O',$wi
 		$ingroup_detail .= "<td>Percentagem de Chamadas Perdidas</td><td> $drpctTODAY%</td>";
 		$ingroup_detail .= "<td>Tempo Médio em Espera para todas as Chamadas</td><td> $AVGhold_sec_queue_calls </td>";
 		$ingroup_detail .= "</tr>";
-
+                
+                // só para escavacar
+                $ingroup_detail = "";    
 		$r++;
 		}
 
