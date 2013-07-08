@@ -374,9 +374,9 @@ for($i=0;$i<mysql_num_rows($gravacoes);$i++){
 $row = mysql_fetch_assoc($gravacoes);
 $duracao = sec_convert($row['length_in_sec'],"H");
 echo "
-<tr> 
+<tr>
 <td>$row[data]</td>
-<td>$row[hora_inicio]</td>
+<td>$row[hora_inicio]</td> 
 <td>$row[hora_fim]</td>
 <td>$duracao</td>
 <td><a href='$row[location]'><img src='../images/icons/sound_add_16.png'></a></td>
