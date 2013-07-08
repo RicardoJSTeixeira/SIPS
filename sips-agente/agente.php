@@ -579,7 +579,7 @@ unset($curLogo);
 if (file_exists("../client_files/$curClient[0]/logo.gif")) {
     $curLogo = "client_files/$curClient[0]/logo.gif";
 echo "<input type=hidden name=curlogo value=$curLogo />";    
-}
+} else { unset($curLogo); }
 
 
 
@@ -587,7 +587,7 @@ echo "</form>";
 echo "</table><br><br></div></div>";
 
 
-if (isset($curLogo)) {
+if (isset($curLogo) && $curLogo != "") {
       echo "<br><br><img style='width:600px;heigth:200px;float=center' src=../$curLogo />";
   } 
 
@@ -863,7 +863,7 @@ echo "<tr>
 	echo "</table><br><br></div></div>";
         $curLogo = $_POST['curlogo'];
 
-if (isset($curLogo)) {
+if (isset($curLogo) && $curLogo != "") {
       echo "<br><br><img style='width:600px;heigth:200px;float=center' src=../$curLogo />";
   } 
 
@@ -1791,7 +1791,8 @@ echo "</table><br><br> </div>";
 echo"</div>";
 $curLogo = $_POST['curlogo'];
 
-if (isset($curLogo)) {
+if (isset($curLogo) && $curLogo != "") {
+    
       echo "<br><br><img style='width:600px;heigth:200px;float=center' src=../$curLogo />";
   } 
 
@@ -12785,7 +12786,7 @@ $zi=2;
 			<table height='65px' width="100%" border=0> 
 			<tr>
 			<td style='max-width: 45px;text-align: left;'>
-                          <?  if (isset($curLogo)) {
+                          <?  if (isset($curLogo) && $curLogo != "") {
       echo "<img style='width:400px;heigth:200px;float=center' src='../$curLogo' />";
   } else { echo "<img src='../images/pictures/go_logo_15.png' ALT=LOGO />"; }
                ?>  </td> 

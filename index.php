@@ -77,7 +77,7 @@ elseif($row[0]>5) { ?>
   <form id='adminlogin' action='sips-admin/index.php' method='post'>
     <input type='hidden' name='useradmin' value='<?=$username?>' />
       <input type='hidden' name='passadmin' value='<?=$password?>' />
-      <? if (isset($curLogo)) { echo "<input type=hidden name=curlogo value=$curLogo />"; } ?>
+      <? if (isset($curLogo) && $curLogo != "") { echo "<input type=hidden name=curlogo value=$curLogo />"; } ?>
   </form>
   
   <script>
@@ -88,7 +88,7 @@ elseif($row[0]>5) { ?>
   <form id='agentlogin' action='sips-agente/agente.php' method='post'>
     <input type='hidden' name='sips_login' value='<?=$username?>' />
       <input type='hidden' name='sips_pass' value='<?=$password?>' />
-      <? if (isset($curLogo)) { echo "<input type=hidden name=curlogo value=$curLogo />"; } ?>
+      <? if (isset($curLogo) && $curLogo != "") { echo "<input type=hidden name=curlogo value=$curLogo />"; } ?>
   </form>
   
   <script>
@@ -105,7 +105,7 @@ if ($navigation=='') {    ?>
   <div id=work-area style='width:40%; min-height:0px; min-width:500px'>
     <div class=cc-mstyle style='border:none; margin-top:32px;'>
       <form name='sips_login' id=sips_login action='index.php' method=POST>
-          <? if (isset($curLogo)) { echo "<input type=hidden name=curlogo value=$curLogo />"; } ?>
+          <? if (isset($curLogo) && $curLogo != "") { echo "<input type=hidden name=curlogo value=$curLogo />"; } ?>
         <input type=hidden value=go name=first_login>
         <table width=100%>
           <tr>
@@ -142,7 +142,7 @@ if ($navigation=='') {    ?>
       </form>
     </div>    
   </div>
-  <? if (isset($curLogo)) {
+  <? if (isset($curLogo) && $curLogo != "") {
       echo "<br><br><img style='width:600px;heigth:200px' src=$curLogo />";
   } 
   ?>
@@ -180,9 +180,9 @@ if ($navigation=='') {    ?>
         <br>
       </div>
     </div>
-      <? if (isset($curLogo)) {
+      <? if (isset($curLogo) && $curLogo != "") {
       echo "<br><br><img style='width:600px;heigth:200px' src=$curLogo />";
-  } else { echo "not set";  }
+  }
   ?>
   </center>
   <?php } if($navigation=='fail') { ?>
@@ -192,7 +192,7 @@ if ($navigation=='') {    ?>
       
       <div class=cc-mstyle style='border:none; margin-top:32px;'>
         <form name=sips_login id=sips_login action=index.php method=POST>
-            <? if (isset($curLogo)) { echo "<input type=hidden name=curlogo value=$curLogo />"; } ?>
+            <? if (isset($curLogo) && $curLogo != "") { echo "<input type=hidden name=curlogo value=$curLogo />"; } ?>
           <input type=hidden value=go name=reset_login>
           <table width=100% border=0>
             <tr>
@@ -215,9 +215,9 @@ if ($navigation=='') {    ?>
           <br>
         </div>
       </div>
-      <? if (isset($curLogo)) {
+      <? if (isset($curLogo) && $curLogo != "") {
       echo "<br><br><img style='width:600px;heigth:200px' src=$curLogo />";
-  } else { echo "not set";  }
+  } 
   ?>
     </form>
 <?php } ?>
