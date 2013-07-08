@@ -10,48 +10,132 @@ foreach ($_GET as $key => $value) {
 
 
 switch ($action) {
-    case 'fromTo':
-        $query = "SELECT  TRIM(LEADING 'SIP/' from(SUBSTRING_index(channel,'-',1))) as  canal,a.length_in_sec as segundos, a.uniqueid as uniqueId FROM call_log a inner join vicidial_log b on a.uniqueid=b.uniqueid WHERE start_time between '$dataInicio 00:00:00' and '$dataFim 23:59:59'  and channel like '$channelSearch' and b.campaign_id like '$campaing' and a.length_in_sec>0 and number_dialed $dialled_Number and b.user_group like '$user_Group' order by channel";
-      
+
+
+
+
+    case 'search':
+
+
+        if ($data_inicio == $data_fim) {
+            $data_inicio .= " 00:00:00";
+            $data_fim .= " 23:59:59";
+        } else {
+            $data_inicio .=" 00:00:00";
+            $data_fim .= " 00:00:00";
+        }
+
+//get truncks
+        $trunks = array();
+        $query1 = "SELECT carrier_id FROM `vicidial_server_carriers`";
+        $query1 = mysql_query($query1, $link) or die(mysql_error());
+        while ($row1 = mysql_fetch_assoc($query1)) {
+            
+        }
+
+
+
+
+
+
+        /*    if (opcao == 1)
+          $query = "SELECT vcl.channel,vl.length_in_sec,vl.phone_number FROM `vicidial_log` vl inner join vicidial_carrier_log vcl on vl.uniqueid=vcl.uniqueid  WHERE vl.call_date between '$data_inicio' and '$data_fim' and vcl.channel like '%$row1[carrier_id]%' and vl.campaign_id='$campaign'";
+          else
+          $query = "SELECT vcl.channel,vl.length_in_sec,vl.phone_number FROM `vicidial_log` vl inner join vicidial_carrier_log vcl on vl.uniqueid=vcl.uniqueid  WHERE vl.call_date between '$data_inicio' and '$data_fim' and  vcl.channel like '%$row1[carrier_id]%' and vl.user_group='$user_group'";
+         */
+
+
+        if (opcao == 1)
+            $filtro = "and vl.campaign_id='$campaign'";
+        else
+            $filtro = "and vl.user_group='$user_group'";
+
+
+        $query = "SELECT vcl.channel,vl.length_in_sec,vl.phone_number FROM `vicidial_log` vl inner join vicidial_carrier_log vcl on vl.uniqueid=vcl.uniqueid  WHERE vl.call_date between '$data_inicio' and '$data_fim'  and vcl.channel like '%IAX2%'  $filtro";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        $js = array();
+        while ($row = mysql_fetch_assoc($query)) {
+            $info[] = array(channel => $row["channel"], length_in_sec => $row["length_in_sec"], phone_number => $row["phone_number"]);
+        }
+
+        $query = "SELECT vcl.channel,vl.length_in_sec,vl.phone_number FROM `vicidial_log` vl inner join vicidial_carrier_log vcl on vl.uniqueid=vcl.uniqueid  WHERE vl.call_date between '$data_inicio' and '$data_fim'  and  vcl.channel like '%SIP%' $filtro";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        $js = array();
+        while ($row = mysql_fetch_assoc($query)) {
+            $info[] = array(channel => $row["channel"], length_in_sec => $row["length_in_sec"], phone_number => $row["phone_number"]);
+        }
+
+
+        $trafego = array();
+
+        foreach ($info as $item) {
+
+            list($inicio, $trunk, $fim) = split('[/-]', $item['channel']);
+
+            if (preg_match('/^96[0-9]{7}$/', $item['phone_number'])) {
+                $trafego[$trunk]["TMN"]+=intval($item["length_in_sec"]);
+            } elseif (preg_match('/^92[024567][0-9]{6}$/', $item['phone_number'])) {
+                $trafego[$trunk]["TMN"]+=intval($item["length_in_sec"]);
+            } elseif (preg_match('/^91[0-9]{7}$/', $item['phone_number'])) {
+                $trafego[$trunk]["VODAFONE"]+=intval($item["length_in_sec"]);
+            } elseif (preg_match('/^93[0-9]{7}$/', $item['phone_number'])) {
+                $trafego[$trunk]["OPTIMUS"]+=intval($item["length_in_sec"]);
+            } elseif (preg_match('/^929[0-9]{6}$/', $item['phone_number'])) {
+                $trafego[$trunk]["n929"]+=intval($item["length_in_sec"]);
+            } elseif (preg_match('/^[2-3]{9}$/', $item['phone_number'])) {
+                $trafego[$trunk]["FIXO"]+=intval($item["length_in_sec"]);
+            }
+            else
+                $trafego[$trunk]["outros"]+=intval($item["length_in_sec"]);
+
+
+
+            $trafego[$trunk]["outros"]+=0;
+            $trafego[$trunk]["TMN"]+=0;
+            $trafego[$trunk]["VODAFONE"]+=0;
+            $trafego[$trunk]["OPTIMUS"]+=0;
+            $trafego[$trunk]["n929"]+=0;
+            $trafego[$trunk]["FIXO"]+=0;
+
+        }
+
+        foreach ($trafego as $nome => &$trk) {
+            foreach ($trk as $rede => &$value) {
+              
+                
+                $value = gmdate("H:i:s", $value);
+            }
+        }
+
+
+
+
+
+
+        echo json_encode($trafego);
+        break;
+
+
+
+
+
+
+    case 'campaign':
+        $query = "SELECT  a.campaign_id,b.campaign_name  FROM  vicidial_campaign_statuses a inner join vicidial_campaigns b on a.campaign_id=b.campaign_id where active='y'  group by  campaign_id";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[$row["canal"]]+=$row["segundos"];
+            $js[] = array(campaign_id => $row["campaign_id"], campaign_name => $row["campaign_name"]);
         }
         echo json_encode($js);
         break;
-    case 'Dp2':
 
-        $query = "SELECT  TRIM(LEADING 'SIP/' from(SUBSTRING_index(channel,'-',1))) as  canal FROM call_log where start_time between '$dataInicio 00:00:00' and '$dataFim 23:59:59' and channel like '%SIP/%' and length_in_sec>0 group by canal ";
+
+    case 'user_group':
+        $query = "SELECT  vicidial_user_groups.user_group as user_group, vicidial_user_groups.group_name as group_name FROM  vicidial_log inner join vicidial_user_groups on vicidial_user_groups.user_group= vicidial_log.user_group   where call_date between date_sub(NOW(), INTERVAL 24 hour) and now() and vicidial_log.user_group is not NUll group by vicidial_log.user_group ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-
-            $js[] = $row["canal"];
-        };
-        echo json_encode($js);
-        break;
-    case 'Dp3':
-        $query = "select c.campaign_name as cp_name, c.campaign_id as uniqueId from call_log a inner join vicidial_log b on b.uniqueid=a.uniqueid  inner join vicidial_campaigns c on c.campaign_id=b.campaign_id where start_time between '$dataInicio  00:00:00' and '$dataFim 23:59:59' group by cp_name ";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(cp_name => $row["cp_name"], uniqueId => $row["uniqueId"]);
-        };
-        echo json_encode($js);
-        break;
-        
-        
-        case 'Dp4':
-        $query = "select b.user_group as uG from call_log a inner join vicidial_log b on b.uniqueid=a.uniqueid where start_time between '$dataInicio  00:00:00' and '$dataFim 23:59:59' and b.user_group IS NOT NULL group by uG ";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-       $query1 = "SELECT group_name FROM `vicidial_user_groups` WHERE user_group='$row[uG]'";
-
-            $query1 = mysql_query($query1) or die(mysql_error());
-            $row1 = mysql_fetch_assoc($query1);
-            
-            
-            
-            $js[] =  array(value => $row["uG"], name => $row1["group_name"]);
-        };
+            $js[] = array(user_group => $row["user_group"], group_name => $row["group_name"]);
+        }
         echo json_encode($js);
         break;
 }
