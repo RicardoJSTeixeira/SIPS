@@ -13156,7 +13156,7 @@ $zi=2;
                 <tr id="CallHistoryStart">
                         <td ><img src='/images/icons/small_tiles_32.png'></td><td>Histórico de Chamadas</td>
                 </tr>
-                <?php /*$query="SELECT id_calendar,cal_type FROM `sips_sd_agent_ref` WHERE user='$user'";
+                <?php/* $query="SELECT id_calendar,cal_type FROM `sips_sd_agent_ref` WHERE user='$user'";
                       $result=mysql_query($query);
                               
                       while ($row = mysql_fetch_assoc($result)) { 
@@ -13383,7 +13383,7 @@ $zi=2;
 </td>
 
 <td>
-<div class=cc-mstyle onClick="Dinline('FormPanel'); Dnone('MainPanel'); Dnone('sips-crm')" style='cursor:pointer; display:none; width:60%; '> 
+<div class=cc-mstyle onClick="Dinline('FormPanel'); Dnone('MainPanel'); Dnone('sips-crm')" style='cursor:pointer; width:60%; '> 
 <table> 
 <tr>
 <td style='width:48px;'><img style='float:right' src='/images/icons/script_32.png' /></td>
