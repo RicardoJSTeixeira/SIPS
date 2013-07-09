@@ -38,32 +38,25 @@ switch ($action) {
 
 
 
-        /*    if (opcao == 1)
-          $query = "SELECT vcl.channel,vl.length_in_sec,vl.phone_number FROM `vicidial_log` vl inner join vicidial_carrier_log vcl on vl.uniqueid=vcl.uniqueid  WHERE vl.call_date between '$data_inicio' and '$data_fim' and vcl.channel like '%$row1[carrier_id]%' and vl.campaign_id='$campaign'";
-          else
-          $query = "SELECT vcl.channel,vl.length_in_sec,vl.phone_number FROM `vicidial_log` vl inner join vicidial_carrier_log vcl on vl.uniqueid=vcl.uniqueid  WHERE vl.call_date between '$data_inicio' and '$data_fim' and  vcl.channel like '%$row1[carrier_id]%' and vl.user_group='$user_group'";
-         */
-
-
         if (opcao == 1)
             $filtro = "and vl.campaign_id='$campaign'";
         else
             $filtro = "and vl.user_group='$user_group'";
 
 
-        $query = "SELECT vcl.channel,vl.length_in_sec,vl.phone_number FROM `vicidial_log` vl inner join vicidial_carrier_log vcl on vl.uniqueid=vcl.uniqueid  WHERE vl.call_date between '$data_inicio' and '$data_fim'  and vcl.channel like '%IAX2%'  $filtro";
+        $query = "select channel,length_in_sec,phone_number from
+            (
+            (SELECT vcl.channel,vl.length_in_sec,vl.phone_number FROM `vicidial_log` vl inner join vicidial_carrier_log vcl on vl.uniqueid=vcl.uniqueid  WHERE vl.call_date between '$data_inicio' and '$data_fim'  and vcl.channel like '%IAX2%'  $filtro)
+                union all 
+                (SELECT vcl.channel,vl.length_in_sec,vl.phone_number FROM `vicidial_log` vl inner join vicidial_carrier_log vcl on vl.uniqueid=vcl.uniqueid  WHERE vl.call_date between '$data_inicio' and '$data_fim'  and  vcl.channel like '%SIP%' $filtro)
+                    )as todos ";
+
         $query = mysql_query($query, $link) or die(mysql_error());
-        $js = array();
+
         while ($row = mysql_fetch_assoc($query)) {
             $info[] = array(channel => $row["channel"], length_in_sec => $row["length_in_sec"], phone_number => $row["phone_number"]);
         }
 
-        $query = "SELECT vcl.channel,vl.length_in_sec,vl.phone_number FROM `vicidial_log` vl inner join vicidial_carrier_log vcl on vl.uniqueid=vcl.uniqueid  WHERE vl.call_date between '$data_inicio' and '$data_fim'  and  vcl.channel like '%SIP%' $filtro";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        $js = array();
-        while ($row = mysql_fetch_assoc($query)) {
-            $info[] = array(channel => $row["channel"], length_in_sec => $row["length_in_sec"], phone_number => $row["phone_number"]);
-        }
 
 
         $trafego = array();
@@ -72,17 +65,17 @@ switch ($action) {
 
             list($inicio, $trunk, $fim) = split('[/-]', $item['channel']);
 
-            if (preg_match('/^96[0-9]{7}$/', $item['phone_number'])) {
+            if (preg_match('/^96[0-9]{6}$/', $item['phone_number'])) {
                 $trafego[$trunk]["TMN"]+=intval($item["length_in_sec"]);
-            } elseif (preg_match('/^92[024567][0-9]{6}$/', $item['phone_number'])) {
+            } elseif (preg_match('/^92[024567][0-9]{5}$/', $item['phone_number'])) {
                 $trafego[$trunk]["TMN"]+=intval($item["length_in_sec"]);
-            } elseif (preg_match('/^91[0-9]{7}$/', $item['phone_number'])) {
+            } elseif (preg_match('/^91[0-9]{6}$/', $item['phone_number'])) {
                 $trafego[$trunk]["VODAFONE"]+=intval($item["length_in_sec"]);
             } elseif (preg_match('/^93[0-9]{7}$/', $item['phone_number'])) {
                 $trafego[$trunk]["OPTIMUS"]+=intval($item["length_in_sec"]);
-            } elseif (preg_match('/^929[0-9]{6}$/', $item['phone_number'])) {
+            } elseif (preg_match('/^929[0-9]{5}$/', $item['phone_number'])) {
                 $trafego[$trunk]["n929"]+=intval($item["length_in_sec"]);
-            } elseif (preg_match('/^[2-3]{9}$/', $item['phone_number'])) {
+            } elseif (preg_match('/[^2-3]{8}$/', $item['phone_number'])) {
                 $trafego[$trunk]["FIXO"]+=intval($item["length_in_sec"]);
             }
             else
@@ -96,16 +89,15 @@ switch ($action) {
             $trafego[$trunk]["OPTIMUS"]+=0;
             $trafego[$trunk]["n929"]+=0;
             $trafego[$trunk]["FIXO"]+=0;
-
         }
 
-        foreach ($trafego as $nome => &$trk) {
+   /*     foreach ($trafego as $nome => &$trk) {
             foreach ($trk as $rede => &$value) {
-              
-                
-                $value = gmdate("H:i:s", $value);
+
+
+                $value = Sec2Time($value);
             }
-        }
+        }*/
 
 
 
@@ -139,4 +131,29 @@ switch ($action) {
         echo json_encode($js);
         break;
 }
+
+function Sec2Time($time) {
+    $hours = 0;
+    $minutes = 0;
+    $seconds = 0;
+    if ($time >= 3600) {
+        $hours = floor($time / 3600);
+        $time = ($time % 3600);
+    }
+    if ($time >= 60) {
+        $minutes = floor($time / 60);
+        $time = ($time % 60);
+    }
+    $seconds = floor($time);
+
+    if ($hours < 10)
+        $hours = "0" . $hours;
+    if ($minutes < 10)
+        $minutes = "0" . $minutes;
+    if ($seconds < 10)
+        $seconds = "0" . $seconds;
+
+    return $hours . ":" . $minutes . ":" . $seconds;
+}
+
 ?>

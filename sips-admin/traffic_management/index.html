@@ -36,15 +36,15 @@
 
             <div class="row-fluid">
                   <!--Style forms of validation  Start-->
-                  <div class="grid span4"  >
-                        <div class="grid-title">
-                              <div class="pull-left">Critérios de pesquisa</div>
-                              <div class="pull-right"> <button id="button1" class="btn btn-primary btn-large">Procurar</button></div>
-                              <div class="clear"></div>
-                        </div>
-                        <div class="grid-content">
 
+                  <div class="grid-title">
+                        <div class="pull-left">Critérios de pesquisa</div>
+                        <div class="pull-right"> <button id="button1" class="btn btn-primary btn-large">Procurar</button></div>
+                  
+                  </div>
+                  <div class="grid-content">
 
+                        <div class="span6"> 
                               <h3> <label class="control-label span">Calendário</label></h3>
                               <div class="formRow">
                                     <label>Data de Inicio</label>
@@ -64,11 +64,11 @@
 
 
 
+                        </div>
 
-
-
+                        <div class="span6"> 
                               <div class="formRow">
-                                    <label class="control-label label">Tipo de filtro:</label>
+                                    <label class="control-label label label-info">Tipo de filtro:</label>
                                     <div class="formRight">
                                           <input type="radio" id="radio_filtro1" name="tf" checked="checked">
                                           <label for="radio_filtro1"><span></span>Campanha</label>
@@ -81,13 +81,13 @@
                               </div>
 
 
-                              <h3> <label class="control-label span">Filtros</label></h3>
+                              <h3> <label class="control-label  span">Filtros</label></h3>
 
 
 
 
                               <div class="formRow" id="campanha_div">
-                                    <label> Campanha</label>
+                                    <label class="control-label label"> Campanha</label>
                                     <div class="formRight">
                                           <select id="campanha_select" class="chzn-select"  >
                                           </select>
@@ -95,65 +95,65 @@
                               </div>
 
                               <div class="formRow" id="grupo_user_div">
-                                    <label>Grupo de User</label>
+                                    <label class="control-label label">Grupo de User</label>
                                     <div class="formRight">
                                           <select  id="grupo_user_select" class="chzn-select"  >
                                           </select>
                                     </div>
                               </div>
 
-
-
-
-
-
                         </div>
-                  </div>
-
-                  <!--Style forms of validation  END-->
-
-                  <!--Form help text  Start-->
 
 
-                  <div class="grid span7"  >
-                     
-                              <table class="table table-mod"  style="width:100%;height:100%;">
-                                    <thead>
-                                          <tr>
-                                                <th>
-                                                      Trunc
-                                                </th>
-                                                <th>
-                                                      Fixo
-                                                </th>
-                                                <th>
-                                                      TMN
-                                                </th>
-                                                <th>
-                                                      Vodafone
-                                                </th>
-                                                <th>
-                                                      Optimus
-                                                </th>
-                                                <th>
-                                                      929
-                                                </th>
-                                                <th>
-                                                      outros
-                                                </th>
 
-                                          </tr>
-                                    </thead>
-                                    <tbody id="table_body"></tbody>
-                              </table>
-                       
 
                   </div>
             </div>
 
 
+
+
+
+            <div class="grid"  >
+
+                  <table id="info_table" class="table table-mod table-striped"  style="width:100%;height:100%; display:none">
+                        <thead>
+                              <tr>
+                                    <th>
+                                          Canal
+                                    </th>
+                                    <th>
+                                          Fixo
+                                    </th>
+                                    <th>
+                                          TMN
+                                    </th>
+                                    <th>
+                                          Vodafone
+                                    </th>
+                                    <th>
+                                          Optimus
+                                    </th>
+                                    <th>
+                                          929
+                                    </th>
+                                    <th>
+                                          outros
+                                    </th>
+                                     <th>
+                                         ToTal
+                                    </th>
+
+                              </tr>
+                        </thead>
+                        <tbody id="table_body"></tbody>
+                  </table>
+
+
+            </div>
+
             <!--Ajax loading div -->
-            <div id="Ajax_Loader"   style="display: none;    width:70px;    height: 70px;    position: fixed;    top: 46%;    left: 39%;    background:url(/images/icons/big-loader.gif) no-repeat center #fff;    text-align:center;    padding:10px;     margin-left: -50px;    margin-top: -50px;    z-index:2;    overflow: auto;"></div>
+            <div id="Ajax_Loader"   style="display: none;    width:70px;    height: 70px;    position: fixed;    top: 28%;    left: 39%;    background:url(/images/icons/big-loader.gif) no-repeat center #fff;    text-align:center;    padding:10px;     margin-left: -50px;    margin-top: -50px;    z-index:2;    overflow: auto;"></div>
             <script type="text/javascript" src="consumos.js"></script>
 
       </body>
