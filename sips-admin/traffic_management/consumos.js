@@ -43,7 +43,7 @@ $("#radio_filtro2").change(function()
 
 
 $(document).ready(function() {
-      $(".Search").hide();
+
 
       $("#grupo_user_div").hide();
 
@@ -199,7 +199,7 @@ function checkCampos()
 $("#button1").click(function()
 {
 
-
+      $("#info_table").show();
 
       var Opcao = 1;
       if ($("#radio_filtro1").prop('checked'))
@@ -220,6 +220,9 @@ $("#button1").click(function()
 
             var count = 0;
 
+            var redes = {fixo: 0, tmn: 0, vodafone: 0, optimus: 0, n929: 0, outros: 0};
+
+
             $.each(data, function(index, value)
 
             {
@@ -229,18 +232,38 @@ $("#button1").click(function()
 
                   $("#table_body").append($("<tr>")
                           .append($("<td>").text(index))
-                          .append($("<td>").text(trunc.FIXO))
-                          .append($("<td>").text(trunc.TMN))
-                          .append($("<td>").text(trunc.VODAFONE))
-                          .append($("<td>").text(trunc.OPTIMUS))
-                          .append($("<td>").text(trunc.n929))
-                          .append($("<td>").text(trunc.outros)));
+                          .append($("<td>").text(secondstotime(trunc.FIXO)))
+                          .append($("<td>").text(secondstotime(trunc.TMN)))
+                          .append($("<td>").text(secondstotime(trunc.VODAFONE)))
+                          .append($("<td>").text(secondstotime(trunc.OPTIMUS)))
+                          .append($("<td>").text(secondstotime(trunc.n929)))
+                          .append($("<td>").text(secondstotime(trunc.outros)))
+                          .append($("<td>").text(secondstotime(trunc.outros + trunc.n929 + trunc.OPTIMUS + trunc.VODAFONE + trunc.TMN + trunc.FIXO))));//total por rede
 
+                  redes.fixo += trunc.FIXO;
+                  redes.tmn += trunc.TMN;
+                  redes.vodafone += trunc.VODAFONE;
+                  redes.optimus += trunc.OPTIMUS;
+                  redes.n929 += trunc.n929;
+                  redes.outros += trunc.outros;
 
 
 
                   count++;
             });
+            console.log(redes);
+
+//total por trunc
+            $("#table_body").append($("<tr>")
+                    .append($("<td>").text(("")))
+                    .append($("<td>").text(secondstotime(redes.fixo)))
+                    .append($("<td>").text(secondstotime(redes.tmn)))
+                    .append($("<td>").text(secondstotime(redes.vodafone)))
+                    .append($("<td>").text(secondstotime(redes.optimus)))
+                    .append($("<td>").text(secondstotime(redes.n929)))
+                    .append($("<td>").text(secondstotime(redes.outros)))
+                    .append($("<td>").text((""))));
+
 
             count = 0;
 
@@ -253,6 +276,21 @@ $("#button1").click(function()
 
 
 
+function secondstotime(seconds)
+{
+      var numhours = Math.floor((seconds) / 3600);
+      var numminutes = Math.floor(((seconds) % 3600) / 60);
+      var numseconds = ((seconds) % 3600) % 60;
+
+      if (numhours < 10)
+            numhours = "0" + numhours;
+      if (numminutes < 10)
+            numminutes = "0" + numminutes;
+      if (numseconds < 10)
+            numseconds = "0" + numseconds;
+
+      return numhours + ":" + numminutes + ":" + numseconds;
+}
 
 
 
