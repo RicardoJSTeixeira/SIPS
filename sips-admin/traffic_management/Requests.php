@@ -17,10 +17,10 @@ switch ($action) {
     case 'search':
 
 
-    
-            $data_inicio .= " 00:00:00";
-            $data_fim .= " 23:59:59";
-       
+
+        $data_inicio .= " 00:00:00";
+        $data_fim .= " 23:59:59";
+
 //get truncks
         $trunks = array();
         $query1 = "SELECT carrier_id FROM `vicidial_server_carriers`";
@@ -36,9 +36,10 @@ switch ($action) {
 
         if ($opcao === "1")
             $filtro = "and vl.campaign_id='$filtro_val'";
-        else
+        else if ($opcao === "2")
             $filtro = "and vl.user_group='$filtro_val'";
-
+        else if ($opcao === "3")
+            $filtro = "";
 
         $query = "select channel,length_in_sec,phone_number from
             (
@@ -47,7 +48,7 @@ switch ($action) {
                 (SELECT vcl.channel,vl.length_in_sec,vl.phone_number FROM `vicidial_log` vl inner join vicidial_carrier_log vcl on vl.uniqueid=vcl.uniqueid  WHERE vl.call_date between '$data_inicio' and '$data_fim'  and  vcl.channel like '%SIP%' $filtro)
                     )as todos ";
 
-      
+
         $query = mysql_query($query, $link) or die(mysql_error());
 
         while ($row = mysql_fetch_assoc($query)) {
@@ -62,16 +63,14 @@ switch ($action) {
 
             list($inicio, $trunk, $fim) = split('[/-]', $item['channel']);
 
-            if (preg_match('/^96[0-9]{6}$/', $item['phone_number'])) {
+            if (preg_match('/^96[0-9]{7}$/', $item['phone_number'])) {
                 $trafego[$trunk]["TMN"]+=intval($item["length_in_sec"]);
-            } elseif (preg_match('/^92[024567][0-9]{5}$/', $item['phone_number'])) {
+            } elseif (preg_match('/^92[024567][0-9]{6}$/', $item['phone_number'])) {
                 $trafego[$trunk]["TMN"]+=intval($item["length_in_sec"]);
-            } elseif (preg_match('/^91[0-9]{6}$/', $item['phone_number'])) {
+            } elseif (preg_match('/^91[0-9]{7}$/', $item['phone_number'])) {
                 $trafego[$trunk]["VODAFONE"]+=intval($item["length_in_sec"]);
             } elseif (preg_match('/^93[0-9]{7}$/', $item['phone_number'])) {
                 $trafego[$trunk]["OPTIMUS"]+=intval($item["length_in_sec"]);
-            } elseif (preg_match('/^929[0-9]{5}$/', $item['phone_number'])) {
-                $trafego[$trunk]["n929"]+=intval($item["length_in_sec"]);
             } elseif (preg_match('/[^2-3]{8}$/', $item['phone_number'])) {
                 $trafego[$trunk]["FIXO"]+=intval($item["length_in_sec"]);
             }
@@ -84,24 +83,24 @@ switch ($action) {
             $trafego[$trunk]["TMN"]+=0;
             $trafego[$trunk]["VODAFONE"]+=0;
             $trafego[$trunk]["OPTIMUS"]+=0;
-            $trafego[$trunk]["n929"]+=0;
+
             $trafego[$trunk]["FIXO"]+=0;
         }
 
-   /*     foreach ($trafego as $nome => &$trk) {
-            foreach ($trk as $rede => &$value) {
+        /*     foreach ($trafego as $nome => &$trk) {
+          foreach ($trk as $rede => &$value) {
 
 
-                $value = Sec2Time($value);
-            }
-        }*/
-
-
-
+          $value = Sec2Time($value);
+          }
+          } */
 
 
 
-     echo json_encode($trafego);
+
+
+
+        echo json_encode($trafego);
         break;
 
 
