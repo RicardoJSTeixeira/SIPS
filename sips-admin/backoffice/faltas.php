@@ -49,22 +49,22 @@ if ($row['user_group'] == "ADMIN") {
         <script type="text/javascript" src="/jquery/jqueryUI/language/pt-pt.js"></script>
         <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css" />
         <style>
-        #loader{
-            background: #f9f9f9;
-            top: 0px;
-            left: 0px;
-            position: absolute;
-            height: 100%;
-            width: 100%;
-            z-index: 2;
-        }
-        #loader > img{
-            position:absolute;
-            left:50%;
-            top:50%;
-            margin-left: -33px;
-            margin-top: -33px;
-        }
+            #loader{
+                background: #f9f9f9;
+                top: 0px;
+                left: 0px;
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                z-index: 2;
+            }
+            #loader > img{
+                position:absolute;
+                left:50%;
+                top:50%;
+                margin-left: -33px;
+                margin-top: -33px;
+            }
         </style> 
     </head>
     <body>
@@ -100,11 +100,10 @@ if ($row['user_group'] == "ADMIN") {
                     if (!eregi("ALL-CAMPAIGNS", $rugroups['allowed_campaigns'])) {
                         $campaigns = " WHERE campaign_id IN ('" . str_replace(" ", "','", rtrim(trim($rugroups['allowed_campaigns']), " -")) . "') ";
                     }
-
-
-                    $tabela.="<div class='grid'>
+                    ?>
+                    <div class='grid'>
                         <div class='grid-title'>
-                            <div class='pull-left'>$rugroups[user_group]</div>
+                            <div class='pull-left'><?= $rugroups[user_group] ?></div>
                             <div class='pull-right'></div>
                             <div class='clear'></div>
                         </div>
@@ -113,26 +112,26 @@ if ($row['user_group'] == "ADMIN") {
                                 <tr>
                                     <th>User</th>
                                     <th>Login</th>
-                                    <th>Logout</th>";
-
-
-                    $pausecodes = mysql_query("SELECT `pause_code`, `pause_code_name`, `max_time` FROM `vicidial_pause_codes` $campaigns GROUP BY `pause_code` ORDER BY `pause_code`") or die(mysql_error());
-                    $pausequery1 = "";
-                    $pausequery2 = "";
-                    $tempos = array();
-                    for ($i = 0; $i < mysql_num_rows($pausecodes); $i++) {
-                        $tmp = mysql_fetch_assoc($pausecodes);
-                        $tempos[$i] = $tmp['max_time'];
-
-                        $tabela.="<th>$tmp[pause_code_name]</th>";
-
-                        $pausequery1.=",IFNULL(a.`$tmp[pause_code]`,0) '$tmp[pause_code]' ";
-                        $pausequery2.=",SUM(IF (`sub_status`='$tmp[pause_code]',`pause_sec`,0)) '$tmp[pause_code]' ";
-                    }
-
-                    $tabela.="</thead><tbody>";
-
-                    $query = "SELECT b.`user`,b.`full_name`,IFNULL(c.`login`,'Falta') LOGIN, IFNULL(d.`LOGOUT`,'') LOGOUT
+                                    <th>Logout</th>
+                                    <?php
+                                    $pausecodes = mysql_query("SELECT `pause_code`, `pause_code_name`, `max_time` FROM `vicidial_pause_codes` $campaigns GROUP BY `pause_code` ORDER BY `pause_code`") or die(mysql_error());
+                                    $pausequery1 = "";
+                                    $pausequery2 = "";
+                                    $tempos = array();
+                                    for ($i = 0; $i < mysql_num_rows($pausecodes); $i++) {
+                                        $tmp = mysql_fetch_assoc($pausecodes);
+                                        $tempos[$i] = $tmp['max_time'];
+                                        ?>
+                                        <th><?= $tmp[pause_code_name] ?></th>
+                                        <?php
+                                        $pausequery1.=",IFNULL(a.`$tmp[pause_code]`,0) '$tmp[pause_code]' ";
+                                        $pausequery2.=",SUM(IF (`sub_status`='$tmp[pause_code]',`pause_sec`,0)) '$tmp[pause_code]' ";
+                                    }
+                                    ?>
+                            </thead>
+                            <tbody>
+                                    <?php
+                                    $query = "SELECT b.`user`,b.`full_name`,IFNULL(c.`login`,'Falta') LOGIN, IFNULL(d.`LOGOUT`,'') LOGOUT
 		$pausequery1
 			FROM `vicidial_users` b LEFT JOIN 
 			(SELECT user
@@ -153,46 +152,48 @@ if ($row['user_group'] == "ADMIN") {
 		WHERE b.`user_group`='$rugroups[user_group]' AND b.`active`='Y' AND b.user_level<$user_level
 		GROUP BY b.`user`";
 //echo $query;
-                    $query = mysql_query($query) or die(mysql_error());
-                    if (!mysql_num_rows($query)){
-                    continue;}
-                    else{
-                    echo $tabela;    
-                    }
+                                    $query = mysql_query($query) or die(mysql_error());
+                                    if (!mysql_num_rows($query)) {
+                                        continue;
+                                    } else {
+                                        echo $tabela;
+                                    }
 
-                    while ($row = mysql_fetch_row($query)) {
-                        ?>
-                        <TR> 
-                            <?php
-                            for ($column_num = 0; $column_num < mysql_num_fields($query); $column_num++) {
-                                if ($column_num == 0) {
-                                    $id_user = $row[$column_num];
-                                    continue;
-                                }
-                                $red = ($row[$column_num] == "Falta" or ($column_num > 3 AND $row[$column_num] > $tempos[$column_num - 4] AND $tempos[$column_num - 4] != 0));
+                                    while ($row = mysql_fetch_row($query)) {
+                                        ?>
+                                    <TR> 
+                                    <?php
+                                    for ($column_num = 0; $column_num < mysql_num_fields($query); $column_num++) {
+                                        if ($column_num == 0) {
+                                            $id_user = $row[$column_num];
+                                            continue;
+                                        }
+                                        $red = ($row[$column_num] == "Falta" or ($column_num > 3 AND $row[$column_num] > $tempos[$column_num - 4] AND $tempos[$column_num - 4] != 0));
 
-                                $td_content = ($column_num < 4) ? $row[$column_num] : gmdate("i:s", $row[$column_num]);
-                                ?>
-                                <td><?= ($red) ? '<span class="label label-important">' : "" ?><?= $td_content ?><?= ($red) ? '</span>' : '' ?></td>
-                        <?php } ?>
-                        </TR>
-                <?php } ?>
-                    </tbody></table></div> 
-<?php } ?>
+                                        $td_content = ($column_num < 4) ? $row[$column_num] : (($row[$column_num]>3600)?gmdate("G:i:s", $row[$column_num]):gmdate("i:s", $row[$column_num]));
+                                        ?>
+                                            <td><?= ($red) ? '<span class="label label-important">' : "" ?><?= $td_content ?><?= ($red) ? '</span>' : '' ?></td>
+                                        <?php } ?>
+                                    </TR>
+                                    <?php } ?>
+                            </tbody>
+                        </table>
+                    </div> 
+                                <?php } ?>
 
 
-        </div>
-        
-        <script language="JavaScript">
-            $(function() {
-                $("#data").datepicker({
-                    changeMonth: true,
-                    changeYear: true,
-                    dateFormat: "yy-mm-dd",
-                    maxDate: '0'
+            </div>
+
+            <script language="JavaScript">
+                $(function() {
+                    $("#data").datepicker({
+                        changeMonth: true,
+                        changeYear: true,
+                        dateFormat: "yy-mm-dd",
+                        maxDate: '0'
+                    });
+                    $("#loader").fadeOut("slow");
                 });
-                $("#loader").fadeOut("slow");
-            });
-        </script>
+            </script>
     </body>
 </html>
