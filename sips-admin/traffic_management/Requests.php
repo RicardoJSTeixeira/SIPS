@@ -17,14 +17,10 @@ switch ($action) {
     case 'search':
 
 
-        if ($data_inicio == $data_fim) {
+    
             $data_inicio .= " 00:00:00";
             $data_fim .= " 23:59:59";
-        } else {
-            $data_inicio .=" 00:00:00";
-            $data_fim .= " 00:00:00";
-        }
-
+       
 //get truncks
         $trunks = array();
         $query1 = "SELECT carrier_id FROM `vicidial_server_carriers`";
@@ -38,10 +34,10 @@ switch ($action) {
 
 
 
-        if (opcao == 1)
-            $filtro = "and vl.campaign_id='$campaign'";
+        if ($opcao === "1")
+            $filtro = "and vl.campaign_id='$filtro_val'";
         else
-            $filtro = "and vl.user_group='$user_group'";
+            $filtro = "and vl.user_group='$filtro_val'";
 
 
         $query = "select channel,length_in_sec,phone_number from
@@ -51,6 +47,7 @@ switch ($action) {
                 (SELECT vcl.channel,vl.length_in_sec,vl.phone_number FROM `vicidial_log` vl inner join vicidial_carrier_log vcl on vl.uniqueid=vcl.uniqueid  WHERE vl.call_date between '$data_inicio' and '$data_fim'  and  vcl.channel like '%SIP%' $filtro)
                     )as todos ";
 
+      
         $query = mysql_query($query, $link) or die(mysql_error());
 
         while ($row = mysql_fetch_assoc($query)) {
@@ -104,7 +101,7 @@ switch ($action) {
 
 
 
-        echo json_encode($trafego);
+     echo json_encode($trafego);
         break;
 
 

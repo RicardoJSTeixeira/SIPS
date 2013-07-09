@@ -24,7 +24,7 @@
 
 $("#radio_filtro1").change(function()
 {
-      if ($("#radio_filtro1").prop('checked'))
+      if ($(this).prop('checked'))
       {
             $("#campanha_div").show();
             $("#grupo_user_div").hide();
@@ -33,7 +33,7 @@ $("#radio_filtro1").change(function()
 
 $("#radio_filtro2").change(function()
 {
-      if ($("#radio_filtro2").prop('checked'))
+      if ($(this).prop('checked'))
       {
             $("#campanha_div").hide();
             $("#grupo_user_div").show();
@@ -44,7 +44,39 @@ $("#radio_filtro2").change(function()
 
 $(document).ready(function() {
 
+      $('#from').datepicker({
+            maxDate: "+0",
+            defaultDate: "-1w",
+            changeMonth: true,
+            numberOfMonths: 1,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                  $("#to").datepicker("option", "minDate", selectedDate);
+            },
+            onSelect: function() {
+            
+                        document.getElementById('button1').disabled = false;
+                  
+            }
 
+
+
+      });
+      $('#to').datepicker({
+            maxDate: "+0",
+            defaultDate: "+0w",
+            changeMonth: true,
+            numberOfMonths: 1,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                  $("#from").datepicker("option", "maxDate", selectedDate);
+            },
+            onSelect: function() {
+           
+                        document.getElementById('button1').disabled = false;
+                  
+            }
+      });
       $("#grupo_user_div").hide();
 
       select_campanha();
@@ -52,7 +84,6 @@ $(document).ready(function() {
 
       document.getElementById('button1').disabled = true;
 
-      var ready = false;//para distinguir entre update de informação e renovação.
 
 
 });
@@ -104,31 +135,7 @@ $(document).ajaxStop(function() {
 
 
 //De (data) a (data)·············································································
-$('#from').datepicker({
-      defaultDate: "-1w",
-      changeMonth: true,
-      numberOfMonths: 1,
-      dateFormat: "yy-mm-dd",
-      onClose: function(selectedDate) {
-            $("#to").datepicker("option", "minDate", selectedDate);
-      },
-      onSelect: function() {
-            ready = false;
-      }
-});
-$('#to').datepicker({
-      defaultDate: "+0w",
-      changeMonth: true,
-      numberOfMonths: 1,
-      dateFormat: "yy-mm-dd",
-      onClose: function(selectedDate) {
-            $("#from").datepicker("option", "maxDate", selectedDate);
-      },
-      onSelect: function() {
-            ready = false;
-            document.getElementById('button1').disabled = false;
-      }
-});
+
 
 
 // ···················································································································
@@ -198,19 +205,29 @@ function checkCampos()
 
 $("#button1").click(function()
 {
+if($('#from').datepicker({dateFormat: 'yy-mm-dd'}).val()==""||$('#to').datepicker({dateFormat: 'yy-mm-dd'}).val()=="")
+      alert("Falta preencher as datas");
+else
+      {
+
 
       $("#info_table").show();
-
+      var filtro_data = 0;
       var Opcao = 1;
       if ($("#radio_filtro1").prop('checked'))
       {
             Opcao = 1;
+            filtro_data = $("#campanha_select").val();
       }
       else
+      {
             Opcao = 2;
+            filtro_data = $("#grupo_user_select").val();
+      }
 
 
-      $.post("Requests.php", {action: "search", opcao: Opcao, campaign: $("#campanha_select").val(), user_group: $("#grupo_user_select").val(), data_inicio: $('#from').datepicker({dateFormat: 'yy-mm-dd'}).val(), data_fim: $('#to').datepicker({dateFormat: 'yy-mm-dd'}).val()},
+
+      $.post("Requests.php", {action: "search", opcao: Opcao, filtro_val: filtro_data, data_inicio: $('#from').datepicker({dateFormat: 'yy-mm-dd'}).val(), data_fim: $('#to').datepicker({dateFormat: 'yy-mm-dd'}).val()},
       function(data)
       {
 
@@ -221,7 +238,7 @@ $("#button1").click(function()
             var count = 0;
 
             var redes = {fixo: 0, tmn: 0, vodafone: 0, optimus: 0, n929: 0, outros: 0};
-
+            var total = 0;
 
             $.each(data, function(index, value)
 
@@ -247,7 +264,7 @@ $("#button1").click(function()
                   redes.n929 += trunc.n929;
                   redes.outros += trunc.outros;
 
-
+                  total += trunc.outros + trunc.n929 + trunc.OPTIMUS + trunc.VODAFONE + trunc.TMN + trunc.FIXO;
 
                   count++;
             });
@@ -255,21 +272,21 @@ $("#button1").click(function()
 
 //total por trunc
             $("#table_body").append($("<tr>")
-                    .append($("<td>").text(("")))
+                    .append($("<td>").append($("<b>").text(("Total"))))
                     .append($("<td>").text(secondstotime(redes.fixo)))
                     .append($("<td>").text(secondstotime(redes.tmn)))
                     .append($("<td>").text(secondstotime(redes.vodafone)))
                     .append($("<td>").text(secondstotime(redes.optimus)))
                     .append($("<td>").text(secondstotime(redes.n929)))
                     .append($("<td>").text(secondstotime(redes.outros)))
-                    .append($("<td>").text((""))));
+                    .append($("<td>").text((secondstotime(total + redes.fixo + redes.tmn + redes.vodafone + redes.optimus + redes.n929 + redes.outros)))));
 
 
             count = 0;
 
 
       }, "json");
-
+      }
 
 });
 
