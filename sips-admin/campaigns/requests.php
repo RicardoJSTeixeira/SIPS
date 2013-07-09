@@ -131,4 +131,11 @@ if ($action == "dT_campaign-monitor") {
     }
     echo json_encode($js);
 }
+
+if($action=="iscloud"){
+    $query = "SELECT cloud FROM servers";
+    $result = mysql_query($query) or die(mysql_error);
+    $row = mysql_fetch_row($result);
+    echo json_encode(array("iscloud"=>$row[0]=="1"));
+}
 ?>
