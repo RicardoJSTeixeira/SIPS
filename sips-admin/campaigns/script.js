@@ -101,6 +101,13 @@ function ConstructEditCampaign(event)
             CampaignEdit = true;
             CampaignEditorElemInit();
             MiscOptionsBuilder("EDIT");
+            $.post("requests.php",
+            {action:"iscloud"},
+            function(data){
+                if(data.iscloud){
+                    $(".iscloud").hide();
+                }
+            },"json");
         }
     });
 }

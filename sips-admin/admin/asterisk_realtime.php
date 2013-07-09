@@ -103,7 +103,7 @@
                     <div class="pull-left">Relatório em Tempo Real: <?= $fname ?></div>
                     <div class="pull-right">
                         <div>
-                            <button id="start" class="btn btn-large btn-success"><i class="icon-play"></i>Inciar</button>
+                            <button id="start" class="btn btn-large btn-success"><i class="icon-play"></i>Iniciar</button>
                             <button id="stop" class="btn btn-large btn-danger" disabled><i class="icon-pause"></i>Parar</button>
                         </div>
                     </div>
@@ -117,7 +117,7 @@
         </div>
 
         <script>
-var a=0,b=0;
+            var a=0,b=0;
             var stop = true;
             var bord = $("#bord");
             var intervalo = "2000";

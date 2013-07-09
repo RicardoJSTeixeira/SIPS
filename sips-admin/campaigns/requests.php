@@ -117,8 +117,8 @@ if ($action == "dT_campaign-monitor") {
                     }
                 case "db-count": {
                         $query = mysql_query("SELECT SUM(list_description) FROM vicidial_lists WHERE campaign_id = '$aRow[campaign_id]'") or die(mysql_error);
-                        $query = mysql_fetch_row($query);
-                        if (mysql_num_rows($query) > 0) {
+                        if (mysql_num_rows($query)) {
+			    $query = mysql_fetch_row($query);
                             $row[] = $query[0];
                         } else {
                             $row[] = 0;
@@ -130,5 +130,12 @@ if ($action == "dT_campaign-monitor") {
         $js['aaData'][] = $row;
     }
     echo json_encode($js);
+}
+
+if($action=="iscloud"){
+    $query = "SELECT cloud FROM servers";
+    $result = mysql_query($query) or die(mysql_error);
+    $row = mysql_fetch_row($result);
+    echo json_encode(array("iscloud"=>$row[0]=="1"));
 }
 ?>
