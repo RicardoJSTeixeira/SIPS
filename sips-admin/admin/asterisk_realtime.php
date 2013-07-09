@@ -117,7 +117,7 @@
         </div>
 
         <script>
-var a=0,b=0;
+            var a=0,b=0;
             var stop = true;
             var bord = $("#bord");
             var intervalo = "2000";
