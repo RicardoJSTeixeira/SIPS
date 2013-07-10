@@ -27,7 +27,7 @@ switch ($action) {
         else if ($opcao === "3")
             $filtro = "";
 
-     
+
         $query = "SELECT length_in_sec,phone_number FROM `vicidial_log`  WHERE call_date between '$data_inicio' and '$data_fim'  $filtro";
 
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -67,10 +67,14 @@ switch ($action) {
                 $trafego["FIXO"]+=intval($item["length_in_sec"]);
                 continue;
             }
-            $trafego["outros"]+=intval($item["length_in_sec"]);
+            if (preg_match('/^[0-9]{9}$/', $item['phone_number'])) {
+                $trafego["outros"]+=intval($item["length_in_sec"]);
+              
+                continue;
+            }
         }
 
-        echo json_encode($trafego);
+         echo json_encode($trafego);
         break;
 
 
