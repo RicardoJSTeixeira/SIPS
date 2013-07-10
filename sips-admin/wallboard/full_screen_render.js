@@ -258,7 +258,7 @@ function plot_update(data)
                                           }
                                           verifier += +obj[prop][k].leads;
                                           var temp = new Date(obj[prop][k].call_date);
-                                          temp.setHours(temp.getHours() + 1);
+                                    
                                           dates.push(temp);
                                           result.push([new Date(temp).getTime(), obj[prop][k].leads]);
                                     }
