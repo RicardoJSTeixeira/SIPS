@@ -8872,8 +8872,8 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 // Update vicidial_list lead record with disposition selection
 	function DispoSelect_submit()
 		{
-		$('#fb_timeout').html('25');
-		clearInterval(fb_timer);
+		/*$('#fb_timeout').html('25');
+		clearInterval(fb_timer);*/
 		if (VDCL_group_id.length > 1)
 			{var group = VDCL_group_id;}
 		else
@@ -9150,7 +9150,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 function FecharCallbacks()
 {
 hideDiv('CallBackSelectBox');
-$('#fb_timeout').html('25');
+/*$('#fb_timeout').html('25');
 var fb_curtime = 25;
 fb_timer = setInterval(function(){
 fb_curtime = fb_curtime - 1;
@@ -9159,7 +9159,7 @@ if (fb_curtime < 1) { clearInterval(fb_timer);
 DispoSelectContent_create('sem_feedback','ADD');
 DispoSelect_submit();
 }
-},1000);
+},1000);*/
 showDiv('DispoSelectBox');
 }
 
@@ -11954,14 +11954,14 @@ function MsgReader(){
 					}
 				showDiv('DispoSelectBox');
 				var fb_curtime = 25;
-				fb_timer = setInterval(function(){
+				/*fb_timer = setInterval(function(){
 				fb_curtime = fb_curtime - 1;
 				$("#fb_timeout").html(fb_curtime);
 				if (fb_curtime < 1) { clearInterval(fb_timer); 
 				DispoSelectContent_create('sem_feedback','ADD');
 				DispoSelect_submit();
 				}
-				},1000);
+				},1000);*/
 				
 				DispoSelectContent_create('','ReSET');
 				WaitingForNextStep=1;
@@ -14250,7 +14250,7 @@ Available Agents Transfer: <span id="AgentXferViewSelect"></span></center></font
 <span style="overflow-y:auto; position:fixed;right:5%;top:5%;z-index:<?php $zi++; echo $zi ?>; width:300px; height:550px;" class='popup_form' id="DispoSelectBox">
 <br>
     <table width="400px" height="496px" ><tr>
-      <td align="center" valign="top"> Resultado da Chamada: <span id='fb_timeout'>25</span><br><span id="DispoSelectPhonE"></span> &nbsp; &nbsp; &nbsp; <span id="DispoSelectHAspan">
+      <td align="center" valign="top"> Resultado da Chamada: <!--<span id='fb_timeout'>25</span>--><br><span id="DispoSelectPhonE"></span> &nbsp; &nbsp; &nbsp; <span id="DispoSelectHAspan">
 	  <br>
 	  <a href="#" onClick="DispoHanguPAgaiN()"></a></span> &nbsp; &nbsp; &nbsp; <span id="DispoSelectMaxMin"><!--<a href="#" onclick="DispoMinimize()"> minimize </a>--></span><br />
 	<?php

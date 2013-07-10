@@ -135,8 +135,11 @@ function SaveEditedFeed($FeedID, $FeedName, $EditedCampaignID, $EditedCampaignAc
 
 function GetFeedEditCampaigns($FeedID, $AllowedCampaigns, $link)
 {
+ if(in_array("ALL-CAMPAIGNS-", $AllowedCampaigns)){
+	$query = mysql_query("SELECT A.campaign_id, A.campaign_name, B.selectable FROM vicidial_campaigns A INNER JOIN vicidial_campaign_statuses B ON A.campaign_id=B.campaign_id WHERE status='$FeedID' ORDER BY A.campaign_name") or die(mysql_error());
+ 	}else{
 	$query = mysql_query("SELECT A.campaign_id, A.campaign_name, B.selectable FROM vicidial_campaigns A INNER JOIN vicidial_campaign_statuses B ON A.campaign_id=B.campaign_id WHERE A.campaign_id IN('".implode("','", $AllowedCampaigns)."') AND status='$FeedID' ORDER BY A.campaign_name") or die(mysql_error());
-
+    }
 	while($row = mysql_fetch_assoc($query))
 	{
 		$js['c_id'][] = $row['campaign_id'];

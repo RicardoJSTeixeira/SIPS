@@ -128,7 +128,11 @@ function ReactivatePause($PauseID, $link)
 
 function GetPauseEditCampaigns($AllowedCampaigns, $PauseID, $link)
 {
-	$query = mysql_query("SELECT A.campaign_id, A.campaign_name, B.active FROM vicidial_campaigns A INNER JOIN vicidial_pause_codes B ON A.campaign_id=B.campaign_id WHERE A.campaign_id IN('".implode("','", $AllowedCampaigns)."') AND pause_code='$PauseID' GROUP BY A.campaign_id ORDER BY A.campaign_name");
+    if(in_array("ALL-CAMPAIGNS-", $AllowedCampaigns)){
+  $query = mysql_query("SELECT A.campaign_id, A.campaign_name, B.active FROM vicidial_campaigns A INNER JOIN vicidial_pause_codes B ON A.campaign_id=B.campaign_id WHERE pause_code='$PauseID' GROUP BY A.campaign_id ORDER BY A.campaign_name");
+	}else{
+ $query = mysql_query("SELECT A.campaign_id, A.campaign_name, B.active FROM vicidial_campaigns A INNER JOIN vicidial_pause_codes B ON A.campaign_id=B.campaign_id WHERE A.campaign_id IN('".implode("','", $AllowedCampaigns)."') AND pause_code='$PauseID' GROUP BY A.campaign_id ORDER BY A.campaign_name");
+   }
 	while($row = mysql_fetch_assoc($query))
 	{
 		$js['c_id'][] = $row['campaign_id'];

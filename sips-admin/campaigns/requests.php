@@ -39,12 +39,19 @@ if ($action == "dT_campaign-monitor") {
 
     $js['allowed_campaigns'] = explode(" ", trim(preg_replace("/ -/", '', $query['allowed_campaigns'])));
 
+if(in_array("ALL-CAMPAIGNS-", $js['allowed_campaigns'])){
+    $sQuery = "
+            SELECT A.campaign_id, A.campaign_name, A.active, A.dial_method, A.auto_dial_level, B.pauses, B.feedbacks, B.recycle, B.dynamic_fields, DATE_FORMAT(B.creation_date, '%H:%i:%s <br> %e/%c/%Y') as creation_date
+            FROM   vicidial_campaigns A
+			INNER JOIN sips_campaign_stats B ON A.campaign_id=B.campaign_id";
+}else{
     $sQuery = "
             SELECT A.campaign_id, A.campaign_name, A.active, A.dial_method, A.auto_dial_level, B.pauses, B.feedbacks, B.recycle, B.dynamic_fields, DATE_FORMAT(B.creation_date, '%H:%i:%s <br> %e/%c/%Y') as creation_date
             FROM   vicidial_campaigns A
 			INNER JOIN sips_campaign_stats B ON A.campaign_id=B.campaign_id
-			WHERE A.campaign_id IN('" . implode("','", $js['allowed_campaigns']) . "')";/* AND A.campaign_id LIKE 'W%'
-            ";*/
+    WHERE A.campaign_id IN('" . implode("','", $js['allowed_campaigns']) . "')";
+    
+    }
     $rResult = mysql_query($sQuery, $link) or die(mysql_error());
 
     while ($aRow = mysql_fetch_array($rResult)) {

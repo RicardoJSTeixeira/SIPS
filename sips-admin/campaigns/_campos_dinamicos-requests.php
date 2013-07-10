@@ -149,7 +149,12 @@ function DialogFieldsApplyToAllCampaignsOnSave($CampaignID, $AllowedCampaigns, $
 
 function DialogFieldsCopyOnOpen($CampaignID, $ModAllowedCampaigns, $link)
 {
-	$result = mysql_query("SELECT campaign_id, campaign_name FROM vicidial_campaigns WHERE campaign_id IN ('".implode("','", $ModAllowedCampaigns)."') ORDER BY campaign_name") or die(mysql_error());
+	if(in_array("ALL-CAMPAIGNS-", $ModAllowedCampaigns)){
+  $query = "SELECT campaign_id, campaign_name FROM vicidial_campaigns  ORDER BY campaign_name";
+	}else{
+ $query = "SELECT campaign_id, campaign_name FROM vicidial_campaigns WHERE campaign_id IN ('".implode("','", $ModAllowedCampaigns)."') ORDER BY campaign_name";
+   }
+   $result = mysql_query($query) or die(mysql_error());
 	
 	while($row = mysql_fetch_assoc($result))
 	{

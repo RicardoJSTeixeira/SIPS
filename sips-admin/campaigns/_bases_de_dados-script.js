@@ -4,7 +4,7 @@ function DBListBuilder(Flag)
 	$(".span-active-campaign-name").html($("#campaign-name").val()) 
 	
 	
-if( ($("#tbl-feeds tr").length == 0 && Flag == "ALL") || Flag == "DISABLED" || Flag == "REFRESH")
+if( ($("#tbl-dbs tr").length == 0 && Flag == "ALL") || Flag == "DISABLED" || Flag == "REFRESH")
 {
     if(Flag != "NEW") { $("#tbl-dbs").hide(); }
     
