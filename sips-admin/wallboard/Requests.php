@@ -600,7 +600,7 @@ union all
         echo json_encode($js);
         break;
     case 'user':
-        $query = "SELECT vicidial_users.user as user, vicidial_users.full_name as full_name FROM `vicidial_inbound_group_agents` inner join vicidial_users on vicidial_inbound_group_agents.user=vicidial_users.user where vicidial_inbound_group_agents.user is not null and vicidial_inbound_group_agents.user!='' and vicidial_users.active='y' group by vicidial_inbound_group_agents.user";
+        $query = "SELECT vicidial_users.user as user, vicidial_users.full_name as full_name FROM vicidial_users  where vicidial_users.user is not null and  vicidial_users.active='y'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array(user => $row["user"], full_name => $row["full_name"]);
