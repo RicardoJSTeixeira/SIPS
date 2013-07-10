@@ -233,7 +233,7 @@ if (strlen($static_agent_url) > 5)
 header ("Content-type: text/html; charset=utf-8");
 header ("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
 header ("Pragma: no-cache");                          // HTTP/1.0?>
-<!DOCTYPE html">
+<!DOCTYPE html>
 <html> 
 <head> 
 
@@ -1708,7 +1708,7 @@ else
 	if ($VDloginDISPLAY && ($no_campaign == 1))
 		{
 				
-			$query = "SELECT cloud FROM servers";
+			/*$query = "SELECT cloud FROM servers";
 			$query = mysql_query($query, $link) or die(mysql_error());
 			$row= mysql_fetch_assoc($query);
 			
@@ -1729,11 +1729,11 @@ else
  if ($data_validade != '') { $val = 1; } else { $val = 0; }
  
  
- } else {$val = 1;}
+ } else {$val = 1;}*/
  
 
 
-if($val == 1) {
+if($val == 1 or 1) {
 
 
 			
