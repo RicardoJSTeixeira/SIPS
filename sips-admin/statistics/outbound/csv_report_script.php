@@ -5,7 +5,7 @@ require ("../../../ini/functions.php");
 header('Content-Encoding: UTF-8');
 header('Content-type: text/csv; charset=UTF-8');
 echo "\xEF\xBB\xBF";
-header('Content-Disposition: attachment; filename=TESTE_Report_Script_'.date("Y-m-d_H:i:s").'.csv');
+header('Content-Disposition: attachment; filename=Report_Script_'.date("Y-m-d_H:i:s").'.csv');
 
  
 if (isset($_GET["query_date"])) {$query_date = $_GET["query_date"];
@@ -60,7 +60,7 @@ if (mysql_num_rows($rslt)>0){
 //echo $lists_IN;
 
 $script_query = (($tem_Script == 1) ? "LEFT JOIN custom_$campanha_id B ON A.lead_id = B.lead_id" : "");
-$stmt=" SELECT  X.list_name AS 'Base de Dados', vcdlog.call_date AS 'Data da Chamada', DateTries AS 'Chamadas para este Número', Z.full_name AS 'Operador', $campos, vcs.status_name as 'Feedback', D.callback_time AS 'Data do Call-Back', D.comments AS 'Comentários do Call-Back' 
+$stmt=" SELECT  X.list_name AS 'Base de Dados', vcdlog.call_date AS 'Data da Chamada', DateTries AS 'Chamadas para este Número', Z.full_name AS 'Operador',A.lead_id as Lead_ID, $campos, vcs.status_name as 'Feedback', D.callback_time AS 'Data do Call-Back', D.comments AS 'Comentários do Call-Back' 
         FROM vicidial_list A 
         $script_query 
         INNER JOIN $status vcs ON vcs.status = A.status
@@ -69,8 +69,7 @@ $stmt=" SELECT  X.list_name AS 'Base de Dados', vcdlog.call_date AS 'Data da Cha
         LEFT JOIN vicidial_users AS Z ON Z.user=A.user
         INNER JOIN vicidial_lists X ON X.list_id=A.list_id
         $feedbacks_str 
-        AND X.campaign_id = '$campanha_id' ORDER by A.lead_id
-        ";
+        AND X.campaign_id = '$campanha_id' ORDER by A.lead_id ";
 /*
 $stmt=" SELECT  X.list_name AS 'Base de Dados', A.last_local_call_time AS 'Data da Chamada', DateTries AS 'Chamadas para este Número', Z.full_name AS 'Operador', $campos, vcs.status_name as 'Feedback', D.callback_time AS 'Data do Call-Back', D.comments AS 'Comentários do Call-Back' 
         FROM vicidial_list A 
