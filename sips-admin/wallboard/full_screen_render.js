@@ -127,8 +127,11 @@ $(document).on("click", "#decrease_em_datatop", function(e) {
 
 
 
-$(document).on("hover", ".PanelWB", function(e) {
-        $(".pull-right-letter_button").toggle();
+$(document).on("mouseenter", ".PanelWB", function(e) {
+        $(".pull-right-letter_button").stop().fadeIn(600);
+});
+$(document).on("mouseleave", ".PanelWB", function(e) {
+            $(".pull-right-letter_button").hide();
 });
 
 //BAR GRAPh ««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««
