@@ -13,7 +13,7 @@ function ScriptListBuilder($CampaignID, $AllowedCampaigns, $link)
     $result = mysql_query($query) or die(mysql_error);
     $row = mysql_fetch_row($result);
     if($row[0]=="1"){
-        $query = "SELECT A.campaign_id, B.campaign_name, count(*) AS num_fields FROM vicidial_lists_fields A INNER JOIN vicidial_campaigns B ON A.campaign_id=B.campaign_id GROUP BY A.campaign_id ORDER BY B.campaign_name WHERE campaign_id IN ('".implode("','" , $AllowedCampaigns)."')";
+        $query = "SELECT A.campaign_id, B.campaign_name, count(*) AS num_fields FROM vicidial_lists_fields A INNER JOIN vicidial_campaigns B ON A.campaign_id=B.campaign_id WHERE A.campaign_id IN ('".implode("','" , $AllowedCampaigns)."') GROUP BY A.campaign_id ORDER BY B.campaign_name";
     }else{
 	$query = "SELECT A.campaign_id, B.campaign_name, count(*) AS num_fields FROM vicidial_lists_fields A INNER JOIN vicidial_campaigns B ON A.campaign_id=B.campaign_id GROUP BY A.campaign_id ORDER BY B.campaign_name"; // WHERE campaign_id IN ('".implode("','" , $AllowedCampaigns)."')
     }
