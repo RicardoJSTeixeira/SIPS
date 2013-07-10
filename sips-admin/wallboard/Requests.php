@@ -608,7 +608,7 @@ union all
         echo json_encode($js);
         break;
     case 'user_group':
-        $query = "SELECT  vicidial_user_groups.user_group as user_group, vicidial_user_groups.group_name as group_name FROM  vicidial_log inner join vicidial_user_groups on vicidial_user_groups.user_group= vicidial_log.user_group  where call_date between date_sub(NOW(), INTERVAL $param1) and now() and vicidial_log.user_group is not NUll group by vicidial_log.user_group ";
+        $query = "SELECT  vicidial_user_groups.user_group as user_group, vicidial_user_groups.group_name as group_name FROM  vicidial_user_groups";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array(user_group => $row["user_group"], group_name => $row["group_name"]);

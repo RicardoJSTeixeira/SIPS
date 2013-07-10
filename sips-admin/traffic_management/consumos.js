@@ -1,58 +1,4 @@
-
-/*
- sip.conf
- iax.conf
- 
- 
- 
- vicidial_carrier_log com vicidial log
- 
- 
- filtrar por campanha ou grupo de user
- 
- 
- /oni/red1/red2/
- fixo
- vodafone
- tmn
- 
- */
-
-
-
-
-
-$("#radio_filtro1").change(function()
-{
-      if ($(this).prop('checked'))
-      {
-            $("#campanha_div").show();
-            $("#grupo_user_div").hide();
-      }
-});
-
-$("#radio_filtro2").change(function()
-{
-      if ($(this).prop('checked'))
-      {
-            $("#campanha_div").hide();
-            $("#grupo_user_div").show();
-      }
-});
-$("#radio_filtro3").change(function()
-{
-      if ($(this).prop('checked'))
-      {
-            $("#campanha_div").hide();
-            $("#grupo_user_div").hide();
-      }
-});
-
-
-
-
 $(document).ready(function() {
-
       $('#from').datepicker({
             maxDate: "+0",
             defaultDate: "-1w",
@@ -87,15 +33,40 @@ $(document).ready(function() {
             }
       });
       $("#grupo_user_div").hide();
-
       select_campanha();
       select_user_group();
-
       document.getElementById('button1').disabled = true;
-
-
-
 });
+
+
+
+$("#radio_filtro1").change(function()
+{
+      if ($(this).prop('checked'))
+      {
+            $("#campanha_div").show();
+            $("#grupo_user_div").hide();
+      }
+});
+$("#radio_filtro2").change(function()
+{
+      if ($(this).prop('checked'))
+      {
+            $("#campanha_div").hide();
+            $("#grupo_user_div").show();
+      }
+});
+$("#radio_filtro3").change(function()
+{
+      if ($(this).prop('checked'))
+      {
+            $("#campanha_div").hide();
+            $("#grupo_user_div").hide();
+      }
+});
+
+
+
 
 
 function select_campanha()
@@ -128,91 +99,6 @@ function select_user_group()
             object1.chosen({no_results_text: "Não foi encontrado."});
       }, "json");
 }
-
-$(document).ajaxStart(function() {
-      $("#Ajax_Loader").show();
-});
-$(document).ajaxStop(function() {
-      $(".Search").fadeIn(600);
-      $("#Ajax_Loader").hide();
-});
-
-
-
-
-
-
-
-//De (data) a (data)·············································································
-
-
-
-// ···················································································································
-
-
-
-
-//Check all or diferent choise in dropboxes
-function checkCampos()
-{
-      if ($("#Mv2").val() === '1')
-      {
-            channel = "%SIP%";
-      }
-      else
-      {
-            channel = "%" + $("#Mv2").val() + "%";
-      }
-      if ($("#Mv3").val() === '1')
-      {
-            campanha = "%%";
-      }
-      else
-      {
-            campanha = "%" + $("#Mv3").val() + "%";
-      }
-      if ($("#Mv5").val() === '1')
-      {
-            userGroup = "%%";
-      }
-      else
-      {
-            userGroup = "%" + $("#Mv5").val() + "%";
-      }
-
-
-
-      /*<option value =1>All</option> 
-       <option value =0>Outros</option> 
-       <option value =91>Vodafone</option> 
-       <option value =92>Tmn</option> 
-       <option value =93>Optimus</option> 
-       <option value =21>Fixo</option> */
-      switch ($("#Mv4").val())
-      {
-            case '0':
-                  dialledNumber = "NOT REGEXP '(91|92|93|96|21)'";
-                  break;
-            case '1':
-                  dialledNumber = "REGEXP '[0-9][0-9]'";
-                  break;
-            case '91':
-                  dialledNumber = "REGEXP '(91)'";
-                  break;
-            case '92':
-                  dialledNumber = "REGEXP '(92|96)'";
-                  break;
-            case '93':
-                  dialledNumber = "REGEXP '(93)'";
-                  break;
-            case '21':
-                  dialledNumber = "REGEXP '(21)'";
-                  break;
-      }
-}
-//····································································
-
-
 
 
 
@@ -248,65 +134,18 @@ $("#button1").click(function()
             $.post("Requests.php", {action: "search", opcao: Opcao, filtro_val: filtro_data, data_inicio: $('#from').datepicker({dateFormat: 'yy-mm-dd'}).val(), data_fim: $('#to').datepicker({dateFormat: 'yy-mm-dd'}).val()},
             function(data)
             {
-
                   $("#table_body").empty();
-
-
-
-                  var count = 0;
-
-                  var redes = {fixo: 0, tmn: 0, vodafone: 0, optimus: 0, outros: 0};
-                  var total = 0;
-
-                  $.each(data, function(index, value)
-
-                  {
-
-                        var trunc = data[index];
-
-
-                        $("#table_body").append($("<tr>")
-                                .append($("<td>").text(index))
-                                .append($("<td>").text(secondstotime(trunc.FIXO)))
-                                .append($("<td>").text(secondstotime(trunc.TMN)))
-                                .append($("<td>").text(secondstotime(trunc.VODAFONE)))
-                                .append($("<td>").text(secondstotime(trunc.OPTIMUS)))
-                                .append($("<td>").text(secondstotime(trunc.outros)))
-                                .append($("<td>").text(secondstotime(trunc.outros + trunc.OPTIMUS + trunc.VODAFONE + trunc.TMN + trunc.FIXO))));//total por rede
-
-                        redes.fixo += trunc.FIXO;
-                        redes.tmn += trunc.TMN;
-                        redes.vodafone += trunc.VODAFONE;
-                        redes.optimus += trunc.OPTIMUS;
-                        redes.outros += trunc.outros;
-
-                        total += trunc.outros +  trunc.OPTIMUS + trunc.VODAFONE + trunc.TMN + trunc.FIXO;
-
-                        count++;
-                  });
-                  console.log(redes);
-
-//total por trunc
                   $("#table_body").append($("<tr>")
-                          .append($("<td>").append($("<b>").text(("Total"))))
-                          .append($("<td>").text(secondstotime(redes.fixo)))
-                          .append($("<td>").text(secondstotime(redes.tmn)))
-                          .append($("<td>").text(secondstotime(redes.vodafone)))
-                          .append($("<td>").text(secondstotime(redes.optimus)))
-                          .append($("<td>").text(secondstotime(redes.outros)))
-                          .append($("<td>").text((secondstotime(total + redes.fixo + redes.tmn + redes.vodafone + redes.optimus + redes.outros)))));
-
-
-                  count = 0;
-
-
+                          .append($("<td>").text(secondstotime(data.TMN)))
+                          .append($("<td>").text(secondstotime(data.VODAFONE)))
+                          .append($("<td>").text(secondstotime(data.OPTIMUS)))
+                          .append($("<td>").text(secondstotime(data.FIXO)))
+                          .append($("<td>").text(secondstotime(data.outros)))
+                          .append($("<td>").text(secondstotime(data.outros + data.OPTIMUS + data.VODAFONE + data.TMN + data.FIXO))));//total por rede
             }, "json");
       }
 
 });
-
-
-
 
 function secondstotime(seconds)
 {

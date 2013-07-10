@@ -16,38 +16,19 @@ switch ($action) {
 
     case 'search':
 
-
-
         $data_inicio .= " 00:00:00";
         $data_fim .= " 23:59:59";
 
-//get truncks
-        $trunks = array();
-        $query1 = "SELECT carrier_id FROM `vicidial_server_carriers`";
-        $query1 = mysql_query($query1, $link) or die(mysql_error());
-        while ($row1 = mysql_fetch_assoc($query1)) {
-            
-        }
-
-
-
-
-
 
         if ($opcao === "1")
-            $filtro = "and vl.campaign_id='$filtro_val'";
+            $filtro = "and campaign_id='$filtro_val'";
         else if ($opcao === "2")
-            $filtro = "and vl.user_group='$filtro_val'";
+            $filtro = "and user_group='$filtro_val'";
         else if ($opcao === "3")
             $filtro = "";
 
-        $query = "select channel,length_in_sec,phone_number from
-            (
-            (SELECT vcl.channel,vl.length_in_sec,vl.phone_number FROM `vicidial_log` vl inner join vicidial_carrier_log vcl on vl.uniqueid=vcl.uniqueid  WHERE vl.call_date between '$data_inicio' and '$data_fim'  and vcl.channel like '%IAX2%'  $filtro)
-                union all 
-                (SELECT vcl.channel,vl.length_in_sec,vl.phone_number FROM `vicidial_log` vl inner join vicidial_carrier_log vcl on vl.uniqueid=vcl.uniqueid  WHERE vl.call_date between '$data_inicio' and '$data_fim'  and  vcl.channel like '%SIP%' $filtro)
-                    )as todos ";
 
+        $query = "SELECT length_in_sec,phone_number FROM `vicidial_log`  WHERE call_date between '$data_inicio' and '$data_fim'  $filtro";
 
         $query = mysql_query($query, $link) or die(mysql_error());
 
@@ -55,52 +36,45 @@ switch ($action) {
             $info[] = array(channel => $row["channel"], length_in_sec => $row["length_in_sec"], phone_number => $row["phone_number"]);
         }
 
-
-
         $trafego = array();
+
+        $trafego["outros"]+=0;
+        $trafego["TMN"]+=0;
+        $trafego["VODAFONE"]+=0;
+        $trafego["OPTIMUS"]+=0;
+        $trafego["FIXO"]+=0;
+
+
 
         foreach ($info as $item) {
 
-            list($inicio, $trunk, $fim) = split('[/-]', $item['channel']);
+            //list($inicio, $trunk, $fim) = split('[/@-]', $item['channel']);
 
-            if (preg_match('/^96[0-9]{7}$/', $item['phone_number'])) {
-                $trafego[$trunk]["TMN"]+=intval($item["length_in_sec"]);
-            } elseif (preg_match('/^92[024567][0-9]{6}$/', $item['phone_number'])) {
-                $trafego[$trunk]["TMN"]+=intval($item["length_in_sec"]);
-            } elseif (preg_match('/^91[0-9]{7}$/', $item['phone_number'])) {
-                $trafego[$trunk]["VODAFONE"]+=intval($item["length_in_sec"]);
-            } elseif (preg_match('/^93[0-9]{7}$/', $item['phone_number'])) {
-                $trafego[$trunk]["OPTIMUS"]+=intval($item["length_in_sec"]);
-            } elseif (preg_match('/[^2-3]{8}$/', $item['phone_number'])) {
-                $trafego[$trunk]["FIXO"]+=intval($item["length_in_sec"]);
+
+            if (preg_match('/^96|92[0-9]{7}$/', $item['phone_number'])) {
+                $trafego["TMN"]+=intval($item["length_in_sec"]);
+                continue;
             }
-            else
-                $trafego[$trunk]["outros"]+=intval($item["length_in_sec"]);
-
-
-
-            $trafego[$trunk]["outros"]+=0;
-            $trafego[$trunk]["TMN"]+=0;
-            $trafego[$trunk]["VODAFONE"]+=0;
-            $trafego[$trunk]["OPTIMUS"]+=0;
-
-            $trafego[$trunk]["FIXO"]+=0;
+            if (preg_match('/^91[0-9]{7}$/', $item['phone_number'])) {
+                $trafego["VODAFONE"]+=intval($item["length_in_sec"]);
+                continue;
+            }
+            if (preg_match('/^93[0-9]{7}$/', $item['phone_number'])) {
+                $trafego["OPTIMUS"]+=intval($item["length_in_sec"]);
+                continue;
+            }
+            if (preg_match('/^[2-3][0-9]{8}$/', $item['phone_number'])) {
+                $trafego["FIXO"]+=intval($item["length_in_sec"]);
+                continue;
+            }
+            if (preg_match('/^[0-9]{9}$/', $item['phone_number'])) {
+                $trafego["outros"]+=intval($item["length_in_sec"]);
+              
+                continue;
+            }
         }
 
-        /*     foreach ($trafego as $nome => &$trk) {
-          foreach ($trk as $rede => &$value) {
-
-
-          $value = Sec2Time($value);
-          }
-          } */
-
-
-
-
-
-
-        echo json_encode($trafego);
+         echo json_encode($trafego);
         break;
 
 
@@ -151,5 +125,4 @@ function Sec2Time($time) {
 
     return $hours . ":" . $minutes . ":" . $seconds;
 }
-
 ?>
