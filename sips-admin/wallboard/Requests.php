@@ -64,7 +64,7 @@ switch ($action) {
         if ($graph_type === "4") {
             $query = "INSERT INTO WallBoard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,10000,4)";
             $query = mysql_query($query, $link) or die(mysql_error());
-            $query = "INSERT INTO `asterisk`.`WallBoard_Dataset` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1,param2) VALUES (LAST_INSERT_ID(), 0,1,0,0,0,'$param1',2,0,0,'$param2',0)";
+            $query = "INSERT INTO `WallBoard_Dataset` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1,param2) VALUES (LAST_INSERT_ID(), 0,1,0,0,0,'$param1',2,0,0,'$param2',0)";
             $query = mysql_query($query, $link) or die(mysql_error());
         } else {
             $query = "INSERT INTO WallBoard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
@@ -79,7 +79,7 @@ switch ($action) {
     case 'insert_pie':
         $query = "INSERT INTO WallBoard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "INSERT INTO `asterisk`.`WallBoard_Dataset` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1,param2) 
+        $query = "INSERT INTO `WallBoard_Dataset` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1,param2) 
             VALUES (LAST_INSERT_ID(), $codigo_query,$tempo,'$user','$user_group','$campaign_id','$linha_inbound',$mode,$status_feedback,'$chamadas','$param1','$param2')";
         $query = mysql_query($query, $link) or die(mysql_error());
 
@@ -91,7 +91,7 @@ switch ($action) {
     case 'insert_dataTop':
         $query = "INSERT INTO WallBoard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "INSERT INTO `asterisk`.`WallBoard_DataTop` (`id`, `id_wallboard`, `tempo`, `campanha`, `grupo_inbound`, `grupo_user`, `status_feedback`, `limit`, `custom_colum_name`,`param1`,`mode`)
+        $query = "INSERT INTO `WallBoard_DataTop` (`id`, `id_wallboard`, `tempo`, `campanha`, `grupo_inbound`, `grupo_user`, `status_feedback`, `limit`, `custom_colum_name`,`param1`,`mode`)
             VALUES(NULL,LAST_INSERT_ID() , $tempo, '$campanha', '$grupo_inbound', '$grupo_user', $status_feedback, '$limit', '$custom_colum_name', '$param1',$mode)";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
@@ -160,7 +160,7 @@ switch ($action) {
 
 
     case 'insert_dataset':
-        $query = "INSERT INTO `asterisk`.`WallBoard_Dataset` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1,param2) VALUES ($id_wallboard, $codigo_query,$tempo,'$user','$user_group','$campaign_id','$linha_inbound',$mode,'$status_feedback','$chamadas','$param1','$param2')";
+        $query = "INSERT INTO WallBoard_Dataset (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1,param2) VALUES ($id_wallboard, $codigo_query,$tempo,'$user','$user_group','$campaign_id','$linha_inbound',$mode,'$status_feedback','$chamadas','$param1','$param2')";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
