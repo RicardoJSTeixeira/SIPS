@@ -11575,8 +11575,8 @@ function MsgReader(){
         data: { action: "get_msgs", sent_agent: AgentMsg },
         success: function(data) {
             var HTML_marquee = "";
-            if(data){
-            if(data.msg_alert.from[0]){
+            if(data){            
+            if(data.msg_alert.from[0]!=null){
                 $("#dialog-agent-msg").dialog('option', 'title', '<span style="font-size:13px; color:black">Mensagem Recebida de <span style="color: #0073EA">'+data.msg_alert.from+'</span> enviada a <span style="color: #0073EA">'+data.msg_alert.date+'</span></span>');
                 $("#dialog-agent-msg").dialog("open");
                 AgentMsgFlag = false;
