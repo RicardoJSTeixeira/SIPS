@@ -432,13 +432,13 @@ function   inbound_wallboard(data)
       var updation;
       var wbe = data;
       var id = data[0];
-      var plot;
+
       var panel = $("#" + wbe[0] + "Main");
       var font_size = ((panel.width() / 50) + (panel.height() / 110));
       panel.empty();
       panel.append($("<div>").css("height", "98%").css("font-size", font_size + "px").css("background-color", "rgb(210, 215, 215)").css("padding-left", "1%").css("padding-right", "1%").css("padding-top", "1%").addClass("legend_inbound").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbe[7] / 1000) + " seg.")
 
-              .append($("<div>").append($("<label>").addClass("inbound_title").text(wbe[9][0].param1)))//titulo do inbound
+              .append($("<div>").append($("<label>").addClass("inbound_title").text(wbe[2])))//titulo do inbound
               .append($("<table>").css("height", "80%").css("width", "100%")
 
               //top                    
@@ -490,6 +490,8 @@ function   inbound_wallboard(data)
       function get_values_inbound()
       {
 
+
+
             $.post("Requests.php", {action: "get_agents", linha_inbound: wbe[9][0].linha_inbound},
             function(data1)
             {
@@ -535,6 +537,7 @@ function   inbound_wallboard(data)
                         var chamadas_perdidas_val = data3[0].chamadas_perdidas;
                         var chamadas_perdidas_percent = data3[0].chamadas_perdidas_percent;
                         var tma_todas_chamadas = 0;
+                    
                         if (+data3[0].tma > 0)
                         {
                               var totalSec = +data3[0].tma;
@@ -571,8 +574,9 @@ function   inbound_wallboard(data)
                               $.post("Requests.php", {action: "inbound_groups_info", group_id: wbe[9][0].linha_inbound},
                               function(data5)
                               {
-                                    answer_sec_pct_rt_stat_one = data5[0].answer_sec_pct_rt_stat_one;
-                                    answer_sec_pct_rt_stat_two = data5[0].answer_sec_pct_rt_stat_two;
+                       
+                                    answer_sec_pct_rt_stat_one = +data5[0].answer_sec_pct_rt_stat_one;
+                                    answer_sec_pct_rt_stat_two = +data5[0].answer_sec_pct_rt_stat_two;
 //update dos valores na table 
 
                                     var chamadas_atendidas = document.getElementById("chamadas_atendidas" + id);

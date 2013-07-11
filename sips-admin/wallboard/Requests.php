@@ -64,7 +64,7 @@ switch ($action) {
         if ($graph_type === "4") {
             $query = "INSERT INTO WallBoard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,10000,4)";
             $query = mysql_query($query, $link) or die(mysql_error());
-            $query = "INSERT INTO `WallBoard_Dataset` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1,param2) VALUES (LAST_INSERT_ID(), 0,1,0,0,0,'$param1',2,0,0,'$param2',0)";
+            $query = "INSERT INTO `WallBoard_Dataset` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1,param2) VALUES (LAST_INSERT_ID(), 0,1,0,0,0,$param1,2,0,0,'$param2',0)";
             $query = mysql_query($query, $link) or die(mysql_error());
         } else {
             $query = "INSERT INTO WallBoard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
@@ -415,7 +415,18 @@ switch ($action) {
 
 
     case '4'://inbound
-        $stmtB = "select calls_today,drops_today,answers_today,hold_sec_stat_one,hold_sec_stat_two,hold_sec_answer_calls,hold_sec_drop_calls,hold_sec_queue_calls,drops_today_pct from vicidial_campaign_stats where campaign_id='$linha_inbound'";
+
+
+        $linha = explode(",", $linha_inbound);
+
+        for ($i = 0; $i < count($linha); $i++) {
+            $linha[$i] = "'" . $linha[$i] . "'";
+        }
+
+        $linha_inbound = implode(",", $linha);
+
+
+        $stmtB = "select sum(calls_today),sum(drops_today),sum(answers_today),sum(hold_sec_stat_one),sum(hold_sec_stat_two),sum(hold_sec_answer_calls),sum(hold_sec_drop_calls),sum(hold_sec_queue_calls),AVG(drops_today_pct) from vicidial_campaign_stats where campaign_id in($linha_inbound)";
 
         $rslt = mysql_query($stmtB, $link);
         while ($row = mysql_fetch_row($rslt)) {
@@ -472,7 +483,7 @@ switch ($action) {
             $tomorrow = date("o-m-d", strtotime("+1 day"));
 
 
-            $query = "select ifnull(sum(length_in_sec),0) as total_sec, ifnull(sum(queue_seconds),0) as queue_seconds from vicidial_closer_log where call_date between '$today' and '$tomorrow' and campaign_id='$linha_inbound'";
+            $query = "select ifnull(sum(length_in_sec),0) as total_sec, ifnull(sum(queue_seconds),0) as queue_seconds from vicidial_closer_log where call_date between '$today' and '$tomorrow' and campaign_id in($linha_inbound)";
 
             $query = mysql_query($query, $link);
             $row2 = mysql_fetch_assoc($query);
@@ -483,9 +494,6 @@ switch ($action) {
                 chamadas_atendidas => $answersTODAY,
                 tma1 => $PCThold_sec_stat_one,
                 tma2 => $PCThold_sec_stat_two,
-                tme_chamadas_atendidas => $AVGhold_sec_answer_calls,
-                tme_chamadas_perdidas => $AVGhold_sec_drop_calls,
-                tme_todas_chamadas => $AVGhold_sec_queue_calls,
                 tma => $row2["total_sec"],
                 fila_espera => $row2["queue_seconds"]);
         }
@@ -498,7 +506,19 @@ switch ($action) {
 
     case 'get_agents_incall':// Inbound agentes,campaign,status
         $js = array();
-        $query = "SELECT vcl.status as status  FROM vicidial_auto_calls vac inner join vicidial_closer_log vcl on vac.uniqueid=vcl.uniqueid where vcl.campaign_id='$linha_inbound'";
+
+        $linha = explode(",", $linha_inbound);
+
+        for ($i = 0; $i < count($linha); $i++) {
+            $linha[$i] = "'" . $linha[$i] . "'";
+        }
+
+        $linha_inbound = implode(",", $linha);
+
+
+
+
+        $query = "SELECT vcl.status as status  FROM vicidial_auto_calls vac inner join vicidial_closer_log vcl on vac.uniqueid=vcl.uniqueid where vcl.campaign_id in($linha_inbound)";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = $row["status"];
@@ -508,17 +528,41 @@ switch ($action) {
 
     case 'get_agents':// Inbound agentes,campaign,status
         $js = array();
-        $query = "SELECT status  FROM `vicidial_live_agents` where status in('QUEUE','PAUSED','READY') and closer_campaigns like '% $linha_inbound %'";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
 
-            $js[] = $row["status"];
+
+        $linha = explode(",", $linha_inbound);
+        for ($i = 0; $i < count($linha); $i++) {
+
+
+            $query = "SELECT status  FROM `vicidial_live_agents` where status in('QUEUE','PAUSED','READY') and closer_campaigns like '% $linha[$i] %'";
+            $query = mysql_query($query, $link) or die(mysql_error());
+            while ($row = mysql_fetch_assoc($query)) {
+
+                $js[] = $row["status"];
+            }
         }
+
+
+
+
+
+
+
         echo json_encode($js);
         break;
 
     case 'inbound_groups_info':// Inbound agentes,campaign,status
-        $query = " SELECT answer_sec_pct_rt_stat_one,answer_sec_pct_rt_stat_two FROM vicidial_inbound_groups WHERE group_id='$group_id'";
+
+        $linha = explode(",", $group_id);
+
+        for ($i = 0; $i < count($linha); $i++) {
+            $linha[$i] = "'" . $linha[$i] . "'";
+        }
+
+        $group_id = implode(",", $linha);
+
+
+        $query = "SELECT AVG(answer_sec_pct_rt_stat_one) as answer_sec_pct_rt_stat_one,AVG(answer_sec_pct_rt_stat_two) as answer_sec_pct_rt_stat_two FROM vicidial_inbound_groups WHERE group_id in($group_id)";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array(answer_sec_pct_rt_stat_one => $row["answer_sec_pct_rt_stat_one"], answer_sec_pct_rt_stat_two => $row["answer_sec_pct_rt_stat_two"]);
@@ -624,7 +668,7 @@ union all
         }
         echo json_encode($js);
         break;
-                
+
     case 'status_venda':
         $query = "(SELECT status ,status_name  FROM vicidial_campaign_statuses where visible='1' group by status)
 union all

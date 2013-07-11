@@ -187,7 +187,7 @@ $(function() {
             sql_basic('delete_WBE', 0, id);
       });
       $(document).on("click", ".add_dataset_button", function(e) {
-           edit_dataset = false;
+            edit_dataset = false;
             //reset dataset   
             $("#resultado_dataset_1").attr("checked", "checked");
             radio_checks();
@@ -333,6 +333,12 @@ $(function() {
       $(document).on("click", "#barras_button", function(e) {//GRAFICO DE BARRAS
             $('#graph_name').val('Gráfico de Barras');
       }); //GRAFICO DE BARRAS
+      $(document).on("click", "#graph_inbound", function(e) {//GRAFICO DE BARRAS
+            $("#inbound_name").val("Inbound");
+            $('#group_inbound_select').val("").trigger('liszt:updated');
+      }); //INBOUND
+
+
       $(document).on("click", "#save_button_layout", function(e) {//ALTERAR O NOME DA LAYOUT
 
             if ($("#Layout_Input_name").val() == "")
@@ -433,7 +439,19 @@ $(function() {
             }
       });
       $(document).on("click", "#create_button_inbound", function(e) {
-            manipulate_graph("insert_wbe", 0, "Estatistica", Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 4, $("#group_inbound_select").val(), $("#group_inbound_select option:selected").text());
+            var linhas_inbound = "";
+            linhas_inbound = $("#group_inbound_select").val();
+          
+            linhas_inbound = "'" + linhas_inbound + "'";
+
+            if ($("#group_inbound_select").val())
+            {
+                  manipulate_graph("insert_wbe", 0, $("#inbound_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 4,linhas_inbound, 0);
+                  $('#dialog_inbound').modal('hide');
+            }
+            else
+                  alert("Selecione uma ou mais linhas de inbound");
+
       });
       $(document).on("click", "#create_button_dataset", function(e) {
 
@@ -711,10 +729,10 @@ function update_wbe()
                                 .css("height", wbes[i][6] + "px")
                                 .append($("<div>").addClass("grid-title")
                                 .append($("<div>").addClass("pull-left icon-list-alt ")
-                                .text(" " + wbes[i][2] + " de " + wbes[i][9][0].param1))
+                                .text(" " + wbes[i][2]))
                                 .append($("<div>").addClass("pull-right")
                                 .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
-                                .append($("<i>").addClass("icon-remove")))                                ))
+                                .append($("<i>").addClass("icon-remove")))))
                                 .append($("<div>").addClass("grid-content").attr("id", "grid_content")));
                         break;
                   case "5"://dataTop
@@ -729,8 +747,8 @@ function update_wbe()
                                 .text(" " + wbes[i][2]))
                                 .append($("<div>").addClass("pull-right")
                                 .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
-                                .append($("<i>").addClass("icon-remove")))                                ))
-                                .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0]))                                );
+                                .append($("<i>").addClass("icon-remove")))))
+                                .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0])));
                         $("#grid_content" + wbes[i][0]).append($("<div>").addClass("span12")
                                 .text("Filtro-> " + wbes[i][9][0].param1))
                                 .append($("<div>").addClass("span12")
@@ -748,8 +766,8 @@ function update_wbe()
                                 .text(" " + wbes[i][2]))
                                 .append($("<div>").addClass("pull-right")
                                 .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
-                                .append($("<i>").addClass("icon-remove")))                                ))
-                                .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0])                                ));
+                                .append($("<i>").addClass("icon-remove")))))
+                                .append($("<div>").addClass("grid-content").attr("id", "grid_content" + wbes[i][0])));
                         $("#grid_content" + wbes[i][0]).append($("<div>").addClass("span12")
                                 .text("Filtro-> " + wbes[i][9][0].param1))
                                 .append($("<div>").addClass("span12")
@@ -772,7 +790,7 @@ function update_wbe()
                                 .append($("<button>").addClass("btn icon-alone btn-info add_dataset_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Adicionar dataset")
                                 .append($("<i>").addClass("icon-plus-sign")))
                                 .append($("<button>").addClass("btn icon-alone btn-danger delete_button").data("wbe_id", wbes[i][0]).attr("data-t", "tooltip").attr("title", "Remover Wallboard")
-                                .append($("<i>").addClass("icon-remove")))                               ))
+                                .append($("<i>").addClass("icon-remove")))))
                                 .append($("<div>").addClass("grid-content").attr("id", "grid_content")));
                         var grid_content = $("#" + wbes[i][0] + "WBE #grid_content");
                         var a = 0;
@@ -920,7 +938,7 @@ function sql_basic(opcao, id_layout, id_wbe)
             {
                   load_dados("layout", 0);
                   idLayout = $("#LayoutSelector").val();
-           
+
             }
 
             if (opcao === "remove_Layout")
