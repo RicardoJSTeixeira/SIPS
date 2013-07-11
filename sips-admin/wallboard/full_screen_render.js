@@ -128,10 +128,10 @@ $(document).on("click", "#decrease_em_datatop", function(e) {
 
 
 $(document).on("mouseenter", ".PanelWB", function(e) {
-        $(".pull-right-letter_button").stop().fadeIn(600);
+      $(".pull-right-letter_button").stop().fadeIn(600);
 });
 $(document).on("mouseleave", ".PanelWB", function(e) {
-            $(".pull-right-letter_button").hide();
+      $(".pull-right-letter_button").hide();
 });
 
 //BAR GRAPh ««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««
@@ -261,7 +261,7 @@ function plot_update(data)
                                           }
                                           verifier += +obj[prop][k].leads;
                                           var temp = new Date(obj[prop][k].call_date);
-                                    temp.setHours(temp.getHours() + 1);
+                                          temp.setHours(temp.getHours() + 1);
                                           dates.push(temp);
                                           result.push([new Date(temp).getTime(), obj[prop][k].leads]);
                                     }
@@ -537,24 +537,16 @@ function   inbound_wallboard(data)
                         var chamadas_perdidas_val = data3[0].chamadas_perdidas;
                         var chamadas_perdidas_percent = data3[0].chamadas_perdidas_percent;
                         var tma_todas_chamadas = 0;
-                    
+
                         if (+data3[0].tma > 0)
                         {
                               var totalSec = +data3[0].tma;
                               totalSec = Math.floor(totalSec / chamadas_atendidas_val);
-                              var seconds = totalSec % 60;
-                              tma_todas_chamadas = seconds;
+                              tma_todas_chamadas = secondstotime(totalSec);
                         }
 
 
-                        var tempo_espera_media_fila = 0;
-                        if (+data3[0].fila_espera > 0)
-                        {
-                              var totalSec = +data3[0].fila_espera;
-                              totalSec = Math.floor(totalSec / chamadas_atendidas_val);
-                              var seconds = totalSec % 60;
-                              tempo_espera_media_fila = seconds;
-                        }
+
 
 
                         $.post("Requests.php", {action: "get_agents_incall", linha_inbound: wbe[9][0].linha_inbound},
@@ -574,7 +566,7 @@ function   inbound_wallboard(data)
                               $.post("Requests.php", {action: "inbound_groups_info", group_id: wbe[9][0].linha_inbound},
                               function(data5)
                               {
-                       
+
                                     answer_sec_pct_rt_stat_one = +data5[0].answer_sec_pct_rt_stat_one;
                                     answer_sec_pct_rt_stat_two = +data5[0].answer_sec_pct_rt_stat_two;
 //update dos valores na table 
@@ -586,7 +578,7 @@ function   inbound_wallboard(data)
                                     var chamadas_espera = document.getElementById("chamadas_espera" + id);
                                     chamadas_espera.innerHTML = chamadas_espera_val;
                                     var tma1_element = document.getElementById("tma1" + id);
-                                    tma1_element.innerHTML = tma_todas_chamadas + "sec";
+                                    tma1_element.innerHTML = tma_todas_chamadas;
                                     var sla1 = document.getElementById("sla1" + id);
                                     var sla1_title = document.getElementById("sla1_title" + id);
                                     if (tma1 > 0)
@@ -763,4 +755,17 @@ $(window).bind('beforeunload', function() {
 
 
 
-                          
+               function secondstotime(seconds)
+{
+    
+      var numminutes = Math.floor(((seconds) % 3600) / 60);
+      var numseconds = ((seconds) % 3600) % 60;
+
+      
+      if (numminutes < 10)
+            numminutes = "0" + numminutes;
+      if (numseconds < 10)
+            numseconds = "0" + numseconds;
+
+      return numminutes + ":" + numseconds;
+}           
