@@ -689,7 +689,7 @@ function DBWizardMatchFields()
 		$.each($(".sel-db-wizard-fields"), function(){
 		
 		arrayMatchFields.push($(this).attr("id"));
-		arrayListFields.push($(this)[0].selectedOptions[0].value)
+		arrayListFields.push($(this).val())
 	
 		});
 
