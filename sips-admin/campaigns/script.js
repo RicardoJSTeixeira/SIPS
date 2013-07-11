@@ -84,6 +84,13 @@ function ConstructNewCampaign()
             CampaignEdit = false; 
             CampaignEditorElemInit();
             MiscOptionsBuilder("NEW");
+            $.post("requests.php",
+            {action:"iscloud"},
+            function(data){
+                if(data.iscloud){
+                    $(".iscloud").hide();
+                }
+            },"json");
         }
 	}); 
 };
