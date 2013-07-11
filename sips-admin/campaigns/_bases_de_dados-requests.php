@@ -90,8 +90,11 @@ function DialogDBEditOnOpen($DBID, $AllowedCampaigns, $link)
 	$result = mysql_fetch_row(mysql_query("SELECT campaign_id FROM vicidial_lists WHERE list_id='$DBID'")) or die(mysql_query());
 	
 	$campaign = $result[0];
-	
+	if(in_array("ALL-CAMPAIGNS-", $AllowedCampaigns)){
+	$result = mysql_query("SELECT campaign_name, campaign_id FROM vicidial_campaigns ORDER BY campaign_name") or die(mysql_error());
+	}else{
 	$result = mysql_query("SELECT campaign_name, campaign_id FROM vicidial_campaigns WHERE campaign_id IN ('".implode("','", $AllowedCampaigns)."') ORDER BY campaign_name") or die(mysql_error());
+   }
 	
 	while($row = mysql_fetch_assoc($result))
 	{
