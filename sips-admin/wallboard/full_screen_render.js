@@ -79,6 +79,13 @@ $(document).ready(function() {
                   i++;
             });
       }, "json");
+      
+    
+	setTimeout("location.reload(true);",120000);
+
+      
+      
+      
 });
 $(document).on("click", ".increase_em", function(e) {
 
@@ -511,9 +518,7 @@ function   inbound_wallboard(data)
                               case "CLOSER":
                                     ready++;
                                     break;
-                              case "QUEUE":
-                                    queue++;
-                                    break;
+
                               case"PAUSED":
                                     paused++;
                                     break;
@@ -523,51 +528,54 @@ function   inbound_wallboard(data)
                         }
                         a++;
                   });
-                  $.post("Requests.php", {action: "4", linha_inbound: wbe[9][0].linha_inbound},
-                  function(data3)
+
+
+
+
+
+                  $.post("Requests.php", {action: "get_calls_queue", linha_inbound: wbe[9][0].linha_inbound},
+                  function(data4)
                   {
-                        /* (chamadas_efectuadas => $callsTODAY, 
-                         * chamadas_perdidas => $dropsTODAY
-                         * ,chamadas_atendidas => $answersTODAY,
-                         * tma1=>$PCThold_sec_stat_one,
-                         * tma2=>$PCThold_sec_stat_two,
-                         * tme_chamadas_atendidas=>$AVGhold_sec_answer_calls,
-                         * tme_chamadas_perdidas=>$AVGhold_sec_drop_calls,
-                         * tme_todas_chamadas=>$AVGhold_sec_queue_calls);*/
-                        var tma1 = data3[0].tma1;
-                        var tma2 = data3[0].tma2;
-                        var chamadas_atendidas_val = data3[0].chamadas_atendidas;
-                        var chamadas_perdidas_val = data3[0].chamadas_perdidas;
-                        var chamadas_perdidas_percent = data3[0].chamadas_perdidas_percent;
-                        var tma_todas_chamadas = 0;
-
-                        if (+data3[0].tma > 0)
+                        $.each(data4, function(index, value)
                         {
-                              var totalSec = +data3[0].tma;
-                              totalSec = Math.floor(totalSec / chamadas_atendidas_val);
-                              tma_todas_chamadas = secondstotime(totalSec);
-                              if (!tma_todas_chamadas > 0)
-                                    tma_todas_chamadas = 0;
-                        }
+                              if (data4[index] === "QUEUE")
+                                    queue++;
+                        });
 
 
 
-
-
-                        $.post("Requests.php", {action: "get_agents_incall", linha_inbound: wbe[9][0].linha_inbound},
-                        function(data4)
+                        $.post("Requests.php", {action: "4", linha_inbound: wbe[9][0].linha_inbound},
+                        function(data3)
                         {
+                              /* (chamadas_efectuadas => $callsTODAY, 
+                               * chamadas_perdidas => $dropsTODAY
+                               * ,chamadas_atendidas => $answersTODAY,
+                               * tma1=>$PCThold_sec_stat_one,
+                               * tma2=>$PCThold_sec_stat_two,
+                               * tme_chamadas_atendidas=>$AVGhold_sec_answer_calls,
+                               * tme_chamadas_perdidas=>$AVGhold_sec_drop_calls,
+                               * tme_todas_chamadas=>$AVGhold_sec_queue_calls);*/
+                              var tma1 = data3[0].tma1;
+                              var tma2 = data3[0].tma2;
+                              var chamadas_atendidas_val = data3[0].chamadas_atendidas;
+                              var chamadas_perdidas_val = data3[0].chamadas_perdidas;
+                              var chamadas_perdidas_percent = data3[0].chamadas_perdidas_percent;
+                              var tma_todas_chamadas = 0;
 
-                              var agentes_incall = 0;
-                              var chamadas_espera_val = 0;
-                              $.each(data4, function(index, value)
+                              if (+data3[0].tma > 0)
                               {
+                                    var totalSec = +data3[0].tma;
+                                    totalSec = Math.floor(totalSec / chamadas_atendidas_val);
+                                    if (/^\d+$/.test(totalSec))
+                                          tma_todas_chamadas = secondstotime(totalSec);
 
-                                    if (data4[index] === "QUEUE")
-                                          chamadas_espera_val++;
-                                    if (data4[index] === "INCALL")
-                                          agentes_incall++;
-                              });
+                              }
+
+
+
+
+
+
                               $.post("Requests.php", {action: "inbound_groups_info", group_id: wbe[9][0].linha_inbound},
                               function(data5)
                               {
@@ -581,7 +589,7 @@ function   inbound_wallboard(data)
                                     var chamadas_perdidas = document.getElementById("chamadas_perdidas" + id);
                                     chamadas_perdidas.innerHTML = chamadas_perdidas_val + "-" + Math.floor(chamadas_perdidas_percent) + "%";
                                     var chamadas_espera = document.getElementById("chamadas_espera" + id);
-                                    chamadas_espera.innerHTML = chamadas_espera_val;
+                                    chamadas_espera.innerHTML = queue;
                                     var tma1_element = document.getElementById("tma1" + id);
                                     tma1_element.innerHTML = tma_todas_chamadas;
                                     var sla1 = document.getElementById("sla1" + id);
@@ -589,7 +597,7 @@ function   inbound_wallboard(data)
                                     if (tma1 > 0)
                                     {
                                           sla1.innerHTML = Math.floor(tma1) + "%";
-                                          sla1_title.innerHTML = "SLA1->" + answer_sec_pct_rt_stat_one + "sec";
+                                          sla1_title.innerHTML = "SLA1->" + Math.floor(answer_sec_pct_rt_stat_one) + "sec";
                                     }
                                     else
                                           sla1.innerHTML = 0;
@@ -598,7 +606,7 @@ function   inbound_wallboard(data)
                                     if (tma2 > 0)
                                     {
                                           sla2.innerHTML = Math.floor(tma2) + "%";
-                                          sla2_title.innerHTML = "SLA2->" + answer_sec_pct_rt_stat_two + "sec";
+                                          sla2_title.innerHTML = "SLA2->" + Math.floor(answer_sec_pct_rt_stat_two) + "sec";
                                     }
                                     else
                                           sla2.innerHTML = 0;
@@ -606,8 +614,8 @@ function   inbound_wallboard(data)
                                     var data_array = [];
                                     data_array.push({label: ready + " -- Agentes Disponiveis", data: ready});
                                     data_array.push({label: (queue + paused) + " -- Agentes Indisponiveis", data: (queue + paused)});
-                                    data_array.push({label: agentes_incall + " -- Agentes em Chamada", data: agentes_incall});
-                                    if ((ready + queue + paused + agentes_incall) == "0")
+                                    data_array.push({label: incall + " -- Agentes em Chamada", data: incall});
+                                    if ((ready + queue + paused + incall) == "0")
                                     {
 
                                           data_array = [];

@@ -415,22 +415,17 @@ switch ($action) {
 
 
     case '4'://inbound
-
-
         $linha = explode(",", $linha_inbound);
 
         for ($i = 0; $i < count($linha); $i++) {
             $linha[$i] = "'" . $linha[$i] . "'";
         }
-
         $linha_inbound = implode(",", $linha);
 
 
         $stmtB = "select sum(calls_today),sum(drops_today),sum(answers_today),sum(hold_sec_stat_one),sum(hold_sec_stat_two),sum(hold_sec_answer_calls),sum(hold_sec_drop_calls),sum(hold_sec_queue_calls),AVG(drops_today_pct) from vicidial_campaign_stats where campaign_id in($linha_inbound)";
-
         $rslt = mysql_query($stmtB, $link);
         while ($row = mysql_fetch_row($rslt)) {
-
             $callsTODAY = $row[0];
             $dropsTODAY = $row[1];
             $answersTODAY = $row[2];
@@ -477,17 +472,11 @@ switch ($action) {
                 $PCThold_sec_stat_two = 0;
                 $AVGhold_sec_answer_calls = 0;
             }
-
-
             $today = date("o-m-d");
             $tomorrow = date("o-m-d", strtotime("+1 day"));
-
-
             $query = "select ifnull(sum(length_in_sec),0) as total_sec, ifnull(sum(queue_seconds),0) as queue_seconds from vicidial_closer_log where call_date between '$today' and '$tomorrow' and campaign_id in($linha_inbound)";
-
             $query = mysql_query($query, $link);
             $row2 = mysql_fetch_assoc($query);
-
             $js[] = array(chamadas_efectuadas => $callsTODAY,
                 chamadas_perdidas => $dropsTODAY,
                 chamadas_perdidas_percent => $drops_today_pct,
@@ -502,9 +491,21 @@ switch ($action) {
 
 
 
+    case 'get_agents':// Inbound agentes,campaign,status
+        $js = array();
+        $linha_inbound = str_replace(",", "|", $linha_inbound);
+        $query = "SELECT status  FROM `vicidial_live_agents` where status in('QUEUE','PAUSED','READY','CLOSER','INCALL') and closer_campaigns REGEXP  '$linha_inbound'";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = $row["status"];
+        }
+        echo json_encode($js);
+        break;
 
-
-    case 'get_agents_incall':// Inbound agentes,campaign,status
+        
+        
+        
+           case 'get_calls_queue':// Inbound agentes,campaign,status
         $js = array();
 
         $linha = explode(",", $linha_inbound);
@@ -514,50 +515,27 @@ switch ($action) {
         }
 
         $linha_inbound = implode(",", $linha);
+        $query = "SELECT status FROM vicidial_auto_calls where campaign_id in($linha_inbound)";
 
-
-        $query = "SELECT vcl.status as status  FROM vicidial_auto_calls vac inner join vicidial_closer_log vcl on vac.uniqueid=vcl.uniqueid where vcl.campaign_id in($linha_inbound)";
-   
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = $row["status"];
         }
         echo json_encode($js);
         break;
-
-    case 'get_agents':// Inbound agentes,campaign,status
-        $js = array();
-
-
-        $linha = explode(",", $linha_inbound);
-        for ($i = 0; $i < count($linha); $i++) {
-            $query = "SELECT status  FROM `vicidial_live_agents` where status in('QUEUE','PAUSED','READY','CLOSER') and closer_campaigns like '% $linha[$i] %'";
-            $query = mysql_query($query, $link) or die(mysql_error());
-            while ($row = mysql_fetch_assoc($query)) {
-
-                $js[] = $row["status"];
-            }
-        }
-
-
-
-
-
-
-
-        echo json_encode($js);
-        break;
-
+        
+        
+        
     case 'inbound_groups_info':// Inbound agentes,campaign,status
-
         $linha = explode(",", $group_id);
-
         for ($i = 0; $i < count($linha); $i++) {
             $linha[$i] = "'" . $linha[$i] . "'";
         }
-
         $group_id = implode(",", $linha);
 
+        
+        
+        
 
         $query = "SELECT AVG(answer_sec_pct_rt_stat_one) as answer_sec_pct_rt_stat_one,AVG(answer_sec_pct_rt_stat_two) as answer_sec_pct_rt_stat_two FROM vicidial_inbound_groups WHERE group_id in($group_id)";
         $query = mysql_query($query, $link) or die(mysql_error());
