@@ -1,7 +1,6 @@
-//passar o crescimento de letra para cada wallboard
+//update na layout
 
 
-var wbes = [];
 var layouts = [];
 var idLayout = 0;
 var window_slave;
@@ -1092,7 +1091,7 @@ function flot_extra(opcao)
                   $.each(data, function(index, value) {
                         object.append(new Option(data[index].full_name, data[index].user));
                   });
-                  object.chosen({no_results_text: "Não foi encontrado."});
+                  object.data("placeholder","Escolha uma ou mais opções").chosen({no_results_text: "Não foi encontrado."});
             }
             if (opcao === "user_group")
             {
@@ -1102,7 +1101,7 @@ function flot_extra(opcao)
                               object.append(new Option(data[index].group_name, data[index].user_group));
                         }
                   });
-                  object.chosen({no_results_text: "Não foi encontrado."});
+                  object.data("placeholder","Escolha uma ou mais opções").chosen({no_results_text: "Não foi encontrado."});
             }
 
             if (opcao === "campaign")
@@ -1111,7 +1110,7 @@ function flot_extra(opcao)
                   $.each(data, function(index, value) {
                         object.append(new Option(this.campaign_name, this.campaign_id));
                   });
-                  object.chosen({no_results_text: "Não foi encontrado."});
+                  object.data("placeholder","Escolha uma ou mais opções").chosen({no_results_text: "Não foi encontrado."});
             }
             if (opcao === "status_venda")
             {
@@ -1119,7 +1118,7 @@ function flot_extra(opcao)
                   $.each(data, function(index, value) {
                         object.append(new Option(this.status_t, this.status_v));
                   });
-                  object.chosen({no_results_text: "Não foi encontrado."});
+                  object.data("placeholder","Escolha uma ou mais opções").chosen({no_results_text: "Não foi encontrado."});
             }
             if (opcao === "inbound")
             {
@@ -1127,7 +1126,7 @@ function flot_extra(opcao)
                   $.each(data, function(index, value) {
                         object.append(new Option(this.name, this.id));
                   });
-                  object.chosen({no_results_text: "Não foi encontrado."});
+                  object.data("placeholder","Escolha uma ou mais opções").chosen({no_results_text: "Não foi encontrado."});
             }
       }, "json");
 }
