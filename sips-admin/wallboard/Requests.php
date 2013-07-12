@@ -531,7 +531,7 @@ switch ($action) {
 
         $linha = explode(",", $linha_inbound);
         for ($i = 0; $i < count($linha); $i++) {
-            $query = "SELECT status  FROM `vicidial_live_agents` where status in('QUEUE','PAUSED','READY') and closer_campaigns like '% $linha[$i] %'";
+            $query = "SELECT status  FROM `vicidial_live_agents` where status in('QUEUE','PAUSED','READY','CLOSER') and closer_campaigns like '% $linha[$i] %'";
             $query = mysql_query($query, $link) or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
 
