@@ -20,6 +20,10 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
 
 	if($Flag == "NEW")
 	{
+            $prefix = mysql_fetch_row(mysql_query("SELECT prefix FROM vicidial_user_groups WHERE user_group LIKE '$UserGroup'", $link));
+            $prefix=$prefix[0];
+            $prefix=($prefix!="X" and strlen($prefix)>0)?"$prefix":"X";
+            
 		$query = mysql_fetch_row(mysql_query("SELECT count(*) FROM vicidial_campaigns WHERE campaign_id LIKE 'W%'", $link)) or die(mysql_error());
 		$campaign_number = ($query[0]+1);
 		while(strlen($campaign_number) < 5) { $campaign_number = "0".$campaign_number; }
@@ -75,7 +79,7 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
 			'longest_wait_time',
 			'24hours',
 			'35',
-			'X',
+			'$prefix',
 			'0',
 			'ALLFORCE',
 			'CAMPAIGN_AGENT_CUSTPHONE_FULLDATE',

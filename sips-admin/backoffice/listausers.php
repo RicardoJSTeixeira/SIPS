@@ -92,10 +92,10 @@ require(ROOT . "ini/dbconnect.php");
             $users_regex = "";
             $result = mysql_query("SELECT `user` FROM `vicidial_users` WHERE user_group in ($user_groups) AND user_level < $user_level") or die(mysql_error());
             while ($rugroups = mysql_fetch_assoc($result)) {
-                $users_regex .= "$rugroups[user]|";
+                $users_regex .= "^$rugroups[user]$|";
             }
             $users_regex = rtrim($users_regex, "|");
-            $users_regex = "AND user REGEXP '^$users_regex$'";
+            $users_regex = "AND user REGEXP '$users_regex'";
         }
 //Users FIM
 

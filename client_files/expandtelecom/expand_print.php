@@ -172,7 +172,7 @@ $row = mysql_fetch_assoc($query);
 <tr><td class='black right' colspan='1'>Actividade: </td><td class='black left' colspan='3'><?=$row['extra13']?></td><td class='black left' colspan='2'>Data: <?=$row['extra14']?></td><td class='black left' colspan='2'>Hora: <?=$row['extra15']?></td></tr>
 
 
-<tr><td class='black right' colspan='1'>Responsável:</td><td class='black left' colspan='5'><?=$row['vendor_lead_code']?></td><td class='black left' colspan='2'>Telemóvel: <?=$row['extra10']?></td></tr>
+<tr><td class='black right' colspan='1'>Responsável:</td><td class='black left' colspan='5'><?=$row['vendor_lead_code']?></td><td class='black left' colspan='2'>Telemóvel: <?=$row['address3']?></td></tr>
 
 <tr><td class='black right' colspan='1'>Telefone:</td><td class='black left' colspan='2'><?=$row['phone_number']?></td><td class='black left' colspan='3'>Email:</td><td class='black left' colspan='2'>Fax:</td></tr>
 

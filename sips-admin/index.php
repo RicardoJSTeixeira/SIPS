@@ -228,7 +228,6 @@ if (!mysql_num_rows($r)) {
                                     function SetFrameHeight() {
 
                                         $("#mbody").height($(window).height() - 90);
-
                                     }
 
                                     window.onresize = function() {
@@ -245,15 +244,17 @@ if (!mysql_num_rows($r)) {
 
                                     }
 
-                                    function open_page(url) {
-                                        $("#mbody").attr('src', url);
-                                    }
 
                                     function setCookie(key, value) {
                                         var expires = new Date();
                                         expires.setTime(expires.getTime() + 31536000000); //1 year  
                                         document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
                                     }
+    				
+				    function open_page(url) {
+                                        $("#mbody").attr('src', url);
+                                        document.cookie = setCookie("pagina", url);
+                                     }
 
                                     function getCookie(key) {
                                         var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
@@ -265,7 +266,8 @@ if (!mysql_num_rows($r)) {
 
 
                                     $(function() {
-                                        $('#menu-content > .cc-submenu').hide();
+                                  $("body").on("close",function(){document.cookie = setCookie("pagina", null);});
+      $('#menu-content > .cc-submenu').hide();
                                         $('#menu-content > .cc-menu').click(function() {
 
                                             document.cookie = setCookie("separador", $("#menu-content > .cc-menu").index(this));
@@ -281,7 +283,11 @@ if (!mysql_num_rows($r)) {
                                             $('#menu-content > .cc-menu:eq(' + checkCookie + ')').next().show();
                                         }
 
-
+					var checkPagina = getCookie("pagina");
+                                        
+                                        if (checkPagina !== null) {
+					     $("#mbody").attr("src",checkPagina);
+                                        }
 
                                         $("#menu-hide").toggle(
                                                 function() {
