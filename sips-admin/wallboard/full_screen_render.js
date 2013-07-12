@@ -543,6 +543,8 @@ function   inbound_wallboard(data)
                               var totalSec = +data3[0].tma;
                               totalSec = Math.floor(totalSec / chamadas_atendidas_val);
                               tma_todas_chamadas = secondstotime(totalSec);
+                        if(!tma_todas_chamadas>0)
+                               tma_todas_chamadas=0;
                         }
 
 
