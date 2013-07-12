@@ -5641,6 +5641,12 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 				alert_box("Tem que estar em pausa para fazer chamadas manuais");
 				}
 			}
+                        if(lead_id.value.length!==0)
+                            {
+                            move_on=0;
+                            alert_box("Tem que estar em pausa para fazer chamadas manuais");				
+                            }
+                        
 		if (move_on == 1)
 			{
 			if (TVfast=='FAST')
