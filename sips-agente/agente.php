@@ -7566,7 +7566,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 							var callnum = dialed_number;
 							var dial_display_number = phone_number_format(callnum);
 
-							document.getElementById("MainStatuSSpan").innerHTML = " Chamada Inbound: " + dial_display_number + "Linha de Entrada: " + VDIC_fronter; 
+							document.getElementById("MainStatuSSpan").innerHTML = " Chamada Inbound: " + dial_display_number + "Linha de Entrada: " + VDCL_group_name; 
 
 							if (CBentry_time.length > 2)
 								{
@@ -7612,7 +7612,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 								var callnum = dialed_number;
 								var dial_display_number = phone_number_format(callnum);
 
-								document.getElementById("MainStatuSSpan").innerHTML = "Chamada de Entrada: " + dial_display_number + " Linha de Entrada: " + VDIC_fronter; 
+								document.getElementById("MainStatuSSpan").innerHTML = "Chamada de Entrada: " + dial_display_number + " Linha de Entrada: " + VDCL_group_name; 
 								}
 
                             document.getElementById("ParkControl").innerHTML ="<td onclick=\"mainxfer_send_redirect('ParK','" + lastcustchannel + "','" + lastcustserverip + "');return false;\" style='cursor:pointer'><img src='/images/icons/control_pause_blue.png' /></td><td onclick=\"mainxfer_send_redirect('ParK','" + lastcustchannel + "','" + lastcustserverip + "');return false;\" style='cursor:pointer'><a href=\"#\" >Colocar em Espera</a></td>";
@@ -7818,7 +7818,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 								{
 								var callnum = dialed_number;
 								var dial_display_number = phone_number_format(callnum);
-								alert("Chamada Entrada: " + dial_display_number + "\n Linha de Entrada: " + VDIC_fronter);
+								alert("Chamada Entrada: " + dial_display_number + "\n Linha de Entrada: " + VDCL_group_name);
 								}
 							}
 						
