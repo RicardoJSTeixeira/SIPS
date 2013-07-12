@@ -439,7 +439,7 @@ switch ($action) {
             $hold_sec_answer_calls = $row[5];
             $hold_sec_drop_calls = $row[6];
             $hold_sec_queue_calls = $row[7];
-            $drops_today_pct = $row[8];
+            $drops_today_pct = ceil($row[8]);
 
             if (($dropsTODAY > 0) and ($answersTODAY > 0)) {
                 $drpctTODAY = ( ($dropsTODAY / $callsTODAY) * 100);
@@ -516,9 +516,8 @@ switch ($action) {
         $linha_inbound = implode(",", $linha);
 
 
-
-
         $query = "SELECT vcl.status as status  FROM vicidial_auto_calls vac inner join vicidial_closer_log vcl on vac.uniqueid=vcl.uniqueid where vcl.campaign_id in($linha_inbound)";
+   
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = $row["status"];
@@ -532,8 +531,6 @@ switch ($action) {
 
         $linha = explode(",", $linha_inbound);
         for ($i = 0; $i < count($linha); $i++) {
-
-
             $query = "SELECT status  FROM `vicidial_live_agents` where status in('QUEUE','PAUSED','READY') and closer_campaigns like '% $linha[$i] %'";
             $query = mysql_query($query, $link) or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
