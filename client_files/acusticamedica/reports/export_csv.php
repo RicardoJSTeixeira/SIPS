@@ -20,8 +20,8 @@ foreach ($_GET as $key => $value) {
 function columnmakerwithtotal($array_head, $array, $total = false, $text = false, $i = 0) {
     $sum = 0;
     if (count($array) > 0) {
-        foreach ($array as $value) {
-            $array_head[] = $value;
+        foreach ($array as $key => $value) {
+            $array_head[$key] = $value;
             if ($total) {
                 $sum+=$value;
             }
@@ -29,12 +29,13 @@ function columnmakerwithtotal($array_head, $array, $total = false, $text = false
     }
 
     if ($i > 0) {
-        if (count($array) < $i) {
-            $max = $i - count($array);
-            for ($index = 0; $index < $max; $index++) {
-                $array_head[] = 0;
+        
+            for ($index = 1; $index < $i+2; $index++) {
+                if (!array_key_exists($index, $array_head)) {
+                    $array_head[$index] = 0;
+                }
             }
-        }
+        
     }
     if ($total) {
         $array_head[] = $sum;
@@ -45,13 +46,21 @@ function columnmakerwithtotal($array_head, $array, $total = false, $text = false
     return $array_head;
 }
 
-function joinarray($arr1,$arr2){
-    if(is_array($arr1) and !is_array($arr2)){return $arr1;}
-    if(is_array($arr2) and !is_array($arr1)){return $arr2;}
-    if(!is_array($arr2) and !is_array($arr1)){return array();}
-    
-    $add = function($a, $b) { return $a + $b; };
-return array_map($add, $arr1, $arr2);
+function joinarray($arr1, $arr2) {
+    if (is_array($arr1) and !is_array($arr2)) {
+        return $arr1;
+    }
+    if (is_array($arr2) and !is_array($arr1)) {
+        return $arr2;
+    }
+    if (!is_array($arr2) and !is_array($arr1)) {
+        return array();
+    }
+
+    $add = function($a, $b) {
+                return $a + $b;
+            };
+    return array_map($add, $arr1, $arr2);
 }
 
 if (isset($report_marc_outbound)) {
@@ -223,7 +232,7 @@ if (isset($report_feedback_outbound)) {
 
     foreach ($camp_options as $currentCamp) {
 
-        $query_log = "SELECT a.lead_id,a.campaign_id,a.call_date AS data,a.status AS resultado, a.user as utilizador, b.*, c.*, d.campaign_name AS campanha FROM vicidial_log a JOIN custom_".  strtoupper($currentCamp)." b ON a.lead_id = b.lead_id JOIN vicidial_list c ON a.lead_id = c.lead_id JOIN vicidial_campaigns d ON a.campaign_id = d.campaign_id where a.status IN ('$fbs') AND a.campaign_id LIKE '$currentCamp' AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' group by a.lead_id";
+        $query_log = "SELECT a.lead_id,a.campaign_id,a.call_date AS data,a.status AS resultado, a.user as utilizador, b.*, c.*, d.campaign_name AS campanha FROM vicidial_log a JOIN custom_" . strtoupper($currentCamp) . " b ON a.lead_id = b.lead_id JOIN vicidial_list c ON a.lead_id = c.lead_id JOIN vicidial_campaigns d ON a.campaign_id = d.campaign_id where a.status IN ('$fbs') AND a.campaign_id LIKE '$currentCamp' AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' group by a.lead_id";
         $query_log = mysql_query($query_log, $link) or die(mysql_error());
 
         for ($i = 0; $i < mysql_num_rows($query_log); $i++) {
@@ -650,124 +659,124 @@ if (isset($report_marc_inbound)) {
         }
     }
 }/*
-if (isset($report_marc_inbound)) {
-    $curTime = date("Y-m-d H:i:s");
-    $filename = "marc_inbound_" . $curTime;
-    header("Content-Disposition: attachment; filename=" . $filename . ".csv");
-    $output = fopen('php://output', 'w');
+  if (isset($report_marc_inbound)) {
+  $curTime = date("Y-m-d H:i:s");
+  $filename = "marc_inbound_" . $curTime;
+  header("Content-Disposition: attachment; filename=" . $filename . ".csv");
+  $output = fopen('php://output', 'w');
 
-    fputcsv($output, array('Title',
-        'Campaign No.',
-        'First Name',
-        'Middle Name',
-        'Surname',
-        'Address 1',
-        'Address 2',
-        'Address 3',
-        'County',
-        'Post Code',
-        'Area Code',
-        'No. Porta',
-        'City',
-        'Concelho',
-        'Country Code',
-        'Phone No.',
-        'Mobile Phone No.',
-        'Work Phone No.',
-        'Date of Birth',
-        'No.',
-        'Update contact',
-        'Service Request',
-        'Territory Code',
-        'Salesperson Code',
-        'On Hold',
-        'Exclude Reason Code',
-        'Pensionner',
-        'Want Info from other companies',
-        'Appointment time',
-        'Appointment date',
-        'Visit Location',
-        'Branch',
-        'Comments',
-        'Salesperson Team',
-        'Tipo Cliente',
-        'Operador',
-        'Feedback',
-        'Campanha',
-        'Data da Chamada',
-        'Avisos'), ";");
+  fputcsv($output, array('Title',
+  'Campaign No.',
+  'First Name',
+  'Middle Name',
+  'Surname',
+  'Address 1',
+  'Address 2',
+  'Address 3',
+  'County',
+  'Post Code',
+  'Area Code',
+  'No. Porta',
+  'City',
+  'Concelho',
+  'Country Code',
+  'Phone No.',
+  'Mobile Phone No.',
+  'Work Phone No.',
+  'Date of Birth',
+  'No.',
+  'Update contact',
+  'Service Request',
+  'Territory Code',
+  'Salesperson Code',
+  'On Hold',
+  'Exclude Reason Code',
+  'Pensionner',
+  'Want Info from other companies',
+  'Appointment time',
+  'Appointment date',
+  'Visit Location',
+  'Branch',
+  'Comments',
+  'Salesperson Team',
+  'Tipo Cliente',
+  'Operador',
+  'Feedback',
+  'Campanha',
+  'Data da Chamada',
+  'Avisos'), ";");
 
-    foreach ($camp_options as $currentCamp) {
-        $query_log = "SELECT a.lead_id,a.campaign_id,a.call_date AS data,a.status AS resultado, a.user as utilizador, b.*, c.*, d.group_name AS campanha FROM vicidial_closer_log a JOIN custom_" . strtoupper($currentCamp) . " b ON a.lead_id = b.lead_id JOIN vicidial_list c ON a.lead_id = c.lead_id JOIN vicidial_inbound_groups d ON a.campaign_id = d.group_id where a.status IN ('MARC', 'NOVOCL') AND a.campaign_id LIKE '$currentCamp' AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00'";
+  foreach ($camp_options as $currentCamp) {
+  $query_log = "SELECT a.lead_id,a.campaign_id,a.call_date AS data,a.status AS resultado, a.user as utilizador, b.*, c.*, d.group_name AS campanha FROM vicidial_closer_log a JOIN custom_" . strtoupper($currentCamp) . " b ON a.lead_id = b.lead_id JOIN vicidial_list c ON a.lead_id = c.lead_id JOIN vicidial_inbound_groups d ON a.campaign_id = d.group_id where a.status IN ('MARC', 'NOVOCL') AND a.campaign_id LIKE '$currentCamp' AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00'";
 
-        $query_log = mysql_query($query_log, $link) or die(mysql_error());
+  $query_log = mysql_query($query_log, $link) or die(mysql_error());
 
-        for ($i = 0; $i < mysql_num_rows($query_log); $i++) {
-            $row = mysql_fetch_assoc($query_log);
+  for ($i = 0; $i < mysql_num_rows($query_log); $i++) {
+  $row = mysql_fetch_assoc($query_log);
 
 
-            $cod = "";
-            if ($row['tipoconsulta'] == 'CATOS') {
-                $cod = $row['consultorio'];
-            } else {
-                if ($row['tipoconsulta'] == 'Branch') {
-                    $cod = $row['consultoriodois'];
-                }
-            }
+  $cod = "";
+  if ($row['tipoconsulta'] == 'CATOS') {
+  $cod = $row['consultorio'];
+  } else {
+  if ($row['tipoconsulta'] == 'Branch') {
+  $cod = $row['consultoriodois'];
+  }
+  }
 
-            $campid = $row['extra1'];
-            $no = $row['extra2'];
-            $c_message = "Sem Campanha/Inbound/Chamada Manual";
-            if ($row['tipoconsulta'] == null || $row['tipoconsulta'] == "" || $row['tipoconsulta'] == "semconsulta") {
-                $c_message = "Lead Duplicada - Ignorar/Dados Incompletos";
-            }
-            if ((preg_match("/", $row['consultorio']) === 1)) {
-                $c_message = "bom";
-            }
-            fputcsv($output, array(
-                $row['title'],
-                $campid,
-                $row['first_name'],
-                $row['middle_initial'],
-                $row['last_name'],
-                $row['address1'],
-                $row['address2'],
-                $row['address3'],
-                $row['state'],
-                $row['postal_code'],
-                $row['extra3'],
-                $row['extra10'],
-                $row['city'],
-                $row['province'],
-                $row['country_code'],
-                $row['phone_number'],
-                $row['alt_phone'],
-                "",
-                $row['date_of_birth'],
-                $no,
-                "",
-                "",
-                "",
-                $cod,
-                "",
-                "",
-                "",
-                "",
-                $row['marchora'],
-                $row['marcdata'],
-                $row['tipoconsulta'],
-                "",
-                $row['obs'],
-                "",
-                "",
-                $row['utilizador'],
-                $row['resultado'],
-                $row['campanha'],
-                $row['data']
-                    ), ";");
-        }
-    }
-}*/
+  $campid = $row['extra1'];
+  $no = $row['extra2'];
+  $c_message = "Sem Campanha/Inbound/Chamada Manual";
+  if ($row['tipoconsulta'] == null || $row['tipoconsulta'] == "" || $row['tipoconsulta'] == "semconsulta") {
+  $c_message = "Lead Duplicada - Ignorar/Dados Incompletos";
+  }
+  if ((preg_match("/", $row['consultorio']) === 1)) {
+  $c_message = "bom";
+  }
+  fputcsv($output, array(
+  $row['title'],
+  $campid,
+  $row['first_name'],
+  $row['middle_initial'],
+  $row['last_name'],
+  $row['address1'],
+  $row['address2'],
+  $row['address3'],
+  $row['state'],
+  $row['postal_code'],
+  $row['extra3'],
+  $row['extra10'],
+  $row['city'],
+  $row['province'],
+  $row['country_code'],
+  $row['phone_number'],
+  $row['alt_phone'],
+  "",
+  $row['date_of_birth'],
+  $no,
+  "",
+  "",
+  "",
+  $cod,
+  "",
+  "",
+  "",
+  "",
+  $row['marchora'],
+  $row['marcdata'],
+  $row['tipoconsulta'],
+  "",
+  $row['obs'],
+  "",
+  "",
+  $row['utilizador'],
+  $row['resultado'],
+  $row['campanha'],
+  $row['data']
+  ), ";");
+  }
+  }
+  } */
 
 if (isset($report_feedback_inbound)) {
     $curTime = date("Y-m-d H:i:s");
@@ -901,10 +910,10 @@ if (isset($resumo_geral_camp)) {
     fputcsv($output, array(" ", "Report:", "Resumo Geral"), ";");
     fputcsv($output, array(" ", "De:", $data_inicial), ";");
     fputcsv($output, array(" ", "A:", $data_final), ";");
-$i = 0;
+    $i = 0;
     foreach ($_POST['camp_options'] as $key => $campanha) {
-      $i++;
-       
+        $i++;
+
 
         $query_marc = "select count(status) from
     (select 
@@ -969,18 +978,18 @@ $i = 0;
         $dificuldades[$i] = 0;
         $array_negativos = array('AS', 'PRANK', 'CC', 'C', 'DESLI', 'EPIL', 'EPLM', 'A', 'EC', 'ER', 'F', 'FA', 'IDD', 'IF', 'INFO', 'JFC', 'S00046', 'NI', 'NRM', 'DNC', 'O', 'PPA', 'S00045', 'R', 'RD', 'TR', 'VOLC', 'OUTROS');
         $array_dificuldades = array('FAX', 'NA', 'NAT', 'I', 'NAOEX', 'NNP', 'P', 'VM');
- 
-        
-        
-        
+
+
+
+
         $query_global = "select d.status, c.soma, d.status_name from (select status, count(status) as soma from (select lead_id, status from (select lead_id, status from vicidial_log where campaign_id LIKE '$campanha' 
             and call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' order by call_date DESC) a group by lead_id) b group by status) c inner join (select 
             (status), status_name from vicidial_campaign_statuses group by status UNION ALL select status, status_name from vicidial_statuses group by status) d ON c.status = d.status group by status";
         //fputcsv($output, array(" ", "Query1:", $query_global), ";");
         $query_global = mysql_query($query_global) or die(mysql_error());
-        $tot_leads_2[$i]=0;
-        $agendamentos2[$i]=0;
-        $negativos[$i]=0;
+        $tot_leads_2[$i] = 0;
+        $agendamentos2[$i] = 0;
+        $negativos[$i] = 0;
         while ($row = mysql_fetch_row($query_global)) {
             $tot_leads_2[$i] += $row[1];
             ##############################################################
@@ -1181,10 +1190,10 @@ $i = 0;
                 $na2[$i] += $row[1];
                 $total_leads[$i] += $row[1];
             }
-            /*if () {
-                $nat2[$i] = $row[1];
-                $total_leads[$i] += $row[1];
-            }*/
+            /* if () {
+              $nat2[$i] = $row[1];
+              $total_leads[$i] += $row[1];
+              } */
             if ($row[0] == 'RD') {
                 $rd2[$i] = $row[1];
                 $total_leads[$i] += $row[1];
@@ -1219,80 +1228,80 @@ $i = 0;
         fputcsv($output, array(" "), ";");
         mysql_data_seek($query_global, 0);
 
-        while($row = mysql_fetch_row($query_global)){
+        while ($row = mysql_fetch_row($query_global)) {
             if ($row[0] != 'MARC') {
                 fputcsv($output, array(" ", $row[2], $row[1], $row[0]), ";");
             } else {
                 fputcsv($output, array(" ", $row[2], $tot_marc[$i], $row[0]), ";");
             }
         }
-        
+
         fputcsv($output, array(" "), ";");
         fputcsv($output, array(" "), ";");
         fputcsv($output, array(" "), ";");
     }
-    
-        fputcsv($output, array(" "), ";");
-        fputcsv($output, array(" "), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "Campanha: "), $bds), ";");
-        fputcsv($output, array(" "), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "Total Registos: "), $total_registos), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "Total Registos Trabalhados: "), $tot_leads_2), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "Contactos Efectuados: "), $contactos_efectuados), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "Contactos Uteis: "), $contactos_uteis), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "Agendamentos: "), $agendamentos2), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "Marcacoes: "), $tot_marc), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "Novo Cliente: "), $tot_novocl), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "Total Marcacoes: "), $tot_marc_novocl), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "Contactos Negativos: "), $negativos), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "Dificuldades: "), $dificuldades), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "Marcacoes/Total Registos: "), $m_TR), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "Marcacoes/Contactos Efectuados: "), $m_CE), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "Marcacoes/Contactos Uteis: "), $m_CU), ";");
-        fputcsv($output, array(" "), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "Total Contactos Negativos: "), $negativos), ";");
+
+    fputcsv($output, array(" "), ";");
+    fputcsv($output, array(" "), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Campanha: "), $bds), ";");
+    fputcsv($output, array(" "), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Total Registos: "), $total_registos), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Total Registos Trabalhados: "), $tot_leads_2), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Contactos Efectuados: "), $contactos_efectuados), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Contactos Uteis: "), $contactos_uteis), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Agendamentos: "), $agendamentos2), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Marcacoes: "), $tot_marc), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Novo Cliente: "), $tot_novocl), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Total Marcacoes: "), $tot_marc_novocl), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Contactos Negativos: "), $negativos), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Dificuldades: "), $dificuldades), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Marcacoes/Total Registos: "), $m_TR), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Marcacoes/Contactos Efectuados: "), $m_CE), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Marcacoes/Contactos Uteis: "), $m_CU), ";");
+    fputcsv($output, array(" "), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Total Contactos Negativos: "), $negativos), ";");
 
 
 //('AS','PRANK','CC','C','DESLI','EPIL','EPLM', 'A', 'EC','ER', 'F','FA','IDD', 'IF', 'INFO', 'JFC','S00046','NI','NRM','DNC','O','PPA','S00045','R','RD','TR','VOLC');
 
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Assistencia : "), $status_count['AS'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Brincadeira : "), $status_count['PRANK'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Chamada Caiu : "), $status_count['CC'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Concorrencia : "), $status_count['C'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Desligou : "), $status_count['DESLI'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Enviar Pilhas : "), $status_count['EPIL'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Enviar Pilhas Marcacao : "), $status_count['EPLM'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Enviar Amostra : "), $status_count['A'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Estabelecimento Comercial : "), $status_count['EC'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Exame Recente < 5 Meses : "), $status_count['ER'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Falecido : "), $status_count['F'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Futuras Accoes : "), $status_count['FA'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Idade < 45 anos : "), $status_count['IDD'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Informacao : "), $status_count['INFO'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Ja foi ao Consultorio : "), $status_count['JFC'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Ja tem marcacao : "), $status_count['S00046'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Não Interessado : "), $status_count['NI'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Não Reside/Mudou : "), $status_count['NRM'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Nunca mais ligar: "), $status_count['DNC'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Otorrino : "), $status_count['O'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Pessoa que pediu Amostra : "), $status_count['PPA'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Reclamacao : "), $status_count['R'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Referencia Duplicada : "), $status_count['RD'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Comprou recentemente : "), $status_count['TR'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Voltar a Contactar : "), $status_count['VOLC'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Outros : "), $status_count['OUTROS'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Assistencia : "), $status_count['AS'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Brincadeira : "), $status_count['PRANK'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Chamada Caiu : "), $status_count['CC'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Concorrencia : "), $status_count['C'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Desligou : "), $status_count['DESLI'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Enviar Pilhas : "), $status_count['EPIL'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Enviar Pilhas Marcacao : "), $status_count['EPLM'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Enviar Amostra : "), $status_count['A'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Estabelecimento Comercial : "), $status_count['EC'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Exame Recente < 5 Meses : "), $status_count['ER'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Falecido : "), $status_count['F'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Futuras Accoes : "), $status_count['FA'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Idade < 45 anos : "), $status_count['IDD'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Informacao : "), $status_count['INFO'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Ja foi ao Consultorio : "), $status_count['JFC'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Ja tem marcacao : "), $status_count['S00046'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Não Interessado : "), $status_count['NI'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Não Reside/Mudou : "), $status_count['NRM'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Nunca mais ligar: "), $status_count['DNC'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Otorrino : "), $status_count['O'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Pessoa que pediu Amostra : "), $status_count['PPA'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Reclamacao : "), $status_count['R'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Referencia Duplicada : "), $status_count['RD'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Comprou recentemente : "), $status_count['TR'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Voltar a Contactar : "), $status_count['VOLC'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Outros : "), $status_count['OUTROS'], false, false, $i), ";");
 
 //'FAX','NA','I', 'NAOEX', 'NNP', 'P', 'VM');
 
-        fputcsv($output, array(" "), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "Total Dificuldades: "), $dificuldades), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  FAX : "), $status_count['FAX'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Não Atendeu : "), $na2, false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Número Inválido : "), joinarray($status_count['NAOEX'] , $status_count['I']), false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Número não pertence : "), $status_count['NNP'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Portabilidade : "), $status_count['P'], false, false, $i), ";");
-        fputcsv($output, columnmakerwithtotal(array(" ", "  Voicemail : "), $status_count['VM'], false, false, $i), ";");
-       }
+    fputcsv($output, array(" "), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Total Dificuldades: "), $dificuldades), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  FAX : "), $status_count['FAX'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Não Atendeu : "), $na2, false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Número Inválido : "), joinarray($status_count['NAOEX'], $status_count['I']), false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Número não pertence : "), $status_count['NNP'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Portabilidade : "), $status_count['P'], false, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Voicemail : "), $status_count['VM'], false, false, $i), ";");
+}
 
 if (isset($resumo_geral_operador_camp)) {
     $curTime = date("Y-m-d H:i:s");
@@ -1714,7 +1723,7 @@ if (isset($resumo_geral_db)) {
         $total_leads[$i] = 0;
         $dificuldades[$i] = 0;
         $array_negativos = array('AS', 'PRANK', 'CC', 'C', 'DESLI', 'EPIL', 'EPLM', 'A', 'EC', 'ER', 'F', 'FA', 'IDD', 'IF', 'INFO', 'JFC', 'S00046', 'NI', 'NRM', 'DNC', 'O', 'PPA', 'S00045', 'R', 'RD', 'TR', 'VOLC', 'OUTROS');
-        $array_dificuldades = array('FAX', 'NA','NAT', 'I', 'NAOEX', 'NNP', 'P', 'VM');
+        $array_dificuldades = array('FAX', 'NA', 'NAT', 'I', 'NAOEX', 'NNP', 'P', 'VM');
 
 
 
@@ -1923,10 +1932,10 @@ if (isset($resumo_geral_db)) {
                 $na2[$i] += $row[1];
                 $total_leads[$i]+= $row[1];
             }
-            /*if ($row[0] == 'NAT') {
-                $nat2[$i] = $row[1];
-                $total_leads[$i]+= $row[1];
-            }*/
+            /* if ($row[0] == 'NAT') {
+              $nat2[$i] = $row[1];
+              $total_leads[$i]+= $row[1];
+              } */
             if ($row[0] == 'RD') {
                 $rd2[$i] = $row[1];
                 $total_leads[$i]+= $row[1];
@@ -1954,19 +1963,19 @@ if (isset($resumo_geral_db)) {
 
         $na_total[$i] = $na2[$i] + $nat2[$i];
         $inv_total[$i] = $inv[$i] + $i2[$i];
-        
+
         fputcsv($output, array(" "), ";");
-          fputcsv($output, array(" ", "Resumo total do Query"), ";");
-          fputcsv($output, array(" "), ";");
-          mysql_data_seek($query_global, 0);
-          
-    while($row = mysql_fetch_row($query_global)){
-          if ($row[0] != 'MARC') {
-          fputcsv($output, array(" ", $row[2], $row[1], $row[0]), ";");
-          } else {
-          fputcsv($output, array(" ", $row[2], $tot_marc[$i], $row[0]), ";");
-          }
-          }
+        fputcsv($output, array(" ", "Resumo total do Query"), ";");
+        fputcsv($output, array(" "), ";");
+        mysql_data_seek($query_global, 0);
+
+        while ($row = mysql_fetch_row($query_global)) {
+            if ($row[0] != 'MARC') {
+                fputcsv($output, array(" ", $row[2], $row[1], $row[0]), ";");
+            } else {
+                fputcsv($output, array(" ", $row[2], $tot_marc[$i], $row[0]), ";");
+            }
+        }
         fputcsv($output, array(" "), ";");
     }
 
@@ -2026,7 +2035,7 @@ if (isset($resumo_geral_db)) {
     fputcsv($output, columnmakerwithtotal(array(" ", "Total Dificuldades: "), $dificuldades, true, false, $i), ";");
     fputcsv($output, columnmakerwithtotal(array(" ", "  FAX : "), $status_count['FAX'], true, false, $i), ";");
     fputcsv($output, columnmakerwithtotal(array(" ", "  Não Atendeu : "), $na2, true, false, $i), ";");
-    fputcsv($output, columnmakerwithtotal(array(" ", "  Número Inválido : "), joinarray($status_count['NAOEX'],$status_count['I']), true, false, $i), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "  Número Inválido : "), joinarray($status_count['NAOEX'], $status_count['I']), true, false, $i), ";");
     fputcsv($output, columnmakerwithtotal(array(" ", "  Número não pertence : "), $status_count['NNP'], true, false, $i), ";");
     fputcsv($output, columnmakerwithtotal(array(" ", "  Portabilidade : "), $status_count['P'], true, false, $i), ";");
     fputcsv($output, columnmakerwithtotal(array(" ", "  Voicemail : "), $status_count['VM'], true, false, $i), ";");
@@ -2083,13 +2092,13 @@ if (isset($report_inbound_tvi)) {
     fputcsv($output, array("", "Total: ", "", $total_MARC), ";");
     fputcsv($output, array(" "), ";");
     fputcsv($output, array(" "), ";");
-    
+
 /////////////////////////////////////////////////////////////////////
     fputcsv($output, array(" "), ";");
     // Novas Leads por CAMP 
     fputcsv($output, array(" ", "Novas Leads por Campanha"), ";");
     //$query = "Select ifnull(conta,0) conta, did_description did from (SELECT count(status) conta, did_id FROM vicidial_closer_log a inner join vicidial_did_log b ON a.uniqueid = b.uniqueid AND status = 'NL' AND a.call_date between '$data_inicial 01:00:00' AND '$data_final 23:00:00' group by b.did_id , status order by a.call_date DESC) a right join vicidial_inbound_dids c ON a.did_id = c.did_id where c.did_id in ($did_in)";
-    $query="Select ifnull(conta,0) conta, if(LENGTH(extra1)>0,extra1,'Sem codigo') did from (SELECT count(a.status) conta, extra1,a.call_date FROM vicidial_closer_log a inner join vicidial_did_log b ON a.uniqueid = b.uniqueid  inner join vicidial_list c on a.lead_id=c.lead_id WHERE a.status = 'NL' AND a.call_date between '$data_inicial 01:00:00' AND '$data_final 23:00:00' AND did_id in ($did_in) group by c.extra1 , a.status) a order by a.call_date DESC ";
+    $query = "Select ifnull(conta,0) conta, if(LENGTH(extra1)>0,extra1,'Sem codigo') did from (SELECT count(a.status) conta, extra1,a.call_date FROM vicidial_closer_log a inner join vicidial_did_log b ON a.uniqueid = b.uniqueid  inner join vicidial_list c on a.lead_id=c.lead_id WHERE a.status = 'NL' AND a.call_date between '$data_inicial 01:00:00' AND '$data_final 23:00:00' AND did_id in ($did_in) group by c.extra1 , a.status) a order by a.call_date DESC ";
     $result = mysql_query($query) or die(mysql_error() . "2");
     $total_NL = 0;
     while ($row = mysql_fetch_assoc($result)) {
@@ -2103,7 +2112,7 @@ if (isset($report_inbound_tvi)) {
     // Marcações por CAMP 
     fputcsv($output, array(" ", "Marcações por Campanha"), ";");
     //$query = "Select ifnull(conta,0) conta, did_description did from (SELECT count(status) conta, did_id FROM vicidial_closer_log a inner join vicidial_did_log b ON a.uniqueid = b.uniqueid AND status = 'MARC' AND a.call_date between '$data_inicial 01:00:00' AND '$data_final 23:00:00' group by b.did_id , status order by a.call_date DESC) a right join vicidial_inbound_dids c ON a.did_id = c.did_id where c.did_id in ($did_in)";
-    $query="Select ifnull(conta,0) conta, if(LENGTH(extra1)>0,extra1,'Sem codigo') did from (SELECT count(a.status) conta, extra1,a.call_date FROM vicidial_closer_log a inner join vicidial_did_log b ON a.uniqueid = b.uniqueid  inner join vicidial_list c on a.lead_id=c.lead_id WHERE a.status = 'MARC' AND a.call_date between '$data_inicial 01:00:00' AND '$data_final 23:00:00' AND did_id in ($did_in) group by c.extra1 , a.status) a order by a.call_date DESC ";
+    $query = "Select ifnull(conta,0) conta, if(LENGTH(extra1)>0,extra1,'Sem codigo') did from (SELECT count(a.status) conta, extra1,a.call_date FROM vicidial_closer_log a inner join vicidial_did_log b ON a.uniqueid = b.uniqueid  inner join vicidial_list c on a.lead_id=c.lead_id WHERE a.status = 'MARC' AND a.call_date between '$data_inicial 01:00:00' AND '$data_final 23:00:00' AND did_id in ($did_in) group by c.extra1 , a.status) a order by a.call_date DESC ";
     $result = mysql_query($query) or die(mysql_error() . "3");
     $total_MARC = 0;
     while ($row = mysql_fetch_assoc($result)) {
