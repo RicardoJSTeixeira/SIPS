@@ -5,6 +5,21 @@
 var wbes = [];
 var layout;
 var letter_size_all = 15;
+
+
+function getUrlVars() {
+      var vars = {};
+      var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+            vars[key] = value;
+      });
+      return vars;
+}
+
+
+
+
+
+
 $(document).ready(function() {
 
       $("[data-t=tooltip]").tooltip({placement: "left", html: true});
@@ -12,7 +27,8 @@ $(document).ready(function() {
       var parameters = window.name.split(",");
       var windwidth = +parameters[1]; //parameter;
       var windheight = +parameters[2]; //parameter;
-      layout = +parameters[0]; //parameter
+      layout = getUrlVars()["id"];
+      ; //parameter
       $("[data-t=tooltip]").tooltip({placement: "left", html: true});
       $.post("Requests.php", {action: "wbe", id_layout: layout},
       function(data)
@@ -24,10 +40,10 @@ $(document).ready(function() {
             var i = 0;
             var temp_window = $(window);
             $.each(wbes, function(index, value) {
-                  var left = (wbes[i][3] * temp_window.width()) / windwidth;
-                  var top = (wbes[i][4] * temp_window.height()) / windheight;
-                  var width = (wbes[i][5] * temp_window.width()) / windwidth;
-                  var height = (wbes[i][6] * temp_window.height()) / windheight;
+                  var left = (wbes[i][3] * temp_window.width()) / 904;
+                  var top = (wbes[i][4] * temp_window.height()) / 512;
+                  var width = (wbes[i][5] * temp_window.width()) / 904;
+                  var height = (wbes[i][6] * temp_window.height()) / 512;
                   $("#MainLayout")
                           .append($("<div>").addClass("PanelWB ui-widget-content")
                           .data("letter_size", "18")
@@ -79,13 +95,13 @@ $(document).ready(function() {
                   i++;
             });
       }, "json");
-      
-    
-	setTimeout("location.reload(true);",120000);
 
-      
-      
-      
+
+      setInterval("location.reload(true);", 120000);
+
+
+
+
 });
 $(document).on("click", ".increase_em", function(e) {
 
@@ -587,7 +603,10 @@ function   inbound_wallboard(data)
                                     var chamadas_atendidas = document.getElementById("chamadas_atendidas" + id);
                                     chamadas_atendidas.innerHTML = chamadas_atendidas_val;
                                     var chamadas_perdidas = document.getElementById("chamadas_perdidas" + id);
-                                    chamadas_perdidas.innerHTML = chamadas_perdidas_val + "-" + Math.floor(chamadas_perdidas_percent) + "%";
+                                    if (chamadas_perdidas_val !== "0")
+                                          chamadas_perdidas.innerHTML = chamadas_perdidas_val + "-" + Math.floor((chamadas_perdidas_val / chamadas_atendidas_val) * 100) + "%";
+                                    else
+                                          chamadas_perdidas.innerHTML = chamadas_perdidas_val + "- 0%";
                                     var chamadas_espera = document.getElementById("chamadas_espera" + id);
                                     chamadas_espera.innerHTML = queue;
                                     var tma1_element = document.getElementById("tma1" + id);
@@ -619,7 +638,7 @@ function   inbound_wallboard(data)
                                     {
 
                                           data_array = [];
-                                          data_array.push({label: ("Agentes"), data: 1});
+                                          data_array.push({label: ("Sem agentes online"), data: 0});
                                     }
 
                                     var temp = 0;

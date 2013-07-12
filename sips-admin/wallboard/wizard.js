@@ -82,7 +82,11 @@ $("#pie_opcao").change(function()
       }
 });
 
+$("#opcao_layout_button").click(function()
+{
 
+      $("#fullscreen_link").html((document.URL).split(".org")[0] + ".org" + "/sips-admin/wallboard/full_screen_render.html?id=" + idLayout);
+});
 
 
 
@@ -440,12 +444,12 @@ $(function() {
       $(document).on("click", "#create_button_inbound", function(e) {
             var linhas_inbound = "";
             linhas_inbound = $("#group_inbound_select").val();
-          
+
             linhas_inbound = "'" + linhas_inbound + "'";
 
             if ($("#group_inbound_select").val())
             {
-                  manipulate_graph("insert_wbe", 0, $("#inbound_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 4,linhas_inbound, 0);
+                  manipulate_graph("insert_wbe", 0, $("#inbound_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 4, linhas_inbound, 0);
                   $('#dialog_inbound').modal('hide');
             }
             else
@@ -638,11 +642,8 @@ function get_query(codigo)
 
 function fullScreen()
 {
-      var dados = [];
-      dados.push(idLayout);
-      dados.push($("#MainLayout").width());
-      dados.push($("#MainLayout").height());
-      window_slave = window.open("/sips-admin/wallboard/full_screen_render.html", dados);
+      var window_slave = window.open("/sips-admin/wallboard/full_screen_render.html?id=" + idLayout);
+
 }
 
 function check_save()
@@ -704,12 +705,14 @@ function get_indice_wbe(id)
 
 function layout_change()
 {
+
       $("#MainLayout .PanelWB").remove();
       idLayout = $('#LayoutSelector').val();
       var a = get_indice_layout(idLayout);
       $('#label_id_layout').text(layouts[a][0]);
       $("#Layout_Input_name").val(layouts[a][1]);
       load_dados('wbe', idLayout);
+
 }
 
 function update_wbe()
@@ -1091,7 +1094,7 @@ function flot_extra(opcao)
                   $.each(data, function(index, value) {
                         object.append(new Option(data[index].full_name, data[index].user));
                   });
-                  object.data("placeholder","Escolha uma ou mais opções").chosen({no_results_text: "Não foi encontrado."});
+                  object.data("placeholder", "Escolha uma ou mais opções").chosen({no_results_text: "Não foi encontrado."});
             }
             if (opcao === "user_group")
             {
@@ -1101,7 +1104,7 @@ function flot_extra(opcao)
                               object.append(new Option(data[index].group_name, data[index].user_group));
                         }
                   });
-                  object.data("placeholder","Escolha uma ou mais opções").chosen({no_results_text: "Não foi encontrado."});
+                  object.data("placeholder", "Escolha uma ou mais opções").chosen({no_results_text: "Não foi encontrado."});
             }
 
             if (opcao === "campaign")
@@ -1110,7 +1113,7 @@ function flot_extra(opcao)
                   $.each(data, function(index, value) {
                         object.append(new Option(this.campaign_name, this.campaign_id));
                   });
-                  object.data("placeholder","Escolha uma ou mais opções").chosen({no_results_text: "Não foi encontrado."});
+                  object.data("placeholder", "Escolha uma ou mais opções").chosen({no_results_text: "Não foi encontrado."});
             }
             if (opcao === "status_venda")
             {
@@ -1118,7 +1121,7 @@ function flot_extra(opcao)
                   $.each(data, function(index, value) {
                         object.append(new Option(this.status_t, this.status_v));
                   });
-                  object.data("placeholder","Escolha uma ou mais opções").chosen({no_results_text: "Não foi encontrado."});
+                  object.data("placeholder", "Escolha uma ou mais opções").chosen({no_results_text: "Não foi encontrado."});
             }
             if (opcao === "inbound")
             {
@@ -1126,7 +1129,7 @@ function flot_extra(opcao)
                   $.each(data, function(index, value) {
                         object.append(new Option(this.name, this.id));
                   });
-                  object.data("placeholder","Escolha uma ou mais opções").chosen({no_results_text: "Não foi encontrado."});
+                  object.data("placeholder", "Escolha uma ou mais opções").chosen({no_results_text: "Não foi encontrado."});
             }
       }, "json");
 }
