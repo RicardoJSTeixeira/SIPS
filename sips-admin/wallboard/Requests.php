@@ -91,16 +91,18 @@ switch ($action) {
     case 'insert_dataTop':
         $query = "INSERT INTO WallBoard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "INSERT INTO `WallBoard_DataTop` (`id`, `id_wallboard`, `tempo`, `campanha`, `grupo_inbound`, `grupo_user`, `status_feedback`, `limit`, `custom_colum_name`,`param1`,`mode`)
-            VALUES(NULL,LAST_INSERT_ID() , $tempo, '$campanha', '$grupo_inbound', '$grupo_user', $status_feedback, '$limit', '$custom_colum_name', '$param1',$mode)";
+        $query = "INSERT INTO `WallBoard_DataTop` (`id`, `id_wallboard`, `tempo`, `campanha`, `grupo_inbound`, `grupo_user`, `status_feedback`, `limit`, `custom_colum_name`,mode,param1)
+            VALUES(NULL,LAST_INSERT_ID() , $tempo, '$campanha', '$grupo_inbound', '$grupo_user', $status_feedback, '$limit', '$custom_colum_name',$mode,'$param1')";
+  
         $query = mysql_query($query, $link) or die(mysql_error());
+       
         echo json_encode(array(1));
         break;
 
 
 
 
-    case 'edit_WBE':
+    case 'edit_WBE':http:
         $query = "UPDATE WallBoard SET  pos_x=$pos_x, pos_y=$pos_y, width=$width,height=$height  WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
