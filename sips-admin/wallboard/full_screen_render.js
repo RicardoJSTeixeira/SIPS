@@ -466,6 +466,14 @@ function   inbound_wallboard(data)
 
               //top                    
               .append($("<tr>")
+
+
+
+              .append($("<td>")
+              .append($("<div>").addClass("inbound_grid_div")
+              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("Chamadas Recebidas")))
+              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "chamadas_totais" + id)))))
+
               .append($("<td>")
               .append($("<div>").addClass(" inbound_grid_div")
               .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("Chamadas Atendidas")))
@@ -481,13 +489,7 @@ function   inbound_wallboard(data)
               .append($("<td>")
               .append($("<div>").addClass("inbound_grid_div")
               .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("Chamadas em Espera")))
-              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "chamadas_espera" + id)))))
-
-
-              .append($("<td>")
-              .append($("<div>").addClass("inbound_grid_div")
-              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("TMA")))
-              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "tma1" + id))))))
+              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "chamadas_espera" + id))))))
 
 
 
@@ -500,15 +502,15 @@ function   inbound_wallboard(data)
               .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "sla1" + id)))))
 
               .append($("<td>").css("vertical-align", "top")
-              .append($("<div>").css("top", "80%").css("right", "1%").attr("id","legend_div"+id).css("position", "absolute").css("z-index", "10").css("background-color","#FFFFFF").css("opacity","0.75"))
+              .append($("<div>").css("top", "80%").css("right", "1%").attr("id", "legend_div" + id).css("position", "absolute").css("z-index", "10").css("background-color", "#FFFFFF").css("opacity", "0.75"))
               .append($("<div>").attr("style", "width:70%;height:55%;position:absolute; ").attr("id", "plot_inbound" + id))))
 
 
               .append($("<tr>")
               .append($("<td>")
-              .append($("<div>").addClass(" inbound_grid_div")
-              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("SLA2").attr("id", "sla2_title" + id)))
-              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "sla2" + id))))))
+              .append($("<div>").addClass("inbound_grid_div")
+              .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("TMA")))
+              .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "tma1" + id))))))
               ));
       get_values_inbound();
       function get_values_inbound()
@@ -564,16 +566,11 @@ function   inbound_wallboard(data)
                         $.post("Requests.php", {action: "4", linha_inbound: wbe[9][0].linha_inbound},
                         function(data3)
                         {
-                              /* (chamadas_efectuadas => $callsTODAY, 
-                               * chamadas_perdidas => $dropsTODAY
-                               * ,chamadas_atendidas => $answersTODAY,
-                               * tma1=>$PCThold_sec_stat_one,
-                               * tma2=>$PCThold_sec_stat_two,
-                               * tme_chamadas_atendidas=>$AVGhold_sec_answer_calls,
-                               * tme_chamadas_perdidas=>$AVGhold_sec_drop_calls,
-                               * tme_todas_chamadas=>$AVGhold_sec_queue_calls);*/
+                            
+                              var chamadas_recebidas = data3[0].chamadas_recebidas;
                               var tma1 = data3[0].tma1;
                               var tma2 = data3[0].tma2;
+                           
                               var chamadas_atendidas_val = data3[0].chamadas_atendidas;
                               var chamadas_perdidas_val = data3[0].chamadas_perdidas;
                               var chamadas_perdidas_percent = data3[0].chamadas_perdidas_percent;
@@ -601,15 +598,18 @@ function   inbound_wallboard(data)
                                     answer_sec_pct_rt_stat_two = +data5[0].answer_sec_pct_rt_stat_two;
 //update dos valores na table 
 
-                                    var chamadas_atendidas = document.getElementById("chamadas_atendidas" + id);
-                                    chamadas_atendidas.innerHTML = chamadas_atendidas_val;
-                                    var chamadas_perdidas = document.getElementById("chamadas_perdidas" + id);
+                                    var chamadas_totais_obj = document.getElementById("chamadas_totais" + id);
+                                    chamadas_totais_obj.innerHTML = +chamadas_recebidas;
+
+                                    var chamadas_atendidas_obj = document.getElementById("chamadas_atendidas" + id);
+                                    chamadas_atendidas_obj.innerHTML = chamadas_atendidas_val;
+                                    var chamadas_perdidas_obj = document.getElementById("chamadas_perdidas" + id);
                                     if (chamadas_perdidas_val !== "0")
-                                          chamadas_perdidas.innerHTML = chamadas_perdidas_val + "-" + Math.floor((chamadas_perdidas_val / chamadas_atendidas_val) * 100) + "%";
+                                          chamadas_perdidas_obj.innerHTML = chamadas_perdidas_val + "-" + Math.floor((chamadas_perdidas_val / chamadas_recebidas) * 100) + "%";
                                     else
-                                          chamadas_perdidas.innerHTML = chamadas_perdidas_val + "- 0%";
-                                    var chamadas_espera = document.getElementById("chamadas_espera" + id);
-                                    chamadas_espera.innerHTML = queue;
+                                          chamadas_perdidas_obj.innerHTML = chamadas_perdidas_val + "- 0%";
+                                    var chamadas_espera_obj = document.getElementById("chamadas_espera" + id);
+                                    chamadas_espera_obj.innerHTML = queue;
                                     var tma1_element = document.getElementById("tma1" + id);
                                     tma1_element.innerHTML = tma_todas_chamadas;
                                     var sla1 = document.getElementById("sla1" + id);
@@ -621,15 +621,15 @@ function   inbound_wallboard(data)
                                     }
                                     else
                                           sla1.innerHTML = 0;
-                                    var sla2 = document.getElementById("sla2" + id);
-                                    var sla2_title = document.getElementById("sla2_title" + id);
-                                    if (tma2 > 0)
-                                    {
-                                          sla2.innerHTML = Math.floor(tma2) + "%";
-                                          sla2_title.innerHTML = "SLA2->" + Math.floor(answer_sec_pct_rt_stat_two) + "sec";
-                                    }
-                                    else
-                                          sla2.innerHTML = 0;
+                                    /*  var sla2 = document.getElementById("sla2" + id);
+                                     var sla2_title = document.getElementById("sla2_title" + id);
+                                     if (tma2 > 0)
+                                     {
+                                     sla2.innerHTML = Math.floor(tma2) + "%";
+                                     sla2_title.innerHTML = "SLA2->" + Math.floor(answer_sec_pct_rt_stat_two) + "sec";
+                                     }
+                                     else
+                                     sla2.innerHTML = 0;*/
                                     var painel = $("#plot_inbound" + id);
                                     var data_array = [];
                                     data_array.push({label: ready + " - Agentes Disponiveis", data: ready});
@@ -648,7 +648,7 @@ function   inbound_wallboard(data)
                                                 pie: {
                                                       innerRadius: 0.06,
                                                       show: true,
-                                                      radius: ($("#MainLayout").width() - $("#MainLayout").height()) ,
+                                                      radius: ($("#MainLayout").width() - $("#MainLayout").height()),
                                                       label: {
                                                             show: true,
                                                             formatter: function(label, series) {
@@ -664,7 +664,7 @@ function   inbound_wallboard(data)
                                           },
                                           legend: {
                                                 show: true,
-                                                 container: $("#legend_div"+wbe[0])
+                                                container: $("#legend_div" + wbe[0])
                                           },
                                           grid: {
                                                 hoverable: false,

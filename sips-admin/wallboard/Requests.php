@@ -93,9 +93,9 @@ switch ($action) {
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "INSERT INTO `WallBoard_DataTop` (`id`, `id_wallboard`, `tempo`, `campanha`, `grupo_inbound`, `grupo_user`, `status_feedback`, `limit`, `custom_colum_name`,mode,param1)
             VALUES(NULL,LAST_INSERT_ID() , $tempo, '$campanha', '$grupo_inbound', '$grupo_user', $status_feedback, '$limit', '$custom_colum_name',$mode,'$param1')";
-  
+
         $query = mysql_query($query, $link) or die(mysql_error());
-       
+
         echo json_encode(array(1));
         break;
 
@@ -476,13 +476,14 @@ switch ($action) {
             }
             $today = date("o-m-d");
             $tomorrow = date("o-m-d", strtotime("+1 day"));
-            $query = "select ifnull(sum(length_in_sec),0) as total_sec, ifnull(sum(queue_seconds),0) as queue_seconds from vicidial_closer_log where call_date between '$today' and '$tomorrow' and campaign_id in($linha_inbound)";
+            $query = "select ifnull(sum(length_in_sec),0) as total_sec, ifnull(sum(queue_seconds),0) as queue_seconds from vicidial_closer_log where call_date between '$today' and '$tomorrow' and campaign_id in($linha_inbound) and lead_id is not null";
             $query = mysql_query($query, $link);
             $row2 = mysql_fetch_assoc($query);
-            $js[] = array(chamadas_efectuadas => $callsTODAY,
+            $js[] = array(chamadas_recebidas => $callsTODAY,
                 chamadas_perdidas => $dropsTODAY,
                 chamadas_perdidas_percent => $drops_today_pct,
                 chamadas_atendidas => $answersTODAY,
+             
                 tma1 => $PCThold_sec_stat_one,
                 tma2 => $PCThold_sec_stat_two,
                 tma => $row2["total_sec"],
@@ -504,10 +505,10 @@ switch ($action) {
         echo json_encode($js);
         break;
 
-        
-        
-        
-           case 'get_calls_queue':// Inbound agentes,campaign,status
+
+
+
+    case 'get_calls_queue':// Inbound agentes,campaign,status
         $js = array();
 
         $linha = explode(",", $linha_inbound);
@@ -525,9 +526,9 @@ switch ($action) {
         }
         echo json_encode($js);
         break;
-        
-        
-        
+
+
+
     case 'inbound_groups_info':// Inbound agentes,campaign,status
         $linha = explode(",", $group_id);
         for ($i = 0; $i < count($linha); $i++) {
@@ -535,9 +536,9 @@ switch ($action) {
         }
         $group_id = implode(",", $linha);
 
-        
-        
-        
+
+
+
 
         $query = "SELECT AVG(answer_sec_pct_rt_stat_one) as answer_sec_pct_rt_stat_one,AVG(answer_sec_pct_rt_stat_two) as answer_sec_pct_rt_stat_two FROM vicidial_inbound_groups WHERE group_id in($group_id)";
         $query = mysql_query($query, $link) or die(mysql_error());
