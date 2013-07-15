@@ -1975,7 +1975,7 @@ $agentonlyheader = '';
 if ($agentonlycount > 0)
 	{$agentonlyheader = 'AGENTONLY';}
 $Cecho = '<br>';
-$Cecho .= "<div class='cc-mstyle'><table><tr><th>Status</th><th>Campanha</th><th>Telefone</th><th>Tempo de Dial</th><th>Tipo Chamada</th><th>Prioridade</th></tr>";
+$Cecho .= "<div class='cc-mstyle'><table><tr><th>Descrição</th><th>Telefone</th><th>Tempo de Dial</th><th>Tipo Chamada</th><th>Prioridade</th></tr>";
 #$Cecho .= " STATUS | CAMPAIGN             | PHONE NUMBER | SERVER_IP       | DIALTIME| CALL TYPE  | PRIORITY | $agentonlyheader\n";
 #$Cecho .= "+--------+----------------------+--------------+-----------------+---------+------------+----------+\n";
 
@@ -2011,18 +2011,20 @@ while($p<$k)
               $getLoja = mysql_fetch_assoc($getLoja);
               if ($getLoja['campaign_id'] == 'AGENTDIRECT') {
                     $nome_campanha = $getLoja['did_description'];
+                     
                 } else {
-                    $camp_id = $CDcampaign_id[$p];
-                    $getLoja = mysql_query("select campaign_name from vicidial_campaigns where campaign_id LIKE '$camp_id'", $link) or die(mysql_error());
+                    
+                    $getLoja = mysql_query("select campaign_id from vicidial_auto_calls where phone_number LIKE '$pnqry'", $link) or die(mysql_error());
                     $getLoja = mysql_fetch_assoc($getLoja);
 
-                    $nome_campanha = $getLoja['campaign_name'];
+                    $nome_campanha = $getLoja['campaign_id'];
+                    
                 }
                                   
                                   
-                              
+          
                 
-	$Cecho .= "<tr><td> $G$Cstatus$EG </td><td> $G$nome_campanha$EG </td> <td>$G$Cphone_number$EG </td> <td>$G$Ccall_time_MS$EG </td> <td>$G$Ccall_type$EG </td> <td> $G$Cqueue_priority$EG </td> </tr>";
+	$Cecho .= "<tr><td> $nome_campanha </td> <td>$Cphone_number </td> <td>$Ccall_time_MS </td> <td> ".$Ccall_type."BOUND </td> <td> $Cqueue_priority </td> </tr>";
 	#$G$Cserver_ip$EG $Gcalltypedisplay 
 	$p++;
 	}
