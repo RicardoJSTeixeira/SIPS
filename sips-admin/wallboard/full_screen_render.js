@@ -500,6 +500,7 @@ function   inbound_wallboard(data)
               .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "sla1" + id)))))
 
               .append($("<td>").css("vertical-align", "top")
+              .append($("<div>").css("top", "80%").css("right", "1%").attr("id","legend_div"+id).css("position", "absolute").css("z-index", "10").css("background-color","#FFFFFF").css("opacity","0.75"))
               .append($("<div>").attr("style", "width:70%;height:55%;position:absolute; ").attr("id", "plot_inbound" + id))))
 
 
@@ -631,9 +632,9 @@ function   inbound_wallboard(data)
                                           sla2.innerHTML = 0;
                                     var painel = $("#plot_inbound" + id);
                                     var data_array = [];
-                                    data_array.push({label: ready + " -- Agentes Disponiveis", data: ready});
-                                    data_array.push({label: (queue + paused) + " -- Agentes Indisponiveis", data: (queue + paused)});
-                                    data_array.push({label: incall + " -- Agentes em Chamada", data: incall});
+                                    data_array.push({label: ready + " - Agentes Disponiveis", data: ready});
+                                    data_array.push({label: (queue + paused) + " - Agentes Indisponiveis", data: (queue + paused)});
+                                    data_array.push({label: incall + " - Agentes em Chamada", data: incall});
                                     if ((ready + queue + paused + incall) == "0")
                                     {
 
@@ -644,15 +645,15 @@ function   inbound_wallboard(data)
                                     var temp = 0;
                                     $.plot(painel, data_array, {
                                           series: {
-                                                pie: {innerRadius: 0.06,
+                                                pie: {
+                                                      innerRadius: 0.06,
                                                       show: true,
-                                                      radius: ($("#MainLayout").width() - $("#MainLayout").height()),
+                                                      radius: ($("#MainLayout").width() - $("#MainLayout").height()) ,
                                                       label: {
                                                             show: true,
-                                                            radius: 3 / 4,
                                                             formatter: function(label, series) {
 
-                                                                  return '<div style="font-size:18px;color:black;">' + Math.floor(series.percent) + '%</div>';
+                                                                  return '<div style="float:rigth;font-size:18px;color:black;">' + Math.floor(series.percent) + '%</div>';
                                                             },
                                                             background: {
                                                                   opacity: 0.5,
@@ -662,7 +663,8 @@ function   inbound_wallboard(data)
                                                 }
                                           },
                                           legend: {
-                                                show: true
+                                                show: true,
+                                                 container: $("#legend_div"+wbe[0])
                                           },
                                           grid: {
                                                 hoverable: false,
