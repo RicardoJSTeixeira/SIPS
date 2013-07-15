@@ -5641,11 +5641,11 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 				alert_box("Tem que estar em pausa para fazer chamadas manuais");
 				}
 			}
-                        if(lead_id.value.length!==0)
+                        if(document.vicidial_form.lead_id.value.length!==0)
                             {
                             move_on=0;
                             alert_box("Tem que estar em pausa para fazer chamadas manuais");				
-                            }
+                            } 
                         
 		if (move_on == 1)
 			{
@@ -9804,7 +9804,7 @@ hideDiv('CallBackSelectBox');
 					}
 				else
 					{
-                                            if(lead_id.value.length!=0){
+                                            if(document.vicidial_form.lead_id.value.length!=0){
 				alert("Termine a acção actual antes de fazer logout.\n");
                                                 
                                             }else{

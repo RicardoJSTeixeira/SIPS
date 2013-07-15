@@ -36,10 +36,12 @@ function ScriptListBuilder($CampaignID, $AllowedCampaigns, $link)
 
 function SubmitCopyScript($CampaignID, $ScriptToCopy, $link)
 {
+    global $VARDB_server;
+    global $VARDB_port;
 
 	$ScriptToCopy = strtoupper($ScriptToCopy);
 
-    $connection = mysql_connect("localhost", "sipsadmin", "sipsps2012");
+    $connection = mysql_connect("$VARDB_server:$VARDB_port", "sipsadmin", "sipsps2012");
     mysql_select_db("asterisk", $connection);
     
     mysql_query("DROP TABLE IF EXISTS custom_$CampaignID") or die (mysql_error());
@@ -53,6 +55,7 @@ function SubmitCopyScript($CampaignID, $ScriptToCopy, $link)
 	$js['affected'] = mysql_affected_rows();
 	
 	mysql_close($connection);
+    
 	echo json_encode($js);
 	
 
@@ -62,7 +65,10 @@ function SubmitCopyScript($CampaignID, $ScriptToCopy, $link)
 
 function SubmitRemoveScript($CampaignID, $link)
 {
-    $con = mysql_connect("localhost","sipsadmin", "sipsps2012");
+    global $VARDB_server;
+    global $VARDB_port;
+            
+    $con = mysql_connect("$VARDB_server:$VARDB_port", "sipsadmin", "sipsps2012");
     mysql_select_db("asterisk", $con);
     
   	mysql_query("DROP TABLE IF EXISTS custom_$sent_campaign_id") or die (mysql_error());

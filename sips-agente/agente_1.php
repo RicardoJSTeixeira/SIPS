@@ -5725,11 +5725,11 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 				}
 			}
                         
-                        if(lead_id.value.length!==0)
+                        if(document.vicidial_form.lead_id.value.length!==0)
                             {
                             move_on=0;
                             alert_box("Tem que estar em pausa para fazer chamadas manuais");				
-                            }
+                            }  
 		if (move_on == 1)
 			{
 			if (TVfast=='FAST')
@@ -9845,6 +9845,13 @@ showDiv('DispoSelectBox');
 					}
 				else
 					{
+					    if(document.vicidial_form.lead_id.value.length!=0){
+                alert("Termine a acção actual antes de fazer logout.\n");
+                                                
+                                            }else{
+                                                window.onbeforeunload ="";
+					    
+					    
 					var xmlhttp=false;
 					/*@cc_on @*/
 					/*@if (@_jscript_version >= 5)
@@ -9886,7 +9893,7 @@ showDiv('DispoSelectBox');
 						}
 
 			
-							
+						}	
 					}
 				}
 			}

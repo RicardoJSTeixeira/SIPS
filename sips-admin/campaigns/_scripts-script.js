@@ -149,7 +149,7 @@ function SubmitCopyScript()
                     ScriptToCopy: ScriptToCopy 
                     },
             success: function(data) {
-			
+			console.log(data);
 			hasScript = true;	
 			$("#span-current-script").css("color", "green").html("<b>Com Script associado.</b>");
 			$("#td-new-script-error").html("Script associado com Sucesso.")
