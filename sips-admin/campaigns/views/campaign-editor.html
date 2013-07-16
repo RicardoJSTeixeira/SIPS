@@ -533,6 +533,7 @@
         </table>    
  
         </div> 
+
         <!-- SCRIPTS -->
         <div id="tab5">
         <table class="table-100">
@@ -647,6 +648,7 @@
 
         </table>    
         </div> 
+        
         <!-- CAMPOS DINAMICOS -->
    		<div id="tab6">
         <table class="table-100">
@@ -739,6 +741,7 @@
         
         </table>
         </div> 
+        
         <!-- BASES DE DADOS -->
         <div id="tab7">
         <table class="table-100">
@@ -811,19 +814,14 @@
 				<br />
                 
                 <div class="div-title">Bases de Dados<span class='css-orange-caret'>></span>Acções</div>
-                <table>
-                
-                <i>Sem acções disponíveis.</i>
-                
-                
-               <!--         <tr>
-                        <td class="td-action"><button class="btn-action" id="btn-fields-apply-to-all-campaigns"><img class="img-action" src='icons/mono_indent_decrease_16.png'></button></td>
-                        <td>Aplicar as definições de Campos Dinâmicos desta Campanha a todas as outras Campanhas em sistema.</td>
+                <table>          
+               
+                        <tr>
+                        <td class="td-action"><button class="btn-action" id="btn-dbs-reset"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
+                        <td>Realizar um <i>reset</i> a uma ou mais bases de dados da Campanha.</td>
                         </tr>
-                         <tr>
-                        <td class="td-action td-action-next"><button class="btn-action" id="btn-fields-copy-from-campaign"><img class="img-action" src='icons/mono_indent_increase_16.png'></button></td>
-                        <td class="td-action-next">Copiar definições de Campos Dinamicos de outra Campanha para a Campanha actual.</td>
-                        </tr> -->
+                       
+                         
                 </table> 
 				<br />
 				<div class="div-title">Bases de Dados<span class='css-orange-caret'>></span>Navegação</div>  
@@ -1582,6 +1580,39 @@
          </table>
          </div>
         
+
+         <div id="dialog-dbs-reset" style='display:none'>
+            <div class="div-title">Reset a Bases de Dados<span class='css-orange-caret'>></span>Bases de Dados da Campanha</div>
+            
+
+            <div style='height:360px; overflow:auto; margin-top: 12px'>
+            <table id="table-dbs-reset">
+                <tr>
+                    <td width="50%" valign="top"><table id="table-dbs-reset-1"></table></td>
+                    <td width="50%" valign="top"><table id="table-dbs-reset-2"></table></td>             
+                </tr>
+            </table>
+            </div>
+            
+            <table>
+
+            <tr>
+            <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id="btn-reset-dbs-select-all"><img class="img-action" src='icons/mono_checkbox_checked_16.png'></button></td>
+            <td class="td-action-next">Marcar todas as Bases de Dados.</td>
+            </tr>
+            
+            <tr>
+            <td class="td-action td-action-next"><button class="btn-action btn-nav-nexts" id="btn-reset-dbs-select-none"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
+            <td class="td-action-next">Desmarcar todas as Bases de Dados.</td>
+            </tr>
+            
+            
+        </table>
+            
+            
+            
+        </div>
+
 
 </div>
 </div>

@@ -345,6 +345,30 @@ function  DBWizardDenyLeads($LeadsToDelete, $DBID, $link)
 	mysql_query("UPDATE vicidial_lists SET list_description = list_description - ($index + 1) WHERE list_id = '$DBID'") or die(mysql_query());
 }
 
+function DBResetGetDBList($CampaignID, $link)
+{
+    $query = "SELECT list_id, list_name FROM vicidial_lists WHERE campaign_id = '$CampaignID' AND list_id <> '998%'";
+    $result = mysql_query($query, $link) or die(mysql_error());
+    
+    while($row = mysql_fetch_assoc($result))
+    {
+        $js['list_id'][] = $row['list_id'];
+        $js['list_name'][] = $row['list_name'];
+    }
+    
+    echo json_encode($js);
+    
+}
+
+function DBResetLists($Lists2Reset, $link)
+{
+    $implode = implode("','", $Lists2Reset);
+    
+    mysql_query("UPDATE vicidial_list SET called_since_last_reset = 'N' WHERE list_id IN ('$implode')") or die(mysql_error());    
+    
+}
+
+
 switch($action)
 {
 	case "DBListBuilder" : DBListBuilder($CampaignID, $Flag, $link); break;
@@ -361,6 +385,8 @@ switch($action)
 	case "DBMatchFields" : DBMatchFields($CampaignID, $ConvertedFile, $link); break;
 	case "DBWizardMatchFields" : DBWizardMatchFields($DBID, $MatchFields, $ListFields, $ConvertedFile, $link); break;
 	case "DBWizardDenyLeads" : DBWizardDenyLeads($LeadsToDelete, $DBID, $link); break;
+    case "DBResetGetDBList" : DBResetGetDBList($CampaignID, $link); break;
+    case "DBResetLists" : DBResetLists($Lists2Reset, $link); break;
 }
 
 ?>
