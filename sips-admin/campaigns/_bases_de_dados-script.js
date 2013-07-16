@@ -129,6 +129,12 @@ function DBElemInit()
 	$("#btn-db-wizard-view-details").button({disabled: true});
 	
 	
+	$("#btn-dbs-reset").button();
+	
+	
+	$("#btn-reset-dbs-select-all").button();
+	$("#btn-reset-dbs-select-none").button();
+	
 	
 	
 	
@@ -173,7 +179,20 @@ function DBElemInit()
     resizable: false,
     buttons: { "Fechar" : DialogClose },
     open: function(){}
-	}); 
+	});
+	
+	
+	
+	$("#dialog-dbs-reset").dialog({ 
+    title: "<table><tr><td><img class='dialog-icon-title' src='icons/mono_cancel_16.png'></td><td><span class='dialog-title'> Reset a Bases de Dados </span></td></tr></table>",
+    autoOpen: false,
+    height: 600,
+    width: 400,
+    resizable: false,
+    buttons: { "Reset": DialogDbsOnReset, "Fechar" : DialogClose },
+    open: DialogDbsOnOpen
+    }); 
+     
 	
 	 
 	
@@ -800,6 +819,69 @@ function DBWizardDenyLeads()
 	}, "json");
 }
 
+
+
+function DialogDbsOnReset()
+{
+    var Lists2Reset = new Array();
+
+   $.each($(".checkbox-dbs-reset"), function(index, value){
+       if($(this).parent().hasClass("checked"))
+       {
+            Lists2Reset.push($(this).attr("id"))
+       }
+   }) 
+   
+$.post("_bases_de_dados-requests.php", {action: "DBResetLists", Lists2Reset: Lists2Reset }, function(json){}, "json")
+
+}
+
+function DialogDbsOnOpen()
+{
+
+    $.post("_bases_de_dados-requests.php", {action: "DBResetGetDBList", CampaignID: CampaignID }, function(json){
+        
+        
+      $.each(json.list_id, function(index, value){
+          
+          
+        if( ((index/2) % 1) != 0 )
+        {
+            $("#table-dbs-reset-2").append("<tr><td><input class='checkbox-dbs-reset' type='checkbox' id='"+json.list_id[index]+"'></td><td style='padding-top:1px'><label style='display:inline;' for='"+json.list_id[index]+"'>" + json.list_name[index] + "</label></td></tr>");
+        }
+        else
+        {
+            $("#table-dbs-reset-1").append("<tr><td><input class='checkbox-dbs-reset' type='checkbox' id='"+json.list_id[index]+"'></td><td style='padding-top:1px'><label style='display:inline;' for='"+json.list_id[index]+"'>" + json.list_name[index] + "</label></td></tr>")
+        }    
+         
+      })  
+    
+    
+    $(".checkbox-dbs-reset").uniform();
+    
+    }, "json");
+    
+    
+    
+}
+
+
+function ResetDbsSelectAll(){
+
+        $.each($(".checkbox-dbs-reset").parent(), function(){
+        $(this).addClass("checked");
+    })
+}
+
+function ResetDbsSelectNone(){
+
+        $.each($(".checkbox-dbs-reset").parent(), function(){
+        $(this).removeClass("checked");
+    })
+}
+
+
+
 $("body")
 .on("click", ".db-checkbox", DBSwitch)
 .on("click", "#btn-select-all-dbs", SelectAllDBs)
@@ -818,4 +900,8 @@ $("body")
 .on("input focus", "#input-new-db", InputNewDBClearError)
 .on("click", "#btn-db-wizard-deny-leads", DBWizardDenyLeads)
 //.on("click", "#btn-db-wizard-view-details", {dialog: "#dialog-db-wizard-view-details"}, DialogOpen)
-.on("click", ".add-more-leads", {dialog: "#dialog-db-wizard", dbwizardedit: true}, DialogOpen);
+.on("click", ".add-more-leads", {dialog: "#dialog-db-wizard", dbwizardedit: true}, DialogOpen)
+.on("click", "#btn-dbs-reset", {dialog: "#dialog-dbs-reset"}, DialogOpen)
+.on("click", "#btn-reset-dbs-select-all", ResetDbsSelectAll)
+.on("click", "#btn-reset-dbs-select-none", ResetDbsSelectNone)
+
