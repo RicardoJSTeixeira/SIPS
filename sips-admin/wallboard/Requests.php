@@ -428,15 +428,15 @@ switch ($action) {
         $stmtB = "select sum(calls_today),sum(drops_today),sum(answers_today),sum(hold_sec_stat_one),sum(hold_sec_stat_two),sum(hold_sec_answer_calls),sum(hold_sec_drop_calls),sum(hold_sec_queue_calls),AVG(drops_today_pct) from vicidial_campaign_stats where campaign_id in($linha_inbound)";
         $rslt = mysql_query($stmtB, $link);
         while ($row = mysql_fetch_row($rslt)) {
-            $callsTODAY = $row[0];
-            $dropsTODAY = $row[1];
-            $answersTODAY = $row[2];
+            $callsTODAY = intval($row[0]);
+            $dropsTODAY = intval($row[1]);
+            $answersTODAY = intval($row[2]);
             $hold_sec_stat_one = $row[3];
             $hold_sec_stat_two = $row[4];
             $hold_sec_answer_calls = $row[5];
             $hold_sec_drop_calls = $row[6];
             $hold_sec_queue_calls = $row[7];
-            $drops_today_pct = ceil($row[8]);
+            $drops_today_pct = ceil(intval($row[8]));
 
             if (($dropsTODAY > 0) and ($answersTODAY > 0)) {
                 $drpctTODAY = ( ($dropsTODAY / $callsTODAY) * 100);
@@ -479,7 +479,8 @@ switch ($action) {
             $query = "select ifnull(sum(length_in_sec),0) as total_sec, ifnull(sum(queue_seconds),0) as queue_seconds from vicidial_closer_log where call_date between '$today' and '$tomorrow' and campaign_id in($linha_inbound) and lead_id is not null";
             $query = mysql_query($query, $link);
             $row2 = mysql_fetch_assoc($query);
-            $js[] = array(chamadas_recebidas => $callsTODAY,
+            $js[] = array(
+                chamadas_recebidas => $callsTODAY,
                 chamadas_perdidas => $dropsTODAY,
                 chamadas_perdidas_percent => $drops_today_pct,
                 chamadas_atendidas => $answersTODAY,
