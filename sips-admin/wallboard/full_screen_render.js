@@ -602,7 +602,7 @@ function   inbound_wallboard(data)
                                     chamadas_totais_obj.innerHTML = +chamadas_recebidas;
 
                                     var chamadas_atendidas_obj = document.getElementById("chamadas_atendidas" + id);
-                                    chamadas_atendidas_obj.innerHTML = chamadas_atendidas_val;
+                                    chamadas_atendidas_obj.innerHTML = +chamadas_atendidas_val;
                                     var chamadas_perdidas_obj = document.getElementById("chamadas_perdidas" + id);
                                     if (chamadas_perdidas_val !== "0")
                                           chamadas_perdidas_obj.innerHTML = chamadas_perdidas_val + "-" + Math.floor((chamadas_perdidas_val / chamadas_recebidas) * 100) + "%";
