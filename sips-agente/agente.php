@@ -13015,7 +13015,18 @@ $zi=2;
 				</div>
 			</td>
 		</tr>
-                
+                <? if ($campaign_allow_inbound == 'Y') { ?>
+                <tr id='closerselect' style='cursor:pointer'>
+			<td height='35px'><img src='/images/icons/arrow_change_32.png' /></td>
+			<td height='35px'>
+				<div>
+					<span style="z-index:<?php $zi++; echo $zi ?>; " id="closerselect">
+                                            <a href="#" onclick="OpeNGrouPSelectioN();return false;">Alterar Grupos Inbound</a>
+					</span>
+				</div>
+			</td>
+		</tr>
+                <? } ?>
                 <?php $query="SELECT id_calendar,cal_type FROM `sips_sd_agent_ref` WHERE user='$user'";
                       $result=mysql_query($query);
                               
