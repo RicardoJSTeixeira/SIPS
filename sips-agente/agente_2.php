@@ -14822,7 +14822,7 @@ echo $zi ?>;" id="AlertBox" class="popup_form" >
 <div class="cc-mstyle" style="height: 4em; bottom: 0px; position: fixed; width: 90%; margin: 0px 5%; display: none; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; border-bottom: medium none; opacity: 0.9;" id="shoutbox"><img style="float:right;margin:5px;cursor:pointer;" onClick="$('#shout').slideUp()" src="/images/icons/cross_16.png"><p style="margin:15px 5px 0"></p></div>
 <script>
         setTimeout(function(){window.onbeforeunload = function() {
-        return "Não feche a janela, faça logout primeiro se faz favor :( ";
+        return "Não feche a janela, faça logout primeiro se faz favor :-(.";
 };},500);
    </script>
 </body>

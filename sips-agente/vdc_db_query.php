@@ -1381,8 +1381,8 @@ if ($ACTION == 'manDiaLnextCaLL') {
 
 			if (strlen($phone_number) > 5) {$override_dial_number = $phone_number;
 			}
-		} else {
-			if (strlen($phone_number) > 3) {
+                        } else {
+			if (strlen($phone_number) > 1) {
 				if (ereg("ENABLED", $manual_dial_call_time_check)) {
 					$secX = date("U");
 					$hour = date("H");
