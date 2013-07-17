@@ -3695,9 +3695,11 @@ function JanelaNovoCliente()
 			xfer_in_call=1;
 			agent_dialed_number='1';
 			agent_dialed_type='XFER_3WAY';
-
+            var manual_number = document.vicidial_form.xfernumber.value;            
+            document.vicidial_form.xferchannel.value = 'Local/' + manual_number + '@default';
             document.getElementById("DialWithCustomer").innerHTML ="<img src=\"./images/vdc_XB_dialwithcustomer_OFF.gif\" border=\"0\" alt=\"Dial With Customer\" style=\"vertical-align:middle\" /></a>";
-
+            document.getElementById("HangupXferLine").innerHTML ="<a href=\"#\" onclick=\"DialTimeHangup('HangupTransfer',"+manual_number+");return false;\"><img src=\"/images/icons/telephone_delete_32.png\"  alt=\"Hangup Xfer Line\" style=\"vertical-align:middle\" />Desligar o solicitado</a>";
+								document.getElementById("HangupXferLine").style.display="block";
             document.getElementById("ParkCustomerDial").innerHTML ="<img src=\"/images/icons/telephone_add_32.png\" alt=\"Park Customer Dial\" style=\"vertical-align:middle\" />Solicitar Transferência</a>";
 			document.getElementById("ParkCustomerDial").style.display="none";
 			
@@ -3709,7 +3711,7 @@ function JanelaNovoCliente()
 			var dial_conf_exten = session_id;
 			threeway_cid = '';
 			if (three_way_call_cid == 'CAMPAIGN')
-				{threeway_cid = campaign_cid;}
+				{threeway_cid = campaign_cid;} 
 			if (three_way_call_cid == 'AGENT_PHONE')
 				{threeway_cid = outbound_cid;}
 			if (three_way_call_cid == 'CUSTOMER')
@@ -3745,7 +3747,7 @@ function JanelaNovoCliente()
 				if (omit_phone_code == 'Y') {var temp_phone_code = '';}
 				else {var temp_phone_code = document.vicidial_form.phone_code.value;}
 
-				if (manual_string.length > 7)
+				if (manual_string.length > 1)
 					{manual_string = temp_dial_prefix + "" + temp_phone_code + "" + manual_string;}
 				}
 			else
@@ -4907,7 +4909,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 				var parkedby = protocol + "/" + extension;
 				xferredirect_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&user=" + user + "&pass=" + pass + "&ACTION=RedirectToPark&format=text&channel=" + redirectdestination + "&call_server_ip=" + redirectdestserverip + "&queryCID=" + queryCID + "&exten=" + park_on_extension + "&ext_context=" + ext_context + "&ext_priority=1&extenName=park&parkedby=" + parkedby + "&session_id=" + session_id + "&CalLCID=" + CalLCID + "&uniqueid=" + document.vicidial_form.uniqueid.value + "&lead_id=" + document.vicidial_form.lead_id.value + "&campaign=" + campaign;
 
-                document.getElementById("ParkControl").innerHTML ="<td onclick=\"mainxfer_send_redirect('FROMParK','" + redirectdestination + "','" + redirectdestserverip + "');return false;\" style='cursor:pointer'><img src='/images/icons/control_play_blue.png' /></td><td onclick=\"mainxfer_send_redirect('FROMParK','" + redirectdestination + "','" + redirectdestserverip + "');return false;\" style='cursor:pointer'><a href=\"#\" >Retomar Chamada</a></td>";
+                document.getElementById("ParkControl").innerHTML ="<td onclick=\"mainxfer_send_redirect('FROMParK','" + redirectdestination + "','" + redirectdestserverip + "');return false;\" style='cursor:pointer'><img src='/images/icons/control_play_blue.png' /></td><td onclick=\"mainxfer_send_redirect('FROMParK','" + redirectdestination + "','" + redirectdestserverip + "');return false;\" style='cursor:pointer'><a href=\"#\" >Cancelar Espera</a></td>";
 				if ( (ivr_park_call=='ENABLED') || (ivr_park_call=='ENABLED_PARK_ONLY') )
 					{
                     document.getElementById("ivrParkControl").innerHTML ="<img src=\"./images/vdc_LB_grabivrparkcall_OFF.gif\" border=\"0\" alt=\"Grab IVR Parked Call\" />";
@@ -8004,21 +8006,23 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 		else
 			{var group = campaign;}
 		var form_cust_channel = document.getElementById("callchannel").innerHTML;
+                console.log("form_cust_channel:" + form_cust_channel);
 		var form_cust_serverip = document.vicidial_form.callserverip.value;
 		var customer_channel = lastcustchannel;
-		var customer_server_ip = lastcustserverip;
+		console.log("customer_channel:" + customer_channel);
+                var customer_server_ip = lastcustserverip;
 		AgaiNHanguPChanneL = lastcustchannel;
 		AgaiNHanguPServeR = lastcustserverip;
 		AgainCalLSecondS = VD_live_call_secondS;
 		AgaiNCalLCID = CalLCID;
 		var process_post_hangup=0;
 		if ( (RedirecTxFEr < 1) && ( (MD_channel_look==1) || (auto_dial_level == 0) ) )
-			{
+			{ console.log("1");
 			MD_channel_look=0;
 			DialTimeHangup('MAIN');
 			}
 		if (form_cust_channel.length > 3)
-			{
+			{ console.log("2");
 			var xmlhttp=false;
 			/*@cc_on @*/
 			/*@if (@_jscript_version >= 5)
@@ -8035,16 +8039,17 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 			 }
 			@end @*/
 			if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-				{
+				{ console.log("3");
 				xmlhttp = new XMLHttpRequest();
 				}
 			if (xmlhttp) 
-				{ 
+				{  console.log("4");
 				var queryCID = "HLvdcW" + epoch_sec + user_abb;
 				var hangupvalue = customer_channel;
 				//		alert(auto_dial_level + "|" + CalLCID + "|" + customer_server_ip + "|" + hangupvalue + "|" + VD_live_call_secondS);
 				custhangup_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=Hangup&format=text&user=" + user + "&pass=" + pass + "&channel=" + hangupvalue + "&call_server_ip=" + customer_server_ip + "&queryCID=" + queryCID + "&auto_dial_level=" + auto_dial_level + "&CalLCID=" + CalLCID + "&secondS=" + VD_live_call_secondS + "&exten=" + session_id + "&campaign=" + group + "&stage=CALLHANGUP&nodeletevdac=" + nodeletevdac + "&log_campaign=" + campaign;
-				xmlhttp.open('POST', 'manager_send.php'); 
+				console.log("custhangup_query:" + custhangup_query);
+                                xmlhttp.open('POST', 'manager_send.php'); 
 				xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 				xmlhttp.send(custhangup_query); 
 				xmlhttp.onreadystatechange = function() 
@@ -8261,7 +8266,10 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 	function xfercall_send_hangup() 
 		{
 		var xferchannel = document.vicidial_form.xferchannel.value;
+                console.log("xferchannel = " + xferchannel + "valor?");
 		var xfer_channel = lastxferchannel;
+                
+                
 		var process_post_hangup=0;
 		xfer_in_call=0;
 		if ( (MD_channel_look==1) && (leaving_threeway < 1) )
@@ -8270,7 +8278,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 			DialTimeHangup('XFER');
 			}
 		if (xferchannel.length > 3)
-			{
+			{ console.log("entrou 2");
 			var xmlhttp=false;
 			/*@cc_on @*/
 			/*@if (@_jscript_version >= 5)
@@ -8295,7 +8303,8 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 				var queryCID = "HXvdcW" + epoch_sec + user_abb;
 				var hangupvalue = xfer_channel;
 				custhangup_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=Hangup&format=text&user=" + user + "&pass=" + pass + "&channel=" + hangupvalue + "&queryCID=" + queryCID + "&log_campaign=" + campaign;
-				xmlhttp.open('POST', 'manager_send.php'); 
+				console.log(custhangup_query);
+                                xmlhttp.open('POST', 'manager_send.php'); 
 				xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 				xmlhttp.send(custhangup_query); 
 				xmlhttp.onreadystatechange = function() 
@@ -8342,10 +8351,76 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 
 // ################################################################################
 // Send Hangup command for any Local call that is not in the quiet(7) entry - used to stop manual dials even if no connect
-	function DialTimeHangup(tasktypecall) 
-		{
-		if ( (RedirecTxFEr < 1) && (leaving_threeway < 1) )
-			{
+	function DialTimeHangup(tasktypecall,DestPhoneTransfer) 
+        {
+            if(tasktypecall==='HangupTransfer') {
+                MD_channel_look=0;
+		var xmlhttp=false;
+		/*@cc_on @*/
+		/*@if (@_jscript_version >= 5)
+		// JScript gives us Conditional compilation, we can cope with old IE versions.
+		// and security blocked creation of the objects.
+		 try {
+		  xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+		 } catch (e) {
+		  try {
+		   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		  } catch (E) {
+		   xmlhttp = false;
+		  }
+		 }
+		@end @*/
+		if (!xmlhttp && typeof XMLHttpRequest!='undefined')
+			{ console.log("1.3");
+			xmlhttp = new XMLHttpRequest();
+			}
+		if (xmlhttp) 
+			{ console.log("1.4");
+			var queryCID = "HTvdcW" + epoch_sec + user_abb;
+			custhangup_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=HangupConfDial&format=text&user=" + user + "&pass=" + pass + "&exten=" + DestPhoneTransfer + "&ext_context=" + ext_context + "&queryCID=" + queryCID + "&log_campaign=" + campaign;
+			console.log("1.5" + custhangup_query);
+                        xmlhttp.open('POST', 'manager_send.php'); 
+			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
+			xmlhttp.send(custhangup_query); 
+			xmlhttp.onreadystatechange = function() 
+				{ 
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) 
+					{
+					Nactiveext = null;
+					Nactiveext = xmlhttp.responseText;
+					}
+				}
+			delete xmlhttp;
+			}
+                        
+			XD_live_customer_call = 0;
+			XD_live_call_secondS = 0;
+			MD_ring_secondS = 0;
+			MD_channel_look=0;
+			XDnextCID = '';
+			XDcheck = '';
+			xferchannellive=0;
+
+		//  DEACTIVATE CHANNEL-DEPENDANT BUTTONS AND VARIABLES
+			document.vicidial_form.xferchannel.value = "";
+			lastxferchannel='';
+
+        		document.getElementById("Leave3WayCall").style.display="none";
+
+            document.getElementById("DialWithCustomer").innerHTML ="<a href=\"#\" onclick=\"SendManualDial('YES');return false;\"><img src=\"./images/vdc_XB_dialwithcustomer.gif\" border=\"0\" alt=\"Dial With Customer\" style=\"vertical-align:middle\" /></a>";
+
+            document.getElementById("ParkCustomerDial").innerHTML ="<a href=\"#\" onclick=\"xfer_park_dial();return false;\"><img src=\"/images/icons/telephone_add_32.png\" alt=\"Park Customer Dial\" style=\"vertical-align:middle\" />Solicitar Transferência</a>";
+			document.getElementById("ParkCustomerDial").style.display="block";
+			
+            document.getElementById("HangupXferLine").innerHTML ="<img src=\"/images/icons/telephone_delete_32.png\"  alt=\"Hangup Xfer Line\" style=\"vertical-align:middle\" />Desligar o solicitado";
+			document.getElementById("HangupXferLine").style.display="none";
+			
+            document.getElementById("HangupBothLines").innerHTML ="<a href=\"#\" onclick=\"bothcall_send_hangup();return false;\"><img src=\"./images/vdc_XB_hangupbothlines.gif\" border=\"0\" alt=\"Hangup Both Lines\" style=\"vertical-align:middle\" /></a>";
+		
+            } else {
+            
+                if ( (RedirecTxFEr < 1) && (leaving_threeway < 1) )
+                	{ console.log("1.2");
 		MD_channel_look=0;
 		var xmlhttp=false;
 		/*@cc_on @*/
@@ -8363,14 +8438,15 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 		 }
 		@end @*/
 		if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-			{
+			{ console.log("1.3");
 			xmlhttp = new XMLHttpRequest();
 			}
 		if (xmlhttp) 
-			{ 
+			{ console.log("1.4");
 			var queryCID = "HTvdcW" + epoch_sec + user_abb;
 			custhangup_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=HangupConfDial&format=text&user=" + user + "&pass=" + pass + "&exten=" + session_id + "&ext_context=" + ext_context + "&queryCID=" + queryCID + "&log_campaign=" + campaign;
-			xmlhttp.open('POST', 'manager_send.php'); 
+			console.log("1.5" + custhangup_query);
+                        xmlhttp.open('POST', 'manager_send.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 			xmlhttp.send(custhangup_query); 
 			xmlhttp.onreadystatechange = function() 
@@ -8385,6 +8461,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 			}
 			}
 		}
+        }
 
 
 // ################################################################################
@@ -13773,9 +13850,10 @@ if ($agent_display_dialable_leads > 0)
 		    	<span id="XfeRGrouPLisT"><select size="1" name="XfeRGrouP" id="XfeRGrouP" class="cust_form" onChange="XferAgentSelectLink();return false;"><option>-- SELECT A GROUP TO SEND YOUR CALL TO --</option></select></span>
 			 	<span style="background-color: <?php echo $MAIN_COLOR ?>" id="LocalCloser"><img src="./images/vdc_XB_localcloser_OFF.gif" border="0" alt="LOCAL CLOSER" style="vertical-align:middle" /></span> &nbsp; &nbsp;
 	 		</span>	
- 		</td>
+ 	</td>
     	<td style="height: 36px; width: 180px;">
-    <span style="display:none;float:left;color: rgb(0, 0, 0);padding: 0px;text-decoration: none;font-size: 16px;" id="HangupXferLine"><img src="/images/icons/telephone_delete_32.png" border="0" alt="Hangup Xfer Line" style="vertical-align:middle" />Desligar o solicitado</span>
+             
+    <span style="float:left;color: rgb(0, 0, 0);padding: 0px;text-decoration: none;font-size: 16px;" id="HangupXferLine"><img src="/images/icons/telephone_delete_32.png" border="0" alt="Hangup Xfer Line" style="vertical-align:middle" />Desligar o solicitado</span>
  </td>
  </tr>
 
