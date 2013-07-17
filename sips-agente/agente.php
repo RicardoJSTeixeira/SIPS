@@ -3015,6 +3015,7 @@ if ($enable_fast_refresh < 1) {echo "\tvar refresh_interval = 1000;\n";}
 	var CalL_AutO_LauncH = '';
 	var panel_bgcolor = '<?php echo $MAIN_COLOR ?>';
 	var CusTCB_bgcolor = '#FFFF66';
+        var dead_time = 0;
 	var auto_dial_level = '<?php echo $auto_dial_level ?>';
 	var starting_dial_level = '<?php echo $auto_dial_level ?>';
 	var dial_timeout = '<?php echo $dial_timeout ?>';
@@ -4011,7 +4012,41 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 			}
 		document.vicidial_form.conf_dtmf.value = '';
 		}
+String.prototype.toHHMMSS = function () {
+    var sec_num = parseInt(this, 10); // don't forget the second parm
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
 
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    var time    = hours+':'+minutes+':'+seconds;
+    return time;
+    };                
+function stats_update(){
+    var statsDiv = document.getElementById("statsTimer");
+    
+    if ((VD_live_call_secondS + dead_time + AgentDispoing) < 1 ) {
+        statsDiv.style.backgroundColor = "#FFFFFF";
+    } else {
+    if (VD_live_call_secondS > 1 && dead_time < 1) { statsDiv.style.backgroundColor = "#66FF66"; }
+    if (dead_time > 1) { statsDiv.style.backgroundColor = "#FF3366"; }
+    if (AgentDispoing > 1) { statsDiv.style.backgroundColor = "#66CCFF"; 
+        
+        $("#stats_feedback").html(AgentDispoing.toString().toHHMMSS());
+        
+        
+    } else { $("#stats_incall").html(VD_live_call_secondS.toString().toHHMMSS());
+    $("#stats_dead").html(dead_time.toString().toHHMMSS());
+    $("#stats_feedback").html(AgentDispoing.toString().toHHMMSS());}
+    } 
+
+
+    
+    
+   
+}
 // ################################################################################
 // Check to see if there are any channels live in the agent's conference meetme room
 	// ################################################################################
@@ -4325,9 +4360,11 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 									{NeWManuaLDiaLCalLSubmiT('NOW');}
 								}
 							}
-
+                                                stats_update();
 						if ( (CheckDEADcall > 0) && (VD_live_customer_call===1) )
-							{
+							{ dead_time++;
+                                                            
+                                                        
 							if (CheckDEADcallON < 1)
 								{
 								if( document.images ) 
@@ -8045,7 +8082,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
                     return;
                 }   
                
-				
+		dead_time = 0;		
 		if (VDCL_group_id.length > 1)
 			{var group = VDCL_group_id;}
 		else
@@ -12936,9 +12973,9 @@ $zi=2;
 		
 			<table height='65px' width="100%" border=0> 
 			<tr>
-			<td style='max-width: 45px;text-align: left;'>
+			<td style='width: 400px;text-align: left;'>
                           <?  if (isset($curLogo) && $curLogo != "") {
-      echo "<img style='width:400px;heigth:200px;float=center' src='../$curLogo' />";
+      echo "<img style='width:400px;heigth:200px;' src='../$curLogo' />";
   } else { echo "<img src='../images/pictures/go_logo_15.png' ALT=LOGO />"; }
                ?>  </td> 
 			<span style='display:none;' id="dataHeader"> 
@@ -12949,7 +12986,13 @@ $zi=2;
 				$campanha = $rslt['campaign_name'];
 			
 			?> 
-			<td><h2 style='font-size:24px;text-align: center;'>Campanha <? echo $campanha; ?></h2></td>
+			<td><div id="statsTimer" style="font-weight:normal;text-align:center;height:50px;width:400px;border:2px solid rgb(168, 168, 168);border-radius:5px;padding-top:7px;position:absolute;left:calc(50% - 200px);bottom:-1px;border-bottom:none;"> 
+                                <table>
+                                    <tr>
+                                <td>Campanha: <? echo $campanha; ?></td><td>Hangup: <label id="stats_dead">00:00:00</label</td></tr><tr>
+                                <td>Chamada: <label id="stats_incall">00:00:00</label></td><td>Feedback: <label id="stats_feedback">00:00:00</label></td>
+                                    </tr></table>
+                            </div></td>
 
 			<? $user = $VD_login; ?>
 			<?php $faltas = "../../sips/presencasteste.php?user=".$user; ?>
@@ -14822,7 +14865,7 @@ echo $zi ?>;" id="AlertBox" class="popup_form" >
 <div class="cc-mstyle" style="height: 4em; bottom: 0px; position: fixed; width: 90%; margin: 0px 5%; display: none; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; border-bottom: medium none; opacity: 0.9;" id="shoutbox"><img style="float:right;margin:5px;cursor:pointer;" onClick="$('#shout').slideUp()" src="/images/icons/cross_16.png"><p style="margin:15px 5px 0"></p></div>
 <script>
         setTimeout(function(){window.onbeforeunload = function() {
-        return "Não feche a janela, faça logout primeiro se faz favor :( ";
+        return "Não feche a janela, faça logout primeiro se faz favor :-(.";
 };},500);
    </script>
 </body>
