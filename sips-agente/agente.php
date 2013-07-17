@@ -5385,7 +5385,17 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 // ################################################################################
 // Request list of USERONLY callbacks for this agent
 	function CalLBacKsLisTCheck()
-		{
+		{   var go_on = divchecker("cback");
+                    if (!go_on) { return; }
+                    if ( AgentDispoing > 0) {
+                        alert_box('Termine Wrap-up da chamada.')
+                        return;
+                    }    
+                    
+                    if  ( AutoDialReady == 0 && auto_dial_level > 0 && pause_code_counter == 0) {
+                        alert_box('Seleccione o motivo de pausa por favor.');
+                        return;
+                    }
 		var move_on=1;
 		if ( (AutoDialWaiting == 1) || (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
 			{
@@ -5629,7 +5639,18 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 // ################################################################################
 // Open page to enter details for a new manual dial lead
 	function NeWManuaLDiaLCalL(TVfast,TVphone_code,TVphone_number,TVlead_id,TVtype)
-		{
+		{   var go_on = divchecker("mdial");
+                    if (!go_on) { return; }
+                    if ( AgentDispoing > 0) {
+                        alert_box('Termine Wrap-up da chamada.')
+                        return;
+                    }
+                
+                    if  ( AutoDialReady == 0 && auto_dial_level > 0 && pause_code_counter == 0) {
+                    alert_box('Seleccione o motivo de pausa por favor.');
+                    return;
+                    }
+                
 		var move_on=1;
 		if ( (AutoDialWaiting == 1) || (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
 			{
@@ -6227,6 +6248,17 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 
 
 	function redial() {
+                var go_on = divchecker("redial");
+                    if (!go_on) { return; }
+                if ( AgentDispoing > 0) {
+                        alert_box('Termine Wrap-up da chamada.')
+                        return;
+                    }
+                
+                    if  ( AutoDialReady == 0 && auto_dial_level > 0 && pause_code_counter == 0) {
+                    alert_box('Seleccione o motivo de pausa por favor.');
+                    return;
+                    }
 		var segue=1;
 		if ( (AutoDialWaiting == 1) || (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
 			{
@@ -6248,7 +6280,14 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 			}
 		} 
 		}
-
+        function divchecker(curDiv) {
+            var rdytogo = 1;
+                if (document.getElementById("SearcHForMDisplaYBox").style.visibility == 'visible' && curDiv != "search") { rdytogo = 0;}
+                if (document.getElementById("NeWManuaLDiaLBox").style.visibility == 'visible' && curDiv != "mdial") { rdytogo = 0;}
+                if (document.getElementById("CallBacKsLisTBox").style.visibility == 'visible' && curDiv != "cback") { rdytogo = 0;}
+                if (document.getElementById("CloserSelectBox").style.visibility == 'visible' && curDiv != "closer") { rdytogo = 0;}
+            return rdytogo;
+        }
 	function NewRedialSubmiT(nr)
 		{
 		var sending_group_alias = 0;
@@ -6749,7 +6788,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 		//else
 			//{
 			in_lead_preview_state=0;
-			if (dial_method == "INBOUND_MAN")
+			if (dial_method == "INBOUND_MAN" || dial_method == "RATIO")
 				{
 				auto_dial_level=starting_dial_level;
 
@@ -6757,7 +6796,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 				}
 			else
 				{
-                document.getElementById("DiaLControl").innerHTML = "<td><img src='/images/icons/control_end.png' /></td><td>Marcar Seguint</td>";
+                document.getElementById("DiaLControl").innerHTML = "<td><img src='/images/icons/control_end.png' /></td><td>Marcar Seguinte</td>";
 				}
 
 			var xmlhttp=false;
@@ -7083,7 +7122,8 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 // Set the client to READY and start looking for calls (VDADready, VDADpause)
 	function AutoDial_ReSume_PauSe(taskaction,taskagentlog,taskwrapup,taskstatuschange,temp_reason,temp_auto,temp_auto_code)
 		{
-						
+					var go_on = divchecker("auto_dial");
+                    if (!go_on) { return; }	
 			get_tempo_pausa();
 			
 		var add_pause_code='';
@@ -8693,6 +8733,18 @@ FecharCallbacks();
 // Open lead search form panel
 	function OpeNSearcHForMDisplaYBox()
 		{
+                    var go_on = divchecker("search");
+                    if (!go_on) { return; }
+                        
+                    
+                    if ( AgentDispoing > 0) {
+                        alert_box('Termine Wrap-up da chamada.')
+                        return;
+                    }
+                if  ( AutoDialReady == 0 && auto_dial_level > 0 && pause_code_counter == 0) {
+                    alert_box('Seleccione o motivo de pausa por favor.');
+                    return;
+                }
 		var move_on=1;
 		if ( (AutoDialWaiting == 1) || (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
 			{
@@ -11346,7 +11398,18 @@ function phone_number_format(formatphone) {
 // ################################################################################
 // Show the groups selection span
 	function OpeNGrouPSelectioN()
-		{
+        
+		{   
+                    var go_on = divchecker("closer");
+                    if (!go_on) { return; }
+                    if ( AgentDispoing > 0) {
+                        alert_box('Termine Wrap-up da chamada.')
+                        return;
+                    }
+                    if  ( AutoDialReady == 0 && auto_dial_level > 0 && pause_code_counter == 0) {
+                    alert_box('Seleccione o motivo de pausa por favor.');
+                    return;
+                }
 		var move_on=1;
 		if ( (AutoDialWaiting == 1) || (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
 			{
@@ -14759,7 +14822,7 @@ echo $zi ?>;" id="AlertBox" class="popup_form" >
 <div class="cc-mstyle" style="height: 4em; bottom: 0px; position: fixed; width: 90%; margin: 0px 5%; display: none; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; border-bottom: medium none; opacity: 0.9;" id="shoutbox"><img style="float:right;margin:5px;cursor:pointer;" onClick="$('#shout').slideUp()" src="/images/icons/cross_16.png"><p style="margin:15px 5px 0"></p></div>
 <script>
         setTimeout(function(){window.onbeforeunload = function() {
-        return "Não feche a janela, faça logout primeiro se faz favor :-(.";
+        return "Não feche a janela, faça logout primeiro se faz favor :( ";
 };},500);
    </script>
 </body>
