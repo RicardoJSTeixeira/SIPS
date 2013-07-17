@@ -566,11 +566,11 @@ function   inbound_wallboard(data)
                         $.post("Requests.php", {action: "4", linha_inbound: wbe[9][0].linha_inbound},
                         function(data3)
                         {
-                            
+
                               var chamadas_recebidas = data3[0].chamadas_recebidas;
                               var tma1 = data3[0].tma1;
                               var tma2 = data3[0].tma2;
-                           
+
                               var chamadas_atendidas_val = data3[0].chamadas_atendidas;
                               var chamadas_perdidas_val = data3[0].chamadas_perdidas;
                               var chamadas_perdidas_percent = data3[0].chamadas_perdidas_percent;
@@ -604,7 +604,8 @@ function   inbound_wallboard(data)
                                     var chamadas_atendidas_obj = document.getElementById("chamadas_atendidas" + id);
                                     chamadas_atendidas_obj.innerHTML = +chamadas_atendidas_val;
                                     var chamadas_perdidas_obj = document.getElementById("chamadas_perdidas" + id);
-                                    if (chamadas_perdidas_val !== "0")
+
+                                    if (chamadas_perdidas_val !== "0" && (chamadas_perdidas_val / chamadas_recebidas)>0)
                                           chamadas_perdidas_obj.innerHTML = chamadas_perdidas_val + "-" + Math.floor((chamadas_perdidas_val / chamadas_recebidas) * 100) + "%";
                                     else
                                           chamadas_perdidas_obj.innerHTML = chamadas_perdidas_val + "- 0%";
