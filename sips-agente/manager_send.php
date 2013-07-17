@@ -514,7 +514,7 @@ if ($ACTION=="HangupConfDial")
 		$hangup_channel_prefix = "$local_DEF$exten$local_AMP$ext_context";
 
 		$stmt="SELECT count(*) FROM live_sip_channels where server_ip = '$server_ip' and channel LIKE \"$hangup_channel_prefix%\";";
-                echo "\n<!-- $stmt -->";
+               
 			if ($format=='debug') {echo "\n<!-- $stmt -->";}
 		$rslt=mysql_query($stmt, $link);
 			if ($mel > 0) {mysql_error_logging($NOW_TIME,$link,$mel,$stmt,'02008',$user,$server_ip,$session_name,$one_mysql_log);}
@@ -523,7 +523,7 @@ if ($ACTION=="HangupConfDial")
 			{
 			$stmt="SELECT channel FROM live_sip_channels where server_ip = '$server_ip' and channel LIKE \"$hangup_channel_prefix%\";";
 				if ($format=='debug') {echo "\n<!-- $stmt -->";}
-                                echo "\n<!-- $stmt -->";
+                               
 			$rslt=mysql_query($stmt, $link);
 			if ($mel > 0) {mysql_error_logging($NOW_TIME,$link,$mel,$stmt,'02009',$user,$server_ip,$session_name,$one_mysql_log);}
 			$rowx=mysql_fetch_row($rslt);
