@@ -4908,7 +4908,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 				var redirectdestserverip = taskserverip;
 				var parkedby = protocol + "/" + extension;
 				xferredirect_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&user=" + user + "&pass=" + pass + "&ACTION=RedirectToPark&format=text&channel=" + redirectdestination + "&call_server_ip=" + redirectdestserverip + "&queryCID=" + queryCID + "&exten=" + park_on_extension + "&ext_context=" + ext_context + "&ext_priority=1&extenName=park&parkedby=" + parkedby + "&session_id=" + session_id + "&CalLCID=" + CalLCID + "&uniqueid=" + document.vicidial_form.uniqueid.value + "&lead_id=" + document.vicidial_form.lead_id.value + "&campaign=" + campaign;
-
+                                
                 document.getElementById("ParkControl").innerHTML ="<td onclick=\"mainxfer_send_redirect('FROMParK','" + redirectdestination + "','" + redirectdestserverip + "');return false;\" style='cursor:pointer'><img src='/images/icons/control_play_blue.png' /></td><td onclick=\"mainxfer_send_redirect('FROMParK','" + redirectdestination + "','" + redirectdestserverip + "');return false;\" style='cursor:pointer'><a href=\"#\" >Cancelar Espera</a></td>";
 				if ( (ivr_park_call=='ENABLED') || (ivr_park_call=='ENABLED_PARK_ONLY') )
 					{
@@ -7999,7 +7999,12 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 // Send Hangup command for customer call connected to the conference now to Manager WORKING
 	function dialedcall_send_hangup(dispowindow,hotkeysused,altdispo,nodeletevdac) 
 		{
-			
+		
+                if (customerparked == 1) {
+                    alert_box('Existe um cliente em espera.\nNão pode desligar');
+                    return;
+                }   
+               
 				
 		if (VDCL_group_id.length > 1)
 			{var group = VDCL_group_id;}
