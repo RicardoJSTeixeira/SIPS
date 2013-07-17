@@ -14387,7 +14387,7 @@ $(function() {
             <div style="font-size:12px;width:80%;margin:10px auto;color:#6D6D6D;">Atenção: os nºs novos vão ser associados á lista: <?php echo $manual_dial_list_id ?></div>
         </td>
     </tr>
-    <tr>
+    <tr style="display:none">
         <td>
             <input type="hidden" size="7" maxlength="10" name="MDDiaLCodE" id="MDDiaLCodE" value="1" />
             <span style="float: right;"> Portabilidade: </span>
