@@ -297,7 +297,9 @@ switch ($action) {
 
     case '2'://Barras- total chamadas inbound/outbound
 
-
+   
+        $hours = (gmdate("H", time()-strtotime('today'))+1);
+        
 
         for ($i = 0; $i < count($datasets); $i++) {
             $query = "SELECT * FROM `WallBoard_Dataset` WHERE `id`=" . $datasets[$i]["id"];
@@ -319,13 +321,10 @@ switch ($action) {
                             $selected_query = $row2["query_text_outbound"];
                         //SUbstituição das variaveis
 
+                        $selected_query = str_replace('$hour', $hours, $selected_query);
                         $selected_query = str_replace("now()", "'" . $rounded_time . "'", $selected_query);
-                        $selected_query = str_replace('$hour', $row["tempo"], $selected_query);
                         $selected_query = str_replace('$user_group', $row["user_group"], $selected_query);
                         $selected_query = str_replace('$user', $row["user"], $selected_query);
-
-
-
                         $selected_query = str_replace('$campaign_id', $row["campaign_id"], $selected_query);
                         $selected_query = str_replace('$linha_inbound', $row["linha_inbound"], $selected_query);
                         $selected_query = str_replace('$status', $row["status_feedback"], $selected_query);
@@ -340,8 +339,9 @@ switch ($action) {
                         $inbound = $row2["query_text_inbound"];
                         $outbound = $row2["query_text_outbound"];
                         //SUbstituição das variaveis
+                        $inbound = str_replace('$hour', $hours, $inbound);
                         $inbound = str_replace("now()", "'" . $rounded_time . "'", $inbound);
-                        $inbound = str_replace('$hour', $row["tempo"], $inbound);
+
                         $inbound = str_replace('$user_group', $row["user_group"], $inbound);
                         $inbound = str_replace('$user', $row["user"], $inbound);
 
@@ -350,8 +350,9 @@ switch ($action) {
                         $inbound = str_replace('$status', $row["status_feedback"], $inbound);
                         $inbound = str_replace('$chamadas', $row["chamadas"], $inbound);
                         //SUbstituição das variaveis
+                        $outbound = str_replace('$hour', $hours, $outbound);
                         $outbound = str_replace("now()", "'" . $rounded_time . "'", $outbound);
-                        $outbound = str_replace('$hour', $row["tempo"], $outbound);
+
                         $outbound = str_replace('$user_group', $row["user_group"], $outbound);
                         $outbound = str_replace('$user', $row["user"], $outbound);
 
@@ -377,8 +378,7 @@ switch ($action) {
                 }
             }
         }
-
-        echo json_encode($js);
+         echo json_encode($js);
         break;
 
 
@@ -484,7 +484,6 @@ switch ($action) {
                 chamadas_perdidas => $dropsTODAY,
                 chamadas_perdidas_percent => $drops_today_pct,
                 chamadas_atendidas => $answersTODAY,
-             
                 tma1 => $PCThold_sec_stat_one,
                 tma2 => $PCThold_sec_stat_two,
                 tma => $row2["total_sec"],
