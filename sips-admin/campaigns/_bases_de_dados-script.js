@@ -57,17 +57,7 @@ if( ($("#tbl-dbs tr").length == 0 && Flag == "ALL") || Flag == "DISABLED" || Fla
 				  
 				  
                    $("#tbl-dbs").prepend("\n\
-						<tr id='"+json.db_id[index]+"' style='height:22px;'>\n\
-							"+DBCheckbox+"\n\
-							<td class='css-td-list-label'><label id=''>"+json.db_name[index]+"</label></td>\n\
-							<td class='css-td-list-label'>"+json.db_create[index]+"</td>\n\
-							<td class='css-td-list-icon'><img class='css-img-list-icon pointer add-more-leads' title='Nº de Leads' src='icons/mono_db_16.png'></td>\n\
-							<td class='css-td-list-text'>"+json.db_leads[index]+"</td>\n\
-							<td class='css-td-list-filler'></td>\n\
-							"+DBTrash+"\n\
-							"+DBConfig+"\n\
-							</tr>\n\
-						");
+						<tr id='"+json.db_id[index]+"' style='height:22px;'>"+DBCheckbox+"<td class='css-td-list-label'><label id=''>"+json.db_name[index]+"</label></td><td class='css-td-list-label'>"+json.db_create[index]+"</td><td class='css-td-list-icon'><img class='css-img-list-icon pointer add-more-leads' title='Nº de Leads' src='icons/mono_db_16.png'></td><td class='css-td-list-text'>"+json.db_leads[index]+"</td><td class='css-td-list-filler'></td>"+DBTrash + + DBConfig+"</tr>");
                 });
 				
 			}	
@@ -82,17 +72,7 @@ if( ($("#tbl-dbs tr").length == 0 && Flag == "ALL") || Flag == "DISABLED" || Fla
 				
 				
 			   	$("#tbl-dbs").prepend("\n\
-						<tr id='"+json.db_id_manual+"' style='height:22px;'>\n\
-							<td class='css-td-list-check odd-even-ignore'><input disabled='disabled' checked='checked' class='db-checkbox-manual' type='checkbox' id=''></td>\n\
-							<td class='css-td-list-label'><label id=''><b>Chamadas Manuais da Campanha</b></label></td>\n\
-							<td class='css-td-list-label'></td>\n\
-							<td class='css-td-list-icon'><img class='css-img-list-icon' title='Nº de Leads' src='icons/mono_db_16.png'></td>\n\
-							<td class='css-td-list-text'>"+json.db_leads_manual+"</td>\n\
-							<td class='css-td-list-filler'></td>\n\
-							<td class='css-td-list-actions'><img class='css-img-list-actions' style='opacity:0.3; cursor:default;'  title='' src='icons/mono_trash_16.png'></td>\n\
-							<td class='css-td-list-actions'><img class='css-img-list-actions dbs-edit' title='Configurar' src='icons/mono_wrench_16.png'></td>\n\
-						</tr>\n\
-						")
+						<tr id='"+json.db_id_manual+"' style='height:22px;'><td class='css-td-list-check odd-even-ignore'><input disabled='disabled' checked='checked' class='db-checkbox-manual' type='checkbox' id=''></td><td class='css-td-list-label'><label id=''><b>Chamadas Manuais da Campanha</b></label></td><td class='css-td-list-label'></td><td class='css-td-list-icon'><img class='css-img-list-icon' title='Nº de Leads' src='icons/mono_db_16.png'></td><td class='css-td-list-text'>"+json.db_leads_manual+"</td><td class='css-td-list-filler'></td><td class='css-td-list-actions'><img class='css-img-list-actions' style='opacity:0.3; cursor:default;'  title='' src='icons/mono_trash_16.png'></td><td class='css-td-list-actions'><img class='css-img-list-actions dbs-edit' title='Configurar' src='icons/mono_wrench_16.png'></td></tr>")
 				}
                 
 				$(".db-checkbox").uniform();
@@ -136,6 +116,10 @@ function DBElemInit()
 	$("#btn-reset-dbs-select-none").button();
 	
 	
+	   $("#btn-db-force-duplicate").button();
+	
+	
+	
 	
 	
 	$("#dialog-dbs-edit").dialog({ 
@@ -175,7 +159,7 @@ function DBElemInit()
     title: "<table><tr><td><img class='dialog-icon-title' src='icons/mono_zoom_16.png'></td><td><span class='dialog-title'> Ver Detalhes </span></td></tr></table>",
     autoOpen: false,
     height: 600,
-    width: 400,
+    width: 800,
     resizable: false,
     buttons: { "Fechar" : DialogClose },
     open: function(){}
@@ -310,6 +294,35 @@ function TableEditDBInit()
 
     
 }
+
+
+var dT_errordetails;
+
+function TableErrorDetailsInit()
+{
+
+    dT_errordetails = $('#tbl-db-wizard-view-details').dataTable( {
+        "iDisplayLength": 10,
+        "sDom": '<"top"><"dt-fixed-12lines-with-icon"rt><"bottom"p>',
+        "bJQueryUI": true,  
+        "bProcessing": true, 
+        "bRetrieve": false,
+        "bDestroy": true,
+        "sPaginationType": "full_numbers",
+         
+        "oLanguage": { "sUrl": "../../jquery/jsdatatable/language/pt-pt.txt" },
+        "fnDrawCallback":   function()
+                            { 
+                                $("#tbl-db-wizard-view-details").css("width", "100%");                     
+                            }
+        });
+    
+
+    
+}
+
+
+
 
 function DialogDBEditOnOpen()
 {
@@ -644,11 +657,19 @@ function DBWizardFieldChange()
 
 }
 
+
+var DBLoadErrorLine;
+var DBLoadErrorText;
+var DBLoadErrorPhone;
+
 function DBWizardMatchFields()
 {
 	
 	var validateSubmit = false;
 	var errorCode = 0;
+	
+
+	
 	
 	$.each($(".sel-db-wizard-fields option:selected"), function(index, value){
 	
@@ -712,17 +733,15 @@ function DBWizardMatchFields()
 	
 		});
 
-		console.log(arrayMatchFields);
-		console.log(arrayListFields);
-		console.log(ConvertedFile);
-		
-		
 		
 		$("#td-db-wizard-match-fields-error").html("A carregar contactos...");
 		$("#td-db-wizard-match-fields-error-icon").html("<img style='float:right' class='mono-icon' src='icons/loader2.gif'>");
 		
-		$.post("_bases_de_dados-requests.php", {action: "DBWizardMatchFields", DBID: editedDB, MatchFields: arrayMatchFields, ListFields: arrayListFields, ConvertedFile: ConvertedFile }, function(json){
+		$.post("_bases_de_dados-requests.php", {action: "DBWizardMatchFields", DBID: editedDB, MatchFields: arrayMatchFields, ListFields: arrayListFields, ConvertedFile: ConvertedFile, CampaignID: CampaignID }, function(json){
 
+
+
+            
 
 			if(json.totalloaded == null)
 			{
@@ -758,30 +777,30 @@ function DBWizardMatchFields()
 			}
 			else
 			{
-				$("#td-db-wizard-match-fields-error").html("Total de Contactos no Ficheiro: <b>"+json.totalloaded+"</b> <br><br> Contactos Inseridos com Sucesso: <b>"+json.totalinserted+"</b> <br><br> Contactos com Erros: <b>"+json.totalerrors+"</b>");
-				$("#td-db-wizard-match-fields-error-icon").html("<img style='float:right' class='mono-icon' src='icons/mono_alert_16.png'>");
-				
-				//$("#btn-db-wizard-accept-leads").button("enable");
-				$("#btn-db-wizard-deny-leads").button("enable");
-				$("#btn-db-wizard-view-details").button("enable");
-				
-				$("#btn-db-wizard-match-fields").button("disable");
-				$("#btn-db-wizard-match-fields-restart").button("disable");
-				//$("#btn-db-wizard-restart").button("disable");
-				
-				
-				for(var i = 0; i < json.error_line.length; i++)
-				{
-					$("#tbl-db-wizard-view-details").append("<td>Linha: "+json.error_line[i]+"</td><td>Erro: "+json.error_text[i]+"</td>");
-				}
-				
-				
 
-				
-				
+
+                DBLoadErrorLine = json.error_line;
+                DBLoadErrorText = json.error_text;
+                DBLoadErrorPhone = json.error_phone;
+
+
 				
 				insertedLeadsIDs = json.insert_id;
 				
+				
+				$("#td-db-wizard-match-fields-error").html("Total de Contactos no Ficheiro: <b>"+json.totalloaded+"</b> <br><br> Contactos Inseridos com Sucesso: <b>"+json.totalinserted+"</b> <br><br> Contactos com Erros: <b>"+json.totalerrors+"</b>");
+                $("#td-db-wizard-match-fields-error-icon").html("<img style='float:right' class='mono-icon' src='icons/mono_alert_16.png'>");
+                
+                //$("#btn-db-wizard-accept-leads").button("enable");
+                $("#btn-db-wizard-deny-leads").button("enable");
+                $("#btn-db-wizard-view-details").button("enable");
+                
+                $("#btn-db-wizard-match-fields").button("disable");
+                $("#btn-db-wizard-match-fields-restart").button("disable");
+                //$("#btn-db-wizard-restart").button("disable");
+				
+				
+
 				
 			}
 
@@ -882,6 +901,26 @@ function ResetDbsSelectNone(){
 
 
 
+function onsubmittest(that)
+{
+    console.log(DBLoadErrorLine);
+    
+    $("#hidden_error_line").val(DBLoadErrorLine);
+        $("#hidden_error_text").val(DBLoadErrorText);
+        $("#hidden_error_phone").val(DBLoadErrorPhone);
+        
+    
+    
+  /*  var errorline_ser = $.param(DBLoadErrorLine);
+    
+    console.log(errorline_ser)
+    
+    that.action = that.action + "?errorline=" + errorline_ser + "&errortext=" + DBLoadErrorText;
+    
+    console.log($(this)) */
+}
+
+
 $("body")
 .on("click", ".db-checkbox", DBSwitch)
 .on("click", "#btn-select-all-dbs", SelectAllDBs)
@@ -899,7 +938,7 @@ $("body")
 .on("click", "#btn-db-wizard-match-fields-restart", DBWizardMatchFieldsRestart)
 .on("input focus", "#input-new-db", InputNewDBClearError)
 .on("click", "#btn-db-wizard-deny-leads", DBWizardDenyLeads)
-//.on("click", "#btn-db-wizard-view-details", {dialog: "#dialog-db-wizard-view-details"}, DialogOpen)
+//.on("click", "#btn-db-wizard-view-details", LoadDBDownloadDetails)
 .on("click", ".add-more-leads", {dialog: "#dialog-db-wizard", dbwizardedit: true}, DialogOpen)
 .on("click", "#btn-dbs-reset", {dialog: "#dialog-dbs-reset"}, DialogOpen)
 .on("click", "#btn-reset-dbs-select-all", ResetDbsSelectAll)

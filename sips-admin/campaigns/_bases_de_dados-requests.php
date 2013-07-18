@@ -219,7 +219,7 @@ function DBMatchFields($CampaignID, $ConvertedFile, $link)
     echo json_encode( $js );
 }
 
-function DBWizardMatchFields($DBID, $MatchFields, $ListFields, $ConvertedFile, $link)
+function DBWizardMatchFields($DBID, $MatchFields, $ListFields, $ConvertedFile, $CampaignID, $link)
 {
 
 	
@@ -248,6 +248,25 @@ function DBWizardMatchFields($DBID, $MatchFields, $ListFields, $ConvertedFile, $
 		}
 	}
 	
+    
+    $query  = mysql_query("SELECT list_id FROM vicidial_lists WHERE campaign_id='$CampaignID'", $link) or die(mysql_error());
+    while($row = mysql_fetch_assoc($query))
+    {
+        $js_debug['campaign_lists'][] = $row['list_id'];
+    }
+    
+    $implode = implode("','", $js_debug['campaign_lists']);
+    
+    $query = mysql_query("SELECT phone_number FROM vicidial_list WHERE list_id IN('.$implode.')", $link) or die(mysql_error());
+    while($row = mysql_fetch_assoc($query))
+    {
+        $js_debug['campaign_phones'][] = $row['phone_number'];
+    }
+    
+    
+    
+    
+    
 
 	while (!feof($file)) 
 	{
@@ -276,8 +295,18 @@ function DBWizardMatchFields($DBID, $MatchFields, $ListFields, $ConvertedFile, $
 						 if(strlen($buffer[$index]) <> 9)
 						 {
 							 $ErrorCode = 1;
+                             $error_number = $buffer[$index];
+                             break;
 						 }
 						 
+                         foreach ($js_debug['campaign_phones'] as $key => $value) {
+                             if($value == $buffer[$index])
+                             {
+                                 $ErrorCode = 2;
+                                 $duplicate_number = $buffer[$index];
+                                 break;
+                             }
+                         }
 						 
 						 
 
@@ -294,7 +323,13 @@ function DBWizardMatchFields($DBID, $MatchFields, $ListFields, $ConvertedFile, $
 			$js['error_line'][] = $LineCount + 1;
 			switch($ErrorCode)
 			{
-				case 1: $js['error_text'][] = "Número de Telefone inválido. Os campos 'Telefone', 'Telefone Alternativo', e 'Telemóvel' apenas podem conter nove números.";
+				case 1: $js['error_text'][] = 1; $js['error_phone'][] = $error_number; break;
+                case 2: {
+                    $js['error_text'][] = 2; $js['error_phone'][] = $duplicate_number; $duplicates++;  
+                    
+                    $js['keep_duplicates'][] = "INSERT INTO vicidial_list (".$mysqlListFields."entry_date, called_since_last_reset, gmt_offset_now, last_local_call_time, list_id, status ) VALUES (".$mysqlValues."'$entry_date', '$called_since_last_reset', '$gmt_offset', '$last_local_call_time', '$DBID', 'NEW')";
+                
+                    break;}
 			}
 			$TotalErrors++;
 		}
@@ -328,6 +363,7 @@ function DBWizardMatchFields($DBID, $MatchFields, $ListFields, $ConvertedFile, $
 	$js['totalloaded'] = $LineCount;
 	$js['totalinserted'] = $TotalInserted;
 	$js['totalerrors'] = $TotalErrors;
+    $js['totalduplicates'] = $duplicates;
 	
 	echo json_encode( $js );
 
@@ -336,7 +372,7 @@ function DBWizardMatchFields($DBID, $MatchFields, $ListFields, $ConvertedFile, $
 	
 }
 
-function  DBWizardDenyLeads($LeadsToDelete, $DBID, $link)
+function DBWizardDenyLeads($LeadsToDelete, $DBID, $link)
 {
 	foreach($LeadsToDelete as $index => $value)
 	{
@@ -383,7 +419,7 @@ switch($action)
 	case "DialogDBEditOnSave" : DialogDBEditOnSave($DBID, $changeName, $changeCampaign, $link); break;
 	case "NewDB" : NewDB($CampaignID, $DBName, $link); break;
 	case "DBMatchFields" : DBMatchFields($CampaignID, $ConvertedFile, $link); break;
-	case "DBWizardMatchFields" : DBWizardMatchFields($DBID, $MatchFields, $ListFields, $ConvertedFile, $link); break;
+	case "DBWizardMatchFields" : DBWizardMatchFields($DBID, $MatchFields, $ListFields, $ConvertedFile, $CampaignID, $link); break;
 	case "DBWizardDenyLeads" : DBWizardDenyLeads($LeadsToDelete, $DBID, $link); break;
     case "DBResetGetDBList" : DBResetGetDBList($CampaignID, $link); break;
     case "DBResetLists" : DBResetLists($Lists2Reset, $link); break;

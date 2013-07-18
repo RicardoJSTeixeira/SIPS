@@ -814,6 +814,7 @@
 				<br />
                 
                 <div class="div-title">Bases de Dados<span class='css-orange-caret'>></span>Acções</div>
+                
                 <table>          
                
                         <tr>
@@ -823,6 +824,7 @@
                        
                          
                 </table> 
+                
 				<br />
 				<div class="div-title">Bases de Dados<span class='css-orange-caret'>></span>Navegação</div>  
                     <table>
@@ -1469,9 +1471,29 @@
         <div id="dialog-db-wizard-view-details" style="display:none">
         
         
-        <div class="div-title">Ver Detalhes<span class='css-orange-caret'>></span>Contactos com Erro</div>
+        <div class="div-title">Ver Detalhes<span class='css-orange-caret'>></span>Contactos com Erros</div>
         
-        <table id='tbl-db-wizard-view-details' border=1>
+        <div>
+        <table id='tbl-db-wizard-view-details'>
+            <thead><th>Linha</th><th>Descrição do Erro</th></thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+        </div>
+        <div style="margin-top:12px !important" class="div-title">Ver Detalhes<span class='css-orange-caret'>></span>Contactos com Erros<span class='css-orange-caret'>></span>Acções</div>
+         <table>
+            <tr>
+            <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id="btn-db-force-duplicate"><img class="img-action" src='icons/mono_doc_import.png'></button></td>
+            <td class="td-action-next">Forçar a inserção de contactos com o tupo de erro "Contacto Duplicado".</td>
+            </tr>
+            
+    <!--        <tr>
+            <td class="td-action td-action-next"><button class="btn-action btn-nav-nexts" id="btn-db-wizard-view-details"><img class="img-action" src='icons/mono_zoom_16.png'></button></td>
+            <td class="td-action-next">Ver detalhes dos Contactos com erros.</td>
+    </tr> -->
+            
+            
         </table>
         
         
@@ -1569,7 +1591,14 @@
             </tr>
             
 			<tr>
-            <td class="td-action td-action-next"><button class="btn-action btn-nav-nexts" id="btn-db-wizard-view-details"><img class="img-action" src='icons/mono_zoom_16.png'></button></td>
+            <td class="td-action td-action-next">
+                
+                <form id="form-errors" onsubmit=onsubmittest(this); action="extras/csv/dbload_error.php" target="_self" method="post">
+                <button type="submit" class="btn-action btn-nav-nexts" id="btn-db-wizard-view-details"><img class="img-action" src='icons/mono_zoom_16.png'></button>
+                <input type="hidden" name="hidden_error_line" id="hidden_error_line" value=""><input type="hidden" name="hidden_error_text" id="hidden_error_text" value=""><input type="hidden" name="hidden_error_phone" id="hidden_error_phone" value="">
+                </form>
+                
+                </td>
             <td class="td-action-next">Ver detalhes dos Contactos com erros.</td>
             </tr>
             
