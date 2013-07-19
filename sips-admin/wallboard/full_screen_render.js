@@ -291,10 +291,15 @@ function plot_update(data)
                                                 max_y = +obj[prop][k].leads;
                                           }
                                           verifier += +obj[prop][k].leads;
+
                                           var temp = new Date(obj[prop][k].call_date);
+
                                           temp.setHours(temp.getHours() + 1);
+                                          
+
+
                                           dates.push(temp);
-                                          result.push([new Date(temp).getTime(), obj[prop][k].leads]);
+                                          result.push([temp, obj[prop][k].leads]);
                                     }
                                     var label_text = "";
                                     if (verifier > 0) {
@@ -332,7 +337,7 @@ function plot_update(data)
                   var options = {
                         series: {shadowSize: 0, show: true}, // drawing is faster without shadows
                         yaxis: {min: 0, max: max_y, tickSize: tick_size},
-                        xaxis: {mode: "time", timeformat: "%H:%M", minTickSize: [5, "minute"],
+                        xaxis: {mode: "time", minTickSize: [5, "minute"],
                               min: (dates[0]),
                               max: (dates[dates.length - 1])
                         }
