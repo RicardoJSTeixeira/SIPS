@@ -57,7 +57,7 @@ if( ($("#tbl-dbs tr").length == 0 && Flag == "ALL") || Flag == "DISABLED" || Fla
 				  
 				  
                    $("#tbl-dbs").prepend("\n\
-						<tr id='"+json.db_id[index]+"' style='height:22px;'>"+DBCheckbox+"<td class='css-td-list-label'><label id=''>"+json.db_name[index]+"</label></td><td class='css-td-list-label'>"+json.db_create[index]+"</td><td class='css-td-list-icon'><img class='css-img-list-icon pointer add-more-leads' title='Nº de Leads' src='icons/mono_db_16.png'></td><td class='css-td-list-text'>"+json.db_leads[index]+"</td><td class='css-td-list-filler'></td>"+DBTrash + + DBConfig+"</tr>");
+						<tr id='"+json.db_id[index]+"' style='height:22px;'>"+DBCheckbox+"<td class='css-td-list-label'><label id=''>"+json.db_name[index]+"</label></td><td class='css-td-list-label'>"+json.db_create[index]+"</td><td class='css-td-list-icon'><img class='css-img-list-icon pointer add-more-leads' title='Nº de Leads' src='icons/mono_db_16.png'></td><td class='css-td-list-text'>"+json.db_leads[index]+"</td><td class='css-td-list-filler'></td>"+DBTrash + DBConfig+"</tr>");
                 });
 				
 			}	
@@ -119,13 +119,12 @@ function DBElemInit()
 	   $("#btn-db-force-duplicate").button();
 	
 	
-	
-	
+	$("#btn-dialog-dbs-download-db").button();
 	
 	$("#dialog-dbs-edit").dialog({ 
     title: "<table><tr><td><img class='dialog-icon-title' src='icons/mono_wrench_16.png'></td><td><span class='dialog-title'> Configurar > Base de Dados: </span><span style='color:#0073ea' class='span-dialog-dbs-contact-details-db'></td></tr></table>",
     autoOpen: false,
-    height: 680,
+    height: 750,
     width: 550,
     resizable: false,
     buttons: { "Gravar" : DialogDBEditOnSave, "Fechar" : DialogClose },
@@ -932,21 +931,13 @@ function ResetDbsSelectNone(){
 
 function onsubmittest(that)
 {
-    console.log(DBLoadErrorLine);
     
     $("#hidden_error_line").val(DBLoadErrorLine);
         $("#hidden_error_text").val(DBLoadErrorText);
         $("#hidden_error_phone").val(DBLoadErrorPhone);
         
     
-    
-  /*  var errorline_ser = $.param(DBLoadErrorLine);
-    
-    console.log(errorline_ser)
-    
-    that.action = that.action + "?errorline=" + errorline_ser + "&errortext=" + DBLoadErrorText;
-    
-    console.log($(this)) */
+
 }
 
 function ForceLoadDuplicates()
@@ -974,6 +965,10 @@ function ForceLoadDuplicates()
     
 }
 
+function DownloadDB()
+{
+    $("#download-db-id").val(editedDB)
+}
 
 
 $("body")
@@ -999,4 +994,5 @@ $("body")
 .on("click", "#btn-reset-dbs-select-all", ResetDbsSelectAll)
 .on("click", "#btn-reset-dbs-select-none", ResetDbsSelectNone)
 .on("click", "#btn-db-wizard-match-fields-duplicates-button", ForceLoadDuplicates)
+.on("click", "#btn-dialog-dbs-download-db", DownloadDB)
 
