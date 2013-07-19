@@ -404,6 +404,23 @@ function DBResetLists($Lists2Reset, $link)
     
 }
 
+function ForceLoadDuplicates($DuplicatesInserts, $DBID, $link)
+{
+    foreach($DuplicatesInserts as $key=>$value)
+    {
+        mysql_query("$value", $link) or die(mysql_error());
+        $js['inserted_ids'][] = mysql_insert_id();
+    }
+    
+    
+        
+    
+    mysql_query("UPDATE vicidial_lists SET list_description = (list_description + ".count($js['inserted_ids']).") WHERE list_id = '$DBID'", $link) or die(mysql_error());
+    
+    echo json_encode($js);
+    
+    
+}
 
 switch($action)
 {
@@ -423,6 +440,7 @@ switch($action)
 	case "DBWizardDenyLeads" : DBWizardDenyLeads($LeadsToDelete, $DBID, $link); break;
     case "DBResetGetDBList" : DBResetGetDBList($CampaignID, $link); break;
     case "DBResetLists" : DBResetLists($Lists2Reset, $link); break;
+    case "ForceLoadDuplicates" : ForceLoadDuplicates($DuplicatesInserts, $DBID, $link); break;
 }
 
 ?>
