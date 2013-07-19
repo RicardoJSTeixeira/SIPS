@@ -4,7 +4,7 @@
 
 var wbes = [];
 var layout;
-var letter_size_all = 15;
+
 
 
 function getUrlVars() {
@@ -22,11 +22,11 @@ function getUrlVars() {
 
 $(document).ready(function() {
 
+
       $("[data-t=tooltip]").tooltip({placement: "left", html: true});
       $("#MainLayout").css("width", "100%").css("height", "100%").css("position", "absolute").css("background-color", "#F5F5F5").css("font-size", "1.35em");
-      var parameters = window.name.split(",");
-      var windwidth = +parameters[1]; //parameter;
-      var windheight = +parameters[2]; //parameter;
+
+
       layout = getUrlVars()["id"];
       ; //parameter
       $("[data-t=tooltip]").tooltip({placement: "left", html: true});
@@ -44,14 +44,15 @@ $(document).ready(function() {
                   var top = (wbes[i][4] * temp_window.height()) / 512;
                   var width = (wbes[i][5] * temp_window.width()) / 904;
                   var height = (wbes[i][6] * temp_window.height()) / 512;
+
                   $("#MainLayout")
                           .append($("<div>").addClass("PanelWB ui-widget-content")
-                          .data("letter_size", "18")
                           .css("position", "absolute")
                           .css("left", left + "px")
                           .css("top", top + "px")
                           .css("height", height + "px")
                           .css("width", width + "px")
+                          .data("id", wbes[i][0] + "Main")
                           .attr("id", wbes[i][0] + "Main")
                           .draggable({containment: '#MainLayout'})
                           .append($("<div>").addClass("grid-title")
@@ -63,6 +64,18 @@ $(document).ready(function() {
                           .append($("<div>").addClass("grid-content").attr("id", wbes[i][0] + "WBEGD")
                           .append($("<div>").attr("id", wbes[i][0] + "WBE").css("width", (width - 20) + "px").css("height", (height - 75) + "px").css("padding", "0px").attr("data-t", "tooltip").attr("title", "Tempo de Actualização: " + (wbes[i][7] / 1000) + " seg.")))
                           );
+                  if (wbes[i][8] !== "5") {
+                        if ($.cookie(wbes[i][0] + "Main") > 0) {
+                              $("#" + wbes[i][0] + "Main").data("letter_size", $.cookie(wbes[i][0] + "Main"));
+                              $("#" + wbes[i][0] + "Main").css("font-size", +$.cookie(wbes[i][0] + "Main"));
+
+                        } else {
+                              $("#" + wbes[i][0] + "Main").data("letter_size", "18");
+                              $.cookie(wbes[i][0] + "Main", 18);
+                        }
+                  }
+
+
                   if (wbes[i][8] === "1")//update
                   {
                         plot_update(wbes[i]);
@@ -85,67 +98,62 @@ $(document).ready(function() {
                         dataTable_top(wbes[i]);
                   }
                   $('#letter_size_popover' + wbes[i][0]).popover({html: true});
+
+
                   i++;
             });
-            var object = $([]).add($("#wbes_select"));
-            var i = 0;
-            object.append(new Option("Todos os Wallboards", 1));
-            $.each(wbes, function(index, value) {
-                  object.append(new Option(wbes[i][2], wbes[i][0]));
-                  i++;
-            });
+
       }, "json");
 
 
-      setInterval("location.reload(true);", 120000);
+      setInterval("location.reload(true)", 120000);
 
 
 
 
 });
+
+
+
+
+
 $(document).on("click", ".increase_em", function(e) {
 
       var b = $(this).closest(".PanelWB");
       b.data().letter_size = (+b.data().letter_size) + 1;
       b.css("font-size", b.data().letter_size);
+      $.cookie(b.data().id, b.data().letter_size);
 });
 $(document).on("click", ".decrease_em", function(e) {
 
       var b = $(this).closest(".PanelWB");
       b.data().letter_size = (+b.data().letter_size) - 1;
       b.css("font-size", b.data().letter_size);
+      $.cookie(b.data().id, b.data().letter_size);
 });
 $(document).on("click", "#increase_em_datatop", function(e) {
 
       var b = $(this).closest(".PanelWB").closest("div");
       b.data().letter_size_datatop = (+b.data().letter_size_datatop) + 0.07;
+      $.cookie(b.data().id, b.data().letter_size_datatop);
       var temp = +b.data().letter_size_datatop;
       b.find('tbody tr').each(function() {
 
             $(this).css("font-size", temp + "em");
             temp = temp + -0.1;
       });
-
-
-
 });
-
-
-
-
-
 $(document).on("click", "#decrease_em_datatop", function(e) {
 
       var b = $(this).closest(".PanelWB").closest("div");
       b.data().letter_size_datatop = b.data().letter_size_datatop - 0.07;
+      $.cookie(b.data().id, b.data().letter_size_datatop);
       var temp = +b.data().letter_size_datatop;
       b.find('tbody tr').each(function() {
 
             $(this).css("font-size", temp + "em");
             temp = temp - 0.1;
       });
-
-
 });
 
 
@@ -369,6 +377,8 @@ function plot_update(data)
 //øøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøøø
 //PIE GRAPh ««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««
 function plot_pie(data) {
+
+
       var wbe = data;
       var updation;
       var painel = $("#" + wbe[0] + "WBE");
@@ -605,7 +615,7 @@ function   inbound_wallboard(data)
                                     chamadas_atendidas_obj.innerHTML = +chamadas_atendidas_val;
                                     var chamadas_perdidas_obj = document.getElementById("chamadas_perdidas" + id);
 
-                                    if (chamadas_perdidas_val !== "0" && (chamadas_perdidas_val / chamadas_recebidas)>0)
+                                    if (chamadas_perdidas_val !== "0" && (chamadas_perdidas_val / chamadas_recebidas) > 0)
                                           chamadas_perdidas_obj.innerHTML = chamadas_perdidas_val + "-" + Math.floor((chamadas_perdidas_val / chamadas_recebidas) * 100) + "%";
                                     else
                                           chamadas_perdidas_obj.innerHTML = chamadas_perdidas_val + "- 0%";
@@ -718,7 +728,16 @@ function   dataTable_top(data)
               .append($("<td>").text(wbe[9][0].custom_colum_name))
               .append($("<td>").text("TMA"))))
               .append($("<tbody>").attr("id", "tbody_id" + wbe[0])
-              ))).data("letter_size_datatop", "1.2");
+              )));
+
+
+      if ($.cookie(wbe[0] + "Main") > 0) {
+            panel.data("letter_size_datatop", $.cookie(wbe[0] + "Main"));
+      } else {
+            panel.data("letter_size_datatop", "1.2");
+            $.cookie($.cookie(wbe[0] + "Main"), 1.2);
+      }
+
       var Opcao = 0;
       if (wbe[9][0].campanha != "0")
             Opcao = 1;
@@ -777,16 +796,6 @@ function   dataTable_top(data)
             updation = setTimeout(get_values_dataTop, wbe[7]);
       }
 }
-
-//window exit
-$(window).bind('beforeunload', function() {
-      $("#MainLayout .PanelWB").remove();
-}
-);
-//vdcl e vdad e admin
-
-
-
 
 
 
