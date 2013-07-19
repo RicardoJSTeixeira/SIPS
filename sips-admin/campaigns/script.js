@@ -5,7 +5,7 @@ var editedFeed, alteredFeeds = {};
 var editedRecycle, EditRecycleTimeSpinner, EditRecycleTriesSpinner, tableEditRecycle, tableRecycleContactDetails, editedTryType;
 var hasScript, ScriptToCopy;
 var editedField, AllFields = new Array('SOURCE_ID', 'LIST_ID', 'PHONE_CODE', 'GENDER', 'RANK', 'OWNER', 'VENDOR_LEAD_CODE', 'PHONE_NUMBER','TITLE','FIRST_NAME','MIDDLE_INITIAL','LAST_NAME','ADDRESS1','ADDRESS2','ADDRESS3','CITY','STATE','PROVINCE','POSTAL_CODE','COUNTRY_CODE','DATE_OF_BIRTH','ALT_PHONE','EMAIL','SECURITY_PHRASE','COMMENTS', 'extra1', 'extra2', 'extra3', 'extra4', 'extra5', 'extra6', 'extra7', 'extra8', 'extra9', 'extra10', 'extra11', 'extra12', 'extra13', 'extra14', 'extra15'), AvailFields = new Array('PHONE_NUMBER','TITLE','FIRST_NAME','MIDDLE_INITIAL','LAST_NAME','ADDRESS1','ADDRESS2','ADDRESS3','CITY','STATE','PROVINCE','POSTAL_CODE','COUNTRY_CODE','DATE_OF_BIRTH','ALT_PHONE','EMAIL','COMMENTS', 'extra1', 'extra2', 'extra3', 'extra4', 'extra5', 'extra6', 'extra7', 'extra8', 'extra9', 'extra10', 'extra11', 'extra12', 'extra13', 'extra14', 'extra15');
-var editedDB, editedDBName, tableEditDB, editedDBFeed, tableDbsContactDetails, editedDBCampaign, createdDB, createdDBName, ConvertedFile, insertedLeadsIDs, DBFieldNames = new Array(), DBFieldDisplayNames = new Array();
+var editedDB, editedDBName, tableEditDB, editedDBFeed, tableDbsContactDetails, editedDBCampaign, createdDB, createdDBName, ConvertedFile, insertedLeadsIDs = new Array(), DBFieldNames = new Array(), DBFieldDisplayNames = new Array();
 
 
 $(function()

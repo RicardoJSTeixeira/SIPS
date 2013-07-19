@@ -513,6 +513,10 @@ function DBWizardRestart()
 	$("#btn-db-wizard-deny-leads").button("disable");
 	$("#btn-db-wizard-view-details").button("disable");
 	
+	$("#td-db-wizard-match-fields-duplicates").html("");
+    $("#td-db-wizard-match-fields-duplicates-button").html("");
+                
+	
 	
 }
 
@@ -661,6 +665,8 @@ function DBWizardFieldChange()
 var DBLoadErrorLine;
 var DBLoadErrorText;
 var DBLoadErrorPhone;
+var DBLoadKeepDuplicates;
+
 
 function DBWizardMatchFields()
 {
@@ -668,7 +674,7 @@ function DBWizardMatchFields()
 	var validateSubmit = false;
 	var errorCode = 0;
 	
-
+    insertedLeadsIDs = new Array();
 	
 	
 	$.each($(".sel-db-wizard-fields option:selected"), function(index, value){
@@ -761,7 +767,7 @@ function DBWizardMatchFields()
 
 			if(json.totalerrors == 0)
 			{
-				$("#td-db-wizard-match-fields-error").html("Total de Contactos no Ficheiro: <b>"+json.totalloaded+"</b> <br><br> Contactos Inseridos com Sucesso: <b>"+json.totalinserted+"</b> <br><br> Contactos com Erros: <b>"+json.totalerrors+"</b>");
+				$("#td-db-wizard-match-fields-error").html("Contactos Inseridos com Sucesso: <b>"+json.totalinserted+"</b>");
 				$("#td-db-wizard-match-fields-error-icon").html("<img style='float:right' class='mono-icon' src='icons/mono_check_16.png'>");
 				
 
@@ -771,8 +777,7 @@ function DBWizardMatchFields()
 				$("#btn-db-wizard-match-fields-restart").button("disable");
 				//$("#btn-db-wizard-restart").button("disable");
 
-				
-				insertedLeadsIDs = json.insert_id;
+				if(json.insert_id != null) insertedLeadsIDs = json.insert_id;
 				
 			}
 			else
@@ -782,14 +787,38 @@ function DBWizardMatchFields()
                 DBLoadErrorLine = json.error_line;
                 DBLoadErrorText = json.error_text;
                 DBLoadErrorPhone = json.error_phone;
+                DBLoadKeepDuplicates = json.keep_duplicates;
 
-
 				
-				insertedLeadsIDs = json.insert_id;
+				if(json.insert_id != null) insertedLeadsIDs = json.insert_id;
 				
 				
-				$("#td-db-wizard-match-fields-error").html("Total de Contactos no Ficheiro: <b>"+json.totalloaded+"</b> <br><br> Contactos Inseridos com Sucesso: <b>"+json.totalinserted+"</b> <br><br> Contactos com Erros: <b>"+json.totalerrors+"</b>");
+				$("#td-db-wizard-match-fields-error").html("Total de Contactos Inseridos com Sucesso: <b>"+json.totalinserted+"</b><br><br>Total de Contactos com Erros: <b>"+json.totalerrors+"</b>");
                 $("#td-db-wizard-match-fields-error-icon").html("<img style='float:right' class='mono-icon' src='icons/mono_alert_16.png'>");
+                
+                $("#td-db-wizard-match-fields-duplicates").html("Contactos Duplicados: " + json.totalduplicates);
+                $("#td-db-wizard-match-fields-duplicates-button").html("<table><tr><td class='td-action'><button class='btn-action' id='btn-db-wizard-match-fields-duplicates-button'><img class='img-action' src='icons/mono_doc_import.png'></button></td><td id='td-db-wizard-load-duplicates-msg'>Carregar campos duplicados.</td></tr></table>")
+                
+                
+                $("#btn-db-wizard-match-fields-duplicates-button").button();
+                
+                
+                /*
+                 * <table>
+                    <tr>
+                    <td class="td-action"><button class="btn-action" id="btn-dialog-fields-copy-from-campaign"><img class="img-action" src='icons/mono_indent_increase_16.png'></button></td>
+                    <td>Copiar Campos para a Campanha actual.</td>
+                    </tr>
+               <!--      <tr>
+                    <td class="td-action td-action-next"><button class="btn-action" id="btn-fields-copy-from-campaign"><img class="img-action" src='icons/mono_indent_increase_16.png'></button></td>
+                    <td class="td-action-next">Copiar definições de Campos Dinamicos de outra Campanha para a Campanha actual.</td>
+                    </tr> -->
+            </table>
+                 * 
+                 * 
+                 *  */
+                
+                
                 
                 //$("#btn-db-wizard-accept-leads").button("enable");
                 $("#btn-db-wizard-deny-leads").button("enable");
@@ -920,6 +949,32 @@ function onsubmittest(that)
     console.log($(this)) */
 }
 
+function ForceLoadDuplicates()
+{
+    $(this).html("<img class='img-action' src='icons/mono_check_16.png'>");
+    $("#btn-db-wizard-match-fields-duplicates-button").button({disabled: true});
+
+    
+     $.post("_bases_de_dados-requests.php", {action: "ForceLoadDuplicates", DuplicatesInserts: DBLoadKeepDuplicates, DBID: editedDB }, function(json){
+        
+
+        
+        $.each(json.inserted_ids, function(index, value){
+            insertedLeadsIDs.push(value);
+        })
+        
+        console.log(insertedLeadsIDs);
+        console.log(json.inserted_ids);
+         
+     }, "json")
+    
+    
+    
+    $('#td-db-wizard-load-duplicates-msg').html("Contactos duplicados carregados com sucesso.")
+    
+}
+
+
 
 $("body")
 .on("click", ".db-checkbox", DBSwitch)
@@ -943,4 +998,5 @@ $("body")
 .on("click", "#btn-dbs-reset", {dialog: "#dialog-dbs-reset"}, DialogOpen)
 .on("click", "#btn-reset-dbs-select-all", ResetDbsSelectAll)
 .on("click", "#btn-reset-dbs-select-none", ResetDbsSelectNone)
+.on("click", "#btn-db-wizard-match-fields-duplicates-button", ForceLoadDuplicates)
 
