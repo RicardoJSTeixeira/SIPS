@@ -138,7 +138,11 @@ require(ROOT . "ini/dbconnect.php");
                     $("#loader").fadeOut("slow");
                 });
 
-
+     <?php if (isset($_GET["success"])) { ?> 
+                           $(function() {
+                                makeAlert("#wr", "SUCCESS", "Grupo de Utilizadores Adicionado com Sucesso. :-).", 4, false, false);
+                            });
+          <?php } ?>
             </script>
     </body>
 </html>

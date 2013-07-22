@@ -19,18 +19,23 @@ foreach ($_GET as $key => $value) {
 
 function columnmakerwithtotal($array_head, $array, $total = false, $text = false, $i = 0) {
     $sum = 0;
+    $array_head=array_values($array_head);
+    $array=array_values($array);
+    
+    $plus=count($array_head);
+    
     if (count($array) > 0) {
         foreach ($array as $key => $value) {
-            $array_head[$key] = $value;
+            $array_head[$key+$plus] = $value;
             if ($total) {
                 $sum+=$value;
             }
         }
     }
-
+//acrescentar os 0
     if ($i > 0) {
         
-            for ($index = 1; $index < $i+2; $index++) {
+            for ($index = $plus; $index < $i+$plus; $index++) {
                 if (!array_key_exists($index, $array_head)) {
                     $array_head[$index] = 0;
                 }
@@ -1243,23 +1248,23 @@ if (isset($resumo_geral_camp)) {
 
     fputcsv($output, array(" "), ";");
     fputcsv($output, array(" "), ";");
-    fputcsv($output, columnmakerwithtotal(array(" ", "Campanha: "), $bds), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Campanha: "), $bds, false, true), ";");
     fputcsv($output, array(" "), ";");
-    fputcsv($output, columnmakerwithtotal(array(" ", "Total Registos: "), $total_registos), ";");
-    fputcsv($output, columnmakerwithtotal(array(" ", "Total Registos Trabalhados: "), $tot_leads_2), ";");
-    fputcsv($output, columnmakerwithtotal(array(" ", "Contactos Efectuados: "), $contactos_efectuados), ";");
-    fputcsv($output, columnmakerwithtotal(array(" ", "Contactos Uteis: "), $contactos_uteis), ";");
-    fputcsv($output, columnmakerwithtotal(array(" ", "Agendamentos: "), $agendamentos2), ";");
-    fputcsv($output, columnmakerwithtotal(array(" ", "Marcacoes: "), $tot_marc), ";");
-    fputcsv($output, columnmakerwithtotal(array(" ", "Novo Cliente: "), $tot_novocl), ";");
-    fputcsv($output, columnmakerwithtotal(array(" ", "Total Marcacoes: "), $tot_marc_novocl), ";");
-    fputcsv($output, columnmakerwithtotal(array(" ", "Contactos Negativos: "), $negativos), ";");
-    fputcsv($output, columnmakerwithtotal(array(" ", "Dificuldades: "), $dificuldades), ";");
-    fputcsv($output, columnmakerwithtotal(array(" ", "Marcacoes/Total Registos: "), $m_TR), ";");
-    fputcsv($output, columnmakerwithtotal(array(" ", "Marcacoes/Contactos Efectuados: "), $m_CE), ";");
-    fputcsv($output, columnmakerwithtotal(array(" ", "Marcacoes/Contactos Uteis: "), $m_CU), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Total Registos: "), $total_registos, true), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Total Registos Trabalhados: "), $tot_leads_2, true), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Contactos Efectuados: "), $contactos_efectuados, true), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Contactos Uteis: "), $contactos_uteis, true), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Agendamentos: "), $agendamentos2, true), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Marcacoes: "), $tot_marc, true), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Novo Cliente: "), $tot_novocl, true), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Total Marcacoes: "), $tot_marc_novocl, true), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Contactos Negativos: "), $negativos, true), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Dificuldades: "), $dificuldades, true), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Marcacoes/Total Registos: "), $m_TR, true), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Marcacoes/Contactos Efectuados: "), $m_CE, true), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Marcacoes/Contactos Uteis: "), $m_CU, true), ";");
     fputcsv($output, array(" "), ";");
-    fputcsv($output, columnmakerwithtotal(array(" ", "Total Contactos Negativos: "), $negativos), ";");
+    fputcsv($output, columnmakerwithtotal(array(" ", "Total Contactos Negativos: "), $negativos, true), ";");
 
 
 //('AS','PRANK','CC','C','DESLI','EPIL','EPLM', 'A', 'EC','ER', 'F','FA','IDD', 'IF', 'INFO', 'JFC','S00046','NI','NRM','DNC','O','PPA','S00045','R','RD','TR','VOLC');
