@@ -104,9 +104,7 @@
                     $stmt = "INSERT INTO vicidial_user_groups(user_group,group_name,allowed_campaigns) values('$user_group','$group_name',' -');";
                     $rslt = mysql_query($stmt, $link) or die(mysql_error());
                     ?><script>
-                            $(function() {
-                                makeAlert("#wr", "SUCCESS", "Grupo de Utilizadores Adicionado com Sucesso. :-).", 4, false, false);
-                            });
+                            window.location = 'listausersgroups.php?success=1';
                     </script><?php
                     ### LOG INSERTION Admin Log Table ###
                     $SQL_log = "$stmt|";
