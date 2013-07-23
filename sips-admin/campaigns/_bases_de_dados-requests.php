@@ -220,156 +220,127 @@ function DBMatchFields($CampaignID, $ConvertedFile, $link)
 }
 
 function DBWizardMatchFields($DBID, $MatchFields, $ListFields, $ConvertedFile, $CampaignID, $link)
-{
+ {
 
-	
-	// REGEX
-	$field_regx = "/['\"`\\;]/";
-	
-	// INIS
-	$entry_date = date("Y-m-d H:i:s");
-	$last_local_call_time = "2008-01-01 00:00:00";
-	$gmt_offset = '0';
-	$called_since_last_reset = 'N';
-	$file = fopen("/tmp/$ConvertedFile", "r");
-	$headers = explode("\t", rtrim(fgets($file, 4096)));
-	
-	
-	foreach($ListFields as $index => $value)
-	{
-		if($value != "---")
-		{
-			$mysqlListFields .= strtolower($value).", ";
-			$mysqlListFieldsIndex[] = 1;	
-		}
-		else
-		{
-			$mysqlListFieldsIndex[] = 0;
-		}
-	}
-	
+    // REGEX
+    $field_regx = "/['\"`\\;]/";
+
+    // INIS
+    $entry_date = date("Y-m-d H:i:s");
+    $last_local_call_time = "2008-01-01 00:00:00";
+    $gmt_offset = '0';
+    $called_since_last_reset = 'N';
+    $file = fopen("/tmp/$ConvertedFile", "r");
+    $headers = explode("\t", rtrim(fgets($file, 4096)));
+
+    $ListFields=array_values($ListFields);
     
-    $query  = mysql_query("SELECT list_id FROM vicidial_lists WHERE campaign_id='$CampaignID'", $link) or die(mysql_error());
-    while($row = mysql_fetch_assoc($query))
-    {
+    foreach ($ListFields as $index => $value) {
+        if ($value != "---") {
+            $mysqlListFields .= strtolower($value) . ", ";
+            $mysqlListFieldsIndex[] = 1;
+        } else {
+            $mysqlListFieldsIndex[] = 0;
+        }
+    }
+
+
+    $query = mysql_query("SELECT list_id FROM vicidial_lists WHERE campaign_id='$CampaignID'", $link) or die(mysql_error());
+    while ($row = mysql_fetch_assoc($query)) {
         $js_debug['campaign_lists'][] = $row['list_id'];
     }
-    
+
     $implode = implode("','", $js_debug['campaign_lists']);
-    
+
     $query = mysql_query("SELECT phone_number FROM vicidial_list WHERE list_id IN('.$implode.')", $link) or die(mysql_error());
-    while($row = mysql_fetch_assoc($query))
-    {
+    while ($row = mysql_fetch_assoc($query)) {
         $js_debug['campaign_phones'][] = $row['phone_number'];
     }
-    
-    
-    
-    
-    
 
-	while (!feof($file)) 
-	{
-		
-		$buffer = rtrim(fgets($file, 4096));
-		if(strlen($buffer) > 0) {
-		
-		$buffer = stripslashes($buffer);
-		$buffer = explode("\t", $buffer);
-		
-		$mysqlValues = "";
-		$ErrorCode = 0;
-		$LineCount++;
-		foreach($mysqlListFieldsIndex as $index => $value)
-		{
-			if($value > 0)
-			{
-				$mysqlValues .= "'".preg_replace($field_regx, "", $buffer[$index])."', ";
-				
-				if($ListFields[$index] == "PHONE_NUMBER" /*|| $ListFields[$index] == "ALT_PHONE" || $ListFields[$index] == "ADDRESS3"*/)
-				{
 
-						 
-						 $buffer[$index] = preg_replace("/[^0-9]/", "", $buffer[$index]);
-						 
-						 if(strlen($buffer[$index]) <> 9)
-						 {
-							 $ErrorCode = 1;
-                             $error_number = $buffer[$index];
-                             break;
-						 }
-						 
-                         foreach ($js_debug['campaign_phones'] as $key => $value) {
-                             if($value == $buffer[$index])
-                             {
-                                 $ErrorCode = 2;
-                                 $duplicate_number = $buffer[$index];
-                                 break;
-                             }
-                         }
-						 
-						 
+    while (!feof($file)) {
 
-						 
-				}
-			}
-		}
-		
+        $buffer = rtrim(fgets($file, 4096));
+        if (strlen($buffer) > 0) {
 
-		
-		
-		if($ErrorCode <> 0)
-		{
-			$js['error_line'][] = $LineCount + 1;
-			switch($ErrorCode)
-			{
-				case 1: $js['error_text'][] = 1; $js['error_phone'][] = $error_number; break;
-                case 2: {
-                    $js['error_text'][] = 2; $js['error_phone'][] = $duplicate_number; $duplicates++;  
-                    
-                    $js['keep_duplicates'][] = "INSERT INTO vicidial_list (".$mysqlListFields."entry_date, called_since_last_reset, gmt_offset_now, last_local_call_time, list_id, status ) VALUES (".$mysqlValues."'$entry_date', '$called_since_last_reset', '$gmt_offset', '$last_local_call_time', '$DBID', 'NEW')";
-                
-                    break;}
-			}
-			$TotalErrors++;
-		}
-		else
-		{
-			mysql_query("INSERT INTO vicidial_list 
-							(".$mysqlListFields."entry_date, called_since_last_reset, gmt_offset_now, last_local_call_time, list_id, status ) 
+            $buffer = stripslashes($buffer);
+            $buffer = explode("\t", $buffer);
+
+            $mysqlValues = "";
+            $ErrorCode = 0;
+            $LineCount++;
+            
+            foreach ($mysqlListFieldsIndex as $index => $value) {
+                if ($value > 0) {
+
+                    if ($ListFields[$index] == "PHONE_NUMBER" || $ListFields[$index] == "ALT_PHONE" || $ListFields[$index] == "ADDRESS3") {
+                        $buffer[$index] = preg_replace("/[^0-9]/", "", $buffer[$index]);
+
+                        if ($ListFields[$index] == "PHONE_NUMBER") {
+                            if (strlen($buffer[$index]) <> 9) {
+                                $ErrorCode = 1;
+                                $error_number = $buffer[$index];
+                                break;
+                            }
+
+                            foreach ($js_debug['campaign_phones'] as $key => $value) {
+                                if ($value == $buffer[$index]) {
+                                    $ErrorCode = 2;
+                                    $duplicate_number = $buffer[$index];
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    $mysqlValues .= "'" . preg_replace($field_regx, "", $buffer[$index]) . "', ";
+                }
+            }
+
+            if ($ErrorCode <> 0) {
+                $js['error_line'][] = $LineCount + 1;
+                switch ($ErrorCode) {
+                    case 1: $js['error_text'][] = 1;
+                        $js['error_phone'][] = $error_number;
+                        break;
+                    case 2: {
+                            $js['error_text'][] = 2;
+                            $js['error_phone'][] = $duplicate_number;
+                            $duplicates++;
+
+                            $js['keep_duplicates'][] = "INSERT INTO vicidial_list (" . $mysqlListFields . "entry_date, called_since_last_reset, gmt_offset_now, last_local_call_time, list_id, status ) VALUES (" . $mysqlValues . "'$entry_date', '$called_since_last_reset', '$gmt_offset', '$last_local_call_time', '$DBID', 'NEW')";
+
+                            break;
+                        }
+                }
+                $TotalErrors++;
+            } else {
+                mysql_query("INSERT INTO vicidial_list 
+							(" . $mysqlListFields . "entry_date, called_since_last_reset, gmt_offset_now, last_local_call_time, list_id, status ) 
 							VALUES 
-							(".$mysqlValues."'$entry_date', '$called_since_last_reset', '$gmt_offset', '$last_local_call_time', '$DBID', 'NEW')") or die(mysql_error());
-							
-			$js['insert_id'][] = mysql_insert_id();				
-							
-			$js['insert'][] = "	INSERT INTO vicidial_list 
-							(".$mysqlListFields."entry_date, called_since_last_reset, gmt_offset_now, last_local_call_time, list_id, status ) 
-							VALUES 
-							(".$mysqlValues."'$entry_date', '$called_since_last_reset', '$gmt_offset', '$last_local_call_time', '$DBID', 'NEW')
-						";	
-						
-			$TotalInserted++;						
-							
-		}
-		
-		
-		}
-		
-		
-	}
-	
-	mysql_query("UPDATE vicidial_lists SET list_description = (list_description + '$TotalInserted') WHERE list_id='$DBID'") or die(mysql_error());
+							(" . $mysqlValues . "'$entry_date', '$called_since_last_reset', '$gmt_offset', '$last_local_call_time', '$DBID', 'NEW')") or die(mysql_error());
 
-	$js['totalloaded'] = $LineCount;
-	$js['totalinserted'] = $TotalInserted;
-	$js['totalerrors'] = $TotalErrors;
+                $js['insert_id'][] = mysql_insert_id();
+
+                $js['insert'][] = "	INSERT INTO vicidial_list 
+							(" . $mysqlListFields . "entry_date, called_since_last_reset, gmt_offset_now, last_local_call_time, list_id, status ) 
+							VALUES 
+							(" . $mysqlValues . "'$entry_date', '$called_since_last_reset', '$gmt_offset', '$last_local_call_time', '$DBID', 'NEW')
+						";
+
+                $TotalInserted++;
+            }
+        }
+    }
+
+    mysql_query("UPDATE vicidial_lists SET list_description = (list_description + '$TotalInserted') WHERE list_id='$DBID'") or die(mysql_error());
+
+    $js['totalloaded'] = $LineCount;
+    $js['totalinserted'] = $TotalInserted;
+    $js['totalerrors'] = $TotalErrors;
     $js['totalduplicates'] = $duplicates;
-	
-	echo json_encode( $js );
+    
 
-
-
-	
+    echo json_encode($js);
 }
 
 function DBWizardDenyLeads($LeadsToDelete, $DBID, $link)
@@ -438,9 +409,9 @@ switch($action)
 	case "DBMatchFields" : DBMatchFields($CampaignID, $ConvertedFile, $link); break;
 	case "DBWizardMatchFields" : DBWizardMatchFields($DBID, $MatchFields, $ListFields, $ConvertedFile, $CampaignID, $link); break;
 	case "DBWizardDenyLeads" : DBWizardDenyLeads($LeadsToDelete, $DBID, $link); break;
-    case "DBResetGetDBList" : DBResetGetDBList($CampaignID, $link); break;
-    case "DBResetLists" : DBResetLists($Lists2Reset, $link); break;
-    case "ForceLoadDuplicates" : ForceLoadDuplicates($DuplicatesInserts, $DBID, $link); break;
+        case "DBResetGetDBList" : DBResetGetDBList($CampaignID, $link); break;
+        case "DBResetLists" : DBResetLists($Lists2Reset, $link); break;
+        case "ForceLoadDuplicates" : ForceLoadDuplicates($DuplicatesInserts, $DBID, $link); break;
 }
 
 ?>
