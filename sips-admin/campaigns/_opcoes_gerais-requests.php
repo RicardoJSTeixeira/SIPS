@@ -171,7 +171,7 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
 		$js['c_next_agent_call'] = $result['next_agent_call'];
                 $js['c_my_callback_option'] = $result['my_callback_option'];
                 $js['c_campaign_allow_inbound'] = $result['campaign_allow_inbound'];
-		
+		$js['selected_user_groups'] = array();
 		$query = mysql_query("SELECT user_group FROM vicidial_user_groups WHERE allowed_campaigns LIKE '%$CampaignID%'") or die(mysql_error());
 		while($result = mysql_fetch_row($query))
 		{
