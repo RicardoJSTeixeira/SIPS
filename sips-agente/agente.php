@@ -1172,7 +1172,7 @@ else
 				$VARCBstatuses='';
 				$VARCBstatusesLIST='';
 				##### grab the statuses that can be used for dispositioning by an agent
-				$stmt="SELECT status,status_name,scheduled_callback,selectable FROM vicidial_statuses WHERE status != 'NEW' order by status limit 500;";
+				$stmt="SELECT status,status_name,scheduled_callback,selectable FROM vicidial_statuses WHERE status != 'NEW' order by status_name limit 500;";
 				$rslt=mysql_query($stmt, $link);
 				if ($mel > 0) {mysql_error_logging($NOW_TIME,$link,$mel,$stmt,'01010',$VD_login,$server_ip,$session_name,$one_mysql_log);}
 				if ($DB) {echo "$stmt\n";}
@@ -1198,7 +1198,7 @@ else
 					}
 
 				##### grab the campaign-specific statuses that can be used for dispositioning by an agent
-				$stmt="SELECT status,status_name,scheduled_callback,selectable FROM vicidial_campaign_statuses WHERE status != 'NEW' and campaign_id='$VD_campaign' order by status limit 500;";
+				$stmt="SELECT status,status_name,scheduled_callback,selectable FROM vicidial_campaign_statuses WHERE status != 'NEW' and campaign_id='$VD_campaign' order by status_name limit 500;";
 				$rslt=mysql_query($stmt, $link);
 				if ($mel > 0) {mysql_error_logging($NOW_TIME,$link,$mel,$stmt,'01011',$VD_login,$server_ip,$session_name,$one_mysql_log);}
 				if ($DB) {echo "$stmt\n";}
@@ -8641,7 +8641,7 @@ FecharCallbacks();
 		AgentDispoing = 1;
 		var CBflag = '';
 		var VD_statuses_ct_half = parseInt(VARSELstatuses_ct / 2);
-        var dispo_HTML = "<table cellpadding=\"5\" cellspacing=\"5\" width=\"200px\"><tr><td colspan=\"2\">Escolha um resultado:</td></tr><tr><td  height=\"300px\" width=\"240px\" valign=\"top\"><span id=\"DispoSelectA\">";
+        var dispo_HTML = "<table cellpadding=\"5\" cellspacing=\"5\" width=\"200px\"><tr><td colspan=\"2\">Escolha um resultado:<input type=text id=dispo_search ></td></tr><tr><td  height=\"300px\" width=\"240px\" valign=\"top\"><span id=\"DispoSelectA\">";
 		var loop_ct = 0;
 		var print_ct = 0;
 		while (loop_ct < VD_statuses_ct)
@@ -8654,11 +8654,11 @@ FecharCallbacks();
 					{CBflag = '';}
 				if (taskDSgrp == VARstatuses[loop_ct]) 
 					{
-					dispo_HTML = dispo_HTML + "<font size=\"4\" style=\"BACKGROUND-COLOR: #FFF\"><b><a href=\"#\" onclick=\"DispoSelect_submit();return false;\">" + VARstatusnames[loop_ct] + "</a> " + CBflag + "</b></font><br /><br />"; //+ VARstatuses[loop_ct] + " - "
+					dispo_HTML = dispo_HTML + "<font size=\"4\" style=\"BACKGROUND-COLOR: #FFF\"><b><a href=\"#\" onclick=\"DispoSelect_submit();return false;\">" + VARstatusnames[loop_ct] + CBflag + "</a> </b></font>"; //+ VARstatuses[loop_ct] + " - "
 					}
 				else
 					{
-					dispo_HTML = dispo_HTML + "<a href=\"#\" onclick=\"DispoSelectContent_create('" + VARstatuses[loop_ct] + "','ADD');return false;\">" + VARstatusnames[loop_ct] + "</a> " + CBflag + "<br /><br />"; // " + VARstatuses[loop_ct] + "  - 
+					dispo_HTML = dispo_HTML + "<a href=\"#\" onclick=\"DispoSelectContent_create('" + VARstatuses[loop_ct] + "','ADD');return false;\">" + VARstatusnames[loop_ct] +  CBflag + "</a>"; // " + VARstatuses[loop_ct] + "  - 
 					}
 				if (print_ct == VD_statuses_ct_half) 
 					{dispo_HTML = dispo_HTML + "</span></td><td  height=\"300px\" width=\"240px\" valign=\"top\"><span id=\"DispoSelectB\">";}
@@ -8682,7 +8682,20 @@ FecharCallbacks();
                         //document.vicidial_form.CallBackOnlyMe.checked=true;
                         }
 		}
-
+                //Dispo Search
+                $(document).on("input","#dispo_search",	function(){
+                var that =this;
+		$("#DispoSelectA a, #DispoSelectB a").each(
+			function(){
+				if($(this).text().match($(that).val()))
+                                {
+                                    $(this).show();
+                                }else
+                                {
+                                    $(this).hide();
+                                }
+                            });
+                        });
 // ################################################################################
 // Generate the Pause Code Chooser panel
 	function PauseCodeSelectContent_create()
@@ -14159,15 +14172,20 @@ Available Agents Transfer: <span id="AgentXferViewSelect"></span></center></font
 
 <span style="overflow-y:auto; position:fixed;right:5%;top:5%;z-index:<?php $zi++; echo $zi ?>; width:300px; height:550px;" class='popup_form' id="DispoSelectBox">
 <br>
-    <table width="400px" height="496px" >
+<style>
+    #DispoSelectA a,#DispoSelectB a {
+        display:block;
+        margin:3px 0;
+    }
+</style>
+    <table>
         <tr>
       <td align="center" valign="top">Resultado da Chamada:<span id="DispoSelectPhonE"></span>
           <img id="DispoMinimizeButton" style="cursor:pointer" src="/images/icons/layer_export_32.png"> 
           <span id="DispoSelectHAspan">
 	  <br />
-	  <!--<a href="#" onClick="DispoHanguPAgaiN()">Desligar Novamente</a>-->
           </span> 
-          <span id="DispoSelectMaxMin"><!--<a href="#" onclick="DispoMinimize()"> minimize </a>--></span><br />
+          <span id="DispoSelectMaxMin"></span><br />
 	
 	<span id="Dispo3wayMessage" style="display:none"></span>
 	<span id="DispoManualQueueMessage" style="display:none"></span>
@@ -14175,20 +14193,16 @@ Available Agents Transfer: <span id="AgentXferViewSelect"></span></center></font
 	<span id="DispoSelectContent">Fechar resultado da chamada</span>
     <input type="hidden" name="DispoSelection" id="DispoSelection" /><br />
     <input type="checkbox" name="DispoSelectStop" id="DispoSelectStop" size="1" value="0" /><label style="display:inline" for="DispoSelectStop">Pausa após terminar esta chamada</label><br />
-	<a href="#" onClick="DispoSelectContent_create('','ReSET');return false;">Limpar</a> | 
+	<a href="#" onClick="DispoSelectContent_create('','ReSET');return false;">Limpar</a> 
+        <b>|</b> 
 	<a href="#" onClick="DispoSelect_submit();return false;">Escolher</a>
-    <br /><br />
-	<a href="#" onClick="WeBForMDispoSelect_submit();return false;"></a>
-    <br /><br /> &nbsp;
+    
     </td>
         </tr>
     </table>
-	<br>
 	
 </span>
 
-
-<!-- WORKING555 -->
 
 <span style=" position:fixed;width:650px;height:350px;left:50%; top:50%;z-index:1002; overflow:none; margin-left: -300px;margin-top: -300px; " class='popup_form'  id="CallBackSelectBox">
 <br>
