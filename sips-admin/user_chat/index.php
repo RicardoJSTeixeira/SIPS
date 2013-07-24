@@ -312,6 +312,7 @@
                 $("#search-field").bind("input", function() {
                     var WorkListValue;
                     var WorkListDescription;
+                    var that=this;
                     if (VisibleList == "users") {
                         WorkListValue = UsersValue;
                         WorkListDescription = UsersDescription;
@@ -321,7 +322,7 @@
                     }
                     $("#send-to-options").empty();
                     $.each(WorkListValue, function(index, value) {
-                        if (WorkListDescription[index].toLowerCase().match($("#search-field").val().toLowerCase())) {
+                        if (WorkListDescription[index].toLowerCase().match($(that).val().toLowerCase())) {
                             $("#send-to-options").append($("<option>").val(WorkListValue[index]).text(WorkListDescription[index]));
                         }
                     });
