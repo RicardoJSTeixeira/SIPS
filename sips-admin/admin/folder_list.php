@@ -100,7 +100,7 @@
                     <div class="clear"></div>
                 </div>
                 <div class="grid-content">
-                    <table class="table table-mod-2" id="files">
+                    <table class="table table-mod-2 table-striped" id="files">
                         <thead>
                             <tr>
                                 <th>Nome do ficheiro</th>

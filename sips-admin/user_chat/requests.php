@@ -8,7 +8,20 @@ foreach ($_GET as $key => $value) { ${$key} = $value; }
 
 
 if($action == "get_user_groups"){
-    $query = "SELECT user_group, group_name FROM vicidial_user_groups ORDER BY group_name";
+    
+    $stmt = "SELECT user_group FROM vicidial_users WHERE user='$curUser'";
+    $rslt = mysql_query($stmt, $link);
+
+    $rslt = mysql_fetch_assoc($rslt);
+    $grupo = $rslt['user_group'];
+
+
+    if ($grupo == 'ADMIN') {
+        $query = "SELECT user_group,group_name,forced_timeclock_login from vicidial_user_groups  ORDER BY group_name";
+    } else {
+        $query = "SELECT user_group,group_name from vicidial_user_groups WHERE user_group = '$grupo' ORDER BY group_name";
+    }
+    //$query = "SELECT user_group, group_name FROM vicidial_user_groups ORDER BY group_name";
     $query = mysql_query($query, $link);
     while($row = mysql_fetch_row($query)){
         $js['user_groups']['value'][] = $row[0];
@@ -19,9 +32,42 @@ if($action == "get_user_groups"){
 
 
 
-if($action == "get_users"){
-    $query = "SELECT user, full_name FROM vicidial_users WHERE user_level < 4 ORDER BY full_name";
-    $query = mysql_query($query, $link);
+if($action == "get_users"){ 
+
+        //Users INICIO
+        $query = "select a.user_group,allowed_campaigns,user_level from vicidial_users a inner join `vicidial_user_groups` b on a.user_group=b.user_group where user='$curUser'";
+        $result = mysql_query($query) or die(mysql_error());
+        $row = mysql_fetch_assoc($result);
+
+
+        $user_level = $row['user_level'];
+        $allowed_camps_regex = str_replace(" ", "|", trim(rtrim($row['allowed_campaigns'], " -")));
+
+        if ($row['user_group'] != "ADMIN") {
+            $ret = "WHERE allowed_campaigns REGEXP '$allowed_camps_regex'";
+
+
+            $user_groups = "";
+            $result = mysql_query("SELECT `user_group`, `allowed_campaigns` FROM `vicidial_user_groups` $ret ") or die(mysql_error());
+            while ($row1 = mysql_fetch_assoc($result)) {
+                $user_groups .= "'$row1[user_group]',";
+            }
+            $user_groups = rtrim($user_groups, ",");
+
+            $users_regex = "";
+            $result = mysql_query("SELECT `user` FROM `vicidial_users` WHERE user_group in ($user_groups) AND user_level < $user_level") or die(mysql_error());
+            while ($rugroups = mysql_fetch_assoc($result)) {
+                $users_regex .= "^$rugroups[user]$|";
+            }
+            $users_regex = rtrim($users_regex, "|");
+            $users_regex = "AND user REGEXP '$users_regex'";
+        }
+//Users FIM
+        
+            $query = "SELECT user, full_name FROM vicidial_users WHERE active = 'Y'  $users_regex ORDER BY full_name";
+       
+    //$query = "SELECT user, full_name FROM vicidial_users WHERE user_level < 4 ORDER BY full_name";
+    $query = mysql_query($query, $link) or die(mysql_error());
     while($row = mysql_fetch_row($query)){
         $js['users']['value'][] = $row[0];
         $js['users']['description'][] = $row[1];
