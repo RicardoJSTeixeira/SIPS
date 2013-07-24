@@ -39,6 +39,9 @@ and open the template in the editor.
                   label{
                         display: inline;
                   }
+                  .page_hider{
+                        display:none;
+                  }
             </style>
       </head>
       <body>
@@ -96,21 +99,19 @@ and open the template in the editor.
 
                         <div class="grid span6">
                               <div class="grid-title">
-                                    <div class="pull-left">   Formulário em construção                                       </div>
-                                    <div class="pull-right">                                          </div>
+                                    <div class="pull-left">Formulário em construção</div>
+                                    <div class="pull-right">           
+                                          <select id="page_selector" style="float:left">
+                                          </select>
+                                          <button class="btn btn-info" id="page_add_button">Adicionar Página</button>
+                                          <button class="btn btn-danger icon-remove "  id="page_remove_button" ></button>         
+                                    </div>
                               </div>
                               <div class="grid-content">
                                     <div class="leftDiv span ">
                                     </div> 
                               </div> 
-                              <div class="modal-footer" >
-                                    <select id="page_selector" style="float:left">
-                                          <option value="1">Pagina 1</option>
 
-                                    </select>
-                                    <button class="btn btn-info" id="page_add_button">Adicionar Página</button>
-                                    <button class="btn btn-danger icon-remove "  id="page_remove_button" ></button>
-                              </div>
                         </div> 
 
 
@@ -121,7 +122,7 @@ and open the template in the editor.
                                           <button data-t="tooltip-right" title="Opções da Layout" data-toggle="modal" data-target="#dialog_layout"  class="btn btn-warning icon-alone" id="opcao_script_button"><i class="icon-cogs"></i></button>
 
                                           <select id="script_selector">
-                                                <option value="1">Script 1</option>
+
 
                                           </select>    
                                           <button class="btn btn-info icon-plus" id="script_add_button"></button>
@@ -224,6 +225,15 @@ and open the template in the editor.
                                                             </div>
                                                       </div>
 
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Required</label>
+
+                                                            <div class="formRight">
+                                                                  <input  type="checkbox" id="required_texto" name="required" value="1">
+                                                                  <label for="required_texto"><span></span></label>
+                                                            </div>
+                                                      </div>
+
                                                 </div>
 
                                                 <!--PASSWORD-->
@@ -248,6 +258,14 @@ and open the template in the editor.
 
                                                             <div class="formRight">
                                                                   <input  maxlength="25" class="span password_input" id="passwordmax_length_edit" type="text" placeholder="Numero Máximo de caracteres" />
+                                                            </div>
+                                                      </div>
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Required</label>
+
+                                                            <div class="formRight">
+                                                                  <input  type="checkbox" id="required_password" name="required" value="1">
+                                                                  <label for="required_password"><span></span></label>
                                                             </div>
                                                       </div>
 
@@ -278,7 +296,14 @@ and open the template in the editor.
                                                       </div>
 
 
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Required</label>
 
+                                                            <div class="formRight">
+                                                                  <input  type="checkbox" id="required_radio" name="required" value="1">
+                                                                  <label for="required_radio"><span></span></label>
+                                                            </div>
+                                                      </div>
 
 
 
@@ -301,7 +326,14 @@ and open the template in the editor.
                                                             </div>
 
                                                       </div>
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Required</label>
 
+                                                            <div class="formRight">
+                                                                  <input  type="checkbox" id="required_checkbox" name="required" value="1">
+                                                                  <label for="required_checkbox"><span></span></label>
+                                                            </div>
+                                                      </div>
 
 
                                                 </div>
@@ -325,7 +357,14 @@ and open the template in the editor.
 
                                                       </div>
 
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Required</label>
 
+                                                            <div class="formRight">
+                                                                  <input  type="checkbox" id="required_multichoice" name="required" value="1">
+                                                                  <label for="required_multichoice"><span></span></label>
+                                                            </div>
+                                                      </div>
                                                 </div>
 
                                                 <!--Campo de texto-->
@@ -336,6 +375,14 @@ and open the template in the editor.
 
                                                             <div class="formRight">
                                                                   <input class="span textfield_input" id="textfield_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
+                                                      </div>
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Required</label>
+
+                                                            <div class="formRight">
+                                                                  <input  type="checkbox" id="required_textfield" name="required" value="1">
+                                                                  <label for="required_textfield"><span></span></label>
                                                             </div>
                                                       </div>
                                                 </div>
@@ -366,7 +413,14 @@ and open the template in the editor.
                                                             </div>
                                                       </div>
 
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Required</label>
 
+                                                            <div class="formRight">
+                                                                  <input  type="checkbox" id="required_tag" name="required" value="1">
+                                                                  <label for="required_tag"><span></span></label>
+                                                            </div>
+                                                      </div>
                                                 </div>
 
 

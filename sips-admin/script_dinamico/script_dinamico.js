@@ -12,11 +12,23 @@
 
 
 
+//elemento navegação
+//tags
+//vicidial_list_ref tem as tags
+//regras de edição(novo separador)
+//    -go to
+//    -hide
+//    -show
+
+//tabela com radios
+//sistema de paginas ainda not finished
 
 
-
-
-
+/*
+ demo limesurvey
+ admin
+ test
+ */
 
 
 /*
@@ -40,10 +52,10 @@ var regex_replace_textbox = /[^a-zA-Z0-9çã\s:]/g;
 
 var regex_replace = /[^a-zA-Z0-9çã\n]/g;
 var regex_split = /\n/g;
-var pagina_count = 2;
-var script_count = 2;
+var pagina_count = 1;
 
-var script = [];
+
+
 $(document).ready(function() {
       array_id["textbox"] = 0;
       array_id["radio"] = 0;
@@ -68,24 +80,16 @@ $(document).ready(function() {
                   removeIntent = true;
             },
             stop: function(event, ui) {
-
-                  for (var count = 0; count < script.length; count++)
+                  var items = $(".leftDiv  .item");
+                  for (var count = 0; count < items.length; count++)
                   {
-
-                        if (script[count].id_pagina == $("#page_selector option:selected").val())
-                        {
-                    
-                              item_database("edit_item_order", script[count].id, 0, 0,0, $("#" + script[count].id).index(), 0, 0, 0, 0);
-                        }
+                        item_database("edit_item_order", items[count].id, 0, 0, $("#" + items[count].id).index(), 0, 0, 0, 0);
                   }
-
-
-
             },
             beforeStop: function(event, ui) {
                   if (removeIntent == true) {
                         ui.item.remove();
-                        item_database("delete_item", ui.item.attr("id"), 0, 0, 0, 0, 0, 0, 0, 0);
+                        item_database("delete_item", ui.item.attr("id"), 0, 0, 0, 0, 0, 0, 0);
                   }
             },
             receive: function(event, ui) {
@@ -93,32 +97,32 @@ $(document).ready(function() {
                   if ($(this).data().uiSortable.currentItem.hasClass("texto_class"))
                   {
                         $(this).data().uiSortable.currentItem.attr("id", id).data("id", id).addClass("element").data("type", "texto");
-                        item_database("insert_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", ui.item.index(), $(".texto_class .label_texto")[0].innerHTML, $(".texto_class .input_texto")[0].placeholder, $(".texto_class .input_texto")[0].maxLength, 0);
+                        item_database("insert_item", 0, $("#script_selector option:selected").val(), "texto", ui.item.index(), $(".texto_class .label_texto")[0].innerHTML, $(".texto_class .input_texto")[0].placeholder, $(".texto_class .input_texto")[0].maxLength, 0);
                   }
                   if ($(this).data().uiSortable.currentItem.hasClass("password_class"))
                   {
                         $(this).data().uiSortable.currentItem.attr("id", id).data("id", id).addClass("element").data("type", "password");
-                        item_database("insert_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "password", ui.item.index(), $(".label_texto_password")[0].innerHTML, $(".input_texto_password")[0].placeholder, $(".input_texto_password")[0].maxLength, 0);
+                        item_database("insert_item", 0, $("#script_selector option:selected").val(), "password", ui.item.index(), $(".label_texto_password")[0].innerHTML, $(".input_texto_password")[0].placeholder, $(".input_texto_password")[0].maxLength, 0);
                   }
                   if ($(this).data().uiSortable.currentItem.hasClass("radio_class"))
                   {
                         $(this).data().uiSortable.currentItem.attr("id", id).data("id", id).addClass("element").data("type", "radio");
-                        item_database("insert_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", ui.item.index(), $(".label_radio")[0].innerHTML, 0, 0, "Valor1");
+                        item_database("insert_item", 0, $("#script_selector option:selected").val(), "radio", ui.item.index(), $(".label_radio")[0].innerHTML, 0, 0, "Valor1");
                   }
                   if ($(this).data().uiSortable.currentItem.hasClass("checkbox_class"))
                   {
                         $(this).data().uiSortable.currentItem.attr("id", id).data("id", id).addClass("element").data("type", "checkbox");
-                        item_database("insert_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "checkbox", ui.item.index(), $(".label_checkbox")[0].innerHTML, 0, 0, "Valor1");
+                        item_database("insert_item", 0, $("#script_selector option:selected").val(), "checkbox", ui.item.index(), $(".label_checkbox")[0].innerHTML, 0, 0, "Valor1");
                   }
                   if ($(this).data().uiSortable.currentItem.hasClass("multichoice_class"))
                   {
                         $(this).data().uiSortable.currentItem.attr("id", id).data("id", id).addClass("element").data("type", "multichoice");
-                        item_database("insert_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", ui.item.index(), $(".label_multichoice")[0].innerHTML, 0, 0, "Opção1");
+                        item_database("insert_item", 0, $("#script_selector option:selected").val(), "multichoice", ui.item.index(), $(".label_multichoice")[0].innerHTML, 0, 0, "Opção1");
                   }
                   if ($(this).data().uiSortable.currentItem.hasClass("textfield_class"))
                   {
                         $(this).data().uiSortable.currentItem.attr("id", id).data("id", id).addClass("element").data("type", "textfield");
-                        item_database("insert_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", ui.item.index(), "textfield", 0, 0, $(".label_textfield")[0].innerHTML);
+                        item_database("insert_item", 0, $("#script_selector option:selected").val(), "textfield", ui.item.index(), "textfield", 0, 0, $(".label_textfield")[0].innerHTML);
                   }
                   if ($(this).data().uiSortable.currentItem.hasClass("tag_class"))
                   {
@@ -132,6 +136,10 @@ $(document).ready(function() {
             }
       });
       update_script();
+
+
+
+
       $(document).on("click", ".element", function(e) {
             $(".footer_save_cancel button").prop('disabled', false);
 
@@ -206,7 +214,7 @@ function update_script()
       {
             $("#script_selector").empty();
             $.each(data, function(index, value) {
-                  $("#script_selector").append("<option value=" + data[index].id + ">" + data[index].name + "</option>");
+                  $("#script_selector").append("<option data-pages=" + data[index].pages + " value=" + data[index].id + ">" + data[index].name + "</option>");
             });
 
             update_info();
@@ -214,90 +222,113 @@ function update_script()
 }
 function update_info()
 {
-
-      $.post("requests.php", {action: "get_data", id_script: $("#script_selector option:selected").val()},
-      function(data)
+      $.post("requests.php", {action: "get_pages", id_script: $("#script_selector option:selected").val()},
+      function(data1)
       {
-            script = [];
-            $(".leftDiv").empty();
+            var pag = $("#page_selector option:selected").val();
+            $("#page_selector").empty();
+            $.each(data1, function(index, value) {
 
-            $.each(data, function(index, value) {
-                  script.push({id: data[index].id, id_script: data[index].id_script, id_pagina: data[index].id_pagina, type: data[index].type, ordem: data[index].ordem, texto: data[index].texto, placeholder: data[index].placeholder, max_length: data[index].max_length, values_text: data[index].values_text});
-
-
-
-                  switch (data[index].type)
-                  {
-
-                        case "texto":
-                              var item = $('.rightDiv .texto_class').clone();
-                              save_text_element("insert", item, data[index]);
-                              item.attr("id", data[index].id)
-                                      .data("id", data[index].id)
-                                      .addClass("element")
-                                      .data("type", "texto");
-                              item.appendTo('.leftDiv');
-                              break;
-
-                        case "password":
-                              var item = $('.rightDiv .password_class').clone();
-                              save_password_element("insert", item, data[index]);
-
-                              item.attr("id", data[index].id)
-                                      .data("id", data[index].id)
-                                      .addClass("element")
-                                      .data("type", "password");
-                              item.appendTo('.leftDiv');
-                              break;
-
-                        case "radio":
-                              var item = $('.rightDiv .radio_class').clone();
-                              save_radio_element("insert", item, data[index]);
-
-                              item.attr("id", data[index].id)
-                                      .data("id", data[index].id)
-                                      .addClass("element")
-                                      .data("type", "radio");
-                              item.appendTo('.leftDiv');
-                              break;
-
-                        case "checkbox":
-                              var item = $('.rightDiv .checkbox_class').clone();
-                              save_checkbox_element("insert", item, data[index]);
-
-                              item.attr("id", data[index].id)
-                                      .data("id", data[index].id)
-                                      .addClass("element")
-                                      .data("type", "checkbox");
-                              item.appendTo('.leftDiv');
-                              break;
-
-                        case "multichoice":
-                              var item = $('.rightDiv .multichoice_class').clone();
-                              save_multichoice_element("insert", item, data[index]);
-                              item.attr("id", data[index].id)
-                                      .data("id", data[index].id)
-                                      .addClass("element")
-                                      .data("type", "multichoice");
-                              item.appendTo('.leftDiv');
-                              break;
-
-                        case "textfield":
-                              var item = $('.rightDiv .textfield_class').clone();
-                              save_textfield_element("insert", item, data[index]);
-                              item.attr("id", data[index].id)
-                                      .data("id", data[index].id)
-                                      .addClass("element")
-                                      .data("type", "textfield");
-                              item.appendTo('.leftDiv');
-                              break;
-
-
-                  }
-
-
-
+                  if (pag === value)
+                        $("#page_selector").append("<option value=" + value + " selected>Pagina " + value + "</option>");
+                  else
+                        $("#page_selector").append("<option value=" + value + ">Pagina " + value + "</option>");
             });
+            $.post("requests.php", {action: "get_data", id_script: $("#script_selector option:selected").val(), page: $("#page_selector option:selected").val()},
+            function(data)
+            {
+
+                  $(".leftDiv").empty();
+
+
+
+                  $.each(data, function(index, value) {
+                        switch (data[index].type)
+                        {
+
+                              case "texto":
+                                    var item = $('.rightDiv .texto_class').clone();
+                                    save_text_element("insert", item, data[index]);
+                                    item.attr("id", data[index].id)
+                                            .data("id", data[index].id)
+                                            .addClass("element")
+                                            .data("required", data[index].required)
+
+                                            .data("type", "texto");
+                                    item.appendTo('.leftDiv');
+                                    break;
+
+                              case "password":
+                                    var item = $('.rightDiv .password_class').clone();
+                                    save_password_element("insert", item, data[index]);
+
+                                    item.attr("id", data[index].id)
+                                            .data("id", data[index].id)
+                                            .addClass("element")
+                                            .data("required", data[index].required)
+
+                                            .data("type", "password");
+                                    item.appendTo('.leftDiv');
+                                    break;
+
+                              case "radio":
+                                    var item = $('.rightDiv .radio_class').clone();
+                                    save_radio_element("insert", item, data[index]);
+
+                                    item.attr("id", data[index].id)
+                                            .data("id", data[index].id)
+                                            .addClass("element")
+                                            .data("required", data[index].required)
+
+                                            .data("type", "radio");
+                                    item.appendTo('.leftDiv');
+                                    break;
+
+                              case "checkbox":
+                                    var item = $('.rightDiv .checkbox_class').clone();
+                                    save_checkbox_element("insert", item, data[index]);
+
+                                    item.attr("id", data[index].id)
+                                            .data("id", data[index].id)
+                                            .addClass("element")
+                                            .data("required", data[index].required)
+
+                                            .data("type", "checkbox");
+                                    item.appendTo('.leftDiv');
+                                    break;
+
+                              case "multichoice":
+                                    var item = $('.rightDiv .multichoice_class').clone();
+                                    save_multichoice_element("insert", item, data[index]);
+                                    item.attr("id", data[index].id)
+                                            .data("id", data[index].id)
+                                            .addClass("element")
+                                            .data("required", data[index].required)
+
+                                            .data("type", "multichoice");
+                                    item.appendTo('.leftDiv');
+                                    break;
+
+                              case "textfield":
+                                    var item = $('.rightDiv .textfield_class').clone();
+                                    save_textfield_element("insert", item, data[index]);
+                                    item.attr("id", data[index].id)
+                                            .data("id", data[index].id)
+                                            .addClass("element")
+                                            .data("required", data[index].required)
+
+                                            .data("type", "textfield");
+                                    item.appendTo('.leftDiv');
+                                    break;
+
+
+                        }
+
+
+
+                  });
+
+            }, "json");
 
       }, "json");
 
@@ -316,6 +347,7 @@ $("#cancel_edit").click(function()
 });
 $("#save_edit").click(function()
 {
+
       var element = $("#" + selected_id);
       switch (selected_type)
       {
@@ -341,7 +373,10 @@ $("#save_edit").click(function()
                   save_tag_element("edit", element, 0);
                   break;
       }
-
+      $(".footer_save_cancel button").prop('disabled', true);
+      $(".item").removeClass("helperPick");
+      $("#tabs").tabs("option", "active", 0);
+      $(".editor_layout").hide();
 
 
 });
@@ -350,19 +385,26 @@ $("#save_edit").click(function()
 //PAGES
 $("#page_add_button").click(function()
 {
+      pagina_count = $("#script_selector option:selected").data("pages") + 1;
+      pagescript_database("add_page", $("#script_selector option:selected").val(), 0);
       $("#page_selector").append("<option value=" + pagina_count + ">Pagina " + pagina_count + "</option>");
       pagina_count++;
 });
 
 $("#page_remove_button").click(function()
 {
-      //tem q eliminar a pagina e os elementos com essa pagina e script
+      var pages = $("#script_selector option:selected").data("pages");
+      pagescript_database("delete_page", $("#script_selector option:selected").val(), pages);
+      pages--;
+      $("#script_selector option:selected").data("pages", pages);
+      $("#page_selector option:last-child").remove();
 
-      $("#page_selector option:selected").remove();
+
 
 });
-$('page_selector').change(function() {
-// vai buscar o algoritmo de popular com a pagina pretendida 
+$('#page_selector').change(function() {
+
+      update_info();
 });
 
 
@@ -370,21 +412,18 @@ $('page_selector').change(function() {
 //SCRIPTS
 $("#script_add_button").click(function()
 {
+      pagescript_database("add_script", 0, 0);
 
-      $.post("requests.php", {action: "add_script", name: "name"},
-      function(data)
-      {
-      }, "json");
 });
 
 $("#script_remove_button").click(function()
 {
-      //tem q eliminar os elementos q correspondam a este script
+      pagescript_database("remove_script", 0, 0);
       $("#script_selector option:selected").remove();
 
 });
 
-$('script_selector').change(function() {
+$('#script_selector').change(function() {
       update_info();
 });
 
@@ -393,6 +432,10 @@ $('script_selector').change(function() {
 function populate_text_edit(opcao, element)
 {
 
+      if (element.data("required") === "1")
+            $("#required_texto").attr('checked', true);
+      else
+            $("#required_texto").attr('checked', false);
 
       $("#texto_edit").val(element.find(".label_geral")[0].innerHTML);
       $("#placeholder_edit").val(element.find(".input_texto")[0].placeholder);
@@ -404,13 +447,14 @@ function save_text_element(opcao, element, data)
 {
 
       if (opcao === "edit") {
+
             $("#texto_edit").val($("#texto_edit").val().replace(regex_replace_textbox, ''));
             $("#placeholder_edit").val($("#placeholder_edit").val().replace(regex_replace_textbox, ''));
             $("#max_length_edit").val($("#max_length_edit").val().replace(/[^0-9]/g, ''));
             element.find(".label_geral")[0].innerHTML = $("#texto_edit").val();
             element.find(".input_texto")[0].placeholder = $("#placeholder_edit").val();
             element.find(".input_texto")[0].maxLength = $("#max_length_edit").val();
-            item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", 1, $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0);
+            item_database("edit_item", selected_id, $("#script_selector option:selected").val(),$("#page_selector option:selected").val(), "texto", element.index(), $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, $("#required_texto").is(':checked'));
       }
       if (opcao === "insert") {
             element.find(".label_geral")[0].innerHTML = data.texto;
@@ -422,6 +466,12 @@ function save_text_element(opcao, element, data)
 //------------PASSWORD--------------------------------------------
 function populate_password_edit(opcao, element)
 {
+
+      if (element.data("required") === "1")
+            $("#required_password").attr('checked', true);
+      else
+            $("#required_password").attr('checked', false);
+
       $("#passwordtexto_edit").val(element.find(".label_geral")[0].innerHTML);
       $("#passwordplaceholder_edit").val(element.find(".input_texto_password")[0].placeholder);
       $("#passwordmax_length_edit").val(element.find(".input_texto_password")[0].maxLength);
@@ -436,7 +486,7 @@ function save_password_element(opcao, element, data)
             element.find(".label_geral")[0].innerHTML = $("#passwordtexto_edit").val();
             element.find(".input_texto_password")[0].placeholder = $("#passwordplaceholder_edit").val();
             element.find(".input_texto_password")[0].maxLength = $("#passwordmax_length_edit").val();
-            item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "password", 1, $("#passwordtexto_edit").val(), $("#passwordplaceholder_edit").val(), $("#passwordmax_length_edit").val(), 0);
+            item_database("edit_item", selected_id, $("#script_selector option:selected").val(),$("#page_selector option:selected").val(), "password", element.index(), $("#passwordtexto_edit").val(), $("#passwordplaceholder_edit").val(), $("#passwordmax_length_edit").val(), 0, $("#required_password").is(':checked'));
       }
 
       if (opcao === "insert") {
@@ -452,6 +502,13 @@ function save_password_element(opcao, element, data)
 //------------RADIO--------------------------------------------
 function populate_radio_edit(opcao, element)
 {
+
+      if (element.data("required") === "1")
+            $("#required_radio").attr('checked', true);
+      else
+            $("#required_radio").attr('checked', false);
+
+
       $("#radio_edit").val(element.find(".label_geral")[0].innerHTML);
       $("#radio_group_edit").val(element.find(":radio")[0].name);
       var string_elements = "";
@@ -484,7 +541,7 @@ function save_radio_element(opcao, element, data)
                   array_id["radio"] = array_id["radio"] + 1;
             }
 
-            item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", 1, $("#radio_edit").val(), 0, 0, radios.join(","));
+            item_database("edit_item", selected_id, $("#script_selector option:selected").val(),$("#page_selector option:selected").val(), "radio", element.index(), $("#radio_edit").val(), 0, 0, radios.join(","), $("#required_radio").is(':checked'));
       }
       if (opcao === "insert") {
             element.empty();
@@ -507,6 +564,12 @@ function save_radio_element(opcao, element, data)
 //------------CHECKBOX--------------------------------------------
 function populate_checkbox_edit(opcao, element)
 {
+      if (element.data("required") === "1")
+            $("#required_checkbox").attr('checked', true);
+      else
+            $("#required_checkbox").attr('checked', false);
+
+
       $("#checkbox_edit").val(element.find(".label_geral")[0].innerHTML);
       $("#checkbox_group_edit").val(element.find(":checkbox")[0].name);
       var string_elements = "";
@@ -536,7 +599,7 @@ function save_checkbox_element(opcao, element, data)
                   element.append($("<label>").addClass("checkbox_name").attr("for", array_id["checkbox"] + "checkbox").text(checkboxs[count]).append($("<span>")));
                   array_id["checkbox"] = array_id["checkbox"] + 1;
             }
-            item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "checkbox", 1, $("#checkbox_edit").val(), 0, 0, checkboxs.join(","));
+            item_database("edit_item", selected_id, $("#script_selector option:selected").val(),$("#page_selector option:selected").val(), "checkbox", element.index(), $("#checkbox_edit").val(), 0, 0, checkboxs.join(","), $("#required_checkbox").is(':checked'));
       }
       if (opcao === "insert") {
             element.empty();
@@ -556,6 +619,12 @@ function save_checkbox_element(opcao, element, data)
 //------------MULTICHOICE--------------------------------------------
 function populate_multichoice_edit(opcao, element)
 {
+      if (element.data("required") === "1")
+            $("#required_multichoice").attr('checked', true);
+      else
+            $("#required_multichoice").attr('checked', false);
+
+
       $("#multichoice_edit").val(element.find(".label_geral")[0].innerHTML);
       var string_elements = "";
       var count = 1;
@@ -585,7 +654,7 @@ function save_multichoice_element(opcao, element, data)
             {
                   select.append("<option value='" + multichoices[count] + "'>" + multichoices[count] + "</option>");
             }
-            item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", 1, $("#multichoice_edit").val(), 0, 0, multichoices.join(","));
+            item_database("edit_item", selected_id, $("#script_selector option:selected").val(),$("#page_selector option:selected").val(), "multichoice", element.index(), $("#multichoice_edit").val(), 0, 0, multichoices.join(","), $("#required_multichoice").is(':checked'));
       }
 
       if (opcao === "insert") {
@@ -605,15 +674,21 @@ function save_multichoice_element(opcao, element, data)
 //------------TEXTFIELD-------------------------------------------
 function populate_textfield_edit(opcao, element)
 {
+      if (element.data("required") === "1")
+            $("#required_textfield").attr('checked', true);
+      else
+            $("#required_textfield").attr('checked', false);
+
       $("#textfield_edit").val(element.find(".label_geral")[0].innerHTML);
 }
 
 function save_textfield_element(opcao, element, data)
 {
+
       if (opcao === "edit") {
             $("#textfield_edit").val($("#textfield_edit").val().replace(regex_replace_textbox, ''));
             element.find(".label_geral")[0].innerHTML = $("#textfield_edit").val();
-            item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", 1, "textfield", 0, 0, $("#textfield_edit").val());
+            item_database("edit_item", selected_id, $("#script_selector option:selected").val(),$("#page_selector option:selected").val(), "textfield", element.index(), "textfield", 0, 0, $("#textfield_edit").val(), $("#required_textfield").is(':checked'));
       }
       if (opcao === "insert") {
             element.find(".label_geral")[0].innerHTML = data.values_text;
@@ -634,18 +709,19 @@ function save_tag_element(opcao, element, data)
 
 
 
-function item_database(opcao, Id, Id_script, Id_pagina, Type, Ordem, Texto, Placeholder, Max_length, Values_text)
+function item_database(opcao, Id, Id_script, Page, Type, Ordem, Texto, Placeholder, Max_length, Values_text, Required)
 {
       $.post("requests.php", {action: opcao,
             id: Id,
             id_script: Id_script,
-            id_pagina: Id_pagina,
+            page: Page,
             type: Type,
             ordem: Ordem,
             texto: Texto,
             placeholder: Placeholder,
             max_length: Max_length,
-            values_text: Values_text},
+            values_text: Values_text,
+            required: Required},
       function(data)
       {
 
@@ -655,7 +731,22 @@ function item_database(opcao, Id, Id_script, Id_pagina, Type, Ordem, Texto, Plac
 
             if (opcao === "delete_item")
                   update_info();
+            if (opcao === "edit_item")
+                  update_info();
 
+      }
+      , "json");
+}
+
+function pagescript_database(opcao, Id_script, Pagina)
+{
+      $.post("requests.php", {action: opcao, id_script: Id_script, pagina: Pagina},
+      function(data)
+      {
+            if (opcao === "delete_page")
+                  update_script();
+            if (opcao === "add_script")
+                  update_script();
       }
       , "json");
 }
