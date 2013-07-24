@@ -32,17 +32,34 @@ switch ($action) {
         break;
 
     case "edit_item":
-        $query = "UPDATE script_dinamico SET id_script=$id_script,id_pagina=$id_pagina,type='$type',ordem=$ordem,texto='$texto',placeholder='$placeholder',max_length=$max_length,values_text='$values_text' WHERE id_script=$id_script";
-      echo($query);
-        $query = mysql_query($query, $link) or die(mysql_error());
-       // echo json_encode(array(1));
-        break;
+        $query = "UPDATE script_dinamico SET id_script=$id_script,id_pagina=$id_pagina,type='$type',ordem=$ordem,texto='$texto',placeholder='$placeholder',max_length=$max_length,values_text='$values_text' WHERE id=$id";
 
-    case "add_script_element":
-        $query = "INSERT INTO `asterisk`.`script_dinamico` (`id`, `id_script`, `id_pagina`,type, `ordem`, `texto`, `placeholder`, `max_length`, `values_text`) VALUES (NULL, '',, '', '', '', '', '', '')";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
+
+    case "edit_item_order":
+
+        $query = "UPDATE script_dinamico SET ordem=$ordem WHERE id=$id";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        echo json_encode(array(1));
+        break;
+
+
+    case "insert_item":
+        $query = "INSERT INTO `asterisk`.`script_dinamico` (`id`, `id_script`, `id_pagina`,type, `ordem`, `texto`, `placeholder`, `max_length`, `values_text`) VALUES (NULL, $id_script,$id_pagina, '$type', $ordem, '$texto', '$placeholder', $max_length, '$values_text')";
+
+        $query = mysql_query($query, $link) or die(mysql_error());
+        echo json_encode(array(1));
+        break;
+
+
+    case "delete_item":
+        $query = "delete from script_dinamico where id=$id";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        echo json_encode(array(1));
+        break;
+
 
     case "add_script":
         $query = "INSERT INTO `asterisk`.`script_dinamico_pages` (id,name) VALUES (NULL,'$name')";
