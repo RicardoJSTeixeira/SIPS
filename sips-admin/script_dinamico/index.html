@@ -52,7 +52,7 @@ and open the template in the editor.
             <div id="dialog_layout" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                   <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Opções da Layout</h3>
+                        <h3>Opções do Script</h3>
                   </div>
                   <div class="modal-body">
 
@@ -75,7 +75,32 @@ and open the template in the editor.
                   </div>
             </div>
 
+            <!--DIALOG Das pages, muda nome -->
+            <div id="dialog_page" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Opções da Página</h3>
+                  </div>
+                  <div class="modal-body">
 
+                        <div class="formRow">
+                              <label class="control-label label" for="script_name_edit">Nome:</label>
+
+                              <div class="formRight">
+                                    <input maxlength="25" class="span" id="pages_name_edit" type="text" placeholder="Novo nome da página" />
+                              </div>
+                        </div>
+                        <div class="clear"></div>
+
+
+                  </div>
+
+
+                  <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+                        <button  id="save_button_page" class="btn btn-primary">Gravar Alterações</button>
+                  </div>
+            </div>
             <!--FIM DAS DIALOGS-->
 
 
@@ -86,21 +111,23 @@ and open the template in the editor.
 
 
 
-            <div class="row-fluid">
 
-                  <div class="grid-title">
-                        <div class="pull-left">   Construção de formulários                           </div>
-                        <div class="pull-right">                              </div>
-                  </div>
-                  <div class="grid-content">
+            <div class="grid-title">
+                  <div class="pull-left">   Construção de formulários                           </div>
+                  <div class="pull-right">                              </div>
+            </div>
+            <div class="grid-content">
 
 
+                  <div class="row-fluid">
 
 
                         <div class="grid span6">
                               <div class="grid-title">
                                     <div class="pull-left">Formulário em construção</div>
-                                    <div class="pull-right">           
+                                    <div class="pull-right" id="page_selector_div">           
+                                          <button data-t="tooltip-right" title="Opções da Layout" data-toggle="modal" data-target="#dialog_page"  class="btn btn-warning icon-alone" id="opcao_page_button"><i class="icon-cogs"></i></button>
+
                                           <select id="page_selector" style="float:left">
                                           </select>
                                           <button class="btn btn-info" id="page_add_button">Adicionar Página</button>
@@ -119,20 +146,17 @@ and open the template in the editor.
                               <div class="grid-title">
                                     <div class="pull-left">            Elementos e Edição                              </div>
                                     <div class="pull-right">            
-                                          <button data-t="tooltip-right" title="Opções da Layout" data-toggle="modal" data-target="#dialog_layout"  class="btn btn-warning icon-alone" id="opcao_script_button"><i class="icon-cogs"></i></button>
+               
 
                                           <select id="script_selector">
 
 
-                                          </select>    
+                                          </select>                        
+                                          <button data-t="tooltip-right" title="Opções da Layout" data-toggle="modal" data-target="#dialog_layout"  class="btn btn-warning icon-alone" id="opcao_script_button"><i class="icon-cogs"></i></button>
                                           <button class="btn btn-info icon-plus" id="script_add_button"></button>
                                           <button class="btn btn-danger icon-remove "  id="script_remove_button" ></button>
                                     </div>
                               </div>
-
-
-
-
 
 
 
@@ -145,10 +169,15 @@ and open the template in the editor.
 
 
 
+
+
+
+
                                     <div id="tabs">
                                           <ul>
                                                 <li><a href="#tabs-1">Elementos</a></li>
                                                 <li><a href="#tabs-2">Edição</a></li>
+                                                <li><a href="#tabs-3">Regras</a></li>
 
                                           </ul>
                                           <div id="tabs-1">
@@ -190,11 +219,7 @@ and open the template in the editor.
                                                             <label class="label_textfield label_geral">Exempo:	Lorem ipsum dolor sit amcillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</label>
 
                                                       </div>
-                                                      <div class="item tag_class" > 
-                                                            <label class="label_multichoice label_geral">Campo de tags</label>
-                                                            <input class="input_tag_text" maxlength="25" type="text" placeholder="Texto padrão" />
-                                                            <input class="input_tag_toreplace" maxlength="25" type="text" placeholder="Texto padrão" />
-                                                      </div>
+
                                                 </div>
                                           </div>
                                           <div id="tabs-2">
@@ -391,68 +416,17 @@ and open the template in the editor.
 
 
 
-
-
-
-                                                <!--TAG-->
-                                                <div class="editor_layout" id="tag_layout_editor" style="display:none">
-
-                                                      <div class="formRow" >
-                                                            <label class="control-label label" >Texto com tag</label>
-
-                                                            <div class="formRight">
-                                                                  <input  maxlength="25" class="span tag_input" id="tag_edit" type="text" placeholder="Texto exemplo" />
-                                                            </div>
-                                                      </div>
-
-                                                      <div class="formRow" >
-                                                            <label class="control-label label" >Tag</label>
-
-                                                            <div class="formRight">
-                                                                  <input  maxlength="25" class="span" id="multichoice_edit" type="text" placeholder="Texto exemplo" />
-                                                            </div>
-                                                      </div>
-
-                                                      <div class="formRow" >
-                                                            <label class="control-label label" >Required</label>
-
-                                                            <div class="formRight">
-                                                                  <input  type="checkbox" id="required_tag" name="required" value="1">
-                                                                  <label for="required_tag"><span></span></label>
-                                                            </div>
-                                                      </div>
-                                                </div>
-
-
-
-
                                                 <div class="clear"></div>
                                                 <div class="modal-footer footer_save_cancel">
                                                       <button class="btn btn-info " id="save_edit">Guardar</button>
                                                       <button class="btn btn-info " id="cancel_edit">Cancelar</button>
                                                 </div>
-
-
                                           </div>
-
                                     </div>
-
-
-
-
-
-
-
-                              </div> 
+                              </div>  
                         </div>
-
-
-
                   </div> 
-
-
             </div> 
-
 
 
 
