@@ -109,6 +109,16 @@ $marchora = $marchora_horas.":".$marchora_minutos.":00";
 if ($_POST['nc_flag'] == "nc_post")
 {
 	if($list_id<1) { $list_id='999'; }
+        $updateId = "select list_discription from vicidial_lists where list_id = '$list_id'";
+        $updateId = mysql_query($updateId, $link);
+        $curValue = mysql_fetch_array($updateId);
+
+        $curVal = $curValue[0] + 1;
+        
+        $updateId = "update vicidial_lists set list_discription = '$curVal' where list_id = '$list_id'";
+        mysql_query($updateId, $link);
+        
+        
 $query = "	INSERT INTO vicidial_list (entry_date, status, user, vendor_lead_code, list_id, phone_number, title, first_name, middle_initial, last_name, address1, address2, address3, city, state, province, postal_code, country_code, date_of_birth, alt_phone, security_phrase, comments, source_id, owner, last_local_call_time, extra1, extra2) VALUES 
 			('$today','NOVOCL','$operador','$vendor_lead_code','$list_id','$phone_number','$title','$first_name','$middle_initial','$last_name','$address1','$address2','$address3','$city','$state','$province','$postal_code','$country_code','$date_of_birth','$alt_phone','$security_phrase','$comments', '$comments', '$owner', NOW(), '$extra1', '$extra2')";
 $query = mysql_query($query) or die (mysql_error());
