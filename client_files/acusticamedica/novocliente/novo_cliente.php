@@ -232,8 +232,10 @@ if ($_POST['nc_flag'] == "nc_post") {
                             <option value="C/ENT"> Entroncamento </option>
                             <option value="C/ESP"> Espinho </option>
                             <option value="C/ETJ"> Estarreja </option>
+                            <option value="C/VNF"> Famalicão </option>
                             <option value="C/FAF"> Fafe </option>
                             <option value="C/FUD"> Fundão </option>
+                            <option value="C/GND"> Gondomar </option>
                             <option value="C/GOV"> Gouveia </option>
                             <option value="C/GDL"> Grândola </option>
                             <option value="C/LGS"> Lagos </option>
