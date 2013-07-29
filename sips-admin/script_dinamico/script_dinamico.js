@@ -1,7 +1,7 @@
 
 
 //////////NOW///////////
-//organizar request com comments das seccions
+
 ////tabela com radios
 ////meter regexs
 //    -done mas ainda falta tirar linhas em branco
@@ -9,6 +9,8 @@
 ////////TO BE DONE//////////////////
 ////tags
 //vicidial_list_ref tem as tags
+//arrastar elementos onde copia o id e fica tag
+
 //adicionar opção para o radio e check pra mostrar em linha horizontal ou vertical
 ////////LATER///////////
 //regras de edição(novo separador)
@@ -107,35 +109,32 @@ $(document).ready(function() {
 
                   if ($(this).data().uiSortable.currentItem.hasClass("texto_class"))
                   {
-                        $(this).data().uiSortable.currentItem.attr("id", id).data("id", id).addClass("element").data("type", "texto");
                         item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", ui.item.index(), $(".texto_class .label_texto")[0].innerHTML, $(".texto_class .input_texto")[0].placeholder, $(".texto_class .input_texto")[0].maxLength, 0, 0);
                   }
                   if ($(this).data().uiSortable.currentItem.hasClass("password_class"))
                   {
-                        $(this).data().uiSortable.currentItem.attr("id", id).data("id", id).addClass("element").data("type", "password");
                         item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "password", ui.item.index(), $(".label_texto_password")[0].innerHTML, $(".input_texto_password")[0].placeholder, $(".input_texto_password")[0].maxLength, 0, 0);
                   }
                   if ($(this).data().uiSortable.currentItem.hasClass("radio_class"))
                   {
-                        $(this).data().uiSortable.currentItem.attr("id", id).data("id", id).addClass("element").data("type", "radio");
                         item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", ui.item.index(), $(".label_radio")[0].innerHTML, 0, 0, "Valor1", 0);
                   }
                   if ($(this).data().uiSortable.currentItem.hasClass("checkbox_class"))
                   {
-                        $(this).data().uiSortable.currentItem.attr("id", id).data("id", id).addClass("element").data("type", "checkbox");
                         item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "checkbox", ui.item.index(), $(".label_checkbox")[0].innerHTML, 0, 0, "Valor1", 0);
                   }
                   if ($(this).data().uiSortable.currentItem.hasClass("multichoice_class"))
                   {
-                        $(this).data().uiSortable.currentItem.attr("id", id).data("id", id).addClass("element").data("type", "multichoice");
                         item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", ui.item.index(), $(".label_multichoice")[0].innerHTML, 0, 0, "Opção1", 0);
                   }
                   if ($(this).data().uiSortable.currentItem.hasClass("textfield_class"))
                   {
-                        $(this).data().uiSortable.currentItem.attr("id", id).data("id", id).addClass("element").data("type", "textfield");
                         item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", ui.item.index(), "textfield", 0, 0, $(".label_textfield")[0].innerHTML, 0);
                   }
-
+                  if ($(this).data().uiSortable.currentItem.hasClass("tableradio_class"))
+                  {
+                        item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", ui.item.index(), "mau,médio,bom", 0, 0, "pergunta1", 0);
+                  }
 
 
 
@@ -146,7 +145,7 @@ $(document).ready(function() {
       });
       update_script();
 
-
+      item_database("get_tag_fields", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
       $(document).on("click", ".element", function(e) {
             $(".footer_save_cancel button").prop('disabled', false);
@@ -180,6 +179,10 @@ $(document).ready(function() {
                   case "textfield":
                         $("#textfield_layout_editor").show();
                         populate_textfield_edit("edit", $(this), 0);
+                        break;
+                  case "tableradio":
+                        $("#tableradio_layout_editor").show();
+                        populate_tableradio_edit("edit", $(this), 0);
                         break;
 
             }
@@ -220,6 +223,7 @@ $("#save_button_page").click(function()//Fecha o dialog e grava as alterações
       $.post("requests.php", {action: "edit_page_name", name: $("#pages_name_edit").val(), id_pagina: $("#page_selector option:selected").val()},
       function(data)
       {
+            update_pages();
             $('#dialog_page').modal('hide');
 
 
@@ -237,25 +241,55 @@ function update_script()
       $.post("requests.php", {action: "get_scripts"},
       function(data)
       {
-            $("#script_selector").empty();
-            $.each(data, function(index, value) {
-                  $("#script_selector").append("<option value=" + data[index].id + ">" + data[index].name + "</option>");
-            });
-            update_pages();
+
+            if (data == null)
+
+            {
+                  ;
+                  $("#page_selector_div button").prop('disabled', true);
+                  $("#opcao_script_button").prop('disabled', true);
+            }
+            else
+            {
+                  $("#page_selector_div button").prop('disabled', false);
+                  $("#opcao_script_button").prop('disabled', false);
+                  $("#script_selector").empty();
+                  $.each(data, function(index, value) {
+                        $("#script_selector").append("<option value=" + data[index].id + ">" + data[index].name + "</option>");
+                  });
+                  update_pages();
+            }
       }, "json");
 
 
 }
 function update_pages()
 {
+
+
       $.post("requests.php", {action: "get_pages", id_script: $("#script_selector option:selected").val()},
       function(data)
       {
-            $("#page_selector").empty();
-            $.each(data, function(index, value) {
-                  $("#page_selector").append("<option value=" + data[index].id + ">" + data[index].name + "</option>");
-            });
-            update_info();
+            if (data == null)
+            {
+
+                  $(".leftDiv").hide();
+                  $("#opcao_page_button").prop('disabled', true);
+            }
+            else
+            {
+                  $(".leftDiv").show();
+                  $("#opcao_page_button").prop('disabled', false);
+                  var pag = $("#page_selector").val();
+                  $("#page_selector").empty();
+                  $.each(data, function(index, value) {
+                        if (pag === data[index].id)
+                              $("#page_selector").append("<option value=" + data[index].id + " selected>" + data[index].name + "</option>");
+                        else
+                              $("#page_selector").append("<option value=" + data[index].id + ">" + data[index].name + "</option>");
+                  });
+                  update_info();
+            }
       }, "json");
 
 }
@@ -340,6 +374,17 @@ function update_info()
                                       .addClass("element")
                                       .data("required", data[index].required)
                                       .data("type", "textfield");
+                              item.appendTo('.leftDiv');
+                              break;
+
+                        case "tableradio":
+                              var item = $('.rightDiv .tableradio_class').clone();
+                              save_tableradio_element("insert", item, data[index]);
+                              item.attr("id", data[index].id)
+                                      .data("id", data[index].id)
+                                      .addClass("element")
+                                      .data("required", data[index].required)
+                                      .data("type", "tableradio");
                               item.appendTo('.leftDiv');
                               break;
 
@@ -546,7 +591,7 @@ function save_radio_element(opcao, element, data)
             var radios = $("#radio_textarea").val().split(regex_split);
             for (var count = 0; count < radios.length; count++)
             {
-                  element.append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "radio").attr("name", element.data("id")));
+                  element.append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "radio").attr("name", data.id));
                   element.append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "radio").text(radios[count]).append($("<span>")));
                   array_id["radio"] = array_id["radio"] + 1;
             }
@@ -561,8 +606,16 @@ function save_radio_element(opcao, element, data)
             var radios = data.values_text.split(",");
             for (var count = 0; count < radios.length; count++)
             {
-                  element.append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "radio").attr("name", element.data("id")));
-                  element.append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "radio").text(radios[count]).append($("<span>")));
+
+                  element.append($("<input>")
+                          .attr("type", "radio")
+                          .attr("id", array_id["radio"] + "radio")
+                          .attr("name", data.id));
+                  element.append($("<label>")
+                          .addClass("radio_name")
+                          .attr("for", array_id["radio"] + "radio")
+                          .text(radios[count])
+                          .append($("<span>")));
                   array_id["radio"] = array_id["radio"] + 1;
             }
 
@@ -605,7 +658,7 @@ function save_checkbox_element(opcao, element, data)
             var checkboxs = $("#checkbox_textarea").val().split(regex_split);
             for (var count = 0; count < checkboxs.length; count++)
             {
-                  element.append($("<input>").attr("type", "checkbox").attr("id", array_id["checkbox"] + "checkbox").attr("name", element.data("id")));
+                  element.append($("<input>").attr("type", "checkbox").attr("id", array_id["checkbox"] + "checkbox").attr("name", data.id));
                   element.append($("<label>").addClass("checkbox_name").attr("for", array_id["checkbox"] + "checkbox").text(checkboxs[count]).append($("<span>")));
                   array_id["checkbox"] = array_id["checkbox"] + 1;
             }
@@ -619,7 +672,7 @@ function save_checkbox_element(opcao, element, data)
             var checkboxs = data.values_text.split(",");
             for (var count = 0; count < checkboxs.length; count++)
             {
-                  element.append($("<input>").attr("type", "checkbox").attr("id", array_id["checkbox"] + "checkbox").attr("name", element.data("id")));
+                  element.append($("<input>").attr("type", "checkbox").attr("id", array_id["checkbox"] + "checkbox").attr("name", data.id));
                   element.append($("<label>").addClass("checkbox_name").attr("for", array_id["checkbox"] + "checkbox").text(checkboxs[count]).append($("<span>")));
                   array_id["checkbox"] = array_id["checkbox"] + 1;
             }
@@ -705,6 +758,102 @@ function save_textfield_element(opcao, element, data)
       }
 }
 
+//------------TableRADIO--------------------------------------------
+function populate_tableradio_edit(opcao, element)
+{
+
+      if (element.data("required") === "1")
+            $("#required_tableradio").attr('checked', true);
+      else
+            $("#required_tableradio").attr('checked', false);
+
+//titulos->texto
+
+      $("#tableradio_th_textarea").val(element.find(".label_geral")[0].innerHTML);
+      //perguntas->values_text
+      $("#tableradio_group_edit").val(element.find(":tableradio")[0].name);
+
+
+
+      var string_elements = "";
+      for (var count = 0; count < element.find(":tableradio").length; count++)
+      {
+            if (count == element.find(":tableradio").length - 1)
+                  string_elements += element.find(".tableradio_name")[count].innerHTML;
+            else
+                  string_elements += element.find(".tableradio_name")[count].innerHTML + "\n";
+            string_elements = string_elements.replace("<span></span>", "");
+      }
+      $("#tableradio_textarea").val(string_elements);
+}
+
+function save_tableradio_element(opcao, element, data)
+{
+
+      if (opcao === "edit") {
+
+            element.empty();
+            $("#tableradio_edit").val($("#tableradio_edit").val().replace(regex_replace_textbox, ''));
+            element.append($("<label>").addClass("label_tableradio label_geral").text($("#tableradio_edit").val()));
+            element.append($("<br>"));
+            $("#tableradio_textarea").val($("#tableradio_textarea").val().replace(regex_replace, ''));
+            var tableradios = $("#tableradio_textarea").val().split(regex_split);
+            for (var count = 0; count < tableradios.length; count++)
+            {
+                  element.append($("<input>").attr("type", "tableradio").attr("id", array_id["tableradio"] + "tableradio").attr("name", data.id));
+                  element.append($("<label>").addClass("tableradio_name").attr("for", array_id["tableradio"] + "tableradio").text(tableradios[count]).append($("<span>")));
+                  array_id["tableradio"] = array_id["tableradio"] + 1;
+            }
+
+            item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", element.index(), $("#tableradio_edit").val(), 0, 0, tableradios.join(","), $("#required_tableradio").is(':checked'));
+      }
+      if (opcao === "insert") {
+         
+            var tr_head = element.find(".tr_head");
+            tr_head.empty();
+            var titulos = data.texto.split(",");
+            var radios = titulos.length;
+        
+            for (var count = 0; count < titulos.length; count++)
+            {
+                  tr_head.append($("<td>").text(titulos[count]));
+
+            }
+
+
+            var tr_body = element.find(".tr_body");
+            tr_body.empty();
+            var perguntas = data.values_text.split(",");
+
+            for (var count = 0; count < perguntas.length; count++)
+            {
+                  tr_body.append($("<tr>").append($("<td>").text(perguntas[count])));
+
+            }
+
+            /*element.append($("<label>").addClass("label_tableradio label_geral").text($("#tableradio_edit").val()));
+             element.append($("<br>"));
+             element.find(".label_tableradio")[0].innerHTML = data.texto;
+             var tableradios = data.values_text.split(",");
+             for (var count = 0; count < tableradios.length; count++)
+             {
+             
+             element.append($("<input>")
+             .attr("type", "tableradio")
+             .attr("id", array_id["tableradio"] + "tableradio")
+             .attr("name", data.id));
+             element.append($("<label>")
+             .addClass("tableradio_name")
+             .attr("for", array_id["tableradio"] + "tableradio")
+             .text(tableradios[count])
+             .append($("<span>")));
+             array_id["tableradio"] = array_id["tableradio"] + 1;
+             }*/
+
+      }
+
+
+}
 
 
 
@@ -725,6 +874,17 @@ function item_database(opcao, Id, Id_script, Id_page, Type, Ordem, Texto, Placeh
       function(data)
       {
 
+            if (opcao === "get_tag_fields")
+            {
+
+                  $.each(data, function(index, value) {
+
+                        $("#tags_select").append("<option value='" + data[index].value + "'>" + data[index].name + "</option>");
+                  });
+
+
+            }
+
 
             if (opcao === "add_item")
                   update_info();
@@ -744,16 +904,16 @@ function pagescript_database(opcao, Id_script, Id_pagina)
       {
             if (opcao === "delete_page")
             {
-
                   $("#page_selector option:selected").remove();
-
-                  update_info();
+                  update_pages();
             }
+
             if (opcao === "add_script")
                   update_script();
+
             if (opcao === "add_page")
             {
-                  $("#page_selector").append("<option value=" + pagina_count + ">Pagina " + pagina_count + "</option>");
+                  update_pages();
             }
 
             if (opcao === "delete_script") {

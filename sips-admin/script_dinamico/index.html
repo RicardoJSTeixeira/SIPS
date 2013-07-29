@@ -146,7 +146,7 @@ and open the template in the editor.
                               <div class="grid-title">
                                     <div class="pull-left">            Elementos e Edição                              </div>
                                     <div class="pull-right">            
-               
+
 
                                           <select id="script_selector">
 
@@ -181,7 +181,7 @@ and open the template in the editor.
 
                                           </ul>
                                           <div id="tabs-1">
-                                                <div class="rightDiv span">
+                                                <div class="rightDiv span" id="rigth_list">
                                                       <div class="item texto_class"  >
                                                             <label class="label_texto label_geral" >Caixa de Texto:</label>
                                                             <input class="input_texto" maxlength="25" type="text" placeholder="Texto padrão" />
@@ -199,6 +199,50 @@ and open the template in the editor.
                                                             <br>
                                                             <input type="radio" id="radio1" name="ra" checked="checked">
                                                             <label class="radio_name"  for="radio1"><span></span>valor 1</label>
+
+                                                      </div>
+
+                                                      <div class="item tableradio_class" >
+                                                            <label class="label_tableradio label_geral">Tabela multipla-escolha:</label>
+                                                            <br>
+                                                            <table style="width:100%;">
+                                                                  <thead>
+                                                                        <tr class="tr_head">
+                                                                              <td>
+                                                                                    Perg.
+                                                                              </td>
+                                                                              <td>
+                                                                                    Mau
+                                                                              </td>
+                                                                              <td>
+                                                                                    Médio
+                                                                              </td>
+                                                                              <td>
+                                                                                    Bom
+                                                                              </td>
+                                                                        </tr>
+                                                                  </thead>
+                                                                  <tbody>
+                                                                        <tr class="tr_body">
+                                                                              <td>
+                                                                                    <label class="label_geral">Pergunta1:</label>
+                                                                              </td>
+                                                                              <td>
+                                                                                    <input type="radio" id="tableradio1" name="rb" checked="checked">
+                                                                                    <label class="tableradio_name"  for="tableradio1"><span></span></label>
+                                                                              </td>
+                                                                              <td>
+                                                                                    <input type="radio" id="tableradio2" name="rb" checked="checked">
+                                                                                    <label class="tableradio_name"  for="tableradio2"><span></span></label>
+                                                                              </td>
+                                                                              <td>
+                                                                                    <input type="radio" id="tableradio3" name="rb" checked="checked">
+                                                                                    <label class="tableradio_name"  for="tableradio3"><span></span></label>
+                                                                              </td>
+                                                                        </tr>
+                                                                  </tbody>
+                                                            </table>
+
 
                                                       </div>
                                                       <div class="item checkbox_class" >
@@ -413,6 +457,53 @@ and open the template in the editor.
                                                 </div>
 
 
+
+                                                <!--TABLERADIO-->
+                                                <div class="editor_layout" id="tableradio_layout_editor" style="display:none">
+
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >titulos</label>
+
+                                                            <div class="formRight">
+                                                                  <textarea id="tableradio_th_textarea" rows="4" cols="50"></textarea>
+                                                            </div>
+
+                                                      </div>
+
+
+
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Perguntas</label>
+
+                                                            <div class="formRight">
+                                                                  <textarea id="tableradio_td_textarea" rows="4" cols="50"></textarea>
+                                                            </div>
+
+                                                      </div>
+
+
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Required</label>
+
+                                                            <div class="formRight">
+                                                                  <input  type="checkbox" id="required_tableradio" name="required" value="1">
+                                                                  <label for="required_tableradio"><span></span></label>
+                                                            </div>
+                                                      </div>
+
+
+
+                                                </div>
+
+
+
+                                                <div class="formRow" >
+                                                      <label class="control-label label" >Tags:</label>
+
+                                                      <div class="formRight">
+                                                            <select id="tags_select"></select>
+                                                      </div>
+                                                </div>
 
 
 

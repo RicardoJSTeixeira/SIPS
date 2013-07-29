@@ -10,9 +10,19 @@ foreach ($_GET as $key => $value) {
 
 
 switch ($action) {
+    //------------------------------------------------//
+//-----------------GET-------------------------  
+    //------------------------------------------------//
+    case "get_tag_fields":
+        $query = "SELECT * FROM `vicidial_list_ref` GROUP BY name";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(id => $row["indice"], value => $row["Name"], name => $row["Display_name"]);
+        }
+        echo json_encode($js);
+        break;
 
     case "get_scripts":
-
         $query = "SELECT * FROM script_dinamico_master";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
@@ -40,26 +50,9 @@ switch ($action) {
         echo json_encode($js);
         break;
 
-
-
-
-    case "delete_item":
-        $query = "delete from script_dinamico where id=$id";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
-        break;
-
-    case "delete_script":
-        $query = "delete from script_dinamico_master where id=$id_script";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "delete from script_dinamico_pages where id_script=$id_script ";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "delete from script_dinamico where id_script=$id_script ";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
-        break;
-
-
+    //------------------------------------------------//
+//-----------------EDIT-------------------------
+    //------------------------------------------------//
     case "edit_script_name":
         $query = "update script_dinamico_master set name='$name' where id=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -89,8 +82,9 @@ switch ($action) {
 
 
 
-
-
+    //------------------------------------------------//
+//-----------------ADD-------------------------
+    //------------------------------------------------//
     case "add_page":
         $query = "INSERT INTO `asterisk`.`script_dinamico_pages` (id,id_script,name) VALUES (NULL,$id_script,'Página nova')";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -106,16 +100,37 @@ switch ($action) {
     case "add_item":
         $query = "INSERT INTO `asterisk`.`script_dinamico` (`id`, `id_script`,id_page, type, `ordem`, `texto`, `placeholder`, `max_length`, `values_text`,required) VALUES (NULL, $id_script,$id_page,'$type', $ordem, '$texto', '$placeholder', $max_length, '$values_text',$required)";
         $query = mysql_query($query, $link) or die(mysql_error());
+
+        echo json_encode(mysql_insert_id());
+        break;
+
+    //------------------------------------------------//
+    //-----------------DELETE-------------------------
+    //------------------------------------------------//
+    case "delete_page":
+        $query = "delete from script_dinamico_pages  where id=$id_page";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        $query = "delete from script_dinamico where id_page=$id_pagina";
+        $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
 
-    case "delete_page":
-        $query = "update script_dinamico_pages set pages=pages-1 where id=$id_script";
+    case "delete_item":
+        $query = "delete from script_dinamico where id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "delete from script_dinamico where id_script=$id_script and page=$pagina";
+        echo json_encode(array(1));
+        break;
+
+    case "delete_script":
+        $query = "delete from script_dinamico_master where id=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "update script_dinamico set page=page-1 where id_script=$id_script and page>$pagina";
+        $query = "delete from script_dinamico_pages where id_script=$id_script ";
         $query = mysql_query($query, $link) or die(mysql_error());
+        $query = "delete from script_dinamico where id_script=$id_script ";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        echo json_encode(array(1));
+        break;
+
         echo json_encode(array(1));
         break;
 }
