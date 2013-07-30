@@ -159,7 +159,7 @@ $stmt = "SELECT menu_id,menu_name from vicidial_call_menu $LOGadmin_viewable_gro
 		{
 		$rowx=mysql_fetch_row($rslt);
 		//$call_times_list= "<option value=\"$rowx[0]\">$rowx[1]</option>\n";
-		$call_timename_list[$rowx[0]] = $rowx[1];
+		$call_times_list[$rowx[0]] = $rowx[1];
 		$o++;
 		}
 
