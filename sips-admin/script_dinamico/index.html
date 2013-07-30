@@ -206,8 +206,8 @@ and open the template in the editor.
                                                             <label class="label_tableradio label_geral">Tabela multipla-escolha:</label>
                                                             <br>
                                                             <table style="width:100%;">
-                                                                  <thead>
-                                                                        <tr class="tr_head">
+                                                                  <thead class="tr_head">
+                                                                        <tr >
                                                                               <td>
                                                                                     Perg.
                                                                               </td>
@@ -221,9 +221,9 @@ and open the template in the editor.
                                                                                     Bom
                                                                               </td>
                                                                         </tr>
-                                                                  </thead>
-                                                                  <tbody>
-                                                                        <tr class="tr_body">
+                                                                  </thead >
+                                                                  <tbody class="tr_body">
+                                                                        <tr >
                                                                               <td>
                                                                                     <label class="label_geral">Pergunta1:</label>
                                                                               </td>
@@ -271,6 +271,14 @@ and open the template in the editor.
      Editing popovers            ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
                                                 <!--TEXTO-->
                                                 <div class="editor_layout" id="text_layout_editor" style="display:none">
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Tag:</label>
+
+                                                            <div class="formRight">
+                                                                  <label id="label_tag_texto"></label>
+                                                            </div>
+                                                      </div>
+
 
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
@@ -309,6 +317,14 @@ and open the template in the editor.
                                                 <div class="editor_layout" id="password_layout_editor" style="display:none">
 
                                                       <div class="formRow" >
+                                                            <label class="control-label label" >Tag:</label>
+
+                                                            <div class="formRight">
+                                                                  <label id="label_tag_password"></label>
+                                                            </div>
+                                                      </div>
+
+                                                      <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
 
                                                             <div class="formRight">
@@ -345,6 +361,14 @@ and open the template in the editor.
                                                 <div class="editor_layout" id="radio_layout_editor" style="display:none">
 
                                                       <div class="formRow" >
+                                                            <label class="control-label label" >Tag:</label>
+
+                                                            <div class="formRight">
+                                                                  <label id="label_tag_radio"></label>
+                                                            </div>
+                                                      </div>
+
+                                                      <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
 
                                                             <div class="formRight">
@@ -374,11 +398,31 @@ and open the template in the editor.
                                                             </div>
                                                       </div>
 
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Disposição:</label>
 
+                                                            <div class="formRight">
+                                                                  <input type="radio" id="horiz_radio" name="rdispo" checked="checked">
+                                                                  <label class="radio_dispo"  for="horiz_radio"><span></span>Horizontal</label>
+                                                                  <input type="radio" id="vertic_radio" name="rdispo" >
+                                                                  <label class="radio_dispo"  for="vertic_radio"><span></span>Vertical</label>
+                                                            </div>
+
+                                                      </div>
 
                                                 </div>
                                                 <!--CHECKBOX-->
                                                 <div class="editor_layout" id="checkbox_layout_editor" style="display:none">
+
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Tag:</label>
+
+                                                            <div class="formRight">
+                                                                  <label id="label_tag_checkbox"></label>
+                                                            </div>
+                                                      </div>
+
+
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
 
@@ -404,10 +448,29 @@ and open the template in the editor.
                                                             </div>
                                                       </div>
 
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Disposição:</label>
 
+                                                            <div class="formRight">
+                                                                  <input type="radio" id="horiz_checkbox" name="cdispo" checked="checked">
+                                                                  <label class="checkbox_dispo"  for="horiz_checkbox"><span></span>Horizontal</label>
+                                                                  <input type="radio" id="vertic_checkbox" name="cdispo" >
+                                                                  <label class="checkbox_dispo"  for="vertic_checkbox"><span></span>Vertical</label>
+                                                            </div>
+
+                                                      </div>
                                                 </div>
                                                 <!--MULTICHOISE-->
                                                 <div class="editor_layout" id="multichoice_layout_editor" style="display:none">
+
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Tag:</label>
+
+                                                            <div class="formRight">
+                                                                  <label id="label_tag_multichoice"></label>
+                                                            </div>
+                                                      </div>
+
 
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
@@ -440,6 +503,15 @@ and open the template in the editor.
                                                 <div class="editor_layout" id="textfield_layout_editor" style="display:none">
 
                                                       <div class="formRow" >
+                                                            <label class="control-label label" >Tag:</label>
+
+                                                            <div class="formRight">
+                                                                  <label id="label_tag_textfield"></label>
+                                                            </div>
+                                                      </div>
+
+
+                                                      <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
 
                                                             <div class="formRight">
@@ -459,7 +531,18 @@ and open the template in the editor.
 
 
                                                 <!--TABLERADIO-->
+
+
                                                 <div class="editor_layout" id="tableradio_layout_editor" style="display:none">
+
+
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Tag:</label>
+
+                                                            <div class="formRight">
+                                                                  <label id="label_tag_tableradio"></label>
+                                                            </div>
+                                                      </div>
 
                                                       <div class="formRow" >
                                                             <label class="control-label label" >titulos</label>
@@ -496,15 +579,26 @@ and open the template in the editor.
                                                 </div>
 
 
+                                                <!-------------------------TAG-------------------------->
+                                                <div class="tag_div" style="display:none">
 
-                                                <div class="formRow" >
-                                                      <label class="control-label label" >Tags:</label>
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Tags:</label>
 
-                                                      <div class="formRight">
-                                                            <select id="tags_select"></select>
+                                                            <div class="formRight">
+
+                                                                  <select id="tags_select"></select>
+                                                                  <i class="icon-tag" ></i>
+
+                                                            </div> 
+                                                      </div>
+                                                      <div class="formRow" >
+                                                            <div class="formRight">
+                                                                  <label id="tag_label"></label>
+                                                            </div>
+
                                                       </div>
                                                 </div>
-
 
 
                                                 <div class="clear"></div>
