@@ -297,9 +297,9 @@ switch ($action) {
 
     case '2'://Barras- total chamadas inbound/outbound
 
-   
-        $hours = (gmdate("H", time()-strtotime('today'))+1);
-        
+
+        $hours = (gmdate("H", time() - strtotime('today')) + 1);
+
 
         for ($i = 0; $i < count($datasets); $i++) {
             $query = "SELECT * FROM `WallBoard_Dataset` WHERE `id`=" . $datasets[$i]["id"];
@@ -378,7 +378,7 @@ switch ($action) {
                 }
             }
         }
-         echo json_encode($js);
+        echo json_encode($js);
         break;
 
 
@@ -510,7 +510,8 @@ switch ($action) {
 
     case 'get_calls_queue':// Inbound agentes,campaign,status
         $js = array();
-
+        $today = date("o-m-d");
+        $tomorrow = date("o-m-d", strtotime("+1 day"));
         $linha = explode(",", $linha_inbound);
 
         for ($i = 0; $i < count($linha); $i++) {
@@ -518,12 +519,12 @@ switch ($action) {
         }
 
         $linha_inbound = implode(",", $linha);
-        $query = "SELECT status FROM vicidial_auto_calls where campaign_id in($linha_inbound)";
+        $query = "SELECT count(status) as status FROM vicidial_closer_log where call_date between '$today' and '$tomorrow' and campaign_id in($linha_inbound) and status='QUEUE'";
 
         $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            $js[] = $row["status"];
-        }
+        $row = mysql_fetch_assoc($query);
+        $js[] = $row["status"];
+
         echo json_encode($js);
         break;
 
