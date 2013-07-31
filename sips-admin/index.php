@@ -91,7 +91,9 @@ if (!mysql_num_rows($r)) {
     body {
         background:none !important; 
     }
-
+    #mbody {
+        min-height: 80%;
+    }
 
 
 </style>
@@ -102,10 +104,12 @@ if (!mysql_num_rows($r)) {
 
         <div id='cc-header' class="row-fluid">
             <div class="span3">
-                
-                <? if (isset($curlogo) && $curLogo != "" ) { ?> <img style='float:left;width:400px;heigth:200px' src='<? echo "../$curlogo"; ?>' id="menu-hide" > <? } else { echo "<img style='float:left' src='/images/pictures/go_logo_15.png' id='menu-hide' >"; } ?>
+
+                <? if (isset($curlogo) && $curLogo != "") { ?> <img style='float:left;width:400px;heigth:200px' src='<? echo "../$curlogo"; ?>' id="menu-hide" > <? } else {
+                echo "<img style='float:left' src='/images/pictures/go_logo_15.png' id='menu-hide' >";
+            } ?>
             </div>
-           
+
             <div class="span9">
                 <a href="../index.php?logout=yes" ><img style='height:75px;float:right;' src='/images/pictures/cute_cloud3.png' /></a>
             </div>
@@ -149,7 +153,7 @@ if (!mysql_num_rows($r)) {
                                         <td><img src='<?= $curLink[imgpath] ?>' /></td>
                                         <td><?= $curLink[label] ?></td>
                                     </tr>
-                                <?php } ?>
+<?php } ?>
                             </tbody>
                         </table>
                     </div>
@@ -225,14 +229,8 @@ if (!mysql_num_rows($r)) {
 
         <script>
 
-                                    function SetFrameHeight() {
 
-                                        $("#mbody").height($(window).height() - 90);
-                                    }
 
-                                    window.onresize = function() {
-                                        SetFrameHeight();
-                                    };
 
                                     function ConfirmDelete(Link, Href) {
 
@@ -250,11 +248,11 @@ if (!mysql_num_rows($r)) {
                                         expires.setTime(expires.getTime() + 31536000000); //1 year  
                                         document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
                                     }
-    				
-				    function open_page(url) {
+
+                                    function open_page(url) {
                                         $("#mbody").attr('src', url);
                                         document.cookie = setCookie("pagina", url);
-                                     }
+                                    }
 
                                     function getCookie(key) {
                                         var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
@@ -266,8 +264,10 @@ if (!mysql_num_rows($r)) {
 
 
                                     $(function() {
-                                  $("body").on("close",function(){document.cookie = setCookie("pagina", null);});
-      $('#menu-content > .cc-submenu').hide();
+                                        $("body").on("close", function() {
+                                            document.cookie = setCookie("pagina", null);
+                                        });
+                                        $('#menu-content > .cc-submenu').hide();
                                         $('#menu-content > .cc-menu').click(function() {
 
                                             document.cookie = setCookie("separador", $("#menu-content > .cc-menu").index(this));
@@ -283,10 +283,10 @@ if (!mysql_num_rows($r)) {
                                             $('#menu-content > .cc-menu:eq(' + checkCookie + ')').next().show();
                                         }
 
-					var checkPagina = getCookie("pagina");
-                                        
+                                        var checkPagina = getCookie("pagina");
+
                                         if (checkPagina !== null) {
-					     $("#mbody").attr("src",checkPagina);
+                                            $("#mbody").attr("src", checkPagina);
                                         }
 
                                         $("#menu-hide").toggle(
