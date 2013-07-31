@@ -185,10 +185,7 @@ and open the template in the editor.
                                                       <div class="item texto_class"  >
                                                             <label class="label_texto label_geral" >Caixa de Texto:</label>
                                                             <input class="input_texto" maxlength="25" type="text" placeholder="Texto padrão" />
-
                                                       </div>
-
-
                                                       <div class="item password_class"  >
                                                             <label class="label_texto_password label_geral" >Password:</label>
                                                             <input class="input_texto_password" maxlength="25" type="password" placeholder="Password" />
@@ -264,11 +261,29 @@ and open the template in the editor.
 
                                                       </div>
 
+
                                                 </div>
                                           </div>
                                           <div id="tabs-2">
                                                 <!--
      Editing popovers            ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+                                                <!------------------------Grupo-------------------------->
+                                                <div class="group_div" style="display:none">
+
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Grupo:</label>
+
+                                                            <div class="formRight">
+
+                                                                  <input  maxlength="2" id="grupo_edit" type="text" placeholder="Grupo" style="width:10%" />
+
+
+                                                            </div> 
+                                                      </div>
+
+                                                </div>
+
+
                                                 <!--TEXTO-->
                                                 <div class="editor_layout" id="text_layout_editor" style="display:none">
                                                       <div class="formRow" >
@@ -605,6 +620,68 @@ and open the template in the editor.
                                                 <div class="modal-footer footer_save_cancel">
                                                       <button class="btn btn-info " id="save_edit">Guardar</button>
                                                       <button class="btn btn-info " id="cancel_edit">Cancelar</button>
+                                                </div>
+                                          </div>
+                                          <div id="tabs-3">
+                                                <div class="formRow" >
+                                                      <label class="control-label label" >Nome da regra:</label>
+
+                                                      <div class="formRight">
+                                                            <input class="span regra_input" id="regra_edit" type="text" placeholder="Regra" />
+
+                                                      </div> 
+                                                </div>
+
+                                                <div class="formRow" >
+                                                      <label class="control-label label" >Tipo:</label>
+
+                                                      <div class="formRight">
+                                                            <select id="regra_select">
+                                                                  <option value="goto">go-to</option>
+                                                                  <option value="show">show</option>   
+                                                                  <option value="hide" >Hide</option>
+
+                                                            </select>
+                                                      </div> 
+                                                      <div id="goto_div" class="rules_option" >
+                                                            <div class="formRow" >
+                                                                  <label class="control-label label" >opçao q despoleta:</label>
+
+                                                                  <div class="formRight">
+                                                                        <select id="hide_option_select">
+
+                                                                              <option>id(tag)</option>
+
+                                                                        </select>
+                                                                  </div> 
+                                                            </div> 
+
+                                                      </div>
+
+                                                      <div id="show_div" class="rules_option" style="display:none">
+                                                            <div class="formRow" >
+                                                                  <label class="control-label label" >show por:</label>
+                                                                  <div class="formRight">
+                                                                        <select id="show_option_select">
+                                                                              <option>grupo</option>
+                                                                              <option>id(tag)</option>
+                                                                        </select>
+                                                                  </div> 
+                                                            </div> 
+                                                      </div>
+                                                      
+                                                      <div id="hide_div" class="rules_option" style="display:none">
+                                                            <div class="formRow" >
+                                                                  <label class="control-label label" >Hide por:</label>
+                                                                  <div class="formRight">
+                                                                        <select id="hide_option_select">
+                                                                              <option>grupo</option>
+                                                                              <option>id(tag)</option>
+                                                                        </select>
+                                                                  </div> 
+                                                            </div> 
+                                                      </div>
+
                                                 </div>
                                           </div>
                                     </div>
