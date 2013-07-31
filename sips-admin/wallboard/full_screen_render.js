@@ -295,7 +295,7 @@ function plot_update(data)
                                           var temp = new Date(obj[prop][k].call_date);
 
                                           temp.setHours(temp.getHours() + 1);
-                                          
+
 
 
                                           dates.push(temp);
@@ -572,8 +572,8 @@ function   inbound_wallboard(data)
                   {
                         $.each(data4, function(index, value)
                         {
-                              if (data4[index] === "QUEUE")
-                                    queue++;
+                  
+                                    queue=+data4[0];
                         });
 
 
