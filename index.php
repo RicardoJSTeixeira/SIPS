@@ -9,6 +9,7 @@
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.css">
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
         <script type="text/javascript" src="/jquery/jquery-1.8.3.js">
         </script>
     </head>
@@ -29,7 +30,7 @@
             Header("HTTP/1.0 401 Unauthorized");
             ?>
         <div class='grid-content'>
-            <div class='alert alert-info'>Logout com sucesso <i>prima <ins>cancelar</ins></i></div>
+            <div class='alert alert-info'>Logout com sucesso <i>coloque as novas credencias ou prima <ins>cancelar</ins></i></div>
         </div>
             <script>
                 $(function() {
@@ -135,7 +136,7 @@
                             </div>
                             <div class="formRow">
                                 <div class="formRight">
-                                    <button class="btn btn-primary right"> Log-In </button>
+                                    <button class="btn btn-primary right"><i class="icon-signin"></i> Log-In </button>
                                 </div>
                             </div>
                             <div class="clear"></div>

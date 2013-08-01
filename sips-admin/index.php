@@ -105,9 +105,11 @@ if (!mysql_num_rows($r)) {
         <div id='cc-header' class="row-fluid">
             <div class="span3">
 
-                <? if (isset($curlogo) && $curLogo != "") { ?> <img style='float:left;width:400px;heigth:200px' src='<? echo "../$curlogo"; ?>' id="menu-hide" > <? } else {
-                echo "<img style='float:left' src='/images/pictures/go_logo_15.png' id='menu-hide' >";
-            } ?>
+                <? if (isset($curlogo) && $curLogo != "") { ?>
+                    <img class="left" src='<?= "../$curlogo"; ?>' id="menu-hide" > 
+                <? } else { ?>
+                    <img class="left" src='/images/pictures/go_logo_15.png' id='menu-hide' >
+                <?php } ?>
             </div>
 
             <div class="span9">
@@ -153,7 +155,7 @@ if (!mysql_num_rows($r)) {
                                         <td><img src='<?= $curLink[imgpath] ?>' /></td>
                                         <td><?= $curLink[label] ?></td>
                                     </tr>
-<?php } ?>
+                                <?php } ?>
                             </tbody>
                         </table>
                     </div>
@@ -226,8 +228,9 @@ if (!mysql_num_rows($r)) {
                 <iframe name="mbody" id="mbody" src='<?= $admin_link ?>' ></iframe>
             </div>
         </div>
+    </div>
 
-        <script>
+    <script>
 
 
 
@@ -306,6 +309,6 @@ if (!mysql_num_rows($r)) {
                                     });
 
 
-        </script>
+    </script>
 </body>
 </html>
