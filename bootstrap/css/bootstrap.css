@@ -1692,9 +1692,9 @@ input.search-query {
           border-radius: 14px 0 0 14px;
 }
 
-.form-search input,
-.form-inline input,
-.form-horizontal input,
+.form-search  input:not([type="radio"]):not([type="checkbox"]),
+.form-inline input:not([type="radio"]):not([type="checkbox"]),
+.form-horizontal  input:not([type="radio"]):not([type="checkbox"]),
 .form-search textarea,
 .form-inline textarea,
 .form-horizontal textarea,

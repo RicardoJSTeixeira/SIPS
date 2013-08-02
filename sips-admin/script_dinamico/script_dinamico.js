@@ -1,15 +1,17 @@
 
 
 //////////NOW///////////
-// a ordem ainda da problemas
+// a ordem ainda da problemas-fucking get this done
+////meter regexs    -done mas ainda falta tirar linhas em branco//falta remover espaços brancos das textareas e textboxes
 
-////meter regexs
-//    -done mas ainda falta tirar linhas em branco//falta remover espaços brancos das textareas e textboxes
+
 
 ////////TO BE DONE//////////////////
 //fazer render dos elementos dentro dos elementos(tag)
 
-//adicionar opção para o radio e check pra mostrar em linha horizontal ou vertical
+
+//gerir mudança de scripts e paginas no render.js
+
 ////////LATER///////////
 //regras de edição(novo separador)
 //    -go to
@@ -60,22 +62,6 @@
  */
 
 
-/*
- * id
- * id_script
- * id_pagina
- * type
- * ordem
- * texto
- * placeholder
- * max_length
- * values_text
- */
-
-
-
-
-
 var selected_id = 0;
 var selected_type = "";
 var array_id = [];
@@ -84,7 +70,7 @@ var regex_replace_textbox = /[^a-zA-Z0-9éçã\s:@§]/g;
 
 var regex_replace = /[^a-zA-Z0-9éçã\n§@]/g;
 var regex_split = /\n/g;
-var grupo_count = 1;
+
 
 
 $(document).ready(function() {
@@ -102,6 +88,7 @@ $(document).ready(function() {
             connectToSortable: ".leftDiv"
       });
       var removeIntent = false;
+      
       $(".leftDiv").sortable({
             'items': ".item",
             over: function() {
@@ -114,8 +101,9 @@ $(document).ready(function() {
                   var items = $(".leftDiv  .item");
                   for (var count = 0; count < items.length; count++)
                   {
-                        item_database("edit_item_order", items[count].id, 0, 0, 0, 0, $("#" + items[count].id).index(), 0, 0, 0, 0);
+                                   item_database("edit_item_order", items[count].id, 0, 0, 0, 0, $("#" + items[count].id).index(), 0, 0, 0, 0);
                   }
+
             },
             beforeStop: function(event, ui) {
                   if (removeIntent == true) {
@@ -343,7 +331,6 @@ function update_info()
       $.post("requests.php", {action: "get_data", id_script: $("#script_selector option:selected").val(), id_page: $("#page_selector option:selected").val()},
       function(data)
       {
-
             $.each(data, function(index, value) {
                   switch (data[index].type)
                   {
