@@ -2,47 +2,16 @@
 
 // ################################################################################
 // Send Hangup command for Live call connected to phone now to Manager
-	function livehangup_send_hangup(taskvar) 
-		{
-		var xmlhttp=false;
-		/*@cc_on @*/
-		/*@if (@_jscript_version >= 5)
-		// JScript gives us Conditional compilation, we can cope with old IE versions.
-		// and security blocked creation of the objects.
-		 try {
-		  xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-		 } catch (e) {
-		  try {
-		   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		  } catch (E) {
-		   xmlhttp = false;
-		  }
-		 }
-		@end @*/
-		if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-			{
-			xmlhttp = new XMLHttpRequest();
-			}
-		if (xmlhttp) 
-			{ 
-			var queryCID = "HLagcW" + epoch_sec + user_abb;
-			var hangupvalue = taskvar;
-			livehangup_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&user=" + user + "&pass=" + pass + "&ACTION=Hangup&format=text&channel=" + hangupvalue + "&queryCID=" + queryCID + "&log_campaign=" + campaign;
-			xmlhttp.open('POST', 'manager_send.php'); 
-			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
-			xmlhttp.send(livehangup_query); 
-			xmlhttp.onreadystatechange = function() 
-				{ 
-				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) 
-					{
-					Nactiveext = null;
-					Nactiveext = xmlhttp.responseText;
-					alert_box(xmlhttp.responseText);
-					}
-				}
-			delete xmlhttp;
-			}
-		}
+	function livehangup_send_hangup(taskvar)
+{
+    var queryCID = "HLagcW" + epoch_sec + user_abb;
+    var hangupvalue = taskvar;
+    livehangup_query = {server_ip: server_ip, session_name: session_name, user: user, pass: pass, ACTION: "Hangup", format: "text", channel: hangupvalue, queryCID: queryCID, log_campaign: campaign};
+    $.post('manager_send.php', livehangup_query, function(data) {
+        Nactiveext = data;
+        alert_box(data);
+    });
+}
 
 // ################################################################################
 // Send volume control command for meetme participant
@@ -1396,9 +1365,7 @@ function stats_update(){
                     }, function(data) {
                         $('#tpausa').empty();
                         var time_label,tpausa= $('#tpausa');
-                        console.log(data);
                         $.each(data,function() {
-                            console.log(this);
                             if (this.exceed) {
                                 time_label = $("<label>", {class: "label label-important"}).text(this.time);
                             } else {
@@ -2116,10 +2083,11 @@ function stats_update(){
 		}
         function divchecker(curDiv) {
             var rdytogo = 1;
-                if (document.getElementById("SearcHForMDisplaYBox").style.display != 'none' && curDiv != "search") { rdytogo = 0;}
-                if (document.getElementById("NeWManuaLDiaLBox").style.display != 'none' && curDiv != "mdial") { rdytogo = 0;}
-                if (document.getElementById("CallBacKsLisTBox").style.display != 'none' && curDiv != "cback") { rdytogo = 0;}
-                if (document.getElementById("CloserSelectBox").style.display != 'none' && curDiv != "closer") { rdytogo = 0;}
+                if ($("#SearcHForMDisplaYBox").css("display") != 'none' && curDiv != "search") { rdytogo = 0;}
+                if ($("#NeWManuaLDiaLBox").css("display") != 'none' && curDiv != "mdial") { rdytogo = 0;}
+                if ($("#CallBacKsLisTBox").css("display") != 'none' && curDiv != "cback") { rdytogo = 0;}
+                if ($("#CloserSelectBox").css("display") != 'none' && curDiv != "closer") { rdytogo = 0;}
+                if ($("#CallHistoryDialog").parent().css("display") != 'none' && curDiv != "CallHistoryDialog") { rdytogo = 0;}
             return rdytogo;
         }
 	function NewRedialSubmiT(nr)
@@ -4309,51 +4277,26 @@ FecharCallbacks();
                                     
                                 inOUT_hack=inOUT;
                                 lead_id_hack=$("#lead_id").val();
-				var xmlhttp=false;
-				/*@cc_on @*/
-				/*@if (@_jscript_version >= 5)
-				// JScript gives us Conditional compilation, we can cope with old IE versions.
-				// and security blocked creation of the objects.
-				 try {
-				  xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-				 } catch (e) {
-				  try {
-				   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-				  } catch (E) {
-				   xmlhttp = false;
-				  }
-				 }
-				@end @*/
-				if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-					{
-					xmlhttp = new XMLHttpRequest();
-					}
-				if (xmlhttp) 
-					{ 
-					DSupdate_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=updateDISPO&format=text&user=" + user + "&pass=" + pass + "&dispo_choice=" + DispoChoice + "&lead_id=" + document.vicidial_form.lead_id.value + "&campaign=" + campaign + "&auto_dial_level=" + auto_dial_level + "&agent_log_id=" + agent_log_id + "&CallBackDatETimE=" + CallBackDatETimE + "&list_id=" + document.vicidial_form.list_id.value + "&recipient=" + CallBackrecipient + "&use_internal_dnc=" + use_internal_dnc + "&use_campaign_dnc=" + use_campaign_dnc + "&MDnextCID=" + LasTCID + "&stage=" + group + "&vtiger_callback_id=" + vtiger_callback_id + "&phone_number=" + document.vicidial_form.phone_number.value + "&phone_code=" + document.vicidial_form.phone_code.value + "&dial_method" + dial_method + "&uniqueid=" + document.vicidial_form.uniqueid.value + "&CallBackLeadStatus=" + CallBackLeadStatus + "&comments="+ encodeURIComponent(CallBackCommenTs) + "&custom_field_names=" + custom_field_names + "&call_notes=" + document.vicidial_form.call_notes_dispo.value+"&cb_to_other_user="+cb_to_other_user+"&cb_to_other_username="+cb_to_other_username;
-					xmlhttp.open('POST', 'vdc_db_query.php');
-					xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
-					xmlhttp.send(DSupdate_query); 
-					xmlhttp.onreadystatechange = function() 
-						{ 
-					
-                                                                if(nc_live && nc_live_id!==undefined){nc_log();nc_live=false;nc_live_id=undefined}
-                                                                
-						if ( (xmlhttp.readyState == 4 && xmlhttp.status == 200) && (auto_dial_level < 1) )
-							{
-                                                            
+		DSupdate_query = {server_ip:server_ip,session_name:session_name,ACTION:"updateDISPO",format:"text",user:user,pass:pass,dispo_choice:DispoChoice,lead_id:document.vicidial_form.lead_id.value,campaign:campaign,auto_dial_level:auto_dial_level,agent_log_id:agent_log_id,CallBackDatETimE:CallBackDatETimE,list_id:document.vicidial_form.list_id.value,recipient:CallBackrecipient,use_internal_dnc:use_internal_dnc,use_campaign_dnc:use_campaign_dnc,MDnextCID:LasTCID,stage:group,vtiger_callback_id:vtiger_callback_id,phone_number:document.vicidial_form.phone_number.value,phone_code:document.vicidial_form.phone_code.value,dial_method:dial_method,uniqueid:document.vicidial_form.uniqueid.value,CallBackLeadStatus:CallBackLeadStatus,comments:CallBackCommenTs,custom_field_names:custom_field_names,call_notes:document.vicidial_form.call_notes_dispo.value,cb_to_other_user:cb_to_other_user,cb_to_other_username:cb_to_other_username};
+					$.post('vdc_db_query.php',DSupdate_query,function(data){
+                                          if(nc_live && nc_live_id!==undefined){
+                                              nc_log();
+                                              nc_live=false;
+                                              nc_live_id=undefined;}
+                                            
                                                         
 							var check_dispo = null;
-							check_dispo = xmlhttp.responseText;
+							check_dispo = data;
 							var check_DS_array=check_dispo.split("\n");
 							if (check_DS_array[1] == 'Next agent_log_id:')
 								{
 								agent_log_id = check_DS_array[2];
 								}
-							}
-						}
-					delete xmlhttp;
-					}
+                                        });		
+                    
+					
+                                                                
+						
 				// CLEAR ALL FORM VARIABLES
 				document.getElementById("DiaLControl").innerHTML = "<td><img src='/images/icons/control_end_blue.png' /></td><td><a href='#' onclick=\"ManualDialNext('','','','','','0');\">Marcar Seguinte</a></td>";
 				
@@ -8193,7 +8136,7 @@ function start_all_refresh()
                     }
                 }
             }
-              function CustomCheckRequired() //working
+              function CustomCheckRequired() 
             {
                 var xmlhttp = false;
                 if (!xmlhttp && typeof XMLHttpRequest != 'undefined')
