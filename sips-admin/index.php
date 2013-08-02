@@ -262,11 +262,18 @@ if (!mysql_num_rows($r)) {
                                         return keyValue ? keyValue[2] : null;
                                     }
 
-
+                                    function SetFrameHeight() {
+                                        $("#mbody").height($(window).height() - 90);
+                                    }
+ 
+                                    window.onresize = function() {
+                                        SetFrameHeight();
+                                    };
 
 
 
                                     $(function() {
+                                        SetFrameHeight()
                                         $("body").on("close", function() {
                                             document.cookie = setCookie("pagina", null);
                                         });
