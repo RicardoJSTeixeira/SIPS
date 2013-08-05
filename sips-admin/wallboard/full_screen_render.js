@@ -669,7 +669,7 @@ function   inbound_wallboard(data)
                                                             show: true,
                                                             formatter: function(label, series) {
 
-                                                                  return '<div style="float:rigth;font-size:18px;color:black;">' + Math.floor(series.percent) + '%</div>';
+                                                                  return '<div style="float:rigth;font-size:18px;color:black;">' + Math.round(series.percent) + '%</div>';
                                                             },
                                                             background: {
                                                                   opacity: 0.5,
