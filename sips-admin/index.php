@@ -118,12 +118,12 @@ if (!mysql_num_rows($r)) {
         </div>
 
         <div class="row-fluid">
-            <div class="span2" id="menu"   style='margin-top:1px;'><!-- MENU -->
+            <div class="span2" id="menu"   style='margin-top:1px;'>
 
                 <DIV id="menu-content">
                     <div class='cc-menu'>
                         <div class="grid-title">
-                            <div class="pull-left  tooltip-top offset1" data-t="tooltip" title="Menu">Menu</div>
+                            <div class="pull-left tooltip-top offset1" data-t="tooltip" title="Menu">Menu</div>
                             <div class="pull-right"><img class='cc-menu-img' id='img1'  src='/images/icons/headphone_mic_16.png' /></div>
                             <div class="clear"></div>   
                         </div>
@@ -262,11 +262,18 @@ if (!mysql_num_rows($r)) {
                                         return keyValue ? keyValue[2] : null;
                                     }
 
-
+                                    function SetFrameHeight() {
+                                        $("#mbody").height($(window).height() - 90);
+                                    }
+ 
+                                    window.onresize = function() {
+                                        SetFrameHeight();
+                                    };
 
 
 
                                     $(function() {
+                                        SetFrameHeight()
                                         $("body").on("close", function() {
                                             document.cookie = setCookie("pagina", null);
                                         });
@@ -304,8 +311,6 @@ if (!mysql_num_rows($r)) {
                                                     $("#iframe-conteiner").removeClass("span12").addClass("span10");
                                                 });
 
-
-                                        SetFrameHeight();
                                     });
 
 

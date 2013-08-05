@@ -278,12 +278,12 @@ function GetCampaignDialStatuses($CampaignID, $link)
 
 function SaveCampaignDialStatus($CampaignID, $EditedDialStatus, $link)
 {
-	foreach($EditedDialStatus as $key=>$value)
+	foreach($EditedDialStatus as $value)
 	{
 		$new_dial_status .= " ".$value;
 	}
 	$new_dial_status = $new_dial_status." -";
-	mysql_query("UPDATE vicidial_campaigns SET dial_statuses = '$new_dial_status' WHERE campaign_id= '$CampaingID'", $link) or die(mysql_error());	
+	mysql_query("UPDATE vicidial_campaigns SET dial_statuses = '$new_dial_status' WHERE campaign_id= '$CampaignID'", $link) or die(mysql_error());	
 
 }
 
