@@ -68,9 +68,9 @@ switch ($action) {
 
     case "edit_item":
         $query = "UPDATE script_dinamico SET id_script=$id_script,id_page=$id_page,type='$type',grupo=$grupo,ordem=$ordem,dispo='$dispo',texto='$texto',placeholder='$placeholder',max_length=$max_length,values_text='$values_text',required=$required WHERE id=$id";
-       
+
         $query = mysql_query($query, $link) or die(mysql_error());
-      echo json_encode(array(1));
+        echo json_encode(array(1));
         break;
 
     case "edit_item_order":
@@ -99,10 +99,10 @@ switch ($action) {
 
     case "add_item":
         $query = "INSERT INTO `asterisk`.`script_dinamico` (`id`, `id_script`,id_page, type,grupo, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required) VALUES (NULL, $id_script,$id_page,'$type',$grupo, $ordem,'$dispo', '$texto', '$placeholder', $max_length, '$values_text',$required)";
-   
+
         $query = mysql_query($query, $link) or die(mysql_error());
 
-       echo json_encode(mysql_insert_id());
+        echo json_encode(mysql_insert_id());
         break;
 
     //------------------------------------------------//
@@ -132,6 +132,21 @@ switch ($action) {
         echo json_encode(array(1));
         break;
 
+        echo json_encode(array(1));
+        break;
+
+
+    case "save_form_result":
+
+
+
+        $sql = array();
+        foreach ($results as $row) {
+
+            $sql[] = "(null,$id_script,'" . $row['name'] . "', '" . $row['value'] . "')";
+        }
+        $query = "INSERT INTO `script_result`(`id`,id_script, `id_elemento`, `valor`) VALUES " . implode(',', $sql);
+        $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
 }

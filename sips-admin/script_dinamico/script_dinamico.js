@@ -1,41 +1,18 @@
 
 
 //////////NOW///////////
-// a ordem ainda da problemas-fucking get this done
-////meter regexs    -done mas ainda falta tirar linhas em branco//falta remover espaços brancos das textareas e textboxes
+// Ordem da leftdiv-> not done
 
 
 
 ////////TO BE DONE//////////////////
-//fazer render dos elementos dentro dos elementos(tag)
+//fazer render do valor dos elementos dentro dos elementos(tag)
 
-
-//gerir mudança de scripts e paginas no render.js
-
-////////LATER///////////
-//regras de edição(novo separador)
-//    -go to
-//    -hide
-//    -show
-
-
-/*
- id
- id_element-> elemento geral
- id_subelement -> por exe. diferentes radios
- nome->nome da regra
- tipo(go_to/hide/show)
- go_to
- 
- 
- 
- 
- 
- 
- */
+// required na parte do render
 
 
 
+//começar os forms submits ->http://www.javaworld.com/jw-06-1996/jw-06-javascript.html?page=2
 
 
 
@@ -44,7 +21,7 @@
 //elemento navegação
 
 
-
+//relatorios de script
 
 
 
@@ -88,7 +65,7 @@ $(document).ready(function() {
             connectToSortable: ".leftDiv"
       });
       var removeIntent = false;
-      
+
       $(".leftDiv").sortable({
             'items': ".item",
             over: function() {
@@ -97,12 +74,13 @@ $(document).ready(function() {
             out: function() {
                   removeIntent = true;
             },
-            stop: function(event, ui) {
+            update: function(event, ui) {
                   var items = $(".leftDiv  .item");
                   for (var count = 0; count < items.length; count++)
                   {
-                                   item_database("edit_item_order", items[count].id, 0, 0, 0, 0, $("#" + items[count].id).index(), 0, 0, 0, 0);
+                        item_database("edit_item_order", items[count].id, 0, 0, 0, 0, $("#" + items[count].id).index(), 0, 0, 0, 0);
                   }
+
 
             },
             beforeStop: function(event, ui) {
@@ -120,10 +98,7 @@ $(document).ready(function() {
                   {
                         item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", 0, ui.item.index(), "h", $(".texto_class .label_texto")[0].innerHTML, $(".texto_class .input_texto")[0].placeholder, $(".texto_class .input_texto")[0].maxLength, 0, 0);
                   }
-                  if ($(this).data().uiSortable.currentItem.hasClass("password_class"))
-                  {
-                        item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "password", 0, ui.item.index(), "h", $(".label_texto_password")[0].innerHTML, $(".input_texto_password")[0].placeholder, $(".input_texto_password")[0].maxLength, 0, 0);
-                  }
+                
                   if ($(this).data().uiSortable.currentItem.hasClass("radio_class"))
                   {
                         item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", 0, ui.item.index(), "h", $(".label_radio")[0].innerHTML, 0, 0, "Valor1", 0);
@@ -142,7 +117,7 @@ $(document).ready(function() {
                   }
                   if ($(this).data().uiSortable.currentItem.hasClass("tableradio_class"))
                   {
-                        item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", 0, ui.item.index(), "h", "mau,médio,bom", 0, 0, "pergunta1", 0);
+                        item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", 0, ui.item.index(), "h", "tableradio", "mau,médio,bom", 0, "pergunta1", 0);
                   }
 
 
@@ -169,10 +144,7 @@ $(document).ready(function() {
                         $("#text_layout_editor").show();
                         populate_element("texto", $(this));
                         break;
-                  case "password":
-                        $("#password_layout_editor").show();
-                        populate_element("password", $(this));
-                        break;
+                
                   case "radio":
                         $("#radio_layout_editor").show();
                         populate_element("radio", $(this));
@@ -303,7 +275,7 @@ function update_pages()
       {
             if (data == null)
             {
-
+                  $("#page_selector").empty();
                   $(".leftDiv").hide();
                   $("#opcao_page_button").prop('disabled', true);
             }
@@ -326,7 +298,6 @@ function update_pages()
 }
 function update_info()
 {
-
       $(".leftDiv").empty();
       $.post("requests.php", {action: "get_data", id_script: $("#script_selector option:selected").val(), id_page: $("#page_selector option:selected").val()},
       function(data)
@@ -344,22 +315,13 @@ function update_info()
                                       .data("required", data[index].required)
                                       .data("type", "texto")
                                       .data("grupo", data[index].grupo);
+                                   
                               item.appendTo('.leftDiv');
+                              $("#popover"+data[index].id).popover({html: true});
                               break;
 
-                        case "password":
-                              var item = $('.rightDiv .password_class').clone();
-                              insert_element("password", item, data[index]);
 
-                              item.attr("id", data[index].id)
-                                      .data("id", data[index].id)
-                                      .addClass("element")
-                                      .data("required", data[index].required)
-                                      .data("type", "password")
-                                      .data("grupo", data[index].grupo);
-                              item.appendTo('.leftDiv');
-                              break;
-
+                      
                         case "radio":
                               var item = $('.rightDiv .radio_class').clone();
                               insert_element("radio", item, data[index]);
@@ -372,7 +334,9 @@ function update_info()
                                       .data("dispo", data[index].dispo)
                                       .data("grupo", data[index].grupo);
 
+           
                               item.appendTo('.leftDiv');
+                              $("#popover"+data[index].id).popover({html: true});
                               break;
 
                         case "checkbox":
@@ -384,10 +348,13 @@ function update_info()
                                       .addClass("element")
                                       .data("required", data[index].required)
                                       .data("dispo", data[index].dispo)
-                                      .data("grupo", data[index].grupo)
-                                      .data("type", "checkbox");
+                                 .data("type", "checkbox")
+                                      .data("grupo", data[index].grupo);
+                                   
+                              
 
                               item.appendTo('.leftDiv');
+                              $("#popover"+data[index].id).popover({html: true});
                               break;
 
                         case "multichoice":
@@ -401,7 +368,9 @@ function update_info()
                                       .data("type", "multichoice")
                                       .data("grupo", data[index].grupo);
 
+                                 
                               item.appendTo('.leftDiv');
+                              $("#popover"+data[index].id).popover({html: true});
                               break;
 
                         case "textfield":
@@ -414,7 +383,9 @@ function update_info()
                                       .data("type", "textfield")
                                       .data("grupo", data[index].grupo);
 
+                
                               item.appendTo('.leftDiv');
+                              $("#popover"+data[index].id).popover({html: true});
                               break;
 
                         case "tableradio":
@@ -426,8 +397,9 @@ function update_info()
                                       .data("required", data[index].required)
                                       .data("type", "tableradio")
                                       .data("grupo", data[index].grupo);
-
+                
                               item.appendTo('.leftDiv');
+                              $("#popover"+data[index].id).popover({html: true});
                               break;
 
 
@@ -436,13 +408,9 @@ function update_info()
 
 
             });
-
       }, "json");
-
-
-
-
 }
+
 
 
 //FOOTER EDIT BUTTONS
@@ -489,20 +457,6 @@ function populate_element(tipo, element)
                   $("#max_length_edit").val(element.find(".input_texto")[0].maxLength);
                   break;
 
-
-
-            case "password":
-
-                  $("#grupo_edit").val(element.data("grupo"));
-                  $("#label_tag_password").text("@" + element.data("id") + "@");
-                  if (element.data("required") === "1")
-                        $("#required_password").attr('checked', true);
-                  else
-                        $("#required_password").attr('checked', false);
-                  $("#passwordtexto_edit").val(element.find(".label_geral")[0].innerHTML);
-                  $("#passwordplaceholder_edit").val(element.find(".input_texto_password")[0].placeholder);
-                  $("#passwordmax_length_edit").val(element.find(".input_texto_password")[0].maxLength);
-                  break;
 
 
 
@@ -606,6 +560,8 @@ function populate_element(tipo, element)
 
 
             case "tableradio":
+
+                  $("#tableradio_edit").val(element.find(".label_geral")[0].innerHTML);
                   $("#grupo_edit").val(element.data("grupo"));
                   $("#label_tag_tableradio").text("@" + element.data("id") + "@");
                   if (element.data("required") === "1")
@@ -630,7 +586,6 @@ function populate_element(tipo, element)
 
       }
 }
-
 
 function edit_element(opcao, element, data)
 {
@@ -662,27 +617,7 @@ function edit_element(opcao, element, data)
                   item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", $("#grupo_edit").val(), element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, $("#required_texto").is(':checked'));
 
                   break;
-            case "password":
-
-                  if ($("#required_password").is(':checked'))
-                        element.data("required", "1");
-                  else
-                        element.data("required", "0");
-
-
-                  $("#passwordtexto_edit").val($("#passwordtexto_edit").val().replace(regex_replace_textbox, ''));
-                  $("#passwordplaceholder_edit").val($("#passwordplaceholder_edit").val().replace(regex_replace_textbox, ''));
-                  $("#passwordmax_length_edit").val($("#passwordmax_length_edit").val().replace(/[^0-9]/g, ''));
-                  element.find(".label_geral")[0].innerHTML = $("#passwordtexto_edit").val();
-                  element.find(".input_texto_password")[0].placeholder = $("#passwordplaceholder_edit").val();
-                  element.find(".input_texto_password")[0].maxLength = $("#passwordmax_length_edit").val();
-
-                  $("#grupo_edit").val($("#grupo_edit").val().replace(/[^0-9]/g, ''));
-                  element.data("grupo", $("#grupo_edit").val());
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "password", $("#grupo_edit").val(), element.index(), "h", $("#passwordtexto_edit").val(), $("#passwordplaceholder_edit").val(), $("#passwordmax_length_edit").val(), 0, $("#required_password").is(':checked'));
-
-                  break;
-
+ 
             case "radio":
                   if ($("#required_radio").is(':checked'))
                         element.data("required", "1");
@@ -695,13 +630,25 @@ function edit_element(opcao, element, data)
                         element.data("dispo", "h");
 
                   element.empty();
+
                   $("#radio_edit").val($("#radio_edit").val().replace(regex_replace_textbox, ''));
                   element.append($("<label>").addClass("label_radio label_geral").text($("#radio_edit").val()));
                   element.append($("<br>"));
                   $("#radio_textarea").val($("#radio_textarea").val().replace(regex_replace, ''));
                   var radios = $("#radio_textarea").val().split(regex_split);
+
+
+                  for (var i = radios.length - 1; i >= 0; i--) {
+                        if (radios[i] === "") {
+                              radios.splice(i, 1);
+
+                        }
+                  }
+
+
                   for (var count = 0; count < radios.length; count++)
                   {
+
                         element.append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "radio").attr("name", element.data("id")));
                         element.append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "radio").text(radios[count]).append($("<span>")));
 
@@ -732,6 +679,18 @@ function edit_element(opcao, element, data)
                   element.append($("<br>"));
                   $("#checkbox_textarea").val($("#checkbox_textarea").val().replace(regex_replace, ''));
                   var checkboxs = $("#checkbox_textarea").val().split(regex_split);
+
+
+
+                  for (var i = checkboxs.length - 1; i >= 0; i--) {
+                        if (checkboxs[i] === "") {
+                              checkboxs.splice(i, 1);
+
+                        }
+                  }
+
+
+
                   for (var count = 0; count < checkboxs.length; count++)
                   {
                         element.append($("<input>").attr("type", "checkbox").attr("id", array_id["checkbox"] + "checkbox").attr("name", element.data("id")));
@@ -760,6 +719,20 @@ function edit_element(opcao, element, data)
                   element.append($("<label>").addClass("label_multichoice label_geral").text($("#multichoice_edit").val()));
                   $("#multichoice_textarea").val($("#multichoice_textarea").val().replace(regex_replace, ''));
                   var multichoices = $("#multichoice_textarea").val().split(regex_split);
+
+
+
+                  for (var i = multichoices.length - 1; i >= 0; i--) {
+                        if (multichoices[i] === "") {
+                              multichoices.splice(i, 1);
+
+                        }
+                  }
+
+
+
+
+
                   element.append("<select class = 'multichoice_select' > < /select>");
                   var select = element.find(".multichoice_select");
                   for (var count = 0; count < multichoices.length; count++)
@@ -800,6 +773,16 @@ function edit_element(opcao, element, data)
                   $("#tableradio_th_textarea").val($("#tableradio_th_textarea").val().replace(regex_remove_blank, ""));
                   $("#tableradio_th_textarea").val($("#tableradio_th_textarea").val().replace(regex_replace, ''));
                   var titulos = $("#tableradio_th_textarea").val().split(regex_split);
+
+
+
+                  for (var i = titulos.length - 1; i >= 0; i--) {
+                        if (titulos[i] === "") {
+                              titulos.splice(i, 1);
+
+                        }
+                  }
+
                   tr_head.append($("<td>").text("*"));
                   for (var count = 0; count < titulos.length; count++)
                   {
@@ -810,6 +793,17 @@ function edit_element(opcao, element, data)
                   $("#tableradio_td_textarea").val($("#tableradio_td_textarea").val().replace(regex_remove_blank, ""));
                   $("#tableradio_td_textarea").val($("#tableradio_td_textarea").val().replace(/[^a-zA-Z0-9éçã\s:@§]/g, ''));
                   var perguntas = $("#tableradio_td_textarea").val().split(regex_split);
+
+
+
+                  for (var i = perguntas.length - 1; i >= 0; i--) {
+                        if (perguntas[i] === "") {
+                              perguntas.splice(i, 1);
+
+                        }
+                  }
+
+
                   for (var count = 0; count < perguntas.length; count++)
                   {
                         tr_body.append($("<tr>").attr("id", perguntas[count])
@@ -827,13 +821,12 @@ function edit_element(opcao, element, data)
 
                   $("#grupo_edit").val($("#grupo_edit").val().replace(/[^0-9]/g, ''));
                   element.data("grupo", $("#grupo_edit").val());
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", $("#grupo_edit").val(), element.index(), "h", titulos.join(","), 0, 0, perguntas.join(","), $("#required_tableradio").is(':checked'));
+                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", $("#grupo_edit").val(), element.index(), "h", $("#tableradio_edit").val(), titulos.join(","), 0, perguntas.join(","), $("#required_tableradio").is(':checked'));
                   break;
 
 
       }
 }
-
 
 function insert_element(opcao, element, data)
 {
@@ -845,11 +838,7 @@ function insert_element(opcao, element, data)
                   element.find(".input_texto")[0].placeholder = data.placeholder;
                   element.find(".input_texto")[0].maxLength = data.max_length;
                   break;
-            case "password":
-                  element.find(".label_geral")[0].innerHTML = data.texto;
-                  element.find(".input_texto_password")[0].placeholder = data.placeholder;
-                  element.find(".input_texto_password")[0].maxLength = data.max_length;
-
+         
                   break;
             case "radio":
                   element.empty();
@@ -908,9 +897,10 @@ function insert_element(opcao, element, data)
                   element.find(".label_geral")[0].innerHTML = data.values_text;
                   break;
             case "tableradio":
+                  element.find(".label_geral")[0].innerHTML = data.texto;
                   var tr_head = element.find(".tr_head");
                   tr_head.empty();
-                  var titulos = data.texto.split(",");
+                  var titulos = data.placeholder.split(",");
                   tr_head.append($("<td>").text("*"));
                   for (var count = 0; count < titulos.length; count++)
                   {
@@ -937,6 +927,8 @@ function insert_element(opcao, element, data)
 
       }
 }
+
+
 
 
 
@@ -1031,5 +1023,5 @@ $("#script_remove_button").click(function()
 });
 
 $('#script_selector').change(function() {
-      update_info();
+      update_pages();
 });
