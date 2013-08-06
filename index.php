@@ -109,34 +109,34 @@
 
         if ($navigation == '') {
             ?>
-            <div style="width: 490px;margin: auto;">
+            <div style="width: 525px;margin: auto;">
                 <img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/go_logo_35.png />
 
                 <div class="grid">
                     <div class="grid-content">
 
-                        <form name='sips_login' id=sips_login action='index.php' method=POST>
+                        <form name='sips_login' id=sips_login action='index.php' class="form-horizontal" method=POST>
     <?php
     if (isset($curLogo) && $curLogo != "") {
         echo "<input type=hidden name=curlogo value=$curLogo />";
     }
     ?>
                             <input type=hidden value=go name=first_login>
-                            <div class="formRow">
-                                <label>Username: </label>
-                                <div class="formRight">
+                            <div class="control-group">
+                                <label class="control-label">Username: </label>
+                                <div class="controls">
                                     <input type='text' name='sips_username' id='sips_username' style='width:200px' value=''>
                                 </div>
                             </div>
-                            <div class="formRow">
-                                <label>Password: </label>
-                                <div class="formRight">
+                            <div class="control-group">
+                                <label class="control-label">Password: </label>
+                                <div class="controls">
                                     <input type='password' name='sips_password' id='sips_password' style='width:200px'  value=''>
                                 </div>
                             </div>
-                            <div class="formRow">
-                                <div class="formRight">
-                                    <button class="btn btn-primary right"><i class="icon-signin"></i> Log-In </button>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <button class="btn btn-primary"><i class="icon-signin"></i> Log-In </button>
                                 </div>
                             </div>
                             <div class="clear"></div>
