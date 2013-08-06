@@ -12,7 +12,7 @@ $(document).on("click",".LostCallDial",function(){
 
 $(function() {
 
-$("#CallHistoryStart").on("click",function() {console.log("hello");
+$("#CallHistoryStart").on("click",function() {
     var go_on = divchecker("CallHistoryDialog");
     if (!go_on) {
         return;
