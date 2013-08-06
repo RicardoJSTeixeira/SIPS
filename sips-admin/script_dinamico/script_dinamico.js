@@ -8,7 +8,6 @@
 ////////TO BE DONE//////////////////
 //fazer render do valor dos elementos dentro dos elementos(tag)
 
-// required na parte do render
 
 
 
@@ -43,7 +42,7 @@ var selected_id = 0;
 var selected_type = "";
 var array_id = [];
 var regex_remove_blank = /^\s*$[\n\r]{1,}/gm;
-var regex_replace_textbox = /[^a-zA-Z0-9éçã\s:@§]/g;
+var regex_replace_textbox = /[^a-zA-Z0-9éçã\s:@§ó]/g;
 
 var regex_replace = /[^a-zA-Z0-9éçã\n§@]/g;
 var regex_split = /\n/g;
@@ -78,7 +77,7 @@ $(document).ready(function() {
                   var items = $(".leftDiv  .item");
                   for (var count = 0; count < items.length; count++)
                   {
-                        item_database("edit_item_order", items[count].id, 0, 0, 0, 0, $("#" + items[count].id).index(), 0, 0, 0, 0);
+                        item_database("edit_item_order", items[count].id, 0, 0, 0, $("#" + items[count].id).index(), 0, 0, 0, 0,0,0);
                   }
 
 
@@ -98,7 +97,10 @@ $(document).ready(function() {
                   {
                         item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", 0, ui.item.index(), "h", $(".texto_class .label_texto")[0].innerHTML, $(".texto_class .input_texto")[0].placeholder, $(".texto_class .input_texto")[0].maxLength, 0, 0);
                   }
-                
+                  if ($(this).data().uiSortable.currentItem.hasClass("pagination_class"))
+                  {
+                        item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "pagination", 0, ui.item.index(), "0", 0, 0, 0, 0, 0);
+                  }
                   if ($(this).data().uiSortable.currentItem.hasClass("radio_class"))
                   {
                         item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", 0, ui.item.index(), "h", $(".label_radio")[0].innerHTML, 0, 0, "Valor1", 0);
@@ -144,7 +146,6 @@ $(document).ready(function() {
                         $("#text_layout_editor").show();
                         populate_element("texto", $(this));
                         break;
-                
                   case "radio":
                         $("#radio_layout_editor").show();
                         populate_element("radio", $(this));
@@ -313,15 +314,29 @@ function update_info()
                                       .data("id", data[index].id)
                                       .addClass("element")
                                       .data("required", data[index].required)
-                                      .data("type", "texto")
-                                      .data("grupo", data[index].grupo);
-                                   
+                                      .data("type", "texto");
+
+
                               item.appendTo('.leftDiv');
-                              $("#popover"+data[index].id).popover({html: true});
+
                               break;
 
+                        case "pagination":
 
-                      
+                              var item = $('.rightDiv .pagination_class').clone();
+
+                              insert_element("pagination", item, data[index]);
+                              item.attr("id", data[index].id)
+                                      .data("id", data[index].id)
+                                      .addClass("element")
+
+                                      .data("type", "pagination");
+
+
+                              item.appendTo('.leftDiv');
+
+                              break;
+
                         case "radio":
                               var item = $('.rightDiv .radio_class').clone();
                               insert_element("radio", item, data[index]);
@@ -331,12 +346,12 @@ function update_info()
                                       .addClass("element")
                                       .data("required", data[index].required)
                                       .data("type", "radio")
-                                      .data("dispo", data[index].dispo)
-                                      .data("grupo", data[index].grupo);
+                                      .data("dispo", data[index].dispo);
 
-           
+
+
                               item.appendTo('.leftDiv');
-                              $("#popover"+data[index].id).popover({html: true});
+
                               break;
 
                         case "checkbox":
@@ -348,13 +363,13 @@ function update_info()
                                       .addClass("element")
                                       .data("required", data[index].required)
                                       .data("dispo", data[index].dispo)
-                                 .data("type", "checkbox")
-                                      .data("grupo", data[index].grupo);
-                                   
-                              
+                                      .data("type", "checkbox");
+
+
+
 
                               item.appendTo('.leftDiv');
-                              $("#popover"+data[index].id).popover({html: true});
+
                               break;
 
                         case "multichoice":
@@ -365,12 +380,12 @@ function update_info()
                                       .data("id", data[index].id)
                                       .addClass("element")
                                       .data("required", data[index].required)
-                                      .data("type", "multichoice")
-                                      .data("grupo", data[index].grupo);
+                                      .data("type", "multichoice");
 
-                                 
+
+
                               item.appendTo('.leftDiv');
-                              $("#popover"+data[index].id).popover({html: true});
+
                               break;
 
                         case "textfield":
@@ -380,12 +395,12 @@ function update_info()
                                       .data("id", data[index].id)
                                       .addClass("element")
                                       .data("required", data[index].required)
-                                      .data("type", "textfield")
-                                      .data("grupo", data[index].grupo);
+                                      .data("type", "textfield");
 
-                
+
+
                               item.appendTo('.leftDiv');
-                              $("#popover"+data[index].id).popover({html: true});
+
                               break;
 
                         case "tableradio":
@@ -395,11 +410,11 @@ function update_info()
                                       .data("id", data[index].id)
                                       .addClass("element")
                                       .data("required", data[index].required)
-                                      .data("type", "tableradio")
-                                      .data("grupo", data[index].grupo);
-                
+                                      .data("type", "tableradio");
+
+
                               item.appendTo('.leftDiv');
-                              $("#popover"+data[index].id).popover({html: true});
+
                               break;
 
 
@@ -443,7 +458,6 @@ function populate_element(tipo, element)
             case "texto":
 
 
-                  $("#grupo_edit").val(element.data("grupo"));
 
                   $("#label_tag_texto").text("@" + element.data("id") + "@");
 
@@ -462,7 +476,7 @@ function populate_element(tipo, element)
 
             case "radio":
 
-                  $("#grupo_edit").val(element.data("grupo"));
+
                   $("#label_tag_radio").text("@" + element.data("id") + "@");
                   if (element.data("required") === "1")
                         $("#required_radio").attr('checked', true);
@@ -494,7 +508,7 @@ function populate_element(tipo, element)
 
             case "checkbox":
 
-                  $("#grupo_edit").val(element.data("grupo"));
+
                   $("#label_tag_checkbox").text("@" + element.data("id") + "@");
                   if (element.data("required") === "1")
                         $("#required_checkbox").attr('checked', true);
@@ -525,7 +539,7 @@ function populate_element(tipo, element)
 
             case "multichoice":
 
-                  $("#grupo_edit").val(element.data("grupo"));
+
                   $("#label_tag_multichoice").text("@" + element.data("id") + "@");
                   if (element.data("required") === "1")
                         $("#required_multichoice").attr('checked', true);
@@ -549,7 +563,7 @@ function populate_element(tipo, element)
 
 
             case "textfield":
-                  $("#grupo_edit").val(element.data("grupo"));
+
                   $("#label_tag_textfield").text("@" + element.data("id") + "@");
                   if (element.data("required") === "1")
                         $("#required_textfield").attr('checked', true);
@@ -562,7 +576,7 @@ function populate_element(tipo, element)
             case "tableradio":
 
                   $("#tableradio_edit").val(element.find(".label_geral")[0].innerHTML);
-                  $("#grupo_edit").val(element.data("grupo"));
+
                   $("#label_tag_tableradio").text("@" + element.data("id") + "@");
                   if (element.data("required") === "1")
                         $("#required_tableradio").attr('checked', true);
@@ -609,15 +623,13 @@ function edit_element(opcao, element, data)
                   element.find(".input_texto")[0].maxLength = $("#max_length_edit").val();
 
 
-                  $("#grupo_edit").val($("#grupo_edit").val().replace(/[^0-9]/g, ''));
-                  element.data("grupo", $("#grupo_edit").val());
 
 
 
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", $("#grupo_edit").val(), element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, $("#required_texto").is(':checked'));
+                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, $("#required_texto").is(':checked'));
 
                   break;
- 
+
             case "radio":
                   if ($("#required_radio").is(':checked'))
                         element.data("required", "1");
@@ -658,9 +670,8 @@ function edit_element(opcao, element, data)
                   }
 
 
-                  $("#grupo_edit").val($("#grupo_edit").val().replace(/[^0-9]/g, ''));
-                  element.data("grupo", $("#grupo_edit").val());
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", $("#grupo_edit").val(), element.index(), element.data("dispo"), $("#radio_edit").val(), 0, 0, radios.join(","), $("#required_radio").is(':checked'));
+
+                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", element.index(), element.data("dispo"), $("#radio_edit").val(), 0, 0, radios.join(","), $("#required_radio").is(':checked'));
                   break;
             case "checkbox":
                   if ($("#required_checkbox").is(':checked'))
@@ -701,9 +712,8 @@ function edit_element(opcao, element, data)
                         array_id["checkbox"] = array_id["checkbox"] + 1;
                   }
 
-                  $("#grupo_edit").val($("#grupo_edit").val().replace(/[^0-9]/g, ''));
-                  element.data("grupo", $("#grupo_edit").val());
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "checkbox", $("#grupo_edit").val(), element.index(), element.data("dispo"), $("#checkbox_edit").val(), 0, 0, checkboxs.join(","), $("#required_checkbox").is(':checked'));
+
+                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "checkbox", element.index(), element.data("dispo"), $("#checkbox_edit").val(), 0, 0, checkboxs.join(","), $("#required_checkbox").is(':checked'));
 
 
                   break;
@@ -740,9 +750,8 @@ function edit_element(opcao, element, data)
                         select.append("<option value='" + multichoices[count] + "'>" + multichoices[count] + "</option>");
                   }
 
-                  $("#grupo_edit").val($("#grupo_edit").val().replace(/[^0-9]/g, ''));
-                  element.data("grupo", $("#grupo_edit").val());
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", $("#grupo_edit").val(), element.index(), "h", $("#multichoice_edit").val(), 0, 0, multichoices.join(","), $("#required_multichoice").is(':checked'));
+
+                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", element.index(), "h", $("#multichoice_edit").val(), 0, 0, multichoices.join(","), $("#required_multichoice").is(':checked'));
 
 
 
@@ -757,9 +766,8 @@ function edit_element(opcao, element, data)
                   $("#textfield_edit").val($("#textfield_edit").val().replace(regex_replace_textbox, ''));
                   element.find(".label_geral")[0].innerHTML = $("#textfield_edit").val();
 
-                  $("#grupo_edit").val($("#grupo_edit").val().replace(/[^0-9]/g, ''));
-                  element.data("grupo", $("#grupo_edit").val());
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", $("#grupo_edit").val(), element.index(), "h", "textfield", 0, 0, $("#textfield_edit").val(), $("#required_textfield").is(':checked'));
+
+                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", element.index(), "h", "textfield", 0, 0, $("#textfield_edit").val(), $("#required_textfield").is(':checked'));
                   break;
             case "tableradio":
 
@@ -819,9 +827,8 @@ function edit_element(opcao, element, data)
 
                   }
 
-                  $("#grupo_edit").val($("#grupo_edit").val().replace(/[^0-9]/g, ''));
-                  element.data("grupo", $("#grupo_edit").val());
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", $("#grupo_edit").val(), element.index(), "h", $("#tableradio_edit").val(), titulos.join(","), 0, perguntas.join(","), $("#required_tableradio").is(':checked'));
+
+                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", element.index(), "h", $("#tableradio_edit").val(), titulos.join(","), 0, perguntas.join(","), $("#required_tableradio").is(':checked'));
                   break;
 
 
@@ -838,8 +845,8 @@ function insert_element(opcao, element, data)
                   element.find(".input_texto")[0].placeholder = data.placeholder;
                   element.find(".input_texto")[0].maxLength = data.max_length;
                   break;
-         
-                  break;
+
+
             case "radio":
                   element.empty();
                   element.append($("<label>").addClass("label_radio label_geral").text($("#radio_edit").val()));
@@ -932,14 +939,13 @@ function insert_element(opcao, element, data)
 
 
 
-function item_database(opcao, Id, Id_script, Id_page, Type, Grupo, Ordem, Dispo, Texto, Placeholder, Max_length, Values_text, Required)
+function item_database(opcao, Id, Id_script, Id_page, Type, Ordem, Dispo, Texto, Placeholder, Max_length, Values_text, Required)
 {
       $.post("requests.php", {action: opcao,
             id: Id,
             id_script: Id_script,
             id_page: Id_page,
             type: Type,
-            grupo: Grupo,
             ordem: Ordem,
             dispo: Dispo,
             texto: Texto,
@@ -1024,4 +1030,16 @@ $("#script_remove_button").click(function()
 
 $('#script_selector').change(function() {
       update_pages();
+});
+
+
+
+
+$("#render_go").click(function()
+{
+      var window_slave = window.open("/sips-admin/script_dinamico/render.html");
+});
+$("#report_go").click(function()
+{
+      var window_slave = window.open("/sips-admin/script_dinamico/report.html");
 });

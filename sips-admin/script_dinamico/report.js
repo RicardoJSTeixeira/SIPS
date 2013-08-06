@@ -37,8 +37,6 @@ function update_script()
 }
 function update_pages()
 {
-
-
       $.post("requests.php", {action: "get_pages", id_script: $("#script_selector option:selected").val()},
       function(data)
       {
