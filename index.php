@@ -125,13 +125,13 @@
                             <div class="control-group">
                                 <label class="control-label">Username: </label>
                                 <div class="controls">
-                                    <input type='text' name='sips_username' id='sips_username' style='width:200px' value=''>
+                                    <input type='text' name='sips_username' id='sips_username' value=''>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label">Password: </label>
                                 <div class="controls">
-                                    <input type='password' name='sips_password' id='sips_password' style='width:200px'  value=''>
+                                    <input type='password' name='sips_password' id='sips_password' value=''>
                                 </div>
                             </div>
                             <div class="control-group">
@@ -147,7 +147,7 @@
                 </div>
             <?php
             if (isset($curLogo) && $curLogo != "") {
-                echo "<br><br><img style='width:600px;heigth:200px' src=$curLogo />";
+                echo "<br><br><img src=$curLogo />";
             }
             ?>
             </div>
