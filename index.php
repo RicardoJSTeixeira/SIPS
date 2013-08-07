@@ -110,7 +110,7 @@
         if ($navigation == '') {
             ?>
             <div style="width: 525px;margin: auto;">
-                <img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/go_logo_35.png />
+                <img style='margin-top:10%;' src=../images/pictures/go_logo_35.png />
 
                 <div class="grid">
                     <div class="grid-content">
@@ -156,7 +156,7 @@
 if ($navigation == 'fail') {
     ?>
             <div style="width: 490px;margin: auto;">
-                <img style='margin-top:150px; margin-bottom:32px;' src=../images/pictures/go_logo_35.png />
+                <img style='margin-top:10%;' src=../images/pictures/go_logo_35.png />
 
                 <div class="grid">
                     <div class="grid-content">
