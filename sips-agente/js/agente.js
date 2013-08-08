@@ -1271,69 +1271,69 @@ function stats_update(){
 // ################################################################################
 // Request list of USERONLY callbacks for this agent
 	function CalLBacKsLisTCheck()
-		{   var go_on = divchecker("cback");
-                    if (!go_on) { return; }
-                    if ( AgentDispoing > 0) {
-                        alert_box('Termine Wrap-up da chamada.')
-                        return;
-                    }    
-                    
-                    if  ( AutoDialReady == 0 && auto_dial_level > 0 && pause_code_counter == 0) {
-                        alert_box('Seleccione o motivo de pausa por favor.');
-                        return;
-                    }
-		var move_on=1;
-		if ( (AutoDialWaiting == 1) || (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
-			{
-			if ( (auto_pause_precall == 'Y') && ( (agent_pause_codes_active=='Y') || (agent_pause_codes_active=='FORCE') ) && (AutoDialWaiting == 1) && (VD_live_customer_call!=1) && (alt_dial_active!=1) && (MD_channel_look!=1) && (in_lead_preview_state!=1) )
-				{
-				agent_log_id = AutoDial_ReSume_PauSe("VDADpause",'','','','','1',auto_pause_precall_code);
-				}
-			else
-				{
-				move_on=0;
-				alert_box("Tem que estar em pausa para ver os Call-Backs");
-				}
-			}
-		if (move_on == 1)
-			{
-			LastCallbackViewed=1;
+{
+    var go_on = divchecker("cback");
+    if (!go_on) {
+        return;
+    }
+    if (AgentDispoing > 0) {
+        alert_box('Termine Wrap-up da chamada.')
+        return;
+    }
 
-                        
-					var cb_date_1=document.vicidial_form.cb_date_1.value;
-					var cb_date_2=document.vicidial_form.cb_date_2.value;
-                    $.post("vdc_db_query.php", 
-                    {server_ip: server_ip ,
-                        session_name: session_name ,
-                        ACTION:"CalLBacKLisT",
-                        format:"text",
-                        user: user ,
-                        pass: pass ,
-                        campaign: campaign ,
-                        cb_date_1: cb_date_1 ,
-                        cb_date_2:cb_date_2 },
-                    function(data) {
-                        var tbl_body = "",inactivos="",loop_ct=0;
-                       var tbl_head="<table class=\"table table-mod table-striped table-bordered\"><thead><tr><th> Data Call-back</th><th>Nº Telefone</th><th style='width:150px'>Comentário</th><th>Nome</th><th>Estado</th><th>Campanha</th><th>Última Chamada</th><th>Chamar</th><th>Desactivar Callback</th></tr></thead><tbody>"
-                             $.each(data, function() {
-                            loop_ct++;
-                            var tbl_row = "<td>" + this.callback_time + "</td><td>" + this.phone + "</td><td>" + this.comment + "<a href='#' class=\"btn btn-mini\" onclick=\"VieWLeaDInfO('" + this.lead_id + "','" + this.callback_id + "');return false;\"> mais</a></td><td>" + this.name + "</td><td>" + this.status + "</td><td>" + this.campaign_id + "</td><td>" + this.entry_time + "</td><td><a href='#' class=\"btn\" onclick=\"new_callback_call('" + this.callback_id + "','" + this.lead_id + "','MAIN');return false;\">Chamar</a></td><td> <a href='#' class=\"btn\" onclick=\"ApagaCallback('" + this.callback_id + "');\"> Desactivar </a> </td>";
-                            //and status NOT IN('INACTIVE','DEAD')
-                           if(this.status=="Inativo"){
-                                inactivos+="<tr style='opacity:0.5;' >"+tbl_row+"</tr>";
-                           }else{
-                            tbl_body += "<tr>"+tbl_row+"</tr>"; 
-                           }
-                                          
-                        });
-                        tbl_body +=inactivos;
-                        $("#CallBacKsLisT").html(tbl_head+tbl_body+"</tbody></table>");
-			showDiv('CallBacKsLisTBox');
-                    },"json");
-			
-                        
-			}
-		}
+    if (AutoDialReady == 0 && auto_dial_level > 0 && pause_code_counter == 0) {
+        alert_box('Seleccione o motivo de pausa por favor.');
+        return;
+    }
+    var move_on = 1;
+    if ((AutoDialWaiting == 1) || (VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1))
+    {
+        if ((auto_pause_precall == 'Y') && ((agent_pause_codes_active == 'Y') || (agent_pause_codes_active == 'FORCE')) && (AutoDialWaiting == 1) && (VD_live_customer_call != 1) && (alt_dial_active != 1) && (MD_channel_look != 1) && (in_lead_preview_state != 1))
+        {
+            agent_log_id = AutoDial_ReSume_PauSe("VDADpause", '', '', '', '', '1', auto_pause_precall_code);
+        }
+        else
+        {
+            move_on = 0;
+            alert_box("Tem que estar em pausa para ver os Call-Backs");
+        }
+    }
+    if (move_on == 1)
+    {
+        LastCallbackViewed = 1;
+
+
+        var cb_date_1 = document.vicidial_form.cb_date_1.value;
+        var cb_date_2 = document.vicidial_form.cb_date_2.value;
+        $.post("vdc_db_query.php",
+                {server_ip: server_ip,
+                    session_name: session_name,
+                    ACTION: "CalLBacKLisT",
+                    format: "text",
+                    user: user,
+                    pass: pass,
+                    campaign: campaign,
+                    cb_date_1: cb_date_1,
+                    cb_date_2: cb_date_2},
+        function(data) {
+            var tbl_body = "", inactivos = "";
+            $.each(data, function() {
+                var tbl_row = "<td><time datetime=\"" + this.callback_time + "\" title=\""+moment(this.callback_time).format("dddd, MMMM Do YYYY, hh:mm:ss")+"\" >"+moment(this.callback_time).fromNow()+"</time></td><td>" + this.phone + "</td><td>" + this.comment + "<a href='#' class=\"btn btn-mini\" onclick=\"VieWLeaDInfO('" + this.lead_id + "','" + this.callback_id + "');return false;\"> mais</a></td><td>" + this.name + "</td><td>" + this.status + "</td><td>" + this.campaign_id + "</td><td><time datetime=\"" + this.callback_time + "\" title=\""+moment(this.entry_time).format("dddd, MMMM Do YYYY, hh:mm:ss")+"\" >"+moment(this.entry_time).fromNow()+"</time></td><td><button  onclick=\"new_callback_call('" + this.callback_id + "','" + this.lead_id + "','MAIN');\" class=\"btn btn-mini icon-alone \"><i class=\"icon-phone\"></i></button></td><td> <button onclick=\"ApagaCallback('" + this.callback_id + "');\" class=\"btn btn-mini icon-alone \"><i class=\"icon-trash\"></i></button> </td>";
+                if (this.status == "Inativo") {
+                    inactivos += "<tr style='opacity:0.5;' >" + tbl_row + "</tr>";
+                } else {
+                    tbl_body += "<tr>" + tbl_row + "</tr>";
+                }
+
+            });
+            tbl_body += inactivos;
+            $("#CallBacKsLisT").html(tbl_body);
+            showDiv('CallBacKsLisTBox');
+        }, "json");
+
+
+    }
+}
 
 	function ApagaCallback(cb_id)
 		{
@@ -3965,16 +3965,16 @@ FecharCallbacks();
 			if (VARSELstatuses[loop_ct] == 'Y')
 				{
 				if (VARCBstatuses[loop_ct] == 'Y')
-					{CBflag = '*';}
+					{CBflag = '<i class="icon-book"></i>';}
 				else
 					{CBflag = '';}
 				if (taskDSgrp == VARstatuses[loop_ct]) 
 					{
-					dispo_HTML = dispo_HTML + "<a href=\"#\" onclick=\"DispoSelect_submit();return false;\" class=\"btn btn-success\">" + VARstatusnames[loop_ct] + CBflag + "</a>"; //+ VARstatuses[loop_ct] + " - "
+					dispo_HTML = dispo_HTML + "<a href=\"#\" onclick=\"DispoSelect_submit();return false;\" class=\"btn btn-success\">" + CBflag + VARstatusnames[loop_ct] + "</a>"; //+ VARstatuses[loop_ct] + " - "
 					}
 				else
 					{
-					dispo_HTML = dispo_HTML + "<a href=\"#\" onclick=\"DispoSelectContent_create('" + VARstatuses[loop_ct] + "','ADD');return false;\" class=\"btn\">" + VARstatusnames[loop_ct] +  CBflag + "</a>"; // " + VARstatuses[loop_ct] + "  - 
+					dispo_HTML = dispo_HTML + "<a href=\"#\" onclick=\"DispoSelectContent_create('" + VARstatuses[loop_ct] + "','ADD');return false;\" class=\"btn\">" + CBflag + VARstatusnames[loop_ct] + "</a>"; // " + VARstatuses[loop_ct] + "  - 
 					}
 				if (print_ct == VD_statuses_ct_half) 
 					{dispo_HTML = dispo_HTML + "";}
@@ -6248,8 +6248,6 @@ function phone_number_format(formatphone) {
 	        alert_box('Tem de inserir algum parâmetro de pesquisa.');
 	    } else {
 
-	        $('#result_moradas').html("<img src=/images/icons/ajax-loader.gif id=loader style='display: inline;vertical-align:middle;'> A Procurar...\n");
-
 	        $.post('vdc_db_query.php', {
 	            server_ip: server_ip,
 	            session_name: session_name,
@@ -6259,18 +6257,29 @@ function phone_number_format(formatphone) {
 	            cp_4: cp_4,
 	            cp_3: cp_3
 	        }, function (data) {
-	            $('#result_moradas').html(data + "\n");
-	        });
+                    var content=$('#result_moradas tbody');
+                    content.empty();
+                    $.each(data,function(){
+                        content.append("<tr>\n\
+                                            <td>"+this.rua+"</td>\n\
+                                            <td>"+this.cod_postal+"</td>\n\
+                                            <td>"+this.localidade+"</td>\n\
+                                            <td>"+this.distrito+"</td>\n\
+                                            <td>"+this.conselho+"</td>\n\
+                                            <td><button onclick=\"aplica_morada(this)\" class=\"btn btn-mini icon-alone\" data-rua=\""+this.rua+"\" data-cp7=\""+this.cod_postal+"\" data-localidade=\""+this.localidade+"\" data-distrito=\""+this.distrito+"\" data-conselho=\""+this.conselho+"\"><i class=\"icon-map-marker\"></i></button></td>\n\
+                                        </tr>");
+                    });
+	        },"json");
 
 	    }
 	}
 
-	function aplica_morada(rua, cp7, localidade, freguesia, concelho, distrito) {
-	    $("#address1").val(rua);
-	    $("#postal_code").val(cp7);
-	    $("#city").val(localidade);
-	    $("#state").val(distrito);
-            $("#province").val(concelho);
+	function aplica_morada(that) {
+	    $("#address1").val($(that).data().rua);
+	    $("#postal_code").val($(that).data().cp7);
+	    $("#city").val($(that).data().localidade);
+	    $("#state").val($(that).data().distrito);
+            $("#province").val($(that).data().concelho);
 	    hideDiv('pesquisa_morada');
 	}
 
@@ -6279,55 +6288,57 @@ function phone_number_format(formatphone) {
 // Gather and display lead search data
 	function LeadSearchSubmit()
 		{
-		if ( (AutoDialWaiting == 1) || (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
-			{
-			alert_box("Tem que estar em pausa para pequisar um contacto");
-			}
-		else
-			{
-			showDiv('SearcHResultSDisplaYBox');
+    if ((AutoDialWaiting == 1) || (VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1))
+    {
+        alert_box("Tem que estar em pausa para pequisar um contacto");
+    }
+    else
+    {
+        showDiv('SearcHResultSDisplaYBox');
 
-			document.getElementById('SearcHResultSSpan').innerHTML = "<img src=/images/icons/ajax-loader.gif id=loader style='display: inline;vertical-align:middle;'> A Procurar...\n ";
+        document.getElementById('SearcHResultSSpan').innerHTML = "<tr><td colspan=9 ><img src=/images/icons/ajax-loader.gif id=loader style='display: inline;vertical-align:middle;'> A Procurar...</td></tr> ";
 
-			var xmlhttp=false;
-			/*@cc_on @*
-			/*@if (@_jscript_version >= 5)
-			// JScript gives us Conditional compilation, we can cope with old IE versions.
-			// and security blocked creation of the objects.
-			 try {
-			  xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-			 } catch (e) {
-			  try {
-			   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-			  } catch (E) {
-			   xmlhttp = false;
-			  }
-			 }
-			@end @*/
-			if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-				{
-				xmlhttp = new XMLHttpRequest();
-				}
-			if (xmlhttp)
-				{ 
-				//LSview_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=SEARCHRESULTSview&format=text&user=" + user + "&pass=" + pass + "&conf_exten=" + session_id + "&extension=" + extension + "&protocol=" + protocol + "&phone_number=" + document.vicidial_form.search_phone_number.value + "&lead_id=" + document.vicidial_form.search_lead_id.value + "&vendor_lead_code=" + document.vicidial_form.search_vendor_lead_code.value + "&first_name=" + document.vicidial_form.search_first_name.value + "&last_name=" + document.vicidial_form.search_last_name.value + "&city=" + document.vicidial_form.search_city.value + "&state=" + document.vicidial_form.search_state.value + "&postal_code=" + document.vicidial_form.search_postal_code.value + "&search=" + phone_search_fields + "&campaign=" + campaign + "&stage=<?php echo $HCwidth ?>";
-				LSview_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=SEARCHRESULTSview&format=text&user=" + user + "&pass=" + pass + "&conf_exten=" + session_id + "&extension=" + extension + "&protocol=" + protocol + "&search_field=" + document.vicidial_form.search_field.value + "&search_query=" + encodeURIComponent(document.vicidial_form.search_query.value) + "&campaign=" + campaign + "&stage=<?php echo $HCwidth ?>";
-				xmlhttp.open('POST', 'vdc_db_query.php'); 
-				xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
-				xmlhttp.send(LSview_query); 
-				xmlhttp.onreadystatechange = function() 
-					{ 
-					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) 
-						{
-					//	alert(xmlhttp.responseText);
-						document.getElementById('SearcHResultSSpan').innerHTML = xmlhttp.responseText + "\n";
-						}
-					}
-				delete xmlhttp;
-				}
-			}
-		}
+        //LSview_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=SEARCHRESULTSview&format=text&user=" + user + "&pass=" + pass + "&conf_exten=" + session_id + "&extension=" + extension + "&protocol=" + protocol + "&phone_number=" + document.vicidial_form.search_phone_number.value + "&lead_id=" + document.vicidial_form.search_lead_id.value + "&vendor_lead_code=" + document.vicidial_form.search_vendor_lead_code.value + "&first_name=" + document.vicidial_form.search_first_name.value + "&last_name=" + document.vicidial_form.search_last_name.value + "&city=" + document.vicidial_form.search_city.value + "&state=" + document.vicidial_form.search_state.value + "&postal_code=" + document.vicidial_form.search_postal_code.value + "&search=" + phone_search_fields + "&campaign=" + campaign + "&stage=<?php echo $HCwidth ?>";
+        LSview_query = {server_ip: server_ip, session_name: session_name, ACTION: "SEARCHRESULTSview", format: "text", user: user, pass: pass, conf_exten: session_id, extension: extension, protocol: protocol, search_field: document.vicidial_form.search_field.value, search_query: document.vicidial_form.search_query.value, campaign: campaign};
+        $.post("vdc_db_query.php",
+                LSview_query,
+                function(data) {
+                    var container = $('#SearcHResultSSpan').empty();
+                    if (data.error.length) {
+                        $.each(data.error, function() {
+                            container.append("<tr>\n\
+                                                <td colspan=9 >" + this + "</td>\n\
+                                                </tr>");
+                        }
+                        );
 
+                        return false;
+                    }
+                    $.each(data.leads, function() {
+                        container.append("<tr>\n\
+                                                <td>" + this.name + "</td>\n\
+                                                <td>" + this.phone_number + "</td>\n\
+                                                <td>" + this.status + "</td>\n\
+                                                <td>" + moment(this.call_date).fromNow() + "</td>\n\
+                                                <td>" + this.city + "</td>\n\
+                                                <td>" + this.state + "</td>\n\
+                                                <td>" + this.postal_code + "</td>\n\
+                                                <td><button class=\"btn icon-alone btn-mini\" onclick=\"VieWLeaDInfO(" + this.lead_id + ");\" ><i class=\"icon-info-sign\"></i></button></td>\n\
+                                                <td><button class=\"btn icon-alone btn-mini leadSearchCall\" data-phone='" + this.phone_number + "' \"><i class=\"icon-phone\"></i></button></td>\n\
+                                        </tr>");
+                    });
+                },"json");
+
+
+    }
+}
+
+$(document).on("click",".leadSearchCall",function(){
+
+    $("#SearcHForMDisplaYBox, #SearcHResultSDisplaYBox").hide();
+    document.vicidial_form.MDPhonENumbeR.value = $(this).data().phone;
+    NeWManuaLDiaLCalLSubmiT('PREVIEW');
+});
 
 // ################################################################################
 // Reset lead search form

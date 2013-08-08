@@ -35,8 +35,7 @@ $(function() {
 
 function MsgReader() {
     $.post("ajax/mensagens.php", {action: "get_msgs", sent_agent: user}, function(data) {
-        var HTML_marquee = "";
-        if (data) {
+        
             if (data.msg_alert) {
                 $("#dialog-agent-msg").dialog('option', 'title', '<span style="font-size:13px; color:black">Mensagem Recebida de <span style="color: #0073EA">' + data.msg_alert.from + '</span> enviada a <span style="color: #0073EA">' + moment(data.msg_alert.date).fromNow() + '</span></span>');
                 $("#dialog-agent-msg").dialog("open");
@@ -44,30 +43,28 @@ function MsgReader() {
                 $("#dialog-agent-msg").html("<div class='div-title'>Mensagem</div>" + data.msg_alert.body);
 
             }
+            
+            var HTML_marquee = "";
             if (!Marquee_Count) {
-                if (data.msg_marquee.messages.length) {
+                if (data.msg_marquee.length) {
                     $("#marquee-msg").show();
-                    Marquee_Count = data.msg_marquee.messages.length;
-                    $.each(data.msg_marquee.messages, function() {
+                    Marquee_Count = data.msg_marquee.length;
+                    $.each(data.msg_marquee, function() {
                         HTML_marquee += "<span class=\"msg-marquee\"><b><span style='color: #0073EA'>" + moment(this.date).format('HH:mm:ss') + " </span></b>" + this.body + "</span>";
                     });
                     $("#marquee-msg").html("<marquee style='margin-top:6px' scrolldelay='150'>" + HTML_marquee + "</marquee>");
                 }
-
             }
-            if (data.msg_marquee.messages) {
-                $(".div-marquee").show();
+            
+            if (data.msg_marquee.length) {
+                if (parseInt(Marquee_Count) != parseInt(data.msg_marquee.length)) {
 
-                if (parseInt(Marquee_Count) != parseInt(data.msg_marquee.messages.length)) {
-
-                    $.each(data.msg_marquee.messages, function() {
+                    $.each(data.msg_marquee, function() {
                         HTML_marquee += "<span class=\"msg-marquee\"><b><span style='color: #0073EA'>" + moment(this.date).format('HH:mm:ss') + " </span></b>" + this.body + "</span>";
                     });
                     $("#marquee-msg").html("<marquee style='margin-top:6px' scrolldelay='150'>" + HTML_marquee + "</marquee>");
-                    Marquee_Count = data.msg_marquee.messages.length;
+                    Marquee_Count = data.msg_marquee.length;
                 }
-
-            }
 
         }
     }
