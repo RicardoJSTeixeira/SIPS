@@ -23,43 +23,27 @@ and open the template in the editor.
             <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
             <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
             <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
-
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
             <style>
                   .item { text-align:center; border:1px solid #EEE; background-color:#FFF;padding:10px;}
-
             </style>
       </head>
 
       <body>
-
-
             <div class="grid-title">
                   <div class="pull-left">Páginas<select id="page_selector" ></select></div>
                   <div class="pull-right">Scripts<select id="script_selector"></select></div>
-
-
             </div>
             <div class="grid-content" id="render_zone">
-
-
                   <form style="width:85%;margin:0 auto;" id="myform" ACTION="" METHOD="GET">
                         <div id="script_div" >
-
                         </div>   
-
-
-                        <button    id="submit_button">Submit</button>
-
                   </form>
-
             </div>
-
-
-
-
-
+            <div class="modal-footer ">
+                  <button  class="btn btn-large btn-info"  id="submit_button" style="width:100%" >Submit</button>
+            </div>
             <script type="text/javascript" src="render.js"></script>
       </body>
 </html>

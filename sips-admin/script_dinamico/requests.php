@@ -31,9 +31,27 @@ switch ($action) {
         echo json_encode($js);
         break;
 
+    case "get_results":
+        $query = "SELECT * FROM script_result order by id_elemento ";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_elemento => $row["id_elemento"], valor => $row["valor"]);
+        }
+        echo json_encode($js);
+        break;
+
+    case "get_reduced_data":
+        $query = "SELECT id,type,texto,values_text FROM `script_dinamico` WHERE id in($ids) order by ordem";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(id => $row["id"], type => $row["type"], texto => $row["texto"], values_text => $row["values_text"]);
+        }
+        echo json_encode($js);
+        break;
+
 
     case "get_pages":
-        $query = "SELECT * FROM script_dinamico_pages where id_script=$id_script";
+        $query = "SELECT * FROM script_dinamico_pages where id_script=$id_script order by name";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array(id => $row["id"], name => $row["name"]);
@@ -49,6 +67,8 @@ switch ($action) {
         }
         echo json_encode($js);
         break;
+
+
 
     //------------------------------------------------//
 //-----------------EDIT-------------------------
@@ -98,9 +118,16 @@ switch ($action) {
         break;
 
     case "add_item":
-        $query = "INSERT INTO `asterisk`.`script_dinamico` (`id`, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required) VALUES (NULL, $id_script,$id_page,'$type',$ordem,'$dispo', '$texto', '$placeholder', $max_length, '$values_text',$required)";
-
+         $query = "UPDATE script_dinamico SET ordem=ordem+1 where ordem>=$ordem";
         $query = mysql_query($query, $link) or die(mysql_error());
+        
+        $query = "INSERT INTO `asterisk`.`script_dinamico` (`id`, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required) VALUES (NULL, $id_script,$id_page,'$type',$ordem,'$dispo', '$texto', '$placeholder', $max_length, '$values_text',$required)";
+        $query = mysql_query($query, $link) or die(mysql_error());
+
+       
+        echo json_encode(array(1));
+
+
 
         echo json_encode(mysql_insert_id());
         break;
@@ -117,6 +144,9 @@ switch ($action) {
         break;
 
     case "delete_item":
+           $query = "UPDATE script_dinamico SET ordem=ordem-1 where ordem>$ordem";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        
         $query = "delete from script_dinamico where id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
@@ -143,7 +173,8 @@ switch ($action) {
         $sql = array();
         foreach ($results as $row) {
 
-            $sql[] = "(null,$id_script,'" . $row['name'] . "', '" . $row['value'] . "')";
+            if ($row['value'] != "")
+                $sql[] = "(null,$id_script,'" . $row['name'] . "', '" . $row['value'] . "')";
         }
         $query = "INSERT INTO `script_result`(`id`,id_script, `id_elemento`, `valor`) VALUES " . implode(',', $sql);
         $query = mysql_query($query, $link) or die(mysql_error());
