@@ -4,6 +4,9 @@ for($i=0;$i<$self-2;$i++){$header.="../";}
 define("ROOT", $header);
 require(ROOT."ini/header.php");
 include("../functions.php");
+
+$user = $_SERVER['PHP_AUTH_USER'];
+$pass = $_SERVER['PHP_AUTH_PW'];
 ?>
 
 
@@ -381,7 +384,7 @@ echo "
 <td>$duracao</td>
 <td><a href='$row[location]'><img src='../images/icons/sound_add_16.png'></a></td>
 <td>$row[full_name]</td>
-<td><a target='_new' href='http://goimr.dyndns.org/sips-agente/vdc_form_display.php?submit_button=YES&lead_id=$lead_id&list_id=$lead_info[campaign_id]&user=galpenergia&pass=galpenergia'>Script</a></td>
+<td><a target='_new' href='../../sips-agente/vdc_form_display.php?submit_button=YES&lead_id=$lead_id&list_id=$lead_info[campaign_id]&user=$user&pass=$pass'>Script</a></td>
 </tr>
 ";
 }
