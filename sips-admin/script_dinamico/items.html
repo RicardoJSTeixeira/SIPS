@@ -1,0 +1,87 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="item texto_class"  >
+      <label class="label_texto label_geral" >Caixa de Texto:</label>
+      <input class="input_texto " maxlength="65" type="text" placeholder="Texto padrão" />
+</div>
+
+<div class="item pagination_class" >
+      <button class="btn" onclick=" $('#page_selector option:selected').prev().prop('selected', true);update_info();">Anterior</button>
+      <button class="btn" onclick=" $('#page_selector option:selected').next().prop('selected', true);update_info();">Seguinte</button>
+</div>
+
+
+
+
+<div class="item radio_class" >
+      <label class="label_radio label_geral">Botão de radio:</label>
+      <br>
+      <input  type="radio" id="radio1" name="ra" checked="checked">
+      <label class="radio_name"  for="radio1"><span></span>valor 1</label>
+
+</div>
+
+<div class="item tableradio_class" >
+      <label class="label_tableradio label_geral">Tabela multipla-escolha:</label>
+      <br>
+      <table style="width:100%;">
+            <thead class="tr_head">
+                  <tr >
+                        <td>
+                              Perg.
+                        </td>
+                        <td>
+                              Mau
+                        </td>
+                        <td>
+                              Médio
+                        </td>
+                        <td>
+                              Bom
+                        </td>
+                  </tr>
+            </thead >
+            <tbody class="tr_body">
+                  <tr >
+                        <td>
+                              <label class="label_pergunta">Pergunta1:</label>
+                        </td>
+                        <td>
+                              <input  type="radio" id="tableradio1" name="rb" checked="checked">
+                              <label class="tableradio_name"  for="tableradio1"><span></span></label>
+                        </td>
+                        <td>
+                              <input  type="radio" id="tableradio2" name="rb" checked="checked">
+                              <label class="tableradio_name"  for="tableradio2"><span></span></label>
+                        </td>
+                        <td>
+                              <input type="radio" id="tableradio3" name="rb" checked="checked">
+                              <label class="tableradio_name"  for="tableradio3"><span></span></label>
+                        </td>
+                  </tr>
+            </tbody>
+      </table>
+
+
+</div>
+<div class="item checkbox_class" >
+      <label class="label_checkbox label_geral">Checkbox:</label>
+      <br>
+      <input   type="checkbox" id="checkbox" name="cc" value="1">
+      <label class="checkbox_name" for="checkbox"><span></span>valor 1</label>
+
+</div>
+<div class="item multichoice_class" > 
+      <label class="label_multichoice label_geral">Escolha multipla:</label>
+      <br>
+      <select  class="multichoice_select">
+            <option>opção1</option>
+      </select>
+</div>
+<div class="item textfield_class" > 
+      <label class="label_textfield label_geral">Exempo:	Lorem ipsum dolor sit amcillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</label>
+
+</div>
+

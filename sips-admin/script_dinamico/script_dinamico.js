@@ -1,13 +1,10 @@
 
 
-//////////NOW///////////
-// Ordem da leftdiv-> FINALLY DONE
-
-
 
 ////////TO BE DONE//////////////////
 //fazer render do valor dos elementos dentro dos elementos(tag)
 //Regras
+//relatorio
 
 
 
@@ -21,14 +18,6 @@
 
 
 
-
-/*
- 
- 
- 
- 
- 
- */
 
 /*
  demo limesurvey
@@ -48,85 +37,94 @@ var regex_split = /\n/g;
 
 
 
-$(document).ready(function() {
+$(function() {
       array_id["textbox"] = 0;
       array_id["radio"] = 0;
       array_id["checkbox"] = 0;
       array_id["multichoice"] = 0;
 
-      $(".footer_save_cancel button").prop('disabled', true);
-      $("#tabs").tabs();
-      $(".rightDiv .item").draggable({
-            helper: function(ev, ui) {
-                  return "<span class='helperPick'>" + $(this).html() + "</span>";
-            },
-            connectToSortable: ".leftDiv"
+
+      $.get("items.html", function(data) {
+            $("#rigth_list").html(data);
+
+            $(".footer_save_cancel button").prop('disabled', true);
+            $("#tabs").tabs();
+            $(".rightDiv .item").draggable({
+                  helper: function(ev, ui) {
+                        return "<span class='helperPick'>" + $(this).html() + "</span>";
+                  },
+                  connectToSortable: ".leftDiv"
+            });
+            var removeIntent = false;
+
+            $(".leftDiv").sortable({
+                  'items': ".item",
+                  over: function() {
+                        removeIntent = false;
+                  },
+                  out: function() {
+                        removeIntent = true;
+                  },
+                  beforeStop: function(event, ui) {
+                        if (removeIntent == true) {
+                              item_database("delete_item", $(this).data().uiSortable.currentItem.attr("id"), 0, 0, 0, $(this).data().uiSortable.currentItem.index(), 0, 0, 0, 0, 0, 0);
+                              ui.item.remove();
+                              $("#tabs").tabs("option", "active", 0);
+                              $(".footer_save_cancel button").prop('disabled', true);
+                              $(".editor_layout").hide();
+                        }
+                  },
+                  update: function(event, ui) {
+
+                        var items = $(".leftDiv  .item");
+                        for (var count = 0; count < items.length; count++)
+                        {
+                              item_database("edit_item_order", items[count].id, 0, 0, 0, $("#" + items[count].id).index(), 0, 0, 0, 0, 0, 0);
+                        }
+                  },
+                  receive: function(event, ui) {
+
+                        if ($(this).data().uiSortable.currentItem.hasClass("texto_class"))
+                        {
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .texto_class .label_texto")[0].innerHTML, $(".rightDiv .texto_class .input_texto")[0].placeholder, $(".rightDiv .texto_class .input_texto")[0].maxLength, 0, 0);
+                        }
+                        if ($(this).data().uiSortable.currentItem.hasClass("pagination_class"))
+                        {
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "pagination", $(this).data().uiSortable.currentItem.index(), "h", 0, 0, 0, 0, 0);
+                        }
+                        if ($(this).data().uiSortable.currentItem.hasClass("radio_class"))
+                        {
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_radio")[0].innerHTML, 0, 0, "Valor1", 0);
+                        }
+                        if ($(this).data().uiSortable.currentItem.hasClass("checkbox_class"))
+                        {
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "checkbox", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_checkbox")[0].innerHTML, 0, 0, "Valor1", 0);
+                        }
+                        if ($(this).data().uiSortable.currentItem.hasClass("multichoice_class"))
+                        {
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_multichoice")[0].innerHTML, 0, 0, "Opção1", 0);
+                        }
+                        if ($(this).data().uiSortable.currentItem.hasClass("textfield_class"))
+                        {
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", $(this).data().uiSortable.currentItem.index(), "h", "textfield", 0, 0, $(".rightDiv .label_textfield")[0].innerHTML, 0);
+                        }
+                        if ($(this).data().uiSortable.currentItem.hasClass("tableradio_class"))
+                        {
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", $(this).data().uiSortable.currentItem.index(), "h", "tableradio", "mau,médio,bom", 0, "pergunta1", 0);
+                        }
+                        update_info();
+
+                  }
+            });
+            update_script();
+
+            item_database("get_tag_fields", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+
+
+
       });
-      var removeIntent = false;
 
-      $(".leftDiv").sortable({
-            'items': ".item",
-            over: function() {
-                  removeIntent = false;
-            },
-            out: function() {
-                  removeIntent = true;
-            },
-            beforeStop: function(event, ui) {
-                  if (removeIntent == true) {
-                        item_database("delete_item", $(this).data().uiSortable.currentItem.attr("id"), 0, 0, 0, $(this).data().uiSortable.currentItem.index(), 0, 0, 0, 0, 0,0);
-                        ui.item.remove();
-                        $("#tabs").tabs("option", "active", 0);
-                        $(".footer_save_cancel button").prop('disabled', true);
-                        $(".editor_layout").hide();
-                  }
-            },
-                   
-            update: function(event, ui) {
-
-                  var items = $(".leftDiv  .item");
-                  for (var count = 0; count < items.length; count++)
-                  {
-                        item_database("edit_item_order", items[count].id, 0, 0, 0, $("#" + items[count].id).index(), 0, 0, 0, 0, 0, 0);
-                  }
-            },
-            receive: function(event, ui) {
-
-                  if ($(this).data().uiSortable.currentItem.hasClass("texto_class"))
-                  {
-                        item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .texto_class .label_texto")[0].innerHTML, $(".rightDiv .texto_class .input_texto")[0].placeholder, $(".rightDiv .texto_class .input_texto")[0].maxLength, 0, 0);
-                  }
-                  if ($(this).data().uiSortable.currentItem.hasClass("pagination_class"))
-                  {
-                        item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "pagination", $(this).data().uiSortable.currentItem.index(), "h", 0, 0, 0, 0, 0);
-                  }
-                  if ($(this).data().uiSortable.currentItem.hasClass("radio_class"))
-                  {
-                        item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_radio")[0].innerHTML, 0, 0, "Valor1", 0);
-                  }
-                  if ($(this).data().uiSortable.currentItem.hasClass("checkbox_class"))
-                  {
-                        item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "checkbox", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_checkbox")[0].innerHTML, 0, 0, "Valor1", 0);
-                  }
-                  if ($(this).data().uiSortable.currentItem.hasClass("multichoice_class"))
-                  {
-                        item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_multichoice")[0].innerHTML, 0, 0, "Opção1", 0);
-                  }
-                  if ($(this).data().uiSortable.currentItem.hasClass("textfield_class"))
-                  {
-                        item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", $(this).data().uiSortable.currentItem.index(), "h", "textfield", 0, 0, $(".rightDiv .label_textfield")[0].innerHTML, 0);
-                  }
-                  if ($(this).data().uiSortable.currentItem.hasClass("tableradio_class"))
-                  {
-                        item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", $(this).data().uiSortable.currentItem.index(), "h", "tableradio", "mau,médio,bom", 0, "pergunta1", 0);
-                  }
-                  update_info();
-
-            }
-      });
-      update_script();
-
-      item_database("get_tag_fields", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
       $(document).on("click", ".element", function(e) {
             $(".footer_save_cancel button").prop('disabled', false);
@@ -317,7 +315,6 @@ function update_info()
                                       .data("type", "texto");
                               insert_element("texto", item, data[index]);
                               item.appendTo('.leftDiv');
-
                               break;
 
                         case "pagination":
@@ -328,7 +325,6 @@ function update_info()
                                       .data("type", "pagination");
                               insert_element("pagination", item, data[index]);
                               item.appendTo('.leftDiv');
-
                               break;
 
                         case "radio":

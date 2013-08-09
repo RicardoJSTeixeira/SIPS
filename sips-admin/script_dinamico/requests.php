@@ -146,8 +146,7 @@ switch ($action) {
     case "delete_item":
            $query = "UPDATE script_dinamico SET ordem=ordem-1 where ordem>$ordem";
         $query = mysql_query($query, $link) or die(mysql_error());
-        
-        $query = "delete from script_dinamico where id=$id";
+                $query = "delete from script_dinamico where id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
@@ -162,13 +161,10 @@ switch ($action) {
         echo json_encode(array(1));
         break;
 
-        echo json_encode(array(1));
-        break;
+       
 
 
     case "save_form_result":
-
-
 
         $sql = array();
         foreach ($results as $row) {
