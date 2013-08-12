@@ -3,7 +3,7 @@
 
 var array_id = [];
 
-var tag_regex = /\@([^@]+)\@/;
+var tag_regex = /\@([^@]+)\@/g;
 $(function() {
 
       array_id["radio"] = 0;
@@ -20,21 +20,9 @@ $(function() {
 
 
 
-/*
- if (data.texto.match(tag_regex))
- {
- 
- 
- var temp = data.texto.match(tag_regex);
- var temp2 = $("#" + temp[1]);
- console.log($("#" + temp[1]+" .val").name);
- 
- data.texto = data.texto.replace(tag_regex, $("#" + temp[1]).val());
- }
- */
 
 
-//meter multichoise em div
+
 
 
 
@@ -54,7 +42,7 @@ function insert_element(opcao, element, data)
 
             case "radio":
                   element.empty();
-                  element.append($("<div>").addClass("item radio_class form-inline").attr("id",data.id));
+                  element.append($("<div>").addClass("item radio_class form-inline").attr("id", data.id));
                   element = element.find(".radio_class");
                   element.append($("<label>").addClass("label_radio label_geral").text($("#radio_edit").val()));
                   element.append($("<br>"));
@@ -62,11 +50,13 @@ function insert_element(opcao, element, data)
                   var radios = data.values_text.split(",");
                   for (var count = 0; count < radios.length; count++)
                   {
+
                         if (data.required === "1")
                               element.append($("<input>").attr("type", "radio").prop("required", true).attr("value", radios[count]).attr("id", array_id["radio"] + "radio").attr("name", "radio," + data.id));
                         else
                               element.append($("<input>").attr("type", "radio").attr("value", radios[count]).attr("id", array_id["radio"] + "radio").attr("name", "radio," + data.id));
                         element.append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "radio").text(radios[count]).append($("<span>")));
+
                         if (data.dispo === "v")
                               element.append($("<br>"));
                         array_id["radio"] = array_id["radio"] + 1;
@@ -76,7 +66,7 @@ function insert_element(opcao, element, data)
 
             case "checkbox":
                   element.empty();
-                  element.append($("<div>").addClass("item checkbox_class form-inline").attr("id",data.id));
+                  element.append($("<div>").addClass("item checkbox_class form-inline").attr("id", data.id));
                   element = element.find(".checkbox_class");
                   element.append($("<label>").addClass("label_checkbox label_geral").text($("#checkbox_edit").val()));
                   element.append($("<br>"));
@@ -89,6 +79,7 @@ function insert_element(opcao, element, data)
                         else
                               element.append($("<input>").attr("type", "checkbox").attr("value", checkboxs[count]).attr("id", array_id["checkbox"] + "checkbox").attr("name", "checkbox," + data.id));
                         element.append($("<label>").addClass("checkbox_name").attr("for", array_id["checkbox"] + "checkbox").text(checkboxs[count]).append($("<span>")));
+
                         if (data.dispo === "v")
                               element.append($("<br>"));
                         array_id["checkbox"] = array_id["checkbox"] + 1;
@@ -98,6 +89,8 @@ function insert_element(opcao, element, data)
 
             case "multichoice":
                   element.empty();
+                  element.append($("<div>").addClass("item multichoice_class").attr("id", data.id));
+                  element = element.find(".multichoice_class");
                   element.append($("<label>").addClass("label_multichoice label_geral").text($("#multichoice_edit").val()));
                   element.find(".label_multichoice")[0].innerHTML = data.texto;
                   var multichoices = data.values_text.split(",");
@@ -156,8 +149,34 @@ function insert_element(opcao, element, data)
 
 
 
+function tags()
+{
+      var rz = $("#render_zone");
+      
+      if (rz.html().match(tag_regex))
+      {
+            var temp2 = rz.html().match(tag_regex);
+            var temp = [];
+            $.each(temp2, function() {
+                  if ($.inArray(this, temp) === -1)
+                        temp.push(this);
+            });
 
+            $.each(temp, function() {
+                  var id = this;
+                  id = id.replace(/\@/g, '');
+            console.log(id);
 
+                  var regExp = new RegExp(this,"g");
+                  rz.html(rz.html().replace(regExp, "<span class='" + id + "tag'></span>"));
+
+                  $(document).on("change","#" + id +" input,#" + id +" select",function() {
+                        $("." + id + "tag").text($(this).val());
+                  });
+
+            });
+      }
+}
 
 
 
@@ -219,10 +238,11 @@ function update_info()
             $("#script_div").empty();
 
             $.each(data, function(index, value) {
+                  var item;
                   switch (data[index].type)
                   {
                         case "texto":
-                              var item = $('#dummie .texto_class').clone();
+                              item = $('#dummie .texto_class').clone();
 
                               item.attr("id", data[index].id)
                                       .data("id", data[index].id)
@@ -235,7 +255,7 @@ function update_info()
                               break;
 
                         case "pagination":
-                              var item = $('#dummie .pagination_class').clone();
+                              item = $('#dummie .pagination_class').clone();
                               item.attr("id", data[index].id)
                                       .data("id", data[index].id)
                                       .data("required", data[index].required)
@@ -246,7 +266,7 @@ function update_info()
                               break;
 
                         case "radio":
-                              var item = $('#dummie .radio_class').clone();
+                              item = $('#dummie .radio_class').clone();
                               item.attr("id", data[index].id)
                                       .data("id", data[index].id)
                                       .data("required", data[index].required)
@@ -257,7 +277,7 @@ function update_info()
 
                               break;
                         case "checkbox":
-                              var item = $('#dummie .checkbox_class').clone();
+                              item = $('#dummie .checkbox_class').clone();
 
                               item.attr("id", data[index].id)
                                       .data("id", data[index].id)
@@ -269,7 +289,7 @@ function update_info()
 
                               break;
                         case "multichoice":
-                              var item = $('#dummie .multichoice_class').clone();
+                              item = $('#dummie .multichoice_class').clone();
 
                               item.attr("id", data[index].id)
                                       .data("id", data[index].id)
@@ -280,7 +300,7 @@ function update_info()
 
                               break;
                         case "textfield":
-                              var item = $('#dummie .textfield_class').clone();
+                              item = $('#dummie .textfield_class').clone();
 
                               item.attr("id", data[index].id)
                                       .data("id", data[index].id)
@@ -291,7 +311,7 @@ function update_info()
 
                               break;
                         case "tableradio":
-                              var item = $('#dummie .tableradio_class').clone();
+                              item = $('#dummie .tableradio_class').clone();
 
                               item.attr("id", data[index].id)
                                       .data("id", data[index].id)
@@ -306,6 +326,7 @@ function update_info()
 
             });
 
+            tags();
       }, "json");
 
 }

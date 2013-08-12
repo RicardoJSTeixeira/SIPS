@@ -1,5 +1,5 @@
 
-
+//separar regex das tags, n deixar entrar tags no placeholder
 
 ////////TO BE DONE//////////////////
 //fazer render do valor dos elementos dentro dos elementos(tag)
@@ -30,9 +30,9 @@ var selected_id = 0;
 var selected_type = "";
 var array_id = [];
 var regex_remove_blank = /^\s*$[\n\r]{1,}/gm;
-var regex_replace_textbox = /[^a-zA-Z0-9éçã\s:@§óáà?]/g;
-
-var regex_replace = /[^a-zA-Z0-9éçã\n§@\s?]/g;
+var regex_replace_textbox_tag = /[^a-zA-Z0-9éçã\s:@§óáà?]/g;
+var regex_replace_textbox = /[^a-zA-Z0-9éçã\s:§óáà?]/g;
+var regex_replace = /[^a-zA-Z0-9éçã\n§\s?]/g;
 var regex_split = /\n/g;
 
 
@@ -572,8 +572,8 @@ function edit_element(opcao, element, data)
       switch (opcao)
       {
             case "texto":
-                  $("#texto_edit").val($("#texto_edit").val().replace(regex_replace_textbox, ''));
-                  $("#placeholder_edit").val($("#placeholder_edit").val().replace(regex_replace_textbox, ''));
+                  $("#texto_edit").val($("#texto_edit").val().replace(regex_replace_textbox_tag, ''));
+                  $("#placeholder_edit").val($("#placeholder_edit").val().replace(regex_replace_textbox_tag, ''));
                   $("#max_length_edit").val($("#max_length_edit").val().replace(/[^0-9]/g, ''));
                   if ($("#required_texto").is(':checked'))
                         element.data("required", "1");
@@ -596,7 +596,7 @@ function edit_element(opcao, element, data)
                   else
                         element.data("dispo", "h");
                   element.empty();
-                  $("#radio_edit").val($("#radio_edit").val().replace(regex_replace_textbox, ''));
+                  $("#radio_edit").val($("#radio_edit").val().replace(regex_replace_textbox_tag, ''));
                   element.append($("<label>").addClass("label_radio label_geral").text($("#radio_edit").val()));
                   element.append($("<br>"));
                   $("#radio_textarea").val($("#radio_textarea").val().replace(regex_replace, ''));
@@ -629,7 +629,7 @@ function edit_element(opcao, element, data)
                         element.data("dispo", "h");
 
                   element.empty();
-                  $("#checkbox_edit").val($("#checkbox_edit").val().replace(regex_replace_textbox, ''));
+                  $("#checkbox_edit").val($("#checkbox_edit").val().replace(regex_replace_textbox_tag, ''));
                   element.append($("<label>").addClass("label_checkbox label_geral").text($("#checkbox_edit").val()));
                   element.append($("<br>"));
                   $("#checkbox_textarea").val($("#checkbox_textarea").val().replace(regex_replace, ''));
@@ -659,7 +659,7 @@ function edit_element(opcao, element, data)
                   else
                         element.data("required", "0");
                   element.empty();
-                  $("#multichoice_edit").val($("#multichoice_edit").val().replace(regex_replace_textbox, ''));
+                  $("#multichoice_edit").val($("#multichoice_edit").val().replace(regex_replace_textbox_tag, ''));
                   element.append($("<label>").addClass("label_multichoice label_geral").text($("#multichoice_edit").val()));
                   $("#multichoice_textarea").val($("#multichoice_textarea").val().replace(regex_replace, ''));
                   var multichoices = $("#multichoice_textarea").val().split(regex_split);
@@ -683,7 +683,7 @@ function edit_element(opcao, element, data)
                         element.data("required", "1");
                   else
                         element.data("required", "0");
-                  $("#textfield_edit").val($("#textfield_edit").val().replace(regex_replace_textbox, ''));
+                  $("#textfield_edit").val($("#textfield_edit").val().replace(regex_replace_textbox_tag, ''));
                   element.find(".label_geral")[0].innerHTML = $("#textfield_edit").val();
                   item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", element.index(), "h", "textfield", 0, 0, $("#textfield_edit").val(), $("#required_textfield").is(':checked'));
                   break;
