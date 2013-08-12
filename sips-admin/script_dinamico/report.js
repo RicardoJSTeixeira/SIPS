@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 $(function() {
-   
+
       update_script();
 
 
@@ -29,37 +29,45 @@ function update_script()
                   $.each(data, function(index, value) {
                         $("#script_selector").append("<option value=" + data[index].id + ">" + data[index].name + "</option>");
                   });
-                  update_pages();
+                  get_results();
             }
       }, "json");
 
 
 }
-function update_pages()
+
+
+
+
+function get_results()
 {
-
-
-      $.post("requests.php", {action: "get_pages", id_script: $("#script_selector option:selected").val()},
+      $.post("requests.php", {action: "get_results", id_script: $("#script_selector option:selected").val()},
       function(data)
       {
-            if (data == null)
-            {
+            var ids = "";
+            $.each(data, function(index, value) {
+                  ids = ids + data[index].id_elemento.split(",")[1] + ",";
+            });
+            ids = ids.slice(0, -1);
 
-                  alert("no page");
-            }
-            else
+            $.post("requests.php", {action: "get_reduced_data", ids: ids},
+            function(data1)
             {
+                
+                  $.each(data1, function(index, value) {
 
-                  var pag = $("#page_selector").val();
-                  $("#page_selector").empty();
-                  $.each(data, function(index, value) {
-                        if (pag === data[index].id)
-                              $("#page_selector").append("<option value=" + data[index].id + " selected>" + data[index].name + "</option>");
-                        else
-                              $("#page_selector").append("<option value=" + data[index].id + ">" + data[index].name + "</option>");
+//falta ligar os dados e mostrar tudo
+
                   });
-       
-            }
+
+            }, "json");
+
+
+
+
+
+
+
       }, "json");
 
 }

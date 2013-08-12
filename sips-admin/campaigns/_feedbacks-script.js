@@ -116,7 +116,7 @@ function FeedElemInit()
 	$("#dialog-edit-feed").dialog({ 
     title: "<table><tr><td><img class='dialog-icon-title' src='icons/mono_wrench_16.png'></td><td><span class='dialog-title'>Configuração de Feedbacks</span></td></tr></table>",
     autoOpen: false,
-    height: 525,
+    height: 625,
     width: 550,
     resizable: false,
     buttons: { "Gravar" : DialogEditFeedOnSave,
@@ -346,7 +346,43 @@ function DialogEditFeedOnSave()
                         
                         $(this).dialog("close"); 
                      
-                     
+                    
+                    var edited_att_id = new Array();    
+                    var edited_att_active = new Array();    
+                    
+                       $.each($(".checkbox-edit-feed-att"), function(index, value){
+                       edited_att_id.push($(this).attr("name"));
+                       
+                       if($(this).attr("name") == "Call-Back") {   
+                           if ($(this).parent().hasClass("checked") ) {
+                               $("[feed-id="+editedFeed+"] td:nth-child(6) span").addClass("checked");
+                           } else {
+                               $("[feed-id="+editedFeed+"] td:nth-child(6) span").removeClass("checked");
+                           }
+                       }
+                           
+                       if($(this).parent().hasClass("checked")) {
+                           edited_att_active.push("Y");
+                       } else {
+                           edited_att_active.push("N");
+                       }
+                    });    
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: "_feedbacks-requests.php",
+                        data: { action: "SaveEditedAtt",
+                                FeedID: editedFeed,
+                                CampaignID: CampaignID,
+                                EditedAttID: edited_att_id,
+                                EditedAttActive: edited_att_active,
+                              },
+                        success: function(data) { 
+                            
+                        }
+                    });
+                    
+                    
                     var edited_campaigns_id = new Array();
                     var edited_campaigns_active = new Array();
                     
@@ -428,6 +464,34 @@ function DialogEditFeedOnOpen()
             $("#table-edit-feed-campaigns-1").hide();
             $("#table-edit-feed-campaigns-2").hide();
             
+            $.ajax({
+               type: "POST",
+               url: "_feedbacks-requests.php",
+               dataType: "JSON",
+               data: { action: "GetFeedAttributes",
+                      CampaignID: CampaignID,  
+                      FeedID: editedFeed
+                    },
+               success: function(data) {
+                  var counter = 1;
+                  var checked_code; 
+                  $("#table-edit-feed-att-1").empty();
+                  $("#table-edit-feed-att-2").empty();
+                  $.each(data, function(index, value){
+                      if(value == "Y"){ checked_code = "checked='checked'";} else { checked_code = "";}  
+                      if( ((counter/2) % 1) != 0 )
+                      {
+                        $("#table-edit-feed-att-1").append("<tr><td><input class='checkbox-edit-feed-att' type='checkbox' "+checked_code+" value='"+value+"' name='"+index+"' id='"+index+"'><label style='display:inline; ' for='"+index+"'>"+index+"</label></td></tr>");
+                      } else {
+                        $("#table-edit-feed-att-2").append("<tr><td><input class='checkbox-edit-feed-att' type='checkbox' "+checked_code+" value='"+value+"' name='"+index+"' id='"+index+"'><label style='display:inline; ' for='"+index+"'>"+index+"</label></td></tr>");
+                      }
+                      counter++
+                  })
+                  $(".checkbox-edit-feed-att").uniform();
+               }
+            });
+            
+            
              
             $.ajax({
                     type: "POST",
@@ -440,7 +504,7 @@ function DialogEditFeedOnOpen()
                     success: function(data) {
                         alteredFeeds = {};
                         var checked_code;
-                        var BoldCurrent;
+                        var CurrentBold;
                         
                         $("#table-edit-feed-campaigns-1").empty();
                         $("#table-edit-feed-campaigns-2").empty();
