@@ -162,6 +162,43 @@ function ApplyFeedsToAllCampaings($CampaignID, $FeedID, $FeedName, $FeedActive, 
 	mysql_query("UPDATE sips_campaign_stats SET feedbacks = '$counter'", $link) or die(mysql_error());
 }
 
+function GetFeedAttributes($FeedID, $CampaignID, $link) {
+    $qryTxt = "SELECT * FROM vicidial_campaign_statuses where status LIKE '$FeedID' AND campaign_id LIKE '$CampaignID'";
+    $query = mysql_query($qryTxt, $link) or die(mysql_error());
+    $qryRslt = mysql_fetch_assoc($query);
+      
+    $js['Resposta Humana'][] = $qryRslt['human_answered'];
+    $js['Sucesso'][] = $qryRslt['sale'];
+    $js['Lista Negra'][] = $qryRslt['dnc'];
+    $js['Contacto Útil'][] = $qryRslt['customer_contact'];
+    $js['Negativo'][] = $qryRslt['not_interested'];
+    $js['Não Útil'][] = $qryRslt['unworkable'];
+    $js['Call-Back'][] = $qryRslt['scheduled_callback'];
+    $js['Contacto Fechado'][] = $qryRslt['completed'];
+    
+    
+    echo json_encode($js);
+}
+
+function SaveEditedAtt($FeedID, $CampaignID, $EditedAttID, $EditedAttActive, $link) {
+    
+        $qry = "UPDATE vicidial_campaign_statuses set 
+            human_answered = '$EditedAttActive[0]',
+            dnc = '$EditedAttActive[1]',
+            not_interested = '$EditedAttActive[2]',
+            scheduled_callback = '$EditedAttActive[3]',
+                
+            sale = '$EditedAttActive[4]',    
+            customer_contact = '$EditedAttActive[5]',
+            unworkable = '$EditedAttActive[6]',
+            completed = '$EditedAttActive[7]'
+            
+        where status LIKE '$FeedID' ";   
+        
+        mysql_query($qry, $link) or die(mysql_error());
+    
+}
+
 switch($action)
 {
 	case "FeedListBuilder" : FeedListBuilder($CampaignID, $AllowedCampaigns, $FeedName, $Human, $Callback, $Flag, $link); break; 
@@ -174,7 +211,9 @@ switch($action)
 	case "ShowFeed" : ShowFeed($FeedID, $link); break; 
 	case "SaveEditedFeed" : SaveEditedFeed($FeedID, $FeedName, $EditedCampaignID, $EditedCampaignActive, $AlteredFeeds, $link); break; 	
 	case "GetFeedEditCampaigns" : GetFeedEditCampaigns($FeedID, $AllowedCampaigns, $link); break; 	
-	case "ApplyFeedsToAllCampaings" : ApplyFeedsToAllCampaings($CampaignID, $FeedID, $FeedName, $FeedActive, $Callback, $Human, $link); break; 		
+	case "ApplyFeedsToAllCampaings" : ApplyFeedsToAllCampaings($CampaignID, $FeedID, $FeedName, $FeedActive, $Callback, $Human, $link); break; 
+        case "GetFeedAttributes": GetFeedAttributes($FeedID, $CampaignID, $link); break;
+        case "SaveEditedAtt": SaveEditedAtt($FeedID, $CampaignID, $EditedAttID, $EditedAttActive, $link); break;
 }
 ?>
 
