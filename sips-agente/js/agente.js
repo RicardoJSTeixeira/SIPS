@@ -9239,4 +9239,7 @@ $(document).bind("keydown", disableF5);
                                     $("#cb_date_1").datepicker("option", "maxDate", selectedDate);
                                 }
                             });
+                            
+                            setTimeout(function(){AgentsViewOpen('AgentViewSpan', 'open');}, 2000)
+                            
                         });
