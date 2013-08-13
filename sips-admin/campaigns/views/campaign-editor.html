@@ -8,13 +8,14 @@
             <li id="li-recycle"><a href="#tab4">Reciclagem</a></li> 
             <li id="li-scripts"><a href="#tab5">Scripts</a></li> 
             <li id="li-dfields"><a href="#tab6">Campos Dinâmicos</a></li>
-            <li id="li-dbs"><a href="#tab7">Bases de Dados</a></li>  
+            <li id="li-dbs"><a href="#tab7">Bases de Dados</a></li>
+            <li id="li-dialer"><a href="#tab8">Dialer</a></li>  
         </ul>
         
 		<!-- OPÇÕES GERAIS -->
         <div id="tab1">
         
-        	<table  class="table-100"> 
+        	<table class="table-100"> 
         	<tr>
             	<td class="td-half-left">
             	<div class="div-title">Definições<span class="css-orange-caret">></span>Identificação</div>
@@ -68,7 +69,7 @@
                     </table>
                     	
                     
-                    </div>
+                    </div> 
 				</td>
 
             	<td class="td-half-right">
@@ -90,6 +91,7 @@
                         <td class="tright">
                         <input type="radio" class='campaign-type-switch' id="campaign_type_auto" name="campaign_type" /><label for="campaign_type_auto">Automática</label>
                         <input type="radio" class='campaign-type-switch' id="campaign_type_manual" name="campaign_type" /><label for="campaign_type_manual">Manual</label>
+                        <input type="radio" class='campaign-type-switch' id="campaign_type_predictive" name="campaign_type" /><label for="campaign_type_predictive"><i>Predictive</i></label>
                         </td>
 					</tr>
                     <tr class="tr-options">
@@ -334,14 +336,14 @@
 						<td class="td-action td-action-next"><button class="btn-action feed-hidden-switch" id="btn-feeds-active-inactive-switch"><img class="img-action" src='icons/mono_notconnected_16.png'></button></td>
                         <td class="td-action-next">Ver Feedbacks <span id="span-feeds-active-inactive">inactivos</span>.</td>
                         </tr>
-                    </table>
+                    </table> 
    	        </td>
             
             <td class="td-half-right">
                     <div class="div-title">Feedbacks<span class='css-orange-caret'>></span>Criar novo Feedback</div>
                 	<table>
                     <tr>
-                        <td width=284px><input class="input-text" style='width:272px' maxlength="20" type="text" id="input-new-feed-name"></td>
+                        <td width=284px><input class="input-text" style='width:272px' maxlength="100" type="text" id="input-new-feed-name"></td>
                         <td width="150px" valign="bottom"><span style="font-size:10px; margin:0px 0px 0px 0px">(max. 20 caracteres)</span></td>
                       
                         <td width="20px"><input type='checkbox' checked="checked" id='input-new-feed-human' /></td>
@@ -848,7 +850,33 @@
         
 </div>
         
+      <div id="tab8">
+        
+            <table  class="table-100"> 
+            <tr>
+                <td class="td-half-left">
+                <div class="div-title">Dialer<span class="css-orange-caret">></span>Opções</div>
+                
+                  
+                
+                   
+                 
+                </td>
 
+                <td class="td-half-right">
+                
+                    <div class="div-title">Definições<span class='css-orange-caret'>></span>Opções Gerais</div>
+                    
+
+                </td>
+                             
+                
+            </tr>
+            </table>
+            
+
+        
+        </div>     
 
     	<!-- DIALOGS -->
 		        
@@ -1163,12 +1191,12 @@
 
         </div> 
         
-		<div id="dialog-confirm-pause-apply-to-all-campaigns" style="display:none">
+            <div id="dialog-confirm-pause-apply-to-all-campaigns" style="display:none">
             <div class="div-title">Confirmação</div>
             Esta opção vai aplicar as definições da Campanha actual a <b>todas as Campanhas</b> existentes em sistema. <br /><br /> Clique <b><i>OK</i></b> para confirmar ou <b><i>Cancelar</i></b> para cancelar as alterações. 
-        </div> 
+            </div> 
  		<!-- tab3 -->
-		<div id="dialog-edit-feed" style="display:none">
+	    <div id="dialog-edit-feed" style="display:none">
             <div class="div-title">Editar Feedback<span class='css-orange-caret'>></span>Nome</div>
             <table>
             <tr>
@@ -1181,9 +1209,18 @@
            
             </tr>
             </table>
-            
+            <div class="div-title">Editar Feedbacks<span class='css-orange-caret'>></span>Atributos de Feedbacks</div>           
+            <table >
+                <tr>
+                    <td width="50%" valign="top"><table id="table-edit-feed-att-1"></table></td>
+                    <td width="50%" valign="top"><table id="table-edit-feed-att-2"></table></td>  
+                </tr>
+                
+            </table>    
             <div class="div-title">Editar Feedback<span class='css-orange-caret'>></span>Lista de Campanhas</div>
+            
             <div style='height:192px; overflow:auto;'>
+            
             <table id="table-edit-feed-campaigns">
                 <tr>
                     <td width="50%" valign="top"><table id="table-edit-feed-campaigns-1"></table></td>
@@ -1206,19 +1243,7 @@
                 </tr>
             </table>
             
-            
-            
-            
-            
-            
-        <!--    <div class="div-title"></div>
-            <table>
-            <tr>
-            <td style='text-align:left; width:33%;'><button id="btn-edit-feed-all-campaigns">Todas</button></td>
-            <td style='text-align:center; width:33%;'><button id="btn-edit-feed-current-campaign">Actual</button></td>
-            <td style='text-align:right; width:33%;'><button id="btn-edit-feed-no-campaigns">Nenhuma</button></td>
-            </tr>
-            </table> -->
+         
         </div> 
 		<!-- tab4 -->
 		<!-- DIALOG EDIT RECYCLE -->        

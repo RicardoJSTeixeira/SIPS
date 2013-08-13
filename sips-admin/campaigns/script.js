@@ -316,7 +316,7 @@ $(window).on('beforeunload', function()
 
   
 });
-
+ 
 $("body").on("click", "#img-campaign-edit",  ConstructEditCampaign)
 .on("click", "#btn-new-campaign", ConstructNewCampaign )
 .on("click", ".btn-nav-prev", ConstructCampaignMonitor )

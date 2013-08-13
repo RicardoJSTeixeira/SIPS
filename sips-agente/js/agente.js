@@ -1373,7 +1373,7 @@ function stats_update(){
                             }
                            tpausa.append(
                                     $("<tr>")
-                                    .append($("<td>").text(this.pause))
+                                    .append($("<th>").text(this.pause))
                                     .append($("<td>").html(time_label))
                                     );
                         });
@@ -1385,11 +1385,11 @@ function stats_update(){
 // closes callback list screen
 	function alert_box(temp_message)
 		{
-		document.getElementById("AlertBoxContent").innerHTML = temp_message;
+		$("#AlertBoxContent").html(temp_message);
 
 		showDiv('AlertBox');
 
-		document.alert_form.alert_button.focus();
+		$("#alert_button").focus();
 		}
 
 
@@ -1532,16 +1532,9 @@ function stats_update(){
                     document.getElementById("ManuaLDiaLGrouP").innerHTML = "<a href=\"#\" onclick=\"GroupAliasSelectContent_create('0');\"><font size=\"1\" face=\"Arial,Helvetica\">Click Here to Choose a Group Alias</font></a>";
 					}
 				showDiv('NeWManuaLDiaLBox');
-                                $("#MDPhonENumbeR").focus()
+                                $("#MDPhonENumbeR").focus();
 
-				document.vicidial_form.search_phone_number.value='';
-				document.vicidial_form.search_lead_id.value='';
-				document.vicidial_form.search_vendor_lead_code.value='';
-				document.vicidial_form.search_first_name.value='';
-				document.vicidial_form.search_last_name.value='';
-				document.vicidial_form.search_city.value='';
-				document.vicidial_form.search_state.value='';
-				document.vicidial_form.search_postal_code.value='';
+				
 				}
 			}
 		}
@@ -3933,71 +3926,60 @@ function stats_update(){
 // Generate the Call Disposition Chooser panel
 	function DispoSelectContent_create(taskDSgrp,taskDSstage)
 		{
-		if (customer_3way_hangup_dispo_message.length > 1)
-			{
-            document.getElementById("Dispo3wayMessage").innerHTML = "<br /><b><font color=\"red\" size=\"3\">" + customer_3way_hangup_dispo_message + "</font></b><br />";
-			}
-		if (APIManualDialQueue > 0)
-			{
-            document.getElementById("DispoManualQueueMessage").innerHTML = "<br /><b><font color=\"red\" size=\"3\">Manual Dial Queue Calls Waiting: " + APIManualDialQueue + "</font></b><br />";
-			}
-		if (per_call_notes == 'ENABLED')
-			{
-			var test_notes = document.vicidial_form.call_notes_dispo.value;
-			if (test_notes.length > 0)
-				{document.vicidial_form.call_notes.value = document.vicidial_form.call_notes_dispo.value}
-            document.getElementById("PerCallNotesContent").innerHTML = "<br /><b><font size=\"3\">Call Notes: </font></b><br /><textarea name=\"call_notes_dispo\" id=\"call_notes_dispo\" rows=\"2\" cols=\"100\" class=\"cust_form_text\" value=\"\">" + document.vicidial_form.call_notes.value + "</textarea>";
-			}
-		else
-			{
-            document.getElementById("PerCallNotesContent").innerHTML = "<input type=\"hidden\" name=\"call_notes_dispo\" id=\"call_notes_dispo\" value=\"\" />";
-			}
-FecharCallbacks();
-		HidEGenDerPulldown();
-		AgentDispoing = 1;
-		var CBflag = '';
-		var VD_statuses_ct_half = parseInt(VARSELstatuses_ct / 2);
-        var dispo_HTML = "<td colspan=2 >";
-		var loop_ct = 0;
-		var print_ct = 0;
-		while (loop_ct < VD_statuses_ct)
-			{
-			if (VARSELstatuses[loop_ct] == 'Y')
-				{
-				if (VARCBstatuses[loop_ct] == 'Y')
-					{CBflag = '<i class="icon-book"></i>';}
-				else
-					{CBflag = '';}
-				if (taskDSgrp == VARstatuses[loop_ct]) 
-					{
-					dispo_HTML = dispo_HTML + "<a href=\"#\" onclick=\"DispoSelect_submit();return false;\" class=\"btn btn-success\">" + CBflag + VARstatusnames[loop_ct] + "</a>"; //+ VARstatuses[loop_ct] + " - "
-					}
-				else
-					{
-					dispo_HTML = dispo_HTML + "<a href=\"#\" onclick=\"DispoSelectContent_create('" + VARstatuses[loop_ct] + "','ADD');return false;\" class=\"btn\">" + CBflag + VARstatusnames[loop_ct] + "</a>"; // " + VARstatuses[loop_ct] + "  - 
-					}
-				if (print_ct == VD_statuses_ct_half) 
-					{dispo_HTML = dispo_HTML + "";}
-				print_ct++;
-				}
-			loop_ct++;
-			}
-		dispo_HTML = dispo_HTML + "</td>";
-
-		if (taskDSstage == 'ReSET') {document.vicidial_form.DispoSelection.value = '';}
-		else {document.vicidial_form.DispoSelection.value = taskDSgrp;}
-		
-		document.getElementById("DispoSelectContent").innerHTML = dispo_HTML;
-		if (focus_blur_enabled==1)
-			{
-			document.inert_form.inert_button.focus();
-			document.inert_form.inert_button.blur();
-			}
-		if (my_callback_option == 'CHECKED')
-			{
-                        //document.vicidial_form.CallBackOnlyMe.checked=true;
+                        if (customer_3way_hangup_dispo_message.length > 1)
+                        {
+                            document.getElementById("Dispo3wayMessage").innerHTML = "<br /><b><font color=\"red\" size=\"3\">" + customer_3way_hangup_dispo_message + "</font></b><br />";
                         }
-		}
+                        if (APIManualDialQueue > 0)
+                        {
+                            document.getElementById("DispoManualQueueMessage").innerHTML = "<br /><b><font color=\"red\" size=\"3\">Manual Dial Queue Calls Waiting: " + APIManualDialQueue + "</font></b><br />";
+                        }
+                        if (per_call_notes == 'ENABLED')
+                        {
+                            var test_notes = document.vicidial_form.call_notes_dispo.value;
+                            if (test_notes.length > 0)
+                            {
+                                document.vicidial_form.call_notes.value = document.vicidial_form.call_notes_dispo.value;
+                            }
+                            document.getElementById("PerCallNotesContent").innerHTML = "<br /><b><font size=\"3\">Call Notes: </font></b><br /><textarea name=\"call_notes_dispo\" id=\"call_notes_dispo\" rows=\"2\" cols=\"100\" class=\"cust_form_text\" value=\"\">" + document.vicidial_form.call_notes.value + "</textarea>";
+                        }
+                        else
+                        {
+                            document.getElementById("PerCallNotesContent").innerHTML = "<input type=\"hidden\" name=\"call_notes_dispo\" id=\"call_notes_dispo\" value=\"\" />";
+                        }
+                        FecharCallbacks();
+                        HidEGenDerPulldown();
+                        AgentDispoing = 1;
+                        var CBflag = '';
+                        var dispo_HTML = "";
+                        $.each(campaign_status, function() {
+                            CBflag = (this.callback) ? '<i class="icon-book"></i>' : "";
+                            if (taskDSgrp == this.status) {
+                                dispo_HTML = dispo_HTML + "<a href=\"#\" onclick=\"DispoSelect_submit();return false;\" class=\"btn btn-success\">" + CBflag + this.name + "</a>";
+                            } else {
+                                dispo_HTML = dispo_HTML + "<a href=\"#\" onclick=\"DispoSelectContent_create('" + this.status + "','ADD');return false;\" class=\"btn\">" + CBflag + this.name + "</a>";
+                            }
+                        });
+
+
+                        if (taskDSstage == 'ReSET') {
+                            document.vicidial_form.DispoSelection.value = '';
+                        }
+                        else {
+                            document.vicidial_form.DispoSelection.value = taskDSgrp;
+                        }
+
+                        document.getElementById("DispoSelectContent").innerHTML = dispo_HTML;
+                        if (focus_blur_enabled == 1)
+                        {
+                            document.inert_form.inert_button.focus();
+                            document.inert_form.inert_button.blur();
+                        }
+                        if (my_callback_option == 'CHECKED')
+                        {
+                            document.vicidial_form.tipo_callback.checked = true;
+                        }
+                    }
                 //Dispo Search
                 $(document).on("input","#dispo_search",	function(){
                 var that =this;
@@ -4211,39 +4193,49 @@ FecharCallbacks();
 		
 		var SelectedFeedback = document.vicidial_form.DispoSelection.value;
 		
-		if(SelectedFeedback === "MARC"){ 
-		
-		
-		if($("#vcFormIFrame").contents().find(".radiocheck-required:checked").length){
-			
-			if($("#vcFormIFrame").contents().find(".radiocheck-required:checked").val() === "CATOS"){
-					if($("#vcFormIFrame").contents().find(".multiple-requiredconsultorio option:selected").val() === "nenhum" || typeof $("#vcFormIFrame").contents().find(".multiple-requiredconsultorio option:selected").html() === "undefined" ) {alert_box("Campo do CATO com erros de preenchimento ou vazio.");  return false;}
-			}
-			if($("#vcFormIFrame").contents().find(".radiocheck-required:checked").val() === "Branch"){
-					if($("#vcFormIFrame").contents().find(".multiple-requiredconsultoriodois option:selected").val() === "nenhum" || typeof $("#vcFormIFrame").contents().find(".multiple-requiredconsultoriodois option:selected").html() === "undefined" ) {alert_box("Campo do Consultório com erros de preenchimento ou vazio."); return false;}
-			}
-			
-			 } else { alert_box("Campo do tipo de consulta com erros de preenchimento."); return false; }
-		
+                if (SelectedFeedback === "MARC") {
 
-		
-		
-		if($("#vcFormIFrame").contents().find(".hour-required").val().length === "---" ){ alert_box("Campo da Hora da Marcação com erros de preenchimento ou vazio."); return false; }
-		if($("#vcFormIFrame").contents().find(".minute-required").val().length === "---" ){ alert_box("Campo dos Minutos da Marcação com erros de preenchimento ou vazio."); return false; }
-		if($("#vcFormIFrame").contents().find(".date-required").val().length <= 0 ){ alert_box("Campo da Data da Marcação com erros de preenchimento ou vazio."); return false; }
-		
-		
-		}
+
+                    if ($("#vcFormIFrame").contents().find(".radiocheck-required:checked").length) {
+
+                        if ($("#vcFormIFrame").contents().find(".radiocheck-required:checked").val() === "CATOS") {
+                            if ($("#vcFormIFrame").contents().find(".multiple-requiredconsultorio option:selected").val() === "nenhum" || typeof $("#vcFormIFrame").contents().find(".multiple-requiredconsultorio option:selected").html() === "undefined") {
+                                alert_box("Campo do CATO com erros de preenchimento ou vazio.");
+                                return false;
+                            }
+                        }
+                        if ($("#vcFormIFrame").contents().find(".radiocheck-required:checked").val() === "Branch") {
+                            if ($("#vcFormIFrame").contents().find(".multiple-requiredconsultoriodois option:selected").val() === "nenhum" || typeof $("#vcFormIFrame").contents().find(".multiple-requiredconsultoriodois option:selected").html() === "undefined") {
+                                alert_box("Campo do Consultório com erros de preenchimento ou vazio.");
+                                return false;
+                            }
+                        }
+
+                    } else {
+                        alert_box("Campo do tipo de consulta com erros de preenchimento.");
+                        return false;
+                    }
+
+                    if ($("#vcFormIFrame").contents().find(".hour-required").val().length === "---") {
+                        alert_box("Campo da Hora da Marcação com erros de preenchimento ou vazio.");
+                        return false;
+                    }
+                    if ($("#vcFormIFrame").contents().find(".minute-required").val().length === "---") {
+                        alert_box("Campo dos Minutos da Marcação com erros de preenchimento ou vazio.");
+                        return false;
+                    }
+                    if ($("#vcFormIFrame").contents().find(".date-required").val().length <= 0) {
+                        alert_box("Campo da Data da Marcação com erros de preenchimento ou vazio.");
+                        return false;
+                    }
+
+
+                }
 		
 		
 		
 		CustomerData_update();
 		vcFormIFrame.document.form_custom_fields.submit();
-		
-		
-		
-		
-		
 		
 		if (VDCL_group_id.length > 1)
 			{var group = VDCL_group_id;}
@@ -4270,8 +4262,10 @@ FecharCallbacks();
 			{
 			document.getElementById("CusTInfOSpaN").innerHTML = "";
 			document.getElementById("CusTInfOSpaN").style.background = panel_bgcolor;
-			var regCBstatus = new RegExp(' ' + DispoChoice + ' ',"ig");
-			if ( (VARCBstatusesLIST.match(regCBstatus)) && (DispoChoice.length > 0) && (scheduled_callbacks > 0) && (DispoChoice != 'CBHOLD') ) {showDiv('CallBackSelectBox');}
+                        var isCB=(campaign_status[DispoChoice] === undefined)?false:campaign_status[DispoChoice].callback;
+			if ( isCB && (scheduled_callbacks > 0)) {
+                            showDiv('CallBackSelectBox');
+                        }
 			else
 				{
                                     
@@ -4293,9 +4287,7 @@ FecharCallbacks();
 								agent_log_id = check_DS_array[2];
 								}
                                         });		
-                    
-					
-                                                                
+                                              
 						
 				// CLEAR ALL FORM VARIABLES
 				document.getElementById("DiaLControl").innerHTML = "<td><img src='/images/icons/control_end_blue.png' /></td><td><a href='#' onclick=\"ManualDialNext('','','','','','0');\">Marcar Seguinte</a></td>";
@@ -4403,14 +4395,6 @@ FecharCallbacks();
 				APIManualDialQueue_last=0;
 				document.vicidial_form.FORM_LOADED.value = '0';
 				CallBackLeadStatus = '';
-				document.vicidial_form.search_phone_number.value='';
-				document.vicidial_form.search_lead_id.value='';
-				document.vicidial_form.search_vendor_lead_code.value='';
-				document.vicidial_form.search_first_name.value='';
-				document.vicidial_form.search_last_name.value='';
-				document.vicidial_form.search_city.value='';
-				document.vicidial_form.search_state.value='';
-				document.vicidial_form.search_postal_code.value='';
 				document.vicidial_form.MDPhonENumbeR.value = '';
 				document.vicidial_form.MDDiaLOverridE.value = '';
 				document.vicidial_form.MDLeadID.value = '';
@@ -5867,57 +5851,34 @@ function phone_number_format(formatphone) {
 // RefresH the agents view sidebar or xfer frame
 	function refresh_agents_view(RAlocation,RAcount)
 		{
-		if (RAcount > 0)
-			{
-			if (even > 0)
-				{
-				var xmlhttp=false;
-				/*@cc_on @*/
-				/*@if (@_jscript_version >= 5)
-				// JScript gives us Conditional compilation, we can cope with old IE versions.
-				// and security blocked creation of the objects.
-				 try {
-				  xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-				 } catch (e) {
-				  try {
-				   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-				  } catch (E) {
-				   xmlhttp = false;
-				  }
-				 }
-				@end @*/
-				if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-					{
-					xmlhttp = new XMLHttpRequest();
-					}
-				if (xmlhttp) 
-					{ 
-					RAview_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=AGENTSview&format=text&user=" + user + "&pass=" + pass + "&user_group=" + VU_user_group + "&conf_exten=" + session_id + "&extension=" + extension + "&protocol=" + protocol + "&stage=" + agent_status_view_time + "&campaign=" + campaign + "&comments=" + RAlocation;
-					xmlhttp.open('POST', 'vdc_db_query.php'); 
-					xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
-					xmlhttp.send(RAview_query); 
-					xmlhttp.onreadystatechange = function() 
-						{ 
-						if (xmlhttp.readyState == 4 && xmlhttp.status == 200) 
-							{
-							var newRAlocationHTML = xmlhttp.responseText;
-						//	alert(newRAlocationHTML);
+                if (RAcount > 0)
+                {
+                    if (even > 0)
+                    {
+                        RAview_query = {server_ip:server_ip,session_name:session_name,ACTION:"AGENTSview",format:"text",user: user,pass:pass,user_group: VU_user_group,conf_exten: session_id,extension:extension,protocol:protocol,stage: agent_status_view_time ,campaign:campaign,comments: RAlocation};
+                        $.post("vdc_db_query.php", RAview_query, function(data) {
+                            var newRAlocationHTML = data;
 
-							if (RAlocation == 'AgentXferViewSelect') 
-								{
+                            if (RAlocation == 'AgentXferViewSelect')
+                            {
                                 document.getElementById(RAlocation).innerHTML = newRAlocationHTML + "\n<br /><br /><a href=\"#\" onclick=\"AgentsXferSelect('0','AgentXferViewSelect');return false;\">Close Window</a>";
-								}
-							else
-								{
-								document.getElementById(RAlocation).innerHTML = newRAlocationHTML + "\n";
-								}
-							}
-						}
-					delete xmlhttp;
-					}
-				}
-			}
-		}
+                            }
+                            else
+                            {
+                                var target=$("#"+RAlocation+" tbody").empty();
+                                $.each(data.colegas,function(){
+                                    target.append(
+                                            $("<tr>",{class:this.color})
+                                            .append($("<td>").text(this.name))
+                                            .append($("<td>").text(moment.duration(this.time, "seconds").humanize()))
+                                );
+                                });
+                            }
+                        },"json");
+
+                    }
+                }
+            }
 
 
 // ################################################################################
@@ -6298,7 +6259,6 @@ function phone_number_format(formatphone) {
 
         document.getElementById('SearcHResultSSpan').innerHTML = "<tr><td colspan=9 ><img src=/images/icons/ajax-loader.gif id=loader style='display: inline;vertical-align:middle;'> A Procurar...</td></tr> ";
 
-        //LSview_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=SEARCHRESULTSview&format=text&user=" + user + "&pass=" + pass + "&conf_exten=" + session_id + "&extension=" + extension + "&protocol=" + protocol + "&phone_number=" + document.vicidial_form.search_phone_number.value + "&lead_id=" + document.vicidial_form.search_lead_id.value + "&vendor_lead_code=" + document.vicidial_form.search_vendor_lead_code.value + "&first_name=" + document.vicidial_form.search_first_name.value + "&last_name=" + document.vicidial_form.search_last_name.value + "&city=" + document.vicidial_form.search_city.value + "&state=" + document.vicidial_form.search_state.value + "&postal_code=" + document.vicidial_form.search_postal_code.value + "&search=" + phone_search_fields + "&campaign=" + campaign + "&stage=<?php echo $HCwidth ?>";
         LSview_query = {server_ip: server_ip, session_name: session_name, ACTION: "SEARCHRESULTSview", format: "text", user: user, pass: pass, conf_exten: session_id, extension: extension, protocol: protocol, search_field: document.vicidial_form.search_field.value, search_query: document.vicidial_form.search_query.value, campaign: campaign};
         $.post("vdc_db_query.php",
                 LSview_query,
@@ -6339,20 +6299,6 @@ $(document).on("click",".leadSearchCall",function(){
     document.vicidial_form.MDPhonENumbeR.value = $(this).data().phone;
     NeWManuaLDiaLCalLSubmiT('PREVIEW');
 });
-
-// ################################################################################
-// Reset lead search form
-	function LeadSearchReset()
-		{
-		document.vicidial_form.search_phone_number.value='';
-		document.vicidial_form.search_lead_id.value='';
-		document.vicidial_form.search_vendor_lead_code.value='';
-		document.vicidial_form.search_first_name.value='';
-		document.vicidial_form.search_last_name.value='';
-		document.vicidial_form.search_city.value='';
-		document.vicidial_form.search_state.value='';
-		document.vicidial_form.search_postal_code.value='';
-		}
 
 
 // ################################################################################
@@ -6880,7 +6826,7 @@ function start_all_refresh()
 
 			if ( (agent_pause_codes_active=='Y') || (agent_pause_codes_active=='FORCE') )
 				{
-				document.getElementById("PauseCodeLinkSpan").innerHTML = "<a href=\"#\" onclick=\"PauseCodeSelectContent_create();return false;\">Seleccionar tipo de pausa</a>";
+				document.getElementById("PauseCodeLinkSpan").innerHTML = "<a href=\"#\" onclick=\"PauseCodeSelectContent_create();return false;\"><i class=\"icon-glass\"></i>Tipo de pausa</a>";
 				}
 			if (VICIDiaL_allow_closers < 1)
 				{
@@ -7585,7 +7531,7 @@ function start_all_refresh()
                                 t.setTime(UnixTimeMS);
                                 if ((callholdstatus === '1') || (agentcallsstatus === '1') || (vicidial_agent_disable !== 'NOT_ACTIVE'))
                                 {
-                                    var AGLogiN = check_time_array.Logged_in;
+                                    var AGLogiN = check_time_array.Logged;
                                     var CamPCalLs = check_time_array.CampCalls;
                                     var DiaLCalLs = check_time_array.DiaLCalls;
                                     if (AGLogiN !== 'N')
@@ -7600,7 +7546,7 @@ function start_all_refresh()
                                     {
                                         document.getElementById("AgentStatusDiaLs").innerHTML = DiaLCalLs;
                                     }
-                                    if ((AGLogiN === 'DEAD_VLA') && ((vicidial_agent_disable === 'LIVE_AGENT') || (vicidial_agent_disable == 'ALL')))
+                                    if ((AGLogiN === 'DEAD_VLA') && ((vicidial_agent_disable === 'LIVE_AGENT') || (vicidial_agent_disable === 'ALL')))
                                     {
                                         showDiv('AgenTDisablEBoX');
                                     }
@@ -9275,3 +9221,25 @@ $(document).bind("keydown", disableF5);
                 testwindow = window.open(url, "Janela", "status=no, width=760, height=500, menubar=no, titlebar=no, scrollbars=yes");
                 testwindow.moveTo(300, 250);
             }
+            
+            $(function() {
+                            $("#cb_date_1").datepicker({
+                                changeMonth: true,
+                                changeYear: true,
+                                dateFormat: "yy-mm-dd",
+                                onClose: function(selectedDate) {
+                                    $("#cb_date_2").datepicker("option", "minDate", selectedDate);
+                                }
+                            });
+                            $("#cb_date_2").datepicker({
+                                changeMonth: true,
+                                changeYear: true,
+                                dateFormat: "yy-mm-dd",
+                                onClose: function(selectedDate) {
+                                    $("#cb_date_1").datepicker("option", "maxDate", selectedDate);
+                                }
+                            });
+                            
+                            setTimeout(function(){AgentsViewOpen('AgentViewSpan', 'open');}, 2000)
+                            
+                        });
