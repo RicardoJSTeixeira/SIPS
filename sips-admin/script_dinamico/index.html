@@ -30,12 +30,8 @@ and open the template in the editor.
 
                   .leftDiv, .rightDiv {width:120px; float:left; border:1px solid #000; padding:5px; margin:10px; min-height:130px}
                   .leftDiv {margin-left:40px}
-
                   .item { text-align:center; border:1px solid #EEE; background-color:#FFF;padding:10px;}
-
-
                   .helperPick {border:2px dashed red; text-align:center;width:auto}
-
                   label{
                         display: inline;
                   }
@@ -116,7 +112,7 @@ and open the template in the editor.
                                     </div>
                               </div>
                               <div class="grid-content">
-                                    <div class="leftDiv span ">
+                                    <div class="leftDiv span">
                                     </div> 
                               </div> 
 
@@ -160,54 +156,36 @@ and open the template in the editor.
                                                 <!--TEXTO-->
                                                 <div class="editor_layout" id="text_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Tag:</label>
-
+                                                           <label class="control-label label" >Tag:</label>
                                                             <div class="formRight">
                                                                   <label id="label_tag_texto"></label>
                                                             </div>
                                                       </div>
-
-
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
-
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span texto_input" id="texto_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Placeholder</label>
-
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span texto_input" id="placeholder_edit" type="text" placeholder="Placeholder exemplo" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Tamanho maximo:</label>
-
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span texto_input" id="max_length_edit" type="text" placeholder="Numero Máximo de caracteres" />
                                                             </div>
                                                       </div>
-
-                                                      <div class="formRow" >
-                                                            <label class="control-label label" >Required</label>
-
-                                                            <div class="formRight">
-                                                                  <input  type="checkbox" id="required_texto" name="required" value="1">
-                                                                  <label for="required_texto"><span></span></label>
-                                                            </div>
-                                                      </div>
-
                                                 </div>
 
 
                                                 <!--RADIO-->
                                                 <div class="editor_layout" id="radio_layout_editor" style="display:none">
-
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Tag:</label>
-
                                                             <div class="formRight">
                                                                   <label id="label_tag_radio"></label>
                                                             </div>
@@ -215,7 +193,6 @@ and open the template in the editor.
 
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
-
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span" id="radio_edit" type="text" placeholder="Texto" />
                                                             </div>
@@ -234,18 +211,10 @@ and open the template in the editor.
                                                       </div>
 
 
-                                                      <div class="formRow" >
-                                                            <label class="control-label label" >Required</label>
 
-                                                            <div class="formRight">
-                                                                  <input  type="checkbox" id="required_radio" name="required" value="1">
-                                                                  <label for="required_radio"><span></span></label>
-                                                            </div>
-                                                      </div>
 
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Disposição:</label>
-
                                                             <div class="formRight">
                                                                   <input type="radio" id="horiz_radio" name="rdispo" checked="checked">
                                                                   <label class="radio_dispo"  for="horiz_radio"><span></span>Horizontal</label>
@@ -284,14 +253,7 @@ and open the template in the editor.
                                                             </div>
 
                                                       </div>
-                                                      <div class="formRow" >
-                                                            <label class="control-label label" >Required</label>
 
-                                                            <div class="formRight">
-                                                                  <input  type="checkbox" id="required_checkbox" name="required" value="1">
-                                                                  <label for="required_checkbox"><span></span></label>
-                                                            </div>
-                                                      </div>
 
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Disposição:</label>
@@ -334,14 +296,6 @@ and open the template in the editor.
 
                                                       </div>
 
-                                                      <div class="formRow" >
-                                                            <label class="control-label label" >Required</label>
-
-                                                            <div class="formRight">
-                                                                  <input  type="checkbox" id="required_multichoice" name="required" value="1">
-                                                                  <label for="required_multichoice"><span></span></label>
-                                                            </div>
-                                                      </div>
                                                 </div>
 
                                                 <!--Campo de texto-->
@@ -363,14 +317,7 @@ and open the template in the editor.
                                                                   <input class="span textfield_input" id="textfield_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
-                                                      <div class="formRow" >
-                                                            <label class="control-label label" >Required</label>
 
-                                                            <div class="formRight">
-                                                                  <input  type="checkbox" id="required_textfield" name="required" value="1">
-                                                                  <label for="required_textfield"><span></span></label>
-                                                            </div>
-                                                      </div>
                                                 </div>
 
 
@@ -379,26 +326,20 @@ and open the template in the editor.
 
 
                                                 <div class="editor_layout" id="tableradio_layout_editor" style="display:none">
-
-
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
-
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span tableradio_input" id="tableradio_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
-
-
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Tag:</label>
-
                                                             <div class="formRight">
                                                                   <label id="label_tag_tableradio"></label>
                                                             </div>
-                                                      </div>
+                                                     </div>
 
-                                                      <div class="formRow" >
+                                                     <div class="formRow" >
                                                             <label class="control-label label" >titulos</label>
 
                                                             <div class="formRight">
@@ -419,22 +360,40 @@ and open the template in the editor.
                                                       </div>
 
 
-                                                      <div class="formRow" >
-                                                            <label class="control-label label" >Required</label>
 
-                                                            <div class="formRight">
-                                                                  <input  type="checkbox" id="required_tableradio" name="required" value="1">
-                                                                  <label for="required_tableradio"><span></span></label>
-                                                            </div>
-                                                      </div>
 
 
 
                                                 </div>
 
+                                                <!------------------------------------------------------------------------------>
+                                                <!-------------------------COMUM A TODOS OS ELEMENTOS-------------------------->
+                                                <!------------------------------------------------------------------------------>
 
-                                                <!-------------------------TAG-------------------------->
-                                                <div class="tag_div" style="display:none">
+                                                <div id="item_edit_comum" style="display:none"> 
+
+
+                                                      <!----------------------------------------------REQUIRED------------------------------------------->
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Obrigatório:</label>
+
+                                                            <div class="formRight">
+                                                                  <input  type="checkbox" id="item_required" name="required" value="1">
+                                                                  <label for="item_required"><span></span></label>
+                                                            </div>
+                                                      </div>
+                                                      <div class="formRow" >
+                                                            <!-----------------------------HIDDEN-------------------------------------------------------->
+                                                            <label class="control-label label" >Escondido:</label>
+
+                                                            <div class="formRight">
+                                                                  <input  type="checkbox" id="item_hidden" name="hidden" value="1">
+                                                                  <label for="item_hidden"><span></span></label>
+                                                            </div>
+                                                      </div>
+
+                                                      <!------------------------------------TAGS---------------------------------------------->
+
 
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Tags:</label>
@@ -463,80 +422,95 @@ and open the template in the editor.
                                           </div>
                                           <div id="tabs-3">
 
-                                                <div class="formRow" >
-                                                      <label class="control-label label" >Nome da regra:</label>
+                                                <div id="rule_manager" >
+                                                      <table>
+                                                            <thead>
+                                                                  <tr>
+                                                                        <td>
+                                                                              Nome
+                                                                        </td>
+                                                                        <td>
+                                                                              Tipo
+                                                                        </td>
+                                                                        <td>
+                                                                              Alvo
+                                                                        </td>
 
-                                                      <div class="formRight">
-                                                            <input class="regra_input" id="regra_edit" type="text" placeholder="Regra" />
+                                                                  </tr>
 
-                                                      </div> 
-                                                </div>
+                                                            </thead>
+                                                            <tbody id="rule_manager_list">
 
+                                                            </tbody>
+                                                      </table>
 
-                                                <div class="formRow" >
-                                                      <label class="control-label label" >Trigger:</label>
-
-                                                      <div class="formRight">
-                                                            <input class="regra_input" id="trigger_id_edit" type="text" placeholder="elemento" />
-
-                                                      </div> 
-                                                </div>
-
-                                                <div class="formRow" >
-                                                      <label class="control-label label" >Tipo:</label>
-
-                                                      <div class="formRight">
-                                                            <select id="regra_select">
-                                                                  <option value="goto">go-to</option>
-                                                                  <option value="show">show</option>   
-                                                                  <option value="hide" >Hide</option>
-
-                                                            </select>
-                                                      </div> 
-                                                      <div id="goto_div" class="rules_option">
-                                                            <div class="formRow" >
-                                                                  <label class="control-label label" >opçao q despoleta:</label>
-
-                                                                  <div class="formRight">
-                                                                        <select id="hide_option_select">
-
-                                                                              <option>id(tag)</option>
-
-                                                                        </select>
-                                                                  </div> 
-                                                            </div> 
-                                                      </div>
-
-                                                      <div id="show_div" class="rules_option" style="display:none">
-                                                            <div class="formRow" >
-                                                                  <label class="control-label label" >show por:</label>
-                                                                  <div class="formRight">
-                                                                        <select id="show_option_select">
-                                                                              <option>grupo</option>
-                                                                              <option>id(tag)</option>
-                                                                        </select>
-                                                                  </div> 
-                                                            </div> 
-                                                      </div>
-
-                                                      <div id="hide_div" class="rules_option" style="display:none">
-                                                            <div class="formRow" >
-                                                                  <label class="control-label label" >Hide por:</label>
-                                                                  <div class="formRight">
-                                                                        <select id="hide_option_select">
-                                                                              <option>grupo</option>
-                                                                              <option>id(tag)</option>
-                                                                        </select>
-                                                                  </div> 
-                                                            </div> 
+                                                      <div class="modal-footer ">
+                                                            <button class="btn btn-info" id="open_rule_creator">Criar nova regra</button>
                                                       </div>
 
                                                 </div>
-                                                <div class="clear"></div>
-                                                <div class="modal-footer ">
-                                                      <button class="btn">add</button>
-                                                </div>
 
+
+
+
+                                                <div id="rule_creator" style="display:none;" >
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Nome da regra:</label>
+
+                                                            <div class="formRight">
+                                                                  <input class="regra_input" id="regra_edit" type="text" placeholder="Regra" />
+
+                                                            </div> 
+                                                      </div>
+
+
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Trigger:</label>
+
+                                                            <div class="formRight">
+                                                                  <select id="rule_trigger_select" class="elements_select"></select>
+
+                                                            </div> 
+                                                      </div>
+                                                      <div class="formRow" style="display:none" >
+                                                            <label class="control-label label" >Id do sub_elemento:</label>
+
+                                                            <div class="formRight">
+                                                                  <select class="elements_select_sub"></select>
+
+                                                            </div> 
+                                                      </div>
+
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Alvo</label>
+
+                                                            <div class="formRight">
+                                                                  <select class="elements_select"></select>
+
+                                                            </div> 
+                                                      </div>
+
+
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Tipo:</label>
+
+                                                            <div class="formRight">
+                                                                  <select id="regra_select">
+                                                                        <option value="goto">go-to</option>
+                                                                        <option value="show">show</option>   
+                                                                        <option value="hide" >Hide</option>
+
+
+                                                                  </select>
+                                                            </div> 
+
+
+                                                      </div>
+                                                      <div class="clear"></div>
+                                                      <div class="modal-footer ">
+                                                            <button class="btn">add</button>
+                                                      </div>
+                                                </div>
                                           </div>
 
 

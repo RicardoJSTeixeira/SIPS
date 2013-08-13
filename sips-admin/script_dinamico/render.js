@@ -20,7 +20,7 @@ $(function() {
 
 
 
-
+//fazer um serialize proprio pk o serialize agora n consegue responder as necessidades 
 
 
 
@@ -55,6 +55,7 @@ function insert_element(opcao, element, data)
                               element.append($("<input>").attr("type", "radio").prop("required", true).attr("value", radios[count]).attr("id", array_id["radio"] + "radio").attr("name", "radio," + data.id));
                         else
                               element.append($("<input>").attr("type", "radio").attr("value", radios[count]).attr("id", array_id["radio"] + "radio").attr("name", "radio," + data.id));
+                        
                         element.append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "radio").text(radios[count]).append($("<span>")));
 
                         if (data.dispo === "v")
@@ -144,6 +145,11 @@ function insert_element(opcao, element, data)
                   break;
       }
 
+
+      if (data.hidden === "1")
+            element.css("display","none");
+
+
       return element;
 }
 
@@ -152,7 +158,7 @@ function insert_element(opcao, element, data)
 function tags()
 {
       var rz = $("#render_zone");
-      
+
       if (rz.html().match(tag_regex))
       {
             var temp2 = rz.html().match(tag_regex);
@@ -165,12 +171,10 @@ function tags()
             $.each(temp, function() {
                   var id = this;
                   id = id.replace(/\@/g, '');
-            console.log(id);
-
-                  var regExp = new RegExp(this,"g");
+                  var regExp = new RegExp(this, "g");
                   rz.html(rz.html().replace(regExp, "<span class='" + id + "tag'></span>"));
 
-                  $(document).on("change","#" + id +" input,#" + id +" select",function() {
+                  $(document).on("change", "#" + id + " input,#" + id + " select", function() {
                         $("." + id + "tag").text($(this).val());
                   });
 
