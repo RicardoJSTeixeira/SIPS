@@ -196,6 +196,8 @@ function SaveEditedAtt($FeedID, $CampaignID, $EditedAttID, $EditedAttActive, $li
         where status LIKE '$FeedID' ";   
         
         mysql_query($qry, $link) or die(mysql_error());
+        
+        echo "Save OK!";
     
 }
 

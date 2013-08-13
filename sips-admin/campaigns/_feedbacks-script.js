@@ -488,6 +488,8 @@ function DialogEditFeedOnOpen()
                       counter++
                   })
                   $(".checkbox-edit-feed-att").uniform();
+                  $("#table-edit-feed-att-1").fadeIn(200);
+                  $("#table-edit-feed-att-2").fadeIn(200);
                }
             });
             
