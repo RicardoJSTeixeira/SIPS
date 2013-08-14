@@ -2897,8 +2897,8 @@ echo "
                         $qry = "SELECT count(lead_id) FROM vicidial_list a inner join vicidial_campaign_statuses b ON a.status = b.status WHERE 
                             sale LIKE 'Y' AND
                             last_local_call_time >= DATE(NOW())
-                            $group_SQLand ";
-                       
+                            $group_SQLand group by lead_id";
+                   //    $teste = $qry;
                         $qry = mysql_query($qry, $link);
                         $qry = mysql_fetch_row($qry);
                         $sucesso = $qry[0];
@@ -2917,8 +2917,8 @@ echo "
                         $non_billable = "SELECT sum(pause_sec) from vicidial_agent_log a inner join vicidial_pause_codes b on a.sub_status = b.pause_code 
                             where b.campaign_id in ($group_SQL) and 
                                 event_time >= DATE(NOW()) AND 
-                                billable LIKE 'NO'";
-                        $teste = $non_billable;
+                                billable LIKE 'NO' group by pause_code";
+                        
                         $non_billable = mysql_query($non_billable, $link);
                         $non_billable = mysql_fetch_row($non_billable);
                         
@@ -2944,7 +2944,7 @@ echo "
                         $qry = "SELECT count(lead_id) FROM vicidial_list a inner join vicidial_campaign_statuses b ON a.status = b.status WHERE 
                             customer_contact LIKE 'Y' AND
                             last_local_call_time >= DATE(NOW())
-                            $group_SQLand ";
+                            $group_SQLand group by lead_id ";
                         $qry = mysql_query($qry, $link);
                         $qry = mysql_fetch_row($qry);
                         $uteis = $qry[0];
@@ -2954,7 +2954,7 @@ echo "
                         $qry = "SELECT count(lead_id) FROM vicidial_list a inner join vicidial_campaign_statuses b ON a.status = b.status WHERE 
                             completed LIKE 'Y' AND
                             last_local_call_time >= DATE(NOW())
-                            $group_SQLand ";
+                            $group_SQLand group by lead_id";
                         $qry = mysql_query($qry, $link);
                         $qry = mysql_fetch_row($qry);
                         $fechados = $qry[0];
@@ -2965,7 +2965,7 @@ echo "
                         $qry = "SELECT count(lead_id) FROM vicidial_log a inner join vicidial_campaign_statuses b ON a.status = b.status WHERE 
                             scheduled_callback LIKE 'Y' AND
                             call_date >= DATE(NOW()) AND
-                            a.campaign_id IN ($group_SQL) ";
+                            a.campaign_id IN ($group_SQL) group by lead_id";
                         
                         $qry = mysql_query($qry, $link);
                         $qry = mysql_fetch_row($qry);
@@ -2983,7 +2983,7 @@ echo "
                         <div class='cc-mstyle' style='margin-top:12px; margin-bottom:8px; margin-right:-4px; width:95%;'>
 			<table>
                         <tr>
-                            <td id=icon16><img src='/images/icons/group_16.png' /></td><td style=text-align:left;>Sucesso: $sucesso</td>
+                            <td id=icon16><img src='/images/icons/group_16.png' /></td><td style=text-align:left;>Sucesso:$teste $sucesso</td>
                             <td id=icon16><img src='/images/icons/phone_delete_16.png' /></td><td style=text-align:left>Horas Trabalhadas: $format_horas_trabalhadas </td>
                         </tr>
                         <tr>
