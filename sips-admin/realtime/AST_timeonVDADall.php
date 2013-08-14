@@ -2894,11 +2894,8 @@ echo "
                         // Sucesso
                         $qry = "";
                         
-                        $qry = "SELECT count(lead_id) FROM vicidial_list a inner join vicidial_campaign_statuses b ON a.status = b.status WHERE 
-                            sale LIKE 'Y' AND
-                            last_local_call_time >= DATE(NOW())
-                            $group_SQLand group by lead_id";
-                   //    $teste = $qry;
+                        $qry = "select count(lead_id) from vicidial_log a INNER JOIN (SELECT status from vicidial_campaign_statuses where sale like 'Y' group by status) b on a.status = b.status and call_date >= DATE(NOW()) $group_SQLand;";
+                       //$teste = $qry; 
                         $qry = mysql_query($qry, $link);
                         $qry = mysql_fetch_row($qry);
                         $sucesso = $qry[0];
@@ -2914,10 +2911,10 @@ echo "
 //			status,
 //			dead_sec
                         
-                        $non_billable = "SELECT sum(pause_sec) from vicidial_agent_log a inner join vicidial_pause_codes b on a.sub_status = b.pause_code 
+                        $non_billable = "SELECT sum(pause_sec) from vicidial_agent_log a inner join (SELECT pause_code from vicidial_pause_codes group by pause_code) b on a.sub_status = b.pause_code 
                             where b.campaign_id in ($group_SQL) and 
                                 event_time >= DATE(NOW()) AND 
-                                billable LIKE 'NO' group by pause_code";
+                                billable LIKE 'NO'";
                         
                         $non_billable = mysql_query($non_billable, $link);
                         $non_billable = mysql_fetch_row($non_billable);
@@ -2941,20 +2938,14 @@ echo "
                         // Uteis
                         
                         $qry = "";
-                        $qry = "SELECT count(lead_id) FROM vicidial_list a inner join vicidial_campaign_statuses b ON a.status = b.status WHERE 
-                            customer_contact LIKE 'Y' AND
-                            last_local_call_time >= DATE(NOW())
-                            $group_SQLand group by lead_id ";
+                        $qry = "select count(lead_id) from vicidial_log a INNER JOIN (SELECT status from vicidial_campaign_statuses where customer_contact like 'Y' group by status) b on a.status = b.status and call_date >= DATE(NOW()) $group_SQLand;";
                         $qry = mysql_query($qry, $link);
                         $qry = mysql_fetch_row($qry);
                         $uteis = $qry[0];
                         
                         // Fechados
                         $qry = "";
-                        $qry = "SELECT count(lead_id) FROM vicidial_list a inner join vicidial_campaign_statuses b ON a.status = b.status WHERE 
-                            completed LIKE 'Y' AND
-                            last_local_call_time >= DATE(NOW())
-                            $group_SQLand group by lead_id";
+                        $qry = "select count(lead_id) from vicidial_log a INNER JOIN (SELECT status from vicidial_campaign_statuses where completed like 'Y' group by status) b on a.status = b.status and call_date >= DATE(NOW()) $group_SQLand;";
                         $qry = mysql_query($qry, $link);
                         $qry = mysql_fetch_row($qry);
                         $fechados = $qry[0];
@@ -2962,10 +2953,7 @@ echo "
                         // Agendamentos
                         
                         $qry = "";
-                        $qry = "SELECT count(lead_id) FROM vicidial_log a inner join vicidial_campaign_statuses b ON a.status = b.status WHERE 
-                            scheduled_callback LIKE 'Y' AND
-                            call_date >= DATE(NOW()) AND
-                            a.campaign_id IN ($group_SQL) group by lead_id";
+                        $qry = "select count(lead_id) from vicidial_log a INNER JOIN (SELECT status from vicidial_campaign_statuses where scheduled_callback like 'Y' group by status UNION ALL SELECT status from vicidial_statuses where scheduled_callback like 'Y' group by status) b on a.status = b.status and call_date >= DATE(NOW()) $group_SQLand;";
                         
                         $qry = mysql_query($qry, $link);
                         $qry = mysql_fetch_row($qry);
