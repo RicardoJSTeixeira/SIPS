@@ -231,7 +231,7 @@ $whereLOGallowed_campaignsSQL = "WHERE campaign_id REGEXP '^$allowed_camps_regex
                         <div class="formRow op fix">
                             <label>Nome do Grupo:</label>
                             <div class="formRight">
-                                <input type=text name=user_group_new class="span" maxlength=20 value="<?= $user_group ?>">
+                                <?= $user_group ?>
                             </div>
                         </div> 
                         <div class="formRow op fix">
