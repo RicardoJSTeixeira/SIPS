@@ -2014,10 +2014,10 @@ while($p<$k)
                      
                 } else {
                     
-                    $getLoja = mysql_query("select campaign_id from vicidial_auto_calls where phone_number LIKE '$pnqry'", $link) or die(mysql_error());
+                    $getLoja = mysql_query("select B.campaign_name from vicidial_auto_calls A inner join vicidial_campaigns B ON A.campaign_id=B.campaign_id where phone_number LIKE '$pnqry'", $link) or die(mysql_error());
                     $getLoja = mysql_fetch_assoc($getLoja);
 
-                    $nome_campanha = $getLoja['campaign_id'];
+                    $nome_campanha = $getLoja['campaign_name'];
                     
                 }
                                   
@@ -2957,7 +2957,7 @@ echo "
                         
                         $qry = mysql_query($qry, $link);
                         $qry = mysql_fetch_row($qry);
-                        $agendamentos = $qry[0];
+                        $agendamentos = $qry[0]; 
                         
                         $resp = number_format((($uteis / $fechados) * 100),1);
                         $sucess_hour = number_format(($sucesso / ($horas_trabalhadas / 60 / 60)),2);

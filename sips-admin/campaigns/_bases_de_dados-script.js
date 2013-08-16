@@ -320,9 +320,6 @@ function TableErrorDetailsInit()
     
 }
 
-
-
-
 function DialogDBEditOnOpen()
 {
     $("#div-dbs-state-container").hide();
@@ -632,10 +629,10 @@ function DBWizardFieldChange()
     $("#td-db-wizard-match-fields-error-icon").html("");
     
     var clickedSelect = $(this).attr("id");
-    console.log(clickedSelect);
+
     
     var chosenField = $(this).attr("value");
-    console.log(chosenField);
+
 
     $.each($(".sel-db-wizard-fields"), function(index, value){
 
@@ -651,7 +648,7 @@ function DBWizardFieldChange()
         }
         else
         {
-            console.log($(this).attr("disabled", "disabled").closest("tr").find(".td-db-wizard-middle-graf").html("<img style='float:left' class='mono-icon' src='icons/mono_round_checkmark_16.png'>"));
+            console.log($(this).attr("disabled", "disabled").closest("tr").find(".td-db-wizard-middle-graf").html("<img style='float:left' class='mono-icon' src='icons/mono_round_checkmark_16.png'><img style='float:left; cursor:pointer' class='mono-icon db-wizard-clear-single' src='icons/mono_brush_16.png'>"));
             
             
         }
@@ -667,7 +664,7 @@ var DBLoadErrorPhone;
 var DBLoadKeepDuplicates;
 
 
-function DBWizardMatchFields()
+function DBWizardMatchFields() 
 {
     
     var validateSubmit = false;
@@ -843,6 +840,38 @@ function DBWizardMatchFields()
     
 }
 
+
+function DBWizardClearSingle() 
+{
+	console.log($(this).closest("tr").find("select option:selected").val());
+	
+	
+	var clickedElement = $(this).closest("tr").find("select option:selected").val();
+	
+	$(this).closest("tr").find("select").removeAttr("disabled"); 
+	
+	$(this).closest("tr").find("select  option[value=" + clickedElement + "]").remove();
+	
+	$(this).closest("td").html("<img class='mono-icon' style='float:left' src='icons/mono_right_tag_16.png'>");
+	
+	
+	$.each(DBFieldNames, function(index, value){ 
+
+ 
+   
+
+		if( clickedElement == DBFieldNames[index]){  
+
+				$(".sel-db-wizard-fields").append("<option value='"+DBFieldNames[index]+"'>"+DBFieldDisplayNames[index]+"</option>");
+			}
+		
+		
+    });
+	
+	
+}
+
+
 function DBWizardMatchFieldsRestart()
 {
     $(".sel-db-wizard-fields").removeAttr("disabled");
@@ -865,8 +894,6 @@ function DBWizardDenyLeads()
     
     }, "json");
 }
-
-
 
 function DialogDbsOnReset()
 {
@@ -912,22 +939,21 @@ function DialogDbsOnOpen()
     
 }
 
-
-function ResetDbsSelectAll(){
+function ResetDbsSelectAll()
+{
 
         $.each($(".checkbox-dbs-reset").parent(), function(){
         $(this).addClass("checked");
     })
 }
 
-function ResetDbsSelectNone(){
+function ResetDbsSelectNone()
+{
 
         $.each($(".checkbox-dbs-reset").parent(), function(){
         $(this).removeClass("checked");
     })
 }
-
-
 
 function onsubmittest(that)
 {
@@ -995,4 +1021,5 @@ $("body")
 .on("click", "#btn-reset-dbs-select-none", ResetDbsSelectNone)
 .on("click", "#btn-db-wizard-match-fields-duplicates-button", ForceLoadDuplicates)
 .on("click", "#btn-dialog-dbs-download-db", DownloadDB)
+.on("click", ".db-wizard-clear-single", DBWizardClearSingle)
 
