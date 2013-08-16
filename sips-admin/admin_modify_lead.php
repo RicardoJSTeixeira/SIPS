@@ -529,6 +529,59 @@ $gravacoes = mysql_query($query, $link) or die(mysql_error());
   </div>
 </div>
 
+    <div class="table-title"><center>Chamadas realizadas para este Contacto</center></div>
+        <div class="datagrid" style="width:90%">
+            <table>
+                <thead><th>Data</th><th>Hora</th><th>Duração</th><th>Número</th><th>Operador</th><th>Feedback</th><th>Man/Auto</th><th>Campanha</th><th>Base de Dados</th></thead>';
+                <tbody>
+<?
+for($i=0;$i<mysql_num_rows($chamadas_feitas);$i++){
+$row = mysql_fetch_assoc($chamadas_feitas);
+
+$duracao = sec_convert($row['length_in_sec'],"H");
+if($row[status_name1]){$status_name=$row['status_name1'];}else{$status_name=$row['status_name2'];}
+echo "
+<tr>
+<td>$row[data]</td>
+<td>$row[hora]</td>
+<td>$duracao</td>
+<td>$row[phone_number]</td>
+<td>$row[full_name]</td>
+<td>$status_name</td>
+<td>$row[comments]</td>
+<td>$row[campaign_name]</td>
+<td>$row[list_name]</td>
+</tr>
+";
+} ?>
+</tbody>
+</table>
+</div>
+<br>
+<div class="table-title"><center>Gravações deste Contacto</center></div>
+<div class="datagrid" style="width:90%">
+<table>
+<thead> <th>Data</th> <th>Inicio da Gravação</th> <th>Fim da Gravação</th> <th>Duração</th> <th>Ouvir Gravação</th> <th>Operador</th> </thead>';
+<tbody>
+<?
+    for($i=0;$i<mysql_num_rows($gravacoes);$i++){
+    $row = mysql_fetch_assoc($gravacoes);
+    $duracao = sec_convert($row['length_in_sec'],"H");
+    echo "
+    <tr>
+    <td>$row[data]</td>
+    <td>$row[hora_inicio]</td>
+    <td>$row[hora_fim]</td>
+    <td>$duracao</td>
+    <td><a href='$row[location]'><img src='../images/icons/sound_add_16.png'></a></td>
+    <td>$row[full_name]</td>
+
+    </tr>
+    ";
+    } ?>
+</tbody>
+</table>
+</div>
         
 <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
 <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>
