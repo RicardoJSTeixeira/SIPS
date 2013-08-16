@@ -145,10 +145,16 @@ function GetRecycleDetails($CampaignID, $CampaignLists, $RecycleID, $link)
 	$aTries = array("Não Chamado", "Chamado", "1ª Reciclagem", "2ª Reciclagem", "3ª Reciclagem", "4ª Reciclagem", "5ª Reciclagem", "6ª Reciclagem", "7ª Reciclagem", "8ª Reciclagem", "9ª Reciclagem", "10ª Reciclagem");
 	$output = array("aaData" => array() );
  
-	$CampaignLists = preg_replace("/,/", "/','/", $CampaignLists); 
+ 
+    $output['debug2'] = $CampaignLists;
+ 
+	$CampaignLists = preg_replace("/,/", "','", $CampaignLists); 
 	 
     $sQuery = "SELECT called_since_last_reset AS tentativas, count(*) AS contactos FROM vicidial_list WHERE list_id IN ('$CampaignLists') AND status='$RecycleID' GROUP BY called_since_last_reset ORDER BY FIELD(called_since_last_reset, 'N', 'Y', 'Y1', 'Y2', 'Y3', 'Y4', 'Y5', 'Y6', 'Y7', 'Y8', 'Y9', 'Y10')";
 	
+    $output['debug'] = $sQuery;
+    
+    
 	$rResult = mysql_query( $sQuery, $link ) or die(mysql_error());
     while ( $aRow = mysql_fetch_array( $rResult ) )
     {
@@ -166,7 +172,7 @@ function GetRecycleDetails($CampaignID, $CampaignLists, $RecycleID, $link)
                 case "tentativas": $row[] = $try_type; break;
 				case "contactos": $row[] = $aRow[ $aColumns[$i] ]; break;
                 case "reset": if($index == 0) {$cursor = "style='cursor: default !important;'"; } else {$cursor = ""; } $row[] = "<img $cursor class='css-dt-icon recycle-details-reset-single' title='Realiza um Reset aos Contactos que têm este número de tentativas.' src='icons/mono_undo_16.png'>"; break; 
-				case "detalhes": $row[] = "<img class='css-dt-icon recycle-details-view-contacts' inner-try-type='$aRow[tentativas]' title='Ver Contactos' src='/images/icons/mono_right_expand_16.png'>"; break; 
+				case "detalhes": $row[] = "<img class='css-dt-icon recycle-details-view-contacts' inner-try-type='$aRow[tentativas]' title='Ver Contactos' src='icons/mono_right_expand_16.png'>"; break; 
 				case "index": $row[] = $index; break;
 				default: $row[] = $aRow[ $aColumns[$i] ];
             }
@@ -181,7 +187,7 @@ function GetRecycleDetails($CampaignID, $CampaignLists, $RecycleID, $link)
 
 	foreach($aTries as $index => $value)
 	{
-		$output['aaData'][] = array($value, 0, "<img class='css-dt-icon  recycle-details-reset-single' src='icons/mono_undo_16.png'>", "<img class='css-dt-icon no-pointer' src='/images/icons/mono_right_expand_16.png'>", $index);
+		$output['aaData'][] = array($value, 0, "<img class='css-dt-icon  recycle-details-reset-single' src='icons/mono_undo_16.png'>", "<img class='css-dt-icon no-pointer' src='icons/mono_right_expand_16.png'>", $index);
 	} 
 	
 echo json_encode( $output );	
