@@ -2014,10 +2014,10 @@ while($p<$k)
                      
                 } else {
                     
-                    $getLoja = mysql_query("select campaign_id from vicidial_auto_calls where phone_number LIKE '$pnqry'", $link) or die(mysql_error());
+                    $getLoja = mysql_query("select B.campaign_name from vicidial_auto_calls A inner join vicidial_campaigns B ON A.campaign_id=B.campaign_id where phone_number LIKE '$pnqry'", $link) or die(mysql_error());
                     $getLoja = mysql_fetch_assoc($getLoja);
 
-                    $nome_campanha = $getLoja['campaign_id'];
+                    $nome_campanha = $getLoja['campaign_name'];
                     
                 }
                                   
@@ -2809,9 +2809,9 @@ if ($campaign_allow_inbound == '1' ) { $HTigcall .=  "<th>IN-GROUP</th>";    }
 		#### CODIGO NOSSO #####
 if ($campaign_allow_inbound > 0)
 
-{ $BBB = "<tr><td id=icon16><img src='/images/icons/phone_16.png' /></td><td style=text-align:left>Chamadas Activas: $out_total</td>" ;}
+{ $BBB = "<td id=icon16><img src='/images/icons/phone_16.png' /></td><td style=text-align:left>Chamadas Activas: $out_total</td>" ;}
 		else
-			{ $BBB = "<tr><td id=icon16><img src='/images/icons/phone_16.png' /></td><td style=text-align:left>Chamadas em Colocação:  $out_total </td>" ;}
+			{ $BBB = "<td id=icon16><img src='/images/icons/phone_16.png' /></td><td style=text-align:left>Chamadas em Colocação:  $out_total </td>" ;}
 
 ###################
 
@@ -2873,14 +2873,122 @@ echo "
                               $nome_campanha=mysql_fetch_array($nome_campanha);
                               
                               $group_string_alterado = $nome_campanha[0]; }
+                              //<td id=icon16><img src='/images/icons/phone_sound_16.png' /></td><td style=text-align:left>A Chamar: $out_ring </td>
 			echo"
-			<tr><td id=icon16><img src='/images/icons/group_16.png' /></td><td style=text-align:left;>Total de Operadores Online: $agentcount</td></tr>
+			<tr>
+                            <td id=icon16><img src='/images/icons/group_16.png' /></td><td style=text-align:left;>Total de Operadores Online: $agentcount</td>
+                             <td id=icon16><img src='/images/icons/phone_delete_16.png' /></td><td style=text-align:left>Chamadas à Espera de Users:  $out_live </td> 
+                            
+                        </tr>
 			
-			$BBB
-			<tr><td id=icon16><img src='/images/icons/phone_sound_16.png' /></td><td style=text-align:left>A Chamar: $out_ring </td>
-			<tr><td id=icon16><img src='/images/icons/phone_delete_16.png' /></td><td style=text-align:left>Chamadas à Espera de Users:  $out_live </td> 
-			<tr><td id=icon16><img src='/images/icons/blackberry_16.png' /></td><td style=text-align:left>Chamadas em IVR:  $in_ivr </td> 
-			</table></div>
+			
+			<tr>
+			
+			<td id=icon16><img src='/images/icons/blackberry_16.png' /></td><td style=text-align:left>Chamadas em IVR:  $in_ivr </td> 
+                            $BBB
+			</tr>
+                        </table></div>";
+                        
+                        /////////////// Calculos para estatistica baseada nos atributos dos feedbacks
+                        
+                        // Sucesso
+                        $qry = "";
+                        
+                        $qry = "select count(lead_id) from vicidial_log a INNER JOIN (SELECT status from vicidial_campaign_statuses where sale like 'Y' group by status) b on a.status = b.status and call_date >= DATE(NOW()) $group_SQLand;";
+                       //$teste = $qry; 
+                        $qry = mysql_query($qry, $link);
+                        $qry = mysql_fetch_row($qry);
+                        $sucesso = $qry[0];
+                        
+                        $qry = "";
+                        
+                        // Horas Trabalhadas
+//                        wait_sec,
+//			talk_sec,
+//			dispo_sec,
+//			pause_sec,
+//			lead_id,
+//			status,
+//			dead_sec
+                        
+                        $non_billable = "SELECT sum(pause_sec) from vicidial_agent_log a inner join (SELECT pause_code from vicidial_pause_codes group by pause_code) b on a.sub_status = b.pause_code 
+                            where b.campaign_id in ($group_SQL) and 
+                                event_time >= DATE(NOW()) AND 
+                                billable LIKE 'NO'";
+                        
+                        $non_billable = mysql_query($non_billable, $link);
+                        $non_billable = mysql_fetch_row($non_billable);
+                        
+                        
+                        $qry = "SELECT sum(wait_sec), sum(talk_sec), sum(dispo_sec), sum(pause_sec), sum(dead_sec) from vicidial_agent_log $group_SQLwhere AND event_time >= DATE(NOW())";
+                       
+                        $qry = mysql_query($qry, $link);
+                        $qry = mysql_fetch_row($qry);
+                        $horas_trabalhadas = $qry[0] + $qry[1] + $qry[2] + $qry[3] + $qry[4] - $non_billable[0];
+                        $seconds = $horas_trabalhadas;
+                        $hours = floor($seconds / 3600);
+                        $mins = floor(($seconds - $hours*3600) / 60);
+                        $s = $seconds - ($hours*3600 + $mins*60);
+
+                        $mins = ($mins<10?"0".$mins:"".$mins);
+                        $s = ($s<10?"0".$s:"".$s); 
+
+                        $format_horas_trabalhadas = ($hours>0?$hours.":":"").$mins.":".$s;
+                        
+                        // Uteis
+                        
+                        $qry = "";
+                        $qry = "select count(lead_id) from vicidial_log a INNER JOIN (SELECT status from vicidial_campaign_statuses where customer_contact like 'Y' group by status) b on a.status = b.status and call_date >= DATE(NOW()) $group_SQLand;";
+                        $qry = mysql_query($qry, $link);
+                        $qry = mysql_fetch_row($qry);
+                        $uteis = $qry[0];
+                        
+                        // Fechados
+                        $qry = "";
+                        $qry = "select count(lead_id) from vicidial_log a INNER JOIN (SELECT status from vicidial_campaign_statuses where completed like 'Y' group by status) b on a.status = b.status and call_date >= DATE(NOW()) $group_SQLand;";
+                        $qry = mysql_query($qry, $link);
+                        $qry = mysql_fetch_row($qry);
+                        $fechados = $qry[0];
+                        
+                        // Agendamentos
+                        
+                        $qry = "";
+                        $qry = "select count(lead_id) from vicidial_log a INNER JOIN (SELECT status from vicidial_campaign_statuses where scheduled_callback like 'Y' group by status UNION ALL SELECT status from vicidial_statuses where scheduled_callback like 'Y' group by status) b on a.status = b.status and call_date >= DATE(NOW()) $group_SQLand;";
+                        
+                        $qry = mysql_query($qry, $link);
+                        $qry = mysql_fetch_row($qry);
+                        $agendamentos = $qry[0]; 
+                        
+                        $resp = number_format((($uteis / $fechados) * 100),1);
+                        $sucess_hour = number_format(($sucesso / ($horas_trabalhadas / 60 / 60)),2);
+                        
+                        $sucesso_uteis = number_format((($sucesso / $uteis) * 100),2);
+                        $uteis_hour = number_format(($uteis / ($horas_trabalhadas / 60 / 60)),2);
+                        
+                        echo"
+                        
+
+                        <div class='cc-mstyle' style='margin-top:12px; margin-bottom:8px; margin-right:-4px; width:95%;'>
+			<table>
+                        <tr>
+                            <td id=icon16><img src='/images/icons/group_16.png' /></td><td style=text-align:left;>Sucesso:$teste $sucesso</td>
+                            <td id=icon16><img src='/images/icons/phone_delete_16.png' /></td><td style=text-align:left>Horas Trabalhadas: $format_horas_trabalhadas </td>
+                        </tr>
+                        <tr>
+                            <td id=icon16><img src='/images/icons/blackberry_16.png' /></td><td style=text-align:left>Contactos Uteis:  $uteis </td> 
+                            <td id=icon16><img src='/images/icons/blackberry_16.png' /></td><td style=text-align:left>Uteis / Fechados:  $resp % </td> 
+                            
+                        </tr>
+                        <tr>
+                            <td id=icon16><img src='/images/icons/phone_delete_16.png' /></td><td style=text-align:left>Sucesso / Hora:  $sucess_hour </td>
+                            <td id=icon16><img src='/images/icons/blackberry_16.png' /></td><td style=text-align:left>Sucesso / Uteis:  $sucesso_uteis % </td> 
+                        </tr>
+                        <tr>
+                            <td id=icon16><img src='/images/icons/blackberry_16.png' /></td><td style=text-align:left>Uteis / Hora:  $uteis_hour </td> 
+                            <td id=icon16><img src='/images/icons/blackberry_16.png' /></td><td style=text-align:left>Agendamentos:  $agendamentos </td>     
+                        </tr>
+			
+                        </table></div>
 
 			</td>
 			</tr>

@@ -72,7 +72,13 @@ function MiscOptionsBuilder(Flag)
                     $("#campaign-name").val(data.c_name);
                     $("#campaign-description").val(data.c_description)
                     if(data.c_active == "Y"){ $("#campaign_active_yes").parent().addClass("checked"); } else { $("#campaign_active_no").parent().addClass("checked"); }
-                    if(data.c_dial_method == "RATIO"){ $("#campaign_type_auto").parent().addClass("checked"); $("#ratio-spinner").val(data.c_auto_dial_level); } else { $("#campaign_type_manual").parent().addClass("checked"); $( "#ratio-spinner" ).spinner("disable"); $("#ratio-spinner").val(0); }
+                    if(data.c_dial_method == "RATIO") { 
+                        $("#campaign_type_auto").parent().addClass("checked"); $("#ratio-spinner").val(data.c_auto_dial_level); $("#wizard-tabs").tabs("enable", 1)
+                    } else if(data.c_dial_method == "MANUAL") { 
+                        $("#campaign_type_manual").parent().addClass("checked"); $( "#ratio-spinner" ).spinner("disable"); $("#ratio-spinner").val(0); $("#wizard-tabs").tabs("disable", 1)
+                                } else if(data.c_dial_method == "ADAPT_AVERAGE") {
+                                    $("#campaign_type_predictive").parent().addClass("checked"); $( "#ratio-spinner" ).spinner("disable"); $("#ratio-spinner").val(data.c_auto_dial_level); $("#wizard-tabs").tabs("enable", 1)
+                                }
                     if(data.c_recording == "ALLFORCE"){ $("#campaign_recording_yes").parent().addClass("checked"); } else { $("#campaign_recording_no").parent().addClass("checked"); }
                     if(data.c_lead_order == "RANDOM"){ $("#campaign_lead_order_random").parent().addClass("checked"); } else { $("#campaign_lead_order_ordered").parent().addClass("checked"); }
                     if(data.c_next_agent_call == "longest_wait_time"){ $("#campaign_atrib_calls").val("Maior Tempo em Espera") } else if(data.c_next_agent_call == "random") { $("#campaign_atrib_calls").val("Aleatória") } else { $("#campaign_atrib_calls").val("Menos Chamadas Recebidas") }
@@ -478,20 +484,39 @@ function CampaignTypeSwitch()
 {
 	var CampaignType;
     var TempCampaignRatio;
-    if($(this).attr("id") == 'campaign_type_auto')
-    {
-        CampaignType = "RATIO";
-        TempCampaignRatio = 2;
-        $("#ratio-spinner").spinner("enable");
-        $("#ratio-spinner").val(2);
+    
+    
+    switch($(this).attr("id")){
+        case "campaign_type_auto" : { 
+            CampaignType = "RATIO";
+            TempCampaignRatio = 2;
+            $("#ratio-spinner").spinner("enable");
+            $("#ratio-spinner").val(2); 
+            $( "#wizard-tabs" ).tabs( "disable", 1 )
+            break;
+        }
+        case "campaign_type_manual" : {
+            CampaignType = "MANUAL";
+            TempCampaignRatio = 0;
+            $( "#ratio-spinner" ).spinner( "disable" );
+            $( "#ratio-spinner" ).val(0);
+            $( "#wizard-tabs" ).tabs( "disable", 1 )
+            break;
+        }
+        case "campaign_type_predictive" : {
+            CampaignType = "ADAPT_AVERAGE";
+            TempCampaignRatio = 2;
+            $( "#ratio-spinner" ).spinner( "disable" );
+            $( "#ratio-spinner" ).val(2);
+            $( "#wizard-tabs" ).tabs( "enable", 1 )
+            
+            break;    
+        }
     }
-    else
-    {
-        CampaignType = "MANUAL";
-        TempCampaignRatio = 0;
-        $( "#ratio-spinner" ).spinner( "disable" );
-        $( "#ratio-spinner" ).val(0);
-    }
+    
+ 
+   
+
     $.ajax({
             type: "POST",
             url: "_opcoes_gerais-requests.php",

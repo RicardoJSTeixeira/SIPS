@@ -3,18 +3,20 @@
     <div id="wizard-tabs"> 
         <ul> 
             <li id="li-opcoes"><a href="#tab1">Definições</a></li> 
+            <li id="li-dialer"><a href="#tab8">Dialer</a></li> 
             <li id="li-pausas"><a href="#tab2">Pausas</a></li>
             <li id="li-feeds"><a href="#tab3">Feedbacks</a></li>
             <li id="li-recycle"><a href="#tab4">Reciclagem</a></li> 
             <li id="li-scripts"><a href="#tab5">Scripts</a></li> 
             <li id="li-dfields"><a href="#tab6">Campos Dinâmicos</a></li>
-            <li id="li-dbs"><a href="#tab7">Bases de Dados</a></li>  
-        </ul>
+            <li id="li-dbs"><a href="#tab7">Bases de Dados</a></li>
+             
+        </ul>           
         
 		<!-- OPÇÕES GERAIS -->
         <div id="tab1">
         
-        	<table  class="table-100"> 
+        	<table class="table-100"> 
         	<tr>
             	<td class="td-half-left">
             	<div class="div-title">Definições<span class="css-orange-caret">></span>Identificação</div>
@@ -68,7 +70,7 @@
                     </table>
                     	
                     
-                    </div>
+                    </div> 
 				</td>
 
             	<td class="td-half-right">
@@ -90,6 +92,7 @@
                         <td class="tright">
                         <input type="radio" class='campaign-type-switch' id="campaign_type_auto" name="campaign_type" /><label for="campaign_type_auto">Automática</label>
                         <input type="radio" class='campaign-type-switch' id="campaign_type_manual" name="campaign_type" /><label for="campaign_type_manual">Manual</label>
+                        <input type="radio" class='campaign-type-switch' id="campaign_type_predictive" name="campaign_type" /><label for="campaign_type_predictive"><i>Predictive</i></label>
                         </td>
 					</tr>
                     <tr class="tr-options">
@@ -848,7 +851,152 @@
         
 </div>
         
+      <div id="tab8">
+        
+            <table  class="table-100"> 
+            <tr>
+                <td class="td-half-left">
+                <div class="div-title">Dialer<span class="css-orange-caret">></span>Opções Avançadas</div>
+                <table>
+                    
+                    <tr class="tr-options dialer-options">
+                        <td>Chamadas <i>Inbound</i> em Espera</td>
+                        <td class="tright">
+                        <input type="radio" class='predictive-inbound-queue' id="inbound-queue-yes" name="inbound-queue" /><label for="inbound-queue-yes">Permitir <i>Outbound</i></label>
+                        <input type="radio" class='predictive-inbound-queue' id="inbound-queue-no" name="inbound-queue" /><label for="inbound-queue-no">Não Permitir <i>Outbound</i></label>
+                        </td>
+                    </tr>
+                    
+                    <tr class="tr-options dialer-options">
+                        <td>Apenas Operadores Disponiveis</td>
+                        <td class="tright">
+                        <input type="radio" class='predictive-avail-agents' id="avail-agents-yes" name="avail-agents" /><label for="avail-agents-yes">Sim</label>
+                        <input type="radio" class='predictive-avail-agents' id="avail-agents-no" name="avail-agents" /><label for="avail-agents-no">Não</label>
+                        </td>
+                    </tr>
+                    
+                    <tr class="tr-options dialer-options">
+                        <td>Chamadas / Operadores em Espera</td>
+                        <td class="tright">
+                            
+                            
+                        <div id="predictive-adaptive-diff-target-info" style="text-align:left; font-size: 10px; margin-bottom:2px;"></div>
+                        <div id="predictive-adaptive-diff-target" style=""></div>    
+                            
+                
+                        </td>
+                    </tr>
+                    
+                    
+                    <tr class="tr-options dialer-options">
+                        <td><i>Timeout</i> das Chamadas</td>
+                        <td class="tright">
+                            
+                            
+                       <input maxlength="3" style="width:20px !important; height: 18px; text-align:center" class="input-text" type="text" id="call-timeout-advanced">
+                         segundos   
+                
+                        </td>
+                    </tr>
+                            
+                    <tr class="tr-options dialer-options">
+                        <td><i>Caller ID</i> da Campanha</td>
+                        <td class="tright">
+                            
+                            
+                       <input maxlength="20" style="width:190px !important; height: 18px; text-align:center" class="input-text" type="text" id="campaign-callerid">
+                           
+                
+                        </td>
+                    </tr>
+                    
+                    
+                    
+                </table>
+                
+                 <div class="div-title">Dialer<span class="css-orange-caret">></span>Predictive<span class="css-orange-caret">></span>Opções</div>
+                
+                
+                  <table>
+                    <tr class="tr-options dialer-options">
+                        <td>Tipo de <i>Predictive</i></td>
+                        <td class="tright">
 
+                        <input type="radio" class='predictive-method-switch' id="method-average" name="predictive-method" /><label for="method-average">Média</label>
+                        <input type="radio" class='predictive-method-switch' id="method-limit" name="predictive-method" /><label for="method-limit">Limitado</label>
+
+                        </td>
+                    </tr>
+                    <tr class="tr-options dialer-options">
+                        <td>Percentagem de <i>DROP</i></td>
+                        <td class="tright">
+                        <input maxlength="3" style="width:20px !important; height: 18px; text-align:center" class="input-text" type="text" id="predictive-drop-percentage">
+                        %
+                        </td>
+                    </tr>
+                    <tr class="tr-options dialer-options">
+                        <td>Rácio Máximo em <i>Predictive</i></td>
+                        <td class="tright">
+                        <input maxlength="2" style="width:15px !important; height: 18px; text-align:center" class="input-text" type="text" id="predictive-max-ratio">
+                        
+                        </td>
+                    </tr>
+                    
+                    
+                
+                <tr class="tr-options dialer-options">
+                        <td>Nível de Intensidade em <i>Predictive</i> </td>
+                        <td class="tright">
+                        <div id="predictive-intensity-slider-info" style="text-align:left; font-size: 10px; margin-bottom:2px;"></div>
+                        <div id="predictive-intensity-slider"></div>
+                        </td>
+                    </tr>
+                
+                
+                
+                
+                
+                    
+                    
+                    </table>
+                   
+                 
+                </td>
+
+                <td class="td-half-right">
+                
+                    <div class="div-title">Dialer<span class='css-orange-caret'>></span>Informação</div>
+                    
+                    <div><b>Chamadas <i>Inbound</i> em Espera: </b>Esta opção define se o <i>dialer</i> coloca chamadas em Outbound quando existem chamadas de Inbound em fila de espera.</div> 
+<br>
+                    <div><b>Apenas Operadores Disponiveis: </b>Esta opção controla se todos os operadores logados são considerados para efeitos de rácio ou se apenas são considerados os operadores que estão disponiveis. São considerados operadores disponiveis os operadores que não estejam em Chamada. </div> 
+<br>
+<div><b>Chamadas / Operadores em Espera: </b> Nesta opção é possivel configurar se a Campanha vai forçar que estejam sempre Chamadas ou Operadores em espera independentemente do numero de chamadas em fila de espera. Esta opção pode ser usada, por exemplo, para se garantir que estão sempre alguns operadores disponiveis para receber chamadas de inbound. </div> 
+<br>
+<div><b><i>Timeout</i> das Chamadas</b> Esta opção define quanto tempo cada chamada da Campanha toca antes de ser desligada e marcada como 'Sem Resposta'.</div> 
+<br>
+<div><b><i>Caller ID</i> da Campanha</b> Esta opção configura a identificação do número das chamadas feitas por esta Campanha.</div> 
+<br>
+<div><b>Tipo de <i>Predictive</i></b> 'Média' : O <i>dialer</i> vai tentar com que ao longo do dia o número de chamadas perdidas como 'DROP' sejam uma média do que foi configurado na opção 'Percentagem de DROP'. 'Limitado': Neste tipo o <i>dialer</i> vai quebrar o ritmo de chamadas mal se atinja o limite imposto na opção 'Percentagem de DROP' até que este valor suba acima do limite.  </div> 
+<br>
+<div><b>Percentagem de <i>DROP</i></b> Esta opção configura o limite percentual de chamadas 'DROP' que vai ser utilizado pelo <i>predictive dialer.</i></div> 
+<br>
+<div><b>Rácio Máximo em <i>Predictive</i></b> Esta opção limita de rácio que o predictive dialer pode utilizar.</div> 
+<br>
+<div><b>Nível de Intensidade em <i>Predictive</i></b> Esta opção controla a intensidade com que o <i>predictive dialer</i> aumenta ou diminui o rácio. </div>                 
+                
+                
+                
+                
+                </td>
+                             
+                                    
+            </tr>
+            </table>
+            
+
+        
+        </div>     
 
     	<!-- DIALOGS -->
 		        

@@ -7,7 +7,30 @@ foreach ($_POST as $key => $value) {
 foreach ($_GET as $key => $value) {
 	${$key} = $value;
 }
+if ($action == 'update_status') {
+        $is_cb = "SELECT scheduled_callback from vicidial_campaign_statuses where status='$send_feedback' LIMIT 1 UNION ALL SELECT scheduled_callback from vicidial_statuses where status='$send_feedback' LIMIT 1";
+        $is_cb = mysql_query($is_cb);
+        $is_cb = mysql_fetch_row($is_cb);
+        $is_cb = $is_cb[0];
+        # Update vicidial_list
+	$query = "UPDATE vicidial_list SET status='$send_feedback' WHERE lead_id='$send_lead_id'";	
+	$querya = mysql_query($query);
+	
+	# Update vicidial_log 
+	$query = "UPDATE vicidial_log SET status='$send_feedback' WHERE lead_id='$send_lead_id' ORDER BY call_date DESC LIMIT 1";
+	$queryb = mysql_query($query);
+	
+	# Update vicidial_agent_log
+	$query = "UPDATE vicidial_agent_log SET status='$send_feedback' WHERE lead_id='$send_lead_id' ORDER BY agent_log_id DESC LIMIT 1";
+	$queryc = mysql_query($query);
 
+	# Update vicidial_closer_log | inbound
+	$query = "UPDATE vicidial_closer_log SET status='$send_feedback' WHERE lead_id='$send_lead_id'  ORDER BY call_date DESC LIMIT 1";
+	$queryd = mysql_query($query);
+        
+        echo $is_cb;
+        
+}
 
 if ($action == 'update_contact_field') {
 	$query = "UPDATE vicidial_list SET $send_field='$send_field_value' where lead_id='$send_lead_id'";

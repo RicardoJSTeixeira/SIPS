@@ -33,6 +33,7 @@ if( ($("#tbl-pauses tr").length == 0 && Flag == "ALL") || (Flag == "REFRESH") ||
                 
                 var OddEven;
                 var Checked;
+				var Billable;
                 
                 if($( "#span-no-pauses" ).length > 0){ $( "#span-no-pauses" ).html(""); }
         
@@ -49,6 +50,18 @@ if( ($("#tbl-pauses tr").length == 0 && Flag == "ALL") || (Flag == "REFRESH") ||
                     {
                         Checked = "";
                     }
+					
+					
+					if(data.billable[index] == "YES")
+					{
+						Billable = "checked='checked'";
+					} 
+					else 
+					{
+						Billable = "";
+					
+					}
+					
                 }
                     
                 if(Flag == "DISABLED")
@@ -56,18 +69,24 @@ if( ($("#tbl-pauses tr").length == 0 && Flag == "ALL") || (Flag == "REFRESH") ||
                     var PauseCheckBox = ""; 
                     var PauseConfig = ""; 
                     var PauseEnable = "<td width='16px' class='td-icon'><img class='mono-icon edit-pause-activate' to-enable='"+ data.pause_code[index] + "' title='Activar' style='cursor:pointer;' src='icons/mono_plus_16.png'></td>"; 
-                } 
+                	var PauseBillable = "";
+				} 
                 else
                 {
                     var PauseCheckBox = "<td class='odd-even-ignore' style='width:10px'><input "+Checked+" class='pause-active-inactive pause-checkbox' type='checkbox' value='"+ data.pause_code[index] + "' name='"+ data.pause_code[index] + "' id='"+ data.pause_code[index] + "'></td>";
                     var PauseConfig = "<td width='32px' style='text-align:center' class=''><img style='float:none; cursor:pointer' pause-to-edit='"+ data.pause_code[index] + "' class='mono-icon edit-pause' title='Configurar' style='cursor:pointer;' src='icons/mono_wrench_16.png'></td>";
                     var PauseEnable = "<td width='16px' class='td-icon'><img class='mono-icon edit-pause-deactivate' to-remove='"+ data.pause_code[index] + "' title='Desactivar' style='cursor:pointer;' src='icons/mono_trash_16.png'></td>";
-                }
+                
+					var PauseBillable = "<td class='odd-even-ignore' width='20px'><input "+Billable+" class='pause-billable' type='checkbox'></td><td width='30px'><img class='mono-icon' style='float:left !important' title='Pausa Paga' src='icons/mono_icon_euro_16.png'></td>";
+				
+				}
             
                             
-                    $("#tbl-pauses").prepend("<tr class='tr-pause-rows' pause-id='"+ data.pause_code[index] + "' style='height:22px;'>"+PauseCheckBox+"<td style='padding:1px 0px 0px 3px; text-align:left;'><label class='label-pause-name' for='" + data.pause_code[index] + "'>"+ data.pause_code_name[index] + "</label></td><td class='td-icon'><img class='mono-icon' style='margin-top:-3px' title='Tempo de Pausa' src='icons/mono_cup_16.png'></td><td width='24px' style='text-align:left; padding:1px 0px 0px 3px;'><span><span id='span-pause-time-"+ data.pause_code[index] + "'>"+ data.max_time[index] + "</span></span>m</td><td width='24px'></td>"+PauseEnable+PauseConfig+"\n\</tr>")
+                    $("#tbl-pauses").prepend("<tr class='tr-pause-rows' pause-id='"+ data.pause_code[index] + "' style='height:22px;'>"+PauseCheckBox+"<td style='padding:1px 0px 0px 3px; text-align:left;'><label class='label-pause-name' for='" + data.pause_code[index] + "'>"+ data.pause_code_name[index] + "</label></td>" + PauseBillable + "<td class='td-icon'><img class='mono-icon' style='margin-top:-3px' title='Tempo de Pausa' src='icons/mono_cup_16.png'></td><td width='24px' style='text-align:left; padding:1px 0px 0px 3px;'><span><span id='span-pause-time-"+ data.pause_code[index] + "'>"+ data.max_time[index] + "</span></span>m</td><td width='24px'></td>"+PauseEnable+PauseConfig+"\n\</tr>")
                 });
 
+
+				$(".pause-billable").uniform(); 	
                 $(".pause-checkbox").uniform(); 
                 OddEvenRefresh("", "tbl-pauses");
                 $("#input-new-pause-name").val("");
@@ -474,6 +493,35 @@ function DialogConfirmApplyPausesOnSave()
         $(this).dialog("close");
 }
 
+function PauseBillable(){ 
+	var Checked;
+   
+ 
+   
+    if($(this).parent().hasClass("checked"))
+    {
+        Checked = "YES";
+    }
+    else 
+    {
+        Checked = "NO";
+    }
+    $.ajax({
+            type: "POST",
+            url: "_pausas-requests.php",
+            data: 
+            { 
+                action: "PauseBillable",
+                CampaignID: CampaignID,
+                PauseID: $(this).closest("tr").attr("pause-id"),
+                PauseBillable: Checked,
+
+            },
+            success: function(data) {}
+    }); 
+
+}
+
 $("body")
 .on("click", ".pause-active-inactive", PauseActiveSwitch)
 .on("click", ".edit-pause-deactivate", HidePause)
@@ -487,3 +535,5 @@ $("body")
 .on("click", "#btn-new-pause", {Flag: "NEW" }, PauseListBuilder)
 .on("input", "#input-new-pause-name", ClearNewPauseErrors)
 .on("click", "#btn-pause-apply-to-all-campaigns", {dialog: "#dialog-confirm-pause-apply-to-all-campaigns" }, DialogOpen)
+.on("click", ".pause-billable", PauseBillable)
+

@@ -138,6 +138,7 @@ function CampaignEditorElemInit()
 				if(ui.newPanel.selector == "#tab5"){ ScriptElemInit(); ScriptListBuilder(); }
 				if(ui.newPanel.selector == "#tab6"){ FieldsListBuilder("ALL"); }
 				if(ui.newPanel.selector == "#tab7"){ DBListBuilder("ALL"); }
+				if(ui.newPanel.selector == "#tab8"){ DialerOptionsBuilder(); }
 				
             },
             heightStyle: "fill"
@@ -316,7 +317,7 @@ $(window).on('beforeunload', function()
 
   
 });
-
+ 
 $("body").on("click", "#img-campaign-edit",  ConstructEditCampaign)
 .on("click", "#btn-new-campaign", ConstructNewCampaign )
 .on("click", ".btn-nav-prev", ConstructCampaignMonitor )
