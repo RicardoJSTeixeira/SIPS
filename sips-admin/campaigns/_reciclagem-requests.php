@@ -145,14 +145,12 @@ function GetRecycleDetails($CampaignID, $CampaignLists, $RecycleID, $link)
 	$aTries = array("Não Chamado", "Chamado", "1ª Reciclagem", "2ª Reciclagem", "3ª Reciclagem", "4ª Reciclagem", "5ª Reciclagem", "6ª Reciclagem", "7ª Reciclagem", "8ª Reciclagem", "9ª Reciclagem", "10ª Reciclagem");
 	$output = array("aaData" => array() );
  
- 
-    $output['debug2'] = $CampaignLists;
+
  
 	$CampaignLists = preg_replace("/,/", "','", $CampaignLists); 
 	 
     $sQuery = "SELECT called_since_last_reset AS tentativas, count(*) AS contactos FROM vicidial_list WHERE list_id IN ('$CampaignLists') AND status='$RecycleID' GROUP BY called_since_last_reset ORDER BY FIELD(called_since_last_reset, 'N', 'Y', 'Y1', 'Y2', 'Y3', 'Y4', 'Y5', 'Y6', 'Y7', 'Y8', 'Y9', 'Y10')";
 	
-    $output['debug'] = $sQuery;
     
     
 	$rResult = mysql_query( $sQuery, $link ) or die(mysql_error());
