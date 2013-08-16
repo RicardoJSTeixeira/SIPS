@@ -1230,7 +1230,7 @@ function stats_update(){
 
                          CBcounTtotal_array=data,
                          CBcounT = CBcounTtotal_array[1],
-                         CBcounTex =(CBcounTtotal_array[0] == 0)? "Nenhum": CBcounTtotal_array[0],
+                         CBcounTex =(CBcounTtotal_array[0] == 0)? "Nenhum": "<span class=\"badge badge-important\">"+CBcounTtotal_array[0]+"</span>",
                          cbexs=(CBcounTtotal_array[0] <= 1)? "": "s",
                          cblvs=(CBcounTtotal_array[1] <= 1)? "": "s";
                         
@@ -1247,23 +1247,16 @@ function stats_update(){
                                 if ( (scheduled_callbacks_alert == 'RED_DEFER') || (scheduled_callbacks_alert == 'BLINK_DEFER') || (scheduled_callbacks_alert == 'BLINK_RED_DEFER') )
                                         {Defer=1;}
 
-                                if ( (LastCallbackViewed > 0) && (Defer > 0) )
-                                        {var do_nothing=1;}
-                                else
-                                        {
-                                        if ( (scheduled_callbacks_alert == 'BLINK') || (scheduled_callbacks_alert == 'BLINK_DEFER') )
-                                                {
-                                                CBpre = '';
-                                                CBpost = '';
-                                                }
+                                if ( !(LastCallbackViewed > 0 && Defer > 0) )
+                                       {
                                         if ( (scheduled_callbacks_alert == 'RED') || (scheduled_callbacks_alert == 'RED_DEFER') || (scheduled_callbacks_alert == 'BLINK_RED') || (scheduled_callbacks_alert == 'BLINK_RED_DEFER') )
                                                 {
-                                                CBpre = '<b><font color="red">';
-                                                CBpost = '</font></b>';
+                                                CBpre = '<span class=\"badge badge-important\">';
+                                                CBpost = '</span>';
                                                 }
                                         }
                                 }
-                        CBlinkCONTENT ="<a href=\"#\" onclick=\"CalLBacKsLisTCheck();return false;\">" + CBpre + '' + CBprint + '' + " Callback"+cblvs+" Pronto"+cblvs+" e " +CBcounTex+" Expirado"+cbexs+" "+ CBpost + "</a>";	
+                        CBlinkCONTENT ="<a href=\"#\" onclick=\"CalLBacKsLisTCheck();return false;\">" + CBpre + CBprint + CBpost + " Callback"+cblvs+" Pronto"+cblvs+" e " +CBcounTex+" Expirado"+cbexs+" </a>";	
                         $("#CBstatusSpan").html(CBlinkCONTENT);
                     },"json");
                     
@@ -1318,8 +1311,18 @@ function stats_update(){
         function(data) {
             var tbl_body = "", inactivos = "";
             $.each(data, function() {
-                var tbl_row = "<td><time datetime=\"" + this.callback_time + "\" title=\""+moment(this.callback_time).format("dddd, MMMM Do YYYY, hh:mm:ss")+"\" >"+moment(this.callback_time).fromNow()+"</time></td><td>" + this.phone + "</td><td>" + this.comment + "<a href='#' class=\"btn btn-mini\" onclick=\"VieWLeaDInfO('" + this.lead_id + "','" + this.callback_id + "');return false;\"> mais</a></td><td>" + this.name + "</td><td>" + this.status + "</td><td>" + this.campaign_id + "</td><td><time datetime=\"" + this.callback_time + "\" title=\""+moment(this.entry_time).format("dddd, MMMM Do YYYY, hh:mm:ss")+"\" >"+moment(this.entry_time).fromNow()+"</time></td><td><button  onclick=\"new_callback_call('" + this.callback_id + "','" + this.lead_id + "','MAIN');\" class=\"btn btn-mini icon-alone \"><i class=\"icon-phone\"></i></button></td><td> <button onclick=\"ApagaCallback('" + this.callback_id + "');\" class=\"btn btn-mini icon-alone \"><i class=\"icon-trash\"></i></button> </td>";
-                if (this.status == "Inativo") {
+                var tbl_row = "<td>\n\
+                                <time datetime=\"" + this.callback_time + "\" title=\""+moment(this.callback_time).format("dddd, MMMM Do YYYY, hh:mm:ss")+"\" >"+moment(this.callback_time).fromNow()+"</time></td>\n\
+                                <td>" + this.phone + "</td>\n\
+                                <td>" + this.comment + "</td>\n\
+                                <td>" + this.name + "</td>\n\
+                                <td>" + this.status + "</td>\n\
+                                <td>" + this.campaign_id + "</td>\n\
+                                <td><time datetime=\"" + this.callback_time + "\" title=\""+moment(this.entry_time).format("dddd, MMMM Do YYYY, hh:mm:ss")+"\" >"+moment(this.entry_time).fromNow()+"</time>\n\
+                                <div class=\"view-button\"><button onclick=\"ApagaCallback('" + this.callback_id + "');\" class=\"btn btn-mini activator \"><i class=\"icon-trash\"></i>Eliminar</button></div>\n\
+                                <div class=\"view-button\"><a href='#' class=\"btn btn-mini activator\" onclick=\"VieWLeaDInfO('" + this.lead_id + "','" + this.callback_id + "');return false;\"><i class=\"icon-folder-open\"></i>Info</a></div>\n\
+                                <div class=\"view-button\"><button  onclick=\"new_callback_call('" + this.callback_id + "','" + this.lead_id + "','MAIN');\" class=\"btn btn-mini activator \"><i class=\"icon-phone\"></i>Chamar</button></div> </td>";
+                if (this.status === "Inativo") {
                     inactivos += "<tr style='opacity:0.5;' >" + tbl_row + "</tr>";
                 } else {
                     tbl_body += "<tr>" + tbl_row + "</tr>";
@@ -1367,9 +1370,9 @@ function stats_update(){
                         var time_label,tpausa= $('#tpausa');
                         $.each(data,function() {
                             if (this.exceed) {
-                                time_label = $("<label>", {class: "label label-important"}).text(this.time);
+                                time_label = $("<span>", {class: "badge badge-important"}).text(this.time);
                             } else {
-                                time_label = $("<label>").text(this.time);
+                                time_label = $("<span>").text(this.time);
                             }
                            tpausa.append(
                                     $("<tr>")
@@ -1668,8 +1671,8 @@ function stats_update(){
 						MD_ring_secondS++;
 						var dispnum = lead_dial_number;
 
-						var status_display_number = phone_number_format(dispnum);
-
+						var status_display_number = dispnum;
+                                                redial_number=lead_dial_number;
 						if (alt_dial_status_display=='0')
 							{
 							document.getElementById("MainStatuSSpan").innerHTML = "A Marcar: " + status_display_number + " ID: " + CIDcheck + "  Á espera de ligação... " + MD_ring_secondS + " segundos";
@@ -1760,8 +1763,8 @@ function stats_update(){
 
 								MD_channel_look=0;
 								var dispnum = lead_dial_number;
-								var status_display_number = phone_number_format(dispnum);
-
+								var status_display_number = dispnum;
+                                                                redial_number=lead_dial_number;
 								document.getElementById("MainStatuSSpan").innerHTML = " Chamado: " + status_display_number/* + " UID: " + CIDcheck*/; 
 
                                 document.getElementById("ParkControl").innerHTML ="<td onclick=\"mainxfer_send_redirect('ParK','" + lastcustchannel + "','" + lastcustserverip + "');return false;\" style='cursor:pointer'><img src='/images/icons/control_pause_blue.png' /></td><td onclick=\"mainxfer_send_redirect('ParK','" + lastcustchannel + "','" + lastcustserverip + "');return false;\" style='cursor:pointer'><a href=\"#\">Colocar em Espera</a></td>";
@@ -2042,38 +2045,38 @@ function stats_update(){
 
 
 	function redial() {
-                var go_on = divchecker("redial");
-                    if (!go_on) { return; }
-                if ( AgentDispoing > 0) {
-                        alert_box('Termine Wrap-up da chamada.')
+            
+                    var go_on = divchecker("redial");
+                    if (!go_on) {
                         return;
                     }
-                
-                    if  ( AutoDialReady == 0 && auto_dial_level > 0 && pause_code_counter == 0) {
-                    alert_box('Seleccione o motivo de pausa por favor.');
-                    return;
+                    if (AgentDispoing > 0) {
+                        alert_box('Termine Wrap-up da chamada.');
+                        return;
                     }
-		var segue=1;
-		if ( (AutoDialWaiting == 1) || (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
-			{
-			if (!((auto_pause_precall == 'Y') && ( (agent_pause_codes_active=='Y') || (agent_pause_codes_active=='FORCE') ) && (AutoDialWaiting == 1) && (VD_live_customer_call!=1) && (alt_dial_active!=1) && (MD_channel_look!=1) && (in_lead_preview_state!=1) ))
-			{
-			segue=0;
-			alert_box('Tem de estar em pausa para fazer a re-marcação.');
-			} 
-		}
-		if (segue==1)
-		{
-			if (!redial_number==0) 
-			{
-				NewRedialSubmiT(redial_number);
-			}
-			else
-			{
-				alert_box('Ainda não fez a primeira chamada.');
-			}
-		} 
-		}
+
+                    if (redial_number == 0)
+                        {
+                            alert_box('Ainda não fez a primeira chamada.');
+                            return;
+                        }
+                    var segue = 1;
+                    if ((VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1))
+                    {
+                        segue = 0;
+                        alert_box('Tem de estar em pausa para fazer a re-marcação.');
+                    }
+                    if (AutoDialReady == 1 && auto_dial_level > 0) {
+                        agent_log_id = AutoDial_ReSume_PauSe("VDADpause", '', '', '', '', '1', auto_pause_precall_code);
+                    }
+                    if (segue == 1)
+                    {
+                        
+                            NewRedialSubmiT(redial_number);
+                        
+                    }
+                }
+                
         function divchecker(curDiv) {
             var rdytogo = 1;
                 if ($("#SearcHForMDisplaYBox").css("display") != 'none' && curDiv != "search") { rdytogo = 0;}
@@ -2373,8 +2376,8 @@ function stats_update(){
 						custchannellive=1;
 
 						var dispnum = manDiaLonly_num;
-						var status_display_number = phone_number_format(dispnum);
-
+						var status_display_number = dispnum;
+                                                redial_number=status_display_number;
 						if (alt_dial_status_display=='0')
 							{
 							document.getElementById("MainStatuSSpan").innerHTML = " A Marcar: " + status_display_number /*+ " ID: " + MDnextCID */+ " Á espera de ligação...";
@@ -2930,10 +2933,10 @@ function stats_update(){
 
 							lead_dial_number = document.vicidial_form.phone_number.value;
 							var dispnum = document.vicidial_form.phone_number.value;
-							var status_display_number = phone_number_format(dispnum);
+							var status_display_number = dispnum;
 							var callnum = dialed_number;
-							var dial_display_number = phone_number_format(callnum);
-
+							var dial_display_number = callnum;
+                                                        redial_number=callnum;
 							document.getElementById("MainStatuSSpan").innerHTML = " Chamada Inbound: " + dial_display_number + "Linha de Entrada: " + VDCL_group_name; 
 
 							if (CBentry_time.length > 2)
@@ -2976,10 +2979,10 @@ function stats_update(){
 									//document.getElementById("MainStatuSSpan").style.background = VDIC_data_VDIG[2];
 									}
 								var dispnum = document.vicidial_form.phone_number.value;
-								var status_display_number = phone_number_format(dispnum);
+								var status_display_number = dispnum;
 								var callnum = dialed_number;
-								var dial_display_number = phone_number_format(callnum);
-
+								var dial_display_number = callnum;
+                                                                redial_number=callnum;
 								document.getElementById("MainStatuSSpan").innerHTML = "Chamada de Entrada: " + dial_display_number + " Linha de Entrada: " + VDCL_group_name; 
 								}
 
@@ -3185,7 +3188,7 @@ function stats_update(){
 							if (alert_enabled=='ON')
 								{
 								var callnum = dialed_number;
-								var dial_display_number = phone_number_format(callnum);
+								var dial_display_number = callnum;
 								alert("Chamada Entrada: " + dial_display_number + "\n Linha de Entrada: " + VDCL_group_name);
 								}
 							}
@@ -4681,6 +4684,7 @@ hideDiv('CallBackSelectBox');
 // Show message that there are no voice channels in the VICIDIAL session
 	function NoneInSession()
 		{
+                if($("#NoneInSessionBox").css("display")==="none"){loop_warning.start("disconnected");}
 		showDiv('NoneInSessionBox');
 		document.getElementById("NoneInSessionID").innerHTML = session_id;
 		WaitingForNextStep=1;
@@ -4690,9 +4694,12 @@ hideDiv('CallBackSelectBox');
 		hideDiv('NoneInSessionBox');
 		WaitingForNextStep=0;
 		nochannelinsession=0;
+                loop_warning.stop();
 		}
 	function NoneInSessionCalL()
 		{
+                    loop_warning.stop();
+                    
 		hideDiv('NoneInSessionBox');
 		WaitingForNextStep=0;
 		nochannelinsession=0;
@@ -5793,58 +5800,6 @@ function utf8_decode(utftext) {
     };
 
 
-// ################################################################################
-// phone number format
-function phone_number_format(formatphone) {
-	/*/ customer_local_time, status date display 9999999999
-	//	vdc_header_phone_format
-    //  US_DASH 000-000-0000 - USA dash separated phone number<br />
-    //  US_PARN (000)000-0000 - USA dash separated number with area code in parenthesis<br />
-    //  UK_DASH 00 0000-0000 - UK dash separated phone number with space after city code<br />
-    //  AU_SPAC 000 000 000 - Australia space separated phone number<br />
-    //  IT_DASH 0000-000-000 - Italy dash separated phone number<br />
-    //  FR_SPAC 00 00 00 00 00 - France space separated phone number<br />
-	var regUS_DASHphone = new RegExp("US_DASH","g");
-	var regUS_PARNphone = new RegExp("US_PARN","g");
-	var regUK_DASHphone = new RegExp("UK_DASH","g");
-	var regAU_SPACphone = new RegExp("AU_SPAC","g");
-	var regIT_DASHphone = new RegExp("IT_DASH","g");
-	var regFR_SPACphone = new RegExp("FR_SPAC","g");
-	var status_display_number = formatphone;
-	var dispnum = formatphone;
-	if (disable_alter_custphone == 'HIDE')
-		{
-		var status_display_number = 'XXXXXXXXXX';
-		var dispnum = 'XXXXXXXXXX';
-		}
-	if (vdc_header_phone_format.match(regUS_DASHphone))
-		{
-		var status_display_number = dispnum.substring(0,3) + '-' + dispnum.substring(3,6) + '-' + dispnum.substring(6,10);
-		}
-	if (vdc_header_phone_format.match(regUS_PARNphone))
-		{
-		var status_display_number = '(' + dispnum.substring(0,3) + ')' + dispnum.substring(3,6) + '-' + dispnum.substring(6,10);
-		}
-	if (vdc_header_phone_format.match(regUK_DASHphone))
-		{
-		var status_display_number = dispnum.substring(0,2) + ' ' + dispnum.substring(2,6) + '-' + dispnum.substring(6,10);
-		}
-	if (vdc_header_phone_format.match(regAU_SPACphone))
-		{
-		var status_display_number = dispnum.substring(0,3) + ' ' + dispnum.substring(3,6) + ' ' + dispnum.substring(6,9);
-		}
-	if (vdc_header_phone_format.match(regIT_DASHphone))
-		{
-		var status_display_number = dispnum.substring(0,4) + '-' + dispnum.substring(4,7) + '-' + dispnum.substring(8,10);
-		}
-	if (vdc_header_phone_format.match(regFR_SPACphone))
-		{
-		var status_display_number = dispnum.substring(0,2) + ' ' + dispnum.substring(2,4) + ' ' + dispnum.substring(4,6) + ' ' + dispnum.substring(6,8) + ' ' + dispnum.substring(8,10);
-		}
-
-	return status_display_number;*/
-    return formatphone;
-	};
 
 
 // ################################################################################
@@ -5902,40 +5857,11 @@ function phone_number_format(formatphone) {
 				}
 			if (move_on == 1)
 				{
-				var xmlhttp=false;
-				/*@cc_on @*/
-				/*@if (@_jscript_version >= 5)
-				// JScript gives us Conditional compilation, we can cope with old IE versions.
-				// and security blocked creation of the objects.
-				 try {
-				  xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-				 } catch (e) {
-				  try {
-				   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-				  } catch (E) {
-				   xmlhttp = false;
-				  }
-				 }
-				@end @*/
-				if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-					{
-					xmlhttp = new XMLHttpRequest();
-					}
-				if (xmlhttp) 
-					{ 
-					RAview_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=CALLSINQUEUEgrab&format=text&user=" + user + "&pass=" + pass + "&conf_exten=" + session_id + "&extension=" + extension + "&protocol=" + protocol + "&campaign=" + campaign + "&stage=" + CQauto_call_id;
-					xmlhttp.open('POST', 'vdc_db_query.php'); 
-					xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
-					xmlhttp.send(RAview_query); 
-					xmlhttp.onreadystatechange = function() 
-						{ 
-						if (xmlhttp.readyState == 4 && xmlhttp.status == 200) 
-							{
-							var CQgrabresponse = xmlhttp.responseText;
-							var regCQerror = new RegExp("ERROR","ig");
-							if (CQgrabresponse.match(regCQerror))
+                                    RAview_query = {server_ip:server_ip,session_name:session_name,ACTION:"CALLSINQUEUEgrab",format:"text",user:user,pass:pass,conf_exten:session_id,extension:extension,protocol:protocol,campaign:campaign,stage:CQauto_call_id};
+					$.post("vdc_db_query.php",RAview_query,function(data){
+							if (data.error.length)
 								{
-								alert_box(CQgrabresponse);
+								alert_box(data.error[0]);
 								}
 							else
 								{
@@ -5943,62 +5869,82 @@ function phone_number_format(formatphone) {
 								AutoDialWaiting=1;
 								}
 							}
-						}
-					delete xmlhttp;
-					}
-
-				}
+                                                        ,"json");
+				
 			}
 		}
+                }
 
 
 // ################################################################################
 // RefresH the calls in queue bottombar
+	var ringing_call_id;
 	function refresh_calls_in_queue(CQcount)
 		{
-		if (CQcount > 0)
-			{
-			if (even > 0)
-				{
-				var xmlhttp=false;
-				/*@cc_on @*/
-				/*@if (@_jscript_version >= 5)
-				// JScript gives us Conditional compilation, we can cope with old IE versions.
-				// and security blocked creation of the objects.
-				 try {
-				  xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-				 } catch (e) {
-				  try {
-				   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-				  } catch (E) {
-				   xmlhttp = false;
-				  }
-				 }
-				@end @*/
-				if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-					{
-					xmlhttp = new XMLHttpRequest();
-					}
-				if (xmlhttp) 
-					{ 
-					RAview_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=CALLSINQUEUEview&format=text&user=" + user + "&pass=" + pass + "&conf_exten=" + session_id + "&extension=" + extension + "&protocol=" + protocol + "&campaign=" + campaign + "&stage=<?php echo $CQwidth ?>";
-					xmlhttp.open('POST', 'vdc_db_query.php'); 
-					xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
-					xmlhttp.send(RAview_query); 
-					xmlhttp.onreadystatechange = function() 
-						{ 
-						if (xmlhttp.readyState == 4 && xmlhttp.status == 200) 
-							{
-							document.getElementById('callsinqueuelist').innerHTML = xmlhttp.responseText + "\n";
-							}
-						}
-					delete xmlhttp;
-					}
+                if (CQcount > 0)
+                {
+                    if (even > 0)
+                    {
+                        $.post("vdc_db_query.php",
+                                {server_ip: server_ip, session_name: session_name, ACTION: "CALLSINQUEUEview", format: "text", user: user, pass: pass, conf_exten: session_id, extension: extension, protocol: protocol, campaign: campaign, stage: "<?php echo $CQwidth ?>"},
+                        function(data) {
+                            atum = data;
+                            $('#callsinqueuelist').html('');
 
-				}
-			}
-		}
+                            if (!data.length) {
+                                $("#bitch-answer").hide();
+                                $("#bitch-answer-answer").attr("onclick", "");
+                                $(".bitch-answer-cancel").attr("onclick", "");
+                                loop.stop();
+                            }
 
+                            var move_on = 0;
+                            if (!((AutoDialWaiting == 1) || (VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1)))
+                            {
+                                move_on = 1
+                                if (!((auto_pause_precall == 'Y') && ((agent_pause_codes_active == 'Y') || (agent_pause_codes_active == 'FORCE')) && (AutoDialWaiting == 1) && (VD_live_customer_call != 1) && (alt_dial_active != 1) && (MD_channel_look != 1) && (in_lead_preview_state != 1)))
+                                {
+                                    move_on = 1;
+                                }
+                            }
+
+                            $.each(data, function(i, v) {
+
+                                if (i === 0 && move_on && cancel_call_id_bitchs !== v.call_id) {
+                                    if (ringing_call_id !== v.call_id) {
+                                        loop.stop();
+                                        loop.start("ring");
+                                        ringing_call_id = v.call_id;
+                                    }
+                                    $("#bitch-answer").show();
+                                    $("#bitch-answer p").html('<ul><li><b>Nome: </b>' + v.name + '</li><li><b>Telefone: </b>' + v.phone + '</li><li><b>Tempo em espera (s): </b>' + v.time + '</li></ul>');
+                                    $("#bitch-answer-answer").attr("onclick", "callinqueuegrab('" + v.call_id + "')");
+                                    $(".bitch-answer-cancel").attr("onclick", "cancel_bitch_queue('" + v.call_id + "')");
+                                } else if (i === 0 && !move_on) {
+                                    $("#bitch-answer").hide();
+                                    loop.stop();
+                                }
+
+                                $('#callsinqueuelist').append('<tr><td>' + v.phone + '</td><td>' + v.name + '</td><td>' + v.time + '</td><td><button class="btn btn-success btn-mini icon-alone" onclick="callinqueuegrab(\'' + v.call_id + '\')"><i class="icon-phone"></i></button></td></tr>');
+
+
+                            });
+                        }, "json");
+
+                    }
+                }
+            }
+
+
+//Cancel bitchs queue
+    var cancel_call_id_bitchs;
+    function cancel_bitch_queue(call_id){
+cancel_call_id_bitchs=call_id;
+
+$("#bitch-answer").hide();
+$("#bitch-answer-blocker").hide();
+loop.stop();
+}
 
 // ################################################################################
 // Open or close the callsinqueue view bottombar
@@ -6006,12 +5952,13 @@ function phone_number_format(formatphone) {
 		{
 		if (CQoperation=='SHOW')
 			{
-			document.getElementById("callsinqueuelink").innerHTML = "<a href=\"#\"  onclick=\"show_calls_in_queue('HIDE');\">Esconder chamadas em espera</a>";
+			document.getElementById("callsinqueuelink").innerHTML = "<a tabindex=\"-1\" href=\"#\" onclick=\"show_calls_in_queue('HIDE');\"><i class=\"icon-road\"></i>Chamadas em espera</a>\n";
 			view_calls_in_queue_active=1;
+			showDiv('callsinqueuedisplay');
 			}
 		else
 			{
-			document.getElementById("callsinqueuelink").innerHTML = "<a href=\"#\"  onclick=\"show_calls_in_queue('SHOW');\">Mostrar chamadas em espera</a>";
+			document.getElementById("callsinqueuelink").innerHTML = "<a tabindex=\"-1\" href=\"#\" onclick=\"show_calls_in_queue('SHOW');\"><i class=\"icon-road\"></i>Chamadas em espera</a>\n";
 			view_calls_in_queue_active=0;
 			hideDiv('callsinqueuedisplay');
 			}
@@ -7398,17 +7345,16 @@ function start_all_refresh()
 	// functions to hide and show different DIVs
 	function showDiv(divvar) 
 		{
-		if ($('#'+divvar).length)
-			{
-                            $('#'+divvar).show();
-			}
+                    element=$('#'+divvar);
+                    element.show().addClass("animated bounce");
+                    var wait = window.setTimeout( function(){
+                    element.removeClass("animated bounce");},
+                    1300
+                    ); 
 		}
 	function hideDiv(divvar)
 		{
-		if ($('#'+divvar).length)
-			{
                             $('#'+divvar).hide();
-			}
 		}
 	function clearDiv(divvar)
 		{
@@ -8558,7 +8504,8 @@ function HotKeys(HKstate)
 
                             lead_dial_number = dialed_number;
                             var dispnum = dialed_number;
-                            var status_display_number = phone_number_format(dispnum);
+                            var status_display_number = dispnum;
+                            redial_number=dialed_number;
                             $("#ResumeControl").html(ResumeControl_auto_OFF_HTML);
                             $("#MainStatuSSpan").html(" A Marcar: " + status_display_number + " ID: " + MDnextCID + "  " + man_status);
                             if ((dialed_label.length < 2) || (dialed_label == 'NONE')) {
@@ -8879,10 +8826,75 @@ function HotKeys(HKstate)
                             campaign: campaign,
                             callback_id: VLI_cb_id},
                 function(data) {
-                    $("#LeaDInfOSpan").html(data);
+                    var cb_info=data.callback_info;
+                    var spot=$("#LeaDInfOSpan");
+                    spot.find("#cb_status").text(cb_info.status);
+                    spot.find("#lead_status").text(cb_info.lead_status);
+                    spot.find("#cb_entry_time").text(cb_info.entry_time);
+                    spot.find("#cb_date").text(cb_info.callback_time);
+                    spot.find("#cb_comment").text(cb_info.comments);
+                    
+                    var lead_info=data.lead_info;
+                    var lead_info_spot=spot.find("#lead_info").empty();
+                    $.each(lead_info,function(){
+                        lead_info_spot
+                                .append($("<tr>")
+                                        .append($("<th>",{class:"text-right"}).text(this.name))
+                                        .append($("<td>",{class:"text-left"}).text(this.value)));
+                    });
+                    
+                    var lead_log=data.lead_log;
+                    var lead_log_spot=spot.find("#lead_log").empty();
+                    $.each(lead_log,function(){
+                        lead_log_spot
+                                .append($("<tr>")
+                                        .append($("<td>").text(this.call_date))
+                                        .append($("<td>").text(this.user))
+                                        .append($("<td>").text(this.length))
+                                        .append($("<td>").text(this.status))
+                                        .append($("<td>").text(this.phone_number))
+                                        .append($("<td>").text(this.campaign))
+                                        .append($("<td>").text(this.io))
+                                        .append($("<td>").text(this.term_reason)));
+                    });
+                    
                     showDiv('LeaDInfOBox');
-                });
+                }
+                ,"json");
 
+            }
+            
+            function leadlog(){
+                    var lead_log_spot=$("#LeadLog tbody").empty();
+                 $.post("vdc_db_query.php",
+                        {server_ip: server_ip,
+                            session_name: session_name,
+                            ACTION: "LEADINFOview",
+                            format: "text",
+                            user: user,
+                            pass: pass,
+                            conf_exten: session_id,
+                            extension: extension,
+                            protocol: protocol,
+                            lead_id: $("#lead_id").val(),
+                            campaign: campaign},
+                function(data) {
+                    var lead_log=data.lead_log;
+                    $.each(lead_log,function(){
+                        lead_log_spot
+                                .append($("<tr>")
+                                        .append($("<td>").text(this.call_date))
+                                        .append($("<td>").text(this.user))
+                                        .append($("<td>").text(this.length))
+                                        .append($("<td>").text(this.status))
+                                        .append($("<td>").text(this.phone_number))
+                                        .append($("<td>").text(this.campaign))
+                                        .append($("<td>").text(this.io))
+                                        .append($("<td>").text(this.term_reason)));
+                    });
+                    
+                }
+                ,"json");
             }
 
             function ShoWTransferMain(showxfervar, showoffvar)
@@ -9240,6 +9252,8 @@ $(document).bind("keydown", disableF5);
                                 }
                             });
                             
-                            setTimeout(function(){AgentsViewOpen('AgentViewSpan', 'open');}, 2000)
+                            setTimeout(function(){AgentsViewOpen('AgentViewSpan', 'open');}, 2000);
+                            
+                            $("#toolbox").sortable();
                             
                         });
