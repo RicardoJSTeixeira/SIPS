@@ -73,7 +73,7 @@ function MiscOptionsBuilder(Flag)
                     $("#campaign-description").val(data.c_description)
                     if(data.c_active == "Y"){ $("#campaign_active_yes").parent().addClass("checked"); } else { $("#campaign_active_no").parent().addClass("checked"); }
                     if(data.c_dial_method == "RATIO") { 
-                        $("#campaign_type_auto").parent().addClass("checked"); $("#ratio-spinner").val(data.c_auto_dial_level); $("#wizard-tabs").tabs("disable", 1)
+                        $("#campaign_type_auto").parent().addClass("checked"); $("#ratio-spinner").val(data.c_auto_dial_level); $("#wizard-tabs").tabs("enable", 1)
                     } else if(data.c_dial_method == "MANUAL") { 
                         $("#campaign_type_manual").parent().addClass("checked"); $( "#ratio-spinner" ).spinner("disable"); $("#ratio-spinner").val(0); $("#wizard-tabs").tabs("disable", 1)
                                 } else if(data.c_dial_method == "ADAPT_AVERAGE") {
