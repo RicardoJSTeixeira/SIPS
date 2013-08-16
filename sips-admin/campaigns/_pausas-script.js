@@ -77,7 +77,7 @@ if( ($("#tbl-pauses tr").length == 0 && Flag == "ALL") || (Flag == "REFRESH") ||
                     var PauseConfig = "<td width='32px' style='text-align:center' class=''><img style='float:none; cursor:pointer' pause-to-edit='"+ data.pause_code[index] + "' class='mono-icon edit-pause' title='Configurar' style='cursor:pointer;' src='icons/mono_wrench_16.png'></td>";
                     var PauseEnable = "<td width='16px' class='td-icon'><img class='mono-icon edit-pause-deactivate' to-remove='"+ data.pause_code[index] + "' title='Desactivar' style='cursor:pointer;' src='icons/mono_trash_16.png'></td>";
                 
-					var PauseBillable = "<td class='odd-even-ignore' width='20px'><input "+Billable+" class='pause-billable' type='checkbox'></td><td width='30px'><img class='mono-icon' style='float:left !important' title='Pausa Billable' src='icons/mono_icon_euro_16.png'></td>";
+					var PauseBillable = "<td class='odd-even-ignore' width='20px'><input "+Billable+" class='pause-billable' type='checkbox'></td><td width='30px'><img class='mono-icon' style='float:left !important' title='Pausa Paga' src='icons/mono_icon_euro_16.png'></td>";
 				
 				}
             
