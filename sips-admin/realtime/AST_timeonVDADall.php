@@ -2014,10 +2014,10 @@ while($p<$k)
                      
                 } else {
                     
-                    $getLoja = mysql_query("select campaign_id from vicidial_auto_calls where phone_number LIKE '$pnqry'", $link) or die(mysql_error());
+                    $getLoja = mysql_query("select B.campaign_name from vicidial_auto_calls A inner join vicidial_campaigns B ON A.campaign_id=B.campaign_id where phone_number LIKE '$pnqry'", $link) or die(mysql_error());
                     $getLoja = mysql_fetch_assoc($getLoja);
 
-                    $nome_campanha = $getLoja['campaign_id'];
+                    $nome_campanha = $getLoja['campaign_name'];
                     
                 }
                                   
@@ -2894,11 +2894,8 @@ echo "
                         // Sucesso
                         $qry = "";
                         
-                        $qry = "SELECT count(lead_id) FROM vicidial_list a inner join vicidial_campaign_statuses b ON a.status = b.status WHERE 
-                            sale LIKE 'Y' AND
-                            last_local_call_time >= DATE(NOW())
-                            $group_SQLand ";
-                       
+                        $qry = "select count(lead_id) from vicidial_log a INNER JOIN (SELECT status from vicidial_campaign_statuses where sale like 'Y' group by status) b on a.status = b.status and call_date >= DATE(NOW()) $group_SQLand;";
+                       //$teste = $qry; 
                         $qry = mysql_query($qry, $link);
                         $qry = mysql_fetch_row($qry);
                         $sucesso = $qry[0];
@@ -2914,11 +2911,11 @@ echo "
 //			status,
 //			dead_sec
                         
-                        $non_billable = "SELECT sum(pause_sec) from vicidial_agent_log a inner join vicidial_pause_codes b on a.sub_status = b.pause_code 
+                        $non_billable = "SELECT sum(pause_sec) from vicidial_agent_log a inner join (SELECT pause_code from vicidial_pause_codes group by pause_code) b on a.sub_status = b.pause_code 
                             where b.campaign_id in ($group_SQL) and 
                                 event_time >= DATE(NOW()) AND 
                                 billable LIKE 'NO'";
-                        $teste = $non_billable;
+                        
                         $non_billable = mysql_query($non_billable, $link);
                         $non_billable = mysql_fetch_row($non_billable);
                         
@@ -2941,20 +2938,14 @@ echo "
                         // Uteis
                         
                         $qry = "";
-                        $qry = "SELECT count(lead_id) FROM vicidial_list a inner join vicidial_campaign_statuses b ON a.status = b.status WHERE 
-                            customer_contact LIKE 'Y' AND
-                            last_local_call_time >= DATE(NOW())
-                            $group_SQLand ";
+                        $qry = "select count(lead_id) from vicidial_log a INNER JOIN (SELECT status from vicidial_campaign_statuses where customer_contact like 'Y' group by status) b on a.status = b.status and call_date >= DATE(NOW()) $group_SQLand;";
                         $qry = mysql_query($qry, $link);
                         $qry = mysql_fetch_row($qry);
                         $uteis = $qry[0];
                         
                         // Fechados
                         $qry = "";
-                        $qry = "SELECT count(lead_id) FROM vicidial_list a inner join vicidial_campaign_statuses b ON a.status = b.status WHERE 
-                            completed LIKE 'Y' AND
-                            last_local_call_time >= DATE(NOW())
-                            $group_SQLand ";
+                        $qry = "select count(lead_id) from vicidial_log a INNER JOIN (SELECT status from vicidial_campaign_statuses where completed like 'Y' group by status) b on a.status = b.status and call_date >= DATE(NOW()) $group_SQLand;";
                         $qry = mysql_query($qry, $link);
                         $qry = mysql_fetch_row($qry);
                         $fechados = $qry[0];
@@ -2962,14 +2953,11 @@ echo "
                         // Agendamentos
                         
                         $qry = "";
-                        $qry = "SELECT count(lead_id) FROM vicidial_log a inner join vicidial_campaign_statuses b ON a.status = b.status WHERE 
-                            scheduled_callback LIKE 'Y' AND
-                            call_date >= DATE(NOW()) AND
-                            a.campaign_id IN ($group_SQL) ";
+                        $qry = "select count(lead_id) from vicidial_log a INNER JOIN (SELECT status from vicidial_campaign_statuses where scheduled_callback like 'Y' group by status UNION ALL SELECT status from vicidial_statuses where scheduled_callback like 'Y' group by status) b on a.status = b.status and call_date >= DATE(NOW()) $group_SQLand;";
                         
                         $qry = mysql_query($qry, $link);
                         $qry = mysql_fetch_row($qry);
-                        $agendamentos = $qry[0];
+                        $agendamentos = $qry[0]; 
                         
                         $resp = number_format((($uteis / $fechados) * 100),1);
                         $sucess_hour = number_format(($sucesso / ($horas_trabalhadas / 60 / 60)),2);
@@ -2983,7 +2971,7 @@ echo "
                         <div class='cc-mstyle' style='margin-top:12px; margin-bottom:8px; margin-right:-4px; width:95%;'>
 			<table>
                         <tr>
-                            <td id=icon16><img src='/images/icons/group_16.png' /></td><td style=text-align:left;>Sucesso: $sucesso</td>
+                            <td id=icon16><img src='/images/icons/group_16.png' /></td><td style=text-align:left;>Sucesso:$teste $sucesso</td>
                             <td id=icon16><img src='/images/icons/phone_delete_16.png' /></td><td style=text-align:left>Horas Trabalhadas: $format_horas_trabalhadas </td>
                         </tr>
                         <tr>

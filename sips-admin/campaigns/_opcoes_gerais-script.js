@@ -73,11 +73,11 @@ function MiscOptionsBuilder(Flag)
                     $("#campaign-description").val(data.c_description)
                     if(data.c_active == "Y"){ $("#campaign_active_yes").parent().addClass("checked"); } else { $("#campaign_active_no").parent().addClass("checked"); }
                     if(data.c_dial_method == "RATIO") { 
-                        $("#campaign_type_auto").parent().addClass("checked"); $("#ratio-spinner").val(data.c_auto_dial_level); $("#wizard-tabs").tabs("disable", 7)
+                        $("#campaign_type_auto").parent().addClass("checked"); $("#ratio-spinner").val(data.c_auto_dial_level); $("#wizard-tabs").tabs("enable", 1)
                     } else if(data.c_dial_method == "MANUAL") { 
-                        $("#campaign_type_manual").parent().addClass("checked"); $( "#ratio-spinner" ).spinner("disable"); $("#ratio-spinner").val(0); $("#wizard-tabs").tabs("disable", 7)
+                        $("#campaign_type_manual").parent().addClass("checked"); $( "#ratio-spinner" ).spinner("disable"); $("#ratio-spinner").val(0); $("#wizard-tabs").tabs("disable", 1)
                                 } else if(data.c_dial_method == "ADAPT_AVERAGE") {
-                                    $("#campaign_type_predictive").parent().addClass("checked"); $("#ratio-spinner").val(data.c_auto_dial_level); $("#wizard-tabs").tabs("enable", 7)
+                                    $("#campaign_type_predictive").parent().addClass("checked"); $( "#ratio-spinner" ).spinner("disable"); $("#ratio-spinner").val(data.c_auto_dial_level); $("#wizard-tabs").tabs("enable", 1)
                                 }
                     if(data.c_recording == "ALLFORCE"){ $("#campaign_recording_yes").parent().addClass("checked"); } else { $("#campaign_recording_no").parent().addClass("checked"); }
                     if(data.c_lead_order == "RANDOM"){ $("#campaign_lead_order_random").parent().addClass("checked"); } else { $("#campaign_lead_order_ordered").parent().addClass("checked"); }
@@ -492,7 +492,7 @@ function CampaignTypeSwitch()
             TempCampaignRatio = 2;
             $("#ratio-spinner").spinner("enable");
             $("#ratio-spinner").val(2); 
-            $( "#wizard-tabs" ).tabs( "disable", 7 )
+            $( "#wizard-tabs" ).tabs( "disable", 1 )
             break;
         }
         case "campaign_type_manual" : {
@@ -500,7 +500,7 @@ function CampaignTypeSwitch()
             TempCampaignRatio = 0;
             $( "#ratio-spinner" ).spinner( "disable" );
             $( "#ratio-spinner" ).val(0);
-            $( "#wizard-tabs" ).tabs( "disable", 7 )
+            $( "#wizard-tabs" ).tabs( "disable", 1 )
             break;
         }
         case "campaign_type_predictive" : {
@@ -508,7 +508,7 @@ function CampaignTypeSwitch()
             TempCampaignRatio = 2;
             $( "#ratio-spinner" ).spinner( "disable" );
             $( "#ratio-spinner" ).val(2);
-            $( "#wizard-tabs" ).tabs( "enable", 7 )
+            $( "#wizard-tabs" ).tabs( "enable", 1 )
             
             break;    
         }

@@ -181,4 +181,8 @@ button.btn-action-next span.ui-button-text { padding: 4px 7px 1px 7px !important
 .dt-div-wrapper-12lines-with-icon { min-height:297px; }
 
 
+/* Dialer Tab */
 
+.dialer-options {
+    height: 32px !important;
+}

@@ -138,6 +138,7 @@ function CampaignEditorElemInit()
 				if(ui.newPanel.selector == "#tab5"){ ScriptElemInit(); ScriptListBuilder(); }
 				if(ui.newPanel.selector == "#tab6"){ FieldsListBuilder("ALL"); }
 				if(ui.newPanel.selector == "#tab7"){ DBListBuilder("ALL"); }
+				if(ui.newPanel.selector == "#tab8"){ DialerOptionsBuilder(); }
 				
             },
             heightStyle: "fill"

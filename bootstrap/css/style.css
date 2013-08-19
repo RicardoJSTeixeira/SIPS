@@ -2665,7 +2665,7 @@
 		width:30px;
 		padding-left:9px;
 	}
-	button.icon-alone i{
+	button.icon-alone i, span.icon-alone{
 		padding-right:0;
 	}
 	/* image sliders */

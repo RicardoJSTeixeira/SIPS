@@ -12,7 +12,7 @@ function PauseListBuilder($CampaignID, $AllowedCampaigns, $PauseName, $PauseTime
 	if($Flag == "ALL" || $Flag == "REFRESH" || $Flag == "DISABLED" || $Flag == "EDIT")
 	{
 		if($Flag == "DISABLED"){ $visible = 0; } else { $visible = 1; }
-		$query = "SELECT pause_code, pause_code_name, max_time, active FROM vicidial_pause_codes WHERE campaign_id='$CampaignID' AND visible = '$visible' GROUP BY pause_code ORDER BY pause_code_name DESC";
+		$query = "SELECT pause_code, pause_code_name, max_time, active, billable FROM vicidial_pause_codes WHERE campaign_id='$CampaignID' AND visible = '$visible' GROUP BY pause_code ORDER BY pause_code_name DESC";
 		
 		$js['debug'] = $query;
 		
@@ -26,6 +26,7 @@ function PauseListBuilder($CampaignID, $AllowedCampaigns, $PauseName, $PauseTime
 				$js['pause_code_name'][] = $row['pause_code_name'];
 				$js['max_time'][] = ($row['max_time'] / 60);
 				$js['active'][] = $row['active'];
+				$js['billable'][] = $row['billable'];
 			}
 			echo json_encode($js);	
 		}
@@ -168,6 +169,11 @@ function ApplyPausesToAllCampaings($PauseIDs, $PauseNames, $PauseStatus, $PauseT
 
 }
 
+function PauseBillable($CampaignID, $PauseID, $PauseBillable, $link)
+{
+	mysql_query("UPDATE vicidial_pause_codes SET billable = '$PauseBillable' WHERE pause_code ='$PauseID'") or die(mysql_error());
+}
+
 switch($action)
 {
 	case "PauseListBuilder": PauseListBuilder($CampaignID, $AllowedCampaigns, $PauseName, $PauseTime, $Flag, $link); break;
@@ -179,6 +185,7 @@ switch($action)
 	case "GetPauseEditCampaigns": GetPauseEditCampaigns($AllowedCampaigns, $PauseID, $link); break;
 	case "SaveEditedPause": SaveEditedPause($PauseID, $PauseName, $PauseTime, $EditedCampaignsID, $EditedCampaignsActive, $AlteredPauses, $link); break;
 	case "ApplyPausesToAllCampaings": ApplyPausesToAllCampaings($PauseIDs, $PauseNames, $PauseStatus, $PauseTimes, $link); break;
+	case "PauseBillable": PauseBillable($CampaignID, $PauseID, $PauseBillable, $link); break;
 }
 
 
