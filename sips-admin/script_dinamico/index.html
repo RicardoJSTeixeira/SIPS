@@ -1,7 +1,3 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html>
 <html>
       <head>
@@ -38,9 +34,7 @@ and open the template in the editor.
                   .page_hider{
                         display:none;
                   }
-                  .popover{
-                        width:auto;
-                  }
+
             </style>
       </head>
       <body>
@@ -149,18 +143,12 @@ and open the template in the editor.
                                                 </div>
                                           </div>
                                           <div id="tabs-2">
-                                                <!--
-     Editing popovers            ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
 
 
                                                 <!--TEXTO-->
                                                 <div class="editor_layout" id="text_layout_editor" style="display:none">
-                                                      <div class="formRow" >
-                                                           <label class="control-label label" >Tag:</label>
-                                                            <div class="formRight">
-                                                                  <label id="label_tag_texto"></label>
-                                                            </div>
-                                                      </div>
+
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
                                                             <div class="formRight">
@@ -168,7 +156,7 @@ and open the template in the editor.
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Placeholder</label>
+                                                            <label class="control-label label" >Placeholder:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span texto_input" id="placeholder_edit" type="text" placeholder="Placeholder exemplo" />
                                                             </div>
@@ -176,7 +164,7 @@ and open the template in the editor.
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Tamanho maximo:</label>
                                                             <div class="formRight">
-                                                                  <input  maxlength="65" class="span texto_input" id="max_length_edit" type="text" placeholder="Numero Máximo de caracteres" />
+                                                                  <input  maxlength="3" class="texto_input" id="max_length_edit" type="text" placeholder="Numero Máximo de caracteres" />
                                                             </div>
                                                       </div>
                                                 </div>
@@ -184,35 +172,19 @@ and open the template in the editor.
 
                                                 <!--RADIO-->
                                                 <div class="editor_layout" id="radio_layout_editor" style="display:none">
-                                                      <div class="formRow" >
-                                                            <label class="control-label label" >Tag:</label>
-                                                            <div class="formRight">
-                                                                  <label id="label_tag_radio"></label>
-                                                            </div>
-                                                      </div>
 
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span" id="radio_edit" type="text" placeholder="Texto" />
                                                             </div>
-
                                                       </div>
-
-
-
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Valores</label>
-
+                                                            <label class="control-label label" >Valores:</label>
                                                             <div class="formRight">
                                                                   <textarea id="radio_textarea" rows="4" cols="50"></textarea>
                                                             </div>
-
                                                       </div>
-
-
-
-
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Disposição:</label>
                                                             <div class="formRight">
@@ -221,40 +193,25 @@ and open the template in the editor.
                                                                   <input type="radio" id="vertic_radio" name="rdispo" >
                                                                   <label class="radio_dispo"  for="vertic_radio"><span></span>Vertical</label>
                                                             </div>
-
                                                       </div>
-
                                                 </div>
+
+
+
                                                 <!--CHECKBOX-->
                                                 <div class="editor_layout" id="checkbox_layout_editor" style="display:none">
-
-                                                      <div class="formRow" >
-                                                            <label class="control-label label" >Tag:</label>
-
-                                                            <div class="formRight">
-                                                                  <label id="label_tag_checkbox"></label>
-                                                            </div>
-                                                      </div>
-
-
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
-
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span" id="checkbox_edit" type="text" placeholder="Texto" />
                                                             </div>
-
                                                       </div>
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Valores</label>
-
                                                             <div class="formRight">
                                                                   <textarea id="checkbox_textarea" rows="4" cols="50"></textarea>
                                                             </div>
-
                                                       </div>
-
-
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Disposição:</label>
 
@@ -264,50 +221,30 @@ and open the template in the editor.
                                                                   <input type="radio" id="vertic_checkbox" name="cdispo" >
                                                                   <label class="checkbox_dispo"  for="vertic_checkbox"><span></span>Vertical</label>
                                                             </div>
-
                                                       </div>
                                                 </div>
+
+
                                                 <!--MULTICHOISE-->
                                                 <div class="editor_layout" id="multichoice_layout_editor" style="display:none">
-
-                                                      <div class="formRow" >
-                                                            <label class="control-label label" >Tag:</label>
-
-                                                            <div class="formRight">
-                                                                  <label id="label_tag_multichoice"></label>
-                                                            </div>
-                                                      </div>
-
-
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
-
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span texto_input" id="multichoice_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
-
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Valores</label>
-
+                                                            <label class="control-label label" >Valores:</label>
                                                             <div class="formRight">
                                                                   <textarea id="multichoice_textarea" rows="4" cols="50"></textarea>
                                                             </div>
-
                                                       </div>
-
                                                 </div>
 
+                                                
                                                 <!--Campo de texto-->
                                                 <div class="editor_layout" id="textfield_layout_editor" style="display:none">
 
-                                                      <div class="formRow" >
-                                                            <label class="control-label label" >Tag:</label>
-
-                                                            <div class="formRight">
-                                                                  <label id="label_tag_textfield"></label>
-                                                            </div>
-                                                      </div>
 
 
                                                       <div class="formRow" >
@@ -332,14 +269,9 @@ and open the template in the editor.
                                                                   <input  maxlength="65" class="span tableradio_input" id="tableradio_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
-                                                      <div class="formRow" >
-                                                            <label class="control-label label" >Tag:</label>
-                                                            <div class="formRight">
-                                                                  <label id="label_tag_tableradio"></label>
-                                                            </div>
-                                                     </div>
 
-                                                     <div class="formRow" >
+
+                                                      <div class="formRow" >
                                                             <label class="control-label label" >titulos</label>
 
                                                             <div class="formRight">
@@ -372,7 +304,12 @@ and open the template in the editor.
 
                                                 <div id="item_edit_comum" style="display:none"> 
 
-
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Tag:</label>
+                                                            <div class="formRight">
+                                                                  <label id="label_tag"></label>
+                                                            </div>
+                                                      </div>
                                                       <!----------------------------------------------REQUIRED------------------------------------------->
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Obrigatório:</label>
@@ -422,18 +359,21 @@ and open the template in the editor.
                                           </div>
                                           <div id="tabs-3">
 
-                                                <div id="rule_manager" >
-                                                      <table>
+                                                <div id="rule_manager" style="display:none,width:auto" >
+                                                      <table style="width:100%" class="table table-mod">
                                                             <thead>
                                                                   <tr>
                                                                         <td>
-                                                                              Nome
+                                                                              Trigger
                                                                         </td>
                                                                         <td>
                                                                               Tipo
                                                                         </td>
                                                                         <td>
                                                                               Alvo
+                                                                        </td>
+                                                                        <td>
+                                                                              Opções
                                                                         </td>
 
                                                                   </tr>
@@ -444,7 +384,7 @@ and open the template in the editor.
                                                             </tbody>
                                                       </table>
 
-                                                      <div class="modal-footer ">
+                                                      <div class="modal-footer footer_save_cancel ">
                                                             <button class="btn btn-info" id="open_rule_creator">Criar nova regra</button>
                                                       </div>
 
@@ -454,41 +394,39 @@ and open the template in the editor.
 
 
                                                 <div id="rule_creator" style="display:none;" >
+
+
+                                                      <!--TRIGGER-->
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Nome da regra:</label>
+                                                            <label class="control-label label" >Evento:</label>
 
                                                             <div class="formRight">
-                                                                  <input class="regra_input" id="regra_edit" type="text" placeholder="Regra" />
+                                                                  <select id="rule_trigger_select" ></select>
 
                                                             </div> 
                                                       </div>
 
 
-                                                      <div class="formRow" >
-                                                            <label class="control-label label" >Trigger:</label>
+                                                      <div class="formRow rules_valor" id="rules_valor_select_div" style="display:none"  >
+                                                            <label class="control-label label" >Valores:</label>
 
                                                             <div class="formRight">
-                                                                  <select id="rule_trigger_select" class="elements_select"></select>
-
-                                                            </div> 
-                                                      </div>
-                                                      <div class="formRow" style="display:none" >
-                                                            <label class="control-label label" >Id do sub_elemento:</label>
-
-                                                            <div class="formRight">
-                                                                  <select class="elements_select_sub"></select>
+                                                                  <select id="rules_valor_select" class="chosen_select"  multiple="multiple" ></select>
 
                                                             </div> 
                                                       </div>
 
-                                                      <div class="formRow" >
-                                                            <label class="control-label label" >Alvo</label>
+                                                      <div class="formRow rules_valor" id="rules_valor_input_div" style="display:none" >
+                                                            <label class="control-label label" >Valor:</label>
 
                                                             <div class="formRight">
-                                                                  <select class="elements_select"></select>
-
+                                                                  <input id="rules_valor_input"  type="text" placeholder="Valor que despoleta o evento" />
                                                             </div> 
                                                       </div>
+
+
+
+
 
 
                                                       <div class="formRow" >
@@ -496,19 +434,39 @@ and open the template in the editor.
 
                                                             <div class="formRight">
                                                                   <select id="regra_select">
-                                                                        <option value="goto">go-to</option>
-                                                                        <option value="show">show</option>   
-                                                                        <option value="hide" >Hide</option>
 
+                                                                        <option value="show">Mostrar</option>   
+                                                                        <option value="hide" >Esconder</option>
+                                                                        <option value="goto">Ir para</option>
 
                                                                   </select>
                                                             </div> 
-
-
                                                       </div>
+
+
+                                                      <div class="formRow rule_target" >
+                                                            <label class="control-label label" >Alvo:</label>
+
+                                                            <div class="formRight">
+                                                                  <select id="rule_target_select" multiple="multiple" class="chosen_select">
+
+                                                                  </select>
+
+                                                            </div> 
+                                                      </div>
+
+                                                      <div class="formRow" id="go_to_div" style="display:none" >
+                                                            <label class="control-label label" >Ir para:</label>
+
+                                                            <div class="formRight">
+                                                                  <select id="go_to_select" ></select>
+                                                            </div> 
+                                                      </div>
+
+
                                                       <div class="clear"></div>
                                                       <div class="modal-footer ">
-                                                            <button class="btn">add</button>
+                                                            <button class="btn" id="add_rule_button">Adicionar</button>
                                                       </div>
                                                 </div>
                                           </div>

@@ -1,3 +1,8 @@
+//required not totally done
+//existe um bug q quando se arrasta um objecto para a lista por vezes n é visivel
+
+
+
 
 
 ////////TO BE DONE//////////////////
@@ -33,14 +38,67 @@ var regex_replace = /[^a-zA-Z0-9éçã\n§\s?]/g;
 var regex_split = /\n/g;
 
 
+//mostra/esconde os elementos associados ao edit
+function editor_toggle(tipo)
+{
+      $(".item").removeClass("helperPick");
+      $("#tabs").tabs("option", "active", 0);
+      if (tipo === "on")
+      {
+            $("#item_edit_comum").show();
+            $("#rule_manager").show();
+            $("#open_rule_creator").prop('disabled', false);//botoes de edit
+            $(".chosen_select").chosen();
+            $("#rules_valor_select").empty();
+            $(".editor_layout").hide();// esconde os edits de todos
+            $(".footer_save_cancel button").prop('disabled', false);//botoes de edit
+      }
+      if (tipo === "off")
+      {
+            $(".editor_layout").hide();
+            $("#item_edit_comum").hide();
+            $("#rule_manager").hide();
+            $(".footer_save_cancel button").prop('disabled', true);
+      }
+
+}
+
+
+
+
+//FOOTER EDIT BUTTONS
+$("#cancel_edit").click(function()
+{
+      editor_toggle("off");
+});
+$("#save_edit").click(function()
+{
+      editor_toggle("off");
+      edit_element(selected_type, $("#" + selected_id), 0);
+});
+
+$("#tags_select").change(function()
+{
+      $("#tag_label").text("§" + $(this).val() + "§");
+});
+
+
+$("#regra_select").change(function()
+{
+      if ($(this).val() === "goto")
+      {
+            $("#go_to_div").show();
+            $(".rule_target").hide();
+      } else
+      {
+            $("#go_to_div").hide();
+            $(".rule_target").show();
+      }
+});
 
 $(function() {
-      array_id["textbox"] = 0;
       array_id["radio"] = 0;
       array_id["checkbox"] = 0;
-      array_id["multichoice"] = 0;
-
-
       $.get("items.html", function(data) {
             $("#rigth_list").html(data);
             $(".footer_save_cancel button").prop('disabled', true);
@@ -52,7 +110,6 @@ $(function() {
                   connectToSortable: ".leftDiv"
             });
             var removeIntent = false;
-
             $(".leftDiv").sortable({
                   'items': ".item",
                   over: function() {
@@ -108,19 +165,18 @@ $(function() {
                         {
                               item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", $(this).data().uiSortable.currentItem.index(), "h", "tableradio", "mau,médio,bom", 0, "pergunta1", 0, 0);
                         }
-                        update_info();
+                        editor_toggle("off");
                   }
             });
             update_script();
             item_database("get_tag_fields", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
       });
       $(document).on("click", ".element", function(e) {
-            $(".footer_save_cancel button").prop('disabled', false);
-            $(".item").removeClass("helperPick");
-            $(this).addClass("helperPick");
-            $("#tabs").tabs("option", "active", 1);
-            $(".editor_layout").hide();
-            $("#item_edit_comum").show();
+            selected_id = $(this).data("id");
+            selected_type = $(this).data("type");
+            editor_toggle("on");
+            $(this).addClass("helperPick");//class HelperPick
+            $("#tabs").tabs("option", "active", 1);//tabs
 
             switch ($(this).data("type"))
             {
@@ -151,79 +207,19 @@ $(function() {
                   case "pagination":
                         populate_element("pagination", $(this));
                         break;
-
             }
-            selected_id = $(this).data("id");
-            selected_type = $(this).data("type");
       });
+      $(document).on("click", ".rule_delete_icon", function(e) {
+            rules_database("delete_rule", $(this).data("id"), 0, 0, 0, 0, 0, 0, 0, 0);
+            rules_database("get_rules_by_trigger", 0, 0, 0, selected_id, 0, 0, 0, 0, 0);
 
 
+      });
+      $(document).on("click", ".rule_delete_icon", function(e) {//GRAFICO DE BARRAS
+            rules_database("get_rules_by_trigger", 0, 0, 0, selected_id, 0, 0, 0, 0, 0);
+      });
+      editor_toggle("off");
 });
-
-$("#tags_select").change(function()
-{
-
-      $("#tag_label").text("§" + $(this).val() + "§");
-});
-
-$("#rule_trigger_select").change(function()
-{
-      var rts = $("#rule_trigger_select option:selected");
-
-      switch (rts.data("type"))
-      {
-            case "radio":
-                  break;
-            case "checkbox":
-                  break;
-            case "multichoice":
-                  break;
-            case "tableradio":
-                  break;
-      }
-});
-
-
-$("#opcao_script_button").click(function()//chama o edit do nome do script
-{
-      $("#script_name_edit").val($("#script_selector option:selected").text());
-
-});
-$("#save_button_layout").click(function()//Fecha o dialog e grava as alterações
-{
-      $.post("requests.php", {action: "edit_script_name", name: $("#script_name_edit").val(), id_script: $("#script_selector option:selected").val()},
-      function(data)
-      {
-
-            $('#dialog_layout').modal('hide');
-            update_script();
-
-      }, "json");
-
-});
-$("#opcao_page_button").click(function()//chama o edit do nome da pagina
-{
-      $("#pages_name_edit").val($("#page_selector option:selected").text());
-
-});
-$("#save_button_page").click(function()//Fecha o dialog e grava as alterações
-{
-      $.post("requests.php", {action: "edit_page_name", name: $("#pages_name_edit").val(), id_pagina: $("#page_selector option:selected").val()},
-      function(data)
-      {
-            update_pages();
-            $('#dialog_page').modal('hide');
-
-
-      }, "json");
-
-});
-$("#open_rule_creator").click(function()//Fecha o dialog e grava as alterações
-{
-      $("#rule_creator").toggle();
-
-});
-
 
 
 
@@ -278,11 +274,16 @@ function update_pages()
                   $("#opcao_page_button").prop('disabled', false);
                   var pag = $("#page_selector").val();
                   $("#page_selector").empty();
+
+                  $("#go_to_select").empty();
+
                   $.each(data, function(index, value) {
                         if (pag === data[index].id)
                               $("#page_selector").append("<option value=" + data[index].id + " selected>" + data[index].name + "</option>");
                         else
                               $("#page_selector").append("<option value=" + data[index].id + ">" + data[index].name + "</option>");
+
+                        $("#go_to_select").append(new Option(data[index].name, "pag," + data[index].id));
                   });
                   update_info();
             }
@@ -292,15 +293,15 @@ function update_pages()
 function update_info()
 {
       $(".leftDiv").empty();
+
+
       $.post("requests.php", {action: "get_data", id_script: $("#script_selector option:selected").val(), id_page: $("#page_selector option:selected").val()},
       function(data)
       {
-
             $(".elements_select").empty();
             $.each(data, function(index, value) {
 
-
-                  $(".elements_select").append("<option data-type=" + $(this)[0].type + " value='" + $(this)[0].id + "'>" + $(this)[0].type + "--" + $(this)[0].id + "</option>");
+                  $("#rule_target_select").append(new Option($(this)[0].id + "--" + $(this)[0].type, $(this)[0].id));//povoar os alvos com os ides e tipos dos elementos
 
                   switch (data[index].type)
                   {
@@ -388,10 +389,7 @@ function update_info()
                               item.appendTo('.leftDiv');
                               break;
                   }
-
-
             });
-
       }, "json");
 
 
@@ -399,27 +397,6 @@ function update_info()
 
 
 
-//FOOTER EDIT BUTTONS
-$("#cancel_edit").click(function()
-{
-      $(".footer_save_cancel button").prop('disabled', true);
-      $(".item").removeClass("helperPick");
-      $("#tabs").tabs("option", "active", 0);
-      $(".editor_layout").hide();
-      $("#item_edit_comum").hide();
-      $(".group_div").hide();
-});
-$("#save_edit").click(function()
-{
-      edit_element(selected_type, $("#" + selected_id), 0);
-      $(".footer_save_cancel button").prop('disabled', true);
-      $(".item").removeClass("helperPick");
-      $("#tabs").tabs("option", "active", 0);
-      $(".editor_layout").hide();
-      $("#item_edit_comum").hide();
-      $(".group_div").hide();
-
-});
 
 
 function populate_element(tipo, element)
@@ -435,20 +412,22 @@ function populate_element(tipo, element)
       else
             $("#item_hidden").attr('checked', false);
 
+
+      $("#label_tag").text("@" + element.data("id") + "@");
+
+      rules_manager(tipo, element);
+
       switch (tipo)
       {
             case "texto":
-                  $("#label_tag_texto").text("@" + element.data("id") + "@");
+
                   $("#texto_edit").val(element.find(".label_geral")[0].innerHTML);
                   $("#placeholder_edit").val(element.find(".input_texto")[0].placeholder);
                   $("#max_length_edit").val(element.find(".input_texto")[0].maxLength);
                   break;
 
-
-
-
             case "radio":
-                  $("#label_tag_radio").text("@" + element.data("id") + "@");
+
                   $("#radio_edit").val(element.find(".label_geral")[0].innerHTML);
                   $("#radio_group_edit").val(element.find(":radio")[0].name);
                   var string_elements = "";
@@ -468,9 +447,8 @@ function populate_element(tipo, element)
                   break;
 
 
-
             case "checkbox":
-                  $("#label_tag_checkbox").text("@" + element.data("id") + "@");
+
                   $("#checkbox_edit").val(element.find(".label_geral")[0].innerHTML);
                   $("#checkbox_group_edit").val(element.find(":checkbox")[0].name);
                   var string_elements = "";
@@ -489,13 +467,15 @@ function populate_element(tipo, element)
                         $("#horiz_checkbox").attr('checked', true);
                   break;
 
+
             case "pagination":
                   $(".footer_save_cancel button").prop('disabled', true);
                   $("#item_edit_comum").hide();
                   break;
 
+
             case "multichoice":
-                  $("#label_tag_multichoice").text("@" + element.data("id") + "@");
+
                   $("#multichoice_edit").val(element.find(".label_geral")[0].innerHTML);
                   var string_elements = "";
                   var count = 1;
@@ -512,16 +492,14 @@ function populate_element(tipo, element)
                   break;
 
 
-
             case "textfield":
-                  $("#label_tag_textfield").text("@" + element.data("id") + "@");
+
                   $("#textfield_edit").val(element.find(".label_geral")[0].innerHTML);
                   break;
 
-
             case "tableradio":
                   $("#tableradio_edit").val(element.find(".label_geral")[0].innerHTML);
-                  $("#label_tag_tableradio").text("@" + element.data("id") + "@");
+
                   //titulos->texto
                   var string_elements = "";
                   for (var count = 1; count < element.find(".tr_head td").length; count++)
@@ -538,6 +516,10 @@ function populate_element(tipo, element)
                   break;
 
       }
+      rules_database("get_rules_by_trigger", 0, 0, 0, element.data("id"), 0, 0, 0, 0, 0);
+
+
+
 }
 
 function edit_element(opcao, element, data)
@@ -546,7 +528,7 @@ function edit_element(opcao, element, data)
       {
             case "texto":
                   $("#texto_edit").val($("#texto_edit").val().replace(regex_replace_textbox_tag, ''));
-                  $("#placeholder_edit").val($("#placeholder_edit").val().replace(regex_replace_textbox_tag, ''));
+                  $("#placeholder_edit").val($("#placeholder_edit").val().replace(regex_replace_textbox, ''));
                   $("#max_length_edit").val($("#max_length_edit").val().replace(/[^0-9]/g, ''));
 
 
@@ -605,7 +587,6 @@ function edit_element(opcao, element, data)
                   {
                         element.append($("<input>").attr("type", "checkbox").attr("id", array_id["checkbox"] + "checkbox").attr("name", element.data("id")));
                         element.append($("<label>").addClass("checkbox_name").attr("for", array_id["checkbox"] + "checkbox").text(checkboxs[count]).append($("<span>")));
-
                         if (element.data("dispo") === "v")
                               element.append($("<br>"));
                         array_id["checkbox"] = array_id["checkbox"] + 1;
@@ -735,7 +716,6 @@ function insert_element(opcao, element, data)
                   element.append($("<label>").addClass("label_radio label_geral").text($("#radio_edit").val()));
                   element.append($("<br>"));
                   element.find(".label_radio")[0].innerHTML = data.texto;
-
                   var radios = data.values_text.split(",");
                   for (var count = 0; count < radios.length; count++)
                   {
@@ -749,10 +729,8 @@ function insert_element(opcao, element, data)
                                 .attr("for", array_id["radio"] + "radio")
                                 .text(radios[count])
                                 .append($("<span>")));
-
                         if (data.dispo === "v")
                               element.append($("<br>"));
-
                         array_id["radio"] = array_id["radio"] + 1;
                   }
                   break;
@@ -807,6 +785,7 @@ function insert_element(opcao, element, data)
                   var tr_body = element.find(".tr_body");
                   tr_body.empty();
                   var perguntas = data.values_text.split(",");
+                  var temp = 0;
                   for (var count = 0; count < perguntas.length; count++)
                   {
                         tr_body.append($("<tr>")
@@ -833,6 +812,10 @@ function insert_element(opcao, element, data)
 
       if (data.required === "1")
             element.append($("<i>").addClass("icon-star required_icon").css("float", "right"));
+
+
+      //ids nos elementos
+      element.prepend($("<label>").addClass("label").text(data.id).css("float", "left"));
 }
 
 
@@ -864,12 +847,11 @@ function item_database(opcao, Id, Id_script, Id_page, Type, Ordem, Dispo, Texto,
                   });
             }
 
-
-
-
-
+            if (opcao === "add_item")
+                  update_info();
       }
       , "json");
+
 }
 
 function pagescript_database(opcao, Id_script, Id_pagina)
@@ -895,35 +877,12 @@ function pagescript_database(opcao, Id_script, Id_pagina)
 
 
 
-function rules_database(opcao, Id, Id_trigger, Id_target, Nome, Tipo, Go_to)
-{
-      $.post("requests.php", {action: opcao,
-            id: Id,
-            id_trigger: Id_trigger,
-            id_target: Id_target,
-            nome: Nome,
-            tipo: Tipo,
-            go_to: Go_to},
-      function(data)
-      {
-            if (opcao === "get_rules")
-            {
-                  $("#tag_label").text("§" + data[0].value + "§");
-                  $.each(data, function(index, value) {
-                        $("#tags_select").append("<option value='" + data[index].value + "'>" + data[index].name + "</option>");
-                  });
-            }
-      }
-      , "json");
-}
-
 //PAGES
 $("#page_add_button").click(function()
 {
       pagescript_database("add_page", $("#script_selector option:selected").val(), 0);
 
 });
-
 $("#page_remove_button").click(function()
 {
 
@@ -935,7 +894,23 @@ $('#page_selector').change(function() {
       update_info();
 });
 
+$("#opcao_page_button").click(function()//chama o edit do nome da pagina
+{
+      $("#pages_name_edit").val($("#page_selector option:selected").text());
 
+});
+$("#save_button_page").click(function()//Fecha o dialog e grava as alterações
+{
+      $.post("requests.php", {action: "edit_page_name", name: $("#pages_name_edit").val(), id_pagina: $("#page_selector option:selected").val()},
+      function(data)
+      {
+            update_pages();
+            $('#dialog_page').modal('hide');
+
+
+      }, "json");
+
+});
 
 //SCRIPTS
 $("#script_add_button").click(function()
@@ -943,19 +918,33 @@ $("#script_add_button").click(function()
       pagescript_database("add_script", 0, 0);
 
 });
-
 $("#script_remove_button").click(function()
 {
       pagescript_database("delete_script", $("#script_selector option:selected").val(), 0);
 });
-
 $('#script_selector').change(function() {
       update_pages();
 });
 
+$("#opcao_script_button").click(function()//chama o edit do nome do script
+{
+      $("#script_name_edit").val($("#script_selector option:selected").text());
 
+});
+$("#save_button_layout").click(function()//Fecha o dialog e grava as alterações
+{
+      $.post("requests.php", {action: "edit_script_name", name: $("#script_name_edit").val(), id_script: $("#script_selector option:selected").val()},
+      function(data)
+      {
 
+            $('#dialog_layout').modal('hide');
+            update_script();
 
+      }, "json");
+
+});
+
+//botoes para outras paginas
 $("#render_go").click(function()
 {
       var window_slave = window.open("/sips-admin/script_dinamico/render.html");
@@ -963,4 +952,182 @@ $("#render_go").click(function()
 $("#report_go").click(function()
 {
       var window_slave = window.open("/sips-admin/script_dinamico/report.html");
+});
+
+
+
+
+//------------------RULES------------------
+function rules_manager(tipo, element)
+{
+
+      $("#rule_trigger_select").empty();
+
+      switch (tipo)
+      {
+            case "texto":
+                  $("#rule_trigger_select").append(new Option("Resposta", "answer"));
+                  $("#rule_trigger_select").append(new Option("Valor especifico", "value_input"));
+
+                  break;
+
+            case "radio":
+
+                  $("#rule_trigger_select").append(new Option("Valor escolhido", "value_select"));
+
+
+                  break;
+
+
+            case "checkbox":
+
+                  break;
+
+
+            case "pagination":
+
+                  break;
+
+
+            case "multichoice":
+
+                  break;
+
+
+            case "textfield":
+
+                  break;
+
+            case "tableradio":
+
+                  break;
+
+      }
+      $("#rule_trigger_select").trigger("change");
+}
+$("#rule_trigger_select").change(function()
+{
+      $(".rules_valor").hide();
+      switch ($("#rule_trigger_select option:selected").val())
+      {
+            case "value_input":
+                  $("#rules_valor_input_div").show();
+                  $("#rules_valor_input").val("");
+
+                  break;
+            case "value_select":
+                  $("#rules_valor_select_div").show();
+                  $.post("requests.php", {action: "get_data_individual", id: selected_id},
+                  function(data)
+                  {
+                        var dados = data[0].values_text.split(",");
+                        $.each(dados, function(index, value) {
+
+                              $("#rules_valor_select").append(new Option(dados[index], dados[index]));
+                        });
+                        $('#rules_valor_select').trigger('liszt:updated');
+                  }
+                  , "json");
+                  break;
+
+
+
+
+      }
+});
+
+function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trigger2, Id_target, Tipo, Param1, Param2)
+{
+      $.post("requests.php", {action: opcao,
+            id: Id,
+            id_script: Id_script,
+            tipo_elemento: Tipo_elemento,
+            id_trigger: Id_trigger,
+            id_trigger2: Id_trigger2,
+            id_target: Id_target,
+            tipo: Tipo,
+            param1: Param1,
+            param2: Param2},
+      function(data)
+      {
+
+            if (opcao === "get_rules_by_trigger")
+            {
+                  $("#rule_manager_list").empty();
+
+                  $.each(data, function(index, value) {
+
+                        $("#rule_manager_list").append($("<tr>")
+                                .append($("<td>").text(data[index].id_trigger2))
+                                .append($("<td>").text(data[index].tipo))
+                                .append($("<td>").text(data[index].id_target))
+                                .append($("<td>").append($("<button>").addClass("icon-remove rule_delete_icon btn").data("id", data[index].id).data("id_trigger", data[index].id_trigger)))
+                                );
+                  });
+
+
+
+            }
+            if (opcao === "add_rules")
+            {
+                  rules_database("get_rules_by_trigger", 0, 0, 0, selected_id, 0, 0, 0, 0, 0);
+            }
+      }
+      , "json");
+}
+
+
+
+
+$("#open_rule_creator").click(function()//Fecha o dialog e grava as alterações
+{
+      $("#rule_creator").toggle();
+
+});
+
+$("#add_rule_button").click(function()
+{
+      switch (selected_type)
+      {
+            case "texto":
+
+                  switch ($("#rule_trigger_select").val())
+                  {
+                        case "answer":
+                              if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, 0, $("#rule_target_select").val().join(","), $("#regra_select").val(), "answer", "0");
+                              else
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, 0, 0, $("#regra_select").val(), "answer", $("#go_to_select").val());
+                              break;
+                        case "value_input":
+                              if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_input").val(), $("#rule_target_select").val().join(","), $("#regra_select").val(), "value_input", "0");
+                              else
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_input").val(), 0, $("#regra_select").val(), "value_select", $("#go_to_select").val());
+                              break;
+
+                  }
+
+                  break;
+            case "radio":
+                  if ($("#rule_trigger_select").val() === "value_select")
+                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val().join(","), $("#rule_target_select").val().join(","), $("#regra_select").val(), "value_select", "0");
+                        else
+                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val().join(","), 0, $("#regra_select").val(), "value_select", $("#go_to_select").val());
+                  break;
+            case "checkbox":
+                  if ($("#rule_trigger_select").val() === "value_select")
+                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val().join(","), $("#rule_target_select").val().join(","), $("#regra_select").val(), "value_select", "0");
+                  break;
+            case"multichoice":
+                  break;
+            case "tableradio":
+                  break;
+
+      }
+
+
+
+
 });
