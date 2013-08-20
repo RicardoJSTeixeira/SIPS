@@ -1,13 +1,7 @@
-//required not totally done
-//existe um bug q quando se arrasta um objecto para a lista por vezes n é visivel
-
-
-
 
 
 ////////TO BE DONE//////////////////
 
-//Regras - individual do item
 //relatorio
 //fazer explode dos values_Text no php e vir ja em array
 
@@ -34,7 +28,7 @@ var array_id = [];
 var regex_remove_blank = /^\s*$[\n\r]{1,}/gm;
 var regex_replace_textbox_tag = /[^a-zA-Z0-9éçã\s:@§óáà?]/g;
 var regex_replace_textbox = /[^a-zA-Z0-9éçã\s:§óáà?]/g;
-var regex_replace = /[^a-zA-Z0-9éçã\n§\s?]/g;
+var regex_replace = /[^a-zA-Z0-9éçã\n§óáà\s?]/g;
 var regex_split = /\n/g;
 
 
@@ -62,7 +56,6 @@ function editor_toggle(tipo)
       }
 
 }
-
 
 
 
@@ -760,12 +753,12 @@ function insert_element(opcao, element, data)
                   var multichoices = data.values_text.split(",");
                   element.append("<select class = 'multichoice_select' > < /select>");
                   var select = element.find(".multichoice_select");
+                  var options = "";
                   for (var count = 0; count < multichoices.length; count++)
                   {
-                        select.append("<option value='" + multichoices[count] + "'>" + multichoices[count] + "</option>");
+                        options += "<option value='" + multichoices[count] + "'>" + multichoices[count] + "</option>";
                   }
-                  break;
-
+                  select.append(options);
 
             case "textfield":
                   element.find(".label_geral")[0].innerHTML = data.values_text;
@@ -803,19 +796,19 @@ function insert_element(opcao, element, data)
 
 
       }
-
-      if (data.hidden === "1")
+console.log(data.hidden);
+      if (data.hidden)
             element.append($("<i>").addClass("icon-eye-close hidden_icon").css("float", "right"));
       else
             element.append($("<i>").addClass("icon-eye-open hidden_icon").css("float", "right"));
 
 
-      if (data.required === "1")
+      if (data.required)
             element.append($("<i>").addClass("icon-star required_icon").css("float", "right"));
 
 
       //ids nos elementos
-      element.prepend($("<label>").addClass("label").text(data.id).css("float", "left"));
+      element.prepend($("<label>").addClass("label label-sucess").text(data.id).css("float", "left"));
 }
 
 
@@ -968,40 +961,28 @@ function rules_manager(tipo, element)
             case "texto":
                   $("#rule_trigger_select").append(new Option("Resposta", "answer"));
                   $("#rule_trigger_select").append(new Option("Valor especifico", "value_input"));
-
                   break;
 
+
             case "radio":
-
                   $("#rule_trigger_select").append(new Option("Valor escolhido", "value_select"));
-
-
                   break;
 
 
             case "checkbox":
-
-                  break;
-
-
-            case "pagination":
-
+                  $("#rule_trigger_select").append(new Option("Valor escolhido", "value_select"));
                   break;
 
 
             case "multichoice":
-
+                  $("#rule_trigger_select").append(new Option("Valor escolhido", "value_select"));
                   break;
 
-
-            case "textfield":
-
-                  break;
 
             case "tableradio":
-
+                  $("#rule_trigger_select").append(new Option("Resposta", "answer"));
+                  $("#rule_trigger_select").append(new Option("Valor escolhido", "value_select"));
                   break;
-
       }
       $("#rule_trigger_select").trigger("change");
 }
@@ -1020,16 +1001,39 @@ $("#rule_trigger_select").change(function()
                   $.post("requests.php", {action: "get_data_individual", id: selected_id},
                   function(data)
                   {
-                        var dados = data[0].values_text.split(",");
-                        $.each(dados, function(index, value) {
 
-                              $("#rules_valor_select").append(new Option(dados[index], dados[index]));
-                        });
+                        var dados = data[0].values_text.split(",");
+
+                        if (selected_type === "tableradio")
+                        {
+                              var titulos = data[0].placeholder.split(",");
+                              var options = "";
+                              $.each(dados, function(index1, value1) {
+                                    $.each(titulos, function(index2, value2) {
+                                          options += "<option value='" + dados[index1] + ";" + titulos[index2] + "'>" + dados[index1] + ";" + titulos[index2] + "</option>";
+
+                                    });
+                              });
+                              $("#rules_valor_select").append(options);
+                        }
+                        else
+                        {
+                              var options = "";
+                              $.each(dados, function(index, value) {
+                                    options += "<option value=" + dados[index] + ">" + dados[index] + "</option>";
+                              });
+                              $("#rules_valor_select").append(options);
+                        }
+
+
+
+
+
+
                         $('#rules_valor_select').trigger('liszt:updated');
                   }
                   , "json");
                   break;
-
 
 
 
@@ -1105,7 +1109,6 @@ $("#add_rule_button").click(function()
                               else
                                     rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_input").val(), 0, $("#regra_select").val(), "value_select", $("#go_to_select").val());
                               break;
-
                   }
 
                   break;
@@ -1118,15 +1121,37 @@ $("#add_rule_button").click(function()
                   break;
             case "checkbox":
                   if ($("#rule_trigger_select").val() === "value_select")
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val().join(","), $("#rule_target_select").val().join(","), $("#regra_select").val(), "value_select", "0");
+                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val().join(","), $("#rule_target_select").val().join(","), $("#regra_select").val(), "value_select", "0");
+                        else
+                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val().join(","), 0, $("#regra_select").val(), "value_select", $("#go_to_select").val());
                   break;
             case"multichoice":
+                  if ($("#rule_trigger_select").val() === "value_select")
+                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val().join(","), $("#rule_target_select").val().join(","), $("#regra_select").val(), "value_select", "0");
+                        else
+                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val().join(","), 0, $("#regra_select").val(), "value_select", $("#go_to_select").val());
+                  break;
                   break;
             case "tableradio":
-                  break;
 
+                  switch ($("#rule_trigger_select").val())
+                  {
+                        case "answer":
+                              if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, 0, $("#rule_target_select").val().join(","), $("#regra_select").val(), "answer", "0");
+                              else
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, 0, 0, $("#regra_select").val(), "answer", $("#go_to_select").val());
+                              break;
+                        case "value_select":
+                              if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val().join(","), $("#rule_target_select").val().join(","), $("#regra_select").val(), "value_select", "0");
+                              else
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val().join(","), 0, $("#regra_select").val(), "value_select", $("#go_to_select").val());
+                              break;
+                  }
       }
-
 
 
 
