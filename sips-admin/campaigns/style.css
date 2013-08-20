@@ -180,6 +180,10 @@ button.btn-action-next span.ui-button-text { padding: 4px 7px 1px 7px !important
 .dt-fixed-12lines-with-icon { min-height:347px; }
 .dt-div-wrapper-12lines-with-icon { min-height:297px; }
 
+.dt-fixed-8lines-with-icon { min-height:240px; }
+.dt-div-wrapper-8lines-with-icon { min-height:200px; }
+
+
 
 /* Dialer Tab */
 
