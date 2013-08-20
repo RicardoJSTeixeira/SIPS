@@ -600,7 +600,12 @@ function DBMatchFields()
         
         });
         
-        $.each(json.name, function(index, value){
+        if(typeof json.name == 'undefined'){
+            $("#td-db-wizard-file-error").html("<span style='color:red'>Não estão configurados Campos Dinamicos, por favor configure os campos necessários.</span>")
+            $("#td-db-wizard-file-icon").html("<img class='mono-icon' src='icons/mono_attention_16.png'>")
+        }
+        else {
+            $.each(json.name, function(index, value){
         
             DBFieldNames.push(json.name[index]);
             DBFieldDisplayNames.push(json.display_name[index]);
@@ -608,6 +613,8 @@ function DBMatchFields()
         });
         
         DBSelBuilder();
+        }
+        
         
     }, "json");
 }
