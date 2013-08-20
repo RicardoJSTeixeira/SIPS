@@ -186,3 +186,10 @@ button.btn-action-next span.ui-button-text { padding: 4px 7px 1px 7px !important
 .dialer-options {
     height: 32px !important;
 }
+
+
+/* NEW STUFF */
+
+#options-scroll-wrapper div.slimScrollDiv {
+    padding-right: 10px;
+}
