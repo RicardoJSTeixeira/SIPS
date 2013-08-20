@@ -1,6 +1,7 @@
 function MiscOptionsBuilder(Flag)
 {
 	MiscOptionsElemInit()
+	
 	$.ajax({
             type: "POST",
             url: "_opcoes_gerais-requests.php",
@@ -83,7 +84,24 @@ function MiscOptionsBuilder(Flag)
                     if(data.c_lead_order == "RANDOM"){ $("#campaign_lead_order_random").parent().addClass("checked"); } else { $("#campaign_lead_order_ordered").parent().addClass("checked"); }
                     if(data.c_next_agent_call == "longest_wait_time"){ $("#campaign_atrib_calls").val("Maior Tempo em Espera") } else if(data.c_next_agent_call == "random") { $("#campaign_atrib_calls").val("Aleatória") } else { $("#campaign_atrib_calls").val("Menos Chamadas Recebidas") }
                     if(data.c_my_callback_option == "UNCHECKED"){ $("#campaign_callback_type_global").parent().addClass("checked");  } else { $("#campaign_callback_type_user").parent().addClass("checked"); }
-                    if(data.c_campaign_allow_inbound == "Y"){ $("#campaign_inbound_yes").parent().addClass("checked");  } else { $("#campaign_inbound_no").parent().addClass("checked"); }
+                    if(data.c_campaign_allow_inbound == "Y"){ $("#campaign-allow-inbound-yes").parent().addClass("checked");  } else { $("#campaign-allow-inbound-no").parent().addClass("checked"); }
+
+                    if(data.c_agent_display_dialable_leads == "Y"){ $("#campaign-show-leads-yes").parent().addClass("checked");  } else { $("#campaign-show-leads-no").parent().addClass("checked"); }
+
+                    if(data.c_display_queue_count == "Y"){ $("#campaign-show-leads-inqueue-count-yes").parent().addClass("checked");  } else { $("#campaign-show-leads-inqueue-count-no").parent().addClass("checked"); }
+                    if(data.c_view_calls_in_queue == "ALL"){ $("#campaign-show-leads-inqueue-yes").parent().addClass("checked");  } else { $("#campaign-show-leads-inqueue-no").parent().addClass("checked"); }                   
+                   
+                   
+                    if(data.c_agent_lead_search == "ENABLED"){ $("#campaign-search-yes").parent().addClass("checked");  } else { $("#campaign-search-no").parent().addClass("checked"); } 
+                    
+                    
+                    
+                    
+                    if(data.c_agent_allow_transfers == 1){ $("#campaign-transfer-yes").parent().addClass("checked");  } else { $("#campaign-transfer-no").parent().addClass("checked"); } 
+                    
+                    if(data.c_agent_allow_dtmf == 1){ $("#campaign-dtmf-yes").parent().addClass("checked");  } else { $("#campaign-dtmf-no").parent().addClass("checked"); } 
+                    
+                    
 
                     $.each(data.user_groups_id, function(index, value)
                     {
@@ -134,7 +152,7 @@ function MiscOptionsBuilder(Flag)
 
 function MiscOptionsElemInit()
 {
-	
+	$("#options-scroll-container").slimScroll({ height: '350px', alwaysVisible: "true", size: "5px" })
 	$("#btn-config-inbound").button();
 	$("#btn-config-dial-status").button();
 	$("#btn-check-all-groups").button();
@@ -720,6 +738,207 @@ function InboundGroupsSwitch()
     }); 
 }
 
+function CampaignAllowInbound(){
+    var Inbound;
+    if($(this).attr("id") == "campaign-allow-inbound-yes"){
+        Inbound = "Y";
+    }
+    else{
+        Inbound = "N";
+    }
+
+
+    
+    $.ajax({
+            type: "POST",
+            url: "_opcoes_gerais-requests.php",
+            dataType: "JSON",
+            data:
+            { 
+                    action: "CampaignAllowInbound",
+                    CampaignID: CampaignID,
+                    Inbound: Inbound
+            },
+            success: function(data) 
+            {
+                
+            }
+    }); 
+}
+
+
+
+function CampaignShowAgentLeads(){
+    var Checked;
+    if($(this).attr("id") == "campaign-show-leads-yes"){
+        Checked = "Y";
+    }
+    else{
+        Checked = "N";
+    }
+
+
+    
+    $.ajax({
+            type: "POST",
+            url: "_opcoes_gerais-requests.php",
+            dataType: "JSON",
+            data:
+            { 
+                    action: "CampaignShowAgentLeads",
+                    CampaignID: CampaignID,
+                    Checked: Checked
+            },
+            success: function(data) 
+            {
+                
+            }
+    }); 
+}
+
+function CampaignShowAgentLeadsCount(){
+        var Checked;
+    if($(this).attr("id") == "campaign-show-leads-inqueue-count-yes"){
+        Checked = "Y";
+    }
+    else{
+        Checked = "N";
+    }
+
+
+    
+    $.ajax({
+            type: "POST",
+            url: "_opcoes_gerais-requests.php",
+            dataType: "JSON",
+            data:
+            { 
+                    action: "CampaignShowAgentLeadsCount",
+                    CampaignID: CampaignID,
+                    Checked: Checked
+            },
+            success: function(data) 
+            {
+                
+            }
+    });     
+}
+
+function CampaignShowAgentLeadsInqueue(){
+        var Checked;
+    if($(this).attr("id") == "campaign-show-leads-inqueue-yes"){
+        Checked = "ALL";
+    }
+    else{
+        Checked = "NONE";
+    }
+
+
+    
+    $.ajax({
+            type: "POST",
+            url: "_opcoes_gerais-requests.php",
+            dataType: "JSON",
+            data:
+            { 
+                    action: "CampaignShowAgentLeadsInqueue",
+                    CampaignID: CampaignID,
+                    Checked: Checked
+            },
+            success: function(data) 
+            {
+                
+            }
+    });     
+}
+
+function CampaignAllowAgentSearch(){
+        var Checked;
+    if($(this).attr("id") == "campaign-search-yes"){
+        Checked = "ENABLED";
+    }
+    else{
+        Checked = "DISABLED";
+    }
+
+
+    
+    $.ajax({
+            type: "POST",
+            url: "_opcoes_gerais-requests.php",
+            dataType: "JSON",
+            data:
+            { 
+                    action: "CampaignAllowAgentSearch",
+                    CampaignID: CampaignID,
+                    Checked: Checked
+            },
+            success: function(data) 
+            {
+                
+            }
+    });     
+}
+
+
+function CampaignTransfers(){
+        var Checked;
+    if($(this).attr("id") == "campaign-transfer-yes"){
+        Checked = 1;
+    }
+    else{
+        Checked = 0;
+    }
+
+
+    
+    $.ajax({
+            type: "POST",
+            url: "_opcoes_gerais-requests.php",
+            dataType: "JSON",
+            data:
+            { 
+                    action: "CampaignTransfers",
+                    CampaignID: CampaignID,
+                    Checked: Checked
+            },
+            success: function(data) 
+            {
+                
+            }
+    });     
+}
+
+
+function CampaignDTMF(){
+        var Checked;
+    if($(this).attr("id") == "campaign-dtmf-yes"){
+        Checked = 1;
+    }
+    else{
+        Checked = 0;
+    }
+
+
+    
+    $.ajax({
+            type: "POST",
+            url: "_opcoes_gerais-requests.php",
+            dataType: "JSON",
+            data:
+            { 
+                    action: "CampaignDTMF",
+                    CampaignID: CampaignID,
+                    Checked: Checked
+            },
+            success: function(data) 
+            {
+                
+            }
+    });     
+}
+
+
 $("body")
 .on("click", ".groups-checkbox", GroupsSwitch)
 .on("click", "#btn-check-all-groups", GroupsCheckAll)
@@ -734,8 +953,14 @@ $("body")
 .on("click", ".campaign-callback-type", CampaignCallbackType)
 .on("click", "#btn-config-inbound", { dialog: "#dialog-config-inbound" }, DialogOpen)
 .on("click", ".campaign-inbound-switch", InboundSwitch)
-.on("click", ".checkbox-edit-inbound-groups", InboundGroupsSwitch);
-
+.on("click", ".checkbox-edit-inbound-groups", InboundGroupsSwitch)
+.on("click", ".campaign-allow-inbound", CampaignAllowInbound)
+.on("click", ".campaign-show-leads", CampaignShowAgentLeads)
+.on("click", ".campaign-show-leads-inqueue-count", CampaignShowAgentLeadsCount)
+.on("click", ".campaign-show-leads-inqueue", CampaignShowAgentLeadsInqueue)
+.on("click", ".campaign-search", CampaignAllowAgentSearch)
+.on("click", ".campaign-transfer", CampaignTransfers)
+.on("click", ".campaign-dtmf", CampaignDTMF)
 
 
 

@@ -68,8 +68,35 @@ switch ($action) {
         echo json_encode($js);
         break;
 
+         case "get_data_individual":
+        $query = "SELECT * FROM `script_dinamico` WHERE id=$id";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => $row["placeholder"], max_length => $row["max_length"], values_text => $row["values_text"], required => $row["required"], hidden => $row["hidden"]);
+        }
+        echo json_encode($js);
+        break;
+        
+
+    case "get_rules_by_trigger":
+        $query = "SELECT * FROM `script_rules` WHERE id_trigger=$id_trigger";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(id => $row["id"],id_script => $row["id_script"], tipo_elemento => $row["tipo_elemento"], id_trigger => $row["id_trigger"], id_trigger2 => $row["id_trigger2"], id_target => $row["id_target"], tipo => $row["tipo"], param1 => $row["param1"], param2 => $row["param2"]);
+        }
+        echo json_encode($js);
+        break;
 
 
+    case "get_rules":
+        $query = "SELECT * FROM `script_rules` WHERE id_script=$id_script";
+  
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(id => $row["id"],id_script => $row["id_script"], tipo_elemento => $row["tipo_elemento"], id_trigger => $row["id_trigger"], id_trigger2 => $row["id_trigger2"], id_target => $row["id_target"], tipo => $row["tipo"], param1 => $row["param1"], param2 => $row["param2"]);
+        }
+        echo json_encode($js);
+        break;
     //------------------------------------------------//
 //-----------------EDIT-------------------------
     //------------------------------------------------//
@@ -125,6 +152,13 @@ switch ($action) {
         echo json_encode(mysql_insert_id());
         break;
 
+    case "add_rules":
+        $query = "INSERT INTO `asterisk`.`script_rules` (id,id_script,tipo_elemento,id_trigger,id_trigger2,id_target,tipo,param1,param2) VALUES (NULL,$id_script,'$tipo_elemento',$id_trigger,'$id_trigger2','$id_target','$tipo','$param1','$param2')";
+
+        $query = mysql_query($query, $link) or die(mysql_error());
+     echo json_encode(array(1));
+        break;
+
     //------------------------------------------------//
     //-----------------DELETE-------------------------
     //------------------------------------------------//
@@ -154,7 +188,14 @@ switch ($action) {
         echo json_encode(array(1));
         break;
 
-
+ case "delete_rule":
+        $query = "delete from script_rules  where id=$id";
+        $query = mysql_query($query, $link) or die(mysql_error());
+      
+        echo json_encode(array(1));
+        break;
+    
+    
     case "save_form_result":
 
         $sql = array();

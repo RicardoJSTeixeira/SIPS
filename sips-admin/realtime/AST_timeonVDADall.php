@@ -1975,7 +1975,7 @@ $agentonlyheader = '';
 if ($agentonlycount > 0)
 	{$agentonlyheader = 'AGENTONLY';}
 $Cecho = '<br>';
-$Cecho .= "<div class='cc-mstyle'><table><tr><th>Descrição</th><th>Telefone</th><th>Tempo de Dial</th><th>Tipo Chamada</th><th>Prioridade</th></tr>";
+$Cecho .= "<div class='cc-mstyle'><table><tr><th>Campanha / Groupo Inbound</th><th>Telefone</th><th>Tempo de Dial</th><th>Tipo Chamada</th><th>Prioridade</th></tr>";
 #$Cecho .= " STATUS | CAMPAIGN             | PHONE NUMBER | SERVER_IP       | DIALTIME| CALL TYPE  | PRIORITY | $agentonlyheader\n";
 #$Cecho .= "+--------+----------------------+--------------+-----------------+---------+------------+----------+\n";
 
@@ -2016,8 +2016,16 @@ while($p<$k)
                     
                     $getLoja = mysql_query("select B.campaign_name from vicidial_auto_calls A inner join vicidial_campaigns B ON A.campaign_id=B.campaign_id where phone_number LIKE '$pnqry'", $link) or die(mysql_error());
                     $getLoja = mysql_fetch_assoc($getLoja);
-
                     $nome_campanha = $getLoja['campaign_name'];
+                    
+                    
+                    if($getLoja['campaign_name'] == ""){
+                        $getLoja = mysql_query("select B.group_name FROM vicidial_auto_calls A INNER JOIN vicidial_inbound_groups B ON A.campaign_id=B.group_id", $link) or die(mysql_error());
+                    $getLoja = mysql_fetch_assoc($getLoja);
+                    $nome_campanha = $getLoja['group_name'];
+                    }
+                    
+                    
                     
                 }
                                   

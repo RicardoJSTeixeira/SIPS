@@ -50,12 +50,11 @@ function insert_element(opcao, element, data)
                   var radios = data.values_text.split(",");
                   for (var count = 0; count < radios.length; count++)
                   {
-
                         if (data.required === "1")
                               element.append($("<input>").attr("type", "radio").prop("required", true).attr("value", radios[count]).attr("id", array_id["radio"] + "radio").attr("name", "radio," + data.id));
                         else
                               element.append($("<input>").attr("type", "radio").attr("value", radios[count]).attr("id", array_id["radio"] + "radio").attr("name", "radio," + data.id));
-                        
+
                         element.append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "radio").text(radios[count]).append($("<span>")));
 
                         if (data.dispo === "v")
@@ -147,42 +146,11 @@ function insert_element(opcao, element, data)
 
 
       if (data.hidden === "1")
-            element.css("display","none");
+            element.css("display", "none");
 
 
       return element;
 }
-
-
-
-function tags()
-{
-      var rz = $("#render_zone");
-
-      if (rz.html().match(tag_regex))
-      {
-            var temp2 = rz.html().match(tag_regex);
-            var temp = [];
-            $.each(temp2, function() {
-                  if ($.inArray(this, temp) === -1)
-                        temp.push(this);
-            });
-
-            $.each(temp, function() {
-                  var id = this;
-                  id = id.replace(/\@/g, '');
-                  var regExp = new RegExp(this, "g");
-                  rz.html(rz.html().replace(regExp, "<span class='" + id + "tag'></span>"));
-
-                  $(document).on("change", "#" + id + " input,#" + id + " select", function() {
-                        $("." + id + "tag").text($(this).val());
-                  });
-
-            });
-      }
-}
-
-
 
 //UPDATES DE INFO
 function update_script()
@@ -198,12 +166,11 @@ function update_script()
             }
             else
             {
-
-
                   $("#script_selector").empty();
                   $.each(data, function(index, value) {
                         $("#script_selector").append("<option value=" + data[index].id + ">" + data[index].name + "</option>");
                   });
+
                   update_pages();
             }
       }, "json");
@@ -329,10 +296,141 @@ function update_info()
 
 
             });
+            rules();
 
             tags();
       }, "json");
 
+
+
+
+}
+
+function rules_work(data)
+{
+      switch (data.tipo)
+      {
+            case "hide":
+                  var target = data.id_target.split(",");
+                  for (var count2 = 0; count2 < target.length; count2++)
+                  {
+                        $("#" + target[count2]).fadeOut(1000);
+                  }
+                  break;
+
+            case "show":
+                  var target = data.id_target.split(",");
+                  for (var count2 = 0; count2 < target.length; count2++)
+                  {
+                        $("#" + target[count2]).fadeIn(1000);
+                  }
+                  break;
+
+            case "goto":
+                  var param = data.param2.split(",");
+                  switch (param[0])
+                  {
+                        case "pag":
+                              $("#page_selector option[value='" + param[1] + "']").attr("selected", "selected");
+                              $("#page_selector").trigger("change");
+                              break;
+                  }
+                  break;
+      }
+}
+
+
+function rules()
+{
+      $.post("requests.php", {action: "get_rules", id_script: $("#script_selector option:selected").val()},
+      function(data)
+      {
+            $.each(data, function(index, value) {
+                  switch ($(this)[0].tipo_elemento)
+                  {
+                        case "texto":
+                              switch ($(this)[0].param1)
+                              {
+                                    case "value_input":
+                                          $("#" + data[0].id_trigger).bind("keyup", function()//atribuir os binds a cada value
+                                          {
+                                                var pattern = new RegExp('\\b' + data[0].id_trigger2, 'i');
+                                                if ($("#" + data[0].id_trigger + " input").val().match(pattern))
+                                                {
+                                                      rules_work(data[0]);
+                                                }
+                                          }
+                                          );
+
+                                          break;
+                                    case "answer":
+                                          $("#" + $(this)[0].id_trigger).bind("focusout", function()//atribuir os binds a cada value
+                                          {
+                                                rules_work(data[0]);
+                                          }
+                                          );
+                                          break;
+
+                              }
+                              break;
+
+                        case "radio":
+                              switch ($(this)[0].param1)
+                              {
+                                    case "value_select":
+                                          var values = $(this)[0].id_trigger2.split(",");
+                                          for (var count = 0; count < values.length; count++)
+                                          {
+                                                $("#" + $(this)[0].id_trigger).find("input[value=" + values[count] + "]").bind("click", function()//atribuir os binds a cada value
+                                                {
+                                                      rules_work(data[0]);
+                                                }
+                                                );
+                                          }
+                                          break;
+
+                              }
+
+                              break;
+                        case "checkbox":
+                              break;
+                        case"multichoice":
+                              break;
+                        case "tableradio":
+                              break;
+
+                  }
+
+            });
+
+
+
+
+      }
+      , "json");
+}
+
+function tags()
+{
+      var rz = $("#render_zone");
+      if (rz.html().match(tag_regex))
+      {
+            var temp2 = rz.html().match(tag_regex);
+            var temp = [];
+            $.each(temp2, function() {
+                  if ($.inArray(this, temp) === -1)
+                        temp.push(this);
+            });
+            $.each(temp, function() {
+                  var id = this;
+                  id = id.replace(/\@/g, '');
+                  var regExp = new RegExp(this, "g");
+                  rz.html(rz.html().replace(regExp, "<span class='" + id + "tag'></span>"));
+                  $(document).on("change", "#" + id + " input,#" + id + " select", function() {
+                        $("." + id + "tag").text($(this).val());
+                  });
+            });
+      }
 }
 
 

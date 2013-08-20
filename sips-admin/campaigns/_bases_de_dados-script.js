@@ -124,7 +124,7 @@ function DBElemInit()
     $("#dialog-dbs-edit").dialog({ 
     title: "<table><tr><td><img class='dialog-icon-title' src='icons/mono_wrench_16.png'></td><td><span class='dialog-title'> Configurar > Base de Dados: </span><span style='color:#0073ea' class='span-dialog-dbs-contact-details-db'></td></tr></table>",
     autoOpen: false,
-    height: 750,
+    height: 650, 
     width: 550,
     resizable: false,
     buttons: { "Gravar" : DialogDBEditOnSave, "Fechar" : DialogClose },
@@ -145,7 +145,7 @@ function DBElemInit()
     $("#dialog-db-wizard").dialog({ 
     title: "<table><tr><td><img class='dialog-icon-title' src='icons/mono_db_16.png'></td><td><span class='dialog-title'>Carregar Novos Contactos > Base de Dados: </span><span style='color:#0073ea' id='span-dialog-wizard-db-name-random'></span></td></tr></table>",
     autoOpen: false,
-    height: 750,
+    height: 650,
     width: 950,
     resizable: false,
     buttons: { "Fechar" : DialogClose },
@@ -257,8 +257,8 @@ function TableEditDBInit()
 
     tableEditDB = $('#dbs-state').dataTable( {
         "aaSorting": [[0, 'asc']],
-        "iDisplayLength": 12,
-        "sDom": '<"top"><"dt-fixed-12lines-with-icon"rt><"bottom"p>',
+        "iDisplayLength": 8,
+        "sDom": '<"top"><"dt-fixed-8lines-with-icon"rt><"bottom"p>',
         "bSortClasses": false,
         "bJQueryUI": true,  
         "bProcessing": true, 
@@ -600,7 +600,12 @@ function DBMatchFields()
         
         });
         
-        $.each(json.name, function(index, value){
+        if(typeof json.name == 'undefined'){
+            $("#td-db-wizard-file-error").html("<span style='color:red'>Não estão configurados Campos Dinamicos, por favor configure os campos necessários.</span>")
+            $("#td-db-wizard-file-icon").html("<img class='mono-icon' src='icons/mono_attention_16.png'>")
+        }
+        else {
+            $.each(json.name, function(index, value){
         
             DBFieldNames.push(json.name[index]);
             DBFieldDisplayNames.push(json.display_name[index]);
@@ -608,6 +613,8 @@ function DBMatchFields()
         });
         
         DBSelBuilder();
+        }
+        
         
     }, "json");
 }
