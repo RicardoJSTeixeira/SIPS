@@ -1048,10 +1048,10 @@ function stats_update(){
 // Request number of dialable leads left in this campaign
 	function DiaLableLeaDsCounT()
 		{
-		DLcount_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&user=" + user + "&pass=" + pass + "&ACTION=DiaLableLeaDsCounT&campaign=" + campaign + "&format=text";
+		DLcount_query = {server_ip: server_ip,session_name: session_name ,user: user ,pass: pass ,ACTION:"DiaLableLeaDsCounT",campaign: campaign ,format:"text"};
 			$.post('vdc_db_query.php',DLcount_query,function(data){
-                        $("#dialableleadsspan").text(data);
-                        });
+                        $("#dialableleadsspan").text(data.count);
+                        },"json");
 		}
 // ################################################################################
 // Request number of USERONLY callbacks for this agent
@@ -9013,6 +9013,6 @@ $(document).bind("keydown", disableF5);
                             
                             $("#CallbacksButtons").tooltip();
                             
-                            $("#SendDTMF").popover({html:true,title:"Digite o nº"});
+                            $("#SendDTMF").popover({html:true});
                             
                         });
