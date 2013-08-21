@@ -48,7 +48,8 @@
                 exit;
             }
         }
-
+        mysql_query("UPDATE `asterisk`.`vicidial_user_groups` SET `agent_status_viewable_groups` = ' --CAMPAIGN-AGENTS--  '");
+        
         $queryClient = "SELECT server_description from servers limit 1";
         $queryClient = mysql_query($queryClient, $link) or die(mysql_error());
         $curClient = mysql_fetch_row($queryClient);

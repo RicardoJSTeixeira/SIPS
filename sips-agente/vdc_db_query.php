@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE );
+ini_set('display_errors', '1');
 # vdc_db_query.php
 #
 # Copyright (C) 2011  Matt Florell <vicidial@gmail.com>    LICENSE: AGPLv2
@@ -428,8 +430,6 @@ if (isset($_GET["email"])) {$email = $_GET["email"];
 if (isset($_GET["security_phrase"])) {$security_phrase = $_GET["security_phrase"];
 } elseif (isset($_POST["security_phrase"])) {$security_phrase = $_POST["security_phrase"];}
 
-
-
 if (isset($_GET["extra1"])) {$extra1 = $_GET["extra1"];
 } elseif (isset($_POST["extra1"])) {$extra1 = $_POST["extra1"];}
 
@@ -474,10 +474,6 @@ if (isset($_GET["extra14"])) {$extra14 = $_GET["extra14"];
 
 if (isset($_GET["extra15"])) {$extra15 = $_GET["extra15"];
 } elseif (isset($_POST["extra15"])) {$extra15 = $_POST["extra15"];}
-
-
-
-
 
 if (isset($_GET["comments"])) {$comments = $_GET["comments"];
 } elseif (isset($_POST["comments"])) {$comments = $_POST["comments"];
@@ -966,18 +962,18 @@ if ($ACTION == 'LogiNCamPaigns') {
 		} else {$valogin = 1;
 		}
 
-		$stmt = "SELECT campaign_id,campaign_name from vicidial_campaigns where active='Y' $LOGallowed_campaignsSQL order by campaign_id";
+		$stmt = "SELECT campaign_id,campaign_name from vicidial_campaigns where active='Y' $LOGallowed_campaignsSQL order by campaign_name";
 		$rslt = mysql_query($stmt, $link);
 		if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00006', $user, $server_ip, $session_name, $one_mysql_log);
 		}
 		$camps_to_print = mysql_num_rows($rslt);
 
 		if ($valogin == 0) {
-			echo "<select style=width:200px name=VD_campaign id=VD_campaign onfocus='login_allowable_campaigns()'>\n";
+			echo "<select name=VD_campaign id=VD_campaign onfocus='login_allowable_campaigns()'>\n";
 			echo "<option value=\"\">LogIn Incorrecto</option>\n";
 
 		} else {
-			echo "<select style=width:200px name=VD_campaign id=VD_campaign>\n";
+			echo "<select name=VD_campaign id=VD_campaign>\n";
 			echo "<option value=\"\">Escolha uma campanha</option>\n";
 		}
 		$o = 0;
@@ -988,7 +984,7 @@ if ($ACTION == 'LogiNCamPaigns') {
 		}
 		echo "</select>\n";
 	} else {
-		echo "<select style=width:200px name=VD_campaign id=VD_campaign onFocus=\"login_allowable_campaigns()\">\n";
+		echo "<select name=VD_campaign id=VD_campaign onFocus=\"login_allowable_campaigns()\">\n";
 		echo "<option value=\"\">-- YOU MUST LOG IN TO THE TIMECLOCK FIRST --</option>\n";
 		echo "</select>\n";
 	}
@@ -2922,8 +2918,7 @@ if ($ACTION == 'manDiaLskip') {
 	$channel_live = 1;
 	if ((strlen($stage) < 1) || (strlen($called_count) < 1) || (strlen($lead_id) < 1)) {
 		$channel_live = 0;
-		echo "LEAD NOT REVERTED\n";
-		echo "Conf Exten $conf_exten or campaign $campaign or ext_context $ext_context is not valid\n";
+		echo json_encode(array("LEAD NOT REVERTED","Conf Exten $conf_exten or campaign $campaign or ext_context $ext_context is not valid"));
 		exit ;
 	} else {
 		$called_count = ($called_count - 1);
@@ -2934,8 +2929,7 @@ if ($ACTION == 'manDiaLskip') {
 		$rslt = mysql_query($stmt, $link);
 		if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00042', $user, $server_ip, $session_name, $one_mysql_log);
 		}
-
-		echo "LEAD REVERTED\n";
+                echo json_encode(array("LEAD REVERTED"));
 	}
 }
 
@@ -3317,8 +3311,7 @@ if ($ACTION == 'manDiaLlookCaLL') {
 	$rowx = '';
 	$call_good = 0;
 	if (strlen($MDnextCID) < 18) {
-		echo "NO\n";
-		echo "MDnextCID $MDnextCID is not valid\n";
+		 echo json_encode(array("NO","MDnextCID $MDnextCID is not valid"));
 		exit ;
 	} else {
 		##### look for the channel in the UPDATED vicidial_manager record of the call initiation
@@ -3333,7 +3326,7 @@ if ($ACTION == 'manDiaLlookCaLL') {
 			$row = mysql_fetch_row($rslt);
 			$uniqueid = $row[0];
 			$channel = $row[1];
-			$call_output = "$uniqueid\n$channel\n";
+			$call_output = array($uniqueid,$channel);
 			$call_good++;
 		} else {
 			### after 10 seconds, start checking for call termination in the carrier log
@@ -3367,7 +3360,7 @@ if ($ACTION == 'manDiaLlookCaLL') {
 						$channel = $dialstatus;
 						$hangup_cause_msg = "Cause: " . $hangup_cause . " - " . hangup_cause_description($hangup_cause);
 
-						$call_output = "$uniqueid\n$channel\nERROR\n" . $hangup_cause_msg;
+						$call_output = array($uniqueid,$channel,"ERROR",$hangup_cause_msg);
 						$call_good++;
 
 						### Delete call record
@@ -8172,19 +8165,18 @@ if ($ACTION == 'AGENTSview') {
 	if ($comments == 'AgentXferViewSelect') {$AGENTviewSQL .= " and (vla.closer_campaigns LIKE \"%AGENTDIRECT%\")";
 	}
 
-	echo "<TABLE CELLPADDING=0 CELLSPACING=1>";
 	### Gather agents data and statuses
 	$agentviewlistSQL = '';
 	$j = 0;
-	$stmt = "SELECT vla.user,vla.status,vu.full_name,UNIX_TIMESTAMP(last_call_time),UNIX_TIMESTAMP(last_call_finish) from vicidial_live_agents vla,vicidial_users vu where vla.user=vu.user $AGENTviewSQL order by vu.full_name;";
+	$stmt = "SELECT vla.user,vla.status,vu.full_name,UNIX_TIMESTAMP(last_call_time),UNIX_TIMESTAMP(last_call_finish) from vicidial_live_agents vla inner join vicidial_users vu on vla.user=vu.user $AGENTviewSQL order by vu.full_name;";
 	$rslt = mysql_query($stmt, $link);
 	if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00227', $VD_login, $server_ip, $session_name, $one_mysql_log);
 	}
 	if ($rslt) {$agents_count = mysql_num_rows($rslt);
 	}
-	$loop_count = 0;
-	while ($agents_count > $loop_count) {
-		$row = mysql_fetch_row($rslt);
+        $colegas["colegas"]=array();
+	$colegas["view_time"]=$agent_status_view_time;
+	while ($row = mysql_fetch_row($rslt)) {
 		$user = $row[0];
 		$status = $row[1];
 		$full_name = $row[2];
@@ -8193,32 +8185,19 @@ if ($ACTION == 'AGENTSview') {
 		$agentviewlistSQL .= "'$user',";
 
 		if (($status == 'READY') or ($status == 'CLOSER')) {
-			$statuscolor = '#ADD8E6';
+			$statuscolor = 'info';
 			$call_time = ($StarTtime - $call_finish);
 		}
 		if (($status == 'QUEUE') or ($status == 'INCALL')) {
-			$statuscolor = '#D8BFD8';
+			$statuscolor = 'success';
 			$call_time = ($StarTtime - $call_start);
 		}
 		if ($status == 'PAUSED') {
-			$statuscolor = '#F0E68C';
+			$statuscolor = 'error';
 			$call_time = ($StarTtime - $call_finish);
 		}
 
-		if ($call_time < 1) {
-			$call_time = "0:00";
-		} else {
-			$Fminutes_M = ($call_time / 60);
-			$Fminutes_M_int = floor($Fminutes_M);
-			$Fminutes_M_int = intval("$Fminutes_M_int");
-			$Fminutes_S = ($Fminutes_M - $Fminutes_M_int);
-			$Fminutes_S = ($Fminutes_S * 60);
-			$Fminutes_S = round($Fminutes_S, 0);
-			if ($Fminutes_S < 10) {$Fminutes_S = "0$Fminutes_S";
-			}
-			$call_time = "$Fminutes_M_int:$Fminutes_S";
-		}
-
+		
 		if ($comments == 'AgentXferViewSelect') {
 			$AXVSuserORDER[$j] = "$full_name$US$j";
 			$AXVSuser[$j] = $user;
@@ -8227,14 +8206,8 @@ if ($ACTION == 'AGENTSview') {
 			$AXVSstatuscolor[$j] = $statuscolor;
 			$j++;
 		} else {
-			echo "<TR BGCOLOR=\"$statuscolor\"><TD><font style=\"font-size: 12px;  font-family: sans-serif;\"> &nbsp; ";
-			echo "$row[0] - $row[2]";
-			echo "&nbsp;</font></TD>";
-			if ($agent_status_view_time > 0) {echo "<TD><font style=\"font-size: 12px;  font-family: sans-serif;\">&nbsp; $call_time &nbsp;</font></TD>";
-			}
-			echo "</TR>";
+                    $colegas["colegas"][]=array("color"=>$statuscolor,"user"=>$user,"name"=>$full_name,"time"=>$call_time);
 		}
-		$loop_count++;
 	}
 	$agentviewlistSQL = eregi_replace(".$", "", $agentviewlistSQL);
 	if (strlen($agentviewlistSQL) < 3) {$agentviewlistSQL = "''";
@@ -8247,9 +8220,7 @@ if ($ACTION == 'AGENTSview') {
 		}
 		if ($rslt) {$agents_count = mysql_num_rows($rslt);
 		}
-		$loop_count = 0;
-		while ($agents_count > $loop_count) {
-			$row = mysql_fetch_row($rslt);
+		while ($row = mysql_fetch_row($rslt)) {
 			$user = $row[0];
 			$full_name = $row[1];
 
@@ -8257,18 +8228,12 @@ if ($ACTION == 'AGENTSview') {
 				$AXVSuserORDER[$j] = "$full_name$US$j";
 				$AXVSuser[$j] = $user;
 				$AXVSfull_name[$j] = $full_name;
-				$AXVScall_time[$j] = '0:00';
+				$AXVScall_time[$j] = '';
 				$AXVSstatuscolor[$j] = 'white';
 				$j++;
 			} else {
-				echo "<TR BGCOLOR=\"white\"><TD><font style=\"font-size: 12px;  font-family: sans-serif;\"> &nbsp; ";
-				echo "$user - $full_name";
-				echo "&nbsp;</font></TD>";
-				if ($agent_status_view_time > 0) {echo "<TD><font style=\"font-size: 12px;  font-family: sans-serif;\">&nbsp; 0:00 &nbsp;</font></TD>";
-				}
-				echo "</TR>";
+                    $colegas["colegas"][]=array("color"=>"","user"=>$user,"name"=>$full_name,"time"=>"0");
 			}
-			$loop_count++;
 		}
 	}
 
@@ -8300,8 +8265,8 @@ if ($ACTION == 'AGENTSview') {
 			$order_split = explode("_", $AXVSuserORDER[$k]);
 			$i = $order_split[1];
 
-			echo "<TR BGCOLOR=\"$AXVSstatuscolor[$i]\"><TD><font style=\"font-size: $AXVSfontsize; font-family: sans-serif;\"> &nbsp; <a href=\"#\" onclick=\"AgentsXferSelect('$AXVSuser[$i]','AgentXferViewSelect');return false;\">$AXVSuser[$i] - $AXVSfull_name[$i]</a>&nbsp;</font></TD>";
-			if ($agent_status_view_time > 0) {echo "<TD><font style=\"font-size: $AXVSfontsize;  font-family: sans-serif;\">&nbsp; $AXVScall_time[$i] &nbsp;</font></TD>";
+			echo "<TR BGCOLOR=\"$AXVSstatuscolor[$i]\"><TD><font style=\"font-size: $AXVSfontsize; \"> &nbsp; <a href=\"#\" onclick=\"AgentsXferSelect('$AXVSuser[$i]','AgentXferViewSelect');return false;\">$AXVSuser[$i] - $AXVSfull_name[$i]</a></font></TD>";
+			if ($agent_status_view_time > 0) {echo "<TD><font style=\"font-size: $AXVSfontsize;  \">&nbsp; $AXVScall_time[$i] &nbsp;</font></TD>";
 			}
 			echo "</TR>";
 
@@ -8315,13 +8280,10 @@ if ($ACTION == 'AGENTSview') {
 		}
 		echo "</TD></TR></TABLE>";
 	}
+        echo json_encode($colegas);
+	//echo "<font style=\"font-size:10px;\"><font style=\"background-color:#ADD8E6;\"> &nbsp; &nbsp;</font>-READY &nbsp; <font style=\"background-color:#D8BFD8;\">&nbsp; &nbsp;</font>-INCALL &nbsp; <font style=\"background-color:#F0E68C;\"> &nbsp; &nbsp;</font>-PAUSED &nbsp;\n";
+	//if (ereg("NOT-LOGGED-IN-AGENTS", $agent_status_viewable_groups)) {echo "<font style=\"background-color:#FFFFFF;\"> &nbsp; &nbsp;</font>-LOGGED-OUT &nbsp;\n";}
 
-	echo "</TABLE><BR>\n";
-	echo "<font style=\"font-size:10px;font-family:sans-serif;\"><font style=\"background-color:#ADD8E6;\"> &nbsp; &nbsp;</font>-READY &nbsp; <font style=\"background-color:#D8BFD8;\">&nbsp; &nbsp;</font>-INCALL &nbsp; <font style=\"background-color:#F0E68C;\"> &nbsp; &nbsp;</font>-PAUSED &nbsp;\n";
-	if (ereg("NOT-LOGGED-IN-AGENTS", $agent_status_viewable_groups)) {echo "<font style=\"background-color:#FFFFFF;\"> &nbsp; &nbsp;</font>-LOGGED-OUT &nbsp;\n";
-	}
-
-	echo "</font>\n";
 }
 
 ################################################################################
@@ -8667,381 +8629,188 @@ if ($ACTION == 'CALLLOGview') {
 ### SEARCHRESULTSview - display search results for lead search
 ################################################################################
 if ($ACTION == 'SEARCHRESULTSview') {
-	/*if (strlen($stage) < 3)
-	 {$stage = '670';}
 
-	 $stmt="select agent_lead_search_method,manual_dial_list_id from vicidial_campaigns where campaign_id='$campaign';";
-	 if ($mel > 0) {mysql_error_logging($NOW_TIME,$link,$mel,$stmt,'00374',$user,$server_ip,$session_name,$one_mysql_log);}
-	 $rslt=mysql_query($stmt, $link);
-	 $camps_to_print = mysql_num_rows($rslt);
-	 if ($camps_to_print > 0)
-	 {
-	 $row=mysql_fetch_row($rslt);
-	 $agent_lead_search_method =		$row[0];
-	 $manual_dial_list_id =			$row[1];*/
 
-	 		 
-	$searchSQL = '';
-	$searchmethodSQL = '';
+    $searchSQL = '';
+    $searchmethodSQL = '';
 
-	$lead_id = ereg_replace("[^0-9]", "", $lead_id);
-	$vendor_lead_code = ereg_replace("'|\"|\\\\|;", "", $vendor_lead_code);
-	$last_name = ereg_replace("'|\"|\\\\|;", "", $last_name);
-	$first_name = ereg_replace("'|\"|\\\\|;", "", $first_name);
-	$city = ereg_replace("'|\"|\\\\|;", "", $city);
-	$state = ereg_replace("'|\"|\\\\|;", "", $state);
-	$postal_code = ereg_replace("'|\"|\\\\|;", "", $postal_code);
+    $lead_id = ereg_replace("[^0-9]", "", $lead_id);
+    $vendor_lead_code = ereg_replace("'|\"|\\\\|;", "", $vendor_lead_code);
+    $last_name = ereg_replace("'|\"|\\\\|;", "", $last_name);
+    $first_name = ereg_replace("'|\"|\\\\|;", "", $first_name);
+    $city = ereg_replace("'|\"|\\\\|;", "", $city);
+    $state = ereg_replace("'|\"|\\\\|;", "", $state);
+    $postal_code = ereg_replace("'|\"|\\\\|;", "", $postal_code);
+    $js["error"] = array();
+    $js["leads"] = array();
+    if (strlen($search_query) < 1) {
+        $js["error"][] = "O campo de pesquisa não pode estar vazio.";
+        exit;
+    }
 
-		if (strlen($search_query)<1) {
-			
-				echo "ERRO: O campo de pesquisa não pode estar vazio.\n";
-				echo "<BR><BR>";
-				echo "<a href=\"#\" onclick=\"hideDiv('SearcHResultSDisplaYBox');return false;\">Go Back</a>";
-				echo "</CENTER>";
-				exit ;
-		}
 
-	/*if (strlen($lead_id) > 0) {
-		### lead ID entered, search by this
-		$searchSQL = "lead_id LIKE '%$lead_id%'";
-	} elseif (strlen($vendor_lead_code) > 0) {
-		### vendor ID entered, search by this
-		$searchSQL = "vendor_lead_code LIKE '%$vendor_lead_code%'";
-	} elseif ((strlen($phone_number) >= 6) and (strlen($search) > 2)) {
-		### phone number entered, search by this
-		if (preg_match('/MAIN/', $search)) {$searchSQL = "phone_number LIKE '%$phone_number%'";
-		}
-		if (preg_match('/ALT/', $search)) {
-			if (strlen($searchSQL) > 10) {$searchSQL .= " or ";
-			}
-			$searchSQL .= "alt_phone LIKE '%$phone_number%'";
-		}
-		if (preg_match('/ADDR3/', $search)) {
-			if (strlen($searchSQL) > 10) {$searchSQL .= " or ";
-			}
-			$searchSQL .= "address3 LIKE '%$phone_number%'";
-		}
-	} elseif (strlen($last_name) > 0) {
-		### last name entered, search by this and other fields
-		$searchSQL = "last_name LIKE '%$last_name%'";
-		if (strlen($first_name) > 0) {
-			if (strlen($searchSQL) > 10) {$searchSQL .= " and ";
-			}
-			$searchSQL .= "first_name LIKE '%$first_name%'";
-		}
-		if (strlen($city) > 0) {
-			if (strlen($searchSQL) > 10) {$searchSQL .= " and ";
-			}
-			$searchSQL .= "city LIKE '%$city%'";
-		}
-		if (strlen($state) > 0) {
-			if (strlen($searchSQL) > 10) {$searchSQL .= " and ";
-			}
-			$searchSQL .= "state LIKE '%$state%'";
-		}
-		if (strlen($postal_code) > 0) {
-			if (strlen($searchSQL) > 10) {$searchSQL .= " and ";
-			}
-			$searchSQL .= "postal_code LIKE '%$postal_code%'";
-		}
-	} else {
-		echo "ERRO: Deve preencher pelo menos, o número de telefone, ou o ultimo nome.\n";
-		echo "<BR><BR>";
-		echo "<a href=\"#\" onclick=\"hideDiv('SearcHResultSDisplaYBox');return false;\">Go Back</a>";
-		echo "</CENTER>";
-		exit ;
-	}*/
+    ### limit results to specified search method
+    # 'SYSTEM','CAMPAIGNLISTS','CAMPLISTS_ALL','LIST'
+    if (preg_match('/SYSTEM/', $agent_lead_search_method)) {
+        $searchmethodSQL = '';
+    }
+    if (preg_match('/LIST/', $agent_lead_search_method)) {
+        $searchmethodSQL = " and list_id='$manual_dial_list_id'";
+    }
+    if (preg_match('/CAMPLISTS_ALL/', $agent_lead_search_method)) {
+        $stmt = "SELECT list_id from vicidial_lists where campaign_id='$campaign';";
+        $rslt = mysql_query($stmt, $link);
+        if ($mel > 0) {
+            mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00375', $user, $server_ip, $session_name, $one_mysql_log);
+        }
+        $lists_to_parse = mysql_num_rows($rslt);
+        $camp_lists = '';
+        $o = 0;
+        while ($lists_to_parse > $o) {
+            $rowx = mysql_fetch_row($rslt);
+            $camp_lists .= "'$rowx[0]',";
+            $o++;
+        }
+        $camp_lists = eregi_replace(".$", "", $camp_lists);
+        $searchmethodSQL = " and list_id IN($camp_lists)";
+    }
+    if (preg_match('/CAMPAIGNLISTS/', $agent_lead_search_method)) {
+        $stmt = "SELECT list_id,active from vicidial_lists where campaign_id='$campaign' and active='Y';";
+        $rslt = mysql_query($stmt, $link);
+        if ($mel > 0) {
+            mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00376', $user, $server_ip, $session_name, $one_mysql_log);
+        }
+        $lists_to_parse = mysql_num_rows($rslt);
+        $camp_lists = '';
+        $o = 0;
+        while ($lists_to_parse > $o) {
+            $rowx = mysql_fetch_row($rslt);
+            $camp_lists .= "'$rowx[0]',";
+            $o++;
+        }
+        $camp_lists = eregi_replace(".$", "", $camp_lists);
+        $searchmethodSQL = " and list_id IN($camp_lists)";
+    }
 
-	/*$searchownerSQL='';
-	 ### limit results to specified search method
-	 # USER_, GROUP_, TERRITORY_
-	 if (preg_match('/USER_/',$agent_lead_search_method))
-	 {$searchownerSQL=" and owner='$user'";}
-	 if (preg_match('/GROUP_/',$agent_lead_search_method))
-	 {
-	 $stmt="SELECT user_group from vicidial_users where user='$user';";
-	 $rslt=mysql_query($stmt, $link);
-	 if ($mel > 0) {mysql_error_logging($NOW_TIME,$link,$mel,$stmt,'00386',$user,$server_ip,$session_name,$one_mysql_log);}
-	 $groups_to_parse = mysql_num_rows($rslt);
-	 if ($groups_to_parse > 0)
-	 {
-	 $rowx=mysql_fetch_row($rslt);
-	 $searchownerSQL=" and owner='$rowx[0]'";
-	 }
-	 }
-	 if (preg_match('/TERRITORY_/',$agent_lead_search_method))
-	 {
-	 $agent_territories='';
-	 $agent_choose_territories=0;
-	 $stmt="SELECT agent_choose_territories from vicidial_users where user='$user';";
-	 $rslt=mysql_query($stmt, $link);
-	 if ($mel > 0) {mysql_error_logging($NOW_TIME,$link,$mel,$stmt,'00404',$user,$server_ip,$session_name,$one_mysql_log);}
-	 $Uterrs_to_parse = mysql_num_rows($rslt);
-	 if ($Uterrs_to_parse > 0)
-	 {
-	 $rowx=mysql_fetch_row($rslt);
-	 $agent_choose_territories = $rowx[0];
-	 }
+    ##### BEGIN search queries and output #####
+    $allowed_camp = "";
+    $is_cloud = mysql_query("SELECT cloud FROM `servers` limit 1;", $link);
+    $is_cloud = mysql_fetch_assoc($allowed_camp);
+    $is_cloud = $is_cloud['cloud'];
+    $allowed_camp = "";
+    if ($is_cloud == 1) {
+        $current_admin = $_SERVER['PHP_AUTH_USER'];
+        $allowed_camp = mysql_query("SELECT b.allowed_campaigns FROM `vicidial_users` a inner join `vicidial_user_groups` b on a.user_group=b.user_group WHERE a.user='$current_admin';", $link);
+        $allowed_camp = mysql_fetch_assoc($allowed_camp);
+        $allowed_camp = $allowed_camp['b.allowed_campaigns'];
 
-	 if ($agent_choose_territories < 1)
-	 {
-	 $stmt="SELECT territory from vicidial_user_territories where user='$user';";
-	 $rslt=mysql_query($stmt, $link);
-	 if ($mel > 0) {mysql_error_logging($NOW_TIME,$link,$mel,$stmt,'00405',$user,$server_ip,$session_name,$one_mysql_log);}
-	 $vuts_to_parse = mysql_num_rows($rslt);
-	 $o=0;
-	 while ($vuts_to_parse > $o)
-	 {
-	 $rowx=mysql_fetch_row($rslt);
-	 $agent_territories .= "'$rowx[0]',";
-	 $o++;
-	 }
-	 $agent_territories = preg_replace("/\,$/",'',$agent_territories);
-	 $searchownerSQL=" and owner IN($agent_territories)";
-	 if ($vuts_to_parse < 1)
-	 {$searchownerSQL=" and lead_id < 0";}
-	 }
-	 else
-	 {
-	 $stmt="SELECT agent_territories from vicidial_live_agents where user='$user';";
-	 $rslt=mysql_query($stmt, $link);
-	 if ($mel > 0) {mysql_error_logging($NOW_TIME,$link,$mel,$stmt,'00387',$user,$server_ip,$session_name,$one_mysql_log);}
-	 $terrs_to_parse = mysql_num_rows($rslt);
-	 if ($terrs_to_parse > 0)
-	 {
-	 $rowx=mysql_fetch_row($rslt);
-	 $agent_territories = $rowx[0];
-	 $agent_territories = preg_replace("/ -$|^ /",'',$agent_territories);
-	 $agent_territories = preg_replace("/ /","','",$agent_territories);
-	 $searchownerSQL=" and owner IN('$agent_territories')";
-	 }
-	 }
-	 }
-	 */
-	### limit results to specified search method
-	# 'SYSTEM','CAMPAIGNLISTS','CAMPLISTS_ALL','LIST'
-	if (preg_match('/SYSTEM/',$agent_lead_search_method))
-	 {$searchmethodSQL='';}
-	 if (preg_match('/LIST/',$agent_lead_search_method))
-	 {$searchmethodSQL=" and list_id='$manual_dial_list_id'";}
-	 if (preg_match('/CAMPLISTS_ALL/',$agent_lead_search_method))
-	 {
-	 $stmt="SELECT list_id from vicidial_lists where campaign_id='$campaign';";
-	 $rslt=mysql_query($stmt, $link);
-	 if ($mel > 0) {mysql_error_logging($NOW_TIME,$link,$mel,$stmt,'00375',$user,$server_ip,$session_name,$one_mysql_log);}
-	 $lists_to_parse = mysql_num_rows($rslt);
-	 $camp_lists='';
-	 $o=0;
-	 while ($lists_to_parse > $o)
-	 {
-	 $rowx=mysql_fetch_row($rslt);
-	 $camp_lists .= "'$rowx[0]',";
-	 $o++;
-	 }
-	 $camp_lists = eregi_replace(".$","",$camp_lists);
-	 $searchmethodSQL=" and list_id IN($camp_lists)";
-	 }
-	 if (preg_match('/CAMPAIGNLISTS/',$agent_lead_search_method))
-	 {
-	 $stmt="SELECT list_id,active from vicidial_lists where campaign_id='$campaign' and active='Y';";
-	 $rslt=mysql_query($stmt, $link);
-	 if ($mel > 0) {mysql_error_logging($NOW_TIME,$link,$mel,$stmt,'00376',$user,$server_ip,$session_name,$one_mysql_log);}
-	 $lists_to_parse = mysql_num_rows($rslt);
-	 $camp_lists='';
-	 $o=0;
-	 while ($lists_to_parse > $o)
-	 {
-	 $rowx=mysql_fetch_row($rslt);
-	 $camp_lists .= "'$rowx[0]',";
-	 $o++;
-	 }
-	 $camp_lists = eregi_replace(".$","",$camp_lists);
-	 $searchmethodSQL=" and list_id IN($camp_lists)";
-	 }
+        if (eregi("-ALL-CAMPAIGNS-", $allowed_camp)) {
+            $allowed_camp = "";
+        } else {
+            $tmp = explode($allowed_camp);
+            foreach ($tmp as $key => $value) {
+                $allowed_camp.="'" . trim($value) . "',";
+            }
+            $allowed_camps2 = "WHERE campaign_id IN (" . rtrim($allowed_camp, ",") . ") ";
+            $allowed_camp = " AND campaign_id IN (" . rtrim($allowed_camp, ",") . ") ";
+        }
+    }
 
-	##### BEGIN search queries and output #####
-	$allowed_camp="";
-	$is_cloud=mysql_query("SELECT cloud FROM `servers` limit 1;",$link);
-			$is_cloud=mysql_fetch_assoc($allowed_camp);
-			$is_cloud=$is_cloud['cloud'];
-			$allowed_camp="";
-			if ($is_cloud==1)
-			{
-			$current_admin = $_SERVER['PHP_AUTH_USER'];
-			$allowed_camp=mysql_query("SELECT b.allowed_campaigns FROM `vicidial_users` a inner join `vicidial_user_groups` b on a.user_group=b.user_group WHERE a.user='$current_admin';",$link);
-			$allowed_camp=mysql_fetch_assoc($allowed_camp);
-			$allowed_camp=$allowed_camp['b.allowed_campaigns'];
-			
-			if (eregi("-ALL-CAMPAIGNS-", $allowed_camp)) {
-				$allowed_camp="";
-			}
-			else{
-				$tmp=explode($allowed_camp);
-				foreach ($tmp as $key => $value) {
-					$allowed_camp.="'".trim($value)."',";
-				}
-				$allowed_camp=" AND campaign_id IN (".rtrim($allowed_camp,",").") ";
-			}
-			}
-	
-	//$stmt = "select count(*) from vicidial_list where $searchSQL $searchownerSQL $searchmethodSQL;";
-	$stmt = "select count(*) from vicidial_list a inner join vicidial_lists b on a.list_id=b.list_id where ".mysql_real_escape_string($search_field)." like '%".mysql_real_escape_string($search_query)."%' $allowed_camp;";
+    $stmt = "select count(*) from vicidial_list a inner join vicidial_lists b on a.list_id=b.list_id where " . mysql_real_escape_string($search_field) . " like '%" . mysql_real_escape_string($search_query) . "%' $allowed_camp;";
 
-	### LOG INSERTION Search Log Table ###
-	$SQL_log = "$stmt|";
-	$SQL_log = ereg_replace(';', '', $SQL_log);
-	$SQL_log = addslashes($SQL_log);
-	$stmtL = "INSERT INTO vicidial_lead_search_log set event_date='$NOW_TIME', user='$user', source='agent', results='0', search_query=\"$SQL_log\";";
-	if ($DB) {echo "|$stmtL|\n";
-	}
-	$rslt = mysql_query($stmtL, $link);
-	if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00377', $user, $server_ip, $session_name, $one_mysql_log);
-	}
-	$search_log_id = mysql_insert_id($link);
+    ### LOG INSERTION Search Log Table ###
+    $SQL_log = "$stmt|";
+    $SQL_log = ereg_replace(';', '', $SQL_log);
+    $SQL_log = addslashes($SQL_log);
+    $stmtL = "INSERT INTO vicidial_lead_search_log set event_date='$NOW_TIME', user='$user', source='agent', results='0', search_query=\"$SQL_log\";";
+    if ($DB) {
+        echo "|$stmtL|\n";
+    }
+    $rslt = mysql_query($stmtL, $link);
+    if ($mel > 0) {
+        mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00377', $user, $server_ip, $session_name, $one_mysql_log);
+    }
+    $search_log_id = mysql_insert_id($link);
 
-	$rslt = mysql_query($stmt, $link);
-	if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00378', $user, $server_ip, $session_name, $one_mysql_log);
-	}
-	$counts_to_print = mysql_num_rows($rslt);
-	if ($counts_to_print > 0) {
-		$row = mysql_fetch_row($rslt);
-		$search_result_count = $row[0];
+    $rslt = mysql_query($stmt, $link);
+    if ($mel > 0) {
+        mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00378', $user, $server_ip, $session_name, $one_mysql_log);
+    }
+    $counts_to_print = mysql_num_rows($rslt);
+    if ($counts_to_print > 0) {
+        $row = mysql_fetch_row($rslt);
+        $search_result_count = $row[0];
 
-		$end_process_time = date("U");
-		$search_seconds = ($end_process_time - $StarTtime);
+        $end_process_time = date("U");
+        $search_seconds = ($end_process_time - $StarTtime);
 
-		$stmtL = "UPDATE vicidial_lead_search_log set results='$search_result_count',seconds='$search_seconds' where search_log_id='$search_log_id';";
-		if ($DB) {echo "|$stmtL|\n";
-		}
-		$rslt = mysql_query($stmtL, $link);
-		if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00379', $user, $server_ip, $session_name, $one_mysql_log);
-		}
+        $stmtL = "UPDATE vicidial_lead_search_log set results='$search_result_count',seconds='$search_seconds' where search_log_id='$search_log_id';";
+        if ($DB) {
+            echo "|$stmtL|\n";
+        }
+        $rslt = mysql_query($stmtL, $link);
+        if ($mel > 0) {
+            mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00379', $user, $server_ip, $session_name, $one_mysql_log);
+        }
 
-		echo "<CENTER>\n";
-		echo "<B>";
-		echo "Resultados encontrados: $search_result_count <br>";
-		echo "</B>";
-		echo "<BR>\n";
-		echo "<DIV class=cc-mstyle style='height: 300px;overflow: scroll;'>";
-		echo "<table style=width:95%>";
-		echo "<thead>";
-		echo "<TR>";
-		echo "<TH> # </TH>";
-		echo "<TH> Nome </TH>";
-		echo "<TH> Telefone </TH>";
-		echo "<TH> Estado </TH>";
-		echo "<TH> Ultima Chamada </TH>";
-		echo "<TH> Localidade </TH>";
-		echo "<TH> Freguesia </TH>";
-		echo "<TH> Cod. Postal </TH>";
-		#echo "<TH> Info </TH>";
-		echo "<TH> Chamar </TH>";
-		echo "</TR>";
-		echo "</thead>";
-                
-		echo "<tbody>";
 
-		if ($search_result_count) {
-			//$stmt = "select first_name,last_name,phone_code,phone_number,status,last_local_call_time,lead_id,city,state,postal_code from vicidial_list where $searchSQL $searchownerSQL $searchmethodSQL order by last_local_call_time desc limit 1000;";
-			$stmt = "select first_name,last_name,phone_code,phone_number,status,last_local_call_time,lead_id,city,state,postal_code from vicidial_list a inner join vicidial_lists b on a.list_id=b.list_id  where ".mysql_real_escape_string($search_field)." like '%".mysql_real_escape_string($search_query)."%' $allowed_camp order by last_local_call_time desc limit 1000;";
-			
-			$rslt = mysql_query($stmt, $link);
-			if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00380', $user, $server_ip, $session_name, $one_mysql_log);
-			}
-			$out_logs_to_print = mysql_num_rows($rslt);
-			if ($format == 'debug') {echo "|$out_logs_to_print|$stmt|";
-			}
+        if ($search_result_count) {
+            //$stmt = "select first_name,last_name,phone_code,phone_number,status,last_local_call_time,lead_id,city,state,postal_code from vicidial_list where $searchSQL $searchownerSQL $searchmethodSQL order by last_local_call_time desc limit 1000;";
+            $stmt = "select first_name,last_name,phone_code,phone_number,status_name as status,last_local_call_time,lead_id,city,state,postal_code from vicidial_list a inner join vicidial_lists b on a.list_id=b.list_id inner join (select status,status_name from vicidial_statuses union all select status,status_name from vicidial_campaign_statuses $allowed_camps2 group by status) c on a.status=c.status where " . mysql_real_escape_string($search_field) . " like '%" . mysql_real_escape_string($search_query) . "%' $allowed_camp order by last_local_call_time desc limit 50;";
+$js["query"]=$stmt;
+            $rslt = mysql_query($stmt, $link);
+            if ($mel > 0) {
+                mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00380', $user, $server_ip, $session_name, $one_mysql_log);
+            }
+            $out_logs_to_print = mysql_num_rows($rslt);
+            if ($format == 'debug') {
+                echo "|$out_logs_to_print|$stmt|";
+            }
 
-			$g = 0;
-			$u = 0;
-			while ($out_logs_to_print > $u) {
-				$row = mysql_fetch_row($rslt);
-				$ALLsort[$g] = "$row[0]-----$g";
-				$ALLname[$g] = "$row[0] $row[1]";
-				$ALLphone_code[$g] = $row[2];
-				$ALLphone_number[$g] = $row[3];
-				$ALLstatus[$g] = $row[4];
-				$ALLcall_date[$g] = $row[5];
-				$ALLlead_id[$g] = $row[6];
-				$ALLcity[$g] = $row[7];
-				$ALLstate[$g] = $row[8];
-				$ALLpostal_code[$g] = $row[9];
+            while ($row = mysql_fetch_row($rslt)) {
+                $js["leads"][] = array("name" => "$row[0] $row[1]", "phone_number" => $row[3], "status" => $row[4], "call_date" => $row[5], "lead_id" => $row[6], "city" => $row[7], "state" => $row[8], "postal_code" => $row[9]);
+            }
 
-				$g++;
-				$u++;
-			}
+            if (!mysql_num_rows($rslt)) {
+                $js["error"][] = "Não foram encontrados resultados.";
+                echo json_encode($js);
+                exit;
+            }
 
-			if ($g < 1) {echo "<tr bgcolor=white><td colspan=10 align=center>No results found</td></tr>";
-			}
 
-			$u = 0;
-			while ($g > $u) {
-				$sort_split = explode("-----", $ALLsort[$u]);
-				$i = $sort_split[1];
+            $end_process_time = date("U");
+            $search_seconds = ($end_process_time - $StarTtime);
 
-				if (eregi("1$|3$|5$|7$|9$", $u)) {$bgcolor = 'bgcolor="#B9CBFD"';
-				} else {$bgcolor = 'bgcolor="#9BB9FB"';
-				}
-
-				$u++;
-				echo "<tr $bgcolor>";
-				echo "<td><font size=1>$u</td>";
-				echo "<td align=right> $ALLname[$i] </td>\n";
-				echo "<td align=right> $ALLphone_code[$i] $ALLphone_number[$i] </td>\n";
-				echo "<td align=right> $ALLstatus[$i] </td>\n";
-				echo "<td align=right> $ALLcall_date[$i] </td>\n";
-				echo "<td align=right> $ALLcity[$i] </td>\n";
-				echo "<td align=right> $ALLstate[$i]</td>\n";
-				echo "<td align=right> $ALLpostal_code[$i] </td>\n";
-				#echo "<td align=right> <a href=\"#\" onclick=\"VieWLeaDInfO($ALLlead_id[$i]);return false;\"><img src=../images/icons/info_rhombus.png /></A> </td>\n";
-				echo "<td align=right> <a href=\"#\" onclick=\"NeWManuaLDiaLCalL('LEADSEARCH','$ALLphone_code[$i]','$ALLphone_number[$i]','$ALLlead_id[$i]');return false;\"><img src=../images/icons/phone_call_32.png /></A> </td>\n";
-				echo "</tr>\n";
-			}
-
-			$end_process_time = date("U");
-			$search_seconds = ($end_process_time - $StarTtime);
-
-			$stmtL = "UPDATE vicidial_lead_search_log set seconds='$search_seconds' where search_log_id='$search_log_id';";
-			if ($DB) {echo "|$stmtL|\n";
-			}
-			$rslt = mysql_query($stmtL, $link);
-			if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00381', $user, $server_ip, $session_name, $one_mysql_log);
-			}
-		} else {echo "<tr bgcolor=white><td colspan=10 align=center>Não foram encontrados resultados.</td></tr>";
-		}
-
-		echo "<tbody>";
-		echo "</TABLE></div>";
-		echo "<BR>";
-		echo "<table><tr><td style=text-align:right;><a href=\"#\" onclick=\"hideDiv('SearcHResultSDisplaYBox');return false;\"><img src=../images/icons/resultset_previous_32.png></a></td><td style=text-align:left;><a href=\"#\" onclick=\"hideDiv('SearcHResultSDisplaYBox');return false;\">Voltar</a></td></tr></table>";
-		echo "</CENTER>";
-	} else {
-		echo "ERROR: Ouve um erro com a sua pesquisa.\n";
-		echo "<BR><BR>";
-		echo "<table><tr><td style=text-align:right;><a href=\"#\" onclick=\"hideDiv('SearcHResultSDisplaYBox');return false;\"><img src=../images/icons/resultset_previous_32.png></a></td><td style=text-align:left;><a href=\"#\" onclick=\"hideDiv('SearcHResultSDisplaYBox');return false;\">Voltar</a></td></tr></table>";
-		echo "</CENTER>";
-		exit ;
-	}
-	##### END search queries and output #####
-	/*}
-	 else
-	 {
-	 echo "ERROR: Campaign not found\n";
-	 echo "<BR><BR>";
-	 echo "<a href=\"#\" onclick=\"hideDiv('SearcHResultSDisplaYBox');return false;\">Go Back</a>";
-	 echo "</CENTER>";
-	 exit;
-	 }*/
+            $stmtL = "UPDATE vicidial_lead_search_log set seconds='$search_seconds' where search_log_id='$search_log_id';";
+            if ($DB) {
+                echo "|$stmtL|\n";
+            }
+            $rslt = mysql_query($stmtL, $link);
+            if ($mel > 0) {
+                mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00381', $user, $server_ip, $session_name, $one_mysql_log);
+            }
+            
+            echo json_encode($js);
+                exit;
+        } else {
+            $js["error"][] = "Não foram encontrados resultados.";
+            echo json_encode($js);
+            exit;
+        }
+    } else {
+        $js["error"][] = " Ouve um erro com a sua pesquisa.";
+        echo json_encode($js);
+        exit;
+    }
 }
 
 ################################################################################
 ### LEADINFOview - display the information for a lead and logs for that lead
 ################################################################################
 if ($ACTION == 'LEADINFOview') {
-	if (strlen($lead_id) < 1) {echo "ERROR: no Lead ID";
+   if (strlen($lead_id) < 1) {echo "ERROR: no Lead ID";
 	} else {
 		$hide_dial_links = 0;
-		echo "<h4>Informação do Callback</h4><Div class='datagrid'>\n";
 
 		if ($search == 'logfirst') {$hide_dial_links++;
 		}
@@ -9049,24 +8818,21 @@ if ($ACTION == 'LEADINFOview') {
 		### BEGIN Display callback information ###
 		$callback_id = preg_replace('/\D/', '', $callback_id);
 		if (strlen($callback_id) > 0) {
-			$stmt = "select status,entry_time,callback_time,modify_date,user,recipient,comments,lead_status from vicidial_callbacks where lead_id='$lead_id' and callback_id='$callback_id' limit 1;";
-			$rslt = mysql_query($stmt, $link);
+			$stmt = "select a.status,entry_time,callback_time,modify_date,user,recipient,comments,b.status_name from vicidial_callbacks a inner join (Select status, status_name from vicidial_statuses union all select status,status_name from vicidial_campaign_statuses group by status) b on a.lead_status=b.status where lead_id='$lead_id' and callback_id='$callback_id' limit 1;";
+			$rslt = mysql_query($stmt, $link) or die(mysql_error());
 			if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00397', $user, $server_ip, $session_name, $one_mysql_log);
 			}
 			$cb_to_print = mysql_num_rows($rslt);
 			if ($format == 'debug') {echo "|$cb_to_print|$stmt|";
 			}
-			if ($cb_to_print > 0) {
-				$row = mysql_fetch_row($rslt);
-				echo "<TABLE>";
-				echo "<tr><th ALIGN=right>Estado de Callback:  </th><td ALIGN=left>$row[0]</td></tr>";
-				echo "<tr><th ALIGN=right>Estado de Lead: </th><td ALIGN=left>$row[7]</td></tr>";
-				echo "<tr><th ALIGN=right>Entrada de Callback:  </th><td ALIGN=left>$row[1]</td></tr>";
-				echo "<tr><th ALIGN=right>Hora de Callback: </th><td ALIGN=left>$row[2]</td></tr>";
-				echo "<tr><th ALIGN=right>Comentário de callback: </th><td ALIGN=left>$row[6]</td></tr>";
-				echo "</TABLE>";
-				echo "</Div><br>";
-				$hide_dial_links++;
+                        $cb_status=array();
+			if ($row = mysql_fetch_assoc($rslt)) {
+                        $cb_status=array(
+                            "status"=>$row["status"],
+                            "entry_time"=>$row["entry_time"],
+                            "lead_status"=>$row["status_name"],
+                            "callback_time"=>$row["callback_time"],
+                            "comments"=>$row["comments"]);
 			}
 		}
 		### END Display callback information ###
@@ -9074,85 +8840,18 @@ if ($ACTION == 'LEADINFOview') {
 		### BEGIN Display lead info and custom fields ###
 		### BEGIN find any custom field labels ###
                 $stmt = "SELECT NAME,DISPLAY_NAME,READONLY,ACTIVE FROM `vicidial_list_ref` WHERE campaign_id='$campaign' ORDER BY field_order asc";
-        $rslt = mysql_query($stmt, $link);
-
-
-        $fields_order = array();
-        for ($i = 0; $i < mysql_num_rows($rslt); $i++) {
-            $row = mysql_fetch_assoc($rslt);
-            $fields_order[$i][0] = strtolower($row['NAME']);
-            $fields_order[$i][1] = $row['ACTIVE'] == 1;
-            $fields_order[$i][2] = ($row['READONLY'] == 1 ? "readonly='readonly'" : "");
-            $fields_order[$i][3] = $row['DISPLAY_NAME'];
-        }
-		$INFOout = '';
-		/*$label_title = 'Title';
-		$label_first_name = 'First';
-		$label_middle_initial = 'MI';
-		$label_last_name = 'Last';
-		$label_address1 = 'Address1';
-		$label_address2 = 'Address2';
-		$label_address3 = 'Address3';
-		$label_city = 'City';
-		$label_state = 'State';
-		$label_province = 'Province';
-		$label_postal_code = 'PostCode';
-		$label_vendor_lead_code = 'Vendor ID';
-		$label_gender = 'Gender';
-		$label_phone_number = 'Phone';
-		$label_phone_code = 'DialCode';
-		$label_alt_phone = 'Alt. Phone';
-		$label_security_phrase = 'Show';
-		$label_email = 'Email';
-		$label_comments = 'Comments';
-
-		$stmt = "SELECT label_title,label_first_name,label_middle_initial,label_last_name,label_address1,label_address2,label_address3,label_city,label_state,label_province,label_postal_code,label_vendor_lead_code,label_gender,label_phone_number,label_phone_code,label_alt_phone,label_security_phrase,label_email,label_comments from system_settings;";
-		$rslt = mysql_query($stmt, $link);
-		$row = mysql_fetch_row($rslt);
-		if (strlen($row[0]) > 0) {$label_title = $row[0];
-		}
-		if (strlen($row[1]) > 0) {$label_first_name = $row[1];
-		}
-		if (strlen($row[2]) > 0) {$label_middle_initial = $row[2];
-		}
-		if (strlen($row[3]) > 0) {$label_last_name = $row[3];
-		}
-		if (strlen($row[4]) > 0) {$label_address1 = $row[4];
-		}
-		if (strlen($row[5]) > 0) {$label_address2 = $row[5];
-		}
-		if (strlen($row[6]) > 0) {$label_address3 = $row[6];
-		}
-		if (strlen($row[7]) > 0) {$label_city = $row[7];
-		}
-		if (strlen($row[8]) > 0) {$label_state = $row[8];
-		}
-		if (strlen($row[9]) > 0) {$label_province = $row[9];
-		}
-		if (strlen($row[10]) > 0) {$label_postal_code = $row[10];
-		}
-		if (strlen($row[11]) > 0) {$label_vendor_lead_code = $row[11];
-		}
-		if (strlen($row[12]) > 0) {$label_gender = $row[12];
-		}
-		if (strlen($row[13]) > 0) {$label_phone_number = $row[13];
-		}
-		if (strlen($row[14]) > 0) {$label_phone_code = $row[14];
-		}
-		if (strlen($row[15]) > 0) {$label_alt_phone = $row[15];
-		}
-		if (strlen($row[16]) > 0) {$label_security_phrase = $row[16];
-		}
-		if (strlen($row[17]) > 0) {$label_email = $row[17];
-		}
-		if (strlen($row[18]) > 0) {$label_comments = $row[18];
-		}*/
-		### END find any custom field labels ###
-
-		$INFOout .= "<h4>Informação da Lead</h4><Div class='datagrid'><TABLE>";
-
+                $rslt = mysql_query($stmt, $link) or die(mysql_error());
+                $fields_order = array();
+                while($row = mysql_fetch_assoc($rslt)){
+                    $fields_order[] = array(
+                        "name"=>strtolower($row['NAME']),
+                        "active"=>$row['ACTIVE'] == 1,
+                        "readonly"=>($row['READONLY'] == 1 ? "readonly" : ""),
+                        "display"=>$row['DISPLAY_NAME']);
+                }
+		
 		$stmt = "select status,vendor_lead_code,list_id,gmt_offset_now,called_since_last_reset,phone_code,phone_number,title,first_name,middle_initial,last_name,address1,address2,address3,city,state,province,postal_code,country_code,gender,alt_phone,email,security_phrase,comments,called_count,last_local_call_time,rank,owner,entry_list_id,extra1,extra2,extra3,extra4,extra5,extra6,extra7,extra8,extra9,extra10,extra11,extra12,extra13,extra14,extra15 from vicidial_list where lead_id='$lead_id' limit 1;";
-		$rslt = mysql_query($stmt, $link);
+		$rslt = mysql_query($stmt, $link) or die(mysql_error());
 		if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00398', $user, $server_ip, $session_name, $one_mysql_log);
 		}
 		$info_to_print = mysql_num_rows($rslt);
@@ -9160,217 +8859,38 @@ if ($ACTION == 'LEADINFOview') {
 		}
 
 			$row = mysql_fetch_assoc($rslt);
-        for ($i = 0; $i < count($fields_order); $i++) {
-            $INFOout .=($fields_order[$i][1]) ? "<tr><th ALIGN=right>" . $fields_order[$i][3] . "</th><td ALIGN=left>" . $row[$fields_order[$i][0]] . "</td></tr>" : "";
-        }
-		/*if ($info_to_print > 0) {
-			$row = mysql_fetch_row($rslt);
-
-			##### BEGIN check for postal_code and phone time zones if alert enabled
-			$post_phone_time_diff_alert_message = '';
-			$stmt = "SELECT post_phone_time_diff_alert,local_call_time FROM vicidial_campaigns where campaign_id='$campaign';";
-			$rslt = mysql_query($stmt, $link);
-			if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00415', $user, $server_ip, $session_name, $one_mysql_log);
-			}
-			if ($DB) {echo "$stmt\n";
-			}
-			$camp_pptda_ct = mysql_num_rows($rslt);
-			if ($camp_pptda_ct > 0) {
-				$rowx = mysql_fetch_row($rslt);
-				$post_phone_time_diff_alert = $rowx[0];
-				$local_call_time = $rowx[1];
-			}
-			if (($post_phone_time_diff_alert == 'ENABLED') or (preg_match("/OUTSIDE_CALLTIME/", $post_phone_time_diff_alert))) {
-				$postal_code = $row[17];
-				$phone_code = $row[5];
-				$phone_number = $row[6];
-				$state = $row[15];
-				### get current gmt_offset of the phone_number
-				$postalgmtNOW = '';
-				$USarea = substr($phone_number, 0, 3);
-				$PHONEgmt_offset = lookup_gmt($phone_code, $USarea, $state, $LOCAL_GMT_OFF_STD, $Shour, $Smin, $Ssec, $Smon, $Smday, $Syear, $postalgmtNOW, $postal_code);
-				$PHONEdialable = dialable_gmt($DB, $link, $local_call_time, $PHONEgmt_offset, $state);
-
-				$postalgmtNOW = 'POSTAL';
-				$POSTgmt_offset = lookup_gmt($phone_code, $USarea, $state, $LOCAL_GMT_OFF_STD, $Shour, $Smin, $Ssec, $Smon, $Smday, $Syear, $postalgmtNOW, $postal_code);
-				$POSTdialable = dialable_gmt($DB, $link, $local_call_time, $POSTgmt_offset, $state);
-
-				#	$post_phone_time_diff_alert_message = "$POSTgmt_offset|$POSTdialable|$postal_code   ---   $PHONEgmt_offset|$PHONEdialable|$USarea";
-				$post_phone_time_diff_alert_message = '';
-
-				if ($PHONEgmt_offset != $POSTgmt_offset) {
-					$post_phone_time_diff_alert_message .= "Phone and Post Code Time Zone Mismatch! ";
-
-					if ($post_phone_time_diff_alert == 'OUTSIDE_CALLTIME_ONLY') {
-						$post_phone_time_diff_alert_message = '';
-						if ($PHONEdialable < 1) {$post_phone_time_diff_alert_message .= " Phone Area Code Outside Dialable Zone $PHONEgmt_offset &nbsp; &nbsp; &nbsp; ";
-						}
-						if ($POSTdialable < 1) {$post_phone_time_diff_alert_message .= " Postal Code Outside Dialable Zone $POSTgmt_offset";
-						}
-					}
-				}
-				if (($post_phone_time_diff_alert == 'OUTSIDE_CALLTIME_PHONE') or ($post_phone_time_diff_alert == 'OUTSIDE_CALLTIME_POSTAL') or ($post_phone_time_diff_alert == 'OUTSIDE_CALLTIME_BOTH')) {$post_phone_time_diff_alert_message = '';
-				}
-
-				if (($post_phone_time_diff_alert == 'OUTSIDE_CALLTIME_PHONE') or ($post_phone_time_diff_alert == 'OUTSIDE_CALLTIME_BOTH')) {
-					if ($PHONEdialable < 1) {$post_phone_time_diff_alert_message .= " Phone Area Code Outside Dialable Zone $PHONEgmt_offset &nbsp; &nbsp; &nbsp; ";
-					}
-				}
-				if (($post_phone_time_diff_alert == 'OUTSIDE_CALLTIME_POSTAL') or ($post_phone_time_diff_alert == 'OUTSIDE_CALLTIME_BOTH')) {
-					if ($POSTdialable < 1) {$post_phone_time_diff_alert_message .= " Postal Code Outside Dialable Zone $POSTgmt_offset ";
-					}
-				}
-
-				if (strlen($post_phone_time_diff_alert_message) > 5) {$INFOout .= "<tr bgcolor=white><td colspan=2 align=center><font size=2 color=red><b>$post_phone_time_diff_alert_message</b></font></td></tr>";
-				}
-			}
-			##### END check for postal_code and phone time zones if alert enabled
-
-			$INFOout .= "<tr><th ALIGN=right>Status: &nbsp; </th><td ALIGN=left>$row[0]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>$label_vendor_lead_code: &nbsp; </th><td ALIGN=left>$row[1]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>List ID: &nbsp; </th><td ALIGN=left>$row[2]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>Timezone: &nbsp; </th><td ALIGN=left>$row[3]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>Called Since Last Reset: &nbsp; </th><td ALIGN=left>$row[4]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>$label_phone_code: &nbsp; </th><td ALIGN=left>$row[5]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>$label_phone_number: &nbsp; </th><td ALIGN=left>$row[6] - &nbsp; &nbsp; &nbsp; &nbsp; ";
-			if ($hide_dial_links < 1) {$INFOout .= "<a href=\"#\" onclick=\"NeWManuaLDiaLCalL('CALLLOG',$row[5], $row[6], $lead_id);return false;\">DIAL</a>";
-			}
-			$INFOout .= "</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>$label_title: &nbsp; </th><td ALIGN=left>$row[7]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>$label_first_name: &nbsp; </th><td ALIGN=left>$row[8]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>$label_middle_initial: &nbsp; </th><td ALIGN=left>$row[9]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>$label_last_name: &nbsp; </th><td ALIGN=left>$row[10]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>$label_address1: &nbsp; </th><td ALIGN=left>$row[11]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>$label_address2: &nbsp; </th><td ALIGN=left>$row[12]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>$label_address3: &nbsp; </th><td ALIGN=left>$row[13]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>$label_city: &nbsp; </th><td ALIGN=left>$row[14]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>$label_state: &nbsp; </th><td ALIGN=left>$row[15]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>$label_province: &nbsp; </th><td ALIGN=left>$row[16]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>$label_postal_code: &nbsp; </th><td ALIGN=left>$row[17]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>Country: &nbsp; </th><td ALIGN=left>$row[18]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>$label_gender: &nbsp; </th><td ALIGN=left>$row[19]</td></tr>";
-			$INFOout .= "<tr><th ALIGN=right>$label_alt_phone: &nbsp; </th><td ALIGN=left>$row[20] - &nbsp; &nbsp; &nbsp; &nbsp; ";
-			if ($hide_dial_links < 1) {$INFOout .= "<a href=\"#\" onclick=\"NeWManuaLDiaLCalL('CALLLOG',$row[5], $row[20], $lead_id, 'ALT');return false;\">DIAL</a>";
-			}
-			$INFOout .= "</td></tr>";
-			$INFOout .= "<tr bgcolor=white><th ALIGN=right>$label_email: &nbsp; </th><td ALIGN=left>$row[21]</td></tr>";
-			$INFOout .= "<tr bgcolor=white><th ALIGN=right>$label_security_phrase: &nbsp; </th><td ALIGN=left>$row[22]</td></tr>";
-			$INFOout .= "<tr bgcolor=white><th ALIGN=right>$label_comments: &nbsp; </th><td ALIGN=left>$row[23]</td></tr>";
-			$INFOout .= "<tr bgcolor=white><th ALIGN=right>Called Count: &nbsp; </th><td ALIGN=left>$row[24]</td></tr>";
-			$INFOout .= "<tr bgcolor=white><th ALIGN=right>Last Local Call Time: &nbsp; </th><td ALIGN=left>$row[25]</td></tr>";
-
-			$entry_list_id = $row[28];
-			$CFoutput = '';
-			$stmt = "SHOW TABLES LIKE \"custom_$entry_list_id\";";
-			if ($DB > 0) {$INFOout .= "$stmt";
-			}
-			$rslt = mysql_query($stmt, $link);
-			if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00382', $user, $server_ip, $session_name, $one_mysql_log);
-			}
-			$tablecount_to_print = mysql_num_rows($rslt);
-			if ($tablecount_to_print > 0) {
-				$stmt = "SELECT count(*) from custom_$entry_list_id where lead_id='$lead_id';";
-				if ($DB > 0) {$INFOout .= "$stmt";
-				}
-				$rslt = mysql_query($stmt, $link);
-				if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00383', $user, $server_ip, $session_name, $one_mysql_log);
-				}
-				$fieldscount_to_print = mysql_num_rows($rslt);
-				if ($fieldscount_to_print > 0) {
-					$rowx = mysql_fetch_row($rslt);
-					$custom_records_count = $rowx[0];
-
-					$select_SQL = '';
-					$stmt = "SHOW COLUMNS FROM custom_$entry_list_id where Field != 'lead_id';";
-					$rslt = mysql_query($stmt, $link);
-					if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00384', $user, $server_ip, $session_name, $one_mysql_log);
-					}
-					$fields_to_print = mysql_num_rows($rslt);
-					$select_SQL = '';
-					$o = 0;
-					while ($fields_to_print > $o) {
-						$rowx = mysql_fetch_row($rslt);
-						$select_SQL .= "$rowx[0],";
-						$A_field_name[$o] = $rowx[0];
-						$o++;
-					}
-					$select_SQL = preg_replace("/.$/", '', $select_SQL);
-					if (strlen($select_SQL) > 0) {
-						$stmt = "SELECT $select_SQL FROM custom_$entry_list_id where lead_id='$lead_id' LIMIT 1;";
-						$rslt = mysql_query($stmt, $link);
-						if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00385', $user, $server_ip, $session_name, $one_mysql_log);
-						}
-						if ($DB) {$INFOout .= "$stmt\n";
-						}
-						$list_lead_ct = mysql_num_rows($rslt);
-						if ($list_lead_ct > 0) {
-							$row = mysql_fetch_row($rslt);
-							$o = 0;
-							while ($fields_to_print > $o) {
-								$A_field_value = trim("$row[$o]");
-
-								$INFOout .= "<tr bgcolor=white><td ALIGN=right>$A_field_name[$o]: &nbsp; </td><td ALIGN=left>$A_field_value</td></tr>";
-
-								$o++;
-							}
-						}
-					}
-				}
-			}
-		}
-*/
-		$INFOout .= "</TABLE></DIV>";
-		$INFOout .= "<BR>";
+                        $lead_info=array();
+                        for ($i = 0; $i < count($fields_order); $i++) {
+                            if($fields_order[$i]["active"]){
+                               $lead_info[]=array("name"=>$fields_order[$i]["display"],"value"=>$row[$fields_order[$i]["name"]]);
+                            }
+                        }
+		
 		### END Display lead info and custom fields ###
 
 		### BEGIN Gather Call Log and notes ###
-		$NOTESout = '';
-		if ($search != 'logfirst') {$NOTESout .= "<h4>Histórico da Lead:</h4><DIV  class=datagrid >\n";
-		}
-		$NOTESout .= "<TABLE>";
-		$NOTESout .= "<thead><TR>";
-		$NOTESout .= "<TH>#</TH>";
-		$NOTESout .= "<TH>Data</TH>";
-		$NOTESout .= "<TH>Operador</TH>";
-		$NOTESout .= "<TH>Tempo (seg.)</TH>";
-		$NOTESout .= "<TH>Estado</TH>";
-		$NOTESout .= "<TH>Nº</TH>";
-		$NOTESout .= "<TH>Campanha</TH>";
-		$NOTESout .= "<TH title='Entrada Ou Saida'>IO</TH>";
-		$NOTESout .= "<TH>Nº Alt</TH>";
-		$NOTESout .= "<TH>Desligou</TH>";
-		#	$NOTESout .= "</TR><TR>";
-		#	$NOTESout .= "<TD BGCOLOR=\"#CCCCCC\" COLSPAN=9><font style=\"font-size:11px;font-family:sans-serif;\"><B> &nbsp; FULL NAME &nbsp; </font></TD>";
-		$NOTESout .= "</thead></TR>";
-
-		$stmt = "select start_epoch,call_date,campaign_id,length_in_sec,status,phone_code,phone_number,lead_id,term_reason,alt_dial,comments,uniqueid,user from vicidial_log where lead_id='$lead_id' order by call_date desc limit 10000;";
-		$rslt = mysql_query($stmt, $link);
+		
+		$stmt = "select call_date,campaign_name,length_in_sec,status_name,phone_number,lead_id,term_reason,uniqueid,full_name,comments from vicidial_log a inner join (Select status, status_name from vicidial_statuses union all select status,status_name from vicidial_campaign_statuses group by status) b on a.status=b.status inner join vicidial_users c on a.user=c.user inner join vicidial_campaigns d on a.campaign_id=d.campaign_id where lead_id='$lead_id' order by call_date desc limit 10000";
+		$rslt = mysql_query($stmt, $link) or die(mysql_error());
 		$out_logs_to_print = mysql_num_rows($rslt);
 		if ($format == 'debug') {$NOTESout .= "|$out_logs_to_print|$stmt|";
 		}
 
-		$g = 0;
-		$u = 0;
-		while ($out_logs_to_print > $u) {
-			$row = mysql_fetch_row($rslt);
-			$ALLsort[$g] = "$row[0]-----$g";
-			$ALLstart_epoch[$g] = $row[0];
-			$ALLcall_date[$g] = $row[1];
-			$ALLcampaign_id[$g] = $row[2];
-			$ALLlength_in_sec[$g] = $row[3];
-			$ALLstatus[$g] = $row[4];
-			$ALLphone_code[$g] = $row[5];
-			$ALLphone_number[$g] = $row[6];
-			$ALLlead_id[$g] = $row[7];
-			$ALLhangup_reason[$g] = $row[8];
-			$ALLalt_dial[$g] = $row[9];
-			$ALLuniqueid[$g] = $row[11];
-			$ALLuser[$g] = $row[12];
-			$ALLin_out[$g] = "OUT-AUTO";
-			if ($row[10] == 'MANUAL') {$ALLin_out[$g] = "OUT-MANUAL";
-			}
+		$lead_log=array();
+		while ($row = mysql_fetch_assoc($rslt)) {
+                    $lead_log[]=array(
+                        "call_date"=>$row[call_date],
+                        "campaign"=>$row[campaign_name],
+                        "length"=>$row[length_in_sec],
+                        "status"=>$row[status_name],
+                        "phone_number"=>$row[phone_number],
+                        "lead_id"=>$row[lead_id],
+                        "term_reason"=> ucwords(strtolower($row[term_reason])),
+                        "unique_id"=>$row[uniqueid],
+                        "user"=>$row[full_name],
+                        "io"=>ucwords(strtolower($row[comments])));
 
-			$stmtA = "SELECT call_notes FROM vicidial_call_notes WHERE lead_id='$ALLlead_id[$g]' and vicidial_id='$ALLuniqueid[$g]';";
+			/*$stmtA = "SELECT call_notes FROM vicidial_call_notes WHERE lead_id='$ALLlead_id[$g]' and vicidial_id='$ALLuniqueid[$g]';";
 			$rsltA = mysql_query($stmtA, $link);
 			$out_notes_to_print = mysql_num_rows($rslt);
 			if ($out_notes_to_print > 0) {
@@ -9378,49 +8898,32 @@ if ($ACTION == 'LEADINFOview') {
 				$Allcall_notes[$g] = $rowA[0];
 				if (strlen($Allcall_notes[$g]) > 0) {$Allcall_notes[$g] = "<b>NOTES: </b> $Allcall_notes[$g]";
 				}
-			}
-			$stmtA = "SELECT full_name FROM vicidial_users WHERE user='$ALLuser[$g]';";
-			$rsltA = mysql_query($stmtA, $link);
-			$users_to_print = mysql_num_rows($rslt);
-			if ($users_to_print > 0) {
-				$rowA = mysql_fetch_row($rsltA);
-				$ALLuser[$g] = "$rowA[0]";
-			}
-
-			$Allcounter[$g] = $g;
-
-			$g++;
-			$u++;
+			}*/
+			
+			
 		}
 
-		$stmt = "select start_epoch,call_date,campaign_id,length_in_sec,status,phone_code,phone_number,lead_id,term_reason,queue_seconds,uniqueid,closecallid,user from vicidial_closer_log where lead_id='$lead_id' order by call_date desc limit 10000;";
+		$stmt = "select call_date,group_name,length_in_sec,status_name,phone_number,lead_id,term_reason,queue_seconds,uniqueid from vicidial_closer_log a inner join (Select status, status_name from vicidial_statuses union all select status,status_name from vicidial_campaign_statuses group by status) b on a.status=b.status inner join vicidial_users c on a.user=c.user inner join vicidial_inbound_groups d on a.campaign_id=d.group_id where lead_id='$lead_id' order by call_date desc limit 10000";
 		$rslt = mysql_query($stmt, $link);
 		$in_logs_to_print = mysql_num_rows($rslt);
 		if ($format == 'debug') {$NOTESout .= "|$in_logs_to_print|$stmt|";
 		}
 
-		$u = 0;
-		while ($in_logs_to_print > $u) {
-			$row = mysql_fetch_row($rslt);
-			$ALLsort[$g] = "$row[0]-----$g";
-			$ALLstart_epoch[$g] = $row[0];
-			$ALLcall_date[$g] = $row[1];
-			$ALLcampaign_id[$g] = $row[2];
-			$ALLlength_in_sec[$g] = ($row[3] - $row[9]);
-			if ($ALLlength_in_sec[$g] < 0) {$ALLlength_in_sec[$g] = 0;
-			}
-			$ALLstatus[$g] = $row[4];
-			$ALLphone_code[$g] = $row[5];
-			$ALLphone_number[$g] = $row[6];
-			$ALLlead_id[$g] = $row[7];
-			$ALLhangup_reason[$g] = $row[8];
-			$ALLuniqueid[$g] = $row[10];
-			$ALLclosecallid[$g] = $row[11];
-			$ALLuser[$g] = $row[12];
-			$ALLalt_dial[$g] = "MAIN";
-			$ALLin_out[$g] = "IN";
-
-			$stmtA = "SELECT call_notes FROM vicidial_call_notes WHERE lead_id='$ALLlead_id[$g]' and vicidial_id='$ALLclosecallid[$g]';";
+		while ($row = mysql_fetch_assoc($rslt)) {
+			$lead_log[]=array(
+                        "call_date"=>$row[call_date],
+                        "campaign"=>$row[group_name],
+                        "length"=>(($row[length_in_sec] - $row[queue_seconds])<0)?0:($row[length_in_sec] - $row[queue_seconds]),
+                        "status"=>$row[status_name],
+                        "phone_number"=>$row[phone_number],
+                        "lead_id"=>$row[lead_id],
+                        "term_reason"=> ucwords(strtolower($row[term_reason])),
+                        "unique_id"=>$row[uniqueid],
+                        "user"=>$row[full_name],
+                        "io"=>"In");
+                        
+			
+			/*$stmtA = "SELECT call_notes FROM vicidial_call_notes WHERE lead_id='$ALLlead_id[$g]' and vicidial_id='$ALLclosecallid[$g]';";
 			$rsltA = mysql_query($stmtA, $link);
 			$in_notes_to_print = mysql_num_rows($rslt);
 			if ($in_notes_to_print > 0) {
@@ -9428,69 +8931,25 @@ if ($ACTION == 'LEADINFOview') {
 				$Allcall_notes[$g] = $rowA[0];
 				if (strlen($Allcall_notes[$g]) > 0) {$Allcall_notes[$g] = "<b>NOTES: </b> $Allcall_notes[$g]";
 				}
-			}
-			$stmtA = "SELECT full_name FROM vicidial_users WHERE user='$ALLuser[$g]';";
-			$rsltA = mysql_query($stmtA, $link);
-			$users_to_print = mysql_num_rows($rslt);
-			if ($users_to_print > 0) {
-				$rowA = mysql_fetch_row($rsltA);
-				$ALLuser[$g] = " - $rowA[0]";
-			}
-
-			$Allcounter[$g] = $g;
-
-			$g++;
-			$u++;
-		}
-
-		if ($g > 0) {sort($ALLsort, SORT_NUMERIC);
-		} else {$NOTESout .= "<tr><td colspan=11 align=center>No calls found</td></tr>";
-		}
-
-		$u = 0;
-                $NOTESout .="<tbody>";
-		while ($g > $u) {
-			$sort_split = explode("-----", $ALLsort[$u]);
-			$i = $sort_split[1];
-
-			/*if (eregi("1$|3$|5$|7$|9$", $u)) {$bgcolor = 'bgcolor="#B9CBFD"';
-			} else {$bgcolor = 'bgcolor="#9BB9FB"';
 			}*/
-
-			$u++;
-			$NOTESout .= "<tr $bgcolor>";
-			$NOTESout .= "<td><font size=1>$u</td>";
-			$NOTESout .= "<td align=right>$ALLcall_date[$i]</td>";
-			$NOTESout .= "<td align=right> $ALLuser[$i]</td>\n";
-			$NOTESout .= "<td align=right> $ALLlength_in_sec[$i]</td>\n";
-			$NOTESout .= "<td align=right> $ALLstatus[$i]</td>\n";
-			$NOTESout .= "<td align=right> $ALLphone_number[$i] </td>\n";
-			$NOTESout .= "<td align=right> $ALLcampaign_id[$i] </td>\n";
-			$NOTESout .= "<td align=right> $ALLin_out[$i] </td>\n";
-			$NOTESout .= "<td align=right> $ALLalt_dial[$i] </td>\n";
-			$NOTESout .= "<td align=right> $ALLhangup_reason[$i] </td>\n";
-			/*$NOTESout .= "</TR><TR>";
-			$NOTESout .= "<td></td>";
-			$NOTESout .= "<TD $bgcolor COLSPAN=9 align=left><font style=\"font-size:11px;font-family:sans-serif;\"> $Allcall_notes[$i] </font></TD>";*/
-			$NOTESout .= "</tr>\n";
+			
+			
 		}
 
-		$NOTESout .= "</tbody></TABLE>";
+		
 		### END Gather Call Log and notes ###
 
-		if ($search == 'logfirst') {echo "$NOTESout\n$INFOout\n";
-		} else {echo "$INFOout\n$NOTESout\n";
-		}
+		echo json_encode(array("callback_info"=>$cb_status,"lead_info"=>$lead_info,"lead_log"=>$lead_log));
 
-		echo "</DIV><BR>";
-	}
+	} 
 }
 
 ################################################################################
 ### CALLSINQUEUEgrab - grab a call in queue and reserve it for that agent
 ################################################################################
 if ($ACTION == 'CALLSINQUEUEgrab') {
-	$stmt = "SELECT view_calls_in_queue,grab_calls_in_queue from vicidial_campaigns where campaign_id='$campaign'";
+    $js=array("error"=>array(),"success"=>array());	
+    $stmt = "SELECT view_calls_in_queue,grab_calls_in_queue from vicidial_campaigns where campaign_id='$campaign'";
 	if ($non_latin > 0) {$rslt = mysql_query("SET NAMES 'UTF8'") OR die(mysql_error());
 	}
 	$rslt = mysql_query($stmt, $link) OR die(mysql_error());
@@ -9501,7 +8960,8 @@ if ($ACTION == 'CALLSINQUEUEgrab') {
 	$grab_calls_in_queue = $row[1];
 
 	if ((eregi('NONE', $view_calls_in_queue)) or (eregi('N', $grab_calls_in_queue))) {
-		echo "ERROR: Calls in Queue View Disabled for this campaign\n";
+		$js["error"][]="Calls in Queue View Disabled for this campaign";
+                echo json_encode($js);
 		exit ;
 	} else {
 		$stmtU = "UPDATE vicidial_auto_calls set agent_grab=\"$user\" where auto_call_id='$stage' and agent_grab='' and status='LIVE';";
@@ -9537,9 +8997,11 @@ if ($ACTION == 'CALLSINQUEUEgrab') {
 				$affected_rows = mysql_affected_rows($link);
 			}
 
-			echo "SUCCESS: Call $stage grabbed for $user";
+			$js["success"][]="Call $stage grabbed for $user";
+                echo json_encode($js);
 		} else {
-			echo "ERROR: Call $stage could not be grabbed for $user\n";
+		$js["error"][]="Call $stage could not be grabbed for $user";
+                echo json_encode($js);
 		}
 
 		$stmtD = "SELECT * from vicidial_auto_calls where auto_call_id='$stage';";
@@ -9626,8 +9088,7 @@ if ($ACTION == 'CalLBacKLisT') {
                 }
                 
                 
-		//echo "$row[0] ~$row[1] ~$row[2] ~$callback_id[$loop_count] ~$lead_id[$loop_count] ~$campaign_id[$loop_count] ~$status[$loop_count] ~$entry_time[$loop_count] ~$callback_time[$loop_count] ~$comentario\n";
-		$callback[] = array("name"=>$row[0]." ".$row[1],"phone"=>$row[2],"callback_id"=>$callback_id[$loop_count],"lead_id"=>$lead_id[$loop_count],"campaign_id"=>$campaign_id[$loop_count],"status"=>$estado,"entry_time"=>$entry_time[$loop_count],"callback_time"=>$callback_time[$loop_count],"comment"=>$comentario);
+		$callback[] = array("name"=>$row[0]." ".$row[1],"phone"=>$row[2],"callback_id"=>$callback_id[$loop_count],"lead_id"=>$lead_id[$loop_count],"campaign_id"=>$campaign_id[$loop_count],"status"=>$estado,"entry_time"=>date("c",strtotime($entry_time[$loop_count])),"callback_time"=>date("c",strtotime($callback_time[$loop_count])),"comment"=>$comentario);
                 $loop_count++;
 	}
 
@@ -9660,7 +9121,7 @@ if ($ACTION == 'CalLBacKCounT') {
 	$row = mysql_fetch_row($rslt);
 	$cbcount_live = $row[0];
 
-	echo json_encode(array($cbcount,$cbcount_live));
+	echo json_encode(array("expired"=>$cbcount,"live"=>$cbcount_live));
 }
 
 ################################################################################
@@ -9694,7 +9155,7 @@ if ($ACTION == 'DiaLableLeaDsCounT') {
 		$DLcount = $row[0];
 	}
 
-	echo "$DLcount";
+	echo json_encode(array("count"=>$DLcount));
 }
 
 ################################################################################
@@ -9758,51 +9219,27 @@ if(mysql_num_rows($query) > 0)
 
 if ($ACTION == 'get_tempo_pausa') {
 
-	
-	$smt = "SELECT pause_code_name, max_time from vicidial_pause_codes WHERE campaign_id = '$campaign' AND max_time > 0";
-	$rsl=mysql_query($smt,$link);
-	
-	
-	echo "<table>
-			<tr>
-			<td><img src='../images/icons/clock_pause.png' alt='relogio pausa'></td><td>Tempo restante de pausa</td>
-			</tr>";
-	
-	for ($i=0;$i<mysql_num_rows($rsl);$i++) {
-		$curPausa = mysql_fetch_row($rsl);
-		$nowPausa = $curPausa[0];
-		$ze = $curPausa[1];
-		
-	
-	$query ="SELECT 
-    Sum(pause_sec) tempo
-FROM
-    vicidial_agent_log a
-        INNER JOIN
-    vicidial_pause_codes b ON a.sub_status = b.pause_code
-WHERE
-    b.campaign_id = '$campaign' AND pause_code_name = '$nowPausa' AND event_time between CURDATE() AND NOW() AND user = '$user'";
-        $result=mysql_query($query,$link);
-	$result = mysql_fetch_assoc($result);
-	$itv = number_format($result['tempo'] / 60, 0);
-	$max = number_format($ze / 60, 0);
-	if ($itv > $max) {
-		$itv = "<span align='center' style=color:red>" . ($max - $itv) ." minutos </span>";
-	} else {
-		$itv = "<span align='center'>" . ($max - $itv) . " minutos </span>";
-	}
 
-	echo "<tr>
-			<td height='35px'>$nowPausa</td>
-			<td height='35px'>
-			" . $itv ."
-			</td>
-			</tr>
-	";
+    $smt = "SELECT pause_code_name, max_time from vicidial_pause_codes WHERE campaign_id = '$campaign' AND max_time > 0 and active=1";
+    $rsl = mysql_query($smt, $link);
 
-}
-			echo "</table>";
 
+    $js = array();
+
+    for ($i = 0; $i < mysql_num_rows($rsl); $i++) {
+        $curPausa = mysql_fetch_row($rsl);
+        $nowPausa = $curPausa[0];
+        $ze = $curPausa[1];
+
+
+        $query = "SELECT Sum(pause_sec) tempo FROM  vicidial_agent_log a INNER JOIN vicidial_pause_codes b ON a.sub_status = b.pause_code WHERE b.campaign_id = '$campaign' AND pause_code_name = '$nowPausa' AND event_time between CURDATE() AND NOW() AND user = '$user'";
+        $result = mysql_query($query, $link);
+        $result = mysql_fetch_assoc($result);
+        $itv = number_format($result['tempo'] / 60, 0);
+        $max = number_format($ze / 60, 0);
+        $js[] = array("pause" => $nowPausa, "time" => ($max - $itv)."m", "exceed" => ($max < $itv));
+    }
+        echo json_encode($js);
 }
 
 
@@ -9832,49 +9269,22 @@ if ($ACTION == 'reactive_callback'){
 		}
 }
 
-if ($ACTION == 'pesquisa_morada'){
-	
-		$cp_4=ereg_replace("[^0-9]", "", $cp_4);
-		$cp_3=ereg_replace("[^0-9]", "", $cp_3);
-		
-		$cp_4 = (strlen($cp_4)<4) ? "%$cp_4%" : $cp_4 ;
-		$cp_3 = (strlen($cp_3)<3) ? "%$cp_3%" : $cp_3 ;
-		
-		
-	$rsl=mysql_query("SELECT * FROM `cp7` WHERE `cod_postal` LIKE '".mysql_real_escape_string($cp_4)."-".mysql_real_escape_string($cp_3)."' Limit 250;", $link);
-		
-		if (mysql_num_rows($rsl)==0) {
-			echo "Não teve resultados.";
-		}
-		else{
-			echo "
-			<table> \n
-				<tr>
-					<th>Rua</th>
-					<th>Cód. Postal</th>
-					<th>Localidade</th>
-					<th>Freguesia</th>
-					<th>Concelho</th>
-                                        <th>Distrito</th>
-				</tr>
-			";
-		for ($i=0; $i < mysql_num_rows($rsl) ; $i++) {
-				$linha=mysql_fetch_assoc($rsl); 
-			echo "
-				<tr>
-					<td>$linha[rua]</td>
-					<td>$linha[cod_postal]</td>
-					<td>$linha[localidade]</td>
-                                        <td>$linha[freguesia]</td>
-                                        <td>$linha[concelho]</td>    
-					<td>$linha[distrito]</td> 
-					<td><img src='../images/icons/map_add_32.png' alt='Abrir' style='cursor:pointer;vertical-align:middle;' onclick=\"aplica_morada('".$linha[rua]."', '".$linha[cod_postal]."', '".$linha[localidade]."', '".$linha[freguesia]."', '".$linha[concelho]."', '".$linha[distrito]."')\"></td>
-			</tr>";
-		}
-			
-		echo "</table>";
-			
-		}
+if ($ACTION == 'pesquisa_morada') {
+
+    $cp_4 = ereg_replace("[^0-9]", "", $cp_4);
+    $cp_3 = ereg_replace("[^0-9]", "", $cp_3);
+
+    $cp_4 = (strlen($cp_4) < 4) ? "%$cp_4%" : $cp_4;
+    $cp_3 = (strlen($cp_3) < 3) ? "%$cp_3%" : $cp_3;
+
+
+    $rsl = mysql_query("SELECT * FROM `cp7` WHERE `cod_postal` LIKE '$cp_4-$cp_3' Limit 250;", $link);
+
+    $js = array();
+    while ($linha = mysql_fetch_assoc($rsl)) {
+        $js[] = array("rua"=>$linha[rua],"cod_postal"=>$linha[cod_postal],"localidade"=>$linha[localidade],"conselho"=>$linha[concelho],"distrito"=>$linha[distrito]);
+    }
+    echo json_encode($js);
 }
 ################################################################################
 ### Clear_API_Field - clears a single vicidial_live_agents field
