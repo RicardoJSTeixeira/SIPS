@@ -1,4 +1,4 @@
-//se um multichoice n estiver required ainda manda pra BD
+
 
 
 var array_id = [];
@@ -12,6 +12,7 @@ $(function() {
       $.get("items.html", function(data) {
             $("#dummie").html(data);
             update_script();
+
       });
 
 
@@ -20,8 +21,8 @@ $(function() {
 
 
 
-//fazer um serialize proprio pk o serialize agora n consegue responder as necessidades 
-//required no select not working as intended
+
+
 
 
 
@@ -91,11 +92,11 @@ function insert_element(opcao, element, data)
                   element.empty();
                   element.append($("<div>").addClass("item multichoice_class").attr("id", data.id));
                   element = element.find(".multichoice_class");
-                  element.append($("<label>").addClass("label_multichoice label_geral").text($("#multichoice_edit").val()));
-                  element.find(".label_multichoice")[0].innerHTML = data.texto;
+                  element.append($("<label>").addClass("label_multichoice label_geral").text(data.texto));
                   var multichoices = data.values_text.split(",");
+
                   if (data.required)
-                        element.append($("<select>").prop("required", true).addClass("multichoice_select").attr("name", "multichoice," + data.id));
+                        element.append($("<select>").addClass("multichoice_select").attr("name", "multichoice," + data.id).prop("required", true));
                   else
                         element.append($("<select>").addClass("multichoice_select").attr("name", "multichoice," + data.id));
                   var select = element.find(".multichoice_select");
@@ -113,6 +114,12 @@ function insert_element(opcao, element, data)
                   element.find(".label_geral")[0].innerHTML = data.values_text;
                   element.find(".label_geral")[0].name = "textfield," + data.id;
                   break;
+
+            case "legend":
+                  element.find(".label_geral")[0].innerHTML = data.values_text;
+                  element.find(".label_geral")[0].name = "legend," + data.id;
+                  break;
+
 
 
             case "tableradio":
@@ -134,11 +141,13 @@ function insert_element(opcao, element, data)
                         temp = element.find(".tr_body tr:last");
                         for (var count2 = 0; count2 < titulos.length; count2++)
                         {
-                              if (data.required) {
+                              if (data.required)
+                              {
                                     temp.append($("<td>")
                                             .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").prop("required", true).attr("value", titulos[count2]).attr("name", "tableradio," + data.id + "," + count))
                                             .append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "tableradio").append($("<span>"))));
-                              } else
+                              }
+                              else
                               {
                                     temp.append($("<td>")
                                             .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").attr("value", titulos[count2]).attr("name", "tableradio," + data.id + "," + count))
@@ -147,6 +156,17 @@ function insert_element(opcao, element, data)
                               array_id["radio"] = array_id["radio"] + 1;
                         }
                   }
+                  break;
+
+
+            case "datepicker":
+                  element.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'}).keypress(function(e){e.preventDefault()}).bind("cut copy paste",function(e) {e.preventDefault();});
+                  element.find(".label_geral")[0].innerHTML = data.values_text;
+                  if (data.required)
+                        element.find(".form_datetime").prop("required", true);
+
+
+                  element.find(".form_datetime")[0].name = "datepicker," + data.id;
                   break;
       }
 
@@ -218,7 +238,7 @@ function update_info()
                   var item;
                   switch (data[index].type)
                   {
-                        
+
                         case "texto":
                               item = $('#dummie .texto_class').clone();
 
@@ -255,8 +275,8 @@ function update_info()
                               item = insert_element("radio", item, data[index]);
                               $('#script_div').append(item);
                               break;
-                              
-                              
+
+
                         case "checkbox":
                               item = $('#dummie .checkbox_class').clone();
 
@@ -268,9 +288,9 @@ function update_info()
                               item = insert_element("checkbox", item, data[index]);
                               $('#script_div').append(item);
                               break;
-                              
-                              
-                              
+
+
+
                         case "multichoice":
                               item = $('#dummie .multichoice_class').clone();
 
@@ -281,9 +301,9 @@ function update_info()
                               item = insert_element("multichoice", item, data[index]);
                               $('#script_div').append(item);
                               break;
-                              
-                              
-                              
+
+
+
                         case "textfield":
                               item = $('#dummie .textfield_class').clone();
 
@@ -294,9 +314,18 @@ function update_info()
                               item = insert_element("textfield", item, data[index]);
                               $('#script_div').append(item);
                               break;
-                              
-                              
-                              
+
+                        case "legend":
+                              item = $('#dummie .legend_class').clone();
+
+                              item.attr("id", data[index].id)
+                                      .data("id", data[index].id)
+                                      .data("required", data[index].required)
+                                      .data("type", "legend");
+                              item = insert_element("legend", item, data[index]);
+                              $('#script_div').append(item);
+                              break;
+
                         case "tableradio":
                               item = $('#dummie .tableradio_class').clone();
 
@@ -307,10 +336,23 @@ function update_info()
                               item = insert_element("tableradio", item, data[index]);
                               $('#script_div').append(item);
                               break;
+
+
+                        case "datepicker":
+                              item = $('#dummie .datepicker_class').clone();
+
+                              item.attr("id", data[index].id)
+                                      .data("id", data[index].id)
+                                      .data("required", data[index].required)
+                                      .data("type", "datepicker");
+                              item = insert_element("datepicker", item, data[index]);
+                              $('#script_div').append(item);
+                              break;
                   }
 
 
             });
+
             tags();
             rules();
       }, "json");
@@ -401,6 +443,7 @@ function rules()
                               switch (data[index].param1)
                               {
                                     case "value_select":
+                                          var values = data[index].id_trigger2.split(",");
                                           for (var count = 0; count < values.length; count++)
                                           {
                                                 $("#" + data[index].id_trigger).bind("change", function()//atribuir os binds a cada value
@@ -487,8 +530,6 @@ function rules_work(data)
                   break;
       }
 }
-
-
 function tags()
 {
       var rz = $("#render_zone");
@@ -513,7 +554,6 @@ function tags()
 }
 
 
-
 //PAGES
 $('#page_selector').change(function() {
       update_info();
@@ -523,14 +563,12 @@ $('#script_selector').change(function() {
       update_pages();
 });
 //FORM MANIPULATION
-$("#submit_button").click(function()
+$("#myform").on("submit", function(e)
 {
-
-      $.post("requests.php", {action: "save_form_result", id_script: $('#script_selector').val(), results: $("#myform").serializeArray()},
-      function(data)
-      {
-
-      }, "json");
+      e.preventDefault();
+      var result = $("#myform").serializeArray();
+      console.log(result);
+      $.post("requests.php", {action: "save_form_result", id_script: $('#script_selector').val(), results: result}, "json");
 });
 
 

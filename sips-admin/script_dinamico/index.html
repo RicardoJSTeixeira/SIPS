@@ -9,6 +9,8 @@
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
             <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
             <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
 
 
             <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
@@ -19,11 +21,10 @@
             <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
             <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
 
-
-
+            <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt-BR.js"></script>
 
             <style>
-
                   .leftDiv, .rightDiv {width:120px; float:left; border:1px solid #000; padding:5px; margin:10px; min-height:130px}
                   .leftDiv {margin-left:40px}
                   .item { text-align:center; border:1px solid #EEE; background-color:#FFF;padding:10px;}
@@ -31,10 +32,6 @@
                   label{
                         display: inline;
                   }
-                  .page_hider{
-                        display:none;
-                  }
-
             </style>
       </head>
       <body>
@@ -241,27 +238,32 @@
                                                       </div>
                                                 </div>
 
-                                                
-                                                <!--Campo de texto-->
+
+                                                <!--TEXTFIELD-->
                                                 <div class="editor_layout" id="textfield_layout_editor" style="display:none">
-
-
-
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
 
                                                             <div class="formRight">
-                                                                  <input class="span textfield_input" id="textfield_edit" type="text" placeholder="Texto exemplo" />
+                                                                  <input  maxlength="250" class="span textfield_input" id="textfield_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
 
                                                 </div>
 
+                                                <!--LEGEND-->
+                                                <div class="editor_layout" id="legend_layout_editor" style="display:none">
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Texto:</label>
 
+                                                            <div class="formRight">
+                                                                  <input  maxlength="250" class="span legend_input" id="legend_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
+                                                      </div>
+
+                                                </div>
 
                                                 <!--TABLERADIO-->
-
-
                                                 <div class="editor_layout" id="tableradio_layout_editor" style="display:none">
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
@@ -289,15 +291,25 @@
                                                                   <textarea id="tableradio_td_textarea" rows="4" cols="50"></textarea>
                                                             </div>
 
+
+
+
                                                       </div>
-
-
-
-
 
 
                                                 </div>
 
+                                                <!--DATEPICKER-->
+                                                <div class="editor_layout" id="datepicker_layout_editor" style="display:none">
+                                                      <div class="formRow" >
+                                                            <label class="control-label label" >Texto:</label>
+
+                                                            <div class="formRight">
+                                                                  <input  maxlength="250" class="span datepicker_input" id="datepicker_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
+                                                      </div>
+
+                                                </div>
                                                 <!------------------------------------------------------------------------------>
                                                 <!-------------------------COMUM A TODOS OS ELEMENTOS-------------------------->
                                                 <!------------------------------------------------------------------------------>
@@ -311,7 +323,7 @@
                                                             </div>
                                                       </div>
                                                       <!----------------------------------------------REQUIRED------------------------------------------->
-                                                      <div class="formRow" >
+                                                      <div class="formRow required_class" >
                                                             <label class="control-label label" >Obrigatório:</label>
 
                                                             <div class="formRight">
@@ -319,7 +331,7 @@
                                                                   <label for="item_required"><span></span></label>
                                                             </div>
                                                       </div>
-                                                      <div class="formRow" >
+                                                      <div class="formRow hidden_class" >
                                                             <!-----------------------------HIDDEN-------------------------------------------------------->
                                                             <label class="control-label label" >Escondido:</label>
 
@@ -454,8 +466,8 @@
 
                                                             </div> 
                                                       </div>
-                                                      
-                                                     
+
+
 
                                                       <div class="formRow" id="go_to_div" style="display:none" >
                                                             <label class="control-label label" >Ir para:</label>
