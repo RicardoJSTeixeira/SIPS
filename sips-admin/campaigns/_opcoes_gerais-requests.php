@@ -158,7 +158,7 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
 	}
 	else
 	{
-		$query = mysql_query("SELECT campaign_name, campaign_description, active, dial_method, auto_dial_level, campaign_recording, lead_order, next_agent_call, my_callback_option, campaign_allow_inbound FROM vicidial_campaigns WHERE campaign_id='$CampaignID' LIMIT 1", $link) or die(mysql_error());
+		$query = mysql_query("SELECT campaign_name, campaign_description, active, dial_method, auto_dial_level, campaign_recording, lead_order, next_agent_call, my_callback_option, campaign_allow_inbound, agent_display_dialable_leads, display_queue_count, view_calls_in_queue, agent_lead_search, agent_allow_transfers, agent_allow_dtmf FROM vicidial_campaigns WHERE campaign_id='$CampaignID' LIMIT 1", $link) or die(mysql_error());
 		$result = mysql_fetch_assoc($query) or die(mysql_error());
 		
 		$js['c_name'] = $result['campaign_name'];
@@ -170,7 +170,23 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
 		$js['c_lead_order'] = $result['lead_order'];
 		$js['c_next_agent_call'] = $result['next_agent_call'];
                 $js['c_my_callback_option'] = $result['my_callback_option'];
+                
                 $js['c_campaign_allow_inbound'] = $result['campaign_allow_inbound'];
+                                
+                $js['c_agent_display_dialable_leads'] = $result['agent_display_dialable_leads'];
+                
+                $js['c_display_queue_count'] = $result['display_queue_count'];
+                
+                $js['c_view_calls_in_queue'] = $result['view_calls_in_queue'];
+                
+                $js['c_agent_lead_search'] = $result['agent_lead_search'];
+                
+                $js['c_agent_allow_transfers'] = $result['agent_allow_transfers'];
+                
+                $js['c_agent_allow_dtmf'] = $result['agent_allow_dtmf'];
+                
+                
+                
 		$js['selected_user_groups'] = array();
 		$query = mysql_query("SELECT user_group FROM vicidial_user_groups WHERE allowed_campaigns LIKE '%$CampaignID%'") or die(mysql_error());
 		while($result = mysql_fetch_row($query))
@@ -389,6 +405,37 @@ function InboundGroupsSwitch($CampaignID, $GroupID, $Checked, $link)
     
 }
 
+function CampaignAllowInbound($CampaignID, $Inbound, $link){
+    mysql_query("UPDATE vicidial_campaigns SET campaign_allow_inbound = '$Inbound' WHERE campaign_id='$CampaignID'", $link) or die (mysql_error());   
+}
+
+function CampaignShowAgentLeads($CampaignID, $Checked, $link){
+    mysql_query("UPDATE vicidial_campaigns SET agent_display_dialable_leads = '$Checked' WHERE campaign_id='$CampaignID'", $link) or die (mysql_error());   
+}
+
+function CampaignShowAgentLeadsCount($CampaignID, $Checked, $link){
+    mysql_query("UPDATE vicidial_campaigns SET display_queue_count = '$Checked' WHERE campaign_id='$CampaignID'", $link) or die (mysql_error());   
+}
+
+function CampaignShowAgentLeadsInqueue($CampaignID, $Checked, $link){
+    mysql_query("UPDATE vicidial_campaigns SET view_calls_in_queue = '$Checked' WHERE campaign_id='$CampaignID'", $link) or die (mysql_error());   
+}
+
+function CampaignAllowAgentSearch($CampaignID, $Checked, $link){
+    mysql_query("UPDATE vicidial_campaigns SET agent_lead_search = '$Checked' WHERE campaign_id='$CampaignID'", $link) or die (mysql_error());   
+}
+
+function CampaignTransfers($CampaignID, $Checked, $link){
+    mysql_query("UPDATE vicidial_campaigns SET agent_allow_transfers = '$Checked' WHERE campaign_id='$CampaignID'", $link) or die (mysql_error());   
+}
+
+function CampaignDTMF($CampaignID, $Checked, $link){
+    mysql_query("UPDATE vicidial_campaigns SET agent_allow_dtmf = '$Checked' WHERE campaign_id='$CampaignID'", $link) or die (mysql_error());   
+}
+
+
+
+
 switch($action)
 {
     case "MiscOptionsBuilder": MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $Flag, $link); break;
@@ -409,6 +456,13 @@ switch($action)
     case "GetCampaignInboundGroups": GetCampaignInboundGroups($CampaignID, $link); break;
     case "InboundSwitch": InboundSwitch($CampaignID, $YesNo, $link); break;
     case "InboundGroupsSwitch": InboundGroupsSwitch($CampaignID, $GroupID, $Checked, $link); break;
+    case "CampaignAllowInbound": CampaignAllowInbound($CampaignID, $Inbound, $link); break;
+    case "CampaignShowAgentLeads": CampaignShowAgentLeads($CampaignID, $Checked, $link); break;
+    case "CampaignShowAgentLeadsCount": CampaignShowAgentLeadsCount($CampaignID, $Checked, $link); break;
+    case "CampaignShowAgentLeadsInqueue": CampaignShowAgentLeadsInqueue($CampaignID, $Checked, $link); break;
+    case "CampaignAllowAgentSearch": CampaignAllowAgentSearch($CampaignID, $Checked, $link); break;
+        case "CampaignTransfers": CampaignTransfers($CampaignID, $Checked, $link); break;
+        case "CampaignDTMF": CampaignDTMF($CampaignID, $Checked, $link); break;
 }
 
 ?>

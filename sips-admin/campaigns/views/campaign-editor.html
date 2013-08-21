@@ -75,6 +75,11 @@
 
             	<td class="td-half-right">
                 
+                
+                <div id="options-scroll-wrapper">
+                
+                    <div id="options-scroll-container" style="padding-right: 6px">
+                
                     <div class="div-title">Definições<span class='css-orange-caret'>></span>Opções Gerais</div>
                     
                     <table>
@@ -95,6 +100,16 @@
                         <input type="radio" class='campaign-type-switch' id="campaign_type_predictive" name="campaign_type" /><label for="campaign_type_predictive"><i>Predictive</i></label>
                         </td>
 					</tr>
+					
+					<tr class="tr-options">
+                        <td>Permitir Inbound</td>
+                        <td class="tright">
+                        <input type="radio" class="campaign-allow-inbound" id="campaign-allow-inbound-yes" name="campaign-show-leads-inqueue" /><label for="campaign-show-leads-yes">Sim</label>
+                        <input type="radio" class="campaign-allow-inbound" id="campaign-allow-inbound-no" name="campaign-show-leads-inqueue" /><label for="campaign-show-leads-no">Não</label>
+                        </td>
+                    </tr>
+					
+					
                     <tr class="tr-options">
                         <td>Rácio</td>
                         <td class="tright">
@@ -140,7 +155,65 @@
                     </tr>
                      </table>
                     
-                    <div class="div-title">Definições<span class='css-orange-caret'>></span>Acções</div>           
+                    <div class="div-title">Definições<span class='css-orange-caret'>></span>Operadores</div>
+                    <table>
+                    <tr class="tr-options">
+                        <td>Permitir Enviar DTMF</td>
+                        <td class="tright">
+                        <input type="radio" class="campaign-dtmf" id="campaign-dtmf-yes" name="campaign-dtmf" /><label for="campaign-dtmf-yes">Sim</label>
+                        <input type="radio" class="campaign-dtmf" id="campaign-dtmf-no" name="campaign-dtmf" /><label for="campaign-dtmf-no">Não</label>
+                        </td>
+                    </tr>
+                    
+                    
+                    <tr class="tr-options">
+                        <td>Permitir Pesquisas</td>
+                        <td class="tright">
+                        <input type="radio" class="campaign-search" id="campaign-search-yes" name="campaign-search" /><label for="campaign-search-yes">Sim</label>
+                        <input type="radio" class="campaign-search" id="campaign-search-no" name="campaign-search" /><label for="campaign-search-no">Não</label>
+                        </td>
+                    </tr>
+                    
+                    <tr class="tr-options">
+                        <td>Permitir Trânsferencia de Chamadas</td>
+                        <td class="tright">
+                        <input type="radio" class="campaign-transfer" id="campaign-transfer-yes" name="campaign-transfer" /><label for="campaign-transfer-yes">Sim</label>
+                        <input type="radio" class="campaign-transfer" id="campaign-transfer-no" name="campaign-transfer" /><label for="campaign-transfer-no">Não</label>
+                        </td>
+                    </tr>
+                    
+                    <tr class="tr-options">
+                        <td>Mostrar Número de Contactos Disponiveis</td>
+                        <td class="tright">
+                        <input type="radio" class="campaign-show-leads" id="campaign-show-leads-yes" name="campaign-show-leads" /><label for="campaign-show-leads-yes">Sim</label>
+                        <input type="radio" class="campaign-show-leads" id="campaign-show-leads-no" name="campaign-show-leads" /><label for="campaign-show-leads-no">Não</label>
+                        </td>
+                    </tr>
+                    
+                    <tr class="tr-options">
+                        <td>Mostrar Contactos em Fila de Espera</td>
+                        <td class="tright">
+                        <input type="radio" class="campaign-show-leads-inqueue" id="campaign-show-leads-inqueue-yes" name="campaign-show-leads-inqueue" /><label for="campaign-show-leads-inqueue-yes">Sim</label>
+                        <input type="radio" class="campaign-show-leads-inqueue" id="campaign-show-leads-inqueue-no" name="campaign-show-leads-inqueue" /><label for="campaign-show-leads-inqueue-no">Não</label>
+                        </td>
+                    </tr>
+                    
+                    <tr class="tr-options">
+                        <td>Mostrar Número de Contactos em Fila de Espera</td>
+                        <td class="tright">
+                        <input type="radio" class="campaign-show-leads-inqueue-count" id="campaign-show-leads-inqueue-count-yes" name="campaign-show-leads-inqueue-count" /><label for="campaign-show-leads-inqueue-count-yes">Sim</label>
+                        <input type="radio" class="campaign-show-leads-inqueue-count" id="campaign-show-leads-inqueue-count-no" name="campaign-show-leads-inqueue-count" /><label for="campaign-show-leads-inqueue-count-no">Não</label>
+                        </td>
+                    </tr>
+                    
+                    
+                    </table>
+                    
+                    </div>
+                    
+                </div>
+                    
+                    <div style="padding-top:32px;" class="div-title">Definições<span class='css-orange-caret'>></span>Acções</div>           
                     <table>
                         <tr>
                         <td class="td-action"><button class="btn-action" id="btn-config-dial-status"><img class="img-action" src='icons/mono_wrench_plus_16.png'></button></td>
@@ -1562,7 +1635,7 @@
             
             <br />
             <div class="div-title">Ver Detalhes<span class='css-orange-caret'>></span>Contactos por Feedback</div>
-            <div id='div-dbs-state-container' style='display:none;' class='dt-div-wrapper-12lines-with-icon'>
+            <div id='div-dbs-state-container' style='display:none;' class='dt-div-wrapper-8lines-with-icon'>
             <table id='dbs-state'>
             <thead></thead>
             <tbody></tbody>
@@ -1667,7 +1740,7 @@
          	<input type="file" id="input-db-wizard-upload" name="input-db-wizard-upload" />
          </form>
          <br />
-         <div style="height:200px">
+         <div style="height:180px">
          <table id='tbl-db-wizard-errors'>
          <tr>
          <td id="td-db-wizard-file-error"></td>
@@ -1683,7 +1756,7 @@
          <td style="width:70% !important" rowspan="3" class="td-half-right">
          <div class="div-title">Novos Contactos<span class='css-orange-caret'>></span>Campos Dinâmicos</div>
          
-         <div style='height:420px; overflow:auto'>
+         <div style='height:385px; overflow:auto'>
          <table  id="table-db-wizard-match-fields">
          </table>
          </div>

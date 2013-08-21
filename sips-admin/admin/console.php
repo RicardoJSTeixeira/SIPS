@@ -91,7 +91,7 @@ if (!empty($_GET['cmd'])) {
     $errstr = 0;
     $fp = fsockopen("localhost", $m_port, &$errno, &$errstr, 20);
     if (!$fp) {
-        echo "$errstr ($errno)<br>\n";
+        echo "$errstr ($errno)\n";
     } else {
         fputs($fp, "Action: login\r\n");
         fputs($fp, "Username: $m_user\r\n");
