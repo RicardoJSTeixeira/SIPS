@@ -349,10 +349,10 @@ function custom_list_fields_values($lead_id,$list_id,$uniqueid,$user)
 			$CFoutput .= "</td></tr></table></div>\n";
 			}
 		else
-			{$CFoutput .= "ERROR: no custom list fields\n";}
+			{$CFoutput .= "Não tem script associado.\n";}
 		}
 	else
-		{$CFoutput .= "ERROR: no custom list fields table\n";}
+		{$CFoutput .= "Não tem script associado.\n";}
 
 
 	##### BEGIN parsing for vicidial variables #####

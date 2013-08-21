@@ -554,7 +554,7 @@ if ($LogiNAJAX > 0)
 			if (xmlhttp) 
 				{ 
 				logincampaign_query = "&user=" + document.vicidial_form.VD_login.value + "&pass=" + document.vicidial_form.VD_pass.value + "&ACTION=LogiNCamPaigns&format=html";
-				xmlhttp.open('POST', 'vdc_db_query.php'); 
+				xmlhttp.open('POST', 'vdc_db_query2.php'); 
 				xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 				xmlhttp.send(logincampaign_query); 
 				xmlhttp.onreadystatechange = function() 
@@ -3683,7 +3683,7 @@ function JanelaNovoCliente()
 		if (xmlhttp) 
 			{ 
 			alert_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&user=" + user + "&pass=" + pass + "&ACTION=AlertControl&format=text&stage=" + taskalert;
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
+			xmlhttp.open('POST', 'vdc_db_query2.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 			xmlhttp.send(alert_query); 
 			xmlhttp.onreadystatechange = function() 
@@ -5145,9 +5145,9 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 			"&length_in_sec=0&phone_code=" + document.vicidial_form.phone_code.value + 
 			"&phone_number=" + lead_dial_number + 
 			"&exten=" + extension + "&channel=" + lastcustchannel + "&start_epoch=" + MDlogEPOCH + "&auto_dial_level=" + auto_dial_level + "&VDstop_rec_after_each_call=" + VDstop_rec_after_each_call + "&conf_silent_prefix=" + conf_silent_prefix + "&protocol=" + protocol + "&extension=" + extension + "&ext_context=" + ext_context + "&conf_exten=" + session_id + "&user_abb=" + user_abb + "&agent_log_id=" + agent_log_id + "&MDnextCID=" + LasTCID + "&inOUT=" + inOUT + "&alt_dial=" + dialed_label + "&DB=0" + "&agentchannel=" + agentchannel + "&conf_dialed=" + conf_dialed + "&leaving_threeway=" + leaving_threeway + "&hangup_all_non_reserved=" + hangup_all_non_reserved + "&blind_transfer=" + blind_transfer + "&dial_method" + dial_method + "&nodeletevdac=" + nodeletevdac + "&alt_num_status=" + alt_num_status;
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
+			xmlhttp.open('POST', 'vdc_db_query2.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
-		//		document.getElementById("busycallsdebug").innerHTML = "vdc_db_query.php?" + manDiaLlog_query;
+		//		document.getElementById("busycallsdebug").innerHTML = "vdc_db_query2.php?" + manDiaLlog_query;
 			xmlhttp.send(manDiaLlog_query); 
 			xmlhttp.onreadystatechange = function() 
 				{ 
@@ -5224,7 +5224,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 		if (xmlhttp) 
 			{ 
 			DLcount_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&user=" + user + "&pass=" + pass + "&ACTION=DiaLableLeaDsCounT&campaign=" + campaign + "&format=text";
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
+			xmlhttp.open('POST', 'vdc_db_query2.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 			xmlhttp.send(DLcount_query); 
 			xmlhttp.onreadystatechange = function() 
@@ -5245,7 +5245,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 // Request number of USERONLY callbacks for this agent
 	function CalLBacKsCounTCheck()
 		{
-                    $.post("vdc_db_query.php", 
+                    $.post("vdc_db_query2.php", 
                     {server_ip: server_ip,
                         session_name: session_name,
                         ACTION:"CalLBacKCounT",
@@ -5321,7 +5321,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 		if (xmlhttp) 
 			{ 
 			CBcount_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&user=" + user + "&pass=" + pass + "&ACTION=CalLBacKCounT&campaign=" + campaign + "&format=text";
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
+			xmlhttp.open('POST', 'vdc_db_query2.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 			xmlhttp.send(CBcount_query); 
 			xmlhttp.onreadystatechange = function() 
@@ -5415,7 +5415,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
                         
 					var cb_date_1=document.vicidial_form.cb_date_1.value;
 					var cb_date_2=document.vicidial_form.cb_date_2.value;
-                    $.post("vdc_db_query.php", 
+                    $.post("vdc_db_query2.php", 
                     {server_ip: server_ip ,
                         session_name: session_name ,
                         ACTION:"CalLBacKLisT",
@@ -5468,7 +5468,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 					var cb_date_1=document.vicidial_form.cb_date_1.value;
 					var cb_date_2=document.vicidial_form.cb_date_2.value;
 				var CBlist_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&user=" + user + "&pass=" + pass + "&ACTION=CalLBacKLisT&campaign=" + campaign +"&cb_date_1=" + encodeURIComponent(cb_date_1) + "&cb_date_2=" + encodeURIComponent(cb_date_2) + "&format=text";
-				xmlhttp.open('POST', 'vdc_db_query.php'); 
+				xmlhttp.open('POST', 'vdc_db_query2.php'); 
 				xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 				xmlhttp.send(CBlist_query); 
 				xmlhttp.onreadystatechange = function() 
@@ -5512,7 +5512,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 	function ApagaCallback(cb_id)
 		{ 		clearInterval(cb_timer);
 				
-                $.post('vdc_db_query.php', {
+                $.post('vdc_db_query2.php', {
 	            server_ip: server_ip,
 	            session_name: session_name,
 	            user: user,
@@ -5531,7 +5531,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 
             function get_tempo_pausa()
             { 
-            $.post('vdc_db_query.php', {
+            $.post('vdc_db_query2.php', {
                 server_ip: server_ip,
                 session_name: session_name,
                 user:user,
@@ -5557,7 +5557,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 				var current_camp = '<?php echo $VD_campaign; ?>';	
 		
 				var customcheckrequired = "server_ip=" + server_ip + "&session_name=" + session_name + "&user=" + user + "&pass=" + pass + "&ACTION=custom_required&current_campaign=" + current_camp;
-				xmlhttp.open('POST', 'vdc_db_query.php'); 
+				xmlhttp.open('POST', 'vdc_db_query2.php'); 
 				xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 				xmlhttp.send(customcheckrequired); 
 				xmlhttp.onreadystatechange = function() 
@@ -5897,7 +5897,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 			}
 		
 			manDiaLlook_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=manDiaLlookCaLL&conf_exten=" + session_id + "&user=" + user + "&pass=" + pass + "&MDnextCID=" + CIDcheck + "&agent_log_id=" + agent_log_id + "&lead_id=" + document.vicidial_form.lead_id.value + "&DiaL_SecondS=" + MD_ring_secondS;
-			$.post('vdc_db_query.php', manDiaLlook_query, function(data) 
+			$.post('vdc_db_query2.php', manDiaLlook_query, function(data) 
 				{ 
 					var MDlookResponse = null;
 				//	alert(xmlhttp.responseText);
@@ -6116,7 +6116,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 		var fields_list = update_fields_data + ',';
 		update_fields=0;
 		update_fields_data='';
-		$.post('vdc_db_query.php',
+		$.post('vdc_db_query2.php',
             {server_ip:server_ip,
                 session_name:session_name,
                 ACTION:"UpdateFields",
@@ -6466,7 +6466,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 
 			
 			
-			$.post("vdc_db_query.php",
+			$.post("vdc_db_query2.php",
                         {server_ip: server_ip,
                         session_name: session_name,
                         ACTION:"manDiaLnextCaLL",
@@ -6859,7 +6859,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 			if (xmlhttp) 
 				{ 
 				manDiaLskip_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=manDiaLskip&conf_exten=" + session_id + "&user=" + user + "&pass=" + pass + "&lead_id=" + document.vicidial_form.lead_id.value + "&stage=" + previous_dispo + "&called_count=" + previous_called_count;
-				xmlhttp.open('POST', 'vdc_db_query.php'); 
+				xmlhttp.open('POST', 'vdc_db_query2.php'); 
 				xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 				xmlhttp.send(manDiaLskip_query); 
 				xmlhttp.onreadystatechange = function() 
@@ -7066,7 +7066,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 				{var call_prefix = manual_dial_prefix;}
 
 			manDiaLonly_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=manDiaLonly&conf_exten=" + session_id + "&user=" + user + "&pass=" + pass + "&lead_id=" + document.vicidial_form.lead_id.value + "&phone_number=" + manDiaLonly_num + "&phone_code=" + document.vicidial_form.phone_code.value + "&campaign=" + campaign + "&ext_context=" + ext_context + "&dial_timeout=" + dial_timeout + "&dial_prefix=" + call_prefix + "&campaign_cid=" + call_cid + "&omit_phone_code=" + omit_phone_code + "&usegroupalias=" + usegroupalias + "&account=" + active_group_alias + "&agent_dialed_number=" + agent_dialed_number + "&agent_dialed_type=" + agent_dialed_type + "&dial_method=" + dial_method + "&agent_log_id=" + agent_log_id + "&security=" + document.vicidial_form.security_phrase.value +"&portabilidade="+portabilidade;
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
+			xmlhttp.open('POST', 'vdc_db_query2.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 			xmlhttp.send(manDiaLonly_query);
 			xmlhttp.onreadystatechange = function() 
@@ -7248,7 +7248,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 		if (xmlhttp) 
 			{ 
 			autoDiaLready_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=" + taskaction + "&user=" + user + "&pass=" + pass + "&stage=" + VDRP_stage + "&agent_log_id=" + agent_log_id + "&agent_log=" + taskagentlog + "&wrapup=" + taskwrapup + "&campaign=" + campaign + "&dial_method=" + dial_method + "&comments=" + taskstatuschange + add_pause_code;
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
+			xmlhttp.open('POST', 'vdc_db_query2.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 			xmlhttp.send(autoDiaLready_query); 
 			xmlhttp.onreadystatechange = function() 
@@ -7296,7 +7296,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 		if (xmlhttp) 
 			{ 
 			recheckVDAI_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&user=" + user + "&pass=" + pass + "&campaign=" + campaign + "&ACTION=VDADREcheckINCOMING" + "&agent_log_id=" + agent_log_id + "&lead_id=" + document.vicidial_form.lead_id.value;
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
+			xmlhttp.open('POST', 'vdc_db_query2.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 			xmlhttp.send(recheckVDAI_query); 
 			xmlhttp.onreadystatechange = function() 
@@ -7409,7 +7409,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 		if (xmlhttp) 
 			{ 
 			APC_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&user=" + user + "&pass=" + pass + "&campaign=" + campaign + "&ACTION=alt_phone_change" + "&phone_number=" + APCphone + "&lead_id=" + APCleadID + "&called_count=" + APCcount + "&stage=" + APCactive;
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
+			xmlhttp.open('POST', 'vdc_db_query2.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 			xmlhttp.send(APC_query); 
 			xmlhttp.onreadystatechange = function() 
@@ -7430,7 +7430,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 		
 			all_record = 'NO';
 			all_record_count=0;
-			$.post("vdc_db_query.php",
+			$.post("vdc_db_query2.php",
                         {server_ip:server_ip,
                             session_name:session_name,
                             user:user,
@@ -8548,7 +8548,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 			"&extra13=" + encodeURIComponent(document.vicidial_form.extra13.value) +
 			"&extra14=" + encodeURIComponent(document.vicidial_form.extra14.value) +
 			"&extra15=" + encodeURIComponent(document.vicidial_form.extra15.value);
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
+			xmlhttp.open('POST', 'vdc_db_query2.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 			xmlhttp.send(VLupdate_query); 
 			xmlhttp.onreadystatechange = function() 
@@ -8931,7 +8931,7 @@ function set_length(SLnumber,SLlength_goal,SLdirection)
 				if (xmlhttp) 
 					{ 
 					DSupdate_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=updateDISPO&format=text&user=" + user + "&pass=" + pass + "&dispo_choice=" + DispoChoice + "&lead_id=" + document.vicidial_form.lead_id.value + "&campaign=" + campaign + "&auto_dial_level=" + auto_dial_level + "&agent_log_id=" + agent_log_id + "&CallBackDatETimE=" + CallBackDatETimE + "&list_id=" + document.vicidial_form.list_id.value + "&recipient=" + CallBackrecipient + "&use_internal_dnc=" + use_internal_dnc + "&use_campaign_dnc=" + use_campaign_dnc + "&MDnextCID=" + LasTCID + "&stage=" + group + "&vtiger_callback_id=" + vtiger_callback_id + "&phone_number=" + document.vicidial_form.phone_number.value + "&phone_code=" + document.vicidial_form.phone_code.value + "&dial_method" + dial_method + "&uniqueid=" + document.vicidial_form.uniqueid.value + "&CallBackLeadStatus=" + CallBackLeadStatus + "&comments="+ encodeURIComponent(CallBackCommenTs) + "&custom_field_names=" + custom_field_names + "&call_notes=" + document.vicidial_form.call_notes_dispo.value;
-					xmlhttp.open('POST', 'vdc_db_query.php');
+					xmlhttp.open('POST', 'vdc_db_query2.php');
 					xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 					xmlhttp.send(DSupdate_query); 
 					xmlhttp.onreadystatechange = function() 
@@ -9201,7 +9201,7 @@ showDiv('DispoSelectBox');
 			{ 
 			VMCpausecode_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&user=" + user + "&pass=" + pass  + "&ACTION=PauseCodeSubmit&format=text&status=" + newpausecode + "&agent_log_id=" + agent_log_id + "&campaign=" + campaign + "&extension=" + extension + "&protocol=" + protocol + "&phone_ip=" + phone_ip + "&enable_sipsak_messages=" + enable_sipsak_messages + "&stage=" + pause_code_counter + "&campaign_cid=" + LastCallCID + "&auto_dial_level=" + starting_dial_level;
 			pause_code_counter++;
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
+			xmlhttp.open('POST', 'vdc_db_query2.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 			xmlhttp.send(VMCpausecode_query); 
 			xmlhttp.onreadystatechange = function() 
@@ -9575,7 +9575,7 @@ showDiv('DispoSelectBox');
 		if (xmlhttp) 
 			{ 
 			CSCupdate_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=regCLOSER&format=text&user=" + user + "&pass=" + pass + "&comments=" + VU_agent_choose_ingroups_DV + "&closer_blended=" + VICIDiaL_closer_blended + "&campaign=" + campaign + "&qm_phone=" + qm_phone + "&dial_method" + dial_method + "&closer_choice=" + CloserSelectChoices + "-";
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
+			xmlhttp.open('POST', 'vdc_db_query2.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 			xmlhttp.send(CSCupdate_query); 
 			xmlhttp.onreadystatechange = function() 
@@ -9729,7 +9729,7 @@ showDiv('DispoSelectBox');
 		if (xmlhttp) 
 			{ 
 			TERRupdate_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=regTERRITORY&format=text&user=" + user + "&pass=" + pass + "&comments=" + agent_select_territories + "&campaign=" + campaign + "&agent_territories=" + TerritorySelectChoices + "-";
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
+			xmlhttp.open('POST', 'vdc_db_query2.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 			xmlhttp.send(TERRupdate_query); 
 			xmlhttp.onreadystatechange = function() 
@@ -9774,7 +9774,7 @@ showDiv('DispoSelectBox');
 		if (xmlhttp) 
 			{ 
 			TERRupdate_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=Clear_API_Field&format=text&user=" + user + "&pass=" + pass + "&comments=" + temp_field;
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
+			xmlhttp.open('POST', 'vdc_db_query2.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 			xmlhttp.send(TERRupdate_query); 
 			xmlhttp.onreadystatechange = function() 
@@ -9874,7 +9874,7 @@ showDiv('DispoSelectBox');
 					if (xmlhttp) 
 						{ 
 						VDlogout_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=userLOGout&format=text&user=" + user + "&pass=" + pass + "&campaign=" + campaign + "&conf_exten=" + session_id + "&extension=" + extension + "&protocol=" + protocol + "&agent_log_id=" + agent_log_id + "&no_delete_sessions=" + no_delete_sessions + "&phone_ip=" + phone_ip + "&enable_sipsak_messages=" + enable_sipsak_messages + "&LogouTKicKAlL=" + LogouTKicKAlL + "&ext_context=" + ext_context;
-						xmlhttp.open('POST', 'vdc_db_query.php'); 
+						xmlhttp.open('POST', 'vdc_db_query2.php'); 
 						xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 						xmlhttp.send(VDlogout_query); 
 						xmlhttp.onreadystatechange = function() 
@@ -10677,7 +10677,7 @@ function phone_number_format(formatphone) {
 				if (xmlhttp) 
 					{ 
 					RAview_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=AGENTSview&format=text&user=" + user + "&pass=" + pass + "&user_group=" + VU_user_group + "&conf_exten=" + session_id + "&extension=" + extension + "&protocol=" + protocol + "&stage=" + agent_status_view_time + "&campaign=" + campaign + "&comments=" + RAlocation;
-					xmlhttp.open('POST', 'vdc_db_query.php'); 
+					xmlhttp.open('POST', 'vdc_db_query2.php'); 
 					xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 					xmlhttp.send(RAview_query); 
 					xmlhttp.onreadystatechange = function() 
@@ -10750,7 +10750,7 @@ function phone_number_format(formatphone) {
 				if (xmlhttp) 
 					{ 
 					RAview_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=CALLSINQUEUEgrab&format=text&user=" + user + "&pass=" + pass + "&conf_exten=" + session_id + "&extension=" + extension + "&protocol=" + protocol + "&campaign=" + campaign + "&stage=" + CQauto_call_id;
-					xmlhttp.open('POST', 'vdc_db_query.php'); 
+					xmlhttp.open('POST', 'vdc_db_query2.php'); 
 					xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 					xmlhttp.send(RAview_query); 
 					xmlhttp.onreadystatechange = function() 
@@ -10787,7 +10787,7 @@ var ringing_call_id;
 			{
 			if (even > 0)
 				{
-                                    $.post("vdc_db_query.php",
+                                    $.post("vdc_db_query2.php",
                 {server_ip: server_ip ,session_name: session_name , ACTION:"CALLSINQUEUEview",format:"text",user: user ,pass: pass ,conf_exten: session_id  ,extension: extension ,protocol: protocol  ,campaign: campaign  ,stage:"<?php echo $CQwidth ?>"},
                 function(data){atum=data;
                     $('#callsinqueuelist').html('');
@@ -10854,7 +10854,7 @@ var ringing_call_id;
 				if (xmlhttp) 
 					{ 
 					RAview_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=CALLSINQUEUEview&format=text&user=" + user + "&pass=" + pass + "&conf_exten=" + session_id + "&extension=" + extension + "&protocol=" + protocol + "&campaign=" + campaign + "&stage=<?php echo $CQwidth ?>";
-					xmlhttp.open('POST', 'vdc_db_query.php'); 
+					xmlhttp.open('POST', 'vdc_db_query2.php'); 
 					xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 					xmlhttp.send(RAview_query); 
 					xmlhttp.onreadystatechange = function() 
@@ -11023,7 +11023,7 @@ loop.stop();
 	function VieWLeaDInfO(VLI_lead_id,VLI_cb_id)
 		{
 		
-        $.post("vdc_db_query.php", 
+        $.post("vdc_db_query2.php", 
         {server_ip: server_ip,
             session_name: session_name,
             ACTION:"LEADINFOview",
@@ -11093,7 +11093,7 @@ loop.stop();
 			if (xmlhttp) 
 				{ 
 				RAview_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=CALLLOGview&format=text&user=" + user + "&pass=" + pass + "&conf_exten=" + session_id + "&extension=" + extension + "&protocol=" + protocol + "&date=" + logdate + "&campaign=" + campaign + "&stage=<?php echo $HCwidth ?>";
-				xmlhttp.open('POST', 'vdc_db_query.php'); 
+				xmlhttp.open('POST', 'vdc_db_query2.php'); 
 				xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 				xmlhttp.send(RAview_query); 
 				xmlhttp.onreadystatechange = function() 
@@ -11121,7 +11121,7 @@ loop.stop();
 
 	        $('#result_moradas').html("<img src=/images/icons/ajax-loader.gif id=loader style='display: inline;vertical-align:middle;'> A Procurar...\n");
 
-	        $.post('vdc_db_query.php', {
+	        $.post('vdc_db_query2.php', {
 	            server_ip: server_ip,
 	            session_name: session_name,
 	            user: user,
@@ -11183,7 +11183,7 @@ loop.stop();
 				{ 
 				//LSview_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=SEARCHRESULTSview&format=text&user=" + user + "&pass=" + pass + "&conf_exten=" + session_id + "&extension=" + extension + "&protocol=" + protocol + "&phone_number=" + document.vicidial_form.search_phone_number.value + "&lead_id=" + document.vicidial_form.search_lead_id.value + "&vendor_lead_code=" + document.vicidial_form.search_vendor_lead_code.value + "&first_name=" + document.vicidial_form.search_first_name.value + "&last_name=" + document.vicidial_form.search_last_name.value + "&city=" + document.vicidial_form.search_city.value + "&state=" + document.vicidial_form.search_state.value + "&postal_code=" + document.vicidial_form.search_postal_code.value + "&search=" + phone_search_fields + "&campaign=" + campaign + "&stage=<?php echo $HCwidth ?>";
 				LSview_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=SEARCHRESULTSview&format=text&user=" + user + "&pass=" + pass + "&conf_exten=" + session_id + "&extension=" + extension + "&protocol=" + protocol + "&search_field=" + document.vicidial_form.search_field.value + "&search_query=" + encodeURIComponent(document.vicidial_form.search_query.value) + "&campaign=" + campaign + "&stage=<?php echo $HCwidth ?>";
-				xmlhttp.open('POST', 'vdc_db_query.php'); 
+				xmlhttp.open('POST', 'vdc_db_query2.php'); 
 				xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 				xmlhttp.send(LSview_query); 
 				xmlhttp.onreadystatechange = function() 
@@ -11259,7 +11259,7 @@ loop.stop();
 		if (xmlhttp) 
 			{ 
 			RAview_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=LEADINFOview&search=logfirst&format=text&user=" + user + "&pass=" + pass + "&conf_exten=" + session_id + "&extension=" + extension + "&protocol=" + protocol + "&lead_id=" + document.vicidial_form.lead_id.value + "&campaign=" + campaign + "&stage=<?php echo $HCwidth ?>";
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
+			xmlhttp.open('POST', 'vdc_db_query2.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 			xmlhttp.send(RAview_query); 
 			xmlhttp.onreadystatechange = function() 
@@ -11302,7 +11302,7 @@ loop.stop();
 		if (xmlhttp) 
 			{ 
 			CTHPview_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=customer_3way_hangup_process&format=text&user=" + user + "&pass=" + pass + "&conf_exten=" + session_id + "&lead_id=" + document.vicidial_form.lead_id.value + "&campaign=" + campaign + "&status=" + temp_hungup_time + "&stage=" + temp_xfer_call_seconds;
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
+			xmlhttp.open('POST', 'vdc_db_query2.php'); 
 			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
 			xmlhttp.send(CTHPview_query); 
 			xmlhttp.onreadystatechange = function() 
@@ -11500,7 +11500,7 @@ loop.stop();
 
 	function reactive_last_callback()
 		{	
-                    $.post('vdc_db_query.php', { 
+                    $.post('vdc_db_query2.php', { 
                         server_ip: server_ip,
                         session_name: session_name,
                         user: user,
@@ -11610,7 +11610,7 @@ loop.stop();
 // ################################################################################
 	function CheckForceReady()
 	{
-$.post("vdc_db_query.php", { 
+$.post("vdc_db_query2.php", { 
     server_ip: server_ip,
     session_name: session_name,
     user: user,

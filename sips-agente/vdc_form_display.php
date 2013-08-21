@@ -14,6 +14,8 @@
 # 100916-1749 - Added non-lead variable parsing
 #
 
+error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
+ini_set('display_errors', '1');
 
 
 $version = '2.4-4';
@@ -416,7 +418,7 @@ if ($stage=='SUBMIT')
 			}
 		}
 	else
-		{$CFoutput .= "ERROR: no custom list fields table\n";}
+		{$CFoutput .= "Não tem script associado.\n";}
 
 	echo "<span><div class='cf-style' style='border:none; width:100%;'>Resultado da Chamada:\n<BR>\n";
 	echo "<table>";
@@ -466,8 +468,6 @@ else
 	echo "\n";
 
 
-	require("functions.php");
-	
 	$CFoutput = custom_list_fields_values($lead_id,$list_id,$uniqueid,$user);
 
 	echo "$CFoutput";
