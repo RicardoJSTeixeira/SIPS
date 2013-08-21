@@ -100,8 +100,8 @@ if($action=="send_email")
     
     
     require_once 'lib/swift_required.php';
-    $transport = Swift_SmtpTransport::newInstance('mail.exemplyrigor.pt', 25)
-      ->setUsername('info@exemplyrigor.pt')      
+    $transport = Swift_SmtpTransport::newInstance('mail.exemplyrigor.com', 25)
+      ->setUsername('info@exemplyrigor.com')      
       ->setPassword('exemplyrigor')
       ;
 
@@ -111,7 +111,7 @@ if($action=="send_email")
     
        
     $message = Swift_Message::newInstance('Eficiência Energética - Proposta Retific Power®')
-        ->setFrom(array('info@exemplyrigor.pt' => 'Sónia Ferreira'))
+        ->setFrom(array('info@exemplyrigor.com' => 'Sónia Ferreira'))
         ->setTo(array($email_address => $email_name));
     
     $message->attach(Swift_Attachment::fromPath('attachments/EmpresaEenergy.pdf'));
@@ -148,8 +148,8 @@ if($action=="send_email")
         <span style="font-size:11px; font-family:Arial;"><b><font color="#404040">Departamento Comercial</font></b></span> <br>
 
        	<table><tr><td><img src="'.$cid1.'"></td></tr></table>
-        <a href="www.exemplyrigor.pt"><b>www.exemplyrigor.com</b></a><br>
-        <a href="mailto:sferreira@exemplyrigor.pt">sferreira@exemplyrigor.pt</a> <br>
+        <a href="www.exemplyrigor.com"><b>www.exemplyrigor.com</b></a><br>
+        <a href="mailto:sferreira@exemplyrigor.com">sferreira@exemplyrigor.com</a> <br>
         
         <span style="font-size:16px; font-family:Arial;"><b><font color="#404040">Nº ÚNICO +351 707 200 220</font></b></span> <br>
         <span style="font-size:11px; font-family:Arial;"><b><font color="#404040">Tel/Fax: &nbsp;&nbsp;&nbsp;&nbsp;         +351 214 759 910 </font></b></span> <br>
