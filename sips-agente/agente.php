@@ -4460,7 +4460,7 @@ if ($enable_xfer_presets == 'ENABLED') {
                                 <span style='color:black' class="add-on">Filtro</span><input type=text id=dispo_search >
                             </div>
                         </div>
-                        <div class="notification-mes c_bg-2" id="DispoSelectContent"  style='margin:0;'>
+                        <div class="notification-mes c_bg-2" id="DispoSelectContent"  style="margin:0;max-height: 330px;overflow-y: auto;">
 
                         </div>
                         <div class="notification-mes  last-item"  style='margin:0;'>
@@ -4671,8 +4671,8 @@ if ($enable_xfer_presets == 'ENABLED') {
                         </div>
                         <div  class="notification-mes" >
                             <div class="right">
-                                <a href="#" onClick="CloserSelectContent_create();return false;" class="btn"> Reset </a>
-                                <a href="#" onClick="CloserSelect_submit();return false;" class="btn btn-primary">Gravar</a>
+                                <a href="#" onClick="CloserSelectContent_create();return false;" class="btn">Limpar</a>
+                                <a href="#" onClick="CloserSelect_submit();return false;" class="btn btn-primary">Ok</a>
                             </div>
                             <div class="clear"></div>
                         </div>
