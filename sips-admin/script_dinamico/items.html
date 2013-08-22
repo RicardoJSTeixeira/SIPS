@@ -1,18 +1,11 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
-<div class="item texto_class">
+
+<div class="item texto_class" title="Caixa de Texto">
       <label class="label_texto label_geral" >Caixa de Texto:</label>
       <input class="input_texto " maxlength="65" type="text" placeholder="Texto padrão" />
 </div>
 
 
-
-
-
-
-<div class="item radio_class">
+<div class="item radio_class" title="Botões de Resposta unica">
       <label class="label_radio label_geral">Radio:</label>
       <br>
       <input  type="radio" id="radio1" name="ra" checked="checked">
@@ -20,9 +13,7 @@ and open the template in the editor.
 </div>
 
 
-
-
-<div class="item tableradio_class">
+<div class="item tableradio_class" title="Tabela de Resposta Multipla">
       <label class="label_tableradio label_geral">Tabela escolha-multipla:</label>
       <br>
       <table style="width:100%;">
@@ -66,8 +57,7 @@ and open the template in the editor.
 
 
 
-
-<div class="item checkbox_class">
+<div class="item checkbox_class" title="Escolha Multipla">
       <label class="label_checkbox label_geral">Checkbox:</label>
       <br>
       <input   type="checkbox" id="checkbox" name="cc" value="1">
@@ -76,7 +66,7 @@ and open the template in the editor.
 
 
 
-<div class="item multichoice_class"> 
+<div class="item multichoice_class" title="Lista de Opções"> 
       <label class="label_multichoice label_geral">Escolha multipla:</label>
       <br>
       <select  class="multichoice_select">
@@ -86,18 +76,18 @@ and open the template in the editor.
 
 
 
-
-
-<div class="item textfield_class"> 
+<div class="item textfield_class" title="Campo de texto"> 
       <label class="label_textfield label_geral">Exempo:	Lorem ipsum dolor sit amcillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</label>
 </div>
 
-<div class="item legend_class"> 
+
+<div class="item legend_class" title="Titulo/Separador"> 
       <fieldset>   <legend class="label_legend label_geral">Este elemento é um Titulo</legend></fieldset>
 </div>
 
 
-<div class="item pagination_class">
+
+<div class="item pagination_class" title="Elemento de paginação">
       <button class="btn" onclick=" $('#page_selector option:selected').prev().prop('selected', true);
                   update_info();">Anterior</button>
       <button class="btn" onclick=" $('#page_selector option:selected').next().prop('selected', true);
@@ -105,8 +95,7 @@ and open the template in the editor.
 </div>
 
 
-
-<div class="item datepicker_class">
+<div class="item datepicker_class" title="Elemento de data e tempo">
       <label class="label_datepicker label_geral">Selector de data e tempo: </label>
       <input size="16" type="text" class="form_datetime">
 </div>

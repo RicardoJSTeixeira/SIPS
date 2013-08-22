@@ -10,8 +10,8 @@ foreach ($_GET as $key => $value) {
 
 
 switch ($action) {
-    //------------------------------------------------//
-//-----------------GET-------------------------  
+    //------------------------------------------------//    
+    //---------------------GET------------------------//  
     //------------------------------------------------//
     case "get_tag_fields":
         $query = "SELECT * FROM `vicidial_list_ref` GROUP BY name";
@@ -51,7 +51,7 @@ switch ($action) {
 
 
     case "get_pages":
-        $query = "SELECT * FROM script_dinamico_pages where id_script=$id_script order by name";
+        $query = "SELECT * FROM script_dinamico_pages where id_script=$id_script order by id";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array(id => $row["id"], name => $row["name"]);
@@ -97,8 +97,11 @@ switch ($action) {
         }
         echo json_encode($js);
         break;
+
+
+
     //------------------------------------------------//
-//-----------------EDIT-------------------------
+    //-----------------EDIT---------------------------//
     //------------------------------------------------//
     case "edit_script_name":
         $query = "update script_dinamico_master set name='$name' where id=$id_script";
@@ -129,8 +132,10 @@ switch ($action) {
 
 
 
+
+
     //------------------------------------------------//
-//-----------------ADD-------------------------
+    //-----------------ADD----------------------------//
     //------------------------------------------------//
     case "add_page":
         $query = "INSERT INTO `asterisk`.`script_dinamico_pages` (id,id_script,name) VALUES (NULL,$id_script,'Página nova')";
@@ -159,25 +164,28 @@ switch ($action) {
         echo json_encode(array(1));
         break;
 
+
+
     //------------------------------------------------//
-    //-----------------DELETE-------------------------
+    //-----------------DELETE-------------------------//
     //------------------------------------------------//
     case "delete_page":
-        //  $query = "delete from script_dinamico_pages  where id=$id_pagina";
-        // $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "select * from script_dinamico sd inner join script_rules sr on sd.id=sr.id_trigger";
+        $query = "delete from script_dinamico_pages  where id=$id_pagina";
         $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            $js[] = $row["id"];
-        }
-        $js= implode(', ', $js);
-        $query = "delete from  script_rules where id_trigger in($js)";
-echo($query);
+        $query = "select sd.id as id from script_dinamico sd inner join script_rules sr on sd.id=sr.id_trigger";
 
         $query = mysql_query($query, $link) or die(mysql_error());
-        //$query = "delete from  script_dinamico where id_page=$id_pagina";
-        // $query = mysql_query($query, $link) or die(mysql_error());
-        //echo json_encode(array(1));
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = "'" . $row["id"] . "'";
+        }
+        $js = implode(', ', $js);
+        if ($js . length > 0) {
+            $query = "delete from  script_rules where id_trigger in($js)";
+            $query = mysql_query($query, $link) or die(mysql_error());
+        }
+        $query = "delete from  script_dinamico where id_page=$id_pagina";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        echo json_encode(array(1));
         break;
 
     case "delete_item":
@@ -210,6 +218,14 @@ echo($query);
         break;
 
 
+
+
+
+
+
+    //------------------------------------------------//
+    //-----------------FORM---------------------------//
+    //------------------------------------------------//
     case "save_form_result":
 
         $sql = array();
