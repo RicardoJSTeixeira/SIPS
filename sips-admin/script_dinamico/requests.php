@@ -63,26 +63,26 @@ switch ($action) {
         $query = "SELECT * FROM `script_dinamico` WHERE id_script=$id_script and id_page=$id_page order by ordem asc";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => $row["placeholder"], max_length => $row["max_length"], values_text => $row["values_text"], required => $row["required"], hidden => $row["hidden"]);
+            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => $row["placeholder"], max_length => $row["max_length"], values_text => $row["values_text"], required => $row["required"] == 1, hidden => $row["hidden"] == 1);
         }
         echo json_encode($js);
         break;
 
-         case "get_data_individual":
+    case "get_data_individual":
         $query = "SELECT * FROM `script_dinamico` WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => $row["placeholder"], max_length => $row["max_length"], values_text => $row["values_text"], required => $row["required"], hidden => $row["hidden"]);
+            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => $row["placeholder"], max_length => $row["max_length"], values_text => $row["values_text"], required => $row["required"] == 1, hidden => $row["hidden"] == 1);
         }
         echo json_encode($js);
         break;
-        
+
 
     case "get_rules_by_trigger":
         $query = "SELECT * FROM `script_rules` WHERE id_trigger=$id_trigger";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"],id_script => $row["id_script"], tipo_elemento => $row["tipo_elemento"], id_trigger => $row["id_trigger"], id_trigger2 => $row["id_trigger2"], id_target => $row["id_target"], tipo => $row["tipo"], param1 => $row["param1"], param2 => $row["param2"]);
+            $js[] = array(id => $row["id"], id_script => $row["id_script"], tipo_elemento => $row["tipo_elemento"], id_trigger => $row["id_trigger"], id_trigger2 => $row["id_trigger2"], id_target => $row["id_target"], tipo => $row["tipo"], param1 => $row["param1"], param2 => $row["param2"]);
         }
         echo json_encode($js);
         break;
@@ -90,10 +90,10 @@ switch ($action) {
 
     case "get_rules":
         $query = "SELECT * FROM `script_rules` WHERE id_script=$id_script";
-  
+
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"],id_script => $row["id_script"], tipo_elemento => $row["tipo_elemento"], id_trigger => $row["id_trigger"], id_trigger2 => $row["id_trigger2"], id_target => $row["id_target"], tipo => $row["tipo"], param1 => $row["param1"], param2 => $row["param2"]);
+            $js[] = array(id => $row["id"], id_script => $row["id_script"], tipo_elemento => $row["tipo_elemento"], id_trigger => $row["id_trigger"], id_trigger2 => $row["id_trigger2"], id_target => $row["id_target"], tipo => $row["tipo"], param1 => $row["param1"], param2 => $row["param2"]);
         }
         echo json_encode($js);
         break;
@@ -156,24 +156,36 @@ switch ($action) {
         $query = "INSERT INTO `asterisk`.`script_rules` (id,id_script,tipo_elemento,id_trigger,id_trigger2,id_target,tipo,param1,param2) VALUES (NULL,$id_script,'$tipo_elemento',$id_trigger,'$id_trigger2','$id_target','$tipo','$param1','$param2')";
 
         $query = mysql_query($query, $link) or die(mysql_error());
-     echo json_encode(array(1));
+        echo json_encode(array(1));
         break;
 
     //------------------------------------------------//
     //-----------------DELETE-------------------------
     //------------------------------------------------//
     case "delete_page":
-        $query = "delete from script_dinamico_pages  where id=$id_pagina";
+        //  $query = "delete from script_dinamico_pages  where id=$id_pagina";
+        // $query = mysql_query($query, $link) or die(mysql_error());
+        $query = "select * from script_dinamico sd inner join script_rules sr on sd.id=sr.id_trigger";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "delete from script_dinamico where id_page=$id_pagina";
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = $row["id"];
+        }
+        $js= implode(', ', $js);
+        $query = "delete from  script_rules where id_trigger in($js)";
+echo($query);
+
         $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
+        //$query = "delete from  script_dinamico where id_page=$id_pagina";
+        // $query = mysql_query($query, $link) or die(mysql_error());
+        //echo json_encode(array(1));
         break;
 
     case "delete_item":
         $query = "UPDATE script_dinamico SET ordem=ordem-1 where ordem>$ordem";
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "delete from script_dinamico where id=$id";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        $query = "delete from script_rules where id_trigger=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
@@ -185,17 +197,19 @@ switch ($action) {
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "delete from script_dinamico where id_script=$id_script ";
         $query = mysql_query($query, $link) or die(mysql_error());
+        $query = "delete from script_rules where id_script=$id_script";
+        $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
 
- case "delete_rule":
+    case "delete_rule":
         $query = "delete from script_rules  where id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
-      
+
         echo json_encode(array(1));
         break;
-    
-    
+
+
     case "save_form_result":
 
         $sql = array();

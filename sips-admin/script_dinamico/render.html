@@ -14,7 +14,7 @@ and open the template in the editor.
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
             <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
             <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
-
+    <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
 
             <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
             <script type="text/javascript" src="/jquery/jqueryUI/jquery-ui-1.10.2.custom.min.js"></script>
@@ -23,10 +23,16 @@ and open the template in the editor.
             <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
             <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
             <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
+            
+            
+               <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt-BR.js"></script>
+            
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
             <style>
-                  .item { text-align:center; border:1px solid #EEE; background-color:#FFF;padding:10px;}
+                  .item { text-align:center;  background-color:#FFF;padding:10px;}
+
             </style>
       </head>
 
@@ -36,18 +42,17 @@ and open the template in the editor.
                   <div class="pull-right">Scripts<select id="script_selector"></select></div>
             </div>
             <div id="dummie" style="display:none">
-                  
+
             </div>
-            
-            <div class="grid-content" id="render_zone">
-                  <form style="width:85%;margin:0 auto;" id="myform"  onsubmit="return false;" ACTION="" METHOD="GET">
-                        <div id="script_div" >
+            <form id="myform">
+                  <div class="grid-content" id="render_zone">
+                        <div id="script_div"  style="width:85%;margin:0 auto;" >
                         </div>   
-                  </form>
-            </div>
-            <div class="modal-footer ">
-                  <button  class="btn btn-large btn-info"  id="submit_button" style="width:100%" >Submit</button>
-            </div>
+                  </div>
+                  <div class="modal-footer ">
+                        <button  class="btn btn-large btn-info"  id="submit_button" style="width:100%" >Submit</button>
+                  </div>
+            </form>
             <script type="text/javascript" src="render.js"></script>
       </body>
 </html>
