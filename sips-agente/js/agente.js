@@ -1698,7 +1698,7 @@ function stats_update(){
 								}
 							}
 						}
-					})
+					},"json");
 		
 
 		if (MD_ring_secondS > 49) 
