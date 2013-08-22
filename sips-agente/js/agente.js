@@ -2141,32 +2141,8 @@ function stats_update(){
 			showDiv('EAcommentsBox');
 			}
                         
-            manDiaLonly_query = {server_ip:server_ip,session_name:session_name,ACTION:"manDiaLonly",conf_exten:session_id,user:user,pass:pass,lead_id:document.vicidial_form.lead_id.value,phone_number:manDiaLonly_num,phone_code:document.vicidial_form.phone_code.value,campaign:campaign,ext_context:ext_context,dial_timeout:dial_timeout,dial_prefix:call_prefix,campaign_cid:call_cid,omit_phone_code:omit_phone_code,usegroupalias:usegroupalias,account:active_group_alias,agent_dialed_number:agent_dialed_number,agent_dialed_type:agent_dialed_type,dial_method:dial_method,agent_log_id:agent_log_id,security:document.vicidial_form.security_phrase.value,portabilidade:portabilidade};
-			
-            $.post("vdc_db_query.php",manDiaLonly_query,function(data){
-                            
-                        })
-		var xmlhttp=false;
-		/*@cc_on @*/
-		/*@if (@_jscript_version >= 5)
-		// JScript gives us Conditional compilation, we can cope with old IE versions.
-		// and security blocked creation of the objects.
-		 try {
-		  xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-		 } catch (e) {
-		  try {
-		   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		  } catch (E) {
-		   xmlhttp = false;
-		  }
-		 }
-		@end @*/
-		if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-			{
-			xmlhttp = new XMLHttpRequest();
-			}
-		if (xmlhttp) 
-			{ 
+           		
+                        
 			if (cid_choice.length > 3) 
 				{
 				var call_cid = cid_choice;
@@ -2182,21 +2158,15 @@ function stats_update(){
 				{var call_prefix = prefix_choice;}
 			else
 				{var call_prefix = manual_dial_prefix;}
-
-			manDiaLonly_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=manDiaLonly&conf_exten=" + session_id + "&user=" + user + "&pass=" + pass + "&lead_id=" + document.vicidial_form.lead_id.value + "&phone_number=" + manDiaLonly_num + "&phone_code=" + document.vicidial_form.phone_code.value + "&campaign=" + campaign + "&ext_context=" + ext_context + "&dial_timeout=" + dial_timeout + "&dial_prefix=" + call_prefix + "&campaign_cid=" + call_cid + "&omit_phone_code=" + omit_phone_code + "&usegroupalias=" + usegroupalias + "&account=" + active_group_alias + "&agent_dialed_number=" + agent_dialed_number + "&agent_dialed_type=" + agent_dialed_type + "&dial_method=" + dial_method + "&agent_log_id=" + agent_log_id + "&security=" + document.vicidial_form.security_phrase.value +"&portabilidade="+portabilidade;
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
-			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
-			xmlhttp.send(manDiaLonly_query);
-			xmlhttp.onreadystatechange = function() 
-				{ 
+             manDiaLonly_query = {server_ip:server_ip,session_name:session_name,ACTION:"manDiaLonly",conf_exten:session_id,user:user,pass:pass,lead_id:document.vicidial_form.lead_id.value,phone_number:manDiaLonly_num,phone_code:document.vicidial_form.phone_code.value,campaign:campaign,ext_context:ext_context,dial_timeout:dial_timeout,dial_prefix:call_prefix,campaign_cid:call_cid,omit_phone_code:omit_phone_code,usegroupalias:usegroupalias,account:active_group_alias,agent_dialed_number:agent_dialed_number,agent_dialed_type:agent_dialed_type,dial_method:dial_method,agent_log_id:agent_log_id,security:document.vicidial_form.security_phrase.value,portabilidade:portabilidade};
+	                    
+            $.post("vdc_db_query.php",manDiaLonly_query,function(data){
+                
                                     portabilidade=0;
                                 
-				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) 
-					{
+				
 					var MDOnextResponse = null;
-			//		alert(manDiaLonly_query);
-			//		alert(xmlhttp.responseText);
-					MDOnextResponse = xmlhttp.responseText;
+					MDOnextResponse = data;
 
 					var MDOnextResponse_array=MDOnextResponse.split("\n");
 					MDnextCID =		MDOnextResponse_array[0];
@@ -2265,9 +2235,11 @@ function stats_update(){
 							window.open(TEMP_VDIC_web_form_address_two, web_form_target, 'toolbar=1,scrollbars=1,location=1,statusbar=1,menubar=1,resizable=1,width=640,height=450');
 							}
 						}
-					}
-				}
-			delete xmlhttp;
+					
+                        })
+		 
+
+			
 			active_group_alias='';
 			cid_choice='';
 			prefix_choice='';
@@ -2275,7 +2247,7 @@ function stats_update(){
 			agent_dialed_type='';
 			CalL_ScripT_id='';
 			}
-		}
+		
 
 
 // ################################################################################

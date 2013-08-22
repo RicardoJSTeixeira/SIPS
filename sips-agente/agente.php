@@ -4671,8 +4671,8 @@ if ($enable_xfer_presets == 'ENABLED') {
                         </div>
                         <div  class="notification-mes" >
                             <div class="right">
-                                <a href="#" onClick="CloserSelectContent_create();return false;" class="btn"> Reset </a>
-                                <a href="#" onClick="CloserSelect_submit();return false;" class="btn btn-primary">Gravar</a>
+                                <a href="#" onClick="CloserSelectContent_create();return false;" class="btn">Limpar</a>
+                                <a href="#" onClick="CloserSelect_submit();return false;" class="btn btn-primary">Ok</a>
                             </div>
                             <div class="clear"></div>
                         </div>
