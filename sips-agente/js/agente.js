@@ -8177,6 +8177,7 @@ function HotKeys(HKstate)
                             }
                             if (alert_displayed)
                             {
+                                in_lead_preview_state=0;
                                 return false;
                             }
 
@@ -8986,5 +8987,6 @@ $(document).bind("keydown", disableF5);
                             $("#CallbacksButtons").tooltip();
                             
                             $("#SendDTMF").popover({html:true});
+            get_tempo_pausa();
                             
                         });
