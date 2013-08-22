@@ -14,8 +14,6 @@
 # 100916-1749 - Added non-lead variable parsing
 #
 
-error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
-ini_set('display_errors', '1');
 
 
 $version = '2.4-4';
