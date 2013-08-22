@@ -4460,7 +4460,7 @@ if ($enable_xfer_presets == 'ENABLED') {
                                 <span style='color:black' class="add-on">Filtro</span><input type=text id=dispo_search >
                             </div>
                         </div>
-                        <div class="notification-mes c_bg-2" id="DispoSelectContent"  style='margin:0;'>
+                        <div class="notification-mes c_bg-2" id="DispoSelectContent"  style="margin:0;max-height: 330px;overflow-y: auto;">
 
                         </div>
                         <div class="notification-mes  last-item"  style='margin:0;'>
