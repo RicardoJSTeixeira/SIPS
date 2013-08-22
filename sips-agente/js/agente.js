@@ -5677,7 +5677,7 @@ function utf8_decode(utftext) {
                     if (even > 0)
                     {
                         $.post("vdc_db_query.php",
-                                {server_ip: server_ip, session_name: session_name, ACTION: "CALLSINQUEUEview", format: "text", user: user, pass: pass, conf_exten: session_id, extension: extension, protocol: protocol, campaign: campaign, stage: "<?php echo $CQwidth ?>"},
+                                {server_ip: server_ip, session_name: session_name, ACTION: "CALLSINQUEUEview", format: "text", user: user, pass: pass, conf_exten: session_id, extension: extension, protocol: protocol, campaign: campaign},
                         function(data) {
                             atum = data;
                             $('#callsinqueuelist').html('');
@@ -8061,7 +8061,7 @@ function HotKeys(HKstate)
                     reselect_preview_dial = 1;
                     in_lead_preview_state = 1;
                     var man_preview = 'YES';
-                    var man_status = "<a href=\"#\" onclick=\"ManualDialOnly('" + manual_dial_only_type_flag + "')\" class=\"btn\">Principal</a> ou <a href=\"#\" onclick=\"ManualDialOnly('ALTPhonE')\" class=\"btn\">Alternativo</a> ou <a href=\"#\" onclick=\"ManualDialOnly('AddresS3')\" class=\"btn\">Alternativo 2</a> ou <a href=\"#\" onclick=\"ManualDialSkip()\" class=\"btn\">Ligação</a>";
+                    var man_status = "<a href=\"#\" onclick=\"ManualDialOnly('" + manual_dial_only_type_flag + "')\" class=\"btn\">Principal</a> ou <a href=\"#\" onclick=\"ManualDialOnly('ALTPhonE')\" class=\"btn\">Alternativo</a> ou <a href=\"#\" onclick=\"ManualDialOnly('AddresS3')\" class=\"btn\">Alternativo 2</a> ou <a href=\"#\" onclick=\"ManualDialSkip()\" class=\"btn\">Cancelar</a>";
                     if (manual_preview_dial == 'PREVIEW_ONLY')
                     {
                         var man_status = "<a href=\"#\" onclick=\"ManualDialOnly('" + manual_dial_only_type_flag + "')\" style='font-size:14px; font-weight: bold; text-decoration:underline'>Fazer Ligação</a>";

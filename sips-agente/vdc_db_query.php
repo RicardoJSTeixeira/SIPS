@@ -3420,8 +3420,8 @@ if ($ACTION == 'manDiaLlookCaLL') {
 			if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00300', $user, $server_ip, $session_name, $one_mysql_log);
 			}
 
-			echo "$call_output";
-		} else {echo "NO\n$DiaL_SecondS\n";
+			echo json_encode($call_output);
+		} else {echo json_encode(array("NO","$DiaL_SecondS"));
 		}
 	}
 }
