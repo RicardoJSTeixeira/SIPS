@@ -963,44 +963,40 @@ function stats_update(){
 					}
 				}
 			}
-		var xmlhttp=false;
-		/*@cc_on @*/
-		/*@if (@_jscript_version >= 5)
-		// JScript gives us Conditional compilation, we can cope with old IE versions.
-		// and security blocked creation of the objects.
-		 try {
-		  xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-		 } catch (e) {
-		  try {
-		   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		  } catch (E) {
-		   xmlhttp = false;
-		  }
-		 }
-		@end @*/
-		if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-			{
-			xmlhttp = new XMLHttpRequest();
-			}
-		if (xmlhttp) 
-			{
-			manDiaLlog_query = "format=text&server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=manDiaLlogCaLL&stage=" + taskMDstage + "&uniqueid=" + document.vicidial_form.uniqueid.value + 
+		manDiaLlog_query = "format=text&server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=manDiaLlogCaLL&stage=" + taskMDstage + "&uniqueid=" + document.vicidial_form.uniqueid.value + 
 			"&user=" + user + "&pass=" + pass + "&campaign=" + campaign + 
 			"&lead_id=" + document.vicidial_form.lead_id.value + 
 			"&list_id=" + document.vicidial_form.list_id.value + 
 			"&length_in_sec=0&phone_code=" + document.vicidial_form.phone_code.value + 
 			"&phone_number=" + lead_dial_number + 
-			"&exten=" + extension + "&channel=" + lastcustchannel + "&start_epoch=" + MDlogEPOCH + "&auto_dial_level=" + auto_dial_level + "&VDstop_rec_after_each_call=" + VDstop_rec_after_each_call + "&conf_silent_prefix=" + conf_silent_prefix + "&protocol=" + protocol + "&extension=" + extension + "&ext_context=" + ext_context + "&conf_exten=" + session_id + "&user_abb=" + user_abb + "&agent_log_id=" + agent_log_id + "&MDnextCID=" + LasTCID + "&inOUT=" + inOUT + "&alt_dial=" + dialed_label + "&DB=0" + "&agentchannel=" + agentchannel + "&conf_dialed=" + conf_dialed + "&leaving_threeway=" + leaving_threeway + "&hangup_all_non_reserved=" + hangup_all_non_reserved + "&blind_transfer=" + blind_transfer + "&dial_method" + dial_method + "&nodeletevdac=" + nodeletevdac + "&alt_num_status=" + alt_num_status;
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
-			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
-		//		document.getElementById("busycallsdebug").innerHTML = "vdc_db_query.php?" + manDiaLlog_query;
-			xmlhttp.send(manDiaLlog_query); 
-			xmlhttp.onreadystatechange = function() 
-				{ 
-				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) 
-					{
+			"&exten=" + extension +
+                        "&channel=" + lastcustchannel +
+                        "&start_epoch=" + MDlogEPOCH +
+                        "&auto_dial_level=" + auto_dial_level +
+                        "&VDstop_rec_after_each_call=" + VDstop_rec_after_each_call +
+                        "&conf_silent_prefix=" + conf_silent_prefix +
+                        "&protocol=" + protocol +
+                        "&extension=" + extension +
+                        "&ext_context=" + ext_context +
+                        "&conf_exten=" + session_id +
+                        "&user_abb=" + user_abb +
+                        "&agent_log_id=" + agent_log_id +
+                        "&MDnextCID=" + LasTCID +
+                        "&inOUT=" + inOUT +
+                        "&alt_dial=" + dialed_label +
+                        "&DB=0" +
+                        "&agentchannel=" +agentchannel +
+                        "&conf_dialed=" + conf_dialed +
+                        "&leaving_threeway=" + leaving_threeway +
+                        "&hangup_all_non_reserved=" + hangup_all_non_reserved +
+                        "&blind_transfer=" + blind_transfer +
+                        "&dial_method" + dial_method +
+                        "&nodeletevdac=" + nodeletevdac +
+                        "&alt_num_status=" + alt_num_status;
+			$.post('vdc_db_query.php',manDiaLlog_query,function(data){
+                           
 					var MDlogResponse = null;
-					MDlogResponse = xmlhttp.responseText;
+					MDlogResponse = data;
 					var MDlogResponse_array=MDlogResponse.split("\n");
 					MDlogLINE = MDlogResponse_array[0];
 					if ( (MDlogLINE == "LOG NOT ENTERED") && (VDstop_rec_after_each_call != 1) )
@@ -1034,11 +1030,9 @@ function stats_update(){
 								document.getElementById("RecorDID").innerHTML = MDlogRecorDings_array[3];
 								}
 							}
-						}
-					}
-				}
-			delete xmlhttp;
-			}
+						} 
+                        })
+		
 		RedirecTxFEr=0;
 		conf_dialed=0;
 		}
@@ -1116,7 +1110,7 @@ function stats_update(){
         return;
     }
     var move_on = 1;
-    if ((AutoDialWaiting == 1) || (VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1))
+    if (/*(AutoDialWaiting == 1) ||*/ (VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1))
     {
         if ((auto_pause_precall == 'Y') && ((agent_pause_codes_active == 'Y') || (agent_pause_codes_active == 'FORCE')) && (AutoDialWaiting == 1) && (VD_live_customer_call != 1) && (alt_dial_active != 1) && (MD_channel_look != 1) && (in_lead_preview_state != 1))
         {
@@ -1274,6 +1268,16 @@ function stats_update(){
 // Open up a callback customer record as manual dial preview mode
 	function new_callback_call(taskCBid,taskLEADid,taskCBalt)
 		{
+                    if (  (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
+			{
+			if ((auto_pause_precall == 'Y') && ( (agent_pause_codes_active=='Y') || (agent_pause_codes_active=='FORCE') ) && (AutoDialWaiting == 1) && (VD_live_customer_call!=1) && (alt_dial_active!=1) && (MD_channel_look!=1) && (in_lead_preview_state!=1) )
+				{
+                                    
+                                }
+                                else
+                                {return;
+                                }
+                        }
 	//	alt_phone_dialing=1;
 		LastCallbackViewed=1;
 		LastCallbackCount = (LastCallbackCount - 1);
@@ -1319,7 +1323,7 @@ function stats_update(){
                     }
                 
 		var move_on=1;
-		if ( (AutoDialWaiting == 1) || (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
+		if ( /*(AutoDialWaiting == 1) ||*/ (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
 			{
 			if ((auto_pause_precall == 'Y') && ( (agent_pause_codes_active=='Y') || (agent_pause_codes_active=='FORCE') ) && (AutoDialWaiting == 1) && (VD_live_customer_call!=1) && (alt_dial_active!=1) && (MD_channel_look!=1) && (in_lead_preview_state!=1) )
 				{
@@ -1385,6 +1389,19 @@ function stats_update(){
 	var portabilidade=0;
         function NeWManuaLDiaLCalLSubmiT(tempDiaLnow)
 		{
+                    if (  (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
+			{
+			if ((auto_pause_precall == 'Y') && ( (agent_pause_codes_active=='Y') || (agent_pause_codes_active=='FORCE') ) && (AutoDialWaiting == 1) && (VD_live_customer_call!=1) && (alt_dial_active!=1) && (MD_channel_look!=1) && (in_lead_preview_state!=1) )
+				{
+                                    
+                                }
+                                else
+                                {return;
+                                }
+                        }
+                        if(AutoDialWaiting){
+                        agent_log_id = AutoDial_ReSume_PauSe("VDADpause", '', '', '', '', '1', auto_pause_precall_code);
+            }
 		hideDiv('NeWManuaLDiaLBox');
 		//document.getElementById("debugbottomspan").innerHTML = "DEBUG OUTPUT" + document.vicidial_form.MDPhonENumbeR.value + "|" + active_group_alias;
 
@@ -1902,6 +1919,7 @@ function stats_update(){
                     {
                         segue = 0;
                         alert_box('Tem de estar em pausa para fazer a re-marcação.');
+                        return;
                     }
                     if (AutoDialReady == 1 && auto_dial_level > 0) {
                         agent_log_id = AutoDial_ReSume_PauSe("VDADpause", '', '', '', '', '1', auto_pause_precall_code);
@@ -2319,7 +2337,7 @@ function stats_update(){
 
                 if ((agent_pause_codes_active == 'FORCE') && (temp_reason != 'LOGOUT') && (temp_reason != 'REQUEUE') && (temp_reason != 'DIALNEXT') && (temp_auto != '1'))
                 {
-                    PauseCodeSelectContent_create();
+                    /*PauseCodeSelectContent_create();*/
                 }
                 if (temp_auto == '1')
                 {
@@ -3789,7 +3807,7 @@ function stats_update(){
 	function PauseCodeSelectContent_create()
 		{
 		var move_on=1;
-		if ( (AutoDialWaiting == 1) || (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
+		if ( /*(AutoDialWaiting == 1) ||*/ (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
 			{
 			if ((auto_pause_precall == 'Y') && ( (agent_pause_codes_active=='Y') || (agent_pause_codes_active=='FORCE') ) && (AutoDialWaiting == 1) && (VD_live_customer_call!=1) && (alt_dial_active!=1) && (MD_channel_look!=1) && (in_lead_preview_state!=1) )
 				{
@@ -3814,14 +3832,11 @@ function stats_update(){
 				WaitingForNextStep=1;
 				PauseCode_HTML = '';
 				document.vicidial_form.PauseCodeSelection.value = '';		
-				//var VD_pause_codes_ct_half = parseInt(VD_pause_codes_ct / 2);
 				var loop_ct = 0;
 				while (loop_ct < VD_pause_codes_ct)
 					{
-                    PauseCode_HTML = PauseCode_HTML + "<a href=\"#\" onclick=\"PauseCodeSelect_submit('" + VARpause_codes[loop_ct] + "');return false;\" class=btn >" + VARpause_code_names[loop_ct] + "</a>";
+                    PauseCode_HTML =PauseCode_HTML+ "<a href=\"#\" onclick=\"PauseCodeSelect_submit('" + VARpause_codes[loop_ct] + "');return false;\" class=btn >" + VARpause_code_names[loop_ct] + "</a>";
 					loop_ct++;
-					/*if (loop_ct == VD_pause_codes_ct_half) 
-                        {PauseCode_HTML = PauseCode_HTML + "</span></td><td height=\"300px\" width=\"240px\" valign=\"top\"><span id=PauseCodeSelectB>";}*/
 					}
 
 				if (agent_pause_codes_active=='FORCE')
@@ -3857,7 +3872,7 @@ function stats_update(){
                     return;
                 }
 		var move_on=1;
-		if ( (AutoDialWaiting == 1) || (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
+		if ( /*(AutoDialWaiting == 1) ||*/ (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
 			{
 			if ((auto_pause_precall == 'Y') && ( (agent_pause_codes_active=='Y') || (agent_pause_codes_active=='FORCE') ) && (AutoDialWaiting == 1) && (VD_live_customer_call!=1) && (alt_dial_active!=1) && (MD_channel_look!=1) && (in_lead_preview_state!=1) )
 				{
@@ -4280,43 +4295,25 @@ hideDiv('CallBackSelectBox');
 // Submit the Pause Code 
 	function PauseCodeSelect_submit(newpausecode)
 		{
+                    if (  (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
+			{
+			if ((auto_pause_precall == 'Y') && ( (agent_pause_codes_active=='Y') || (agent_pause_codes_active=='FORCE') ) && (AutoDialWaiting == 1) && (VD_live_customer_call!=1) && (alt_dial_active!=1) && (MD_channel_look!=1) && (in_lead_preview_state!=1) )
+				{
+                                    
+                                }
+                                else
+                                {return;
+                                }
+                        }
 		hideDiv('PauseCodeSelectBox');
 		ShoWGenDerPulldown();
-
+                agent_log_id=AutoDial_ReSume_PauSe('VDADpause');
 		WaitingForNextStep=0;
-
-		var xmlhttp=false;
-		/*@cc_on @*/
-		/*@if (@_jscript_version >= 5)
-		// JScript gives us Conditional compilation, we can cope with old IE versions.
-		// and security blocked creation of the objects.
-		 try {
-		  xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-		 } catch (e) {
-		  try {
-		   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		  } catch (E) {
-		   xmlhttp = false;
-		  }
-		 }
-		@end @*/
-		if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-			{
-			xmlhttp = new XMLHttpRequest();
-			}
-		if (xmlhttp) 
-			{ 
-			VMCpausecode_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&user=" + user + "&pass=" + pass  + "&ACTION=PauseCodeSubmit&format=text&status=" + newpausecode + "&agent_log_id=" + agent_log_id + "&campaign=" + campaign + "&extension=" + extension + "&protocol=" + protocol + "&phone_ip=" + phone_ip + "&enable_sipsak_messages=" + enable_sipsak_messages + "&stage=" + pause_code_counter + "&campaign_cid=" + LastCallCID + "&auto_dial_level=" + starting_dial_level;
-			pause_code_counter++;
-			xmlhttp.open('POST', 'vdc_db_query.php'); 
-			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
-			xmlhttp.send(VMCpausecode_query); 
-			xmlhttp.onreadystatechange = function() 
-				{ 
-				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) 
-					{
-					var check_pause_code = null;
-					var check_pause_code = xmlhttp.responseText;
+pause_code_counter++;
+	VMCpausecode_query = {server_ip:server_ip,session_name: session_name,user:user,pass:pass,ACTION:"PauseCodeSubmit",format:"text",status: newpausecode,agent_log_id: agent_log_id,campaign: campaign,extension: extension ,protocol: protocol ,phone_ip: phone_ip ,enable_sipsak_messages: enable_sipsak_messages,stage: pause_code_counter,campaign_cid: LastCallCID ,auto_dial_level: starting_dial_level};
+			$.post('vdc_db_query.php',VMCpausecode_query,function(data){	
+                            var check_pause_code = null;
+					var check_pause_code = data;
 					var check_PC_array=check_pause_code.split("\n");
 					if (check_PC_array[1] == 'Next agent_log_id:')
 						{
@@ -4324,10 +4321,7 @@ hideDiv('CallBackSelectBox');
                                                     				
                                     document.getElementById("ResumeControl").innerHTML = ResumeControl_auto_ON_HTML;
                                                 }
-					}
-				}
-			delete xmlhttp;
-			}
+                                            });
 		LastCallCID='';
 		scroll(0,0);
 		}
@@ -4686,7 +4680,7 @@ $.post('vdc_db_query.php',CSCupdate_query);
 		
 
 		hideDiv('CloserSelectBox');
-		MainPanelToFront();
+		//MainPanelToFront();
 		CloserSelecting = 0;
 		scroll(0,0);
 		}
@@ -5987,7 +5981,7 @@ loop.stop();
 // Gather and display lead search data
 	function LeadSearchSubmit()
 		{
-    if ((AutoDialWaiting == 1) || (VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1))
+    if (/*(AutoDialWaiting == 1) ||*/ (VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1))
     {
         alert_box("Tem que estar em pausa para pequisar um contacto");
     }
@@ -6200,7 +6194,7 @@ $(document).on("click",".leadSearchCall",function(){
                     return;
                 }
 		var move_on=1;
-		if ( (AutoDialWaiting == 1) || (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
+		if (  (VD_live_customer_call==1) || (alt_dial_active==1) || (MD_channel_look==1) || (in_lead_preview_state==1) )
 			{
 			if ((auto_pause_precall == 'Y') && ( (agent_pause_codes_active=='Y') || (agent_pause_codes_active=='FORCE') ) && (AutoDialWaiting == 1) && (VD_live_customer_call!=1) && (alt_dial_active!=1) && (MD_channel_look!=1) && (in_lead_preview_state!=1) )
 				{
@@ -8560,11 +8554,15 @@ function HotKeys(HKstate)
                 function(data) {
                     var cb_info=data.callback_info;
                     var spot=$("#LeaDInfOSpan");
-                    spot.find("#cb_status").text(cb_info.status);
+                    if(cb_info){
+                    spot.find("#cb_status").text(cb_info.status).closest("div").show();;
                     spot.find("#lead_status").text(cb_info.lead_status);
                     spot.find("#cb_entry_time").text(cb_info.entry_time);
                     spot.find("#cb_date").text(cb_info.callback_time);
                     spot.find("#cb_comment").text(cb_info.comments);
+                    }else{
+                        spot.find("#cb_status").closest("div").hide();
+                    }
                     
                     var lead_info=data.lead_info;
                     var lead_info_spot=spot.find("#lead_info").empty();
@@ -8989,4 +8987,7 @@ $(document).bind("keydown", disableF5);
                             $("#SendDTMF").popover({html:true});
             get_tempo_pausa();
                             
+                            $("#DispoSelectBox .close").on("click",function(){
+                                $(this).text((this.innerText==="+")?"-":"+").closest(".grid-agent").find(".notification-mes").toggle();
+                            });
                         });

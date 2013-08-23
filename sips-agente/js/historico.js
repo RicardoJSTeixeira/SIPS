@@ -28,7 +28,7 @@ $("#CallHistoryStart").on("click",function() {
     }
 
     var move_on = 1;
-    if ((AutoDialWaiting == 1) || (VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1))
+    if ( (VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1))
     {
         if ((auto_pause_precall == 'Y') && ((agent_pause_codes_active == 'Y') || (agent_pause_codes_active == 'FORCE')) && (AutoDialWaiting == 1) && (VD_live_customer_call != 1) && (alt_dial_active != 1) && (MD_channel_look != 1) && (in_lead_preview_state != 1))
         {
@@ -37,7 +37,7 @@ $("#CallHistoryStart").on("click",function() {
         else
         {
             move_on = 0;
-            alert_box("Tem que estar em pausa para fazer chamadas manuais");
+            alert_box("Tem que estar em pausa para ver o Histórico");
         }
     }
     if (document.vicidial_form.lead_id.value.length !== 0)
