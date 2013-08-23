@@ -319,9 +319,7 @@ function update_info()
             $("#rule_target_select").empty();
             $.each(data, function(index, value) {
 
-                  $("#rule_target_select").append(new Option(data[index].id + "--" + data[index].type, data[index].id));//povoar os alvos com os ides e tipos dos elementos
-
-
+                  $("#rule_target_select").append(new Option(data[index].id + "---" + data[index].type, data[index].id));//povoar os alvos com os ides e tipos dos elementos
                   switch (data[index].type)
                   {
                         case "texto":
@@ -444,7 +442,6 @@ function update_info()
 
 function populate_element(tipo, element)
 {
-
       if (element.data("required"))
             $("#item_required").attr('checked', true);
       else
@@ -899,11 +896,11 @@ function insert_element(opcao, element, data)
                   break;
 
       }
+      
       if (data.hidden)
             element.append($("<i>").addClass("icon-eye-close hidden_icon").css("float", "right"));
       else
             element.append($("<i>").addClass("icon-eye-open hidden_icon").css("float", "right"));
-
 
       if (data.required)
             element.append($("<i>").addClass("icon-star required_icon").css("float", "right"));
@@ -1122,8 +1119,7 @@ $("#rule_trigger_select").change(function()
                               var options = "";
                               $.each(dados, function(index1, value1) {
                                     $.each(titulos, function(index2, value2) {
-                                          options += "<option value='" + dados[index1] + ";" + titulos[index2] + "'>" + dados[index1] + ";" + titulos[index2] + "</option>";
-
+                                          options += "<option value='" + dados[index1] + ";" + titulos[index2] + "'>" + dados[index1] + "---" + titulos[index2] + "</option>";
                                     });
                               });
                               $("#rules_valor_select").append(options);
@@ -1133,9 +1129,8 @@ $("#rule_trigger_select").change(function()
                               var options = "";
 
                               $.each(dados, function(index, value) {
-                                    options += "<option value='" + dados[index] + "'>" + dados[index] + "</option>";
-                                    console.log(options);
-                              });
+                                    options += "<option value='" + dados[index] + "'---" + dados[index] + "</option>";
+                                                               });
                               $("#rules_valor_select").append(options);
                         }
 

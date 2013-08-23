@@ -157,16 +157,9 @@ function insert_element(opcao, element, data)
 
 
             case "datepicker":
-                  element.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'}).keypress(function(e) {
-                        e.preventDefault()
-                  }).bind("cut copy paste", function(e) {
-                        e.preventDefault();
-                  });
                   element.find(".label_geral")[0].innerHTML = data.values_text;
                   if (data.required)
                         element.find(".form_datetime").prop("required", true);
-
-
                   element.find(".form_datetime")[0].name = "datepicker," + data.id;
                   break;
       }
@@ -348,16 +341,23 @@ function update_info()
                                       .data("type", "datepicker");
                               item = insert_element("datepicker", item, data[index]);
                               $('#script_div').append(item);
-                              break;
+       break;
+
                   }
 
 
             });
-
+           
+     
             tags();
             rules();
+            $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'}).keypress(function(e) {
+                  e.preventDefault();
+            }).bind("cut copy paste", function(e) {
+                  e.preventDefault();
+            });
       }, "json");
-
+ 
 
 
 
@@ -521,7 +521,7 @@ function rules_work(data)
                   var target = data.id_target.split(",");
                   for (var count2 = 0; count2 < target.length; count2++)
                   {
-                        $("#" + target[count2]).fadeOut(1000);
+                        $("#" + target[count2]).hide();
                   }
                   break;
 
@@ -529,7 +529,7 @@ function rules_work(data)
                   var target = data.id_target.split(",");
                   for (var count2 = 0; count2 < target.length; count2++)
                   {
-                        $("#" + target[count2]).fadeIn(1000);
+                        $("#" + target[count2]).show();
                   }
                   break;
 
