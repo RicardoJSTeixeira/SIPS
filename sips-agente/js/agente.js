@@ -1,5 +1,4 @@
 
-
 // ################################################################################
 // Send Hangup command for Live call connected to phone now to Manager
 	function livehangup_send_hangup(taskvar)
@@ -8980,7 +8979,7 @@ $(document).bind("keydown", disableF5);
                                 }
                             });
                             
-                            setTimeout(function(){AgentsViewOpen('AgentViewSpan', 'open');}, 2000);
+                            //setTimeout(function(){AgentsViewOpen('AgentViewSpan', 'open');}, 2000);
                             
                             $("#CallbacksButtons").tooltip();
                             

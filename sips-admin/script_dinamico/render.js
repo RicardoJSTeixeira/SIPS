@@ -2,7 +2,6 @@
 
 
 var array_id = [];
-
 var tag_regex = /\@([^@]+)\@/g;
 $(function() {
 
@@ -55,7 +54,6 @@ function insert_element(opcao, element, data)
                               element.append($("<input>").attr("type", "radio").prop("required", true).attr("value", radios[count]).attr("id", array_id["radio"] + "radio").attr("name", "radio," + data.id));
                         else
                               element.append($("<input>").attr("type", "radio").attr("value", radios[count]).attr("id", array_id["radio"] + "radio").attr("name", "radio," + data.id));
-
                         element.append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "radio").text(radios[count]).append($("<span>")));
 
                         if (data.dispo === "v")
@@ -94,13 +92,11 @@ function insert_element(opcao, element, data)
                   element = element.find(".multichoice_class");
                   element.append($("<label>").addClass("label_multichoice label_geral").text(data.texto));
                   var multichoices = data.values_text.split(",");
-
                   if (data.required)
                         element.append($("<select>").addClass("multichoice_select").attr("name", "multichoice," + data.id).prop("required", true));
                   else
                         element.append($("<select>").addClass("multichoice_select").attr("name", "multichoice," + data.id));
                   var select = element.find(".multichoice_select");
-
                   var options = "<option value=''>Selecione uma opção</option>";
                   for (var count = 0; count < multichoices.length; count++)
                   {
@@ -123,6 +119,7 @@ function insert_element(opcao, element, data)
 
 
             case "tableradio":
+                  element.find(".label_geral")[0].innerHTML = data.texto;
                   var tr_head = element.find(".tr_head");
                   tr_head.empty();
                   var titulos = data.placeholder.split(",");
@@ -160,7 +157,11 @@ function insert_element(opcao, element, data)
 
 
             case "datepicker":
-                  element.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'}).keypress(function(e){e.preventDefault()}).bind("cut copy paste",function(e) {e.preventDefault();});
+                  element.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'}).keypress(function(e) {
+                        e.preventDefault()
+                  }).bind("cut copy paste", function(e) {
+                        e.preventDefault();
+                  });
                   element.find(".label_geral")[0].innerHTML = data.values_text;
                   if (data.required)
                         element.find(".form_datetime").prop("required", true);
@@ -488,6 +489,20 @@ function rules()
                               }
                               break;
 
+
+                        case "datepicker":
+                              switch (data[index].param1)
+                              {
+
+                                    case "answer":
+                                          $("#" + data[index].id_trigger).bind("change", function()//atribuir os binds a cada value
+                                          {
+                                                rules_work(data[index]);
+                                          }
+                                          );
+                                          break;
+                              }
+                              break;
                   }
 
             });
@@ -567,7 +582,6 @@ $("#myform").on("submit", function(e)
 {
       e.preventDefault();
       var result = $("#myform").serializeArray();
-      console.log(result);
       $.post("requests.php", {action: "save_form_result", id_script: $('#script_selector').val(), results: result}, "json");
 });
 

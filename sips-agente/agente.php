@@ -3387,7 +3387,7 @@ while ($MM_scripts > $h) {
                                                     </span>
                                                     <div class="dropdown-menu">
                                                         <ul>
-                                                            <li><a tabindex="-1" href="#" onclick="AgentsViewOpen('AgentViewSpan', 'open');return false;"><i class="icon-group"></i>Ver Colegas</a></li>
+                                                            <li style="display:none"><a tabindex="-1" href="#" onclick="AgentsViewOpen('AgentViewSpan', 'open');return false;"><i class="icon-group"></i>Ver Colegas</a></li>
                                                             <li id="callsinqueuelink">
                                                                 <?php
                                                                 if ($view_calls_in_queue > 0) {
