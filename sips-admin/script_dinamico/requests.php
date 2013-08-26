@@ -26,7 +26,7 @@ switch ($action) {
         $query = "SELECT * FROM script_dinamico_master";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], name => $row["name"]);
+            $js[] = array(id => $row["id"], name => $row["name"], campaign => explode(",", $row["campaign"]), linha_inbound => explode(",", $row["linha_inbound"]));
         }
         echo json_encode($js);
         break;
@@ -63,7 +63,7 @@ switch ($action) {
         $query = "SELECT * FROM `script_dinamico` WHERE id_script=$id_script and id_page=$id_page order by ordem asc";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => $row["placeholder"], max_length => $row["max_length"], values_text => explode(",", $row["values_text"]), required => $row["required"] == 1, hidden => $row["hidden"] == 1);
+            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => explode(",", $row["placeholder"]), max_length => $row["max_length"], values_text => explode(",", $row["values_text"]), required => $row["required"] == 1, hidden => $row["hidden"] == 1);
         }
         echo json_encode($js);
         break;
@@ -72,7 +72,7 @@ switch ($action) {
         $query = "SELECT * FROM `script_dinamico` WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => $row["placeholder"], max_length => $row["max_length"], values_text => explode(",", $row["values_text"]), required => $row["required"] == 1, hidden => $row["hidden"] == 1);
+            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => explode(",", $row["placeholder"]), max_length => $row["max_length"], values_text => explode(",", $row["values_text"]), required => $row["required"] == 1, hidden => $row["hidden"] == 1);
         }
         echo json_encode($js);
         break;
@@ -82,7 +82,7 @@ switch ($action) {
         $query = "SELECT * FROM `script_rules` WHERE id_trigger=$id_trigger";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], tipo_elemento => $row["tipo_elemento"], id_trigger => $row["id_trigger"], id_trigger2 => $row["id_trigger2"], id_target => $row["id_target"], tipo => $row["tipo"], param1 => $row["param1"], param2 => $row["param2"]);
+            $js[] = array(id => $row["id"], id_script => $row["id_script"], tipo_elemento => $row["tipo_elemento"], id_trigger => $row["id_trigger"], id_trigger2 => explode(",", $row["id_trigger2"]), id_target => explode(",", $row["id_target"]), tipo => $row["tipo"], param1 => $row["param1"], param2 => $row["param2"]);
         }
         echo json_encode($js);
         break;
@@ -93,18 +93,34 @@ switch ($action) {
 
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], tipo_elemento => $row["tipo_elemento"], id_trigger => $row["id_trigger"], id_trigger2 => $row["id_trigger2"], id_target => $row["id_target"], tipo => $row["tipo"], param1 => $row["param1"], param2 => $row["param2"]);
+            $js[] = array(id => $row["id"], id_script => $row["id_script"], tipo_elemento => $row["tipo_elemento"], id_trigger => $row["id_trigger"], id_trigger2 => explode(",", $row["id_trigger2"]), id_target => explode(",", $row["id_target"]), tipo => $row["tipo"], param1 => $row["param1"], param2 => $row["param2"]);
         }
         echo json_encode($js);
         break;
 
 
+    case 'get_campaign':
+        $query = "SELECT  a.campaign_id,b.campaign_name  FROM  vicidial_campaign_statuses a inner join vicidial_campaigns b on a.campaign_id=b.campaign_id and active='y'  group by  campaign_id ";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(id => $row["campaign_id"], name => $row["campaign_name"]);
+        }
+        echo json_encode($js);
+        break;
 
+    case 'get_linha_inbound':
+        $query = "SELECT group_id,group_name FROM vicidial_inbound_groups";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(id => $row["group_id"], name => $row["group_name"]);
+        }
+        echo json_encode($js);
+        break;
     //------------------------------------------------//
     //-----------------EDIT---------------------------//
     //------------------------------------------------//
-    case "edit_script_name":
-        $query = "update script_dinamico_master set name='$name' where id=$id_script";
+    case "edit_script":
+        $query = "update script_dinamico_master set name='$name', campaign='$campaign',linha_inbound='$linha_inbound' where id=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
@@ -144,7 +160,7 @@ switch ($action) {
         break;
 
     case "add_script":
-        $query = "INSERT INTO `asterisk`.`script_dinamico_master` (id,name) VALUES (NULL,'Script novo')";
+        $query = "INSERT INTO `asterisk`.`script_dinamico_master` (id,name,campaign,linha_inbound) VALUES (NULL,'Script novo',0,0)";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;

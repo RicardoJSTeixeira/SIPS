@@ -38,8 +38,6 @@ function insert_element(opcao, element, data)
 
             case "radio":
                   element.empty();
-                  element.append($("<div>").addClass("item radio_class form-inline").attr("id", data.id));
-                  element = element.find(".radio_class");
                   element.append($("<label>").addClass("label_radio label_geral").text($("#radio_edit").val()));
                   element.append($("<br>"));
                   element.find(".label_radio")[0].innerHTML = data.texto;
@@ -61,8 +59,6 @@ function insert_element(opcao, element, data)
 
             case "checkbox":
                   element.empty();
-                  element.append($("<div>").addClass("item checkbox_class form-inline").attr("id", data.id));
-                  element = element.find(".checkbox_class");
                   element.append($("<label>").addClass("label_checkbox label_geral").text($("#checkbox_edit").val()));
                   element.append($("<br>"));
                   element.find(".label_checkbox")[0].innerHTML = data.texto;
@@ -84,8 +80,6 @@ function insert_element(opcao, element, data)
 
             case "multichoice":
                   element.empty();
-                  element.append($("<div>").addClass("item multichoice_class").attr("id", data.id));
-                  element = element.find(".multichoice_class");
                   element.append($("<label>").addClass("label_multichoice label_geral").text(data.texto));
                   var multichoices = data.values_text;
                   if (data.required)
@@ -118,7 +112,7 @@ function insert_element(opcao, element, data)
                   element.find(".label_geral")[0].innerHTML = data.texto;
                   var tr_head = element.find(".tr_head");
                   tr_head.empty();
-                  var titulos = data.placeholder.split(",");
+                  var titulos = data.placeholder;
                   tr_head.append($("<td>").text("*"));
                   for (var count = 0; count < titulos.length; count++)
                   {
@@ -127,6 +121,7 @@ function insert_element(opcao, element, data)
                   var tr_body = element.find(".tr_body");
                   tr_body.empty();
                   var perguntas = data.values_text;
+                  var temp;
                   for (var count = 0; count < perguntas.length; count++)
                   {
                         tr_body.append($("<tr>")
@@ -157,11 +152,8 @@ function insert_element(opcao, element, data)
                   if (data.required)
                         element.find(".form_datetime").prop("required", true);
                   element.find(".form_datetime")[0].name = "datepicker," + data.id;
-
                   break;
       }
-
-
       if (data.hidden)
             element.css("display", "none");
 
@@ -219,7 +211,7 @@ function update_pages()
 }
 function update_info()
 {
-         $(".datetimepicker").remove();
+      $(".datetimepicker").remove();
       $("#page_title").text($("#script_selector option:selected").text() + "---" + $("#page_selector option:selected").text());
 
       $.post("requests.php", {action: "get_data", id_script: $("#script_selector option:selected").val(), id_page: $("#page_selector option:selected").val()},
@@ -326,7 +318,7 @@ function update_info()
             });
             tags();
             rules();
-         
+
             $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'}).keypress(function(e) {
                   e.preventDefault();
             }).bind("cut copy paste", function(e) {
@@ -379,7 +371,7 @@ function rules()
                               switch (this.param1)
                               {
                                     case "value_select":
-                                          var values = this.id_trigger2.split(",");
+                                          var values = this.id_trigger2;
                                           for (var count = 0; count < values.length; count++)
                                           {
                                                 $("#" + this.id_trigger).find("input[value='" + values[count] + "']").bind("click", function()//atribuir os binds a cada value
@@ -397,7 +389,7 @@ function rules()
                               switch (this.param1)
                               {
                                     case "value_select":
-                                          var values = this.id_trigger2.split(",");
+                                          var values = this.id_trigger2;
                                           for (var count = 0; count < values.length; count++)
                                           {
                                                 $("#" + this.id_trigger).find("input[value='" + values[count] + "']").bind("click", function()//atribuir os binds a cada value
@@ -415,7 +407,7 @@ function rules()
                               switch (this.param1)
                               {
                                     case "value_select":
-                                          var values = this.id_trigger2.split(",");
+                                          var values = this.id_trigger2;
                                           for (var count = 0; count < values.length; count++)
                                           {
                                                 $("#" + this.id_trigger).bind("change", function()//atribuir os binds a cada value
@@ -434,7 +426,7 @@ function rules()
                               switch (this.param1)
                               {
                                     case "value_select":
-                                          var linhas = this.id_trigger2.split(",");
+                                          var linhas = this.id_trigger2;
                                           for (var count = 0; count < linhas.length; count++)
                                           {
                                                 var values = linhas[count].split(";");
@@ -452,7 +444,7 @@ function rules()
                                                       rules_work(data[index]);
                                           });
                                           break;
-                             }
+                              }
                               break;
 
 
@@ -478,19 +470,20 @@ function rules_work(data)
       switch (data.tipo)
       {
             case "hide":
-                  var target = data.id_target.split(",");
+                  var target = data.id_target;
                   for (var count2 = 0; count2 < target.length; count2++)
                   {
 
-                        $("#" + target[count2]).hide();
+                        $("#" + target[count2]).fadeOut(400);
                   }
                   break;
 
             case "show":
-                  var target = data.id_target.split(",");
+                  var target = data.id_target;
+
                   for (var count2 = 0; count2 < target.length; count2++)
                   {
-                        $("#" + target[count2]).show();
+                        $("#" + target[count2]).fadeIn(400);
                   }
                   break;
 

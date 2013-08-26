@@ -32,6 +32,20 @@
                   label{
                         display: inline;
                   }
+                  .item .info_icon{
+                        float:right;
+                  }
+                  #add_rule_button
+                  {
+                        margin :5px;
+                  }
+                  legend{
+                        border-bottom: 8px  groove   #a1a1a9;
+                        margin-bottom: 0px;
+
+                  }
+           
+                
             </style>
       </head>
       <body>
@@ -39,19 +53,37 @@
 
 
             <!--DIALOG Da Layout, muda nome -->
-            <div id="dialog_layout" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div id="dialog_layout" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
                   <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h3>Opções do Script</h3>
                   </div>
-                  <div class="modal-body">
+                  <div class="modal-body" style="overflow:0">
                         <div class="formRow">
-                              <label class="control-label label" for="script_name_edit">Nome:</label>
+                              <label class="label label-info" for="script_name_edit">Nome:</label>
 
                               <div class="formRight">
                                     <input maxlength="65" class="span" id="script_name_edit" type="text" placeholder="Novo nome do script" />
                               </div>
                         </div>
+
+
+
+                        <div class="formRow">
+                              <label class="label label-info" >Campanha</label>
+                              <div class="formRight">
+                                    <select id="script_campanha_selector" class="chosen_select"  multiple="multiple"   ></select>
+                              </div> 
+                        </div>
+
+                        <div class="formRow">
+                              <label class="label label-info" >Linha Inbound</label>
+                              <div class="formRight">
+                                    <select id="script_linha_inbound_selector" class="chosen_select"  multiple="multiple"   ></select>
+                              </div> 
+                        </div>
+
+
                         <div class="clear"></div>
                   </div>
                   <div class="modal-footer">
@@ -67,7 +99,7 @@
                   </div>
                   <div class="modal-body">
                         <div class="formRow">
-                              <label class="control-label label" for="script_name_edit">Nome:</label>
+                              <label class="label label-info" for="script_name_edit">Nome:</label>
 
                               <div class="formRight">
                                     <input maxlength="65" class="span" id="pages_name_edit" type="text" placeholder="Novo nome da página" />
@@ -141,19 +173,19 @@
                                                 <!--TEXTO-->
                                                 <div class="editor_layout" id="text_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Texto:</label>
+                                                            <label class="label label-info" >Texto:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span texto_input" id="texto_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Placeholder:</label>
+                                                            <label class="label label-info" >Placeholder:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span texto_input" id="placeholder_edit" type="text" placeholder="Placeholder exemplo" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Tamanho maximo:</label>
+                                                            <label class="label label-info" >Tamanho maximo:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="3" class="texto_input" id="max_length_edit" type="text" placeholder="Numero Máximo de caracteres" />
                                                             </div>
@@ -162,19 +194,19 @@
                                                 <!--RADIO-->
                                                 <div class="editor_layout" id="radio_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Texto:</label>
+                                                            <label class="label label-info" >Texto:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span" id="radio_edit" type="text" placeholder="Texto" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Valores:</label>
+                                                            <label class="label label-info" >Valores:</label>
                                                             <div class="formRight">
                                                                   <textarea id="radio_textarea" rows="4" cols="50"></textarea>
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Disposição:</label>
+                                                            <label class="label label-info" >Disposição:</label>
                                                             <div class="formRight">
                                                                   <input type="radio" id="horiz_radio" name="rdispo" checked="checked">
                                                                   <label class="radio_dispo"  for="horiz_radio"><span></span>Horizontal</label>
@@ -186,19 +218,19 @@
                                                 <!--CHECKBOX-->
                                                 <div class="editor_layout" id="checkbox_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Texto:</label>
+                                                            <label class="label label-info" >Texto:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span" id="checkbox_edit" type="text" placeholder="Texto" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Valores</label>
+                                                            <label class="label label-info" >Valores:</label>
                                                             <div class="formRight">
                                                                   <textarea id="checkbox_textarea" rows="4" cols="50"></textarea>
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Disposição:</label>
+                                                            <label class="label label-info" >Disposição:</label>
                                                             <div class="formRight">
                                                                   <input type="radio" id="horiz_checkbox" name="cdispo" checked="checked">
                                                                   <label class="checkbox_dispo"  for="horiz_checkbox"><span></span>Horizontal</label>
@@ -210,13 +242,13 @@
                                                 <!--MULTICHOISE-->
                                                 <div class="editor_layout" id="multichoice_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Texto:</label>
+                                                            <label class="label label-info" >Texto:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span texto_input" id="multichoice_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Valores:</label>
+                                                            <label class="label label-info" >Valores:</label>
                                                             <div class="formRight">
                                                                   <textarea id="multichoice_textarea" rows="4" cols="50"></textarea>
                                                             </div>
@@ -225,41 +257,39 @@
                                                 <!--TEXTFIELD-->
                                                 <div class="editor_layout" id="textfield_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Texto:</label>
+                                                            <label class="label label-info" >Texto:</label>
 
                                                             <div class="formRight">
                                                                   <input  maxlength="250" class="span textfield_input" id="textfield_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
-
                                                 </div>
                                                 <!--LEGEND-->
                                                 <div class="editor_layout" id="legend_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Texto:</label>
+                                                            <label class="label label-info" >Texto:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="250" class="span legend_input" id="legend_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
-
                                                 </div>
                                                 <!--TABLERADIO-->
                                                 <div class="editor_layout" id="tableradio_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Texto:</label>
+                                                            <label class="label label-info" >Texto:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span tableradio_input" id="tableradio_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >titulos</label>
+                                                            <label class="label label-info" >Titulos:</label>
 
                                                             <div class="formRight">
                                                                   <textarea id="tableradio_th_textarea" rows="4" cols="50"></textarea>
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Perguntas</label>
+                                                            <label class="label label-info" >Perguntas:</label>
 
                                                             <div class="formRight">
                                                                   <textarea id="tableradio_td_textarea" rows="4" cols="50"></textarea>
@@ -269,7 +299,7 @@
                                                 <!--DATEPICKER-->
                                                 <div class="editor_layout" id="datepicker_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Texto:</label>
+                                                            <label class="label label-info" >Texto:</label>
 
                                                             <div class="formRight">
                                                                   <input  maxlength="250" class="span datepicker_input" id="datepicker_edit" type="text" placeholder="Texto exemplo" />
@@ -281,14 +311,14 @@
                                                 <!------------------------------------------------------------------------------>
                                                 <div id="item_edit_comum" style="display:none"> 
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Tag:</label>
+                                                            <label class="label label-info" >Tag:</label>
                                                             <div class="formRight">
                                                                   <label  id="label_tag"></label>
                                                             </div>
                                                       </div>
                                                       <!----------------------------------------------REQUIRED------------------------------------------->
                                                       <div class="formRow required_class" >
-                                                            <label class="control-label label" >Obrigatório:</label>
+                                                            <label class="label label-info" >Obrigatório:</label>
                                                             <div class="formRight">
                                                                   <input  type="checkbox" id="item_required" name="required" value="1">
                                                                   <label for="item_required"><span></span></label>
@@ -297,7 +327,7 @@
                                                       </div>
                                                       <div class="formRow hidden_class" >
                                                             <!-----------------------------HIDDEN-------------------------------------------------------->
-                                                            <label class="control-label label" >Escondido:</label>
+                                                            <label class="label label-info" >Escondido:</label>
                                                             <div class="formRight">
                                                                   <input  type="checkbox" id="item_hidden" name="hidden" value="1">
                                                                   <label for="item_hidden"><span></span></label>
@@ -306,7 +336,7 @@
                                                       </div>
                                                       <!------------------------------------TAGS---------------------------------------------->
                                                       <div class="formRow" >
-                                                            <label class="control-label label" >Tags:</label>
+                                                            <label class="label label-info" >Tags:</label>
                                                             <div class="formRight">
                                                                   <select id="tags_select"></select>
                                                                   <i class="icon-tag" ></i>
@@ -324,7 +354,6 @@
                                                       <button class="btn btn-info" id="cancel_edit">Cancelar</button>
                                                 </div>
                                           </div>
-
                                           <div id="tabs-3">
                                                 <div id="rule_manager" style="display:none,width:auto" >
                                                       <table id="rule_table" style="width:100%" class="table table-mod">
@@ -347,73 +376,66 @@
                                                             <tbody id="rule_manager_list">
                                                             </tbody>
                                                       </table>
-
                                                 </div>
-                                                <button class="btn btn-info span" style="width:95%" id="open_rule_creator">Criar nova regra</button>
 
                                                 <form id="rule_form">
                                                       <div id="rule_creator" style="display:none;">
                                                             <!--TRIGGER-->
                                                             <div class="formRow" >
-                                                                  <label class="control-label label" >Evento:</label>
-
+                                                                  <label class="label label-info" >Evento:</label>
                                                                   <div class="formRight">
                                                                         <select id="rule_trigger_select" ></select>
-
                                                                   </div> 
                                                             </div>
                                                             <div class="formRow rules_valor" id="rules_valor_select_div" style="display:none"  >
-                                                                  <label class="control-label label" >Valores:</label>
-
+                                                                  <label class="label label-info" >Valores:</label>
                                                                   <div class="formRight">
                                                                         <select id="rules_valor_select" class="chosen_select"  multiple="multiple"   ></select>
-
                                                                   </div> 
                                                             </div>
                                                             <div class="formRow rules_valor" id="rules_valor_input_div" style="display:none" >
-                                                                  <label class="control-label label" >Valor:</label>
-
+                                                                  <label class="label label-info" >Valor:</label>
                                                                   <div class="formRight">
                                                                         <input required id="rules_valor_input"  type="text" placeholder="Valor que despoleta o evento" />
                                                                   </div> 
                                                             </div>
                                                             <div class="formRow" >
-                                                                  <label class="control-label label" >Tipo:</label>
-
+                                                                  <label class="label label-info" >Tipo:</label>
                                                                   <div class="formRight">
                                                                         <select id="regra_select">
-
                                                                               <option value="show">Mostrar</option>   
                                                                               <option value="hide" >Esconder</option>
                                                                               <option value="goto">Ir para</option>
-
                                                                         </select>
                                                                   </div> 
                                                             </div>
                                                             <div class="formRow rule_target" >
-                                                                  <label class="control-label label" >Alvo:</label>
-
+                                                                  <label class="label label-info" >Alvo:</label>
                                                                   <div class="formRight">
                                                                         <select  id="rule_target_select" multiple="multiple" class="chosen_select">
 
                                                                         </select>
-
                                                                   </div> 
                                                             </div>
                                                             <div class="formRow" id="go_to_div" style="display:none" >
-                                                                  <label class="control-label label" >Ir para:</label>
-
+                                                                  <label class="label label-info" >Ir para:</label>
                                                                   <div class="formRight">
                                                                         <select id="go_to_select" ></select>
                                                                   </div> 
                                                             </div>
                                                             <div class="clear"></div>
-                                                            <div class="modal-footer ">
-                                                                  <button class="btn" id="add_rule_button">Adicionar</button>
-                                                            </div>
+
+                                                            <div class="pull-right formRight">          <button class="btn btn-large btn-warning" id="add_rule_button">Adicionar</button>                              </div>
+
+
+                                                            <div class="clear"></div>
+
+
                                                       </div>
                                                 </form>
-
+                                                <div class="modal-footer ">
+                                                      <button class="btn btn-info"  id="open_rule_creator">Criar nova regra</button>
+                                                </div>
 
                                           </div><!--TAB 3-->
 
