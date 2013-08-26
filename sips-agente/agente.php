@@ -3341,7 +3341,7 @@ while ($MM_scripts > $h) {
             var ResumeControl_auto_ON_HTML = "<td style='cursor:pointer' onClick=\"AutoDial_ReSume_PauSe('VDADready');\"><i class=\"fam-control-play\"></i></td><td onClick=\"AutoDial_ReSume_PauSe('VDADready');\" style='cursor:pointer'><a href='#' >Retomar</a></td></tr>";
             var ResumeControl_auto_OFF_HTML = "<td><i class=\"fam-control-play-blue\"></i></td><td>Retomar</td>";
             
-            var PauseControl_auto_ON_HTML = "<td onclick=\"AutoDial_ReSume_PauSe('VDADpause');\" style='cursor:pointer'><i class=\"fam-control-stop\"></i></td><td onclick=\"AutoDial_ReSume_PauSe('VDADpause');\" style='cursor:pointer'><a href=\"#\" >Pausa</a></td></tr>";
+            var PauseControl_auto_ON_HTML = "<td onclick=\"PauseCodeSelectContent_create();\" style='cursor:pointer'><i class=\"fam-control-stop\"></i></td><td onclick=\"PauseCodeSelectContent_create();\" style='cursor:pointer'><a href=\"#\" >Pausa</a></td></tr>";
             var PauseControl_auto_OFF_HTML = "<td><i class=\"fam-control-stop-blue\"></i></td><td>Pausa</td>";
             
             var HangupControl_auto_ON_HTML = "<td onclick='dialedcall_send_hangup();' style='cursor:pointer' ><i class=\"fam-control-eject\"/></td><td onclick='dialedcall_send_hangup();' style='cursor:pointer'><a href='#'>Desligar</a></td>";
@@ -3387,7 +3387,7 @@ while ($MM_scripts > $h) {
                                                     </span>
                                                     <div class="dropdown-menu">
                                                         <ul>
-                                                            <li><a tabindex="-1" href="#" onclick="AgentsViewOpen('AgentViewSpan', 'open');return false;"><i class="icon-group"></i>Ver Colegas</a></li>
+                                                            <li style="display:none"><a tabindex="-1" href="#" onclick="AgentsViewOpen('AgentViewSpan', 'open');return false;"><i class="icon-group"></i>Ver Colegas</a></li>
                                                             <li id="callsinqueuelink">
                                                                 <?php
                                                                 if ($view_calls_in_queue > 0) {
@@ -4456,6 +4456,7 @@ if ($enable_xfer_presets == 'ENABLED') {
                     <div style="overflow-y:auto; z-index:<?= ++$zi ?>; width:60%;margin-left: -30%;" class='grid-agent' id="DispoSelectBox">
                         <div class="modal-header box_title label-info">
                             Resultado da Chamada:<strong id="DispoSelectPhonE"></strong>
+                            <button class="close" style="margin-left:10px">​-</button>​
                             <div class="input-prepend right" style="margin-top:-5px">
                                 <span style='color:black' class="add-on">Filtro</span><input type=text id=dispo_search >
                             </div>
@@ -4879,6 +4880,7 @@ if (($outbound_autodial_active < 1) or ($disable_blended_checkbox > 0) or ($dial
                     <div style="overflow-y:auto;z-index:1001; width:60%;margin-left: -30%;" class="grid-agent"  id="PauseCodeSelectBox" >
                          <div class="modal-header box_title label-info">
                             Seleccione o motivo da pausa
+                            <span class="close" onclick="hideDiv('PauseCodeSelectBox');">&times;</span>
                         </div>
                         <div class="modal-body" id="PauseCodeSelectContent"></div>
                         <input type="hidden" name="PauseCodeSelection" id="PauseCodeSelection" />

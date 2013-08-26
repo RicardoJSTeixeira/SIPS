@@ -8693,22 +8693,20 @@ if ($ACTION == 'SEARCHRESULTSview') {
     }
 
     ##### BEGIN search queries and output #####
-    $allowed_camp = "";
     $is_cloud = mysql_query("SELECT cloud FROM `servers` limit 1;", $link);
-    $is_cloud = mysql_fetch_assoc($allowed_camp);
+    $is_cloud = mysql_fetch_assoc($is_cloud);
     $is_cloud = $is_cloud['cloud'];
     $allowed_camp = "";
     if ($is_cloud == 1) {
-        $current_admin = $_SERVER['PHP_AUTH_USER'];
-        $allowed_camp = mysql_query("SELECT b.allowed_campaigns FROM `vicidial_users` a inner join `vicidial_user_groups` b on a.user_group=b.user_group WHERE a.user='$current_admin';", $link);
+        $allowed_camp = mysql_query("SELECT b.allowed_campaigns FROM `vicidial_users` a inner join `vicidial_user_groups` b on a.user_group=b.user_group WHERE a.user='$user';", $link);
         $allowed_camp = mysql_fetch_assoc($allowed_camp);
-        $allowed_camp = $allowed_camp['b.allowed_campaigns'];
-
-        if (eregi("-ALL-CAMPAIGNS-", $allowed_camp)) {
+        $allowed_camp = $allowed_camp['allowed_campaigns'];
+        $js["query"][]="SELECT b.allowed_campaigns FROM `vicidial_users` a inner join `vicidial_user_groups` b on a.user_group=b.user_group WHERE a.user='$user';";
+        if (preg_match("/-ALL-CAMPAIGNS-/i", $allowed_camp)) {
             $allowed_camp = "";
         } else {
-            $tmp = explode($allowed_camp);
-            foreach ($tmp as $key => $value) {
+            $tmp = explode(" ",$allowed_camp);
+            foreach ($tmp as $value) {
                 $allowed_camp.="'" . trim($value) . "',";
             }
             $allowed_camps2 = "WHERE campaign_id IN (" . rtrim($allowed_camp, ",") . ") ";
@@ -8717,7 +8715,7 @@ if ($ACTION == 'SEARCHRESULTSview') {
     }
 
     $stmt = "select count(*) from vicidial_list a inner join vicidial_lists b on a.list_id=b.list_id where " . mysql_real_escape_string($search_field) . " like '%" . mysql_real_escape_string($search_query) . "%' $allowed_camp;";
-
+    $js["query"][]=$stmt;
     ### LOG INSERTION Search Log Table ###
     $SQL_log = "$stmt|";
     $SQL_log = ereg_replace(';', '', $SQL_log);
@@ -8757,7 +8755,7 @@ if ($ACTION == 'SEARCHRESULTSview') {
         if ($search_result_count) {
             //$stmt = "select first_name,last_name,phone_code,phone_number,status,last_local_call_time,lead_id,city,state,postal_code from vicidial_list where $searchSQL $searchownerSQL $searchmethodSQL order by last_local_call_time desc limit 1000;";
             $stmt = "select first_name,last_name,phone_code,phone_number,status_name as status,last_local_call_time,lead_id,city,state,postal_code from vicidial_list a inner join vicidial_lists b on a.list_id=b.list_id inner join (select status,status_name from vicidial_statuses union all select status,status_name from vicidial_campaign_statuses $allowed_camps2 group by status) c on a.status=c.status where " . mysql_real_escape_string($search_field) . " like '%" . mysql_real_escape_string($search_query) . "%' $allowed_camp order by last_local_call_time desc limit 50;";
-$js["query"]=$stmt;
+            $js["query"][]=$stmt;
             $rslt = mysql_query($stmt, $link);
             if ($mel > 0) {
                 mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00380', $user, $server_ip, $session_name, $one_mysql_log);
@@ -8825,7 +8823,6 @@ if ($ACTION == 'LEADINFOview') {
 			$cb_to_print = mysql_num_rows($rslt);
 			if ($format == 'debug') {echo "|$cb_to_print|$stmt|";
 			}
-                        $cb_status=array();
 			if ($row = mysql_fetch_assoc($rslt)) {
                         $cb_status=array(
                             "status"=>$row["status"],
