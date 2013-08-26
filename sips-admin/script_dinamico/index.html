@@ -28,13 +28,10 @@
                   .leftDiv, .rightDiv {width:120px; float:left; border:1px solid #000; padding:5px; margin:10px; min-height:130px}
                   .leftDiv {margin-left:40px}
                   .item { text-align:center; border:1px solid #EEE; background-color:#FFF;padding:10px;}
-       
                   .helperPick {border:3px dashed #288dd4; text-align:center;width:auto}
                   label{
                         display: inline;
                   }
-
-
             </style>
       </head>
       <body>
@@ -109,8 +106,6 @@
                                     <div class="leftDiv span">
                                     </div> 
                               </div> 
-
-
                         </div> 
 
 
@@ -143,12 +138,8 @@
                                                 </div>
                                           </div>
                                           <div id="tabs-2">
-
-
-
                                                 <!--TEXTO-->
                                                 <div class="editor_layout" id="text_layout_editor" style="display:none">
-
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
                                                             <div class="formRight">
@@ -168,11 +159,8 @@
                                                             </div>
                                                       </div>
                                                 </div>
-
-
                                                 <!--RADIO-->
                                                 <div class="editor_layout" id="radio_layout_editor" style="display:none">
-
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
                                                             <div class="formRight">
@@ -195,9 +183,6 @@
                                                             </div>
                                                       </div>
                                                 </div>
-
-
-
                                                 <!--CHECKBOX-->
                                                 <div class="editor_layout" id="checkbox_layout_editor" style="display:none">
                                                       <div class="formRow" >
@@ -214,7 +199,6 @@
                                                       </div>
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Disposição:</label>
-
                                                             <div class="formRight">
                                                                   <input type="radio" id="horiz_checkbox" name="cdispo" checked="checked">
                                                                   <label class="checkbox_dispo"  for="horiz_checkbox"><span></span>Horizontal</label>
@@ -223,8 +207,6 @@
                                                             </div>
                                                       </div>
                                                 </div>
-
-
                                                 <!--MULTICHOISE-->
                                                 <div class="editor_layout" id="multichoice_layout_editor" style="display:none">
                                                       <div class="formRow" >
@@ -240,8 +222,6 @@
                                                             </div>
                                                       </div>
                                                 </div>
-
-
                                                 <!--TEXTFIELD-->
                                                 <div class="editor_layout" id="textfield_layout_editor" style="display:none">
                                                       <div class="formRow" >
@@ -253,19 +233,16 @@
                                                       </div>
 
                                                 </div>
-
                                                 <!--LEGEND-->
                                                 <div class="editor_layout" id="legend_layout_editor" style="display:none">
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Texto:</label>
-
                                                             <div class="formRight">
                                                                   <input  maxlength="250" class="span legend_input" id="legend_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
 
                                                 </div>
-
                                                 <!--TABLERADIO-->
                                                 <div class="editor_layout" id="tableradio_layout_editor" style="display:none">
                                                       <div class="formRow" >
@@ -274,34 +251,21 @@
                                                                   <input  maxlength="65" class="span tableradio_input" id="tableradio_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
-
-
                                                       <div class="formRow" >
                                                             <label class="control-label label" >titulos</label>
 
                                                             <div class="formRight">
                                                                   <textarea id="tableradio_th_textarea" rows="4" cols="50"></textarea>
                                                             </div>
-
                                                       </div>
-
-
-
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Perguntas</label>
 
                                                             <div class="formRight">
                                                                   <textarea id="tableradio_td_textarea" rows="4" cols="50"></textarea>
                                                             </div>
-
-
-
-
                                                       </div>
-
-
                                                 </div>
-
                                                 <!--DATEPICKER-->
                                                 <div class="editor_layout" id="datepicker_layout_editor" style="display:none">
                                                       <div class="formRow" >
@@ -311,14 +275,11 @@
                                                                   <input  maxlength="250" class="span datepicker_input" id="datepicker_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
-
                                                 </div>
                                                 <!------------------------------------------------------------------------------>
                                                 <!-------------------------COMUM A TODOS OS ELEMENTOS-------------------------->
                                                 <!------------------------------------------------------------------------------>
-
                                                 <div id="item_edit_comum" style="display:none"> 
-
                                                       <div class="formRow" >
                                                             <label class="control-label label" >Tag:</label>
                                                             <div class="formRight">
@@ -328,19 +289,19 @@
                                                       <!----------------------------------------------REQUIRED------------------------------------------->
                                                       <div class="formRow required_class" >
                                                             <label class="control-label label" >Obrigatório:</label>
-
                                                             <div class="formRight">
                                                                   <input  type="checkbox" id="item_required" name="required" value="1">
                                                                   <label for="item_required"><span></span></label>
+                                                                  <i class="icon-star"></i>
                                                             </div>
                                                       </div>
                                                       <div class="formRow hidden_class" >
                                                             <!-----------------------------HIDDEN-------------------------------------------------------->
                                                             <label class="control-label label" >Escondido:</label>
-
                                                             <div class="formRight">
                                                                   <input  type="checkbox" id="item_hidden" name="hidden" value="1">
                                                                   <label for="item_hidden"><span></span></label>
+                                                                  <i class="icon-eye-open">​</i> / <i class="icon-eye-close">​</i>
                                                             </div>
                                                       </div>
                                                       <!------------------------------------TAGS---------------------------------------------->
@@ -357,16 +318,14 @@
                                                             </div>
                                                       </div>
                                                 </div>
-
-
                                                 <div class="clear"></div>
                                                 <div class="modal-footer footer_save_cancel">
                                                       <button class="btn btn-info" id="save_edit">Guardar</button>
                                                       <button class="btn btn-info" id="cancel_edit">Cancelar</button>
                                                 </div>
                                           </div>
-                                          <div id="tabs-3">
 
+                                          <div id="tabs-3">
                                                 <div id="rule_manager" style="display:none,width:auto" >
                                                       <table id="rule_table" style="width:100%" class="table table-mod">
                                                             <thead>
@@ -383,29 +342,17 @@
                                                                         <td>
                                                                               Opções
                                                                         </td>
-
                                                                   </tr>
-
                                                             </thead>
                                                             <tbody id="rule_manager_list">
-
                                                             </tbody>
                                                       </table>
 
-                                                      <div class="modal-footer footer_rule_save_cancel ">
-                                                            <button class="btn btn-info" id="open_rule_creator">Criar nova regra</button>
-                                                      </div>
-
                                                 </div>
-
-
+                                                <button class="btn btn-info span" style="width:95%" id="open_rule_creator">Criar nova regra</button>
 
                                                 <form id="rule_form">
-
-
                                                       <div id="rule_creator" style="display:none;">
-
-
                                                             <!--TRIGGER-->
                                                             <div class="formRow" >
                                                                   <label class="control-label label" >Evento:</label>
@@ -415,8 +362,6 @@
 
                                                                   </div> 
                                                             </div>
-
-
                                                             <div class="formRow rules_valor" id="rules_valor_select_div" style="display:none"  >
                                                                   <label class="control-label label" >Valores:</label>
 
@@ -425,7 +370,6 @@
 
                                                                   </div> 
                                                             </div>
-
                                                             <div class="formRow rules_valor" id="rules_valor_input_div" style="display:none" >
                                                                   <label class="control-label label" >Valor:</label>
 
@@ -433,12 +377,6 @@
                                                                         <input required id="rules_valor_input"  type="text" placeholder="Valor que despoleta o evento" />
                                                                   </div> 
                                                             </div>
-
-
-
-
-
-
                                                             <div class="formRow" >
                                                                   <label class="control-label label" >Tipo:</label>
 
@@ -452,8 +390,6 @@
                                                                         </select>
                                                                   </div> 
                                                             </div>
-
-
                                                             <div class="formRow rule_target" >
                                                                   <label class="control-label label" >Alvo:</label>
 
@@ -464,9 +400,6 @@
 
                                                                   </div> 
                                                             </div>
-
-
-
                                                             <div class="formRow" id="go_to_div" style="display:none" >
                                                                   <label class="control-label label" >Ir para:</label>
 
@@ -474,27 +407,22 @@
                                                                         <select id="go_to_select" ></select>
                                                                   </div> 
                                                             </div>
-
-
                                                             <div class="clear"></div>
                                                             <div class="modal-footer ">
                                                                   <button class="btn" id="add_rule_button">Adicionar</button>
                                                             </div>
                                                       </div>
                                                 </form>
-                                          </div>
 
+
+                                          </div><!--TAB 3-->
 
 
                                     </div>
                               </div>  
-
-
                         </div>
                   </div> 
             </div> 
-
-
             <script type="text/javascript" src="script_dinamico.js"></script>
       </body>
 </html>

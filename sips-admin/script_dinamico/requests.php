@@ -63,7 +63,7 @@ switch ($action) {
         $query = "SELECT * FROM `script_dinamico` WHERE id_script=$id_script and id_page=$id_page order by ordem asc";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => $row["placeholder"], max_length => $row["max_length"], values_text => $row["values_text"], required => $row["required"] == 1, hidden => $row["hidden"] == 1);
+            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => $row["placeholder"], max_length => $row["max_length"], values_text => explode(",", $row["values_text"]), required => $row["required"] == 1, hidden => $row["hidden"] == 1);
         }
         echo json_encode($js);
         break;
@@ -72,7 +72,7 @@ switch ($action) {
         $query = "SELECT * FROM `script_dinamico` WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => $row["placeholder"], max_length => $row["max_length"], values_text => $row["values_text"], required => $row["required"] == 1, hidden => $row["hidden"] == 1);
+            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => $row["placeholder"], max_length => $row["max_length"], values_text => explode(",", $row["values_text"]), required => $row["required"] == 1, hidden => $row["hidden"] == 1);
         }
         echo json_encode($js);
         break;

@@ -14,7 +14,7 @@ and open the template in the editor.
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
             <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
             <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
-    <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
 
             <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
             <script type="text/javascript" src="/jquery/jqueryUI/jquery-ui-1.10.2.custom.min.js"></script>
@@ -23,23 +23,50 @@ and open the template in the editor.
             <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
             <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
             <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
-            
-            
-               <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+
+
+            <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
             <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt-BR.js"></script>
-            
+
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
             <style>
-                  .item { text-align:center;  background-color:#FFF;padding:10px;}
+                  .item 
+                  { text-align:center; 
+                    background-color:#FAFAFA;
+                    padding:5px;
+                    border: 2px solid #F0F0F0 ;
+                  font-size:140%;}
+                  
+                  legend{
+                        border-bottom: 8px  groove   #a1a1a9;
+
+                  }
+                  label
+                  {
+                        display:inline;                       
+                  }
+                  #page_title
+
+                  {
+                        background-color:#E1E1F1;
+                        padding:4px;
+                        text-align: center;
+                        font-size:170%;
+                        display:block;
+                        margin: 0 auto;
+                  }
+                  .modal-footer{
+                        font-size:170%;
+                        text-align: center;
+                  }
 
             </style>
       </head>
 
       <body>
             <div class="grid-title">
-                  <div class="pull-left">Páginas<select id="page_selector" ></select></div>
-                  <div class="pull-right">Scripts<select id="script_selector"></select></div>
+                  <span id="page_title"></span>
             </div>
             <div id="dummie" style="display:none">
 
@@ -49,8 +76,11 @@ and open the template in the editor.
                         <div id="script_div"  style="width:85%;margin:0 auto;" >
                         </div>   
                   </div>
-                  <div class="modal-footer ">
-                        <button  class="btn btn-large btn-info"  id="submit_button" style="width:100%" >Submit</button>
+                  <div class="modal-footer " >
+                        <div class="pull-left">Página<select id="page_selector" ></select></div>
+                        <div class="pull-right">Script<select id="script_selector"></select></div>
+                        <button  class="btn btn-large  btn-info"  id="submit_button" style="width:85%; " >Submit</button>
+
                   </div>
             </form>
             <script type="text/javascript" src="render.js"></script>

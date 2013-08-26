@@ -3,7 +3,7 @@
 ////////TO BE DONE//////////////////
 
 //relatorio
-//fazer explode dos values_Text no php e vir ja em array
+
 
 
 //forms ->http://www.javaworld.com/jw-06-1996/jw-06-javascript.html?page=2
@@ -15,7 +15,7 @@
  test
  */
 
-//por time
+
 
 
 var selected_id = 0;
@@ -45,14 +45,13 @@ function editor_toggle(tipo)
       }
       if (tipo === "off")
       {
+            $("#open_rule_creator").prop('disabled', true);
             $(".editor_layout").hide();
             $("#item_edit_comum").hide();
             $("#rule_manager").hide();
             $(".footer_save_cancel button").prop('disabled', true);
       }
-
 }
-
 
 
 //FOOTER EDIT BUTTONS
@@ -65,13 +64,10 @@ $("#save_edit").click(function()
       editor_toggle("off");
       edit_element(selected_type, $("#" + selected_id), 0);
 });
-
 $("#tags_select").change(function()
 {
       $("#tag_label").text("§" + $(this).val() + "§");
 });
-
-
 $("#regra_select").change(function()
 {
       if ($(this).val() === "goto")
@@ -86,16 +82,11 @@ $("#regra_select").change(function()
 });
 
 $(function() {
-
       $("#tabs").tabs();
       array_id["radio"] = 0;
       array_id["checkbox"] = 0;
-
       $.get("items.html", function(data) {
             $("#rigth_list").html(data);
-            $(".footer_save_cancel button").prop('disabled', true);
-            $("#rule_manager").hide();
-            $(".footer_rule_save_cancel button").prop('disabled', true);
             $(".rightDiv .item").draggable({
                   helper: function(ev, ui) {
                         return "<span class='helperPick'>" + $(this).html() + "</span>";
@@ -164,16 +155,13 @@ $(function() {
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("datepicker_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", $(this).data().uiSortable.currentItem.index(), "h", "datepicker", 0, 0, $(".rightDiv .label_datepicker")[0].innerHTML, 0, 0);
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_datepicker")[0].innerHTML, 0, 0, 0, 0, 0);
                         }
                         editor_toggle("off");
                   }
             });
             update_script();
-
             item_database("get_tag_fields", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-            
-           
       });
       $(document).on("click", ".element", function(e) {
             selected_id = $(this).data("id");
@@ -232,9 +220,6 @@ $(function() {
             rules_database("get_rules_by_trigger", 0, 0, 0, selected_id, 0, 0, 0, 0, 0);
       });
       editor_toggle("off");
-
-
-
 });
 
 
@@ -263,7 +248,7 @@ function update_script()
                   $("#opcao_script_button").prop('disabled', false);
                   $("#script_selector").empty();
                   $.each(data, function(index, value) {
-                        $("#script_selector").append("<option value=" + data[index].id + ">" + data[index].name + "</option>");
+                        $("#script_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
                   });
                   update_pages();
             }
@@ -294,12 +279,12 @@ function update_pages()
                   $("#go_to_select").empty();
 
                   $.each(data, function(index, value) {
-                        if (pag === data[index].id)
-                              $("#page_selector").append("<option value=" + data[index].id + " selected>" + data[index].name + "</option>");
+                        if (pag === this.id)
+                              $("#page_selector").append("<option value=" + this.id + " selected>" + this.name + "</option>");
                         else
-                              $("#page_selector").append("<option value=" + data[index].id + ">" + data[index].name + "</option>");
+                              $("#page_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
 
-                        $("#go_to_select").append(new Option(data[index].name, "pag," + data[index].id));
+                        $("#go_to_select").append(new Option(this.name, "pag," + this.id));
                   });
                   update_info();
             }
@@ -319,113 +304,113 @@ function update_info()
             $("#rule_target_select").empty();
             $.each(data, function(index, value) {
 
-                  $("#rule_target_select").append(new Option(data[index].id + "---" + data[index].type, data[index].id));//povoar os alvos com os ides e tipos dos elementos
-                  switch (data[index].type)
+                  $("#rule_target_select").append(new Option(this.id + "---" + this.type, this.id));//povoar os alvos com os ides e tipos dos elementos
+                  switch (this.type)
                   {
                         case "texto":
                               var item = $('.rightDiv .texto_class').clone();
-                              item.attr("id", data[index].id)
-                                      .data("id", data[index].id)
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
                                       .addClass("element")
-                                      .data("required", data[index].required)
-                                      .data("hidden", data[index].hidden)
+                                      .data("required", this.required)
+                                      .data("hidden", this.hidden)
                                       .data("type", "texto");
-                              insert_element("texto", item, data[index]);
+                              insert_element("texto", item, this);
                               item.appendTo('.leftDiv');
                               break;
 
                         case "pagination":
                               var item = $('.rightDiv .pagination_class').clone();
-                              item.attr("id", data[index].id)
-                                      .data("id", data[index].id)
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
                                       .addClass("element")
                                       .data("type", "pagination");
-                              insert_element("pagination", item, data[index]);
+                              insert_element("pagination", item, this);
                               item.appendTo('.leftDiv');
                               break;
 
                         case "radio":
                               var item = $('.rightDiv .radio_class').clone();
-                              item.attr("id", data[index].id)
-                                      .data("id", data[index].id)
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
                                       .addClass("element")
-                                      .data("required", data[index].required)
-                                      .data("hidden", data[index].hidden)
+                                      .data("required", this.required)
+                                      .data("hidden", this.hidden)
                                       .data("type", "radio")
-                                      .data("dispo", data[index].dispo);
-                              insert_element("radio", item, data[index]);
+                                      .data("dispo", this.dispo);
+                              insert_element("radio", item, this);
                               item.appendTo('.leftDiv');
                               break;
 
                         case "checkbox":
                               var item = $('.rightDiv .checkbox_class').clone();
-                              item.attr("id", data[index].id)
-                                      .data("id", data[index].id)
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
                                       .addClass("element")
-                                      .data("required", data[index].required)
-                                      .data("hidden", data[index].hidden)
-                                      .data("dispo", data[index].dispo)
+                                      .data("required", this.required)
+                                      .data("hidden", this.hidden)
+                                      .data("dispo", this.dispo)
                                       .data("type", "checkbox");
-                              insert_element("checkbox", item, data[index]);
+                              insert_element("checkbox", item, this);
                               item.appendTo('.leftDiv');
                               break;
 
                         case "multichoice":
                               var item = $('.rightDiv .multichoice_class').clone();
-                              item.attr("id", data[index].id)
-                                      .data("id", data[index].id)
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
                                       .addClass("element")
-                                      .data("required", data[index].required)
-                                      .data("hidden", data[index].hidden)
+                                      .data("required", this.required)
+                                      .data("hidden", this.hidden)
                                       .data("type", "multichoice");
-                              insert_element("multichoice", item, data[index]);
+                              insert_element("multichoice", item, this);
                               item.appendTo('.leftDiv');
                               break;
 
                         case "textfield":
                               var item = $('.rightDiv .textfield_class').clone();
-                              item.attr("id", data[index].id)
-                                      .data("id", data[index].id)
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
                                       .addClass("element")
-                                      .data("required", data[index].required)
-                                      .data("hidden", data[index].hidden)
+                                      .data("required", this.required)
+                                      .data("hidden", this.hidden)
                                       .data("type", "textfield");
-                              insert_element("textfield", item, data[index]);
+                              insert_element("textfield", item, this);
                               item.appendTo('.leftDiv');
                               break;
                         case "legend":
                               var item = $('.rightDiv .legend_class').clone();
-                              item.attr("id", data[index].id)
-                                      .data("id", data[index].id)
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
                                       .addClass("element")
-                                      .data("required", data[index].required)
-                                      .data("hidden", data[index].hidden)
+                                      .data("required", this.required)
+                                      .data("hidden", this.hidden)
                                       .data("type", "legend");
-                              insert_element("legend", item, data[index]);
+                              insert_element("legend", item, this);
                               item.appendTo('.leftDiv');
                               break;
 
                         case "tableradio":
                               var item = $('.rightDiv .tableradio_class').clone();
-                              item.attr("id", data[index].id)
-                                      .data("id", data[index].id)
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
                                       .addClass("element")
-                                      .data("required", data[index].required)
-                                      .data("hidden", data[index].hidden)
+                                      .data("required", this.required)
+                                      .data("hidden", this.hidden)
                                       .data("type", "tableradio");
-                              insert_element("tableradio", item, data[index]);
+                              insert_element("tableradio", item, this);
                               item.appendTo('.leftDiv');
                               break;
 
                         case "datepicker":
                               var item = $('.rightDiv .datepicker_class').clone();
-                              item.attr("id", data[index].id)
-                                      .data("id", data[index].id)
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
                                       .addClass("element")
-                                      .data("required", data[index].required)
-                                      .data("hidden", data[index].hidden)
+                                      .data("required", this.required)
+                                      .data("hidden", this.hidden)
                                       .data("type", "datepicker");
-                              insert_element("datepicker", item, data[index]);
+                              insert_element("datepicker", item, this);
                               item.appendTo('.leftDiv');
                               break;
                   }
@@ -542,7 +527,7 @@ function populate_element(tipo, element)
 
                   $("#tabs").tabs("disable", 2);
                   $("#rule_manager").hide();
-                  $(".footer_rule_save_cancel button").prop('disabled', true);
+                  $("#open_rule_creator").prop('disabled', true);
                   $(".required_class").hide();
                   $("#textfield_edit").val(element.find(".label_geral")[0].innerHTML);
                   break;
@@ -551,7 +536,7 @@ function populate_element(tipo, element)
 
                   $("#tabs").tabs("disable", 2);
                   $("#rule_manager").hide();
-                  $(".footer_rule_save_cancel button").prop('disabled', true);
+                  $("#open_rule_creator").prop('disabled', true);
                   $(".required_class").hide();
                   $("#legend_edit").val(element.find(".label_geral")[0].innerHTML);
                   break;
@@ -749,7 +734,7 @@ function edit_element(opcao, element, data)
                         element.data("required", "0");
                   $("#datepicker_edit").val($("#datepicker_edit").val().replace(regex_replace_textbox_tag, ''));
                   element.find(".label_geral")[0].innerHTML = $("#datepicker_edit").val();
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", element.index(), "h", "datepicker", 0, 0, $("#datepicker_edit").val(), $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", element.index(), "h", $("#datepicker_edit").val(), 0, 0, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   break;
 
       }
@@ -802,7 +787,7 @@ function insert_element(opcao, element, data)
                   element.append($("<label>").addClass("label_radio label_geral").text($("#radio_edit").val()));
                   element.append($("<br>"));
                   element.find(".label_radio")[0].innerHTML = data.texto;
-                  var radios = data.values_text.split(",");
+                  var radios = data.values_text;
                   for (var count = 0; count < radios.length; count++)
                   {
                         element.append($("<input>")
@@ -827,7 +812,7 @@ function insert_element(opcao, element, data)
                   element.append($("<label>").addClass("label_checkbox label_geral").text($("#checkbox_edit").val()));
                   element.append($("<br>"));
                   element.find(".label_checkbox")[0].innerHTML = data.texto;
-                  var checkboxs = data.values_text.split(",");
+                  var checkboxs = data.values_text;
                   for (var count = 0; count < checkboxs.length; count++)
                   {
                         element.append($("<input>").attr("type", "checkbox").attr("value", count + 1).attr("id", array_id["checkbox"] + "checkbox").attr("name", data.id));
@@ -842,7 +827,7 @@ function insert_element(opcao, element, data)
             case "multichoice":
                   element.empty();
                   element.append($("<label>").addClass("label_multichoice label_geral").text(data.texto));
-                  var multichoices = data.values_text.split(",");
+                  var multichoices = data.values_text;
                   element.append($("<select>").addClass("multichoice_select"));
                   var select = element.find(".multichoice_select");
                   var options = "";
@@ -873,7 +858,7 @@ function insert_element(opcao, element, data)
                   }
                   var tr_body = element.find(".tr_body");
                   tr_body.empty();
-                  var perguntas = data.values_text.split(",");
+                  var perguntas = data.values_text;
                   var temp = 0;
                   for (var count = 0; count < perguntas.length; count++)
                   {
@@ -892,11 +877,11 @@ function insert_element(opcao, element, data)
 
             case "datepicker":
                   element.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
-                  element.find(".label_geral")[0].innerHTML = data.values_text;
+                  element.find(".label_geral")[0].innerHTML = data.texto;
                   break;
 
       }
-      
+
       if (data.hidden)
             element.append($("<i>").addClass("icon-eye-close hidden_icon").css("float", "right"));
       else
@@ -937,7 +922,7 @@ function item_database(opcao, Id, Id_script, Id_page, Type, Ordem, Dispo, Texto,
             {
                   $("#tag_label").text("§" + data[0].value + "§");
                   $.each(data, function(index, value) {
-                        $("#tags_select").append("<option value='" + data[index].value + "'>" + data[index].name + "</option>");
+                        $("#tags_select").append("<option value='" + this.value + "'>" + this.name + "</option>");
                   });
             }
 
@@ -1111,7 +1096,7 @@ $("#rule_trigger_select").change(function()
                   function(data)
                   {
 
-                        var dados = data[0].values_text.split(",");
+                        var dados = data[0].values_text;
 
                         if (selected_type === "tableradio")
                         {
@@ -1129,8 +1114,10 @@ $("#rule_trigger_select").change(function()
                               var options = "";
 
                               $.each(dados, function(index, value) {
-                                    options += "<option value='" + dados[index] + "'---" + dados[index] + "</option>";
-                                                               });
+
+                                    options += "<option value='" + this + "'>" + this + "</option>";
+                              });
+
                               $("#rules_valor_select").append(options);
                         }
 
@@ -1171,14 +1158,14 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
 
                   $.each(data, function(index, value) {
                         $("#rule_table").show();
-                        if (data[index].id_trigger2 == "0")
-                              data[index].id_trigger2 = "resposta";
+                        if (this.id_trigger2 == "0")
+                              this.id_trigger2 = "resposta";
 
                         $("#rule_manager_list").append($("<tr>")
-                                .append($("<td>").text(data[index].id_trigger2))
-                                .append($("<td>").text(data[index].tipo))
-                                .append($("<td>").text(data[index].id_target))
-                                .append($("<td>").append($("<button>").addClass("icon-remove rule_delete_icon btn").data("id", data[index].id).data("id_trigger", data[index].id_trigger)))
+                                .append($("<td>").text(this.id_trigger2))
+                                .append($("<td>").text(this.tipo))
+                                .append($("<td>").text(this.id_target))
+                                .append($("<td>").append($("<button>").addClass("icon-remove rule_delete_icon btn").data("id", this.id).data("id_trigger", this.id_trigger)))
                                 );
                   });
 
@@ -1205,6 +1192,7 @@ $("#open_rule_creator").click(function()//Fecha o dialog e grava as alterações
 
 $("#add_rule_button").click(function()
 {
+
       switch (selected_type)
       {
             case "texto":
@@ -1271,7 +1259,7 @@ $("#add_rule_button").click(function()
                                     rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val().join(","), 0, $("#regra_select").val(), "value_select", $("#go_to_select").val());
                               break;
                   }
-
+                  break;
 
             case "datepicker":
                   switch ($("#rule_trigger_select").val())
@@ -1283,6 +1271,7 @@ $("#add_rule_button").click(function()
                                     rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, 0, 0, $("#regra_select").val(), "answer", $("#go_to_select").val());
                               break;
                   }
+                  break;
       }
 
 
