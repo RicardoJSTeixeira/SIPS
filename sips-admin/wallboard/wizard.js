@@ -407,16 +407,17 @@ $(function() {
                   feedbacks = "'" + feedbacks + "'";
                   var limit = 10;
                   if ($("#resultado_datatable_1").prop('checked'))
+                        limit = 15;
+                  if ($("#resultado_datatable_2").prop('checked'))
                         limit = 10;
-                  else
+                  if ($("#resultado_datatable_3").prop('checked'))
                         limit = 5;
-
 
                   var mode = 1;
                   if ($("#resultado_datatable_1_tipo").prop('checked'))
                         mode = 1;
                   else if ($("#resultado_datatable_2_tipo").prop('checked'))
-                        mode = 2
+                        mode = 2;
                   else if ($("#resultado_datatable_3_tipo").prop('checked'))
                         mode = 3;
 

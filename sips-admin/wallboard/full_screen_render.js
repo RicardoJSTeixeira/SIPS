@@ -770,7 +770,7 @@ function   dataTable_top(data)
                   var tbody = $("#tbody_id" + wbe[0]);
                   tbody.empty();
                   var letter_size = +panel.data().letter_size_datatop;
-
+ 
                   $.each(data, function(index, value) {
 //calculo do TMA de segundos para hora:minuto:segundo
                         var totalSec = +data[index].tma;
@@ -787,12 +787,11 @@ function   dataTable_top(data)
                               var result = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
                         if (+data[index].count_feedbacks > 0)
                         {
-
                               tbody.append($("<tr>").css("font-size", letter_size + "em")
                                       .append($("<td>").text(data[index].user))
                                       .append($("<td>").text(data[index].count_feedbacks).css("text-align", "center"))
                                       .append($("<td>").text(result)));
-                              letter_size = letter_size - 0.07;
+                              letter_size = letter_size - 0.03;
 
                         }
                   });
@@ -806,15 +805,11 @@ function   dataTable_top(data)
 
 function secondstotime(seconds)
 {
-
       var numminutes = Math.floor(((seconds) % 3600) / 60);
       var numseconds = ((seconds) % 3600) % 60;
-
-
       if (numminutes < 10)
             numminutes = "0" + numminutes;
       if (numseconds < 10)
             numseconds = "0" + numseconds;
-
       return numminutes + ":" + numseconds;
-}           
+}

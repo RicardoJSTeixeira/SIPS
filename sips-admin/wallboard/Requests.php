@@ -556,44 +556,47 @@ switch ($action) {
         $round_numerator = 60 * 5;
         $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
         $rounded_time = date("Y-m-d H:i:s", $rounded_time);
+        $today = date("o-m-d");
 
-        if ($opcao === "1") {
+        if ($opcao === "1")
             $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_log where campaign_id='$campaign_id' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and user not in('VDCL') and ($status) and lead_id is not null group by user order by total_feedback desc ,talk_sec asc limit $limit";
-            $query = str_replace("now()", "'" . $rounded_time . "'", $query);
-            $query = str_replace("time_span", $tempo, $query);
-        }
         if ($opcao === "2") {
             switch ($mode) {
                 case 1:
                     $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_closer_log where user_group='$user_group' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and user not in('VDAD') and ($status) and lead_id is not null group by user order by total_feedback desc ,talk_sec asc limit $limit";
-                    $query = str_replace("now()", "'" . $rounded_time . "'", $query);
-                    $query = str_replace("time_span", $tempo, $query);
                     $opcao = 1;
                     break;
                 case 2:
                     $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_log where user_group='$user_group' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and user not in('VDCL') and ($status) and lead_id is not null group by user order by total_feedback desc ,talk_sec asc limit $limit";
-                    $query = str_replace("now()", "'" . $rounded_time . "'", $query);
-                    $query = str_replace("time_span", $tempo, $query);
                     $opcao = 1;
                     break;
                 case 3:
-
                     $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from
 ((select user,length_in_sec,status from vicidial_closer_log where user_group='$user_group' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and user not in('VDAD') and ($status) and lead_id is not null)
 union all
 (select user,length_in_sec,status from vicidial_log where user_group='$user_group' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and user not in('VDCL') and ($status) and lead_id is not null)) as inoutbound group by user order by total_feedback desc ,talk_sec asc limit $limit";
-                    $query = str_replace("now()", "'" . $rounded_time . "'", $query);
-                    $query = str_replace("time_span", $tempo, $query);
-
                     break;
             }
         }
-        if ($opcao === "3") {
+        if ($opcao === "3")
             $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_closer_log where campaign_id= '$linha_inbound' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and user not in('VDCL') and ($status) and lead_id is not null group by user order by total_feedback desc ,talk_sec asc  limit $limit";
-            $query = str_replace("now()", "'" . $rounded_time . "'", $query);
-            $query = str_replace("time_span", $tempo, $query);
-        }
 //muda as horas para ver os resultados desde "agora" ate a altura especificada aquando da criação do dataset
+       
+        
+        
+        
+        
+        
+        
+        
+        
+        if ($tempo == "25")
+            $query = str_replace("date_sub(now(), INTERVAL time_span hour)","'". $today."'", $query);
+        else
+            $query = str_replace("time_span", $tempo, $query);
+               
+        $query = str_replace("now()", "'" . $rounded_time . "'", $query);
+
 
         $query = mysql_query($query) or die(mysql_error());
         $tma_call = 0;
