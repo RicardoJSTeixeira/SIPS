@@ -3509,7 +3509,7 @@ while ($MM_scripts > $h) {
                                     </div>
                                     
                                     
-                                    <div class="alert alert-block "id="SysteMDisablEBoX">
+                                    <div class="alert alert-block" id="SysteMDisablEBoX">
                                         <h4 class="alert-titleing">Existe um problema de sincronização com o servidor, avise o administrador de sistemas.</h4>
                                         <p><a href="#" class="btn" onClick="hideDiv('SysteMDisablEBoX');return false;">Voltar</a></p>    
                                     </div>
@@ -3530,7 +3530,7 @@ while ($MM_scripts > $h) {
                                         <p id="test_no_empty_session_warnings"></p>
                                         <p>
                                             <a href="#" class="btn btn-danger" onClick="CustomerGoneHangup();return false;">Desligar e Preencher FeedBack</a>
-                                            <a href="#" class="btn"onClick="CustomerGoneOK();return false;">Voltar</a>
+                                            <a href="#" class="btn" onClick="CustomerGoneOK();return false;">Voltar</a>
                                         </p>
                                     </span>
 
@@ -3580,7 +3580,7 @@ while ($MM_scripts > $h) {
                                             <input type="hidden" name="callserverip" id="callserverip" value="" />
                                             <input type="hidden" name="SecondS" id="SecondS" value="" />
                                       
-                                                <input type="hidden" name="gender_list" id="gender_list" value="" />
+                                            <input type="hidden" name="gender_list" id="gender_list" value="" />
 
                                             <div id="MainPanelCustInfo">
 
@@ -3683,51 +3683,51 @@ while ($MM_scripts > $h) {
                                         </div>
                                         <table class="table table-condensed" >
                                                 <tr id="DiaLControl" <?= ($auto_dial_level > 0 and $dial_method != "INBOUND_MAN") ? "style='display:none'" : ""; ?>>
-                                                    <td><i class="fam-control-end"/></td>
+                                                    <td><i class="fam-control-end"></i></td>
                                                     <td>
                                                         <a href="#" onClick="ManualDialNext('', '', '', '', '', '0');">Marcar Seguinte</a>
                                                     </td>
                                                 </tr>
                                                 <tr id="ResumeControl" <?= ($auto_dial_level < 1) ? "style='display:none'" : ""; ?>>
-                                                    <td><i class="fam-control-play"/></td>
+                                                    <td><i class="fam-control-play"></i></td>
                                                     <td><a href="#" onClick="AutoDial_ReSume_PauSe('VDADready');">Retomar Chamadas</a></td>
                                                 </tr>
                                                 <tr id="PauseControl" <?= ($auto_dial_level < 1) ? "style='display:none'" : ""; ?>>
-                                                    <td><i class="fam-control-stop"/></td>
+                                                    <td><i class="fam-control-stop"></i></td>
                                                     <td><a href="#" onClick="AutoDial_ReSume_PauSe('VDADpause');">Pausar Chamadas</a></td>
                                                 </tr>
                                                 <tr id="HangupControl">
-                                                    <td><i class="fam-control-eject-blue"/></td>
+                                                    <td><i class="fam-control-eject-blue"></i></td>
                                                     <td>Desligar</td>
                                                 </tr>
 
 
                                                 <tr id='ParkControl'>
-                                                    <td><i class="fam-control-pause-blue"/></td>
+                                                    <td><i class="fam-control-pause-blue"></i></td>
                                                     <td>Espera</td>
                                                 </tr>
                                                 <tr id='XferControl' <?=(!$agent_allow_transfers)?"style='display:none;'":""?>>
-                                                    <td><i class="fam-control-repeat-blue"/></td>
+                                                    <td><i class="fam-control-repeat-blue"></i></td>
                                                     <td>Transferir</td>
                                                 </tr>
                                                 <tr <?=(!$agent_allow_dtmf)?"style='display:none;'":""?>>
-                                                    <td><i class="fam-sitemap-color"/></td>
+                                                    <td><i class="fam-sitemap-color"></i></td>
                                                     <td>
                                                         <a href="#" id="SendDTMF" data-toggle="popover" data-placement="left" data-original-title="Digite o nº" data-content="<div class='input-append'><input type='text'  name='conf_dtmf' id='conf_dtmf' class='span2'  maxlength='5' /><span class='btn btn-primary' onclick='SendConfDTMF(session_id);return false;'>Enviar</span></div>" >DTMF</a> 
                                                     </td>
                                                 </tr>   
 
                                                 <tr onClick="redial();" style='cursor:pointer'>
-                                                    <td><i class="fam-arrow-undo"/></td>
+                                                    <td><i class="fam-arrow-undo"></i></td>
                                                     <td class='btn-link'>Re-Marcar</td>
                                                 </tr>  
 
                                                 <tr id='search' onClick="OpeNSearcHForMDisplaYBox();" style='cursor:pointer<?=($agent_lead_search=="DISABLED")?";display:none":""?>'>
-                                                    <td><i class="fam-zoom-in"/></td>
+                                                    <td><i class="fam-zoom-in"></i></td>
                                                     <td class='btn-link'>Procurar</td>
                                                 </tr>
                                                 <tr id='mdial' onClick="NeWManuaLDiaLCalL('NO');" style='cursor:pointer'>
-                                                    <td><i class="fam-telephone-delete"/></td>
+                                                    <td><i class="fam-telephone-delete"></i></td>
                                                     <td>
                                                         <span id="MDstatusSpan">
                                                             <a href="#" >Manual</a>
@@ -3735,7 +3735,7 @@ while ($MM_scripts > $h) {
                                                     </td>
                                                 </tr>
                                                 <tr id='CallbacksButtons' style='cursor:pointer' data-toggle="tooltip" title="Verdes: prontos. Vermelhos: expirados.">
-                                                    <td><i class="fam-calendar"/></td>
+                                                    <td><i class="fam-calendar"></i></td>
                                                     <td>
                                                         <span id="CBstatusSpan" >Callbacks</span> 
                                                     </td>
@@ -3941,7 +3941,7 @@ if (mysql_num_rows($result) > 0) {
                                     </tr>
                                 </table>
                             </span>
-                    </span>
+                    
 
                     <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi?>;" id="WelcomeBoxA">
                         <table>

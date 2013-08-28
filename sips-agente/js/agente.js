@@ -2271,13 +2271,21 @@ function stats_update(){
 // Set the client to READY and start looking for calls (VDADready, VDADpause)
 	function AutoDial_ReSume_PauSe(taskaction,taskagentlog,taskwrapup,taskstatuschange,temp_reason,temp_auto,temp_auto_code)
 		{
+                    
             var go_on = divchecker("auto_dial");
             if (!go_on) {
                 return;
             }
+            var callback=null;
             get_tempo_pausa();
 
             var add_pause_code = '';
+            
+            if(typeof taskagentlog === "function"){
+                callback=taskagentlog;
+                taskagentlog="";
+            }
+            
             if (taskaction == 'VDADready')
             {
                 VDRP_stage = 'READY';
@@ -2351,6 +2359,9 @@ function stats_update(){
         if (check_DS_array[1] == 'Next agent_log_id:')
         {
             agent_log_id = check_DS_array[2];
+            if(typeof callback==="function"){
+            callback();
+            }
         }
     });
 
@@ -4307,8 +4318,7 @@ hideDiv('CallBackSelectBox');
                         }
 		hideDiv('PauseCodeSelectBox');
 		ShoWGenDerPulldown();
-                agent_log_id=AutoDial_ReSume_PauSe('VDADpause');
-		WaitingForNextStep=0;
+                var callback=function(){WaitingForNextStep=0;
 pause_code_counter++;
 	VMCpausecode_query = {server_ip:server_ip,session_name: session_name,user:user,pass:pass,ACTION:"PauseCodeSubmit",format:"text",status: newpausecode,agent_log_id: agent_log_id,campaign: campaign,extension: extension ,protocol: protocol ,phone_ip: phone_ip ,enable_sipsak_messages: enable_sipsak_messages,stage: pause_code_counter,campaign_cid: LastCallCID ,auto_dial_level: starting_dial_level};
 			$.post('vdc_db_query.php',VMCpausecode_query,function(data){	
@@ -4323,7 +4333,9 @@ pause_code_counter++;
                                                 }
                                             });
 		LastCallCID='';
-		scroll(0,0);
+		scroll(0,0);};
+                agent_log_id=AutoDial_ReSume_PauSe('VDADpause',callback);
+		
 		}
 
 
