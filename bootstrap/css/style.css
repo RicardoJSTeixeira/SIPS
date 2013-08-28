@@ -795,6 +795,8 @@
 		display:inline-block;
 		width:19px;
 		height:21px;
+  margin:-1px 4px 0 0;
+
 		vertical-align:middle;
 		background:url(../images/check_radio_sheet.png) -1px top no-repeat;
 		background-size:100px 24px;
