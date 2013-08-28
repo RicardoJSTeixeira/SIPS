@@ -553,10 +553,7 @@ header("Pragma: no-cache");                          // HTTP/1.0
                                                 <input type="hidden" name="JS_browser_height" id="JS_browser_height" value="" />
                                                 <input type="hidden" name="JS_browser_width" id="JS_browser_width" value="" />
                                                 <input type="hidden" name="phone_pass" value="<?= $phone_pass ?>" />
-                                                <span id=GENDERhideFORie style=display:none><select name=gender_list id=gender_list><option value="U">---</option><option value="M">Masculino</option><option value="F">Feminino</option></select></span>
-
-                                                <input type="hidden" name="gender_list" id="gender_list" value="" />
-
+                                              
                                                 <div class="control-group">
                                                     <label class="control-label">Licença: </label>
                                                     <div class="controls">
@@ -3582,6 +3579,8 @@ while ($MM_scripts > $h) {
                                             <input type="hidden" name="uniqueid" id="uniqueid" value="" />
                                             <input type="hidden" name="callserverip" id="callserverip" value="" />
                                             <input type="hidden" name="SecondS" id="SecondS" value="" />
+                                      
+                                                <input type="hidden" name="gender_list" id="gender_list" value="" />
 
                                             <div id="MainPanelCustInfo">
 
