@@ -3,7 +3,7 @@ var nc_live=false,nc_live_id=undefined;
 function JanelaNovoCliente()
 	{
 		var NC_operador = user,
-                    NC_campanha = campaign,
+                    NC_campanha = (VDCL_group_id.length)?VDCL_group_id:campaign,
                     NC_list_id = $('#list_id').val(),
                     NC_owner = $('#owner').val(),
                     NC_security_phrase = $('#security_phrase').val(),

@@ -3571,13 +3571,10 @@ while ($MM_scripts > $h) {
                                         <div id="MainTable" class="tab-pane active tab-overflow-main">
 
                                             <input type="hidden" name="lead_id" id="lead_id" value="" />
-                                            <input type="hidden" name="list_id" id="list_id" value="" />
                                             <input type="hidden" name="entry_list_id" id="entry_list_id" value="" />
                                             <input type="hidden" name="called_count" id="called_count" value="" />
-                                            <input type="hidden" name="rank" id="rank" value="" />
 
                                             <input type="hidden" name="gmt_offset_now" id="gmt_offset_now" value="" />
-                                            <input type="hidden" name="gender" id="gender" value="" />
 
                                             <input type="hidden" name="uniqueid" id="uniqueid" value="" />
                                             <input type="hidden" name="callserverip" id="callserverip" value="" />
@@ -3585,20 +3582,9 @@ while ($MM_scripts > $h) {
 
                                             <div id="MainPanelCustInfo">
 
-                                                <input type=hidden name=phone_code id=phone_code value= />
 
                                                 <input type=hidden name=call_notes id=call_notes value= /><span id=CallNotesButtons></span>
-
-                                                <span id=GENDERhideFORie style=display:none>
-                                                    <select style='display:none' name=gender_list id=gender_list>
-                                                        <option value="U">---</option>
-                                                        <option value="M">Masculino</option>
-                                                        <option value="F">Feminino</option>
-                                                    </select>
-                                                </span>
                                                 
-                                                <input type="hidden" name="gender_list" id="gender_list" value="" />
-
                                                 <div class="grid-content">
 
                                                     <div id="MainStatuSSpan" class="alert alert-info" ></div>

@@ -8422,8 +8422,6 @@ function HotKeys(HKstate)
                     CalL_ScripT_id = '';
                 }
 
-
-
             }
             
 
@@ -8497,10 +8495,6 @@ function HotKeys(HKstate)
                 Presets_HTML = Presets_HTML + "</td></tr></table><br /><br /><table cellpadding=\"0\" cellspacing=\"0\"><tr><td width=\"330px\" align=\"left\"><font size=\"3\" style=\"BACKGROUND-COLOR: #CCCCFF\"><b><a href=\"#\" onclick=\"hideDiv('PresetsSelectBox');return false;\">Close [X]</a></b></font></td></tr></table>";
                 document.getElementById("PresetsSelectBoxContent").innerHTML = Presets_HTML;
             }
-
-
-
-
 
 
 // ################################################################################
