@@ -553,7 +553,7 @@ header("Pragma: no-cache");                          // HTTP/1.0
                                                 <input type="hidden" name="JS_browser_height" id="JS_browser_height" value="" />
                                                 <input type="hidden" name="JS_browser_width" id="JS_browser_width" value="" />
                                                 <input type="hidden" name="phone_pass" value="<?= $phone_pass ?>" />
-                                                <span id=GENDERhideFORie style=display:none><select style='width:250px; display:none' name=gender_list id=gender_list><option value=\"U\">---</option><option value=\"M\">Masculino</option><option value=\"F\">Feminino</option></select></span>
+                                                <span id=GENDERhideFORie style=display:none><select name=gender_list id=gender_list><option value="U">---</option><option value="M">Masculino</option><option value="F">Feminino</option></select></span>
 
                                                 <input type="hidden" name="gender_list" id="gender_list" value="" />
 
