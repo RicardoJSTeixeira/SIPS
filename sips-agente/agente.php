@@ -553,6 +553,7 @@ header("Pragma: no-cache");                          // HTTP/1.0
                                                 <input type="hidden" name="JS_browser_height" id="JS_browser_height" value="" />
                                                 <input type="hidden" name="JS_browser_width" id="JS_browser_width" value="" />
                                                 <input type="hidden" name="phone_pass" value="<?= $phone_pass ?>" />
+                                                <input type="hidden" name="gender_list" value="" />
                                                 
                                                 <div class="control-group">
                                                     <label class="control-label">Licença: </label>
@@ -4442,7 +4443,7 @@ if ($enable_xfer_presets == 'ENABLED') {
                     <div style="overflow-y:auto; z-index:<?= ++$zi ?>; width:60%;margin-left: -30%;" class='grid-agent' id="DispoSelectBox">
                         <div class="modal-header box_title label-info">
                             Resultado da Chamada:<strong id="DispoSelectPhonE"></strong>
-                            <button class="close" style="margin-left:10px">​-</button>​
+                            <span class="close" style="margin-left:10px">​-</span>​
                             <div class="input-prepend right" style="margin-top:-5px">
                                 <span style='color:black' class="add-on">Filtro</span><input type=text id=dispo_search >
                             </div>
