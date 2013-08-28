@@ -8264,7 +8264,7 @@ function HotKeys(HKstate)
                                 dialed_label = 'MAIN';
                             }
 
-                            if (hide_gender > 0)
+                            /*if (hide_gender > 0)
                             {
                                 document.vicidial_form.gender_list.value = MDnextResponse_array[21];
                             }
@@ -8281,7 +8281,7 @@ function HotKeys(HKstate)
                                 var genderIndex = document.getElementById("gender_list").selectedIndex;
                                 var genderValue = document.getElementById('gender_list').options[genderIndex].value;
                                 document.vicidial_form.gender.value = genderValue;
-                            }
+                            }*/
 
                             LeaDDispO = '';
 
