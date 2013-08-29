@@ -90,7 +90,6 @@ switch ($action) {
 
     case "get_rules":
         $query = "SELECT * FROM `script_rules` WHERE id_script=$id_script";
-
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array(id => $row["id"], id_script => $row["id_script"], tipo_elemento => $row["tipo_elemento"], id_trigger => $row["id_trigger"], id_trigger2 => explode(",", $row["id_trigger2"]), id_target => explode(",", $row["id_target"]), tipo => $row["tipo"], param1 => $row["param1"], param2 => $row["param2"]);
@@ -134,22 +133,15 @@ switch ($action) {
 
     case "edit_item":
         $query = "UPDATE script_dinamico SET id_script=$id_script,id_page=$id_page,type='$type',ordem=$ordem,dispo='$dispo',texto='$texto',placeholder='$placeholder',max_length=$max_length,values_text='$values_text',required=$required,hidden=$hidden WHERE id=$id";
-
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
 
     case "edit_item_order":
-
         $query = "UPDATE script_dinamico SET ordem=$ordem WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
-
-
-
-
-
     //------------------------------------------------//
     //-----------------ADD----------------------------//
     //------------------------------------------------//
@@ -175,13 +167,9 @@ switch ($action) {
 
     case "add_rules":
         $query = "INSERT INTO `asterisk`.`script_rules` (id,id_script,tipo_elemento,id_trigger,id_trigger2,id_target,tipo,param1,param2) VALUES (NULL,$id_script,'$tipo_elemento',$id_trigger,'$id_trigger2','$id_target','$tipo','$param1','$param2')";
-
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
-
-
-
     //------------------------------------------------//
     //-----------------DELETE-------------------------//
     //------------------------------------------------//
@@ -229,16 +217,8 @@ switch ($action) {
     case "delete_rule":
         $query = "delete from script_rules  where id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
-
         echo json_encode(array(1));
         break;
-
-
-
-
-
-
-
     //------------------------------------------------//
     //-----------------FORM---------------------------//
     //------------------------------------------------//
@@ -246,7 +226,6 @@ switch ($action) {
 
         $sql = array();
         foreach ($results as $row) {
-
             if ($row['value'] != "")
                 $sql[] = "(null,$id_script,'" . $row['name'] . "', '" . $row['value'] . "')";
         }

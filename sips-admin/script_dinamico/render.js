@@ -18,8 +18,9 @@ $(function() {
 
 
 
-
-
+//tags n resulta pra checkbox pk so mostra o ultimo valor
+//http://www.position-absolute.com/articles/jquery-form-validator-because-form-validation-is-a-mess/
+//http://lavrinyuk.pp.ua/demo/?theme=sweetdreams
 
 function insert_element(opcao, element, data)
 {
@@ -28,11 +29,12 @@ function insert_element(opcao, element, data)
       {
             case "texto":
                   element.find(".label_geral")[0].innerHTML = data.texto;
-                  element.find(".input_texto")[0].placeholder = data.placeholder;
-                  element.find(".input_texto")[0].maxLength = data.max_length;
-                  element.find(".input_texto")[0].name = "texto," + data.id;
+                  var input = element.find(".input_texto")[0];
+                  input.placeholder = data.placeholder;
+                  input.maxLength = data.max_length;
+                  input.name = data.id;
                   if (data.required)
-                        element.find(".input_texto").prop("required", true);
+                        element.find(".input_texto").addClass("validate[required]");
                   break;
 
 
@@ -45,10 +47,25 @@ function insert_element(opcao, element, data)
                   for (var count = 0; count < radios.length; count++)
                   {
                         if (data.required)
-                              element.append($("<input>").attr("type", "radio").prop("required", true).attr("value", radios[count]).attr("id", array_id["radio"] + "radio").attr("name", "radio," + data.id));
+                              element.append($("<input>")
+                                      .attr("type", "radio")
+                                      .addClass("validate[required]")
+                                      .attr("value", radios[count])
+                                      .attr("id", array_id["radio"] + "radio")
+                                      .attr("name", data.id));
                         else
-                              element.append($("<input>").attr("type", "radio").attr("value", radios[count]).attr("id", array_id["radio"] + "radio").attr("name", "radio," + data.id));
-                        element.append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "radio").text(radios[count]).append($("<span>")));
+                              element.append($("<input>")
+                                      .attr("type", "radio")
+                                      .attr("value", radios[count])
+                                      .attr("id", array_id["radio"] + "radio")
+                                      .attr("name", data.id));
+
+
+                        element.append($("<label>")
+                                .addClass("radio_name radio inline")
+                                .attr("for", array_id["radio"] + "radio")
+                                .text(radios[count])
+                                );
 
                         if (data.dispo === "v")
                               element.append($("<br>"));
@@ -59,6 +76,7 @@ function insert_element(opcao, element, data)
 
             case "checkbox":
                   element.empty();
+
                   element.append($("<label>").addClass("label_checkbox label_geral").text($("#checkbox_edit").val()));
                   element.append($("<br>"));
                   element.find(".label_checkbox")[0].innerHTML = data.texto;
@@ -66,15 +84,25 @@ function insert_element(opcao, element, data)
                   for (var count = 0; count < checkboxs.length; count++)
                   {
                         if (data.required)
-                              element.append($("<input>").attr("type", "checkbox").prop("required", true).attr("value", checkboxs[count]).attr("id", array_id["checkbox"] + "checkbox").attr("name", "checkbox," + data.id));
+                              element.append($("<input>").attr("type", "checkbox").addClass("validate[minCheckbox[1]]").attr("value", checkboxs[count]).attr("id", array_id["checkbox"] + "checkbox").attr("name", data.id));
                         else
-                              element.append($("<input>").attr("type", "checkbox").attr("value", checkboxs[count]).attr("id", array_id["checkbox"] + "checkbox").attr("name", "checkbox," + data.id));
+                              element.append($("<input>").attr("type", "checkbox").attr("value", checkboxs[count]).attr("id", array_id["checkbox"] + "checkbox").attr("name", data.id));
 
-                        element.append($("<label>").addClass("checkbox_name").attr("for", array_id["checkbox"] + "checkbox").text(checkboxs[count]).append($("<span>")));
+
+
+                        element.append($("<label>")
+                                .addClass("checkbox_name checkbox inline")
+                                .attr("for", array_id["checkbox"] + "checkbox")
+                                .text(checkboxs[count])
+                                );
                         if (data.dispo === "v")
                               element.append($("<br>"));
                         array_id["checkbox"] = array_id["checkbox"] + 1;
                   }
+
+
+
+
                   break;
 
 
@@ -83,9 +111,9 @@ function insert_element(opcao, element, data)
                   element.append($("<label>").addClass("label_multichoice label_geral").text(data.texto));
                   var multichoices = data.values_text;
                   if (data.required)
-                        element.append($("<select>").addClass("multichoice_select").attr("name", "multichoice," + data.id).prop("required", true));
+                        element.append($("<select>").addClass("multichoice_select validate[required]").attr("name", data.id));
                   else
-                        element.append($("<select>").addClass("multichoice_select").attr("name", "multichoice," + data.id));
+                        element.append($("<select>").addClass("multichoice_select").attr("name", data.id));
                   var select = element.find(".multichoice_select");
                   var options = "<option value=''>Selecione uma opção</option>";
                   for (var count = 0; count < multichoices.length; count++)
@@ -98,12 +126,12 @@ function insert_element(opcao, element, data)
 
             case "textfield":
                   element.find(".label_geral")[0].innerHTML = data.values_text;
-                  element.find(".label_geral")[0].name = "textfield," + data.id;
+                  element.find(".label_geral")[0].name = data.id;
                   break;
 
             case "legend":
                   element.find(".label_geral")[0].innerHTML = data.values_text;
-                  element.find(".label_geral")[0].name = "legend," + data.id;
+                  element.find(".label_geral")[0].name = data.id;
                   break;
 
 
@@ -121,25 +149,25 @@ function insert_element(opcao, element, data)
                   var tr_body = element.find(".tr_body");
                   tr_body.empty();
                   var perguntas = data.values_text;
-                  var temp;
+                  var trbody_last;
                   for (var count = 0; count < perguntas.length; count++)
                   {
                         tr_body.append($("<tr>")
                                 .append($("<td>").text(perguntas[count]).addClass("td_row")));
-                        temp = element.find(".tr_body tr:last");
+                        trbody_last = element.find(".tr_body tr:last");
                         for (var count2 = 0; count2 < titulos.length; count2++)
                         {
                               if (data.required)
                               {
-                                    temp.append($("<td>")
-                                            .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").prop("required", true).attr("value", titulos[count2]).attr("name", "tableradio," + data.id + "," + count))
-                                            .append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "tableradio").append($("<span>"))));
+                                    trbody_last.append($("<td>")
+                                            .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").addClass("validate[required]").attr("value", titulos[count2]).attr("name", data.id + "," + count))
+                                            .append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "tableradio")));
                               }
                               else
                               {
-                                    temp.append($("<td>")
-                                            .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").attr("value", titulos[count2]).attr("name", "tableradio," + data.id + "," + count))
-                                            .append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "tableradio").append($("<span>"))));
+                                    trbody_last.append($("<td>")
+                                            .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").attr("value", titulos[count2]).attr("name", data.id + "," + count))
+                                            .append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "tableradio")));
                               }
                               array_id["radio"] = array_id["radio"] + 1;
                         }
@@ -150,8 +178,8 @@ function insert_element(opcao, element, data)
             case "datepicker":
                   element.find(".label_geral")[0].innerHTML = data.texto;
                   if (data.required)
-                        element.find(".form_datetime").prop("required", true);
-                  element.find(".form_datetime")[0].name = "datepicker," + data.id;
+                        element.find(".form_datetime").addClass("validate[required]");
+                  element.find(".form_datetime")[0].name = data.id;
                   break;
       }
       if (data.hidden)
@@ -217,7 +245,6 @@ function update_info()
       $.post("requests.php", {action: "get_data", id_script: $("#script_selector option:selected").val(), id_page: $("#page_selector option:selected").val()},
       function(data)
       {
-
             $("#script_div").empty();
             $.each(data, function(index, value) {
                   var item;
@@ -324,7 +351,7 @@ function update_info()
             }).bind("cut copy paste", function(e) {
                   e.preventDefault();
             });
-
+            $("#myform").validationEngine();
       }, "json");
 
 
@@ -333,7 +360,40 @@ function update_info()
 }
 
 
+//RULES 
+function rules_work(data)
+{
+      switch (data.tipo)
+      {
+            case "hide":
+                  var target = data.id_target;
+                  for (var count2 = 0; count2 < target.length; count2++)
+                  {
+                        $("#" + target[count2]).fadeOut(400);
+                  }
+                  break;
 
+            case "show":
+                  var target = data.id_target;
+
+                  for (var count2 = 0; count2 < target.length; count2++)
+                  {
+                        $("#" + target[count2]).fadeIn(400);
+                  }
+                  break;
+
+            case "goto":
+                  var param = data.param2.split(",");
+                  switch (param[0])
+                  {
+                        case "pag":
+                              $("#page_selector option[value='" + param[1] + "']").attr("selected", "selected");
+                              $("#page_selector").trigger("change");
+                              break;
+                  }
+                  break;
+      }
+}
 function rules()
 {
       $.post("requests.php", {action: "get_rules", id_script: $("#script_selector option:selected").val()},
@@ -465,40 +525,7 @@ function rules()
       }
       , "json");
 }
-function rules_work(data)
-{
-      switch (data.tipo)
-      {
-            case "hide":
-                  var target = data.id_target;
-                  for (var count2 = 0; count2 < target.length; count2++)
-                  {
 
-                        $("#" + target[count2]).fadeOut(400);
-                  }
-                  break;
-
-            case "show":
-                  var target = data.id_target;
-
-                  for (var count2 = 0; count2 < target.length; count2++)
-                  {
-                        $("#" + target[count2]).fadeIn(400);
-                  }
-                  break;
-
-            case "goto":
-                  var param = data.param2.split(",");
-                  switch (param[0])
-                  {
-                        case "pag":
-                              $("#page_selector option[value='" + param[1] + "']").attr("selected", "selected");
-                              $("#page_selector").trigger("change");
-                              break;
-                  }
-                  break;
-      }
-}
 function tags()
 {
       var rz = $("#render_zone");
@@ -533,10 +560,10 @@ $('#script_selector').change(function() {
 });
 //FORM MANIPULATION
 $("#myform").on("submit", function(e)
-{
-      e.preventDefault();
-      var result = $("#myform").serializeArray();
-      $.post("requests.php", {action: "save_form_result", id_script: $('#script_selector').val(), results: result}, "json");
-});
-
+ {
+ 
+ e.preventDefault();
+ var result = $("#myform").serializeArray();
+ $.post("requests.php", {action: "save_form_result", id_script: $('#script_selector').val(), results: result}, "json");
+ });
 
