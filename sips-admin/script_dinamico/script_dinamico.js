@@ -16,7 +16,7 @@
  test
  */
 
-//sem scripts nem pag dá para adicionar elements
+//demasiado grande tableradio FODE TUDO!
 
 
 var selected_id = 0;
@@ -152,7 +152,7 @@ $(function() {
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("tableradio_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", $(this).data().uiSortable.currentItem.index(), "h", "tableradio", ["mau","médio","bom"], 0, ["pergunta1"], 0, 0);
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", $(this).data().uiSortable.currentItem.index(), "h", "tableradio", ["mau", "médio", "bom"], 0, ["pergunta1"], 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("legend_class"))
                         {
@@ -634,7 +634,7 @@ function edit_element(opcao, element, data)
                                 .addClass("radio_name radio inline")
                                 .attr("for", array_id["radio"] + "radio")
                                 .text(radios[count])
-                               );
+                                );
                         if (element.data("dispo") === "v")
                               element.append($("<br>"));
                         array_id["radio"] = array_id["radio"] + 1;
@@ -909,7 +909,7 @@ function insert_element(opcao, element, data)
                                       .append($("<label>")
                                       .addClass("radio_name radio inline")
                                       .attr("for", array_id["radio"])
-                                     ));
+                                      ));
                               array_id["radio"] = array_id["radio"] + 1;
                         }
                   }
@@ -1068,8 +1068,9 @@ $("#save_button_layout").click(function()//Fecha o dialog e grava as alteraçõe
 //botoes para outras paginas
 $("#render_go").click(function()
 {
-      var window_slave = window.open("/sips-admin/script_dinamico/render.html");
+      var window_slave = window.open("/sips-admin/script_dinamico/render.html?id_script=" + $("#script_selector option:selected").val());
 });
+
 $("#report_go").click(function()
 {
       var window_slave = window.open("/sips-admin/script_dinamico/report.html");

@@ -3,6 +3,11 @@
 
 var array_id = [];
 var tag_regex = /\@([^@]+)\@/g;
+var user_id = getUrlVars()["user_id"];
+var unique_id = getUrlVars()["unique_id"];
+var campaign_id = getUrlVars()["campaign_id"];
+var lead_id = getUrlVars()["lead_id"];
+var script_id = 0;
 $(function() {
       array_id["radio"] = 0;
       array_id["checkbox"] = 0;
@@ -18,9 +23,15 @@ $(function() {
 
 
 
-//tags n resulta pra checkbox pk so mostra o ultimo valor
-//http://www.position-absolute.com/articles/jquery-form-validator-because-form-validation-is-a-mess/
-//http://lavrinyuk.pp.ua/demo/?theme=sweetdreams
+function getUrlVars() {
+      var vars = {};
+      var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+            vars[key] = value;
+      });
+      return vars;
+}
+
+
 
 function insert_element(opcao, element, data)
 {
@@ -210,21 +221,19 @@ function insert_element(opcao, element, data)
 //UPDATES DE INFO
 function update_script()
 {
-      $.post("requests.php", {action: "get_scripts"},
+    
+      $.post("requests.php", {action: "get_scripts_by_campaign", id_campaign: campaign_id},
       function(data)
       {
-
             if (data == null)
 
             {
-                  alert("no data");
+                  alert("Não existe script");
             }
             else
             {
-                  $("#script_selector").empty();
-                  $.each(data, function(index, value) {
-                        $("#script_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
-                  });
+
+                  script_id = data.id;
 
                   update_info();
             }
@@ -235,7 +244,7 @@ function update_info()
 {
       $(".datetimepicker").remove();
 
-      $.post("requests.php", {action: "get_data_render", id_script: $("#script_selector option:selected").val()},
+      $.post("requests.php", {action: "get_data_render", id_script: script_id},
       function(data)
       {
             $("#script_div").empty();
@@ -408,7 +417,7 @@ function rules_work(data)
 }
 function rules()
 {
-      $.post("requests.php", {action: "get_rules", id_script: $("#script_selector option:selected").val()},
+      $.post("requests.php", {action: "get_rules", id_script: script_id},
       function(data)
       {
             $.each(data, function(index, value) {
@@ -418,11 +427,11 @@ function rules()
                               switch (this.param1)
                               {
                                     case "value_input":
-                                       
+
                                           $("#" + this.id_trigger).bind("keyup", function()//atribuir os binds a cada value
                                           {
                                                 var pattern = new RegExp('\\b' + data[index].id_trigger2, 'i');
-                                       
+
                                                 if ($("#" + data[index].id_trigger + " input").val().match(pattern))
                                                 {
                                                       rules_work(data[index]);
@@ -564,20 +573,13 @@ function tags()
 }
 
 
-//PAGES
-$('#page_selector').change(function() {
-      update_info();
-});
-//SCRIPTS
-$('#script_selector').change(function() {
-      update_pages();
-});
+
 //FORM MANIPULATION
 $("#myform").on("submit", function(e)
 {
 
       e.preventDefault();
-      var result = $("#myform").serializeArray();
-      $.post("requests.php", {action: "save_form_result", id_script: $('#script_selector').val(), results: result}, "json");
+
+      $.post("requests.php", {action: "save_form_result", id_script: script_id, results: $("#myform").serializeArray(), user_id: user_id, unique_id: unique_id, campaign_id: campaign_id, lead_id: lead_id}, "json");
 });
 
