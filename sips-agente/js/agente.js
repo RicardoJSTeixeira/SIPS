@@ -7964,8 +7964,8 @@ function HotKeys(HKstate)
 
                     if (VDRP_stage != 'PAUSED')
                     {
-                        agent_log_id = AutoDial_ReSume_PauSe("VDADpause", '', '', '', "DIALNEXT", '1', 'NXDIAL');
-
+                        agent_log_id = AutoDial_ReSume_PauSe("VDADpause", manNextCall(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnStagE, mdVendorid, mdgroupalias, mdtype), '', '', "DIALNEXT", '1', 'NXDIAL');
+                        return true;
                         //	PauseCodeSelect_submit("NXDIAL");
                     }
                     else
@@ -7981,6 +7981,10 @@ function HotKeys(HKstate)
                     $("#DiaLControl").html(DiaLControl_manual_HTML_OFF);
 
                 }
+                manNextCall(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnStagE, mdVendorid, mdgroupalias, mdtype);
+
+            }
+            function manNextCall(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnStagE, mdVendorid, mdgroupalias, mdtype){
                 var manual_dial_only_type_flag = '';
                 if ((mdtype == 'ALT') || (mdtype == 'ADDR3'))
                 {
@@ -8433,9 +8437,7 @@ function HotKeys(HKstate)
                     agent_dialed_type = '';
                     CalL_ScripT_id = '';
                 }
-
             }
-            
 
 
 // ################################################################################
