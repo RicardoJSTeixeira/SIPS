@@ -15,19 +15,19 @@
 <div class="item checkbox_class" title="Escolha Multipla">
       <label class="label_checkbox label_geral">Checkbox:</label>
       <input   type="checkbox" id="checkbox1" name="cc" value="1">
-      <label class="checkbox_name checkbox inline" for="checkbox1"><span></span>valor 1</label>
+      <label class="checkbox_name checkbox inline" for="checkbox1">valor 1</label>
 </div>
 
 <div class="item radio_class" title="Botões de Resposta unica">
       <label class="label_radio label_geral">Radio:</label>
       <input  type="radio" id="radio1" name="ra" checked="checked">
-      <label class="radio_name radio inline"  for="radio1"><span></span>valor 1</label>
+      <label class="radio_name radio inline"  for="radio1">valor 1</label>
 </div>
 
 
 <div class="item tableradio_class" title="Tabela de Resposta Multipla">
       <label class="label_tableradio label_geral">Tabela escolha-multipla:</label>
-      <br>
+      
       <table style="width:100%;">
             <thead class="tr_head">
                   <tr >
@@ -51,16 +51,16 @@
                               <label class="label_pergunta">Pergunta1:</label>
                         </td>
                         <td>
-                              <input  type="radio" id="tableradio1" name="rb" checked="checked">
-                              <label class="tableradio_name radio inline"  for="tableradio1"><span></span></label>
+                              <input  type="radio" id="tableradio1" name="rb" checked >
+                              <label class="tableradio_name radio inline"  for="tableradio1"></label>
                         </td>
                         <td>
-                              <input  type="radio" id="tableradio2" name="rb" checked="checked">
-                              <label class="tableradio_name radio inline"  for="tableradio2"><span></span></label>
+                              <input  type="radio" id="tableradio2" name="rb" >
+                              <label class="tableradio_name radio inline"  for="tableradio2"></label>
                         </td>
                         <td>
-                              <input type="radio" id="tableradio3" name="rb" checked="checked">
-                              <label class="tableradio_name radio inline"  for="tableradio3"><span></span></label>
+                              <input type="radio" id="tableradio3" name="rb" >
+                              <label class="tableradio_name radio inline"  for="tableradio3"></label>
                         </td>
                   </tr>
             </tbody>
@@ -98,8 +98,6 @@
 </div>
 
 <div class="item pagination_class" title="Elemento de paginação">
-      <button class="btn" onclick=" $('#page_selector option:selected').prev().prop('selected', true);
-                  update_info();">Anterior</button>
-      <button class="btn" onclick=" $('#page_selector option:selected').next().prop('selected', true);
-                  update_info();">Seguinte</button>
+      <button class="btn" id="previous_pag">Anterior</button>
+      <button class="btn" id="next_pag">Seguinte</button>
 </div>

@@ -24,7 +24,7 @@ $(function() {
 
 function insert_element(opcao, element, data)
 {
-      $('#script_div').append(element);
+
       switch (opcao)
       {
             case "texto":
@@ -41,7 +41,6 @@ function insert_element(opcao, element, data)
             case "radio":
                   element.empty();
                   element.append($("<label>").addClass("label_radio label_geral").text($("#radio_edit").val()));
-                  element.append($("<br>"));
                   element.find(".label_radio")[0].innerHTML = data.texto;
                   var radios = data.values_text;
                   for (var count = 0; count < radios.length; count++)
@@ -78,7 +77,6 @@ function insert_element(opcao, element, data)
                   element.empty();
 
                   element.append($("<label>").addClass("label_checkbox label_geral").text($("#checkbox_edit").val()));
-                  element.append($("<br>"));
                   element.find(".label_checkbox")[0].innerHTML = data.texto;
                   var checkboxs = data.values_text;
                   for (var count = 0; count < checkboxs.length; count++)
@@ -134,7 +132,27 @@ function insert_element(opcao, element, data)
                   element.find(".label_geral")[0].name = data.id;
                   break;
 
+            case "pagination":
+                  element.find("#previous_pag").bind("click", function()
+                  {
+                        var temp = $(".pag_div:visible").prev(".pag_div");
+                        if (temp.length)
+                        {
+                              $(".pag_div").hide();
+                              temp.show();
+                        }
+                  });
+                  element.find("#next_pag").bind("click", function()
+                  {
 
+                        var temp = $(".pag_div:visible").next(".pag_div");
+                        if (temp.length)
+                        {
+                              $(".pag_div").hide();
+                              temp.show();
+                        }
+                  });
+                  break;
 
             case "tableradio":
                   element.find(".label_geral")[0].innerHTML = data.texto;
@@ -208,46 +226,25 @@ function update_script()
                         $("#script_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
                   });
 
-                  update_pages();
-            }
-      }, "json");
-}
-function update_pages()
-{
-
-
-      $.post("requests.php", {action: "get_pages", id_script: $("#script_selector option:selected").val()},
-      function(data)
-      {
-            if (data == null)
-            {
-                  alert("no page");
-            }
-            else
-            {
-                  var pag = $("#page_selector").val();
-                  $("#page_selector").empty();
-                  $.each(data, function(index, value) {
-                        if (pag === this.id)
-                              $("#page_selector").append("<option value=" + this.id + " selected>" + this.name + "</option>");
-                        else
-                              $("#page_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
-                  });
                   update_info();
             }
       }, "json");
 }
+
 function update_info()
 {
       $(".datetimepicker").remove();
-      $("#page_title").text($("#script_selector option:selected").text() + "---" + $("#page_selector option:selected").text());
 
-      $.post("requests.php", {action: "get_data", id_script: $("#script_selector option:selected").val(), id_page: $("#page_selector option:selected").val()},
+      $.post("requests.php", {action: "get_data_render", id_script: $("#script_selector option:selected").val()},
       function(data)
       {
             $("#script_div").empty();
+
             $.each(data, function(index, value) {
                   var item;
+
+
+
                   switch (this.type)
                   {
                         case "texto":
@@ -342,6 +339,22 @@ function update_info()
                               insert_element("datepicker", item, this);
                               break;
                   }
+
+
+
+                  if ($("#" + this.id_page + "pag").length) {
+                        $("#" + this.id_page + "pag").append(item);
+                  }
+                  else
+                  {
+                        $("#script_div").append($("<div>").addClass("pag_div").attr("id", this.id_page + "pag"));
+                        $("#" + this.id_page + "pag").append(item);
+                  }
+
+
+
+
+
             });
             tags();
             rules();
@@ -352,7 +365,12 @@ function update_info()
                   e.preventDefault();
             });
             $("#myform").validationEngine();
+
+            $(".pag_div").hide().first().show();
+
+
       }, "json");
+
 
 
 
@@ -383,14 +401,8 @@ function rules_work(data)
                   break;
 
             case "goto":
-                  var param = data.param2.split(",");
-                  switch (param[0])
-                  {
-                        case "pag":
-                              $("#page_selector option[value='" + param[1] + "']").attr("selected", "selected");
-                              $("#page_selector").trigger("change");
-                              break;
-                  }
+                  $(".pag_div").hide();
+                  $("#" + data.param2 + "pag").show();
                   break;
       }
 }
@@ -406,9 +418,11 @@ function rules()
                               switch (this.param1)
                               {
                                     case "value_input":
+                                       
                                           $("#" + this.id_trigger).bind("keyup", function()//atribuir os binds a cada value
                                           {
                                                 var pattern = new RegExp('\\b' + data[index].id_trigger2, 'i');
+                                       
                                                 if ($("#" + data[index].id_trigger + " input").val().match(pattern))
                                                 {
                                                       rules_work(data[index]);
@@ -560,10 +574,10 @@ $('#script_selector').change(function() {
 });
 //FORM MANIPULATION
 $("#myform").on("submit", function(e)
- {
- 
- e.preventDefault();
- var result = $("#myform").serializeArray();
- $.post("requests.php", {action: "save_form_result", id_script: $('#script_selector').val(), results: result}, "json");
- });
+{
+
+      e.preventDefault();
+      var result = $("#myform").serializeArray();
+      $.post("requests.php", {action: "save_form_result", id_script: $('#script_selector').val(), results: result}, "json");
+});
 

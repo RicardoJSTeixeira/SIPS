@@ -24,13 +24,15 @@
             <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt-BR.js"></script>
 
             <style>
+                   #page_title{background-color:#111111;padding:10px;text-align: center;font-size:170%;display:block;margin: 0 auto;color:#FFFFFF}
+                  
                   .leftDiv, .rightDiv { padding:5px; }
                   .grid{
                         border: 1px inset #000000;
                   }
                   .leftDiv .item { text-align:center; border:1px dashed #EEE; background-color:#FFF;padding:3px;}
                   .rightDiv .item { text-align:center; border:1px dashed #AAA; background-color:#FFF;padding:3px;}
-                  .helperPick {border:4px solid #288dd4; text-align:center;width:auto}
+                  .helperPick {border:4px solid #288dd4!important; text-align:center;width:auto}
 
                   #add_rule_button{margin :5px;}
                   legend{border-bottom: 8px  groove #a1a1a9;margin-bottom: 0px;}
@@ -43,6 +45,9 @@
                   {
                         width:75%;
                   }
+                   input[type="checkbox"]{display:inline;}
+                  input[type="radio"]{display:inline;}
+                  .radio, .checkbox {padding-left: 1px;padding-right: 16px;}
             </style>
       </head>
       <body>
@@ -111,7 +116,7 @@
             </div>
             <!--FIM DAS DIALOGS-->
             <div class="grid-title">
-                  <div class="pull-left">   Construção de formulários                           </div>
+                  <div class="pull-left" >   Construção de formulários                           </div>
                   <div class="pull-right">
                         <button class="btn" id="render_go">Visualisação</button>
                         <button class="btn"  id="report_go">Reports</button>
@@ -202,9 +207,9 @@
                                                             <label class="label label-info" >Disposição:</label>
                                                             <div class="formRight">
                                                                   <input type="radio" id="horiz_radio" name="rdispo" checked="checked">
-                                                                  <label class="radio_dispo"  for="horiz_radio"><span></span>Horizontal</label>
+                                                                  <label class="radio_dispo"  for="horiz_radio">Horizontal</label>
                                                                   <input type="radio" id="vertic_radio" name="rdispo" >
-                                                                  <label class="radio_dispo"  for="vertic_radio"><span></span>Vertical</label>
+                                                                  <label class="radio_dispo"  for="vertic_radio">Vertical</label>
                                                             </div>
                                                       </div>
                                                 </div>
@@ -226,9 +231,9 @@
                                                             <label class="label label-info" >Disposição:</label>
                                                             <div class="formRight">
                                                                   <input type="radio" id="horiz_checkbox" name="cdispo" checked="checked">
-                                                                  <label class="checkbox_dispo"  for="horiz_checkbox"><span></span>Horizontal</label>
+                                                                  <label class="checkbox_dispo"  for="horiz_checkbox">Horizontal</label>
                                                                   <input type="radio" id="vertic_checkbox" name="cdispo" >
-                                                                  <label class="checkbox_dispo"  for="vertic_checkbox"><span></span>Vertical</label>
+                                                                  <label class="checkbox_dispo"  for="vertic_checkbox">Vertical</label>
                                                             </div>
                                                       </div>
                                                 </div>
@@ -315,7 +320,7 @@
                                                             <label class="label label-info" >Obrigatório:</label>
                                                             <div class="formRight">
                                                                   <input  type="checkbox" id="item_required" name="required" value="1">
-                                                                  <label for="item_required"><span></span></label>
+                                                                  <label for="item_required"></label>
                                                                   <i class="icon-star"></i>
                                                             </div>
                                                             <div class="formRight">
@@ -328,7 +333,7 @@
                                                             <label class="label label-info" >Escondido:</label>
                                                             <div class="formRight">
                                                                   <input  type="checkbox" id="item_hidden" name="hidden" value="1">
-                                                                  <label for="item_hidden"><span></span></label>
+                                                                  <label for="item_hidden"></label>
                                                                   <i class="icon-eye-open">​</i> / <i class="icon-eye-close">​</i>
                                                             </div>
                                                       </div>

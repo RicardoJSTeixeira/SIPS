@@ -33,33 +33,20 @@ and open the template in the editor.
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
             <style>
-                  .item  {text-align:center;background-color:#ECECEC;padding:10px;font-size:140%;border-radius: 0px;}
+                  .item  {text-align:center;background-color:#F1F1F1;padding:10px;font-size:140%;border-radius: 0px;border: 1px dashed #EFDFDF}
                   legend{border-bottom: 8px  groove   #a1a1a9;margin-bottom: 0px;}
 
-                  #page_title{background-color:#E1E1E9;padding:4px;text-align: center;font-size:170%;display:block;margin: 0 auto;}
+                 
                   .modal-footer{font-size:170%;text-align: center;}
                   div{-moz-border-radius: 5px;border-radius: 15px;}
-                  input[type="checkbox"]
-                  {
-                        display:inline;
-                  }
-                  input[type="radio"]
-                  {
-                        display:inline;
-                  }
-
-                  .radio, .checkbox {
-
-                        padding-left: 1px;
-                        padding-right: 16px;
-                  }
+                  input[type="checkbox"]{display:inline;}
+                  input[type="radio"]{display:inline;}
+                  .radio, .checkbox {padding-left: 1px;padding-right: 16px;}
             </style>
       </head>
 
       <body>
-            <div class="grid-title">
-                  <span id="page_title"></span>
-            </div>
+          
             <div id="dummie" style="display:none">
 
             </div>
@@ -69,7 +56,7 @@ and open the template in the editor.
                         </div>   
                   </div>
                   <div class="modal-footer " >
-                        <div class="pull-left">Página <select id="page_selector" ></select></div>
+                     
                         <div class="pull-right">Script <select id="script_selector"></select></div>
                         <button  class="btn btn-large  btn-primary"  id="submit_button" style="width:50%; " >Submit</button>
 
