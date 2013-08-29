@@ -2271,13 +2271,21 @@ function stats_update(){
 // Set the client to READY and start looking for calls (VDADready, VDADpause)
 	function AutoDial_ReSume_PauSe(taskaction,taskagentlog,taskwrapup,taskstatuschange,temp_reason,temp_auto,temp_auto_code)
 		{
+                    
             var go_on = divchecker("auto_dial");
             if (!go_on) {
                 return;
             }
+            var callback=null;
             get_tempo_pausa();
 
             var add_pause_code = '';
+            
+            if(typeof taskagentlog === "function"){
+                callback=taskagentlog;
+                taskagentlog="";
+            }
+            
             if (taskaction == 'VDADready')
             {
                 VDRP_stage = 'READY';
@@ -2351,6 +2359,9 @@ function stats_update(){
         if (check_DS_array[1] == 'Next agent_log_id:')
         {
             agent_log_id = check_DS_array[2];
+            if(typeof callback==="function"){
+            callback();
+            }
         }
     });
 
@@ -4243,6 +4254,7 @@ function stats_update(){
 								{
 								AutoDialWaiting = 0;
 								AutoDial_ReSume_PauSe("VDADpause");
+                                                                PauseCodeSelectContent_create();
 								}
 								
 							VICIDiaL_pause_calling = 1;
@@ -4306,8 +4318,7 @@ hideDiv('CallBackSelectBox');
                         }
 		hideDiv('PauseCodeSelectBox');
 		ShoWGenDerPulldown();
-                agent_log_id=AutoDial_ReSume_PauSe('VDADpause');
-		WaitingForNextStep=0;
+                var callback=function(){WaitingForNextStep=0;
 pause_code_counter++;
 	VMCpausecode_query = {server_ip:server_ip,session_name: session_name,user:user,pass:pass,ACTION:"PauseCodeSubmit",format:"text",status: newpausecode,agent_log_id: agent_log_id,campaign: campaign,extension: extension ,protocol: protocol ,phone_ip: phone_ip ,enable_sipsak_messages: enable_sipsak_messages,stage: pause_code_counter,campaign_cid: LastCallCID ,auto_dial_level: starting_dial_level};
 			$.post('vdc_db_query.php',VMCpausecode_query,function(data){	
@@ -4322,7 +4333,9 @@ pause_code_counter++;
                                                 }
                                             });
 		LastCallCID='';
-		scroll(0,0);
+		scroll(0,0);};
+                agent_log_id=AutoDial_ReSume_PauSe('VDADpause',callback);
+		
 		}
 
 
@@ -4497,44 +4510,14 @@ pause_code_counter++;
 			}
 		var originatevalue = protodial + "/" + extendial;
 		var queryCID = "ACagcW" + epoch_sec + user_abb;
-
-		var xmlhttp=false;
-		/*@cc_on @*/
-		/*@if (@_jscript_version >= 5)
-		// JScript gives us Conditional compilation, we can cope with old IE versions.
-		// and security blocked creation of the objects.
-		 try {
-		  xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-		 } catch (e) {
-		  try {
-		   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		  } catch (E) {
-		   xmlhttp = false;
-		  }
-		 }
-		@end @*/
-		if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-			{
-			xmlhttp = new XMLHttpRequest();
-			}
-		if (xmlhttp) 
-			{ 
-			VMCoriginate_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&user=" + user + "&pass=" + pass  + "&ACTION=OriginateVDRelogin&format=text&channel=" + originatevalue + "&queryCID=" + queryCID + "&exten=" + session_id + "&ext_context=" + ext_context + "&ext_priority=1" + "&extension=" + extension + "&protocol=" + protocol + "&phone_ip=" + phone_ip + "&enable_sipsak_messages=" + enable_sipsak_messages + "&allow_sipsak_messages=" + allow_sipsak_messages + "&campaign=" + campaign + "&outbound_cid=" + campaign_cid;
-			xmlhttp.open('POST', 'manager_send.php'); 
-			xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
-			xmlhttp.send(VMCoriginate_query); 
-			xmlhttp.onreadystatechange = function() 
-				{ 
-				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) 
-					{
-			//		alert(xmlhttp.responseText);
-					}
-				}
-			delete xmlhttp;
-			}
+VMCoriginate_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&user=" + user + "&pass=" + pass  + "&ACTION=OriginateVDRelogin&format=text&channel=" + originatevalue + "&queryCID=" + queryCID + "&exten=" + session_id + "&ext_context=" + ext_context + "&ext_priority=1" + "&extension=" + extension + "&protocol=" + protocol + "&phone_ip=" + phone_ip + "&enable_sipsak_messages=" + enable_sipsak_messages + "&allow_sipsak_messages=" + allow_sipsak_messages + "&campaign=" + campaign + "&outbound_cid=" + campaign_cid;
+			
+                $.post('manager_send.php',VMCoriginate_query);
+		
 		if (auto_dial_level > 0)
 			{
 			AutoDial_ReSume_PauSe("VDADpause");
+                        PauseCodeSelectContent_create();
 			}
 		}
 
@@ -8451,8 +8434,6 @@ function HotKeys(HKstate)
                     CalL_ScripT_id = '';
                 }
 
-
-
             }
             
 
@@ -8526,10 +8507,6 @@ function HotKeys(HKstate)
                 Presets_HTML = Presets_HTML + "</td></tr></table><br /><br /><table cellpadding=\"0\" cellspacing=\"0\"><tr><td width=\"330px\" align=\"left\"><font size=\"3\" style=\"BACKGROUND-COLOR: #CCCCFF\"><b><a href=\"#\" onclick=\"hideDiv('PresetsSelectBox');return false;\">Close [X]</a></b></font></td></tr></table>";
                 document.getElementById("PresetsSelectBoxContent").innerHTML = Presets_HTML;
             }
-
-
-
-
 
 
 // ################################################################################

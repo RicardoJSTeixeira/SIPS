@@ -1591,6 +1591,24 @@ if ($ACTION == 'manDiaLnextCaLL') {
 						if ($DB) {echo "$stmt\n";
 						}
 						$man_leadID_ct = mysql_num_rows($rslt);
+                                                if(!$man_leadID_ct){
+                                                   $stmt = "SELECT lead_id FROM vicidial_list where alt_phone='$phone_number' order by modify_date desc LIMIT 1;";
+						$rslt = mysql_query($stmt, $link);
+						if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00362', $user, $server_ip, $session_name, $one_mysql_log);
+						}
+						if ($DB) {echo "$stmt\n";
+						}
+						$man_leadID_ct = mysql_num_rows($rslt); 
+                                                }
+                                                if(!$man_leadID_ct){
+                                                   $stmt = "SELECT lead_id FROM vicidial_list where address3='$phone_number' order by modify_date desc LIMIT 1;";
+						$rslt = mysql_query($stmt, $link);
+						if ($mel > 0) {mysql_error_logging($NOW_TIME, $link, $mel, $stmt, '00362', $user, $server_ip, $session_name, $one_mysql_log);
+						}
+						if ($DB) {echo "$stmt\n";
+						}
+						$man_leadID_ct = mysql_num_rows($rslt); 
+                                                }
 					}
 					if ($man_leadID_ct > 0) {
 						$row = mysql_fetch_row($rslt);
