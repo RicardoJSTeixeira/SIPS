@@ -12,11 +12,16 @@
 </div>
 
 
+<div class="item checkbox_class" title="Escolha Multipla">
+      <label class="label_checkbox label_geral">Checkbox:</label>
+      <input   type="checkbox" id="checkbox1" name="cc" value="1">
+      <label class="checkbox_name checkbox inline" for="checkbox1"><span></span>valor 1</label>
+</div>
+
 <div class="item radio_class" title="Botões de Resposta unica">
       <label class="label_radio label_geral">Radio:</label>
-      <br>
       <input  type="radio" id="radio1" name="ra" checked="checked">
-      <label class="radio_name"  for="radio1"><span></span>valor 1</label>
+      <label class="radio_name radio inline"  for="radio1"><span></span>valor 1</label>
 </div>
 
 
@@ -41,21 +46,21 @@
                   </tr>
             </thead >
             <tbody class="tr_body">
-                  <tr >
+                  <tr>
                         <td>
                               <label class="label_pergunta">Pergunta1:</label>
                         </td>
                         <td>
                               <input  type="radio" id="tableradio1" name="rb" checked="checked">
-                              <label class="tableradio_name"  for="tableradio1"><span></span></label>
+                              <label class="tableradio_name radio inline"  for="tableradio1"><span></span></label>
                         </td>
                         <td>
                               <input  type="radio" id="tableradio2" name="rb" checked="checked">
-                              <label class="tableradio_name"  for="tableradio2"><span></span></label>
+                              <label class="tableradio_name radio inline"  for="tableradio2"><span></span></label>
                         </td>
                         <td>
                               <input type="radio" id="tableradio3" name="rb" checked="checked">
-                              <label class="tableradio_name"  for="tableradio3"><span></span></label>
+                              <label class="tableradio_name radio inline"  for="tableradio3"><span></span></label>
                         </td>
                   </tr>
             </tbody>
@@ -64,18 +69,13 @@
 
 
 
-<div class="item checkbox_class" title="Escolha Multipla">
-      <label class="label_checkbox label_geral">Checkbox:</label>
-      <br>
-      <input   type="checkbox" id="checkbox" name="cc" value="1">
-      <label class="checkbox_name" for="checkbox"><span></span>valor 1</label>
-</div>
+
 
 
 
 <div class="item multichoice_class" title="Lista de Opções"> 
       <label class="label_multichoice label_geral">Escolha multipla:</label>
-      <br>
+
       <select  class="multichoice_select">
             <option>opção1</option>
       </select>
@@ -90,15 +90,16 @@
 
 
 
-<div class="item pagination_class" title="Elemento de paginação">
-      <button class="btn" onclick=" $('#page_selector option:selected').prev().prop('selected', true);
-                  update_info();">Anterior</button>
-      <button class="btn" onclick=" $('#page_selector option:selected').next().prop('selected', true);
-                  update_info();">Seguinte</button>
-</div>
 
 
 <div class="item datepicker_class" title="Elemento de data e tempo">
       <label class="label_datepicker label_geral">Selector de data e tempo: </label>
       <input size="16" type="text" class="form_datetime">
+</div>
+
+<div class="item pagination_class" title="Elemento de paginação">
+      <button class="btn" onclick=" $('#page_selector option:selected').prev().prop('selected', true);
+                  update_info();">Anterior</button>
+      <button class="btn" onclick=" $('#page_selector option:selected').next().prop('selected', true);
+                  update_info();">Seguinte</button>
 </div>

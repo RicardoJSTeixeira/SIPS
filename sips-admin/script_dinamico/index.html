@@ -20,32 +20,29 @@
             <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
             <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
             <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
-
             <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
             <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt-BR.js"></script>
 
             <style>
-                  .leftDiv, .rightDiv {width:120px; float:left; border:1px solid #000; padding:5px; margin:10px; min-height:130px}
-                  .leftDiv {margin-left:40px}
-                  .item { text-align:center; border:1px solid #EEE; background-color:#FFF;padding:10px;}
-                  .helperPick {border:3px dashed #288dd4; text-align:center;width:auto}
-                  label{
-                        display: inline;
+                  .leftDiv, .rightDiv { padding:5px; }
+                  .grid{
+                        border: 1px inset #000000;
                   }
-                  .item .info_icon{
-                        float:right;
-                  }
-                  #add_rule_button
-                  {
-                        margin :5px;
-                  }
-                  legend{
-                        border-bottom: 8px  groove   #a1a1a9;
-                        margin-bottom: 0px;
+                  .leftDiv .item { text-align:center; border:1px dashed #EEE; background-color:#FFF;padding:3px;}
+                  .rightDiv .item { text-align:center; border:1px dashed #AAA; background-color:#FFF;padding:3px;}
+                  .helperPick {border:4px solid #288dd4; text-align:center;width:auto}
 
+                  #add_rule_button{margin :5px;}
+                  legend{border-bottom: 8px  groove #a1a1a9;margin-bottom: 0px;}
+                  .modal-body, .modal{
+                        overflow:visible;
                   }
-           
-                
+                  .grid-title select{width:auto;}
+
+                  .formRow .formRight
+                  {
+                        width:75%;
+                  }
             </style>
       </head>
       <body>
@@ -102,7 +99,7 @@
                               <label class="label label-info" for="script_name_edit">Nome:</label>
 
                               <div class="formRight">
-                                    <input maxlength="65" class="span" id="pages_name_edit" type="text" placeholder="Novo nome da página" />
+                                    <input maxlength="25" class="span" id="pages_name_edit" type="text" placeholder="Novo nome da página" />
                               </div>
                         </div>
                         <div class="clear"></div>
@@ -124,13 +121,12 @@
                   <div class="row-fluid">
                         <div class="grid span6">
                               <div class="grid-title">
-                                    <div class="pull-left">Formulário em construção</div>
+                                    <div class="pull-left">Formulário</div>
                                     <div class="pull-right" id="page_selector_div">           
                                           <button data-t="tooltip-right" title="Opções da Layout" data-toggle="modal" data-target="#dialog_page"  class="btn btn-warning icon-alone" id="opcao_page_button"><i class="icon-cogs"></i></button>
-
                                           <select id="page_selector" style="float:left">
                                           </select>
-                                          <button class="btn btn-info icon-plus" id="page_add_button"></button>
+                                          <button class="btn btn-primary icon-plus" id="page_add_button"></button>
                                           <button class="btn btn-danger icon-remove "  id="page_remove_button" ></button>         
                                     </div>
                               </div>
@@ -145,15 +141,13 @@
                               <div class="grid-title">
                                     <div class="pull-left">            Elementos e Edição                              </div>
                                     <div class="pull-right">            
-
-                                          <select id="script_selector">
+                                          <select id="script_selector" style="float:left">
                                           </select>                        
                                           <button data-t="tooltip-right" title="Opções da Layout" data-toggle="modal" data-target="#dialog_layout"  class="btn btn-warning icon-alone" id="opcao_script_button"><i class="icon-cogs"></i></button>
-                                          <button class="btn btn-info icon-plus" id="script_add_button"></button>
+                                          <button class="btn btn-primary icon-plus" id="script_add_button"></button>
                                           <button class="btn btn-danger icon-remove "  id="script_remove_button" ></button>
                                     </div>
                               </div>
-
 
 
 
@@ -163,7 +157,6 @@
                                                 <li><a href="#tabs-1">Elementos</a></li>
                                                 <li><a href="#tabs-2">Edição</a></li>
                                                 <li><a href="#tabs-3">Regras</a></li>
-
                                           </ul>
                                           <div id="tabs-1">
                                                 <div class="rightDiv span" id="rigth_list">
@@ -309,6 +302,7 @@
                                                 <!------------------------------------------------------------------------------>
                                                 <!-------------------------COMUM A TODOS OS ELEMENTOS-------------------------->
                                                 <!------------------------------------------------------------------------------>
+                                                <div class="clear"></div>
                                                 <div id="item_edit_comum" style="display:none"> 
                                                       <div class="formRow" >
                                                             <label class="label label-info" >Tag:</label>
@@ -324,6 +318,10 @@
                                                                   <label for="item_required"><span></span></label>
                                                                   <i class="icon-star"></i>
                                                             </div>
+                                                            <div class="formRight">
+                                                                  <label>(Apenas obrigatório quando visivel)</label>
+                                                            </div>
+
                                                       </div>
                                                       <div class="formRow hidden_class" >
                                                             <!-----------------------------HIDDEN-------------------------------------------------------->
@@ -350,13 +348,15 @@
                                                 </div>
                                                 <div class="clear"></div>
                                                 <div class="modal-footer footer_save_cancel">
-                                                      <button class="btn btn-info" id="save_edit">Guardar</button>
-                                                      <button class="btn btn-info" id="cancel_edit">Cancelar</button>
+                                                      <button class="btn btn-primary" id="save_edit">Guardar</button>
+                                                      <button class="btn btn-primary" id="cancel_edit">Cancelar</button>
                                                 </div>
                                           </div>
                                           <div id="tabs-3">
+
                                                 <div id="rule_manager" style="display:none,width:auto" >
-                                                      <table id="rule_table" style="width:100%" class="table table-mod">
+
+                                                      <table id="rule_table" style="width:100%" class="table table-bordered">
                                                             <thead>
                                                                   <tr>
                                                                         <td>
@@ -380,6 +380,7 @@
 
                                                 <form id="rule_form">
                                                       <div id="rule_creator" style="display:none;">
+
                                                             <!--TRIGGER-->
                                                             <div class="formRow" >
                                                                   <label class="label label-info" >Evento:</label>
@@ -425,16 +426,19 @@
                                                             </div>
                                                             <div class="clear"></div>
 
-                                                            <div class="pull-right formRight">          <button class="btn btn-large btn-warning" id="add_rule_button">Adicionar</button>                              </div>
 
+                                                            <div class="pull-right">    
+                                                                  <button class="btn btn-large btn-primary" id="add_rule_button" style="float:right;">Adicionar</button>
 
+                                                            </div>
+                                                            <div class="pull-left">  
+                                                                  <label class="label label-warning">Certifique-se que a edição do elemento está concluida antes de criar as regras.</label>
+                                                            </div>
                                                             <div class="clear"></div>
-
-
                                                       </div>
                                                 </form>
                                                 <div class="modal-footer ">
-                                                      <button class="btn btn-info"  id="open_rule_creator">Criar nova regra</button>
+                                                      <button class="btn"  id="open_rule_creator">Criar nova regra</button>
                                                 </div>
 
                                           </div><!--TAB 3-->
