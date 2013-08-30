@@ -22,6 +22,17 @@ switch ($action) {
         echo json_encode($js);
         break;
 
+    case "get_camp_linha_by_id_script":
+        $query = "SELECT * FROM script_assoc where id_script=$id_script";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(id_script => $row["id_script"], id_camp_linha => $row["id_camp_linha"], tipo => $row["tipo"]);
+        }
+        echo json_encode($js);
+        break;
+
+
+
     case "get_scripts":
         $query = "SELECT * FROM script_dinamico_master";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -41,12 +52,21 @@ switch ($action) {
         echo json_encode($js);
         break;
 
-
-    case "get_results":
-        $query = "SELECT * FROM script_result order by id_elemento ";
+    case "get_scripts_by_id_script":
+        $query = "SELECT * FROM script_dinamico_master where id='$id_script'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_elemento => $row["id_elemento"], valor => $row["valor"]);
+            $js = array(id => $row["id"], name => $row["name"]);
+        }
+        echo json_encode($js);
+        break;
+
+
+    case "get_results_to_populate":
+        $query = "SELECT sr.id_script,lead_id,id_elemento,valor,type FROM script_result sr inner join script_dinamico sd on sr.id_elemento=sd.id  where sr.lead_id=$lead_id order by unique_id ";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(id_script => $row["id_script"], lead_id => $row["lead_id"], id_elemento => $row["id_elemento"], valor => $row["valor"], type => $row["type"]);
         }
         echo json_encode($js);
         break;
@@ -120,7 +140,7 @@ switch ($action) {
 
 
     case 'get_campaign':
-        $query = "SELECT  a.campaign_id,b.campaign_name  FROM  vicidial_campaign_statuses a inner join vicidial_campaigns b on a.campaign_id=b.campaign_id and active='y'  group by  campaign_id ";
+        $query = "SELECT  campaign_id,campaign_name  FROM  vicidial_campaigns where active='y' order by campaign_name ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array(id => $row["campaign_id"], name => $row["campaign_name"]);
@@ -147,11 +167,11 @@ switch ($action) {
         $query = mysql_query($query, $link) or die(mysql_error());
 
         foreach ($campaign as $value) {
-            $query = "INSERT INTO `script_assoc` values($id_script,'$value')";
+            $query = "INSERT INTO `script_assoc` values($id_script,'$value','campaign')";
             $query = mysql_query($query, $link) or die(mysql_error());
         }
         foreach ($linha_inbound as $value) {
-            $query = "INSERT INTO `script_assoc` values($id_script,'$value')";
+            $query = "INSERT INTO `script_assoc` values($id_script,'$value','linha_inbound')";
             $query = mysql_query($query, $link) or die(mysql_error());
         }
 
@@ -192,7 +212,7 @@ switch ($action) {
         break;
 
     case "add_item":
-        $query = "UPDATE script_dinamico SET ordem=ordem+1 where ordem>=$ordem";
+        $query = "UPDATE script_dinamico SET ordem=ordem+1 where ordem>=$ordem and id_page=$id_page ";
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "INSERT INTO `asterisk`.`script_dinamico` (`id`, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required,hidden) VALUES (NULL, $id_script,$id_page,'$type',$ordem,'$dispo', '$texto', '" . mysql_real_escape_string(json_encode($placeholder)) . "', $max_length, '" . mysql_real_escape_string(json_encode($values_text)) . "',$required,$hidden)";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -227,7 +247,7 @@ switch ($action) {
         break;
 
     case "delete_item":
-        $query = "UPDATE script_dinamico SET ordem=ordem-1 where ordem>$ordem";
+        $query = "UPDATE script_dinamico SET ordem=ordem-1 where ordem>$ordem and id_page=$id_page ";
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "delete from script_dinamico where id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -237,6 +257,8 @@ switch ($action) {
         break;
 
     case "delete_script":
+        $query = "delete from script_assoc where id_script=$id_script";
+        $query = mysql_query($query, $link) or die(mysql_error());
         $query = "delete from script_dinamico_master where id=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "delete from script_dinamico_pages where id_script=$id_script ";
@@ -261,7 +283,7 @@ switch ($action) {
         $sql = array();
         foreach ($results as $row) {
             if ($row['value'] != "")
-                $sql[] = "(null,$id_script,$user_id,$unique_id,$campaign_id,$lead_id,'" . $row['name'] . "', '" . $row['value'] . "')";
+                $sql[] = "(null,$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$row[name]', '$row[value]')";
         }
         $query = "INSERT INTO `script_result`(`id`,id_script,user_id,unique_id,campaign_id,lead_id, `id_elemento`, `valor`) VALUES " . implode(',', $sql);
         $query = mysql_query($query, $link) or die(mysql_error());

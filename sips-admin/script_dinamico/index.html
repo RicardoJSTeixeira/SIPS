@@ -24,8 +24,8 @@
             <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt-BR.js"></script>
 
             <style>
-                   #page_title{background-color:#111111;padding:10px;text-align: center;font-size:170%;display:block;margin: 0 auto;color:#FFFFFF}
-                  
+                  #page_title{background-color:#111111;padding:10px;text-align: center;font-size:170%;display:block;margin: 0 auto;color:#FFFFFF}
+
                   .leftDiv, .rightDiv { padding:5px; }
                   .grid{
                         border: 1px inset #000000;
@@ -45,9 +45,11 @@
                   {
                         width:75%;
                   }
-                   input[type="checkbox"]{display:inline;}
+                  input[type="checkbox"]{display:inline;}
                   input[type="radio"]{display:inline;}
                   .radio, .checkbox {padding-left: 1px;padding-right: 16px;}
+
+
             </style>
       </head>
       <body>
@@ -206,10 +208,13 @@
                                                       <div class="formRow" >
                                                             <label class="label label-info" >Disposição:</label>
                                                             <div class="formRight">
-                                                                  <input type="radio" id="horiz_radio" name="rdispo" checked="checked">
-                                                                  <label class="radio_dispo"  for="horiz_radio">Horizontal</label>
-                                                                  <input type="radio" id="vertic_radio" name="rdispo" >
-                                                                  <label class="radio_dispo"  for="vertic_radio">Vertical</label>
+                                                                  <label class="radio_dispo"  for="horiz_radio">Horizontal        <input type="radio" id="horiz_radio" name="rdispo" checked="checked"></label>
+                                                          
+
+                                                            </div> <div class="formRight">
+
+                                                                  <label class="radio_dispo"  for="vertic_radio">Vertical <input type="radio" id="vertic_radio" name="rdispo" ></label>
+                                                                 
                                                             </div>
                                                       </div>
                                                 </div>
@@ -230,10 +235,13 @@
                                                       <div class="formRow" >
                                                             <label class="label label-info" >Disposição:</label>
                                                             <div class="formRight">
-                                                                  <input type="radio" id="horiz_checkbox" name="cdispo" checked="checked">
-                                                                  <label class="checkbox_dispo"  for="horiz_checkbox">Horizontal</label>
-                                                                  <input type="radio" id="vertic_checkbox" name="cdispo" >
-                                                                  <label class="checkbox_dispo"  for="vertic_checkbox">Vertical</label>
+                                                                  <label class="checkbox_dispo"  for="horiz_checkbox">Horizontal <input type="radio" id="horiz_checkbox" name="cdispo" checked="checked"></label>
+                                                                 
+
+                                                            </div>   <div class="formRight">
+                                                                  <label class="checkbox_dispo"  for="vertic_checkbox">Vertical  <input type="radio" id="vertic_checkbox" name="cdispo" ></label>
+                                                                
+
                                                             </div>
                                                       </div>
                                                 </div>
@@ -283,7 +291,7 @@
                                                             <label class="label label-info" >Titulos:</label>
 
                                                             <div class="formRight">
-                                                                  <textarea id="tableradio_th_textarea" rows="4" cols="50"></textarea>
+                                                                  <textarea id="tableradio_th_textarea" maxlength="50" rows="4" cols="50"></textarea>
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >

@@ -1,13 +1,18 @@
 
 
 
+//licença: 1339
+//operador:blitz
+//pass: 1234
+//sflphone
+
 var array_id = [];
 var tag_regex = /\@([^@]+)\@/g;
 var user_id = getUrlVars()["user_id"];
 var unique_id = getUrlVars()["unique_id"];
 var campaign_id = getUrlVars()["campaign_id"];
 var lead_id = getUrlVars()["lead_id"];
-var script_id = 0;
+var script_id = getUrlVars()["id_script"];
 $(function() {
       array_id["radio"] = 0;
       array_id["checkbox"] = 0;
@@ -35,7 +40,7 @@ function getUrlVars() {
 
 function insert_element(opcao, element, data)
 {
-
+      element.removeAttr("title");
       switch (opcao)
       {
             case "texto":
@@ -57,26 +62,26 @@ function insert_element(opcao, element, data)
                   for (var count = 0; count < radios.length; count++)
                   {
                         if (data.required)
-                              element.append($("<input>")
+                              element.append($("<label>")
+                                      .addClass("radio_name radio inline")
+                                      .attr("for", array_id["radio"] + "radio")
+                                      .text(radios[count]).append($("<input>")
                                       .attr("type", "radio")
                                       .addClass("validate[required]")
                                       .attr("value", radios[count])
                                       .attr("id", array_id["radio"] + "radio")
-                                      .attr("name", data.id));
+                                      .attr("name", data.id))
+                                      );
                         else
-                              element.append($("<input>")
+                              element.append($("<label>")
+                                      .addClass("radio_name radio inline")
+                                      .attr("for", array_id["radio"] + "radio")
+                                      .text(radios[count]).append($("<input>")
                                       .attr("type", "radio")
                                       .attr("value", radios[count])
                                       .attr("id", array_id["radio"] + "radio")
-                                      .attr("name", data.id));
-
-
-                        element.append($("<label>")
-                                .addClass("radio_name radio inline")
-                                .attr("for", array_id["radio"] + "radio")
-                                .text(radios[count])
-                                );
-
+                                      .attr("name", data.id))
+                                      );
                         if (data.dispo === "v")
                               element.append($("<br>"));
                         array_id["radio"] = array_id["radio"] + 1;
@@ -86,32 +91,39 @@ function insert_element(opcao, element, data)
 
             case "checkbox":
                   element.empty();
-
                   element.append($("<label>").addClass("label_checkbox label_geral").text($("#checkbox_edit").val()));
                   element.find(".label_checkbox")[0].innerHTML = data.texto;
                   var checkboxs = data.values_text;
                   for (var count = 0; count < checkboxs.length; count++)
                   {
+
                         if (data.required)
-                              element.append($("<input>").attr("type", "checkbox").addClass("validate[minCheckbox[1]]").attr("value", checkboxs[count]).attr("id", array_id["checkbox"] + "checkbox").attr("name", data.id));
+                              element.append($("<label>")
+                                      .addClass("checkbox_name checkbox inline")
+                                      .attr("for", array_id["checkbox"] + "checkbox")
+                                      .text(checkboxs[count]).
+                                      append($("<input>")
+                                      .attr("type", "checkbox")
+                                      .addClass("validate[minCheckbox[1]]")
+                                      .attr("value", checkboxs[count])
+                                      .attr("id", array_id["checkbox"] + "checkbox")
+                                      .attr("name", data.id))
+                                      );
                         else
-                              element.append($("<input>").attr("type", "checkbox").attr("value", checkboxs[count]).attr("id", array_id["checkbox"] + "checkbox").attr("name", data.id));
-
-
-
-                        element.append($("<label>")
-                                .addClass("checkbox_name checkbox inline")
-                                .attr("for", array_id["checkbox"] + "checkbox")
-                                .text(checkboxs[count])
-                                );
+                              element.append($("<label>")
+                                      .addClass("checkbox_name checkbox inline")
+                                      .attr("for", array_id["checkbox"] + "checkbox")
+                                      .text(checkboxs[count])
+                                      .append($("<input>")
+                                      .attr("type", "checkbox")
+                                      .attr("value", checkboxs[count])
+                                      .attr("id", array_id["checkbox"] + "checkbox")
+                                      .attr("name", data.id))
+                                      );
                         if (data.dispo === "v")
                               element.append($("<br>"));
                         array_id["checkbox"] = array_id["checkbox"] + 1;
                   }
-
-
-
-
                   break;
 
 
@@ -218,26 +230,87 @@ function insert_element(opcao, element, data)
 
 }
 
+function populate_script()
+{
+      $.post("requests.php", {action: "get_results_to_populate", lead_id: lead_id},
+      function(data)
+      {
+            if (data !== null)
+            {
+                  $.each(data, function(index, value) {
+
+                        switch (this.type)
+                        {
+                              case "texto":
+                                    $("#" + this.id_elemento + " :input").val(this.valor);
+                                    break;
+                              case "radio":
+                              case "checkbox":
+                                    $("#" + this.id_elemento + " :input[value='" + this.valor + "']").attr('checked', true);
+                                    break;
+                              case "multichoice":
+                                    $("#" + this.id_elemento + " :input").val(this.valor);
+                                    break;
+                              case "tableradio":
+
+                                    var temp = this.id_elemento.split(",");
+                                    $("#" + temp[0] + " tbody tr:eq(" + temp[1] + ") :input[value='" + this.valor + "']").attr('checked', true);
+
+
+                                    break;
+                              case "datepicker":
+                                    $("#" + this.id_elemento + " :input").val(this.valor);
+                                    break;
+
+
+
+
+
+                        }
+                  });
+            }
+
+      }, "json");
+}
+
+
 //UPDATES DE INFO
 function update_script()
 {
-    
-      $.post("requests.php", {action: "get_scripts_by_campaign", id_campaign: campaign_id},
-      function(data)
+
+      if (campaign_id !== undefined)
       {
-            if (data == null)
 
+            $.post("requests.php", {action: "get_scripts_by_campaign", id_campaign: campaign_id},
+            function(data)
             {
-                  alert("Não existe script");
-            }
-            else
+                  if (data !== null)
+                  {
+                        script_id = data.id;
+                        update_info();
+                  }
+
+            }, "json");
+      }
+      else
+
+      {
+
+            $.post("requests.php", {action: "get_scripts_by_id_script", id_script: script_id},
+            function(data)
             {
+                  if (data == null)
 
-                  script_id = data.id;
-
-                  update_info();
-            }
-      }, "json");
+                  {
+                        alert("Não existe script");
+                  }
+                  else
+                  {
+                        script_id = data.id;
+                        update_info();
+                  }
+            }, "json");
+      }
 }
 
 function update_info()
@@ -260,7 +333,6 @@ function update_info()
                               item = $('#dummie .texto_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
-                                      .addClass("element")
                                       .data("required", this.required)
                                       .data("type", "texto");
                               insert_element("texto", item, this);
@@ -351,16 +423,11 @@ function update_info()
 
 
 
-                  if ($("#" + this.id_page + "pag").length) {
-                        $("#" + this.id_page + "pag").append(item);
-                  }
-                  else
-                  {
+
+                  if (!$("#" + this.id_page + "pag").length) {
                         $("#script_div").append($("<div>").addClass("pag_div").attr("id", this.id_page + "pag"));
-                        $("#" + this.id_page + "pag").append(item);
                   }
-
-
+                   $("#" + this.id_page + "pag").append(item);
 
 
 
@@ -368,16 +435,18 @@ function update_info()
             tags();
             rules();
 
-            $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'}).keypress(function(e) {
+            $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true}).keypress(function(e) {
                   e.preventDefault();
             }).bind("cut copy paste", function(e) {
                   e.preventDefault();
             });
             $("#myform").validationEngine();
 
+
+
             $(".pag_div").hide().first().show();
 
-
+            populate_script();
       }, "json");
 
 
@@ -580,6 +649,21 @@ $("#myform").on("submit", function(e)
 
       e.preventDefault();
 
-      $.post("requests.php", {action: "save_form_result", id_script: script_id, results: $("#myform").serializeArray(), user_id: user_id, unique_id: unique_id, campaign_id: campaign_id, lead_id: lead_id}, "json");
+
 });
 
+function submit_manual()
+{
+      $.post("requests.php", {action: "save_form_result", id_script: script_id, results: $("#myform").serializeArray(), user_id: user_id, unique_id: unique_id, campaign_id: campaign_id, lead_id: lead_id}, function() {
+            return true;
+      }, "json").fail(function() {
+            return false;
+      });
+
+}
+
+function validate_manual()
+{
+      return $("#myform").validationEngine('validate');
+
+}
