@@ -266,10 +266,12 @@ function populate_script()
 function update_script()
 {
 
-      if (page_info.campaign_id !== undefined)
-      {
 
-            $.post("requests.php", {action: "get_scripts_by_campaign", id_campaign: page_info.campaign_id},
+
+
+      if (page_info.script_id !== undefined)
+      {
+            $.post("requests.php", {action: "get_scripts_by_id_script", id_script: page_info.script_id},
             function(data)
             {
                   if (data !== null)
@@ -281,24 +283,27 @@ function update_script()
             }, "json");
       }
       else
-
       {
+            var camp_linha = 0;
+            if (page_info.in_group_id !== "")
+                  camp_linha = page_info.in_group_id;
+            else if (page_info.campaign_id !== "")
+                  camp_linha = page_info.campaign_id;
 
-            $.post("requests.php", {action: "get_scripts_by_id_script", id_script: page_info.script_id},
+
+            $.post("requests.php", {action: "get_scripts_by_campaign", id_campaign: camp_linha},
             function(data)
             {
-                  if (data == null)
-
-                  {
-                        alert("Não existe script");
-                  }
-                  else
+                  if (data !== null)
                   {
                         page_info.script_id = data.id;
                         update_info();
                   }
+
             }, "json");
       }
+
+
 }
 
 function update_info()
