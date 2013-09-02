@@ -93,8 +93,7 @@ function leave_3way_call(tempvarattempt)
 
     mainxfer_send_redirect('3WAY', '', '', tempvarattempt);
 
-    if (document.images) { /*document.images['livecall'].src = image_livecall_OFF.src;*/
-    }
+  
 }
 
 // ################################################################################
@@ -1044,8 +1043,7 @@ function mainxfer_send_redirect(taskvar, taskxferconf, taskserverip, taskdebugno
         }
         document.getElementById("callchannel").value = '';
         document.vicidial_form.callserverip.value = '';
-        if (document.images) { /*document.images['livecall'].src = image_livecall_OFF.src;*/
-        }
+       
         dialedcall_send_hangup(taskdispowindow, '', '', no_delete_VDAC);
     }
 
@@ -1765,8 +1763,7 @@ function ManualDialCheckChanneL(taskCheckOR)
                     document.vicidial_form.uniqueid.value = MDlookResponse_array[0];
                     document.getElementById("callchannel").value = MDlookResponse_array[1];
                     lastcustchannel = MDlookResponse_array[1];
-                    if (document.images) { /*document.images['livecall'].src = image_livecall_ON.src;*/
-                    }
+                    
                     document.vicidial_form.SecondS.value = 0;
                     document.getElementById("SecondSDISP").innerHTML = '0';
 
@@ -2954,8 +2951,7 @@ function check_for_auto_incoming()
             lastcustchannel = VDIC_data_VDAC[3];
             document.vicidial_form.callserverip.value = VDIC_data_VDAC[4];
             lastcustserverip = VDIC_data_VDAC[4];
-            if (document.images) { /*document.images['livecall'].src = image_livecall_ON.src;*/
-            }
+            
             document.vicidial_form.SecondS.value = 0;
             document.getElementById("SecondSDISP").innerHTML = '0';
 
@@ -3679,8 +3675,7 @@ function dialedcall_send_hangup(dispowindow, hotkeysused, altdispo, nodeletevdac
             post_phone_time_diff_alert_message = '';
         }
 
-        if (document.images) { /*document.images['livecall'].src = image_livecall_OFF.src;*/
-        }
+       
         document.getElementById("WebFormSpan").innerHTML = "<img src=\"./images/vdc_LB_webform_OFF.gif\" border=\"0\" alt=\"Web Form\" />";
         if (enable_second_webform > 0)
         {
@@ -4873,8 +4868,7 @@ function CustomerChanneLGone()
     document.getElementById("callchannel").value = '';
     document.vicidial_form.callserverip.value = '';
     document.getElementById("CustomerGoneChanneL").innerHTML = lastcustchannel;
-    if (document.images) { /*document.images['livecall'].src = image_livecall_OFF.src;*/
-    }
+    
     WaitingForNextStep = 1;
 }
 function CustomerGoneOK()
@@ -8231,10 +8225,7 @@ function check_for_conf_calls(taskconfnum, taskforce)
 
                         if (CheckDEADcallON < 1)
                         {
-                            if (document.images)
-                            {
-                                /*document.images['livecall'].src = image_livecall_DEAD.src;*/
-                            }
+                           
                             CheckDEADcallON = 1;
 
                             if ((xfer_in_call > 0) && (customer_3way_hangup_logging === 'ENABLED'))
@@ -8619,7 +8610,12 @@ function ManualDialNext(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnSt
 
     }
     else
-    {
+    {if (VDRP_stage != 'PAUSED')
+        {
+            agent_log_id = AutoDial_ReSume_PauSe("VDADpause", manNextCall(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnStagE, mdVendorid, mdgroupalias, mdtype), '', '', "DIALNEXT", '1', 'NXDIAL');
+            return true;
+            //	PauseCodeSelect_submit("NXDIAL");
+        }
         $("#DiaLControl").html(DiaLControl_manual_HTML_OFF);
 
     }

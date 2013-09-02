@@ -3646,7 +3646,7 @@ while ($MM_scripts > $h) {
                                                     <td class='btn-link'>Re-Marcar</td>
                                                 </tr>  
 
-                                                <tr id='search' onClick="OpeNSearcHForMDisplaYBox();" style='cursor:pointer<?=($agent_lead_search=="DISABLED")?";display:none":""?>'>
+                                                <tr id='search' onClick="OpeNSearcHForMDisplaYBox();" style='cursor:pointer;<?=($agent_lead_search=="DISABLED")?"display:none;":""?>'>
                                                     <td><i class="fam-zoom-in"></i></td>
                                                     <td class='btn-link'>Procurar</td>
                                                 </tr>
