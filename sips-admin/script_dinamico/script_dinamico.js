@@ -816,7 +816,6 @@ function insert_element(opcao, element, data)
                   var radios = data.values_text;
                   for (var count = 0; count < radios.length; count++)
                   {
-
                         element.append($("<label>")
                                 .addClass("radio_name radio inline")
                                 .attr("for", array_id["radio"] + "radio")
@@ -840,7 +839,6 @@ function insert_element(opcao, element, data)
                   var checkboxs = data.values_text;
                   for (var count = 0; count < checkboxs.length; count++)
                   {
-
                         element.append($("<label>")
                                 .addClass("checkbox_name checkbox inline")
                                 .attr("for", array_id["checkbox"] + "checkbox")

@@ -577,7 +577,6 @@ function rules()
       }
       , "json");
 }
-
 function tags()
 {
 
