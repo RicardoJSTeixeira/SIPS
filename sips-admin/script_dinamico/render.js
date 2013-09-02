@@ -41,6 +41,7 @@ function getUrlVars() {
 function insert_element(opcao, element, data)
 {
       element.removeAttr("title");
+
       switch (opcao)
       {
             case "texto":
@@ -156,6 +157,7 @@ function insert_element(opcao, element, data)
                   break;
 
             case "pagination":
+         
                   element.find("#previous_pag").bind("click", function()
                   {
                         var temp = $(".pag_div:visible").prev(".pag_div");
@@ -335,7 +337,6 @@ function update_info()
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "texto");
-                              insert_element("texto", item, this);
                               break;
 
 
@@ -345,7 +346,6 @@ function update_info()
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "pagination");
-                              insert_element("pagination", item, this);
                               break;
 
 
@@ -356,7 +356,6 @@ function update_info()
                                       .data("required", this.required)
                                       .data("type", "radio")
                                       .data("dispo", this.dispo);
-                              insert_element("radio", item, this);
                               break;
 
 
@@ -367,7 +366,6 @@ function update_info()
                                       .data("required", this.required)
                                       .data("dispo", this.dispo)
                                       .data("type", "checkbox");
-                              insert_element("checkbox", item, this);
                               break;
 
 
@@ -377,7 +375,6 @@ function update_info()
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "multichoice");
-                              insert_element("multichoice", item, this);
                               break;
 
 
@@ -387,7 +384,6 @@ function update_info()
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "textfield");
-                              insert_element("textfield", item, this);
                               break;
 
 
@@ -397,7 +393,6 @@ function update_info()
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "legend");
-                              insert_element("legend", item, this);
                               break;
 
 
@@ -407,7 +402,6 @@ function update_info()
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "tableradio");
-                              insert_element("tableradio", item, this);
                               break;
 
 
@@ -417,17 +411,17 @@ function update_info()
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "datepicker");
-                              insert_element("datepicker", item, this);
                               break;
                   }
-
-
-
 
                   if (!$("#" + this.id_page + "pag").length) {
                         $("#script_div").append($("<div>").addClass("pag_div").attr("id", this.id_page + "pag"));
                   }
-                   $("#" + this.id_page + "pag").append(item);
+                  $("#" + this.id_page + "pag").append(item);
+
+
+                  insert_element(this.type, item, this);
+
 
 
 
