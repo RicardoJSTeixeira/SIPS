@@ -1063,7 +1063,6 @@ function ManualDialAltDonE()
 // Insert or update the vicidial_log entry for a customer call
 function DialLog(taskMDstage, nodeletevdac)
 {
-    console.log("entrou")
     var alt_num_status = 0;
     if (taskMDstage == "start")
     {
@@ -1120,9 +1119,7 @@ function DialLog(taskMDstage, nodeletevdac)
             "&dial_method" + dial_method +
             "&nodeletevdac=" + nodeletevdac +
             "&alt_num_status=" + alt_num_status;
-    console.log(manDiaLlog_query);
     $.post('vdc_db_query.php', manDiaLlog_query, function(data) {
-        console.log(data);
         var MDlogResponse = null;
         MDlogResponse = data;
         var MDlogResponse_array = MDlogResponse.split("\n");
@@ -1539,10 +1536,13 @@ function NeWManuaLDiaLCalLSubmiT(tempDiaLnow)
         }
     }
     if (AutoDialWaiting) {
-        agent_log_id = AutoDial_ReSume_PauSe("VDADpause", '', '', '', '', '1', auto_pause_precall_code);
+        agent_log_id = AutoDial_ReSume_PauSe("VDADpause", continueManualDial(tempDiaLnow), '', '', '', '1', auto_pause_precall_code);
+        return;
     }
+    continueManualDial(tempDiaLnow);
+}
+function continueManualDial(tempDiaLnow){
     hideDiv('NeWManuaLDiaLBox');
-    //document.getElementById("debugbottomspan").innerHTML = "DEBUG OUTPUT" + document.vicidial_form.MDPhonENumbeR.value + "|" + active_group_alias;
 
     var s_portabilidade = document.getElementById('portabilidade');
 
@@ -1617,7 +1617,6 @@ function NeWManuaLDiaLCalLSubmiT(tempDiaLnow)
     document.vicidial_form.MDLeadID.value = '';
     document.vicidial_form.MDType.value = '';
 }
-
 // ################################################################################
 // Fast version of manual dial
 function NeWManuaLDiaLCalLSubmiTfast()
@@ -3586,10 +3585,8 @@ function dialedcall_send_hangup(dispowindow, hotkeysused, altdispo, nodeletevdac
         var group = campaign;
     }
     var form_cust_channel = document.getElementById("callchannel").value;
-    console.log("form_cust_channel:" + form_cust_channel);
     var form_cust_serverip = document.vicidial_form.callserverip.value;
     var customer_channel = lastcustchannel;
-    console.log("customer_channel:" + customer_channel);
     var customer_server_ip = lastcustserverip;
     AgaiNHanguPChanneL = lastcustchannel;
     AgaiNHanguPServeR = lastcustserverip;
@@ -3598,7 +3595,6 @@ function dialedcall_send_hangup(dispowindow, hotkeysused, altdispo, nodeletevdac
     var process_post_hangup = 0;
     if ((RedirecTxFEr < 1) && ((MD_channel_look == 1) || (auto_dial_level == 0)))
     {
-        console.log("1");
         MD_channel_look = 0;
         DialTimeHangup('MAIN');
     }
@@ -3607,9 +3603,7 @@ function dialedcall_send_hangup(dispowindow, hotkeysused, altdispo, nodeletevdac
         var queryCID = "HLvdcW" + epoch_sec + user_abb;
             var hangupvalue = customer_channel;
            custhangup_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=Hangup&format=text&user=" + user + "&pass=" + pass + "&channel=" + hangupvalue + "&call_server_ip=" + customer_server_ip + "&queryCID=" + queryCID + "&auto_dial_level=" + auto_dial_level + "&CalLCID=" + CalLCID + "&secondS=" + VD_live_call_secondS + "&exten=" + session_id + "&campaign=" + group + "&stage=CALLHANGUP&nodeletevdac=" + nodeletevdac + "&log_campaign=" + campaign;
-           $.post('manager_send.php',custhangup_query,function(data){
-               Nactiveext = data;
-           })
+           $.post('manager_send.php',custhangup_query);
         
     }
         VD_live_customer_call = 0;
@@ -3768,7 +3762,6 @@ function dialedcall_send_hangup(dispowindow, hotkeysused, altdispo, nodeletevdac
                             manual_auto_hotkey = 1;
                             alt_dial_active = 0;
 
-                            //document.getElementById("MainStatuSSpan").style.background = panel_bgcolor;
                             document.getElementById("MainStatuSSpan").innerHTML = '';
                             if (dial_method == "INBOUND_MAN")
                             {
@@ -3791,7 +3784,7 @@ function dialedcall_send_hangup(dispowindow, hotkeysused, altdispo, nodeletevdac
                     document.getElementById("DiaLControl").innerHTML = DiaLControl_manual_HTML_OFF;
                 }
                 else
-                {
+                {console.log("Eu sou o mau da fita");
                     document.getElementById("ResumeControl").innerHTML = ResumeControl_auto_OFF_HTML;
                     document.getElementById("PauseControl").innerHTML = PauseControl_auto_OFF_HTML;
                 }
@@ -3903,45 +3896,10 @@ function DialTimeHangup(tasktypecall, DestPhoneTransfer)
 {
     if (tasktypecall === 'HangupTransfer') {
         MD_channel_look = 0;
-        var xmlhttp = false;
-        /*@cc_on @*/
-        /*@if (@_jscript_version >= 5)
-         // JScript gives us Conditional compilation, we can cope with old IE versions.
-         // and security blocked creation of the objects.
-         try {
-         xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-         } catch (e) {
-         try {
-         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-         } catch (E) {
-         xmlhttp = false;
-         }
-         }
-         @end @*/
-        if (!xmlhttp && typeof XMLHttpRequest != 'undefined')
-        {
-            console.log("1.3");
-            xmlhttp = new XMLHttpRequest();
-        }
-        if (xmlhttp)
-        {
-            console.log("1.4");
-            var queryCID = "HTvdcW" + epoch_sec + user_abb;
+        var queryCID = "HTvdcW" + epoch_sec + user_abb;
             custhangup_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=HangupConfDial&format=text&user=" + user + "&pass=" + pass + "&exten=" + DestPhoneTransfer + "&ext_context=" + ext_context + "&queryCID=" + queryCID + "&log_campaign=" + campaign;
-            console.log("1.5" + custhangup_query);
-            xmlhttp.open('POST', 'manager_send.php');
-            xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-            xmlhttp.send(custhangup_query);
-            xmlhttp.onreadystatechange = function()
-            {
-                if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
-                {
-                    Nactiveext = null;
-                    Nactiveext = xmlhttp.responseText;
-                }
-            }
-            delete xmlhttp;
-        }
+            $.post('manager_send.php',custhangup_query);
+        
 
         XD_live_customer_call = 0;
         XD_live_call_secondS = 0;
@@ -3971,47 +3929,12 @@ function DialTimeHangup(tasktypecall, DestPhoneTransfer)
 
         if ((RedirecTxFEr < 1) && (leaving_threeway < 1))
         {
-            console.log("1.2");
             MD_channel_look = 0;
-            var xmlhttp = false;
-            /*@cc_on @*/
-            /*@if (@_jscript_version >= 5)
-             // JScript gives us Conditional compilation, we can cope with old IE versions.
-             // and security blocked creation of the objects.
-             try {
-             xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-             } catch (e) {
-             try {
-             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-             } catch (E) {
-             xmlhttp = false;
-             }
-             }
-             @end @*/
-            if (!xmlhttp && typeof XMLHttpRequest != 'undefined')
-            {
-                console.log("1.3");
-                xmlhttp = new XMLHttpRequest();
-            }
-            if (xmlhttp)
-            {
-                console.log("1.4");
-                var queryCID = "HTvdcW" + epoch_sec + user_abb;
+            
+             var queryCID = "HTvdcW" + epoch_sec + user_abb;
                 custhangup_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=HangupConfDial&format=text&user=" + user + "&pass=" + pass + "&exten=" + session_id + "&ext_context=" + ext_context + "&queryCID=" + queryCID + "&log_campaign=" + campaign;
-                console.log("1.5" + custhangup_query);
-                xmlhttp.open('POST', 'manager_send.php');
-                xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-                xmlhttp.send(custhangup_query);
-                xmlhttp.onreadystatechange = function()
-                {
-                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
-                    {
-                        Nactiveext = null;
-                        Nactiveext = xmlhttp.responseText;
-                    }
-                }
-                delete xmlhttp;
-            }
+                $.post('manager_send.php',custhangup_query);
+           
         }
     }
 }
@@ -4646,9 +4569,6 @@ function DispoSelect_submit()
             hideDiv('DispoButtonHideA');
             hideDiv('DispoButtonHideB');
             hideDiv('DispoButtonHideC');
-            //document.getElementById("DispoSelectBox").style.top = '80px';  // Firefox error on this line for some reason
-            //document.getElementById("DispoSelectMaxMin").innerHTML = "<a href=\"#\" onclick=\"DispoMinimize()\"> minimize </a>";
-            //document.getElementById("DispoSelectHAspan").innerHTML = "<a href=\"#\" onclick=\"DispoHanguPAgaiN()\">Hangup Again</a>";
 
             CBcommentsBoxhide();
             EAcommentsBoxhide();
@@ -4657,9 +4577,9 @@ function DispoSelect_submit()
 
             if (shift_logout_flag < 1)
             {
-                if (wrapup_waiting == 0)
-                {
-                    if (document.vicidial_form.DispoSelectStop.checked == true)
+                if (wrapup_waiting == 1)
+                {console.log("as");
+                    if (document.vicidial_form.DispoSelectStop.checked)
                     {
                         if (auto_dial_level != '0')
                         {
@@ -6614,7 +6534,7 @@ function FormContentsLoad()
 
 
     if (script_dinamico) {
-        document.getElementById('vcFormIFrame').src = '../sips-admin/script_dinamico/render.html?lead_id=' + document.vicidial_form.lead_id.value + '&user_id=' + user + '&pass=' + pass + '&campaign_id=' + campaign ;
+        document.getElementById('vcFormIFrame').src = '../sips-admin/script_dinamico/render.html?lead_id=' + document.vicidial_form.lead_id.value + '&user_id=' + user + '&pass=' + pass + '&campaign_id=' + campaign +'&in_group_id=' + VDCL_group_id;
     } else {
         document.getElementById('vcFormIFrame').src = './vdc_form_display.php?in_group_id=' + VDCL_group_id + '&lead_id=' + document.vicidial_form.lead_id.value + '&list_id=' + form_list_id + '&user=' + user + '&pass=' + pass + '&campaign=' + campaign + '&server_ip=' + server_ip + '&uniqueid=' + document.vicidial_form.uniqueid.value + '&stage=DISPLAY' + "&campaign=" + campaign + "&phone_login=" + phone_login + "&original_phone_login=" + original_phone_login + "&phone_pass=" + phone_pass + "&fronter=" + fronter + "&closer=" + user + "&group=" + group + "&channel_group=" + group + "&SQLdate=" + SQLdate + "&epoch=" + UnixTime + "&uniqueid=" + document.vicidial_form.uniqueid.value + "&customer_zap_channel=" + lastcustchannel + "&customer_server_ip=" + lastcustserverip + "&server_ip=" + server_ip + "&SIPexten=" + extension + "&session_id=" + session_id + "&phone=" + document.vicidial_form.phone_number.value + "&parked_by=" + document.vicidial_form.lead_id.value + "&dispo=" + LeaDDispO + '' + "&dialed_number=" + dialed_number + '' + "&dialed_label=" + dialed_label + '' + "&camp_script=" + campaign_script + '' + "&in_script=" + CalL_ScripT_id + '' + "&script_width=" + script_width + '' + "&script_height=" + script_height + '' + "&fullname=" + LOGfullname + '' + "&recording_filename=" + recording_filename + '' + "&recording_id=" + recording_id + '' + "&user_custom_one=" + VU_custom_one + '' + "&user_custom_two=" + VU_custom_two + '' + "&user_custom_three=" + VU_custom_three + '' + "&user_custom_four=" + VU_custom_four + '' + "&user_custom_five=" + VU_custom_five + '' + "&preset_number_a=" + CalL_XC_a_NuMber + '' + "&preset_number_b=" + CalL_XC_b_NuMber + '' + "&preset_number_c=" + CalL_XC_c_NuMber + '' + "&preset_number_d=" + CalL_XC_d_NuMber + '' + "&preset_number_e=" + CalL_XC_e_NuMber + '' + "&preset_dtmf_a=" + CalL_XC_a_Dtmf + '' + "&preset_dtmf_b=" + CalL_XC_b_Dtmf + '' + "&did_id=" + did_id + '' + "&did_extension=" + did_extension + '' + "&did_pattern=" + did_pattern + '' + "&did_description=" + did_description + '' + "&closecallid=" + closecallid + '' + "&xfercallid=" + xfercallid + '' + "&agent_log_id=" + agent_log_id + '' + "&web_vars=" + LIVE_web_vars + '';
     }

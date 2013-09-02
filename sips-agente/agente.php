@@ -4860,7 +4860,7 @@ if (($outbound_autodial_active < 1) or ($disable_blended_checkbox > 0) or ($dial
                             
                             <div id="bitch-answer" class="modal" style="display:none">
                                 <div class="modal-header">
-                                    <button class="close bitch-answer-cancel" type="button" >×</button>
+                                    <button class="close" type="button" >×</button>
                                     <h3>Cliente em espera</h3>
                                 </div>
                                 <div class="modal-body">
@@ -4868,7 +4868,7 @@ if (($outbound_autodial_active < 1) or ($disable_blended_checkbox > 0) or ($dial
                                 </div>
                                 <div class="modal-footer">
                                     <button class="btn btn-success" id="bitch-answer-answer"><i class="icon-phone"></i>Atender</button>
-                                    <button class="btn btn-link bitch-answer-cancel">Cancelar</button>
+                                    <button class="btn btn-link">Cancelar</button>
                                 </div>
                             </div>
     </div>
