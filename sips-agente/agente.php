@@ -2767,82 +2767,6 @@ header("Pragma: no-cache");                          // HTTP/1.0
         }
 
 
-### SCREEN WIDTH AND HEIGHT CALCULATIONS ###
-### DO NOT EDIT! ###
-        if ($stretch_dimensions > 0) {
-            if ($agent_status_view < 1) {
-                if ($JS_browser_width >= 510) {
-                    $BROWSER_WIDTH = ($JS_browser_width - 80);
-                }
-            } else {
-                if ($JS_browser_width >= 730) {
-                    $BROWSER_WIDTH = ($JS_browser_width - 300);
-                }
-            }
-            if ($JS_browser_height >= 340) {
-                $BROWSER_HEIGHT = ($JS_browser_height - 40);
-            }
-        }
-        if ($agent_fullscreen == 'Y') {
-            $BROWSER_WIDTH = ($JS_browser_width - 10);
-            $BROWSER_HEIGHT = $JS_browser_height;
-        }
-        $MASTERwidth = ($BROWSER_WIDTH - 400);
-        $MASTERheight = ($BROWSER_HEIGHT - 350);
-        if ($MASTERwidth < 530) {
-            $MASTERwidth = '530';
-        }
-        if ($MASTERheight < 350) {
-            $MASTERheight = '350';
-        }
-        if ($webphone_location == 'bar') {
-            $MASTERwidth = ($MASTERwidth + $webphone_height);
-        }
-
-        $CAwidth = ($MASTERwidth + 350); # 770 - cover all (none-in-session, customer hunngup, etc...)
-        $SBwidth = ($MASTERwidth + 195); # 761 - SideBar starting point
-        $MNwidth = ($MASTERwidth + 350); # 760 - main frame
-        $XFwidth = ($MASTERwidth + 320); # 750 - transfer/conference
-        $HCwidth = ($MASTERwidth + 310); # 740 - hotkeys and callbacks
-        $CQwidth = ($MASTERwidth + 55); # 730 - calls in queue listings
-        $AMwidth = ($MASTERwidth + 270); # 700 - refresh links
-        $SCwidth = ($MASTERwidth + 230); # 670 - live call seconds counter, sidebar link
-        $PDwidth = ($MASTERwidth + 270); # 650 - preset-dial links
-        $MUwidth = ($MASTERwidth + 180); # 610 - agent mute
-        $SSwidth = ($MASTERwidth + 176); # 606 - scroll script
-        $SDwidth = ($MASTERwidth + 170); # 600 - scroll script, customer data and calls-in-session
-        $HKwidth = ($MASTERwidth + 20); # 450 - Hotkeys button
-        $HSwidth = ($MASTERwidth + 1);  # 431 - Header spacer
-        $PBwidth = ($MASTERwidth + 0);  # 430 - Presets list
-        $CLwidth = ($MASTERwidth - 160); # 310 - Calls in queue link
-
-
-        $GHheight = ($MASTERheight + 1260); # 1560 - Gender Hide span
-        $DBheight = ($MASTERheight + 260); # 560 - Debug span
-        $WRheight = ($MASTERheight + 125); # 460 - Warning boxes
-        $CQheight = ($MASTERheight + 130); # 440 - Calls in queue section
-        $SLheight = ($MASTERheight + 128); # 422 - SideBar link, Agents view link
-        $QLheight = ($MASTERheight + 110); # 412 - Calls in queue link
-        $HKheight = ($MASTERheight + 105); # 405 - HotKey active Button
-        $AMheight = ($MASTERheight + 100); # 400 - Agent mute buttons
-        $PBheight = ($MASTERheight + 110); # 390 - preset dial links
-        $MBheight = ($MASTERheight + 65); # 365 - Manual Dial Buttons
-        $CBheight = ($MASTERheight + 50); # 350 - Agent Callback, pause code, volume control Buttons and agent status
-        $SSheight = ($MASTERheight - 15); # 331 - script content
-        $HTheight = ($MASTERheight + 10); # 310 - transfer frame, callback comments and hotkey
-        $BPheight = ($MASTERheight - 250); # 50 - bottom buffer, Agent Xfer Span
-        $SCheight = 49; # 49 - seconds on call display
-        $SFheight = 120; # 65 - height of the script and form contents
-        $SRheight = 109; # 69 - height of the script and form refresh links
-        if ($webphone_location == 'bar') {
-            $SCheight = ($SCheight + $webphone_height);
-#	$SFheight = ($SFheight + $webphone_height);
-            $SRheight = ($SRheight + $webphone_height);
-        }
-        $AVTheight = '0';
-        if ($is_webphone) {
-            $AVTheight = '20';
-        }
         ?>
             
         <script type="text/javascript" src="js/mensagens.js"></script>
@@ -2854,6 +2778,7 @@ header("Pragma: no-cache");                          // HTTP/1.0
             function soundsLoaded(){loop.start("ring");loop.stop("ring");};
             var loop = new SeamlessLoop();
             var loop_warning = new SeamlessLoop();
+            var script_dinamico=<?= ($agent_fullscreen=="Y")?"true":"false" ?>;
             loop.addUri("/ini/telephone-ring-4.ogg",4000,"ring");
             loop_warning.addUri("/ini/disconnected.ogg",10000,"disconnected");
             loop.callback(soundsLoaded);
@@ -3283,7 +3208,6 @@ while ($MM_scripts > $h) {
             var API_selected_xfergroup = '';
             var API_selected_callmenu = '';
             if (VICIDiaL_web_form_address != '') {
-                var limesurvey_enabled = 1;
                 var custom_fields_enabled = 0;
             }
             else {
@@ -3722,7 +3646,7 @@ while ($MM_scripts > $h) {
                                                     <td class='btn-link'>Re-Marcar</td>
                                                 </tr>  
 
-                                                <tr id='search' onClick="OpeNSearcHForMDisplaYBox();" style='cursor:pointer<?=($agent_lead_search=="DISABLED")?";display:none":""?>'>
+                                                <tr id='search' onClick="OpeNSearcHForMDisplaYBox();" style='cursor:pointer;<?=($agent_lead_search=="DISABLED")?"display:none;":""?>'>
                                                     <td><i class="fam-zoom-in"></i></td>
                                                     <td class='btn-link'>Procurar</td>
                                                 </tr>
