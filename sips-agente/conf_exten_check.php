@@ -1,6 +1,4 @@
 <?php
-error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
-ini_set('display_errors', '1');
 # conf_exten_check.php    version 2.4
 # 
 # Copyright (C) 2010  Matt Florell <vicidial@gmail.com>    LICENSE: AGPLv2
