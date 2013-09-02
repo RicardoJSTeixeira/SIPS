@@ -121,7 +121,7 @@
                   <div class="pull-left" >   Construção de formulários                           </div>
                   <div class="pull-right">
                         <button class="btn" id="render_go">Visualisação</button>
-                        <button class="btn"  id="report_go">Reports</button>
+               
                   </div>
             </div>
             <div class="grid-content">
@@ -190,6 +190,30 @@
                                                                   <input  maxlength="3" class="texto_input" id="max_length_edit" type="text" placeholder="Numero Máximo de caracteres" />
                                                             </div>
                                                       </div>
+
+                                                      <div class="formRow validation" >
+                                                            <label class="label label-info" >Validação</label>
+                                                            <div class="formRight">
+                                                                  <label class="radio inline"  for="validacao_texto_normal">Numeros e letras<input type="radio" id="validacao_texto_normal" name="regex_texto" value="normal" /></label>
+                                                            </div> 
+                                                            <div class="formRight">
+                                                                  <label class="radio inline"  for="validacao_texto_letter">Apenas letras<input type="radio" id="validacao_texto_letter" name="regex_texto" value="letter" /></label>
+                                                            </div> 
+                                                            <div class="formRight">
+                                                                  <label class="radio inline"  for="validacao_texto_email">Email<input type="radio" id="validacao_texto_email" name="regex_texto" value="email"/></label>
+                                                            </div>
+
+                                                            <div class="formRight">
+                                                                  <label class="radio inline"  for="validacao_texto_nib">NIB<input type="radio" id="validacao_texto_nib" name="regex_texto" value="nib"/></label>
+                                                            </div>
+
+                                                            <div class="formRight">
+                                                                  <label class="radio inline"  for="validacao_texto_nif">NIF<input type="radio" id="validacao_texto_nif" name="regex_texto" value="nif" /></label>
+                                                            </div>
+                                                            <div class="formRight">
+                                                                  <label class="radio inline"  for="validacao_texto_postal">Codigo-postal<input type="radio" id="validacao_texto_postal" name="regex_texto" value="postal"/></label>
+                                                            </div>
+                                                      </div>
                                                 </div>
                                                 <!--RADIO-->
                                                 <div class="editor_layout" id="radio_layout_editor" style="display:none">
@@ -209,12 +233,12 @@
                                                             <label class="label label-info" >Disposição:</label>
                                                             <div class="formRight">
                                                                   <label class="radio_dispo"  for="horiz_radio">Horizontal        <input type="radio" id="horiz_radio" name="rdispo" checked="checked"></label>
-                                                          
+
 
                                                             </div> <div class="formRight">
 
                                                                   <label class="radio_dispo"  for="vertic_radio">Vertical <input type="radio" id="vertic_radio" name="rdispo" ></label>
-                                                                 
+
                                                             </div>
                                                       </div>
                                                 </div>
@@ -236,11 +260,11 @@
                                                             <label class="label label-info" >Disposição:</label>
                                                             <div class="formRight">
                                                                   <label class="checkbox_dispo"  for="horiz_checkbox">Horizontal <input type="radio" id="horiz_checkbox" name="cdispo" checked="checked"></label>
-                                                                 
+
 
                                                             </div>   <div class="formRight">
                                                                   <label class="checkbox_dispo"  for="vertic_checkbox">Vertical  <input type="radio" id="vertic_checkbox" name="cdispo" ></label>
-                                                                
+
 
                                                             </div>
                                                       </div>

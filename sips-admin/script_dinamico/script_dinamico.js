@@ -4,7 +4,7 @@
 
 //relatorio
 
-//choosen ainda tem os widths a 400 px fixo
+
 
 
 //
@@ -130,39 +130,39 @@ $(function() {
 
                         if ($(this).data().uiSortable.currentItem.hasClass("texto_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .texto_class .label_texto")[0].innerHTML, $(".rightDiv .texto_class .input_texto")[0].placeholder, $(".rightDiv .texto_class .input_texto")[0].maxLength, 0, 0, 0);
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .texto_class .label_texto")[0].innerHTML, $(".rightDiv .texto_class .input_texto")[0].placeholder, $(".rightDiv .texto_class .input_texto")[0].maxLength, 0, 0, 0, "normal");
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("pagination_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "pagination", $(this).data().uiSortable.currentItem.index(), "h", 0, 0, 0, 0, 0, 0);
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "pagination", $(this).data().uiSortable.currentItem.index(), "h", 0, 0, 0, 0, 0, 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("radio_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_radio")[0].innerHTML, 0, 0, ["Valor1"], 0, 0);
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_radio")[0].innerHTML, 0, 0, ["Valor1"], 0, 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("checkbox_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "checkbox", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_checkbox")[0].innerHTML, 0, 0, ["Valor1"], 0, 0);
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "checkbox", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_checkbox")[0].innerHTML, 0, 0, ["Valor1"], 0, 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("multichoice_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_multichoice")[0].innerHTML, 0, 0, ["Opção1"], 0, 0);
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_multichoice")[0].innerHTML, 0, 0, ["Opção1"], 0, 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("textfield_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", $(this).data().uiSortable.currentItem.index(), "h", "textfield", 0, 0, $(".rightDiv .label_textfield")[0].innerHTML, 0, 0);
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", $(this).data().uiSortable.currentItem.index(), "h", "textfield", 0, 0, $(".rightDiv .label_textfield")[0].innerHTML, 0, 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("tableradio_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", $(this).data().uiSortable.currentItem.index(), "h", "tableradio", ["mau", "médio", "bom"], 0, ["pergunta1"], 0, 0);
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", $(this).data().uiSortable.currentItem.index(), "h", "tableradio", ["mau", "médio", "bom"], 0, ["pergunta1"], 0, 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("legend_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "legend", $(this).data().uiSortable.currentItem.index(), "h", "legend", 0, 0, $(".rightDiv .label_legend")[0].innerHTML, 0, 0);
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "legend", $(this).data().uiSortable.currentItem.index(), "h", "legend", 0, 0, $(".rightDiv .label_legend")[0].innerHTML, 0, 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("datepicker_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_datepicker")[0].innerHTML, 0, 0, 0, 0, 0);
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_datepicker")[0].innerHTML, 0, 0, 0, 0, 0, 0);
                         }
                         editor_toggle("off");
                   }
@@ -340,7 +340,8 @@ function update_info()
                                       .addClass("element")
                                       .data("type", "texto")
                                       .data("required", this.required)
-                                      .data("hidden", this.hidden);
+                                      .data("hidden", this.hidden)
+                                      .data("regex", this.param1);
                               insert_element("texto", item, this);
                               item.appendTo('.leftDiv');
                               break;
@@ -472,6 +473,7 @@ function populate_element(tipo, element)
                   $("#texto_edit").val(element.find(".label_geral")[0].innerHTML);
                   $("#placeholder_edit").val(element.find(".input_texto")[0].placeholder);
                   $("#max_length_edit").val(element.find(".input_texto")[0].maxLength);
+                  $(".validation input:radio[name='regex_texto'][value=" + element.data("regex") + "]").prop("checked", true);
                   break;
 
 
@@ -606,7 +608,8 @@ function edit_element(opcao, element, data)
                   element.find(".label_geral")[0].innerHTML = $("#texto_edit").val();
                   element.find(".input_texto")[0].placeholder = $("#placeholder_edit").val();
                   element.find(".input_texto")[0].maxLength = $("#max_length_edit").val();
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  element.data("regex", $(".validation input:radio[name='regex_texto']:checked").val());
+                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
                   break;
 
 
@@ -661,7 +664,6 @@ function edit_element(opcao, element, data)
                   }
                   for (var count = 0; count < checkboxs.length; count++)
                   {
-
                         element.append($("<label>")
                                 .addClass("checkbox_name checkbox inline")
                                 .attr("for", array_id["checkbox"] + "checkbox")
@@ -940,7 +942,7 @@ function insert_element(opcao, element, data)
 
 
 
-function item_database(opcao, Id, Id_script, Id_page, Type, Ordem, Dispo, Texto, Placeholder, Max_length, Values_text, Required, Hidden)
+function item_database(opcao, Id, Id_script, Id_page, Type, Ordem, Dispo, Texto, Placeholder, Max_length, Values_text, Required, Hidden, Param1)
 {
       $.post("requests.php", {action: opcao,
             id: Id,
@@ -954,7 +956,8 @@ function item_database(opcao, Id, Id_script, Id_page, Type, Ordem, Dispo, Texto,
             max_length: Max_length,
             values_text: Values_text,
             required: Required,
-            hidden: Hidden},
+            hidden: Hidden,
+            param1: Param1},
       function(data)
       {
             if (opcao === "get_tag_fields")
@@ -1039,6 +1042,9 @@ $("#script_remove_button").click(function()
       pagescript_database("delete_script", $("#script_selector option:selected").val(), 0);
 });
 $('#script_selector').change(function() {
+      $("#script_campanha_selector").val("").trigger("liszt:updated");
+      $("#script_linha_inbound_selector").val("").trigger("liszt:updated");
+      editor_toggle("off");
       update_script();
 });
 
@@ -1080,15 +1086,8 @@ $("#save_button_layout").click(function()//Fecha o dialog e grava as alteraçõe
 //botoes para outras paginas
 $("#render_go").click(function()
 {
-      var window_slave = window.open("/sips-admin/script_dinamico/render.html?id_script=" + $("#script_selector option:selected").val());
+      var window_slave = window.open("/sips-admin/script_dinamico/render.html?script_id=" + $("#script_selector option:selected").val());
 });
-
-$("#report_go").click(function()
-{
-      var window_slave = window.open("/sips-admin/script_dinamico/report.html");
-});
-
-
 
 
 //------------------RULES------------------
