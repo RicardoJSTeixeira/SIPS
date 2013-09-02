@@ -32,6 +32,13 @@
       "regex": /^\d{3}(-\d{4})?$/,
       "alertText": "* 郵便番号が正しくありません"
     };
+     $.validationEngineLanguage.allRules["postcodePT"] = {
+      // JP zip codes | Accepts 123 and 123-1234 format zipcodes
+      "regex": /^[0-9]{4,4}-[0-9]{3,3}?$/,
+      "alertText": "* Código Postal Incorrecto (xxxx-xxx)"
+    };
+    
+ 
 		$.validationEngineLanguage.allRules["onlyLetNumSpec"] = {
 				// Good for database fields
 				"regex": /^[0-9a-zA-Z_-]+$/,
