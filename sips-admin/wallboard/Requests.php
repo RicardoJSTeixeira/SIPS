@@ -473,10 +473,10 @@ switch ($action) {
                 $PCThold_sec_stat_one = 0;
                 $PCThold_sec_stat_two = 0;
                 $AVGhold_sec_answer_calls = 0;
-            }
+            } 
             $today = date("o-m-d");
             $tomorrow = date("o-m-d", strtotime("+1 day"));
-            $query = "select ifnull(sum(length_in_sec),0) as total_sec, ifnull(sum(queue_seconds),0) as queue_seconds from vicidial_closer_log where call_date between '$today' and '$tomorrow' and campaign_id in($linha_inbound) and lead_id is not null";
+            $query = "select ifnull(sum(length_in_sec),0) as total_sec, ifnull(sum(queue_seconds),0) as queue_seconds from vicidial_closer_log where comments not like 'AFTER HOURS DROP' and call_date between '$today' and '$tomorrow' and campaign_id in($linha_inbound) and lead_id is not null";
             $query = mysql_query($query, $link);
             $row2 = mysql_fetch_assoc($query);
             $js[] = array(
@@ -517,9 +517,10 @@ switch ($action) {
         for ($i = 0; $i < count($linha); $i++) {
             $linha[$i] = "'" . $linha[$i] . "'";
         }
-
+    
         $linha_inbound = implode(",", $linha);
-        $query = "SELECT count(status) as status FROM vicidial_closer_log where call_date between '$today' and '$tomorrow' and campaign_id in($linha_inbound) and status='QUEUE'";
+        $query = "SELECT count(status) as status FROM vicidial_auto_calls where call_time>'$today'  and campaign_id in($linha_inbound)  and status='LIVE' and call_type='IN'";
+     
 
         $query = mysql_query($query, $link) or die(mysql_error());
         $row = mysql_fetch_assoc($query);
@@ -581,20 +582,20 @@ union all
         if ($opcao === "3")
             $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_closer_log where campaign_id= '$linha_inbound' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and user not in('VDCL') and ($status) and lead_id is not null group by user order by total_feedback desc ,talk_sec asc  limit $limit";
 //muda as horas para ver os resultados desde "agora" ate a altura especificada aquando da criação do dataset
-       
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
+
+
         if ($tempo == "25")
-            $query = str_replace("date_sub(now(), INTERVAL time_span hour)","'". $today."'", $query);
+            $query = str_replace("date_sub(now(), INTERVAL time_span hour)", "'" . $today . "'", $query);
         else
             $query = str_replace("time_span", $tempo, $query);
-               
+
         $query = str_replace("now()", "'" . $rounded_time . "'", $query);
 
 
