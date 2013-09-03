@@ -1,4 +1,3 @@
-
 // ################################################################################
 // Send Hangup command for Live call connected to phone now to Manager
 function livehangup_send_hangup(taskvar)
@@ -4577,7 +4576,7 @@ function DispoSelect_submit()
 
             if (shift_logout_flag < 1)
             {
-                if (wrapup_waiting == 1)
+                if (wrapup_waiting == 0)
                 {console.log("as");
                     if (document.vicidial_form.DispoSelectStop.checked)
                     {
