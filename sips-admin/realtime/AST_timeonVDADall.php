@@ -2713,7 +2713,7 @@ if ($campaign_allow_inbound == '1' ) { $HTigcall .=  "<th>IN-GROUP</th>";    }
 			$query=mysql_query($query);
 			$query_r=mysql_fetch_row($query);	
 			
-			if(($status=='PAUSED') && ($query_r[0]=='RATIO')){$force_var = "<span style=cursor:pointer; onclick=ForceReady('$Auser[$i]','$user')><img title='Forçar Ready' src='/images/icons/user_go_16.png'></span>";}
+			if(($status=='PAUSED') && ($query_r[0]=='RATIO')){$force_var = "<span style=\"cursor:pointer;\" onclick=\"ForceReady('$Auser[$i]','".trim($user)."')\"><img title='Forçar Ready' src='/images/icons/user_go_16.png'></span>";}
 			else {$force_var = "<span><img title='Não é possivel Forçar READY neste User. \n - O Operador tem de estar PAUSED. \n - A Campanha não pode ser MANUAL.' src='/images/icons/user_delete_16.png'></span>";}
 			
 			$kick_var="<span style=cursor:pointer;  onclick=\"ForceLogout('$Auser[$i]','$user')\" ><img title='Forçar logout.' src='/images/icons/cut_red_16.png'></span>";	
