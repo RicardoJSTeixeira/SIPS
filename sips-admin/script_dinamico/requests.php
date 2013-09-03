@@ -32,7 +32,6 @@ switch ($action) {
         break;
 
 
-
     case "get_scripts":
         $query = "SELECT * FROM script_dinamico_master";
         $query = mysql_query($query, $link) or die(mysql_error());

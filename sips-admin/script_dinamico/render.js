@@ -6,7 +6,7 @@
 //sflphone
 
 var array_id = [];
-var tag_regex = /\@([^@]+)\@/g;
+var tag_regex = /\@(\d{1,5})\@/g;
 var page_info = 0;
 var items = [];
 $(function() {
@@ -17,14 +17,205 @@ $(function() {
             $("#dummie").html(data);
             update_script();
       });
+
+    $(document).on("click", ".previous_pag", function(e) {
+            e.preventDefault();
+            var temp = $(".pag_div:visible").prev(".pag_div");
+            if (temp.length)
+            {
+                  $(".pag_div").hide();
+                  temp.show();
+            }
+      });
+
+      $(document).on("click", ".next_pag", function(e) {
+            e.preventDefault();
+            var temp = $(".pag_div:visible").next(".pag_div");
+            if (temp.length)
+            {
+                  $(".pag_div").hide();
+                  temp.show();
+            }
+      });
+
 });
 
+//Sérgio Gonçalves: 211155302 ->connecta
 
 
 
+
+
+
+
+//UPDATES DE INFO
+function update_script()
+{
+
+
+
+
+      if (page_info.script_id !== undefined)
+      {
+            $.post("requests.php", {action: "get_scripts_by_id_script", id_script: page_info.script_id},
+            function(data)
+            {
+                  if (data !== null)
+                  {
+                        page_info.script_id = data.id;
+                        update_info();
+                  }
+
+            }, "json");
+      }
+      else
+      {
+            var camp_linha = 0;
+            if (page_info.in_group_id !== "")
+                  camp_linha = page_info.in_group_id;
+            else if (page_info.campaign_id !== "")
+                  camp_linha = page_info.campaign_id;
+
+
+            $.post("requests.php", {action: "get_scripts_by_campaign", id_campaign: camp_linha},
+            function(data)
+            {
+                  if (data !== null)
+                  {
+                        page_info.script_id = data.id;
+                        update_info();
+                  }
+
+            }, "json");
+      }
+
+
+}
+
+function update_info()
+{
+      $(".datetimepicker").remove();
+      $.post("requests.php", {action: "get_data_render", id_script: page_info.script_id},
+      function(data)
+      {
+            $("#script_div").empty();
+            $.each(data, function(index, value) {
+                  var item;
+                  switch (this.type)
+                  {
+                        case "texto":
+                              item = $('#dummie .texto_class').clone();
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
+                                      .data("required", this.required)
+                                      .data("type", "texto");
+                              items.push([item, this.id_page]);
+                              break;
+
+                        case "pagination":
+                              item = $('#dummie .pagination_class').clone();
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
+                                      .data("required", this.required)
+                                      .data("type", "pagination");
+                              items.push([item, this.id_page]);
+                              break;
+
+                        case "radio":
+                              item = $('#dummie .radio_class').clone();
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
+                                      .data("required", this.required)
+                                      .data("type", "radio")
+                                      .data("dispo", this.dispo);
+                              items.push([item, this.id_page]);
+                              break;
+
+                        case "checkbox":
+                              item = $('#dummie .checkbox_class').clone();
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
+                                      .data("required", this.required)
+                                      .data("dispo", this.dispo)
+                                      .data("type", "checkbox");
+                              items.push([item, this.id_page]);
+                              break;
+
+                        case "multichoice":
+                              item = $('#dummie .multichoice_class').clone();
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
+                                      .data("required", this.required)
+                                      .data("type", "multichoice");
+                              items.push([item, this.id_page]);
+                              break;
+
+                        case "textfield":
+                              item = $('#dummie .textfield_class').clone();
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
+                                      .data("required", this.required)
+                                      .data("type", "textfield");
+                              items.push([item, this.id_page]);
+                              break;
+                        case "legend":
+                              item = $('#dummie .legend_class').clone();
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
+                                      .data("required", this.required)
+                                      .data("type", "legend");
+                              items.push([item, this.id_page]);
+                              break;
+
+                        case "tableradio":
+                              item = $('#dummie .tableradio_class').clone();
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
+                                      .data("required", this.required)
+                                      .data("type", "tableradio");
+                              items.push([item, this.id_page]);
+                              break;
+
+                        case "datepicker":
+                              item = $('#dummie .datepicker_class').clone();
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
+                                      .data("required", this.required)
+                                      .data("type", "datepicker");
+                              items.push([item, this.id_page]);
+                              break;
+                  }
+                  insert_element(this.type, item, this);
+            });
+            
+            
+            $("#myform").validationEngine();
+//FAZER O APPEND DOS ITEMS A LISTA
+            $.each(items, function()
+            {
+                  if (!$("#" + this[1] + "pag").length) {
+                        $("#script_div").append($("<div>").addClass("pag_div").attr("id", this[1] + "pag"));
+                  }
+                  $("#" + this[1] + "pag").append(this[0]);
+            });
+     populate_script();
+          rules();
+          tags();
+       
+            $(".pag_div").hide().first().show();
+            $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true}).keypress(function(e) {
+                  e.preventDefault();
+            }).bind("cut copy paste", function(e) {
+                  e.preventDefault();
+            });
+
+      }, "json");
+        
+}
 
 function insert_element(opcao, element, data)
 {
+     
       element.removeAttr("title");
       switch (opcao)
       {
@@ -155,34 +346,13 @@ function insert_element(opcao, element, data)
                   element.find(".label_geral")[0].innerHTML = data.values_text;
                   element.find(".label_geral")[0].name = data.id;
                   break;
-            case "pagination":
 
-                  element.find("#previous_pag").bind("click", function()
-                  {
-                        var temp = $(".pag_div:visible").prev(".pag_div");
-                        if (temp.length)
-                        {
-                              $(".pag_div").hide();
-                              temp.show();
-                        }
-                  });
-                  element.find("#next_pag").bind("click", function()
-                  {
-
-                        var temp = $(".pag_div:visible").next(".pag_div");
-                        if (temp.length)
-                        {
-                              $(".pag_div").hide();
-                              temp.show();
-                        }
-                  });
-                  break;
             case "tableradio":
                   element.find(".label_geral")[0].innerHTML = data.texto;
                   var tr_head = element.find(".tr_head");
                   tr_head.empty();
                   var titulos = data.placeholder;
-                  tr_head.append($("<td>").text("*"));
+                  tr_head.append($("<td>"));
                   for (var count = 0; count < titulos.length; count++)
                   {
                         tr_head.append($("<td>").text(titulos[count]));
@@ -247,7 +417,6 @@ function populate_script()
                                     $("#" + this.id_elemento + " :input").val(this.valor);
                                     break;
                               case "tableradio":
-
                                     var temp = this.id_elemento.split(",");
                                     $("#" + temp[0] + " tbody tr:eq(" + temp[1] + ") :input[value='" + this.valor + "']").attr('checked', true);
                                     break;
@@ -260,175 +429,6 @@ function populate_script()
 
       }, "json");
 }
-
-
-//UPDATES DE INFO
-function update_script()
-{
-
-
-
-
-      if (page_info.script_id !== undefined)
-      {
-            $.post("requests.php", {action: "get_scripts_by_id_script", id_script: page_info.script_id},
-            function(data)
-            {
-                  if (data !== null)
-                  {
-                        page_info.script_id = data.id;
-                        update_info();
-                  }
-
-            }, "json");
-      }
-      else
-      {
-            var camp_linha = 0;
-            if (page_info.in_group_id !== "")
-                  camp_linha = page_info.in_group_id;
-            else if (page_info.campaign_id !== "")
-                  camp_linha = page_info.campaign_id;
-
-
-            $.post("requests.php", {action: "get_scripts_by_campaign", id_campaign: camp_linha},
-            function(data)
-            {
-                  if (data !== null)
-                  {
-                        page_info.script_id = data.id;
-                        update_info();
-                  }
-
-            }, "json");
-      }
-
-
-}
-
-function update_info()
-{
-      $(".datetimepicker").remove();
-      $.post("requests.php", {action: "get_data_render", id_script: page_info.script_id},
-      function(data)
-      {
-            $("#script_div").empty();
-            $.each(data, function(index, value) {
-                  var item;
-
-
-                  switch (this.type)
-                  {
-                        case "texto":
-                              item = $('#dummie .texto_class').clone();
-                              item.attr("id", this.id)
-                                      .data("id", this.id)
-                                      .data("required", this.required)
-                                      .data("type", "texto");
-
-                              items.push([item, this.id_page]);
-                              break;
-                        case "pagination":
-                              item = $('#dummie .pagination_class').clone();
-                              item.attr("id", this.id)
-                                      .data("id", this.id)
-                                      .data("required", this.required)
-                                      .data("type", "pagination");
-                              items.push([item, this.id_page]);
-                              break;
-                        case "radio":
-                              item = $('#dummie .radio_class').clone();
-                              item.attr("id", this.id)
-                                      .data("id", this.id)
-                                      .data("required", this.required)
-                                      .data("type", "radio")
-                                      .data("dispo", this.dispo);
-                              items.push([item, this.id_page]);
-                              break;
-                        case "checkbox":
-                              item = $('#dummie .checkbox_class').clone();
-                              item.attr("id", this.id)
-                                      .data("id", this.id)
-                                      .data("required", this.required)
-                                      .data("dispo", this.dispo)
-                                      .data("type", "checkbox");
-                              items.push([item, this.id_page]);
-                              break;
-                        case "multichoice":
-                              item = $('#dummie .multichoice_class').clone();
-                              item.attr("id", this.id)
-                                      .data("id", this.id)
-                                      .data("required", this.required)
-                                      .data("type", "multichoice");
-                              items.push([item, this.id_page]);
-
-                              break;
-                        case "textfield":
-                              item = $('#dummie .textfield_class').clone();
-                              item.attr("id", this.id)
-                                      .data("id", this.id)
-                                      .data("required", this.required)
-                                      .data("type", "textfield");
-                              items.push([item, this.id_page]);
-                              break;
-                        case "legend":
-                              item = $('#dummie .legend_class').clone();
-                              item.attr("id", this.id)
-                                      .data("id", this.id)
-                                      .data("required", this.required)
-                                      .data("type", "legend");
-                              items.push([item, this.id_page]);
-                              break;
-                        case "tableradio":
-                              item = $('#dummie .tableradio_class').clone();
-                              item.attr("id", this.id)
-                                      .data("id", this.id)
-                                      .data("required", this.required)
-                                      .data("type", "tableradio");
-                              items.push([item, this.id_page]);
-                              break;
-                        case "datepicker":
-                              item = $('#dummie .datepicker_class').clone();
-                              item.attr("id", this.id)
-                                      .data("id", this.id)
-                                      .data("required", this.required)
-                                      .data("type", "datepicker");
-                              items.push([item, this.id_page]);
-                              break;
-                  }
-
-                  insert_element(this.type, item, this);
-
-
-            });
-
-
-            $("#myform").validationEngine();
-
-
-
-
-//FAZER O APPEND DOS ITEMS A LISTA
-            $.each(items, function()
-            {
-                  if (!$("#" + this[1] + "pag").length) {
-                        $("#script_div").append($("<div>").addClass("pag_div").attr("id", this[1] + "pag"));
-                  }
-                  $("#" + this[1] + "pag").append(this[0]);
-            });
-            $(".pag_div").hide().first().show();
-            $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true}).keypress(function(e) {
-                  e.preventDefault();
-            }).bind("cut copy paste", function(e) {
-                  e.preventDefault();
-            });
-            rules();
-            tags();
-            populate_script();
-
-      }, "json");
-}
-
 
 //RULES 
 function rules_work(data)
@@ -576,12 +576,12 @@ function rules()
             });
       }
       , "json");
+   
 }
 function tags()
 {
-
       var rz = $("#render_zone");
-      if (rz.html().match(tag_regex))
+     if (rz.html().match(tag_regex))
       {
             var temp2 = rz.html().match(tag_regex);
             var temp = [];
@@ -592,6 +592,7 @@ function tags()
             $.each(temp, function() {
                   var id = this;
                   id = id.replace(/\@/g, '');
+                 
                   var regExp = new RegExp(this, "g");
                   rz.html(rz.html().replace(regExp, "<span class='" + id + "tag'></span>"));
                   $(document).on("change", "#" + id + " input,#" + id + " select", function() {
@@ -608,6 +609,7 @@ $("#myform").on("submit", function(e)
 {
       e.preventDefault();
 });
+
 function submit_manual()
 {
       $.post("requests.php", {action: "save_form_result", id_script: page_info.script_id, results: $("#myform").serializeArray(), user_id: page_info.user_id, unique_id: page_info.unique_id, campaign_id: page_info.campaign_id, lead_id: page_info.lead_id}, function() {

@@ -242,12 +242,8 @@ $(function() {
       $(document).on("click", ".rule_delete_icon", function(e) {
             rules_database("delete_rule", $(this).data("id"), 0, 0, 0, 0, 0, 0, 0, 0);
             rules_database("get_rules_by_trigger", 0, 0, 0, selected_id, 0, 0, 0, 0, 0);
-
-
       });
-      $(document).on("click", ".rule_delete_icon", function(e) {//GRAFICO DE BARRAS
-            rules_database("get_rules_by_trigger", 0, 0, 0, selected_id, 0, 0, 0, 0, 0);
-      });
+  
       editor_toggle("off");
 });
 
@@ -702,13 +698,13 @@ function edit_element(opcao, element, data)
 
 
             case "textfield":
-                  $("#textfield_edit").val($("#textfield_edit").val().replace(/[^a-zA-Z0-9éçã\s:@§óáà,?\/\-]/g, ''));
+                  $("#textfield_edit").val($("#textfield_edit").val().replace(/[^a-zA-Z0-9éçã\s:@§óáà,?\/\-\.\,]/g, ''));
                   element.find(".label_geral")[0].innerHTML = $("#textfield_edit").val();
                   item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", element.index(), "h", "textfield", 0, 0, $("#textfield_edit").val(), false, $("#item_hidden").is(':checked'));
                   break;
 
             case "legend":
-                  $("#legend_edit").val($("#legend_edit").val().replace(regex_replace_textbox_tag, ''));
+                  $("#legend_edit").val($("#legend_edit").val().replace(/[^a-zA-Z0-9éçã\s:@§óáà,?\/\-\.\,()]/g, ''));
                   element.find(".label_geral")[0].innerHTML = $("#legend_edit").val();
                   item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "legend", element.index(), "h", "legend", 0, 0, $("#legend_edit").val(), false, $("#item_hidden").is(':checked'));
                   break;
@@ -725,7 +721,7 @@ function edit_element(opcao, element, data)
                               titulos.splice(i, 1);
                         }
                   }
-                  tr_head.append($("<td>").text("*"));
+                  tr_head.append($("<td>"));
                   for (var count = 0; count < titulos.length; count++)
                   {
                         tr_head.append($("<td>").text(titulos[count]));
@@ -772,6 +768,8 @@ function edit_element(opcao, element, data)
       element.find(".div_info_item").remove();
       element.prepend($("<div>").css("float", "right").addClass("div_info_item span1"));
       var temp = element.find(".div_info_item");
+      //ids nos elementos
+      temp.append($("<label>").addClass("label label-inverse label_id_item").text(element.data("id")).css("float", "left"));
       if ($("#item_required").is(':checked'))
       {
             element.data("required", true);
@@ -791,8 +789,7 @@ function edit_element(opcao, element, data)
             element.data("hidden", false);
             temp.append($("<i>").addClass("icon-eye-open hidden_icon info_icon"));
       }
-      //ids nos elementos
-      temp.append($("<label>").addClass("label label-inverse label_id_item").text(element.data("id")).css("float", "left"));
+
 
 }
 
@@ -883,7 +880,7 @@ function insert_element(opcao, element, data)
                   var tr_head = element.find(".tr_head");
                   tr_head.empty();
                   var titulos = data.placeholder;
-                  tr_head.append($("<td>").text("*"));
+                  tr_head.append($("<td>"));
                   for (var count = 0; count < titulos.length; count++)
                   {
                         tr_head.append($("<td>").text(titulos[count]));
@@ -923,16 +920,16 @@ function insert_element(opcao, element, data)
 
       element.prepend($("<div>").css("float", "right").addClass("div_info_item span1"));
       var temp = element.find(".div_info_item");
+
+      //IDs nos elementos 
+      temp.append($("<label>").addClass("label label-inverse label_id_item").text(data.id));
+
       if (data.required)
             temp.append($("<i>").addClass("icon-star required_icon info_icon"));
       if (data.hidden)
             temp.append($("<i>").addClass("icon-eye-close hidden_icon info_icon"));
       else
             temp.append($("<i>").addClass("icon-eye-open hidden_icon info_icon"));
-      //IDs nos elementos
-      temp.append($("<label>").addClass("label label-inverse label_id_item").text(data.id).css("float", "left"));
-
-
 
 }
 
@@ -1048,6 +1045,9 @@ $('#script_selector').change(function() {
 
 $("#opcao_script_button").click(function()//chama o edit do nome do script
 {
+   $("#script_campanha_selector").val("").trigger("liszt:updated");
+            $("#script_linha_inbound_selector").val("").trigger("liszt:updated");
+           
       $.post("requests.php", {action: "get_camp_linha_by_id_script", id_script: $("#script_selector option:selected").val()},
       function(data)
       {
@@ -1075,9 +1075,12 @@ $("#save_button_layout").click(function()//Fecha o dialog e grava as alteraçõe
             linha_inbound: $("#script_linha_inbound_selector").val()},
       function(data)
       {
-            $('#dialog_layout').modal('hide');
+           $('#dialog_layout').modal('hide');
             update_script();
-      }, "json");
+      }, "json")
+              .fail(function(xhr, textStatus, errorThrown) {
+            alert(xhr.responseText);
+      });
 
 });
 
