@@ -2559,7 +2559,7 @@ function AutoDial_ReSume_PauSe(taskaction, taskagentlog, taskwrapup, taskstatusc
         taskagentlog = "";
     }
 
-    if (taskaction == 'VDADready')
+    if (taskaction != 'VDADready')
     {
         VDRP_stage = 'READY';
         if (INgroupCOUNT > 0)
