@@ -24,8 +24,8 @@ var selected_id = 0;
 var selected_type = "";
 var array_id = [];
 var regex_remove_blank = /^\s*$[\n\r]{1,}/gm;
-var regex_replace_textbox_tag = /[^a-zA-Z0-9éçã\s:@§óáà?!ê]/g;
-var regex_replace_textbox = /[^a-zA-Z0-9éçã\s:§óáà?!ê]/g;
+var regex_replace_textbox_tag = /[^a-zA-Z0-9éçã\s:@§óáà?!ê().,]/g;
+var regex_replace_textbox = /[^a-zA-Z0-9éçã\s:§óáà?!ê(),.]/g;
 var regex_replace = /[^a-zA-Z0-9éçã\n§óáà\s?é()/-]/g;
 var regex_split = /\n/g;
 
@@ -243,7 +243,7 @@ $(function() {
             rules_database("delete_rule", $(this).data("id"), 0, 0, 0, 0, 0, 0, 0, 0);
             rules_database("get_rules_by_trigger", 0, 0, 0, selected_id, 0, 0, 0, 0, 0);
       });
-  
+
       editor_toggle("off");
 });
 
@@ -256,7 +256,6 @@ function update_script()
       function(data)
       {
             if (data == null)
-
             {
                   $("#page_selector_div button").prop('disabled', true);
                   $("#opcao_script_button").prop('disabled', true);
@@ -519,14 +518,6 @@ function populate_element(tipo, element)
                   break;
 
 
-            case "pagination":
-                  $("#tabs").tabs("disable", 1);
-                  $("#tabs").tabs("disable", 2);
-                  $(".footer_save_cancel button").prop('disabled', true);
-                  $("#item_edit_comum").hide();
-                  break;
-
-
             case "multichoice":
                   $("#multichoice_edit").val(element.find(".label_geral")[0].innerHTML);
                   var string_elements = "";
@@ -626,7 +617,6 @@ function edit_element(opcao, element, data)
                   }
                   for (var count = 0; count < radios.length; count++)
                   {
-
                         element.append($("<label>")
                                 .addClass("radio_name radio inline")
                                 .attr("for", array_id["radio"] + "radio")
@@ -769,7 +759,8 @@ function edit_element(opcao, element, data)
       element.prepend($("<div>").css("float", "right").addClass("div_info_item span1"));
       var temp = element.find(".div_info_item");
       //ids nos elementos
-      temp.append($("<label>").addClass("label label-inverse label_id_item").text(element.data("id")).css("float", "left"));
+      temp.append($("<label>").addClass("label label-inverse label_id_item").text(element.data("id")));
+
       if ($("#item_required").is(':checked'))
       {
             element.data("required", true);
@@ -789,6 +780,11 @@ function edit_element(opcao, element, data)
             element.data("hidden", false);
             temp.append($("<i>").addClass("icon-eye-open hidden_icon info_icon"));
       }
+
+
+
+
+
 
 
 }
@@ -1007,13 +1003,11 @@ $("#page_remove_button").click(function()
 $('#page_selector').change(function() {
       editor_toggle("off");
       update_info();
-
 });
 
 $("#opcao_page_button").click(function()//chama o edit do nome da pagina
 {
       $("#pages_name_edit").val($("#page_selector option:selected").text());
-
 });
 $("#save_button_page").click(function()//Fecha o dialog e grava as alterações
 {
@@ -1045,9 +1039,9 @@ $('#script_selector').change(function() {
 
 $("#opcao_script_button").click(function()//chama o edit do nome do script
 {
-   $("#script_campanha_selector").val("").trigger("liszt:updated");
-            $("#script_linha_inbound_selector").val("").trigger("liszt:updated");
-           
+      $("#script_campanha_selector").val("").trigger("liszt:updated");
+      $("#script_linha_inbound_selector").val("").trigger("liszt:updated");
+
       $.post("requests.php", {action: "get_camp_linha_by_id_script", id_script: $("#script_selector option:selected").val()},
       function(data)
       {
@@ -1068,18 +1062,14 @@ $("#opcao_script_button").click(function()//chama o edit do nome do script
 });
 $("#save_button_layout").click(function()//Fecha o dialog e grava as alterações
 {
-      $.post("requests.php", {action: "edit_script",
-            name: $("#script_name_edit").val(),
-            id_script: $("#script_selector option:selected").val(),
-            campaign: $("#script_campanha_selector").val(),
-            linha_inbound: $("#script_linha_inbound_selector").val()},
+      $.post("requests.php", {action: "edit_script", name: $("#script_name_edit").val(), id_script: $("#script_selector option:selected").val(), campaign: $("#script_campanha_selector").val(), linha_inbound: $("#script_linha_inbound_selector").val()},
       function(data)
       {
-           $('#dialog_layout').modal('hide');
+            $('#dialog_layout').modal('hide');
             update_script();
       }, "json")
               .fail(function(xhr, textStatus, errorThrown) {
-            alert(xhr.responseText);
+            alert("A campanha/linha de inbound escolhida ja tem um script associado");
       });
 
 });
@@ -1095,40 +1085,41 @@ $("#render_go").click(function()
 function rules_manager(tipo, element)
 {
       $("#rule_creator").hide();
-      $("#rule_trigger_select").empty();
+      var rts=$("#rule_trigger_select");
+      rts.empty()
       switch (tipo)
       {
             case "texto":
-                  $("#rule_trigger_select").append(new Option("Resposta", "answer"));
-                  $("#rule_trigger_select").append(new Option("Valor especifico", "value_input"));
+                 rts.append(new Option("Resposta", "answer"));
+                 rts.append(new Option("Valor especifico", "value_input"));
                   break;
 
 
             case "radio":
-                  $("#rule_trigger_select").append(new Option("Valor escolhido", "value_select"));
+                 rts.append(new Option("Valor escolhido", "value_select"));
                   break;
 
 
             case "checkbox":
-                  $("#rule_trigger_select").append(new Option("Valor escolhido", "value_select"));
+                 rts.append(new Option("Valor escolhido", "value_select"));
                   break;
 
 
             case "multichoice":
-                  $("#rule_trigger_select").append(new Option("Valor escolhido", "value_select"));
+                 rts.append(new Option("Valor escolhido", "value_select"));
                   break;
 
 
             case "tableradio":
-                  $("#rule_trigger_select").append(new Option("Resposta", "answer"));
-                  $("#rule_trigger_select").append(new Option("Valor escolhido", "value_select"));
+                 rts.append(new Option("Resposta", "answer"));
+                 rts.append(new Option("Valor escolhido", "value_select"));
                   break;
 
             case "datepicker":
-                  $("#rule_trigger_select").append(new Option("Resposta", "answer"));
+                 rts.append(new Option("Resposta", "answer"));
                   break;
       }
-      $("#rule_trigger_select").trigger("change");
+     rts.trigger("change");
 }
 $("#rule_trigger_select").change(function()
 {
@@ -1170,10 +1161,7 @@ $("#rule_trigger_select").change(function()
                   }
                   , "json");
                   break;
-
-
-
-      }
+     }
 });
 
 function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trigger2, Id_target, Tipo, Param1, Param2)
@@ -1278,7 +1266,6 @@ $("#add_rule_button").click(function()
                   break;
 
             case "tableradio":
-
                   switch ($("#rule_trigger_select").val())
                   {
                         case "answer":

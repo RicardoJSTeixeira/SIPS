@@ -51,6 +51,10 @@
                   .chzn-container
                   {width:340px!important}
 
+                  .hidden
+                  {
+                        display:none!important;
+                  }
             </style>
       </head>
       <body> 
@@ -65,7 +69,7 @@
                   </div>
                   <div class="modal-body" style="overflow:0">
                         <div class="formRow">
-                              <label class="label label-info" for="script_name_edit">Nome:</label>
+                              <label class="label label-inverse" for="script_name_edit">Nome:</label>
 
                               <div class="formRight">
                                     <input maxlength="65" class="span" id="script_name_edit" type="text" placeholder="Novo nome do script" />
@@ -75,14 +79,14 @@
 
 
                         <div class="formRow">
-                              <label class="label label-info" >Campanha</label>
+                              <label class="label label-inverse" >Campanha</label>
                               <div class="formRight">
                                     <select id="script_campanha_selector" class="chosen_select"  multiple="multiple"   ></select>
                               </div> 
                         </div>
 
                         <div class="formRow">
-                              <label class="label label-info" >Linha Inbound</label>
+                              <label class="label label-inverse" >Linha Inbound</label>
                               <div class="formRight">
                                     <select id="script_linha_inbound_selector" class="chosen_select"  multiple="multiple"   ></select>
                               </div> 
@@ -104,7 +108,7 @@
                   </div>
                   <div class="modal-body">
                         <div class="formRow">
-                              <label class="label label-info" for="script_name_edit">Nome:</label>
+                              <label class="label label-inverse" for="script_name_edit">Nome:</label>
 
                               <div class="formRight">
                                     <input maxlength="25" class="span" id="pages_name_edit" type="text" placeholder="Novo nome da página" />
@@ -174,26 +178,26 @@
                                                 <!--TEXTO-->
                                                 <div class="editor_layout" id="text_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Texto:</label>
+                                                            <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span texto_input" id="texto_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Placeholder:</label>
+                                                            <label class="label label-inverse" >Placeholder:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span texto_input" id="placeholder_edit" type="text" placeholder="Placeholder exemplo" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Tamanho maximo:</label>
+                                                            <label class="label label-inverse" >Tamanho maximo:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="3" class="texto_input" id="max_length_edit" type="text" placeholder="Numero Máximo de caracteres" />
                                                             </div>
                                                       </div>
 
                                                       <div class="formRow validation" >
-                                                            <label class="label label-info" >Validação</label>
+                                                            <label class="label label-inverse" >Validação</label>
                                                             <div class="formRight">
                                                                   <label class="radio inline"  for="validacao_texto_normal">Numeros e letras<input type="radio" id="validacao_texto_normal" name="regex_texto" value="normal" /></label>
                                                             </div> 
@@ -219,52 +223,48 @@
                                                 <!--RADIO-->
                                                 <div class="editor_layout" id="radio_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Texto:</label>
+                                                            <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span" id="radio_edit" type="text" placeholder="Texto" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Valores:</label>
+                                                            <label class="label label-inverse" >Valores:</label>
                                                             <div class="formRight">
                                                                   <textarea id="radio_textarea" rows="4" cols="50"></textarea>
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Disposição:</label>
+                                                            <label class="label label-inverse" >Disposição:</label>
                                                             <div class="formRight">
-                                                                  <label class="radio_dispo"  for="horiz_radio">Horizontal        <input type="radio" id="horiz_radio" name="rdispo" checked="checked"></label>
-
-
+                                                                  <label class="radio_dispo"  for="horiz_radio">Horizontal <input type="radio" class='radio inline' id="horiz_radio" name="rdispo" checked="checked"></label>
                                                             </div> <div class="formRight">
-
-                                                                  <label class="radio_dispo"  for="vertic_radio">Vertical <input type="radio" id="vertic_radio" name="rdispo" ></label>
-
+                                                                  <label class="radio_dispo"  for="vertic_radio">Vertical <input type="radio"  class='radio inline' id="vertic_radio" name="rdispo" ></label>
                                                             </div>
                                                       </div>
                                                 </div>
                                                 <!--CHECKBOX-->
                                                 <div class="editor_layout" id="checkbox_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Texto:</label>
+                                                            <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span" id="checkbox_edit" type="text" placeholder="Texto" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Valores:</label>
+                                                            <label class="label label-inverse" >Valores:</label>
                                                             <div class="formRight">
                                                                   <textarea id="checkbox_textarea" rows="4" cols="50"></textarea>
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Disposição:</label>
+                                                            <label class="label label-inverse" >Disposição:</label>
                                                             <div class="formRight">
-                                                                  <label class="checkbox_dispo"  for="horiz_checkbox">Horizontal <input type="radio" id="horiz_checkbox" name="cdispo" checked="checked"></label>
+                                                                  <label class="checkbox_dispo"  for="horiz_checkbox">Horizontal <input type="radio" class='radio inline' id="horiz_checkbox" name="cdispo" checked="checked"></label>
 
 
                                                             </div>   <div class="formRight">
-                                                                  <label class="checkbox_dispo"  for="vertic_checkbox">Vertical  <input type="radio" id="vertic_checkbox" name="cdispo" ></label>
+                                                                  <label class="checkbox_dispo"  for="vertic_checkbox">Vertical  <input type="radio" class='radio inline' id="vertic_checkbox" name="cdispo" ></label>
 
 
                                                             </div>
@@ -273,13 +273,13 @@
                                                 <!--MULTICHOISE-->
                                                 <div class="editor_layout" id="multichoice_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Texto:</label>
+                                                            <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span texto_input" id="multichoice_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Valores:</label>
+                                                            <label class="label label-inverse" >Valores:</label>
                                                             <div class="formRight">
                                                                   <textarea id="multichoice_textarea" rows="4" cols="50"></textarea>
                                                             </div>
@@ -288,7 +288,7 @@
                                                 <!--TEXTFIELD-->
                                                 <div class="editor_layout" id="textfield_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Texto:</label>
+                                                            <label class="label label-inverse" >Texto:</label>
 
                                                             <div class="formRight">
                                                                   <input  maxlength="250" class="span textfield_input" id="textfield_edit" type="text" placeholder="Texto exemplo" />
@@ -298,7 +298,7 @@
                                                 <!--LEGEND-->
                                                 <div class="editor_layout" id="legend_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Texto:</label>
+                                                            <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="250" class="span legend_input" id="legend_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
@@ -307,20 +307,20 @@
                                                 <!--TABLERADIO-->
                                                 <div class="editor_layout" id="tableradio_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Texto:</label>
+                                                            <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
                                                                   <input  maxlength="65" class="span tableradio_input" id="tableradio_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Titulos:</label>
+                                                            <label class="label label-inverse" >Titulos:</label>
 
                                                             <div class="formRight">
                                                                   <textarea id="tableradio_th_textarea" maxlength="50" rows="4" cols="50"></textarea>
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Perguntas:</label>
+                                                            <label class="label label-inverse" >Perguntas:</label>
 
                                                             <div class="formRight">
                                                                   <textarea id="tableradio_td_textarea" rows="4" cols="50"></textarea>
@@ -330,7 +330,7 @@
                                                 <!--DATEPICKER-->
                                                 <div class="editor_layout" id="datepicker_layout_editor" style="display:none">
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Texto:</label>
+                                                            <label class="label label-inverse" >Texto:</label>
 
                                                             <div class="formRight">
                                                                   <input  maxlength="250" class="span datepicker_input" id="datepicker_edit" type="text" placeholder="Texto exemplo" />
@@ -343,14 +343,14 @@
                                                 <div class="clear"></div>
                                                 <div id="item_edit_comum" style="display:none"> 
                                                       <div class="formRow" >
-                                                            <label class="label label-info" >Tag:</label>
+                                                            <label class="label label-inverse" >Tag:</label>
                                                             <div class="formRight">
                                                                   <label  id="label_tag"></label>
                                                             </div>
                                                       </div>
                                                       <!----------------------------------------------REQUIRED------------------------------------------->
                                                       <div class="formRow required_class" >
-                                                            <label class="label label-info" >Obrigatório:</label>
+                                                            <label class="label label-inverse" >Obrigatório:</label>
                                                             <div class="formRight">
                                                                   <input  type="checkbox" id="item_required" name="required" value="1">
                                                                   <label for="item_required"></label>
@@ -363,7 +363,7 @@
                                                       </div>
                                                       <div class="formRow hidden_class" >
                                                             <!-----------------------------HIDDEN-------------------------------------------------------->
-                                                            <label class="label label-info" >Escondido:</label>
+                                                            <label class="label label-inverse" >Escondido:</label>
                                                             <div class="formRight">
                                                                   <input  type="checkbox" id="item_hidden" name="hidden" value="1">
                                                                   <label for="item_hidden"></label>
@@ -371,9 +371,9 @@
                                                             </div>
                                                       </div>
                                                       <!------------------------------------TAGS---------------------------------------------->
-                                                      <div style="display:none">
+                                                      <div class="hidden">
                                                             <div class="formRow"  >
-                                                                  <label class="label label-info" >Tags:</label>
+                                                                  <label class="label label-inverse" >Tags:</label>
                                                                   <div class="formRight">
                                                                         <select id="tags_select"></select>
                                                                         <i class="icon-tag" ></i>
@@ -423,25 +423,25 @@
 
                                                             <!--TRIGGER-->
                                                             <div class="formRow" >
-                                                                  <label class="label label-info" >Evento:</label>
+                                                                  <label class="label label-inverse" >Evento:</label>
                                                                   <div class="formRight">
                                                                         <select id="rule_trigger_select" ></select>
                                                                   </div> 
                                                             </div>
                                                             <div class="formRow rules_valor" id="rules_valor_select_div" style="display:none"  >
-                                                                  <label class="label label-info" >Valores:</label>
+                                                                  <label class="label label-inverse" >Valores:</label>
                                                                   <div class="formRight">
                                                                         <select id="rules_valor_select" class="chosen_select"  multiple="multiple"   ></select>
                                                                   </div> 
                                                             </div>
                                                             <div class="formRow rules_valor" id="rules_valor_input_div" style="display:none" >
-                                                                  <label class="label label-info" >Valor:</label>
+                                                                  <label class="label label-inverse" >Valor:</label>
                                                                   <div class="formRight">
                                                                         <input required id="rules_valor_input"  type="text" placeholder="Valor que despoleta o evento" />
                                                                   </div> 
                                                             </div>
                                                             <div class="formRow" >
-                                                                  <label class="label label-info" >Tipo:</label>
+                                                                  <label class="label label-inverse" >Tipo:</label>
                                                                   <div class="formRight">
                                                                         <select id="regra_select">
                                                                               <option value="show">Mostrar</option>   
@@ -451,7 +451,7 @@
                                                                   </div> 
                                                             </div>
                                                             <div class="formRow rule_target" >
-                                                                  <label class="label label-info" >Alvo:</label>
+                                                                  <label class="label label-inverse" >Alvo:</label>
                                                                   <div class="formRight">
                                                                         <select  id="rule_target_select" multiple="multiple" class="chosen_select">
 
@@ -459,7 +459,7 @@
                                                                   </div> 
                                                             </div>
                                                             <div class="formRow" id="go_to_div" style="display:none" >
-                                                                  <label class="label label-info" >Ir para:</label>
+                                                                  <label class="label label-inverse" >Ir para:</label>
                                                                   <div class="formRight">
                                                                         <select id="go_to_select" ></select>
                                                                   </div> 
