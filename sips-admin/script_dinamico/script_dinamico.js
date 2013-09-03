@@ -26,7 +26,7 @@ var array_id = [];
 var regex_remove_blank = /^\s*$[\n\r]{1,}/gm;
 var regex_replace_textbox_tag = /[^a-zA-Z0-9éçã\s:@§óáà?!ê().,]/g;
 var regex_replace_textbox = /[^a-zA-Z0-9éçã\s:§óáà?!ê(),.]/g;
-var regex_replace = /[^a-zA-Z0-9éçã\n§óáà\s?é()/-]/g;
+var regex_replace = /[^a-zA-Z0-9éçã\n§óáà\s?ê()/-]/g;
 var regex_split = /\n/g;
 
 
