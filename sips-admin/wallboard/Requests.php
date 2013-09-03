@@ -486,7 +486,7 @@ switch ($action) {
             $query = mysql_query($query, $link);
             $row2 = mysql_fetch_assoc($query);
             $js[] = array( 
-                chamadas_recebidas => $callsTODAY-$temp["number"],
+                chamadas_recebidas => $callsTODAY,
                 chamadas_perdidas => $dropsTODAY-$temp["number"],
                 chamadas_perdidas_percent => $drops_today_pct,
                 chamadas_atendidas => $answersTODAY,
