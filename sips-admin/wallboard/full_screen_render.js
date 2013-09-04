@@ -333,7 +333,7 @@ function plot_update(data)
 
 
                   max_y = (max_y * 100) / 65;
-                  var tick_size = Math.floor(max_y / 10);
+                  var tick_size = Math.round(max_y / 10);
                   var options = {
                         series: {shadowSize: 0, show: true}, // drawing is faster without shadows
                         yaxis: {min: 0, max: max_y, tickSize: tick_size},
@@ -584,17 +584,17 @@ function   inbound_wallboard(data)
 
                               var chamadas_recebidas = data3[0].chamadas_recebidas;
                               var tma1 = data3[0].tma1;
-                              var tma2 = data3[0].tma2;
+                           
 
                               var chamadas_atendidas_val = data3[0].chamadas_atendidas;
                               var chamadas_perdidas_val = data3[0].chamadas_perdidas;
-                              var chamadas_perdidas_percent = data3[0].chamadas_perdidas_percent;
+                         
                               var tma_todas_chamadas = 0;
 
                               if (+data3[0].tma > 0)
                               {
                                     var totalSec = +data3[0].tma;
-                                    totalSec = Math.floor(totalSec / chamadas_atendidas_val);
+                                    totalSec = Math.round(totalSec / chamadas_atendidas_val);
                                     if (/^\d+$/.test(totalSec))
                                           tma_todas_chamadas = secondstotime(totalSec);
 
@@ -621,7 +621,7 @@ function   inbound_wallboard(data)
                                     var chamadas_perdidas_obj = document.getElementById("chamadas_perdidas" + id);
 
                                     if (chamadas_perdidas_val !== "0" && (chamadas_perdidas_val / chamadas_recebidas) > 0)
-                                          chamadas_perdidas_obj.innerHTML = chamadas_perdidas_val + "-" + Math.floor((chamadas_perdidas_val / chamadas_recebidas) * 100) + "%";
+                                          chamadas_perdidas_obj.innerHTML = chamadas_perdidas_val + "-" + Math.round((chamadas_perdidas_val / chamadas_recebidas) * 100) + "%";
                                     else
                                           chamadas_perdidas_obj.innerHTML = chamadas_perdidas_val + "- 0%";
                                     var chamadas_espera_obj = document.getElementById("chamadas_espera" + id);
@@ -632,8 +632,8 @@ function   inbound_wallboard(data)
                                     var sla1_title = document.getElementById("sla1_title" + id);
                                     if (tma1 > 0)
                                     {
-                                          sla1.innerHTML = Math.floor(tma1) + "%";
-                                          sla1_title.innerHTML = "SLA1->" + Math.floor(answer_sec_pct_rt_stat_one) + "sec";
+                                          sla1.innerHTML = Math.round(tma1) + "%";
+                                          sla1_title.innerHTML = "SLA1->" + Math.round(answer_sec_pct_rt_stat_one) + "sec";
                                     }
                                     else
                                           sla1.innerHTML = 0;
@@ -641,8 +641,8 @@ function   inbound_wallboard(data)
                                      var sla2_title = document.getElementById("sla2_title" + id);
                                      if (tma2 > 0)
                                      {
-                                     sla2.innerHTML = Math.floor(tma2) + "%";
-                                     sla2_title.innerHTML = "SLA2->" + Math.floor(answer_sec_pct_rt_stat_two) + "sec";
+                                     sla2.innerHTML = Math.round(tma2) + "%";
+                                     sla2_title.innerHTML = "SLA2->" + Math.round(answer_sec_pct_rt_stat_two) + "sec";
                                      }
                                      else
                                      sla2.innerHTML = 0;*/
@@ -775,7 +775,7 @@ function   dataTable_top(data)
 //calculo do TMA de segundos para hora:minuto:segundo
                         var totalSec = +data[index].tma;
                         var total_feedbacks = +data[index].count_feedbacks;
-                        totalSec = Math.floor(totalSec / total_feedbacks);
+                        totalSec = Math.round(totalSec / total_feedbacks);
                         var hours = parseInt(totalSec / 3600) % 24;
                         var minutes = parseInt(totalSec / 60) % 60;
                         var seconds = totalSec % 60;
@@ -805,7 +805,7 @@ function   dataTable_top(data)
 
 function secondstotime(seconds)
 {
-      var numminutes = Math.floor(((seconds) % 3600) / 60);
+      var numminutes = Math.round(((seconds) % 3600) / 60);
       var numseconds = ((seconds) % 3600) % 60;
       if (numminutes < 10)
             numminutes = "0" + numminutes;

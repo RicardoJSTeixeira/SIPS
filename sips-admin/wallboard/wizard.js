@@ -356,7 +356,7 @@ $(function() {
             sql_basic("remove_Layout", idLayout);
       });
       $(document).on("click", "#create_button_dialog", function(e) {//CRIAR OS WALLBOARDS PARA LINHAS E BARRAS
-            manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, $("#update_time").val(), selected_type_graph, 0, 0);
+            manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.round((Math.random() * 500) + 1), Math.round((Math.random() * 250) + 1), 250, 250, idLayout, $("#update_time").val(), selected_type_graph, 0, 0);
       });
       $(document).on("click", "#create_button_pie", function(e) {//CRIAR OS WALLBOARDS PARA LINHAS E BARRAS
             var feedbacks = "";
@@ -377,16 +377,16 @@ $(function() {
                   switch ($("#pie_opcao").val())
                   {
                         case "1":
-                              manipulate_pie("insert_pie", 0, 0, 1, "Gráfico de Tarte", $("#pie_timespan").val(), 0, 0, $("#campaign_id_pie option:selected").val(), 0, 0, feedbacks, 0, $("#campaign_id_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
+                              manipulate_pie("insert_pie", 0, 0, 1, "Gráfico de Tarte", $("#pie_timespan").val(), 0, 0, $("#campaign_id_pie option:selected").val(), 0, 0, feedbacks, 0, $("#campaign_id_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.round((Math.random() * 500) + 1), Math.round((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
                               break;
                         case "2":
-                              manipulate_pie("insert_pie", 0, 0, 2, "Gráfico de Tarte", $("#pie_timespan").val(), 0, $("#grupo_user_pie option:selected").val(), 0, 0, 0, feedbacks, 0, $("#grupo_user_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
+                              manipulate_pie("insert_pie", 0, 0, 2, "Gráfico de Tarte", $("#pie_timespan").val(), 0, $("#grupo_user_pie option:selected").val(), 0, 0, 0, feedbacks, 0, $("#grupo_user_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.round((Math.random() * 500) + 1), Math.round((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
                               break;
                         case "3":
-                              manipulate_pie("insert_pie", 0, 0, 3, "Gráfico de Tarte", $("#pie_timespan").val(), 0, 0, 0, $("#grupo_inbound_pie option:selected").val(), 0, feedbacks, 0, $("#grupo_inbound_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
+                              manipulate_pie("insert_pie", 0, 0, 3, "Gráfico de Tarte", $("#pie_timespan").val(), 0, 0, 0, $("#grupo_inbound_pie option:selected").val(), 0, feedbacks, 0, $("#grupo_inbound_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.round((Math.random() * 500) + 1), Math.round((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
                               break;
                         case "4":
-                              manipulate_pie("insert_pie", 0, 0, 4, "Gráfico de Tarte", $("#pie_timespan").val(), $("#user_pie option:selected").val(), 0, 0, 0, 0, feedbacks, 0, $("#user_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
+                              manipulate_pie("insert_pie", 0, 0, 4, "Gráfico de Tarte", $("#pie_timespan").val(), $("#user_pie option:selected").val(), 0, 0, 0, 0, feedbacks, 0, $("#user_pie option:selected").text(), $("#pie_feedback_colum_name").val(), $("#pie_name").val(), Math.round((Math.random() * 500) + 1), Math.round((Math.random() * 250) + 1), 450, 242, idLayout, 10000, 3);
                               break;
                   }
                   ;
@@ -429,13 +429,13 @@ $(function() {
                   switch ($("#dataTable_opcao").val())
                   {
                         case "1":
-                              manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), $("#campaign_id_dataTable").val(), 0, 0, feedbacks, limit, $("#coluna_feedback").val(), 0, $("#dataTable_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, $("#campaign_id_dataTable option:selected").text(), 0, mode);
+                              manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), $("#campaign_id_dataTable").val(), 0, 0, feedbacks, limit, $("#coluna_feedback").val(), 0, $("#dataTable_name").val(), Math.round((Math.random() * 500) + 1), Math.round((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, $("#campaign_id_dataTable option:selected").text(), 0, mode);
                               break;
                         case "2":
-                              manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), 0, $("#grupo_inbound_dataTable").val(), 0, feedbacks, limit, $("#coluna_feedback").val(), 0, $("#dataTable_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, $("#grupo_inbound_dataTable option:selected").text(), 0, mode);
+                              manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), 0, $("#grupo_inbound_dataTable").val(), 0, feedbacks, limit, $("#coluna_feedback").val(), 0, $("#dataTable_name").val(), Math.round((Math.random() * 500) + 1), Math.round((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, $("#grupo_inbound_dataTable option:selected").text(), 0, mode);
                               break;
                         case "3":
-                              manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), 0, 0, $("#grupo_user_dataTable").val(), feedbacks, limit, $("#coluna_feedback").val(), 0, $("#dataTable_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, $("#grupo_user_dataTable option:selected").text(), 0, mode);
+                              manipulate_dataTable_top("insert_dataTop", id_wallboard, $("#dataTable_timespan").val(), 0, 0, $("#grupo_user_dataTable").val(), feedbacks, limit, $("#coluna_feedback").val(), 0, $("#dataTable_name").val(), Math.round((Math.random() * 500) + 1), Math.round((Math.random() * 250) + 1), 250, 250, idLayout, 10000, selected_type_graph, $("#grupo_user_dataTable option:selected").text(), 0, mode);
                               break;
                   }
 
@@ -450,7 +450,7 @@ $(function() {
 
             if ($("#group_inbound_select").val())
             {
-                  manipulate_graph("insert_wbe", 0, $("#inbound_name").val(), Math.floor((Math.random() * 500) + 1), Math.floor((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 4, linhas_inbound, 0);
+                  manipulate_graph("insert_wbe", 0, $("#inbound_name").val(), Math.round((Math.random() * 500) + 1), Math.round((Math.random() * 250) + 1), 429, 242, idLayout, 10000, 4, linhas_inbound, 0);
                   $('#dialog_inbound').modal('hide');
             }
             else
