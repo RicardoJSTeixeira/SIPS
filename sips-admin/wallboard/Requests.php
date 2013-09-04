@@ -211,7 +211,7 @@ switch ($action) {
                             $selected_query = $row2["query_text_inbound"];
                         if ($row["mode"] == 2)
                             $selected_query = $row2["query_text_outbound"];
-                        //SUbstituição das variaveis
+//SUbstituição das variaveis
                         $selected_query = str_replace("now()", "'" . $rounded_time . "'", $selected_query);
                         $selected_query = str_replace('$hour', $row["tempo"], $selected_query);
 
@@ -230,7 +230,7 @@ switch ($action) {
                     } else {//BLENDED-----------------------------------------------------------
                         $inbound = $row2["query_text_inbound"];
                         $outbound = $row2["query_text_outbound"];
-                        //SUbstituição das variaveis
+//SUbstituição das variaveis
                         $inbound = str_replace("now()", "'" . $rounded_time . "'", $inbound);
                         $inbound = str_replace('$hour', $row["tempo"], $inbound);
                         $inbound = str_replace('$user_group', $row["user_group"], $inbound);
@@ -240,7 +240,7 @@ switch ($action) {
                         $inbound = str_replace('$linha_inbound', $row["linha_inbound"], $inbound);
                         $inbound = str_replace('$status', $row["status_feedback"], $inbound);
                         $inbound = str_replace('$chamadas', $row["chamadas"], $inbound);
-                        //SUbstituição das variaveis
+//SUbstituição das variaveis
                         $outbound = str_replace("now()", "'" . $rounded_time . "'", $outbound);
                         $outbound = str_replace('$hour', $row["tempo"], $outbound);
                         $outbound = str_replace('$user_group', $row["user_group"], $outbound);
@@ -319,7 +319,7 @@ switch ($action) {
                             $selected_query = $row2["query_text_inbound"];
                         if ($row["mode"] == 2)
                             $selected_query = $row2["query_text_outbound"];
-                        //SUbstituição das variaveis
+//SUbstituição das variaveis
 
                         $selected_query = str_replace('$hour', $hours, $selected_query);
                         $selected_query = str_replace("now()", "'" . $rounded_time . "'", $selected_query);
@@ -338,7 +338,7 @@ switch ($action) {
                     } else {//BLENDED-----------------------------------------------------------
                         $inbound = $row2["query_text_inbound"];
                         $outbound = $row2["query_text_outbound"];
-                        //SUbstituição das variaveis
+//SUbstituição das variaveis
                         $inbound = str_replace('$hour', $hours, $inbound);
                         $inbound = str_replace("now()", "'" . $rounded_time . "'", $inbound);
 
@@ -349,7 +349,7 @@ switch ($action) {
                         $inbound = str_replace('$linha_inbound', $row["linha_inbound"], $inbound);
                         $inbound = str_replace('$status', $row["status_feedback"], $inbound);
                         $inbound = str_replace('$chamadas', $row["chamadas"], $inbound);
-                        //SUbstituição das variaveis
+//SUbstituição das variaveis
                         $outbound = str_replace('$hour', $hours, $outbound);
                         $outbound = str_replace("now()", "'" . $rounded_time . "'", $outbound);
 
@@ -389,12 +389,12 @@ switch ($action) {
 
         if ($opcao === "1")
             $query = "select status ,count(status) as total_feedback from vicidial_log where campaign_id='$campaign_id' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by status order by total_feedback desc";
-        //  if ($opcao === "2")
-        //    $query = "select vicidial_users.full_name,count(status) as total_feedback from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user where vicidial_agent_log.user_group='$user_group' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by vicidial_agent_log.user order by total_feedback desc";
+//  if ($opcao === "2")
+//    $query = "select vicidial_users.full_name,count(status) as total_feedback from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user where vicidial_agent_log.user_group='$user_group' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by vicidial_agent_log.user order by total_feedback desc";
         if ($opcao === "3")
             $query = "select status ,count(status) as total_feedback from vicidial_closer_log where campaign_id = '$linha_inbound' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by status order by total_feedback desc";
-        //  if ($opcao === "4")
-        //   $query = "select status ,count(status) as total_feedback from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user  where vicidial_agent_log.user='$user' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by status order by total_feedback desc";
+//  if ($opcao === "4")
+//   $query = "select status ,count(status) as total_feedback from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user  where vicidial_agent_log.user='$user' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by status order by total_feedback desc";
 //muda as horas para ver os resultados desde "agora" ate a altura especificada aquando da criação do dataset
         $round_numerator = 60 * 5;
         $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
@@ -428,9 +428,6 @@ switch ($action) {
         $stmtB = "select sum(calls_today),sum(drops_today),sum(answers_today),sum(hold_sec_stat_one),sum(hold_sec_stat_two),sum(hold_sec_answer_calls),sum(hold_sec_drop_calls),sum(hold_sec_queue_calls),AVG(drops_today_pct) from vicidial_campaign_stats where campaign_id in($linha_inbound)";
         $rslt = mysql_query($stmtB, $link);
         while ($row = mysql_fetch_row($rslt)) {
-            $callsTODAY = intval($row[0]);
-            $dropsTODAY = intval($row[1]);
-            $answersTODAY = intval($row[2]);
             $hold_sec_stat_one = $row[3];
             $hold_sec_stat_two = $row[4];
             $hold_sec_answer_calls = $row[5];
@@ -477,18 +474,31 @@ switch ($action) {
             $today = date("o-m-d");
             $tomorrow = date("o-m-d", strtotime("+1 day"));
 
-            $query = "select count(*) as number from vicidial_closer_log where  call_date between '$today' and '$tomorrow' and comments = 'AFTER HOURS DROP' and campaign_id in($linha_inbound)";
+
+
+
+            $callsTODAY = 0;
+            $dropsTODAY = 0;
+            $answersTODAY = 0;
+
+            $query = "select status,count(status) as status1 from vicidial_closer_log where  call_date between '$today' and '$tomorrow'  and campaign_id in($linha_inbound) and status not like ('AFTHRS') group by status";
             $query = mysql_query($query, $link);
-            $temp = mysql_fetch_assoc($query);
+            while ($row = mysql_fetch_assoc($query)) {
+                $callsTODAY+=$row["status1"];
+                if ($row["status"] === "DROP")
+                    $dropsTODAY = $row["status1"];
+                else if ($row["status"] != "QUEUE")
+                    $answersTODAY += $row["status1"];
+            }
 
 
             $query = "select ifnull(sum(length_in_sec),0) as total_sec, ifnull(sum(queue_seconds),0) as queue_seconds from vicidial_closer_log where  call_date between '$today' and '$tomorrow' and campaign_id in($linha_inbound) and lead_id is not null";
             $query = mysql_query($query, $link);
             $row2 = mysql_fetch_assoc($query);
-            $js[] = array( 
+            $js[] = array(
                 chamadas_recebidas => $callsTODAY,
-                chamadas_perdidas => $dropsTODAY-$temp["number"],
-                chamadas_perdidas_percent => $drops_today_pct,
+                chamadas_perdidas => $dropsTODAY,
+                chamadas_perdidas_percent => 0,
                 chamadas_atendidas => $answersTODAY,
                 tma1 => $PCThold_sec_stat_one,
                 tma2 => $PCThold_sec_stat_two,

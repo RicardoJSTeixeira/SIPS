@@ -32,7 +32,6 @@ switch ($action) {
         break;
 
 
-
     case "get_scripts":
         $query = "SELECT * FROM script_dinamico_master";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -191,6 +190,8 @@ switch ($action) {
         echo json_encode(array(1));
         break;
 
+    
+    
     case "edit_item_order":
         $query = "UPDATE script_dinamico SET ordem=$ordem WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -279,7 +280,6 @@ switch ($action) {
     //-----------------FORM---------------------------//
     //------------------------------------------------//
     case "save_form_result":
-
         $sql = array();
         foreach ($results as $row) {
             if ($row['value'] != "")
