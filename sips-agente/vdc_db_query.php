@@ -2925,6 +2925,12 @@ if ($ACTION == 'AlertControl') {
 	}
 }
 
+if ($ACTION == 'reactive_callback'){
+		if(!$ultimo_callback==0){
+	mysql_query("UPDATE `asterisk`.`vicidial_callbacks` SET `status` = 'ACTIVE',`modify_date` = NOW() WHERE `vicidial_callbacks`.`callback_id` =$ultimo_callback LIMIT 1 ;", $link) or die(mysql_error());
+		}
+                exit;
+}
 ################################################################################
 ### manDiaLskip - for manual VICIDiaL dialing this skips the lead that was
 ###               previewed in the step above and puts it back in orig status
@@ -9211,6 +9217,7 @@ if ($ACTION == 'apagacallback') {
 	echo "Callback eliminado com sucesso.";
 
 }
+
 ################################################################################
 ### check force ready
 ################################################################################
@@ -9275,13 +9282,6 @@ if ($ACTION == 'custom_required') {
 		}
 
 	}
-}
-
-
-if ($ACTION == 'reactive_callback'){
-		if(!$ultimo_callback==0){
-	mysql_query("UPDATE `asterisk`.`vicidial_callbacks` SET `status` = 'ACTIVE',`modify_date` = NOW( ) WHERE `vicidial_callbacks`.`callback_id` =$ultimo_callback LIMIT 1 ;", $link);
-		}
 }
 
 if ($ACTION == 'pesquisa_morada') {
