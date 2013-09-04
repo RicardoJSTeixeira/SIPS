@@ -53,7 +53,7 @@
                         "minCheckbox": {
                               "regex": "none",
                               "alertText": "* Selecione ",
-                              "alertText2": " opções"
+                              "alertText2": " opção" //alertText2 default value-> opções
                         },
                         "equals": {
                               "regex": "none",
