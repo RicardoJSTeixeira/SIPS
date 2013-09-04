@@ -110,8 +110,8 @@
             <div class="grid-title">
                   <div class="pull-left" ><i class="fam-script-error"></i> Scripts Dinâmicos </div>
                   <div class="pull-right">
-                        <button class="btn" id="render_go">Visualisação</button>
-
+                        <button class="btn btn-inverse" id="render_go">Visualisação</button>
+ 
                   </div>
             </div>
             <div class="grid-content">
@@ -274,9 +274,8 @@
                                                 <div class="editor_layout" id="textfield_layout_editor" style="display:none">
                                                       <div class="formRow" >
                                                             <label class="label label-inverse" >Texto:</label>
-
                                                             <div class="formRight">
-                                                                  <input  maxlength="250" class="span textfield_input" id="textfield_edit" type="text" placeholder="Texto exemplo" />
+                                                                  <textarea class="span textfield_input" id="textfield_edit" maxlength="250" rows="4" cols="50"></textarea>
                                                             </div>
                                                       </div>
                                                 </div>
@@ -327,7 +326,7 @@
                                                 <!------------------------------------------------------------------------------>
                                                 <div class="clear"></div>
                                                 <div id="item_edit_comum" style="display:none"> 
-                                                      <div class="formRow" >
+                                                      <div class="formRow" id="tag_edit" >
                                                             <label class="label label-inverse" >Tag:</label>
                                                             <div class="formRight">
                                                                   <label  id="label_tag"></label>

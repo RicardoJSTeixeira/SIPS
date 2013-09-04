@@ -215,8 +215,7 @@ function update_info()
 
 function insert_element(opcao, element, data)
 {
-     
-      element.removeAttr("title");
+           element.removeAttr("title");
       switch (opcao)
       {
             case "texto":
@@ -232,7 +231,7 @@ function insert_element(opcao, element, data)
                   switch (data.param1)
                   {
                         case "normal":
-                              pattern.push("[custom[onlyLetNumSpec]]");
+                              pattern.push("[custom[onlyLetterNumberSymbol]]");
                               break;
                         case "letter":
                               pattern.push("[custom[onlyLetterSp]]");
@@ -636,11 +635,11 @@ function checknib(field, rules, i, options) {
             }
             w_total = 98 - ((w_total * 10) % 97);
             if (w_total !== w_dig_controlo) {
-                  return "Introduza um nib correto";
+                  return "Introduza um NIB correto";
             }
       }
       else
-            return "Introduza um nib correto";
+            return "Introduza um NIB correto";
 
 }
 

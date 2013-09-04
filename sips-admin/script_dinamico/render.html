@@ -31,10 +31,8 @@
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
             <style>
-                  .item  {text-align:center;padding:10px;font-size:140%;border-radius: 0px;}
+                  .item  {text-align:center;padding:10px;font-size:140%;}
                   legend{border-bottom: 8px  double   #a1a1a9;margin-bottom: 0px;}
-
-
                   .modal-footer{font-size:170%;text-align: center;}
                   div{-moz-border-radius: 5px;border-radius: 15px;}
                   input[type="checkbox"]{display:inline;}
@@ -54,11 +52,11 @@
                         <div id="script_div"  style="width:100%;margin:0 auto;" >
                         </div>  
                         <div style="width:23%;">
-                              <button class="btn btn-info" id="validate_button" onclick="$('#result_validate').text(validate_manual());">Validar o script</button>
-                              <span class="label" id="result_validate"></span>
-                              <label class="label">Clique validar para verificar cada pagina</label>  
-                              <br>
-                              <label class="label">'True' se todos os requisitos estiverem preenchidos</label>
+                              <button class="btn btn-inverse" id="validate_button" onclick="$('#result_validate').text(validate_manual());">Validar o script</button>
+                              <span class="label label-warning" id="result_validate"></span>
+                              <label class="label label-info ">Clique validar para verificar cada pagina</label>  
+                         
+                              <label class="label label-info">'True' se todos os requisitos estiverem preenchidos</label>
                         </div>    
 
 

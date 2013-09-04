@@ -24,9 +24,9 @@ var selected_id = 0;
 var selected_type = "";
 var array_id = [];
 var regex_remove_blank = /^\s*$[\n\r]{1,}/gm;
-var regex_replace_textbox_tag = /[^a-zA-Z0-9éçã\s:@§óáà?!ê().,]/g;
-var regex_replace_textbox = /[^a-zA-Z0-9éçã\s:§óáà?!ê(),.]/g;
-var regex_replace = /[^a-zA-Z0-9éçã\n§óáà\s?ê()/-]/g;
+var regex_replace_textbox_tag = /[^a-zA-Z0-9éçã\s:@§óõáàí?!ê().,]/g;
+var regex_replace_textbox = /[^a-zA-Z0-9éçã\s:óõáàí?!ê().,]/g;
+var regex_replace = /[^a-zA-Z0-9éçã\s:óõáàí?!ê()]/g;
 var regex_split = /\n/g;
 
 
@@ -325,7 +325,7 @@ function update_info()
       {
             $("#rule_target_select").empty();
             $.each(data, function(index, value) {
-                  $("#rule_target_select").append(new Option(this.id + "---" + this.type, this.id));//povoar os alvos com os ides e tipos dos elementos
+                  $("#rule_target_select").append(new Option("id-"+this.id + "---" + this.type, this.id));//povoar os alvos com os ides e tipos dos elementos
                   switch (this.type)
                   {
                         case "texto":
@@ -536,6 +536,7 @@ function populate_element(tipo, element)
 
 
             case "textfield":
+                  $("#tag_edit").hide();
                   $("#tabs").tabs("disable", 2);
                   $("#rule_manager").hide();
                   $("#open_rule_creator").prop('disabled', true);
@@ -545,6 +546,7 @@ function populate_element(tipo, element)
 
 
             case "legend":
+                  $("#tag_edit").hide();
                   $("#tabs").tabs("disable", 2);
                   $("#rule_manager").hide();
                   $("#open_rule_creator").prop('disabled', true);
@@ -688,13 +690,13 @@ function edit_element(opcao, element, data)
 
 
             case "textfield":
-                  $("#textfield_edit").val($("#textfield_edit").val().replace(/[^a-zA-Z0-9éçã\s:@§óáà,?\/\-\.\,]/g, ''));
+                  $("#textfield_edit").val($("#textfield_edit").val().replace(/[^a-zA-Z0-9éçã\s:@§óõáàí,?\/\-\.\,]/g, ''));
                   element.find(".label_geral")[0].innerHTML = $("#textfield_edit").val();
                   item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", element.index(), "h", "textfield", 0, 0, $("#textfield_edit").val(), false, $("#item_hidden").is(':checked'));
                   break;
 
             case "legend":
-                  $("#legend_edit").val($("#legend_edit").val().replace(/[^a-zA-Z0-9éçã\s:@§óáà,?\/\-\.\,()]/g, ''));
+                  $("#legend_edit").val($("#legend_edit").val().replace(/[^a-zA-Z0-9éçã\s:@§óõáàí,?\/\-\.\,()]/g, ''));
                   element.find(".label_geral")[0].innerHTML = $("#legend_edit").val();
                   item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "legend", element.index(), "h", "legend", 0, 0, $("#legend_edit").val(), false, $("#item_hidden").is(':checked'));
                   break;
@@ -758,7 +760,9 @@ function edit_element(opcao, element, data)
       element.find(".div_info_item").remove();
       element.prepend($("<div>").css("float", "right").addClass("div_info_item span1"));
       var temp = element.find(".div_info_item");
+     
       //ids nos elementos
+      
       temp.append($("<label>").addClass("label label-inverse label_id_item").text(element.data("id")));
 
       if ($("#item_required").is(':checked'))
@@ -791,6 +795,9 @@ function edit_element(opcao, element, data)
 
 function insert_element(opcao, element, data)
 {
+
+
+
 
       switch (opcao)
       {
@@ -914,18 +921,26 @@ function insert_element(opcao, element, data)
 
       }
 
+
       element.prepend($("<div>").css("float", "right").addClass("div_info_item span1"));
       var temp = element.find(".div_info_item");
 
       //IDs nos elementos 
-      temp.append($("<label>").addClass("label label-inverse label_id_item").text(data.id));
+
+    
+            temp.append($("<label>").addClass("label label-inverse label_id_item").text(data.id));
 
       if (data.required)
             temp.append($("<i>").addClass("icon-star required_icon info_icon"));
-      if (data.hidden)
-            temp.append($("<i>").addClass("icon-eye-close hidden_icon info_icon"));
-      else
-            temp.append($("<i>").addClass("icon-eye-open hidden_icon info_icon"));
+
+      if (opcao != "pagination")
+      {
+            if (data.hidden)
+                  temp.append($("<i>").addClass("icon-eye-close hidden_icon info_icon"));
+            else
+                  temp.append($("<i>").addClass("icon-eye-open hidden_icon info_icon"));
+      }
+
 
 }
 
@@ -1085,41 +1100,41 @@ $("#render_go").click(function()
 function rules_manager(tipo, element)
 {
       $("#rule_creator").hide();
-      var rts=$("#rule_trigger_select");
+      var rts = $("#rule_trigger_select");
       rts.empty()
       switch (tipo)
       {
             case "texto":
-                 rts.append(new Option("Resposta", "answer"));
-                 rts.append(new Option("Valor especifico", "value_input"));
+                  rts.append(new Option("Resposta", "answer"));
+                  rts.append(new Option("Valor especifico", "value_input"));
                   break;
 
 
             case "radio":
-                 rts.append(new Option("Valor escolhido", "value_select"));
+                  rts.append(new Option("Valor escolhido", "value_select"));
                   break;
 
 
             case "checkbox":
-                 rts.append(new Option("Valor escolhido", "value_select"));
+                  rts.append(new Option("Valor escolhido", "value_select"));
                   break;
 
 
             case "multichoice":
-                 rts.append(new Option("Valor escolhido", "value_select"));
+                  rts.append(new Option("Valor escolhido", "value_select"));
                   break;
 
 
             case "tableradio":
-                 rts.append(new Option("Resposta", "answer"));
-                 rts.append(new Option("Valor escolhido", "value_select"));
+                  rts.append(new Option("Resposta", "answer"));
+                  rts.append(new Option("Valor escolhido", "value_select"));
                   break;
 
             case "datepicker":
-                 rts.append(new Option("Resposta", "answer"));
+                  rts.append(new Option("Resposta", "answer"));
                   break;
       }
-     rts.trigger("change");
+      rts.trigger("change");
 }
 $("#rule_trigger_select").change(function()
 {
@@ -1161,7 +1176,7 @@ $("#rule_trigger_select").change(function()
                   }
                   , "json");
                   break;
-     }
+      }
 });
 
 function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trigger2, Id_target, Tipo, Param1, Param2)
@@ -1184,6 +1199,20 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
                   $("#rule_manager_list").empty();
 
                   $.each(data, function(index, value) {
+
+                        switch (this.tipo)
+                        {
+                              case "show":
+                                    this.tipo = "mostrar";
+                                    break;
+                              case "hide":
+                                    this.tipo = "esconder";
+                                    break;
+                              case "goto":
+                                    this.tipo = "ir para página";
+                                    break;
+                        }
+
                         $("#rule_table").show();
                         if (this.id_trigger2 == "0")
                               this.id_trigger2 = "resposta";//por questões visuais na tabela
@@ -1209,14 +1238,11 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
 
 $("#open_rule_creator").click(function()//Fecha o dialog e grava as alterações
 {
-
       $("#rule_creator").toggle(800);
-
 });
 
 $("#add_rule_button").click(function()
 {
-
       switch (selected_type)
       {
             case "texto":
@@ -1295,11 +1321,8 @@ $("#add_rule_button").click(function()
                   }
                   break;
       }
-
       $("#rule_target_select").val("").trigger("liszt:updated");
       $("#rules_valor_select").val("").trigger("liszt:updated");
-
-
 });
 
 //FORM MANIPULATION
