@@ -1513,7 +1513,12 @@ function NeWManuaLDiaLCalL(TVfast, TVphone_code, TVphone_number, TVlead_id, TVty
 // Insert the new manual dial as a lead and go to manual dial screen
 var portabilidade = 0;
 function NeWManuaLDiaLCalLSubmiT(tempDiaLnow)
-{
+{ 
+   document.vicidial_form.MDPhonENumbeR.value=document.vicidial_form.MDPhonENumbeR.value.replace(/[^0-9\.]+/g,'');
+      if (document.vicidial_form.MDPhonENumbeR.value.length < 2) {
+        alert_box("Nº não inserido!");
+        return false;
+    }
     if ((VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1))
     {
         if ((auto_pause_precall == 'Y') && ((agent_pause_codes_active == 'Y') || (agent_pause_codes_active == 'FORCE')) && (AutoDialWaiting == 1) && (VD_live_customer_call != 1) && (alt_dial_active != 1) && (MD_channel_look != 1) && (in_lead_preview_state != 1))
@@ -1548,10 +1553,7 @@ function continueManualDial(tempDiaLnow){
     var MDVendorLeadCode = document.vicidial_form.vendor_lead_code.value;
     var MDLookuPLeaD = 'new';
 
-    if (MDPhonENumbeRform.length < 2) {
-        alert_box("Nº não inserido!");
-        return false;
-    }
+  
 
     if (document.vicidial_form.LeadLookuP.checked == true)
     {
@@ -2131,7 +2133,7 @@ function UpdateFieldsData()
 
 
 function redial() {
-
+    redial_number=redial_number.replace(/[^0-9\.]+/g,'');
     var go_on = divchecker("redial");
     if (!go_on) {
         return;
