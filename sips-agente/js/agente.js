@@ -1426,16 +1426,7 @@ function new_callback_call(taskCBid, taskLEADid, taskCBalt)
 }
 
 
-// ################################################################################
-// Finish Callback and go back to original screen
-function manual_dial_finished()
-{
-    alt_phone_dialing = starting_alt_phone_dialing;
-    auto_dial_level = starting_dial_level;
-    MainPanelToFront();
-    CalLBacKsCounTCheck();
-    manual_dial_in_progress = 0;
-}
+
 
 
 // ################################################################################
@@ -2246,20 +2237,17 @@ function ManualDialSkip()
     {
         reactive_last_callback();
     }
-$('#vcFormIFrame')[0].src ="";
+        $('#vcFormIFrame')[0].src ="";
         $("#ResumeControl").html(ResumeControl_auto_ON_HTML);
         
     in_lead_preview_state = 0;
     if (dial_method == "INBOUND_MAN" || dial_method == "RATIO")
     {
         auto_dial_level = starting_dial_level;
+    }
 
                 document.getElementById("DiaLControl").innerHTML = DiaLControl_manual_HTML_OFF;
-    }
-    else
-    {
-        document.getElementById("DiaLControl").innerHTML = DiaLControl_manual_HTML_OFF;
-    }
+                
     manDiaLskip_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=manDiaLskip&conf_exten=" + session_id + "&user=" + user + "&pass=" + pass + "&lead_id=" + document.vicidial_form.lead_id.value + "&stage=" + previous_dispo + "&called_count=" + previous_called_count;
 
     $.post('vdc_db_query.php', manDiaLskip_query, function(data)
@@ -4557,7 +4545,11 @@ function DispoSelect_submit()
 
             if (manual_dial_in_progress == 1)
             {
-                manual_dial_finished();
+                alt_phone_dialing = starting_alt_phone_dialing;
+                auto_dial_level = starting_dial_level;
+                MainPanelToFront();
+                CalLBacKsCounTCheck();
+                manual_dial_in_progress = 0;
             }
             if (hide_gender < 1)
             {
@@ -4583,7 +4575,8 @@ function DispoSelect_submit()
                         if (auto_dial_level != '0')
                         {
                             AutoDialWaiting = 0;
-                            PauseCodeSelectContent_create();
+                            AutoDial_ReSume_PauSe("VDADpause",PauseCodeSelectContent_create);
+                            
                         }
 
                         VICIDiaL_pause_calling = 1;
@@ -7351,7 +7344,7 @@ function start_all_refresh()
                 document.getElementById("blind_monitor_notice_span_contents").innerHTML = '';
                 hideDiv('blind_monitor_alert_span');
             }
-
+/*
             //AQUI
             if (wrapup_seconds > 0)
             {
@@ -7383,7 +7376,7 @@ function start_all_refresh()
                         }
                     }
                 }
-            }
+            }*/
         }
     }
     setTimeout("all_refresh()", refresh_interval);
@@ -8517,7 +8510,7 @@ function ManualDialNext(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnSt
 
         if (VDRP_stage != 'PAUSED')
         {
-            AutoDial_ReSume_PauSe("VDADpause", manNextCall(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnStagE, mdVendorid, mdgroupalias, mdtype), '', '', "DIALNEXT", '1', 'NXDIAL');
+            AutoDial_ReSume_PauSe( "VDADpause", manNextCall(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnStagE, mdVendorid, mdgroupalias, mdtype), '', '', "DIALNEXT", '1', 'NXDIAL');
             return true;
             //	PauseCodeSelect_submit("NXDIAL");
         }
