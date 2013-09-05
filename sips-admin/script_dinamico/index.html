@@ -30,7 +30,7 @@
                   .leftDiv .item { text-align:center; border:1px solid #EEF; background-color:#FFF;padding:3px; margin-bottom: 11px}
                   .rightDiv .item { text-align:center; border:1px dashed #AAA; background-color:#FFF;padding:3px;}
                   .helperPick {border:4px solid #288dd4!important; text-align:center;width:auto}
-                  #add_rule_button{margin :5px;}
+                  #add_rule_button{margin:12px;}
                   legend{border-bottom: 8px  groove #a1a1a9;margin-bottom: 0px;}
                   .modal-body, .modal{overflow:visible;}
                   .grid-title select{width:auto;}
@@ -38,7 +38,7 @@
                   input[type="checkbox"]{display:inline;}
                   input[type="radio"]{display:inline;}
                   .radio, .checkbox {padding-left: 1px;padding-right: 16px;}
-                  .chzn-container{width:340px!important;}
+                  .chzn-container,.chzn-drop{width:340px!important;}
                   .hidden{display:none!important;}
             </style>
       </head>
@@ -111,7 +111,7 @@
                   <div class="pull-left" ><i class="fam-script-error"></i> Scripts Dinâmicos </div>
                   <div class="pull-right">
                         <button class="btn btn-inverse" id="render_go">Visualisação</button>
- 
+
                   </div>
             </div>
             <div class="grid-content">
@@ -321,6 +321,28 @@
                                                             </div>
                                                       </div>
                                                 </div>
+
+                                                <!--SCHEDULER-->
+                                                <div class="editor_layout" id="scheduler_layout_editor" style="display:none">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Texto:</label>
+                                                            <div class="formRight">
+                                                                  <input  maxlength="65" class="scheduler_input" id="scheduler_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
+                                                      </div>
+
+
+                                                      <div class="formRow">
+                                                            <label class="label label-inverse" >Calendários:</label>
+                                                            <div class="formRight">
+                                                                  <select id="scheduler_edit_select" class="chosen_select"  multiple="multiple"   ></select>
+                                                            </div>
+                                                      </div>   
+
+                                                </div>
+
+
+
                                                 <!------------------------------------------------------------------------------>
                                                 <!-------------------------COMUM A TODOS OS ELEMENTOS-------------------------->
                                                 <!------------------------------------------------------------------------------>
@@ -376,6 +398,7 @@
                                                       <button class="btn btn-primary" id="cancel_edit">Cancelar</button>
                                                 </div>
                                           </div>
+
                                           <div id="tabs-3">
 
                                                 <div id="rule_manager" style="display:none,width:auto" >
@@ -466,10 +489,10 @@
                                                 </div>
 
                                           </div><!--TAB 3-->
-
-
                                     </div>
-                              </div>  
+
+                              </div>
+
                         </div>
                   </div> 
             </div> 

@@ -13,6 +13,17 @@ switch ($action) {
     //------------------------------------------------//    
     //---------------------GET------------------------//  
     //------------------------------------------------//
+
+    case "get_schedule":
+        $query = "SELECT * FROM sips_sd_schedulers";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(id => $row["id_scheduler"], text => $row["display_text"]);
+        }
+        echo json_encode($js);
+        break;
+
+
     case "get_tag_fields":
         $query = "SELECT * FROM `vicidial_list_ref` GROUP BY name";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -94,7 +105,7 @@ switch ($action) {
         $query = "SELECT * FROM `script_dinamico` WHERE id_script=$id_script  order by ordem,id_page asc";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => json_decode($row["placeholder"]), max_length => $row["max_length"], values_text => json_decode($row["values_text"]), required => $row["required"] == 1, hidden => $row["hidden"] == 1,param1=>$row["param1"]);
+            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => json_decode($row["placeholder"]), max_length => $row["max_length"], values_text => json_decode($row["values_text"]), required => $row["required"] == 1, hidden => $row["hidden"] == 1, param1 => $row["param1"]);
         }
         echo json_encode($js);
         break;
@@ -103,7 +114,7 @@ switch ($action) {
         $query = "SELECT * FROM `script_dinamico` WHERE id_script=$id_script and id_page=$id_page order by ordem asc";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => json_decode($row["placeholder"]), max_length => $row["max_length"], values_text => json_decode($row["values_text"]), required => $row["required"] == 1, hidden => $row["hidden"] == 1,param1=>$row["param1"]);
+            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => json_decode($row["placeholder"]), max_length => $row["max_length"], values_text => json_decode($row["values_text"]), required => $row["required"] == 1, hidden => $row["hidden"] == 1, param1 => $row["param1"]);
         }
         echo json_encode($js);
         break;
@@ -112,7 +123,7 @@ switch ($action) {
         $query = "SELECT * FROM `script_dinamico` WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => json_decode($row["placeholder"]), max_length => $row["max_length"], values_text => json_decode($row["values_text"]), required => $row["required"] == 1, hidden => $row["hidden"] == 1,param1=>$row["param1"]);
+            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => json_decode($row["placeholder"]), max_length => $row["max_length"], values_text => json_decode($row["values_text"]), required => $row["required"] == 1, hidden => $row["hidden"] == 1, param1 => $row["param1"]);
         }
         echo json_encode($js);
         break;
@@ -190,8 +201,8 @@ switch ($action) {
         echo json_encode(array(1));
         break;
 
-    
-    
+
+
     case "edit_item_order":
         $query = "UPDATE script_dinamico SET ordem=$ordem WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
