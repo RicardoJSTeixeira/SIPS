@@ -8514,7 +8514,6 @@ function ManualDialNext(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnSt
         {
             AutoDial_ReSume_PauSe( "VDADpause", manNextCall(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnStagE, mdVendorid, mdgroupalias, mdtype), '', '', "DIALNEXT", '1', 'NXDIAL');
             return true;
-            //	PauseCodeSelect_submit("NXDIAL");
         }
         else
         {
@@ -8529,7 +8528,6 @@ function ManualDialNext(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnSt
         {
             AutoDial_ReSume_PauSe("VDADpause", manNextCall(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnStagE, mdVendorid, mdgroupalias, mdtype), '', '', "DIALNEXT", '1', 'NXDIAL');
             return true;
-            //	PauseCodeSelect_submit("NXDIAL");
         }
         $("#DiaLControl").html(DiaLControl_manual_HTML_OFF);
 

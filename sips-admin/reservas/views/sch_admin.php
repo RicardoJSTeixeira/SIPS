@@ -42,9 +42,9 @@ require_once('../func/reserve_utils.php');
 <div class=cc-mstyle>
     <table>
         <tr>
-            <td id='icon32'><img src='<?php echo ROOT; ?>images/icons/calendar_32.png' /></td>
+            <td id='icon32'><img src='/images/icons/calendar_32.png' /></td>
             <td id='submenu-title'> Criar calendário </td>
-            <td ><span style='float:right;cursor:pointer;' onclick="location='reserv_types.php'" >Tipos de reserva<img src='<?php echo ROOT; ?>images/icons/to_do_list_cheked_all_32.png' /></span></td>
+            <td ><span style='float:right;cursor:pointer;' onclick="location='reserv_types.php'" >Tipos de reserva<img src='/images/icons/to_do_list_cheked_all_32.png' /></span></td>
         </tr>
     </table>
 </div>
@@ -74,7 +74,7 @@ require_once('../func/reserve_utils.php');
 					
 					//echo "<script type='text/javascript'> console.log(\"SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers a WHERE a.alias_code in ($usrCode) ;\"); </script>"; 
 				$u_g=$usrQry['user_group'];
-					if ($u_g=='AreaSalesManager' or $u_g=='AAL' or $u_g=='AMB' or $u_g=='ANU' or $u_g=='FPO' or $u_g=='RGE') {
+					if ($u_g=='AreaSalesManager' or $u_g=='AAL' or $u_g=='AMB' or $u_g=='ANU' or $u_g=='FPO' or $u_g=='RGE' or $u_g=="BIO") {
 					 $query = "SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers a WHERE a.alias_code in ($usrCode) ;";
 					
 					} else {  $query = "SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers ;"; }
@@ -196,7 +196,7 @@ require_once('../func/reserve_utils.php');
          "sType": "string"
      }],
      "oLanguage": {
-         "sUrl": "<?php echo ROOT; ?>jquery/jsdatatable/language/pt-pt.txt"
+         "sUrl": "/jquery/jsdatatable/language/pt-pt.txt"
      }  
  });
 
@@ -208,7 +208,7 @@ require_once('../func/reserve_utils.php');
          function (data) {
              if (data.sucess == 1) {
                  $("#sch")[0].reset();
-                 otable.dataTable().fnAddData(['<img src="<?php echo ROOT;?>images/icons/livejournal_16.png" title="Editar" style="cursor:pointer;" onclick=location="rsc_edita.php?rsc=' + data.id + '" ><a href=rsc_admin.php?sch=' + data.id + '>' + data.display_text + '</a>', data.alias_code, data.display_days, data.blocks, data.begin_time, data.end_time, '<img src="<?php echo ROOT ?>images/icons/tick_16.png"  >']);
+                 otable.dataTable().fnAddData(['<img src="/images/icons/livejournal_16.png" title="Editar" style="cursor:pointer;" onclick=location="rsc_edita.php?rsc=' + data.id + '" ><a href=rsc_admin.php?sch=' + data.id + '>' + data.display_text + '</a>', data.alias_code, data.display_days, data.blocks, data.begin_time, data.end_time, '<img src="<?php echo ROOT ?>images/icons/tick_16.png"  >']);
              } else {
                  showDialog("Sucedeu-se um erro.");
              }
