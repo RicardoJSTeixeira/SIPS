@@ -111,7 +111,7 @@
                   <div class="pull-left" ><i class="fam-script-error"></i> Scripts Dinâmicos </div>
                   <div class="pull-right">
                         <button class="btn btn-inverse" id="render_go">Visualisação</button>
- 
+
                   </div>
             </div>
             <div class="grid-content">
@@ -321,6 +321,28 @@
                                                             </div>
                                                       </div>
                                                 </div>
+
+                                                <!--SCHEDULER-->
+                                                <div class="editor_layout" id="scheduler_layout_editor" style="display:none">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Texto:</label>
+                                                            <div class="formRight">
+                                                                  <input  maxlength="65" class="scheduler_input" id="scheduler_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
+                                                      </div>
+
+
+                                                      <div class="formRow">
+                                                            <label class="label label-inverse" >Calendários:</label>
+                                                            <div class="formRight">
+                                                                  <select id="scheduler_edit_select" class="chosen_select"  multiple="multiple"   ></select>
+                                                            </div>
+                                                      </div>   
+
+                                                </div>
+
+
+
                                                 <!------------------------------------------------------------------------------>
                                                 <!-------------------------COMUM A TODOS OS ELEMENTOS-------------------------->
                                                 <!------------------------------------------------------------------------------>
@@ -376,6 +398,7 @@
                                                       <button class="btn btn-primary" id="cancel_edit">Cancelar</button>
                                                 </div>
                                           </div>
+
                                           <div id="tabs-3">
 
                                                 <div id="rule_manager" style="display:none,width:auto" >
@@ -466,10 +489,10 @@
                                                 </div>
 
                                           </div><!--TAB 3-->
-
-
                                     </div>
-                              </div>  
+
+                              </div>
+
                         </div>
                   </div> 
             </div> 
