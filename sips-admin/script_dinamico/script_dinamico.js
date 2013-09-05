@@ -618,8 +618,14 @@ function populate_element(tipo, element)
 
 
             case "scheduler":
+
                   $("#scheduler_edit").val(element.find(".label_geral")[0].innerHTML);
-                  $("#scheduler_edit_select").val(element.find(".scheduler_select").val()).trigger("liszt:updated");
+
+                  var valores = element.find(".scheduler_select>option").map(function() {
+                        return $(this).val();
+                  });
+
+                  $("#scheduler_edit_select").val(valores).trigger("liszt:updated");
                   break;
       }
       rules_database("get_rules_by_trigger", 0, 0, 0, element.data("id"), 0, 0, 0, 0, 0);
@@ -788,7 +794,6 @@ function edit_element(opcao, element, data)
 
 
             case "datepicker":
-
                   $("#datepicker_edit").val($("#datepicker_edit").val().replace(regex_replace_textbox_tag, ''));
                   element.find(".label_geral")[0].innerHTML = $("#datepicker_edit").val();
                   item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", element.index(), "h", $("#datepicker_edit").val(), 0, 0, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
@@ -797,12 +802,13 @@ function edit_element(opcao, element, data)
 
 
             case "scheduler":
+                  var valores = $("#scheduler_edit_select").val();
+                  var select = element.find(".scheduler_select").empty();
+                  $("#scheduler_edit_select option:selected").clone().appendTo(select);
+                  select.append("<option value='' selected>Selecione um calendário</option>")
                   $("#scheduler_edit").val($("#scheduler_edit").val().replace(regex_replace_textbox_tag, ''));
                   element.find(".label_geral")[0].innerHTML = $("#scheduler_edit").val();
-                  var select = element.find(".scheduler_select").empty();
-                select.empty();
-                select.append($("#scheduler_edit_select option:selected"));
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), $("#scheduler_edit_select option:selected").text(), 0, $("#scheduler_edit_select").val(), $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), "", 0, valores, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   break;
       }
 
@@ -970,7 +976,7 @@ function insert_element(opcao, element, data)
                   var options = "";
                   for (var count = 0; count < calendarios.length; count++)
                   {
-                        options += "<option value='" + calendarios[count] + "'>" + calendarios[count] + "</option>";
+                        options += "<option value='" + calendarios[count] + "'>" + $("#scheduler_edit_select option[value=" + calendarios[count] + "]").text() + "</option>";
                   }
                   select.append(options);
                   break;

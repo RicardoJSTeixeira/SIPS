@@ -7,7 +7,7 @@
 
 var array_id = [];
 var tag_regex = /\@(\d{1,5})\@/g;
-var page_info = 0;
+var page_info = [];
 var items = [];
 $(function() {
       array_id["radio"] = 0;
@@ -18,7 +18,7 @@ $(function() {
             update_script();
       });
 
-    $(document).on("click", ".previous_pag", function(e) {
+      $(document).on("click", ".previous_pag", function(e) {
             e.preventDefault();
             var temp = $(".pag_div:visible").prev(".pag_div");
             if (temp.length)
@@ -36,6 +36,12 @@ $(function() {
                   $(".pag_div").hide();
                   temp.show();
             }
+      });
+
+      $(document).on("click", ".scheduler_button_go", function(e) {
+            e.preventDefault();
+            var url = '../reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + page_info.user_id + '&lead=' + page_info.lead_id;
+            window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
       });
 
 });
@@ -184,11 +190,21 @@ function update_info()
                                       .data("type", "datepicker");
                               items.push([item, this.id_page]);
                               break;
+
+                        case "scheduler":
+                              item = $('#dummie .scheduler_class').clone();
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
+                                      .data("required", this.required)
+                                      .data("type", "scheduler");
+                              items.push([item, this.id_page]);
+                              break;
                   }
+
                   insert_element(this.type, item, this);
             });
-            
-            
+
+
             $("#myform").validationEngine();
 //FAZER O APPEND DOS ITEMS A LISTA
             $.each(items, function()
@@ -198,10 +214,10 @@ function update_info()
                   }
                   $("#" + this[1] + "pag").append(this[0]);
             });
-     populate_script();
-          rules();
-          tags();
-       
+            populate_script();
+            rules();
+            tags();
+
             $(".pag_div").hide().first().show();
             $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true}).keypress(function(e) {
                   e.preventDefault();
@@ -210,12 +226,12 @@ function update_info()
             });
 
       }, "json");
-        
+
 }
 
 function insert_element(opcao, element, data)
 {
-           element.removeAttr("title");
+      element.removeAttr("title");
       switch (opcao)
       {
             case "texto":
@@ -389,6 +405,24 @@ function insert_element(opcao, element, data)
                         element.find(".form_datetime").addClass("validate[required]");
                   element.find(".form_datetime")[0].name = data.id;
                   break;
+
+            case "scheduler":
+                  element.find(".scheduler_button_go").attr("id", element.data("id") + "go_button");
+                  var select = element.find(".scheduler_select");
+                  $.post("requests.php", {action: "get_schedule_by_id", ids: data.values_text.join(",")},
+                  function(data3)
+                  {
+                        $.each(data3, function(index, value) {
+                              select.append("<option value=" + this.id + ">" + this.text + "</option>");
+                        });
+                        select.val("").trigger("liszt:updated");
+                  }, "json");
+                  element.find(".label_geral")[0].innerHTML = data.texto;
+                  if (data.required)
+                        element.find(".scheduler_select").addClass("validate[required]");
+                  break;
+
+
       }
       if (data.hidden)
             element.css("display", "none");
@@ -575,12 +609,12 @@ function rules()
             });
       }
       , "json");
-   
+
 }
 function tags()
 {
       var rz = $("#render_zone");
-     if (rz.html().match(tag_regex))
+      if (rz.html().match(tag_regex))
       {
             var temp2 = rz.html().match(tag_regex);
             var temp = [];
@@ -591,7 +625,7 @@ function tags()
             $.each(temp, function() {
                   var id = this;
                   id = id.replace(/\@/g, '');
-                 
+
                   var regExp = new RegExp(this, "g");
                   rz.html(rz.html().replace(regExp, "<span class='" + id + "tag'></span>"));
                   $(document).on("change", "#" + id + " input,#" + id + " select", function() {
