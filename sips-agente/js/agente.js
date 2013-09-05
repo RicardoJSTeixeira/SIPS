@@ -7893,7 +7893,7 @@ function check_for_conf_calls(taskconfnum, taskforce)
                         if (PausENotifYCounTer > 10)
                         {
                             alert_box('A sua sessão está em pausa');
-                            AutoDial_ReSume_PauSe('VDADpause');
+                            AutoDial_ReSume_PauSe("VDADpause", pause_create_div, '', '', '', '1', '');
                             PausENotifYCounTer = 0;
                         }
                         else {
@@ -9259,7 +9259,6 @@ function MainPanelToFront(resumevar)
             if (dial_method == "INBOUND_MAN")
             {
                 document.getElementById("DiaLControl").innerHTML = DiaLControl_manual_HTML;
-
 
 
                 if (manual_dial_preview == 1)
