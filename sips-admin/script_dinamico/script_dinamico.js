@@ -800,8 +800,9 @@ function edit_element(opcao, element, data)
                   $("#scheduler_edit").val($("#scheduler_edit").val().replace(regex_replace_textbox_tag, ''));
                   element.find(".label_geral")[0].innerHTML = $("#scheduler_edit").val();
                   var select = element.find(".scheduler_select").empty();
-                  console.log($("#scheduler_edit_select").val());
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), 0, 0, $("#scheduler_edit_select").val(), $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                select.empty();
+                select.append($("#scheduler_edit_select option:selected"));
+                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), $("#scheduler_edit_select option:selected").text(), 0, $("#scheduler_edit_select").val(), $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   break;
       }
 
