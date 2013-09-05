@@ -24,6 +24,18 @@ switch ($action) {
         break;
 
 
+    case "get_schedule_by_id":
+        $query = "SELECT * FROM sips_sd_schedulers where id_scheduler in($ids)";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array(id => $row["id_scheduler"], text => $row["display_text"]);
+        }
+        echo json_encode($js);
+        break;
+
+
+
+
     case "get_tag_fields":
         $query = "SELECT * FROM `vicidial_list_ref` GROUP BY name";
         $query = mysql_query($query, $link) or die(mysql_error());
