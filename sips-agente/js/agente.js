@@ -2184,6 +2184,9 @@ function divchecker(curDiv) {
     if ($("#CallHistoryDialog").parent().css("display") != 'none' && curDiv != "CallHistoryDialog") {
         rdytogo = 0;
     }
+    if ($("#PauseCodeSelectBox").css("display") != 'none' && curDiv != "PauseCodeSelectBox") {
+        rdytogo = 0;
+    }
     return rdytogo;
 }
 function NewRedialSubmiT(nr)
