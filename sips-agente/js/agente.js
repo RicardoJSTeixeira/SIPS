@@ -2184,6 +2184,9 @@ function divchecker(curDiv) {
     if ($("#CallHistoryDialog").parent().css("display") != 'none' && curDiv != "CallHistoryDialog") {
         rdytogo = 0;
     }
+    if ($("#PauseCodeSelectBox").css("display") != 'none' && curDiv != "PauseCodeSelectBox") {
+        rdytogo = 0;
+    }
     return rdytogo;
 }
 function NewRedialSubmiT(nr)
@@ -7888,7 +7891,7 @@ function check_for_conf_calls(taskconfnum, taskforce)
                         }
                     }
                     var VLAStatuS = check_time_array.Status;
-                    if ((VLAStatuS === 'PAUSED') && ((AutoDialWaiting === 1) && (in_lead_preview_state=== 0)))
+                    if ((VLAStatuS === 'PAUSED') && (AutoDialWaiting === 1))
                     {
                         if (PausENotifYCounTer > 10)
                         {
