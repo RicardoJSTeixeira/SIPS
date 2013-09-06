@@ -1,0 +1,100 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+      <head>
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css">
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
+            <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/validationEngine.jquery.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.stepy.css">
+
+            <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
+            <script type="text/javascript" src="/jquery/jqueryUI/jquery-ui-1.10.2.custom.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt-BR.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/jquery.stepy.min.js"></script>
+
+
+            <script type="text/javascript" src="/bootstrap/js/validation/jquery.validationEngine.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/validation/languages/jquery.validationEngine-pt.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/validation/contrib/other-validations.js"></script>
+
+            <title></title>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <style>
+                  .hidden
+                  {
+                        display:none;
+                  }
+            </style>
+      </head>
+      <body>
+            <form id="form_wizard" >
+                  <fieldset title="Escolha de dados">
+                        <legend>Selecione um Parametro</legend>
+
+
+                        <label class="label">Dados principais</label>
+                        <select id="select_fieldset1_param1" class="chzn-select  chosen_select ">
+                              <option value="user">User</option>
+                              <option value="user_group">User_group</option>
+                              <option value="campanha">Campanha</option>
+                              <option value="linha_inbound">Linha de inbound</option>
+                              <option value="totalcc">Total call center</option>
+                              <option value="script">Script</option>
+                        </select>
+                        <select id="select_fieldset1_param2" class="chzn-select  chosen_select ">
+                        </select> 
+
+
+
+                        <div id="div_part2" >
+                              <label class="label ">Cruzar com:</label>
+                              <select id="select_fieldset1_param3" class="chzn-select  chosen_select " >
+                              </select> 
+
+                              <select id="select_fieldset1_param4"  class="chzn-select  chosen_select ">
+                              </select>     
+                        </div>
+
+
+                        <div id="div_datepicker" class="hidden">
+                          
+                                    <label>Data de Inicio</label>
+                                    <div class="formRight">
+                                          <input type="text" id="from" name="from" />
+                                    </div>
+                         
+                             
+                                    <label> Data final </label>
+                                    <div class="formRight">
+                                          <input type="text" id="to" name="to"/>
+                                    </div>
+                             
+
+                        </div>
+
+
+                  </fieldset>
+
+                  <fieldset title="Step 2">
+                        <legend>description two</legend>
+
+                  </fieldset>
+
+            </form>
+            <script type="text/javascript" src="wizard.js"></script>
+      </body>
+</html>
