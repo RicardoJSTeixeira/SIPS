@@ -6344,7 +6344,7 @@ function pesquisa_morada() {
                                             <td>" + this.localidade + "</td>\n\
                                             <td>" + this.distrito + "</td>\n\
                                             <td>" + this.conselho + "</td>\n\
-                                            <td><button onclick=\"aplica_morada(this)\" class=\"btn btn-mini icon-alone\" data-rua=\"" + this.rua + "\" data-cp7=\"" + this.cod_postal + "\" data-localidade=\"" + this.localidade + "\" data-distrito=\"" + this.distrito + "\" data-conselho=\"" + this.conselho + "\"><i class=\"icon-map-marker\"></i></button></td>\n\
+                                            <td><button onclick=\"aplica_morada(this)\" class=\"btn btn-mini icon-alone\" data-rua=\"" + this.rua + "\" data-cp7=\"" + this.cod_postal + "\" data-localidade=\"" + this.localidade + "\" data-distrito=\"" + this.distrito + "\" data-concelho=\"" + this.conselho + "\"><i class=\"icon-map-marker\"></i></button></td>\n\
                                         </tr>");
             });
         }, "json");
