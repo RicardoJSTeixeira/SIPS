@@ -418,8 +418,10 @@ function insert_element(opcao, element, data)
                         select.val("").trigger("liszt:updated");
                   }, "json");
                   element.find(".label_geral")[0].innerHTML = data.texto;
+             
                   if (data.required)
                         element.find(".scheduler_select").addClass("validate[required]");
+
                   break;
 
 

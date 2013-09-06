@@ -4,8 +4,8 @@
 
 //relatorio
 
-
-
+//tratar das rules quando o elemento n as tem
+//schedule ta cabenenariazado
 
 //
 //forms ->http://www.javaworld.com/jw-06-1996/jw-06-javascript.html?page=2
@@ -16,8 +16,8 @@
  admin
  test
  */
-
-
+// NOS COMMITS!------------------------
+// Issue #13
 
 
 var selected_id = 0;
@@ -47,12 +47,10 @@ function editor_toggle(tipo)
       }
       if (tipo === "off")
       {
-
             $("#tabs").tabs("disable", 1);
             $("#tabs").tabs("disable", 2);
             $("#item_edit_comum").hide();
             $("#rule_manager").hide();
-
             $("#open_rule_creator").prop('disabled', true);
             $(".editor_layout").hide();
             $(".footer_save_cancel button").prop('disabled', true);
@@ -86,6 +84,20 @@ $("#regra_select").change(function()
             $(".rule_target").show();
       }
 });
+
+$("#checkbox_scheduler_all").click(function()
+{
+
+      if (this.checked)
+            $("#scheduler_edit_select option").prop("selected", true);
+
+      else
+            $("#scheduler_edit_select option").prop("selected", false);
+
+      $("#scheduler_edit_select").trigger("liszt:updated");
+});
+
+
 
 $(function() {
       $("#tabs").tabs();
@@ -166,7 +178,7 @@ $(function() {
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("scheduler_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_scheduler")[0].innerHTML, 0, 0, 0, 0, 0, 0);
+                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_scheduler")[0].innerHTML, 0, 0, [], 0, 0, 1);
                         }
                         editor_toggle("off");
                   }
@@ -618,14 +630,17 @@ function populate_element(tipo, element)
 
 
             case "scheduler":
-
+                  $("#tabs").tabs("disable", 2);
                   $("#scheduler_edit").val(element.find(".label_geral")[0].innerHTML);
+                  $("#checkbox_scheduler_all").prop("checked", false);
 
-                  var valores = element.find(".scheduler_select>option").map(function() {
+                  var select = element.find(".scheduler_select>option");
+
+                  var values = select.map(function() {
                         return $(this).val();
                   });
 
-                  $("#scheduler_edit_select").val(valores).trigger("liszt:updated");
+                  $("#scheduler_edit_select").val(values).trigger("liszt:updated");
                   break;
       }
       rules_database("get_rules_by_trigger", 0, 0, 0, element.data("id"), 0, 0, 0, 0, 0);
@@ -802,13 +817,23 @@ function edit_element(opcao, element, data)
 
 
             case "scheduler":
-                  var valores = $("#scheduler_edit_select").val();
-                  var select = element.find(".scheduler_select").empty();
-                  $("#scheduler_edit_select option:selected").clone().appendTo(select);
-                  select.append("<option value='' selected>Selecione um calendário</option>")
+                  var options = $("#scheduler_edit_select > option:selected").clone();
+                  var valores = [];
+                  $.each(options, function()
+                  {
+                        valores.push(this.value);
+                  });
+                  var select = element.find(".scheduler_select");
+                  select.empty();
+                  select.append("<option value='' selected>Selecione um calendário</option>");
+
+                  if (options.length > 0)
+                        select.append(options);
+
+
                   $("#scheduler_edit").val($("#scheduler_edit").val().replace(regex_replace_textbox_tag, ''));
                   element.find(".label_geral")[0].innerHTML = $("#scheduler_edit").val();
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), "", 0, valores, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), "0", 0, valores, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $("#scheduler_edit_marcação option:selected").val());
                   break;
       }
 
@@ -972,13 +997,20 @@ function insert_element(opcao, element, data)
             case "scheduler":
                   element.find(".label_geral")[0].innerHTML = data.texto;
                   var select = element.find(".scheduler_select");
+
+
                   var calendarios = data.values_text;
-                  var options = "";
-                  for (var count = 0; count < calendarios.length; count++)
-                  {
-                        options += "<option value='" + calendarios[count] + "'>" + $("#scheduler_edit_select option[value=" + calendarios[count] + "]").text() + "</option>";
-                  }
-                  select.append(options);
+                  var options = [];
+
+                  $.each(calendarios, function() {
+                        options.push("<option value='" + this + "'>" + $("#scheduler_edit_select option[value=" + this + "]").text() + "</option>");
+
+
+                  });
+                  if (options.length > 0)
+                        select.append(options);
+
+
                   break;
 
 
