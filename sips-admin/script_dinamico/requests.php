@@ -15,7 +15,7 @@ switch ($action) {
     //------------------------------------------------//
 
     case "get_schedule":
-        $query = "SELECT * FROM sips_sd_schedulers";
+        $query = "SELECT id_scheduler,display_text FROM sips_sd_schedulers where active='1' order by display_text";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array(id => $row["id_scheduler"], text => $row["display_text"]);
@@ -25,7 +25,7 @@ switch ($action) {
 
 
     case "get_schedule_by_id":
-        $query = "SELECT * FROM sips_sd_schedulers where id_scheduler in($ids)";
+        $query = "SELECT id_scheduler,display_text FROM sips_sd_schedulers where id_scheduler in($ids) and active='1' order by display_text";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array(id => $row["id_scheduler"], text => $row["display_text"]);
@@ -208,6 +208,7 @@ switch ($action) {
 
 
     case "edit_item":
+        $values_text=(!isset($values_text))?array():$values_text;
         $query = "UPDATE script_dinamico SET id_script=$id_script,id_page=$id_page,type='$type',ordem=$ordem,dispo='$dispo',texto='$texto',placeholder='" . mysql_real_escape_string(json_encode($placeholder)) . "',max_length=$max_length,values_text='" . mysql_real_escape_string(json_encode($values_text)) . "',required=$required,hidden=$hidden,param1='$param1' WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
@@ -238,6 +239,7 @@ switch ($action) {
     case "add_item":
         $query = "UPDATE script_dinamico SET ordem=ordem+1 where ordem>=$ordem and id_page=$id_page ";
         $query = mysql_query($query, $link) or die(mysql_error());
+        $values_text=(!isset($values_text))?array():$values_text;
         $query = "INSERT INTO `asterisk`.`script_dinamico` (`id`, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required,hidden,param1) VALUES (NULL, $id_script,$id_page,'$type',$ordem,'$dispo', '$texto', '" . mysql_real_escape_string(json_encode($placeholder)) . "', $max_length, '" . mysql_real_escape_string(json_encode($values_text)) . "',$required,$hidden,'$param1')";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(mysql_insert_id());

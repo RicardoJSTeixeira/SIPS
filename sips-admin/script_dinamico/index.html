@@ -335,167 +335,187 @@
                                                       <div class="formRow">
                                                             <label class="label label-inverse" >Calendários:</label>
                                                             <div class="formRight">
-                                                                  <select id="scheduler_edit_select" class="chosen_select"  multiple="multiple"   ></select>
-                                                            </div>
-                                                      </div>   
-
-                                                </div>
-
-
-
-                                                <!------------------------------------------------------------------------------>
-                                                <!-------------------------COMUM A TODOS OS ELEMENTOS-------------------------->
-                                                <!------------------------------------------------------------------------------>
-                                                <div class="clear"></div>
-                                                <div id="item_edit_comum" style="display:none"> 
-                                                      <div class="formRow" id="tag_edit" >
-                                                            <label class="label label-inverse" >Tag:</label>
-                                                            <div class="formRight">
-                                                                  <label  id="label_tag"></label>
-                                                            </div>
-                                                      </div>
-                                                      <!----------------------------------------------REQUIRED------------------------------------------->
-                                                      <div class="formRow required_class" >
-                                                            <label class="label label-inverse" >Obrigatório:</label>
-                                                            <div class="formRight">
-                                                                  <input  type="checkbox" id="item_required" name="required" value="1">
-                                                                  <label for="item_required"></label>
-                                                                  <i class="icon-star"></i>
+                                                                  <select id="scheduler_edit_select" class="chosen_select"  multiple   ></select>
                                                             </div>
                                                             <div class="formRight">
-                                                                  <label>(Apenas obrigatório quando visivel)</label>
+                                                                  <input   type="checkbox" id="checkbox_scheduler_all" name="cc" value="1">
+                                                                  <label class="checkbox inline" for="checkbox_scheduler_all">Selecionar todos</label>
                                                             </div>
+                                                      </div>  
+
+
+
+                                                      <div class="formRow">
+                                                            <label class="label label-inverse" >Marcações max.</label>
+                                                            <div class="formRight">
+                                                                  <select id="scheduler_edit_marcação" >
+                                                                        <option value="1">1</option>
+                                                                        <option value="2">2</option>
+                                                                        <option value="3">3</option>
+                                                                        <option value="4">4</option>
+                                                                        <option value="5">5</option>
+                                                                  </select>
+
+                                                            </div>  
+
 
                                                       </div>
-                                                      <div class="formRow hidden_class" >
-                                                            <!-----------------------------HIDDEN-------------------------------------------------------->
-                                                            <label class="label label-inverse" >Escondido:</label>
-                                                            <div class="formRight">
-                                                                  <input  type="checkbox" id="item_hidden" name="hidden" value="1">
-                                                                  <label for="item_hidden"></label>
-                                                                  <i class="icon-eye-open">​</i> / <i class="icon-eye-close">​</i>
-                                                            </div>
-                                                      </div>
-                                                      <!------------------------------------TAGS---------------------------------------------->
-                                                      <div class="hidden">
-                                                            <div class="formRow"  >
-                                                                  <label class="label label-inverse" >Tags:</label>
+
+
+
+                                                      <!------------------------------------------------------------------------------>
+                                                      <!-------------------------COMUM A TODOS OS ELEMENTOS-------------------------->
+                                                      <!------------------------------------------------------------------------------>
+                                                      <div class="clear"></div>
+                                                      <div id="item_edit_comum" style="display:none"> 
+                                                            <div class="formRow" id="tag_edit" >
+                                                                  <label class="label label-inverse" >Tag:</label>
                                                                   <div class="formRight">
-                                                                        <select id="tags_select"></select>
-                                                                        <i class="icon-tag" ></i>
-                                                                  </div> 
+                                                                        <label  id="label_tag"></label>
+                                                                  </div>
                                                             </div>
-                                                            <div class="formRow" >
+                                                            <!----------------------------------------------REQUIRED------------------------------------------->
+                                                            <div class="formRow required_class" >
+                                                                  <label class="label label-inverse" >Obrigatório:</label>
                                                                   <div class="formRight">
-                                                                        <label id="tag_label"></label>
+                                                                        <input  type="checkbox" id="item_required" name="required" value="1">
+                                                                        <label for="item_required"></label>
+                                                                        <i class="icon-star"></i>
+                                                                  </div>
+                                                                  <div class="formRight">
+                                                                        <label>(Apenas obrigatório quando visivel)</label>
+                                                                  </div>
+
+                                                            </div>
+                                                            <div class="formRow hidden_class" >
+                                                                  <!-----------------------------HIDDEN-------------------------------------------------------->
+                                                                  <label class="label label-inverse" >Escondido:</label>
+                                                                  <div class="formRight">
+                                                                        <input  type="checkbox" id="item_hidden" name="hidden" value="1">
+                                                                        <label for="item_hidden"></label>
+                                                                        <i class="icon-eye-open">​</i> / <i class="icon-eye-close">​</i>
+                                                                  </div>
+                                                            </div>
+                                                            <!------------------------------------TAGS---------------------------------------------->
+                                                            <div class="hidden">
+                                                                  <div class="formRow"  >
+                                                                        <label class="label label-inverse" >Tags:</label>
+                                                                        <div class="formRight">
+                                                                              <select id="tags_select"></select>
+                                                                              <i class="icon-tag" ></i>
+                                                                        </div> 
+                                                                  </div>
+                                                                  <div class="formRow" >
+                                                                        <div class="formRight">
+                                                                              <label id="tag_label"></label>
+                                                                        </div>
                                                                   </div>
                                                             </div>
                                                       </div>
+                                                      <div class="clear"></div>
+                                                      <div class="modal-footer footer_save_cancel">
+                                                            <button class="btn btn-primary" id="save_edit">Guardar</button>
+                                                            <button class="btn btn-primary" id="cancel_edit">Cancelar</button>
+                                                      </div>
                                                 </div>
-                                                <div class="clear"></div>
-                                                <div class="modal-footer footer_save_cancel">
-                                                      <button class="btn btn-primary" id="save_edit">Guardar</button>
-                                                      <button class="btn btn-primary" id="cancel_edit">Cancelar</button>
-                                                </div>
+
+                                                <div id="tabs-3">
+
+                                                      <div id="rule_manager" style="display:none,width:auto" >
+
+                                                            <table id="rule_table" style="width:100%" class="table table-bordered">
+                                                                  <thead>
+                                                                        <tr>
+                                                                              <td>
+                                                                                    Ação que despoleta
+                                                                              </td>
+                                                                              <td>
+                                                                                    Tipo
+                                                                              </td>
+                                                                              <td>
+                                                                                    Alvo
+                                                                              </td>
+                                                                              <td>
+                                                                                    Opções
+                                                                              </td>
+                                                                        </tr>
+                                                                  </thead>
+                                                                  <tbody id="rule_manager_list">
+                                                                  </tbody>
+                                                            </table>
+                                                      </div>
+
+                                                      <form id="rule_form">
+                                                            <div id="rule_creator" style="display:none;">
+
+                                                                  <!--TRIGGER-->
+                                                                  <div class="formRow" >
+                                                                        <label class="label label-inverse" >Evento:</label>
+                                                                        <div class="formRight">
+                                                                              <select id="rule_trigger_select" ></select>
+                                                                        </div> 
+                                                                  </div>
+                                                                  <div class="formRow rules_valor" id="rules_valor_select_div" style="display:none"  >
+                                                                        <label class="label label-inverse" >Valores:</label>
+                                                                        <div class="formRight">
+                                                                              <select id="rules_valor_select" class="chosen_select"  multiple="multiple"   ></select>
+                                                                        </div> 
+                                                                  </div>
+                                                                  <div class="formRow rules_valor" id="rules_valor_input_div" style="display:none" >
+                                                                        <label class="label label-inverse" >Valor:</label>
+                                                                        <div class="formRight">
+                                                                              <input required id="rules_valor_input"  type="text" placeholder="Valor que despoleta o evento" />
+                                                                        </div> 
+                                                                  </div>
+                                                                  <div class="formRow" >
+                                                                        <label class="label label-inverse" >Tipo:</label>
+                                                                        <div class="formRight">
+                                                                              <select id="regra_select">
+                                                                                    <option value="show">Mostrar</option>   
+                                                                                    <option value="hide" >Esconder</option>
+                                                                                    <option value="goto">Ir para</option>
+                                                                              </select>
+                                                                        </div> 
+                                                                  </div>
+                                                                  <div class="formRow rule_target" >
+                                                                        <label class="label label-inverse" >Alvo:</label>
+                                                                        <div class="formRight">
+                                                                              <select  id="rule_target_select" multiple="multiple" class="chosen_select">
+
+                                                                              </select>
+                                                                        </div> 
+                                                                  </div>
+                                                                  <div class="formRow" id="go_to_div" style="display:none" >
+                                                                        <label class="label label-inverse" >Ir para:</label>
+                                                                        <div class="formRight">
+                                                                              <select id="go_to_select" ></select>
+                                                                        </div> 
+                                                                  </div>
+                                                                  <div class="clear"></div>
+
+
+                                                                  <div class="pull-right">    
+                                                                        <button class="btn btn-large btn-primary" id="add_rule_button" style="float:right;">Adicionar</button>
+
+                                                                  </div>
+                                                                  <div class="pull-left">  
+                                                                        <label class="label label-warning">Certifique-se que a edição do elemento está concluida antes de criar as regras.</label>
+                                                                  </div>
+                                                                  <div class="clear"></div>
+                                                            </div>
+                                                      </form>
+                                                      <div class="modal-footer ">
+                                                            <button class="btn"  id="open_rule_creator">Criar nova regra</button>
+                                                      </div>
+
+                                                </div><!--TAB 3-->
                                           </div>
 
-                                          <div id="tabs-3">
-
-                                                <div id="rule_manager" style="display:none,width:auto" >
-
-                                                      <table id="rule_table" style="width:100%" class="table table-bordered">
-                                                            <thead>
-                                                                  <tr>
-                                                                        <td>
-                                                                              Ação que despoleta
-                                                                        </td>
-                                                                        <td>
-                                                                              Tipo
-                                                                        </td>
-                                                                        <td>
-                                                                              Alvo
-                                                                        </td>
-                                                                        <td>
-                                                                              Opções
-                                                                        </td>
-                                                                  </tr>
-                                                            </thead>
-                                                            <tbody id="rule_manager_list">
-                                                            </tbody>
-                                                      </table>
-                                                </div>
-
-                                                <form id="rule_form">
-                                                      <div id="rule_creator" style="display:none;">
-
-                                                            <!--TRIGGER-->
-                                                            <div class="formRow" >
-                                                                  <label class="label label-inverse" >Evento:</label>
-                                                                  <div class="formRight">
-                                                                        <select id="rule_trigger_select" ></select>
-                                                                  </div> 
-                                                            </div>
-                                                            <div class="formRow rules_valor" id="rules_valor_select_div" style="display:none"  >
-                                                                  <label class="label label-inverse" >Valores:</label>
-                                                                  <div class="formRight">
-                                                                        <select id="rules_valor_select" class="chosen_select"  multiple="multiple"   ></select>
-                                                                  </div> 
-                                                            </div>
-                                                            <div class="formRow rules_valor" id="rules_valor_input_div" style="display:none" >
-                                                                  <label class="label label-inverse" >Valor:</label>
-                                                                  <div class="formRight">
-                                                                        <input required id="rules_valor_input"  type="text" placeholder="Valor que despoleta o evento" />
-                                                                  </div> 
-                                                            </div>
-                                                            <div class="formRow" >
-                                                                  <label class="label label-inverse" >Tipo:</label>
-                                                                  <div class="formRight">
-                                                                        <select id="regra_select">
-                                                                              <option value="show">Mostrar</option>   
-                                                                              <option value="hide" >Esconder</option>
-                                                                              <option value="goto">Ir para</option>
-                                                                        </select>
-                                                                  </div> 
-                                                            </div>
-                                                            <div class="formRow rule_target" >
-                                                                  <label class="label label-inverse" >Alvo:</label>
-                                                                  <div class="formRight">
-                                                                        <select  id="rule_target_select" multiple="multiple" class="chosen_select">
-
-                                                                        </select>
-                                                                  </div> 
-                                                            </div>
-                                                            <div class="formRow" id="go_to_div" style="display:none" >
-                                                                  <label class="label label-inverse" >Ir para:</label>
-                                                                  <div class="formRight">
-                                                                        <select id="go_to_select" ></select>
-                                                                  </div> 
-                                                            </div>
-                                                            <div class="clear"></div>
-
-
-                                                            <div class="pull-right">    
-                                                                  <button class="btn btn-large btn-primary" id="add_rule_button" style="float:right;">Adicionar</button>
-
-                                                            </div>
-                                                            <div class="pull-left">  
-                                                                  <label class="label label-warning">Certifique-se que a edição do elemento está concluida antes de criar as regras.</label>
-                                                            </div>
-                                                            <div class="clear"></div>
-                                                      </div>
-                                                </form>
-                                                <div class="modal-footer ">
-                                                      <button class="btn"  id="open_rule_creator">Criar nova regra</button>
-                                                </div>
-
-                                          </div><!--TAB 3-->
                                     </div>
 
                               </div>
-
-                        </div>
+                        </div> 
                   </div> 
-            </div> 
-            <script type="text/javascript" src="script_dinamico.js"></script>
+                  <script type="text/javascript" src="script_dinamico.js"></script>
       </body>
 </html>
