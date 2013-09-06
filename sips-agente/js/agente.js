@@ -7888,7 +7888,7 @@ function check_for_conf_calls(taskconfnum, taskforce)
                         }
                     }
                     var VLAStatuS = check_time_array.Status;
-                    if ((VLAStatuS === 'PAUSED') && (AutoDialWaiting === 1) && (in_lead_preview_state=== 1))
+                    if ((VLAStatuS === 'PAUSED') && ((AutoDialWaiting === 1) && (in_lead_preview_state=== 0)))
                     {
                         if (PausENotifYCounTer > 10)
                         {
