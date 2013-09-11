@@ -144,6 +144,7 @@ switch ($action) {
     case "get_rules_by_trigger":
         $query = "SELECT * FROM `script_rules` WHERE id_trigger=$id_trigger";
         $query = mysql_query($query, $link) or die(mysql_error());
+        $js=array();
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array(id => $row["id"], id_script => $row["id_script"], tipo_elemento => $row["tipo_elemento"], id_trigger => $row["id_trigger"], id_trigger2 => json_decode($row["id_trigger2"]), id_target => json_decode($row["id_target"]), tipo => $row["tipo"], param1 => $row["param1"], param2 => $row["param2"]);
         }
