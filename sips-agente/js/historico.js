@@ -43,7 +43,7 @@ $("#CallHistoryStart").on("click",function() {
     if (document.vicidial_form.lead_id.value.length !== 0)
     {
         move_on = 0;
-        alert_box("Tem que estar em pausa para fazer chamadas manuais");
+        alert_box("Tem que estar em pausa para ver o Histórico");
     }
 
     if (move_on == 1)
