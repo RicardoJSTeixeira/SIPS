@@ -2919,10 +2919,10 @@ echo "
 //			status,
 //			dead_sec
                         
-                        $non_billable = "SELECT sum(pause_sec) from vicidial_agent_log a inner join (SELECT pause_code from vicidial_pause_codes group by pause_code) b on a.sub_status = b.pause_code 
+                        $non_billable = "SELECT sum(pause_sec) from vicidial_agent_log a inner join (SELECT pause_code, billable from vicidial_pause_codes group by pause_code) b on a.sub_status = b.pause_code 
                             where b.campaign_id in ($group_SQL) and 
                                 event_time >= DATE(NOW()) AND 
-                                billable LIKE 'NO'";
+                                b.billable LIKE 'NO'";
                         
                         $non_billable = mysql_query($non_billable, $link);
                         $non_billable = mysql_fetch_row($non_billable);
