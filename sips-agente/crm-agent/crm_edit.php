@@ -1,5 +1,5 @@
 <?php
-#HEADER
+
 $self = count(explode('/', $_SERVER['PHP_SELF']));
 for ($i = 0; $i < $self - 2; $i++) {
     $header.="../";
@@ -7,19 +7,13 @@ for ($i = 0; $i < $self - 2; $i++) {
 define("ROOT", $header);
 require(ROOT . "ini/dbconnect.php");
 include(ROOT . "sips-admin/functions.php");
-?>
-
-
-
-<?php
 ####################################################################### 
 ### BEGIN  - Created by kant <-- fag
 #######################################################################
 $lead_id = (isset($_GET['lead_id'])) ? $_GET['lead_id'] : $_POST['lead_id'];
 
 ### Dados da Lead
-$query = "
-		SELECT 
+$query = "SELECT 
 			vdlf.campaign_id,
 			vdc.campaign_name, 
 			vdlf.list_id, 
@@ -59,8 +53,7 @@ $query = "
 			vdcs.status=vdl.status
 		WHERE 
 			lead_id='$lead_id'
-		LIMIT 1
-	";
+		LIMIT 1";
 
 $query = mysql_query($query, $link) or die(mysql_error());
 $lead_info = mysql_fetch_assoc($query);
@@ -80,8 +73,7 @@ $query = "SELECT
 		WHERE
 			campaign_id='$lead_info[campaign_id]'
 		AND
-			active=1 Order by field_order ASC
-		";
+			active=1 Order by field_order ASC";
 $query = mysql_query($query, $link) or die(mysql_error());
 $fields_count = mysql_num_rows($query);
 for ($i = 0; $i < $fields_count; $i++) {
@@ -107,7 +99,7 @@ $query = "SELECT
 		WHERE
 			lead_id='$lead_id' 
 		LIMIT 1";
-$query = mysql_query($query, $link);
+$query = mysql_query($query, $link) or die(mysql_error());
 $fields = mysql_fetch_row($query);
 
 ### Construção da Lista de Feedbacks
@@ -173,7 +165,7 @@ $query = "SELECT
 $chamadas_feitas = mysql_query($query, $link) or die(mysql_error());
 
 #Gravações da lead
-$query = "	SELECT 
+$query = "SELECT 
 				DATE_FORMAT(start_time,'%d-%m-%Y') AS data,
 				DATE_FORMAT(start_time,'%H:%i:%s') AS hora_inicio,
 				DATE_FORMAT(end_time,'%H:%i:%s') AS hora_fim,
@@ -183,7 +175,6 @@ $query = "	SELECT
 				lead_id,
 				rl.user,
 				full_name
-
 			FROM 
 				recording_log rl
 			INNER JOIN vicidial_users vu ON rl.user=vu.user
@@ -195,276 +186,229 @@ $query = "	SELECT
 $gravacoes = mysql_query($query, $link) or die(mysql_error());
 ?>
 
-
-
 <!-- Cabeçalho -->
-<div class=cc-mstyle>
-    <table>
-        <tr>
-            <td id='icon32'><img src='/images/icons/book_edit_32.png' /></td>
-            <td id='submenu-title'> Gestão de Leads </td>
-            <td><img style='float:right;cursor: pointer;' src='/images/icons/cross_32.png' onclick='CloseCRMEdit();'></td>
-        </tr>
+
+
+    <table class='table table-mod table-bordered'>
+        <thead> 
+            <tr>
+                <th>ID do Contacto</th>
+                <th>Número de Telefone</th>
+                <th>Base de Dados</th>
+                <th>Campanha</th>
+                <th>Operador</th>
+                <th>Feedback</th>
+                <th>Nº de Chamadas</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><?= $lead_id ?></td>
+                <td><?= $lead_info[phone_number] ?></td>
+                <td><?= $lead_info[list_name] ?></td>
+                <td><?= $lead_info[campaign_name] ?></td>
+                <td><?= $lead_info[full_name] ?></td>
+                <td><span id='lead_info_status'><?= $status_name ?></span></td>
+                <td><?= $lead_info[called_count] ?></td>
+            </tr>
+        </tbody>
     </table>
-</div>
-<br><br>
-<?php
-### Informações do Contacto
-echo "
-<div class='datagrid' style='width:90%'>
-<table>
-<thead> 
-	<th>ID do Contacto</th>
-	<th>Número de Telefone</th>
-	<th>Base de Dados</th>
-	<th>Campanha</th>
-	<th>Operador</th>
-	<th>Feedback</th>
-	<th>Nº de Chamadas</th>
-</thead>
-<tbody>
-<tr>
-	<td>$lead_id</td>
-	<td>$lead_info[phone_number]</td>
-	<td>$lead_info[list_name]</td>
-	<td>$lead_info[campaign_name]</td>
-	<td>$lead_info[full_name]</td>
-	<td><span id='lead_info_status'>$status_name</span></td>
-	<td>$lead_info[called_count]</td>
-</tr>
-</tbody>
-</table>
-</div>
-";
-### Datas de Carregamento/Ultima Chamada
-echo "
 <br>
-<div class='datagrid' style='width:90%'>
-<table>
-<thead> 
-	<th>Data de Carregamento</th>
-	<th>Hora de Carregamento</th>
-	<th>Data da Última Chamada</th>
-	<th>Hora da Última Chamada</th>
-</thead>
-<tbody>
-<tr>
-	<td>$lead_info[data_load]</td>
-	<td>$lead_info[hora_load]</td>
-	<td>$lead_info[data_last]</td>
-	<td>$lead_info[hora_last]</td>
-</tr>
-</tbody>
-</table>
-</div>
-";
+    <table class='table table-mod table-bordered'>
+        <thead> 
+        <tr>
+            <th>Data de Carregamento</th>
+            <th>Hora de Carregamento</th>
+            <th>Data da Última Chamada</th>
+            <th>Hora da Última Chamada</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><?= $lead_info[data_load] ?></td>
+                <td><?= $lead_info[hora_load] ?></td>
+                <td><?= $lead_info[data_last] ?></td>
+                <td><?= $lead_info[hora_last] ?></td>
+            </tr>
+        </tbody>
+    </table>
+
+<legend>Dados da Lead</legend>
+        <form class="form-horizontal" id='inputcontainer' >
+            <?php for ($i = 0; $i < count($fields); $i++) { ?>
+                <div class="control-group">
+                    <label class="control-label"><?= $fields_LABEL[$i] ?>:</label>
+                    <div class="controls" >
+                        <?php if($fields_NAME[$i]!="comments"){ ?>
+                        <input type=text name='<?= $fields_NAME[$i] ?>' id='<?= $fields_NAME[$i] ?>' class='span10' value='<?= $fields[$i] ?>'>
+                        <?php } else { ?>
+                        <textarea name='<?= $fields_NAME[$i] ?>' id='<?= $fields_NAME[$i] ?>' class='span10' ><?= $fields[$i] ?></textarea>
+                        <?php } ?>
+                        <span id='td_<?= $fields_NAME[$i] ?>'></span>
+                    </div>
+                </div>
+            <?php } ?>
+        </form>
+
+<legend>Alteração do Feedback</legend>
+      <div class="control-group">
+            <label class="control-label">Feedback Actual:</label>
+            <div class="controls" >
+                <select style='width:200px' name=feedback_list id=feedback_list><?= $status_options ?></select>
+                <span id=modify_feedback_status class='help-inline'><i>(O feedback deste contacto pode ser alterado neste menu.)</i></Span>
+            </div>
+        </div>
 
 
-echo "<div id=work-area>";
-echo "<br>";
+
+<legend>Chamadas realizadas para este Contacto</legend>
+    <table class='table table-mod table-bordered'>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Hora</th>
+                <th>Duração</th>
+                <th>Número</th>
+                <th>Operador</th>
+                <th>Feedback</th>
+                <th>Campanha</th>
+                <th>Base de Dados</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            while ($row = mysql_fetch_assoc($chamadas_feitas)) {
+
+                $duracao = sec_convert($row['length_in_sec'], "H");
+                if ($row['status_name1']) {
+                    $status_name = $row['status_name1'];
+                } else {
+                    $status_name = $row['status_name2'];
+                }
+                ?>
+
+                <tr>
+                    <td><?= $row[data] ?></td>
+                    <td><?= $row[hora] ?></td>
+                    <td><?= $duracao ?></td>
+                    <td><?= $row[phone_number] ?></td>
+                    <td><?= $row[full_name] ?></td>
+                    <td><?= $status_name ?></td>
+                    <td><?= $row[campaign_name] ?></td>
+                    <td><?= $row[list_name] ?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
 
 
+<legend>Gravações deste Contacto</legend>
+    <table class='table table-mod table-bordered'>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Inicio da Gravação</th>
+                <th>Fim da Gravação</th>
+                <th>Duração</th>
+                <th>Operador</th>
+        </thead>
+        <tbody>
+            <?php while ($row = mysql_fetch_assoc($gravacoes)) { ?>
+                <tr>
+                    <td><?= $row[data] ?></td>
+                    <td><?= $row[hora_inicio] ?></td>
+                    <td><?= $row[hora_fim] ?></td>
+                    <td><?= sec_convert($row['length_in_sec'], "H") ?></td>
+                    <td><?= $row[full_name] ?>
+                                    <div class="view-button"><a href='<?= $row[location] ?>' target='_self' class="btn  btn-mini"><i class="icon-play"></i>Ouvir</a></div>
+                    </td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
 
-### Lista dos Campos/Dados Contacto
-echo "<div class='table-title'><center>Dados do Contacto</center></div>";
-echo "<div class=cc-mstyle style='border:none; width:90%;'>";
-echo "<div id='inputcontainer'>";
-echo "<table border=0>";
-for ($i = 0; $i < count($fields); $i++) {
-    echo "<tr>";
-    echo "
-<td style='width:375px'> <div class=cc-mstyle style='height:28px;'><p> $fields_LABEL[$i] </p></div></td>
-<td><input type=text style='text-align:center' name='$fields_NAME[$i]' id='$fields_NAME[$i]' size=40 maxlength=40 value='$fields[$i]'></td>
-<td style='min-width:130px' id='td_$fields_NAME[$i]'></td>
-";
-    echo "</tr>";
-}
-echo "</table>";
-
-echo "</form>";
-echo "<br>";
-echo "</div>";
-echo "</div>";
-echo "</div>";
-echo "<br>";
-
-### Alteração do Feedback/NEW/CALLBACK
-echo "<div id=work-area style='min-height:0;'>";
-echo "<br>";
-
-echo "<div class=cc-mstyle style='border:none'>";
-echo "<div class='table-title'><center>Alteração do Feedback</center></div>";
-echo "<table>";
-
-echo "<tr>";
-echo "
-<td id=icon16><img src='/images/icons/report_edit_16.png'></td>
-<td style='text-align:left; width:100px'>Feedback Actual:</td>
-<td style='text-align:left'><center><select style='width:200px' name=feedback_list id=feedback_list>$status_options</select></td>
-<td style='min-width:275px'><span id=modify_feedback_status style='color:grey;font-size:11px;'><i>(O feedback deste contacto pode ser alterado neste menu.)</i></Span></td>
-";
-echo "</tr>";
-
-
-echo "</table>";
-echo "<br>";
-echo "</div></div>";
-
-
-### Chamadas feitas para a Lead
-echo '
-<br>
-<div class="table-title"><center>Chamadas realizadas para este Contacto</center></div>
-<div class="datagrid" style="width:90%">
-<table>
-<thead><th>Data</th><th>Hora</th><th>Duração</th><th>Número</th><th>Operador</th><th>Feedback</th><th>Campanha</th><th>Base de Dados</th></thead>';
-echo "<tbody>";
-for ($i = 0; $i < mysql_num_rows($chamadas_feitas); $i++) {
-    $row = mysql_fetch_assoc($chamadas_feitas);
-
-    $duracao = sec_convert($row['length_in_sec'], "H");
-    if ($row['status_name1']) {
-        $status_name = $row['status_name1'];
-    } else {
-        $status_name = $row['status_name2'];
-    }
-
-    echo "
-<tr>
-<td>$row[data]</td>
-<td>$row[hora]</td>
-<td>$duracao</td>
-<td>$row[phone_number]</td>
-<td>$row[full_name]</td>
-<td>$status_name</td>
-<td>$row[campaign_name]</td>
-<td>$row[list_name]</td>
-</tr>
-";
-}
-echo "</tbody>";
-echo '
-</table>
-</div>
-';
-### Gravações associadas ao Contacto
-echo '
-<br>
-<div class="table-title"><center>Gravações deste Contacto</center></div>
-<div class="datagrid" style="width:90%">
-<table>
-<thead> <th>Data</th> <th>Inicio da Gravação</th> <th>Fim da Gravação</th> <th>Duração</th> <th>Ouvir Gravação</th> <th>Operador</th> </thead>';
-echo "<tbody>";
-for ($i = 0; $i < mysql_num_rows($gravacoes); $i++) {
-    $row = mysql_fetch_assoc($gravacoes);
-    $duracao = sec_convert($row['length_in_sec'], "H");
-    echo "
-<tr>
-<td>$row[data]</td>
-<td>$row[hora_inicio]</td>
-<td>$row[hora_fim]</td>
-<td>$duracao</td>
-<td><a href='$row[location]'><img src='/images/icons/sound_add_16.png'></a></td>
-<td>$row[full_name]</td>
-
-</tr>
-";
-}
-echo "</tbody>";
-echo '
-</table>
-</div>
-';
-?>
 <script type="text/javascript">
 
-                /* VARS/DIALOGS */
-                var lead_id = <?php echo $lead_id; ?>;
-                var $error = $('<div></div>')
-                        .html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ')
-                        .dialog({
-                    autoOpen: false,
-                    title: "<span style='float:left; margin-right: 4px;' class='ui-icon ui-icon-alert'></span> Erro",
-                    width: "550",
-                    height: "250",
-                    show: "fade",
-                    hide: "fade",
-                    buttons: {"OK": function() {
-                            $(this).dialog("close");
-                        }}
-                });
-         
+    /* VARS/DIALOGS */
+    var lead_id = <?= $lead_id; ?>;
+    var $error = $('<div></div>')
+            .html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ')
+            .dialog({
+        autoOpen: false,
+        title: "<span style='float:left; margin-right: 4px;' class='ui-icon ui-icon-alert'></span> Erro",
+        width: "550",
+        height: "250",
+        show: "fade",
+        hide: "fade",
+        buttons: {"OK": function() {
+                $(this).dialog("close");
+            }}
+    });
 
-                /* FUNCTIONS */
-                $("#inputcontainer input").focus(function()
+
+    /* FUNCTIONS */
+    $("#inputcontainer input").focus(function()
+    {
+        $(this).css({"border": "1px solid green"});
+
+    });
+    $("#inputcontainer input").blur(function()
+    {
+
+        var field = this.name;
+        var field_value = $(this).val();
+        $(this).css({"border": "1px solid #c0c0c0"});
+
+        $.ajax({
+            type: "POST",
+            url: "/sips-agente/crm-agent/_requests.php",
+            data: {action: "update_contact_field", send_field: field, send_field_value: field_value, send_lead_id: lead_id},
+            error: function(jqXHR, textStatus, errorThrown) {
+                $error.dialog("open").html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ' + errorThrown)
+            },
+            success: function(data, textStatus, jqXHR)
+            {
+                if ((textStatus == 'success') && (data == 1))
                 {
-                    $(this).css({"border": "1px solid green"});
-
-                });
-                $("#inputcontainer input").blur(function()
+                    $("#td_" + field).html("<span id='img_fade" + field + "'><table><tr><td style='width:18px'><td style='text-align:left;'>A Gravar</span></tr></table></span>");
+                    $("#img_fade" + field).fadeOut(2500);
+                }
+                else
                 {
+                    $("#td_" + field).html("<span id='img_fade" + field + "'><table><tr><td style='width:18px'><td style='text-align:left;'>Erro a Gravar</tr></table></span>");
+                    $("#img_fade" + field).fadeOut(2500);
+                }
+            }
+        });
 
-                    var field = this.name;
-                    var field_value = $(this).val();
-                    $(this).css({"border": "1px solid #c0c0c0"});
+    });
+    $("#feedback_list").change(function()
+    {
+        var feedback_id = $("#feedback_list").val();
+        var feedback_name = $("#feedback_list option:selected").text();
+        $.ajax({
+            type: "POST",
+            url: "/sips-agente/crm-agent/_requests.php",
+            data: {action: "update_feedback", send_lead_id: lead_id, send_feedback: feedback_id},
+            error: function(jqXHR, textStatus, errorThrown) {
+                $error.dialog("open").html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ' + errorThrown);
+            },
+            success: function(data, textStatus, jqXHR)
+            {
 
-                    $.ajax({
-                        type: "POST",
-                        url: "/sips-agente/crm-agent/_requests.php",
-                        data: {action: "update_contact_field", send_field: field, send_field_value: field_value, send_lead_id: lead_id},
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            $error.dialog("open").html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ' + errorThrown)
-                        },
-                        success: function(data, textStatus, jqXHR)
-                        {
-                            if ((textStatus == 'success') && (data == 1))
-                            {
-                                $("#td_" + field).html("<span id='img_fade" + field + "'><table><tr><td style='width:18px'><img src='/images/icons/clock_add_16.png'><td style='text-align:left;'>A Gravar</span></tr></table></span>");
-                                $("#img_fade" + field).fadeOut(2500);
-                            }
-                            else
-                            {
-                                $("#td_" + field).html("<span id='img_fade" + field + "'><table><tr><td style='width:18px'><img src='/images/icons/clock_red_16.png'><td style='text-align:left;'>Erro a Gravar</tr></table></span>");
-                                $("#img_fade" + field).fadeOut(2500);
-                            }
-                        }
+                if ((textStatus == 'success') && (data == 1)) {
+                    $("#modify_feedback_status").html("<span id='feedback_fade'><table><tr><td style='width:18px'><td style='text-align:left;'>A Gravar</span></tr></table></span>");
+                    $("#feedback_fade").fadeOut(2000, function() {
+                        $("#modify_feedback_status").html("<i>(O feedback deste contacto pode ser alterado neste menu.)</i>");
                     });
+                    $("#lead_info_status").html(feedback_name);
+                } else {
+                    $error.dialog("open").html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ' + data);
+                }
 
-                });
-                $("#feedback_list").change(function()
-                {
-                    var feedback_id = $("#feedback_list").val();
-                    var feedback_name = $("#feedback_list option:selected").text();
-                    $.ajax({
-                        type: "POST",
-                        url: "/sips-agente/crm-agent/_requests.php",
-                        data: {action: "update_feedback", send_lead_id: lead_id, send_feedback: feedback_id},
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            $error.dialog("open").html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ' + errorThrown)
-                        },
-                        success: function(data, textStatus, jqXHR)
-                        {
+            }
+        });
 
-                            if ((textStatus == 'success') && (data == 1)) {
-                                $("#modify_feedback_status").html("<span id='feedback_fade'><table><tr><td style='width:18px'><img src='/images/icons/clock_add_16.png'><td style='text-align:left;'>A Gravar</span></tr></table></span>");
-                                $("#feedback_fade").fadeOut(2000, function() {
-                                    $("#modify_feedback_status").html("<i>(O feedback deste contacto pode ser alterado neste menu.)</i>");
-                                });
-                                $("#lead_info_status").html(feedback_name);
-                            } else {
-                                $error.dialog("open").html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ' + data);
-                            }
-
-                        }
-                    });
-
-                });
+    });
 
 </script>
-
-<?php
-####################################################################### 
-### END - Created by kant
-#######################################################################
-require("/ini/footer.php");
-?>
