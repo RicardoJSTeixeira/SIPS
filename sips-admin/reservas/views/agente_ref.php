@@ -13,18 +13,9 @@ function query_pop_select($query) {
     }
     return $options;
 }
-
-$user = $_SERVER['PHP_AUTH_USER'];
-
-        //Users INICIO
-        $query = "select a.user_group,allowed_campaigns,user_level from vicidial_users a inner join `vicidial_user_groups` b on a.user_group=b.user_group where user='$user'";
-        $result = mysql_query($query) or die(mysql_error());
-        $row = mysql_fetch_assoc($result);
-
-
-        $user_level = $row['user_level'];
-        $allowed_camps_regex = str_replace(" ", "|", trim(rtrim($row['allowed_campaigns'], " -")));
-
+$user=new user;
+        
+        $allowed_camps_regex = implode("|", $user->allowed_campaigns);
         if ($row['user_group'] != "ADMIN") {
             $ret = "WHERE allowed_campaigns REGEXP '$allowed_camps_regex'";
 
@@ -36,7 +27,7 @@ $user = $_SERVER['PHP_AUTH_USER'];
             }
             $user_groups = rtrim($user_groups, ",");
 
-            $result = mysql_query("SELECT `user` FROM `vicidial_users` WHERE user_group in ($user_groups) AND user_level < $user_level") or die(mysql_error());
+            $result = mysql_query("SELECT `user` FROM `vicidial_users` WHERE user_group in ($user_groups) AND user_level < $user->user_level") or die(mysql_error());
             while ($rugroups = mysql_fetch_assoc($result)) {
                 $tmp .= "$rugroups[user]|";
             }
@@ -51,7 +42,7 @@ $user = $_SERVER['PHP_AUTH_USER'];
 <html>
     <head>
         <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
-        <title>Go Contact Center</title>
+        <title>Referência de Calendários</title>
 
         <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
         <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>
@@ -102,8 +93,11 @@ $user = $_SERVER['PHP_AUTH_USER'];
 
             <div class="grid">
                 <div class="grid-title">
-                    <div class="pull-left">Referencia de Calendários para Agentes</div>
-                    <div class="pull-right"><button class="btn btn-large btn-primary" id="newRef">Novo</button></div>
+                    <div class="pull-left">Referência de Calendários</div>
+                    <div class="pull-right">
+                <span class="btn" onclick="location = 'sch_admin.php'"><i class="icon-arrow-left"></i>Voltar</span>
+                <button class="btn btn-primary" id="newRef">Novo</button>
+                    </div>
                     <div class="clear"></div>
                 </div>
                 <div class="grid-content">
@@ -264,7 +258,7 @@ $user = $_SERVER['PHP_AUTH_USER'];
                         });
 
                         $("#del-confirm").on("click", function() {
-                            $.post("../ajax/agente_ref_do.php", {pedido: 667, cr:'<?=$user?>', id: $('#modal-from-dom').data().id}, function(data) {
+                            $.post("../ajax/agente_ref_do.php", {pedido: 667, cr:'<?=$user->id?>', id: $('#modal-from-dom').data().id}, function(data) {
                                 otable.fnDeleteRow(live_row);
                                 $('#modal-from-dom').modal("hide");
                             }, "json");
@@ -273,7 +267,7 @@ $user = $_SERVER['PHP_AUTH_USER'];
                         $("#newRef-confirm").on("click", function() {
                             var conf = $("#newRef-form").serializeObject(), cal_id;
                             cal_id = (conf.type === "1") ? conf.sch : conf.rsc;
-                            $.post("../ajax/agente_ref_do.php", {pedido: 128, cr:'<?=$user?>', user: conf.user, type: conf.type, cal: cal_id}, function(data) {
+                            $.post("../ajax/agente_ref_do.php", {pedido: 128, cr:'<?=$user->id?>', user: conf.user, type: conf.type, cal: cal_id}, function(data) {
                                 otable.dataTable().fnAddData([data.utilizador,data.desc_cal,data.tipo+'<div class="view-button"><a href="#" class="btn  btn-mini activator confirm-delete" data-id="'+data.last+'" data-user="'+data.utilizador+'" data-cal="'+data.desc_cal+'"> <i class="icon-trash"></i><span>Eliminar</span></a></div></div>']);					
                                 $("#newRef-modal").modal('hide');
                             }, "json");
