@@ -57,8 +57,14 @@ switch ($action) {
         break;
 
 
+
     case "get_scripts":
-        $query = "SELECT * FROM script_dinamico_master where user_group='$user->user_group'";
+
+        $user_group_temp = "where user_group='$user->user_group'";
+        if ($user->user_group == "ADMIN")
+            $user_group_temp = "";
+        
+        $query = "SELECT * FROM script_dinamico_master $user_group_temp";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[$row["id"]] = array("id" => $row["id"], "name" => $row["name"]);
