@@ -63,7 +63,7 @@ switch ($action) {
         $user_group_temp = "where user_group='$user->user_group'";
         if ($user->user_group == "ADMIN")
             $user_group_temp = "";
-        
+
         $query = "SELECT * FROM script_dinamico_master $user_group_temp";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
@@ -90,6 +90,8 @@ switch ($action) {
         }
         echo json_encode($js);
         break;
+
+
 
 
     case "get_results_to_populate":
@@ -188,13 +190,23 @@ switch ($action) {
         break;
 
     case 'get_linha_inbound':
+
         $query = "SELECT group_id,group_name FROM vicidial_inbound_groups";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array("id" => $row["group_id"], "name" => $row["group_name"]);
         }
         echo json_encode($js);
+
         break;
+
+    case 'iscloud':
+        $query = "SELECT cloud FROM servers";
+        $result = mysql_query($query) or die(mysql_error);
+        $row = mysql_fetch_row($result);
+        echo json_encode(array("iscloud" => $row[0] == "1"));
+        break;
+    
     //------------------------------------------------//
     //-----------------EDIT---------------------------//
     //------------------------------------------------//
