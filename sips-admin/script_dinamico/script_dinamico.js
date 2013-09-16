@@ -188,7 +188,7 @@ $(function() {
             $.post("requests.php", {action: "get_campaign"},
             function(data1)
             {
-                  $.each(data1, function(index, value) {
+                                     $.each(data1, function(index, value) {
                         $("#script_campanha_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
                   });
                   $("#script_campanha_selector").chosen();

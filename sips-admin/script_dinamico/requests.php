@@ -58,7 +58,7 @@ switch ($action) {
 
 
     case "get_scripts":
-        $query = "SELECT * FROM script_dinamico_master";
+        $query = "SELECT * FROM script_dinamico_master where user_group='$user->user_group'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[$row["id"]] = array("id" => $row["id"], "name" => $row["name"]);
@@ -165,8 +165,15 @@ switch ($action) {
 
 
     case 'get_campaign':
-        $query = "SELECT  campaign_id,campaign_name  FROM  vicidial_campaigns where active='y' and campaign_id in ('" + implode(",",$user->allowed_campaigns) + "') order by campaign_name ";
-       // echo($query);
+        $campaigns = implode(",", $user->allowed_campaigns);
+
+        if ($user->is_all_campaigns)
+            $campaigns = "";
+        else
+            $campaigns = "and campaign_id in('$campaigns')";
+
+
+        $query = "SELECT  campaign_id,campaign_name  FROM  vicidial_campaigns where active='y' $campaigns  order by campaign_name ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array("id" => $row["campaign_id"], "name" => $row["campaign_name"]);
@@ -235,7 +242,7 @@ switch ($action) {
         break;
 
     case "add_script":
-        $query = "INSERT INTO `asterisk`.`script_dinamico_master` (id,name) VALUES (NULL,'Script novo')";
+        $query = "INSERT INTO `asterisk`.`script_dinamico_master` (id,name,user_group) VALUES (NULL,'Script novo','$user->user_group')";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
