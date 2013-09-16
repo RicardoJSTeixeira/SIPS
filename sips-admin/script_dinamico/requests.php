@@ -1,6 +1,7 @@
 <?php
 
 require("../../ini/dbconnect.php");
+require("../../ini/user.php");
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -8,6 +9,7 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 
+$user = new user;
 
 switch ($action) {
     //------------------------------------------------//    
@@ -15,10 +17,10 @@ switch ($action) {
     //------------------------------------------------//
 
     case "get_schedule":
-        $query = "SELECT id_scheduler,display_text FROM sips_sd_schedulers where active='1' order by display_text";
+        $query = "SELECT id_scheduler,display_text FROM sips_sd_schedulers where active='1' and user_group='$user->user_group' order by display_text";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id_scheduler"], text => $row["display_text"]);
+            $js[] = array("id" => $row["id_scheduler"], "text" => $row["display_text"]);
         }
         echo json_encode($js);
         break;
@@ -28,7 +30,7 @@ switch ($action) {
         $query = "SELECT id_scheduler,display_text FROM sips_sd_schedulers where id_scheduler in($ids) and active='1' order by display_text";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id_scheduler"], text => $row["display_text"]);
+            $js[] = array("id" => $row["id_scheduler"], "text" => $row["display_text"]);
         }
         echo json_encode($js);
         break;
@@ -40,7 +42,7 @@ switch ($action) {
         $query = "SELECT * FROM `vicidial_list_ref` GROUP BY name";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["indice"], value => $row["Name"], name => $row["Display_name"]);
+            $js[] = array("id" => $row["indice"], "value" => $row["Name"], "name" => $row["Display_name"]);
         }
         echo json_encode($js);
         break;
@@ -49,7 +51,7 @@ switch ($action) {
         $query = "SELECT * FROM script_assoc where id_script=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id_script => $row["id_script"], id_camp_linha => $row["id_camp_linha"], tipo => $row["tipo"]);
+            $js[] = array("id_script" => $row["id_script"], "id_camp_linha" => $row["id_camp_linha"], "tipo" => $row["tipo"]);
         }
         echo json_encode($js);
         break;
@@ -59,7 +61,7 @@ switch ($action) {
         $query = "SELECT * FROM script_dinamico_master";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[$row["id"]] = array(id => $row["id"], name => $row["name"]);
+            $js[$row["id"]] = array("id" => $row["id"], "name" => $row["name"]);
         }
         echo json_encode($js);
         break;
@@ -69,7 +71,7 @@ switch ($action) {
         $query = "SELECT * FROM script_dinamico_master sdm inner join script_assoc sa on sa.id_script=sdm.id where sa.id_camp_linha='$id_campaign'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js = array(id => $row["id"], name => $row["name"]);
+            $js = array("id" => $row["id"], "name" => $row["name"]);
         }
         echo json_encode($js);
         break;
@@ -78,7 +80,7 @@ switch ($action) {
         $query = "SELECT * FROM script_dinamico_master where id='$id_script'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js = array(id => $row["id"], name => $row["name"]);
+            $js = array("id" => $row["id"], "name" => $row["name"]);
         }
         echo json_encode($js);
         break;
@@ -88,7 +90,7 @@ switch ($action) {
         $query = "SELECT sr.id_script,lead_id,id_elemento,valor,type FROM script_result sr inner join script_dinamico sd on sr.id_elemento=sd.id  where sr.lead_id=$lead_id order by unique_id ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id_script => $row["id_script"], lead_id => $row["lead_id"], id_elemento => $row["id_elemento"], valor => $row["valor"], type => $row["type"]);
+            $js[] = array("id_script" => $row["id_script"], "lead_id" => $row["lead_id"], "id_elemento" => $row["id_elemento"], "valor" => $row["valor"], "type" => $row["type"]);
         }
         echo json_encode($js);
         break;
@@ -97,7 +99,7 @@ switch ($action) {
         $query = "SELECT id,type,texto,values_text FROM `script_dinamico` WHERE id in($ids) order by ordem";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], type => $row["type"], texto => $row["texto"], values_text => $row["values_text"]);
+            $js[] = array("id" => $row["id"], "type" => $row["type"], "texto" => $row["texto"], "values_text" => $row["values_text"]);
         }
         echo json_encode($js);
         break;
@@ -107,7 +109,7 @@ switch ($action) {
         $query = "SELECT * FROM script_dinamico_pages where id_script=$id_script order by id";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], name => $row["name"]);
+            $js[] = array("id" => $row["id"], "name" => $row["name"]);
         }
         echo json_encode($js);
         break;
@@ -117,7 +119,7 @@ switch ($action) {
         $query = "SELECT * FROM `script_dinamico` WHERE id_script=$id_script  order by ordem,id_page asc";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => json_decode($row["placeholder"]), max_length => $row["max_length"], values_text => json_decode($row["values_text"]), required => $row["required"] == 1, hidden => $row["hidden"] == 1, param1 => $row["param1"]);
+            $js[] = array("id" => $row["id"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
         }
         echo json_encode($js);
         break;
@@ -126,7 +128,7 @@ switch ($action) {
         $query = "SELECT * FROM `script_dinamico` WHERE id_script=$id_script and id_page=$id_page order by ordem asc";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => json_decode($row["placeholder"]), max_length => $row["max_length"], values_text => json_decode($row["values_text"]), required => $row["required"] == 1, hidden => $row["hidden"] == 1, param1 => $row["param1"]);
+            $js[] = array("id" => $row["id"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
         }
         echo json_encode($js);
         break;
@@ -135,7 +137,7 @@ switch ($action) {
         $query = "SELECT * FROM `script_dinamico` WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], id_page => $row["id_page"], type => $row["type"], ordem => $row["ordem"], dispo => $row["dispo"], texto => $row["texto"], placeholder => json_decode($row["placeholder"]), max_length => $row["max_length"], values_text => json_decode($row["values_text"]), required => $row["required"] == 1, hidden => $row["hidden"] == 1, param1 => $row["param1"]);
+            $js[] = array("id" => $row["id"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
         }
         echo json_encode($js);
         break;
@@ -144,9 +146,9 @@ switch ($action) {
     case "get_rules_by_trigger":
         $query = "SELECT * FROM `script_rules` WHERE id_trigger=$id_trigger";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $js=array();
+        $js = array();
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], tipo_elemento => $row["tipo_elemento"], id_trigger => $row["id_trigger"], id_trigger2 => json_decode($row["id_trigger2"]), id_target => json_decode($row["id_target"]), tipo => $row["tipo"], param1 => $row["param1"], param2 => $row["param2"]);
+            $js[] = array("id" => $row["id"], "id_script" => $row["id_script"], "tipo_elemento" => $row["tipo_elemento"], "id_trigger" => $row["id_trigger"], "id_trigger2" => json_decode($row["id_trigger2"]), "id_target" => json_decode($row["id_target"]), "tipo" => $row["tipo"], "param1" => $row["param1"], "param2" => $row["param2"]);
         }
         echo json_encode($js);
         break;
@@ -156,17 +158,18 @@ switch ($action) {
         $query = "SELECT * FROM `script_rules` WHERE id_script=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["id"], id_script => $row["id_script"], tipo_elemento => $row["tipo_elemento"], id_trigger => $row["id_trigger"], id_trigger2 => json_decode($row["id_trigger2"]), id_target => json_decode($row["id_target"]), tipo => $row["tipo"], param1 => $row["param1"], param2 => json_decode($row["param2"]));
+            $js[] = array("id" => $row["id"], "id_script" => $row["id_script"], "tipo_elemento" => $row["tipo_elemento"], "id_trigger" => $row["id_trigger"], "id_trigger2" => json_decode($row["id_trigger2"]), "id_target" => json_decode($row["id_target"]), "tipo" => $row["tipo"], "param1" => $row["param1"], "param2" => json_decode($row["param2"]));
         }
         echo json_encode($js);
         break;
 
 
     case 'get_campaign':
-        $query = "SELECT  campaign_id,campaign_name  FROM  vicidial_campaigns where active='y' order by campaign_name ";
+        $query = "SELECT  campaign_id,campaign_name  FROM  vicidial_campaigns where active='y' and campaign_id in ('" + implode(",",$user->allowed_campaigns) + "') order by campaign_name ";
+       // echo($query);
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["campaign_id"], name => $row["campaign_name"]);
+            $js[] = array("id" => $row["campaign_id"], "name" => $row["campaign_name"]);
         }
         echo json_encode($js);
         break;
@@ -175,7 +178,7 @@ switch ($action) {
         $query = "SELECT group_id,group_name FROM vicidial_inbound_groups";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["group_id"], name => $row["group_name"]);
+            $js[] = array("id" => $row["group_id"], "name" => $row["group_name"]);
         }
         echo json_encode($js);
         break;
@@ -209,7 +212,7 @@ switch ($action) {
 
 
     case "edit_item":
-        $values_text=(!isset($values_text))?array():$values_text;
+        $values_text = (!isset($values_text)) ? array() : $values_text;
         $query = "UPDATE script_dinamico SET id_script=$id_script,id_page=$id_page,type='$type',ordem=$ordem,dispo='$dispo',texto='$texto',placeholder='" . mysql_real_escape_string(json_encode($placeholder)) . "',max_length=$max_length,values_text='" . mysql_real_escape_string(json_encode($values_text)) . "',required=$required,hidden=$hidden,param1='$param1' WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
@@ -240,7 +243,7 @@ switch ($action) {
     case "add_item":
         $query = "UPDATE script_dinamico SET ordem=ordem+1 where ordem>=$ordem and id_page=$id_page ";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $values_text=(!isset($values_text))?array():$values_text;
+        $values_text = (!isset($values_text)) ? array() : $values_text;
         $query = "INSERT INTO `asterisk`.`script_dinamico` (`id`, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required,hidden,param1) VALUES (NULL, $id_script,$id_page,'$type',$ordem,'$dispo', '$texto', '" . mysql_real_escape_string(json_encode($placeholder)) . "', $max_length, '" . mysql_real_escape_string(json_encode($values_text)) . "',$required,$hidden,'$param1')";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(mysql_insert_id());
