@@ -220,7 +220,7 @@ $(function() {
             editor_toggle("off");
 
             update_script();
-            item_database("get_tag_fields", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+           // item_database("get_tag_fields", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
       });
       $(document).on("click", ".element", function(e) {
             selected_id = $(this).data("id");
