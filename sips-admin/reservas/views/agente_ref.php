@@ -127,7 +127,7 @@ $user=new user;
                                     <td><?= $row[1] ?></td>
                                     <td><?= $row[2] ?></td>
                                     <td><?= strtr($row[3], array("RESOURCE" => "Recurso", "SCHEDULER" => "Calendário")) ?>
-                                        <div class="view-button"><a href="#" class="btn  btn-mini activator confirm-delete" data-id="<?= $row[0] ?>" data-user="<?= $row[1] ?>" data-cal="<?= $row[2] ?>"> <i class="icon-trash"></i><span>Eliminar</span></a></div></td></tr>
+                                        <div class="view-button"><a href="#" class="btn btn-mini activator confirm-delete" data-id="<?= $row[0] ?>" data-user="<?= $row[1] ?>" data-cal="<?= $row[2] ?>"> <i class="icon-trash"></i><span>Eliminar</span></a></div></td></tr>
                             <?php } ?>
                         </tbody>
                     </table>
@@ -162,13 +162,13 @@ $user=new user;
                     <div class="formRow" id="sch-row">
                         <label class="control-label" for="sch-modal">Calendário</label>
                         <div class="formRight">
-                            <select name="sch" id="sch-modal" class="chzn-select"><?= query_pop_select("Select id_scheduler,display_text From sips_sd_schedulers Where 1") ?></select>
+                            <select name="sch" id="sch-modal" class="chzn-select"><?= query_pop_select("Select id_scheduler,display_text From sips_sd_schedulers Where user_group='$user->user_group'") ?></select>
                         </div>
                     </div>
                     <div class="formRow" id="rsc-row" style="display:none">
                         <label class="control-label" for="rsc-modal">Recurso</label>
                         <div class="formRight">
-                            <select name="rsc" id="rsc-modal" class="chzn-select"><?= query_pop_select("Select id_resource,display_text From sips_sd_resources Where 1") ?></select>
+                            <select name="rsc" id="rsc-modal" class="chzn-select"><?= query_pop_select("Select id_resource,a.display_text From sips_sd_resources a left join sips_sd_schedulers b on a.id_scheduler=b.id_scheduler Where user_group='$user->user_group'") ?></select>
                         </div>
                     </div>
                 </form>
