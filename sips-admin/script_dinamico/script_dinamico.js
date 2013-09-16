@@ -19,7 +19,7 @@
 // NOS COMMITS!------------------------
 // Issue #13
 
-
+var current_page_pos = 0;
 var selected_id = 0;
 var selected_type = "";
 var array_id = [];
@@ -27,6 +27,7 @@ var regex_remove_blank = /^\s*$[\n\r]{1,}/gm;
 var regex_replace_textbox_tag = /[^a-zA-Z0-9éçã\s:@§óõáàí?!ê().,]/g;
 var regex_replace_textbox = /[^a-zA-Z0-9éçã\s:óõáàí?!ê().,]/g;
 var regex_replace = /[^a-zA-Z0-9éçã\s:óõáàí?!ê()]/g;
+var regex_text = /[^a-zA-Z0-9éçã\s:@§óõáàíê,?\/\-\.\,()]/g;
 var regex_split = /\n/g;
 
 
@@ -339,11 +340,15 @@ function update_pages()
                   var pag = $("#page_selector").val();
                   $("#page_selector").empty();
                   $("#go_to_select").empty();
+                  $("#page_position").empty();
                   $.each(data, function(index, value) {
                         if (pag === this.id)
-                              $("#page_selector").append("<option value=" + this.id + " selected>" + this.name + "</option>");
+                              $("#page_selector").append("<option data-pos=" + this.pos + " value=" + this.id + " selected>" + this.name + "</option>");
                         else
-                              $("#page_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
+                              $("#page_selector").append("<option data-pos=" + this.pos + " value=" + this.id + ">" + this.name + "</option>");
+
+                        $("#page_position").append("<option value=" + this.pos + ">" + this.pos + "</option>");
+
                         $("#go_to_select").append(new Option(this.name, this.id));
                   });
                   update_info();
@@ -708,12 +713,12 @@ function edit_element(opcao, element, data)
                   item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", element.index(), "h", $("#multichoice_edit").val(), 0, 0, multichoices, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   break;
             case "textfield":
-                  $("#textfield_edit").val($("#textfield_edit").val().replace(/[^a-zA-Z0-9éçã\s:@§óõáàí,?\/\-\.\,]/g, ''));
+                  $("#textfield_edit").val($("#textfield_edit").val().replace(regex_text, ''));
                   element.find(".label_geral")[0].innerHTML = $("#textfield_edit").val();
                   item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", element.index(), "h", "textfield", 0, 0, $("#textfield_edit").val(), false, $("#item_hidden").is(':checked'));
                   break;
             case "legend":
-                  $("#legend_edit").val($("#legend_edit").val().replace(/[^a-zA-Z0-9éçã\s:@§óõáàí,?\/\-\.\,()]/g, ''));
+                  $("#legend_edit").val($("#legend_edit").val().replace(regex_text, ''));
                   element.find(".label_geral")[0].innerHTML = $("#legend_edit").val();
                   item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "legend", element.index(), "h", "legend", 0, 0, $("#legend_edit").val(), false, $("#item_hidden").is(':checked'));
                   break;
@@ -991,9 +996,9 @@ function item_database(opcao, Id, Id_script, Id_page, Type, Ordem, Dispo, Texto,
       , "json");
 }
 
-function pagescript_database(opcao, Id_script, Id_pagina)
+function pagescript_database(opcao, Id_script, Id_pagina, Pos)
 {
-      $.post("requests.php", {action: opcao, id_script: Id_script, id_pagina: Id_pagina},
+      $.post("requests.php", {action: opcao, id_script: Id_script, id_pagina: Id_pagina, pos: Pos},
       function(data)
       {
             if (opcao === "delete_page")
@@ -1014,12 +1019,25 @@ function pagescript_database(opcao, Id_script, Id_pagina)
 //PAGES
 $("#page_add_button").click(function()
 {
-      pagescript_database("add_page", $("#script_selector option:selected").val(), 0);
+
+      var value1 = 0;
+
+      if ($("#page_selector option").length > 0)
+            value1 = $("#page_selector option:last-child").data("pos");
+
+      pagescript_database("add_page", $("#script_selector option:selected").val(), 0, value1 + 1);
+      $.jGrowl('Página adicionada com sucesso', {life: 3000});
 });
 $("#page_remove_button").click(function()
 {
+      $('#page_modal').modal('show');
+});
+$("#page_remove_button_modal").click(function()
+{
       editor_toggle("off");
-      pagescript_database("delete_page", $("#script_selector option:selected").val(), $("#page_selector option:selected").val());
+      pagescript_database("delete_page", $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), $("#page_selector option:selected").data("pos"));
+      $.jGrowl('Página removida com sucesso', {life: 3000});
+       $('#page_modal').modal('hide');
 });
 $('#page_selector').change(function() {
       editor_toggle("off");
@@ -1027,27 +1045,43 @@ $('#page_selector').change(function() {
 });
 $("#opcao_page_button").click(function()//chama o edit do nome da pagina
 {
+      current_page_pos = $("#page_selector option:selected").data("pos");
       $("#pages_name_edit").val($("#page_selector option:selected").text());
+      $("#page_position option[value=" + $("#page_selector option:selected").data("pos") + "] ").prop("selected", true);
 });
 $("#save_button_page").click(function()//Fecha o dialog e grava as alterações
 {
-      $.post("requests.php", {action: "edit_page_name", name: $("#pages_name_edit").val(), id_pagina: $("#page_selector option:selected").val()},
+      console.log(current_page_pos);
+      $.post("requests.php", {action: "edit_page", name: $("#pages_name_edit").val(), id_pagina: $("#page_selector option:selected").val(), old_pos: current_page_pos, new_pos: $("#page_position option:selected").val()},
       function(data)
       {
             $('#dialog_page').modal('hide');
             update_pages();
       }, "json");
+
 });
 //SCRIPTS
 $("#script_add_button").click(function()
 {
       pagescript_database("add_script", 0, 0);
+      $.jGrowl('Script adicionado com sucesso', {life: 3000});
 });
 $("#script_remove_button").click(function()
 {
+      $('#script_modal').modal('show');
+
+});
+
+$("#script_remove_button_modal").click(function()
+{
       editor_toggle("off");
       pagescript_database("delete_script", $("#script_selector option:selected").val(), 0);
+      $.jGrowl('Script removido com sucesso', {life: 3000});
+      $('#script_modal').modal('hide');
 });
+
+
+
 $('#script_selector').change(function() {
       $("#script_campanha_selector").val("").trigger("liszt:updated");
       $("#script_linha_inbound_selector").val("").trigger("liszt:updated");
@@ -1212,6 +1246,20 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
       }
       , "json");
 }
+//--------------Rules safety
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

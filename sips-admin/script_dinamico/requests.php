@@ -10,7 +10,7 @@ foreach ($_GET as $key => $value) {
 }
 
 $user = new user;
-
+$js = array();
 switch ($action) {
     //------------------------------------------------//    
     //---------------------GET------------------------//  
@@ -114,17 +114,17 @@ switch ($action) {
 
 
     case "get_pages":
-        $query = "SELECT * FROM script_dinamico_pages where id_script=$id_script order by id";
+        $query = "SELECT * FROM script_dinamico_pages where id_script=$id_script order by pos";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array("id" => $row["id"], "name" => $row["name"]);
+            $js[] = array("id" => $row["id"], "name" => $row["name"], "pos" => $row["pos"]);
         }
         echo json_encode($js);
         break;
 
 
     case "get_data_render":
-        $query = "SELECT * FROM `script_dinamico` WHERE id_script=$id_script  order by ordem,id_page asc";
+        $query = "SELECT sd.id,sd.id_script,id_page,type,ordem,dispo,texto,placeholder,max_length,values_text,required,hidden,param1 FROM script_dinamico sd inner join script_dinamico_pages sdp on sd.id_page=sdp.id  WHERE sd.id_script=$id_script  order by sdp.pos,sd.ordem asc";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array("id" => $row["id"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
@@ -206,7 +206,7 @@ switch ($action) {
         $row = mysql_fetch_row($result);
         echo json_encode(array("iscloud" => $row[0] == "1"));
         break;
-    
+
     //------------------------------------------------//
     //-----------------EDIT---------------------------//
     //------------------------------------------------//
@@ -229,8 +229,19 @@ switch ($action) {
         echo json_encode(array(1));
         break;
 
-    case "edit_page_name":
-        $query = "update script_dinamico_pages set name='$name' where id=$id_pagina";
+    case "edit_page":
+        $query = "update script_dinamico_pages set pos=$old_pos where pos=$new_pos";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        $query = "update script_dinamico_pages set name='$name',pos=$new_pos where id=$id_pagina";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        echo json_encode(array(1));
+        break;
+
+
+
+
+
+        $query = "update script_dinamico_pages set pos='$pos' where id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
@@ -254,7 +265,7 @@ switch ($action) {
     //-----------------ADD----------------------------//
     //------------------------------------------------//
     case "add_page":
-        $query = "INSERT INTO `asterisk`.`script_dinamico_pages` (id,id_script,name) VALUES (NULL,$id_script,'Página nova')";
+        $query = "INSERT INTO `asterisk`.`script_dinamico_pages` (id,id_script,name,pos) VALUES (NULL,$id_script,'Página nova',$pos)";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
@@ -283,6 +294,12 @@ switch ($action) {
     //-----------------DELETE-------------------------//
     //------------------------------------------------//
     case "delete_page":
+
+
+        $query = "update script_dinamico_pages set pos=pos-1 where pos>$pos and id_script=$id_script ";
+        $query = mysql_query($query, $link) or die(mysql_error());
+
+
         $query = "delete from script_dinamico_pages  where id=$id_pagina";
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "select sd.id as id from script_dinamico sd inner join script_rules sr on sd.id=sr.id_trigger";
