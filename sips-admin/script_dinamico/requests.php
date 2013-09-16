@@ -171,7 +171,7 @@ switch ($action) {
 
 
     case 'get_campaign':
-        $campaigns = implode(",", $user->allowed_campaigns);
+        $campaigns = implode("','", $user->allowed_campaigns);
 
         if ($user->is_all_campaigns)
             $campaigns = "";
