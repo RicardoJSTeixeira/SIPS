@@ -152,14 +152,14 @@ if ($is_upload) {
 <div class=cc-mstyle>
     <table>
         <tr>
-            <td id='icon32'><img src='<?php echo ROOT; ?>images/icons/calendar_32.png' ></td>
+            <td id='icon32'><img src='/images/icons/calendar_32.png' ></td>
             <td id='submenu-title'> Editar Codigos Postais </td>
-            <td><span style='float: right;cursor: pointer;' onclick="location='rsc_admin.php?sch=<?php echo $row[id_scheduler] ?>'"><img src='<?php echo ROOT; ?>images/icons/resultset_previous_32.png' >Voltar</span></td>
+            <td><span style='float: right;cursor: pointer;' onclick="location='rsc_admin.php?sch=<?= $row[id_scheduler] ?>'"><img src='/images/icons/resultset_previous_32.png' >Voltar</span></td>
         </tr>
     </table>
 </div>
 <div id="work-area" style="min-height: 400px;">
-    <form id="fileForm" method="POST" action=<?php echo $PHP_SELF ?> enctype="multipart/form-data">
+    <form id="fileForm" method="POST" action=<?= $PHP_SELF ?> enctype="multipart/form-data">
         <div id="main" class="cc-mstyle" style='border: none;margin-top: 20px;clear: both;'>
             <ul>
                 <li>
@@ -168,10 +168,10 @@ if ($is_upload) {
                             Escolha um ficheiro
                         </p>
                     </div>
-                    <input type="file" value="" name="ref_file" id="ref_file"/>
+                    <input type="file" name="ref_file" id="ref_file"/>
                 </li>
 
-                <li id="result" style="visibility:<?php if ($is_upload) { ?> visible <?php } else { ?> hidden<?php } ?>">
+                <li id="result" style="visibility:<?=($is_upload)?"visible":"hidden"?>">
                     Sucessos:<span id="good"></span>
                     Erros:<span id="bad"></span>
                     Total:<span id="total"></span>
@@ -202,7 +202,7 @@ $query = "SELECT id_cp, cp, tecnico FROM sips_sd_cp";
 $result = mysql_query($query);
 
 while ($row1 = mysql_fetch_assoc($result)) {
-    echo "<tr><td><img src='" . ROOT . "images/icons/cross_16.png' title='Eliminar' onclick='del($row1[id_cp],this)' class='x' />$row1[cp]</td><td>$row1[tecnico]</td></tr>";
+    echo "<tr><td><img src='/images/icons/cross_16.png' title='Eliminar' onclick='del($row1[id_cp],this)' class='x' />$row1[cp]</td><td>$row1[tecnico]</td></tr>";
 }
 ?>
             </tbody>
@@ -236,7 +236,7 @@ while ($row1 = mysql_fetch_assoc($result)) {
             { "bSortable": true}
         ],
         "oLanguage": {
-            "sUrl": "<?php echo ROOT; ?>jquery/jsdatatable/language/pt-pt.txt"
+            "sUrl": "/jquery/jsdatatable/language/pt-pt.txt"
         }
     } );
     
@@ -327,8 +327,8 @@ while ($row1 = mysql_fetch_assoc($result)) {
                     } else showDialog("Sucedeu-se um erro.");
                 }, "json").fail(function () {
                     showDialog("Sucedeu-se um erro.");
-                })
-            }))
+                });
+            }));
         } 
 
         function save(cp,ref) {
@@ -337,10 +337,10 @@ while ($row1 = mysql_fetch_assoc($result)) {
                 ref: ref
             },
             function (data) {
-                otable.dataTable().fnAddData(['<img src="<?php echo ROOT ?>images/icons/cross_16.png" title="Eliminar" style="cursor:pointer;" class="x"  onclick=del(' + data.id + ',this) >'+data.cp, data.ref]);
+                otable.dataTable().fnAddData(['<img src="/images/icons/cross_16.png" title="Eliminar" style="cursor:pointer;" class="x"  onclick=del(' + data.id + ',this) >'+data.cp, data.ref]);
             }, "json").fail(function () {
                 showDialog("Sucedeu-se um erro.");
-            })
+            });
         }
         
         
