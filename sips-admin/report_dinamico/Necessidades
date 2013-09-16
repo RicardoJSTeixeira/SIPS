@@ -1,0 +1,60 @@
+fase 1---------------------------------
+selecionar por campanha
+ e selecionar tempos
+
+dps selecionar feedbacks e feedback atributes
+------------------------------------
+
+
+
+1º seleciona por:
+user
+user_groups
+campanha
+linha feedback
+otalcallcenter
+script
+
+2º mostra opções
+users-> feedbacks
+      -> tempos
+
+campanhas->tempos
+           ->feedbacks
+           ->scripts
+
+scripts ->medias de resposta
+            -> totais de resposta
+
+
+
+
+
+user/ user groups 
+campanhas/linhas inbound/total callcenter
+feedbacks/feedbacks attributes
+tempos
+scripts
+
+
+
+
+
+
+
+
+
+
+
+Tipo de output
+->Grafico
+->Tabela
+->Grafico+tabela
+->PDF
+
+
+
+
+
+wizard  manager-> http://wbotelhos.com/stepy
+->https://github.com/wbotelhos/stepy
