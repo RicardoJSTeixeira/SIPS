@@ -17,8 +17,8 @@ if (!(checkDateTime($start) && checkDateTime($end)) ){
     WHERE id_resource='".mysql_real_escape_string($resource)."' 
     AND start_date='".$start."' AND end_date='".$end."';";
 
-    $result=mysql_query($query,$link) or die(__json_encode(array(sucess => "1")).mysql_error());
+    $result=mysql_query($query,$link) or die(json_encode(array("sucess" => "1")).mysql_error());
     
-            echo __json_encode(array(sucess => "1"));
+            echo json_encode(array("sucess" => "1"));
 
 ?>

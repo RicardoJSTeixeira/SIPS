@@ -51,8 +51,7 @@ else
 	$WeBServeRRooT = '/usr/local/apache2/htdocs';
 	}
 
-if ( ($use_slave_server > 0) and (strlen($slave_db_server)>5) )
-	{$VARDB_server = $slave_db_server;}
+
 $link=mysql_connect("$VARDB_server:$VARDB_port", "$VARDB_user", "$VARDB_pass");
 mysql_query('SET NAMES utf8'); 
 if (!$link) 
