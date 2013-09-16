@@ -19,6 +19,7 @@
 // NOS COMMITS!------------------------
 // Issue #13
 
+var temp_value_holder = "";
 var current_page_pos = 0;
 var selected_id = 0;
 var selected_type = "";
@@ -1037,7 +1038,7 @@ $("#page_remove_button_modal").click(function()
       editor_toggle("off");
       pagescript_database("delete_page", $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), $("#page_selector option:selected").data("pos"));
       $.jGrowl('Página removida com sucesso', {life: 3000});
-       $('#page_modal').modal('hide');
+      $('#page_modal').modal('hide');
 });
 $('#page_selector').change(function() {
       editor_toggle("off");
@@ -1248,10 +1249,28 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
 }
 //--------------Rules safety
 
+$(".values_edit_textarea").on("focus", function()
+{
+      temp_value_holder = $(this).val();
+
+});
+
+
+$(".values_edit_textarea").on("blur", function()
+{
+      if (temp_value_holder !== $(this).val())
+      {
+            $.post("requests.php", {action: "has_rules",id:selected_id},
+            function(data)
+            {
+                  if (data != "0")
+                        $.jGrowl('Alterou dados que podem ter regras associadas,procure no separador das regras por conflitos/diferença de dados', {life: 6000});
+            }, "json");
+      }
 
 
 
-
+});
 
 
 

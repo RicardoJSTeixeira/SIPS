@@ -207,6 +207,18 @@ switch ($action) {
         echo json_encode(array("iscloud" => $row[0] == "1"));
         break;
 
+
+    case 'has_rules':
+        $temp = 0;
+        $query = "SELECT count(id) as count FROM script_rules where id_trigger=$id";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $temp = $row["count"];
+        }
+        echo json_encode($temp);
+
+        break;
+
     //------------------------------------------------//
     //-----------------EDIT---------------------------//
     //------------------------------------------------//
@@ -298,12 +310,9 @@ switch ($action) {
 
         $query = "update script_dinamico_pages set pos=pos-1 where pos>$pos and id_script=$id_script ";
         $query = mysql_query($query, $link) or die(mysql_error());
-
-
         $query = "delete from script_dinamico_pages  where id=$id_pagina";
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "select sd.id as id from script_dinamico sd inner join script_rules sr on sd.id=sr.id_trigger";
-
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = "'" . $row["id"] . "'";
