@@ -53,7 +53,7 @@
         </div>
         <div class="grid-content">
 
-            <legend>Calendário: <strong><?= $row["display_text"] ?></strong> <span class="btn btn-mini" onclick="location='sch_edita.php?sch=<?= $id_scheduler ?>'"><i class="icon-pencil"></i>Editar</span></legend>
+            <legend>Calendário: <strong><?= $row["display_text"] ?></strong> <span class="btn btn-mini" onclick="location = 'sch_edita.php?sch=<?= $id_scheduler ?>'"><i class="icon-pencil"></i>Editar</span></legend>
 
             <div id="table_conteiner" style="opacity: 0">
                 <table id="schedulers" class="table table-mod-2">
@@ -74,6 +74,7 @@
                                 <td><?= $row["display_text"] ?></td>
                                 <td><?= $row["alias_code"] ?></td>
                                 <td>
+                                    <div class="view-button"><span onclick="newUser(this);" data-id='<?= $row["id_resource"] ?>'  class="btn  btn-mini"><i class="icon-user"></i>Utilizador</span></div>
                                     <div class="view-button"><a href='rsc_edita.php?rsc=<?= $row["id_resource"] ?>' target='_self' class="btn  btn-mini"><i class="icon-pencil"></i>Editar</a></div>
                                     <div class="view-button"><a href='calendar_container.php?rsc=<?= $row["id_resource"] ?>' target='_self' class="btn  btn-mini"><i class="icon-folder-open"></i>Ver</a></div>
                                     <?= (($row["active"] == 1) ? " <img src='/images/icons/tick_16.png'  >" : "<img src='/images/icons/cross_16.png' >") ?></td>				
@@ -112,47 +113,61 @@
     <div id="dialog-confirm" title="Resultado"  style="display: none;">
         <p><span class="ui-icon ui-icon-info" style="float:left; margin:0 7px 20px 0;"></span><span id="alertbox"></span></p>
     </div>
-    <script>
-                var rsc =<?= $id_scheduler; ?>;
-                
-                var otable = $('#schedulers').dataTable({
-                    "sDom": '<"top"f>rt<"bottom"p>',
-                    "sPaginationType": "full_numbers",
-                    "aoColumns": [
-                        {"bSortable": true},
-                        {"bSortable": true},
-                        {"bSortable": true, "sType": "string"}
-                    ],
-                    "oLanguage": {
-                        "sUrl": "/jquery/jsdatatable/language/pt-pt.txt"
-                    }
-                });
 
-                $('#saveForm').click(function() {
-                    if (verify()) {
-                        $.post("../ajax/rsc_admin_do.php", {
-                            id: rsc,
-                            display_text: $('#display_text').val(),
-                            alias_code: $('#alias_code').val()
-                        },
-                        function(data) {
-                            $("#sch :input:text").val('');
-                            otable.dataTable().fnAddData([ data.display_text,
-                                data.alias_code,
-                                '<div class="view-button"><a href=\'rsc_edita.php?rsc='+data.id+'\' target=\'_self\' class="btn  btn-mini"><i class="icon-pencil"></i>Editar</a></div>\n\
-                                 <div class="view-button"><a href=\'calendar_container.php?rsc='+data.id+'\' target=\'_self\' class="btn  btn-mini"><i class="icon-folder-open"></i>Ver</a></div>\n\
+    <div id="dialog-addUser" title="Utilizador de Calendário"  style="display: none;">
+        <p class="validateTips">Cria um utilizador só com acesso a este calendário.</p>
+
+        <form id="usr">
+            <fieldset>
+                <label for="username">Username</label>
+                <input type="text" id="username"  />
+                <label for="pass">Password</label>
+                <input type="text" id="password" value="" />
+            </fieldset>
+        </form>
+    </div>
+    <script>
+                    var rsc =<?= $id_scheduler; ?>;
+
+                    var otable = $('#schedulers').dataTable({
+                        "sDom": '<"top"f>rt<"bottom"p>',
+                        "sPaginationType": "full_numbers",
+                        "aoColumns": [
+                            {"bSortable": true},
+                            {"bSortable": true},
+                            {"bSortable": true, "sType": "string"}
+                        ],
+                        "oLanguage": {
+                            "sUrl": "/jquery/jsdatatable/language/pt-pt.txt"
+                        }
+                    });
+
+                    $('#saveForm').click(function() {
+                        if (verify()) {
+                            $.post("../ajax/rsc_admin_do.php", {
+                                id: rsc,
+                                display_text: $('#display_text').val(),
+                                alias_code: $('#alias_code').val()
+                            },
+                            function(data) {
+                                $("#sch :input:text").val('');
+                                otable.dataTable().fnAddData([data.display_text,
+                                    data.alias_code,
+                                    '<div class="view-button"><span onclick="newUser();" data-id=' + data.id + ' class="btn  btn-mini"><i class="icon-user"></i>Utilizador</span></div>\n\
+                                 <div class="view-button"><a href=\'rsc_edita.php?rsc=' + data.id + '\' target=\'_self\' class="btn  btn-mini"><i class="icon-pencil"></i>Editar</a></div>\n\
+                                 <div class="view-button"><a href=\'calendar_container.php?rsc=' + data.id + '\' target=\'_self\' class="btn  btn-mini"><i class="icon-folder-open"></i>Ver</a></div>\n\
                                  <img src="/images/icons/tick_16.png" >']);
-                        }, "json").fail(function() {
-                            showDialog("Sucedeu-se um erro.");
-                        });
+                            }, "json").fail(function() {
+                                showDialog("Sucedeu-se um erro.");
+                            });
+                        }
+                    });
+                    function showDialog(msg) {
+                        $('#alertbox').html(msg);
+                        $('#dialog-confirm').dialog("open");
                     }
-                });
-                function showDialog(msg) {
-                    $('#alertbox').html(msg);
-                    $('#dialog-confirm').dialog("open");
-                }
-                $('#dialog-confirm').dialog({
-                        autoOpen:false,
+                    $('#dialog-confirm').dialog({
+                        autoOpen: false,
                         modal: true,
                         buttons: {
                             Ok: function() {
@@ -160,22 +175,66 @@
                             }
                         }
                     });
-                
-                function verify() {
-                    return $("#sch :input:text,textarea,select").removeClass('alert').filter(function() {
-                        return !/\S+/.test($(this).val());
-                    }).addClass('alert').size() == 0;
-                }
 
-                $(document).ready(function() {
-                    $("#table_conteiner").animate({opacity: 1});
-                    $(".num").keydown(function(event) {
-                        if ((!event.shiftKey && !event.ctrlKey && !event.altKey) && ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105))) {
-                        } else if (event.keyCode != 8 && event.keyCode != 46 && event.keyCode != 37 && event.keyCode != 39) {
-                            event.preventDefault();
+                    function verifyUser() {
+                        return $("#usr :input:text,textarea,select").removeClass('alert').filter(function() {
+                            return !/\S+/.test($(this).val());
+                        }).addClass('alert').size() == 0;
+                    }
+
+                    var live_rsc = 0;
+                    function newUser(el) {
+                        live_rsc = $(el).data().id;
+                        $('#dialog-addUser').dialog("open");
+                    }
+                    function addUser() {
+                        var user = $("#username").val(),
+                                pass = $("#password").val();
+
+                        $.post("../ajax/user_rsc.php", {username: user, password: pass, rsc: live_rsc}, function(data) {
+                            var msg=(data)?"Criado com Sucesso!":"Ups algo não correu bem :-/";
+                            if(data==="exist")
+                                msg="Utilizador indisponivel, tente outro.";
+                            showDialog(msg);
+                        },"json");
+                    }
+                    $('#dialog-addUser').dialog({
+                        autoOpen: false,
+                        modal: true,
+                        buttons: {
+                            Ok: function() {
+                                if (verifyUser()) {
+                                    addUser();
+                                    $("#usr :input:text,textarea,select").val("").removeClass('alert');
+                                    $(this).dialog("close");
+                                }
+                            },
+                            cancel: function() {
+                                $("#usr :input:text,textarea,select").val("").removeClass('alert');
+                                $(this).dialog("close");
+                            }
                         }
                     });
-                });
+
+                    function verify() {
+                        return $("#sch :input:text,textarea,select").removeClass('alert').filter(function() {
+                            return !/\S+/.test($(this).val());
+                        }).addClass('alert').size() == 0;
+                    }
+
+
+
+
+                    $(function() {
+                        $("#table_conteiner").animate({opacity: 1});
+                        $(".num").keydown(function(event) {
+                            if ((!event.shiftKey && !event.ctrlKey && !event.altKey) && ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105))) {
+                            } else if (event.keyCode != 8 && event.keyCode != 46 && event.keyCode != 37 && event.keyCode != 39) {
+                                event.preventDefault();
+                            }
+                        });
+                    });
+
 
     </script>
 
