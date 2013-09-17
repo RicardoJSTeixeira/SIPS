@@ -3637,7 +3637,7 @@ while ($MM_scripts > $h) {
                                                 <tr <?=(!$agent_allow_dtmf)?"style='display:none;'":""?>>
                                                     <td><i class="fam-sitemap-color"></i></td>
                                                     <td>
-                                                        <a href="#" id="SendDTMF" data-toggle="popover" data-placement="left" data-original-title="Digite o nº" data-content="<div class='input-append'><input type='text'  name='conf_dtmf' id='conf_dtmf' class='span2'  maxlength='5' /><span class='btn btn-primary' onclick='SendConfDTMF(session_id);return false;'>Enviar</span></div>" >DTMF</a> 
+                                                        <a href="#" id="SendDTMF" data-toggle="popover" data-placement="left" data-original-title="Digite o nº" data-content="<div class='input-append'><input type='text'  name='conf_dtmf' id='conf_dtmf' class='span2'  maxlength='10' /><span class='btn btn-primary' onclick='SendConfDTMF(session_id);return false;'>Enviar</span></div>" >DTMF</a> 
                                                     </td>
                                                 </tr>   
 
