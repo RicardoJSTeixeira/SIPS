@@ -19,6 +19,14 @@
 // NOS COMMITS!------------------------
 // Issue #13
 
+///////NAO FAZER COMMIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+//criar duplicado de scripts
+//tags individuais por scripts
+
+
 var temp_value_holder = "";
 var current_page_pos = 0;
 var selected_id = 0;
@@ -35,6 +43,7 @@ var regex_split = /\n/g;
 //mostra/esconde os elementos associados ao edit
 function editor_toggle(tipo)
 {
+      
       $(".item").removeClass("helperPick");
       $("#tabs").tabs("option", "active", 0);
       if (tipo === "on")
@@ -100,6 +109,7 @@ $("#checkbox_scheduler_all").click(function()
 });
 
 
+//file:///home/ricardo/Desktop/bootstrap-wysiwyg-master/index.html
 
 $(function() {
       $("#tabs").tabs();
@@ -234,6 +244,10 @@ $(function() {
             update_script();
             // item_database("get_tag_fields", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
       });
+      
+      $("#tag_label").text("§nome§");
+      
+      
       $(document).on("click", ".element", function(e) {
             selected_id = $(this).data("id");
             selected_type = $(this).data("type");

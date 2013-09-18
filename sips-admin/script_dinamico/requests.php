@@ -36,6 +36,23 @@ switch ($action) {
         break;
 
 
+    case "get_client_info_by_lead_id":
+       $js=array();
+        $query = "SELECT first_name,phone_number,alt_phone,address1,address3,postal_code,email,comments from vicidial_list where lead_id='$lead_id'";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array("nome" => $row["first_name"], "telefone" => $row["phone_number"], "telefone_alt" => $row["alt_phone"], "morada" => $row["address1"], "telefone_alt2" => $row["address3"], "codigo_postal" => $row["postal_code"], "email" => $row["email"], "comentario" => $row["comments"]);
+        }
+        
+         if (sizeof($js) < 1) {
+              $js[] = array("nome" => "//Nome do cliente//", "telefone" => "//telefone do cliente//", "telefone_alt" => "//Telefone alternativo do cliente//", "morada" => "//morada do cliente//", "telefone_alt2" =>"//Telefone alternativo2 do cliente//", "codigo_postal" => "//codigo postal do cliente//", "email" => "//email do cliente//", "comentario" => "//comentarios//");
+         }
+        
+        
+        echo json_encode($js);
+        break;
+
+
 
 
     case "get_tag_fields":

@@ -22,6 +22,8 @@
             <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
             <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
             <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt-BR.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/jquery.hotkeys.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/bootstrap-wysiwyg.js"></script>
 
             <style>
 
@@ -40,10 +42,10 @@
                   .radio, .checkbox {padding-left: 1px;padding-right: 16px;}
                   .chzn-container,.chzn-drop{width:340px!important;}
                   .hidden{display:none!important;}
+
             </style>
       </head>
       <body> 
-
 
 
             <!-- MODALS DE CONFIRMAÇÂO DE DELETES  -->
@@ -64,7 +66,7 @@
 
 
 
-     <div id="page_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Page Modal" aria-hidden="true">
+            <div id="page_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Page Modal" aria-hidden="true">
                   <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h3 id="myModalLabel">Confirmação de eliminação de página</h3>
@@ -316,7 +318,7 @@
                                                             <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
                                                                   <textarea class="span textfield_input" id="textfield_edit" maxlength="3800" rows="4" cols="50"></textarea>
-                                                            </div>
+                                                            </div>  
                                                       </div>
                                                 </div>
                                                 <!--LEGEND-->
@@ -438,20 +440,33 @@
                                                             </div>
                                                       </div>
                                                       <!------------------------------------TAGS---------------------------------------------->
-                                                      <div class="hidden">
-                                                            <div class="formRow"  >
-                                                                  <label class="label label-inverse" >Tags:</label>
-                                                                  <div class="formRight">
-                                                                        <select id="tags_select"></select>
-                                                                        <i class="icon-tag" ></i>
-                                                                  </div> 
-                                                            </div>
-                                                            <div class="formRow" >
-                                                                  <div class="formRight">
-                                                                        <label id="tag_label"></label>
-                                                                  </div>
+
+                                                      <div class="formRow"  >
+                                                            <label class="label label-inverse" >Tags:</label>
+                                                            <div class="formRight">
+                                                                  <select id="tags_select">
+                                                                        <option value="nome" selected>Nome</option>
+                                                                        <option value="telefone">Nº telefone</option>
+                                                                        <option value="telefone_alt">telefone alternativo</option>
+                                                                        <option value="telefone_alt2">Telefone alternativo 2</option>
+                                                                        <option value="morada">morada</option>
+                                                                        <option value="codigo_postal">Codigo postal</option>
+
+                                                                        <option value="localidade">localidade</option>
+                                                                        <option value="distrito">distrito</option>
+                                                                        <option value="email">E-mail</option>
+                                                                        <option value="Comentario">Comentarios</option>
+
+                                                                  </select>
+                                                                  <i class="icon-tag" ></i>
+                                                            </div> 
+                                                      </div>
+                                                      <div class="formRow" >
+                                                            <div class="formRight">
+                                                                  <label id="tag_label"></label>
                                                             </div>
                                                       </div>
+
                                                 </div>
                                                 <div class="clear"></div>
                                                 <div class="modal-footer footer_save_cancel">
