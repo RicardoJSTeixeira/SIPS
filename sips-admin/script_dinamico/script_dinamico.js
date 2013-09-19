@@ -23,7 +23,7 @@
 
 
 
-//criar duplicado de scripts -> falta duplicar rules, script_assoc
+
 //tags individuais por scripts
 
 

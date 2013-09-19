@@ -317,18 +317,21 @@ switch ($action) {
 
 
     case "duplicate_script":
+        //script
         $query = "INSERT INTO script_dinamico_master (id,name,user_group) VALUES (NULL,'$nome_script duplicado','$user->user_group')";
         $query = mysql_query($query, $link) or die(mysql_error());
 
-
         $temp_script_page = mysql_insert_id();
-        $query = "SELECT id,id_script,name,pos FROM script_dinamico_pages where id_script=$id_script";
+
+          $query = "SELECT id,id_script,name,pos FROM script_dinamico_pages where id_script=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
+            //pages
             $query1 = "INSERT INTO script_dinamico_pages (id,id_script,name,pos) values(NULL, $temp_script_page,'" . $row['name'] . "','" . $row['pos'] . "')";
             $query1 = mysql_query($query1, $link) or die(mysql_error());
-            $query1 = "INSERT INTO script_dinamico (`id`, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required,hidden,param1) select NULL,'$temp_script_page','".mysql_insert_id()."',type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required,hidden,param1 from script_dinamico where id_script='$id_script' and id_page= '".$row['id']."'  ";
-                        $query1 = mysql_query($query1, $link) or die(mysql_error());
+            //elements
+            $query1 = "INSERT INTO script_dinamico (`id`, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required,hidden,param1) select NULL,'$temp_script_page','" . mysql_insert_id() . "',type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required,hidden,param1 from script_dinamico where id_script='$id_script' and id_page= '" . $row['id'] . "'  ";
+            $query1 = mysql_query($query1, $link) or die(mysql_error());
         }
         echo json_encode(1);
         break;
