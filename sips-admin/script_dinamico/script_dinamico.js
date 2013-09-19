@@ -23,7 +23,7 @@
 
 
 
-//criar duplicado de scripts
+//criar duplicado de scripts -> falta duplicar rules, script_assoc
 //tags individuais por scripts
 
 
@@ -33,17 +33,17 @@ var selected_id = 0;
 var selected_type = "";
 var array_id = [];
 var regex_remove_blank = /^\s*$[\n\r]{1,}/gm;
-var regex_replace_textbox_tag = /[^a-zA-Z0-9éçã\s:@§óõáàí?!ê().,]/g;
-var regex_replace_textbox = /[^a-zA-Z0-9éçã\s:óõáàí?!ê().,]/g;
-var regex_replace = /[^a-zA-Z0-9éçã\s:óõáàí?!ê()]/g;
-var regex_text = /[^a-zA-Z0-9éçã\s:@§óõáàíê,?\/\-\.\,()]/g;
+var regex_replace_textbox_tag = /[^a-zA-Z0-9éÉçÇãÃóÓõÕáÁàÀíÍêÊ\s:,?\/\-\.\,()@§]/g;
+var regex_replace_textbox = /[^a-zA-Z0-9éÉçÇãÃóÓõÕáÁàÀíÍêÊ\s:,?\/\-\.\,(),]/g;
+var regex_replace = /[^a-zA-Z0-9éÉçÇãÃóÓõÕáÁàÀíÍêÊ\s:,?\/\-\.\,()]/g;
+var regex_text = /[^a-zA-Z0-9éÉçÇãÃóÓõÕáÁàÀíÍêÊ\s:,?\/\-\.\,()@§]/g;
 var regex_split = /\n/g;
 
 
 //mostra/esconde os elementos associados ao edit
 function editor_toggle(tipo)
 {
-      
+
       $(".item").removeClass("helperPick");
       $("#tabs").tabs("option", "active", 0);
       if (tipo === "on")
@@ -244,10 +244,10 @@ $(function() {
             update_script();
             // item_database("get_tag_fields", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
       });
-      
+
       $("#tag_label").text("§nome§");
-      
-      
+
+
       $(document).on("click", ".element", function(e) {
             selected_id = $(this).data("id");
             selected_type = $(this).data("type");
@@ -1066,8 +1066,8 @@ $("#opcao_page_button").click(function()//chama o edit do nome da pagina
 });
 $("#save_button_page").click(function()//Fecha o dialog e grava as alterações
 {
-      
-      $.post("requests.php", {action: "edit_page",id_script:$("#script_selector option:selected").val(), name: $("#pages_name_edit").val(), id_pagina: $("#page_selector option:selected").val(), old_pos: current_page_pos, new_pos: $("#page_position option:selected").val()},
+
+      $.post("requests.php", {action: "edit_page", id_script: $("#script_selector option:selected").val(), name: $("#pages_name_edit").val(), id_pagina: $("#page_selector option:selected").val(), old_pos: current_page_pos, new_pos: $("#page_position option:selected").val()},
       function(data)
       {
             $('#dialog_page').modal('hide');
@@ -1095,7 +1095,18 @@ $("#script_remove_button_modal").click(function()
       $('#script_modal').modal('hide');
 });
 
+//script duplicate
+$("#copy_script_button").on("click", function()
+{
+      $('#dialog_layout').modal('hide');
 
+      $.post("requests.php", {action: "duplicate_script", id_script: $("#script_selector option:selected").val(), nome_script: $("#script_selector option:selected").text()},
+      function(data)
+      {
+
+      }
+      , "json");
+});
 
 $('#script_selector').change(function() {
       $("#script_campanha_selector").val("").trigger("liszt:updated");
@@ -1274,7 +1285,7 @@ $(".values_edit_textarea").on("blur", function()
 {
       if (temp_value_holder !== $(this).val())
       {
-            $.post("requests.php", {action: "has_rules",id:selected_id},
+            $.post("requests.php", {action: "has_rules", id: selected_id},
             function(data)
             {
                   if (data != "0")
