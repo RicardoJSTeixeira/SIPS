@@ -259,20 +259,15 @@ switch ($action) {
         break;
 
     case "edit_page":
-        $query = "update script_dinamico_pages set pos=$old_pos where pos=$new_pos";
+        $query = "update script_dinamico_pages set pos=$old_pos where pos=$new_pos and  id_script=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
+        
+        
         $query = "update script_dinamico_pages set name='$name',pos=$new_pos where id=$id_pagina";
         $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
-        break;
-
-
-
-
-
-        $query = "update script_dinamico_pages set pos='$pos' where id=$id";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
+ 
+     
+        echo json_encode(1);
         break;
 
 

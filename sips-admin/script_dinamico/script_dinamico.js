@@ -1066,8 +1066,8 @@ $("#opcao_page_button").click(function()//chama o edit do nome da pagina
 });
 $("#save_button_page").click(function()//Fecha o dialog e grava as alterações
 {
-      console.log(current_page_pos);
-      $.post("requests.php", {action: "edit_page", name: $("#pages_name_edit").val(), id_pagina: $("#page_selector option:selected").val(), old_pos: current_page_pos, new_pos: $("#page_position option:selected").val()},
+      
+      $.post("requests.php", {action: "edit_page",id_script:$("#script_selector option:selected").val(), name: $("#pages_name_edit").val(), id_pagina: $("#page_selector option:selected").val(), old_pos: current_page_pos, new_pos: $("#page_position option:selected").val()},
       function(data)
       {
             $('#dialog_page').modal('hide');
