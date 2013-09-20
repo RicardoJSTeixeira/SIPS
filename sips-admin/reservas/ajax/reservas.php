@@ -22,7 +22,7 @@ if (isset($_POST['start']) && isset($_POST['end']) && isset($_POST['resource']) 
 		$row=mysql_fetch_assoc($result);
 		
 		if ($row[existe]>0) {
-			echo __json_encode(array(sucess => "0",message => "Já existe."));
+			echo json_encode(array("sucess" => "0","message" => "Já existe."));
 			exit;
 		}
 		
@@ -31,5 +31,5 @@ if (isset($_POST['start']) && isset($_POST['end']) && isset($_POST['resource']) 
 		 VALUES 
 		('".mysql_real_escape_string($start)."', '".mysql_real_escape_string($end)."', '0', '".  mysql_real_escape_string($rtype)."', '".mysql_real_escape_string($resource)."','".mysql_real_escape_string($user)."','".mysql_real_escape_string($lead_id)."');";
 		mysql_query($query) or die(mysql_error());
-                echo __json_encode(array(sucess => "1",message => "Sucesso"));
+                echo json_encode(array("sucess" => "1","message" => "Sucesso"));
 ?>

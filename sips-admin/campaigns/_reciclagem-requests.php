@@ -278,7 +278,7 @@ function EditRecycleContactDetailsDisableSingle($LeadID, $link)
 
 function DialogRecycleResetCallbacksOnSave($CampaignID, $link)
 {
-    $query = "SELECT lead_id FROM vicidial_callbacks WHERE campaign_id='$CampaignID'";
+    $query = "SELECT lead_id FROM vicidial_callbacks WHERE campaign_id='$CampaignID' and status != 'INACTIVE'";
     $query = mysql_query($query, $link) or die(mysql_error());
     
     

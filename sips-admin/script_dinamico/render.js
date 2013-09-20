@@ -7,6 +7,7 @@
 
 var array_id = [];
 var tag_regex = /\@(\d{1,5})\@/g;
+var tag_regex2 = /\§(.*)\§/g;
 var page_info = [];
 var items = [];
 $(function() {
@@ -418,7 +419,7 @@ function insert_element(opcao, element, data)
                         select.val("").trigger("liszt:updated");
                   }, "json");
                   element.find(".label_geral")[0].innerHTML = data.texto;
-             
+
                   if (data.required)
                         element.find(".scheduler_select").addClass("validate[required]");
 
@@ -616,6 +617,7 @@ function rules()
 function tags()
 {
       var rz = $("#render_zone");
+      //tags de valores de elementos da mesma pagina
       if (rz.html().match(tag_regex))
       {
             var temp2 = rz.html().match(tag_regex);
@@ -634,6 +636,61 @@ function tags()
                         $("." + id + "tag").text($(this).val());
                   });
             });
+      }
+
+//Tags de nome/morada/telefone etc
+      if (rz.html().match(tag_regex2))
+      {
+            var temp2 = rz.html().match(tag_regex2);
+            var temp = [];
+            $.each(temp2, function() {
+                  if ($.inArray(this, temp) === -1)
+                        temp.push(this);
+            });
+            $.post("requests.php", {action: "get_client_info_by_lead_id", lead_id: page_info.lead_id},
+            function(data)
+            {
+                  $.each(temp, function() {
+                        var id = this;
+                        id = id.replace(/\§/g, '');
+
+                        var regExp = new RegExp(this, "g");
+                  switch (id)
+                  {
+                        case "nome":
+                              rz.html(rz.html().replace(regExp, data[0].nome));
+                              break;
+                        case "telefone":
+                              rz.html(rz.html().replace(regExp, data[0].telefone));
+                              break;
+                        case "telefone_alt":
+                              rz.html(rz.html().replace(regExp, data[0].telefone_alt));
+                              break;
+                        case "telefone_alt2":
+                              rz.html(rz.html().replace(regExp, data[0].telefone_alt2));
+                              break;
+                        case "morada":
+                              rz.html(rz.html().replace(regExp, data[0].morada));
+                              break;
+                        case "codigo_postal":
+                              rz.html(rz.html().replace(regExp, data[0].codigo_postal));
+                              break;
+                        case "localidade":
+                              rz.html(rz.html().replace(regExp, data[0].localidade));
+                              break;
+                        case "distrito":
+                              rz.html(rz.html().replace(regExp, data[0].distrito));
+                              break;
+                        case "email":
+                              rz.html(rz.html().replace(regExp, data[0].email));
+                              break;
+                        case "Comentario":
+                              rz.html(rz.html().replace(regExp, data[0].Comentario));
+                              break;
+                  }     
+            });
+
+            }, "json");
       }
 }
 
