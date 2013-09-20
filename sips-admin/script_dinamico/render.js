@@ -77,16 +77,16 @@ function update_script()
       }
       else
       {
-$("#validate_admin").hide();
+            $("#validate_admin").hide();
             var camp_linha = 0;
 
             if (page_info.in_group_id !== "")
             {
                   camp_linha = page_info.in_group_id;
             }
-             if (page_info.campaign_id !== "")
+            if (page_info.campaign_id !== "")
             {
-                        camp_linha = page_info.campaign_id;
+                  camp_linha = page_info.campaign_id;
             }
 
 
@@ -653,7 +653,7 @@ function tags()
                   if ($.inArray(this, temp) === -1)
                         temp.push(this);
             });
-            $.post("requests.php", {action: "get_client_info_by_lead_id", lead_id: page_info.lead_id},
+            $.post("requests.php", {action: "get_client_info_by_lead_id", lead_id: page_info.lead_id, user_logged:page_info.user_id},
             function(data)
             {
                   $.each(temp, function() {
@@ -664,35 +664,39 @@ function tags()
                         switch (id)
                         {
                               case "nome":
-                                    rz.html(rz.html().replace(regExp, data[0].nome));
+                                    rz.html(rz.html().replace(regExp, data.nome));
                                     break;
                               case "telefone":
-                                    rz.html(rz.html().replace(regExp, data[0].telefone));
+                                    rz.html(rz.html().replace(regExp, data.telefone));
                                     break;
                               case "telefone_alt":
-                                    rz.html(rz.html().replace(regExp, data[0].telefone_alt));
+                                    rz.html(rz.html().replace(regExp, data.telefone_alt));
                                     break;
                               case "telefone_alt2":
-                                    rz.html(rz.html().replace(regExp, data[0].telefone_alt2));
+                                    rz.html(rz.html().replace(regExp, data.telefone_alt2));
                                     break;
                               case "morada":
-                                    rz.html(rz.html().replace(regExp, data[0].morada));
+                                    rz.html(rz.html().replace(regExp, data.morada));
                                     break;
                               case "codigo_postal":
-                                    rz.html(rz.html().replace(regExp, data[0].codigo_postal));
+                                    rz.html(rz.html().replace(regExp, data.codigo_postal));
                                     break;
                               case "localidade":
-                                    rz.html(rz.html().replace(regExp, data[0].localidade));
+                                    rz.html(rz.html().replace(regExp, data.localidade));
                                     break;
                               case "distrito":
-                                    rz.html(rz.html().replace(regExp, data[0].distrito));
+                                    rz.html(rz.html().replace(regExp, data.distrito));
                                     break;
                               case "email":
-                                    rz.html(rz.html().replace(regExp, data[0].email));
+                                    rz.html(rz.html().replace(regExp, data.email));
                                     break;
                               case "Comentario":
-                                    rz.html(rz.html().replace(regExp, data[0].Comentario));
+                                    rz.html(rz.html().replace(regExp, data.Comentario));
                                     break;
+                              case "nome_operador":
+                                    rz.html(rz.html().replace(regExp, data.nome_operador));
+                                    break;
+
                         }
                   });
 

@@ -106,14 +106,14 @@
                         <div class="formRow">
                               <label class="label label-inverse" >Campanha</label>
                               <div class="formRight">
-                                    <select id="script_campanha_selector" class="chosen_select"  multiple="multiple"   ></select>
+                                    <select id="script_campanha_selector" class="chosen_select"  multiple="multiple" data-placeholder="Selecione uma/várias campanhas"   ></select>
                               </div> 
                         </div>
 
                         <div class="formRow linha_inbound_div">
                               <label class="label label-inverse" >Linha Inbound</label>
                               <div class="formRight">
-                                    <select id="script_linha_inbound_selector" class="chosen_select"  multiple="multiple"   ></select>
+                                    <select id="script_linha_inbound_selector" class="chosen_select"  multiple="multiple" data-placeholder="Selecione uma/várias linhas_inbound"   ></select>
                               </div> 
                         </div>
 
@@ -346,7 +346,7 @@
                                                             <label class="label label-inverse" >Titulos:</label>
 
                                                             <div class="formRight">
-                                                                  <textarea class="values_edit_textarea" id="tableradio_th_textarea" maxlength="50" rows="4" cols="50"></textarea>
+                                                                  <textarea class="values_edit_textarea" id="tableradio_th_textarea" maxlength="250" rows="4" cols="50"></textarea>
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
@@ -381,7 +381,7 @@
                                                       <div class="formRow">
                                                             <label class="label label-inverse" >Calendários:</label>
                                                             <div class="formRight">
-                                                                  <select id="scheduler_edit_select" class="chosen_select"  multiple   ></select>
+                                                                  <select id="scheduler_edit_select" class="chosen_select"  multiple data-placeholder="Selecione um/vários calendários"   ></select>
                                                             </div>
                                                             <div class="formRight">
                                                                   <input   type="checkbox" id="checkbox_scheduler_all" name="cc" value="1">
@@ -450,16 +450,17 @@
                                                             <div class="formRight">
                                                                   <select id="tags_select">
                                                                         <option value="nome" selected>Nome</option>
-                                                                        <option value="telefone">Nº telefone</option>
-                                                                        <option value="telefone_alt">telefone alternativo</option>
-                                                                        <option value="telefone_alt2">Telefone alternativo 2</option>
-                                                                        <option value="morada">morada</option>
+                                                                        <option value="telefone">Nº Telefone</option>
+                                                                        <option value="telefone_alt">Telefone Alternativo</option>
+                                                                        <option value="telefone_alt2">Telemóvel</option>
+                                                                        <option value="morada">Morada</option>
                                                                         <option value="codigo_postal">Codigo postal</option>
 
-                                                                        <option value="localidade">localidade</option>
-                                                                        <option value="distrito">distrito</option>
+                                                                        <option value="localidade">Localidade</option>
+                                                                        <option value="distrito">Distrito</option>
                                                                         <option value="email">E-mail</option>
                                                                         <option value="Comentario">Comentarios</option>
+                                                                             <option value="nome_operador">Nome do operador</option>
 
                                                                   </select>
                                                                   <i class="icon-tag" ></i>
@@ -475,7 +476,7 @@
                                                 <div class="clear"></div>
                                                 <div class="modal-footer footer_save_cancel">
                                                       <button class="btn btn-primary" id="save_edit">Guardar</button>
-                                                      <button class="btn btn-primary" id="cancel_edit">Cancelar</button>
+                                                      <button class="btn" id="cancel_edit">Cancelar</button>
                                                 </div>
 
                                           </div>
@@ -518,7 +519,7 @@
                                                             <div class="formRow rules_valor" id="rules_valor_select_div" style="display:none"  >
                                                                   <label class="label label-inverse" >Valores:</label>
                                                                   <div class="formRight">
-                                                                        <select id="rules_valor_select" class="chosen_select"  multiple="multiple"   ></select>
+                                                                        <select id="rules_valor_select" class="chosen_select"  multiple data-placeholder="Selecione um/vários valores"   ></select>
                                                                   </div> 
                                                             </div>
                                                             <div class="formRow rules_valor" id="rules_valor_input_div" style="display:none" >
@@ -540,7 +541,7 @@
                                                             <div class="formRow rule_target" >
                                                                   <label class="label label-inverse" >Alvo:</label>
                                                                   <div class="formRight">
-                                                                        <select  id="rule_target_select" multiple="multiple" class="chosen_select">
+                                                                        <select  id="rule_target_select" multiple class="chosen_select" data-placeholder="Selecione um/vários elementos">
 
                                                                         </select>
                                                                   </div> 

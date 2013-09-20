@@ -9,7 +9,8 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 
-$user = new user;
+$user = new users;
+
 $js = array();
 switch ($action) {
     //------------------------------------------------//    
@@ -41,11 +42,11 @@ switch ($action) {
         $query = "SELECT first_name,phone_number,alt_phone,address1,address3,postal_code,email,comments from vicidial_list where lead_id='$lead_id'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array("nome" => $row["first_name"], "telefone" => $row["phone_number"], "telefone_alt" => $row["alt_phone"], "morada" => $row["address1"], "telefone_alt2" => $row["address3"], "codigo_postal" => $row["postal_code"], "email" => $row["email"], "comentario" => $row["comments"]);
+            $js = array("nome" => $row["first_name"], "telefone" => $row["phone_number"], "telefone_alt" => $row["alt_phone"], "morada" => $row["address1"], "telefone_alt2" => $row["address3"], "codigo_postal" => $row["postal_code"], "email" => $row["email"], "comentario" => $row["comments"], "nome_operador"=>$user->getUser($user_logged));
         }
 
         if (sizeof($js) < 1) {
-            $js[] = array("nome" => "//Nome do cliente//", "telefone" => "//telefone do cliente//", "telefone_alt" => "//Telefone alternativo do cliente//", "morada" => "//morada do cliente//", "telefone_alt2" => "//Telefone alternativo2 do cliente//", "codigo_postal" => "//codigo postal do cliente//", "email" => "//email do cliente//", "comentario" => "//comentarios//");
+            $js = array("nome" => "//Nome do cliente//", "telefone" => "//telefone do cliente//", "telefone_alt" => "//Telefone alternativo do cliente//", "morada" => "//morada do cliente//", "telefone_alt2" => "//Telemóvel do cliente//", "codigo_postal" => "//codigo postal do cliente//", "email" => "//email do cliente//", "comentario" => "//comentarios//", "nome_operador"=>"//nome do operador//");
         }
 
 
@@ -297,6 +298,9 @@ switch ($action) {
     case "add_script":
         $query = "INSERT INTO `asterisk`.`script_dinamico_master` (id,name,user_group) VALUES (NULL,'Script novo','$user->user_group')";
         $query = mysql_query($query, $link) or die(mysql_error());
+
+        $query = "INSERT INTO `asterisk`.`script_dinamico_pages` (id,id_script,name,pos) VALUES (NULL," . mysql_insert_id() . ",'Página nova','0')";
+        $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(1);
         break;
 
@@ -323,7 +327,7 @@ switch ($action) {
 
         $temp_script_page = mysql_insert_id();
 
-          $query = "SELECT id,id_script,name,pos FROM script_dinamico_pages where id_script=$id_script";
+        $query = "SELECT id,id_script,name,pos FROM script_dinamico_pages where id_script=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             //pages

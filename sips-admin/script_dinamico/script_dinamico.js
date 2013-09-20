@@ -33,10 +33,10 @@ var selected_id = 0;
 var selected_type = "";
 var array_id = [];
 var regex_remove_blank = /^\s*$[\n\r]{1,}/gm;
-var regex_replace_textbox_tag = /[^a-zA-Z0-9éÉçÇãÃóÓõÕáÁàÀíÍêÊ\s:,?\/\-\.\,()@§]/g;
-var regex_replace_textbox = /[^a-zA-Z0-9éÉçÇãÃóÓõÕáÁàÀíÍêÊ\s:,?\/\-\.\,(),]/g;
-var regex_replace = /[^a-zA-Z0-9éÉçÇãÃóÓõÕáÁàÀíÍêÊ\s:,?\/\-\.\,()]/g;
-var regex_text = /[^a-zA-Z0-9éÉçÇãÃóÓõÕáÁàÀíÍêÊ\s:,?\/\-\.\,()@§]/g;
+var regex_replace_textbox_tag = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊ\s:,?\/\-\.\,()@§]/g;
+var regex_replace_textbox = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊ\s:,?\/\-\.\,(),]/g;
+var regex_replace = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊ\s:,?\/\-\.\,()]/g;
+var regex_text = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊ\s:,?\/\-\.\,()@§]/g;
 var regex_split = /\n/g;
 
 
@@ -54,7 +54,7 @@ function editor_toggle(tipo)
             $("#open_rule_creator").prop('disabled', false);//botoes de edit
             $(".editor_layout").hide();// esconde os edits de todos
             $(".footer_save_cancel button").prop('disabled', false);//botoes de edit
-            $(".chosen_select").chosen();
+            $(".chosen_select").chosen({no_results_text: "Sem resultados"});
       }
       if (tipo === "off")
       {
@@ -201,7 +201,7 @@ $(function() {
                   $.each(data1, function(index, value) {
                         $("#script_campanha_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
                   });
-                  $("#script_campanha_selector").chosen();
+                  $("#script_campanha_selector").chosen(({no_results_text: "Sem resultados"}));
             }, "json");
             $.post("requests.php", {action: "get_linha_inbound"},
             function(data2)
@@ -209,7 +209,7 @@ $(function() {
                   $.each(data2, function(index, value) {
                         $("#script_linha_inbound_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
                   });
-                  $("#script_linha_inbound_selector").chosen();
+                  $("#script_linha_inbound_selector").chosen(({no_results_text: "Sem resultados"}));
 
 
 
@@ -305,13 +305,30 @@ $(function() {
       });
 });
 //UPDATES DE INFO
-function update_script()
+
+
+Object.size = function(a)
 {
-      $(".chosen_select").chosen();
+      var count = 0;
+      var i;
+
+      for (i in a) {
+            if (a.hasOwnProperty(i)) {
+                  count++;
+            }
+      }
+ 
+      return count;
+};
+function update_script(callback)
+{
+
+      $(".chosen_select").chosen(({no_results_text: "Sem resultados"}));
       $.post("requests.php", {action: "get_scripts"},
       function(data)
       {
-            if (data == null)
+
+            if (!Object.size(data))
             {
                   $("#page_selector_div button").prop('disabled', true);
                   $("#opcao_script_button").prop('disabled', true);
@@ -333,16 +350,19 @@ function update_script()
                         else
                               $("#script_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
                   });
+                if(typeof callback==="function")
+                        callback();
                   update_pages();
             }
       }, "json");
 }
-function update_pages()
+function update_pages(callback)
 {
       $.post("requests.php", {action: "get_pages", id_script: $("#script_selector option:selected").val()},
       function(data)
       {
-            if (data == null)
+
+            if (!Object.size(data))
             {
                   $("#page_selector").empty();
                   $(".leftDiv").hide();
@@ -366,6 +386,11 @@ function update_pages()
 
                         $("#go_to_select").append(new Option(this.name, this.id));
                   });
+                  
+                  
+                  if(typeof callback==="function")
+                        callback();
+                  
                   update_info();
             }
       }, "json");
@@ -379,7 +404,7 @@ function update_info()
       {
             $("#rule_target_select").empty();
             $.each(data, function(index, value) {
-                  $("#rule_target_select").append(new Option("id-" + this.id + "---" + this.type, this.id)); //povoar os alvos com os ides e tipos dos elementos
+                  $("#rule_target_select").append(new Option(this.id + " --- " + this.type, this.id)); //povoar os alvos com os ides e tipos dos elementos
                   switch (this.type)
                   {
                         case "texto":
@@ -1017,11 +1042,14 @@ function pagescript_database(opcao, Id_script, Id_pagina, Pos)
       function(data)
       {
             if (opcao === "delete_page")
-                  update_pages();
+                  update_pages(function(){ $("#page_selector option:last-child").prop("selected",true);      });
             if (opcao === "add_script")
-                  update_script();
+                  update_script(function(){ $("#script_selector option:last-child").prop("selected",true);      });
             if (opcao === "add_page")
-                  update_pages();
+                  {
+                  update_pages(function(){ $("#page_selector option:last-child").prop("selected",true);      });
+           
+            }
             if (opcao === "delete_script") {
                   update_script();
             }
@@ -1103,9 +1131,10 @@ $("#copy_script_button").on("click", function()
       $.post("requests.php", {action: "duplicate_script", id_script: $("#script_selector option:selected").val(), nome_script: $("#script_selector option:selected").text()},
       function(data)
       {
-
+            update_script();
       }
       , "json");
+
 });
 
 $('#script_selector').change(function() {
