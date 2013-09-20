@@ -2305,7 +2305,7 @@ $talking_to_print = mysql_num_rows($rslt);
 
 	$callerids='';
 	$pausecode='';
-	$stmt="select callerid,lead_id,phone_number from vicidial_auto_calls;";
+	$stmt="select callerid,lead_id,phone_number from vicidial_auto_calls where campaign_id NOT IN ('CALLMENU');";
 	$rslt=mysql_query($stmt, $link);
 	if ($DB) {echo "$stmt\n";}
 	$calls_to_list = mysql_num_rows($rslt);
@@ -2414,7 +2414,7 @@ $talking_to_print = mysql_num_rows($rslt);
 			if ( (ereg("$VAClead_ids[$n]", $Alead_id[$j])) and (strlen($VAClead_ids[$n]) == strlen($Alead_id[$j])) )
 				{$custphone = $VACphones[$n];}
 			$n++;
-			}
+                        }
 
 		$phone_split = explode("-----",$Alogin[$j]);
 		$i = $phone_split[1];
