@@ -250,7 +250,7 @@ if ($_POST['nc_flag'] == "nc_post") {
                             <div class="control-group">
                                 <label class="control-label">CATO mais perto da área de residência do cliente</label>
                                 <div class="controls">
-                                    <select class="multiple-required consultorio chzn-select" id="consultorio" name="consultorio">
+                                    <select class="multiple-requiredconsultorio chzn-select" id="consultorio" name="consultorio">
                                         <option selected="" value="nenhum">Nenhum </option>
                                         <option value="C/AGD"> Águeda </option>
                                         <option value="C/ABF"> Albufeira </option>
@@ -334,7 +334,7 @@ if ($_POST['nc_flag'] == "nc_post") {
                             <div class="control-group">
                                 <label class="control-label">Consultorio mais perto da área de residencia do cliente</label>
                                 <div class="controls">
-                                    <select class="multiple-required consultoriodois chzn-select" id="consultoriodois" name="consultoriodois">
+                                    <select class="multiple-requiredconsultoriodois chzn-select" id="consultoriodois" name="consultoriodois">
                                         <option selected="" value="nenhum">Nenhum </option>
                                         <option value="B/ABN"> Consultório Abrantes </option>
                                         <option value="B/ALM"> Consultório Almada </option>
