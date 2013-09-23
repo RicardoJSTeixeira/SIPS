@@ -50,7 +50,7 @@
             </div>
 
             <div class="grid-content">
-                <legend>Recurso: <strong><?= $row[display_text] ?></strong></legend>
+                <legend>Recurso: <strong><?= $row["display_text"] ?></strong></legend>
 
                 <table id="schedulers" class='table table-mod-2'>
                     <thead>
@@ -66,9 +66,9 @@
                         while ($row = mysql_fetch_assoc($result)) {
                             ?>
                             <tr>
-                                <td><?= substr($row[start_date], 0, -3) ?></td>
-                                <td><?= substr($row[end_date], 0, -3) ?>
-                                    <div class="view-button"><span class='btn btn-mini' title='Eliminar' onclick='del(<?= $row[id_execao] ?>, this);' ><i class='icon-trash'></i>Eliminar</span></div>
+                                <td><?= substr($row["start_date"], 0, -3) ?></td>
+                                <td><?= substr($row["end_date"], 0, -3) ?>
+                                    <div class="view-button"><span class='btn btn-mini' title='Eliminar' onclick='del(<?= $row["id_execao"] ?>, this);' ><i class='icon-trash'></i>Eliminar</span></div>
                                 </td>
                             </tr>
                         <?php } ?>
