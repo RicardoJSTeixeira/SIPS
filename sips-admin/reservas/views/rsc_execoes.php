@@ -129,7 +129,7 @@
                                     $("#sch")[0].reset();
                                     otable.dataTable().fnAddData([data.beg,
                                         data.end +
-                                                "<div class='view-button'><span class='btn btn-mini' title='Eliminar' onclick=del(" + data.id + ", this) ><i class='icon-trash'></i>Eliminar</span></div>"]);
+                                                "<div class='view-button'><span class='btn btn-mini' title='Eliminar' onclick='del(\"" + data.id + "\", this)' ><i class='icon-trash'></i>Eliminar</span></div>"]);
                                 }, "json").fail(function() {
                                     showDialog("Sucedeu-se um erro.");
                                 });
