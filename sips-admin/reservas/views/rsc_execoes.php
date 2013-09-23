@@ -179,7 +179,7 @@
                         }
 
                         function del(nr, r) {
-                            confirma("Deseja eliminar a serie?").done(function() {
+                            confirma("Deseja eliminar a exepção?").done(function() {
                                 var nTr = otable.fnGetPosition($(r).closest("tr").get(0));
                                 $.post("../ajax/rsc_execoes_do.php", {
                                     nr: nr
