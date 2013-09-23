@@ -2,29 +2,28 @@
 for ($i = 0; $i < count(explode('/', $_SERVER['PHP_SELF'])) - 2; $i++) {$far.="../";}
 define("ROOT", $far);
 require(ROOT . "ini/header.php");
+require(ROOT . "ini/user.php");
+
+$user=new user;
+$where="";
+if($user->user_group!="ADMIN")
+{
+$where=" WHERE campaign_id in('".  implode("','", $user->allowed_campaigns)."')";    
+}
 
 $today = date("o-m-d");
 ##################################################
 $query = "	SELECT 	campaign_id, campaign_name 
-			FROM 	vicidial_campaigns";
-$query = mysql_query($query, $link);
+			FROM 	vicidial_campaigns $where";
+$query = mysql_query($query, $link) or die(mysql_error());
 
 $num_camps = mysql_num_rows($query);
 
-for ($i=0;$i<$num_camps;$i++)
-{
-	if ($i == 0) 
-	{
-	$row = mysql_fetch_assoc($query);
-	$camp_options .= "<option selected value=$row[campaign_id]>$row[campaign_name]</option>";
-	}
-	else
-	{
+while ($row1 = mysql_fetch_assoc($query)) {
 	$row = mysql_fetch_assoc($query);
 	$camp_options .= "<option value=$row[campaign_id]>$row[campaign_name]</option>";
-	}
-	
 }
+
 ##################################################
 ?>
 </head>
