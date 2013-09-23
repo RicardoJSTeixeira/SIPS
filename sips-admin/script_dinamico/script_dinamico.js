@@ -338,13 +338,11 @@ function update_script(callback)
       $.post("requests.php", {action: "get_scripts"},
       function(data)
       {
-
             if (!Object.size(data))
             {
                   $("#page_selector_div button").prop('disabled', true);
                   $("#opcao_script_button").prop('disabled', true);
                   $("#script_remove_button").prop('disabled', true);
-
                   $("#script_selector").empty();
                   $("#page_selector").empty();
                   $(".leftDiv").empty();
