@@ -50,7 +50,7 @@
             </div>
 
             <div class="grid-content">
-                <legend>Recurso: <strong><?= $row[display_text] ?></strong></legend>
+                <legend>Recurso: <strong><?= $row["display_text"] ?></strong></legend>
 
                 <table id="schedulers" class='table table-mod-2'>
                     <thead>
@@ -66,9 +66,9 @@
                         while ($row = mysql_fetch_assoc($result)) {
                             ?>
                             <tr>
-                                <td><?= substr($row[start_date], 0, -3) ?></td>
-                                <td><?= substr($row[end_date], 0, -3) ?>
-                                    <div class="view-button"><span class='btn btn-mini' title='Eliminar' onclick='del(<?= $row[id_execao] ?>, this);' ><i class='icon-trash'></i>Eliminar</span></div>
+                                <td><?= substr($row["start_date"], 0, -3) ?></td>
+                                <td><?= substr($row["end_date"], 0, -3) ?>
+                                    <div class="view-button"><span class='btn btn-mini' title='Eliminar' onclick='del(<?= $row["id_execao"] ?>, this);' ><i class='icon-trash'></i>Eliminar</span></div>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -129,7 +129,7 @@
                                     $("#sch")[0].reset();
                                     otable.dataTable().fnAddData([data.beg,
                                         data.end +
-                                                "<div class='view-button'><span class='btn btn-mini' title='Eliminar' onclick=del(" + data.id + ", this) ><i class='icon-trash'></i>Eliminar</span></div>"]);
+                                                "<div class='view-button'><span class='btn btn-mini' title='Eliminar' onclick='del(\"" + data.id + "\", this)' ><i class='icon-trash'></i>Eliminar</span></div>"]);
                                 }, "json").fail(function() {
                                     showDialog("Sucedeu-se um erro.");
                                 });
@@ -179,7 +179,7 @@
                         }
 
                         function del(nr, r) {
-                            confirma("Deseja eliminar a serie?").done(function() {
+                            confirma("Deseja eliminar a exepção?").done(function() {
                                 var nTr = otable.fnGetPosition($(r).closest("tr").get(0));
                                 $.post("../ajax/rsc_execoes_do.php", {
                                     nr: nr
@@ -191,8 +191,8 @@
                                         showDialog("Sucedeu-se um erro.");
                                 }, "json").fail(function() {
                                     showDialog("Sucedeu-se um erro.");
-                                })
-                            })
+                                });
+                            });
                         }
         </script>
 
