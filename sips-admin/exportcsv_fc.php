@@ -1,9 +1,13 @@
 <?
 
-require('dbconnect_noutf8.php');
+
+require('../ini/dbconnect.php');
 require('functions.php');
 header('Content-Type: text/csv; charset=utf-8');
 header('Content-Disposition: attachment; filename=data_new.csv');
+
+echo "\xEF\xBB\xBF";
+
 if (isset($_POST['camp_options'])) {
     $campanhas = $_POST['camp_options'];
 }
