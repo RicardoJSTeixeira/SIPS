@@ -191,8 +191,8 @@
                                         showDialog("Sucedeu-se um erro.");
                                 }, "json").fail(function() {
                                     showDialog("Sucedeu-se um erro.");
-                                })
-                            })
+                                });
+                            });
                         }
         </script>
 
