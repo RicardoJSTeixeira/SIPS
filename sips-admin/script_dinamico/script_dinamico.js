@@ -1017,7 +1017,7 @@ function insert_element(opcao, element, data)
                   }
                   break;
             case "datepicker":
-                  element.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
+                  element.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii',autoclose:true,language:"pt"});
                   element.find(".label_geral")[0].innerHTML = data.texto;
                   break;
             case "scheduler":

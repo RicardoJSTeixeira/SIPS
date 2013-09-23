@@ -226,7 +226,7 @@ function update_info()
             tags();
 
             $(".pag_div").hide().first().show();
-            $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true}).keypress(function(e) {
+            $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true,language:"pt"}).keypress(function(e) {
                   e.preventDefault();
             }).bind("cut copy paste", function(e) {
                   e.preventDefault();
