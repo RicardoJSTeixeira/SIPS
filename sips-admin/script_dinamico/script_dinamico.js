@@ -23,13 +23,16 @@
 
 
 
+//falta required ou metodo de validação nas regras quando os selects por vezes vao vazios
 
-//tags individuais por scripts
+//duplicar script - falta regras, dependente da criação das tags
+//tags individuais por scripts-working
 
 
 var temp_value_holder = "";
 var current_page_pos = 0;
 var selected_id = 0;
+var selected_tag = 0
 var selected_type = "";
 var array_id = [];
 var regex_remove_blank = /^\s*$[\n\r]{1,}/gm;
@@ -134,7 +137,7 @@ $(function() {
                   },
                   beforeStop: function(event, ui) {
                         if (removeIntent == true) {
-                              item_database("delete_item", $(this).data().uiSortable.currentItem.attr("id"), 0, 0, 0, $(this).data().uiSortable.currentItem.index(), 0, 0, 0, 0, 0, 0);
+                              item_database("delete_item", $(this).data().uiSortable.currentItem.attr("id"), 0, 0, 0, 0, $(this).data().uiSortable.currentItem.index(), 0, 0, 0, 0, 0, 0);
                               ui.item.remove();
                               editor_toggle("off");
                               $("#rule_target_select option[value=" + $(this).data().uiSortable.currentItem.attr("id") + "] ").remove();
@@ -145,7 +148,7 @@ $(function() {
                         var items = $(".leftDiv  .item");
                         for (var count = 0; count < items.length; count++)
                         {
-                              item_database("edit_item_order", items[count].id, 0, 0, 0, $("#" + items[count].id).index(), 0, 0, 0, 0, 0, 0, 0);
+                              item_database("edit_item_order", items[count].id, 0, 0, 0, 0, $("#" + items[count].id).index(), 0, 0, 0, 0, 0, 0, 0);
                         }
                         editor_toggle("off");
                   },
@@ -153,43 +156,43 @@ $(function() {
 
                         if ($(this).data().uiSortable.currentItem.hasClass("texto_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .texto_class .label_texto")[0].innerHTML, $(".rightDiv .texto_class .input_texto")[0].placeholder, $(".rightDiv .texto_class .input_texto")[0].maxLength, 0, 0, 0, "normal");
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .texto_class .label_texto")[0].innerHTML, $(".rightDiv .texto_class .input_texto")[0].placeholder, $(".rightDiv .texto_class .input_texto")[0].maxLength, 0, 0, 0, "normal");
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("pagination_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "pagination", $(this).data().uiSortable.currentItem.index(), "h", 0, 0, 0, 0, 0, 0, 0);
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "pagination", $(this).data().uiSortable.currentItem.index(), "h", 0, 0, 0, 0, 0, 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("radio_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_radio")[0].innerHTML, 0, 0, ["Valor1"], 0, 0, 0);
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_radio")[0].innerHTML, 0, 0, ["Valor1"], 0, 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("checkbox_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "checkbox", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_checkbox")[0].innerHTML, 0, 0, ["Valor1"], 0, 0, 0);
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "checkbox", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_checkbox")[0].innerHTML, 0, 0, ["Valor1"], 0, 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("multichoice_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_multichoice")[0].innerHTML, 0, 0, ["Opção1"], 0, 0, 0);
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_multichoice")[0].innerHTML, 0, 0, ["Opção1"], 0, 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("textfield_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", $(this).data().uiSortable.currentItem.index(), "h", "textfield", 0, 0, $(".rightDiv .label_textfield")[0].innerHTML, 0, 0, 0);
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", $(this).data().uiSortable.currentItem.index(), "h", "textfield", 0, 0, $(".rightDiv .label_textfield")[0].innerHTML, 0, 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("tableradio_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", $(this).data().uiSortable.currentItem.index(), "h", "tableradio", ["mau", "médio", "bom"], 0, ["pergunta1"], 0, 0, 0);
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", $(this).data().uiSortable.currentItem.index(), "h", "tableradio", ["mau", "médio", "bom"], 0, ["pergunta1"], 0, 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("legend_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "legend", $(this).data().uiSortable.currentItem.index(), "h", "legend", 0, 0, $(".rightDiv .label_legend")[0].innerHTML, 0, 0, 0);
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "legend", $(this).data().uiSortable.currentItem.index(), "h", "legend", 0, 0, $(".rightDiv .label_legend")[0].innerHTML, 0, 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("datepicker_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_datepicker")[0].innerHTML, 0, 0, 0, 0, 0, 0);
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_datepicker")[0].innerHTML, 0, 0, 0, 0, 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("scheduler_class"))
                         {
-                              item_database("add_item", 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_scheduler")[0].innerHTML, 0, 0, [], 0, 0, 1);
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_scheduler")[0].innerHTML, 0, 0, [], 0, 0, 1);
                         }
                         editor_toggle("off");
                   }
@@ -211,8 +214,6 @@ $(function() {
                   });
                   $("#script_linha_inbound_selector").chosen(({no_results_text: "Sem resultados"}));
 
-
-
 //VERIFICAR SÉ É CLOUD
                   $.post("requests.php", {action: "iscloud"},
                   function(data4)
@@ -222,8 +223,6 @@ $(function() {
                         else
                               $(".linha_inbound_div").show();
                   }, "json");
-
-
             }, "json");
 
 
@@ -239,10 +238,21 @@ $(function() {
                   });
                   $("#scheduler_edit_select").val("").trigger("liszt:updated");
             }, "json");
+
+
+
+
+
+
+
             //--------------------------------------//
             editor_toggle("off");
             update_script();
-            // item_database("get_tag_fields", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+
+
+
+
       });
 
       $("#tag_label").text("§nome§");
@@ -250,6 +260,7 @@ $(function() {
 
       $(document).on("click", ".element", function(e) {
             selected_id = $(this).data("id");
+            selected_tag = $(this).data("tag");
             selected_type = $(this).data("type");
             editor_toggle("on");
             $(this).addClass("helperPick"); //class HelperPick
@@ -301,7 +312,7 @@ $(function() {
       });
       $(document).on("click", ".rule_delete_icon", function(e) {
             rules_database("delete_rule", $(this).data("id"), 0, 0, 0, 0, 0, 0, 0, 0);
-            rules_database("get_rules_by_trigger", 0, 0, 0, selected_id, 0, 0, 0, 0, 0);
+            rules_database("get_rules_by_trigger", 0, $("#script_selector option:selected").val(), 0, selected_tag, 0, 0, 0, 0, 0);
       });
 });
 //UPDATES DE INFO
@@ -317,7 +328,7 @@ Object.size = function(a)
                   count++;
             }
       }
- 
+
       return count;
 };
 function update_script(callback)
@@ -350,10 +361,34 @@ function update_script(callback)
                         else
                               $("#script_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
                   });
-                if(typeof callback==="function")
+                  if (typeof callback === "function")
                         callback();
                   update_pages();
             }
+
+
+
+
+            $.post("requests.php", {action: "get_tag_fields", id_script: $("#script_selector option:selected").val()},
+            function(data4)
+            {
+                  $("#tags_select .tag_group").remove();
+                  $.each(data4, function() {
+                        $("#tags_select").append("<optgroup class='tag_group' label='" + this.text + "'></optgroup>");
+                        var temp = "";
+                        $.each(this.lista, function() {
+                              temp = temp + "<option value='" + this.value + "'>" + this.name + "</option>";
+                        });
+                        $("#tags_select optgroup:last").append(temp);
+                  });
+                  $("#tags_select").val("").trigger("liszt:updated");
+            }
+
+            , "json");
+
+
+
+
       }, "json");
 }
 function update_pages(callback)
@@ -386,11 +421,11 @@ function update_pages(callback)
 
                         $("#go_to_select").append(new Option(this.name, this.id));
                   });
-                  
-                  
-                  if(typeof callback==="function")
+
+
+                  if (typeof callback === "function")
                         callback();
-                  
+
                   update_info();
             }
       }, "json");
@@ -404,13 +439,15 @@ function update_info()
       {
             $("#rule_target_select").empty();
             $.each(data, function(index, value) {
-                  $("#rule_target_select").append(new Option(this.id + " --- " + this.type, this.id)); //povoar os alvos com os ides e tipos dos elementos
+                  $("#rule_target_select").append(new Option(this.tag + " --- " + this.type, this.tag)); //povoar os alvos com os ides e tipos dos elementos
+              
                   switch (this.type)
                   {
                         case "texto":
                               var item = $('.rightDiv .texto_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
+                                      .data("tag", this.tag)
                                       .addClass("element")
                                       .data("type", "texto")
                                       .data("required", this.required)
@@ -423,6 +460,7 @@ function update_info()
                               var item = $('.rightDiv .pagination_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
+                                      .data("tag", this.tag)
                                       .data("type", "pagination");
                               insert_element("pagination", item, this);
                               item.appendTo('.leftDiv');
@@ -431,6 +469,7 @@ function update_info()
                               var item = $('.rightDiv .radio_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
+                                      .data("tag", this.tag)
                                       .addClass("element")
                                       .data("type", "radio")
                                       .data("required", this.required)
@@ -443,6 +482,7 @@ function update_info()
                               var item = $('.rightDiv .checkbox_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
+                                      .data("tag", this.tag)
                                       .addClass("element")
                                       .data("type", "checkbox")
                                       .data("required", this.required)
@@ -455,6 +495,7 @@ function update_info()
                               var item = $('.rightDiv .multichoice_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
+                                      .data("tag", this.tag)
                                       .addClass("element")
                                       .data("type", "multichoice")
                                       .data("required", this.required)
@@ -466,6 +507,7 @@ function update_info()
                               var item = $('.rightDiv .textfield_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
+                                      .data("tag", this.tag)
                                       .addClass("element")
                                       .data("type", "textfield")
                                       .data("required", this.required)
@@ -477,6 +519,7 @@ function update_info()
                               var item = $('.rightDiv .legend_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
+                                      .data("tag", this.tag)
                                       .addClass("element")
                                       .data("type", "legend")
                                       .data("required", this.required)
@@ -488,6 +531,7 @@ function update_info()
                               var item = $('.rightDiv .tableradio_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
+                                      .data("tag", this.tag)
                                       .addClass("element")
                                       .data("type", "tableradio")
                                       .data("required", this.required)
@@ -499,6 +543,7 @@ function update_info()
                               var item = $('.rightDiv .datepicker_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
+                                      .data("tag", this.tag)
                                       .addClass("element")
                                       .data("type", "datepicker")
                                       .data("required", this.required)
@@ -510,6 +555,7 @@ function update_info()
                               var item = $('.rightDiv .scheduler_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
+                                      .data("tag", this.tag)
                                       .addClass("element")
                                       .data("type", "scheduler")
                                       .data("required", this.required)
@@ -524,7 +570,10 @@ function update_info()
 }
 
 
-
+function validate_manual()
+{
+      return $("#rule_form").validationEngine('validate');
+}
 
 
 function populate_element(tipo, element)
@@ -538,7 +587,7 @@ function populate_element(tipo, element)
             $("#item_hidden").attr('checked', true);
       else
             $("#item_hidden").attr('checked', false);
-      $("#label_tag").text("@" + element.data("id") + "@");
+      $("#label_tag").text("@" + element.data("tag") + "@");
       rules_manager(tipo, element);
       $("#tabs").tabs("enable");
       switch (tipo)
@@ -654,7 +703,7 @@ function populate_element(tipo, element)
                   $("#scheduler_edit_select").val(values).trigger("liszt:updated");
                   break;
       }
-      rules_database("get_rules_by_trigger", 0, 0, 0, element.data("id"), 0, 0, 0, 0, 0);
+      rules_database("get_rules_by_trigger", 0, $("#script_selector option:selected").val(), 0, element.data("tag"), 0, 0, 0, 0, 0);
 }
 
 function edit_element(opcao, element, data)
@@ -669,7 +718,7 @@ function edit_element(opcao, element, data)
                   element.find(".input_texto")[0].placeholder = $("#placeholder_edit").val();
                   element.find(".input_texto")[0].maxLength = $("#max_length_edit").val();
                   element.data("regex", $(".validation input:radio[name='regex_texto']:checked").val());
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
+                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
                   break;
             case "radio":
                   if ($("#vertic_radio").is(':checked'))
@@ -700,7 +749,7 @@ function edit_element(opcao, element, data)
                               element.append($("<br>"));
                         array_id["radio"] = array_id["radio"] + 1;
                   }
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", element.index(), element.data("dispo"), $("#radio_edit").val(), 0, 0, radios, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", element.index(), element.data("dispo"), $("#radio_edit").val(), 0, 0, radios, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   break;
             case "checkbox":
                   if ($("#vertic_checkbox").is(':checked'))
@@ -731,7 +780,7 @@ function edit_element(opcao, element, data)
                               element.append($("<br>"));
                         array_id["checkbox"] = array_id["checkbox"] + 1;
                   }
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "checkbox", element.index(), element.data("dispo"), $("#checkbox_edit").val(), 0, 0, checkboxs, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "checkbox", element.index(), element.data("dispo"), $("#checkbox_edit").val(), 0, 0, checkboxs, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   break;
             case "multichoice":
                   element.empty();
@@ -750,17 +799,17 @@ function edit_element(opcao, element, data)
                   {
                         select.append("<option value='" + multichoices[count] + "'>" + multichoices[count] + "</option>");
                   }
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", element.index(), "h", $("#multichoice_edit").val(), 0, 0, multichoices, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", element.index(), "h", $("#multichoice_edit").val(), 0, 0, multichoices, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   break;
             case "textfield":
                   $("#textfield_edit").val($("#textfield_edit").val().replace(regex_text, ''));
                   element.find(".label_geral")[0].innerHTML = $("#textfield_edit").val();
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", element.index(), "h", "textfield", 0, 0, $("#textfield_edit").val(), false, $("#item_hidden").is(':checked'));
+                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", element.index(), "h", "textfield", 0, 0, $("#textfield_edit").val(), false, $("#item_hidden").is(':checked'));
                   break;
             case "legend":
                   $("#legend_edit").val($("#legend_edit").val().replace(regex_text, ''));
                   element.find(".label_geral")[0].innerHTML = $("#legend_edit").val();
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "legend", element.index(), "h", "legend", 0, 0, $("#legend_edit").val(), false, $("#item_hidden").is(':checked'));
+                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "legend", element.index(), "h", "legend", 0, 0, $("#legend_edit").val(), false, $("#item_hidden").is(':checked'));
                   break;
             case "tableradio":
                   element.find(".label_geral")[0].innerHTML = $("#tableradio_edit").val();
@@ -801,12 +850,12 @@ function edit_element(opcao, element, data)
                               array_id["radio"] = array_id["radio"] + 1;
                         }
                   }
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", element.index(), "h", $("#tableradio_edit").val(), titulos, 0, perguntas, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", element.index(), "h", $("#tableradio_edit").val(), titulos, 0, perguntas, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   break;
             case "datepicker":
                   $("#datepicker_edit").val($("#datepicker_edit").val().replace(regex_replace_textbox_tag, ''));
                   element.find(".label_geral")[0].innerHTML = $("#datepicker_edit").val();
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", element.index(), "h", $("#datepicker_edit").val(), 0, 0, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", element.index(), "h", $("#datepicker_edit").val(), 0, 0, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   break;
             case "scheduler":
                   var options = $("#scheduler_edit_select > option:selected").clone();
@@ -822,7 +871,7 @@ function edit_element(opcao, element, data)
                         select.append(options);
                   $("#scheduler_edit").val($("#scheduler_edit").val().replace(regex_replace_textbox_tag, ''));
                   element.find(".label_geral")[0].innerHTML = $("#scheduler_edit").val();
-                  item_database("edit_item", selected_id, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), "0", 0, valores, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $("#scheduler_edit_marcação option:selected").val());
+                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), "0", 0, valores, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $("#scheduler_edit_marcação option:selected").val());
                   break;
       }
 
@@ -831,7 +880,7 @@ function edit_element(opcao, element, data)
       element.prepend($("<div>").css("float", "right").addClass("div_info_item span1"));
       var temp = element.find(".div_info_item");
       //ids nos elementos
-      temp.append($("<label>").addClass("label label-inverse label_id_item").text(element.data("id")));
+      temp.append($("<label>").addClass("label label-inverse label_id_item").text(element.data("tag")));
       if ($("#item_required").is(':checked'))
       {
             element.data("required", true);
@@ -862,6 +911,7 @@ function edit_element(opcao, element, data)
 
 function insert_element(opcao, element, data)
 {
+     
       switch (opcao)
       {
             case "texto":
@@ -986,7 +1036,7 @@ function insert_element(opcao, element, data)
       element.prepend($("<div>").css("float", "right").addClass("div_info_item span1"));
       var temp = element.find(".div_info_item");
       //IDs nos elementos 
-      temp.append($("<label>").addClass("label label-inverse label_id_item").text(data.id));
+      temp.append($("<label>").addClass("label label-inverse label_id_item").text(data.tag));
       if (data.required)
             temp.append($("<i>").addClass("icon-star required_icon info_icon"));
       if (opcao != "pagination")
@@ -1004,10 +1054,11 @@ function insert_element(opcao, element, data)
 
 
 
-function item_database(opcao, Id, Id_script, Id_page, Type, Ordem, Dispo, Texto, Placeholder, Max_length, Values_text, Required, Hidden, Param1)
+function item_database(opcao, Id, Tag, Id_script, Id_page, Type, Ordem, Dispo, Texto, Placeholder, Max_length, Values_text, Required, Hidden, Param1)
 {
       $.post("requests.php", {action: opcao,
             id: Id,
+            tag: Tag,
             id_script: Id_script,
             id_page: Id_page,
             type: Type,
@@ -1022,13 +1073,7 @@ function item_database(opcao, Id, Id_script, Id_page, Type, Ordem, Dispo, Texto,
             param1: Param1},
       function(data)
       {
-            if (opcao === "get_tag_fields")
-            {
-                  $("#tag_label").text("§" + data[0].value + "§");
-                  $.each(data, function(index, value) {
-                        $("#tags_select").append("<option value='" + this.value + "'>" + this.name + "</option>");
-                  });
-            }
+
 
             if (opcao === "add_item")
                   update_info();
@@ -1042,13 +1087,19 @@ function pagescript_database(opcao, Id_script, Id_pagina, Pos)
       function(data)
       {
             if (opcao === "delete_page")
-                  update_pages(function(){ $("#page_selector option:last-child").prop("selected",true);      });
+                  update_pages(function() {
+                        $("#page_selector option:last-child").prop("selected", true);
+                  });
             if (opcao === "add_script")
-                  update_script(function(){ $("#script_selector option:last-child").prop("selected",true);      });
+                  update_script(function() {
+                        $("#script_selector option:last-child").prop("selected", true);
+                  });
             if (opcao === "add_page")
-                  {
-                  update_pages(function(){ $("#page_selector option:last-child").prop("selected",true);      });
-           
+            {
+                  update_pages(function() {
+                        $("#page_selector option:last-child").prop("selected", true);
+                  });
+
             }
             if (opcao === "delete_script") {
                   update_script();
@@ -1255,9 +1306,9 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
             id: Id,
             id_script: Id_script,
             tipo_elemento: Tipo_elemento,
-            id_trigger: Id_trigger,
-            id_trigger2: Id_trigger2,
-            id_target: Id_target,
+            tag_trigger: Id_trigger,
+            tag_trigger2: Id_trigger2,
+            tag_target: Id_target,
             tipo: Tipo,
             param1: Param1,
             param2: Param2},
@@ -1283,20 +1334,34 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
                         }
 
                         $("#rule_table").show();
-                        if (this.id_trigger2 == "0")
-                              this.id_trigger2 = "resposta"; //por questões visuais na tabela
+                        if (this.tag_trigger2 == "1")
+                              this.tag_trigger2 = "resposta"; //por questões visuais na tabela
 
-                        $("#rule_manager_list").append($("<tr>")
-                                .append($("<td>").text(this.id_trigger2))
-                                .append($("<td>").text(this.tipo))
-                                .append($("<td>").text(this.id_target))
-                                .append($("<td>").append($("<button>").addClass("icon-remove rule_delete_icon btn btn-inverse span").data("id", this.id).data("id_trigger", this.id_trigger)))
-                                );
+
+                        if (this.tipo == "ir para página")
+                        {   $("#rule_manager_list").append($("<tr>")
+                                      .append($("<td>").text(this.tag_trigger2))
+                                      .append($("<td>").text(this.tipo))
+                                      .append($("<td>").text(  $("#go_to_select option[value="+ this.param2+"]").text()))
+                                      .append($("<td>").append($("<button>").addClass("icon-remove rule_delete_icon btn btn-inverse span").data("id", this.id).data("tag_trigger", this.tag_trigger)))
+                                      );
+                        }
+                        else
+                        {
+                              $("#rule_manager_list").append($("<tr>")
+                                      .append($("<td>").text(this.tag_trigger2))
+                                      .append($("<td>").text(this.tipo))
+                                      .append($("<td>").text(this.tag_target))
+                                      .append($("<td>").append($("<button>").addClass("icon-remove rule_delete_icon btn btn-inverse span").data("id", this.id).data("tag_trigger", this.tag_trigger)))
+                                      );
+                        }
+
+
                   });
             }
             if (opcao === "add_rules")
             {
-                  rules_database("get_rules_by_trigger", 0, 0, 0, selected_id, 0, 0, 0, 0, 0);
+                  rules_database("get_rules_by_trigger", 0, $("#script_selector option:selected").val(), 0, selected_tag, 0, 0, 0, 0, 0);
             }
       }
       , "json");
@@ -1334,69 +1399,70 @@ $(".values_edit_textarea").on("blur", function()
 
 
 
-
-
-
 $("#open_rule_creator").click(function()//Fecha o dialog e grava as alterações
 {
       $("#rule_creator").toggle(800);
 });
 $("#add_rule_button").click(function()
 {
+      
+if(validate_manual())
       switch (selected_type)
       {
             case "texto":
                   switch ($("#rule_trigger_select").val())
                   {
                         case "answer":
+                              
+                              
                               if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, 0, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
                               else
-                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, 0, 0, $("#regra_select").val(), "answer", $("#go_to_select").val());
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, 1, $("#regra_select").val(), "answer", $("#go_to_select").val());
                               break;
                         case "value_input":
                               if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_input").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_input", "0");
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_input").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_input", "0");
                               else
-                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_input").val(), 0, $("#regra_select").val(), "value_input", $("#go_to_select").val());
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_input").val(), 0, $("#regra_select").val(), "value_input", $("#go_to_select").val());
                               break;
                   }
                   break;
             case "radio":
                   if ($("#rule_trigger_select").val() === "value_select")
                         if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
+                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
                         else
-                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val(), 0, $("#regra_select").val(), "value_select", $("#go_to_select").val());
+                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), 0, $("#regra_select").val(), "value_select", $("#go_to_select").val());
                   break;
             case "checkbox":
                   if ($("#rule_trigger_select").val() === "value_select")
                         if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
+                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
                         else
-                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val(), 0, $("#regra_select").val(), "value_select", $("#go_to_select").val());
+                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), 0, $("#regra_select").val(), "value_select", $("#go_to_select").val());
                   break;
             case"multichoice":
                   if ($("#rule_trigger_select").val() === "value_select")
                         if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
+                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
                         else
-                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val(), 0, $("#regra_select").val(), "value_select", $("#go_to_select").val());
+                              rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), 0, $("#regra_select").val(), "value_select", $("#go_to_select").val());
                   break;
             case "tableradio":
                   switch ($("#rule_trigger_select").val())
                   {
                         case "answer":
                               if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, 0, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
                               else
-                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, 0, 0, $("#regra_select").val(), "answer", $("#go_to_select").val());
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, 1, $("#regra_select").val(), "answer", $("#go_to_select").val());
                               break;
                         case "value_select":
                               if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
                               else
-                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, $("#rules_valor_select").val(), 0, $("#regra_select").val(), "value_select", $("#go_to_select").val());
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), 0, $("#regra_select").val(), "value_select", $("#go_to_select").val());
                               break;
                   }
                   break;
@@ -1405,9 +1471,9 @@ $("#add_rule_button").click(function()
                   {
                         case "answer":
                               if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, 0, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
                               else
-                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_id, 0, 0, $("#regra_select").val(), "answer", $("#go_to_select").val());
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, 1, $("#regra_select").val(), "answer", $("#go_to_select").val());
                               break;
                   }
                   break;
