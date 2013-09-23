@@ -9,7 +9,8 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 
-$user = new user;
+$user = new users;
+
 $js = array();
 switch ($action) {
     //------------------------------------------------//    
@@ -37,18 +38,18 @@ switch ($action) {
 
 
     case "get_client_info_by_lead_id":
-       $js=array();
+        $js = array();
         $query = "SELECT first_name,phone_number,alt_phone,address1,address3,postal_code,email,comments from vicidial_list where lead_id='$lead_id'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array("nome" => $row["first_name"], "telefone" => $row["phone_number"], "telefone_alt" => $row["alt_phone"], "morada" => $row["address1"], "telefone_alt2" => $row["address3"], "codigo_postal" => $row["postal_code"], "email" => $row["email"], "comentario" => $row["comments"]);
+            $js = array("nome" => $row["first_name"], "telefone" => $row["phone_number"], "telefone_alt" => $row["alt_phone"], "morada" => $row["address1"], "telefone_alt2" => $row["address3"], "codigo_postal" => $row["postal_code"], "email" => $row["email"], "comentario" => $row["comments"], "nome_operador"=>$user->getUser($user_logged));
         }
-        
-         if (sizeof($js) < 1) {
-              $js[] = array("nome" => "//Nome do cliente//", "telefone" => "//telefone do cliente//", "telefone_alt" => "//Telefone alternativo do cliente//", "morada" => "//morada do cliente//", "telefone_alt2" =>"//Telefone alternativo2 do cliente//", "codigo_postal" => "//codigo postal do cliente//", "email" => "//email do cliente//", "comentario" => "//comentarios//");
-         }
-        
-        
+
+        if (sizeof($js) < 1) {
+            $js = array("nome" => "//Nome do cliente//", "telefone" => "//telefone do cliente//", "telefone_alt" => "//Telefone alternativo do cliente//", "morada" => "//morada do cliente//", "telefone_alt2" => "//Telemóvel do cliente//", "codigo_postal" => "//codigo postal do cliente//", "email" => "//email do cliente//", "comentario" => "//comentarios//", "nome_operador"=>"//nome do operador//");
+        }
+
+
         echo json_encode($js);
         break;
 
@@ -255,24 +256,19 @@ switch ($action) {
             $query = mysql_query($query, $link) or die(mysql_error());
         }
 
-        echo json_encode(array(1));
+        echo json_encode(1);
         break;
 
     case "edit_page":
-        $query = "update script_dinamico_pages set pos=$old_pos where pos=$new_pos";
+        $query = "update script_dinamico_pages set pos=$old_pos where pos=$new_pos and  id_script=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
+
+
         $query = "update script_dinamico_pages set name='$name',pos=$new_pos where id=$id_pagina";
         $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
-        break;
 
 
-
-
-
-        $query = "update script_dinamico_pages set pos='$pos' where id=$id";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
+        echo json_encode(1);
         break;
 
 
@@ -280,7 +276,7 @@ switch ($action) {
         $values_text = (!isset($values_text)) ? array() : $values_text;
         $query = "UPDATE script_dinamico SET id_script=$id_script,id_page=$id_page,type='$type',ordem=$ordem,dispo='$dispo',texto='$texto',placeholder='" . mysql_real_escape_string(json_encode($placeholder)) . "',max_length=$max_length,values_text='" . mysql_real_escape_string(json_encode($values_text)) . "',required=$required,hidden=$hidden,param1='$param1' WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
+        echo json_encode(1);
         break;
 
 
@@ -288,7 +284,7 @@ switch ($action) {
     case "edit_item_order":
         $query = "UPDATE script_dinamico SET ordem=$ordem WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
+        echo json_encode(1);
         break;
     //------------------------------------------------//
     //-----------------ADD----------------------------//
@@ -296,13 +292,16 @@ switch ($action) {
     case "add_page":
         $query = "INSERT INTO `asterisk`.`script_dinamico_pages` (id,id_script,name,pos) VALUES (NULL,$id_script,'Página nova',$pos)";
         $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
+        echo json_encode(1);
         break;
 
     case "add_script":
         $query = "INSERT INTO `asterisk`.`script_dinamico_master` (id,name,user_group) VALUES (NULL,'Script novo','$user->user_group')";
         $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
+
+        $query = "INSERT INTO `asterisk`.`script_dinamico_pages` (id,id_script,name,pos) VALUES (NULL," . mysql_insert_id() . ",'Página nova','0')";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        echo json_encode(1);
         break;
 
     case "add_item":
@@ -317,8 +316,30 @@ switch ($action) {
     case "add_rules":
         $query = "INSERT INTO `asterisk`.`script_rules` (id,id_script,tipo_elemento,id_trigger,id_trigger2,id_target,tipo,param1,param2) VALUES (NULL,$id_script,'$tipo_elemento',$id_trigger,'" . mysql_real_escape_string(json_encode($id_trigger2)) . "','" . mysql_real_escape_string(json_encode($id_target)) . "','$tipo','$param1','$param2')";
         $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
+        echo json_encode(1);
         break;
+
+
+    case "duplicate_script":
+        //script
+        $query = "INSERT INTO script_dinamico_master (id,name,user_group) VALUES (NULL,'$nome_script duplicado','$user->user_group')";
+        $query = mysql_query($query, $link) or die(mysql_error());
+
+        $temp_script_page = mysql_insert_id();
+
+        $query = "SELECT id,id_script,name,pos FROM script_dinamico_pages where id_script=$id_script";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            //pages
+            $query1 = "INSERT INTO script_dinamico_pages (id,id_script,name,pos) values(NULL, $temp_script_page,'" . $row['name'] . "','" . $row['pos'] . "')";
+            $query1 = mysql_query($query1, $link) or die(mysql_error());
+            //elements
+            $query1 = "INSERT INTO script_dinamico (`id`, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required,hidden,param1) select NULL,'$temp_script_page','" . mysql_insert_id() . "',type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required,hidden,param1 from script_dinamico where id_script='$id_script' and id_page= '" . $row['id'] . "'  ";
+            $query1 = mysql_query($query1, $link) or die(mysql_error());
+        }
+        echo json_encode(1);
+        break;
+
     //------------------------------------------------//
     //-----------------DELETE-------------------------//
     //------------------------------------------------//
@@ -341,7 +362,7 @@ switch ($action) {
         }
         $query = "delete from  script_dinamico where id_page=$id_pagina";
         $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
+        echo json_encode(1);
         break;
 
     case "delete_item":
@@ -351,7 +372,7 @@ switch ($action) {
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "delete from script_rules where id_trigger=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
+        echo json_encode(1);
         break;
 
     case "delete_script":
@@ -365,13 +386,13 @@ switch ($action) {
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "delete from script_rules where id_script=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
+        echo json_encode(1);
         break;
 
     case "delete_rule":
         $query = "delete from script_rules  where id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
+        echo json_encode(1);
         break;
     //------------------------------------------------//
     //-----------------FORM---------------------------//
@@ -384,7 +405,7 @@ switch ($action) {
         }
         $query = "INSERT INTO `script_result`(`id`,id_script,user_id,unique_id,campaign_id,lead_id, `id_elemento`, `valor`) VALUES " . implode(',', $sql);
         $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(array(1));
+        echo json_encode(1);
         break;
 }
 ?>
