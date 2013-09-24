@@ -11,6 +11,7 @@ class user {
     public $allowed_campaigns;
     public $allowed_campaigns_raw;
     public $is_all_campaigns = FALSE;
+    public $is_script_dinamico = FALSE;
 
     public function __construct($username = "", $password = "") {
         if (!strlen($username)) {
@@ -23,7 +24,7 @@ class user {
 
         global $link;
         if ($this->id) {
-            $query = mysql_query("Select a.user_group,full_name,user_level,allowed_campaigns,active from vicidial_users a left join vicidial_user_groups b on a.user_group=b.user_group Where user='$this->id' AND pass='$this->password'") or die(mysql_error());
+            $query = mysql_query("Select a.user_group,full_name,user_level,allowed_campaigns,active,agent_fullscreen from vicidial_users a left join vicidial_user_groups b on a.user_group=b.user_group Where user='$this->id' AND pass='$this->password'") or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
                 $this->full_name = $row["full_name"];
                 $this->active = $row["active"] == "Y";
@@ -32,6 +33,7 @@ class user {
                 $this->allowed_campaigns_raw = $row["allowed_campaigns"];
                 $this->is_all_campaigns = preg_match("/-ALL-CAMPAIGNS-/", $this->allowed_campaigns_raw);
                 $this->allowed_campaigns = explode(" ", trim(rtrim($this->allowed_campaigns_raw, " -")));
+                $this->is_script_dinamico = $row["agent_fullscreen"] == "Y";
             }
         }
     }
