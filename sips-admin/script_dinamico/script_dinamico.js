@@ -32,14 +32,14 @@
 var temp_value_holder = "";
 var current_page_pos = 0;
 var selected_id = 0;
-var selected_tag = 0;
+var selected_tag = 0; 
 var selected_type = "";
 var array_id = [];
-var regex_remove_blank = /^\s*$[\n\r]{1,}/gm;
-var regex_replace_textbox_tag = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊ\s:,?\/\-\.\,()@§]/g;
-var regex_replace_textbox = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊ\s:,?\/\-\.\,(),]/g;
-var regex_replace = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊ\s:,?\/\-\.\,()]/g;
-var regex_text = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊ\s:,?\/\-\.\,()@§]/g;
+var regex_remove_blank = /^\s*$[\n\r]{1,}/gm; 
+var regex_replace_textbox_tag = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\_\s:,?\/\-\.\,()@§]/g;
+var regex_replace_textbox = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\_\s:,?\/\-\.\,(),]/g;
+var regex_replace = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\_\s:,?\/\-\.\,()]/g;
+var regex_text = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\_\s:,?\/\-\.\,()@§]/g;
 var regex_split = /\n/g;
 
 
@@ -57,7 +57,7 @@ function editor_toggle(tipo)
             $("#open_rule_creator").prop('disabled', false);//botoes de edit
             $(".editor_layout").hide();// esconde os edits de todos
             $(".footer_save_cancel button").prop('disabled', false);//botoes de edit
-            $(".chosen_select").chosen({no_results_text: "Sem resultados"});
+            $(".chosen-select").chosen({no_results_text: "Sem resultados"});
       }
       if (tipo === "off")
       {
@@ -334,7 +334,7 @@ Object.size = function(a)
 function update_script(callback)
 {
 
-      $(".chosen_select").chosen(({no_results_text: "Sem resultados"}));
+      $(".chosen-select").chosen(({no_results_text: "Sem resultados"}));
       $.post("requests.php", {action: "get_scripts"},
       function(data)
       {
@@ -1086,13 +1086,15 @@ function pagescript_database(opcao, Id_script, Id_pagina, Pos)
 {
       $.post("requests.php", {action: opcao, id_script: Id_script, id_pagina: Id_pagina, pos: Pos},
       function(data)
-      {
+      { 
+            editor_toggle("off");
             if (opcao === "delete_page")
                   update_pages(function() {
                         $("#page_selector option:last-child").prop("selected", true);
                   });
             if (opcao === "add_script")
                   update_script(function() {
+                 
                         $("#script_selector option:last-child").prop("selected", true);
                   });
             if (opcao === "add_page")

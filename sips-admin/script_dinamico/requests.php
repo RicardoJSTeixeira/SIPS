@@ -437,11 +437,48 @@ switch ($action) {
         $sql = array();
         foreach ($results as $row) {
             if ($row['value'] != "")
-                $sql[] = "(null,$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$row[name]', '$row[value]')";
+                $sql[] = "(null,'".date('Y-m-d H:i:s')."',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$row[name]', '$row[value]')";
         }
-        $query = "INSERT INTO `script_result`(`id`,id_script,user_id,unique_id,campaign_id,lead_id, `tag_elemento`, `valor`) VALUES " . implode(',', $sql);
+        $query = "INSERT INTO `script_result`(`id`,date,id_script,user_id,unique_id,campaign_id,lead_id, `tag_elemento`, `valor`) VALUES " . implode(',', $sql);
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(1);
+        break;
+        
+        
+        
+        
+        
+        
+    case "write_to_file":
+        
+        $query = "SELECT `id`,date, `id_script`, `user_id`, `unique_id`, `campaign_id`, `lead_id`, `tag_elemento`, `valor` FROM `script_result` where id_script='$id_script'";
+
+
+
+  $query = mysql_query($query, $link) or die(mysql_error());
+
+
+
+$output = fopen('php://output', 'w');
+fputcsv($output, $query,";",'"');
+// output header row (if at least one row exists)
+$row = mysql_fetch_assoc($query);
+if($row) {
+	fputcsv($output, array_keys($row),";",'"');
+	// reset pointer back to beginning
+	mysql_data_seek($query, 0);
+}
+
+
+
+while($row = mysql_fetch_assoc($query)) {
+	
+	
+    fputcsv($output, $row,";",'"');
+}
+print_r($row);
+fclose($output);
+        
         break;
 }
 ?>

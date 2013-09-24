@@ -45,14 +45,17 @@
                   input[type="checkbox"]{display:inline;}
                   input[type="radio"]{display:inline;}
                   .radio, .checkbox {padding-left: 1px;padding-right: 16px;}
-                  .chzn-container,.chzn-drop{width:340px!important;}
+               
+        .chosen-select{
+            width: 250%;
+        }
                   .hidden{display:none!important;}
            
 
             </style>
       </head>
       <body> 
-
+ 
 
             <!-- MODALS DE CONFIRMAÇÂO DE DELETES  -->
 
@@ -112,14 +115,14 @@
                         <div class="formRow">
                               <label class="label label-inverse" >Campanha</label>
                               <div class="formRight">
-                                    <select id="script_campanha_selector" class="chosen_select"  multiple="multiple" data-placeholder="Selecione uma/várias campanhas"   ></select>
+                                    <select id="script_campanha_selector" class="chosen-select"  multiple="multiple" data-placeholder="Selecione uma/várias campanhas"   ></select>
                               </div> 
                         </div>
 
                         <div class="formRow linha_inbound_div">
                               <label class="label label-inverse" >Linha Inbound</label>
                               <div class="formRight">
-                                    <select id="script_linha_inbound_selector" class="chosen_select"  multiple="multiple" data-placeholder="Selecione uma/várias linhas_inbound"   ></select>
+                                    <select id="script_linha_inbound_selector" class="chosen-select"  multiple="multiple" data-placeholder="Selecione uma/várias linhas_inbound"   ></select>
                               </div> 
                         </div>
 
@@ -387,7 +390,7 @@
                                                       <div class="formRow">
                                                             <label class="label label-inverse" >Calendários:</label>
                                                             <div class="formRight">
-                                                                  <select id="scheduler_edit_select" class="chosen_select"  multiple data-placeholder="Selecione um/vários calendários"   ></select>
+                                                                  <select id="scheduler_edit_select" class="chosen-select"  multiple data-placeholder="Selecione um/vários calendários"   ></select>
                                                             </div>
                                                             <div class="formRight">
                                                                   <input   type="checkbox" id="checkbox_scheduler_all" name="cc" value="1">
@@ -454,7 +457,7 @@
                                                       <div class="formRow"  >
                                                             <label class="label label-inverse" >Tags:</label>
                                                             <div class="formRight">
-                                                                  <select id="tags_select" class="chosen_select" style="width:325px" >
+                                                                  <select id="tags_select" class="chosen-select" >
                                                                         <optgroup label="Campos Gerais">
                                                                               <option value="nome_operador">Nome do operador</option>
                                                                         </optgroup>
@@ -516,7 +519,7 @@
                                                             <div class="formRow rules_valor" id="rules_valor_select_div" style="display:none"  >
                                                                   <label class="label label-inverse" >Valores:</label>
                                                                   <div class="formRight">
-                                                                        <select id="rules_valor_select" class="chosen_select"  multiple data-placeholder="Selecione um/vários valores" name="rules_valores_select"   ></select>
+                                                                        <select id="rules_valor_select" class="chosen-select"  multiple data-placeholder="Selecione um/vários valores" name="rules_valores_select"   ></select>
                                                                   </div> 
                                                             </div>
                                                             <div class="formRow rules_valor" id="rules_valor_input_div" style="display:none" >
@@ -538,7 +541,7 @@
                                                             <div class="formRow rule_target" >
                                                                   <label class="label label-inverse" >Alvo:</label>
                                                                   <div class="formRight">
-                                                                        <select  id="rule_target_select" multiple class="chosen_select" name="rules_target_select" data-placeholder="Selecione um/vários elementos">
+                                                                        <select  id="rule_target_select" multiple class="chosen-select" name="rules_target_select" data-placeholder="Selecione um/vários elementos">
 
                                                                         </select>
                                                                   </div> 
