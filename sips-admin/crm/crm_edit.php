@@ -8,7 +8,7 @@ require(ROOT . "ini/dbconnect.php");
 include(ROOT . "sips-admin/functions.php");
 require(ROOT . "ini/user.php");
 
-$user=new user;
+$user = new user;
 ####################################################################### 
 ### BEGIN  - Created by kant <-- fag
 #######################################################################
@@ -192,6 +192,20 @@ $query = "SELECT
 				recording_id 
 			DESC LIMIT 500;";
 $gravacoes = mysql_query($query, $link) or die(mysql_error());
+
+function curPageURL() {
+    $pageURL = 'http';
+    if ($_SERVER["HTTPS"] == "on") {
+        $pageURL .= "s";
+    }
+    $pageURL .= "://";
+    if ($_SERVER["SERVER_PORT"] != "80") {
+        $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
+    } else {
+        $pageURL .= $_SERVER["SERVER_NAME"]; //.$_SERVER["REQUEST_URI"];
+    }
+    return $pageURL;
+}
 ?>
 
 <!-- Cabeçalho -->
@@ -243,19 +257,19 @@ $gravacoes = mysql_query($query, $link) or die(mysql_error());
 
 <h2>Dados da Lead</h2>
 <form class="form-horizontal" id='inputcontainer' >
-    <?php for ($i = 0; $i < count($fields); $i++) { ?>
+<?php for ($i = 0; $i < count($fields); $i++) { ?>
         <div class="control-group">
             <label class="control-label"><?= $fields_LABEL[$i] ?>:</label>
             <div class="controls" >
-                <?php if ($fields_NAME[$i] != "comments") { ?>
+    <?php if ($fields_NAME[$i] != "comments") { ?>
                     <input type=text name='<?= $fields_NAME[$i] ?>' id='<?= $fields_NAME[$i] ?>' class='span9' value='<?= $fields[$i] ?>'>
-                <?php } else { ?>
+    <?php } else { ?>
                     <textarea name='<?= $fields_NAME[$i] ?>' id='<?= $fields_NAME[$i] ?>' class='span9' ><?= $fields[$i] ?></textarea>
-                <?php } ?>
+        <?php } ?>
                 <span id='td_<?= $fields_NAME[$i] ?>'></span>
             </div>
         </div>
-    <?php } ?>
+            <?php } ?>
 </form>
 
 <h3>Alteração do Feedback</h3>
@@ -264,7 +278,7 @@ $gravacoes = mysql_query($query, $link) or die(mysql_error());
     <div class="controls input-append">
         <select style='width:200px' name=feedback_list id=feedback_list><?= $status_options ?></select>
         <button class="btn btn-primary" id="confirm_feedback" style="display:none">Confirmação de feedback</button>
-      </div>
+    </div>
     <span id=modify_feedback_status class='help-inline'><i>(O feedback deste contacto pode ser alterado neste menu.)</i></Span>
 </div>
 
@@ -348,16 +362,16 @@ $gravacoes = mysql_query($query, $link) or die(mysql_error());
         </tr>
     </thead>
     <tbody>
-        <?php
-        while ($row = mysql_fetch_assoc($chamadas_feitas)) {
+<?php
+while ($row = mysql_fetch_assoc($chamadas_feitas)) {
 
-            $duracao = sec_convert($row['length_in_sec'], "H");
-            if ($row['status_name1']) {
-                $status_name = $row['status_name1'];
-            } else {
-                $status_name = $row['status_name2'];
-            }
-            ?>
+    $duracao = sec_convert($row['length_in_sec'], "H");
+    if ($row['status_name1']) {
+        $status_name = $row['status_name1'];
+    } else {
+        $status_name = $row['status_name2'];
+    }
+    ?>
 
             <tr>
                 <td><?= $row["data"] ?></td>
@@ -369,7 +383,7 @@ $gravacoes = mysql_query($query, $link) or die(mysql_error());
                 <td><?= $row["campaign_name"] ?></td>
                 <td><?= $row["list_name"] ?></td>
             </tr>
-        <?php } ?>
+<?php } ?>
     </tbody>
 </table>
 
@@ -383,28 +397,67 @@ $gravacoes = mysql_query($query, $link) or die(mysql_error());
             <th>Fim da Gravação</th>
             <th>Duração</th>
             <th>Operador</th>
-            
+
     </thead>
     <tbody>
-        <?php while ($row = mysql_fetch_assoc($gravacoes)) { ?>
+<?php 
+
+    $curpage = curPageURL();
+while ($row = mysql_fetch_assoc($gravacoes)) { ?>
+
             <tr>
                 <td><?= $row["data"] ?></td>
                 <td><?= $row["hora_inicio"] ?></td>
                 <td><?= $row["hora_fim"] ?></td>
                 <td><?= sec_convert($row['length_in_sec'], "H") ?></td>
                 <td><?= $row["full_name"] ?>
-                    <div class="view-button"><a href='<?= $row["locaation"] ?>' target='_self' class="btn btn-mini"><i class="icon-play"></i>Ouvir</a></div>
-                <?php if($user->is_script_dinamico){  ?>    
-                     <div class="view-button"><a class="btn btn-mini" target='_new' href='../../sips-admin/script_dinamico/render.html?lead_id=<?=$lead_id?>&campaign_id=<?=$lead_info[campaign_id]?>&user=<?=$user->id?>&pass=<?=$user->password?>'><i class="icon-bookmark"></i>Script</a></div>
-                <?php } else { ?>
-                   <div class="view-button">  <a class="btn btn-mini" target='_new' href='../../sips-agente/vdc_form_display.php?submit_button=YES&lead_id=<?= $lead_id ?>&list_id=<?= $lead_info[campaign_id] ?>&user=<?=$user->id?>&pass=<?=$user->password?>'><i class="icon-bookmark"></i>Script</a></div>
-                <?php } ?>
+
+    <?
+
+
+        $mp3File = "#";
+
+        if (strlen($row[location]) > 0) {
+            $tmp = explode("/", $row[location]);
+            $ip = $tmp[2];
+            $tmp = explode(".", $ip);
+            $ip = $tmp[3];
+
+            switch ($ip) {
+                case "248":
+                    $port = ":20248";
+                    break;
+                case "247":
+                    $port = ":20247";
+                    break;
+                default:
+                    $port = "";
+                    break;
+            }
+
+            $mp3File = $curpage . $port . "/RECORDINGS/MP3/$row[filename]-all.mp3";
+            $audioPlayer = "Há gravação";
+        } else {
+            $audioPlayer = "Não há gravação!";
+        }
+
+        $lenghtInMin = date("i:s", $row[length_in_sec]);
+    
+    ?>
+
+
+                    <div class="view-button"><a href='<?= $mp3File ?>' target='_self' class="btn btn-mini"><i class="icon-play"></i>Ouvir</a></div>
+                    <?php if ($user->is_script_dinamico) { ?>    
+                        <div class="view-button"><a class="btn btn-mini" target='_new' href='../../sips-admin/script_dinamico/render.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>'><i class="icon-bookmark"></i>Script</a></div>
+                    <?php } else { ?>
+                        <div class="view-button">  <a class="btn btn-mini" target='_new' href='../../sips-agente/vdc_form_display.php?submit_button=YES&lead_id=<?= $lead_id ?>&list_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>'><i class="icon-bookmark"></i>Script</a></div>
+                    <?php } ?>
                 </td>
-               
-              
-               
+
+
+
             </tr>
-        <?php } ?>
+                <?php } ?>
     </tbody>
 </table>
 
