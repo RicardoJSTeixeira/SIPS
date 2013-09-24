@@ -107,7 +107,7 @@
                               "alertText": "* Só é permitido letras e números"
                         },
                         "onlyLetterNumberSymbol": {
-                              "regex": /^[0-9a-zA-Z\-\_]+$/,
+                              "regex": /^[0-9a-zA-Z\-\_\ ]+$/,
                               "alertText": "* Só é permitido letras, números, hifen(-) e underscore(_)"
                         },
                         // --- CUSTOM RULES -- Those are specific to the demos, they can be removed or changed to your likings

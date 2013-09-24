@@ -24,6 +24,11 @@
             <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt-BR.js"></script>
             <script type="text/javascript" src="/bootstrap/js/jquery.hotkeys.js"></script>
             <script type="text/javascript" src="/bootstrap/js/bootstrap-wysiwyg.js"></script>
+            
+            
+                    <script type="text/javascript" src="/bootstrap/js/validation/jquery.validationEngine.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/validation/languages/jquery.validationEngine-pt.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/validation/contrib/other-validations.js"></script>
 
             <style>
 
@@ -42,6 +47,7 @@
                   .radio, .checkbox {padding-left: 1px;padding-right: 16px;}
                   .chzn-container,.chzn-drop{width:340px!important;}
                   .hidden{display:none!important;}
+           
 
             </style>
       </head>
@@ -414,7 +420,7 @@
                                                 <!-------------------------COMUM A TODOS OS ELEMENTOS-------------------------->
                                                 <!------------------------------------------------------------------------------>
                                                 <div class="clear"></div>
-                                                <div id="item_edit_comum" style="display:none"> 
+                                                <div id="item_edit_comum" style="display:none;"> 
                                                       <div class="formRow" id="tag_edit" >
                                                             <label class="label label-inverse" >Tag:</label>
                                                             <div class="formRight">
@@ -448,20 +454,11 @@
                                                       <div class="formRow"  >
                                                             <label class="label label-inverse" >Tags:</label>
                                                             <div class="formRight">
-                                                                  <select id="tags_select">
-                                                                        <option value="nome" selected>Nome</option>
-                                                                        <option value="telefone">Nº Telefone</option>
-                                                                        <option value="telefone_alt">Telefone Alternativo</option>
-                                                                        <option value="telefone_alt2">Telemóvel</option>
-                                                                        <option value="morada">Morada</option>
-                                                                        <option value="codigo_postal">Codigo postal</option>
-
-                                                                        <option value="localidade">Localidade</option>
-                                                                        <option value="distrito">Distrito</option>
-                                                                        <option value="email">E-mail</option>
-                                                                        <option value="Comentario">Comentarios</option>
-                                                                             <option value="nome_operador">Nome do operador</option>
-
+                                                                  <select id="tags_select" class="chosen_select" style="width:325px" >
+                                                                        <optgroup label="Campos Gerais">
+                                                                              <option value="nome_operador">Nome do operador</option>
+                                                                        </optgroup>
+                                                                      
                                                                   </select>
                                                                   <i class="icon-tag" ></i>
                                                             </div> 
@@ -519,13 +516,13 @@
                                                             <div class="formRow rules_valor" id="rules_valor_select_div" style="display:none"  >
                                                                   <label class="label label-inverse" >Valores:</label>
                                                                   <div class="formRight">
-                                                                        <select id="rules_valor_select" class="chosen_select"  multiple data-placeholder="Selecione um/vários valores"   ></select>
+                                                                        <select id="rules_valor_select" class="chosen_select"  multiple data-placeholder="Selecione um/vários valores" name="rules_valores_select"   ></select>
                                                                   </div> 
                                                             </div>
                                                             <div class="formRow rules_valor" id="rules_valor_input_div" style="display:none" >
                                                                   <label class="label label-inverse" >Valor:</label>
                                                                   <div class="formRight">
-                                                                        <input required id="rules_valor_input"  type="text" placeholder="Valor que despoleta o evento" />
+                                                                        <input  id="rules_valor_input"  type="text" placeholder="Valor que despoleta o evento" name="rules_valor_select" />
                                                                   </div> 
                                                             </div>
                                                             <div class="formRow" >
@@ -541,7 +538,7 @@
                                                             <div class="formRow rule_target" >
                                                                   <label class="label label-inverse" >Alvo:</label>
                                                                   <div class="formRight">
-                                                                        <select  id="rule_target_select" multiple class="chosen_select" data-placeholder="Selecione um/vários elementos">
+                                                                        <select  id="rule_target_select" multiple class="chosen_select" name="rules_target_select" data-placeholder="Selecione um/vários elementos">
 
                                                                         </select>
                                                                   </div> 
