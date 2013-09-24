@@ -438,13 +438,15 @@ function update_info()
       $.post("requests.php", {action: "get_data", id_script: $("#script_selector option:selected").val(), id_page: $("#page_selector option:selected").val()},
       function(data)
       {
+            var temp_type="";
             $("#rule_target_select").empty();
             $.each(data, function(index, value) {
-                  $("#rule_target_select").append(new Option(this.tag + " --- " + this.type, this.tag)); //povoar os alvos com os ides e tipos dos elementos
+                  
 
                   switch (this.type)
                   {
                         case "texto":
+                              temp_type="caixa de texto";
                               var item = $('.rightDiv .texto_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
@@ -456,8 +458,9 @@ function update_info()
                                       .data("regex", this.param1);
                               insert_element("texto", item, this);
                               item.appendTo('.leftDiv');
-                              break;
+                                                     break;
                         case "pagination":
+                               temp_type="Paginação";
                               var item = $('.rightDiv .pagination_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
@@ -467,6 +470,7 @@ function update_info()
                               item.appendTo('.leftDiv');
                               break;
                         case "radio":
+                               temp_type="Botão radio";
                               var item = $('.rightDiv .radio_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
@@ -480,6 +484,7 @@ function update_info()
                               item.appendTo('.leftDiv');
                               break;
                         case "checkbox":
+                               temp_type="Botão resposta multipla";
                               var item = $('.rightDiv .checkbox_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
@@ -493,6 +498,7 @@ function update_info()
                               item.appendTo('.leftDiv');
                               break;
                         case "multichoice":
+                               temp_type="Lista de Opções";
                               var item = $('.rightDiv .multichoice_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
@@ -505,6 +511,7 @@ function update_info()
                               item.appendTo('.leftDiv');
                               break;
                         case "textfield":
+                               temp_type="Campo de Texto";
                               var item = $('.rightDiv .textfield_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
@@ -517,6 +524,7 @@ function update_info()
                               item.appendTo('.leftDiv');
                               break;
                         case "legend":
+                               temp_type="Titulo";
                               var item = $('.rightDiv .legend_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
@@ -529,6 +537,7 @@ function update_info()
                               item.appendTo('.leftDiv');
                               break;
                         case "tableradio":
+                               temp_type="Tabela botões radio";
                               var item = $('.rightDiv .tableradio_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
@@ -541,6 +550,7 @@ function update_info()
                               item.appendTo('.leftDiv');
                               break;
                         case "datepicker":
+                               temp_type="Seletor tempo e hora";
                               var item = $('.rightDiv .datepicker_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
@@ -553,6 +563,7 @@ function update_info()
                               item.appendTo('.leftDiv');
                               break;
                         case "scheduler":
+                               temp_type="Calendário";
                               var item = $('.rightDiv .scheduler_class').clone();
                               item.attr("id", this.id)
                                       .data("id", this.id)
@@ -565,6 +576,7 @@ function update_info()
                               item.appendTo('.leftDiv');
                               break;
                   }
+                  $("#rule_target_select").append(new Option(this.tag + " --- " + temp_type, this.tag)); //povoar os alvos com as tags e tipos dos elementos
             });
             $('#rule_target_select').val('').trigger('liszt:updated');
       }, "json");
