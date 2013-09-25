@@ -22,11 +22,8 @@
 ///////NAO FAZER COMMIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-
-//falta required ou metodo de validação nas regras quando os selects por vezes vao vazios
-
-//duplicar script - falta regras, dependente da criação das tags
-//tags individuais por scripts-working
+//adicionar elemento de textarea pra resposta
+//metodo de edição de elementos de texto
 
 
 var temp_value_holder = "";
@@ -588,6 +585,16 @@ function validate_manual()
       return $("#rule_form").validationEngine('validate');
 }
 
+function write_to_file()
+{
+         
+      
+   document.location.href = "requests.php?id_script="+$("#script_selector option:selected").val()+"&action=write_to_file";   
+      
+      
+      
+  
+}
 
 function populate_element(tipo, element)
 {

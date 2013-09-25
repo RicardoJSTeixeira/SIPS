@@ -2,6 +2,8 @@
 
 require("../../ini/dbconnect.php");
 require("../../ini/user.php");
+
+header('Content-Disposition: attachment; filename=Report_Script_' . date("Y-m-d_H:i:s") . '.csv');
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -42,8 +44,8 @@ switch ($action) {
         $query = "SELECT first_name,phone_number,alt_phone,address1,address3,postal_code,email,comments from vicidial_list where lead_id='$lead_id'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $user_temp=$user->getUser($user_logged);
-            $js = array("nome" => $row["first_name"], "telefone" => $row["phone_number"], "telefone_alt" => $row["alt_phone"], "morada" => $row["address1"], "telefone_alt2" => $row["address3"], "codigo_postal" => $row["postal_code"], "email" => $row["email"], "comentario" => $row["comments"], "nome_operador" =>$user_temp["full_name"] );
+            $user_temp = $user->getUser($user_logged);
+            $js = array("nome" => $row["first_name"], "telefone" => $row["phone_number"], "telefone_alt" => $row["alt_phone"], "morada" => $row["address1"], "telefone_alt2" => $row["address3"], "codigo_postal" => $row["postal_code"], "email" => $row["email"], "comentario" => $row["comments"], "nome_operador" => $user_temp["full_name"]);
         }
 
         if (sizeof($js) < 1) {
@@ -343,12 +345,11 @@ switch ($action) {
         break;
 
     case "add_rules":
-        
-        if(!empty($tag_trigger2)&&!empty($tag_target))
-        {
-        $query = "INSERT INTO `asterisk`.`script_rules` (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) VALUES (NULL,$id_script,'$tipo_elemento',$tag_trigger,'" . mysql_real_escape_string(json_encode($tag_trigger2)) . "','" . mysql_real_escape_string(json_encode($tag_target)) . "','$tipo','$param1','$param2')";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        echo json_encode(1);
+
+        if (!empty($tag_trigger2) && !empty($tag_target)) {
+            $query = "INSERT INTO `asterisk`.`script_rules` (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) VALUES (NULL,$id_script,'$tipo_elemento',$tag_trigger,'" . mysql_real_escape_string(json_encode($tag_trigger2)) . "','" . mysql_real_escape_string(json_encode($tag_target)) . "','$tipo','$param1','$param2')";
+            $query = mysql_query($query, $link) or die(mysql_error());
+            echo json_encode(1);
         }
         break;
 
@@ -438,48 +439,64 @@ switch ($action) {
         $sql = array();
         foreach ($results as $row) {
             if ($row['value'] != "")
-                $sql[] = "(null,'".date('Y-m-d H:i:s')."',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$row[name]', '$row[value]')";
+                $sql[] = "(null,'" . date('Y-m-d H:i:s') . "',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$row[name]', '$row[value]')";
         }
         $query = "INSERT INTO `script_result`(`id`,date,id_script,user_id,unique_id,campaign_id,lead_id, `tag_elemento`, `valor`) VALUES " . implode(',', $sql);
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(1);
         break;
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
     case "write_to_file":
-        
-        $query = "SELECT `id`,date, `id_script`, `user_id`, `unique_id`, `campaign_id`, `lead_id`, `tag_elemento`, `valor` FROM `script_result` where id_script='$id_script'";
 
 
 
-  $query = mysql_query($query, $link) or die(mysql_error());
 
 
 
-$output = fopen('php://output', 'w');
-fputcsv($output, $query,";",'"');
-// output header row (if at least one row exists)
-$row = mysql_fetch_assoc($query);
-if($row) {
-	fputcsv($output, array_keys($row),";",'"');
-	// reset pointer back to beginning
-	mysql_data_seek($query, 0);
-}
+
+
+        header('Content-Encoding: UTF-8');
+        header('Content-type: text/csv; charset=UTF-8');
+        echo "\xEF\xBB\xBF";
+        header('Content-Disposition: attachment; filename=data_new.csv');
+
+        $output = fopen('php://output', 'w');
 
 
 
-while($row = mysql_fetch_assoc($query)) {
-	
-	
-    fputcsv($output, $row,";",'"');
-}
-print_r($row);
-fclose($output);
-        
+        $titles = array('ID', 'Data', 'Script', 'Nome completo', 'Unique id', 'Campaign', 'Lead id');
+
+
+        $query = "SELECT tag,type,texto  FROM `script_dinamico` where type not in ('pagination','textfield') and texto!='' and id_script='$id_script' order by tag asc";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            array_push($titles, $row['tag'] . "->" . $row['type'] . "-" . $row['texto']);
+                       
+        }
+
+
+        fputcsv($output, $titles, ";", '"');
+
+
+        $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name, sr.unique_id, vc.campaign_name, sr.lead_id FROM `script_result` sr
+left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id
+left join vicidial_users vu on sr.user_id=vu.user_id
+left join script_dinamico_master sdm on sdm.id=sr.id_script
+where id_script='$id_script' group by lead_id";
+        $query = mysql_query($query, $link) or die(mysql_error());
+
+
+        while ($row = mysql_fetch_assoc($query)) {
+            fputcsv($output, $row, ";", '"');
+        }
+
+        fclose($output);
+
         break;
 }
 ?>

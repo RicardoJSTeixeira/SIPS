@@ -214,6 +214,7 @@ function update_info()
 
             $("#myform").validationEngine();
 //FAZER O APPEND DOS ITEMS A LISTA
+
             $.each(items, function()
             {
                   if (!$("#" + this[1] + "pag").length) {
@@ -221,16 +222,18 @@ function update_info()
                   }
                   $("#" + this[1] + "pag").append(this[0]);
             });
-            populate_script();
-            rules();
-            tags();
+
 
             $(".pag_div").hide().first().show();
-            $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true,language:"pt"}).keypress(function(e) {
+            $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt"}).keypress(function(e) {
                   e.preventDefault();
             }).bind("cut copy paste", function(e) {
                   e.preventDefault();
             });
+
+            populate_script();
+           
+          
 
       }, "json");
 
@@ -469,7 +472,7 @@ function populate_script()
                         }
                   });
             }
-
+ tags();
       }, "json");
 }
 
@@ -535,6 +538,7 @@ function rules()
                               switch (this.param1)
                               {
                                     case "value_select":
+
                                           var values = this.tag_trigger2;
                                           for (var count = 0; count < values.length; count++)
                                           {
@@ -676,7 +680,7 @@ function tags()
                               case "telefone_alt":
                                     rz.html(rz.html().replace(regExp, data.telefone_alt));
                                     break;
-                              case "telefone_alt2":
+                              case "telefone_alt2": 
                                     rz.html(rz.html().replace(regExp, data.telefone_alt2));
                                     break;
                               case "morada":
@@ -706,6 +710,7 @@ function tags()
 
             }, "json");
       }
+        rules();
 }
 
 
