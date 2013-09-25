@@ -214,7 +214,6 @@ function update_info()
 
             $("#myform").validationEngine();
 //FAZER O APPEND DOS ITEMS A LISTA
-
             $.each(items, function()
             {
                   if (!$("#" + this[1] + "pag").length) {
@@ -232,8 +231,8 @@ function update_info()
             });
 
             populate_script();
-           
-          
+            tags();
+            rules();
 
       }, "json");
 
@@ -472,7 +471,7 @@ function populate_script()
                         }
                   });
             }
- tags();
+
       }, "json");
 }
 
@@ -515,7 +514,7 @@ function rules()
                               {
                                     case "value_input":
 
-                                          $("#" + this.tag_trigger).bind("keyup", function()//atribuir os binds a cada value
+                                          $(document).on("keyup","#" + this.tag_trigger, function()//atribuir os ons a cada value
                                           {
                                                 var pattern = new RegExp('\\b' + data[index].tag_trigger2, 'i');
                                                 if ($("#" + data[index].tag_trigger + " input").val().match(pattern))
@@ -526,7 +525,7 @@ function rules()
                                           );
                                           break;
                                     case "answer":
-                                          $("#" + this.tag_trigger).bind("focusout", function()//atribuir os binds a cada value
+                                          $(document).on("focusout","#" + this.tag_trigger, function()//atribuir os ons a cada value
                                           {
                                                 rules_work(data[index]);
                                           }
@@ -542,7 +541,7 @@ function rules()
                                           var values = this.tag_trigger2;
                                           for (var count = 0; count < values.length; count++)
                                           {
-                                                $("#" + this.tag_trigger).find("input[value='" + values[count] + "']").bind("click", function()//atribuir os binds a cada value
+                                                $(document).on("click","#" + this.tag_trigger +" input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                                 {
                                                       rules_work(data[index]);
                                                 }
@@ -558,7 +557,7 @@ function rules()
                                           var values = this.tag_trigger2;
                                           for (var count = 0; count < values.length; count++)
                                           {
-                                                $("#" + this.tag_trigger).find("input[value='" + values[count] + "']").bind("click", function()//atribuir os binds a cada value
+                                                $(document).on("click","#" + this.tag_trigger+" input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                                 {
 
                                                       rules_work(data[index]);
@@ -575,7 +574,7 @@ function rules()
                                           var values = this.tag_trigger2;
                                           for (var count = 0; count < values.length; count++)
                                           {
-                                                $("#" + this.tag_trigger).bind("change", function()//atribuir os binds a cada value
+                                                $(document).on("change","#" + this.tag_trigger, function()//atribuir os ons a cada value
                                                 {
                                                       if ($("#" + data[index].tag_trigger + " option:selected").val() === data[index].tag_trigger2)
                                                             rules_work(data[index]);
@@ -593,7 +592,7 @@ function rules()
                                           for (var count = 0; count < linhas.length; count++)
                                           {
                                                 var values = linhas[count].split(";");
-                                                $("#" + this.tag_trigger).find("tr:contains('" + values[0] + "') input[value='" + values[1] + "']").bind("click", function()//atribuir os binds a cada value
+                                                $(document).on("click","#" + this.tag_trigger +" tr:contains('" + values[0] + "') input[value='" + values[1] + "']", function()
                                                 {
                                                       rules_work(data[index]);
                                                 }
@@ -601,7 +600,7 @@ function rules()
                                           }
                                           break;
                                     case "answer":
-                                          $("#" + this.tag_trigger).find("input").on("click", function()
+                                          $(document).on("click","#" + this.tag_trigger+" input", function()
                                           {
 
                                                 if ($("#" + data[index].tag_trigger).find("input:checked").length === ($("#" + data[index].tag_trigger + " .tr_body").find("tr").length))
@@ -614,7 +613,7 @@ function rules()
                               switch (this.param1)
                               {
                                     case "answer":
-                                          $("#" + this.tag_trigger).bind("change", function()//atribuir os binds a cada value
+                                          $(document).on("change","#" + this.tag_trigger, function()//atribuir os ons a cada value
                                           {
                                                 rules_work(data[index]);
                                           }
@@ -680,7 +679,7 @@ function tags()
                               case "telefone_alt":
                                     rz.html(rz.html().replace(regExp, data.telefone_alt));
                                     break;
-                              case "telefone_alt2": 
+                              case "telefone_alt2":
                                     rz.html(rz.html().replace(regExp, data.telefone_alt2));
                                     break;
                               case "morada":
@@ -710,7 +709,6 @@ function tags()
 
             }, "json");
       }
-        rules();
 }
 
 
