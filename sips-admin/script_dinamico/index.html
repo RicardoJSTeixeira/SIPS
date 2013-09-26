@@ -24,9 +24,9 @@
             <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt.js"></script>
             <script type="text/javascript" src="/bootstrap/js/jquery.hotkeys.js"></script>
             <script type="text/javascript" src="/bootstrap/js/bootstrap-wysiwyg.js"></script>
-            
-            
-                    <script type="text/javascript" src="/bootstrap/js/validation/jquery.validationEngine.js"></script>
+
+
+            <script type="text/javascript" src="/bootstrap/js/validation/jquery.validationEngine.js"></script>
             <script type="text/javascript" src="/bootstrap/js/validation/languages/jquery.validationEngine-pt.js"></script>
             <script type="text/javascript" src="/bootstrap/js/validation/contrib/other-validations.js"></script>
 
@@ -45,21 +45,26 @@
                   input[type="checkbox"]{display:inline;}
                   input[type="radio"]{display:inline;}
                   .radio, .checkbox {padding-left: 1px;padding-right: 16px;}
-               .grid-title select
-               {
-                     max-width: 200px;
-               }
-                  
-        .chosen-select{
-            width: 250%;
-        }
+                  .grid-title select
+                  {
+                        max-width: 200px;
+                  }
+
+                  .chosen-select{
+                        width: 250%;
+                  }
                   .hidden{display:none!important;}
-           
+                  #textfield_edit
+                  {
+                        border:2px solid #EEF;
+                        overflow:scroll; 
+                        max-height:200px
+                  }
 
             </style>
       </head>
       <body> 
- 
+
 
             <!-- MODALS DE CONFIRMAÇÂO DE DELETES  -->
 
@@ -111,17 +116,23 @@
                               </div>
                               <div class="formRight">
                                     <button class="btn btn-primary" id="copy_script_button">Duplicar script</button>
-                                 <button class="btn btn-info" onclick="write_to_file();">Criar relatório</button>
+
                               </div>
                         </div>
 
 
-                    
+
                         <div class="formRow">
                               <label class="label label-inverse" >Campanha</label>
                               <div class="formRight">
                                     <select id="script_campanha_selector" class="chosen-select"  multiple="multiple" data-placeholder="Selecione uma/várias campanhas"   ></select>
                               </div> 
+                                 <div class="formRow">
+                              <button class="btn btn-info" onclick="write_to_file('camp');">Criar relatório</button>
+                              <div class="formRight">
+                                    <select id="write_to_file_select_campanha" class="chosen-select" data-placeholder="Selecione uma campanha"   ></select>
+                              </div> 
+                        </div>
                         </div>
 
                         <div class="formRow linha_inbound_div">
@@ -129,7 +140,19 @@
                               <div class="formRight">
                                     <select id="script_linha_inbound_selector" class="chosen-select"  multiple="multiple" data-placeholder="Selecione uma/várias linhas_inbound"   ></select>
                               </div> 
+                              
+                                      <div class="formRow">
+                              <button class="btn btn-info" onclick="write_to_file('linha');">Criar relatório</button>
+                              <div class="formRight">
+                                    <select id="write_to_file_select_linha_inbound" class="chosen-select" data-placeholder="Selecione uma linha inbound"   ></select>
+                              </div> 
                         </div>
+                        </div>
+
+
+                     
+
+
 
 
                         <div class="clear"></div>
@@ -335,7 +358,62 @@
                                                       <div class="formRow" >
                                                             <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
-                                                                  <textarea class="span textfield_input" id="textfield_edit" maxlength="3800" rows="4" cols="50"></textarea>
+                                                                  <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+                                                                        <div class="btn-group">
+                                                                              <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font"><i class="icon-font"></i><b class="caret"></b></a>
+                                                                              <div  class="dropdown-menu">
+                                                                                    <ul>
+                                                                                          <li><a data-edit="fontName Serif" style="font-family:'Serif'">Serif</a></li>
+                                                                                          <li><a data-edit="fontName Sans" style="font-family:'Sans'">Sans</a></li>
+                                                                                          <li><a data-edit="fontName Arial" style="font-family:'Arial'">Arial</a></li>
+                                                                                          <li><a data-edit="fontName Arial Black" style="font-family:'Arial Black'">Arial Black</a></li>
+                                                                                          <li><a data-edit="fontName Courier" style="font-family:'Courier'">Courier</a></li>
+                                                                                          <li><a data-edit="fontName Courier New" style="font-family:'Courier New'">Courier New</a></li>
+                                                                                          <li><a data-edit="fontName Comic Sans MS" style="font-family:'Comic Sans MS'">Comic Sans MS</a></li>
+                                                                                          <li><a data-edit="fontName Helvetica" style="font-family:'Helvetica'">Helvetica</a></li>
+                                                                                          <li><a data-edit="fontName Impact" style="font-family:'Impact'">Impact</a></li>
+                                                                                          <li><a data-edit="fontName Lucida Grande" style="font-family:'Lucida Grande'">Lucida Grande</a></li>
+                                                                                          <li><a data-edit="fontName Lucida Sans" style="font-family:'Lucida Sans'">Lucida Sans</a></li>
+                                                                                          <li><a data-edit="fontName Tahoma" style="font-family:'Tahoma'">Tahoma</a></li>
+                                                                                          <li><a data-edit="fontName Times" style="font-family:'Times'">Times</a></li>
+                                                                                          <li><a data-edit="fontName Times New Roman" style="font-family:'Times New Roman'">Times New Roman</a></li>
+                                                                                          <li><a data-edit="fontName Verdana" style="font-family:'Verdana'">Verdana</a></li></ul>
+                                                                              </div>
+                                                                        </div>
+                                                                        <div class="btn-group">
+                                                                              <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font Size"><i class="icon-text-height"></i>&nbsp;<b class="caret"></b></a>
+                                                                              <div  class="dropdown-menu">
+                                                                                    <ul >
+                                                                                          <li><a data-edit="fontSize 5"><font size="5">Huge</font></a></li>
+                                                                                          <li><a data-edit="fontSize 3"><font size="3">Normal</font></a></li>
+                                                                                          <li><a data-edit="fontSize 1"><font size="1">Small</font></a></li>
+                                                                                    </ul>
+                                                                              </div>
+                                                                        </div>
+                                                                        <div class="btn-group">
+                                                                              <a class="btn" data-edit="bold" title="" data-original-title="Bold (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
+                                                                              <a class="btn" data-edit="italic" title="" data-original-title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
+                                                                              <a class="btn" data-edit="strikethrough" title="" data-original-title="Strikethrough"><i class="icon-strikethrough"></i></a>
+                                                                              <a class="btn" data-edit="underline" title="" data-original-title="Underline (Ctrl/Cmd+U)"><i class="icon-underline"></i></a>
+                                                                        </div>
+
+
+
+
+                                                                  </div>
+                                                                  <div id="textfield_edit" class="span textfield_input" contenteditable="true">
+
+                                                                  </div>
+                                                                  <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+                                                                        <div class="btn-group">
+                                                                              <a class="btn btn-info" data-edit="justifyleft" title="" data-original-title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
+                                                                              <a class="btn" data-edit="justifycenter" title="" data-original-title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
+                                                                              <a class="btn" data-edit="justifyright" title="" data-original-title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
+                                                                              <a class="btn" data-edit="justifyfull" title="" data-original-title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
+                                                                        </div>
+                                                                  </div>
+
+
                                                             </div>  
                                                       </div>
                                                 </div>
@@ -421,7 +499,59 @@
 
                                                       </div>
 
+
+
+
                                                 </div>
+
+
+
+
+                                                <!--Textarea-->
+                                                <div class="editor_layout" id="textarea_layout_editor" style="display:none">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Titulo</label>
+
+                                                            <div class="formRight">
+                                                                  <input  maxlength="250" class="span textarea_input" id="textarea_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
+                                                      </div>
+                                                </div>
+
+                                                <!--IMAGE-->
+                                                <div class="editor_layout" id="image_layout_editor" style="display:none">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Texto:</label>
+
+                                                            <div class="formRight">
+                                                                  <input  maxlength="250" class="span image_input" id="image_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
+                                                      </div>
+                                                </div>
+
+                                                <!--PDF-->
+                                                <div class="editor_layout" id="pdf_layout_editor" style="display:none">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Texto:</label>
+
+                                                            <div class="formRight">
+                                                                  <input  maxlength="250" class="span pdf_input" id="pdf_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
+                                                      </div>
+                                                </div>
+
+                                                <!--LINK-->
+                                                <div class="editor_layout" id="link_layout_editor" style="display:none">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Texto:</label>
+
+                                                            <div class="formRight">
+                                                                  <input  maxlength="250" class="span link_input" id="link_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
+                                                      </div>
+                                                </div>
+
+
 
 
                                                 <!------------------------------------------------------------------------------>
@@ -466,7 +596,7 @@
                                                                         <optgroup label="Campos Gerais">
                                                                               <option value="nome_operador">Nome do operador</option>
                                                                         </optgroup>
-                                                                      
+
                                                                   </select>
                                                                   <i class="icon-tag" ></i>
                                                             </div> 

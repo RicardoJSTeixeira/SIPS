@@ -1,5 +1,24 @@
 
 
+
+/*
+ 
+ 1.1 - Encerramento de estabelecimento
+ 2.1 - Problemas técnicos com o equipamento
+ 3.1 - Deixou de utilizar o terminal como meio de pagamento
+ 4.1 - Custo/ tarifário
+ 5.2 - Redução da actividade com o banco
+ 6.1 - Insatisfação com o Banco/Gestor
+ 7.1 - Outra. Qual
+ 
+ 
+ 
+ */
+
+
+
+
+
 ////////TO BE DONE//////////////////
 
 //relatorio
@@ -31,14 +50,14 @@
 var temp_value_holder = "";
 var current_page_pos = 0;
 var selected_id = 0;
-var selected_tag = 0; 
+var selected_tag = 0;
 var selected_type = "";
 var array_id = [];
-var regex_remove_blank = /^\s*$[\n\r]{1,}/gm; 
+var regex_remove_blank = /^\s*$[\n\r]{1,}/gm;
 var regex_replace_textbox_tag = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\_\s:,?\/\-\.\,()@§]/g;
 var regex_replace_textbox = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\_\s:,?\/\-\.\,(),]/g;
 var regex_replace = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\_\s:,?\/\-\.\,()]/g;
-var regex_text = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\_\s:,?\/\-\.\,()@§]/g;
+var regex_text = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª><=\"\'\_\s\:\-,?\/\-\.\,()@§]/g;
 var regex_split = /\n/g;
 
 
@@ -193,6 +212,22 @@ $(function() {
                         {
                               item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_scheduler")[0].innerHTML, 0, 0, [], 0, 0, 1);
                         }
+                        if ($(this).data().uiSortable.currentItem.hasClass("textarea_class"))
+                        {
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textarea", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_textarea")[0].innerHTML, 0, 0, [], 0, 0, 1);
+                        }
+                        if ($(this).data().uiSortable.currentItem.hasClass("image_class"))
+                        {
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "image", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_image")[0].innerHTML, 0, 0, [], 0, 0, 1);
+                        }
+                        if ($(this).data().uiSortable.currentItem.hasClass("pdf_class"))
+                        {
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "pdf", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_pdf")[0].innerHTML, 0, 0, [], 0, 0, 1);
+                        }
+                        if ($(this).data().uiSortable.currentItem.hasClass("link_class"))
+                        {
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "link", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_link")[0].innerHTML, 0, 0, [], 0, 0, 1);
+                        }
                         editor_toggle("off");
                   }
             });
@@ -242,7 +277,7 @@ $(function() {
 
 
 
-
+            $('#textfield_edit').wysiwyg();
 
             //--------------------------------------//
             editor_toggle("off");
@@ -305,6 +340,22 @@ $(function() {
                   case "scheduler":
                         $("#scheduler_layout_editor").show();
                         populate_element("scheduler", $(this));
+                        break;
+                  case "textarea":
+                        $("#textarea_layout_editor").show();
+                        populate_element("textarea", $(this));
+                        break;
+                  case "image":
+                        $("#image_layout_editor").show();
+                        populate_element("image", $(this));
+                        break;
+                  case "pdf":
+                        $("#pdf_layout_editor").show();
+                        populate_element("pdf", $(this));
+                        break;
+                  case "link":
+                        $("#link_layout_editor").show();
+                        populate_element("link", $(this));
                         break;
             }
 
@@ -437,16 +488,17 @@ function update_info()
       $.post("requests.php", {action: "get_data", id_script: $("#script_selector option:selected").val(), id_page: $("#page_selector option:selected").val()},
       function(data)
       {
-            var temp_type="";
+            var temp_type = "";
             $("#rule_target_select").empty();
             $.each(data, function(index, value) {
-                  
+
 
                   switch (this.type)
                   {
                         case "texto":
-                              temp_type="caixa de texto";
+                              temp_type = "caixa de texto";
                               var item = $('.rightDiv .texto_class').clone();
+                              item.appendTo('.leftDiv');
                               item.attr("id", this.id)
                                       .data("id", this.id)
                                       .data("tag", this.tag)
@@ -456,21 +508,23 @@ function update_info()
                                       .data("hidden", this.hidden)
                                       .data("regex", this.param1);
                               insert_element("texto", item, this);
-                              item.appendTo('.leftDiv');
-                                                     break;
+
+                              break;
                         case "pagination":
-                               temp_type="Paginação";
+                              temp_type = "Paginação";
                               var item = $('.rightDiv .pagination_class').clone();
+                              item.appendTo('.leftDiv');
                               item.attr("id", this.id)
                                       .data("id", this.id)
                                       .data("tag", this.tag)
                                       .data("type", "pagination");
                               insert_element("pagination", item, this);
-                              item.appendTo('.leftDiv');
+
                               break;
                         case "radio":
-                               temp_type="Botão radio";
+                              temp_type = "Botão radio";
                               var item = $('.rightDiv .radio_class').clone();
+                              item.appendTo('.leftDiv');
                               item.attr("id", this.id)
                                       .data("id", this.id)
                                       .data("tag", this.tag)
@@ -480,11 +534,12 @@ function update_info()
                                       .data("hidden", this.hidden)
                                       .data("dispo", this.dispo);
                               insert_element("radio", item, this);
-                              item.appendTo('.leftDiv');
+
                               break;
                         case "checkbox":
-                               temp_type="Botão resposta multipla";
+                              temp_type = "Botão resposta multipla";
                               var item = $('.rightDiv .checkbox_class').clone();
+                              item.appendTo('.leftDiv');
                               item.attr("id", this.id)
                                       .data("id", this.id)
                                       .data("tag", this.tag)
@@ -494,11 +549,12 @@ function update_info()
                                       .data("hidden", this.hidden)
                                       .data("dispo", this.dispo);
                               insert_element("checkbox", item, this);
-                              item.appendTo('.leftDiv');
+
                               break;
                         case "multichoice":
-                               temp_type="Lista de Opções";
+                              temp_type = "Lista de Opções";
                               var item = $('.rightDiv .multichoice_class').clone();
+                              item.appendTo('.leftDiv');
                               item.attr("id", this.id)
                                       .data("id", this.id)
                                       .data("tag", this.tag)
@@ -507,11 +563,12 @@ function update_info()
                                       .data("required", this.required)
                                       .data("hidden", this.hidden);
                               insert_element("multichoice", item, this);
-                              item.appendTo('.leftDiv');
+
                               break;
                         case "textfield":
-                               temp_type="Campo de Texto";
+                              temp_type = "Campo de Texto";
                               var item = $('.rightDiv .textfield_class').clone();
+                              item.appendTo('.leftDiv');
                               item.attr("id", this.id)
                                       .data("id", this.id)
                                       .data("tag", this.tag)
@@ -520,11 +577,12 @@ function update_info()
                                       .data("required", this.required)
                                       .data("hidden", this.hidden);
                               insert_element("textfield", item, this);
-                              item.appendTo('.leftDiv');
+
                               break;
                         case "legend":
-                               temp_type="Titulo";
+                              temp_type = "Titulo";
                               var item = $('.rightDiv .legend_class').clone();
+                              item.appendTo('.leftDiv');
                               item.attr("id", this.id)
                                       .data("id", this.id)
                                       .data("tag", this.tag)
@@ -533,11 +591,12 @@ function update_info()
                                       .data("required", this.required)
                                       .data("hidden", this.hidden);
                               insert_element("legend", item, this);
-                              item.appendTo('.leftDiv');
+
                               break;
                         case "tableradio":
-                               temp_type="Tabela botões radio";
+                              temp_type = "Tabela botões radio";
                               var item = $('.rightDiv .tableradio_class').clone();
+                              item.appendTo('.leftDiv');
                               item.attr("id", this.id)
                                       .data("id", this.id)
                                       .data("tag", this.tag)
@@ -546,11 +605,12 @@ function update_info()
                                       .data("required", this.required)
                                       .data("hidden", this.hidden);
                               insert_element("tableradio", item, this);
-                              item.appendTo('.leftDiv');
+
                               break;
                         case "datepicker":
-                               temp_type="Seletor tempo e hora";
+                              temp_type = "Seletor tempo e hora";
                               var item = $('.rightDiv .datepicker_class').clone();
+                              item.appendTo('.leftDiv');
                               item.attr("id", this.id)
                                       .data("id", this.id)
                                       .data("tag", this.tag)
@@ -559,11 +619,13 @@ function update_info()
                                       .data("required", this.required)
                                       .data("hidden", this.hidden);
                               insert_element("datepicker", item, this);
-                              item.appendTo('.leftDiv');
+
                               break;
                         case "scheduler":
-                               temp_type="Calendário";
+                              temp_type = "Calendário";
                               var item = $('.rightDiv .scheduler_class').clone();
+
+                              item.appendTo('.leftDiv');
                               item.attr("id", this.id)
                                       .data("id", this.id)
                                       .data("tag", this.tag)
@@ -572,7 +634,7 @@ function update_info()
                                       .data("required", this.required)
                                       .data("hidden", this.hidden);
                               insert_element("scheduler", item, this);
-                              item.appendTo('.leftDiv');
+
                               break;
                   }
                   $("#rule_target_select").append(new Option(this.tag + " --- " + temp_type, this.tag)); //povoar os alvos com as tags e tipos dos elementos
@@ -587,15 +649,17 @@ function validate_manual()
       return $("#rule_form").validationEngine('validate');
 }
 
-function write_to_file()
+function write_to_file(tipo)
 {
-         
-      
-   document.location.href = "requests.php?id_script="+$("#script_selector option:selected").val()+"&action=write_to_file";   
-      
-      
-      
-  
+alert(tipo);
+      if (tipo === "camp")
+            document.location.href = "requests.php?id_script=" + $("#script_selector option:selected").val() + "&campaign_id=" + $("#write_to_file_select_campanha option:selected").val() + "&action=write_to_file";
+      else
+            document.location.href = "requests.php?id_script=" + $("#script_selector option:selected").val() + "&campaign_id=" + $("#write_to_file_select_linha_inbound option:selected").val() + "&action=write_to_file";
+
+
+
+
 }
 
 function populate_element(tipo, element)
@@ -612,23 +676,33 @@ function populate_element(tipo, element)
       $("#label_tag").text("@" + element.data("tag") + "@");
       rules_manager(tipo, element);
       $("#tabs").tabs("enable");
+
+
+
+
+
+      var id = element.data("id");
+
+
+
+
       switch (tipo)
       {
             case "texto":
-                  $("#texto_edit").val(element.find(".label_geral")[0].innerHTML);
-                  $("#placeholder_edit").val(element.find(".input_texto")[0].placeholder);
-                  $("#max_length_edit").val(element.find(".input_texto")[0].maxLength);
+
+                  $("#texto_edit").val($("#" + id + " .label_geral").html());
+                  $("#placeholder_edit").val($("#" + id + " .input_texto").attr("placeholder"));
+                  $("#max_length_edit").val($("#" + id + " .input_texto").attr("maxLength"));
                   $(".validation input:radio[name='regex_texto'][value=" + element.data("regex") + "]").prop("checked", true);
                   break;
             case "radio":
-                  $("#radio_edit").val(element.find(".label_geral")[0].innerHTML);
-                  $("#radio_group_edit").val(element.find(":radio")[0].name);
+                  $("#radio_edit").val($("#" + id + " .label_geral").html());
                   var string_elements = "";
-                  var element_rlength = element.find(":radio").length;
+                  var element_rlength = $("#" + id + " :radio").length;
                   var rname;
                   for (var count = 0; count < element_rlength; count++)
                   {
-                        rname = element.find(".radio_name")[count].innerText;
+                        rname = $("#" + id + " .radio_name")[count].innerText;
                         if (count == element_rlength - 1)
                               string_elements += rname;
                         else
@@ -642,14 +716,13 @@ function populate_element(tipo, element)
                         $("#horiz_radio").attr('checked', true);
                   break;
             case "checkbox":
-                  $("#checkbox_edit").val(element.find(".label_geral")[0].innerHTML);
-                  $("#checkbox_group_edit").val(element.find(":checkbox")[0].name);
+                  $("#checkbox_edit").val($("#" + id + " .label_geral").html());
                   var string_elements = "";
-                  var element_clength = element.find(":checkbox").length;
+                  var element_clength = $("#" + id + " :checkbox").length;
                   var cname;
                   for (var count = 0; count < element_clength; count++)
                   {
-                        cname = element.find(".checkbox_name")[count].innerText;
+                        cname = $("#" + id + " .checkbox_name")[count].innerText;
                         if (count == element_clength - 1)
                               string_elements += cname;
                         else
@@ -663,11 +736,11 @@ function populate_element(tipo, element)
                         $("#horiz_checkbox").attr('checked', true);
                   break;
             case "multichoice":
-                  $("#multichoice_edit").val(element.find(".label_geral")[0].innerHTML);
+                  $("#multichoice_edit").val($("#" + id + " .label_geral").html());
                   var string_elements = "";
                   var count = 1;
-                  var max = element.find(".multichoice_select option").length;
-                  element.find(".multichoice_select option").each(function()
+                  var max = $("#" + id + " .multichoice_select option").length;
+                  $("#" + id + " .multichoice_select option").each(function()
                   {
                         if (count == max)
                               string_elements += $(this).val();
@@ -683,28 +756,28 @@ function populate_element(tipo, element)
                   $("#rule_manager").hide();
                   $("#open_rule_creator").prop('disabled', true);
                   $(".required_class").hide();
-                  $("#textfield_edit").val(element.find(".label_geral")[0].innerHTML);
+                  $("#textfield_edit").html($("#" + id + " .label_geral").html());
                   break;
             case "legend":
+                  $("#legend_edit").val($("#" + id + " .label_geral").html());
                   $("#tag_edit").hide();
                   $("#tabs").tabs("disable", 2);
                   $("#rule_manager").hide();
                   $("#open_rule_creator").prop('disabled', true);
                   $(".required_class").hide();
-                  $("#legend_edit").val(element.find(".label_geral")[0].innerHTML);
                   break;
             case "tableradio":
-                  $("#tableradio_edit").val(element.find(".label_geral")[0].innerHTML);
+                  $("#tableradio_edit").val($("#" + id + " .label_geral").html());
                   //titulos->texto
                   var string_elements = "";
-                  var head_td = element.find(".tr_head td");
+                  var head_td = $("#" + id + " .tr_head td");
                   for (var count = 1; count < head_td.length; count++)
                   {
                         string_elements += head_td[count].innerHTML + "\n";
                   }
                   $("#tableradio_th_textarea").val(string_elements.slice(0, -1));
                   string_elements = "";
-                  var body_tdrow = element.find(".tr_body .td_row");
+                  var body_tdrow = $("#" + id + " .tr_body .td_row");
                   for (var count = 0; count < body_tdrow.length; count++)
                   {
                         string_elements += body_tdrow[count].innerHTML + "\n";
@@ -712,13 +785,13 @@ function populate_element(tipo, element)
                   $("#tableradio_td_textarea").val(string_elements.slice(0, -1));
                   break;
             case "datepicker":
-                  $("#datepicker_edit").val(element.find(".label_geral")[0].innerHTML);
+                  $("#datepicker_edit").val($("#" + id + " .label_geral").html());
                   break;
             case "scheduler":
                   $("#tabs").tabs("disable", 2);
-                  $("#scheduler_edit").val(element.find(".label_geral")[0].innerHTML);
+                  $("#scheduler_edit").val($("#" + id + " .label_geral").html());
                   $("#checkbox_scheduler_all").prop("checked", false);
-                  var select = element.find(".scheduler_select>option");
+                  var select = $("#" + id + " .scheduler_select>option");
                   var values = select.map(function() {
                         return $(this).val();
                   });
@@ -730,15 +803,16 @@ function populate_element(tipo, element)
 
 function edit_element(opcao, element, data)
 {
+      var id = element.data("id");
       switch (opcao)
       {
             case "texto":
                   $("#texto_edit").val($("#texto_edit").val().replace(regex_replace_textbox_tag, ''));
                   $("#placeholder_edit").val($("#placeholder_edit").val().replace(regex_replace_textbox, ''));
                   $("#max_length_edit").val($("#max_length_edit").val().replace(/[^0-9]/g, ''));
-                  element.find(".label_geral")[0].innerHTML = $("#texto_edit").val();
-                  element.find(".input_texto")[0].placeholder = $("#placeholder_edit").val();
-                  element.find(".input_texto")[0].maxLength = $("#max_length_edit").val();
+                  $("#" + id + " .label_geral").html($("#texto_edit").val());
+                  $("#" + id + " .input_texto").attr("placeholder", $("#placeholder_edit").val());
+                  $("#" + id + " .input_texto").attr("maxLength", $("#max_length_edit").val());
                   element.data("regex", $(".validation input:radio[name='regex_texto']:checked").val());
                   item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
                   break;
@@ -816,7 +890,7 @@ function edit_element(opcao, element, data)
                         }
                   }
                   element.append($("<select>").addClass("multichoice_select"));
-                  var select = element.find(".multichoice_select");
+                  var select = $("#" + id + " .multichoice_select");
                   for (var count = 0; count < multichoices.length; count++)
                   {
                         select.append("<option value='" + multichoices[count] + "'>" + multichoices[count] + "</option>");
@@ -824,18 +898,19 @@ function edit_element(opcao, element, data)
                   item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", element.index(), "h", $("#multichoice_edit").val(), 0, 0, multichoices, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   break;
             case "textfield":
-                  $("#textfield_edit").val($("#textfield_edit").val().replace(regex_text, ''));
-                  element.find(".label_geral")[0].innerHTML = $("#textfield_edit").val();
-                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", element.index(), "h", "textfield", 0, 0, $("#textfield_edit").val(), false, $("#item_hidden").is(':checked'));
+                  $("#textfield_edit").html($("#textfield_edit").html().replace(regex_text, ''));
+                  $("#" + id + " .label_geral").html($("#textfield_edit").html());
+
+                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", element.index(), "h", "textfield", 0, 0, $("#textfield_edit").html(), false, $("#item_hidden").is(':checked'));
                   break;
             case "legend":
                   $("#legend_edit").val($("#legend_edit").val().replace(regex_text, ''));
-                  element.find(".label_geral")[0].innerHTML = $("#legend_edit").val();
+                  $("#" + id + " .label_geral").html($("#legend_edit").val());
                   item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "legend", element.index(), "h", "legend", 0, 0, $("#legend_edit").val(), false, $("#item_hidden").is(':checked'));
                   break;
             case "tableradio":
-                  element.find(".label_geral")[0].innerHTML = $("#tableradio_edit").val();
-                  var tr_head = element.find(".tr_head");
+                  $("#" + id + " .label_geral").html($("#tableradio_edit").val());
+                  var tr_head = $("#" + id + " .tr_head");
                   tr_head.empty();
                   $("#tableradio_th_textarea").val($("#tableradio_th_textarea").val().replace(regex_remove_blank, ""));
                   $("#tableradio_th_textarea").val($("#tableradio_th_textarea").val().replace(regex_replace, ''));
@@ -850,7 +925,7 @@ function edit_element(opcao, element, data)
                   {
                         tr_head.append($("<td>").text(titulos[count]));
                   }
-                  var tr_body = element.find(".tr_body");
+                  var tr_body = $("#" + id + " .tr_body");
                   tr_body.empty();
                   $("#tableradio_td_textarea").val($("#tableradio_td_textarea").val().replace(regex_remove_blank, ""));
                   $("#tableradio_td_textarea").val($("#tableradio_td_textarea").val().replace(regex_replace, ''));
@@ -863,7 +938,7 @@ function edit_element(opcao, element, data)
                   for (var count = 0; count < perguntas.length; count++)
                   {
                         tr_body.append($("<tr>").append($("<td>").text(perguntas[count]).addClass("td_row")));
-                        temp = element.find(".tr_body tr:last");
+                        temp = $("#" + id + " .tr_body tr:last");
                         for (var count2 = 0; count2 < titulos.length; count2++)
                         {
                               temp.append($("<td>")
@@ -876,7 +951,8 @@ function edit_element(opcao, element, data)
                   break;
             case "datepicker":
                   $("#datepicker_edit").val($("#datepicker_edit").val().replace(regex_replace_textbox_tag, ''));
-                  element.find(".label_geral")[0].innerHTML = $("#datepicker_edit").val();
+                  $("#" + id + " .label_geral").html($("#datepicker_edit").val());
+
                   item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", element.index(), "h", $("#datepicker_edit").val(), 0, 0, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   break;
             case "scheduler":
@@ -886,21 +962,21 @@ function edit_element(opcao, element, data)
                   {
                         valores.push(this.value);
                   });
-                  var select = element.find(".scheduler_select");
+                  var select = $("#" + id + " .scheduler_select");
                   select.empty();
                   select.append("<option value='' selected>Selecione um calendário</option>");
                   if (options.length > 0)
                         select.append(options);
                   $("#scheduler_edit").val($("#scheduler_edit").val().replace(regex_replace_textbox_tag, ''));
-                  element.find(".label_geral")[0].innerHTML = $("#scheduler_edit").val();
+                  $("#" + id + " .label_geral").html($("#scheduler_edit").val());
+
                   item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), "0", 0, valores, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $("#scheduler_edit_marcação option:selected").val());
                   break;
       }
 
-
-      element.find(".div_info_item").remove();
+      $("#" + id + " .div_info_item").remove();
       element.prepend($("<div>").css("float", "right").addClass("div_info_item span1"));
-      var temp = element.find(".div_info_item");
+      var temp = $("#" + id + " .div_info_item");
       //ids nos elementos
       temp.append($("<label>").addClass("label label-inverse label_id_item").text(element.data("tag")));
       if ($("#item_required").is(':checked'))
@@ -934,17 +1010,19 @@ function edit_element(opcao, element, data)
 function insert_element(opcao, element, data)
 {
 
+      var id = element.data("id");
+
       switch (opcao)
       {
             case "texto":
-                  element.find(".label_geral")[0].innerHTML = data.texto;
-                  element.find(".input_texto")[0].placeholder = data.placeholder;
-                  element.find(".input_texto")[0].maxLength = data.max_length;
+                  $("#" + id + " .label_geral").html(data.texto);
+                  $("#" + id + " .input_texto").attr("placeholder", data.placeholder);
+                  $("#" + id + " .input_texto").attr("maxLength", data.max_length);
                   break;
             case "radio":
                   element.empty();
                   element.append($("<label>").addClass("label_radio label_geral").text($("#radio_edit").val()));
-                  element.find(".label_radio")[0].innerHTML = data.texto;
+                  $("#" + id + " .label_radio").html(data.texto);
                   var radios = data.values_text;
                   for (var count = 0; count < radios.length; count++)
                   {
@@ -965,7 +1043,7 @@ function insert_element(opcao, element, data)
             case "checkbox":
                   element.empty();
                   element.append($("<label>").addClass("label_checkbox label_geral").text($("#checkbox_edit").val()));
-                  element.find(".label_checkbox")[0].innerHTML = data.texto;
+                  $("#" + id + " .label_checkbox").html(data.texto);
                   var checkboxs = data.values_text;
                   for (var count = 0; count < checkboxs.length; count++)
                   {
@@ -988,7 +1066,7 @@ function insert_element(opcao, element, data)
                   element.append($("<label>").addClass("label_multichoice label_geral").text(data.texto));
                   var multichoices = data.values_text;
                   element.append($("<select>").addClass("multichoice_select"));
-                  var select = element.find(".multichoice_select");
+                  var select = $("#" + id + " .multichoice_select");
                   var options = "";
                   for (var count = 0; count < multichoices.length; count++)
                   {
@@ -997,14 +1075,15 @@ function insert_element(opcao, element, data)
                   select.append(options);
                   break;
             case "textfield":
-                  element.find(".label_geral")[0].innerHTML = data.values_text;
+                  $("#" + id + " .label_geral").html(data.values_text);
+
                   break;
             case "legend":
-                  element.find(".label_geral")[0].innerHTML = data.values_text;
+                  $("#" + id + " .label_geral").html(data.values_text);
                   break;
             case "tableradio":
-                  element.find(".label_geral")[0].innerHTML = data.texto;
-                  var tr_head = element.find(".tr_head");
+                  $("#" + id + " .label_geral").html(data.texto);
+                  var tr_head = $("#" + id + " .tr_head");
                   tr_head.empty();
                   var titulos = data.placeholder;
                   tr_head.append($("<td>"));
@@ -1012,14 +1091,14 @@ function insert_element(opcao, element, data)
                   {
                         tr_head.append($("<td>").text(titulos[count]));
                   }
-                  var tr_body = element.find(".tr_body");
+                  var tr_body = $("#" + id + " .tr_body");
                   tr_body.empty();
                   var perguntas = data.values_text;
                   var temp = 0;
                   for (var count = 0; count < perguntas.length; count++)
                   {
                         tr_body.append($("<tr>").append($("<td>").text(perguntas[count]).addClass("td_row")));
-                        temp = element.find(".tr_body tr:last");
+                        temp = $("#" + id + " .tr_body tr:last");
                         for (var count2 = 0; count2 < titulos.length; count2++)
                         {
                               temp.append($("<td>")
@@ -1038,12 +1117,13 @@ function insert_element(opcao, element, data)
                   }
                   break;
             case "datepicker":
-                  element.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii',autoclose:true,language:"pt"});
-                  element.find(".label_geral")[0].innerHTML = data.texto;
+
+                  $("#" + id + " .form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt"});
+                  $("#" + id + " .label_geral").html(data.texto);
                   break;
             case "scheduler":
-                  element.find(".label_geral")[0].innerHTML = data.texto;
-                  var select = element.find(".scheduler_select");
+                  $("#" + id + " .label_geral").html(data.texto);
+                  var select = $("#" + id + " .scheduler_select");
                   var calendarios = data.values_text;
                   var options = [];
                   $.each(calendarios, function() {
@@ -1056,7 +1136,8 @@ function insert_element(opcao, element, data)
 
 
       element.prepend($("<div>").css("float", "right").addClass("div_info_item span1"));
-      var temp = element.find(".div_info_item");
+      var temp = $("#" + id + " .div_info_item");
+
       //IDs nos elementos 
       temp.append($("<label>").addClass("label label-inverse label_id_item").text(data.tag));
       if (data.required)
@@ -1107,7 +1188,7 @@ function pagescript_database(opcao, Id_script, Id_pagina, Pos)
 {
       $.post("requests.php", {action: opcao, id_script: Id_script, id_pagina: Id_pagina, pos: Pos},
       function(data)
-      { 
+      {
             editor_toggle("off");
             if (opcao === "delete_page")
                   update_pages(function() {
@@ -1115,7 +1196,7 @@ function pagescript_database(opcao, Id_script, Id_pagina, Pos)
                   });
             if (opcao === "add_script")
                   update_script(function() {
-                 
+
                         $("#script_selector option:last-child").prop("selected", true);
                   });
             if (opcao === "add_page")
@@ -1222,6 +1303,14 @@ $("#opcao_script_button").click(function()//chama o edit do nome do script
 {
       $("#script_campanha_selector").val("").trigger("liszt:updated");
       $("#script_linha_inbound_selector").val("").trigger("liszt:updated");
+
+
+
+
+
+
+
+
       $.post("requests.php", {action: "get_camp_linha_by_id_script", id_script: $("#script_selector option:selected").val()},
       function(data)
       {
@@ -1235,8 +1324,25 @@ $("#opcao_script_button").click(function()//chama o edit do nome do script
             });
             $("#script_campanha_selector").val(campaign).trigger("liszt:updated");
             $("#script_linha_inbound_selector").val(linha_inbound).trigger("liszt:updated");
+
+            $("#write_to_file_select_campanha").empty();
+            //fazer append das opcions selected da campanha para geração de relatorios
+            $("#script_campanha_selector option:selected").clone().appendTo($("#write_to_file_select_campanha"));
+            $("#write_to_file_select_campanha").trigger("liszt:updated");
+            
+            
+                  $("#write_to_file_select_linha_inbound").empty();
+            //fazer append das opcions selected da campanha para geração de relatorios
+            $("#script_linha_inbound_selector option:selected").clone().appendTo($("#write_to_file_select_linha_inbound"));
+            $("#write_to_file_select_linha_inbound").trigger("liszt:updated");
+     
+            
+
       }, "json");
       $("#script_name_edit").val($("#script_selector option:selected").text());
+
+
+
 });
 $("#save_button_layout").click(function()//Fecha o dialog e grava as alterações
 {

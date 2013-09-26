@@ -450,13 +450,9 @@ switch ($action) {
 
 
 
-
+//falta tableradios
+        //falta linhas inbound
     case "write_to_file":
-
-
-
-
-
 
 
 
@@ -468,40 +464,63 @@ switch ($action) {
         $output = fopen('php://output', 'w');
 
 
+        $titles = array('ID', 'Data', 'Script', 'Nome agente', 'Unique id', 'Campanha', 'Lead id');
+        $campos = array();
+        $ref_name=array();
 
-        $titles = array('ID', 'Data', 'Script', 'Nome completo', 'Unique id', 'Campaign', 'Lead id');
+        $query = "SELECT Name,Display_name  FROM vicidial_list_ref where campaign_id = '$campaign_id' and active='1' ";
+
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            array_push($titles, $row['Display_name']);
+            $campos[$row['Name']] = "";
+             array_push($ref_name, $row['Name']);
+            
+        }
+
+
         $tags = array();
 
         $query = "SELECT tag,type,texto  FROM `script_dinamico` where type not in ('pagination','textfield') and texto!='' and id_script='$id_script' order by tag asc ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            array_push($titles, $row['tag'] . "->" . $row['type'] . "-" . $row['texto']);
+            array_push($titles, $row['texto']);
             $tags["m" . $row['tag']] = "";
         }
 
         fputcsv($output, $titles, ";", '"');
 
 
+$query = "SELECT a.lead_id, ".implode(",",$ref_name)." from vicidial_list a left join `script_result` b on a.lead_id=b.lead_id where id_script='$id_script' and  b.campaign_id = '$campaign_id'  group by b.lead_id";
+        $result = mysql_query($query, $link) or die(mysql_error());
+        $lead_info=array();
+        while ($row3 = mysql_fetch_assoc($result)) {
+            $lead_info[$row3["lead_id"]]=$row3;
+        }
 
-        $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name, sr.unique_id, vc.campaign_name, sr.lead_id, sr.tag_elemento,sr.valor as valor FROM `script_result` sr
+        $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name, sr.unique_id, vc.campaign_name, sr.lead_id,vs.status_name, sr.tag_elemento,sr.valor as valor FROM `script_result` sr
 left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id
 left join vicidial_users vu on sr.user_id=vu.user_id
 left join script_dinamico_master sdm on sdm.id=sr.id_script
-where id_script='$id_script' order by sr.lead_id,tag_elemento  ";
+left join vicidial_list vl on vl.lead_id=sr.lead_id
+left join vicidial_log vlg on vlg.uniqueid=sr.unique_id
+left join vicidial_statuses vs on vs.status=vlg.status
+where id_script='$id_script' and sr.campaign_id = '$campaign_id' order by sr.lead_id,tag_elemento";
         $result = mysql_query($query, $link) or die(mysql_error());
 
 
 
-        $final_row = array_merge(array("id" => "", "date" => "", "name" => "", "full_name" => "", "unique_id" => "", "campaign_name" => "", "lead_id" => ""), $tags);
-
+        $final_row = array("id" => "", "date" => "", "name" => "", "full_name" => "", "unique_id" => "", "campaign_name" => "", "lead_id" => "");
+        
         $lead_id = false;
+        $client=array();
         while ($row1 = mysql_fetch_assoc($result)) {
             if ($lead_id != $row1["lead_id"]) {
                 if ($lead_id) {
                     fputcsv($output, $client, ";", '"');
                 }
                 $lead_id = $row1["lead_id"];
-                $client = $final_row;
+                $client= array_merge($final_row,$lead_info[$lead_id],$tags);
                 $client["id"] = $row1["id"];
                 $client["date"] = $row1["date"];
                 $client["name"] = $row1["name"];
@@ -510,9 +529,9 @@ where id_script='$id_script' order by sr.lead_id,tag_elemento  ";
                 $client["campaign_name"] = $row1["campaign_name"];
                 $client["lead_id"] = $row1["lead_id"];
             }
-
             $client["m" . $row1["tag_elemento"]] = $row1["valor"];
         }
+                    fputcsv($output, $client, ";", '"');// necessário para imprimir a info da ultima lead0
 
 
 
