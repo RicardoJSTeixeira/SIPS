@@ -10,6 +10,7 @@ var tag_regex = /\@(\d{1,5})\@/g;
 var tag_regex2 = /\§(.*)\§/g;
 var page_info = [];
 var items = [];
+var unique_id;
 $(function() {
       array_id["radio"] = 0;
       array_id["checkbox"] = 0;
@@ -721,7 +722,7 @@ $("#myform").on("submit", function(e)
 
 function submit_manual()
 {
-      $.post("requests.php", {action: "save_form_result", id_script: page_info.script_id, results: $("#myform").serializeArray(), user_id: page_info.user_id, unique_id: page_info.unique_id, campaign_id: page_info.campaign_id, lead_id: page_info.lead_id}, function() {
+      $.post("requests.php", {action: "save_form_result", id_script: page_info.script_id, results: $("#myform").serializeArray(), user_id: page_info.user_id, unique_id:unique_id, campaign_id: page_info.campaign_id, lead_id: page_info.lead_id}, function() {
             return true;
       }, "json").fail(function() {
             return false;
