@@ -26,6 +26,8 @@
 //metodo de edição de elementos de texto
 
 
+//get_results_to_populate not debuged
+
 var temp_value_holder = "";
 var current_page_pos = 0;
 var selected_id = 0;

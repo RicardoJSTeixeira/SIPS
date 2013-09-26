@@ -135,7 +135,7 @@ switch ($action) {
 
 
     case "get_results_to_populate":
-        $query = "SELECT sr.id_script,lead_id,tag_elemento,valor,type FROM script_result sr inner join script_dinamico sd on sr.tag_elemento=sd.tag  where sr.lead_id=$lead_id order by unique_id ";
+        $query = "SELECT sr.id_script,lead_id,tag_elemento,valor,type FROM script_result sr inner join script_dinamico sd on sr.tag_elemento=sd.tag  where sr.lead_id=$lead_id order by unique_id desc limit 1 ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array("id_script" => $row["id_script"], "lead_id" => $row["lead_id"], "tag_elemento" => $row["tag_elemento"], "valor" => $row["valor"], "type" => $row["type"]);
@@ -470,30 +470,51 @@ switch ($action) {
 
 
         $titles = array('ID', 'Data', 'Script', 'Nome completo', 'Unique id', 'Campaign', 'Lead id');
+        $tags = array();
 
-
-        $query = "SELECT tag,type,texto  FROM `script_dinamico` where type not in ('pagination','textfield') and texto!='' and id_script='$id_script' order by tag asc";
+        $query = "SELECT tag,type,texto  FROM `script_dinamico` where type not in ('pagination','textfield') and texto!='' and id_script='$id_script' order by tag asc ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             array_push($titles, $row['tag'] . "->" . $row['type'] . "-" . $row['texto']);
-                       
+            $tags["m" . $row['tag']] = "";
         }
-
 
         fputcsv($output, $titles, ";", '"');
 
 
-        $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name, sr.unique_id, vc.campaign_name, sr.lead_id FROM `script_result` sr
+
+        $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name, sr.unique_id, vc.campaign_name, sr.lead_id, sr.tag_elemento,sr.valor as valor FROM `script_result` sr
 left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id
 left join vicidial_users vu on sr.user_id=vu.user_id
 left join script_dinamico_master sdm on sdm.id=sr.id_script
-where id_script='$id_script' group by lead_id";
-        $query = mysql_query($query, $link) or die(mysql_error());
+where id_script='$id_script' order by sr.lead_id,tag_elemento  ";
+        $result = mysql_query($query, $link) or die(mysql_error());
 
 
-        while ($row = mysql_fetch_assoc($query)) {
-            fputcsv($output, $row, ";", '"');
+
+        $final_row = array_merge(array("id" => "", "date" => "", "name" => "", "full_name" => "", "unique_id" => "", "campaign_name" => "", "lead_id" => ""), $tags);
+
+        $lead_id = false;
+        while ($row1 = mysql_fetch_assoc($result)) {
+            if ($lead_id != $row1["lead_id"]) {
+                if ($lead_id) {
+                    fputcsv($output, $client, ";", '"');
+                }
+                $lead_id = $row1["lead_id"];
+                $client = $final_row;
+                $client["id"] = $row1["id"];
+                $client["date"] = $row1["date"];
+                $client["name"] = $row1["name"];
+                $client["full_name"] = $row1["full_name"];
+                $client["unique_id"] = $row1["unique_id"];
+                $client["campaign_name"] = $row1["campaign_name"];
+                $client["lead_id"] = $row1["lead_id"];
+            }
+
+            $client["m" . $row1["tag_elemento"]] = $row1["valor"];
         }
+
+
 
         fclose($output);
 
