@@ -1,45 +1,13 @@
 
 
 
-/*
- 
- 1.1 - Encerramento de estabelecimento
- 2.1 - Problemas técnicos com o equipamento
- 3.1 - Deixou de utilizar o terminal como meio de pagamento
- 4.1 - Custo/ tarifário
- 5.2 - Redução da actividade com o banco
- 6.1 - Insatisfação com o Banco/Gestor
- 7.1 - Outra. Qual
- 
- 
- 
- */
-
-
-
 
 
 
 
 // URGENTE GO CONECTA REPORT
 //FEEDBACK CHAMADA NOT NICE
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//tableradio
 
 
 
@@ -62,7 +30,6 @@
 // NOS COMMITS!------------------------
 // Issue #13
 
-///////NAO FAZER COMMIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 //adicionar elemento de textarea pra resposta
@@ -153,8 +120,6 @@ $("#checkbox_scheduler_all").click(function()
       $("#scheduler_edit_select").trigger("liszt:updated");
 });
 
-
-//file:///home/ricardo/Desktop/bootstrap-wysiwyg-master/index.html
 
 $(function() {
       $("#tabs").tabs();
@@ -658,7 +623,66 @@ function update_info()
                                       .data("required", this.required)
                                       .data("hidden", this.hidden);
                               insert_element("scheduler", item, this);
+                              break;
 
+                        case "textarea":
+                              temp_type = "Input de texto";
+                              var item = $('.rightDiv .textarea_class').clone();
+
+                              item.appendTo('.leftDiv');
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
+                                      .data("tag", this.tag)
+                                      .addClass("element")
+                                      .data("type", "textarea")
+                                      .data("required", this.required)
+                                      .data("hidden", this.hidden);
+                              insert_element("textarea", item, this);
+                              break;
+
+                        case "image":
+                              temp_type = "Imagem";
+                              var item = $('.rightDiv .image_class').clone();
+
+                              item.appendTo('.leftDiv');
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
+                                      .data("tag", this.tag)
+                                      .addClass("element")
+                                      .data("type", "image")
+                                      .data("required", this.required)
+                                      .data("hidden", this.hidden);
+                              insert_element("image", item, this);
+                              break;
+
+                        case "pdf":
+                              temp_type = "PDF";
+                              var item = $('.rightDiv .pdf_class').clone();
+
+                              item.appendTo('.leftDiv');
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
+                                      .data("tag", this.tag)
+                                      .addClass("element")
+                                      .data("type", "pdf")
+                                      .data("required", this.required)
+                                      .data("hidden", this.hidden);
+                              insert_element("pdf", item, this);
+                              break;
+
+                        case "link":
+                              temp_type = "Link";
+                              var item = $('.rightDiv .link_class').clone();
+
+                              item.appendTo('.leftDiv');
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
+                                      .data("tag", this.tag)
+                                      .addClass("element")
+                                      .data("type", "link")
+                                      .data("required", this.required)
+                                      .data("hidden", this.hidden);
+                              insert_element("link", item, this);
                               break;
                   }
                   $("#rule_target_select").append(new Option(this.tag + " --- " + temp_type, this.tag)); //povoar os alvos com as tags e tipos dos elementos
@@ -675,7 +699,7 @@ function validate_manual()
 
 function write_to_file(tipo)
 {
-alert(tipo);
+
       if (tipo === "camp")
             document.location.href = "requests.php?id_script=" + $("#script_selector option:selected").val() + "&campaign_id=" + $("#write_to_file_select_campanha option:selected").val() + "&action=write_to_file";
       else
@@ -820,6 +844,11 @@ function populate_element(tipo, element)
                         return $(this).val();
                   });
                   $("#scheduler_edit_select").val(values).trigger("liszt:updated");
+                  break;
+
+
+            case "textarea":
+                  $("#textarea_edit").val($("#" + id + " .label_geral").html());
                   break;
       }
       rules_database("get_rules_by_trigger", 0, $("#script_selector option:selected").val(), 0, element.data("tag"), 0, 0, 0, 0, 0);
@@ -994,8 +1023,16 @@ function edit_element(opcao, element, data)
                   $("#scheduler_edit").val($("#scheduler_edit").val().replace(regex_replace_textbox_tag, ''));
                   $("#" + id + " .label_geral").html($("#scheduler_edit").val());
 
-                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), "0", 0, valores, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $("#scheduler_edit_marcação option:selected").val());
+                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), "1", 0, valores, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $("#scheduler_edit_marcação option:selected").val());
                   break;
+
+            case "textarea":
+                  $("#textarea_edit").val($("#textarea_edit").val().replace(regex_text, ''));
+                  $("#" + id + " .label_geral").html($("#textarea_edit").val());
+                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textarea", element.index(), "h", $("#textarea_edit").val(), 0, 0, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  break;
+
+
       }
 
       $("#" + id + " .div_info_item").remove();
@@ -1155,6 +1192,19 @@ function insert_element(opcao, element, data)
                   });
                   if (options.length > 0)
                         select.append(options);
+                  break;
+
+            case "textarea":
+                  $("#" + id + " .label_geral").html(data.texto);
+                  break;
+
+            case "image":
+                  break;
+
+            case "pdf":
+                  break;
+
+            case "link":
                   break;
       }
 
@@ -1353,14 +1403,14 @@ $("#opcao_script_button").click(function()//chama o edit do nome do script
             //fazer append das opcions selected da campanha para geração de relatorios
             $("#script_campanha_selector option:selected").clone().appendTo($("#write_to_file_select_campanha"));
             $("#write_to_file_select_campanha").trigger("liszt:updated");
-            
-            
-                  $("#write_to_file_select_linha_inbound").empty();
+
+
+            $("#write_to_file_select_linha_inbound").empty();
             //fazer append das opcions selected da campanha para geração de relatorios
             $("#script_linha_inbound_selector option:selected").clone().appendTo($("#write_to_file_select_linha_inbound"));
             $("#write_to_file_select_linha_inbound").trigger("liszt:updated");
-     
-            
+
+
 
       }, "json");
       $("#script_name_edit").val($("#script_selector option:selected").text());
@@ -1407,6 +1457,7 @@ function rules_manager(tipo, element)
                   rts.append(new Option("Valor escolhido", "value_select"));
                   break;
             case "datepicker":
+            case "textarea":
                   rts.append(new Option("Resposta", "answer"));
                   break;
       }
@@ -1615,6 +1666,18 @@ $("#add_rule_button").click(function()
                         }
                         break;
                   case "datepicker":
+                        switch ($("#rule_trigger_select").val())
+                        {
+                              case "answer":
+                                    if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                          rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                                    else
+                                          rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, 1, $("#regra_select").val(), "answer", $("#go_to_select").val());
+                                    break;
+                        }
+                        break;
+                        
+                            case "textarea":
                         switch ($("#rule_trigger_select").val())
                         {
                               case "answer":

@@ -237,7 +237,7 @@ function update_info()
 
       }, "json");
 
-}
+} 
 
 function insert_element(opcao, element, data)
 {
@@ -396,13 +396,13 @@ function insert_element(opcao, element, data)
                               if (data.required)
                               {
                                     trbody_last.append($("<td>")
-                                            .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").addClass("validate[required]").attr("value", titulos[count2]).attr("name", data.tag + "," + count))
+                                            .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").addClass("validate[required]").attr("value", titulos[count2]).attr("name", data.tag + "," + perguntas[count]))
                                             .append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "tableradio")));
                               }
                               else
                               {
                                     trbody_last.append($("<td>")
-                                            .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").attr("value", titulos[count2]).attr("name", data.tag + "," + count))
+                                            .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").attr("value", titulos[count2]).attr("name", data.tag + "," + perguntas[count]))
                                             .append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "tableradio")));
                               }
                               array_id["radio"] = array_id["radio"] + 1;
@@ -624,7 +624,10 @@ function rules()
                               break;
                   }
             });
+         
+            $("#myform").validationEngine();
       }
+
       , "json");
 
 }
