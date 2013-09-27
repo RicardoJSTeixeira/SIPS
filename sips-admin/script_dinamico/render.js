@@ -207,6 +207,15 @@ function update_info()
                                       .data("type", "scheduler");
                               items.push([item, this.id_page]);
                               break;
+
+                        case "textarea":
+                              item = $('#dummie .textarea_class').clone();
+                              item.attr("id", this.tag)
+                                      .data("id", this.id)
+                                      .data("required", this.required)
+                                      .data("type", "textarea");
+                              items.push([item, this.id_page]);
+                              break;
                   }
 
                   insert_element(this.type, item, this);
@@ -237,7 +246,7 @@ function update_info()
 
       }, "json");
 
-} 
+}
 
 function insert_element(opcao, element, data)
 {
@@ -434,6 +443,15 @@ function insert_element(opcao, element, data)
 
                   break;
 
+            case "textarea":
+                  element.find(".label_geral")[0].innerHTML = data.texto;
+                  element.find(".input_textarea")[0].name = data.tag;
+                  if (data.required)
+                        element.find(".input_textarea").addClass("validate[required]");
+                  
+                  break;
+
+
 
       }
       if (data.hidden)
@@ -515,7 +533,7 @@ function rules()
                               {
                                     case "value_input":
 
-                                          $(document).on("keyup","#" + this.tag_trigger, function()//atribuir os ons a cada value
+                                          $(document).on("keyup", "#" + this.tag_trigger, function()//atribuir os ons a cada value
                                           {
                                                 var pattern = new RegExp('\\b' + data[index].tag_trigger2, 'i');
                                                 if ($("#" + data[index].tag_trigger + " input").val().match(pattern))
@@ -526,7 +544,7 @@ function rules()
                                           );
                                           break;
                                     case "answer":
-                                          $(document).on("focusout","#" + this.tag_trigger, function()//atribuir os ons a cada value
+                                          $(document).on("focusout", "#" + this.tag_trigger, function()//atribuir os ons a cada value
                                           {
                                                 rules_work(data[index]);
                                           }
@@ -542,7 +560,7 @@ function rules()
                                           var values = this.tag_trigger2;
                                           for (var count = 0; count < values.length; count++)
                                           {
-                                                $(document).on("click","#" + this.tag_trigger +" input[value='" + values[count] + "']", function()//atribuir os ons a cada value
+                                                $(document).on("click", "#" + this.tag_trigger + " input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                                 {
                                                       rules_work(data[index]);
                                                 }
@@ -558,7 +576,7 @@ function rules()
                                           var values = this.tag_trigger2;
                                           for (var count = 0; count < values.length; count++)
                                           {
-                                                $(document).on("click","#" + this.tag_trigger+" input[value='" + values[count] + "']", function()//atribuir os ons a cada value
+                                                $(document).on("click", "#" + this.tag_trigger + " input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                                 {
 
                                                       rules_work(data[index]);
@@ -575,7 +593,7 @@ function rules()
                                           var values = this.tag_trigger2;
                                           for (var count = 0; count < values.length; count++)
                                           {
-                                                $(document).on("change","#" + this.tag_trigger, function()//atribuir os ons a cada value
+                                                $(document).on("change", "#" + this.tag_trigger, function()//atribuir os ons a cada value
                                                 {
                                                       if ($("#" + data[index].tag_trigger + " option:selected").val() === data[index].tag_trigger2)
                                                             rules_work(data[index]);
@@ -593,7 +611,7 @@ function rules()
                                           for (var count = 0; count < linhas.length; count++)
                                           {
                                                 var values = linhas[count].split(";");
-                                                $(document).on("click","#" + this.tag_trigger +" tr:contains('" + values[0] + "') input[value='" + values[1] + "']", function()
+                                                $(document).on("click", "#" + this.tag_trigger + " tr:contains('" + values[0] + "') input[value='" + values[1] + "']", function()
                                                 {
                                                       rules_work(data[index]);
                                                 }
@@ -601,7 +619,7 @@ function rules()
                                           }
                                           break;
                                     case "answer":
-                                          $(document).on("click","#" + this.tag_trigger+" input", function()
+                                          $(document).on("click", "#" + this.tag_trigger + " input", function()
                                           {
 
                                                 if ($("#" + data[index].tag_trigger).find("input:checked").length === ($("#" + data[index].tag_trigger + " .tr_body").find("tr").length))
@@ -614,7 +632,21 @@ function rules()
                               switch (this.param1)
                               {
                                     case "answer":
-                                          $(document).on("change","#" + this.tag_trigger, function()//atribuir os ons a cada value
+                                          $(document).on("change", "#" + this.tag_trigger, function()//atribuir os ons a cada value
+                                          {
+                                                rules_work(data[index]);
+                                          }
+                                          );
+                                          break;
+                              }
+                              break;
+                              
+                                           case "textarea":
+                                                 
+                              switch (this.param1)
+                              {
+                                    case "answer":
+                                          $(document).on("focusout", "#" + this.tag_trigger, function()//atribuir os ons a cada value
                                           {
                                                 rules_work(data[index]);
                                           }
@@ -624,7 +656,7 @@ function rules()
                               break;
                   }
             });
-         
+
             $("#myform").validationEngine();
       }
 
@@ -725,7 +757,7 @@ $("#myform").on("submit", function(e)
 
 function submit_manual()
 {
-      $.post("requests.php", {action: "save_form_result", id_script: page_info.script_id, results: $("#myform").serializeArray(), user_id: page_info.user_id, unique_id:unique_id, campaign_id: page_info.campaign_id, lead_id: page_info.lead_id}, function() {
+      $.post("requests.php", {action: "save_form_result", id_script: page_info.script_id, results: $("#myform").serializeArray(), user_id: page_info.user_id, unique_id: unique_id, campaign_id: page_info.campaign_id, lead_id: page_info.lead_id}, function() {
             return true;
       }, "json").fail(function() {
             return false;

@@ -406,10 +406,13 @@ switch ($action) {
     case "delete_item":
         $query = "UPDATE script_dinamico SET ordem=ordem-1 where ordem>$ordem and id_page=$id_page ";
         $query = mysql_query($query, $link) or die(mysql_error());
+        $query = "delete from script_result where id_script=$id_script and tag_elemento=(select tag from script_dinamico where id=$id)";
+        $query = mysql_query($query, $link) or die(mysql_error());
         $query = "delete from script_dinamico where id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "delete from script_rules where tag_trigger=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
+          
         echo json_encode(1);
         break;
 

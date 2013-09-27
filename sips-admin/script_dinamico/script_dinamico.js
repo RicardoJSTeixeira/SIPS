@@ -50,6 +50,8 @@ var regex_replace_textbox = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊ
 var regex_replace = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\_\s:,?\/\-\.\,()]/g;
 var regex_text = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª><=\"\'\_\s\:\-,?\/\-\.\,()@§]/g;
 var regex_split = /\n/g;
+var list_ui;
+var list_item;
 
 
 //mostra/esconde os elementos associados ao edit
@@ -121,6 +123,42 @@ $("#checkbox_scheduler_all").click(function()
 });
 
 
+
+$("#apagar_elemento").click(function()
+{
+      function item_database(opcao, Id, Tag, Id_script, Id_page, Type, Ordem, Dispo, Texto, Placeholder, Max_length, Values_text, Required, Hidden, Param1)
+      {
+            $.post("requests.php", {action: opcao,
+                  id: Id,
+                  tag: Tag,
+                  id_script: Id_script,
+                  id_page: Id_page,
+                  type: Type,
+                  ordem: Ordem,
+                  dispo: Dispo,
+                  texto: Texto,
+                  placeholder: Placeholder,
+                  max_length: Max_length,
+                  values_text: Values_text,
+                  required: Required,
+                  hidden: Hidden,
+                  param1: Param1},
+            function(data)
+            {
+
+
+                  if (opcao === "add_item")
+                        update_info();
+            }
+            , "json");
+      }
+      item_database("delete_item", list_item.attr("id"), 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), 0, list_item.index(), 0, 0, 0, 0, 0, 0);
+      list_ui.item.remove();
+      editor_toggle("off");
+      $("#rule_target_select option[value=" + list_item.attr("id") + "] ").remove();
+      $('#rule_target_select').val('').trigger('liszt:updated');
+});
+
 $(function() {
       $("#tabs").tabs();
       array_id["radio"] = 0;
@@ -144,11 +182,9 @@ $(function() {
                   },
                   beforeStop: function(event, ui) {
                         if (removeIntent == true) {
-                              item_database("delete_item", $(this).data().uiSortable.currentItem.attr("id"), 0, 0, 0, 0, $(this).data().uiSortable.currentItem.index(), 0, 0, 0, 0, 0, 0);
-                              ui.item.remove();
-                              editor_toggle("off");
-                              $("#rule_target_select option[value=" + $(this).data().uiSortable.currentItem.attr("id") + "] ").remove();
-                              $('#rule_target_select').val('').trigger('liszt:updated');
+                              list_item = $(this).data().uiSortable.currentItem;
+                              list_ui = ui;
+                              $('#dialog_elements').modal('show');
                         }
                   },
                   update: function(event, ui) {
@@ -205,17 +241,9 @@ $(function() {
                         {
                               item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textarea", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_textarea")[0].innerHTML, 0, 0, [], 0, 0, 1);
                         }
-                        if ($(this).data().uiSortable.currentItem.hasClass("image_class"))
+                        if ($(this).data().uiSortable.currentItem.hasClass("ipl_class"))
                         {
-                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "image", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_image")[0].innerHTML, 0, 0, [], 0, 0, 1);
-                        }
-                        if ($(this).data().uiSortable.currentItem.hasClass("pdf_class"))
-                        {
-                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "pdf", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_pdf")[0].innerHTML, 0, 0, [], 0, 0, 1);
-                        }
-                        if ($(this).data().uiSortable.currentItem.hasClass("link_class"))
-                        {
-                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "link", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_link")[0].innerHTML, 0, 0, [], 0, 0, 1);
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_ipl")[0].innerHTML, 0, 0, [], 0, 0, 1);
                         }
                         editor_toggle("off");
                   }
@@ -247,10 +275,6 @@ $(function() {
                               $(".linha_inbound_div").show();
                   }, "json");
             }, "json");
-
-
-
-
             $.post("requests.php", {action: "get_schedule"},
             function(data3)
             {
@@ -261,21 +285,10 @@ $(function() {
                   });
                   $("#scheduler_edit_select").val("").trigger("liszt:updated");
             }, "json");
-
-
-
-
-
             $('#textfield_edit').wysiwyg();
-
             //--------------------------------------//
             editor_toggle("off");
             update_script();
-
-
-
-
-
       });
 
       $("#tag_label").text("§nome§");
@@ -334,18 +347,11 @@ $(function() {
                         $("#textarea_layout_editor").show();
                         populate_element("textarea", $(this));
                         break;
-                  case "image":
-                        $("#image_layout_editor").show();
-                        populate_element("image", $(this));
+                  case "ipl":
+                        $("#ipl_layout_editor").show();
+                        populate_element("ipl", $(this));
                         break;
-                  case "pdf":
-                        $("#pdf_layout_editor").show();
-                        populate_element("pdf", $(this));
-                        break;
-                  case "link":
-                        $("#link_layout_editor").show();
-                        populate_element("link", $(this));
-                        break;
+
             }
 
       });
@@ -472,7 +478,6 @@ function update_pages(callback)
 }
 function update_info()
 {
-
       $(".leftDiv").empty();
       $.post("requests.php", {action: "get_data", id_script: $("#script_selector option:selected").val(), id_page: $("#page_selector option:selected").val()},
       function(data)
@@ -480,8 +485,6 @@ function update_info()
             var temp_type = "";
             $("#rule_target_select").empty();
             $.each(data, function(index, value) {
-
-
                   switch (this.type)
                   {
                         case "texto":
@@ -640,50 +643,21 @@ function update_info()
                               insert_element("textarea", item, this);
                               break;
 
-                        case "image":
-                              temp_type = "Imagem";
-                              var item = $('.rightDiv .image_class').clone();
+                        case "ipl":
+                              temp_type = "Imagem/PDF/Link";
+                              var item = $('.rightDiv .ipl_class').clone();
 
                               item.appendTo('.leftDiv');
                               item.attr("id", this.id)
                                       .data("id", this.id)
                                       .data("tag", this.tag)
                                       .addClass("element")
-                                      .data("type", "image")
-                                      .data("required", this.required)
+                                      .data("type", "ipl")
                                       .data("hidden", this.hidden);
-                              insert_element("image", item, this);
+                              insert_element("ipl", item, this);
                               break;
 
-                        case "pdf":
-                              temp_type = "PDF";
-                              var item = $('.rightDiv .pdf_class').clone();
 
-                              item.appendTo('.leftDiv');
-                              item.attr("id", this.id)
-                                      .data("id", this.id)
-                                      .data("tag", this.tag)
-                                      .addClass("element")
-                                      .data("type", "pdf")
-                                      .data("required", this.required)
-                                      .data("hidden", this.hidden);
-                              insert_element("pdf", item, this);
-                              break;
-
-                        case "link":
-                              temp_type = "Link";
-                              var item = $('.rightDiv .link_class').clone();
-
-                              item.appendTo('.leftDiv');
-                              item.attr("id", this.id)
-                                      .data("id", this.id)
-                                      .data("tag", this.tag)
-                                      .addClass("element")
-                                      .data("type", "link")
-                                      .data("required", this.required)
-                                      .data("hidden", this.hidden);
-                              insert_element("link", item, this);
-                              break;
                   }
                   $("#rule_target_select").append(new Option(this.tag + " --- " + temp_type, this.tag)); //povoar os alvos com as tags e tipos dos elementos
             });
@@ -849,6 +823,11 @@ function populate_element(tipo, element)
 
             case "textarea":
                   $("#textarea_edit").val($("#" + id + " .label_geral").html());
+                  break;
+
+            case "ipl":
+                  $("#ipl_edit").val($("#" + id + " .label_geral").html());
+                  $("#ipl_link").val($("#" + id + " .ipl_link").html());
                   break;
       }
       rules_database("get_rules_by_trigger", 0, $("#script_selector option:selected").val(), 0, element.data("tag"), 0, 0, 0, 0, 0);
@@ -1198,14 +1177,12 @@ function insert_element(opcao, element, data)
                   $("#" + id + " .label_geral").html(data.texto);
                   break;
 
-            case "image":
+            case "ipl":
+                  $("#" + id + " .label_geral").html(data.texto);
+                  $("#" + id + " .ipl_link").html(data.values_text);
                   break;
 
-            case "pdf":
-                  break;
 
-            case "link":
-                  break;
       }
 
 
@@ -1676,8 +1653,8 @@ $("#add_rule_button").click(function()
                                     break;
                         }
                         break;
-                        
-                            case "textarea":
+
+                  case "textarea":
                         switch ($("#rule_trigger_select").val())
                         {
                               case "answer":
