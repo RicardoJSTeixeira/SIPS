@@ -153,11 +153,8 @@ if ($row['user_group'] == "ADMIN") {
 		GROUP BY b.`user`";
 //echo $query;
                                     $query = mysql_query($query) or die(mysql_error());
-                                    if (!mysql_num_rows($query)) {
-                                        continue;
-                                    } else {
+                                    
                                         echo $tabela;
-                                    }
 
                                     while ($row = mysql_fetch_row($query)) {
                                         ?>
