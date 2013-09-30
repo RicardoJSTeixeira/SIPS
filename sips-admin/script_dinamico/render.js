@@ -10,6 +10,7 @@ var tag_regex = /\@(\d{1,5})\@/g;
 var tag_regex2 = /\§(.*)\§/g;
 var page_info = [];
 var items = [];
+var unique_id;
 $(function() {
       array_id["radio"] = 0;
       array_id["checkbox"] = 0;
@@ -118,7 +119,7 @@ function update_info()
                   {
                         case "texto":
                               item = $('#dummie .texto_class').clone();
-                             item.attr("id", this.tag)
+                              item.attr("id", this.tag)
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "texto");
@@ -127,7 +128,7 @@ function update_info()
 
                         case "pagination":
                               item = $('#dummie .pagination_class').clone();
-                             item.attr("id", this.tag)
+                              item.attr("id", this.tag)
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "pagination");
@@ -136,7 +137,7 @@ function update_info()
 
                         case "radio":
                               item = $('#dummie .radio_class').clone();
-                             item.attr("id", this.tag)
+                              item.attr("id", this.tag)
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "radio")
@@ -146,7 +147,7 @@ function update_info()
 
                         case "checkbox":
                               item = $('#dummie .checkbox_class').clone();
-                             item.attr("id", this.tag)
+                              item.attr("id", this.tag)
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("dispo", this.dispo)
@@ -156,7 +157,7 @@ function update_info()
 
                         case "multichoice":
                               item = $('#dummie .multichoice_class').clone();
-                             item.attr("id", this.tag)
+                              item.attr("id", this.tag)
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "multichoice");
@@ -165,7 +166,7 @@ function update_info()
 
                         case "textfield":
                               item = $('#dummie .textfield_class').clone();
-                             item.attr("id", this.tag)
+                              item.attr("id", this.tag)
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "textfield");
@@ -173,7 +174,7 @@ function update_info()
                               break;
                         case "legend":
                               item = $('#dummie .legend_class').clone();
-                             item.attr("id", this.tag)
+                              item.attr("id", this.tag)
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "legend");
@@ -182,7 +183,7 @@ function update_info()
 
                         case "tableradio":
                               item = $('#dummie .tableradio_class').clone();
-                             item.attr("id", this.tag)
+                              item.attr("id", this.tag)
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "tableradio");
@@ -191,7 +192,7 @@ function update_info()
 
                         case "datepicker":
                               item = $('#dummie .datepicker_class').clone();
-                             item.attr("id", this.tag)
+                              item.attr("id", this.tag)
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "datepicker");
@@ -200,10 +201,19 @@ function update_info()
 
                         case "scheduler":
                               item = $('#dummie .scheduler_class').clone();
-                             item.attr("id", this.tag)
+                              item.attr("id", this.tag)
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "scheduler");
+                              items.push([item, this.id_page]);
+                              break;
+
+                        case "textarea":
+                              item = $('#dummie .textarea_class').clone();
+                              item.attr("id", this.tag)
+                                      .data("id", this.id)
+                                      .data("required", this.required)
+                                      .data("type", "textarea");
                               items.push([item, this.id_page]);
                               break;
                   }
@@ -221,16 +231,18 @@ function update_info()
                   }
                   $("#" + this[1] + "pag").append(this[0]);
             });
-            populate_script();
-            rules();
-            tags();
+
 
             $(".pag_div").hide().first().show();
-            $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true}).keypress(function(e) {
+            $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt"}).keypress(function(e) {
                   e.preventDefault();
             }).bind("cut copy paste", function(e) {
                   e.preventDefault();
             });
+
+            populate_script();
+            tags();
+            rules();
 
       }, "json");
 
@@ -393,13 +405,13 @@ function insert_element(opcao, element, data)
                               if (data.required)
                               {
                                     trbody_last.append($("<td>")
-                                            .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").addClass("validate[required]").attr("value", titulos[count2]).attr("name", data.tag + "," + count))
+                                            .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").addClass("validate[required]").attr("value", titulos[count2]).attr("name", data.tag + "," + perguntas[count]))
                                             .append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "tableradio")));
                               }
                               else
                               {
                                     trbody_last.append($("<td>")
-                                            .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").attr("value", titulos[count2]).attr("name", data.tag + "," + count))
+                                            .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").attr("value", titulos[count2]).attr("name", data.tag + "," + perguntas[count]))
                                             .append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "tableradio")));
                               }
                               array_id["radio"] = array_id["radio"] + 1;
@@ -410,7 +422,7 @@ function insert_element(opcao, element, data)
                   element.find(".label_geral")[0].innerHTML = data.texto;
                   if (data.required)
                         element.find(".form_datetime").addClass("validate[required]");
-                  element.find(".form_datetime")[0].name = data.tag; 
+                  element.find(".form_datetime")[0].name = data.tag;
                   break;
 
             case "scheduler":
@@ -431,6 +443,15 @@ function insert_element(opcao, element, data)
 
                   break;
 
+            case "textarea":
+                  element.find(".label_geral")[0].innerHTML = data.texto;
+                  element.find(".input_textarea")[0].name = data.tag;
+                  if (data.required)
+                        element.find(".input_textarea").addClass("validate[required]");
+                  
+                  break;
+
+
 
       }
       if (data.hidden)
@@ -442,7 +463,7 @@ function populate_script()
       $.post("requests.php", {action: "get_results_to_populate", lead_id: page_info.lead_id},
       function(data)
       {
-          console.log(data);
+            console.log(data);
             if (data !== null)
             {
                   $.each(data, function(index, value) {
@@ -476,6 +497,7 @@ function populate_script()
 //RULES 
 function rules_work(data)
 {
+
       switch (data.tipo)
       {
             case "hide":
@@ -511,7 +533,7 @@ function rules()
                               {
                                     case "value_input":
 
-                                          $("#" + this.tag_trigger).bind("keyup", function()//atribuir os binds a cada value
+                                          $(document).on("keyup", "#" + this.tag_trigger, function()//atribuir os ons a cada value
                                           {
                                                 var pattern = new RegExp('\\b' + data[index].tag_trigger2, 'i');
                                                 if ($("#" + data[index].tag_trigger + " input").val().match(pattern))
@@ -522,7 +544,7 @@ function rules()
                                           );
                                           break;
                                     case "answer":
-                                          $("#" + this.tag_trigger).bind("focusout", function()//atribuir os binds a cada value
+                                          $(document).on("focusout", "#" + this.tag_trigger, function()//atribuir os ons a cada value
                                           {
                                                 rules_work(data[index]);
                                           }
@@ -534,10 +556,11 @@ function rules()
                               switch (this.param1)
                               {
                                     case "value_select":
+
                                           var values = this.tag_trigger2;
                                           for (var count = 0; count < values.length; count++)
                                           {
-                                                $("#" + this.tag_trigger).find("input[value='" + values[count] + "']").bind("click", function()//atribuir os binds a cada value
+                                                $(document).on("click", "#" + this.tag_trigger + " input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                                 {
                                                       rules_work(data[index]);
                                                 }
@@ -553,8 +576,9 @@ function rules()
                                           var values = this.tag_trigger2;
                                           for (var count = 0; count < values.length; count++)
                                           {
-                                                $("#" + this.tag_trigger).find("input[value='" + values[count] + "']").bind("click", function()//atribuir os binds a cada value
+                                                $(document).on("click", "#" + this.tag_trigger + " input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                                 {
+
                                                       rules_work(data[index]);
                                                 }
                                                 );
@@ -569,7 +593,7 @@ function rules()
                                           var values = this.tag_trigger2;
                                           for (var count = 0; count < values.length; count++)
                                           {
-                                                $("#" + this.tag_trigger).bind("change", function()//atribuir os binds a cada value
+                                                $(document).on("change", "#" + this.tag_trigger, function()//atribuir os ons a cada value
                                                 {
                                                       if ($("#" + data[index].tag_trigger + " option:selected").val() === data[index].tag_trigger2)
                                                             rules_work(data[index]);
@@ -587,7 +611,7 @@ function rules()
                                           for (var count = 0; count < linhas.length; count++)
                                           {
                                                 var values = linhas[count].split(";");
-                                                $("#" + this.tag_trigger).find("tr:contains('" + values[0] + "') input[value='" + values[1] + "']").bind("click", function()//atribuir os binds a cada value
+                                                $(document).on("click", "#" + this.tag_trigger + " tr:contains('" + values[0] + "') input[value='" + values[1] + "']", function()
                                                 {
                                                       rules_work(data[index]);
                                                 }
@@ -595,10 +619,10 @@ function rules()
                                           }
                                           break;
                                     case "answer":
-                                          $("#" + this.tag_trigger).find("input").on("click", function()
+                                          $(document).on("click", "#" + this.tag_trigger + " input", function()
                                           {
-                                            
-                                                if ($("#" + data[index].tag_trigger).find("input:checked").length === ($("#" + data[index].tag_trigger+" .tr_body").find("tr").length ))
+
+                                                if ($("#" + data[index].tag_trigger).find("input:checked").length === ($("#" + data[index].tag_trigger + " .tr_body").find("tr").length))
                                                       rules_work(data[index]);
                                           });
                                           break;
@@ -608,7 +632,21 @@ function rules()
                               switch (this.param1)
                               {
                                     case "answer":
-                                          $("#" + this.tag_trigger).bind("change", function()//atribuir os binds a cada value
+                                          $(document).on("change", "#" + this.tag_trigger, function()//atribuir os ons a cada value
+                                          {
+                                                rules_work(data[index]);
+                                          }
+                                          );
+                                          break;
+                              }
+                              break;
+                              
+                                           case "textarea":
+                                                 
+                              switch (this.param1)
+                              {
+                                    case "answer":
+                                          $(document).on("focusout", "#" + this.tag_trigger, function()//atribuir os ons a cada value
                                           {
                                                 rules_work(data[index]);
                                           }
@@ -618,7 +656,10 @@ function rules()
                               break;
                   }
             });
+
+            $("#myform").validationEngine();
       }
+
       , "json");
 
 }
@@ -655,7 +696,7 @@ function tags()
                   if ($.inArray(this, temp) === -1)
                         temp.push(this);
             });
-            $.post("requests.php", {action: "get_client_info_by_lead_id", lead_id: page_info.lead_id, user_logged:page_info.user_id},
+            $.post("requests.php", {action: "get_client_info_by_lead_id", lead_id: page_info.lead_id, user_logged: page_info.user_id},
             function(data)
             {
                   $.each(temp, function() {
@@ -716,7 +757,7 @@ $("#myform").on("submit", function(e)
 
 function submit_manual()
 {
-      $.post("requests.php", {action: "save_form_result", id_script: page_info.script_id, results: $("#myform").serializeArray(), user_id: page_info.user_id, unique_id: page_info.unique_id, campaign_id: page_info.campaign_id, lead_id: page_info.lead_id}, function() {
+      $.post("requests.php", {action: "save_form_result", id_script: page_info.script_id, results: $("#myform").serializeArray(), user_id: page_info.user_id, unique_id: unique_id, campaign_id: page_info.campaign_id, lead_id: page_info.lead_id}, function() {
             return true;
       }, "json").fail(function() {
             return false;

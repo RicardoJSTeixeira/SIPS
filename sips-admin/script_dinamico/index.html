@@ -11,6 +11,7 @@
             <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-wysihtml5.css" />
 
 
             <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
@@ -21,12 +22,12 @@
             <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
             <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
             <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt-BR.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt.js"></script>
             <script type="text/javascript" src="/bootstrap/js/jquery.hotkeys.js"></script>
             <script type="text/javascript" src="/bootstrap/js/bootstrap-wysiwyg.js"></script>
-            
-            
-                    <script type="text/javascript" src="/bootstrap/js/validation/jquery.validationEngine.js"></script>
+
+
+            <script type="text/javascript" src="/bootstrap/js/validation/jquery.validationEngine.js"></script>
             <script type="text/javascript" src="/bootstrap/js/validation/languages/jquery.validationEngine-pt.js"></script>
             <script type="text/javascript" src="/bootstrap/js/validation/contrib/other-validations.js"></script>
 
@@ -45,9 +46,22 @@
                   input[type="checkbox"]{display:inline;}
                   input[type="radio"]{display:inline;}
                   .radio, .checkbox {padding-left: 1px;padding-right: 16px;}
-                  .chzn-container,.chzn-drop{width:340px!important;}
+                  .grid-title select
+                  {
+                        max-width: 200px;
+                  }
+
+                  .chosen-select{
+                        width: 250%;
+                  }
                   .hidden{display:none!important;}
-           
+                  #textfield_edit
+                  {
+                        border:2px solid #EEF;
+                        overflow:scroll;
+                        min-height: 200px;
+                        max-height:300px
+                  }
 
             </style>
       </head>
@@ -104,6 +118,7 @@
                               </div>
                               <div class="formRight">
                                     <button class="btn btn-primary" id="copy_script_button">Duplicar script</button>
+
                               </div>
                         </div>
 
@@ -112,18 +127,29 @@
                         <div class="formRow">
                               <label class="label label-inverse" >Campanha</label>
                               <div class="formRight">
-                                    <select id="script_campanha_selector" class="chosen_select"  multiple="multiple" data-placeholder="Selecione uma/várias campanhas"   ></select>
+                                    <select id="script_campanha_selector" class="chosen-select"  multiple="multiple" data-placeholder="Selecione uma/várias campanhas"   ></select>
                               </div> 
+                              <div class="formRow">
+                                    <button class="btn btn-info" onclick="write_to_file('camp');">Criar relatório</button>
+                                    <div class="formRight">
+                                          <select id="write_to_file_select_campanha" class="chosen-select" data-placeholder="report de campanha"   ></select>
+                                    </div> 
+                              </div>
                         </div>
 
                         <div class="formRow linha_inbound_div">
                               <label class="label label-inverse" >Linha Inbound</label>
                               <div class="formRight">
-                                    <select id="script_linha_inbound_selector" class="chosen_select"  multiple="multiple" data-placeholder="Selecione uma/várias linhas_inbound"   ></select>
+                                    <select id="script_linha_inbound_selector" class="chosen-select"  multiple="multiple" data-placeholder="Selecione uma/várias linhas_inbound"   ></select>
                               </div> 
+
+                              <div class="formRow">
+                                    <button class="btn btn-info" onclick="write_to_file('linha');">Criar relatório</button>
+                                    <div class="formRight">
+                                          <select id="write_to_file_select_linha_inbound" class="chosen-select" data-placeholder="report de linha inbound"   ></select>
+                                    </div> 
+                              </div>
                         </div>
-
-
                         <div class="clear"></div>
                   </div>
                   <div class="modal-footer">
@@ -159,6 +185,26 @@
                   <div class="modal-footer">
                         <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
                         <button  id="save_button_page" class="btn btn-primary">Gravar Alterações</button>
+                  </div>
+            </div>
+
+
+            <!--DIALOG De apagar elementos -->
+            <div id="dialog_elements" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Aviso</h3>
+                  </div>
+                  <div class="modal-body">
+                        <h5 class="alert">Tem a certeza que quer eliminar este elemento?</h5>
+
+                        <p>   Ao apagar este elemento, todos os resultados no report a ele associados tambem serão eliminados. </p>
+
+                        <div class="clear"></div>
+                  </div>
+                  <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+                        <button  data-dismiss="modal" id="apagar_elemento" class="btn btn-primary">Apagar</button>
                   </div>
             </div>
             <!--FIM DAS DIALOGS-->
@@ -217,7 +263,7 @@
                                                       <div class="formRow" >
                                                             <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
-                                                                  <input  maxlength="65" class="span texto_input" id="texto_edit" type="text" placeholder="Texto exemplo" />
+                                                                  <input  maxlength="150" class="span texto_input" id="texto_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
@@ -262,7 +308,7 @@
                                                       <div class="formRow" >
                                                             <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
-                                                                  <input  maxlength="65" class="span" id="radio_edit" type="text" placeholder="Texto" />
+                                                                  <input  maxlength="150" class="span" id="radio_edit" type="text" placeholder="Texto" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
@@ -285,7 +331,7 @@
                                                       <div class="formRow" >
                                                             <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
-                                                                  <input  maxlength="65" class="span" id="checkbox_edit" type="text" placeholder="Texto" />
+                                                                  <input  maxlength="150" class="span" id="checkbox_edit" type="text" placeholder="Texto" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
@@ -312,7 +358,7 @@
                                                       <div class="formRow" >
                                                             <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
-                                                                  <input  maxlength="65" class="span texto_input" id="multichoice_edit" type="text" placeholder="Texto exemplo" />
+                                                                  <input  maxlength="150" class="span texto_input" id="multichoice_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
@@ -327,7 +373,69 @@
                                                       <div class="formRow" >
                                                             <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
-                                                                  <textarea class="span textfield_input" id="textfield_edit" maxlength="3800" rows="4" cols="50"></textarea>
+                                                                  <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+                                                                        <div class="btn-group">
+                                                                              <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font"><i class="icon-font"></i><b class="caret"></b></a>
+                                                                              <div  class="dropdown-menu">
+                                                                                    <ul>
+                                                                                          <li><a data-edit="fontName Serif" style="font-family:'Serif'">Serif</a></li>
+                                                                                          <li><a data-edit="fontName Sans" style="font-family:'Sans'">Sans</a></li>
+                                                                                          <li><a data-edit="fontName Arial" style="font-family:'Arial'">Arial</a></li>
+                                                                                          <li><a data-edit="fontName Arial Black" style="font-family:'Arial Black'">Arial Black</a></li>
+                                                                                          <li><a data-edit="fontName Courier" style="font-family:'Courier'">Courier</a></li>
+                                                                                          <li><a data-edit="fontName Courier New" style="font-family:'Courier New'">Courier New</a></li>
+                                                                                          <li><a data-edit="fontName Comic Sans MS" style="font-family:'Comic Sans MS'">Comic Sans MS</a></li>
+                                                                                          <li><a data-edit="fontName Helvetica" style="font-family:'Helvetica'">Helvetica</a></li>
+                                                                                          <li><a data-edit="fontName Impact" style="font-family:'Impact'">Impact</a></li>
+                                                                                          <li><a data-edit="fontName Lucida Grande" style="font-family:'Lucida Grande'">Lucida Grande</a></li>
+                                                                                          <li><a data-edit="fontName Lucida Sans" style="font-family:'Lucida Sans'">Lucida Sans</a></li>
+                                                                                          <li><a data-edit="fontName Tahoma" style="font-family:'Tahoma'">Tahoma</a></li>
+                                                                                          <li><a data-edit="fontName Times" style="font-family:'Times'">Times</a></li>
+                                                                                          <li><a data-edit="fontName Times New Roman" style="font-family:'Times New Roman'">Times New Roman</a></li>
+                                                                                          <li><a data-edit="fontName Verdana" style="font-family:'Verdana'">Verdana</a></li></ul>
+                                                                              </div>
+                                                                        </div>
+                                                                        <div class="btn-group">
+                                                                              <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font Size"><i class="icon-text-height"></i>&nbsp;<b class="caret"></b></a>
+                                                                              <div  class="dropdown-menu">
+                                                                                    <ul >
+                                                                                          <li><a data-edit="fontSize 5"><font size="5">Huge</font></a></li>
+                                                                                          <li><a data-edit="fontSize 3"><font size="3">Normal</font></a></li>
+                                                                                          <li><a data-edit="fontSize 1"><font size="1">Small</font></a></li>
+                                                                                    </ul>
+                                                                              </div>
+                                                                        </div>
+                                                                        <div class="btn-group">
+                                                                              <a class="btn" data-edit="bold" title="" data-original-title="Bold (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
+                                                                              <a class="btn" data-edit="italic" title="" data-original-title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
+                                                                              <a class="btn" data-edit="strikethrough" title="" data-original-title="Strikethrough"><i class="icon-strikethrough"></i></a>
+                                                                              <a class="btn" data-edit="underline" title="" data-original-title="Underline (Ctrl/Cmd+U)"><i class="icon-underline"></i></a>
+                                                                        </div>
+
+                                                                        <div class="btn-group">
+                                                                              <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="color"><i class="fam-color-swatch"></i><b class="caret"></b></a>
+                                                                              <div  class="dropdown-menu">
+                                                                                    <ul>
+
+                                                                                          <li> <a class="btn" data-edit="foreColor #ff0024" ><i class="icon-tint"></i> Vermelho</a></li>   
+                                                                                          <li>  <a class="btn" data-edit="foreColor #54bc00" ><i class="icon-tint"></i> Verde</a></li> 
+                                                                                          <li> <a class="btn" data-edit="foreColor #22aeff" ><i class="icon-tint"></i> Azul</a></li> 
+                                                                                          <li> <a class="btn" data-edit="foreColor #ff8400" ><i class="icon-tint"></i> Laranja</a></li>  
+                                                                                          <li> <a class="btn" data-edit="foreColor #999999" ><i class="icon-tint"></i> Cinzento</a></li>  
+                                                                                          <li> <a class="btn" data-edit="foreColor #000000" ><i class="icon-tint"></i> Preto</a></li>  
+                                                                              </div>
+                                                                        </div>
+
+                                                                        <div class="btn-group">
+                                                                              <a class="btn btn-info" data-edit="justifyleft" title="" data-original-title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
+                                                                              <a class="btn" data-edit="justifycenter" title="" data-original-title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
+                                                                              <a class="btn" data-edit="justifyright" title="" data-original-title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
+                                                                              <a class="btn" data-edit="justifyfull" title="" data-original-title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
+                                                                        </div>
+
+
+                                                                  </div>
+                                                                  <div id="textfield_edit" class="span textfield_input" contenteditable="true"></div>
                                                             </div>  
                                                       </div>
                                                 </div>
@@ -345,7 +453,7 @@
                                                       <div class="formRow" >
                                                             <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
-                                                                  <input  maxlength="65" class="span tableradio_input" id="tableradio_edit" type="text" placeholder="Texto exemplo" />
+                                                                  <input  maxlength="150" class="span tableradio_input" id="tableradio_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
                                                       <div class="formRow" >
@@ -379,7 +487,7 @@
                                                       <div class="formRow" >
                                                             <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
-                                                                  <input  maxlength="65" class="scheduler_input" id="scheduler_edit" type="text" placeholder="Texto exemplo" />
+                                                                  <input  maxlength="150" class="scheduler_input" id="scheduler_edit" type="text" placeholder="Texto exemplo" />
                                                             </div>
                                                       </div>
 
@@ -387,7 +495,7 @@
                                                       <div class="formRow">
                                                             <label class="label label-inverse" >Calendários:</label>
                                                             <div class="formRight">
-                                                                  <select id="scheduler_edit_select" class="chosen_select"  multiple data-placeholder="Selecione um/vários calendários"   ></select>
+                                                                  <select id="scheduler_edit_select" class="chosen-select"  multiple data-placeholder="Selecione um/vários calendários"   ></select>
                                                             </div>
                                                             <div class="formRight">
                                                                   <input   type="checkbox" id="checkbox_scheduler_all" name="cc" value="1">
@@ -413,7 +521,65 @@
 
                                                       </div>
 
+
+
+
                                                 </div>
+
+
+
+
+                                                <!--Textarea-->
+                                                <div class="editor_layout" id="textarea_layout_editor" style="display:none">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Titulo</label>
+
+                                                            <div class="formRight">
+                                                                  <input  maxlength="150" class="span textarea_input" id="textarea_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
+                                                      </div>
+                                                </div>
+
+                                                <!--ipl-->
+                                                <div class="editor_layout" id="ipl_layout_editor" style="display:none">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >titulo:</label>
+
+                                                            <div class="formRight">
+                                                                  <input  maxlength="250" class="span ipl_input" id="ipl_edit" type="text" placeholder="Titulo" />
+                                                            </div>
+                                                      </div>
+
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Link:</label>
+                                                            <div class="formRight">
+                                                                 <div class="btn-toolbar" data-role="editor-toolbar" data-target="#ipl_link">
+
+                                                                        <div class="btn-group">
+                                                                              <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Hyperlink"><i class="icon-link"></i></a>
+                                                                              <div class="dropdown-menu input-append">
+                                                                                    <input class="span2" placeholder="URL" type="text" data-edit="createLink">
+                                                                                    <button class="btn" type="button">Add</button>
+                                                                              </div>
+
+                                                                        </div>
+
+                                                                        <div class="btn-group">
+                                                                              <a class="btn" title="" id="pictureBtn" data-original-title="Insert picture (or just drag &amp; drop)"><i class="icon-picture"></i></a>
+                                                                              <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" style="opacity: 0; position: absolute; top: 0px; left: 0px; width: 34px; height: 30px;">
+                                                                        </div>
+                                                                  </div>
+                                                            </div>
+                                                            
+                                                            <div class="formRight">
+                                                                         <div class="span ipl_link" id="ipl_link"> </div>   
+                                                            </div>
+                                                      </div>
+                                                </div>
+
+
+
+
 
 
                                                 <!------------------------------------------------------------------------------>
@@ -454,11 +620,11 @@
                                                       <div class="formRow"  >
                                                             <label class="label label-inverse" >Tags:</label>
                                                             <div class="formRight">
-                                                                  <select id="tags_select" class="chosen_select" style="width:325px" >
+                                                                  <select id="tags_select" class="chosen-select" data-placeholder="Selecione uma tag" >
                                                                         <optgroup label="Campos Gerais">
                                                                               <option value="nome_operador">Nome do operador</option>
                                                                         </optgroup>
-                                                                      
+
                                                                   </select>
                                                                   <i class="icon-tag" ></i>
                                                             </div> 
@@ -516,7 +682,7 @@
                                                             <div class="formRow rules_valor" id="rules_valor_select_div" style="display:none"  >
                                                                   <label class="label label-inverse" >Valores:</label>
                                                                   <div class="formRight">
-                                                                        <select id="rules_valor_select" class="chosen_select"  multiple data-placeholder="Selecione um/vários valores" name="rules_valores_select"   ></select>
+                                                                        <select id="rules_valor_select" class="chosen-select"  multiple data-placeholder="Selecione um/vários valores" name="rules_valores_select"   ></select>
                                                                   </div> 
                                                             </div>
                                                             <div class="formRow rules_valor" id="rules_valor_input_div" style="display:none" >
@@ -538,7 +704,7 @@
                                                             <div class="formRow rule_target" >
                                                                   <label class="label label-inverse" >Alvo:</label>
                                                                   <div class="formRight">
-                                                                        <select  id="rule_target_select" multiple class="chosen_select" name="rules_target_select" data-placeholder="Selecione um/vários elementos">
+                                                                        <select  id="rule_target_select" multiple class="chosen-select" name="rules_target_select" data-placeholder="Selecione um/vários elementos">
 
                                                                         </select>
                                                                   </div> 

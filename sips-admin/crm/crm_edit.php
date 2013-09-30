@@ -1,25 +1,26 @@
-<?php #HEADER
-$self=count(explode('/', $_SERVER['PHP_SELF']));
-for($i=0;$i<$self-2;$i++){$header.="../";} 
-define("ROOT", $header);
-require(ROOT."ini/header.php");
-include("../functions.php");
-
-$user = $_SERVER['PHP_AUTH_USER'];
-$pass = $_SERVER['PHP_AUTH_PW'];
-?>
-
-
-
 <?php
-####################################################################### 
-### BEGIN  - Created by kant
-#######################################################################
-$lead_id = $_GET['lead_id'];
+$self = count(explode('/', $_SERVER['PHP_SELF']));
+for ($i = 0; $i < $self - 2; $i++) {
+    $header.="../";
+}
+define("ROOT", $header);
+require(ROOT . "ini/dbconnect.php");
+include(ROOT . "sips-admin/functions.php");
+require(ROOT . "ini/user.php");
 
+$user = new user;
+####################################################################### 
+### BEGIN  - Created by kant <-- fag
+#######################################################################
+$campaign_id = (isset($_GET['campaign_id'])) ? $_GET['campaign_id'] : $_POST['campaign_id'];
+$lead_id = (isset($_GET['lead_id'])) ? $_GET['lead_id'] : $_POST['lead_id'];
+
+
+
+
+//340066
 ### Dados da Lead
-$query="
-		SELECT 
+$query = "SELECT 
 			vdlf.campaign_id,
 			vdc.campaign_name, 
 			vdlf.list_id, 
@@ -59,19 +60,19 @@ $query="
 			vdcs.status=vdl.status
 		WHERE 
 			lead_id='$lead_id'
-		LIMIT 1
-	";
-			
-$query=mysql_query($query,$link) or die(mysql_error());
-$lead_info=mysql_fetch_assoc($query);
+		LIMIT 1";
 
-if($lead_info['status_name_one']==NULL)
-{$status_name=$lead_info['status_name_two'];} 
-else 
-{$status_name=$lead_info['status_name_one'];}
+$query = mysql_query($query, $link) or die(mysql_error());
+$lead_info = mysql_fetch_assoc($query);
+
+if ($lead_info['status_name_one'] == NULL) {
+    $status_name = $lead_info['status_name_two'];
+} else {
+    $status_name = $lead_info['status_name_one'];
+}
 
 ### Dados do Contacto
-$query="SELECT 
+$query = "SELECT 
 			Name,
 			Display_name
 		FROM 
@@ -79,69 +80,58 @@ $query="SELECT
 		WHERE
 			campaign_id='$lead_info[campaign_id]'
 		AND
-			active=1 Order by field_order ASC
-		";
-$query=mysql_query($query,$link) or die(mysql_error());
+			active=1 Order by field_order ASC";
+$query = mysql_query($query, $link) or die(mysql_error());
 $fields_count = mysql_num_rows($query);
-for ($i=0;$i<$fields_count;$i++)
-{
-	$row = mysql_fetch_row($query);
-	if ($fields_count == 1) 
-		{
-		$fields_NAME[$i]= strtolower($row[0]);
-		$fields_SELECT = $row[0]; 
-		$fields_LABEL[$i] = $row[1]; 
-		}
-	elseif ($fields_count-1 == $i)
-		{
-		$fields_NAME[$i]= strtolower($row[0]);
-		$fields_SELECT .= $row[0];	
-		$fields_LABEL[$i] = $row[1]; 
-		}	
-	else
-		{
-		$fields_NAME[$i]= strtolower($row[0]);
-		$fields_SELECT .= $row[0].","; 
-		$fields_LABEL[$i] = $row[1]; 
-		}
-}	
-$query="SELECT 
+for ($i = 0; $i < $fields_count; $i++) {
+    $row = mysql_fetch_row($query);
+    if ($fields_count == 1) {
+        $fields_NAME[$i] = strtolower($row[0]);
+        $fields_SELECT = $row[0];
+        $fields_LABEL[$i] = $row[1];
+    } elseif ($fields_count - 1 == $i) {
+        $fields_NAME[$i] = strtolower($row[0]);
+        $fields_SELECT .= $row[0];
+        $fields_LABEL[$i] = $row[1];
+    } else {
+        $fields_NAME[$i] = strtolower($row[0]);
+        $fields_SELECT .= $row[0] . ",";
+        $fields_LABEL[$i] = $row[1];
+    }
+}
+$query = "SELECT 
 			$fields_SELECT 
 		FROM 
 			vicidial_list
 		WHERE
 			lead_id='$lead_id' 
 		LIMIT 1";
-$query=mysql_query($query,$link);
+$query = mysql_query($query, $link) or die(mysql_error());
 $fields = mysql_fetch_row($query);
 
 ### Construção da Lista de Feedbacks
-$query="SELECT status,status_name FROM vicidial_campaign_statuses WHERE campaign_id='$lead_info[campaign_id]' AND scheduled_callback!=1";
-$query=mysql_query($query,$link) or die(mysql_error());
-$is_campaign_feedback=0;
+$query = "SELECT status,status_name,sale FROM vicidial_campaign_statuses WHERE campaign_id='$lead_info[campaign_id]' AND scheduled_callback!=1";
+$query = mysql_query($query, $link) or die(mysql_error());
+$is_campaign_feedback = 0;
 
-for($i=0;$i<mysql_num_rows($query);$i++)
-{
-	$row=mysql_fetch_assoc($query) or die(mysql_query());
-	
-	if($row['status']==$lead_info['status'])
-	{ # feedback actual (selected)
-		$status_options .= "<option selected value='$row[status]'>$row[status_name]</option>\n";
-		$is_campaign_feedback=1;
-	}
-	else
-	{ # outros feedbacks da campanha
-		$status_options .= "<option value='$row[status]'>$row[status_name]</option\n>";
-	}
+for ($i = 0; $i < mysql_num_rows($query); $i++) {
+    $row = mysql_fetch_assoc($query) or die(mysql_query());
+
+    if ($row['status'] == $lead_info['status']) { # feedback actual (selected)
+        $status_options .= "<option data-sale='$row[sale]' selected value='$row[status]'>$row[status_name]</option>\n";
+        $is_campaign_feedback = 1;
+    } else { # outros feedbacks da campanha
+        $status_options .= "<option data-sale='$row[sale]' value='$row[status]'>$row[status_name]</option\n>";
+    }
 }
 
-if(!$is_campaign_feedback)
-{ # caso se o feedback actual seja de sistema
-	$query="SELECT status,status_name FROM vicidial_statuses WHERE status='$lead_info[status]'";
-	$query=mysql_query($query,$link) or die(mysql_error());
-	$row=mysql_fetch_assoc($query);
-	$status_options .= "<option selected value='$row[status]'>$row[status_name]</option>";
+if (!$is_campaign_feedback) { # caso se o feedback actual seja de sistema
+    $query = "SELECT status,status_name FROM vicidial_statuses WHERE status='$lead_info[status]'";
+    $query = mysql_query($query, $link) or die(mysql_error());
+    $row = mysql_fetch_assoc($query);
+    $status_options .= "<option selected value='$row[status]'>$row[status_name]</option>";
 }
+
 
 
 ### Chamadas Feitas
@@ -180,10 +170,10 @@ $query = "SELECT
 		ORDER BY
 			uniqueid 
 		DESC LIMIT 500;";
-$chamadas_feitas=mysql_query($query, $link) or die(mysql_error());
+$chamadas_feitas = mysql_query($query, $link) or die(mysql_error());
 
 #Gravações da lead
-$query = "	SELECT 
+$query = "SELECT 
 				DATE_FORMAT(start_time,'%d-%m-%Y') AS data,
 				DATE_FORMAT(start_time,'%H:%i:%s') AS hora_inicio,
 				DATE_FORMAT(end_time,'%H:%i:%s') AS hora_fim,
@@ -193,7 +183,6 @@ $query = "	SELECT
 				lead_id,
 				rl.user,
 				full_name
-
 			FROM 
 				recording_log rl
 			INNER JOIN vicidial_users vu ON rl.user=vu.user
@@ -203,318 +192,449 @@ $query = "	SELECT
 				recording_id 
 			DESC LIMIT 500;";
 $gravacoes = mysql_query($query, $link) or die(mysql_error());
+
+function curPageURL() {
+    $pageURL = 'http';
+    if ($_SERVER["HTTPS"] == "on") {
+        $pageURL .= "s";
+    }
+    $pageURL .= "://";
+    if ($_SERVER["SERVER_PORT"] != "80") {
+        $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
+    } else {
+        $pageURL .= $_SERVER["SERVER_NAME"]; //.$_SERVER["REQUEST_URI"];
+    }
+    return $pageURL;
+}
 ?>
 
+<!-- Cabeçalho -->
 
 
+<table class='table table-mod table-bordered'>
+    <thead> 
+        <tr>
+            <th>ID do Contacto</th>
+            <th>Número de Telefone</th>
+            <th>Base de Dados</th>
+            <th>Campanha</th>
+            <th>Operador</th>
+            <th>Feedback</th>
+            <th>Nº de Chamadas</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><?= $lead_id ?></td>
+            <td><?= $lead_info["phone_number"] ?></td>
+            <td><?= $lead_info["list_name"] ?></td>
+            <td><?= $lead_info["campaign_name"] ?></td>
+            <td><?= $lead_info["full_name"] ?></td>
+            <td><span id='lead_info_status'><?= $status_name ?></span></td>
+            <td><?= $lead_info["called_count"] ?></td>
+        </tr>
+    </tbody>
+</table>
+<br>
+<table class='table table-mod table-bordered'>
+    <thead> 
+        <tr>
+            <th>Data de Carregamento</th>
+            <th>Hora de Carregamento</th>
+            <th>Data da Última Chamada</th>
+            <th>Hora da Última Chamada</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><?= $lead_info["data_load"] ?></td>
+            <td><?= $lead_info["hora_load"] ?></td>
+            <td><?= $lead_info["data_last"] ?></td>
+            <td><?= $lead_info["hora_last"] ?></td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Dados da Lead</h2>
+<form class="form-horizontal" id='inputcontainer' >
+<?php for ($i = 0; $i < count($fields); $i++) { ?>
+        <div class="control-group">
+            <label class="control-label"><?= $fields_LABEL[$i] ?>:</label>
+            <div class="controls" >
+    <?php if ($fields_NAME[$i] != "comments") { ?>
+                    <input type=text name='<?= $fields_NAME[$i] ?>' id='<?= $fields_NAME[$i] ?>' class='span9' value='<?= $fields[$i] ?>'>
+    <?php } else { ?>
+                    <textarea name='<?= $fields_NAME[$i] ?>' id='<?= $fields_NAME[$i] ?>' class='span9' ><?= $fields[$i] ?></textarea>
+        <?php } ?>
+                <span id='td_<?= $fields_NAME[$i] ?>'></span>
+            </div>
+        </div>
+            <?php } ?>
+</form>
+
+<h3>Alteração do Feedback</h3>
+<div class="control-group">
+    <label class="control-label">Feedback Actual:</label>
+    <div class="controls input-append">
+        <select style='width:200px' name=feedback_list id=feedback_list><?= $status_options ?></select>
+        <button class="btn btn-primary" id="confirm_feedback" style="display:none">Confirmação de feedback</button>
+    </div>
+    <span id=modify_feedback_status class='help-inline'><i>(O feedback deste contacto pode ser alterado neste menu.)</i></Span>
+</div>
+
+
+
+<div id="confirm_feedback_div"  style="display:none;width:95%">
+
+    <div class="formRow">
+        <label class="control-label">Confirmação de feedback</label>
+        <div class="formRight">
+            <input type="radio" id="radio_confirm_yes" name="radio_confirm_group"><label for="radio_confirm_yes"><span></span>Validado</label>
+        </div>
+        <div class="formRight">
+            <input type="radio" id="radio_confirm_no" name="radio_confirm_group"><label for="radio_confirm_no"><span></span>Retornar para novo contacto</label>
+        </div>
+    </div>
+    <div class="clear"></div>
+
+    <div class="formRow">
+        <label class="control-label">Log de Comentários</label>
+
+        <table class="table table-mod table-bordered">
+            <thead>
+            <th>
+                Comentario
+            </th>
+            <th>
+                Venda
+            </th>
+            <th>
+                Agente
+            </th>
+            <th>
+                Admin
+            </th>
+            <th>
+                Data
+            </th>
+            </thead>
+            <tbody id="comment_log_tbody">
+
+            </tbody>
+        </table>
+
+    </div>
+    <div class="formRow">
+        <label class="control-label">Comentários</label>
+        <div class="formRight">
+            <textarea id='textarea_comment'></textarea>
+        </div>
+    </div>
+    <div class="clear"></div>
+
+    <div class="formRow">
+        <label class="control-label">Agente</label>
+        <div class="formRight">
+            <select id='agente_selector'>
+            </select>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="pull-right">
+        <button class='btn btn-action' id='confirm_feedback_button'>Guardar</button>
+    </div>
+</div>
+
+
+
+<h3>Chamadas realizadas para este Contacto</h3>
+<table class='table table-mod table-bordered'>
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Hora</th>
+            <th>Duração</th>
+            <th>Número</th>
+            <th>Operador</th>
+            <th>Feedback</th>
+            <th>Campanha</th>
+            <th>Base de Dados</th>
+        </tr>
+    </thead>
+    <tbody>
 <?php
+while ($row = mysql_fetch_assoc($chamadas_feitas)) {
 
-### Cabeçalho
-echo "<div class=cc-mstyle>";
-echo "<table>";
-echo "<tr>";
-echo "<td id='icon32'><img src='../../images/icons/book_edit_32.png' /></td>";
-echo "<td id='submenu-title'> Gestão de Leads </td>";
-echo "<td><img style='float:right' src='../../images/icons/cross_32.png' onclick='CloseHTML();'></td>";
-echo "</tr>";
-echo "</table>";
-echo "</div>";
-echo "<br><br>";
+    $duracao = sec_convert($row['length_in_sec'], "H");
+    if ($row['status_name1']) {
+        $status_name = $row['status_name1'];
+    } else {
+        $status_name = $row['status_name2'];
+    }
+    ?>
 
-
-### Informações do Contacto
-echo "
-<div class='datagrid' style='width:90%'>
-<table>
-<thead> 
-	<th>ID do Contacto</th>
-	<th>Número de Telefone</th>
-	<th>Base de Dados</th>
-	<th>Campanha</th>
-	<th>Operador</th>
-	<th>Feedback</th>
-	<th>Nº de Chamadas</th>
-</thead>
-<tbody>
-<tr>
-	<td>$lead_id</td>
-	<td>$lead_info[phone_number]</td>
-	<td>$lead_info[list_name]</td>
-	<td>$lead_info[campaign_name]</td>
-	<td>$lead_info[full_name]</td>
-	<td><span id='lead_info_status'>$status_name</span></td>
-	<td>$lead_info[called_count]</td>
-</tr>
-</tbody>
+            <tr>
+                <td><?= $row["data"] ?></td>
+                <td><?= $row["hora"] ?></td>
+                <td><?= $duracao ?></td>
+                <td><?= $row["phone_number"] ?></td>
+                <td><?= $row["full_name"] ?></td>
+                <td><?= $status_name ?></td>
+                <td><?= $row["campaign_name"] ?></td>
+                <td><?= $row["list_name"] ?></td>
+            </tr>
+<?php } ?>
+    </tbody>
 </table>
-</div>
-";
-### Datas de Carregamento/Ultima Chamada
-echo "
-<br>
-<div class='datagrid' style='width:90%'>
-<table>
-<thead> 
-	<th>Data de Carregamento</th>
-	<th>Hora de Carregamento</th>
-	<th>Data da Última Chamada</th>
-	<th>Hora da Última Chamada</th>
-</thead>
-<tbody>
-<tr>
-	<td>$lead_info[data_load]</td>
-	<td>$lead_info[hora_load]</td>
-	<td>$lead_info[data_last]</td>
-	<td>$lead_info[hora_last]</td>
-</tr>
-</tbody>
+
+
+<h3>Gravações deste Contacto</h3>
+<table class='table table-mod table-bordered'>
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Inicio da Gravação</th>
+            <th>Fim da Gravação</th>
+            <th>Duração</th>
+            <th>Operador</th>
+
+    </thead>
+    <tbody>
+<?php 
+
+    $curpage = curPageURL();
+while ($row = mysql_fetch_assoc($gravacoes)) { ?>
+
+            <tr>
+                <td><?= $row["data"] ?></td>
+                <td><?= $row["hora_inicio"] ?></td>
+                <td><?= $row["hora_fim"] ?></td>
+                <td><?= sec_convert($row['length_in_sec'], "H") ?></td>
+                <td><?= $row["full_name"] ?>
+
+    <?
+
+
+        $mp3File = "#";
+
+        if (strlen($row[location]) > 0) {
+            $tmp = explode("/", $row[location]);
+            $ip = $tmp[2];
+            $tmp = explode(".", $ip);
+            $ip = $tmp[3];
+
+            switch ($ip) {
+                case "248":
+                    $port = ":20248";
+                    break;
+                case "247":
+                    $port = ":20247";
+                    break;
+                default:
+                    $port = "";
+                    break;
+            }
+
+            $mp3File = $curpage . $port . "/RECORDINGS/MP3/$row[filename]-all.mp3";
+            $audioPlayer = "Há gravação";
+        } else {
+            $audioPlayer = "Não há gravação!";
+        }
+
+        $lenghtInMin = date("i:s", $row[length_in_sec]);
+    
+    ?>
+
+
+                    <div class="view-button"><a href='<?= $mp3File ?>' target='_self' class="btn btn-mini"><i class="icon-play"></i>Ouvir</a></div>
+                    <?php if ($user->is_script_dinamico) { ?>    
+                        <div class="view-button"><a class="btn btn-mini" target='_new' href='../../sips-admin/script_dinamico/render.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>'><i class="icon-bookmark"></i>Script</a></div>
+                    <?php } else { ?>
+                        <div class="view-button">  <a class="btn btn-mini" target='_new' href='../../sips-agente/vdc_form_display.php?submit_button=YES&lead_id=<?= $lead_id ?>&list_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>'><i class="icon-bookmark"></i>Script</a></div>
+                    <?php } ?>
+                </td>
+
+
+
+            </tr>
+                <?php } ?>
+    </tbody>
 </table>
-</div>
-";
-
-
-echo "<div id=work-area>";
-echo "<br>";
 
 
 
-### Lista dos Campos/Dados Contacto
-echo "<div class='table-title'><center>Dados do Contacto</center></div>";
-echo "<div class=cc-mstyle style='border:none; width:90%;'>";
-echo "<div id='inputcontainer'>";
-echo "<table border=0>";
-for($i=0;$i<count($fields);$i++)
-{
-echo "<tr>";
-echo "
-<td style='width:375px'> <div class=cc-mstyle style='height:28px;  '><p> $fields_LABEL[$i] </p></div></td>
-<td><input type=text style='text-align:center' name='$fields_NAME[$i]' id='$fields_NAME[$i]' size=40 maxlength=40 value='$fields[$i]'></td>
-<td style='min-width:130px' id='td_$fields_NAME[$i]'></td>
-";
-echo "</tr>";
-}
-echo "</table>";
-
-echo "</form>";
-echo "<br>";
-echo "</div>";
-echo "</div>";
-echo "</div>";
-echo "<br>";
-
-### Alteração do Feedback/NEW/CALLBACK
-echo "<div id=work-area style='min-height:0;'>";
-echo "<br>";
-
-echo "<div class=cc-mstyle style='border:none'>";
-echo "<div class='table-title'><center>Alteração do Feedback</center></div>";
-echo "<table>";
-
-echo "<tr>";
-echo "
-<td id=icon16><img src='../images/icons/report_edit_16.png'></td>
-<td style='text-align:left; width:100px'>Feedback Actual:</td>
-<td style='text-align:left'><center><select style='width:200px' name=feedback_list id=feedback_list>$status_options</select></td>
-<td style='min-width:275px'><span id=modify_feedback_status style='color:grey;font-size:11px;'><i>(O feedback deste contacto pode ser alterado neste menu.)</i></Span></td>
-";
-echo "</tr>";
-
-/*echo "<tr>";
-echo "
-<td id=icon16><img src='../images/icons/book_add_16.png'></td>
-<td style='text-align:left; width:100px'>Tornar o Contacto NEW:</td>
-<td style='text-align:left'><table><tr><td style='width:50%;'><img id='resetfeedback' style='float:right' src=../images/icons/book_add_32.png><td style='width:50%; text-align:left;'>Alterar</table></td>
-<td></td>
-";
-echo "</tr>";*/
-
-echo "</table>";
-echo "<br>";
-echo "</div></div>";
 
 
-### Chamadas feitas para a Lead
-echo '
-<br>
-<div class="table-title"><center>Chamadas realizadas para este Contacto</center></div>
-<div class="datagrid" style="width:90%">
-<table>
-<thead><th>Data</th><th>Hora</th><th>Duração</th><th>Número</th><th>Operador</th><th>Feedback</th><th>Campanha</th><th>Base de Dados</th></thead>';
-echo "<tbody>";
-for($i=0;$i<mysql_num_rows($chamadas_feitas);$i++){
-$row = mysql_fetch_assoc($chamadas_feitas);
 
-$duracao = sec_convert($row['length_in_sec'],"H");
-if($row['status_name1']){$status_name=$row['status_name1'];}else{$status_name=$row['status_name2'];}
 
-echo "
-<tr>
-<td>$row[data]</td>
-<td>$row[hora]</td>
-<td>$duracao</td>
-<td>$row[phone_number]</td>
-<td>$row[full_name]</td>
-<td>$status_name</td>
-<td>$row[campaign_name]</td>
-<td>$row[list_name]</td>
-</tr>
-";
-}
-echo "</tbody>";
-echo '
-</table>
-</div>
-'; 
-### Gravações associadas ao Contacto
-echo '
-<br>
-<div class="table-title"><center>Gravações deste Contacto</center></div>
-<div class="datagrid" style="width:90%">
-<table>
-<thead> <th>Data</th> <th>Inicio da Gravação</th> <th>Fim da Gravação</th> <th>Duração</th> <th>Ouvir Gravação</th> <th>Operador</th> <th>Script</th></thead>';
-echo "<tbody>";
-for($i=0;$i<mysql_num_rows($gravacoes);$i++){
-$row = mysql_fetch_assoc($gravacoes);
-$duracao = sec_convert($row['length_in_sec'],"H");
-echo "
-<tr>
-<td>$row[data]</td>
-<td>$row[hora_inicio]</td> 
-<td>$row[hora_fim]</td>
-<td>$duracao</td>
-<td><a href='$row[location]'><img src='../images/icons/sound_add_16.png'></a></td>
-<td>$row[full_name]</td>
-<td><a target='_new' href='../../sips-agente/vdc_form_display.php?submit_button=YES&lead_id=$lead_id&list_id=$lead_info[campaign_id]&user=$user&pass=$pass'>Script</a></td>
-</tr>
-";
-}
-echo "</tbody>";
-echo '
-</table>
-</div>
-';
-?>
 <script type="text/javascript">
 
-/* VARS/DIALOGS */
-var lead_id = <?php echo $lead_id;  ?>;
-var $error = $('<div></div>')
-		.html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ')
-		.dialog({
-			autoOpen: false,
-			title: "<span style='float:left; margin-right: 4px;' class='ui-icon ui-icon-alert'></span> Erro",
-			width: "550",
-			height: "250",
-			show: "fade",
-			hide: "fade",
-			buttons: { "OK": function(){ $(this).dialog("close"); } }
-});
-/*var $feedback_reset_confirm = $('<div></div>')
-		.html('Se fizer reset ao contacto, todos os dados referentes ao mesmo serão apagados.<br><br>De certeza que pretende continuar com esta operação?')
-		.dialog({
-			autoOpen: false,
-			title: "<span style='float:left; margin-right: 4px;' class='ui-icon ui-icon-alert'></span> Atenção",
-			width: "550",
-			height: "250",
-			show: "fade",
-			hide: "fade",
-			buttons: 
-				{ "Sim": 
-				function() 
-				{
-					$.ajax({
-					type: "POST",
-					url: "../requests/admin_lead_modify_requests.php",
-					data: {action: "feedback_reset", send_lead_id: lead_id},
-					success: function(msg){ $feedback_reset_confirm.dialog("close"); }
-					})	
-				}, "Não": 
-				function()
-				{ 
-					$(this).dialog("close"); 
-				} 
-			}
-});*/
+    $(function() {
 
-/* FUNCTIONS */
-$("#inputcontainer input").focus(function() 
-{
-	$(this).css({"border":"1px solid green"}); 
+        if ($("#feedback_list option:selected").data("sale") == "Y")
+            $("#confirm_feedback").show();
+        //get agentes
+        $.post("_requests.php", {action: "get_agentes"},
+        function(data)
+        {
+            $("#agente_selector").empty();
+            $.each(data, function(index, value)
+            {
+                if (this.full_name == "<?= $lead_info["full_name"] ?>")
+                    $("#agente_selector").append("<option value=" + this.user + " selected>" + this.full_name + "</option>");
+                else
+                    $("#agente_selector").append("<option value=" + this.user + ">" + this.full_name + "</option>");
+            });
+        }, "json");
+    });
 
-}); 
-/*$('#resetfeedback').click(function() {
-	$feedback_reset_confirm.dialog('open');
-});*/
-$("#inputcontainer input").blur(function()
-{
-	
-	var field = this.name;
-	var field_value = $(this).val();
-	$(this).css({"border":"1px solid #c0c0c0"}); 	
-	
-	$.ajax({
-		type: "POST",
-		url: "_requests.php",
-		data: {action: "update_contact_field", send_field: field, send_field_value: field_value, send_lead_id: lead_id },
-		error: function(jqXHR, textStatus, errorThrown) { $error.dialog("open").html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ' + errorThrown)},
-		success: function(data, textStatus, jqXHR)
-		{  
-			if((textStatus=='success') && (data==1)) 
-			{
-			$("#td_"+field).html("<span id='img_fade" + field + "'><table><tr><td style='width:18px'><img src='../../images/icons/clock_add_16.png'><td style='text-align:left;'>A Gravar</span></tr></table></span>");
-			$("#img_fade"+field).fadeOut(2500);
-			}  
-			else
-			{
-			$("#td_"+field).html("<span id='img_fade" + field + "'><table><tr><td style='width:18px'><img src='../../images/icons/clock_red_16.png'><td style='text-align:left;'>Erro a Gravar</tr></table></span>");
-			$("#img_fade"+field).fadeOut(2500);
-			}
-		}
-		});
 
-});
-$("#feedback_list").change(function()
-{
-	var feedback_id = $("#feedback_list").val();
-	var feedback_name = $("#feedback_list option:selected").text();
-	$.ajax({
-	  type: "POST",
-	  url: "_requests.php",
-	  data: {action: "update_feedback", send_lead_id: lead_id, send_feedback: feedback_id},
-	  error: function(jqXHR, textStatus, errorThrown) { $error.dialog("open").html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ' + errorThrown)},
-	  success: function(data, textStatus, jqXHR)
-	  {   
-	
-	  if((textStatus=='success') && (data==1)) {
-		  $("#modify_feedback_status").html("<span id='feedback_fade'><table><tr><td style='width:18px'><img src='../../images/icons/clock_add_16.png'><td style='text-align:left;'>A Gravar</span></tr></table></span>");
-		  $("#feedback_fade").fadeOut(2000, function(){$("#modify_feedback_status").html("<i>(O feedback deste contacto pode ser alterado neste menu.)</i>");});
-		  $("#lead_info_status").html(feedback_name);
-		  } else {
-			  $error.dialog("open").html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ' + data);
-	  }
-	
-	  }
-	  });	
-	 
-});
+
+
+    /* VARS/DIALOGS */
+    var lead_id = '<?= $lead_id; ?>';
+    var Campaign_id = '<?= $campaign_id; ?>';
+    var $error = $('<div></div>')
+            .html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ')
+            .dialog({
+        autoOpen: false,
+        title: "<span style='float:left; margin-right: 4px;' class='ui-icon ui-icon-alert'></span> Erro",
+        width: "550",
+        height: "250",
+        show: "fade",
+        hide: "fade",
+        buttons: {"OK": function() {
+                $(this).dialog("close");
+            }}
+    });
+    /* FUNCTIONS */
 
 
 
 
 
 
-	
+    $("#inputcontainer input").focus(function()
+    {
+        $(this).css({"border": "1px solid green"});
+    });
+    $("#inputcontainer input").blur(function()
+    {
+
+        var field = this.name;
+        var field_value = $(this).val();
+        $(this).css({"border": "1px solid #c0c0c0"});
+        $.ajax({
+            type: "POST",
+            url: "/sips-agente/crm-agent/_requests.php",
+            data: {action: "update_contact_field", send_field: field, send_field_value: field_value, send_lead_id: lead_id},
+            error: function(jqXHR, textStatus, errorThrown) {
+                $error.dialog("open").html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ' + errorThrown);
+            },
+            success: function(data, textStatus, jqXHR)
+            {
+                if ((textStatus == 'success') && (data == 1))
+                {
+                    $("#td_" + field).html("<span id='img_fade" + field + "'><table><tr><td style='width:18px'><td style='text-align:left;'>A Gravar</span></tr></table></span>");
+                    $("#img_fade" + field).fadeOut(2500);
+                }
+                else
+                {
+                    $("#td_" + field).html("<span id='img_fade" + field + "'><table><tr><td style='width:18px'><td style='text-align:left;'>Erro a Gravar</tr></table></span>");
+                    $("#img_fade" + field).fadeOut(2500);
+                }
+            }
+        });
+    });
+    $("#feedback_list").change(function()
+    {
+        var feedback_id = $("#feedback_list").val();
+        var feedback_name = $("#feedback_list option:selected").text();
+        $.ajax({
+            type: "POST",
+            url: "/sips-agente/crm-agent/_requests.php",
+            data: {action: "update_feedback", send_lead_id: lead_id, send_feedback: feedback_id},
+            error: function(jqXHR, textStatus, errorThrown) {
+                $error.dialog("open").html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ' + errorThrown);
+            },
+            success: function(data, textStatus, jqXHR)
+            {
+
+                if ((textStatus == 'success') && (data == 1)) {
+                    $("#modify_feedback_status").html("<span id='feedback_fade'><table><tr><td style='width:18px'><td style='text-align:left;'>A Gravar</span></tr></table></span>");
+                    $("#feedback_fade").fadeOut(2000, function() {
+                        $("#modify_feedback_status").html("<i>(O feedback deste contacto pode ser alterado neste menu.)</i>");
+                    });
+                    $("#lead_info_status").html(feedback_name);
+                } else {
+                    $error.dialog("open").html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ' + data);
+                }
+
+            }
+        });
+
+//show or hide o botao e div consoante feedback é sale ou n
+        if ($("#feedback_list option:selected").data("sale") == "Y")
+            $("#confirm_feedback").show();
+        else
+            $("#confirm_feedback").hide();
+
+        $("#confirm_feedback_div").hide(600);
+        $("#confirm_feedback").prop('disabled', false);
+
+    });
 
 
-	
+
+    $("#confirm_feedback").on("click", function()
+    {
+        $("#confirm_feedback_div").show(600);
+        $(this).prop('disabled', true);
+        $("#comment_log_tbody").empty();
+        $.post("_requests.php", {action: "get_info_crm", lead_id: lead_id, status: $("#feedback_list option:selected").val(), campaign_id: Campaign_id},
+        function(data)
+        {
+            $("#radio_confirm_no").prop("checked", true);
+            $.each(data, function() {
+                if (this.has_info)
+                {
+                    $("#comment_log_tbody").append($("<tr>")
+                            .append($("<td>").text(this.comment))
+                            .append($("<td>").text(this.sale ? "Sim" : "Não"))
+                            .append($("<td>").text($("#agente_selector option[value=" + this.agent + "]").text()))
+                            .append($("<td>").text(this.admin))
+                            .append($("<td>").text(this.date))
+                            );
+                    if (this.sale)
+                        $("#radio_confirm_yes").prop("checked", true);
+                    else
+                        $("#radio_confirm_no").prop("checked", true);
+
+                    $("#agente_selector option[value=" + this.agent + "]").prop("selected", true);
+                    $("#textarea_comment").val("");
+                }
+                else
+                {
+                    $("#radio_confirm_no").prop("checked", true);
+                }
+
+            });
+
+
+        }, "json");
+    });
+
+
+    //insere nova entrada
+    $("#confirm_feedback_button").on("click", function()
+    {
+        $("#confirm_feedback").prop('disabled', false);
+        $("#confirm_feedback_div").hide(600);
+        $.post("_requests.php", {action: "add_info_crm", lead_id: lead_id, feedback: $("#feedback_list option:selected").val(), sale: $("#radio_confirm_yes").is(':checked'), campaign: Campaign_id, agent: $("#agente_selector option:selected").val(), comment: $("#textarea_comment").val()},
+        function(data)
+        {
+        }, "json");
+    });
 
 
 </script>
-
-<?php
-####################################################################### 
-### END - Created by kant
-#######################################################################
-$footer=ROOT."ini/footer.php";
-require($footer);
-?>
