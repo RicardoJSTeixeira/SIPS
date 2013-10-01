@@ -259,6 +259,27 @@ switch ($action) {
 
         break;
 
+    case "get_image_pdf":
+        $path = getcwd() . "/files/"; //change this if the script is in a different dir that the files you want 
+        $show = array('.jpg', '.gif', '.png','.jpeg','.pdf'); //Type of files to show 
+
+        $select = "<select name=\"select_box\">";
+
+        $dh = @opendir($path);
+
+        while (false !== ( $file = readdir($dh) )) {
+            $ext = substr($file, -4, 4);
+            if (in_array($ext, $show)) {
+                $select .= "<option value='$path/$file'>$file</option>\n";
+            }
+        }
+
+        $select .= "</select>";
+        closedir($dh);
+
+        echo "$select";
+        break;
+
     //------------------------------------------------//
     //-----------------EDIT---------------------------//
     //------------------------------------------------//
@@ -412,7 +433,7 @@ switch ($action) {
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "delete from script_rules where tag_trigger=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
-          
+
         echo json_encode(1);
         break;
 
@@ -491,11 +512,11 @@ switch ($action) {
         while ($row = mysql_fetch_assoc($query)) {
 
             if ($row['type'] == "tableradio") {
-          
 
-                $temp =   json_decode($row['values_text']);
+
+                $temp = json_decode($row['values_text']);
                 foreach ($temp as $value) {
-                     array_push($titles, $row['texto']."-". $value);
+                    array_push($titles, $row['texto'] . "-" . $value);
                     $tags["m" . $row['tag'] . $value] = "";
                 }
             } else {

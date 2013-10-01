@@ -159,6 +159,9 @@ $("#apagar_elemento").click(function()
       $('#rule_target_select').val('').trigger('liszt:updated');
 });
 
+
+
+
 $(function() {
       $("#tabs").tabs();
       array_id["radio"] = 0;
@@ -248,7 +251,7 @@ $(function() {
                         editor_toggle("off");
                   }
             });
-            //campaigns and linhas inbound
+         /*   //campaigns and linhas inbound
             $.post("requests.php", {action: "get_campaign"},
             function(data1)
             {
@@ -285,10 +288,26 @@ $(function() {
                   });
                   $("#scheduler_edit_select").val("").trigger("liszt:updated");
             }, "json");
+*/
+
+
+            $.post("requests.php", {action: "get_image_pdf"},
+            function(data4)
+            {
+
+                  $.each(data4, function(index, value) {
+
+                        $("#ipl_file_select").append("<option value=" + this.id + ">" + this.text + "</option>");
+                  });
+
+            }, "json");
+
             $('#textfield_edit').wysiwyg();
+            $('#ipl_link').wysiwyg();
+
             //--------------------------------------//
             editor_toggle("off");
-            update_script();
+         //   update_script();
       });
 
       $("#tag_label").text("§nome§");
@@ -361,6 +380,59 @@ $(function() {
       });
 });
 //UPDATES DE INFO
+
+$("#ipl_upload_button").on("click", function(e)
+{
+      e.preventDefault();
+      var form = $("#form_ipl");
+      if (form.find('input[type="file"]').val() === '')
+            return false;
+      var formData = new FormData(form[0]);
+      $.ajax({
+            url: 'upload.php',
+            type: 'POST',
+            data: formData,
+            dataType: "json",
+            cache: false,
+            error: function(data) {
+
+                  $("#label_ipl_info").text(data.responseText);
+            },
+            fail: function(data) {
+
+                  $("#label_ipl_info").text(data.responseText);
+            },
+            success: function(data) {
+
+                  $("#label_ipl_info").text(data.responseText);
+            },
+            contentType: false,
+            processData: false
+      });
+});
+
+
+
+
+
+
+function submit_file()
+{
+
+      $.post("upload.php", {results: $("#forma").serializeArray()}, function(data) {
+
+            return data;
+      }, "json").fail(function() {
+            return false;
+      });
+
+
+
+
+
+
+
+}
 
 
 Object.size = function(a)
@@ -651,6 +723,7 @@ function update_info()
                               item.attr("id", this.id)
                                       .data("id", this.id)
                                       .data("tag", this.tag)
+                                      .data("option", this.param1)
                                       .addClass("element")
                                       .data("type", "ipl")
                                       .data("hidden", this.hidden);
@@ -826,8 +899,29 @@ function populate_element(tipo, element)
                   break;
 
             case "ipl":
+                  $(".required_class").hide();
                   $("#ipl_edit").val($("#" + id + " .label_geral").html());
-                  $("#ipl_link").val($("#" + id + " .ipl_link").html());
+
+
+                  $(".ipl_option_divs").hide();
+                  if (element.data("option") == "1") {
+                        $("#ipl_image_preview").text($("#" + id + " .ipl_link").text());
+                        $("#radio_ipl_image").prop("checked", true);
+                        $("#ipl_image_div").show();
+                  }
+                  else if (element.data("option") == "2")
+                  {
+                        $("#ipl_pdf_preview").text($("#" + id + " .ipl_link").text());
+                        $("#radio_ipl_pdf").prop("checked", true);
+                        $("#ipl_pdf_div").show();
+                  }
+                  else
+                  {
+                        $("#ipl_link_preview").text($("#" + id + " .ipl_link").text());
+                        $("#radio_ipl_link").prop("checked", true);
+                        $("#ipl_link_div").show();
+                  }
+
                   break;
       }
       rules_database("get_rules_by_trigger", 0, $("#script_selector option:selected").val(), 0, element.data("tag"), 0, 0, 0, 0, 0);
@@ -1009,6 +1103,21 @@ function edit_element(opcao, element, data)
                   $("#textarea_edit").val($("#textarea_edit").val().replace(regex_text, ''));
                   $("#" + id + " .label_geral").html($("#textarea_edit").val());
                   item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textarea", element.index(), "h", $("#textarea_edit").val(), 0, 0, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  break;
+
+            case "ipl":
+                  $("#ipl_edit").val($("#ipl_edit").val().replace(regex_text, ''));
+                  $("#" + id + " .label_geral").html($("#ipl_edit").val());
+
+
+                  if ($("#radio_ipl_image").is(":checked"))
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, $("#ipl_image_preview").text(), false, $("#item_hidden").is(':checked'), 1);
+                  else if ($("#radio_ipl_pdf").is(":checked"))
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, $("#ipl_pdf_preview").text(), false, $("#item_hidden").is(':checked'), 2);
+                  else
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, $("#ipl_edit_link").text(), false, $("#item_hidden").is(':checked'), 3);
+
+
                   break;
 
 
