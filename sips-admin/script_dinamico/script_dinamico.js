@@ -52,8 +52,6 @@ var regex_text = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔº�
 var regex_split = /\n/g;
 var list_ui;
 var list_item;
-
-
 //mostra/esconde os elementos associados ao edit
 function editor_toggle(tipo)
 {
@@ -65,10 +63,12 @@ function editor_toggle(tipo)
             $("#tabs").tabs("enable");
             $("#item_edit_comum").show();
             $("#rule_manager").show();
-            $("#open_rule_creator").prop('disabled', false);//botoes de edit
-            $(".editor_layout").hide();// esconde os edits de todos
-            $(".footer_save_cancel button").prop('disabled', false);//botoes de edit
+            $("#open_rule_creator").prop('disabled', false); //botoes de edit
+            $(".editor_layout").hide(); // esconde os edits de todos
+            $(".footer_save_cancel button").prop('disabled', false); //botoes de edit
             $(".chosen-select").chosen({no_results_text: "Sem resultados"});
+            $("#ipl_file_select option").prop("disabled", false);
+
       }
       if (tipo === "off")
       {
@@ -109,21 +109,15 @@ $("#regra_select").change(function()
             $(".rule_target").show();
       }
 });
-
 $("#checkbox_scheduler_all").click(function()
 {
 
       if (this.checked)
             $("#scheduler_edit_select option").prop("selected", true);
-
       else
             $("#scheduler_edit_select option").prop("selected", false);
-
       $("#scheduler_edit_select").trigger("liszt:updated");
 });
-
-
-
 $("#apagar_elemento").click(function()
 {
       function item_database(opcao, Id, Tag, Id_script, Id_page, Type, Ordem, Dispo, Texto, Placeholder, Max_length, Values_text, Required, Hidden, Param1)
@@ -158,10 +152,25 @@ $("#apagar_elemento").click(function()
       $("#rule_target_select option[value=" + list_item.attr("id") + "] ").remove();
       $('#rule_target_select').val('').trigger('liszt:updated');
 });
-
-
-
-
+$(".ipl_radio_options").on("click", function()
+{
+      $("#ipl_link_div").hide();
+      $("#ipl_file_select").show();
+      $("#ipl_file_select option").prop("disabled", false);
+      if (this.value == "1")
+      {
+            $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
+      }
+      else if (this.value == "2")
+      {
+            $("#ipl_file_select option[data-type='image']").prop("disabled", true);
+      }
+      else
+      {
+            $("#ipl_file_select").hide();
+            $("#ipl_link_div").show();
+      }
+});
 $(function() {
       $("#tabs").tabs();
       array_id["radio"] = 0;
@@ -251,7 +260,7 @@ $(function() {
                         editor_toggle("off");
                   }
             });
-         /*   //campaigns and linhas inbound
+            //campaigns and linhas inbound
             $.post("requests.php", {action: "get_campaign"},
             function(data1)
             {
@@ -259,60 +268,56 @@ $(function() {
                         $("#script_campanha_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
                   });
                   $("#script_campanha_selector").chosen(({no_results_text: "Sem resultados"}));
-            }, "json");
-            $.post("requests.php", {action: "get_linha_inbound"},
-            function(data2)
-            {
-                  $.each(data2, function(index, value) {
-                        $("#script_linha_inbound_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
-                  });
-                  $("#script_linha_inbound_selector").chosen(({no_results_text: "Sem resultados"}));
-
-//VERIFICAR SÉ É CLOUD
-                  $.post("requests.php", {action: "iscloud"},
-                  function(data4)
+                  $.post("requests.php", {action: "get_linha_inbound"},
+                  function(data2)
                   {
-                        if (data4.iscloud)
-                              $(".linha_inbound_div").hide();
-                        else
-                              $(".linha_inbound_div").show();
+                        $.each(data2, function(index, value) {
+                              $("#script_linha_inbound_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
+                        });
+                        $("#script_linha_inbound_selector").chosen(({no_results_text: "Sem resultados"}));
+//VERIFICAR SÉ É CLOUD
+                        $.post("requests.php", {action: "iscloud"},
+                        function(data4)
+                        {
+                              if (data4.iscloud)
+                                    $(".linha_inbound_div").hide();
+                              else
+                                    $(".linha_inbound_div").show();
+                              $.post("requests.php", {action: "get_schedule"},
+                              function(data3)
+                              {
+                                    $.each(data3, function(index, value) {
+                                          $("#scheduler_edit_select").append("<option value=" + this.id + ">" + this.text + "</option>");
+                                    });
+                                    $("#scheduler_edit_select").val("").trigger("liszt:updated");
+                                    $("#ipl_file_select").empty();
+                                    $.post("requests.php", {action: "get_image_pdf"},
+                                    function(data5)
+                                    {
+                                          $("#ipl_file_select").html(data5);
+                                    }, "json");
+                              }, "json");
+                        }, "json");
                   }, "json");
             }, "json");
-            $.post("requests.php", {action: "get_schedule"},
-            function(data3)
-            {
-
-                  $.each(data3, function(index, value) {
-
-                        $("#scheduler_edit_select").append("<option value=" + this.id + ">" + this.text + "</option>");
-                  });
-                  $("#scheduler_edit_select").val("").trigger("liszt:updated");
-            }, "json");
-*/
-
-
-            $.post("requests.php", {action: "get_image_pdf"},
-            function(data4)
-            {
-
-                  $.each(data4, function(index, value) {
-
-                        $("#ipl_file_select").append("<option value=" + this.id + ">" + this.text + "</option>");
-                  });
-
-            }, "json");
-
             $('#textfield_edit').wysiwyg();
             $('#ipl_link').wysiwyg();
-
             //--------------------------------------//
             editor_toggle("off");
-         //   update_script();
+
+
+            $.post("requests.php", {action: "get_element_tags"},
+            function(data5)
+            {
+                  $("#rule_target_select").append(new Option(this.tag + " --- " + temp_type, this.tag)); //povoar os alvos com as tags e tipos dos elementos
+
+            }, "json");
+            $('#rule_target_select').val('').trigger('liszt:updated');
+
+
+            update_script();
       });
-
-      $("#tag_label").text("§nome§");
-
-
+      $("#tag_label").text("§nome_operador§");
       $(document).on("click", ".element", function(e) {
             selected_id = $(this).data("id");
             selected_tag = $(this).data("tag");
@@ -370,7 +375,6 @@ $(function() {
                         $("#ipl_layout_editor").show();
                         populate_element("ipl", $(this));
                         break;
-
             }
 
       });
@@ -409,13 +413,17 @@ $("#ipl_upload_button").on("click", function(e)
             contentType: false,
             processData: false
       });
+      $("#ipl_file_select").empty();
+      $.post("requests.php", {action: "get_image_pdf"},
+      function(data5)
+      {
+            $("#ipl_file_select").html(data5);
+            if ($("#radio_ipl_image").is(":checked"))
+                  $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
+            if ($("#radio_ipl_pdf").is(":checked"))
+                  $("#ipl_file_select option[data-type='image']").prop("disabled", true);
+      }, "json");
 });
-
-
-
-
-
-
 function submit_file()
 {
 
@@ -425,13 +433,6 @@ function submit_file()
       }, "json").fail(function() {
             return false;
       });
-
-
-
-
-
-
-
 }
 
 
@@ -439,7 +440,6 @@ Object.size = function(a)
 {
       var count = 0;
       var i;
-
       for (i in a) {
             if (a.hasOwnProperty(i)) {
                   count++;
@@ -503,10 +503,6 @@ function update_script(callback)
             }
 
             , "json");
-
-
-
-
       }, "json");
 }
 function update_pages(callback)
@@ -534,16 +530,11 @@ function update_pages(callback)
                               $("#page_selector").append("<option data-pos=" + this.pos + " value=" + this.id + " selected>" + this.name + "</option>");
                         else
                               $("#page_selector").append("<option data-pos=" + this.pos + " value=" + this.id + ">" + this.name + "</option>");
-
                         $("#page_position").append("<option value=" + this.pos + ">" + this.pos + "</option>");
-
                         $("#go_to_select").append(new Option(this.name, this.id));
                   });
-
-
                   if (typeof callback === "function")
                         callback();
-
                   update_info();
             }
       }, "json");
@@ -572,7 +563,6 @@ function update_info()
                                       .data("hidden", this.hidden)
                                       .data("regex", this.param1);
                               insert_element("texto", item, this);
-
                               break;
                         case "pagination":
                               temp_type = "Paginação";
@@ -583,7 +573,6 @@ function update_info()
                                       .data("tag", this.tag)
                                       .data("type", "pagination");
                               insert_element("pagination", item, this);
-
                               break;
                         case "radio":
                               temp_type = "Botão radio";
@@ -598,7 +587,6 @@ function update_info()
                                       .data("hidden", this.hidden)
                                       .data("dispo", this.dispo);
                               insert_element("radio", item, this);
-
                               break;
                         case "checkbox":
                               temp_type = "Botão resposta multipla";
@@ -613,7 +601,6 @@ function update_info()
                                       .data("hidden", this.hidden)
                                       .data("dispo", this.dispo);
                               insert_element("checkbox", item, this);
-
                               break;
                         case "multichoice":
                               temp_type = "Lista de Opções";
@@ -627,7 +614,6 @@ function update_info()
                                       .data("required", this.required)
                                       .data("hidden", this.hidden);
                               insert_element("multichoice", item, this);
-
                               break;
                         case "textfield":
                               temp_type = "Campo de Texto";
@@ -641,7 +627,6 @@ function update_info()
                                       .data("required", this.required)
                                       .data("hidden", this.hidden);
                               insert_element("textfield", item, this);
-
                               break;
                         case "legend":
                               temp_type = "Titulo";
@@ -655,7 +640,6 @@ function update_info()
                                       .data("required", this.required)
                                       .data("hidden", this.hidden);
                               insert_element("legend", item, this);
-
                               break;
                         case "tableradio":
                               temp_type = "Tabela botões radio";
@@ -669,7 +653,6 @@ function update_info()
                                       .data("required", this.required)
                                       .data("hidden", this.hidden);
                               insert_element("tableradio", item, this);
-
                               break;
                         case "datepicker":
                               temp_type = "Seletor tempo e hora";
@@ -683,12 +666,10 @@ function update_info()
                                       .data("required", this.required)
                                       .data("hidden", this.hidden);
                               insert_element("datepicker", item, this);
-
                               break;
                         case "scheduler":
                               temp_type = "Calendário";
                               var item = $('.rightDiv .scheduler_class').clone();
-
                               item.appendTo('.leftDiv');
                               item.attr("id", this.id)
                                       .data("id", this.id)
@@ -699,11 +680,9 @@ function update_info()
                                       .data("hidden", this.hidden);
                               insert_element("scheduler", item, this);
                               break;
-
                         case "textarea":
                               temp_type = "Input de texto";
                               var item = $('.rightDiv .textarea_class').clone();
-
                               item.appendTo('.leftDiv');
                               item.attr("id", this.id)
                                       .data("id", this.id)
@@ -714,11 +693,9 @@ function update_info()
                                       .data("hidden", this.hidden);
                               insert_element("textarea", item, this);
                               break;
-
                         case "ipl":
                               temp_type = "Imagem/PDF/Link";
                               var item = $('.rightDiv .ipl_class').clone();
-
                               item.appendTo('.leftDiv');
                               item.attr("id", this.id)
                                       .data("id", this.id)
@@ -729,12 +706,10 @@ function update_info()
                                       .data("hidden", this.hidden);
                               insert_element("ipl", item, this);
                               break;
-
-
                   }
-                  $("#rule_target_select").append(new Option(this.tag + " --- " + temp_type, this.tag)); //povoar os alvos com as tags e tipos dos elementos
+
             });
-            $('#rule_target_select').val('').trigger('liszt:updated');
+
       }, "json");
 }
 
@@ -751,10 +726,6 @@ function write_to_file(tipo)
             document.location.href = "requests.php?id_script=" + $("#script_selector option:selected").val() + "&campaign_id=" + $("#write_to_file_select_campanha option:selected").val() + "&action=write_to_file";
       else
             document.location.href = "requests.php?id_script=" + $("#script_selector option:selected").val() + "&campaign_id=" + $("#write_to_file_select_linha_inbound option:selected").val() + "&action=write_to_file";
-
-
-
-
 }
 
 function populate_element(tipo, element)
@@ -771,16 +742,7 @@ function populate_element(tipo, element)
       $("#label_tag").text("@" + element.data("tag") + "@");
       rules_manager(tipo, element);
       $("#tabs").tabs("enable");
-
-
-
-
-
       var id = element.data("id");
-
-
-
-
       switch (tipo)
       {
             case "texto":
@@ -892,34 +854,38 @@ function populate_element(tipo, element)
                   });
                   $("#scheduler_edit_select").val(values).trigger("liszt:updated");
                   break;
-
-
             case "textarea":
                   $("#textarea_edit").val($("#" + id + " .label_geral").html());
                   break;
-
             case "ipl":
+
+                  $("#tag_edit").hide();
+                  $("#tabs").tabs("disable", 2);
+                  $("#rule_manager").hide();
+                  $("#open_rule_creator").prop('disabled', true);
                   $(".required_class").hide();
+
+
                   $("#ipl_edit").val($("#" + id + " .label_geral").html());
+                  $("#ipl_file_select").hide();
+                  $("#ipl_link_div").hide();
 
-
-                  $(".ipl_option_divs").hide();
                   if (element.data("option") == "1") {
-                        $("#ipl_image_preview").text($("#" + id + " .ipl_link").text());
                         $("#radio_ipl_image").prop("checked", true);
-                        $("#ipl_image_div").show();
+                        $("#ipl_file_select").show();
+                        $("#ipl_file_select option[value='" + $("#" + id + " .ipl_link").text() + "']").prop("selected", true);
                   }
                   else if (element.data("option") == "2")
                   {
-                        $("#ipl_pdf_preview").text($("#" + id + " .ipl_link").text());
                         $("#radio_ipl_pdf").prop("checked", true);
-                        $("#ipl_pdf_div").show();
+                        $("#ipl_file_select").show();
+                        $("#ipl_file_select option[value='" + $("#" + id + " .ipl_link").text() + "']").prop("selected", true);
                   }
                   else
                   {
-                        $("#ipl_link_preview").text($("#" + id + " .ipl_link").text());
                         $("#radio_ipl_link").prop("checked", true);
                         $("#ipl_link_div").show();
+                        $("#ipl_edit_link").val($("#" + id + " .ipl_link").text());
                   }
 
                   break;
@@ -1026,7 +992,6 @@ function edit_element(opcao, element, data)
             case "textfield":
                   $("#textfield_edit").html($("#textfield_edit").html().replace(regex_text, ''));
                   $("#" + id + " .label_geral").html($("#textfield_edit").html());
-
                   item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", element.index(), "h", "textfield", 0, 0, $("#textfield_edit").html(), false, $("#item_hidden").is(':checked'));
                   break;
             case "legend":
@@ -1078,7 +1043,6 @@ function edit_element(opcao, element, data)
             case "datepicker":
                   $("#datepicker_edit").val($("#datepicker_edit").val().replace(regex_replace_textbox_tag, ''));
                   $("#" + id + " .label_geral").html($("#datepicker_edit").val());
-
                   item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", element.index(), "h", $("#datepicker_edit").val(), 0, 0, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   break;
             case "scheduler":
@@ -1095,32 +1059,35 @@ function edit_element(opcao, element, data)
                         select.append(options);
                   $("#scheduler_edit").val($("#scheduler_edit").val().replace(regex_replace_textbox_tag, ''));
                   $("#" + id + " .label_geral").html($("#scheduler_edit").val());
-
                   item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), "1", 0, valores, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $("#scheduler_edit_marcação option:selected").val());
                   break;
-
             case "textarea":
                   $("#textarea_edit").val($("#textarea_edit").val().replace(regex_text, ''));
                   $("#" + id + " .label_geral").html($("#textarea_edit").val());
                   item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textarea", element.index(), "h", $("#textarea_edit").val(), 0, 0, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   break;
-
             case "ipl":
                   $("#ipl_edit").val($("#ipl_edit").val().replace(regex_text, ''));
                   $("#" + id + " .label_geral").html($("#ipl_edit").val());
-
-
                   if ($("#radio_ipl_image").is(":checked"))
-                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, $("#ipl_image_preview").text(), false, $("#item_hidden").is(':checked'), 1);
+                  {
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, $("#ipl_file_select option:selected").val(), false, $("#item_hidden").is(':checked'), 1);
+                        $("#" + id + " .ipl_link").text($("#ipl_file_select option:selected").val());
+                        element.data("option", "1");
+                  }
                   else if ($("#radio_ipl_pdf").is(":checked"))
-                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, $("#ipl_pdf_preview").text(), false, $("#item_hidden").is(':checked'), 2);
-                  else
-                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, $("#ipl_edit_link").text(), false, $("#item_hidden").is(':checked'), 3);
+                  {
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, $("#ipl_file_select option:selected").val(), false, $("#item_hidden").is(':checked'), 2);
+                        $("#" + id + " .ipl_link").text($("#ipl_file_select option:selected").val());
+                        element.data("option", "2");
+                  } else {
 
 
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, $("#ipl_edit_link").val(), false, $("#item_hidden").is(':checked'), 3);
+                        $("#" + id + " .ipl_link").text($("#ipl_edit_link").val());
+                        element.data("option", "3");
+                  }
                   break;
-
-
       }
 
       $("#" + id + " .div_info_item").remove();
@@ -1160,7 +1127,6 @@ function insert_element(opcao, element, data)
 {
 
       var id = element.data("id");
-
       switch (opcao)
       {
             case "texto":
@@ -1225,7 +1191,6 @@ function insert_element(opcao, element, data)
                   break;
             case "textfield":
                   $("#" + id + " .label_geral").html(data.values_text);
-
                   break;
             case "legend":
                   $("#" + id + " .label_geral").html(data.values_text);
@@ -1266,7 +1231,6 @@ function insert_element(opcao, element, data)
                   }
                   break;
             case "datepicker":
-
                   $("#" + id + " .form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt"});
                   $("#" + id + " .label_geral").html(data.texto);
                   break;
@@ -1281,23 +1245,18 @@ function insert_element(opcao, element, data)
                   if (options.length > 0)
                         select.append(options);
                   break;
-
             case "textarea":
                   $("#" + id + " .label_geral").html(data.texto);
                   break;
-
             case "ipl":
                   $("#" + id + " .label_geral").html(data.texto);
                   $("#" + id + " .ipl_link").html(data.values_text);
                   break;
-
-
       }
 
 
       element.prepend($("<div>").css("float", "right").addClass("div_info_item span1"));
       var temp = $("#" + id + " .div_info_item");
-
       //IDs nos elementos 
       temp.append($("<label>").addClass("label label-inverse label_id_item").text(data.tag));
       if (data.required)
@@ -1309,8 +1268,6 @@ function insert_element(opcao, element, data)
             else
                   temp.append($("<i>").addClass("icon-eye-open hidden_icon info_icon"));
       }
-
-
 }
 
 
@@ -1364,7 +1321,6 @@ function pagescript_database(opcao, Id_script, Id_pagina, Pos)
                   update_pages(function() {
                         $("#page_selector option:last-child").prop("selected", true);
                   });
-
             }
             if (opcao === "delete_script") {
                   update_script();
@@ -1380,10 +1336,8 @@ $("#page_add_button").click(function()
 {
 
       var value1 = 0;
-
       if ($("#page_selector option").length > 0)
             value1 = $("#page_selector option:last-child").data("pos");
-
       pagescript_database("add_page", $("#script_selector option:selected").val(), 0, value1 + 1);
       $.jGrowl('Página adicionada com sucesso', {life: 3000});
 });
@@ -1417,7 +1371,6 @@ $("#save_button_page").click(function()//Fecha o dialog e grava as alterações
             $('#dialog_page').modal('hide');
             update_pages();
       }, "json");
-
 });
 //SCRIPTS
 $("#script_add_button").click(function()
@@ -1428,9 +1381,7 @@ $("#script_add_button").click(function()
 $("#script_remove_button").click(function()
 {
       $('#script_modal').modal('show');
-
 });
-
 $("#script_remove_button_modal").click(function()
 {
       editor_toggle("off");
@@ -1438,21 +1389,17 @@ $("#script_remove_button_modal").click(function()
       $.jGrowl('Script removido com sucesso', {life: 3000});
       $('#script_modal').modal('hide');
 });
-
 //script duplicate
 $("#copy_script_button").on("click", function()
 {
       $('#dialog_layout').modal('hide');
-
       $.post("requests.php", {action: "duplicate_script", id_script: $("#script_selector option:selected").val(), nome_script: $("#script_selector option:selected").text()},
       function(data)
       {
             update_script();
       }
       , "json");
-
 });
-
 $('#script_selector').change(function() {
       $("#script_campanha_selector").val("").trigger("liszt:updated");
       $("#script_linha_inbound_selector").val("").trigger("liszt:updated");
@@ -1463,14 +1410,6 @@ $("#opcao_script_button").click(function()//chama o edit do nome do script
 {
       $("#script_campanha_selector").val("").trigger("liszt:updated");
       $("#script_linha_inbound_selector").val("").trigger("liszt:updated");
-
-
-
-
-
-
-
-
       $.post("requests.php", {action: "get_camp_linha_by_id_script", id_script: $("#script_selector option:selected").val()},
       function(data)
       {
@@ -1484,25 +1423,16 @@ $("#opcao_script_button").click(function()//chama o edit do nome do script
             });
             $("#script_campanha_selector").val(campaign).trigger("liszt:updated");
             $("#script_linha_inbound_selector").val(linha_inbound).trigger("liszt:updated");
-
             $("#write_to_file_select_campanha").empty();
             //fazer append das opcions selected da campanha para geração de relatorios
             $("#script_campanha_selector option:selected").clone().appendTo($("#write_to_file_select_campanha"));
             $("#write_to_file_select_campanha").trigger("liszt:updated");
-
-
             $("#write_to_file_select_linha_inbound").empty();
             //fazer append das opcions selected da campanha para geração de relatorios
             $("#script_linha_inbound_selector option:selected").clone().appendTo($("#write_to_file_select_linha_inbound"));
             $("#write_to_file_select_linha_inbound").trigger("liszt:updated");
-
-
-
       }, "json");
       $("#script_name_edit").val($("#script_selector option:selected").text());
-
-
-
 });
 $("#save_button_layout").click(function()//Fecha o dialog e grava as alterações
 {
@@ -1663,10 +1593,7 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
 $(".values_edit_textarea").on("focus", function()
 {
       temp_value_holder = $(this).val();
-
 });
-
-
 $(".values_edit_textarea").on("blur", function()
 {
       if (temp_value_holder !== $(this).val())
@@ -1682,8 +1609,6 @@ $(".values_edit_textarea").on("blur", function()
 
 
 });
-
-
 $("#open_rule_creator").click(function()//Fecha o dialog e grava as alterações 
 {
       $("#rule_creator").toggle(800);
@@ -1762,7 +1687,6 @@ $("#add_rule_button").click(function()
                                     break;
                         }
                         break;
-
                   case "textarea":
                         switch ($("#rule_trigger_select").val())
                         {

@@ -63,11 +63,7 @@
                         min-height: 200px;
                         max-height:300px
                   }
-                  #ipl_link
-                  {border:2px solid #EEF;
-                   overflow:scroll;
-                   min-height: 200px;
-                   max-height:300px}
+
 
             </style>
       </head>
@@ -288,6 +284,9 @@
                                                       <div class="formRow validation" >
                                                             <label class="label label-inverse" >Validação</label>
                                                             <div class="formRight">
+                                                                  <label class="radio inline"  for="validacao_texto_none">Sem validação<input type="radio" id="validacao_texto_none" name="regex_texto" value="none" /></label>
+                                                            </div> 
+                                                            <div class="formRight">
                                                                   <label class="radio inline"  for="validacao_texto_normal">Numeros e letras<input type="radio" id="validacao_texto_normal" name="regex_texto" value="normal" /></label>
                                                             </div> 
                                                             <div class="formRight">
@@ -379,7 +378,21 @@
                                                       <div class="formRow" >
                                                             <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
-                                                                  <div class="btn-toolbar" data-role="editor-toolbar" data-target="#textfield_edit">
+                                                                  <div class="btn-toolbar" data-role="editor-toolbar" data-target="#textfield_edit" style="float:right">
+
+                                                                    
+                                                                        <div class="btn-group">
+                                                                              <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="color" ><i class="fam-color-swatch" style="padding-right: 0px"></i></a>
+                                                                              <div  class="dropdown-menu">
+                                                                                    <ul>
+                                                                                          <li> <a class="btn" data-edit="foreColor #ff0024" ><i class="icon-tint"></i> Vermelho</a></li>   
+                                                                                          <li>  <a class="btn" data-edit="foreColor #54bc00" ><i class="icon-tint"></i> Verde</a></li> 
+                                                                                          <li> <a class="btn" data-edit="foreColor #22aeff" ><i class="icon-tint"></i> Azul</a></li> 
+                                                                                          <li> <a class="btn" data-edit="foreColor #ff8400" ><i class="icon-tint"></i> Laranja</a></li>  
+                                                                                          <li> <a class="btn" data-edit="foreColor #999999" ><i class="icon-tint"></i> Cinzento</a></li>  
+                                                                                          <li> <a class="btn" data-edit="foreColor #000000" ><i class="icon-tint"></i> Preto</a></li>  
+                                                                              </div>
+                                                                        </div>
                                                                         <div class="btn-group">
                                                                               <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font"><i class="icon-font"></i><b class="caret"></b></a>
                                                                               <div  class="dropdown-menu">
@@ -401,6 +414,14 @@
                                                                                           <li><a data-edit="fontName Verdana" style="font-family:'Verdana'">Verdana</a></li></ul>
                                                                               </div>
                                                                         </div>
+                                                                        
+                                                                            <div class="btn-group">
+                                                                              <a class="btn btn-info" data-edit="justifyleft" title="" data-original-title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
+                                                                              <a class="btn" data-edit="justifycenter" title="" data-original-title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
+                                                                              <a class="btn" data-edit="justifyright" title="" data-original-title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
+                                                                              <a class="btn" data-edit="justifyfull" title="" data-original-title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
+
+                                                                        </div>
                                                                         <div class="btn-group">
                                                                               <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font Size"><i class="icon-text-height"></i>&nbsp;<b class="caret"></b></a>
                                                                               <div  class="dropdown-menu">
@@ -411,19 +432,7 @@
                                                                                     </ul>
                                                                               </div>
                                                                         </div>
-                                                                        <div class="btn-group">
-                                                                              <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="color"><i class="fam-color-swatch"></i><b class="caret"></b></a>
-                                                                              <div  class="dropdown-menu">
-                                                                                    <ul>
 
-                                                                                          <li> <a class="btn" data-edit="foreColor #ff0024" ><i class="icon-tint"></i> Vermelho</a></li>   
-                                                                                          <li>  <a class="btn" data-edit="foreColor #54bc00" ><i class="icon-tint"></i> Verde</a></li> 
-                                                                                          <li> <a class="btn" data-edit="foreColor #22aeff" ><i class="icon-tint"></i> Azul</a></li> 
-                                                                                          <li> <a class="btn" data-edit="foreColor #ff8400" ><i class="icon-tint"></i> Laranja</a></li>  
-                                                                                          <li> <a class="btn" data-edit="foreColor #999999" ><i class="icon-tint"></i> Cinzento</a></li>  
-                                                                                          <li> <a class="btn" data-edit="foreColor #000000" ><i class="icon-tint"></i> Preto</a></li>  
-                                                                              </div>
-                                                                        </div>
                                                                         <div class="btn-group">
                                                                               <a class="btn" data-edit="bold" title="" data-original-title="Bold (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
                                                                               <a class="btn" data-edit="italic" title="" data-original-title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
@@ -433,17 +442,14 @@
 
 
 
-                                                                        <div class="btn-group">
-                                                                              <a class="btn btn-info" data-edit="justifyleft" title="" data-original-title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
-                                                                              <a class="btn" data-edit="justifycenter" title="" data-original-title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
-                                                                              <a class="btn" data-edit="justifyright" title="" data-original-title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
-                                                                              <a class="btn" data-edit="justifyfull" title="" data-original-title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
-                                                                        </div>
+
 
 
                                                                   </div>
-                                                                  <div id="textfield_edit" class="span textfield_input" contenteditable="true"></div>
-                                                            </div>  
+                                                            </div>
+
+                                                            <div id="textfield_edit" class="span textfield_input" contenteditable="true"></div>
+
                                                       </div>
                                                 </div>
                                                 <!--LEGEND-->
@@ -564,18 +570,7 @@
 
 
 
-                                                      <div class="formRow">
-                                                            <label class="label">Opções:</label>
 
-                                                            <div class="formRight">
-                                                                  <label class="radio inline"  for="radio_ipl_image"><input  type="radio" class="radio_ipl" id="radio_ipl_image" name="ripl" checked="checked" value="1"> Imagem       </label> 
-
-                                                                  <label class=" radio inline"  for="radio_ipl_pdf"><input  type="radio" class="radio_ipl" id="radio_ipl_pdf" name="ripl" value="2" >PDF  </label> 
-
-                                                                  <label class=" radio inline"  for="radio_ipl_link"><input  type="radio" class="radio_ipl" id="radio_ipl_link" name="ripl" value="3" >Link      </label>    
-                                                                  <label class="inline" id="label_ipl_info" > </label>
-                                                            </div>
-                                                      </div>
 
 
 
@@ -585,14 +580,45 @@
 
                                                                   <form enctype="multipart/form-data" action="" method="POST" id="form_ipl">
 
-                                                                        <input name="file" type="file" />
+                                                                        <input name="file" type="file"  />
 
                                                                         <button class="btn" id="ipl_upload_button"  >upload</button>
                                                                   </form>
                                                             </div>
-                                                            <select id="ipl_file_select"></select>
+                                                            <div class="formRight">
+                                                                  <label class="inline" id="label_ipl_info" > </label>   
+                                                            </div>
                                                       </div>
 
+                                                      <div class="formRow">
+                                                            <label class="label">Opções:</label>
+
+                                                            <div class="formRight">
+                                                                  <label class="radio inline"  for="radio_ipl_image"><input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_image" name="ripl" value="1"> Imagem</label> 
+
+                                                                  <label class=" radio inline"  for="radio_ipl_pdf"><input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_pdf" name="ripl" value="2" >PDF</label> 
+
+                                                                  <label class=" radio inline"  for="radio_ipl_link"><input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_link" name="ripl" value="3" checked="checked" >Link</label>    
+                                                                  <select id="ipl_file_select" ></select>
+                                                            </div>
+                                                      </div>
+
+
+
+
+
+
+
+
+
+                                                      <div class="formRow" id="ipl_link_div" style="display: none" >
+
+                                                            <label class="label">Link</label>
+
+                                                            <div class="formRight">
+                                                                  <input type="text" placeholder="Exemplo: www.google.pt" id="ipl_edit_link">
+                                                            </div>
+                                                      </div>
 
                                                 </div>
 

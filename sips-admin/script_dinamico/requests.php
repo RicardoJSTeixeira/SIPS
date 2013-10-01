@@ -41,11 +41,12 @@ switch ($action) {
 
     case "get_client_info_by_lead_id":
         $js = array();
-        $query = "SELECT first_name,phone_number,alt_phone,address1,address3,postal_code,email,comments from vicidial_list where lead_id='$lead_id'";
+        $query = "SELECT * from vicidial_list where lead_id='$lead_id'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $user_temp = $user->getUser($user_logged);
-            $js = array("nome" => $row["first_name"], "telefone" => $row["phone_number"], "telefone_alt" => $row["alt_phone"], "morada" => $row["address1"], "telefone_alt2" => $row["address3"], "codigo_postal" => $row["postal_code"], "email" => $row["email"], "comentario" => $row["comments"], "nome_operador" => $user_temp["full_name"]);
+            $row["nome_operador"] = $user->getUser($user_logged);
+
+              $js[] = $row;
         }
 
         if (sizeof($js) < 1) {
@@ -261,23 +262,34 @@ switch ($action) {
 
     case "get_image_pdf":
         $path = getcwd() . "/files/"; //change this if the script is in a different dir that the files you want 
-        $show = array('.jpg', '.gif', '.png','.jpeg','.pdf'); //Type of files to show 
+        $show = array('.jpg', '.gif', '.png', '.jpeg', '.pdf'); //Type of files to show 
 
         $select = "<select name=\"select_box\">";
-
+        $select .= "<option value='' selected>Selecione uma opção</option>\n";
         $dh = @opendir($path);
+        $temp_ext = "";
 
         while (false !== ( $file = readdir($dh) )) {
             $ext = substr($file, -4, 4);
+
+
+
             if (in_array($ext, $show)) {
-                $select .= "<option value='$path/$file'>$file</option>\n";
+
+                if ($ext == ".pdf")
+                    $temp_ext = "pdf";
+                else
+                    $temp_ext = "image";
+
+
+                $select .= "<option data-type='$temp_ext' value='$file'>$file</option>\n";
             }
         }
 
         $select .= "</select>";
         closedir($dh);
 
-        echo "$select";
+        echo json_encode($select);
         break;
 
     //------------------------------------------------//

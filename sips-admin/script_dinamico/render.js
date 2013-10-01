@@ -7,7 +7,7 @@
 
 var array_id = [];
 var tag_regex = /\@(\d{1,5})\@/g;
-var tag_regex2 = /\§(.*)\§/g;
+var tag_regex2 = /\§(.*?)\§/g;
 var page_info = [];
 var items = [];
 var unique_id;
@@ -19,7 +19,6 @@ $(function() {
             $("#dummie").html(data);
             update_script();
       });
-
       $(document).on("click", ".previous_pag", function(e) {
             e.preventDefault();
             var temp = $(".pag_div:visible").prev(".pag_div");
@@ -29,7 +28,6 @@ $(function() {
                   temp.show();
             }
       });
-
       $(document).on("click", ".next_pag", function(e) {
             e.preventDefault();
             var temp = $(".pag_div:visible").next(".pag_div");
@@ -39,15 +37,18 @@ $(function() {
                   temp.show();
             }
       });
-
       $(document).on("click", ".scheduler_button_go", function(e) {
             e.preventDefault();
             var url = '../reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + page_info.user_id + '&lead=' + page_info.lead_id;
             window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
       });
 
+      $(document).on("click", ".pdf_button", function(e)
+      {
+            var url = "../script_dinamico/files/" + $(this).attr("file");
+            window.open(url, 'PDF', 'fullscreen=no, scrollbars=auto');
+      });
 });
-
 //Sérgio Gonçalves: 211155302 ->connecta
 
 
@@ -80,7 +81,6 @@ function update_script()
       {
             $("#validate_admin").hide();
             var camp_linha = 0;
-
             if (page_info.in_group_id !== "")
             {
                   camp_linha = page_info.in_group_id;
@@ -125,7 +125,6 @@ function update_info()
                                       .data("type", "texto");
                               items.push([item, this.id_page]);
                               break;
-
                         case "pagination":
                               item = $('#dummie .pagination_class').clone();
                               item.attr("id", this.tag)
@@ -134,7 +133,6 @@ function update_info()
                                       .data("type", "pagination");
                               items.push([item, this.id_page]);
                               break;
-
                         case "radio":
                               item = $('#dummie .radio_class').clone();
                               item.attr("id", this.tag)
@@ -144,7 +142,6 @@ function update_info()
                                       .data("dispo", this.dispo);
                               items.push([item, this.id_page]);
                               break;
-
                         case "checkbox":
                               item = $('#dummie .checkbox_class').clone();
                               item.attr("id", this.tag)
@@ -154,7 +151,6 @@ function update_info()
                                       .data("type", "checkbox");
                               items.push([item, this.id_page]);
                               break;
-
                         case "multichoice":
                               item = $('#dummie .multichoice_class').clone();
                               item.attr("id", this.tag)
@@ -163,7 +159,6 @@ function update_info()
                                       .data("type", "multichoice");
                               items.push([item, this.id_page]);
                               break;
-
                         case "textfield":
                               item = $('#dummie .textfield_class').clone();
                               item.attr("id", this.tag)
@@ -180,7 +175,6 @@ function update_info()
                                       .data("type", "legend");
                               items.push([item, this.id_page]);
                               break;
-
                         case "tableradio":
                               item = $('#dummie .tableradio_class').clone();
                               item.attr("id", this.tag)
@@ -189,7 +183,6 @@ function update_info()
                                       .data("type", "tableradio");
                               items.push([item, this.id_page]);
                               break;
-
                         case "datepicker":
                               item = $('#dummie .datepicker_class').clone();
                               item.attr("id", this.tag)
@@ -198,7 +191,6 @@ function update_info()
                                       .data("type", "datepicker");
                               items.push([item, this.id_page]);
                               break;
-
                         case "scheduler":
                               item = $('#dummie .scheduler_class').clone();
                               item.attr("id", this.tag)
@@ -207,7 +199,6 @@ function update_info()
                                       .data("type", "scheduler");
                               items.push([item, this.id_page]);
                               break;
-
                         case "textarea":
                               item = $('#dummie .textarea_class').clone();
                               item.attr("id", this.tag)
@@ -216,12 +207,18 @@ function update_info()
                                       .data("type", "textarea");
                               items.push([item, this.id_page]);
                               break;
+                        case "ipl":
+                              item = $('#dummie .ipl_class').clone();
+                              item.attr("id", this.tag)
+                                      .data("id", this.id)
+                                      .data("option", this.param1)
+                                      .data("type", "ipl");
+                              items.push([item, this.id_page]);
+                              break;
                   }
 
                   insert_element(this.type, item, this);
             });
-
-
             $("#myform").validationEngine();
 //FAZER O APPEND DOS ITEMS A LISTA
             $.each(items, function()
@@ -231,21 +228,16 @@ function update_info()
                   }
                   $("#" + this[1] + "pag").append(this[0]);
             });
-
-
             $(".pag_div").hide().first().show();
             $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt"}).keypress(function(e) {
                   e.preventDefault();
             }).bind("cut copy paste", function(e) {
                   e.preventDefault();
             });
-
             populate_script();
             tags();
             rules();
-
       }, "json");
-
 }
 
 function insert_element(opcao, element, data)
@@ -259,7 +251,6 @@ function insert_element(opcao, element, data)
                   input.placeholder = data.placeholder;
                   input.maxLength = data.max_length;
                   input.name = data.tag;
-
                   var pattern = [];
                   if (data.required)
                         pattern.push("required");
@@ -284,8 +275,8 @@ function insert_element(opcao, element, data)
                               pattern.push("funcCall[checknif]");
                               break;
                   }
-                  element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
-
+                  if (data.param1 != "none")
+                        element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
                   break;
             case "radio":
                   element.empty();
@@ -380,7 +371,6 @@ function insert_element(opcao, element, data)
                   element.find(".label_geral")[0].innerHTML = data.values_text;
                   element.find(".label_geral")[0].name = data.tag;
                   break;
-
             case "tableradio":
                   element.find(".label_geral")[0].innerHTML = data.texto;
                   var tr_head = element.find(".tr_head");
@@ -424,7 +414,6 @@ function insert_element(opcao, element, data)
                         element.find(".form_datetime").addClass("validate[required]");
                   element.find(".form_datetime")[0].name = data.tag;
                   break;
-
             case "scheduler":
                   element.find(".scheduler_button_go").attr("id", element.data("id") + "go_button");
                   var select = element.find(".scheduler_select");
@@ -437,26 +426,31 @@ function insert_element(opcao, element, data)
                         select.val("").trigger("liszt:updated");
                   }, "json");
                   element.find(".label_geral")[0].innerHTML = data.texto;
-
                   if (data.required)
                         element.find(".scheduler_select").addClass("validate[required]");
-
                   break;
-
             case "textarea":
                   element.find(".label_geral")[0].innerHTML = data.texto;
                   element.find(".input_textarea")[0].name = data.tag;
                   if (data.required)
                         element.find(".input_textarea").addClass("validate[required]");
-                  
                   break;
-
-
-
+            case "ipl":
+                  element.find(".label_geral")[0].innerHTML = data.texto;
+                  element.find("span").remove();
+                  if (element.data("option") == "1")
+                        element.append($("<img>").attr("src", 'files\\' + data.values_text));
+                  else if (element.data("option") == "2")
+                        element.append($("<button>").addClass("pdf_button").attr("file", data.values_text).text("Ver PDF"));
+                  else
+                        element.append($("<a>").attr("href","http://"+ data.values_text).text(data.values_text));
+                  break;
       }
       if (data.hidden)
             element.css("display", "none");
 }
+
+
 
 function populate_script()
 {
@@ -640,9 +634,8 @@ function rules()
                                           break;
                               }
                               break;
-                              
-                                           case "textarea":
-                                                 
+                        case "textarea":
+
                               switch (this.param1)
                               {
                                     case "answer":
@@ -656,12 +649,10 @@ function rules()
                               break;
                   }
             });
-
             $("#myform").validationEngine();
       }
 
       , "json");
-
 }
 function tags()
 {
@@ -678,7 +669,6 @@ function tags()
             $.each(temp, function() {
                   var id = this;
                   id = id.replace(/\@/g, '');
-
                   var regExp = new RegExp(this, "g");
                   rz.html(rz.html().replace(regExp, "<span class='" + id + "tag'></span>"));
                   $(document).on("change", "#" + id + " input,#" + id + " select", function() {
@@ -696,53 +686,136 @@ function tags()
                   if ($.inArray(this, temp) === -1)
                         temp.push(this);
             });
+
             $.post("requests.php", {action: "get_client_info_by_lead_id", lead_id: page_info.lead_id, user_logged: page_info.user_id},
             function(data)
             {
+                  console.log(data);
                   $.each(temp, function() {
                         var id = this;
                         id = id.replace(/\§/g, '');
-
                         var regExp = new RegExp(this, "g");
+                        console.log(id);
                         switch (id)
                         {
-                              case "nome":
-                                    rz.html(rz.html().replace(regExp, data.nome));
-                                    break;
-                              case "telefone":
-                                    rz.html(rz.html().replace(regExp, data.telefone));
-                                    break;
-                              case "telefone_alt":
-                                    rz.html(rz.html().replace(regExp, data.telefone_alt));
-                                    break;
-                              case "telefone_alt2":
-                                    rz.html(rz.html().replace(regExp, data.telefone_alt2));
-                                    break;
-                              case "morada":
-                                    rz.html(rz.html().replace(regExp, data.morada));
-                                    break;
-                              case "codigo_postal":
-                                    rz.html(rz.html().replace(regExp, data.codigo_postal));
-                                    break;
-                              case "localidade":
-                                    rz.html(rz.html().replace(regExp, data.localidade));
-                                    break;
-                              case "distrito":
-                                    rz.html(rz.html().replace(regExp, data.distrito));
-                                    break;
-                              case "email":
-                                    rz.html(rz.html().replace(regExp, data.email));
-                                    break;
-                              case "Comentario":
-                                    rz.html(rz.html().replace(regExp, data.Comentario));
-                                    break;
                               case "nome_operador":
-                                    rz.html(rz.html().replace(regExp, data.nome_operador));
+                                    rz.html(rz.html().replace(regExp, data[0].nome_operador));
                                     break;
+                              case "ADDRESS1":
+                                    rz.html(rz.html().replace(regExp, data[0].address1));
+                                    break;
+                              case "ADDRESS2":
+                                    rz.html(rz.html().replace(regExp, data[0].address2));
+                                    break;
+                              case "ADDRESS3":
+                                    rz.html(rz.html().replace(regExp, data[0].address3));
+                                    break;
+                              case "ALT_PHONE":
+                                    rz.html(rz.html().replace(regExp, data[0].alt_phone));
+                                    break;
+                              case "CITY":
+                                    rz.html(rz.html().replace(regExp, data[0].city));
+                                    break;
+                              case "COMMENTS":
+                                    rz.html(rz.html().replace(regExp, data[0].comments));
+                                    break;
+                              case "COUNTRY_CODE":
+                                    rz.html(rz.html().replace(regExp, data[0].country_code));
+                                    break;
+                              case "DATE_OF_BIRTH":
+                                    rz.html(rz.html().replace(regExp, data[0].date_of_birth));
+                                    break;
+                              case "EMAIL":
+                                    rz.html(rz.html().replace(regExp, data[0].email));
+                                    break;
+                              case "ENTRY_DATE":
+                                    rz.html(rz.html().replace(regExp, data[0].entry_date));
+                                    break;
+                              case "EXTRA1":
+                                    rz.html(rz.html().replace(regExp, data[0].extra1));
+                                    break;
+                              case "EXTRA2":
+                                    rz.html(rz.html().replace(regExp, data[0].extra2));
+                                    break;
+                              case "EXTRA3":
+                                    rz.html(rz.html().replace(regExp, data[0].extra3));
+                                    break;
+                              case "EXTRA4":
+                                    rz.html(rz.html().replace(regExp, data[0].extra4));
+                                    break;
+                              case "EXTRA5":
+                                    rz.html(rz.html().replace(regExp, data[0].extra5));
+                                    break;
+                              case "EXTRA6":
+                                    rz.html(rz.html().replace(regExp, data[0].extra6));
+                                    break;
+                              case "EXTRA7":
+                                    rz.html(rz.html().replace(regExp, data[0].extra7));
+                                    break;
+                              case "EXTRA8":
+                                    rz.html(rz.html().replace(regExp, data[0].extra8));
+                                    break;
+                              case "EXTRA9":
+                                    rz.html(rz.html().replace(regExp, data[0].extra9));
+                                    break;
+                              case "EXTRA10":
+                                    rz.html(rz.html().replace(regExp, data[0].extra10));
+                                    break;
+                              case "EXTRA11":
+                                    rz.html(rz.html().replace(regExp, data[0].extra11));
+                                    break;
+                              case "EXTRA12":
+                                    rz.html(rz.html().replace(regExp, data[0].extra12));
+                                    break;
+                              case "EXTRA13":
+                                    rz.html(rz.html().replace(regExp, data[0].extra13));
+                                    break;
+                              case "EXTRA14":
+                                    rz.html(rz.html().replace(regExp, data[0].extra14));
+                                    break;
+                              case "EXTRA15":
+                                    rz.html(rz.html().replace(regExp, data[0].extra15));
+                                    break;
+                              case "FIRST_NAME":
+                                    rz.html(rz.html().replace(regExp, data[0].first_name));
+                                    break;
+                              case "GENDER":
+                                    rz.html(rz.html().replace(regExp, data[0].gender));
+                                    break;
+                              case "LAST_LOCAL_CALL_TIME":
+                                    rz.html(rz.html().replace(regExp, data[0].last_local_call_time));
+                                    break;
+                              case "LAST_NAME":
+                                    rz.html(rz.html().replace(regExp, data[0].last_name));
+                                    break;
+                              case "MIDDLE_INITIAL":
+                                    rz.html(rz.html().replace(regExp, data[0].middle_initial));
+                                    break;
+                              case "PHONE_NUMBER":
+                                    rz.html(rz.html().replace(regExp, data[0].phone_number));
+                                    break;
+                              case "POSTAL_CODE":
+                                    rz.html(rz.html().replace(regExp, data[0].postal_code));
+                                    break;
+                              case "PROVINCE":
+                                    rz.html(rz.html().replace(regExp, data[0].province));
+                                    break;
+                              case "STATE":
+                                    rz.html(rz.html().replace(regExp, data[0].state));
+                                    break;
+                              case "STATUS":
+                                    rz.html(rz.html().replace(regExp, data[0].status));
+                                    break;
+                              case "TITLE":
+                                    rz.html(rz.html().replace(regExp, data[0].title));
+                                    break;
+                              case "USER":
+                                    rz.html(rz.html().replace(regExp, data[0].user));
+                                    break;
+
 
                         }
                   });
-
             }, "json");
       }
 }
@@ -754,7 +827,6 @@ $("#myform").on("submit", function(e)
 {
       e.preventDefault();
 });
-
 function submit_manual()
 {
       $.post("requests.php", {action: "save_form_result", id_script: page_info.script_id, results: $("#myform").serializeArray(), user_id: page_info.user_id, unique_id: unique_id, campaign_id: page_info.campaign_id, lead_id: page_info.lead_id}, function() {
@@ -786,7 +858,6 @@ function checknib(field, rules, i, options) {
       }
       else
             return "Introduza um NIB correto";
-
 }
 
 function checknif(field, rules, i, options) {
