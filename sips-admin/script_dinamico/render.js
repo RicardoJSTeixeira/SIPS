@@ -681,12 +681,14 @@ function tags()
             $.post("requests.php", {action: "get_client_info_by_lead_id", lead_id: page_info.lead_id, user_logged: page_info.user_id},
             function(data)
             {
-                   if (Object.size(data))
+
+                 if (Object.size(data))
                   $.each(temp, function() {
                         var id = this;
                         id = id.replace(/\§/g, '');
                         var regExp = new RegExp(this, "g");
                         rz.html(rz.html().replace(regExp, data[id.toLowerCase()]));
+                      
                   });
             }, "json");
       }
