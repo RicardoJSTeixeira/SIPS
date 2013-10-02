@@ -1,16 +1,13 @@
 
 
-//licença: 1339
-//operador:blitz
-//pass: 1234
-//sflphone
 
 var array_id = [];
 var tag_regex = /\@(\d{1,5})\@/g;
 var tag_regex2 = /\§(.*?)\§/g;
 var page_info = [];
 var items = [];
-var unique_id;
+var unique_id = 0;
+var id_script = 0;
 $(function() {
       array_id["radio"] = 0;
       array_id["checkbox"] = 0;
@@ -49,8 +46,6 @@ $(function() {
             window.open(url, 'PDF', 'fullscreen=no, scrollbars=auto');
       });
 });
-//Sérgio Gonçalves: 211155302 ->connecta
-
 
 
 
@@ -60,10 +55,6 @@ $(function() {
 //UPDATES DE INFO
 function update_script()
 {
-
-
-
-
       if (page_info.script_id !== undefined)
       {
             $.post("requests.php", {action: "get_scripts_by_id_script", id_script: page_info.script_id},
@@ -74,7 +65,6 @@ function update_script()
                         page_info.script_id = data.id;
                         update_info();
                   }
-
             }, "json");
       }
       else
@@ -89,8 +79,6 @@ function update_script()
             {
                   camp_linha = page_info.campaign_id;
             }
-
-
             $.post("requests.php", {action: "get_scripts_by_campaign", id_campaign: camp_linha},
             function(data)
             {
@@ -99,11 +87,8 @@ function update_script()
                         page_info.script_id = data.id;
                         update_info();
                   }
-
             }, "json");
       }
-
-
 }
 
 function update_info()
@@ -216,7 +201,6 @@ function update_info()
                               items.push([item, this.id_page]);
                               break;
                   }
-
                   insert_element(this.type, item, this);
             });
             $("#myform").validationEngine();
@@ -235,7 +219,6 @@ function update_info()
                   e.preventDefault();
             });
             populate_script();
-            tags();
             rules();
       }, "json");
 }
@@ -318,7 +301,6 @@ function insert_element(opcao, element, data)
                   var checkboxs = data.values_text;
                   for (var count = 0; count < checkboxs.length; count++)
                   {
-
                         if (data.required)
                               element.append($("<label>")
                                       .addClass("checkbox_name checkbox inline")
@@ -443,7 +425,7 @@ function insert_element(opcao, element, data)
                   else if (element.data("option") == "2")
                         element.append($("<button>").addClass("pdf_button").attr("file", data.values_text).text("Ver PDF"));
                   else
-                        element.append($("<a>").attr("href","http://"+ data.values_text).text(data.values_text));
+                        element.append($("<a>").attr("href", "http://" + data.values_text).text(data.values_text));
                   break;
       }
       if (data.hidden)
@@ -454,11 +436,10 @@ function insert_element(opcao, element, data)
 
 function populate_script()
 {
-      $.post("requests.php", {action: "get_results_to_populate", lead_id: page_info.lead_id},
+      $.post("requests.php", {action: "get_results_to_populate", lead_id: page_info.lead_id, id_script: page_info.script_id},
       function(data)
       {
-            console.log(data);
-            if (data !== null)
+               if (data !== null)
             {
                   $.each(data, function(index, value) {
 
@@ -475,8 +456,7 @@ function populate_script()
                                     $("#" + this.tag_elemento + " :input").val(this.valor);
                                     break;
                               case "tableradio":
-                                    var temp = this.tag_elemento.split(",");
-                                    $("#" + temp[0] + " tbody tr:eq(" + temp[1] + ") :input[value='" + this.valor + "']").attr('checked', true);
+                                    $("#" + this.tag_elemento + " tbody tr:contains(" + this.param1 + ") :input[value='" + this.valor + "']").attr('checked', true);
                                     break;
                               case "datepicker":
                                     $("#" + this.tag_elemento + " :input").val(this.valor);
@@ -486,6 +466,7 @@ function populate_script()
             }
 
       }, "json");
+
 }
 
 //RULES 
@@ -519,6 +500,7 @@ function rules()
       $.post("requests.php", {action: "get_rules", id_script: page_info.script_id},
       function(data)
       {
+
             $.each(data, function(index, value) {
                   switch (this.tipo_elemento)
                   {
@@ -572,8 +554,7 @@ function rules()
                                           {
                                                 $(document).on("click", "#" + this.tag_trigger + " input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                                 {
-
-                                                      rules_work(data[index]);
+                                                                                                           rules_work(data[index]);
                                                 }
                                                 );
                                           }
@@ -650,9 +631,8 @@ function rules()
                   }
             });
             $("#myform").validationEngine();
-      }
-
-      , "json");
+            tags();
+      }, "json");
 }
 function tags()
 {
@@ -685,139 +665,21 @@ function tags()
             $.each(temp2, function() {
                   if ($.inArray(this, temp) === -1)
                         temp.push(this);
+
             });
 
             $.post("requests.php", {action: "get_client_info_by_lead_id", lead_id: page_info.lead_id, user_logged: page_info.user_id},
             function(data)
             {
-                  console.log(data);
                   $.each(temp, function() {
                         var id = this;
                         id = id.replace(/\§/g, '');
                         var regExp = new RegExp(this, "g");
-                        console.log(id);
-                        switch (id)
-                        {
-                              case "nome_operador":
-                                    rz.html(rz.html().replace(regExp, data[0].nome_operador));
-                                    break;
-                              case "ADDRESS1":
-                                    rz.html(rz.html().replace(regExp, data[0].address1));
-                                    break;
-                              case "ADDRESS2":
-                                    rz.html(rz.html().replace(regExp, data[0].address2));
-                                    break;
-                              case "ADDRESS3":
-                                    rz.html(rz.html().replace(regExp, data[0].address3));
-                                    break;
-                              case "ALT_PHONE":
-                                    rz.html(rz.html().replace(regExp, data[0].alt_phone));
-                                    break;
-                              case "CITY":
-                                    rz.html(rz.html().replace(regExp, data[0].city));
-                                    break;
-                              case "COMMENTS":
-                                    rz.html(rz.html().replace(regExp, data[0].comments));
-                                    break;
-                              case "COUNTRY_CODE":
-                                    rz.html(rz.html().replace(regExp, data[0].country_code));
-                                    break;
-                              case "DATE_OF_BIRTH":
-                                    rz.html(rz.html().replace(regExp, data[0].date_of_birth));
-                                    break;
-                              case "EMAIL":
-                                    rz.html(rz.html().replace(regExp, data[0].email));
-                                    break;
-                              case "ENTRY_DATE":
-                                    rz.html(rz.html().replace(regExp, data[0].entry_date));
-                                    break;
-                              case "EXTRA1":
-                                    rz.html(rz.html().replace(regExp, data[0].extra1));
-                                    break;
-                              case "EXTRA2":
-                                    rz.html(rz.html().replace(regExp, data[0].extra2));
-                                    break;
-                              case "EXTRA3":
-                                    rz.html(rz.html().replace(regExp, data[0].extra3));
-                                    break;
-                              case "EXTRA4":
-                                    rz.html(rz.html().replace(regExp, data[0].extra4));
-                                    break;
-                              case "EXTRA5":
-                                    rz.html(rz.html().replace(regExp, data[0].extra5));
-                                    break;
-                              case "EXTRA6":
-                                    rz.html(rz.html().replace(regExp, data[0].extra6));
-                                    break;
-                              case "EXTRA7":
-                                    rz.html(rz.html().replace(regExp, data[0].extra7));
-                                    break;
-                              case "EXTRA8":
-                                    rz.html(rz.html().replace(regExp, data[0].extra8));
-                                    break;
-                              case "EXTRA9":
-                                    rz.html(rz.html().replace(regExp, data[0].extra9));
-                                    break;
-                              case "EXTRA10":
-                                    rz.html(rz.html().replace(regExp, data[0].extra10));
-                                    break;
-                              case "EXTRA11":
-                                    rz.html(rz.html().replace(regExp, data[0].extra11));
-                                    break;
-                              case "EXTRA12":
-                                    rz.html(rz.html().replace(regExp, data[0].extra12));
-                                    break;
-                              case "EXTRA13":
-                                    rz.html(rz.html().replace(regExp, data[0].extra13));
-                                    break;
-                              case "EXTRA14":
-                                    rz.html(rz.html().replace(regExp, data[0].extra14));
-                                    break;
-                              case "EXTRA15":
-                                    rz.html(rz.html().replace(regExp, data[0].extra15));
-                                    break;
-                              case "FIRST_NAME":
-                                    rz.html(rz.html().replace(regExp, data[0].first_name));
-                                    break;
-                              case "GENDER":
-                                    rz.html(rz.html().replace(regExp, data[0].gender));
-                                    break;
-                              case "LAST_LOCAL_CALL_TIME":
-                                    rz.html(rz.html().replace(regExp, data[0].last_local_call_time));
-                                    break;
-                              case "LAST_NAME":
-                                    rz.html(rz.html().replace(regExp, data[0].last_name));
-                                    break;
-                              case "MIDDLE_INITIAL":
-                                    rz.html(rz.html().replace(regExp, data[0].middle_initial));
-                                    break;
-                              case "PHONE_NUMBER":
-                                    rz.html(rz.html().replace(regExp, data[0].phone_number));
-                                    break;
-                              case "POSTAL_CODE":
-                                    rz.html(rz.html().replace(regExp, data[0].postal_code));
-                                    break;
-                              case "PROVINCE":
-                                    rz.html(rz.html().replace(regExp, data[0].province));
-                                    break;
-                              case "STATE":
-                                    rz.html(rz.html().replace(regExp, data[0].state));
-                                    break;
-                              case "STATUS":
-                                    rz.html(rz.html().replace(regExp, data[0].status));
-                                    break;
-                              case "TITLE":
-                                    rz.html(rz.html().replace(regExp, data[0].title));
-                                    break;
-                              case "USER":
-                                    rz.html(rz.html().replace(regExp, data[0].user));
-                                    break;
-
-
-                        }
+                        rz.html(rz.html().replace(regExp, data[id.toLowerCase()]));
                   });
             }, "json");
       }
+
 }
 
 
