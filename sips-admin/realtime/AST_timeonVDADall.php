@@ -923,7 +923,7 @@ if ($DB > 0) {echo "\n|$closer_campaigns|$closer_campaignsSQL|$stmt|\n";}
 ##### SHOW IN-GROUP STATS OR INBOUND ONLY WITH VIEW-MORE ###
 if ($campaign_allow_inbound == "1"  ) #($ALLINGROUPstats > 0) or ( (ereg('O',$with_inbound)) and ($adastats > 1) )
 	{
-	$stmtB="select calls_today,drops_today,answers_today,status_category_1,status_category_count_1,status_category_2,status_category_count_2,status_category_3,status_category_count_3,status_category_4,status_category_count_4,hold_sec_stat_one,hold_sec_stat_two,hold_sec_answer_calls,hold_sec_drop_calls,hold_sec_queue_calls,campaign_id from vicidial_campaign_stats where campaign_id IN ($closer_campaignsSQL) order by campaign_id;";
+//	$stmtB="select calls_today,drops_today,answers_today,status_category_1,status_category_count_1,status_category_2,status_category_count_2,status_category_3,status_category_count_3,status_category_4,status_category_count_4,hold_sec_stat_one,hold_sec_stat_two,hold_sec_answer_calls,hold_sec_drop_calls,hold_sec_queue_calls,campaign_id from vicidial_campaign_stats where campaign_id IN ($closer_campaignsSQL) order by campaign_id;";
 
 	if ($DB > 0) {echo "\n|$stmtB|\n";}
 # working
@@ -1425,7 +1425,7 @@ else
 		$multi_drop++;
 		$stmt="select avg(auto_dial_level),min(dial_status_a),min(dial_status_b),min(dial_status_c),min(dial_status_d),min(dial_status_e),min(lead_order),min(lead_filter_id),sum(hopper_level),min(dial_method),avg(adaptive_maximum_level),avg(adaptive_dropped_percentage),avg(adaptive_dl_diff_target),avg(adaptive_intensity),min(available_only_ratio_tally),min(adaptive_latest_server_time),min(local_call_time),avg(dial_timeout),min(dial_statuses),max(agent_pause_codes_active),max(list_order_mix),max(auto_hopper_level) from vicidial_campaigns where active='Y' $group_SQLand;";
 
-		$stmtB="select sum(dialable_leads),sum(calls_today),sum(drops_today),avg(drops_answers_today_pct),avg(differential_onemin),avg(agents_average_onemin),sum(balance_trunk_fill),sum(answers_today),max(status_category_1),sum(status_category_count_1),max(status_category_2),sum(status_category_count_2),max(status_category_3),sum(status_category_count_3),max(status_category_4),sum(status_category_count_4),sum(agent_calls_today),sum(agent_wait_today),sum(agent_custtalk_today),sum(agent_acw_today),sum(agent_pause_today) from vicidial_campaign_stats where calls_today > -1 $non_inboundSQL;";
+		$stmtB="select sum(dialable_leads),sum(calls_today),sum(drops_today),avg(drops_answers_today_pct),avg(differential_onemin),avg(agents_average_onemin),sum(balance_trunk_fill),sum(answers_today),max(status_category_1),sum(status_category_count_1),max(status_category_2),sum(status_category_count_2),max(status_category_3),sum(status_category_count_3),max(status_category_4),sum(status_category_count_4),sum(agent_calls_today),sum(agent_wait_today),sum(agent_custtalk_today),sum(agent_acw_today),sum(agent_pause_today) from vicidial_campaign_stats where calls_today > 1 $non_inboundSQL;";
 		}
 	else
 		{
@@ -2249,8 +2249,7 @@ if ($DB) {echo "$stmt\n";}
 
 
 $talking_to_print = mysql_num_rows($rslt);
-	if ($talking_to_print > 0)
-	{
+	
 	$i=0;
 	while ($i < $talking_to_print)
 		{
@@ -3012,16 +3011,10 @@ echo "
 		echo "$Cecho";
 	
 		echo "$Aecho";
-	}
-	else
-	{
-	echo "<center><br><br> Neste momento não se encontram Colaboradores online. </center>";
-	echo "$Cecho";
-	}
 
 
 
-
+                                
 
 
 
