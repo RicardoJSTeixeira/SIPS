@@ -192,7 +192,7 @@ switch ($action) {
         
         
         
-        
+        //93715
         
     
         
@@ -201,6 +201,7 @@ switch ($action) {
     case "get_agentes":
         
               $allowed_camps_regex = implode("|", $user->allowed_campaigns);
+      
         if (!$user->is_all_campaigns) {
             $ret = "WHERE allowed_campaigns REGEXP '$allowed_camps_regex'";
 

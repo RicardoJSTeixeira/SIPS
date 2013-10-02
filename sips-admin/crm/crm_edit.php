@@ -335,10 +335,10 @@ function curPageURL() {
     <div class="formRow">
         <label class="control-label">Agente</label>
         <div class="formRight">
-            <select id='agente_selector'>
+            <select id='agente_selector' class="chosen-select" data-placeholder="Selecione um Agente">
             </select>
         </div>
-    </div>
+    </div> 
     <div class="clear"></div>
     <div class="pull-right">
         <button class='btn btn-action' id='confirm_feedback_button'>Guardar</button>
@@ -485,7 +485,10 @@ while ($row = mysql_fetch_assoc($gravacoes)) { ?>
                 else
                     $("#agente_selector").append("<option value=" + this.user + ">" + this.full_name + "</option>");
             });
+            $("#agente_selector").val("").trigger("liszt:updated");
         }, "json");
+        
+       $(".chosen-select").chosen({no_results_text: "Sem resultados"});
     });
 
 
