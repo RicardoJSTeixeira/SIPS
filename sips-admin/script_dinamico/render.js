@@ -47,7 +47,17 @@ $(function() {
       });
 });
 
-
+Object.size = function(a)
+{
+      var count = 0;
+      var i;
+      for (i in a) {
+            if (a.hasOwnProperty(i)) {
+                  count++;
+            }
+      }
+      return count;
+};
 
 
 
@@ -671,6 +681,7 @@ function tags()
             $.post("requests.php", {action: "get_client_info_by_lead_id", lead_id: page_info.lead_id, user_logged: page_info.user_id},
             function(data)
             {
+                   if (Object.size(data))
                   $.each(temp, function() {
                         var id = this;
                         id = id.replace(/\§/g, '');

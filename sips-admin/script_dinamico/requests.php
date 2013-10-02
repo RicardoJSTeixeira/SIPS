@@ -57,9 +57,7 @@ switch ($action) {
             $row["nome_operador"] = $user->getUser($user_logged);
             $js = $row;
         }
-        if (sizeof($js) < 1) {
-            $js = array("nome" => "//Nome do cliente//", "telefone" => "//telefone do cliente//", "telefone_alt" => "//Telefone alternativo do cliente//", "morada" => "//morada do cliente//", "telefone_alt2" => "//Telemóvel do cliente//", "codigo_postal" => "//codigo postal do cliente//", "email" => "//email do cliente//", "comentario" => "//comentarios//", "nome_operador" => "//nome do operador//");
-        }
+     
         echo json_encode($js);
         break;
 
