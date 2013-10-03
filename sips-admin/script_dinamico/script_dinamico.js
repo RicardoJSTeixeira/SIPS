@@ -1241,15 +1241,12 @@ function pagescript_database(opcao, Id_script, Id_pagina, Pos)
       function(data)
       {
             editor_toggle("off");
-            if (opcao === "delete_page")
-                  update_pages(function() {
-                        $("#page_selector option:last-child").prop("selected", true);
-                  });
-            if (opcao === "add_script")
+            if (opcao === "delete_page"){
+                  update_pages();}
+            if (opcao === "add_script"){
                   update_script(function() {
-
                         $("#script_selector option:last-child").prop("selected", true);
-                  });
+                  });}
             if (opcao === "add_page")
             {
                   update_pages(function() {
