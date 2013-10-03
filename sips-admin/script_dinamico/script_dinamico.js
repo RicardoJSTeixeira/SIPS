@@ -1251,7 +1251,7 @@ function pagescript_database(opcao, Id_script, Id_pagina, Pos)
             {
                   update_pages(function() {
                         $("#page_selector option:last-child").prop("selected", true);
-                  });
+                  }); 
 
             }
             if (opcao === "delete_script") {
