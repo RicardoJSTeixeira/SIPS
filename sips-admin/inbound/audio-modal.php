@@ -135,7 +135,7 @@ $(function(){
                     makeAlert("#div-upload","Erro","Se voltar a acontecer contacte o responsável.",1,false,false);
                 }
                 function successHandler(e){
-                    makeAlert("#div-upload","Successo","O ficheiro foi carregado com sucesso. Pode agora adicionalo a qualquer mensagem, ou até ouvi-lo :-).",4,false,false);
+                    makeAlert("#div-upload","Successo","O ficheiro foi carregado com sucesso. Pode agora adicionalo a qualquer mensagem, ou até ouvilo :-).",4,false,false);
                     playFile(e.path);
                     var path=e.path.toString().replace(".gsm","");
                     path;
@@ -158,10 +158,10 @@ $(function(){
                     size = (Math.round((file.size/1024/1024)*100)/100);
                     type = file.type;
                     if(size>10){
-                        makeAlert($("#audio-div").parent(),"Tamanha excedido","O tamanha do ficheiro ultrapasso os 10mb permitidos.",1,false,false);
+                        makeAlert($("#audio-div").parent(),"Tamanha exedido","O tamanha do ficheiro ultrapasso os 10mb permitidos.",1,false,false);
                         $(this).fileupload('clear');}
                     if(!re_ext.test(type)){
-                        makeAlert($("#audio-div").parent(),"Extensão não válida","A extensão do ficheiro seleccionado não é valida.",1,false,false);
+                        makeAlert($("#audio-div").parent(),"Extensão Não valida","A extensão do ficheiro seleccionado não é valida.",1,false,false);
                         $(this).fileupload('clear');}
                     console.log("name:"+name);
                     console.log("size:"+size+"mb");
