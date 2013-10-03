@@ -4307,12 +4307,13 @@ function WeBForMDispoSelect_submit()
 function DispoSelect_submit()
 {
 
-    var SelectedFeedback = document.vicidial_form.DispoSelection.value;
-    if (custom_fields_enabled && SelectedFeedback!=="CBHOLD") {
+    var DispoChoice = document.vicidial_form.DispoSelection.value;
+    var isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback;
+    if (custom_fields_enabled && !isCB) {
 
         if (script_dinamico) {
             vcFormIFrame.unique_id=document.vicidial_form.uniqueid.value;
-            if (campaign_status[SelectedFeedback].sale) {
+            if (campaign_status[DispoChoice].sale) {
                 if (vcFormIFrame.validate_manual()) {
                     vcFormIFrame.submit_manual();
                     $('#vcFormIFrame')[0].src ="";
@@ -4327,7 +4328,7 @@ function DispoSelect_submit()
         else
         {
 
-            if (SelectedFeedback === "MARC") {
+            if (DispoChoice === "MARC") {
 
 
                 if ($("#vcFormIFrame").contents().find(".radiocheck-required:checked").length) {
@@ -4393,7 +4394,6 @@ function DispoSelect_submit()
 
     document.getElementById("HangupBothLines").innerHTML = "<a href=\"#\" onclick=\"bothcall_send_hangup();return false;\"><img src=\"./images/vdc_XB_hangupbothlines.gif\" border=\"0\" alt=\"Hangup Both Lines\" style=\"vertical-align:middle\" /></a>";
 
-    var DispoChoice = document.vicidial_form.DispoSelection.value;
 
     if (DispoChoice.length < 1) {
         alert_box("Tem que escolher um resultado!!");
@@ -4402,7 +4402,6 @@ function DispoSelect_submit()
     {
         document.getElementById("CusTInfOSpaN").innerHTML = "";
         document.getElementById("CusTInfOSpaN").style.background = panel_bgcolor;
-        var isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback;
         if (isCB && (scheduled_callbacks > 0)) {
             showDiv('CallBackSelectBox');
         }
