@@ -48,16 +48,18 @@ switch ($action) {
         echo json_encode($js);
         break;
 
-        
+
     case "get_client_info_by_lead_id":
         $js = array();
         $query = "SELECT * from vicidial_list where lead_id='$lead_id'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $row["nome_operador"] = $user->getUser($user_logged);
+
+            $temp = $user->getUser($user_logged);
+            $row["nome_operador"] = $temp["full_name"];
             $js = $row;
         }
-     
+
         echo json_encode($js);
         break;
 
@@ -86,7 +88,7 @@ switch ($action) {
         echo json_encode($js);
         break;
 
-        
+
     case "get_camp_linha_by_id_script":
         $query = "SELECT * FROM script_assoc where id_script=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -121,7 +123,7 @@ switch ($action) {
         echo json_encode($js);
         break;
 
-        
+
     case "get_scripts_by_id_script":
         $query = "SELECT * FROM script_dinamico_master where id='$id_script'";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -136,12 +138,12 @@ switch ($action) {
         $query = "SELECT b.id_script,a.lead_id,a.tag_elemento,a.valor,b.type,a.param_1 FROM script_result a inner join script_dinamico b on a.tag_elemento=b.tag  where a.lead_id=$lead_id and b.id_script=$id_script and a.unique_id= (select max(unique_id) from script_result where lead_id=$lead_id) ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array("id_script" => $row["id_script"], "lead_id" => $row["lead_id"], "tag_elemento" => $row["tag_elemento"], "valor" => $row["valor"], "type" => $row["type"],"param1" => $row["param_1"]);
+            $js[] = array("id_script" => $row["id_script"], "lead_id" => $row["lead_id"], "tag_elemento" => $row["tag_elemento"], "valor" => $row["valor"], "type" => $row["type"], "param1" => $row["param_1"]);
         }
         echo json_encode($js);
         break;
 
-        
+
     case "get_reduced_data":
         $query = "SELECT id,tag,type,texto,values_text FROM `script_dinamico` WHERE id in($ids) order by ordem";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -171,7 +173,7 @@ switch ($action) {
         echo json_encode($js);
         break;
 
-        
+
     case "get_data":
         $query = "SELECT * FROM `script_dinamico` WHERE id_script=$id_script and id_page=$id_page order by ordem asc";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -181,7 +183,7 @@ switch ($action) {
         echo json_encode($js);
         break;
 
-        
+
     case "get_data_individual":
         $query = "SELECT * FROM `script_dinamico` WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -228,7 +230,7 @@ switch ($action) {
         echo json_encode($js);
         break;
 
-        
+
     case 'get_linha_inbound':
         $query = "SELECT group_id,group_name FROM vicidial_inbound_groups";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -237,7 +239,7 @@ switch ($action) {
         }
         echo json_encode($js);
         break;
-        
+
 
     case 'iscloud':
         $query = "SELECT cloud FROM servers";
@@ -257,7 +259,7 @@ switch ($action) {
         echo json_encode($temp);
         break;
 
-        
+
     case "get_image_pdf":
         $path = getcwd() . "/files/"; //change this if the script is in a different dir that the files you want 
         $show = array('.jpg', '.gif', '.png', '.jpeg', '.pdf'); //Type of files to show 
@@ -299,16 +301,16 @@ switch ($action) {
         echo json_encode(1);
         break;
 
-        
+
     case "edit_page":
         $query = "update script_dinamico_pages set pos=$old_pos where pos=$new_pos and  id_script=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "update script_dinamico_pages set name='$name',pos=$new_pos where id=$id_pagina";
         $query = mysql_query($query, $link) or die(mysql_error());
-       echo json_encode(1);
+        echo json_encode(1);
         break;
 
-    
+
 
     case "edit_item":
         $values_text = (!isset($values_text)) ? array() : $values_text;
@@ -332,7 +334,7 @@ switch ($action) {
         echo json_encode(1);
         break;
 
-    
+
     case "add_script":
         $query = "INSERT INTO `asterisk`.`script_dinamico_master` (id,name,user_group) VALUES (NULL,'Script novo','$user->user_group')";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -351,12 +353,12 @@ switch ($action) {
         $query2 = mysql_query($query2, $link) or die(mysql_error());
         $row2 = mysql_fetch_assoc($query2);
         $tag = (!isset($row2["max_tag"])) ? 0 : $row2["max_tag"] + 1;
-                $query = "INSERT INTO `asterisk`.`script_dinamico` (`id`,tag, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required,hidden,param1) VALUES (NULL,$tag, $id_script,$id_page,'$type',$ordem,'$dispo', '$texto', '" . mysql_real_escape_string(json_encode($placeholder)) . "', $max_length, '" . mysql_real_escape_string(json_encode($values_text)) . "',$required,$hidden,'$param1')";
+        $query = "INSERT INTO `asterisk`.`script_dinamico` (`id`,tag, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required,hidden,param1) VALUES (NULL,$tag, $id_script,$id_page,'$type',$ordem,'$dispo', '$texto', '" . mysql_real_escape_string(json_encode($placeholder)) . "', $max_length, '" . mysql_real_escape_string(json_encode($values_text)) . "',$required,$hidden,'$param1')";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(mysql_insert_id());
         break;
 
-    
+
     case "add_rules":
 
         if (!empty($tag_trigger2) && !empty($tag_target)) {
@@ -413,7 +415,7 @@ switch ($action) {
         echo json_encode(1);
         break;
 
-        
+
     case "delete_item":
         $query = "UPDATE script_dinamico SET ordem=ordem-1 where ordem>$ordem and id_page=$id_page ";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -439,7 +441,7 @@ switch ($action) {
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(1);
         break;
-    
+
 
     case "delete_rule":
         $query = "delete from script_rules  where id=$id";
@@ -458,7 +460,7 @@ switch ($action) {
             }
         }
         $query = "INSERT INTO `script_result`(`id`,date,id_script,user_id,unique_id,campaign_id,lead_id, `tag_elemento`, `valor`,param_1) VALUES " . implode(',', $sql);
-                $query = mysql_query($query, $link) or die(mysql_error());
+        $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(1);
         break;
 
@@ -486,7 +488,7 @@ switch ($action) {
             $campos[$row['Name']] = "";
             array_push($ref_name, $row['Name']);
         }
-       $tags = array();
+        $tags = array();
         $query = "SELECT tag,type,texto,values_text  FROM `script_dinamico` where type not in ('pagination','textfield') and texto!='' and id_script='$id_script' order by tag asc ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
