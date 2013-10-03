@@ -2,22 +2,6 @@
 
 
 
-
-
-
-// URGENTE GO CONECTA REPORT
-//FEEDBACK CHAMADA NOT NICE
-//tableradio
-
-
-
-////////TO BE DONE//////////////////
-
-//relatorio
-
-//tratar das rules quando o elemento n as tem
-//schedule ta cabenenariazado
-
 //
 //forms ->http://www.javaworld.com/jw-06-1996/jw-06-javascript.html?page=2
 
@@ -32,11 +16,7 @@
 
 
 
-//adicionar elemento de textarea pra resposta
-//metodo de edição de elementos de texto
 
-
-//get_results_to_populate not debuged
 
 var temp_value_holder = "";
 var current_page_pos = 0;
@@ -291,7 +271,7 @@ $(function() {
             update_script();
       });
 
-      $("#tag_label").text("§nome§");
+      $("#tag_label").text("§nome_operador§");
 
 
       $(document).on("click", ".element", function(e) {
