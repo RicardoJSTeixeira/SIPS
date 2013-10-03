@@ -4307,10 +4307,8 @@ function WeBForMDispoSelect_submit()
 function DispoSelect_submit()
 {
 
-    var DispoChoice = document.vicidial_form.DispoSelection.value;
-    var isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback;
     var SelectedFeedback = document.vicidial_form.DispoSelection.value;
-    if (custom_fields_enabled && !isCB) {
+    if (custom_fields_enabled && SelectedFeedback!=="CBHOLD") {
 
         if (script_dinamico) {
             vcFormIFrame.unique_id=document.vicidial_form.uniqueid.value;
@@ -4395,6 +4393,7 @@ function DispoSelect_submit()
 
     document.getElementById("HangupBothLines").innerHTML = "<a href=\"#\" onclick=\"bothcall_send_hangup();return false;\"><img src=\"./images/vdc_XB_hangupbothlines.gif\" border=\"0\" alt=\"Hangup Both Lines\" style=\"vertical-align:middle\" /></a>";
 
+    var DispoChoice = document.vicidial_form.DispoSelection.value;
 
     if (DispoChoice.length < 1) {
         alert_box("Tem que escolher um resultado!!");
@@ -4403,6 +4402,7 @@ function DispoSelect_submit()
     {
         document.getElementById("CusTInfOSpaN").innerHTML = "";
         document.getElementById("CusTInfOSpaN").style.background = panel_bgcolor;
+        var isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback;
         if (isCB && (scheduled_callbacks > 0)) {
             showDiv('CallBackSelectBox');
         }
