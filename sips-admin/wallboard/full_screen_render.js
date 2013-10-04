@@ -552,7 +552,6 @@ function   inbound_wallboard(data)
                               case "CLOSER":
                                     ready++;
                                     break;
-
                               case"PAUSED":
                                     paused++;
                                     break;
@@ -637,19 +636,11 @@ function   inbound_wallboard(data)
                                     }
                                     else
                                           sla1.innerHTML = 0;
-                                    /*  var sla2 = document.getElementById("sla2" + id);
-                                     var sla2_title = document.getElementById("sla2_title" + id);
-                                     if (tma2 > 0)
-                                     {
-                                     sla2.innerHTML = Math.round(tma2) + "%";
-                                     sla2_title.innerHTML = "SLA2->" + Math.round(answer_sec_pct_rt_stat_two) + "sec";
-                                     }
-                                     else
-                                     sla2.innerHTML = 0;*/
+                   
                                     var painel = $("#plot_inbound" + id);
                                     var data_array = [];
                                     data_array.push({label: ready + " - Agentes Disponiveis", data: ready});
-                                    data_array.push({label: (queue + paused) + " - Agentes Indisponiveis", data: (queue + paused)});
+                                    data_array.push({label: paused + " - Agentes Indisponiveis", data: paused});
                                     data_array.push({label: incall + " - Agentes em Chamada", data: incall});
                                     if ((ready + queue + paused + incall) == "0")
                                     {
