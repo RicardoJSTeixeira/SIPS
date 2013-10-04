@@ -428,7 +428,7 @@ function insert_element(opcao, element, data)
                         element.find(".input_textarea").addClass("validate[required]");
                   break;
             case "ipl":
-                  element.find(".label_geral")[0].innerHTML = data.texto;
+                             element.find(".label_geral")[0].innerHTML = data.texto;
                   element.find("span").remove();
                   if (element.data("option") == "1")
                         element.append($("<img>").attr("src", 'files\\' + data.values_text));
