@@ -1,16 +1,13 @@
 
 
-//licença: 1339
-//operador:blitz
-//pass: 1234
-//sflphone
 
 var array_id = [];
 var tag_regex = /\@(\d{1,5})\@/g;
-var tag_regex2 = /\§(.*)\§/g;
+var tag_regex2 = /\§(.*?)\§/g;
 var page_info = [];
 var items = [];
-var unique_id;
+var unique_id = 0;
+var id_script = 0;
 $(function() {
       array_id["radio"] = 0;
       array_id["checkbox"] = 0;
@@ -19,7 +16,6 @@ $(function() {
             $("#dummie").html(data);
             update_script();
       });
-
       $(document).on("click", ".previous_pag", function(e) {
             e.preventDefault();
             var temp = $(".pag_div:visible").prev(".pag_div");
@@ -29,7 +25,6 @@ $(function() {
                   temp.show();
             }
       });
-
       $(document).on("click", ".next_pag", function(e) {
             e.preventDefault();
             var temp = $(".pag_div:visible").next(".pag_div");
@@ -39,19 +34,30 @@ $(function() {
                   temp.show();
             }
       });
-
       $(document).on("click", ".scheduler_button_go", function(e) {
             e.preventDefault();
             var url = '../reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + page_info.user_id + '&lead=' + page_info.lead_id;
             window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
       });
 
+      $(document).on("click", ".pdf_button", function(e)
+      {
+            var url = "../script_dinamico/files/" + $(this).attr("file");
+            window.open(url, 'PDF', 'fullscreen=no, scrollbars=auto');
+      });
 });
 
-//Sérgio Gonçalves: 211155302 ->connecta
-
-
-
+Object.size = function(a)
+{
+      var count = 0;
+      var i;
+      for (i in a) {
+            if (a.hasOwnProperty(i)) {
+                  count++;
+            }
+      }
+      return count;
+};
 
 
 
@@ -59,10 +65,6 @@ $(function() {
 //UPDATES DE INFO
 function update_script()
 {
-
-
-
-
       if (page_info.script_id !== undefined)
       {
             $.post("requests.php", {action: "get_scripts_by_id_script", id_script: page_info.script_id},
@@ -73,14 +75,12 @@ function update_script()
                         page_info.script_id = data.id;
                         update_info();
                   }
-
             }, "json");
       }
       else
       {
             $("#validate_admin").hide();
             var camp_linha = 0;
-
             if (page_info.in_group_id !== "")
             {
                   camp_linha = page_info.in_group_id;
@@ -89,8 +89,6 @@ function update_script()
             {
                   camp_linha = page_info.campaign_id;
             }
-
-
             $.post("requests.php", {action: "get_scripts_by_campaign", id_campaign: camp_linha},
             function(data)
             {
@@ -99,11 +97,8 @@ function update_script()
                         page_info.script_id = data.id;
                         update_info();
                   }
-
             }, "json");
       }
-
-
 }
 
 function update_info()
@@ -125,7 +120,6 @@ function update_info()
                                       .data("type", "texto");
                               items.push([item, this.id_page]);
                               break;
-
                         case "pagination":
                               item = $('#dummie .pagination_class').clone();
                               item.attr("id", this.tag)
@@ -134,7 +128,6 @@ function update_info()
                                       .data("type", "pagination");
                               items.push([item, this.id_page]);
                               break;
-
                         case "radio":
                               item = $('#dummie .radio_class').clone();
                               item.attr("id", this.tag)
@@ -144,7 +137,6 @@ function update_info()
                                       .data("dispo", this.dispo);
                               items.push([item, this.id_page]);
                               break;
-
                         case "checkbox":
                               item = $('#dummie .checkbox_class').clone();
                               item.attr("id", this.tag)
@@ -154,7 +146,6 @@ function update_info()
                                       .data("type", "checkbox");
                               items.push([item, this.id_page]);
                               break;
-
                         case "multichoice":
                               item = $('#dummie .multichoice_class').clone();
                               item.attr("id", this.tag)
@@ -163,7 +154,6 @@ function update_info()
                                       .data("type", "multichoice");
                               items.push([item, this.id_page]);
                               break;
-
                         case "textfield":
                               item = $('#dummie .textfield_class').clone();
                               item.attr("id", this.tag)
@@ -180,7 +170,6 @@ function update_info()
                                       .data("type", "legend");
                               items.push([item, this.id_page]);
                               break;
-
                         case "tableradio":
                               item = $('#dummie .tableradio_class').clone();
                               item.attr("id", this.tag)
@@ -189,7 +178,6 @@ function update_info()
                                       .data("type", "tableradio");
                               items.push([item, this.id_page]);
                               break;
-
                         case "datepicker":
                               item = $('#dummie .datepicker_class').clone();
                               item.attr("id", this.tag)
@@ -198,7 +186,6 @@ function update_info()
                                       .data("type", "datepicker");
                               items.push([item, this.id_page]);
                               break;
-
                         case "scheduler":
                               item = $('#dummie .scheduler_class').clone();
                               item.attr("id", this.tag)
@@ -207,7 +194,6 @@ function update_info()
                                       .data("type", "scheduler");
                               items.push([item, this.id_page]);
                               break;
-
                         case "textarea":
                               item = $('#dummie .textarea_class').clone();
                               item.attr("id", this.tag)
@@ -216,12 +202,17 @@ function update_info()
                                       .data("type", "textarea");
                               items.push([item, this.id_page]);
                               break;
+                        case "ipl":
+                              item = $('#dummie .ipl_class').clone();
+                              item.attr("id", this.tag)
+                                      .data("id", this.id)
+                                      .data("option", this.param1)
+                                      .data("type", "ipl");
+                              items.push([item, this.id_page]);
+                              break;
                   }
-
                   insert_element(this.type, item, this);
             });
-
-
             $("#myform").validationEngine();
 //FAZER O APPEND DOS ITEMS A LISTA
             $.each(items, function()
@@ -231,21 +222,15 @@ function update_info()
                   }
                   $("#" + this[1] + "pag").append(this[0]);
             });
-
-
             $(".pag_div").hide().first().show();
             $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt"}).keypress(function(e) {
                   e.preventDefault();
             }).bind("cut copy paste", function(e) {
                   e.preventDefault();
             });
-
             populate_script();
-            tags();
             rules();
-
       }, "json");
-
 }
 
 function insert_element(opcao, element, data)
@@ -259,7 +244,6 @@ function insert_element(opcao, element, data)
                   input.placeholder = data.placeholder;
                   input.maxLength = data.max_length;
                   input.name = data.tag;
-
                   var pattern = [];
                   if (data.required)
                         pattern.push("required");
@@ -284,8 +268,8 @@ function insert_element(opcao, element, data)
                               pattern.push("funcCall[checknif]");
                               break;
                   }
-                  element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
-
+                  if (data.param1 != "none")
+                        element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
                   break;
             case "radio":
                   element.empty();
@@ -327,7 +311,6 @@ function insert_element(opcao, element, data)
                   var checkboxs = data.values_text;
                   for (var count = 0; count < checkboxs.length; count++)
                   {
-
                         if (data.required)
                               element.append($("<label>")
                                       .addClass("checkbox_name checkbox inline")
@@ -380,7 +363,6 @@ function insert_element(opcao, element, data)
                   element.find(".label_geral")[0].innerHTML = data.values_text;
                   element.find(".label_geral")[0].name = data.tag;
                   break;
-
             case "tableradio":
                   element.find(".label_geral")[0].innerHTML = data.texto;
                   var tr_head = element.find(".tr_head");
@@ -424,7 +406,6 @@ function insert_element(opcao, element, data)
                         element.find(".form_datetime").addClass("validate[required]");
                   element.find(".form_datetime")[0].name = data.tag;
                   break;
-
             case "scheduler":
                   element.find(".scheduler_button_go").attr("id", element.data("id") + "go_button");
                   var select = element.find(".scheduler_select");
@@ -437,34 +418,38 @@ function insert_element(opcao, element, data)
                         select.val("").trigger("liszt:updated");
                   }, "json");
                   element.find(".label_geral")[0].innerHTML = data.texto;
-
                   if (data.required)
                         element.find(".scheduler_select").addClass("validate[required]");
-
                   break;
-
             case "textarea":
                   element.find(".label_geral")[0].innerHTML = data.texto;
                   element.find(".input_textarea")[0].name = data.tag;
                   if (data.required)
                         element.find(".input_textarea").addClass("validate[required]");
-                  
                   break;
-
-
-
+            case "ipl":
+                  element.find(".label_geral")[0].innerHTML = data.texto;
+                  element.find("span").remove();
+                  if (element.data("option") == "1")
+                        element.append($("<img>").attr("src", 'files\\' + data.values_text));
+                  else if (element.data("option") == "2")
+                        element.append($("<button>").addClass("pdf_button").attr("file", data.values_text).text("Ver PDF"));
+                  else
+                        element.append($("<a>").attr("href", "http://" + data.values_text).text(data.values_text));
+                  break;
       }
       if (data.hidden)
             element.css("display", "none");
 }
 
+
+
 function populate_script()
 {
-      $.post("requests.php", {action: "get_results_to_populate", lead_id: page_info.lead_id},
+      $.post("requests.php", {action: "get_results_to_populate", lead_id: page_info.lead_id, id_script: page_info.script_id},
       function(data)
       {
-            console.log(data);
-            if (data !== null)
+               if (data !== null)
             {
                   $.each(data, function(index, value) {
 
@@ -481,8 +466,7 @@ function populate_script()
                                     $("#" + this.tag_elemento + " :input").val(this.valor);
                                     break;
                               case "tableradio":
-                                    var temp = this.tag_elemento.split(",");
-                                    $("#" + temp[0] + " tbody tr:eq(" + temp[1] + ") :input[value='" + this.valor + "']").attr('checked', true);
+                                    $("#" + this.tag_elemento + " tbody tr:contains(" + this.param1 + ") :input[value='" + this.valor + "']").attr('checked', true);
                                     break;
                               case "datepicker":
                                     $("#" + this.tag_elemento + " :input").val(this.valor);
@@ -492,6 +476,7 @@ function populate_script()
             }
 
       }, "json");
+
 }
 
 //RULES 
@@ -525,6 +510,7 @@ function rules()
       $.post("requests.php", {action: "get_rules", id_script: page_info.script_id},
       function(data)
       {
+
             $.each(data, function(index, value) {
                   switch (this.tipo_elemento)
                   {
@@ -578,8 +564,7 @@ function rules()
                                           {
                                                 $(document).on("click", "#" + this.tag_trigger + " input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                                 {
-
-                                                      rules_work(data[index]);
+                                                                                                           rules_work(data[index]);
                                                 }
                                                 );
                                           }
@@ -640,9 +625,8 @@ function rules()
                                           break;
                               }
                               break;
-                              
-                                           case "textarea":
-                                                 
+                        case "textarea":
+
                               switch (this.param1)
                               {
                                     case "answer":
@@ -656,12 +640,9 @@ function rules()
                               break;
                   }
             });
-
             $("#myform").validationEngine();
-      }
-
-      , "json");
-
+            tags();
+      }, "json");
 }
 function tags()
 {
@@ -678,7 +659,6 @@ function tags()
             $.each(temp, function() {
                   var id = this;
                   id = id.replace(/\@/g, '');
-
                   var regExp = new RegExp(this, "g");
                   rz.html(rz.html().replace(regExp, "<span class='" + id + "tag'></span>"));
                   $(document).on("change", "#" + id + " input,#" + id + " select", function() {
@@ -695,56 +675,24 @@ function tags()
             $.each(temp2, function() {
                   if ($.inArray(this, temp) === -1)
                         temp.push(this);
+
             });
+
             $.post("requests.php", {action: "get_client_info_by_lead_id", lead_id: page_info.lead_id, user_logged: page_info.user_id},
             function(data)
             {
+
+                 if (Object.size(data))
                   $.each(temp, function() {
                         var id = this;
                         id = id.replace(/\§/g, '');
-
                         var regExp = new RegExp(this, "g");
-                        switch (id)
-                        {
-                              case "nome":
-                                    rz.html(rz.html().replace(regExp, data.nome));
-                                    break;
-                              case "telefone":
-                                    rz.html(rz.html().replace(regExp, data.telefone));
-                                    break;
-                              case "telefone_alt":
-                                    rz.html(rz.html().replace(regExp, data.telefone_alt));
-                                    break;
-                              case "telefone_alt2":
-                                    rz.html(rz.html().replace(regExp, data.telefone_alt2));
-                                    break;
-                              case "morada":
-                                    rz.html(rz.html().replace(regExp, data.morada));
-                                    break;
-                              case "codigo_postal":
-                                    rz.html(rz.html().replace(regExp, data.codigo_postal));
-                                    break;
-                              case "localidade":
-                                    rz.html(rz.html().replace(regExp, data.localidade));
-                                    break;
-                              case "distrito":
-                                    rz.html(rz.html().replace(regExp, data.distrito));
-                                    break;
-                              case "email":
-                                    rz.html(rz.html().replace(regExp, data.email));
-                                    break;
-                              case "Comentario":
-                                    rz.html(rz.html().replace(regExp, data.Comentario));
-                                    break;
-                              case "nome_operador":
-                                    rz.html(rz.html().replace(regExp, data.nome_operador));
-                                    break;
-
-                        }
+                        rz.html(rz.html().replace(regExp, data[id.toLowerCase()]));
+                      
                   });
-
             }, "json");
       }
+
 }
 
 
@@ -754,7 +702,6 @@ $("#myform").on("submit", function(e)
 {
       e.preventDefault();
 });
-
 function submit_manual()
 {
       $.post("requests.php", {action: "save_form_result", id_script: page_info.script_id, results: $("#myform").serializeArray(), user_id: page_info.user_id, unique_id: unique_id, campaign_id: page_info.campaign_id, lead_id: page_info.lead_id}, function() {
@@ -786,7 +733,6 @@ function checknib(field, rules, i, options) {
       }
       else
             return "Introduza um NIB correto";
-
 }
 
 function checknif(field, rules, i, options) {
