@@ -3664,6 +3664,12 @@ while ($MM_scripts > $h) {
                                                         <span id="CBstatusSpan" >Callbacks</span> 
                                                     </td>
                                                 </tr>
+                                                 <tr id='confirm_feedback_log_button' style='cursor:pointer' data-toggle="tooltip" title="Log do feedback">
+                                                    <td><i class="fam-book-go"></i></td>
+                                                    <td>
+                                                        <span class="btn-link" onclick="confirm_feedback_load();">Vendas não confirmadas</span> 
+                                                    </td>
+                                                </tr>
                                                 <?php if ($campaign_allow_inbound == 'Y') { ?>
                                                 <tr style='cursor:pointer' onclick="OpeNGrouPSelectioN();">
                                                     <td><i class="fam-group-add"></i></td>
@@ -4319,18 +4325,14 @@ if ($enable_xfer_presets == 'ENABLED') {
                         </table>
                     </span>
 
-                    <span style="border-radius:0;width:20%;height:35%;position:absolute;left:40%;top:38.5%;z-index:<?= ++$zi?>;" id="TimerSpan" class='cc-mstyle'> 
-                        <table>
-                            <tr>
-                                <td align="center">
-                                    <br />
-                                    <span id="TimerContentSpan"></span>
-                                    <br />
-                                    <br />
-                                    <a href="#" onClick="hideDiv('TimerSpan');return false;">Fechar Aviso</a> 
-                                </td>
-                            </tr>
-                        </table>
+                    <span  id="TimerSpan" class='modal'> 
+                        <div class="modal-header">
+                            <button class="close" type="button" onClick="hideDiv('TimerSpan');return false;" >×</button>
+                            Aviso
+                        </div>
+                        <div class="modal-body">
+                            <b><p id="TimerContentSpan"></p></b>
+                        </div>
                     </span>
 
                     <span style="position:fixed;left:0;top:0;z-index:1001; width:100%; height:100%;" id="LogouTBox" class="form_settings">
@@ -4567,6 +4569,26 @@ if ($enable_xfer_presets == 'ENABLED') {
                         </div>
                     </div>
 
+                    <div class="grid-agent" id="confirm_feedback_log" style="z-index:1001; width:1000px; margin-left: -500px; display:none;" >
+                         <div class="modal-header">
+                             <button class="close" type="button" onclick="hideDiv('confirm_feedback_log');">×</button>
+                             Vendas não confirmadas
+                         </div>
+                         <div class="modal-body">
+                             <table class="table table-mod table-bordered">
+                                 <thead>
+                                <th>Comentário</th>
+
+                                 <th> Cliente </th>
+                                  <th> Data </th>
+                                                       </thead>
+                                 <tbody id="comment_log_tbody">
+                                 </tbody>
+                             </table>
+                         </div>
+                     </div>
+            
+            
                     <div class="grid-agent" style="overflow-y: auto;margin-left:-175px;margin-top:-250px; width: 350px; z-index:<?= ++$zi ?>;" id="CloserSelectBox">
                         <div class="modal-header">
                             Seleccção de Grupos Inbound
