@@ -4309,11 +4309,12 @@ function DispoSelect_submit()
 
     var DispoChoice = document.vicidial_form.DispoSelection.value;
     var isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback;
+    var isSALE = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].sale;
     if (custom_fields_enabled && !isCB) {
 
         if (script_dinamico) {
             vcFormIFrame.unique_id=document.vicidial_form.uniqueid.value;
-            if (campaign_status[DispoChoice].sale) {
+            if (isSALE) {
                 if (vcFormIFrame.validate_manual()) {
                     vcFormIFrame.submit_manual();
                     $('#vcFormIFrame')[0].src ="";
@@ -4594,7 +4595,6 @@ function DispoSelect_submit()
                         if (auto_dial_level != '0')
                         {
                             AutoDialWaiting = 1;
-                            console.log("UI");
                              AutoDial_ReSume_PauSe("VDADready", "NEW_ID");
                         }
                         else
@@ -6754,7 +6754,7 @@ function TimerActionRun(taskaction, taskdialalert)
     var next_action = 0;
     if (taskaction == 'DiaLAlerT')
     {
-        document.getElementById("TimerContentSpan").innerHTML = "<b>Atenção!<br /><br />" + taskdialalert.replace("\n", "<br />") + "</b>";
+        document.getElementById("TimerContentSpan").innerHTML = taskdialalert.replace("\n", "</p><p>");
 
         showDiv('TimerSpan');
     }
@@ -9525,3 +9525,57 @@ $(function() {
         $(this).text((this.innerText === "+") ? "-" : "+").closest(".grid-agent").find(".notification-mes").toggle();
     });
 });
+
+
+ $(document).on("click",".ligar_comment_log", function()
+      {
+        
+             if ((VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1))
+      {
+            if ((auto_pause_precall == 'Y') && ((agent_pause_codes_active == 'Y') || (agent_pause_codes_active == 'FORCE')) && (AutoDialWaiting == 1) && (VD_live_customer_call != 1) && (alt_dial_active != 1) && (MD_channel_look != 1) && (in_lead_preview_state != 1))
+            {
+
+            }
+            else
+            {
+                  return;
+            }
+      }
+            
+            ManualDialNext("", $(this).data("lead_id"), "", $(this).data("phone_number"), "", "", "", "");
+            
+       
+      });
+
+
+function confirm_feedback_load()
+{
+      showDiv('confirm_feedback_log');
+
+      $("#comment_log_tbody").empty();
+  
+      $.post("ajax/confirm_feedback.php", {user: user},
+      function(data)
+      {
+
+            $.each(data, function(index, value) {
+                  if (this.has_info)
+                  {
+                        $("#comment_log_tbody").append($("<tr>")
+                                .append($("<td>").text(this.comment))
+
+                                .append($("<td>").text(this.full_name))
+                                .append($("<td>").text(moment(this.date).fromNow())
+                                .append($("<div>").addClass("view-button")
+                                .append($("<button>").addClass("btn btn-mini ligar_comment_log icon-phone").data("lead_id", this.lead_id).data("phone_number", this.phone_number).text(" ligar"))))
+
+                                );
+
+                  }
+
+            });
+      }, "json");
+    $(".ligar_comment_log").show();
+
+
+}
