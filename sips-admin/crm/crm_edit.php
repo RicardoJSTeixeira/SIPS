@@ -257,19 +257,19 @@ function curPageURL() {
 
 <h2>Dados da Lead</h2>
 <form class="form-horizontal" id='inputcontainer' >
-<?php for ($i = 0; $i < count($fields); $i++) { ?>
+    <?php for ($i = 0; $i < count($fields); $i++) { ?>
         <div class="control-group">
             <label class="control-label"><?= $fields_LABEL[$i] ?>:</label>
             <div class="controls" >
-    <?php if ($fields_NAME[$i] != "comments") { ?>
+                <?php if ($fields_NAME[$i] != "comments") { ?>
                     <input type=text name='<?= $fields_NAME[$i] ?>' id='<?= $fields_NAME[$i] ?>' class='span9' value='<?= $fields[$i] ?>'>
-    <?php } else { ?>
+                <?php } else { ?>
                     <textarea name='<?= $fields_NAME[$i] ?>' id='<?= $fields_NAME[$i] ?>' class='span9' ><?= $fields[$i] ?></textarea>
-        <?php } ?>
+                <?php } ?>
                 <span id='td_<?= $fields_NAME[$i] ?>'></span>
             </div>
         </div>
-            <?php } ?>
+    <?php } ?>
 </form>
 
 <h3>Alteração do Feedback</h3>
@@ -362,16 +362,16 @@ function curPageURL() {
         </tr>
     </thead>
     <tbody>
-<?php
-while ($row = mysql_fetch_assoc($chamadas_feitas)) {
+        <?php
+        while ($row = mysql_fetch_assoc($chamadas_feitas)) {
 
-    $duracao = sec_convert($row['length_in_sec'], "H");
-    if ($row['status_name1']) {
-        $status_name = $row['status_name1'];
-    } else {
-        $status_name = $row['status_name2'];
-    }
-    ?>
+            $duracao = sec_convert($row['length_in_sec'], "H");
+            if ($row['status_name1']) {
+                $status_name = $row['status_name1'];
+            } else {
+                $status_name = $row['status_name2'];
+            }
+            ?>
 
             <tr>
                 <td><?= $row["data"] ?></td>
@@ -383,7 +383,7 @@ while ($row = mysql_fetch_assoc($chamadas_feitas)) {
                 <td><?= $row["campaign_name"] ?></td>
                 <td><?= $row["list_name"] ?></td>
             </tr>
-<?php } ?>
+        <?php } ?>
     </tbody>
 </table>
 
@@ -400,10 +400,10 @@ while ($row = mysql_fetch_assoc($chamadas_feitas)) {
 
     </thead>
     <tbody>
-<?php 
-
-    $curpage = curPageURL();
-while ($row = mysql_fetch_assoc($gravacoes)) { ?>
+        <?php
+        $curpage = curPageURL();
+        while ($row = mysql_fetch_assoc($gravacoes)) {
+            ?>
 
             <tr>
                 <td><?= $row["data"] ?></td>
@@ -412,42 +412,49 @@ while ($row = mysql_fetch_assoc($gravacoes)) { ?>
                 <td><?= sec_convert($row['length_in_sec'], "H") ?></td>
                 <td><?= $row["full_name"] ?>
 
-    <?
+                    <?
+                    $mp3File = "#";
 
+                    if (strlen($row[location]) > 0) {
+                        $tmp = explode("/", $row[location]);
+                        $ip = $tmp[2];
+                        $tmp = explode(".", $ip);
+                        $ip = $tmp[3];
 
-        $mp3File = "#";
+                        switch ($ip) {
+                            case "248":
+                                $port = ":20248";
+                                break;
+                            case "247":
+                                $port = ":20247";
+                                break;
+                            default:
+                                $port = "";
+                                break;
+                        }
 
-        if (strlen($row[location]) > 0) {
-            $tmp = explode("/", $row[location]);
-            $ip = $tmp[2];
-            $tmp = explode(".", $ip);
-            $ip = $tmp[3];
+                        $mp3File = $curpage . $port . "/RECORDINGS/MP3/$row[filename]-all.mp3";
+                        $audioPlayer = "Há gravação";
+                    } else {
+                        $audioPlayer = "Não há gravação!";
+                    }
 
-            switch ($ip) {
-                case "248":
-                    $port = ":20248";
-                    break;
-                case "247":
-                    $port = ":20247";
-                    break;
-                default:
-                    $port = "";
-                    break;
-            }
-
-            $mp3File = $curpage . $port . "/RECORDINGS/MP3/$row[filename]-all.mp3";
-            $audioPlayer = "Há gravação";
-        } else {
-            $audioPlayer = "Não há gravação!";
-        }
-
-        $lenghtInMin = date("i:s", $row[length_in_sec]);
-    
-    ?>
+                    $lenghtInMin = date("i:s", $row[length_in_sec]);
+                    ?>
 
 
                     <div class="view-button"><a href='<?= $mp3File ?>' target='_self' class="btn btn-mini"><i class="icon-play"></i>Ouvir</a></div>
-                    <?php if ($user->is_script_dinamico) { ?>    
+                    <?php
+                    $temp = 0;
+                    $query = "SELECT *  FROM script_assoc where id_camp_linha='" . $lead_info[campaign_id] . "'";
+                    $query = mysql_query($query, $link) or die(mysql_error());
+                    while ($row = mysql_fetch_assoc($query)) {
+                        $temp = 1;
+                    }
+
+
+                    if ($temp) {
+                        ?>    
                         <div class="view-button"><a class="btn btn-mini" target='_new' href='../../sips-admin/script_dinamico/render.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>'><i class="icon-bookmark"></i>Script</a></div>
                     <?php } else { ?>
                         <div class="view-button">  <a class="btn btn-mini" target='_new' href='../../sips-agente/vdc_form_display.php?submit_button=YES&lead_id=<?= $lead_id ?>&list_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>'><i class="icon-bookmark"></i>Script</a></div>
@@ -457,7 +464,7 @@ while ($row = mysql_fetch_assoc($gravacoes)) { ?>
 
 
             </tr>
-                <?php } ?>
+        <?php } ?>
     </tbody>
 </table>
 
