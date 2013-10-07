@@ -4316,14 +4316,16 @@ function DispoSelect_submit()
             vcFormIFrame.unique_id=document.vicidial_form.uniqueid.value;
             if (isSALE) {
                 if (vcFormIFrame.validate_manual()) {
-                    vcFormIFrame.submit_manual();
-                    $('#vcFormIFrame')[0].src ="";
+                    vcFormIFrame.submit_manual(function(){
+                    $('#vcFormIFrame',parent.window.document)[0].src="";
+                });
                 }else{
                     return false;
                 }
             } else {
-                vcFormIFrame.submit_manual();
-                $('#vcFormIFrame')[0].src ="";
+                vcFormIFrame.submit_manual(function(){
+                    $('#vcFormIFrame',parent.window.document)[0].src="";
+                });
             }
         }
         else
