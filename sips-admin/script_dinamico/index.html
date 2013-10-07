@@ -9,6 +9,7 @@
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
             <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
             <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-fileupload.min.css" />
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-wysihtml5.css" />
@@ -25,7 +26,7 @@
             <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt.js"></script>
             <script type="text/javascript" src="/bootstrap/js/jquery.hotkeys.js"></script>
             <script type="text/javascript" src="/bootstrap/js/bootstrap-wysiwyg.js"></script>
-
+            <script type="text/javascript" src="/bootstrap/js/bootstrap-fileupload.min.js"></script>
 
             <script type="text/javascript" src="/bootstrap/js/validation/jquery.validationEngine.js"></script>
             <script type="text/javascript" src="/bootstrap/js/validation/languages/jquery.validationEngine-pt.js"></script>
@@ -62,6 +63,7 @@
                         min-height: 200px;
                         max-height:300px
                   }
+
 
             </style>
       </head>
@@ -282,6 +284,9 @@
                                                       <div class="formRow validation" >
                                                             <label class="label label-inverse" >Validação</label>
                                                             <div class="formRight">
+                                                                  <label class="radio inline"  for="validacao_texto_none">Sem validação<input type="radio" id="validacao_texto_none" name="regex_texto" value="none" /></label>
+                                                            </div> 
+                                                            <div class="formRight">
                                                                   <label class="radio inline"  for="validacao_texto_normal">Numeros e letras<input type="radio" id="validacao_texto_normal" name="regex_texto" value="normal" /></label>
                                                             </div> 
                                                             <div class="formRight">
@@ -373,7 +378,21 @@
                                                       <div class="formRow" >
                                                             <label class="label label-inverse" >Texto:</label>
                                                             <div class="formRight">
-                                                                  <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+                                                                  <div class="btn-toolbar" data-role="editor-toolbar" data-target="#textfield_edit" style="float:right">
+
+
+                                                                        <div class="btn-group">
+                                                                              <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="color" ><i class="fam-color-swatch" style="padding-right: 0px"></i></a>
+                                                                              <div  class="dropdown-menu">
+                                                                                    <ul>
+                                                                                          <li> <a class="btn" data-edit="foreColor #ff0024" ><i class="icon-tint"></i> Vermelho</a></li>   
+                                                                                          <li>  <a class="btn" data-edit="foreColor #54bc00" ><i class="icon-tint"></i> Verde</a></li> 
+                                                                                          <li> <a class="btn" data-edit="foreColor #22aeff" ><i class="icon-tint"></i> Azul</a></li> 
+                                                                                          <li> <a class="btn" data-edit="foreColor #ff8400" ><i class="icon-tint"></i> Laranja</a></li>  
+                                                                                          <li> <a class="btn" data-edit="foreColor #999999" ><i class="icon-tint"></i> Cinzento</a></li>  
+                                                                                          <li> <a class="btn" data-edit="foreColor #000000" ><i class="icon-tint"></i> Preto</a></li>  
+                                                                              </div>
+                                                                        </div>
                                                                         <div class="btn-group">
                                                                               <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font"><i class="icon-font"></i><b class="caret"></b></a>
                                                                               <div  class="dropdown-menu">
@@ -395,6 +414,14 @@
                                                                                           <li><a data-edit="fontName Verdana" style="font-family:'Verdana'">Verdana</a></li></ul>
                                                                               </div>
                                                                         </div>
+
+                                                                        <div class="btn-group">
+                                                                              <a class="btn btn-info" data-edit="justifyleft" title="" data-original-title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
+                                                                              <a class="btn" data-edit="justifycenter" title="" data-original-title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
+                                                                              <a class="btn" data-edit="justifyright" title="" data-original-title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
+                                                                              <a class="btn" data-edit="justifyfull" title="" data-original-title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
+
+                                                                        </div>
                                                                         <div class="btn-group">
                                                                               <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font Size"><i class="icon-text-height"></i>&nbsp;<b class="caret"></b></a>
                                                                               <div  class="dropdown-menu">
@@ -405,6 +432,7 @@
                                                                                     </ul>
                                                                               </div>
                                                                         </div>
+
                                                                         <div class="btn-group">
                                                                               <a class="btn" data-edit="bold" title="" data-original-title="Bold (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
                                                                               <a class="btn" data-edit="italic" title="" data-original-title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
@@ -412,31 +440,16 @@
                                                                               <a class="btn" data-edit="underline" title="" data-original-title="Underline (Ctrl/Cmd+U)"><i class="icon-underline"></i></a>
                                                                         </div>
 
-                                                                        <div class="btn-group">
-                                                                              <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="color"><i class="fam-color-swatch"></i><b class="caret"></b></a>
-                                                                              <div  class="dropdown-menu">
-                                                                                    <ul>
 
-                                                                                          <li> <a class="btn" data-edit="foreColor #ff0024" ><i class="icon-tint"></i> Vermelho</a></li>   
-                                                                                          <li>  <a class="btn" data-edit="foreColor #54bc00" ><i class="icon-tint"></i> Verde</a></li> 
-                                                                                          <li> <a class="btn" data-edit="foreColor #22aeff" ><i class="icon-tint"></i> Azul</a></li> 
-                                                                                          <li> <a class="btn" data-edit="foreColor #ff8400" ><i class="icon-tint"></i> Laranja</a></li>  
-                                                                                          <li> <a class="btn" data-edit="foreColor #999999" ><i class="icon-tint"></i> Cinzento</a></li>  
-                                                                                          <li> <a class="btn" data-edit="foreColor #000000" ><i class="icon-tint"></i> Preto</a></li>  
-                                                                              </div>
-                                                                        </div>
 
-                                                                        <div class="btn-group">
-                                                                              <a class="btn btn-info" data-edit="justifyleft" title="" data-original-title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
-                                                                              <a class="btn" data-edit="justifycenter" title="" data-original-title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
-                                                                              <a class="btn" data-edit="justifyright" title="" data-original-title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
-                                                                              <a class="btn" data-edit="justifyfull" title="" data-original-title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
-                                                                        </div>
+
 
 
                                                                   </div>
-                                                                  <div id="textfield_edit" class="span textfield_input" contenteditable="true"></div>
-                                                            </div>  
+                                                            </div>
+
+                                                            <div id="textfield_edit" class="span textfield_input" contenteditable="true"></div>
+
                                                       </div>
                                                 </div>
                                                 <!--LEGEND-->
@@ -550,31 +563,67 @@
                                                             </div>
                                                       </div>
 
-                                                      <div class="formRow" >
-                                                            <label class="label label-inverse" >Link:</label>
-                                                            <div class="formRight">
-                                                                 <div class="btn-toolbar" data-role="editor-toolbar" data-target="#ipl_link">
 
-                                                                        <div class="btn-group">
-                                                                              <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Hyperlink"><i class="icon-link"></i></a>
-                                                                              <div class="dropdown-menu input-append">
-                                                                                    <input class="span2" placeholder="URL" type="text" data-edit="createLink">
-                                                                                    <button class="btn" type="button">Add</button>
+
+
+
+
+
+
+
+
+
+
+                                                      <div class="formRow" id="ipl_div" >
+                                                            <label class="label label-inverse" >Upload de ficheiros</label>
+                                                            <div class="formRight">
+
+                                                                  <form enctype="multipart/form-data" action="" method="POST" id="form_ipl">
+
+                                                                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                                                                              <div class="input-append">
+                                                                                    <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Escolha um ficheiro</span><span class="fileupload-exists">Alterar</span><input type="file" name="file" /></span><a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remover</a>
                                                                               </div>
-
                                                                         </div>
 
-                                                                        <div class="btn-group">
-                                                                              <a class="btn" title="" id="pictureBtn" data-original-title="Insert picture (or just drag &amp; drop)"><i class="icon-picture"></i></a>
-                                                                              <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" style="opacity: 0; position: absolute; top: 0px; left: 0px; width: 34px; height: 30px;">
-                                                                        </div>
-                                                                  </div>
+                                                                        <button class="btn" id="ipl_upload_button"  >upload</button>
+                                                                  </form>
                                                             </div>
-                                                            
                                                             <div class="formRight">
-                                                                         <div class="span ipl_link" id="ipl_link"> </div>   
+                                                                  <label class="inline" id="label_ipl_info" > </label>   
                                                             </div>
                                                       </div>
+
+                                                      <div class="formRow">
+                                                            <label class="label">Opções:</label>
+
+                                                            <div class="formRight">
+                                                                  <label class="radio inline"  for="radio_ipl_image"><input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_image" name="ripl" value="1"> Imagem</label> 
+
+                                                                  <label class=" radio inline"  for="radio_ipl_pdf"><input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_pdf" name="ripl" value="2" >PDF</label> 
+
+                                                                  <label class=" radio inline"  for="radio_ipl_link"><input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_link" name="ripl" value="3" checked="checked" >Link</label>    
+                                                                  <select id="ipl_file_select" ></select>
+                                                            </div>
+                                                      </div>
+
+
+
+
+
+
+
+
+
+                                                      <div class="formRow" id="ipl_link_div" style="display: none" >
+
+                                                            <label class="label">Link</label>
+
+                                                            <div class="formRight">
+                                                                  <input type="text" placeholder="Exemplo: www.google.pt" id="ipl_edit_link">
+                                                            </div>
+                                                      </div>
+
                                                 </div>
 
 
@@ -606,8 +655,8 @@
                                                             </div>
 
                                                       </div>
+                                                      <!-----------------------------HIDDEN-------------------------------------------------------->
                                                       <div class="formRow hidden_class" >
-                                                            <!-----------------------------HIDDEN-------------------------------------------------------->
                                                             <label class="label label-inverse" >Escondido:</label>
                                                             <div class="formRight">
                                                                   <input  type="checkbox" id="item_hidden" name="hidden" value="1">
@@ -629,11 +678,29 @@
                                                                   <i class="icon-tag" ></i>
                                                             </div> 
                                                       </div>
+
                                                       <div class="formRow" >
                                                             <div class="formRight">
                                                                   <label id="tag_label"></label>
                                                             </div>
                                                       </div>
+
+
+                                                      <!-----------------------------QUOTAS-------------------------------------------------------->
+                                                      <div class="formRow quota_class hidden" >
+                                                            <label class="label label-inverse" >Quota:</label>
+                                                            
+                                                            <div class="formRight">
+                                                                  <input  type="checkbox" id="quota_required" name="quota_required" value="1"> Número max. de respostas por pergunta
+                                                                 
+                                                            </div>
+                                                            
+                                                            <div class="formRight" id="div_quota" >
+                                                             
+                                                                  <input class="span2" type="number" id="quota_input" name="quota_input" min="1" max="1000" value="1">max.1000
+                                                            </div>
+                                                      </div>
+
 
                                                 </div>
                                                 <div class="clear"></div>
@@ -669,65 +736,65 @@
                                                       </table>
                                                 </div>
 
-                                                <form id="rule_form">
-                                                      <div id="rule_creator" style="display:none;">
 
-                                                            <!--TRIGGER-->
-                                                            <div class="formRow" >
-                                                                  <label class="label label-inverse" >Evento:</label>
-                                                                  <div class="formRight">
-                                                                        <select id="rule_trigger_select" ></select>
-                                                                  </div> 
-                                                            </div>
-                                                            <div class="formRow rules_valor" id="rules_valor_select_div" style="display:none"  >
-                                                                  <label class="label label-inverse" >Valores:</label>
-                                                                  <div class="formRight">
-                                                                        <select id="rules_valor_select" class="chosen-select"  multiple data-placeholder="Selecione um/vários valores" name="rules_valores_select"   ></select>
-                                                                  </div> 
-                                                            </div>
-                                                            <div class="formRow rules_valor" id="rules_valor_input_div" style="display:none" >
-                                                                  <label class="label label-inverse" >Valor:</label>
-                                                                  <div class="formRight">
-                                                                        <input  id="rules_valor_input"  type="text" placeholder="Valor que despoleta o evento" name="rules_valor_select" />
-                                                                  </div> 
-                                                            </div>
-                                                            <div class="formRow" >
-                                                                  <label class="label label-inverse" >Tipo:</label>
-                                                                  <div class="formRight">
-                                                                        <select id="regra_select">
-                                                                              <option value="show">Mostrar</option>   
-                                                                              <option value="hide" >Esconder</option>
-                                                                              <option value="goto">Ir para</option>
-                                                                        </select>
-                                                                  </div> 
-                                                            </div>
-                                                            <div class="formRow rule_target" >
-                                                                  <label class="label label-inverse" >Alvo:</label>
-                                                                  <div class="formRight">
-                                                                        <select  id="rule_target_select" multiple class="chosen-select" name="rules_target_select" data-placeholder="Selecione um/vários elementos">
+                                                <div id="rule_creator" style="display:none;">
 
-                                                                        </select>
-                                                                  </div> 
-                                                            </div>
-                                                            <div class="formRow" id="go_to_div" style="display:none" >
-                                                                  <label class="label label-inverse" >Ir para:</label>
-                                                                  <div class="formRight">
-                                                                        <select id="go_to_select" ></select>
-                                                                  </div> 
-                                                            </div>
-                                                            <div class="clear"></div>
-
-
-                                                            <div class="pull-right">    
-                                                                  <button class="btn btn-large btn-primary" id="add_rule_button" style="float:right;">Adicionar</button>
-
-                                                            </div>
-                                                            <div class="pull-left">  
-                                                                  <label class="label label-warning">Certifique-se que a edição do elemento está concluida antes de criar as regras.</label>
-                                                            </div>
-                                                            <div class="clear"></div>
+                                                      <!--TRIGGER-->
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Evento:</label>
+                                                            <div class="formRight">
+                                                                  <select id="rule_trigger_select" ></select>
+                                                            </div> 
                                                       </div>
-                                                </form>
+                                                      <div class="formRow rules_valor" id="rules_valor_select_div" style="display:none"  >
+                                                            <label class="label label-inverse" >Valores:</label>
+                                                            <div class="formRight">
+                                                                  <select id="rules_valor_select" class="chosen-select"  multiple data-placeholder="Selecione um/vários valores" name="rules_valores_select"   ></select>
+                                                            </div> 
+                                                      </div>
+                                                      <div class="formRow rules_valor" id="rules_valor_input_div" style="display:none" >
+                                                            <label class="label label-inverse" >Valor:</label>
+                                                            <div class="formRight">
+                                                                  <input  id="rules_valor_input"  type="text" placeholder="Valor que despoleta o evento" name="rules_valor_select" />
+                                                            </div> 
+                                                      </div>
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Tipo:</label>
+                                                            <div class="formRight">
+                                                                  <select id="regra_select">
+                                                                        <option value="show">Mostrar</option>   
+                                                                        <option value="hide" >Esconder</option>
+                                                                        <option value="goto">Ir para página</option>
+                                                                  </select>
+                                                            </div> 
+                                                      </div>
+                                                      <div class="formRow rule_target" >
+                                                            <label class="label label-inverse" >Alvo:</label>
+                                                            <div class="formRight">
+                                                                  <select  id="rule_target_select" multiple class="chosen-select" name="rules_target_select" data-placeholder="Selecione um/vários elementos">
+
+                                                                  </select>
+                                                            </div> 
+                                                      </div>
+                                                      <div class="formRow" id="go_to_div" style="display:none" >
+                                                            <label class="label label-inverse" >Ir para:</label>
+                                                            <div class="formRight">
+                                                                  <select id="go_to_select" ></select>
+                                                            </div> 
+                                                      </div>
+                                                      <div class="clear"></div>
+
+
+                                                      <div class="pull-right">    
+                                                            <button class="btn btn-large btn-primary" id="add_rule_button" style="float:right;">Adicionar</button>
+
+                                                      </div>
+                                                      <div class="pull-left">  
+                                                            <label class="label label-warning">Certifique-se que a edição do elemento está concluida antes de criar as regras.</label>
+                                                      </div>
+                                                      <div class="clear"></div>
+                                                </div>
+
                                                 <div class="modal-footer ">
                                                       <button class="btn"  id="open_rule_creator">Criar nova regra</button>
                                                 </div>
