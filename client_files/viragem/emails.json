@@ -1,0 +1,460 @@
+{
+"concessionarios": [
+{
+"nome": "SGA Alcabideche - Opel e Chevrolet",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "Pedro Esteves",
+        "email": "pmesteves@santogal.pt"
+},
+{
+"nome": "Joaquim Tomé Santos",
+        "email": "jtsantos@santogal.pt"
+},
+{
+"nome": "Ana Costa",
+        "email": "afcosta@santogal.pt"
+},
+{
+"nome": "AAAAAAAAAAAAAAAAA",
+        "email": "andreduarte92@hotmail.com"
+}
+]
+},
+{
+"nome": "Santogal Volvo/ Mazda Alcabideche - Volvo e Mazda",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "Pedro Esteves",
+        "email": "pmesteves@santogal.pt"
+},
+{
+"nome": "Joaquim Tomé Santos",
+        "email": "jtsantos@santogal.pt"
+},
+{
+"nome": "Ana Costa",
+        "email": "afcosta@santogal.pt"
+}
+]
+},
+{
+"nome": "Mocar",
+        "servico": "APV e Garantias",
+        "interlocutores": [
+{
+"nome": "Pedro Esteves",
+        "email": "pmesteves@santogal.pt"
+},
+{
+"nome": "Joaquim Tomé Santos",
+        "email": "jtsantos@santogal.pt"
+},
+{
+"nome": "Ana Costa",
+        "email": "afcosta@santogal.pt"
+}
+]
+},
+{
+"nome": "VN Citroen",
+        "servico": "VN",
+        "interlocutores": [
+{
+"nome": "Pedro Esteves",
+        "email": "pmesteves@santogal.pt"
+},
+{
+"nome": "Joaquim Tomé Santos",
+        "email": "jtsantos@santogal.pt"
+},
+{
+"nome": "Ana Costa",
+        "email": "afcosta@santogal.pt"
+}
+]
+},
+{
+"nome": "Gavis",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "Nuno Botelho",
+        "email": "nuno.botelho@gavis.pt"
+}
+]
+},
+{
+"nome": "IMV Alfragide",
+        "servico": "APV e Garantias",
+        "interlocutores": [
+{
+"nome": "José Moreira",
+        "email": "jose.moreira@fiat.com"
+},
+{
+"nome": "Rapahel Schneider",
+        "email": "raphaelserge.schneider@fiat.com"
+},
+{
+"nome": "Amadeu Martins",
+        "email": "amadeu.martins@fiat.com"
+},
+{
+"nome": "José Luis Torres",
+        "email": "joseluis.torres@fiat.com"
+}
+]
+},
+{
+"nome": "IMV Expo",
+        "servico": "APV e Garantias",
+        "interlocutores": [
+{
+"nome": "Francisco Silva",
+        "email": "francisco.silva@fiat.com"
+},
+{
+"nome": "Carlos Veigas",
+        "email": "carlos.veigas@fiat.com"
+},
+{
+"nome": "José Moreira",
+        "email": "jose.moreira@fiat.com"
+},
+{
+"nome": "José Manuel Moreira",
+        "email": "josemanuel.moreira@fiat.com"
+}
+]
+},
+{
+"nome": "Motorex Évora",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "José Vicente",
+        "email": "jose.vicente@multiauto-galilei.pt"
+},
+{
+"nome": "Joaquim Cardoso",
+        "email": "joaquim.cardoso@multiauto-galilei.pt"
+}
+]
+},
+{
+"nome": "Motorex Évora",
+        "servico": "VN/VU",
+        "interlocutores": [
+{
+"nome": "José Vicente",
+        "email": "jose.vicente@multiauto-galilei.pt"
+},
+{
+"nome": "Carlos Calado",
+        "email": "carlos.calado@multiauto-galilei.pt"
+}
+]
+},
+{
+"nome": "Motorex Portalegre",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "José Vicente",
+        "email": "jose.vicente@multiauto-galilei.pt"
+},
+{
+"nome": "Joaquim Cardoso",
+        "email": "joaquim.cardoso@multiauto-galilei.pt"
+},
+{
+"nome": "João Bonito",
+        "email": "joao.bonito@multiauto-galilei.pt"
+}
+]
+},
+{
+"nome": "Motorex Portalegre",
+        "servico": "VN/VU",
+        "interlocutores": [
+{
+"nome": "José Vicente",
+        "email": "jose.vicente@multiauto-galilei.pt"
+},
+{
+"nome": "Paulo Tarouca",
+        "email": "paulo.tarouca@multiauto-galilei.pt"
+}
+]
+},
+{
+"nome": "Motorex Estremoz",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "José Vicente",
+        "email": "jose.vicente@multiauto-galilei.pt"
+},
+{
+"nome": "Joaquim Cardoso",
+        "email": "joaquim.cardoso@multiauto-galilei.pt"
+}
+]
+},
+{
+"nome": "Motorex Estremoz",
+        "servico": "VN/VU",
+        "interlocutores": [
+{
+"nome": "José Vicente",
+        "email": "jose.vicente@multiauto-galilei.pt"
+},
+{
+"nome": "Paulo Tarouca",
+        "email": "paulo.tarouca@multiauto-galilei.pt"
+}
+]
+},
+{
+"nome": "Motorex Beja",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "José Vicente",
+        "email": "jose.vicente@multiauto-galilei.pt"
+},
+{
+"nome": "Joaquim Cardoso",
+        "email": "joaquim.cardoso@multiauto-galilei.pt"
+},
+{
+"nome": "António Martins",
+        "email": "antonio.martins@multiauto-galilei.pt"
+}
+]
+},
+{
+"nome": "Motorex Beja",
+        "servico": "VN/VU",
+        "interlocutores": [
+{
+"nome": "José Vicente",
+        "email": "jose.vicente@multiauto-galilei.pt"
+},
+{
+"nome": "Carlos Calado",
+        "email": "carlos.calado@multiauto-galilei.pt"
+},
+{
+"nome": "António Martins",
+        "email": "antonio.martins@multiauto-galilei.pt"
+}
+]
+},
+{
+"nome": "Evoracar Portalegre",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "João Bonito",
+        "email": "joao.bonito@multiauto-galilei.pt"
+}
+]
+},
+{
+"nome": "Evoracar Portalegre",
+        "servico": "VN/VU",
+        "interlocutores": [
+{
+"nome": "José Vicente",
+        "email": "jose.vicente@multiauto-galilei.pt"
+},
+{
+"nome": "Paulo Tarouca",
+        "email": "paulo.tarouca@multiauto-galilei.pt"
+}
+]
+},
+{
+"nome": "Evoracar Ponte de Sor",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "João Bonito",
+        "email": "joao.bonito@multiauto-galilei.pt"
+}
+]
+},
+{
+"nome": "Evoracar Ponte de Sor",
+        "servico": "VN/VU",
+        "interlocutores": [
+{
+"nome": "José Vicente",
+        "email": "jose.vicente@multiauto-galilei.pt"
+},
+{
+"nome": "Paulo Tarouca",
+        "email": "paulo.tarouca@multiauto-galilei.pt"
+}
+]
+},
+{
+"nome": "Evoracar Évora",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "João Lopes",
+        "email": "joao.l.lopes@multiauto-galilei.pt"
+}
+]
+},
+{
+"nome": "Evoracar Évora",
+        "servico": "VN/VU",
+        "interlocutores": [
+{
+"nome": "José Vicente",
+        "email": "jose.vicente@multiauto-galilei.pt"
+},
+{
+"nome": "Paulo Tarouca",
+        "email": "paulo.tarouca@multiauto-galilei.pt"
+}
+]
+},
+{
+"nome": "Hydraplan",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "Meira Afonso",
+        "email": "meira.afonso@hydraplan.pt"
+},
+{
+"nome": "Paulo Tarouca",
+        "email": "paulo.tarouca@multiauto-galilei.pt"
+},
+{
+"nome": "Paulo Tarouca",
+        "email": "paulo.tarouca@multiauto-galilei.pt"
+}
+]
+},
+{
+"nome": "Auto Continente",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "Nuno Saraiva",
+        "email": "resp.apos-venda@autocontinente.pt"
+},
+{
+"nome": "Luis Cavaco",
+        "email": "uismiguel.cavaco@citroen.com"
+}
+]
+},
+{
+"nome": "Carsil",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "Carsil",
+        "email": "resp.apos-venda@carsil.pt"
+},
+{
+"nome": "Luis Cavaco",
+        "email": "uismiguel.cavaco@citroen.com"
+}
+]
+},
+{
+"nome": "F Marques",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "Miguel",
+        "email": "miguelcolaco@fmarques.pt"
+},
+{
+"nome": "Luis Cavaco",
+        "email": "uismiguel.cavaco@citroen.com"
+}
+]
+},
+{
+"nome": "Joaquim Mendes",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "Geral",
+        "email": "geral@joaquimmendes.com"
+},
+{
+"nome": "Luis Cavaco",
+        "email": "uismiguel.cavaco@citroen.com"
+}
+]
+},
+{
+"nome": "Macauto",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "Geral",
+        "email": "macautoestefania@iol.pt"
+},
+{
+"nome": "Luis Cavaco",
+        "email": "uismiguel.cavaco@citroen.com"
+}
+]
+},
+{
+"nome": "Manuel Gomes Automóveis",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "Sandra Moreira",
+        "email": "sandramoreira@mga.pt"
+},
+{
+"nome": "Luis Cavaco",
+        "email": "uismiguel.cavaco@citroen.com"
+}
+]
+},
+{
+"nome": "Z S Camilo",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "Alberto Dinis",
+        "email": "aposvenda@zscamilo.pt"
+},
+{
+"nome": "Luis Cavaco",
+        "email": "uismiguel.cavaco@citroen.com"
+}
+]
+},
+{
+"nome": "Sacel",
+        "servico": "APV",
+        "interlocutores": [
+{
+"nome": "Mario Santos",
+        "email": "aposvenda.cr@sacel.pt"
+},
+{
+"nome": "Luis Cavaco",
+        "email": "uismiguel.cavaco@citroen.com"
+}
+]
+}
+]
+        }
