@@ -712,14 +712,16 @@ function submit_manual(callback)
 
 
       $.post("requests.php", {action: "save_form_result", id_script: page_info.script_id, results: $("#myform").serializeArray(), user_id: page_info.user_id, unique_id: unique_id, campaign_id: page_info.campaign_id, lead_id: page_info.lead_id}, function() {
-                     if (typeof callback === "function")
+                    
+            if (typeof callback === "function")
             {
                   callback();
             }
-            return false;
             return true;
+         
             
       }, "json").fail(function() {
+            console.log("FAIL saving data");
      
       });
 }
