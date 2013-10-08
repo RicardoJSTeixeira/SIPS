@@ -61,22 +61,35 @@
 
                   <div class="container-fluid">
                         <div class="row-fluid">
-                              <form id="dateform" class="formular" >
-                                    <div class="span3">
-                                          <label>Data de Inicio</label>
+                              <form id="dateform" class="formular span6" >
+                                    <div class="formRow">
+                                          <label>Data de Inicio:</label>
                                           <input  type="text" id="datetime_from" class="datetime_range validate[required]">
                                     </div>
-                                    <div class="span3">
-                                          <label>Data de Fim</label>
+                                    <div class="formRow">
+                                          <label>Data de Fim:</label>
                                           <input  type="text" id="datetime_to" class="datetime_range validate[required]" >  
                                     </div>
+                                    <div class="formRight">
+                                          <button class="btn btn-info" id="button_pesquisa"  >Pesquisar</button> 
+                                    </div>  
                               </form>
 
                               <div class="span6 ">
-                                    <div class="formRight">
-                                          <button class="btn btn-info" id="button_pesquisa" >Pesquisar</button> 
+
+
+                                    <div class="formRow">
+                                          <label>Report por concessionário</label>
+                                          <div class="formRight">
+                                                <select id="concessionarios_report">
+
+                                                </select>
+                                          </div> 
                                     </div>
 
+                                    <div class="formRight">
+                                          <button class="btn btn-inverse" id="report_download">Download</button>
+                                    </div>
                               </div>
 
 
@@ -377,7 +390,7 @@
                               </div>
                         </div>
 
-                                <div class="formRow ">
+                        <div class="formRow ">
                               <label>
                                     Emails de destino
                               </label>
@@ -385,7 +398,7 @@
                                     <span id="emails_destino_af"></span>
                               </div>
                         </div>
-                        
+
                         <div class="formRow ">
                               <label>
                                     Comentario
@@ -469,7 +482,7 @@
                               </div>
                         </div>
 
-                         <div class="formRow ">
+                        <div class="formRow ">
                               <label>
                                     Emails de destino
                               </label>
