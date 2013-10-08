@@ -1633,7 +1633,7 @@ while ($i < $statuses_to_print)
 		$statcat =	sprintf("%-60s", $statcat_list[$RAWstatus]); 
 		while(mb_strlen($statcat,'utf-8')>20) {$statcat = mb_substr("$statcat", 0, -1,'utf-8');}	
 		}
-	$graph_stats[$i][0]="$status - $status_name - $statcat";
+	$graph_stats[$i][0]="$status_name";
 
 
 	$ASCII_text.="| $status | $status_name | $statcat | $STATUScount | $STATUShours | $STATUSavg | $STATUSrate |\n";

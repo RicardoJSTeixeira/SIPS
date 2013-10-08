@@ -235,9 +235,10 @@ if (isset($report_feedback_outbound)) {
         'Avisos'), ";");
     $fbs = implode("','", $feedbacks);
 
+    $archive=(strtotime("2 month ago")>strtotime($data_final))?"_archive":"";
     foreach ($camp_options as $currentCamp) {
 
-        $query_log = "SELECT a.lead_id,a.campaign_id,a.call_date AS data,a.status AS resultado, a.user as utilizador, b.*, c.*, d.campaign_name AS campanha FROM vicidial_log a JOIN custom_" . strtoupper($currentCamp) . " b ON a.lead_id = b.lead_id JOIN vicidial_list c ON a.lead_id = c.lead_id JOIN vicidial_campaigns d ON a.campaign_id = d.campaign_id where a.status IN ('$fbs') AND a.campaign_id LIKE '$currentCamp' AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' group by a.lead_id";
+        $query_log = "SELECT a.lead_id,a.campaign_id,a.call_date AS data,a.status AS resultado, a.user as utilizador, b.*, c.*, d.campaign_name AS campanha FROM vicidial_log$archive a JOIN custom_" . strtoupper($currentCamp) . " b ON a.lead_id = b.lead_id JOIN vicidial_list c ON a.lead_id = c.lead_id JOIN vicidial_campaigns d ON a.campaign_id = d.campaign_id where a.status IN ('$fbs') AND a.campaign_id LIKE '$currentCamp' AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' group by a.lead_id";
         $query_log = mysql_query($query_log, $link) or die(mysql_error());
 
         for ($i = 0; $i < mysql_num_rows($query_log); $i++) {
@@ -910,7 +911,7 @@ if (isset($resumo_geral_camp)) {
     $output = fopen('php://output', 'w');
     $data_inicial = $_POST['data_inicial'];
     $data_final = $_POST['data_final'];
-
+    $archive=(strtotime("2 month ago")>strtotime($data_final))?"_archive":"";
     fputcsv($output, array(" "), ";");
     fputcsv($output, array(" ", "Report:", "Resumo Geral"), ";");
     fputcsv($output, array(" ", "De:", $data_inicial), ";");
@@ -927,7 +928,7 @@ if (isset($resumo_geral_camp)) {
         (select 
         user, status, campaign_id, lead_id
     from
-        vicidial_log
+        vicidial_log$archive
     where
         campaign_id LIKE '$campanha' AND status IN ('MARC')
         AND call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00'    
@@ -945,7 +946,7 @@ if (isset($resumo_geral_camp)) {
         (select 
         user, status, campaign_id, lead_id
     from
-        vicidial_log
+        vicidial_log$archive
     where
         campaign_id LIKE '$campanha' AND status IN ('NOVOCL')
         AND call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00'    
@@ -987,7 +988,7 @@ if (isset($resumo_geral_camp)) {
 
 
 
-        $query_global = "select d.status, c.soma, d.status_name from (select status, count(status) as soma from (select lead_id, status from (select lead_id, status from vicidial_log where campaign_id LIKE '$campanha' 
+        $query_global = "select d.status, c.soma, d.status_name from (select status, count(status) as soma from (select lead_id, status from (select lead_id, status from vicidial_log$archive where campaign_id LIKE '$campanha' 
             and call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' order by call_date DESC) a group by lead_id) b group by status) c inner join (select 
             (status), status_name from vicidial_campaign_statuses group by status UNION ALL select status, status_name from vicidial_statuses group by status) d ON c.status = d.status group by status";
         //fputcsv($output, array(" ", "Query1:", $query_global), ";");
@@ -1667,6 +1668,7 @@ if (isset($resumo_geral_db)) {
     $output = fopen('php://output', 'w');
     $data_inicial = $_POST['data_inicial'];
     $data_final = $_POST['data_final'];
+    $archive=(strtotime("2 month ago")>strtotime($data_final))?"_archive":"";
 
 
     $i = 0;
@@ -1680,7 +1682,7 @@ if (isset($resumo_geral_db)) {
         (select 
         user, status, campaign_id, lead_id
     from
-        vicidial_log
+        vicidial_log$archive
     where
         list_id LIKE '$db' AND status IN ('MARC')
         AND call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00'    
@@ -1698,7 +1700,7 @@ if (isset($resumo_geral_db)) {
         (select 
         user, status, campaign_id, lead_id
     from
-        vicidial_log
+        vicidial_log$archive
     where
         list_id LIKE '$db' AND status IN ('NOVOCL')
         AND call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00'    
@@ -1732,7 +1734,7 @@ if (isset($resumo_geral_db)) {
 
 
 
-        $query_global = "select d.status, c.soma, d.status_name from (select status, count(status) as soma from (select lead_id, status from (select lead_id, status from vicidial_log where list_id LIKE '$db' and (user_group LIKE 'Agentes' or user like 'VDAD')
+        $query_global = "select d.status, c.soma, d.status_name from (select status, count(status) as soma from (select lead_id, status from (select lead_id, status from vicidial_log$archive where list_id LIKE '$db' and (user_group LIKE 'Agentes' or user like 'VDAD')
             and call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' order by call_date DESC) a group by lead_id) b group by status) c inner join (select 
             (status), status_name from vicidial_campaign_statuses group by status UNION ALL select status, status_name from vicidial_statuses group by status) d ON c.status = d.status group by status";
         //fputcsv($output, array(" ", "Query1:", $query_global), ";");
