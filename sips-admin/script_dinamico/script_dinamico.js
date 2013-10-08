@@ -691,13 +691,7 @@ function update_info()
 
 
 
-function write_to_file(tipo)
-{
-      if (tipo === "camp")
-            document.location.href = "requests.php?id_script=" + $("#script_selector option:selected").val() + "&campaign_id=" + $("#write_to_file_select_campanha option:selected").val() + "&action=write_to_file";
-      else
-            document.location.href = "requests.php?id_script=" + $("#script_selector option:selected").val() + "&campaign_id=" + $("#write_to_file_select_linha_inbound option:selected").val() + "&action=write_to_file";
-}
+
 
 function populate_element(tipo, element)
 {
@@ -1383,14 +1377,11 @@ $("#opcao_script_button").click(function()//chama o edit do nome do script
             });
             $("#script_campanha_selector").val(campaign).trigger("liszt:updated");
             $("#script_linha_inbound_selector").val(linha_inbound).trigger("liszt:updated");
-            $("#write_to_file_select_campanha").empty();
-            //fazer append das opcions selected da campanha para geração de relatorios
-            $("#script_campanha_selector option:selected").clone().appendTo($("#write_to_file_select_campanha"));
-            $("#write_to_file_select_campanha").trigger("liszt:updated");
-            $("#write_to_file_select_linha_inbound").empty();
-            //fazer append das opcions selected da campanha para geração de relatorios
-            $("#script_linha_inbound_selector option:selected").clone().appendTo($("#write_to_file_select_linha_inbound"));
-            $("#write_to_file_select_linha_inbound").trigger("liszt:updated");
+          
+           
+
+           
+          
       }, "json");
       $("#script_name_edit").val($("#script_selector option:selected").text());
 });
@@ -1411,6 +1402,11 @@ $("#save_button_layout").click(function()//Fecha o dialog e grava as alteraçõe
 $("#render_go").click(function()
 {
       var window_slave = window.open("/sips-admin/script_dinamico/render.html?script_id=" + $("#script_selector option:selected").val());
+});
+//Relatorios 
+$("#relatorio_go").click(function()
+{
+      var window_slave = window.open("/sips-admin/script_dinamico/reporting/index.html");
 });
 //------------------RULES----------------------------000000000
 function rules_manager(tipo, element)
