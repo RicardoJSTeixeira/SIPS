@@ -16,6 +16,7 @@
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/validationEngine.jquery.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/demo_table.css" />
 
 
             <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
@@ -38,6 +39,8 @@
                   select{
                         width:300px;
                   }
+
+
             </style>
       </head>
       <body>
@@ -100,7 +103,7 @@
 
 
                               <div id="por_abrir">
-                                    <table class="table table-mod table-bordered" id="table_por_abrir">
+                                    <table class="table table-mod table-striped table-condensed" id="table_por_abrir">
                                           <thead>
                                                 <tr>
                                                       <th>
@@ -114,14 +117,14 @@
                                                       </th>
                                                 </tr>
                                           </thead>
-                                          <tbody class="table_tbody">
+                                          <tbody >
 
                                           </tbody>
                                     </table>   
                               </div>
 
                               <div id="abertos">
-                                    <table class="table table-mod table-bordered" id="table_abertos">
+                                    <table class="table table-mod table-striped table-condensed" id="table_abertos">
                                           <thead>
                                                 <tr>
                                                       <th>
@@ -141,14 +144,14 @@
                                                       </th>
                                                 </tr>
                                           </thead>
-                                          <tbody class="table_tbody">
+                                          <tbody >
 
                                           </tbody>
                                     </table>   
                               </div>
 
                               <div id="fechados">
-                                    <table class="table table-mod table-bordered" id="table_fechados">
+                                    <table class="table table-mod table-striped table-condensed" id="table_fechados">
                                           <thead>
                                                 <tr>
                                                       <th>
@@ -168,14 +171,14 @@
                                                       </th>
                                                 </tr>
                                           </thead>
-                                          <tbody class="table_tbody">
+                                          <tbody>
 
                                           </tbody>
                                     </table>   
                               </div>
 
                               <div id="expirados">
-                                    <table class="table table-mod table-bordered" id="table_expirados">
+                                    <table class="table table-mod table-striped table-condensed" id="table_expirados">
                                           <thead>
                                                 <tr>
                                                       <th>
@@ -199,7 +202,7 @@
                                                       </th>
                                                 </tr>
                                           </thead>
-                                          <tbody class="table_tbody">
+                                          <tbody>
 
                                           </tbody>
                                     </table>   
@@ -257,7 +260,23 @@
                                     <textarea id="textarea_comentario_valor" > </textarea>
                               </div>
                         </div>
-
+                        <form id="form_enviar_mail">
+                              <div class="formRow ">
+                                    <label>Emails de Destino</label>
+                                    <div class="formRight">
+                                          <label>Concessionário</label>
+                                    </div>
+                                    <div class="formRight">
+                                          <select id="concessionarios" class="chzn-select"></select>
+                                    </div>
+                                    <div class="formRight">
+                                          <label>Agentes</label>
+                                    </div>
+                                    <div class="formRight">
+                                          <select id="email_agentes" class="chzn-select" multiple></select>
+                                    </div>
+                              </div>
+                        </form>
                         <div class="formRow ">
                               <label>
                                     Tipo de reclamação
@@ -297,6 +316,10 @@
                               </div>
                         </div>
 
+
+
+
+
                         <div class="formRow ">
                               <label>
                                     Opção:
@@ -310,11 +333,12 @@
                         </div>
 
 
-
+                        <div class="clear"></div>
                   </div>
+
                   <div class="modal-footer">
                         <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-                        <button class="btn btn-primary" id="button_send_mail">Gravar</button>
+                        <button class="btn btn-primary"   id="button_send_mail">Gravar</button>
                   </div>
             </div>
 
@@ -323,7 +347,7 @@
             <div id="modal_abertos_fechados" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
                   <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 id="myModalLabel">Reclamações por abrir</h3>
+                        <h3 id="myModalLabel">Reclamações</h3>
                   </div>
                   <div class="modal-body">
                         <div class="formRow ">
@@ -353,6 +377,15 @@
                               </div>
                         </div>
 
+                                <div class="formRow ">
+                              <label>
+                                    Emails de destino
+                              </label>
+                              <div class="formRight">
+                                    <span id="emails_destino_af"></span>
+                              </div>
+                        </div>
+                        
                         <div class="formRow ">
                               <label>
                                     Comentario
@@ -397,16 +430,16 @@
                   </div>
                   <div class="modal-footer">
                         <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-                        <button class="btn btn-primary" id="button_gravar">Gravar</button>
+                        <button class="btn btn-primary" data-dismiss="modal" id="button_gravar">Gravar</button>
                   </div>
             </div>
 
 
 
-            <div id="modal_por_abrir" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+            <div id="modal_expirados" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
                   <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 id="myModalLabel">Reclamações por abrir</h3>
+                        <h3 id="myModalLabel">Reclamações Expiradas(Mais de 30 dias)</h3>
                   </div>
                   <div class="modal-body">
                         <div class="formRow ">
@@ -414,7 +447,7 @@
                                     Nome do Cliente:
                               </label>
                               <div class="formRight">
-                                    <span class="nome_cliente"></span>
+                                    <span id="nome_cliente_e"></span>
                               </div>
                         </div>     
 
@@ -423,7 +456,7 @@
                                     Campanha:
                               </label>
                               <div class="formRight">
-                                    <span class="campanha"></span>
+                                    <span id="campanha_e"></span>
                               </div>
                         </div>
 
@@ -432,34 +465,61 @@
                                     Data:
                               </label>
                               <div class="formRight">
-                                    <span class="data"></span>
+                                    <span id="data_e"></span>
                               </div>
                         </div>
 
+                         <div class="formRow ">
+                              <label>
+                                    Emails de destino
+                              </label>
+                              <div class="formRight">
+                                    <span id="emails_destino_e"></span>
+                              </div>
+                        </div>
                         <div class="formRow ">
                               <label>
                                     Comentario
                               </label>
                               <div class="formRight">
-                                    <span class="comentario"></span>
+                                    <span id="comentario_e"></span>
                               </div>
                         </div>
 
                         <div class="formRow ">
                               <label>
-                                    Enviar para:
+                                    Estado:
                               </label>
                               <div class="formRight">
-                                    <input  type="radio" id="radio1" name="ra">
-                                    <label class="radio inline"  for="radio1"><span></span>Abertos</label> 
-                                    <input  type="radio" id="radio2" name="ra" >
-                                    <label class="radio inline"  for="radio2"><span></span>Fechados</label> 
+
+                                    <span id="estado_e"></span>
                               </div>
                         </div>
+
+                        <div class="formRow ">
+                              <label>
+                                    Tipo reclamação
+                              </label>
+                              <div class="formRight">
+
+                                    <span id="tipo_reclamacao_e"></span>
+
+                              </div>
+                        </div>
+
+                        <div class="formRow ">
+                              <label>
+                                    Tipificaçao de Reclamação
+                              </label>
+                              <div class="formRight">
+                                    <span id="tipificacao_reclamacao_e"></span>
+                              </div>
+                        </div>
+
+
                   </div>
                   <div class="modal-footer">
-                        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-                        <button class="btn btn-primary" id="script_remove_button_modal">Gravar</button>
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Ok</button>
                   </div>
             </div>
 
