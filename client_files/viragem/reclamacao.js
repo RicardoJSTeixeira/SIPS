@@ -150,7 +150,7 @@ $(function()
                         modal_af.comentario.text(info.comentario);
                         modal_af.t_reclamacao.text(info.tipo_reclamacao);
                         modal_af.tp_reclamacao.text(info.tipificacao_reclamacao);
-                        modal_af.email_destino.text(info.email);
+                        modal_af.email_destino.text(info.email.join("\n"));
                         $("#modal_abertos_fechados #myModalLabel").text("Reclamações abertas");
                         $("#checkbox1").prop("checked", false);
                         $("#modal_abertos_fechados #button_gravar").data("id", this.id.slice(0, -1));
@@ -158,13 +158,13 @@ $(function()
                         break;
 
                   case ("Fechados"):
-                        modal_af.nome.text(info.nome);
+                                              modal_af.nome.text(info.nome);
                         modal_af.campanha.text(info.campanha);
                         modal_af.data.text(info.data);
                         modal_af.comentario.text(info.comentario);
                         modal_af.t_reclamacao.text(info.tipo_reclamacao);
                         modal_af.tp_reclamacao.text(info.tipificacao_reclamacao);
-                        modal_af.email_destino.text(info.email);
+                        modal_af.email_destino.text(info.email.join("\n"));
                         $("#modal_abertos_fechados #myModalLabel").text("Reclamações fechadas");
                         $("#checkbox1").prop("checked", true);
                         $("#modal_abertos_fechados #button_gravar").prop("disabled", true);
@@ -179,7 +179,7 @@ $(function()
                         modal_e.estado.text(info.tipo);
                         modal_e.t_reclamacao.text(info.tipo_reclamacao);
                         modal_e.tp_reclamacao.text(info.tipificacao_reclamacao);
-                        modal_e.email.text(info.email);
+                        modal_e.email.text(info.email.join("\n"));
                         $("#modal_expirados").modal('show');
                         break;
             }
