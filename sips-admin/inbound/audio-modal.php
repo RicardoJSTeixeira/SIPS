@@ -158,7 +158,7 @@ $(function(){
                     size = (Math.round((file.size/1024/1024)*100)/100);
                     type = file.type;
                     if(size>10){
-                        makeAlert($("#audio-div").parent(),"Tamanha exedido","O tamanha do ficheiro ultrapasso os 10mb permitidos.",1,false,false);
+                        makeAlert($("#audio-div").parent(),"Tamanho exedido","O tamanho do ficheiro ultrapassa os 10mb permitidos.",1,false,false);
                         $(this).fileupload('clear');}
                     if(!re_ext.test(type)){
                         makeAlert($("#audio-div").parent(),"Extensão Não valida","A extensão do ficheiro seleccionado não é valida.",1,false,false);
