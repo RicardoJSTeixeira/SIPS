@@ -38,7 +38,7 @@
                 margin-left: 0.5em;
             }
             #contact_list{
-                width:100%;
+                width:100%!important;
             }
         </style>
     </head>
