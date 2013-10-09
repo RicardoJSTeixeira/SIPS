@@ -7,14 +7,15 @@ var page_info = [];
 var items = [];
 var unique_id = 0;
 var id_script = 0;
+var admin_review = 0;
 $(function() {
-     
-      
+
+
       array_id["radio"] = 0;
       array_id["checkbox"] = 0;
       $.get("items.html", function(data) {
             page_info = getUrlVars();
-                       $("#dummie").html(data);
+            $("#dummie").html(data);
             update_script();
       });
       $(document).on("click", ".previous_pag", function(e) {
@@ -223,18 +224,23 @@ function update_info()
                   }
                   $("#" + this[1] + "pag").append(this[0]);
             });
-         
-      if(page_info.isadmin!=="1")
+
+            if (page_info.isadmin !== "1")
             {
-            $(".pag_div").hide().first().show();
+                  $(".pag_div").hide().first().show();
+                  $("#admin_submit").hide();
             }
-            
+            else
+            {
+                  $("#admin_submit").show();
+            }
+
             $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt"}).keypress(function(e) {
                   e.preventDefault();
             }).bind("cut copy paste", function(e) {
                   e.preventDefault();
             });
-          
+
             rules();
       }, "json");
 }
@@ -455,11 +461,11 @@ function populate_script()
       $.post("requests.php", {action: "get_results_to_populate", lead_id: page_info.lead_id, id_script: page_info.script_id},
       function(data)
       {
-           
+
             if (data !== null)
             {
-                  
-                 
+
+
                   $.each(data, function() {
 
                         switch (this.type)
@@ -651,7 +657,7 @@ function rules()
             });
             $("#myform").validationEngine();
             tags();
-            
+
       }, "json");
 }
 function tags()
@@ -702,7 +708,7 @@ function tags()
                         });
             }, "json");
       }
-  populate_script();
+      populate_script();
 }
 
 
@@ -712,23 +718,26 @@ $("#myform").on("submit", function(e)
 {
       e.preventDefault();
 });
+$("#admin_submit").on("click", function()
+{
+      admin_review = 1;
+      submit_manual();
+});
 
 function submit_manual(callback)
 {
-
-
-      $.post("requests.php", {action: "save_form_result", id_script: page_info.script_id, results: $("#myform").serializeArray(), user_id: page_info.user_id, unique_id: unique_id, campaign_id: page_info.campaign_id, lead_id: page_info.lead_id}, function() {
-                    
+      $.post("requests.php", {action: "save_form_result", id_script: page_info.script_id, results: $("#myform").serializeArray(), user_id: page_info.user_id, unique_id: unique_id, campaign_id: page_info.campaign_id, lead_id: page_info.lead_id, admin_review: admin_review},
+      function() {
+            admin_review = 0;
             if (typeof callback === "function")
             {
                   callback();
             }
             return true;
-         
-            
+
+
       }, "json").fail(function() {
             console.log("FAIL saving data");
-     
       });
 }
 

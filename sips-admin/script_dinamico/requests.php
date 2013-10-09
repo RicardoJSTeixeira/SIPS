@@ -453,6 +453,11 @@ switch ($action) {
     //------------------------------------------------//
     case "save_form_result":
         $sql = array();
+
+        if (admin_review == "1") {
+            $unique_id = time() . "." . rand(1, 1000);
+        }
+
         foreach ($results as $row) {
             if ($row['value'] != "") {
                 $temp = explode(",", $row['name']);
@@ -463,12 +468,5 @@ switch ($action) {
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(1);
         break;
-
-
-
-
-
-
-   
 }
 ?>

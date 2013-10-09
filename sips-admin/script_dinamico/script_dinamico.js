@@ -192,7 +192,7 @@ $(function() {
 
             update_script();
       });
-      $("#tag_label").text("§nome_operador§");
+      
       $(document).on("click", ".element", function(e) {
             selected_id = $(this).data("id");
             selected_tag = $(this).data("tag");
@@ -441,6 +441,7 @@ function update_script(callback)
                         $("#tags_select optgroup:last").append(temp);
                   });
                   $("#tags_select").val("").trigger("liszt:updated");
+                  $("#tag_label").text("§"+$("#tags_select option:selected").val()+"§");
             }, "json");
 
 //Get o tipo e tag de todos os elementos para o select dos alvos (regras)
