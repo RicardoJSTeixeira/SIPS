@@ -3,7 +3,7 @@
 require("../../ini/dbconnect.php");
 require("../../ini/user.php");
 
-header('Content-Disposition: attachment; filename=Report_Script_' . date("Y-m-d_H:i:s") . '.csv');
+
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -453,6 +453,12 @@ switch ($action) {
     //------------------------------------------------//
     case "save_form_result":
         $sql = array();
+
+        if ($admin_review == "1") {
+            $unique_id = time() . "." . rand(1, 1000);
+            $user_id=$user->id;
+        }
+
         foreach ($results as $row) {
             if ($row['value'] != "") {
                 $temp = explode(",", $row['name']);
@@ -462,91 +468,6 @@ switch ($action) {
         $query = "INSERT INTO `script_result`(`id`,date,id_script,user_id,unique_id,campaign_id,lead_id, `tag_elemento`, `valor`,param_1) VALUES " . implode(',', $sql);
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(1);
-        break;
-
-
-
-
-
-
-    case "write_to_file":
-        header('Content-Encoding: UTF-8');
-        header('Content-type: text/csv; charset=UTF-8');
-        echo "\xEF\xBB\xBF";
-        header('Content-Disposition: attachment; filename=data_new.csv');
-
-        $output = fopen('php://output', 'w');
-
-
-        $titles = array('ID', 'Data', 'Script', 'Nome agente', 'Unique id', 'Campanha', 'Lead id', "feedback");
-        $campos = array();
-        $ref_name = array();
-        $query = "SELECT Name,Display_name  FROM vicidial_list_ref where campaign_id = '$campaign_id' and active='1' ";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            array_push($titles, $row['Display_name']);
-            $campos[$row['Name']] = "";
-            array_push($ref_name, $row['Name']);
-        }
-        $tags = array();
-        $query = "SELECT tag,type,texto,values_text  FROM `script_dinamico` where type not in ('pagination','textfield') and texto!='' and id_script='$id_script' order by tag asc ";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            if ($row['type'] == "tableradio") {
-                $temp = json_decode($row['values_text']);
-                foreach ($temp as $value) {
-                    array_push($titles, $row['texto'] . "-" . $value);
-                    $tags["m" . $row['tag'] . $value] = "";
-                }
-            } else {
-                array_push($titles, $row['texto']);
-                $tags["m" . $row['tag']] = "";
-            }
-        }
-        fputcsv($output, $titles, ";", '"');
-        $query = "SELECT a.lead_id, " . implode(",", $ref_name) . " from vicidial_list a left join `script_result` b on a.lead_id=b.lead_id where id_script='$id_script' and  b.campaign_id = '$campaign_id'  group by b.lead_id";
-        $result = mysql_query($query, $link) or die(mysql_error());
-        $lead_info = array();
-        while ($row3 = mysql_fetch_assoc($result)) {
-            $lead_info[$row3["lead_id"]] = $row3;
-        }
-        $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name, sr.unique_id, vc.campaign_name, sr.lead_id,sr.param_1,vcs.status_name, sr.tag_elemento,sr.valor,sd.param1,sd.type FROM `script_result` sr
-left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id
-left join vicidial_users vu on sr.user_id=vu.user_id
-left join script_dinamico_master sdm on sdm.id=sr.id_script
-left join vicidial_list vl on vl.lead_id=sr.lead_id
-left join vicidial_log vlg on vlg.uniqueid=sr.unique_id
-left join vicidial_campaign_statuses vcs on vcs.status=vlg.status
-left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script 
-where sr.id_script='$id_script' and sr.campaign_id = '$campaign_id' order by sr.lead_id,tag_elemento";
-        $result = mysql_query($query, $link) or die(mysql_error());
-        $final_row = array("id" => "", "date" => "", "name" => "", "full_name" => "", "unique_id" => "", "campaign_name" => "", "lead_id" => "", "status_name" => "");
-        $lead_id = false;
-        $client = array();
-        while ($row1 = mysql_fetch_assoc($result)) {
-            if ($lead_id != $row1["lead_id"]) {
-                if ($lead_id) {
-                    fputcsv($output, $client, ";", '"');
-                }
-                $lead_id = $row1["lead_id"];
-                $client = array_merge($final_row, $lead_info[$lead_id], $tags);
-                $client["id"] = $row1["id"];
-                $client["date"] = $row1["date"];
-                $client["name"] = $row1["name"];
-                $client["full_name"] = $row1["full_name"];
-                $client["unique_id"] = $row1["unique_id"];
-                $client["campaign_name"] = $row1["campaign_name"];
-                $client["lead_id"] = $row1["lead_id"];
-                $client["status_name"] = $row1["status_name"];
-            }
-
-            if ($row1["type"] == "tableradio")
-                $client["m" . $row1["tag_elemento"] . $row1["param_1"]] = $row1["valor"];
-            else
-                $client["m" . $row1["tag_elemento"]] = ($row1["param1"] == "nib") ? "" . $row1["valor"] . "" : $row1["valor"];
-        }
-        fputcsv($output, $client, ";", '"'); // necessário para imprimir a info da ultima lead0
-        fclose($output);
         break;
 }
 ?>

@@ -131,12 +131,7 @@
                               <div class="formRight">
                                     <select id="script_campanha_selector" class="chosen-select"  multiple="multiple" data-placeholder="Selecione uma/várias campanhas"   ></select>
                               </div> 
-                              <div class="formRow">
-                                    <button class="btn btn-info" onclick="write_to_file('camp');">Criar relatório</button>
-                                    <div class="formRight">
-                                          <select id="write_to_file_select_campanha" class="chosen-select" data-placeholder="report de campanha"   ></select>
-                                    </div> 
-                              </div>
+                      
                         </div>
 
                         <div class="formRow linha_inbound_div">
@@ -145,12 +140,7 @@
                                     <select id="script_linha_inbound_selector" class="chosen-select"  multiple="multiple" data-placeholder="Selecione uma/várias linhas_inbound"   ></select>
                               </div> 
 
-                              <div class="formRow">
-                                    <button class="btn btn-info" onclick="write_to_file('linha');">Criar relatório</button>
-                                    <div class="formRight">
-                                          <select id="write_to_file_select_linha_inbound" class="chosen-select" data-placeholder="report de linha inbound"   ></select>
-                                    </div> 
-                              </div>
+                             
                         </div>
                         <div class="clear"></div>
                   </div>
@@ -213,14 +203,14 @@
             <div class="grid-title">
                   <div class="pull-left" ><i class="fam-script-error"></i> Scripts Dinâmicos </div>
                   <div class="pull-right">
+                        <a class="btn btn-inverse" id="relatorio_go" href="/sips-admin/script_dinamico/reporting/index.html" target="_self">Relatório</a>                        
                         <button class="btn btn-inverse" id="render_go">Visualisação</button>
-
                   </div>
             </div>
             <div class="grid-content">
                   <div class="row-fluid">
                         <div class="grid span6">
-                              <div class="grid-title">
+                              <div class="grid-title"> 
                                     <div class="pull-left">Formulário</div>
                                     <div class="pull-right" id="page_selector_div">           
                                           <button data-t="tooltip-right" title="Opções da Layout" data-toggle="modal" data-target="#dialog_page"  class="btn btn-warning icon-alone" id="opcao_page_button"><i class="icon-cogs"></i></button>
@@ -689,14 +679,14 @@
                                                       <!-----------------------------QUOTAS-------------------------------------------------------->
                                                       <div class="formRow quota_class hidden" >
                                                             <label class="label label-inverse" >Quota:</label>
-                                                            
+
                                                             <div class="formRight">
                                                                   <input  type="checkbox" id="quota_required" name="quota_required" value="1"> Número max. de respostas por pergunta
-                                                                 
+
                                                             </div>
-                                                            
+
                                                             <div class="formRight" id="div_quota" >
-                                                             
+
                                                                   <input class="span2" type="number" id="quota_input" name="quota_input" min="1" max="1000" value="1">max.1000
                                                             </div>
                                                       </div>

@@ -6,22 +6,25 @@ var tables = {por_abrir: {}, abertos: {}, fechados: {}, expirados: {}};
 var concess_mail = [];
 
 
-
+ 
 
 $(function()
 {
       $("#form_enviar_mail").validationEngine();
+      $("#dateform").validationEngine();
       $(".chzn-select").chosen({no_results_text: "Sem resultados"});
 
-      $.getJSON("emails.json", function(data) {
+      $.getJSON("emails.json", function(data) { 
             concess_mail = data.concessionarios;
             var temp = "<option value=''>Selecione um Concessionário</option> ";
             $.each(data.concessionarios, function(index) {
-
-                  temp += "<option value=" + index + ">" + this.nome + "</option>";
+                  temp += "<option value=" + index + ">" + this.nome + "-"+this.servico+"</option>";
             });
             $("#concessionarios").append(temp);
             $("#concessionarios").val("").trigger("liszt:updated");
+            $("#concessionarios_report").append(temp);
+            $("#concessionarios_report").val("").trigger("liszt:updated");
+
       });
 
 
@@ -53,7 +56,7 @@ $(function()
                     estado: $("#modal_abertos_fechados #checkbox1"),
                     t_reclamacao: $("#modal_abertos_fechados #tipo_reclamacao_af"),
                     tp_reclamacao: $("#modal_abertos_fechados #tipificacao_reclamacao_af"),
-                    email_destino:$("#modal_abertos_fechados #emails_destino_af")
+                    email_destino: $("#modal_abertos_fechados #emails_destino_af")
               };
       var modal_e =
               {
@@ -64,7 +67,7 @@ $(function()
                     estado: $("#modal_expirados #estado_e"),
                     t_reclamacao: $("#modal_expirados #tipo_reclamacao_e"),
                     tp_reclamacao: $("#modal_expirados #tipificacao_reclamacao_e"),
-                    email:$("#modal_expirados #emails_destino_e")
+                    email: $("#modal_expirados #emails_destino_e")
               };
       $("#button_send_mail").on("click", function()
       {
@@ -77,7 +80,7 @@ $(function()
                   var t_reclamacao = modal_pa.t_reclamacao.find("option:selected").text();
                   var tp_reclamacao = modal_pa.tp_reclamacao.find("option:selected").text();
                   $.post("requests.php",
-                          {action: "send_mail", lead_id: info.lead_id, nome: info.nome, campanha: info.campanha, comentario: comentario, email: $("#email_agentes").val(),  tipo: $("#radio2").is(":checked"), tipo_reclamacao: t_reclamacao, tipificacao_reclamacao: tp_reclamacao},
+                          {action: "send_mail", lead_id: info.lead_id, nome: info.nome, campanha: info.campanha, comentario: comentario, email: $("#email_agentes").val(), tipo: $("#radio2").is(":checked"), tipo_reclamacao: t_reclamacao, tipificacao_reclamacao: tp_reclamacao, concessionario: $("#concessionarios").val()},
                   function()
                   {
                         $("#modal_por_abrir .modal-footer button").prop("disabled", false);
@@ -139,33 +142,35 @@ $(function()
                         });
                         $("#modal_por_abrir").modal('show');
                         break;
-                  case ("abertos"):
+
+                  case ("Abertos"):
                         modal_af.nome.text(info.nome);
                         modal_af.campanha.text(info.campanha);
                         modal_af.data.text(info.data);
                         modal_af.comentario.text(info.comentario);
                         modal_af.t_reclamacao.text(info.tipo_reclamacao);
                         modal_af.tp_reclamacao.text(info.tipificacao_reclamacao);
-                        modal_af.email_destino.text(info.email);
+                        modal_af.email_destino.text(info.email.join("\n"));
                         $("#modal_abertos_fechados #myModalLabel").text("Reclamações abertas");
                         $("#checkbox1").prop("checked", false);
                         $("#modal_abertos_fechados #button_gravar").data("id", this.id.slice(0, -1));
                         $("#modal_abertos_fechados").modal('show');
                         break;
-                  case ("fechados"):
 
-                        modal_af.nome.text(info.nome);
+                  case ("Fechados"):
+                                              modal_af.nome.text(info.nome);
                         modal_af.campanha.text(info.campanha);
                         modal_af.data.text(info.data);
                         modal_af.comentario.text(info.comentario);
                         modal_af.t_reclamacao.text(info.tipo_reclamacao);
                         modal_af.tp_reclamacao.text(info.tipificacao_reclamacao);
-                         modal_af.email_destino.text(info.email);
+                        modal_af.email_destino.text(info.email.join("\n"));
                         $("#modal_abertos_fechados #myModalLabel").text("Reclamações fechadas");
                         $("#checkbox1").prop("checked", true);
                         $("#modal_abertos_fechados #button_gravar").prop("disabled", true);
                         $("#modal_abertos_fechados").modal('show');
                         break;
+
                   default:
                         modal_e.nome.text(info.nome);
                         modal_e.campanha.text(info.campanha);
@@ -174,8 +179,7 @@ $(function()
                         modal_e.estado.text(info.tipo);
                         modal_e.t_reclamacao.text(info.tipo_reclamacao);
                         modal_e.tp_reclamacao.text(info.tipificacao_reclamacao);
-                         modal_e.email_destino.text(info.email);
-                        modal_e.data.text(info.data);
+                        modal_e.email.text(info.email.join("\n"));
                         $("#modal_expirados").modal('show');
                         break;
             }
@@ -189,22 +193,35 @@ $(function()
 //TABLE POR ABRIR
       tables.por_abrir = $('#table_por_abrir').dataTable({
             "bProcessing": true,
-            "aoColumns": [{"bSortable": true}, {"bSortable": true}, {"bSortable": true}]
+            "aoColumns": [{"bSortable": true}, {"bSortable": true}, {"bSortable": true}],
+            "oLanguage": {
+                  "sUrl": "/jquery/jsdatatable/language/pt-pt.txt"
+            }
+
       });
       // TABLE ABERTOS
       tables.abertos = $('#table_abertos').dataTable({
             "bProcessing": true,
-            "aoColumns": [{"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}]
+            "aoColumns": [{"bSortable": true},{"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}],
+            "oLanguage": {
+                  "sUrl": "/jquery/jsdatatable/language/pt-pt.txt"
+            }
       });
       //TABLE FECHADOS
       tables.fechados = $('#table_fechados').dataTable({
             "bProcessing": true,
-            "aoColumns": [{"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}]
+            "aoColumns": [{"bSortable": true},{"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}],
+            "oLanguage": {
+                  "sUrl": "/jquery/jsdatatable/language/pt-pt.txt"
+            }
       });
       //TABLE EXPIRADOS
       tables.expirados = $('#table_expirados').dataTable({
             "bProcessing": true,
-            "aoColumns": [{"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}]
+            "aoColumns": [{"bSortable": true},{"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}],
+            "oLanguage": {
+                  "sUrl": "/jquery/jsdatatable/language/pt-pt.txt"
+            }
       });
 });
 
@@ -219,18 +236,20 @@ $("#concessionarios").on("change", function()
                   temp += "<option value=" + this.email + ">" + this.nome + "</option>";
             });
       $("#email_agentes").append(temp);
-      $("#email_agentes option").prop("selected",true);
+      $("#email_agentes option").prop("selected", true);
       $("#email_agentes").trigger("liszt:updated");
 });
 
 
 
-$("#button_pesquisa").on("click", function()
+$("#button_pesquisa").on("click", function(e)
 {
+      e.preventDefault();
       if ($("#dateform").validationEngine('validate'))
       {
             $("#report_reclamacao").removeClass("hidden");
-            $.post("requests.php", {action: "get_table_data", data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val()}, function(data) {
+            $.post("requests.php", {action: "get_table_data", data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val()},
+            function(data) {
                   tables.por_abrir.fnClearTable();
                   $.each(data.por_abrir, function() {
                         tables.por_abrir.dataTable().fnAddData(
@@ -240,19 +259,19 @@ $("#button_pesquisa").on("click", function()
                   tables.abertos.fnClearTable();
                   $.each(data.abertos, function() {
                         tables.abertos.dataTable().fnAddData(
-                                [this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao'> Ver </button></div"]);
+                                [this.id,this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao'> Ver </button></div"]);
                         $("#" + this.id + "I").data("info", this);
                   });
                   tables.fechados.fnClearTable();
                   $.each(data.fechados, function() {
                         tables.fechados.dataTable().fnAddData(
-                                [this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao'> Ver </button></div"]);
+                                [this.id,this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao'> Ver </button></div"]);
                         $("#" + this.id + "I").data("info", this);
                   });
                   tables.expirados.fnClearTable();
                   $.each(data.expirados, function() {
                         tables.expirados.dataTable().fnAddData(
-                                [this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data, this.tipo + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao'> Ver </button></div"]);
+                                [this.id,this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data, this.tipo + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao'> Ver </button></div"]);
                         $("#" + this.id + "I").data("info", this);
                   });
             }, "json")
@@ -260,4 +279,18 @@ $("#button_pesquisa").on("click", function()
                   return false;
             });
       }
+});
+
+$("#report_download").on("click", function()
+{
+      if ($("#concessionarios_report").val() != "")
+      {
+            if ($("#dateform").validationEngine('validate')) {
+                  document.location.href = "requests.php?data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&action=write_to_file&concessionario_id=" + $("#concessionarios_report").val() + "&concessionario_name=" + $("#concessionarios_report option:selected").text();
+            }
+            else
+                  $.jGrowl('Preencha os campos de data', {life: 3000});
+      }
+      else
+            $.jGrowl('Escolha um concessionario', {life: 3000});
 });

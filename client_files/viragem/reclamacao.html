@@ -61,22 +61,35 @@
 
                   <div class="container-fluid">
                         <div class="row-fluid">
-                              <form id="dateform" class="formular" >
-                                    <div class="span3">
-                                          <label>Data de Inicio</label>
+                              <form id="dateform" class="formular span6" >
+                                    <div class="formRow">
+                                          <label>Data de Inicio:</label>
                                           <input  type="text" id="datetime_from" class="datetime_range validate[required]">
                                     </div>
-                                    <div class="span3">
-                                          <label>Data de Fim</label>
+                                    <div class="formRow">
+                                          <label>Data de Fim:</label>
                                           <input  type="text" id="datetime_to" class="datetime_range validate[required]" >  
                                     </div>
+                                    <div class="formRight">
+                                          <button class="btn btn-info" id="button_pesquisa"  >Pesquisar</button> 
+                                    </div>  
                               </form>
 
                               <div class="span6 ">
-                                    <div class="formRight">
-                                          <button class="btn btn-info" id="button_pesquisa" >Pesquisar</button> 
+
+
+                                    <div class="formRow">
+                                          <label>Report por concessionário</label>
+                                          <div class="formRight">
+                                                <select id="concessionarios_report">
+
+                                                </select>
+                                          </div> 
                                     </div>
 
+                                    <div class="formRight">
+                                          <button class="btn btn-inverse" id="report_download">Download</button>
+                                    </div>
                               </div>
 
 
@@ -106,6 +119,7 @@
                                     <table class="table table-mod table-striped table-condensed" id="table_por_abrir">
                                           <thead>
                                                 <tr>
+                                                 
                                                       <th>
                                                             Cliente
                                                       </th>
@@ -127,6 +141,9 @@
                                     <table class="table table-mod table-striped table-condensed" id="table_abertos">
                                           <thead>
                                                 <tr>
+                                                      <th>
+                                                            ID
+                                                      </th>
                                                       <th>
                                                             Cliente
                                                       </th>
@@ -155,6 +172,9 @@
                                           <thead>
                                                 <tr>
                                                       <th>
+                                                            ID
+                                                      </th>
+                                                      <th>
                                                             Cliente
                                                       </th>
                                                       <th>
@@ -181,6 +201,9 @@
                                     <table class="table table-mod table-striped table-condensed" id="table_expirados">
                                           <thead>
                                                 <tr>
+                                                      <th>
+                                                            ID
+                                                      </th>
                                                       <th>
                                                             Cliente
                                                       </th>
@@ -221,7 +244,7 @@
             <div id="modal_por_abrir" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
                   <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 id="myModalLabel">Reclamações por abrir</h3>
+                        <h3 id="myModalLabel">Reclamações por Abrir</h3>
                   </div>
                   <div class="modal-body">
                         <div class="formRow ">
@@ -377,7 +400,7 @@
                               </div>
                         </div>
 
-                                <div class="formRow ">
+                        <div class="formRow ">
                               <label>
                                     Emails de destino
                               </label>
@@ -385,7 +408,7 @@
                                     <span id="emails_destino_af"></span>
                               </div>
                         </div>
-                        
+
                         <div class="formRow ">
                               <label>
                                     Comentario
@@ -469,7 +492,7 @@
                               </div>
                         </div>
 
-                         <div class="formRow ">
+                        <div class="formRow ">
                               <label>
                                     Emails de destino
                               </label>
