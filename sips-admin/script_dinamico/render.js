@@ -9,11 +9,13 @@ var items = [];
 var unique_id = 0;
 var id_script = 0;
 $(function() {
+     
+      
       array_id["radio"] = 0;
       array_id["checkbox"] = 0;
       $.get("items.html", function(data) {
             page_info = getUrlVars();
-            $("#dummie").html(data);
+                       $("#dummie").html(data);
             update_script();
       });
       $(document).on("click", ".previous_pag", function(e) {
@@ -222,7 +224,12 @@ function update_info()
                   }
                   $("#" + this[1] + "pag").append(this[0]);
             });
+         
+      if(page_info.isadmin!=="1")
+            {
             $(".pag_div").hide().first().show();
+            }
+            
             $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt"}).keypress(function(e) {
                   e.preventDefault();
             }).bind("cut copy paste", function(e) {
