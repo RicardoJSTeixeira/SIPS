@@ -71,8 +71,7 @@ if(!$user->is_all_campaigns)
             }
             else
             {
-              if($allctc=="false")
-                $filtro = "and vl.list_id = '$list_id'";
+                      $filtro = "and vl.list_id = '$list_id'";
             }
             
             
@@ -122,11 +121,11 @@ if(!$user->is_all_campaigns)
             else
                  $date_filter="";
             
-            $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name, sr.unique_id, vc.campaign_name, sr.lead_id,sr.param_1,vcs.status_name, sr.tag_elemento,sr.valor,sd.param1,sd.type FROM `script_result` sr
+            $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name, sr.unique_id, vc.campaign_name, sr.lead_id,sr.param_1,vcs.status_name, sr.tag_elemento,sr.valor,sd.param1,sd.type FROM `vicidial_list` vl
 left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id
 left join vicidial_users vu on sr.user_id=vu.user_id
 left join script_dinamico_master sdm on sdm.id=sr.id_script
-left join vicidial_list vl on vl.lead_id=sr.lead_id
+left join script_result sr on vl.lead_id=sr.lead_id
 left join vicidial_log vlg on vlg.uniqueid=sr.unique_id
 left join vicidial_campaign_statuses vcs on vcs.status=vlg.status
 left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script 
