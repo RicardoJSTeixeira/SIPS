@@ -114,6 +114,12 @@ if(!$user->is_all_campaigns)
             while ($row3 = mysql_fetch_assoc($result)) {
                 $lead_info[$row3["lead_id"]] = $row3;
             }
+            
+            if($allctc=="false")
+            $date_filter="and sr.date between '$data_inicio' and '$data_fim'";
+            else
+                 $date_filter="";
+            
             $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name, sr.unique_id, vc.campaign_name, sr.lead_id,sr.param_1,vcs.status_name, sr.tag_elemento,sr.valor,sd.param1,sd.type FROM `script_result` sr
 left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id
 left join vicidial_users vu on sr.user_id=vu.user_id
@@ -122,7 +128,7 @@ left join vicidial_list vl on vl.lead_id=sr.lead_id
 left join vicidial_log vlg on vlg.uniqueid=sr.unique_id
 left join vicidial_campaign_statuses vcs on vcs.status=vlg.status
 left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script 
-where sr.campaign_id='$campaign_id' and sr.id_script='$id_script' $filtro and sr.date between '$data_inicio' and '$data_fim' order by sr.lead_id,tag_elemento";
+where sr.campaign_id='$campaign_id' and sr.id_script='$id_script' $filtro $date_filter  order by sr.lead_id,tag_elemento";
             $result = mysql_query($query, $link) or die(mysql_error());
             $final_row = array("id" => "", "date" => "", "name" => "", "full_name" => "", "unique_id" => "", "campaign_name" => "", "lead_id" => "", "status_name" => "");
             $lead_id = false;

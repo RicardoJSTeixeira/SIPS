@@ -76,15 +76,20 @@ $("#download_report").on("click", function(e)
             if ($("#radio1").is(":checked"))
             {
               
-                  document.location.href = "requests.php?action=report&tipo=1&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_campanha option:selected").val();
+                  document.location.href = "requests.php?action=report&tipo=1&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_campanha option:selected").val()+"&allctc="+$("#allcontacts").is(":checked");
             }
             else if ($("#radio2").is(":checked"))
             {
-                  document.location.href = "requests.php?action=report&tipo=2&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_linha_inbound option:selected").val();
+                  document.location.href = "requests.php?action=report&tipo=2&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_linha_inbound option:selected").val()+"&allctc="+$("#allcontacts").is(":checked");
             }
             else
             {
-                  document.location.href = "requests.php?action=report&tipo=3&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&list_id=" + $("#select_base_dados option:selected").val()+"&campaign_id=" + $("#select_base_dados option:selected").data("campaign_id");
+                  document.location.href = "requests.php?action=report&tipo=3&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&list_id=" + $("#select_base_dados option:selected").val()+"&campaign_id=" + $("#select_base_dados option:selected").data("campaign_id")+"&allctc="+$("#allcontacts").is(":checked");
             }
       }
+});
+
+$("#allcontacts").on("click",function()
+{
+   $(".time_div").toggle(500);   
 });
