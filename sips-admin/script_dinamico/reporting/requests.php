@@ -24,7 +24,7 @@ $user = new users;
 
 $temp="";
 if(!$user->is_all_campaigns)
-   $temp="where campaign_id in(".implode(",",$user->allowed_campaigns).")";
+   $temp="where campaign_id in('".implode("','",$user->allowed_campaigns)."')";
 
     switch ($action) {
 
