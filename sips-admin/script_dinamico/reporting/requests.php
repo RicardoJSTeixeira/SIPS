@@ -25,24 +25,24 @@ $user = new users;
 $temp="";
 if(!$user->is_all_campaigns)
 {
-   $temp="where campaign_id in('".implode("','",$user->allowed_campaigns)."')";
+   $temp="and campaign_id in('".implode("','",$user->allowed_campaigns)."')";
 }
     switch ($action) {
 
         case "get_select_options":
             $js=array("campanha"=>array(),"bd"=>array(),"linha_inbound"=>array());
             
-            $query = "SELECT campaign_id,campaign_name FROM `vicidial_campaigns` $temp";
+            $query = "SELECT campaign_id,campaign_name FROM `vicidial_campaigns` where active='Y' $temp";
             $query = mysql_query($query, $link) or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
                 $js["campanha"][] = array("id" => $row["campaign_id"], "name" => $row["campaign_name"]);
             }
-            $query = "SELECT list_id,list_name,campaign_id FROM vicidial_lists $temp";
+            $query = "SELECT list_id,list_name,campaign_id FROM vicidial_lists where active='Y' $temp";
             $query = mysql_query($query, $link) or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
                 $js["bd"][] = array("id" => $row["list_id"], "name" => $row["list_name"], "campaign_id" => $row["campaign_id"]);
             }
-            $query = "SELECT group_id,group_name FROM vicidial_inbound_groups";
+            $query = "SELECT group_id,group_name FROM vicidial_inbound_groups where active='Y'";
             $query = mysql_query($query, $link) or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
                 $js["linha_inbound"][] = array("id" => $row["group_id"], "name" => $row["group_name"]);
