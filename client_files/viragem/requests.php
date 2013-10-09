@@ -29,16 +29,16 @@ switch ($action) {
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             if ((int) $row["tipo"])
-                $js["fechados"][] = array("nome" => $row["nome"], "campanha" => $row["campanha"], "tipo_reclamacao" => $row["tipo_reclamacao"], "tipificacao_reclamacao" => $row["tipificacao_reclamacao"], "data" => $row["data"], "id" => $row["id"], "lead_id" => $row["lead_id"], "comentario" => $row["comentario"], "email" => json_decode($row["email"]), "tipo" => ((int) $row["tipo"]) ? "Fechados" : "Abertos");
+                $js["fechados"][] = array("id" => $row["id"],"nome" => $row["nome"], "campanha" => $row["campanha"], "tipo_reclamacao" => $row["tipo_reclamacao"], "tipificacao_reclamacao" => $row["tipificacao_reclamacao"], "data" => $row["data"], "lead_id" => $row["lead_id"], "comentario" => $row["comentario"], "email" => json_decode($row["email"]), "tipo" => ((int) $row["tipo"]) ? "Fechados" : "Abertos");
             else
-                $js["abertos"][] = array("nome" => $row["nome"], "campanha" => $row["campanha"], "tipo_reclamacao" => $row["tipo_reclamacao"], "tipificacao_reclamacao" => $row["tipificacao_reclamacao"], "data" => $row["data"], "id" => $row["id"], "lead_id" => $row["lead_id"], "comentario" => $row["comentario"], "email" => json_decode($row["email"]), "tipo" => ((int) $row["tipo"]) ? "Fechados" : "Abertos");
+                $js["abertos"][] = array("id" => $row["id"],"nome" => $row["nome"], "campanha" => $row["campanha"], "tipo_reclamacao" => $row["tipo_reclamacao"], "tipificacao_reclamacao" => $row["tipificacao_reclamacao"], "data" => $row["data"],  "lead_id" => $row["lead_id"], "comentario" => $row["comentario"], "email" => json_decode($row["email"]), "tipo" => ((int) $row["tipo"]) ? "Fechados" : "Abertos");
         }
         //EXPIRADOS
         $date = date("Y-m-d H:i:s", strtotime('-1 month'));
         $query = "SELECT id,lead_id,nome,campanha,comentario,email,data,tipo,tipo_reclamacao,tipificacao_reclamacao from reclamacao where data<'$date' and tipo='0' order  by data desc";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js["expirados"][] = array("nome" => $row["nome"], "campanha" => $row["campanha"], "tipo_reclamacao" => $row["tipo_reclamacao"], "tipificacao_reclamacao" => $row["tipificacao_reclamacao"], "data" => $row["data"], "id" => $row["id"], "lead_id" => $row["lead_id"], "comentario" => $row["comentario"], "email" => json_decode($row["email"]), "tipo" => ((int) $row["tipo"]) ? "Fechado" : "Aberto");
+            $js["expirados"][] = array("id" => $row["id"],"nome" => $row["nome"], "campanha" => $row["campanha"], "tipo_reclamacao" => $row["tipo_reclamacao"], "tipificacao_reclamacao" => $row["tipificacao_reclamacao"], "data" => $row["data"],  "lead_id" => $row["lead_id"], "comentario" => $row["comentario"], "email" => json_decode($row["email"]), "tipo" => ((int) $row["tipo"]) ? "Fechado" : "Aberto");
         }
         //POR ABRIR
         $query = "SELECT a.lead_id,c.first_name,a.campaign_id,b.campaign_name, a.call_date from vicidial_log a inner join vicidial_campaigns b on a.campaign_id=b.campaign_id left join vicidial_list c on a.lead_id=c.lead_id left join reclamacao d on d.lead_id=a.lead_id where a.status='S00014' and d.lead_id is NULL and call_date between '$data_inicio' and '$data_fim'";

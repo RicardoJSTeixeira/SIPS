@@ -6,7 +6,7 @@ var tables = {por_abrir: {}, abertos: {}, fechados: {}, expirados: {}};
 var concess_mail = [];
 
 
-
+ 
 
 $(function()
 {
@@ -14,11 +14,11 @@ $(function()
       $("#dateform").validationEngine();
       $(".chzn-select").chosen({no_results_text: "Sem resultados"});
 
-      $.getJSON("emails.json", function(data) {
+      $.getJSON("emails.json", function(data) { 
             concess_mail = data.concessionarios;
             var temp = "<option value=''>Selecione um Concessionário</option> ";
             $.each(data.concessionarios, function(index) {
-                  temp += "<option value=" + index + ">" + this.nome + "</option>";
+                  temp += "<option value=" + index + ">" + this.nome + "-"+this.servico+"</option>";
             });
             $("#concessionarios").append(temp);
             $("#concessionarios").val("").trigger("liszt:updated");
@@ -143,7 +143,7 @@ $(function()
                         $("#modal_por_abrir").modal('show');
                         break;
 
-                  case ("abertos"):
+                  case ("Abertos"):
                         modal_af.nome.text(info.nome);
                         modal_af.campanha.text(info.campanha);
                         modal_af.data.text(info.data);
@@ -157,7 +157,7 @@ $(function()
                         $("#modal_abertos_fechados").modal('show');
                         break;
 
-                  case ("fechados"):
+                  case ("Fechados"):
                         modal_af.nome.text(info.nome);
                         modal_af.campanha.text(info.campanha);
                         modal_af.data.text(info.data);
@@ -202,7 +202,7 @@ $(function()
       // TABLE ABERTOS
       tables.abertos = $('#table_abertos').dataTable({
             "bProcessing": true,
-            "aoColumns": [{"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}],
+            "aoColumns": [{"bSortable": true},{"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}],
             "oLanguage": {
                   "sUrl": "/jquery/jsdatatable/language/pt-pt.txt"
             }
@@ -210,7 +210,7 @@ $(function()
       //TABLE FECHADOS
       tables.fechados = $('#table_fechados').dataTable({
             "bProcessing": true,
-            "aoColumns": [{"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}],
+            "aoColumns": [{"bSortable": true},{"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}],
             "oLanguage": {
                   "sUrl": "/jquery/jsdatatable/language/pt-pt.txt"
             }
@@ -218,7 +218,7 @@ $(function()
       //TABLE EXPIRADOS
       tables.expirados = $('#table_expirados').dataTable({
             "bProcessing": true,
-            "aoColumns": [{"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}],
+            "aoColumns": [{"bSortable": true},{"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}, {"bSortable": true}],
             "oLanguage": {
                   "sUrl": "/jquery/jsdatatable/language/pt-pt.txt"
             }
@@ -259,19 +259,19 @@ $("#button_pesquisa").on("click", function(e)
                   tables.abertos.fnClearTable();
                   $.each(data.abertos, function() {
                         tables.abertos.dataTable().fnAddData(
-                                [this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao'> Ver </button></div"]);
+                                [this.id,this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao'> Ver </button></div"]);
                         $("#" + this.id + "I").data("info", this);
                   });
                   tables.fechados.fnClearTable();
                   $.each(data.fechados, function() {
                         tables.fechados.dataTable().fnAddData(
-                                [this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao'> Ver </button></div"]);
+                                [this.id,this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao'> Ver </button></div"]);
                         $("#" + this.id + "I").data("info", this);
                   });
                   tables.expirados.fnClearTable();
                   $.each(data.expirados, function() {
                         tables.expirados.dataTable().fnAddData(
-                                [this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data, this.tipo + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao'> Ver </button></div"]);
+                                [this.id,this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data, this.tipo + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao'> Ver </button></div"]);
                         $("#" + this.id + "I").data("info", this);
                   });
             }, "json")
