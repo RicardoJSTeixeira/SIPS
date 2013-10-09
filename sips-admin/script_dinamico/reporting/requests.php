@@ -30,6 +30,8 @@ if(!$user->is_all_campaigns)
     switch ($action) {
 
         case "get_select_options":
+            $js=array("campanha"=>array(),"bd"=>array(),"linha_inbound"=>array());
+            
             $query = "SELECT campaign_id,campaign_name FROM `vicidial_campaigns` $temp";
             $query = mysql_query($query, $link) or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
