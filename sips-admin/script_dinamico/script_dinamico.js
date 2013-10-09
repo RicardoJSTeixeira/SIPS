@@ -1,7 +1,11 @@
 
+/*
+ 
+        
+        
 
-
-
+ 
+*/
 
 //forms ->http://www.javaworld.com/jw-06-1996/jw-06-javascript.html?page=2
 
@@ -180,6 +184,7 @@ $(function() {
                                     function(data5)
                                     {
                                           $("#ipl_file_select").html(data5);
+                                            $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
                                     }, "json");
                               }, "json");
                         }, "json");
@@ -335,6 +340,27 @@ $("#ipl_upload_button").on("click", function(e)
       if (form.find('input[type="file"]').val() === '')
             return false;
       var formData = new FormData(form[0]);
+   
+             /*/validate file
+                var re_ext=new RegExp("(wav|ogg|mp3|gsm|sln)","i");
+                $('#audio-file').change(function(){
+                    var file = this.files[0];
+                    name = file.name;
+                    size = (Math.round((file.size/1024/1024)*100)/100);
+                    type = file.type;
+                    if(size>10){
+                        makeAlert($("#audio-div").parent(),"Tamanho exedido","O tamanho do ficheiro ultrapassa os 10mb permitidos.",1,false,false);
+                        $(this).fileupload('clear');}
+                    if(!re_ext.test(type)){
+                        makeAlert($("#audio-div").parent(),"Extensão Não valida","A extensão do ficheiro seleccionado não é valida.",1,false,false);
+                        $(this).fileupload('clear');}
+                    console.log("name:"+name);
+                    console.log("size:"+size+"mb");
+                    console.log("type:"+type);
+                    console.log("");
+                    //your validation
+                });*/
+      
       $.ajax({
             url: 'upload.php',
             type: 'POST',
@@ -352,6 +378,12 @@ $("#ipl_upload_button").on("click", function(e)
             success: function(data) {
 
                   $("#label_ipl_info").text(data.responseText);
+                         $.post("requests.php", {action: "get_image_pdf"},
+                                    function(data5)
+                                    {
+                                          $("#ipl_file_select").html(data5);
+                                          
+                                    }, "json");
             },
             contentType: false,
             processData: false
