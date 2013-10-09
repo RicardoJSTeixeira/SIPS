@@ -1,6 +1,5 @@
 
 
-
 var array_id = [];
 var tag_regex = /\@(\d{1,5})\@/g;
 var tag_regex2 = /\§(.*?)\§/g;
