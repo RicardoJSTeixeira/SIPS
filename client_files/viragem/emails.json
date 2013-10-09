@@ -2,7 +2,7 @@
       "concessionarios": [
                  {
                   "nome": "Testes",
-                  "servico": "APV",
+                  "servico": "",
                   "interlocutores": [
                         {
                               "nome": "Mario Garcez",
