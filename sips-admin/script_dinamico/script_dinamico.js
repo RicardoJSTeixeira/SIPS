@@ -1403,11 +1403,7 @@ $("#render_go").click(function()
 {
       var window_slave = window.open("/sips-admin/script_dinamico/render.html?script_id=" + $("#script_selector option:selected").val());
 });
-//Relatorios 
-$("#relatorio_go").click(function()
-{
-      var window_slave = window.open("/sips-admin/script_dinamico/reporting/index.html");
-});
+
 //------------------RULES----------------------------000000000
 function rules_manager(tipo, element)
 {
