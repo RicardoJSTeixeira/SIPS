@@ -24,8 +24,9 @@ $user = new users;
 
 $temp="";
 if(!$user->is_all_campaigns)
+{
    $temp="where campaign_id in('".implode("','",$user->allowed_campaigns)."')";
-
+}
     switch ($action) {
 
         case "get_select_options":
@@ -39,7 +40,7 @@ if(!$user->is_all_campaigns)
             while ($row = mysql_fetch_assoc($query)) {
                 $js["bd"][] = array("id" => $row["list_id"], "name" => $row["list_name"], "campaign_id" => $row["campaign_id"]);
             }
-            $query = "SELECT group_id,group_name FROM vicidial_inbound_groups $temp";
+            $query = "SELECT group_id,group_name FROM vicidial_inbound_groups";
             $query = mysql_query($query, $link) or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
                 $js["linha_inbound"][] = array("id" => $row["group_id"], "name" => $row["group_name"]);
