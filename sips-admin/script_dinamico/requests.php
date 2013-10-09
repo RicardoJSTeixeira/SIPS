@@ -454,7 +454,7 @@ switch ($action) {
     case "save_form_result":
         $sql = array();
 
-        if (admin_review == "1") {
+        if ($admin_review == "1") {
             $unique_id = time() . "." . rand(1, 1000);
         }
 
