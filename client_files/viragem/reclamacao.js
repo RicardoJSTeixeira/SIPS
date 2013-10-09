@@ -21,9 +21,10 @@ $(function()
                   temp += "<option value=" + index + ">" + this.nome + "</option>";
             });
             $("#concessionarios").append(temp);
+            $("#concessionarios").val("").trigger("liszt:updated");
             $("#concessionarios_report").append(temp);
             $("#concessionarios_report").val("").trigger("liszt:updated");
-            $("#concessionarios").val("").trigger("liszt:updated");
+
       });
 
 
