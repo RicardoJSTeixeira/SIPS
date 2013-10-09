@@ -9472,7 +9472,9 @@ $(function() {
         separator: "     ",
         hour: 08,
         minute: 00,
-        minDate: 0
+        minDate: 0,
+        changeMonth: true,
+        changeYear: true
     });
 
 
