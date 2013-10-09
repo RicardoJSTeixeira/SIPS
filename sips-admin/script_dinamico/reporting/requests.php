@@ -70,8 +70,10 @@ if(!$user->is_all_campaigns)
                 $filtro = "and sr.campaign_id = '$campaign_id'";
             }
             else
-               $filtro = "and vl.list_id = '$list_id'";
-
+            {
+              if($allctc=="false")
+                $filtro = "and vl.list_id = '$list_id'";
+            }
             
             
             
