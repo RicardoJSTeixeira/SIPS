@@ -119,7 +119,7 @@ left join vicidial_list vl on vl.lead_id=sr.lead_id
 left join vicidial_log vlg on vlg.uniqueid=sr.unique_id
 left join vicidial_campaign_statuses vcs on vcs.status=vlg.status
 left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script 
-where sr.id_script='$id_script' $filtro and sr.date between '$data_inicio' and '$data_fim' order by sr.lead_id,tag_elemento";
+where sr.campaign_id='$campaign_id' and sr.id_script='$id_script' $filtro and sr.date between '$data_inicio' and '$data_fim' order by sr.lead_id,tag_elemento";
             $result = mysql_query($query, $link) or die(mysql_error());
             $final_row = array("id" => "", "date" => "", "name" => "", "full_name" => "", "unique_id" => "", "campaign_name" => "", "lead_id" => "", "status_name" => "");
             $lead_id = false;
