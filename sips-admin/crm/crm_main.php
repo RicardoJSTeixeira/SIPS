@@ -37,6 +37,9 @@
        .view-button{
                 margin-left: 0.5em;
             }
+            #contact_list{
+                width:100%;
+            }
         </style>
     </head>
     <body>
