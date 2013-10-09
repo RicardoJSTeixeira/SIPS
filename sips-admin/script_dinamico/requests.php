@@ -456,6 +456,7 @@ switch ($action) {
 
         if ($admin_review == "1") {
             $unique_id = time() . "." . rand(1, 1000);
+            $user_id=$user->id;
         }
 
         foreach ($results as $row) {
