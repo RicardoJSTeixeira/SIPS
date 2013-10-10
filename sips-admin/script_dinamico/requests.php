@@ -275,10 +275,10 @@ switch ($action) {
         while (false !== ( $file = readdir($dh) )) {
             $ext = substr($file, -4, 4);
             if (in_array($ext, $show)) {
-                if ($ext == ".pdf")
-                    $temp_ext = "pdf";
-                else
-                    $temp_ext = "image";
+                if ($ext == ".pdf"){
+                $temp_ext = "pdf";}
+                else{
+                $temp_ext = "image";}
                 $select .= "<option data-type='$temp_ext' value='$file'>$file</option>\n";
             }
         }

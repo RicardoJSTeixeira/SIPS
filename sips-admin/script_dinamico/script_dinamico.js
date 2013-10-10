@@ -1,11 +1,11 @@
 
 /*
  
-        
-        
-
  
-*/
+ 
+ 
+ 
+ */
 
 //forms ->http://www.javaworld.com/jw-06-1996/jw-06-javascript.html?page=2
 
@@ -35,11 +35,11 @@ var list_item;
 //mostra/esconde os elementos associados ao edit
 function editor_toggle(tipo)
 {
-
       $(".item").removeClass("helperPick");
       $("#tabs").tabs("option", "active", 0);
       if (tipo === "on")
       {
+            $("#edit_div").show(300);
             $("#tabs").tabs("enable");
             $("#item_edit_comum").show();
             $("#rule_manager").show();
@@ -51,8 +51,9 @@ function editor_toggle(tipo)
       }
       if (tipo === "off")
       {
+            $("#edit_div").hide(300);
+            $("#tabs").tabs("disable", 0);
             $("#tabs").tabs("disable", 1);
-            $("#tabs").tabs("disable", 2);
             $("#item_edit_comum").hide();
             $("#rule_manager").hide();
             $("#open_rule_creator").prop('disabled', true);
@@ -60,8 +61,11 @@ function editor_toggle(tipo)
             $(".footer_save_cancel button").prop('disabled', true);
       }
 }
+
+
 $(function() {
-      $("#tabs").tabs();
+
+
       array_id["radio"] = 0;
       array_id["checkbox"] = 0;
       $.get("items.html", function(data) {
@@ -144,7 +148,7 @@ $(function() {
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("ipl_class"))
                         {
-                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_ipl")[0].innerHTML, 0, 0, [], 0, 0, 1);
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_ipl")[0].innerHTML, 0, 0, [], 0, 0, 3);
                         }
                         editor_toggle("off");
                   }
@@ -184,7 +188,6 @@ $(function() {
                                     function(data5)
                                     {
                                           $("#ipl_file_select").html(data5);
-                                            $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
                                     }, "json");
                               }, "json");
                         }, "json");
@@ -197,15 +200,23 @@ $(function() {
 
             update_script();
       });
-      
+      $("#edit_div").draggable();
+      $("#tabs").tabs();
+
+
+
       $(document).on("click", ".element", function(e) {
+
+            $("#edit_div").css("top", $(this).position().top)
+                    .css("left", $(this).position().left)
+                    .css("position", "absolute");
+            editor_toggle("on");
             selected_id = $(this).data("id");
             selected_tag = $(this).data("tag");
             selected_type = $(this).data("type");
-            $("#ipl_edit_link").val("");
-            editor_toggle("on");
+
             $(this).addClass("helperPick"); //class HelperPick
-            $("#tabs").tabs("option", "active", 1); //tabs
+            $("#tabs").tabs("option", "active", 0); //tabs
 
             switch ($(this).data("type"))
             {
@@ -254,6 +265,7 @@ $(function() {
                         break;
                   case "ipl":
                         $("#ipl_layout_editor").show();
+                        $("#ipl_edit_link").val("");
                         populate_element("ipl", $(this));
                         break;
             }
@@ -264,6 +276,21 @@ $(function() {
             rules_database("get_rules_by_trigger", 0, $("#script_selector option:selected").val(), 0, selected_tag, 0, 0, 0, 0, 0);
       });
 });
+
+
+var scroll = 0;
+var marginTop = 10;
+$(document).ready(function(){  
+    $(window).scroll(function () {
+        marginTop = ($(document).scrollTop() - scroll) + marginTop;
+        scroll = $(document).scrollTop();
+
+        $("#rigth_list").animate({"marginTop": marginTop+"px"}, {duration:500,queue:false} );
+    });  
+});
+
+
+
 
 //FOOTER EDIT BUTTONS
 $("#cancel_edit").click(function()
@@ -332,6 +359,21 @@ $("#quota_required").on("click", function() {
       $("#div_quota").toggle(500);
 });
 
+$('#file_upload').change(function() {
+      var re_ext = new RegExp("(gif|jpeg|jpg|png|pdf)", "i");
+      var file = this.files[0];
+      var name = file.name;
+      var size = (Math.round((file.size / 1024 / 1024) * 100) / 100);
+      var type = file.type;
+      if (size > 10) {
+            $("#label_ipl_info").text("O tamanho do ficheiro ultrapassa os 10mb permitidos.");
+            $(this).fileupload('clear');
+      }
+      if (!re_ext.test(type)) {
+            $("#label_ipl_info").text("A extensão do ficheiro seleccionado não é valida.");
+            $(this).fileupload('clear');
+      }
+});
 
 $("#ipl_upload_button").on("click", function(e)
 {
@@ -340,27 +382,6 @@ $("#ipl_upload_button").on("click", function(e)
       if (form.find('input[type="file"]').val() === '')
             return false;
       var formData = new FormData(form[0]);
-   
-             /*/validate file
-                var re_ext=new RegExp("(wav|ogg|mp3|gsm|sln)","i");
-                $('#audio-file').change(function(){
-                    var file = this.files[0];
-                    name = file.name;
-                    size = (Math.round((file.size/1024/1024)*100)/100);
-                    type = file.type;
-                    if(size>10){
-                        makeAlert($("#audio-div").parent(),"Tamanho exedido","O tamanho do ficheiro ultrapassa os 10mb permitidos.",1,false,false);
-                        $(this).fileupload('clear');}
-                    if(!re_ext.test(type)){
-                        makeAlert($("#audio-div").parent(),"Extensão Não valida","A extensão do ficheiro seleccionado não é valida.",1,false,false);
-                        $(this).fileupload('clear');}
-                    console.log("name:"+name);
-                    console.log("size:"+size+"mb");
-                    console.log("type:"+type);
-                    console.log("");
-                    //your validation
-                });*/
-      
       $.ajax({
             url: 'upload.php',
             type: 'POST',
@@ -378,12 +399,12 @@ $("#ipl_upload_button").on("click", function(e)
             success: function(data) {
 
                   $("#label_ipl_info").text(data.responseText);
-                         $.post("requests.php", {action: "get_image_pdf"},
-                                    function(data5)
-                                    {
-                                          $("#ipl_file_select").html(data5);
-                                          
-                                    }, "json");
+                  $.post("requests.php", {action: "get_image_pdf"},
+                  function(data5)
+                  {
+                        $("#ipl_file_select").html(data5);
+
+                  }, "json");
             },
             contentType: false,
             processData: false
@@ -401,7 +422,6 @@ $("#ipl_upload_button").on("click", function(e)
 });
 function submit_file()
 {
-
       $.post("upload.php", {results: $("#forma").serializeArray()}, function(data) {
 
             return data;
@@ -411,17 +431,6 @@ function submit_file()
 }
 
 
-Object.size = function(a)
-{
-      var count = 0;
-      var i;
-      for (i in a) {
-            if (a.hasOwnProperty(i)) {
-                  count++;
-            }
-      }
-      return count;
-};
 function update_script(callback)
 {
       $(".chosen-select").chosen(({no_results_text: "Sem resultados"}));
@@ -473,7 +482,7 @@ function update_script(callback)
                         $("#tags_select optgroup:last").append(temp);
                   });
                   $("#tags_select").val("").trigger("liszt:updated");
-                  $("#tag_label").text("§"+$("#tags_select option:selected").val()+"§");
+                  $("#tag_label").text("§" + $("#tags_select option:selected").val() + "§");
             }, "json");
 
 //Get o tipo e tag de todos os elementos para o select dos alvos (regras)
@@ -719,11 +728,23 @@ function update_info()
                               break;
                   }
             });
+
+
       }, "json");
 }
 
 
-
+Object.size = function(a)
+{
+      var count = 0;
+      var i;
+      for (i in a) {
+            if (a.hasOwnProperty(i)) {
+                  count++;
+            }
+      }
+      return count;
+};
 
 
 function populate_element(tipo, element)
@@ -808,7 +829,7 @@ function populate_element(tipo, element)
                   break;
             case "textfield":
                   $("#tag_edit").hide();
-                  $("#tabs").tabs("disable", 2);
+                  $("#tabs").tabs("disable", 1);
                   $("#rule_manager").hide();
                   $("#open_rule_creator").prop('disabled', true);
                   $(".required_class").hide();
@@ -817,7 +838,7 @@ function populate_element(tipo, element)
             case "legend":
                   $("#legend_edit").val($("#" + id + " .label_geral").html());
                   $("#tag_edit").hide();
-                  $("#tabs").tabs("disable", 2);
+                  $("#tabs").tabs("disable", 1);
                   $("#rule_manager").hide();
                   $("#open_rule_creator").prop('disabled', true);
                   $(".required_class").hide();
@@ -843,7 +864,7 @@ function populate_element(tipo, element)
                   $("#datepicker_edit").val($("#" + id + " .label_geral").html());
                   break;
             case "scheduler":
-                  $("#tabs").tabs("disable", 2);
+                  $("#tabs").tabs("disable", 1);
                   $("#scheduler_edit").val($("#" + id + " .label_geral").html());
                   $("#checkbox_scheduler_all").prop("checked", false);
                   var select = $("#" + id + " .scheduler_select>option");
@@ -857,27 +878,32 @@ function populate_element(tipo, element)
                   break;
             case "ipl":
                   $("#tag_edit").hide();
-                  $("#tabs").tabs("disable", 2);
+                  $("#tabs").tabs("disable", 1);
                   $("#rule_manager").hide();
                   $("#open_rule_creator").prop('disabled', true);
                   $(".required_class").hide();
                   $("#ipl_edit").val($("#" + id + " .label_geral").html());
-                  $("#ipl_file_select").hide();
-                  $("#ipl_link_div").hide();
+
+
                   if (element.data("option") == "1") {
                         $("#radio_ipl_image").prop("checked", true);
                         $("#ipl_file_select").show();
+                        $("#ipl_link_div").hide();
                         $("#ipl_file_select option[value='" + $("#" + id + " .ipl_link").text() + "']").prop("selected", true);
+                        $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
                   }
                   else if (element.data("option") == "2")
                   {
                         $("#radio_ipl_pdf").prop("checked", true);
                         $("#ipl_file_select").show();
+                        $("#ipl_link_div").hide();
                         $("#ipl_file_select option[value='" + $("#" + id + " .ipl_link").text() + "']").prop("selected", true);
+                        $("#ipl_file_select option[data-type='image']").prop("disabled", true);
                   }
                   else
                   {
                         $("#radio_ipl_link").prop("checked", true);
+                        $("#ipl_file_select").hide();
                         $("#ipl_link_div").show();
                         $("#ipl_edit_link").val($("#" + id + " .ipl_link").text());
                   }
@@ -1064,19 +1090,28 @@ function edit_element(opcao, element, data)
                   $("#" + id + " .label_geral").html($("#ipl_edit").val());
                   if ($("#radio_ipl_image").is(":checked"))
                   {
-                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, $("#ipl_file_select option:selected").val(), false, $("#item_hidden").is(':checked'), 1);
+                        var temp = $("#ipl_file_select option:selected").val();
+                        if (temp == "")
+                              temp = [];
+
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, temp, false, $("#item_hidden").is(':checked'), 1);
                         $("#" + id + " .ipl_link").text($("#ipl_file_select option:selected").val());
                         element.data("option", "1");
                   }
                   else if ($("#radio_ipl_pdf").is(":checked"))
                   {
-                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, $("#ipl_file_select option:selected").val(), false, $("#item_hidden").is(':checked'), 2);
+                        var temp = $("#ipl_file_select option:selected").val();
+                        if (temp == "")
+                              temp = [];
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, temp, false, $("#item_hidden").is(':checked'), 2);
                         $("#" + id + " .ipl_link").text($("#ipl_file_select option:selected").val());
                         element.data("option", "2");
                   } else {
+                        var temp = $("#ipl_edit_link").val();
+                        if (temp == "")
+                              temp = [];
 
-
-                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, $("#ipl_edit_link").val(), false, $("#item_hidden").is(':checked'), 3);
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, temp, false, $("#item_hidden").is(':checked'), 3);
                         $("#" + id + " .ipl_link").text($("#ipl_edit_link").val());
                         element.data("option", "3");
                   }
@@ -1375,7 +1410,6 @@ $("#script_remove_button_modal").click(function()
       pagescript_database("delete_script", $("#script_selector option:selected").val(), 0);
       $('#script_modal').modal('hide');
 });
-//script duplicate
 $("#copy_script_button").on("click", function()
 {
       $('#dialog_layout').modal('hide');
@@ -1410,11 +1444,11 @@ $("#opcao_script_button").click(function()//chama o edit do nome do script
             });
             $("#script_campanha_selector").val(campaign).trigger("liszt:updated");
             $("#script_linha_inbound_selector").val(linha_inbound).trigger("liszt:updated");
-          
-           
 
-           
-          
+
+
+
+
       }, "json");
       $("#script_name_edit").val($("#script_selector option:selected").text());
 });
@@ -1431,12 +1465,6 @@ $("#save_button_layout").click(function()//Fecha o dialog e grava as alteraçõe
       });
 });
 //---------------------------------------------0000
-//RENDER/FULLSCREEN 
-$("#render_go").click(function()
-{
-      var window_slave = window.open("/sips-admin/script_dinamico/render.html?script_id=" + $("#script_selector option:selected").val());
-});
-
 //------------------RULES----------------------------000000000
 function rules_manager(tipo, element)
 {
@@ -1569,8 +1597,7 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
       }
       , "json");
 }
-//--------------Rules safety
-
+//Rules safety
 $(".values_edit_textarea").on("focus", function()
 {
       temp_value_holder = $(this).val();
@@ -1687,6 +1714,11 @@ $("#rule_form").on("submit", function(e)
 });
 
 
+//RENDER/FULLSCREEN 
+$("#render_go").click(function()
+{
+      var window_slave = window.open("/sips-admin/script_dinamico/render.html?script_id=" + $("#script_selector option:selected").val());
+});
 
 
 

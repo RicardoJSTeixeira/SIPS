@@ -7,6 +7,7 @@ $extension = end($temp);
 
 $destiny = getcwd() . "/files/";
 
+
 if ($extension == "pdf") {
               if (file_exists($destiny . $_FILES["file"]["name"])) {
                 echo $_FILES["file"]["name"] . " Já existe. ";
