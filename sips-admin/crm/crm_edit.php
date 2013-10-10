@@ -18,7 +18,7 @@ $lead_id = (isset($_GET['lead_id'])) ? $_GET['lead_id'] : $_POST['lead_id'];
 
 
 
-//340066
+
 ### Dados da Lead
 $query = "SELECT 
 			vdlf.campaign_id,
@@ -71,6 +71,7 @@ if ($lead_info['status_name_one'] == NULL) {
     $status_name = $lead_info['status_name_one'];
 }
 
+//9014063
 ### Dados do Contacto
 $query = "SELECT 
 			Name,
@@ -83,31 +84,25 @@ $query = "SELECT
 			active=1 Order by field_order ASC";
 $query = mysql_query($query, $link) or die(mysql_error());
 $fields_count = mysql_num_rows($query);
-for ($i = 0; $i < $fields_count; $i++) {
-    $row = mysql_fetch_row($query);
-    if ($fields_count == 1) {
-        $fields_NAME[$i] = strtolower($row[0]);
-        $fields_SELECT = $row[0];
-        $fields_LABEL[$i] = $row[1];
-    } elseif ($fields_count - 1 == $i) {
-        $fields_NAME[$i] = strtolower($row[0]);
-        $fields_SELECT .= $row[0];
-        $fields_LABEL[$i] = $row[1];
-    } else {
-        $fields_NAME[$i] = strtolower($row[0]);
-        $fields_SELECT .= $row[0] . ",";
-        $fields_LABEL[$i] = $row[1];
-    }
+$fields_SELECT = array();
+
+if ($fields_count==0) {
+    $fields_SELECT = array("phone_number"=>"Nº Telefone", "first_name"=>"Nome", "alt_phone"=>"Telefone Alternativo", "address3"=>"Telefone Alternativo 2", "address1"=>"Morada", "postal_code"=>"Codigo Postal", "email"=>"E-mail", "comments"=>"Comentários");
+} else {
+       while ($row = mysql_fetch_assoc($query)) {
+         $fields_SELECT[$row["Name"]]=$row["Display_name"];
+            }
 }
+
 $query = "SELECT 
-			$fields_SELECT 
+			" . implode(",", array_keys($fields_SELECT)) . "  
 		FROM 
 			vicidial_list
-		WHERE
+		WHERE 
 			lead_id='$lead_id' 
 		LIMIT 1";
 $query = mysql_query($query, $link) or die(mysql_error());
-$fields = mysql_fetch_row($query);
+$fields = mysql_fetch_assoc($query);
 
 ### Construção da Lista de Feedbacks
 $query = "SELECT status,status_name,sale FROM vicidial_campaign_statuses WHERE campaign_id='$lead_info[campaign_id]' AND scheduled_callback!=1";
@@ -131,7 +126,6 @@ if (!$is_campaign_feedback) { # caso se o feedback actual seja de sistema
     $row = mysql_fetch_assoc($query);
     $status_options .= "<option selected value='$row[status]'>$row[status_name]</option>";
 }
-
 
 
 ### Chamadas Feitas
@@ -257,16 +251,16 @@ function curPageURL() {
 
 <h2>Dados da Lead</h2>
 <form class="form-horizontal" id='inputcontainer' >
-    <?php for ($i = 0; $i < count($fields); $i++) { ?>
+    <?php foreach ($fields as $key => $value) {?>
         <div class="control-group">
-            <label class="control-label"><?= $fields_LABEL[$i] ?>:</label>
+            <label class="control-label"><?= $fields_SELECT[$key] ?>:</label>
             <div class="controls" >
-                <?php if ($fields_NAME[$i] != "comments") { ?>
-                    <input type=text name='<?= $fields_NAME[$i] ?>' id='<?= $fields_NAME[$i] ?>' class='span9' value='<?= $fields[$i] ?>'>
+                <?php if ($key != "comments") { ?>
+                    <input type=text name='<?= $key ?>' id='<?= $key ?>' class='span9' value='<?= $value ?>'>
                 <?php } else { ?>
-                    <textarea name='<?= $fields_NAME[$i] ?>' id='<?= $fields_NAME[$i] ?>' class='span9' ><?= $fields[$i] ?></textarea>
+                    <textarea name='<?= $key ?>' id='<?= $key ?>' class='span9' ><?= $value ?></textarea>
                 <?php } ?>
-                <span id='td_<?= $fields_NAME[$i] ?>'></span>
+                <span id='td_<?= $fields_SELECT[$key] ?>'></span>
             </div>
         </div>
     <?php } ?>

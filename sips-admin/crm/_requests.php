@@ -4,7 +4,7 @@ require("../../ini/_json_convert.php");
 require("../../ini/dbconnect.php");
 require("../../ini/functions.php");
 require("../../ini/user.php");
-    
+
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -114,7 +114,23 @@ switch ($action) {
             $feedback_QUERY = " AND status='$filtro_feedback'";
         }
         $aColumns = array('lead_id', 'first_name', 'phone_number', 'address1', 'last_local_call_time');
-        if ($contact_id == "" || $contact_id == null) {
+        if ($contact_id != "" && $contact_id != null) {
+
+            $sQuery = "
+            SELECT first_name, phone_number, address1 ,last_local_call_time, lead_id
+            FROM   vicidial_list
+            WHERE lead_id= '$contact_id'
+            LIMIT 1
+            ";
+        } 
+        elseif ($phone_number != "" && $phone_number != null) {
+            $sQuery = "
+            SELECT first_name, phone_number, address1 ,last_local_call_time, lead_id
+            FROM   vicidial_list
+            WHERE phone_number= '$phone_number'
+            LIMIT 1
+            ";
+        } else {
             $sQuery = "
             SELECT first_name, phone_number, address1 ,last_local_call_time, lead_id
             FROM   vicidial_list
@@ -123,13 +139,6 @@ switch ($action) {
             $operador_QUERY
             $feedback_QUERY
             LIMIT 3000
-            ";
-        } else {
-            $sQuery = "
-            SELECT first_name, phone_number, address1 ,last_local_call_time, lead_id
-            FROM   vicidial_list
-            WHERE lead_id= '$contact_id'
-            LIMIT 1
             ";
         }
 //echo $sQuery;
@@ -141,7 +150,7 @@ switch ($action) {
             for ($i = 0; $i < count($aColumns); $i++) {
 
                 if ($aColumns[$i] == 'last_local_call_time') {
-                    $row[] = $aRow[$aColumns[$i]]."<div class='view-button' ><span class='btn btn-mini' onclick='LoadHTML($aRow[lead_id]);' ><i class='icon-edit'></i>Ver</span></div>";
+                    $row[] = $aRow[$aColumns[$i]] . "<div class='view-button' ><span class='btn btn-mini' onclick='LoadHTML($aRow[lead_id]);' ><i class='icon-edit'></i>Ver</span></div>";
                 } else {
                     $row[] = $aRow[$aColumns[$i]];
                 }
@@ -187,20 +196,20 @@ switch ($action) {
 
 
 
-        
-        
-        
-        
-        
-        
-        
-    
-        
+
+
+
+
+
+
+
+
+
 
 
     case "get_agentes":
-        
-              $allowed_camps_regex = implode("|", $user->allowed_campaigns);
+
+        $allowed_camps_regex = implode("|", $user->allowed_campaigns);
         if (!$user->is_all_campaigns) {
             $ret = "WHERE allowed_campaigns REGEXP '$allowed_camps_regex'";
 
@@ -218,13 +227,12 @@ switch ($action) {
             }
             $tmp = rtrim($tmp, "|");
             $users_regex = "Where user REGEXP '^$tmp'";
-            
         }
-        
-        
-        
-        
-        
+
+
+
+
+
         $js = array();
         $query = "SELECT user,full_name  FROM vicidial_users $users_regex group by user ";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -244,7 +252,7 @@ switch ($action) {
         $query = "SELECT EXISTS(SELECT * FROM crm_confirm_feedback_last WHERE lead_id='$lead_id') as count";
         $query = mysql_query($query, $link) or die(mysql_error());
         $row = mysql_fetch_assoc($query);
-         
+
         if ($row['count'] == "0") {
             $query = "INSERT INTO `crm_confirm_feedback_last`(`id`, `lead_id`, `feedback`, `sale`, `campaign`, `agent`, `comment`,date,admin) VALUES (NULL,$lead_id,'$feedback',$sale,'$campaign','$agent','$comment','" . date('Y-m-d H:i:s') . "','$user->id')";
             $query = mysql_query($query, $link) or die(mysql_error());

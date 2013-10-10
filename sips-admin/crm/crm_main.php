@@ -32,9 +32,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
         <style> 
-     
+
             .modal-backdrop {background: none;}
-       .view-button{
+            .view-button{
                 margin-left: 0.5em;
             }
             #contact_list{
@@ -202,7 +202,16 @@
 
                                     </div>
                                 </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="inputPassword">Telefone do Contacto:</label>
+                                    <div class="controls">
+                                        <input type="text" id='crm-contact-phone'>
+                                        <div class="help-inline ">
+                                            (O uso desta opção invalída os outros filtros)
+                                        </div>
 
+                                    </div>
+                                </div>
 
                             </div>
 
@@ -317,7 +326,8 @@
                         {"name": "filtro_operador", "value": filtro_operador},
                         {"name": "filtro_feedback", "value": filtro_feedback},
                         {"name": "dataflag", "value": dataflag},
-                        {"name": "contact_id", "value": $("#crm-contact-id").val()}
+                        {"name": "contact_id", "value": $("#crm-contact-id").val()},
+                        {"name": "phone_number", "value": $("#crm-contact-phone").val()}
                         )
                     },
                     "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Morada"}, {"sTitle": "Ultima Chamada"}],
@@ -345,7 +355,7 @@
 
             {
                 $('#crm').hide();
-                  $("#main_content").show();
+                $("#main_content").show();
 
             });
 
@@ -369,11 +379,11 @@
                     {
 
 
-                        $("#datai").datetimepicker({autoclose:true,language:"pt"});
-                        $("#dataf").datetimepicker({autoclose:true,language:"pt"});
+                        $("#datai").datetimepicker({autoclose: true, language: "pt"});
+                        $("#dataf").datetimepicker({autoclose: true, language: "pt"});
 
 
-                       
+
 
 
                         var campaign = $('#filtro_campanha').val();
