@@ -56,7 +56,7 @@ switch ($action) {
         header('Content-Encoding: UTF-8');
         header('Content-type: text/csv; charset=UTF-8');
         echo "\xEF\xBB\xBF";
-        header('Content-Disposition: attachment; filename=data_new.csv');
+      
 
         $output = fopen('php://output', 'w');
 
@@ -91,7 +91,7 @@ switch ($action) {
             array_push($ref_name, $row['Name']);
         }
         $tags = array();
-        $query = "SELECT tag,type,texto,values_text  FROM `script_dinamico` where type not in ('pagination','textfield','scheduler')  and id_script='$id_script' order by tag asc ";
+        $query = "SELECT tag,type,texto,values_text  FROM `script_dinamico` where type not in ('pagination','textfield','scheduler','legend')  and id_script='$id_script' order by tag asc ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             if ($row['type'] == "tableradio") {
