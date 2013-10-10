@@ -278,16 +278,7 @@ $(function() {
 });
 
 
-var scroll = 0;
-var marginTop = 10;
-$(document).ready(function(){  
-    $(window).scroll(function () {
-        marginTop = ($(document).scrollTop() - scroll) + marginTop;
-        scroll = $(document).scrollTop();
 
-        $("#rigth_list").animate({"marginTop": marginTop+"px"}, {duration:500,queue:false} );
-    });  
-});
 
 
 
