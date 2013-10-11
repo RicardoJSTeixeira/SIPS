@@ -154,8 +154,8 @@ $query = "SELECT
 			vls.list_name
 		FROM 
 			vicidial_log vl
-		INNER JOIN vicidial_users vu ON vl.user=vu.user
-		INNER JOIN vicidial_campaigns vc ON vl.campaign_id=vc.campaign_id 
+		left JOIN vicidial_users vu ON vl.user=vu.user
+		left JOIN vicidial_campaigns vc ON vl.campaign_id=vc.campaign_id 
 		left JOIN vicidial_lists vls ON vl.list_id=vls.list_id
 			left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vl.status
 		WHERE 
@@ -189,8 +189,8 @@ $query = "SELECT
 			vls.list_name
 		FROM 
 			vicidial_closer_log vl
-		INNER JOIN vicidial_users vu ON vl.user=vu.user
-		INNER JOIN vicidial_campaigns vc ON vl.campaign_id=vc.campaign_id 
+		left JOIN vicidial_users vu ON vl.user=vu.user
+		left JOIN vicidial_campaigns vc ON vl.campaign_id=vc.campaign_id 
 		left JOIN vicidial_lists vls ON vl.list_id=vls.list_id
 			left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vl.status
 		WHERE 
