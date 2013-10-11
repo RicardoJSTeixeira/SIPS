@@ -200,7 +200,7 @@ $(function() {
 
             update_script();
       });
-      $("#edit_div").draggable();
+      $("#edit_div").draggable({ handle: "a" });
       $("#tabs").tabs();
 
 
