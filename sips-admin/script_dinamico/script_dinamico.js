@@ -284,7 +284,7 @@ $(function() {
 
 
 //FOOTER EDIT BUTTONS
-$("#cancel_edit").click(function()
+$(".cancel_edit").click(function()
 {
       editor_toggle("off");
 });
@@ -330,7 +330,7 @@ $("#apagar_elemento").click(function()
 $(".ipl_radio_options").on("click", function()
 {
       $("#ipl_link_div").hide();
-      $("#ipl_file_select").show();
+      $("#ipl_ip_div").show();
       $("#ipl_file_select option").prop("disabled", false);
       if (this.value == "1")
       {
@@ -342,7 +342,7 @@ $(".ipl_radio_options").on("click", function()
       }
       else
       {
-            $("#ipl_file_select").hide();
+            $("#ipl_ip_div").hide();
             $("#ipl_link_div").show();
       }
 });
@@ -878,7 +878,7 @@ function populate_element(tipo, element)
 
                   if (element.data("option") == "1") {
                         $("#radio_ipl_image").prop("checked", true);
-                        $("#ipl_file_select").show();
+                         $("#ipl_ip_div").show();
                         $("#ipl_link_div").hide();
                         $("#ipl_file_select option[value='" + $("#" + id + " .ipl_link").text() + "']").prop("selected", true);
                         $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
@@ -886,7 +886,7 @@ function populate_element(tipo, element)
                   else if (element.data("option") == "2")
                   {
                         $("#radio_ipl_pdf").prop("checked", true);
-                        $("#ipl_file_select").show();
+                        $("#ipl_ip_div").show();
                         $("#ipl_link_div").hide();
                         $("#ipl_file_select option[value='" + $("#" + id + " .ipl_link").text() + "']").prop("selected", true);
                         $("#ipl_file_select option[data-type='image']").prop("disabled", true);
@@ -894,7 +894,7 @@ function populate_element(tipo, element)
                   else
                   {
                         $("#radio_ipl_link").prop("checked", true);
-                        $("#ipl_file_select").hide();
+                           $("#ipl_ip_div").hide();
                         $("#ipl_link_div").show();
                         $("#ipl_edit_link").val($("#" + id + " .ipl_link").text());
                   }
@@ -1136,6 +1136,7 @@ function edit_element(opcao, element, data)
 
 function insert_element(opcao, element, data)
 {
+      element.find(".label_titulo").remove();
       var id = element.data("id");
       switch (opcao)
       {

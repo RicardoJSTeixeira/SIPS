@@ -248,6 +248,7 @@ function update_info()
 function insert_element(opcao, element, data)
 {
       element.removeAttr("title");
+       element.find(".label_titulo").remove();
       switch (opcao)
       {
             case "texto":
