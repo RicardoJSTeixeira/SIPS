@@ -86,12 +86,12 @@ $query = mysql_query($query, $link) or die(mysql_error());
 $fields_count = mysql_num_rows($query);
 $fields_SELECT = array();
 
-if ($fields_count==0) {
-    $fields_SELECT = array("phone_number"=>"Nº Telefone", "first_name"=>"Nome", "alt_phone"=>"Telefone Alternativo", "address3"=>"Telefone Alternativo 2", "address1"=>"Morada", "postal_code"=>"Codigo Postal", "email"=>"E-mail", "comments"=>"Comentários");
+if ($fields_count == 0) {
+    $fields_SELECT = array("phone_number" => "Nº Telefone", "first_name" => "Nome", "alt_phone" => "Telefone Alternativo", "address3" => "Telefone Alternativo 2", "address1" => "Morada", "postal_code" => "Codigo Postal", "email" => "E-mail", "comments" => "Comentários");
 } else {
-       while ($row = mysql_fetch_assoc($query)) {
-         $fields_SELECT[$row["Name"]]=$row["Display_name"];
-            }
+    while ($row = mysql_fetch_assoc($query)) {
+        $fields_SELECT[$row["Name"]] = $row["Display_name"];
+    }
 }
 
 $query = "SELECT 
@@ -134,12 +134,11 @@ $query = "SELECT
 			vl.lead_id, 
 			vl.list_id,
 			vl.campaign_id,
-			DATE_FORMAT(vl.call_date,'%d-%m-%Y') AS data,
-			DATE_FORMAT(vl.call_date,'%H:%i:%s') AS hora,
+			vl.call_date AS data,
+			
 			vl.start_epoch,
 			vl.end_epoch,
 			vl.length_in_sec,
-			vl.status,
 			vl.phone_code,
 			vl.phone_number,
 			vl.user,
@@ -149,22 +148,61 @@ $query = "SELECT
 			vl.term_reason,
 			vl.alt_dial,
 			vu.full_name,
-			(select status_name from vicidial_campaign_statuses where status=vl.status limit 1) as status_name1,
-			(select status_name from vicidial_statuses where status=vl.status limit 1) as status_name2,
+            vstatus.status_name,
+            
 			vc.campaign_name,
 			vls.list_name
 		FROM 
 			vicidial_log vl
 		INNER JOIN vicidial_users vu ON vl.user=vu.user
 		INNER JOIN vicidial_campaigns vc ON vl.campaign_id=vc.campaign_id 
-		INNER JOIN vicidial_lists vls ON vl.list_id=vls.list_id
-			
+		left JOIN vicidial_lists vls ON vl.list_id=vls.list_id
+			left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vl.status
 		WHERE 
 			vl.lead_id='$lead_id' 
 		ORDER BY
 			uniqueid 
 		DESC LIMIT 500;";
 $chamadas_feitas = mysql_query($query, $link) or die(mysql_error());
+
+
+
+$query = "SELECT 									
+			vl.uniqueid, 
+			vl.lead_id, 
+			vl.list_id,
+			vl.campaign_id,
+	vl.call_date AS data,
+			vl.start_epoch,
+			vl.end_epoch,
+			vl.length_in_sec,
+			vl.phone_code,
+			vl.phone_number,
+			vl.user,
+			vl.comments,
+			vl.processed,
+			vl.user_group,
+			vl.term_reason,
+					vu.full_name,
+            vstatus.status_name,
+            			vc.campaign_name,
+			vls.list_name
+		FROM 
+			vicidial_closer_log vl
+		INNER JOIN vicidial_users vu ON vl.user=vu.user
+		INNER JOIN vicidial_campaigns vc ON vl.campaign_id=vc.campaign_id 
+		left JOIN vicidial_lists vls ON vl.list_id=vls.list_id
+			left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vl.status
+		WHERE 
+			vl.lead_id='$lead_id' 
+		ORDER BY
+			uniqueid 
+		DESC LIMIT 500;";
+$chamadas_feitas_in = mysql_query($query, $link) or die(mysql_error());
+
+
+
+
 
 #Gravações da lead
 $query = "SELECT 
@@ -251,7 +289,7 @@ function curPageURL() {
 
 <h2>Dados da Lead</h2>
 <form class="form-horizontal" id='inputcontainer' >
-    <?php foreach ($fields as $key => $value) {?>
+    <?php foreach ($fields as $key => $value) { ?>
         <div class="control-group">
             <label class="control-label"><?= $fields_SELECT[$key] ?>:</label>
             <div class="controls" >
@@ -342,11 +380,11 @@ function curPageURL() {
 
 
 <h3>Chamadas realizadas para este Contacto</h3>
-<table class='table table-mod table-bordered'>
+<table class='table table-mod table-bordered' id="chamadas_realizadas">
     <thead>
         <tr>
             <th>Data</th>
-            <th>Hora</th>
+
             <th>Duração</th>
             <th>Número</th>
             <th>Operador</th>
@@ -360,20 +398,33 @@ function curPageURL() {
         while ($row = mysql_fetch_assoc($chamadas_feitas)) {
 
             $duracao = sec_convert($row['length_in_sec'], "H");
-            if ($row['status_name1']) {
-                $status_name = $row['status_name1'];
-            } else {
-                $status_name = $row['status_name2'];
-            }
             ?>
 
             <tr>
                 <td><?= $row["data"] ?></td>
-                <td><?= $row["hora"] ?></td>
+
                 <td><?= $duracao ?></td>
                 <td><?= $row["phone_number"] ?></td>
                 <td><?= $row["full_name"] ?></td>
-                <td><?= $status_name ?></td>
+                <td><?= $row["status_name"] ?></td>
+                <td><?= $row["campaign_name"] ?></td>
+                <td><?= $row["list_name"] ?></td>
+            </tr>
+        <?php } ?>
+
+        <?php
+        while ($row = mysql_fetch_assoc($chamadas_feitas_in)) {
+
+            $duracao = sec_convert($row['length_in_sec'], "H");
+            ?>
+
+            <tr>
+                <td><?= $row["data"] ?></td>
+
+                <td><?= $duracao ?></td>
+                <td><?= $row["phone_number"] ?></td>
+                <td><?= $row["full_name"] ?></td>
+                <td><?= $row["status_name"] ?></td>
                 <td><?= $row["campaign_name"] ?></td>
                 <td><?= $row["list_name"] ?></td>
             </tr>
@@ -489,8 +540,13 @@ function curPageURL() {
         }, "json");
     });
 
-
-
+    var Table_chamadas = $('#chamadas_realizadas').dataTable({
+        "sPaginationType": "full_numbers",
+        
+        "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"},
+        "aaSorting": [[ 0, "desc" ]]
+    });
+  //  Table_chamadas.fnSort([[1, 'asc']]);
 
     /* VARS/DIALOGS */
     var lead_id = '<?= $lead_id; ?>';

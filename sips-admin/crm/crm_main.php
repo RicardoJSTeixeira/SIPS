@@ -122,13 +122,13 @@
                 <div class="grid">
                     <div class="grid-title">
                         <div class="pull-left">Procura de Contactos</div>
-                        <div class="pull-right"><span class="pesquisa btn"> Pesquisar </span>       
+                        <div class="pull-right">       
                         </div>
                     </div>
                     <div class="grid-content">
 
 
-                        <form class="form-horizontal">
+                        <form class="form-horizontal" id="form_pesquisa">
                             <div class="span5">
                                 <div class="control-group">
                                     <label class="control-label" for="inputEmail">Data Inicial</label>
@@ -212,8 +212,9 @@
 
                                     </div>
                                 </div>
-
+                                <button class="btn btn-success right" >Pesquisa</button>
                             </div>
+
 
                         </form>
                         <div class="clear"></div>
@@ -295,7 +296,8 @@
                 });
             });
             /* Função que realiza a pesquisa e que mostra a tabela com os resultados */
-            $(".pesquisa").click(function() {
+            $("#form_pesquisa").submit(function(e) {
+                e.preventDefault();
                 $('#contact_list').hide();
                 var datai = $("#datai").val();
                 var dataf = $("#dataf").val();
