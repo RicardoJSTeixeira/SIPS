@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+
+      <head>
+            <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+            <title>Gestão de Callbacks</title> 
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css">
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
+            <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-fileupload.min.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-wysihtml5.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/demo_table.css" />
+
+
+            <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
+            <script type="text/javascript" src="/jquery/jqueryUI/jquery-ui-1.10.2.custom.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/jquery.hotkeys.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/bootstrap-wysiwyg.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/bootstrap-fileupload.min.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/bootstrap-tooltip.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/bootstrap-popover.js"></script>
+
+            <script type="text/javascript" src="/bootstrap/js/validation/jquery.validationEngine.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/validation/languages/jquery.validationEngine-pt.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/validation/contrib/other-validations.js"></script>
+
+            <style>
+
+                  textarea
+                  {
+                        min-height:100px;
+                        min-width: 100px;
+                  }
+            </style>
+      </head>
+      <body> 
+
+
+            <div id="eliminar_todos" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+                  <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">Confirmação de eliminação de Callbacks</h3>
+                  </div>
+                  <div class="modal-body">
+                        <p>Tem a certeza que deseja eliminar todos os callbacks?</p>
+                  </div>
+                  <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+                        <button class="btn btn-primary" id="confirm_reset_all_callbacks">Sim, eliminar</button>
+                  </div>
+            </div>
+            <div id="eliminar_dc" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+                  <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">Confirmação de eliminação de Callbacks</h3>
+                  </div>
+                  <div class="modal-body">
+                        <p>Tem a certeza que deseja eliminar todos os callbacks?</p>
+                  </div>
+                  <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+                        <button class="btn btn-primary" id="confirm_reset_dc_callbacks">Sim, eliminar</button>
+                  </div>
+            </div>
+
+
+
+
+
+            <div id="modal_callback" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+                  <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">Edição de Callback</h3>
+                  </div>
+                  <div class="modal-body">
+                        <div class="formRow">
+                              <label class="label">Nome do Cliente</label>
+                              <div class="formRight">
+                                    <label id="label_cliente_name"></label>
+                              </div>      
+                        </div>
+
+                        <div class="formRow">
+                              <label class="label">Nome do Agente</label>
+                              <div class="formRight">
+                                    <select class="chosen-select" id="select_agent"></select>
+                              </div>      
+                        </div>
+
+                        <div class="formRow">
+                              <label class="label">Nome da Base de Dados</label>
+                              <div class="formRight">
+                                    <label id="label_bd_name"></label>
+                              </div>      
+                        </div>
+                        <div class="formRow">
+                              <label class="label">Campanha</label>
+                              <div class="formRight">
+                                    <label id="label_campaign_name"></label>
+                              </div>      
+                        </div>
+                        <div class="formRow">
+                              <label class="label">Data de Entrada</label>
+                              <div class="formRight">
+                                    <label id="label_entry_date"></label>
+                              </div>      
+                        </div>
+
+                        <div class="formRow">
+                              <label class="label">Data do Callback</label>
+                              <div class="formRight">
+                                    <label id="label_callback_date"></label>
+                              </div>      
+                        </div>  
+                        <div class="formRow">
+                              <label class="label">Comentários</label>
+                              <div class="formRight">
+                                    <textarea id="textarea_comments"></textarea>
+                              </div>      
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+                        <button class="btn btn-primary" id="edit_callback">Gravar</button>
+                  </div>
+            </div>
+
+
+
+
+
+            <div class="grid-title">
+                  <div class="pull-left" ><label id="agente_name"></label></div>
+                  <div class="pull-right">
+                  </div>
+            </div>
+            <div class="grid-content">
+
+                  <div class="formRow span6">
+                        <form id="form_search">
+                              <label>Reset dos Callbacks</label>
+                              <div class="formRight">
+                                    <input id="data_inicio" size="16" type="text" value="" class="form_datetime validate[required]">
+                              </div> 
+                              <div class="formRight">
+                                    <input id="data_fim" size="16" type="text" value="" class="form_datetime validate[required]">
+                              </div>
+                              <div class="formRight">
+                                    <input   type="checkbox" id="checkbox1" name="cc" value="1">
+                                    <label class="checkbox inline" for="checkbox1"><span></span>Ver todos os resultados</label>
+                              </div>
+                        </form>
+                  </div>
+
+
+
+                  <div class="span6">
+                        <div class="formRow">
+                              <input class="radio_option" type="radio" id="radio1" name="ra" value="1" checked="checked">
+                              <label class="radio inline"  for="radio1"><span></span>Limpar Todos os Callbacks</label> 
+
+                              <div class="reset_option_div formRight" id="reset_all_div">
+                                    <button class="btn btn-info" id="reset_all">Eliminar CallBacks</button>
+                              </div>
+                        </div>
+                        <div class="formRow">
+                              <input class="radio_option"  type="radio" id="radio2" name="ra" value="2" >
+                              <label class="radio inline"  for="radio2"><span></span>Limpar Callbacks por campanha</label> 
+
+                              <div class="reset_option_div formRight" id="reset_campaign_div" style="display:none">
+                                    <select id="campaign_selector"></select>
+
+                                    <div class=" formRight">
+                                          <button class="btn btn-info" id="reset_dc">Eliminar CallBacks</button>
+                                    </div>
+                              </div>   
+                        </div> 
+                  </div>
+                  <div class="formRow">
+                        <button class="btn btn-primary " id="search">Pesquisar</button>
+                  </div>
+
+
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+            <div class="formRow">
+                  <table class="table table-mod table-bordered table-striped" id="callback_info">
+                        <thead></thead>
+                        <tbody></tbody>
+
+                  </table>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+            <script type="text/javascript" src="callbacks.js"></script>
+      </body>
+</html>
