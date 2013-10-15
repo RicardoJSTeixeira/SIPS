@@ -228,11 +228,6 @@ switch ($action) {
             $tmp = rtrim($tmp, "|");
             $users_regex = "Where user REGEXP '^$tmp'";
         }
-
-
-
-
-
         $js = array();
         $query = "SELECT user,full_name  FROM vicidial_users $users_regex group by user ";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -243,13 +238,11 @@ switch ($action) {
         break;
 
 
+        
     case "add_info_crm":
         $query = "INSERT INTO `crm_confirm_feedback`(`id`, `lead_id`, `feedback`, `sale`, `campaign`, `agent`, `comment`,date,admin) VALUES (NULL,$lead_id,'$feedback',$sale,'$campaign','$agent','$comment','" . date('Y-m-d H:i:s') . "','$user->id')";
         $query = mysql_query($query, $link) or die(mysql_error());
-
-
-
-        $query = "SELECT EXISTS(SELECT * FROM crm_confirm_feedback_last WHERE lead_id='$lead_id') as count";
+       $query = "SELECT EXISTS(SELECT * FROM crm_confirm_feedback_last WHERE lead_id='$lead_id') as count";
         $query = mysql_query($query, $link) or die(mysql_error());
         $row = mysql_fetch_assoc($query);
 
