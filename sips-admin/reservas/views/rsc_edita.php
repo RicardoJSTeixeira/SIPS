@@ -92,7 +92,7 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">Execoes:</label>
+                    <label class="control-label">Exceções:</label>
                     <div class="controls">
                         <span class="btn" onclick="location = 'rsc_execoes.php?rsc=<?= $id_resource; ?>'" ><?= $row[execoes]; ?> <i class="icon-pencil"></i>Editar</span>
                     </div>
