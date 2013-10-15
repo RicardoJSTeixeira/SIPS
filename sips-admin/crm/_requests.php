@@ -120,7 +120,7 @@ switch ($action) {
             SELECT first_name, phone_number, address1 ,last_local_call_time, lead_id
             FROM   vicidial_list
             WHERE lead_id= '$contact_id'
-            LIMIT 1
+            
             ";
         } 
         elseif ($phone_number != "" && $phone_number != null) {
@@ -128,7 +128,7 @@ switch ($action) {
             SELECT first_name, phone_number, address1 ,last_local_call_time, lead_id
             FROM   vicidial_list
             WHERE phone_number= '$phone_number'
-            LIMIT 1
+         
             ";
         } else {
             $sQuery = "
