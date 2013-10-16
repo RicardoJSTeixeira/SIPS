@@ -133,10 +133,12 @@
                               </div> 
                         </div>
 
+                        <div class="formRow">
+                              <button class="btn btn-inverse" id="open_limit_feedback" title="Cria um limite de feedbacks para este script">Criar limite de feedback</button>
+                        </div>
+
 
                         <div id="max_feedback_div">
-
-                              <button class="btn btn-inverse" id="open_limit_feedback">Criar limite</button>
                               <div id="add_limit_feedback_div">
                                     <div class="formRow">
                                           <label class="label label-inverse" >Feedback</label>
@@ -147,16 +149,13 @@
                                     <div class="formRow">
                                           <label class="label label-inverse" >Máximo</label>
                                           <div class="formRight">
-                                                <input type="number" id="max_feedback_number">
+                                                <input type="number" value="50" id="max_feedback_number">
                                           </div> 
                                     </div>
 
                                     <div class="formRow">
-                                          <button id="add_limit_feedback" class="btn">Adicionar</button>
-
+                                          <button id="add_limit_feedback" class="btn btn-success">Adicionar</button>
                                     </div>
-
-
                               </div>
                         </div>
 
@@ -168,7 +167,7 @@
                               <th>
                                     Max
                               </th>
-                               <th>
+                              <th>
                                     Opção
                               </th>
                               </thead>
