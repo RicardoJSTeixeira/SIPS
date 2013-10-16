@@ -70,6 +70,8 @@
                     $u_g = $usrQry['user_group'];
                     if ($u_g == 'AreaSalesManager' or $u_g == 'AAL' or $u_g == 'AMB' or $u_g == 'ANU' or $u_g == 'FPO' or $u_g == 'RGE' or $u_g == "BIO") {
                         $query = "SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers a WHERE a.alias_code in ($usrCode) ;";
+                    } elseif($user->user_group=="ADMIN") {
+                        $query = "SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers;";
                     } else {
                         $query = "SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers WHERE user_group='$user->user_group';";
                     }
