@@ -84,10 +84,10 @@ require(ROOT . "/ini/user.php");
             $user_groups = rtrim($user_groups, ",");
             $result = mysql_query("SELECT `user` FROM `vicidial_users` WHERE user_group in ($user_groups) AND user_level < $user_class->user_level") or die(mysql_error());
             while ($rugroups = mysql_fetch_assoc($result)) {
-                $tmp .= "$rugroups[user]|";
+                $tmp .= "^$rugroups[user]$|";
             }
             $tmp = rtrim($tmp, "|");
-            $users_regex = "Where user REGEXP '^$tmp'";
+            $users_regex = "AND user REGEXP '$tmp'";
         }
         //Users FIM
 
