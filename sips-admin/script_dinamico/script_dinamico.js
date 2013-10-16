@@ -342,10 +342,14 @@ $(".ipl_radio_options").on("click", function()
       }
 });
 
+
+//not introduced feature, still to do 
 $("#quota_required").on("click", function() {
       $("#div_quota").toggle(500);
 });
 
+
+//FILE UPLOADS------------------------------------
 $('#file_upload').change(function() {
       var re_ext = new RegExp("(gif|jpeg|jpg|png|pdf)", "i");
       var file = this.files[0];
@@ -407,6 +411,7 @@ $("#ipl_upload_button").on("click", function(e)
                   $("#ipl_file_select option[data-type='image']").prop("disabled", true);
       }, "json");
 });
+
 function submit_file()
 {
       $.post("upload.php", {results: $("#forma").serializeArray()}, function(data) {
@@ -416,7 +421,7 @@ function submit_file()
             return false;
       });
 }
-
+//FILE UPLOADS------------------------------------
 
 function update_script(callback)
 {
@@ -1431,7 +1436,7 @@ $("#opcao_script_button").click(function()//chama o edit do nome do script
             $("#script_campanha_selector").val(campaign).trigger("liszt:updated");
             $("#script_linha_inbound_selector").val(linha_inbound).trigger("liszt:updated");
       }, "json");
- $("#add_limit_feedback_div").hide();
+      $("#add_limit_feedback_div").hide();
 
       get_limit_feedback();
 
@@ -1721,13 +1726,13 @@ $("#open_limit_feedback").on("click", function()
 });
 $("#add_limit_feedback").on("click", function()
 {
- if($("#select_feedback option:selected").text()!="")    
-      $.post("requests.php", {action: "add_limit_feedback", id_script: $("#script_selector option:selected").val(), feedback: $("#select_feedback option:selected").val(), feedback_name: $("#select_feedback option:selected").text(), max: $("#max_feedback_number").val()},
-      function(data)
-      {
-            get_limit_feedback();
+      if ($("#select_feedback option:selected").text() != "")
+            $.post("requests.php", {action: "add_limit_feedback", id_script: $("#script_selector option:selected").val(), feedback: $("#select_feedback option:selected").val(), feedback_name: $("#select_feedback option:selected").text(), max: $("#max_feedback_number").val()},
+            function(data)
+            {
+                  get_limit_feedback();
 
-      }, "json");
+            }, "json");
 });
 
 function get_limit_feedback()

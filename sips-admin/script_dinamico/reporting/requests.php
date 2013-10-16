@@ -56,10 +56,9 @@ switch ($action) {
         header('Content-Encoding: UTF-8');
         header('Content-type: text/csv; charset=UTF-8');
         echo "\xEF\xBB\xBF";
-      
+
 
         $output = fopen('php://output', 'w');
-
 
 
 
@@ -70,16 +69,10 @@ switch ($action) {
         } else {
             $filtro = "and vl.list_id = '$list_id'";
         }
-
-
-
         $query = "SELECT id_script from script_assoc where id_camp_linha='$campaign_id'";
         $query = mysql_query($query, $link) or die(mysql_error());
         $row = mysql_fetch_assoc($query);
         $id_script = $row["id_script"];
-
-
-
         $titles = array('ID', 'Data', 'Script', 'Nome agente', 'Unique id', 'Campanha', 'Lead id', "feedback");
         $campos = array();
         $ref_name = array();
@@ -89,6 +82,9 @@ switch ($action) {
             array_push($titles, $row['Display_name']);
             $campos[$row['Name']] = "";
             array_push($ref_name, $row['Name']);
+        }
+        if (empty($ref_name)) {
+            break;
         }
         $tags = array();
         $query = "SELECT tag,type,texto,values_text  FROM `script_dinamico` where type not in ('pagination','textfield','scheduler','legend')  and id_script='$id_script' order by tag asc ";
@@ -110,19 +106,16 @@ switch ($action) {
             $contact_filter = " where a.list_id= '$list_id'";
         else
             $contact_filter = "left join `script_result` b on a.lead_id=b.lead_id where id_script='$id_script' and  b.campaign_id = '$campaign_id'";
-
         $query = "SELECT a.lead_id, " . implode(",", $ref_name) . " from vicidial_list a  $contact_filter  group by a.lead_id";
         $result = mysql_query($query, $link) or die(mysql_error());
         $lead_info = array();
         while ($row3 = mysql_fetch_assoc($result)) {
             $lead_info[$row3["lead_id"]] = $row3;
         }
-
         if ($allctc == "false")
             $date_filter = "and sr.date between '$data_inicio' and '$data_fim'";
         else
             $date_filter = "";
-
         $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name, sr.unique_id, vc.campaign_name, sr.lead_id,sr.param_1,vcs.status_name, sr.tag_elemento,sr.valor,sd.param1,sd.type FROM `script_result` sr
 left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id
 left join vicidial_users vu on sr.user_id=vu.user_id
@@ -144,7 +137,6 @@ where sr.campaign_id='$campaign_id' and sr.id_script='$id_script' $filtro $date_
                 $lead_id = $row1["lead_id"];
                 $client = array_merge($final_row, $lead_info[$lead_id], $tags);
                 unset($lead_info[$lead_id]);
-
                 $client["id"] = $row1["id"];
                 $client["date"] = $row1["date"];
                 $client["name"] = $row1["name"];
@@ -154,19 +146,16 @@ where sr.campaign_id='$campaign_id' and sr.id_script='$id_script' $filtro $date_
                 $client["lead_id"] = $row1["lead_id"];
                 $client["status_name"] = $row1["status_name"];
             }
-
             if ($row1["type"] == "tableradio")
                 $client["m" . $row1["tag_elemento"] . $row1["param_1"]] = $row1["valor"];
             else
                 $client["m" . $row1["tag_elemento"]] = ($row1["param1"] == "nib") ? "" . $row1["valor"] . "" : $row1["valor"];
         }
         fputcsv($output, $client, ";", '"'); // necessário para imprimir a info da ultima lead0
-
         foreach ($lead_info as $value) {
             $client = array_merge($final_row, $value, $tags);
             fputcsv($output, $client, ";", '"'); // necessário para imprimir a info da ultima lead0
         }
-
         fclose($output);
         break;
 }

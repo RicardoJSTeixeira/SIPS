@@ -69,8 +69,8 @@
       </head>
       <body> 
 
-
-            <!-- MODALS DE CONFIRMAÇÂO DE DELETES  -->
+            <!--------------- MODALS------------- MODALS------------- MODALS------------- MODALS------------- MODALS------------- MODALS------------- MODALS--> 
+            <!---------MODALS DE CONFIRMAÇÂO DE DELETES  -->
 
             <div id="script_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
                   <div class="modal-header">
@@ -101,10 +101,10 @@
                         <button class="btn btn-primary" id="page_remove_button_modal">Sim, eliminar</button>
                   </div>
             </div>
+            <!---------- MODALS DE CONFIRMAÇÂO DE DELETES  -->
 
 
-
-            <!--DIALOG Da Layout, muda nome -->
+            <!-----------MODAL DO SCRIPT -->
             <div id="dialog_layout" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
                   <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -132,7 +132,6 @@
                                     <select id="script_linha_inbound_selector" class="chosen-select"  multiple="multiple" data-placeholder="Selecione uma/várias linhas_inbound"   ></select>
                               </div> 
                         </div>
-
                         <div class="formRow">
                               <button class="btn btn-inverse" id="open_limit_feedback" title="Cria um limite de feedbacks para este script">Criar limite de feedback</button>
                         </div>
@@ -152,13 +151,11 @@
                                                 <input type="number" value="50" id="max_feedback_number">
                                           </div> 
                                     </div>
-
                                     <div class="formRow">
                                           <button id="add_limit_feedback" class="btn btn-success">Adicionar</button>
                                     </div>
                               </div>
                         </div>
-
                         <table id="table_max_feedback" class="table table-condensed">
                               <thead>
                               <th>
@@ -175,7 +172,6 @@
 
                               </tbody>
                         </table> 
-
                   </div>
                   <div class="clear"></div>
                   <div class="modal-footer">
@@ -183,7 +179,7 @@
                         <button  id="save_button_layout" class="btn btn-primary">Gravar Alterações</button>
                   </div> 
             </div>
-            <!--DIALOG Das pages, muda nome -->
+            <!-----------------DIALOG pages, muda nome -->
             <div id="dialog_page" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                   <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -197,7 +193,6 @@
                                     <input maxlength="25" class="span" id="pages_name_edit" type="text" placeholder="Novo nome da página" />
                               </div>
                         </div>
-
                         <div class="formRow">
                               <label class="label label-inverse">Ordem:</label>
 
@@ -205,7 +200,6 @@
                                     <select class="input-mini " id="page_position"></select>
                               </div>
                         </div>
-
                         <div class="clear"></div>
                   </div>
                   <div class="modal-footer">
@@ -215,7 +209,7 @@
             </div>
 
 
-            <!--DIALOG De apagar elementos -->
+            <!------------DIALOG De apagar elementos -->
             <div id="dialog_elements" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                   <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -223,9 +217,7 @@
                   </div>
                   <div class="modal-body">
                         <h5 class="alert">Tem a certeza que quer eliminar este elemento?</h5>
-
                         <p>   Ao apagar este elemento, todos os resultados no report a ele associados tambem serão eliminados. </p>
-
                         <div class="clear"></div>
                   </div>
                   <div class="modal-footer">
@@ -233,7 +225,7 @@
                         <button  data-dismiss="modal" id="apagar_elemento" class="btn btn-primary">Apagar</button>
                   </div>
             </div>
-            <!--FIM DAS DIALOGS--> 
+            <!--------------- MODALS------------- MODALS------------- MODALS------------- MODALS------------- MODALS------------- MODALS------------- MODALS--> 
 
 
             <div id="popover_div"></div>
@@ -252,21 +244,21 @@
                   <!--barra de paginas e scripts-->
 
                   <div class="grid-title">
-                        <div class="pull-left " >
+                        <div class="pull-right " >
 
                               Scripts           
                               <select id="script_selector" ></select>                        
-                              <button data-t="tooltip-right" title="Opções da Layout" data-toggle="modal" data-target="#dialog_layout"  class="btn btn-warning icon-alone" id="opcao_script_button"><i class="icon-cogs"></i></button>
-                              <button class="btn btn-primary icon-plus" id="script_add_button"></button>
-                              <button class="btn btn-danger icon-remove "  id="script_remove_button" ></button>  
+                              <button data-t="tooltip-right" title="Opções do Script" data-toggle="modal" data-target="#dialog_layout"  class="btn btn-warning icon-alone" id="opcao_script_button"><i class="icon-cogs"></i></button>
+                              <button class="btn btn-primary icon-plus" id="script_add_button" title="Adiciona um Script Novo"></button>
+                              <button class="btn btn-danger icon-remove "  id="script_remove_button" title="Remove o Script selecionado"></button>  
 
                         </div>
-                        <div class="pull-right" id="page_selector_div">
+                        <div class="pull-left" id="page_selector_div">
                               Páginas     
                               <select id="page_selector"></select>
-                              <button data-t="tooltip-right" title="Opções da Layout" data-toggle="modal" data-target="#dialog_page"  class="btn btn-warning icon-alone" id="opcao_page_button"><i class="icon-cogs"></i></button>
-                              <button class="btn btn-primary icon-plus" id="page_add_button"></button>
-                              <button class="btn btn-danger icon-remove "  id="page_remove_button" ></button>         
+                              <button data-t="tooltip-right" title="Opções da Página" data-toggle="modal" data-target="#dialog_page"  class="btn btn-warning icon-alone" id="opcao_page_button"><i class="icon-cogs"></i></button>
+                              <button class="btn btn-primary icon-plus" id="page_add_button" title="Adiciona uma nova página a este Script"></button>
+                              <button class="btn btn-danger icon-remove "  id="page_remove_button" title="Remove esta página" ></button>         
                         </div>
                   </div>
 
@@ -300,7 +292,7 @@
 
                   </div>
 
-                  <div class="grid span7" id="edit_div"><!--Inicio do-->
+                  <div class="grid span7" id="edit_div">
                         <div class="grid-title">
                               <div class="pull-left">Edição</div>
                               <div class="pull-right"><a class="icon-fullscreen"></a>        </div>
@@ -312,7 +304,7 @@
                                           <li><a href="#tabs-1">Edição</a></li>
                                           <li><a href="#tabs-2">Regras</a></li>
                                     </ul>
-                                    <div id="tabs-1">
+                                    <div id="tabs-1"><!--------------------------EDIÇÂO DOS ELEMENTOS----------------->
                                           <!--TEXTO-->
                                           <div class="editor_layout" id="text_layout_editor" style="display:none">
                                                 <div class="formRow" >
@@ -706,8 +698,8 @@
                                                 <button class="btn btn-primary" id="save_edit">Guardar</button>
                                                 <button class="btn cancel_edit" >Cancelar</button>
                                           </div>
-                                    </div>
-                                    <div id="tabs-2">
+                                    </div><!--------------------------FIM DA EDIÇÂO DOS ELEMENTOS----------------->
+                                    <div id="tabs-2"><!--------------------------REGRAS------------------------------->
                                           <div id="rule_manager" style="display:none,width:auto" >
                                                 <table id="rule_table" style="width:100%" class="table table-bordered">
                                                       <thead>
@@ -786,10 +778,10 @@
                                                 <button class="btn"  id="open_rule_creator">Criar nova regra</button>
                                                 <button class="btn cancel_edit" >Sair</button>
                                           </div>
-                                    </div><!--TAB 3-->
+                                    </div><!--------------------------FIM DAS REGRAS------------------------------->
                               </div>
                         </div>
-                  </div><!--Fim do edit-->
+                  </div>
 
 
 
