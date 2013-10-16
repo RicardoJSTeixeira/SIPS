@@ -46,7 +46,7 @@ function editor_toggle(tipo)
             $("#open_rule_creator").prop('disabled', false); //botoes de edit
             $(".editor_layout").hide(); // esconde os edits de todos
             $(".footer_save_cancel button").prop('disabled', false); //botoes de edit
-            $(".chosen-select").chosen({no_results_text: "Sem resultados"});
+
             $("#ipl_file_select option").prop("disabled", false);
       }
       if (tipo === "off")
@@ -65,7 +65,7 @@ function editor_toggle(tipo)
 
 $(function() {
 
-
+      $(".chosen-select").chosen({no_results_text: "Sem resultados"});
       array_id["radio"] = 0;
       array_id["checkbox"] = 0;
       $.get("items.html", function(data) {
@@ -200,13 +200,15 @@ $(function() {
 
             update_script();
       });
-      $("#edit_div").draggable({ handle: "a" });
+      $("#edit_div").draggable({handle: "a"});
       $("#tabs").tabs();
 
 
 
       $(document).on("click", ".element", function(e) {
-
+            $('html,body').animate({
+                  scrollTop: $(this).offset().top
+            }, 1000);
             $("#edit_div").css("top", $(this).position().top)
                     .css("left", $(this).position().left)
                     .css("position", "absolute");
@@ -878,7 +880,7 @@ function populate_element(tipo, element)
 
                   if (element.data("option") == "1") {
                         $("#radio_ipl_image").prop("checked", true);
-                         $("#ipl_ip_div").show();
+                        $("#ipl_ip_div").show();
                         $("#ipl_link_div").hide();
                         $("#ipl_file_select option[value='" + $("#" + id + " .ipl_link").text() + "']").prop("selected", true);
                         $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
@@ -894,7 +896,7 @@ function populate_element(tipo, element)
                   else
                   {
                         $("#radio_ipl_link").prop("checked", true);
-                           $("#ipl_ip_div").hide();
+                        $("#ipl_ip_div").hide();
                         $("#ipl_link_div").show();
                         $("#ipl_edit_link").val($("#" + id + " .ipl_link").text());
                   }
@@ -1608,6 +1610,10 @@ $(".values_edit_textarea").on("blur", function()
 });
 $("#open_rule_creator").click(function()//Fecha o dialog e grava as alterações 
 {
+      $('html,body').animate({
+            scrollTop: $(this).parent().offset().top
+      }, 1000);
+
       $("#rule_creator").toggle(800);
 });
 $("#add_rule_button").click(function()

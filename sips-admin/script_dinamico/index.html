@@ -62,6 +62,13 @@
                   }
                   #edit_div                  {                        border:2px solid #AAAAAA;                  }
                   #rigth_list                  {                        overflow-y:scroll;                        max-height:400px;                  }
+
+                  .grid-title .pull-right {
+                        margin: 3px;
+                  }
+                  .grid-title .pull-left {
+                        margin: 3px;
+                  }
             </style>
       </head>
       <body> 
@@ -215,13 +222,17 @@
                   <!--barra de paginas e scripts-->
 
                   <div class="grid-title">
-                        <div class="pull-left " >Scripts           
+                        <div class="pull-left " >
+
+                              Scripts           
                               <select id="script_selector" ></select>                        
                               <button data-t="tooltip-right" title="Opções da Layout" data-toggle="modal" data-target="#dialog_layout"  class="btn btn-warning icon-alone" id="opcao_script_button"><i class="icon-cogs"></i></button>
                               <button class="btn btn-primary icon-plus" id="script_add_button"></button>
-                              <button class="btn btn-danger icon-remove "  id="script_remove_button" ></button>
+                              <button class="btn btn-danger icon-remove "  id="script_remove_button" ></button>  
+
                         </div>
-                        <div class="pull-right" id="page_selector_div">Páginas     
+                        <div class="pull-right" id="page_selector_div">
+                              Páginas     
                               <select id="page_selector"></select>
                               <button data-t="tooltip-right" title="Opções da Layout" data-toggle="modal" data-target="#dialog_page"  class="btn btn-warning icon-alone" id="opcao_page_button"><i class="icon-cogs"></i></button>
                               <button class="btn btn-primary icon-plus" id="page_add_button"></button>

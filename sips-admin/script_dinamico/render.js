@@ -248,7 +248,7 @@ function update_info()
 function insert_element(opcao, element, data)
 {
       element.removeAttr("title");
-       element.find(".label_titulo").remove();
+      element.find(".label_titulo").remove();
       switch (opcao)
       {
             case "texto":
@@ -441,26 +441,32 @@ function insert_element(opcao, element, data)
                         element.find(".input_textarea").addClass("validate[required]");
                   break;
             case "ipl":
+
                   element.find(".label_geral")[0].innerHTML = data.texto;
                   element.find("span").remove();
                   if (element.data("option") == "1")
                   {
                         if (data.values_text.length > 3)
+                        {
                               element.append($("<img>").attr("src", 'files\\' + data.values_text));
-
-
-
-                  } else if (element.data("option") == "2")
-                          if (data.values_text.length > 0)
-                        element.append($("<button>").addClass("pdf_button").attr("file", data.values_text).text("Ver PDF"));
+                        }
+                  }
+                  else if (element.data("option") == "2")
+                  {
+                        if (data.values_text.length > 0)
+                        {
+                              element.append($("<button>").addClass("pdf_button").attr("file", data.values_text).text("Ver PDF"));
+                        }
+                  }
                   else
+                  {
                         element.append($("<a>").attr("href", "http://" + data.values_text).text(data.values_text));
+                  }
                   break;
       }
       if (data.hidden)
             element.css("display", "none");
 }
-
 
 
 function populate_script()
