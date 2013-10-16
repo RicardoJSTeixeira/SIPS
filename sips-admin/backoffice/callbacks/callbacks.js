@@ -72,6 +72,7 @@ function get_campanhas()
       {
 
             $("#select_campanha_transfer_by_c").empty();
+            $("#select_campanha_edit").empty();
             var temp = "";
             $.each(data2, function() {
 
@@ -80,7 +81,8 @@ function get_campanhas()
 
             $("#select_campanha_transfer_by_c").append(temp);
             $("#select_campanha_transfer_by_c").trigger("liszt:updated");
-
+            $("#select_campanha_edit").append(temp);
+            $("#select_campanha_edit").trigger("liszt:updated");
       }
       , "json");
 }
@@ -146,9 +148,9 @@ $(document).on("click", ".ver_callback", function() {
             mc.find("#select_agent").find("option[value='" + user + "']").prop("selected", true).end().trigger("liszt:updated");
             mc.find("#label_bd_name").text(data1.list_name);
             mc.find("#label_cliente_name").text(data1.first_name);
-            mc.find("#label_campaign_name").text(data1.campaign_name);
+            mc.find("#select_campanha_edit").val(data1.campaign_id).trigger("liszt:updated");
             mc.find("#label_entry_date").text(data1.entry_time);
-            mc.find("#label_callback_date").text(data1.callback_time);
+            mc.find("#callback_datepicker").val(data1.callback_time);
             mc.find("#textarea_comments").text(data1.comments);
             mc.find("#edit_callback").data("callback_id", $(that).val());
       }
@@ -163,7 +165,9 @@ $("#edit_callback").on("click", function()
             action: "edit_callbacks_by_id",
             callback_id: that_info,
             user: $("#modal_callback #select_agent option:selected").val(),
-            comments: $("#modal_callback #textarea_comments").val()},
+            comments: $("#modal_callback #textarea_comments").val(),
+            callback_date: $("#modal_callback #callback_datepicker").val(),
+            campaign_id: $("#modal_callback #select_campanha_edit").val()},
       function(data1)
       {
             $("#modal_callback").modal("hide");

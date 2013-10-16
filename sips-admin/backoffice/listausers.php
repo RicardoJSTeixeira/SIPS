@@ -5,6 +5,7 @@ for ($i = 0; $i < $self - 2; $i++) {
 }
 define("ROOT", $path);
 require(ROOT . "ini/dbconnect.php");
+require(ROOT . "/ini/user.php");
 ?>
 
 <!DOCTYPE html>
@@ -66,38 +67,29 @@ require(ROOT . "ini/dbconnect.php");
         <div id="loader"><img src="/images/icons/big-loader.gif"/></div>
 
         <?php
-        $user = $_SERVER['PHP_AUTH_USER'];
+        $user_class = new users;
         $estado = (!isset($_POST["estado"])) ? 'activo' : $_POST["estado"];
 
         //Users INICIO
-        $query = "select a.user_group,allowed_campaigns,user_level from vicidial_users a inner join `vicidial_user_groups` b on a.user_group=b.user_group where user='$user'";
-        $result = mysql_query($query) or die(mysql_error());
-        $row = mysql_fetch_assoc($result);
-
-
-        $user_level = $row['user_level'];
-        $allowed_camps_regex = str_replace(" ", "|", trim(rtrim($row['allowed_campaigns'], " -")));
-
-        if ($row['user_group'] != "ADMIN") {
+        $users_regex = "";
+        $tmp = "";
+        $allowed_camps_regex = implode("|", $user_class->allowed_campaigns);
+        if (!$user_class->is_all_campaigns) {
             $ret = "WHERE allowed_campaigns REGEXP '$allowed_camps_regex'";
-
-
             $user_groups = "";
             $result = mysql_query("SELECT `user_group`, `allowed_campaigns` FROM `vicidial_user_groups` $ret ") or die(mysql_error());
             while ($row1 = mysql_fetch_assoc($result)) {
                 $user_groups .= "'$row1[user_group]',";
             }
             $user_groups = rtrim($user_groups, ",");
-
-            $users_regex = "";
-            $result = mysql_query("SELECT `user` FROM `vicidial_users` WHERE user_group in ($user_groups) AND user_level < $user_level") or die(mysql_error());
+            $result = mysql_query("SELECT `user` FROM `vicidial_users` WHERE user_group in ($user_groups) AND user_level < $user_class->user_level") or die(mysql_error());
             while ($rugroups = mysql_fetch_assoc($result)) {
-                $users_regex .= "^$rugroups[user]$|";
+                $tmp .= "$rugroups[user]|";
             }
-            $users_regex = rtrim($users_regex, "|");
-            $users_regex = "AND user REGEXP '$users_regex'";
+            $tmp = rtrim($tmp, "|");
+            $users_regex = "Where user REGEXP '^$tmp'";
         }
-//Users FIM
+        //Users FIM
 
 
 
@@ -153,13 +145,14 @@ require(ROOT . "ini/dbconnect.php");
                             while ($rcolab = mysql_fetch_assoc($colab)) {
                                 ?>		
                                 <tr>
-                                    <td><?= $rcolab['user_group'] ?></td>
+                                    <td><?= $rcolab['user_group'] ?></td> 
                                     <td><?= $rcolab['full_name'] ?></td>
                                     <td><?= $rcolab['user'] ?>
                                         <div class="view-button"><a href='editauser.php?user=<?= $rcolab['user'] ?>' target='_self' class="btn  btn-mini"><i class="icon-pencil"></i>Editar</a></div>
-                                        <div class="view-button"><a href='presencas.php?user=<?= $rcolab['user'] ?>' target='_self' class="btn  btn-mini" ><i class="icon-calendar"></i> Faltas</a></div>
+                                        <div class="view-button"><a href='presencas.php?user=<?= $rcolab['user'] ?>' target='_self' class="btn  btn-mini" ><i class="icon-calendar"></i>Folha Horas</a></div>
                                         <div class="view-button"><a href='../user_stats.php?user=<?= $rcolab['user'] ?>' target='_self'  class="btn  btn-mini"><i class="icon-bar-chart"></i> Estatística</a></div>
-                                        <div class="view-button"><a href='gravacoes.php?user=<?= $rcolab['user'] ?>' target='_self'  class="btn  btn-mini"><i class="icon-headphones"></i> Gravações</a></div>
+                                        <div class="view-button"><a href='callbacks/index.html?user=<?= $rcolab['user'] ?>' target='_self'  class="btn  btn-mini"><i class="icon-phone"></i>Callbacks</a></div>
+                                        <div class="view-button"><a href='gravacoes.php?user=<?= $rcolab['user'] ?>' target='_self'  class="btn  btn-mini"><i class="icon-headphones"></i>Gravações</a></div>
                                         <div class="view-button"><a href="#" data-userid='<?= $rcolab['user_id'] ?>' data-active="<?= $rcolab['active'] ?>" class="btn  btn-mini activator"> <i class="icon-check<?= ($rcolab['active'] == "Y") ? "" : "-empty" ?>" ></i><span><?= ($rcolab['active'] == "Y") ? "Activo" : "Inactivo" ?></span></a></div>
                                     </td>
                                 </tr>

@@ -107,7 +107,7 @@ switch ($action) {
 
 
     case "get_callback_by_id":
-        $query = "SELECT b.first_name,c.list_name,d.campaign_name,a.entry_time,a.callback_time,e.full_name,a.comments FROM `vicidial_callbacks` a     
+        $query = "SELECT b.first_name,c.list_name,d.campaign_name,d.campaign_id,a.entry_time,a.callback_time,e.full_name,a.comments FROM `vicidial_callbacks` a     
             left join vicidial_list b on a.lead_id=b.lead_id
             left join vicidial_lists c on a.list_id=c.list_id
              left join vicidial_campaigns d on d.campaign_id=a.campaign_id
@@ -134,7 +134,7 @@ switch ($action) {
             $date = "and entry_time between '$data_inicio' and '$data_fim'";
         else
             $date = "";
-        
+
         $query = "UPDATE vicidial_callbacks b left join  vicidial_list a   on a.lead_id=b.lead_id set b.status='INACTIVE', a.status='NEW', a.called_since_last_reset='N' where b.user='$user' and b.campaign_id='$campaign_id' $date  ";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo("1");
@@ -152,7 +152,7 @@ switch ($action) {
 
 
     case "edit_callbacks_by_id":
-        $query = "UPDATE `vicidial_callbacks` SET user='$user',comments='$comments' WHERE callback_id=$callback_id";
+        $query = "UPDATE `vicidial_callbacks` SET user='$user',campaign_id='$campaign_id',callback_time='$callback_date', comments='$comments' WHERE callback_id=$callback_id";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo("1");
         break;
