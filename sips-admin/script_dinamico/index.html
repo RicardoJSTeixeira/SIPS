@@ -49,16 +49,10 @@
                   input[type="checkbox"]{display:inline;}
                   input[type="radio"]{display:inline;}
                   .radio, .checkbox {padding-left: 1px;padding-right: 16px;}
-                  .grid-title select
-                  {
-                        max-width: 200px;
-                  }
-
-                  .chosen-select{
-                        width: 200%;
-                  }
+                  .grid-title select                  {                        max-width: 200px;                  }
+                  .chosen-select{                        width: 200%;                  }
                   .hidden{display:none!important;}
-                  #textfield_edit
+                  #textfield_edit   
                   {
                         border:2px solid #EEF;
                         overflow:scroll;
@@ -66,17 +60,8 @@
                         max-height:300px;
                         width:95%;    
                   }
-                  #edit_div
-                  {
-                        border:2px solid #AAAAAA;
-                  }
-                  #rigth_list
-                  {
-                        overflow-y:scroll;
-                        max-height:400px;
-
-                  }
-
+                  #edit_div                  {                        border:2px solid #AAAAAA;                  }
+                  #rigth_list                  {                        overflow-y:scroll;                        max-height:400px;                  }
             </style>
       </head>
       <body> 
@@ -284,8 +269,7 @@
                   <div class="grid span7" id="edit_div"><!--Inicio do-->
                         <div class="grid-title">
                               <div class="pull-left">Edição</div>
-                              <div class="pull-right">
-                              </div>
+                              <div class="pull-right"><a class="icon-fullscreen"></a>        </div>
                         </div>
 
                         <div class="grid-content">
@@ -607,7 +591,7 @@
 
                                                 </div>
                                                 <div class="formRow" id="ipl_ip_div">
-                                                         <label class="label label-inverse">Imagem/Pdf</label>
+                                                      <label class="label label-inverse">Imagem/Pdf</label>
                                                       <div class="formRight">
                                                             <select id="ipl_file_select" ></select>
                                                       </div>
@@ -658,7 +642,7 @@
                                                       <div class="formRight">
                                                             <select id="tags_select" class="chosen-select" data-placeholder="Selecione uma tag" >
                                                                   <optgroup label="Campos Gerais">
-                                                                        <option value="nome_operador">Nome do operador</option>
+                                                                        <option value="nome_operador" selected>Nome do operador</option>
                                                                   </optgroup>
 
                                                             </select>
@@ -766,7 +750,7 @@
                                           </div>
                                           <div class="modal-footer ">
                                                 <button class="btn"  id="open_rule_creator">Criar nova regra</button>
-                                                  <button class="btn cancel_edit" >Sair</button>
+                                                <button class="btn cancel_edit" >Sair</button>
                                           </div>
                                     </div><!--TAB 3-->
                               </div>
