@@ -81,7 +81,7 @@ function update_script()
       }
       else
       {
-            $("#validate_admin").hide();
+         
             var camp_linha = 0;
             if (page_info.in_group_id !== "")
             {

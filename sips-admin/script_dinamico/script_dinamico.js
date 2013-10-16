@@ -193,6 +193,7 @@ $(function() {
                         }, "json");
                   }, "json");
             }, "json");
+            $("#add_limit_feedback_div").hide();
             $('#textfield_edit').wysiwyg();
             $('#ipl_link').wysiwyg();
             //--------------------------------------//
@@ -1613,13 +1614,10 @@ $("#open_rule_creator").click(function()//Fecha o dialog e grava as alterações
       $('html,body').animate({
             scrollTop: $(this).parent().offset().top
       }, 1000);
-
       $("#rule_creator").toggle(800);
 });
 $("#add_rule_button").click(function()
 {
-
-
       switch (selected_type)
       {
             case "texto":
@@ -1715,12 +1713,25 @@ $("#rule_form").on("submit", function(e)
 //RENDER/FULLSCREEN 
 $("#render_go").click(function()
 {
-      var window_slave = window.open("/sips-admin/script_dinamico/render.html?script_id=" + $("#script_selector option:selected").val());
+      var window_slave = window.open("/sips-admin/script_dinamico/render_admin.html?script_id=" + $("#script_selector option:selected").val());
 });
 
 
 
 
+$("#open_limit_feedback").on("click", function()
+{
+      $("#add_limit_feedback_div").toggle(400);
+});
+$("#add_limit_feedback").on("click", function()
+{
+      $.post("requests.php", {action: "add_feedback_limit", id_script: $("#script_selector option:selected").val(), feedback: $("#select_feedback option:selected").val(), max: $("#max_feedback_number").val()},
+      function(data)
+      {
+            if (data != "0")
+                  $.jGrowl('Alterou dados que podem ter regras associadas,procure no separador das regras por conflitos/diferença de dados', {life: 6000});
+      }, "json");
+});
 
 
 
