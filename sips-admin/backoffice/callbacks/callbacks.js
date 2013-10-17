@@ -117,7 +117,7 @@ function get_table_data()
                         "mDataProp": "callback_id",
                         "fnRender": function(obj) {
 
-                              var returnButton = "<div class='view-button'><button class='ver_callback btn btn-primary ' type='button' value='" + obj.aData.callback_id + "'>Ver</button><a class='apagar_callback btn  btn-inverse  icon-remove btn-small'  value='" + obj.aData.callback_id + "'></a></div>";
+                              var returnButton = "<div class='view-button'><button class='ver_callback btn btn-primary ' type='button' data-callback_id='" + obj.aData.callback_id + "'>Ver</button><button class='apagar_callback btn  btn-inverse  icon-remove btn-small'  data-callback_id='" + obj.aData.callback_id + "'></button></div>";
                               return returnButton;
                         }
                   }],
@@ -138,8 +138,8 @@ $("#search").on("click", function(e)
 
 //VER CALLBACK
 $(document).on("click", ".ver_callback", function() {
-      var that = this;
-      $.post("requests.php", {action: "get_callback_by_id", callback_id: $(this).val()},
+      var that = $(this);
+      $.post("requests.php", {action: "get_callback_by_id", callback_id:that.data("callback_id")},
       function(data1)
       {
             var mc = $("#modal_callback");
@@ -152,7 +152,7 @@ $(document).on("click", ".ver_callback", function() {
             mc.find("#label_entry_date").text(data1.entry_time);
             mc.find("#callback_datepicker").val(data1.callback_time);
             mc.find("#textarea_comments").text(data1.comments);
-            mc.find("#edit_callback").data("callback_id", $(that).val());
+            mc.find("#edit_callback").data("callback_id", that.data("callback_id"));
       }
       , "json");
 });
@@ -228,12 +228,13 @@ $("#confirm_reset_dc_callbacks").on("click", function()
 // ELIMINATE CALLBACK BY ID ***********************************************************
 $(document).on("click", ".apagar_callback", function() {
       $('#eliminar_one').modal('show');
-      $("#confirm_reset_one_callbacks").val($(this).val());
+ 
+      $("#confirm_reset_one_callbacks").data("callback_id",$(this).data("callback_id"));
 });
 
 $("#confirm_reset_one_callbacks").on("click", function()
 {
-      $.post("requests.php", {action: "reset_callbacks_by_id", callback_id: $(this).val()},
+      $.post("requests.php", {action: "reset_callbacks_by_id", callback_id: $(this).data("callback_id")},
       function(data1)
       {
             $('#eliminar_one').modal('hide');
