@@ -241,6 +241,19 @@ function MiscOptionsElemInit()
       });
 
 
+
+
+      $("#campaign_callback_limit").spinner({
+            min: 0,
+                        spin: function(event, ui)
+            {
+               campaignCallbackLimit();   
+            }
+      });
+
+
+
+
       $.widget("ui.modspinner1", $.ui.spinner,
               {
                     options:
@@ -1038,7 +1051,7 @@ function CampaignDTMF() {
 
 function campaignCallbackLimit()
 {
-      if (!isNAN($("#campaign_callback_limit").val()))
+      if (!(isNaN($("#campaign_callback_limit").val())))
       {
             $.ajax({
                   type: "POST",
