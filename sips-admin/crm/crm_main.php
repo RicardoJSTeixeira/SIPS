@@ -167,13 +167,13 @@
                                 <div class="control-group">
                                     <label class="control-label" for="inputEmail">Campanha</label>
                                     <div class="controls">
-                                        <select  id='filtro_campanha'><?= $select_campaigns; ?></select>
+                                        <select  class="chosen-select" id='filtro_campanha'><?= $select_campaigns; ?></select>
                                     </div>
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label" for="inputPassword">Base de Dados</label>
                                     <div class="controls">
-                                        <select  id="filtro_dbs"><?= $select_bds; ?></select>
+                                        <select class="chosen-select"  id="filtro_dbs"><?= $select_bds; ?></select>
                                     </div>
                                 </div>
 
@@ -181,14 +181,14 @@
                                     <label class="control-label" for="inputPassword">Operador:</label>
 
                                     <div class="controls">
-                                        <select  id='filtro_operador'><?= $select_operadores; ?></select>
+                                        <select class="chosen-select"  id='filtro_operador'><?= $select_operadores; ?></select>
                                     </div>
                                 </div>
 
                                 <div class="control-group">
                                     <label class="control-label" for="inputPassword">Feedback:</label>
                                     <div class="controls">
-                                        <select  id='filtro_feedback'><?= $select_feedback; ?></select>
+                                        <select class="chosen-select"  id='filtro_feedback'><?= $select_feedback; ?></select>
                                     </div>
                                 </div>
 
@@ -241,7 +241,7 @@
         <div id="crm" class='grid' style='display:none'>
             <div class="grid-title">
                 <div class="pull-left">Gestão de Leads</div>
-                <div class="pull-right"><span class='btn' id='crm-close'>Fechar</span></div>
+                <div class="pull-right"><span class='btn btn-danger icon-remove' id='crm-close'></span></div>
             </div>
             <div class='grid-content' id="html_loader"></div>
         </div>
@@ -381,10 +381,10 @@
                     {
 
 
-                        $("#datai").datetimepicker({autoclose: true, language: "pt"});
-                        $("#dataf").datetimepicker({autoclose: true, language: "pt"});
+                        $("#datai").datepicker({autoclose: true, language: "pt",dateFormat: 'yy-mm-dd'});
+                        $("#dataf").datepicker({autoclose: true, language: "pt",dateFormat: 'yy-mm-dd'});
 
-
+    $(".chosen-select").chosen({no_results_text: "Sem resultados"});
 
 
 
