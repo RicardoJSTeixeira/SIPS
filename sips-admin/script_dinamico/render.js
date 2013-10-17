@@ -81,7 +81,7 @@ function update_script()
       }
       else
       {
-         
+
             var camp_linha = 0;
             if (page_info.in_group_id !== "")
             {
@@ -260,6 +260,7 @@ function insert_element(opcao, element, data)
                   var pattern = [];
                   if (data.required)
                         pattern.push("required");
+               
                   switch (data.param1)
                   {
                         case "normal":
@@ -280,7 +281,12 @@ function insert_element(opcao, element, data)
                         case "nif":
                               pattern.push("funcCall[checknif]");
                               break;
+                        case "credit_card":
+                              pattern.push("creditCard");
+                              break;
+                              
                   }
+                  console.log("validate[" + pattern.join(",") + "]");
                   if (data.param1 != "none")
                         element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
                   break;
