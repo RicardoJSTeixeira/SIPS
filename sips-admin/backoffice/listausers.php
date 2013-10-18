@@ -70,8 +70,7 @@ require(ROOT . "/ini/user.php");
         $user_class = new users;
         $estado = (!isset($_POST["estado"])) ? 'activo' : $_POST["estado"];
 
-        //Users INICIO
-        $users_regex = "";
+        //Users INICIO 
         $tmp = "";
         $allowed_camps_regex = implode("|", $user_class->allowed_campaigns);
         if (!$user_class->is_all_campaigns) {
@@ -84,10 +83,10 @@ require(ROOT . "/ini/user.php");
             $user_groups = rtrim($user_groups, ",");
             $result = mysql_query("SELECT `user` FROM `vicidial_users` WHERE user_group in ($user_groups) AND user_level < $user_class->user_level") or die(mysql_error());
             while ($rugroups = mysql_fetch_assoc($result)) {
-                $tmp .= "$rugroups[user]|";
+                $tmp .= "^$rugroups[user]$|";
             }
             $tmp = rtrim($tmp, "|");
-            $users_regex = "Where user REGEXP '^$tmp'";
+            $users_regex = "AND user REGEXP '$tmp'";
         }
         //Users FIM
 
@@ -153,7 +152,7 @@ require(ROOT . "/ini/user.php");
                                         <div class="view-button"><a href='../user_stats.php?user=<?= $rcolab['user'] ?>' target='_self'  class="btn  btn-mini"><i class="icon-bar-chart"></i> Estatística</a></div>
                                         <div class="view-button"><a href='callbacks/index.html?user=<?= $rcolab['user'] ?>' target='_self'  class="btn  btn-mini"><i class="icon-phone"></i>Callbacks</a></div>
                                         <div class="view-button"><a href='gravacoes.php?user=<?= $rcolab['user'] ?>' target='_self'  class="btn  btn-mini"><i class="icon-headphones"></i>Gravações</a></div>
-                                        <div class="view-button"><a href="#" data-userid='<?= $rcolab['user_id'] ?>' data-active="<?= $rcolab['active'] ?>" class="btn  btn-mini activator"> <i class="icon-check<?= ($rcolab['active'] == "Y") ? "" : "-empty" ?>" ></i><span><?= ($rcolab['active'] == "Y") ? "Activo" : "Inactivo" ?></span></a></div>
+                                        <div class="view-button"><a href="#" data-user='<?= $rcolab['user'] ?>' data-userid='<?= $rcolab['user_id'] ?>' data-active="<?= $rcolab['active'] ?>" class="btn  btn-mini activator"> <i class="icon-check<?= ($rcolab['active'] == "Y") ? "" : "-empty" ?>" ></i><span><?= ($rcolab['active'] == "Y") ? "Activo" : "Inactivo" ?></span></a></div>
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -168,7 +167,7 @@ require(ROOT . "/ini/user.php");
 
 
             var otable;
-            var eu;
+            
             $(function() {
                 otable = $('#lists').dataTable({
                     "sPaginationType": "full_numbers",
@@ -178,10 +177,11 @@ require(ROOT . "/ini/user.php");
                 });
                 $(".activator").on("click", function() {
                     var that = $(this);
-                    eu = that;
+                   
                     var active = (that.data("active") == "Y") ? "N" : "Y";
                     var user_id = that.data("userid");
-                    $.post("_requests.php", {action: "user_change_status", user: user_id, active: active}, function(data) {
+                     var user = that.data("user");
+                    $.post("_requests.php", {action: "user_change_status", user_id: user_id,user:user, active: active}, function(data) {
                         that.data("active", active);
                         that.find("i").attr("class", "icon-check" + ((active == "N") ? "-empty" : ""))
                                 .parent().find("span").text((active == "Y") ? "Activo" : "Inactivo");

@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 require("../../ini/dbconnect.php");
 require("../../ini/user.php");
 
@@ -21,6 +18,26 @@ switch ($action) {
     //------------------------------------------------//    
     //---------------------GET------------------------//  
     //------------------------------------------------//
+
+
+    case "get_limit_feedback":
+        $query = "SELECT id,feedback,feedback_name,max from script_max_feedback where id_script=$id_script";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array("feedback_name" => $row["feedback_name"], "feedback" => $row["feedback"], "id" => $row["id"], "max" => $row["max"]);
+        }
+        echo json_encode($js);
+        break;
+
+    case "get_feedbacks":
+        $query = ("select * from((SELECT status,status_name FROM vicidial_campaign_statuses ) union all (SELECT status, status_name FROM vicidial_statuses)) a  group by status order by status_name asc");
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array("status" => $row["status"], "status_name" => $row["status_name"]);
+        }
+        echo json_encode($js);
+        break;
+
     case "get_schedule":
         $query = "SELECT id_scheduler,display_text FROM sips_sd_schedulers where active='1' and user_group='$user->user_group' order by display_text";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -190,9 +207,8 @@ switch ($action) {
     case "get_data_individual":
         $query = "SELECT * FROM `script_dinamico` WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            $js = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
-        }
+        $row = mysql_fetch_assoc($query);
+        $js = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
         echo json_encode($js);
         break;
 
@@ -218,7 +234,7 @@ switch ($action) {
         break;
 
 
-    case 'get_campaign':
+    case 'get_campaign_linha_inbound':
         $campaigns = implode("','", $user->allowed_campaigns);
 
         if ($user->is_all_campaigns)
@@ -228,20 +244,16 @@ switch ($action) {
         $query = "SELECT  campaign_id,campaign_name  FROM  vicidial_campaigns where active='y' $campaigns  order by campaign_name ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array("id" => $row["campaign_id"], "name" => $row["campaign_name"]);
+            $js["campaign"][] = array("id" => $row["campaign_id"], "name" => $row["campaign_name"]);
         }
-        echo json_encode($js);
-        break;
-
-
-    case 'get_linha_inbound':
         $query = "SELECT group_id,group_name FROM vicidial_inbound_groups";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array("id" => $row["group_id"], "name" => $row["group_name"]);
+            $js["linha_inbound"][] = array("id" => $row["group_id"], "name" => $row["group_name"]);
         }
         echo json_encode($js);
         break;
+
 
 
     case 'iscloud':
@@ -274,10 +286,11 @@ switch ($action) {
         while (false !== ( $file = readdir($dh) )) {
             $ext = substr($file, -4, 4);
             if (in_array($ext, $show)) {
-                if ($ext == ".pdf"){
-                $temp_ext = "pdf";}
-                else{
-                $temp_ext = "image";}
+                if ($ext == ".pdf") {
+                    $temp_ext = "pdf";
+                } else {
+                    $temp_ext = "image";
+                }
                 $select .= "<option data-type='$temp_ext' value='$file'>$file</option>\n";
             }
         }
@@ -372,6 +385,14 @@ switch ($action) {
         break;
 
 
+
+    case "add_limit_feedback":
+        $query = "INSERT INTO script_max_feedback (id,id_script,feedback,feedback_name,max) VALUES (NULL,$id_script,'$feedback','$feedback_name',$max)";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        echo json_encode(1);
+        break;
+
+
     case "duplicate_script":
         //script
         $query = "INSERT INTO script_dinamico_master (id,name,user_group) VALUES (NULL,'$nome_script duplicado','$user->user_group')";
@@ -451,6 +472,14 @@ switch ($action) {
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(1);
         break;
+
+
+    case "delete_limit_feedback":
+        $query = "delete from script_max_feedback where id=$id";
+        $query = mysql_query($query, $link) or die(mysql_error());
+
+        echo json_encode(1);
+        break;
     //------------------------------------------------//
     //-----------------FORM---------------------------//
     //------------------------------------------------//
@@ -459,7 +488,7 @@ switch ($action) {
 
         if ($admin_review == "1") {
             $unique_id = time() . "." . rand(1, 1000);
-            $user_id=$user->id;
+            $user_id = $user->id;
         }
 
         foreach ($results as $row) {
