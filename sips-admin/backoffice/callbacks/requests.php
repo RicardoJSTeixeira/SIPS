@@ -22,8 +22,12 @@ switch ($action) {
     case "get_callback_by_user":
         $js['aaData'] = array();
 
-        if ($all_date == "false")
-            $date = "and a.entry_time between '$data_inicio' and '$data_fim'";
+        if ($all_date == "false") {
+            if ($data_filtro=="true")
+                $date = "and a.callback_time between '$data_inicio' and '$data_fim'";
+            else
+                $date = "and a.entry_time between '$data_inicio' and '$data_fim'";
+        }
         else
             $date = "";
 

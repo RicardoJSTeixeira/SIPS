@@ -225,28 +225,44 @@
 
 
                                     <div class="formRow">
+                                   
+                                                <button class="btn btn-primary  left" id="search">Pesquisar</button>
+                                
                                           <input   type="checkbox" id="checkbox1" name="cc" value="1">
                                           <label class="checkbox inline" for="checkbox1"><span></span>Ver todos os resultados</label>
-                                          <div class="formRight">
-                                                <button class="btn btn-primary " id="search">Pesquisar</button>
-                                          </div>
+                                    
                                     </div>
 
 
-                                    <div class="formRow">
-                                          <label class="time_div" >Data de Inicio </label>
-                                          <div class="formRight time_div">
+                                    <div class="formRow time_div">
+                                          <label class="" >Data de Inicio </label>
+                                          <div class="formRight ">
                                                 <input id="data_inicio" size="16"  type="text"  class="validate[required] text-input datepicker">
                                           </div> 
                                     </div> 
-                                    <div class="formRow">
-                                          <label class="time_div">Data de Fim </label>
-                                          <div class="formRight time_div">
+                                    <div class="formRow time_div">
+                                          <label class="">Data de Fim </label>
+                                          <div class="formRight ">
 
                                                 <input id="data_fim" size="16" type="text"  class="validate[required] text-input datepicker">
 
                                           </div>
                                     </div>
+
+
+                                    <div class="formRow time_div">
+                                          <label >Filtro de datas </label>
+                                          <div class="formRight">
+                                                <input   type="radio" id="radio_date1" name="rd" value="1" checked="checked">
+                                                <label class="checkbox inline" for="radio_date1"><span></span>Por data de Callback</label>
+                                                <input   type="radio" id="radio_date2" name="rd" value="2">
+                                                <label class="checkbox inline" for="radio_date2"><span></span>Por data de Entrada</label>
+
+
+                                          </div>
+                                    </div>
+
+
 
                               </form>
 
@@ -263,7 +279,7 @@
                                     <input class="radio_option" type="radio" id="radio1" name="ra" value="1" checked="checked">
                                     <label class="radio inline"  for="radio1"><span></span>Limpar Todos os Callbacks</label> 
                                     <div class="reset_option_div formRight" id="reset_all_div">
-                                          <button class="btn btn-info" id="reset_all">Eliminar CallBacks</button>
+                                          <button class="btn btn-info " id="reset_all">Eliminar CallBacks</button>
                                     </div>
                               </div>
                               <div class="formRow">

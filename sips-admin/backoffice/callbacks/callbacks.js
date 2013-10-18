@@ -100,7 +100,8 @@ function get_table_data()
                   {"name": "all_date", "value": $("#checkbox1").is(":checked")},
                   {"name": "user", "value": user},
                   {"name": "data_inicio", "value": $("#data_inicio").val()},
-                  {"name": "data_fim", "value": $("#data_fim").val()}
+                  {"name": "data_fim", "value": $("#data_fim").val()},
+                  {"name": "data_filtro", "value": $("#radio_date1").is(":checked")}
                   );
             },
             "aoColumns": [
@@ -134,7 +135,7 @@ $("#search").on("click", function(e)
       e.preventDefault();
       if ($("#form_search").validationEngine('validate'))
       {
-                       get_table_data();
+            get_table_data();
             $('html,body').animate({
                   scrollTop: $(this).offset().top
             }, 1000);
@@ -184,15 +185,15 @@ $("#edit_callback").on("click", function()
 
 $(".radio_option").on("click", function()
 {
-      $(".reset_option_div").hide();
+      $(".reset_option_div").hide(1000);
       if ($(this).val() == "1")
-            $("#reset_all_div").show();
+            $("#reset_all_div").show(500);
       if ($(this).val() == "2")
-            $("#reset_campaign_div").show();
+            $("#reset_campaign_div").show(500);
       if ($(this).val() == "3")
-            $("#transfer_all_div").show();
+            $("#transfer_all_div").show(500);
       if ($(this).val() == "4")
-            $("#transfer_by_cd_div").show();
+            $("#transfer_by_cd_div").show(500);
 });
 
 
