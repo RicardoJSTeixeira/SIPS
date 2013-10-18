@@ -1618,7 +1618,7 @@ $(".values_edit_textarea").on("blur", function()
 $("#open_rule_creator").click(function()//Fecha o dialog e grava as alterações 
 {
       $('html,body').animate({
-            scrollTop: $(this).parent().offset().top
+            scrollTop: $(this).parent().offset().top-100
       }, 1000);
       $("#rule_creator").toggle(800);
 });

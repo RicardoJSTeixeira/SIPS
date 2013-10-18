@@ -286,8 +286,7 @@ function insert_element(opcao, element, data)
                               break;
                               
                   }
-                  console.log("validate[" + pattern.join(",") + "]");
-                  if (data.param1 != "none")
+                                    if (data.param1 != "none")
                         element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
                   break;
             case "radio":
@@ -820,3 +819,8 @@ function getUrlVars() {
       });
       return vars;
 }
+
+$("#close_render_admin").on("click",function()
+{
+      window.close();
+});
