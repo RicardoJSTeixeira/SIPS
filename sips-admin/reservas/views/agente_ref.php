@@ -162,13 +162,13 @@ $user=new user;
                     <div class="formRow" id="sch-row">
                         <label class="control-label" for="sch-modal">Calendário</label>
                         <div class="formRight">
-                            <select name="sch" id="sch-modal" class="chzn-select"><?= query_pop_select("Select id_scheduler,display_text From sips_sd_schedulers ".($user->user_group=="ADMIN")?"":"Where user_group='$user->user_group'") ?></select>
+                            <select name="sch" id="sch-modal" class="chzn-select"><?= query_pop_select("Select id_scheduler,display_text From sips_sd_schedulers ".(($user->user_group=="ADMIN")?"":"Where user_group='$user->user_group'")) ?></select>
                         </div>
                     </div>
                     <div class="formRow" id="rsc-row" style="display:none">
                         <label class="control-label" for="rsc-modal">Recurso</label>
                         <div class="formRight">
-                            <select name="rsc" id="rsc-modal" class="chzn-select"><?= query_pop_select("Select id_resource,a.display_text From sips_sd_resources a left join sips_sd_schedulers b on a.id_scheduler=b.id_scheduler ".($user->user_group=="ADMIN")?"":"Where user_group='$user->user_group'") ?></select>
+                            <select name="rsc" id="rsc-modal" class="chzn-select"><?= query_pop_select("Select id_resource,a.display_text From sips_sd_resources a left join sips_sd_schedulers b on a.id_scheduler=b.id_scheduler ".(($user->user_group=="ADMIN")?"":"Where user_group='$user->user_group'")) ?></select>
                         </div>
                     </div>
                 </form>
