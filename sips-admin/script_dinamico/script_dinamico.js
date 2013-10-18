@@ -355,7 +355,6 @@ $(".ipl_radio_options").on("click", function()
 });
 
 
-
 $('#file_upload').change(function() {
       var re_ext = new RegExp("(gif|jpeg|jpg|png|pdf)", "i");
       var file = this.files[0];
@@ -370,9 +369,7 @@ $('#file_upload').change(function() {
             $("#label_ipl_info").text("A extensão do ficheiro seleccionado não é valida.");
             $(this).fileupload('clear');
       }
-      
-      
-        $("#label_ipl_info").text("");
+                $("#label_ipl_info").text("");
 });
 
 $("#ipl_upload_button").on("click", function(e)
