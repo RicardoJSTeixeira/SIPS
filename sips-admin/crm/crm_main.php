@@ -380,11 +380,19 @@
                     function()
                     {
 
+                        $("#datai").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).keypress(function(e) {
+                            e.preventDefault();
+                        }).bind("cut copy paste", function(e) {
+                            e.preventDefault();
+                        });
+                        $("#dataf").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).keypress(function(e) {
+                            e.preventDefault();
+                        }).bind("cut copy paste", function(e) {
+                            e.preventDefault();
+                        });
 
-                        $("#datai").datepicker({autoclose: true, language: "pt",dateFormat: 'yy-mm-dd'});
-                        $("#dataf").datepicker({autoclose: true, language: "pt",dateFormat: 'yy-mm-dd'});
 
-    $(".chosen-select").chosen({no_results_text: "Sem resultados"});
+                        $(".chosen-select").chosen({no_results_text: "Sem resultados"});
 
 
 

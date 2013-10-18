@@ -34,7 +34,7 @@ switch ($action) {
 
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $row["comments"] = htmlentities($row["comments"]);
+            $row["comments"] = htmlspecialchars($row["comments"]);
             $js['aaData'][] = $row;
         }
 

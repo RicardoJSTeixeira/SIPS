@@ -2,16 +2,15 @@
 var user = getUrlVars().user;
 
 $(function() {
+
       $(".chosen-select").chosen(({no_results_text: "Sem resultados"}));
-      $(".datetimep").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt"}).keypress(function(e) {
-            e.preventDefault();
-      }).bind("cut copy paste", function(e) {
+      $(".datepicker").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).bind("cut copy paste", function(e) {
             e.preventDefault();
       });
       $.post("requests.php", {action: "get_agent_name_by_user", user: user},
       function(data)
       {
-            $("#agente_name").text("Agente->" + data);
+            $("#agente_name").text(data);
       });
 
 
@@ -117,7 +116,10 @@ function get_table_data()
                         "mDataProp": "callback_id",
                         "fnRender": function(obj) {
 
-                              var returnButton = "<div class='view-button'><button class='ver_callback btn btn-primary ' type='button' data-callback_id='" + obj.aData.callback_id + "'>Ver</button><button class='apagar_callback btn  btn-inverse  icon-remove btn-small'  data-callback_id='" + obj.aData.callback_id + "'></button></div>";
+                              var returnButton = "<div class='view-button'>\n\
+<button class='ver_callback btn btn-primary icon-eye-open table_bo ' type='button' data-callback_id='" + obj.aData.callback_id + "'></button>\n\
+<button class='apagar_callback btn  btn-inverse  icon-remove table_bo'  data-callback_id='" + obj.aData.callback_id + "'></button>\n\
+</div>";
                               return returnButton;
                         }
                   }],
@@ -132,14 +134,17 @@ $("#search").on("click", function(e)
       e.preventDefault();
       if ($("#form_search").validationEngine('validate'))
       {
-            get_table_data();
+                       get_table_data();
+            $('html,body').animate({
+                  scrollTop: $(this).offset().top
+            }, 1000);
       }
 });
 
 //VER CALLBACK
 $(document).on("click", ".ver_callback", function() {
       var that = $(this);
-      $.post("requests.php", {action: "get_callback_by_id", callback_id:that.data("callback_id")},
+      $.post("requests.php", {action: "get_callback_by_id", callback_id: that.data("callback_id")},
       function(data1)
       {
             var mc = $("#modal_callback");
@@ -228,8 +233,8 @@ $("#confirm_reset_dc_callbacks").on("click", function()
 // ELIMINATE CALLBACK BY ID ***********************************************************
 $(document).on("click", ".apagar_callback", function() {
       $('#eliminar_one').modal('show');
- 
-      $("#confirm_reset_one_callbacks").data("callback_id",$(this).data("callback_id"));
+
+      $("#confirm_reset_one_callbacks").data("callback_id", $(this).data("callback_id"));
 });
 
 $("#confirm_reset_one_callbacks").on("click", function()
