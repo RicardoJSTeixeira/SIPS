@@ -44,7 +44,11 @@ function editor_toggle(tipo)
 
 
 $(function() {
-
+//respostas maximas por feedback TEMPORARIO----------------
+$("#max_feedback_div").hide();
+$("#table_max_feedback").hide();
+$("#open_limit_feedback").hide();
+//_:-------------------------
       $(".chosen-select").chosen({no_results_text: "Sem resultados"});
       array_id["radio"] = 0;
       array_id["checkbox"] = 0;
