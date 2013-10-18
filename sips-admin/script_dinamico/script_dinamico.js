@@ -45,9 +45,9 @@ function editor_toggle(tipo)
 
 $(function() {
 //respostas maximas por feedback TEMPORARIO----------------
-$("#max_feedback_div").hide();
-$("#table_max_feedback").hide();
-$("#open_limit_feedback").hide();
+      $("#max_feedback_div").hide();
+      $("#table_max_feedback").hide();
+      $("#open_limit_feedback").hide();
 //_:-------------------------
       $(".chosen-select").chosen({no_results_text: "Sem resultados"});
       array_id["radio"] = 0;
@@ -173,11 +173,7 @@ $("#open_limit_feedback").hide();
                   $("#ipl_file_select").empty();
             }, "json");
 
-            $.post("requests.php", {action: "get_image_pdf"},
-            function(data5)
-            {
-                  $("#ipl_file_select").html(data5);
-            }, "json");
+
 
             $.post("requests.php", {action: "get_feedbacks"},
             function(data6)
@@ -271,6 +267,7 @@ $(document).on("click", ".element", function(e) {
                   populate_element("textarea", $(this));
                   break;
             case "ipl":
+                  update_select();
                   $("#ipl_layout_editor").show();
                   $("#ipl_edit_link").val("");
                   populate_element("ipl", $(this));
@@ -326,8 +323,19 @@ $("#apagar_elemento").click(function()
       $("#rule_target_select option[value=" + list_item.attr("id") + "] ").remove();
       $('#rule_target_select').val('').trigger('liszt:updated');
 });
+
+
+
+//not introduced feature, still to do 
+$("#quota_required").on("click", function() {
+      $("#div_quota").toggle(500);
+});
+
+
+//FILE UPLOADS------------------------------------
 $(".ipl_radio_options").on("click", function()
 {
+      $("#ipl_file_select").val("");
       $("#ipl_link_div").hide();
       $("#ipl_ip_div").show();
       $("#ipl_file_select option").prop("disabled", false);
@@ -347,13 +355,7 @@ $(".ipl_radio_options").on("click", function()
 });
 
 
-//not introduced feature, still to do 
-$("#quota_required").on("click", function() {
-      $("#div_quota").toggle(500);
-});
 
-
-//FILE UPLOADS------------------------------------
 $('#file_upload').change(function() {
       var re_ext = new RegExp("(gif|jpeg|jpg|png|pdf)", "i");
       var file = this.files[0];
@@ -368,6 +370,9 @@ $('#file_upload').change(function() {
             $("#label_ipl_info").text("A extensão do ficheiro seleccionado não é valida.");
             $(this).fileupload('clear');
       }
+      
+      
+        $("#label_ipl_info").text("");
 });
 
 $("#ipl_upload_button").on("click", function(e)
@@ -377,34 +382,45 @@ $("#ipl_upload_button").on("click", function(e)
       if (form.find('input[type="file"]').val() === '')
             return false;
       var formData = new FormData(form[0]);
+      formData.append("action", "upload");
       $.ajax({
             url: 'upload.php',
             type: 'POST',
             data: formData,
             dataType: "json",
             cache: false,
-            error: function(data) {
+            complete: function(data) {
 
                   $("#label_ipl_info").text(data.responseText);
-            },
-            fail: function(data) {
-
-                  $("#label_ipl_info").text(data.responseText);
-            },
-            success: function(data) {
-
-                  $("#label_ipl_info").text(data.responseText);
+                  $("#ipl_file_select").empty();
                   $.post("requests.php", {action: "get_image_pdf"},
                   function(data5)
                   {
                         $("#ipl_file_select").html(data5);
-
+                        if ($("#radio_ipl_image").is(":checked"))
+                              $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
+                        if ($("#radio_ipl_pdf").is(":checked"))
+                              $("#ipl_file_select option[data-type='image']").prop("disabled", true);
                   }, "json");
             },
             contentType: false,
             processData: false
       });
-      $("#ipl_file_select").empty();
+
+});
+
+function submit_file()
+{
+      $.post("upload.php", {results: $("#forma").serializeArray(), action: "upload"}, function(data) {
+
+            return data;
+      }, "json").fail(function() {
+            return false;
+      });
+}
+
+function update_select()
+{
       $.post("requests.php", {action: "get_image_pdf"},
       function(data5)
       {
@@ -414,17 +430,18 @@ $("#ipl_upload_button").on("click", function(e)
             if ($("#radio_ipl_pdf").is(":checked"))
                   $("#ipl_file_select option[data-type='image']").prop("disabled", true);
       }, "json");
-});
-
-function submit_file()
-{
-      $.post("upload.php", {results: $("#forma").serializeArray()}, function(data) {
-
-            return data;
-      }, "json").fail(function() {
-            return false;
-      });
 }
+;
+
+$("#remove_uploaded_file").on("click", function()
+{
+
+      $.post("upload.php", {action: "delete", name: $("#ipl_file_select option:selected").val()}, function(data) {
+
+            $("#label_ipl_info").text(data);
+            update_select();
+      });
+});
 //FILE UPLOADS------------------------------------
 
 function update_script(callback)
@@ -1618,7 +1635,7 @@ $(".values_edit_textarea").on("blur", function()
 $("#open_rule_creator").click(function()//Fecha o dialog e grava as alterações 
 {
       $('html,body').animate({
-            scrollTop: $(this).parent().offset().top-100
+            scrollTop: $(this).parent().offset().top - 100
       }, 1000);
       $("#rule_creator").toggle(800);
 });
