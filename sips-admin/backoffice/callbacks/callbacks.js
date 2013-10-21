@@ -185,15 +185,15 @@ $("#edit_callback").on("click", function()
 
 $(".radio_option").on("click", function()
 {
-      $(".reset_option_div").hide(1000);
+      $(".reset_option_div").hide(300);
       if ($(this).val() == "1")
-            $("#reset_all_div").show(500);
+            $("#reset_all_div").show(100);
       if ($(this).val() == "2")
-            $("#reset_campaign_div").show(500);
+            $("#reset_campaign_div").show(100);
       if ($(this).val() == "3")
-            $("#transfer_all_div").show(500);
+            $("#transfer_all_div").show(100);
       if ($(this).val() == "4")
-            $("#transfer_by_cd_div").show(500);
+            $("#transfer_by_cd_div").show(100);
 });
 
 
