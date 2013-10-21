@@ -23,10 +23,16 @@ switch ($action) {
         $js['aaData'] = array();
 
         if ($all_date == "false") {
-            if ($data_filtro=="true")
-                $date = "and a.callback_time between '$data_inicio' and '$data_fim'";
+
+
+
+
+
+
+            if ($data_filtro == "true")
+                $date = "and a.callback_time between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
             else
-                $date = "and a.entry_time between '$data_inicio' and '$data_fim'";
+                $date = "and a.entry_time between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
         }
         else
             $date = "";
