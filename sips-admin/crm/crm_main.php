@@ -272,6 +272,7 @@
                                 db_list += "<option value='" + obj.list_id + "'>" + obj.list_name + "</option>";
                             });
                             $("#filtro_dbs").html(db_list).prop("disabled", false);
+                             $("#filtro_dbs").val("").trigger("liszt:updated");
                         }
                         $.ajax({
                             type: "POST",
@@ -288,6 +289,7 @@
                                         feed_list += "<option value='" + obj.status + "'>" + obj.status_name + "</option>";
                                     });
                                     $("#filtro_feedback").html(feed_list).prop("disabled", false);
+                                     $("#filtro_feedback").val("").trigger("liszt:updated");
                                 }
                             }
                         });
@@ -414,6 +416,7 @@
                                         db_list += "<option value='" + obj.list_id + "'>" + obj.list_name + "</option>";
                                     });
                                     $("#filtro_dbs").html(db_list).prop("disabled", false);
+                                    $("#filtro_dbs").val("").trigger("liszt:updated");
                                 }
                                 $.ajax({
                                     type: "POST",
@@ -430,6 +433,7 @@
                                                 feed_list += "<option value='" + obj.status + "'>" + obj.status_name + "</option>";
                                             });
                                             $("#filtro_feedback").html(feed_list).prop("disabled", false);
+                                             $("#filtro_feedback").val("").trigger("liszt:updated");
                                         }
                                     }
                                 });
