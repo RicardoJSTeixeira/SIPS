@@ -93,9 +93,9 @@ switch ($action) {
 # Contrução do Filtro das Datas
         if ($dataflag == 1) {
 
-            $data_QUERY = " AND last_local_call_time >= '$datai' AND last_local_call_time <= '$dataf' ";
+            $data_QUERY = " AND last_local_call_time >= '$datai 00:00:00' AND last_local_call_time <= '$dataf 23:59:59' ";
         } else {
-            $data_QUERY = " AND entry_date >= '$datai' AND entry_date <= '$dataf' ";
+            $data_QUERY = " AND entry_date >= '$datai 00:00:00' AND entry_date <= '$dataf 23:59:59' ";
         }
 # Construção do Filtro das Campanhas/BDs
         if ($filtro_dbs == "all") {
