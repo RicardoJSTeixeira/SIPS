@@ -9060,7 +9060,7 @@ if ($ACTION == 'CalLBacKLisT') {
       }else {  
           $cb_date = " and `callback_time` LIKE concat(curdate(),'%') ";    
      }
-	$stmt = "select callback_id,lead_id,b.campaign_name,status,entry_time,callback_time,comments from vicidial_callbacks a inner join vicidial_campaigns b on a.campaign_id=b.campaign_id where recipient='USERONLY' and user='$user' $campaignCBsql $cb_date order by callback_time;";
+	$stmt = "select callback_id,lead_id,b.campaign_name,status,entry_time,callback_time,comments from vicidial_callbacks a inner join vicidial_campaigns b on a.campaign_id=b.campaign_id where recipient='USERONLY' and status <> 'INACTIVE' and user='$user' $campaignCBsql $cb_date order by callback_time;";
 	if ($DB) {echo "$stmt\n";
 	}
 	$rslt = mysql_query($stmt, $link) OR die(mysql_error());
