@@ -350,11 +350,9 @@
                                                       <div class="formRight">
                                                             <label class="radio inline"  for="validacao_texto_email">Email<input type="radio" id="validacao_texto_email" name="regex_texto" value="email"/></label>
                                                       </div>
-
                                                       <div class="formRight">
                                                             <label class="radio inline"  for="validacao_texto_nib">NIB<input type="radio" id="validacao_texto_nib" name="regex_texto" value="nib"/></label>
                                                       </div>
-
                                                       <div class="formRight">
                                                             <label class="radio inline"  for="validacao_texto_nif">NIF<input type="radio" id="validacao_texto_nif" name="regex_texto" value="nif" /></label>
                                                       </div>
@@ -362,7 +360,10 @@
                                                             <label class="radio inline"  for="validacao_texto_postal">Codigo-postal<input type="radio" id="validacao_texto_postal" name="regex_texto" value="postal"/></label>
                                                       </div>
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="validacao_credit_card">Cartão de Crédito<input type="radio" id="validacao_credit_card" name="regex_texto" value="credit_card"/></label>
+                                                            <label class="radio inline"  for="validacao_credit_card">Cartão de Crédito Visa<input type="radio" id="validacao_credit_card_v" name="regex_texto" value="credit_card_v"/></label>
+                                                      </div>
+                                                      <div class="formRight">
+                                                            <label class="radio inline"  for="validacao_credit_card">Cartão de Crédito MasterCard<input type="radio" id="validacao_credit_card_m" name="regex_texto" value="credit_card_m"/></label>
                                                       </div>
                                                 </div>
                                           </div>
@@ -542,6 +543,24 @@
                                                             <input  maxlength="250" class="span datepicker_input" id="datepicker_edit" type="text" placeholder="Texto exemplo" />
                                                       </div>
                                                 </div>
+
+
+
+                                                <div class="formRow" >
+                                                      <label class="label label-inverse" >Formatação</label>
+
+                                                      <div class="formRight">
+                                                            <label class="radio inline"  for="time_format_day">AAAA-MM-DD<input type="radio" id="time_format_day" name="time_format" value="2" checked="checked"/></label>
+                                                      </div>
+
+                                                      <div class="formRight">
+                                                            <label class="radio inline"  for="time_format_hour">AAAA-MM-DD HH<input type="radio" id="time_format_hour" name="time_format" value="1" /></label>
+                                                      </div>
+                                                      <div class="formRight">
+                                                            <label class="radio inline"  for="time_format_minute">AAAA-MM-DD HH:MM<input type="radio" id="time_format_minute" name="time_format" value="0"/></label>
+                                                      </div>
+
+                                                </div>
                                           </div>
 
                                           <!--SCHEDULER-->
@@ -691,8 +710,8 @@
                                                 <div class="formRow" >
                                                       <label class="label label-inverse" >Tag a copiar:</label>
                                                       <div class="formRight">
-                                                      <label id="tag_label"></label>
-                                                       </div>
+                                                            <label id="tag_label"></label>
+                                                      </div>
                                                 </div>
                                                 <!-----------------------------QUOTAS-------------------------------------------------------->
                                                 <div class="formRow quota_class hidden" >
@@ -756,12 +775,74 @@
                                                             <input  id="rules_valor_input"  type="text" placeholder="Valor que despoleta o evento" name="rules_valor_select" />
                                                       </div> 
                                                 </div>
+                                                <!--DATE-->
+                                                <div class="formRow rules_valor" id="rules_date_div" style="display:none"  >
+                                                      <label class="label label-inverse" >Tipo:</label>
+                                                      <div class="formRight">
+                                                            <select id="rules_data_select" class="chosen-select"   data-placeholder="Selecione um tipo de data" name="rules_data_select"   >
+                                                                  <option value="2">Maior que data</option>
+                                                                  <option value="0">Menor que data</option>
+                                                                  <option value="3">Entre data e data</option>
+                                                                  <option value="1">Igual a data</option>
+                                                            </select>
+                                                      </div> 
+
+                                                      <div class="formRight">
+                                                            <input  class="date_option_radio" type="radio" id="radio_date_type_filter1" name="rdtf" checked="checked" value="1">
+                                                            <label class="radio_name radio inline"  for="radio_date_type_filter1">Data Fixa</label> 
+
+                                                      </div> 
+                                                      <div class="formRight">
+                                                            <input class="date_option_radio"  type="radio" id="radio_date_type_filter2" name="rdtf" value="2" >
+                                                            <label class="radio_name radio inline"  for="radio_date_type_filter2">Data Dinâmica</label> 
+                                                      </div> 
+                                                </div>
+
+                                                <!----------------------------------------------------------------DATE SUB OPTIONS-------------------------------------------------------->
+                                                <div class="formRow rules_valor_dates" id="fixed_date_div1"style="display:none" >
+                                                      <label>Data Inicial</label>
+                                                      <div class="formRight ">
+                                                            <input size="16" type="text" class="form_datetime" id="fixed_date1">
+                                                      </div> 
+                                                </div>      
+                                                <div class="formRow rules_valor_dates" id="fixed_date_div2" style="display:none">
+                                                      <label>Data Final</label>
+                                                      <div class="formRight ">
+                                                            <input size="16" type="text" class="form_datetime"  id="fixed_date2">
+                                                      </div> 
+                                                </div> 
+
+                                                <div class="formRight rules_valor_dates"id="dinamic_date_div1"style="display:none">
+                                                      <table id="table_date1">
+                                                            <thead><th>anos</th><th>Meses</th><th>Dias</th><th>Horas</th></thead>
+                                                            <tbody>
+                                                                  <tr><td><input class="input-mini date_year" type="number" value="0">   </td>
+                                                                        <td><input  class="input-mini date_month" type="number" value="0">   </td>
+                                                                        <td><input class="input-mini date_day" type="number" value="0">   </td>
+                                                                        <td><input class="input-mini date_hour" type="number" value="0">   </td>
+                                                                  </tr>
+                                                            </tbody>
+                                                      </table>
+                                                </div>
+                                                <div class="formRight rules_valor_dates"id="dinamic_date_div2"style="display:none">
+                                                      <table id="table_date2">
+                                                            <thead><th>anos</th><th>Meses</th><th>Dias</th><th>Horas</th></thead>
+                                                            <tbody>
+                                                                  <tr><td><input class="input-mini date_year" type="number" value="0" min="0">   </td>
+                                                                        <td><input  class="input-mini date_month" type="number" value="0" min="0">   </td>
+                                                                        <td><input class="input-mini date_day" type="number" value="0" min="0">   </td>
+                                                                        <td><input class="input-mini date_hour" type="number" value="0" min="0">    </td>
+                                                                  </tr>
+                                                            </tbody>
+                                                      </table>
+                                                </div>
+                                                <!----------------------------------------------------------------DATE SUB OPTIONS-------------------------------------------------------->
                                                 <div class="formRow" >
                                                       <label class="label label-inverse" >Tipo:</label>
                                                       <div class="formRight">
                                                             <select id="regra_select">
-                                                                  <option value="show">Mostrar</option>   
-                                                                  <option value="hide" >Esconder</option>
+                                                                  <option value="show">Mostrar Elemento</option>   
+                                                                  <option value="hide" >Esconder Elemento</option>
                                                                   <option value="goto">Ir para página</option>
                                                             </select>
                                                       </div> 
