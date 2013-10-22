@@ -272,6 +272,7 @@
                                 db_list += "<option value='" + obj.list_id + "'>" + obj.list_name + "</option>";
                             });
                             $("#filtro_dbs").html(db_list).prop("disabled", false);
+                             $("#filtro_dbs").val("").trigger("liszt:updated");
                         }
                         $.ajax({
                             type: "POST",
@@ -288,6 +289,7 @@
                                         feed_list += "<option value='" + obj.status + "'>" + obj.status_name + "</option>";
                                     });
                                     $("#filtro_feedback").html(feed_list).prop("disabled", false);
+                                     $("#filtro_feedback").val("").trigger("liszt:updated");
                                 }
                             }
                         });
@@ -380,11 +382,19 @@
                     function()
                     {
 
+                        $("#datai").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).keypress(function(e) {
+                            e.preventDefault();
+                        }).bind("cut copy paste", function(e) {
+                            e.preventDefault();
+                        });
+                        $("#dataf").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).keypress(function(e) {
+                            e.preventDefault();
+                        }).bind("cut copy paste", function(e) {
+                            e.preventDefault();
+                        });
 
-                        $("#datai").datepicker({autoclose: true, language: "pt",dateFormat: 'yy-mm-dd'});
-                        $("#dataf").datepicker({autoclose: true, language: "pt",dateFormat: 'yy-mm-dd'});
 
-    $(".chosen-select").chosen({no_results_text: "Sem resultados"});
+                        $(".chosen-select").chosen({no_results_text: "Sem resultados"});
 
 
 
@@ -406,6 +416,7 @@
                                         db_list += "<option value='" + obj.list_id + "'>" + obj.list_name + "</option>";
                                     });
                                     $("#filtro_dbs").html(db_list).prop("disabled", false);
+                                    $("#filtro_dbs").val("").trigger("liszt:updated");
                                 }
                                 $.ajax({
                                     type: "POST",
@@ -422,6 +433,7 @@
                                                 feed_list += "<option value='" + obj.status + "'>" + obj.status_name + "</option>";
                                             });
                                             $("#filtro_feedback").html(feed_list).prop("disabled", false);
+                                             $("#filtro_feedback").val("").trigger("liszt:updated");
                                         }
                                     }
                                 });

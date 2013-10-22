@@ -85,7 +85,7 @@ switch ($action) {
 
 
     case "get_tag_fields":
-
+        $campaigns = array();
         $query = "SELECT id_camp_linha FROM script_assoc where id_script='$id_script'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {

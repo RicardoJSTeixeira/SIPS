@@ -22,8 +22,18 @@ switch ($action) {
     case "get_callback_by_user":
         $js['aaData'] = array();
 
-        if ($all_date == "false")
-            $date = "and a.entry_time between '$data_inicio' and '$data_fim'";
+        if ($all_date == "false") {
+
+
+
+
+
+
+            if ($data_filtro == "true")
+                $date = "and a.callback_time between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
+            else
+                $date = "and a.entry_time between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
+        }
         else
             $date = "";
 
@@ -34,7 +44,7 @@ switch ($action) {
 
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $row["comments"] = htmlentities($row["comments"]);
+            $row["comments"] = htmlspecialchars($row["comments"]);
             $js['aaData'][] = $row;
         }
 

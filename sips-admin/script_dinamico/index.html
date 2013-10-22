@@ -44,12 +44,13 @@
                   #add_rule_button{margin:12px;}
                   legend{border-bottom: 8px  groove #a1a1a9;margin-bottom: 0px;}
                   .modal-body, .modal{overflow:visible;}
-                  .grid-title select{width:auto;}
+
                   .formRow .formRight{width:75%;}
                   input[type="checkbox"]{display:inline;}
                   input[type="radio"]{display:inline;}
                   .radio, .checkbox {padding-left: 1px;padding-right: 16px;}
-                  .grid-title select{max-width: 200px;}
+                  .grid-title select{width:auto;max-width: 200px;margin-bottom: 0px;}
+                  .grid-title {height:auto;}
                   .chosen-select{width: 200%;}
                   .hidden{display:none!important;}
                   #textfield_edit   
@@ -62,9 +63,16 @@
                   }
                   #edit_div{border:2px solid #AAAAAA;}
                   #rigth_list{overflow-y:scroll;max-height:400px;}
-
                   .grid-title .pull-right {margin: 3px;}
                   .grid-title .pull-left {margin: 3px;}
+                  #tabs-1 textarea
+                  {
+                        width: 97%;
+                  }
+                  #textfield_layout_editor ul
+                  {
+                        min-width: 0px;
+                  }
             </style>
       </head>
       <body> 
@@ -295,7 +303,8 @@
                   <div class="grid span7" id="edit_div">
                         <div class="grid-title">
                               <div class="pull-left">Edição</div>
-                              <div class="pull-right"><a class="icon-fullscreen"></a>        </div>
+                              <div class="pull-right"><a class="icon-fullscreen"></a>     <button title="fechar caixa de edição" type="button" class=" btn btn-danger icon-remove cancel_edit" data-dismiss="modal" aria-hidden="true"></button>   </div>
+
                         </div>
 
                         <div class="grid-content">
@@ -327,7 +336,8 @@
                                                 </div>
 
                                                 <div class="formRow validation" >
-                                                      <label class="label label-inverse" >Validação</label>
+                                                      <label class="label label-inverse" >Validação:</label>
+
                                                       <div class="formRight">
                                                             <label class="radio inline"  for="validacao_texto_none">Sem validação<input type="radio" id="validacao_texto_none" name="regex_texto" value="none" /></label>
                                                       </div> 
@@ -431,12 +441,12 @@
                                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="color" ><i class="fam-color-swatch" style="padding-right: 0px"></i></a>
                                                                         <div  class="dropdown-menu">
                                                                               <ul>
-                                                                                    <li> <a class="btn" data-edit="foreColor #ff0024" ><i class="icon-tint"></i> Vermelho</a></li>   
-                                                                                    <li>  <a class="btn" data-edit="foreColor #54bc00" ><i class="icon-tint"></i> Verde</a></li> 
-                                                                                    <li> <a class="btn" data-edit="foreColor #22aeff" ><i class="icon-tint"></i> Azul</a></li> 
-                                                                                    <li> <a class="btn" data-edit="foreColor #ff8400" ><i class="icon-tint"></i> Laranja</a></li>  
-                                                                                    <li> <a class="btn" data-edit="foreColor #999999" ><i class="icon-tint"></i> Cinzento</a></li>  
-                                                                                    <li> <a class="btn" data-edit="foreColor #000000" ><i class="icon-tint"></i> Preto</a></li>  
+                                                                                    <li> <a class="btn icon-tint " data-edit="foreColor #ff0024" style="color:#ff0024  " > </a></li>   
+                                                                                    <li>  <a class="btn icon-tint" data-edit="foreColor #54bc00" style="color:#54bc00  " > </a></li>   
+                                                                                    <li> <a class="btn icon-tint" data-edit="foreColor #22aeff" style="color:#22aeff  " > </a></li>   
+                                                                                    <li> <a class="btn icon-tint" data-edit="foreColor #ff8400" style="color:#ff8400  " > </a></li>   
+                                                                                    <li> <a class="btn icon-tint" data-edit="foreColor #999999" style="color:#999999  " > </a></li>   
+                                                                                    <li> <a class="btn icon-tint" data-edit="foreColor #000000" style="color:#000000  " > </a></li>   
                                                                         </div>
                                                                   </div>
                                                                   <div class="btn-group">
@@ -622,7 +632,7 @@
                                                 <div class="formRow" id="ipl_ip_div">
                                                       <label class="label label-inverse">Imagem/Pdf</label>
                                                       <div class="formRight">
-                                                            <select id="ipl_file_select" ></select>
+                                                            <select id="ipl_file_select" ></select><button class="btn btn-mini btn-danger icon-remove" id="remove_uploaded_file"></button>
                                                       </div>
                                                 </div>
                                                 <div class="formRow" id="ipl_link_div"  >
@@ -637,12 +647,7 @@
                                           <!------------------------------------------------------------------------------>
                                           <div class="clear"></div>
                                           <div id="item_edit_comum" style="display:none;"> 
-                                                <div class="formRow" id="tag_edit" >
-                                                      <label class="label label-inverse" >Tag:</label>
-                                                      <div class="formRight">
-                                                            <label  id="label_tag"></label>
-                                                      </div>
-                                                </div>
+
                                                 <!----------------------------------------------REQUIRED------------------------------------------->
                                                 <div class="formRow required_class" >
                                                       <label class="label label-inverse" >Obrigatório:</label>
@@ -665,9 +670,14 @@
                                                       </div>
                                                 </div>
                                                 <!------------------------------------TAGS---------------------------------------------->
-
+                                                <div class="formRow" id="tag_edit" >
+                                                      <label class="label label-inverse" >Tag associativo:</label>
+                                                      <div class="formRight">
+                                                            <label  id="label_tag"></label>
+                                                      </div>
+                                                </div>
                                                 <div class="formRow"  >
-                                                      <label class="label label-inverse" >Tags:</label>
+                                                      <label class="label label-inverse" >Tags campos dinâmicos:</label>
                                                       <div class="formRight">
                                                             <select id="tags_select" class="chosen-select" data-placeholder="Selecione uma tag" >
                                                                   <optgroup label="Campos Gerais">
@@ -681,8 +691,8 @@
                                                 <div class="formRow" >
                                                       <label class="label label-inverse" >Tag a copiar:</label>
                                                       <div class="formRight">
-                                                            <label id="tag_label"></label>
-                                                      </div>
+                                                      <label id="tag_label"></label>
+                                                       </div>
                                                 </div>
                                                 <!-----------------------------QUOTAS-------------------------------------------------------->
                                                 <div class="formRow quota_class hidden" >
