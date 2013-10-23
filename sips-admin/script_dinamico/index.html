@@ -6,9 +6,9 @@
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css">
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
+            <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
             <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
-            <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-fileupload.min.css" />
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
@@ -29,6 +29,7 @@
             <script type="text/javascript" src="/bootstrap/js/bootstrap-fileupload.min.js"></script>
             <script type="text/javascript" src="/bootstrap/js/bootstrap-tooltip.js"></script>
             <script type="text/javascript" src="/bootstrap/js/bootstrap-popover.js"></script>
+            <script type="text/javascript" src="/bootstrap/js/moment.min.js"></script>
 
             <script type="text/javascript" src="/bootstrap/js/validation/jquery.validationEngine.js"></script>
             <script type="text/javascript" src="/bootstrap/js/validation/languages/jquery.validationEngine-pt.js"></script>
@@ -800,41 +801,47 @@
 
                                                 <!----------------------------------------------------------------DATE SUB OPTIONS-------------------------------------------------------->
                                                 <div class="formRow rules_valor_dates" id="fixed_date_div1"style="display:none" >
-                                                      <label>Data Inicial</label>
+                                                      <label class="label label-inverse">Data Inicial</label>
                                                       <div class="formRight ">
                                                             <input size="16" type="text" class="form_datetime" id="fixed_date1">
                                                       </div> 
                                                 </div>      
                                                 <div class="formRow rules_valor_dates" id="fixed_date_div2" style="display:none">
-                                                      <label>Data Final</label>
+                                                      <label class="label label-inverse">Data Final</label>
                                                       <div class="formRight ">
                                                             <input size="16" type="text" class="form_datetime"  id="fixed_date2">
                                                       </div> 
                                                 </div> 
+                                                <div class="formRow rules_valor_dates" id="dinamic_date_div1"style="display:none">
+                                                      <label class="label label-inverse">Data Inicial</label>
+                                                      <div class="formRight">
+                                                            <table id="table_date1">
+                                                                  <thead><th>anos</th><th>Meses</th><th>Dias</th><th>Horas</th></thead>
+                                                                  <tbody>
+                                                                        <tr><td> <input  class="input-mini date_year spinner"  value="0">   </td>
+                                                                              <td><input   class="input-mini date_month spinner"  value="0">   </td>
+                                                                              <td><input  class="input-mini date_day spinner"  value="0">   </td>
+                                                                              <td><input  class="input-mini date_hour spinner"  value="0">   </td>
+                                                                        </tr>
+                                                                  </tbody>
+                                                            </table>
+                                                      </div>
 
-                                                <div class="formRight rules_valor_dates"id="dinamic_date_div1"style="display:none">
-                                                      <table id="table_date1">
-                                                            <thead><th>anos</th><th>Meses</th><th>Dias</th><th>Horas</th></thead>
-                                                            <tbody>
-                                                                  <tr><td><input class="input-mini date_year" type="number" value="0">   </td>
-                                                                        <td><input  class="input-mini date_month" type="number" value="0">   </td>
-                                                                        <td><input class="input-mini date_day" type="number" value="0">   </td>
-                                                                        <td><input class="input-mini date_hour" type="number" value="0">   </td>
-                                                                  </tr>
-                                                            </tbody>
-                                                      </table>
                                                 </div>
-                                                <div class="formRight rules_valor_dates"id="dinamic_date_div2"style="display:none">
-                                                      <table id="table_date2">
-                                                            <thead><th>anos</th><th>Meses</th><th>Dias</th><th>Horas</th></thead>
-                                                            <tbody>
-                                                                  <tr><td><input class="input-mini date_year" type="number" value="0" min="0">   </td>
-                                                                        <td><input  class="input-mini date_month" type="number" value="0" min="0">   </td>
-                                                                        <td><input class="input-mini date_day" type="number" value="0" min="0">   </td>
-                                                                        <td><input class="input-mini date_hour" type="number" value="0" min="0">    </td>
-                                                                  </tr>
-                                                            </tbody>
-                                                      </table>
+                                                <div class="formRow rules_valor_dates" id="dinamic_date_div2"style="display:none">
+                                                      <label class="label label-inverse">Data Final</label>
+                                                      <div class="formRight">
+                                                            <table id="table_date2">
+                                                                  <thead><th>anos</th><th>Meses</th><th>Dias</th><th>Horas</th></thead>
+                                                                  <tbody>
+                                                                        <tr><td><input class="input-mini date_year spinner"  value="0" >   </td>
+                                                                              <td><input  class="input-mini date_month spinner" value="0" >   </td>
+                                                                              <td><input class="input-mini date_day spinner"  value="0" >   </td>
+                                                                              <td><input class="input-mini date_hour spinner"  value="0">    </td>
+                                                                        </tr>
+                                                                  </tbody>
+                                                            </table>
+                                                      </div>
                                                 </div>
                                                 <!----------------------------------------------------------------DATE SUB OPTIONS-------------------------------------------------------->
                                                 <div class="formRow" >

@@ -187,7 +187,7 @@ function update_info()
                                       .data("required", this.required)
                                       .data("type", "datepicker")
                                       .data("data_format", this.placeholder);
-                                    
+
                               items.push([item, this.id_page]);
                               break;
                         case "scheduler":
@@ -679,10 +679,68 @@ function rules()
                                           }
                                           );
                                           break;
-                                          
-                                          
-                                          case "date":
-                                                break;
+
+
+                                    case "date":
+                                          $(document).on("change", "#" + this.tag_trigger + " .form_datetime", function()//atribuir os ons a cada value
+                                          {
+                                                var temp = data[index];
+
+                                                if (temp.param2.fd == "fixed") {
+                                                      switch (temp.param2.tipo)
+                                                      {
+                                                            case "menor":
+                                                                  if ($(this).val() < temp.param2.data_inicio)
+                                                                        rules_work(data[index]);
+                                                                  break;
+                                                            case "igual":
+                                                                  if ($(this).val() == temp.param2.data_inicio)
+                                                                        rules_work(data[index]);
+                                                                  break;
+                                                            case "maior":
+
+                                                                  if ($(this).val() > temp.param2.data_inicio)
+                                                                        rules_work(data[index]);
+                                                                  break;
+                                                            case "entre":
+                                                                  if ($(this).val() > temp.param2.data_inicio && $(this).val() < temp.param2.data_fim)
+                                                                        rules_work(data[index]);
+                                                                  break;
+                                                      }
+                                                }
+                                                else
+                                                {
+                                                      var tempo1 = temp.param2.data_inicio.split("/");
+
+                                                      var time1 = moment();
+                                                      time1.add('year', tempo1[0]).add('month', tempo1[1]).add('day', tempo1[2]).add('hour', tempo1[3]);
+                                                      switch (temp.param2.tipo)
+                                                      {
+                                                            case "menor":
+                                                                  if (time1.isAfter(moment($(this).val())))
+                                                                        rules_work(data[index]);
+                                                                  break;
+                                                            case "igual":
+                                                                  if (time1.isSame(moment($(this).val()), "day"))
+                                                                        rules_work(data[index]);
+                                                                  break;
+                                                            case "maior":
+                                                                  if (time1.isBefore(moment($(this).val())))
+                                                                        rules_work(data[index]);
+                                                                  break;
+                                                            case "entre":
+                                                                  var tempo2 = temp.param2.data_fim.split("/");
+                                                                  var time2 = moment();
+                                                                  time2.add('year', tempo2[0]).add('month', tempo2[1]).add('day', tempo2[2]).add('hour', tempo2[3]);
+                                                                  if (time1.isBefore(moment($(this).val())) && time2.isAfter(moment($(this).val())))
+                                                                        rules_work(data[index]);
+                                                                  break;
+                                                      }
+                                                }
+
+                                          }
+                                          );
+                                          break;
                               }
                               break;
                         case "textarea":

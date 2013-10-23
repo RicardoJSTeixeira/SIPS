@@ -44,7 +44,7 @@ function editor_toggle(tipo)
 
 
 $(function() {
-
+$(".spinner").spinner({});
       $("#rule_creator .form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
       //respostas maximas por feedback TEMPORARIO----------------
       $("#max_feedback_div").hide();
@@ -1499,7 +1499,6 @@ function rules_manager(tipo, element)
                   rts.append(new Option("Valor escolhido", "value_select"));
                   break;
             case "datepicker":
-
                   rts.append(new Option("Resposta", "answer"));
                   rts.append(new Option("Data", "date"));
                   break;
@@ -1554,6 +1553,7 @@ $("#rule_trigger_select").change(function()
 
                   $("#rules_date_div").show();
                   $("#fixed_date_div1").show();
+                  $("#radio_date_type_filter1").prop("checked",true);
                   break;
       }
 });
