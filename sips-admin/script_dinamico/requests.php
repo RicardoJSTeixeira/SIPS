@@ -468,7 +468,7 @@ switch ($action) {
 
 
     case "delete_rule":
-        $query = "delete from script_rules  where id=$id";
+        $query = "delete from script_rules  where id='$id'";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(1);
         break;

@@ -44,7 +44,7 @@ function editor_toggle(tipo)
 
 
 $(function() {
-$(".spinner").spinner({});
+      $(".spinner").spinner({});
       $("#rule_creator .form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
       //respostas maximas por feedback TEMPORARIO----------------
       $("#max_feedback_div").hide();
@@ -189,7 +189,7 @@ $(".spinner").spinner({});
       $('#ipl_link').wysiwyg();
       $(document).on("click", ".rule_delete_icon", function(e) {
             rules_database("delete_rule", $(this).data("id"), 0, 0, 0, 0, 0, 0, 0, 0);
-            rules_database("get_rules_by_trigger", 0, $("#script_selector option:selected").val(), 0, selected_tag, 0, 0, 0, 0, 0);
+
       });
 });
 // ON CLICK DE UM QUALQUER ELEMENTO
@@ -1445,38 +1445,6 @@ $("#save_button_layout").click(function()//Fecha o dialog e grava as alteraçõe
 });
 //---------------------------------------------0000
 //------------------RULES----------------------------000000000
-$(".date_option_radio").on("click", function()
-{
-      $(".rules_valor_dates").hide();
-      if ($(this).val() == "1")
-      {
-            $("#fixed_date_div1").show();
-            if ($("#rules_data_select option:selected").val() == "3")
-                  $("#fixed_date_div2").show();
-      }
-      else
-      {
-            $("#dinamic_date_div1").show();
-            if ($("#rules_data_select option:selected").val() == "3")
-                  $("#dinamic_date_div2").show();
-      }
-
-});
-$("#rules_data_select").on("change", function()
-{
-      if ($(this).val() == "3")
-      {
-            if ($("#radio_date_type_filter1").is(":checked"))
-                  $("#fixed_date_div2").show();
-            else
-                  $("#dinamic_date_div2").show();
-      }
-      else
-      {
-            $("#fixed_date_div2").hide();
-            $("#dinamic_date_div2").hide();
-      }
-});
 function rules_manager(tipo, element)
 {
 
@@ -1508,55 +1476,6 @@ function rules_manager(tipo, element)
       }
       rts.trigger("change");
 }
-$("#rule_trigger_select").change(function()
-{
-      $(".rules_valor_dates").hide();
-      $(".rules_valor").hide();
-      switch ($("#rule_trigger_select option:selected").val())
-      {
-            case "value_input":
-                  $("#rules_valor_input_div").show();
-                  $("#rules_valor_input").val("");
-                  break;
-            case "value_select":
-                  $("#rules_valor_select_div").show();
-                  $("#rules_valor_select").empty();
-                  $.post("requests.php", {action: "get_data_individual", id: selected_id},
-                  function(data)
-                  {
-                        $('#rules_valor_select').empty();
-                        var dados = data.values_text;
-                        if (selected_type === "tableradio")
-                        {
-                              var titulos = data.placeholder;
-                              var options = "";
-                              $.each(dados, function(index1, value1) {
-                                    $.each(titulos, function(index2, value2) {
-                                          options += "<option value='" + dados[index1] + ";" + titulos[index2] + "'>" + dados[index1] + "---" + titulos[index2] + "</option>";
-                                    });
-                              });
-                              $("#rules_valor_select").append(options);
-                        }
-                        else
-                        {
-                              var options = "";
-                              $.each(dados, function(index, value) {
-                                    options += "<option value='" + this + "'>" + this + "</option>";
-                              });
-                              $("#rules_valor_select").append(options);
-                        }
-                        $('#rules_valor_select').val("").trigger('liszt:updated');
-                  }
-                  , "json");
-                  break;
-            case "date":
-
-                  $("#rules_date_div").show();
-                  $("#fixed_date_div1").show();
-                  $("#radio_date_type_filter1").prop("checked",true);
-                  break;
-      }
-});
 function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trigger2, Id_target, Tipo, Param1, Param2)
 {
       $.post("requests.php", {action: opcao,
@@ -1613,7 +1532,7 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
                               }
 
                               $("#rule_manager_list").append($("<tr>")
-                                      .append($("<td>").text(temp_text))
+                                      .append($("<td>").text((this.param1 == "date") ? temp_text : "Resposta"))
                                       .append($("<td>").text(this.tipo))
                                       .append($("<td>").text((this.tipo == "ir para página") ? $("#go_to_select option[value=" + this.tag_target + "]").text() : this.tag_target))
                                       .append($("<td>").append($("<button>").addClass("icon-remove rule_delete_icon btn btn-inverse span").data("id", this.id).data("tag_trigger", this.tag_trigger)))
@@ -1634,9 +1553,97 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
             {
                   rules_database("get_rules_by_trigger", 0, $("#script_selector option:selected").val(), 0, selected_tag, 0, 0, 0, 0, 0);
             }
+            if (opcao === "delete_rule")
+            {
+                  rules_database("get_rules_by_trigger", 0, $("#script_selector option:selected").val(), 0, selected_tag, 0, 0, 0, 0, 0);
+            }
+
       }
+
+
       , "json");
 }
+$(".date_option_radio").on("click", function()
+{
+      $(".rules_valor_dates").hide();
+      if ($(this).val() == "1")
+      {
+            $("#fixed_date_div1").show();
+            if ($("#rules_data_select option:selected").val() == "3")
+                  $("#fixed_date_div2").show();
+      }
+      else
+      {
+            $("#dinamic_date_div1").show();
+            if ($("#rules_data_select option:selected").val() == "3")
+                  $("#dinamic_date_div2").show();
+      }
+
+});
+$("#rules_data_select").on("change", function()
+{
+      if ($(this).val() == "3")
+      {
+            if ($("#radio_date_type_filter1").is(":checked"))
+                  $("#fixed_date_div2").show();
+            else
+                  $("#dinamic_date_div2").show();
+      }
+      else
+      {
+            $("#fixed_date_div2").hide();
+            $("#dinamic_date_div2").hide();
+      }
+});
+$("#rule_trigger_select").change(function()
+{
+      $(".rules_valor_dates").hide();
+      $(".rules_valor").hide();
+      switch ($("#rule_trigger_select option:selected").val())
+      {
+            case "value_input":
+                  $("#rules_valor_input_div").show();
+                  $("#rules_valor_input").val("");
+                  break;
+            case "value_select":
+                  $("#rules_valor_select_div").show();
+                  $("#rules_valor_select").empty();
+                  $.post("requests.php", {action: "get_data_individual", id: selected_id},
+                  function(data)
+                  {
+                        $('#rules_valor_select').empty();
+                        var dados = data.values_text;
+                        if (selected_type === "tableradio")
+                        {
+                              var titulos = data.placeholder;
+                              var options = "";
+                              $.each(dados, function(index1, value1) {
+                                    $.each(titulos, function(index2, value2) {
+                                          options += "<option value='" + dados[index1] + ";" + titulos[index2] + "'>" + dados[index1] + "---" + titulos[index2] + "</option>";
+                                    });
+                              });
+                              $("#rules_valor_select").append(options);
+                        }
+                        else
+                        {
+                              var options = "";
+                              $.each(dados, function(index, value) {
+                                    options += "<option value='" + this + "'>" + this + "</option>";
+                              });
+                              $("#rules_valor_select").append(options);
+                        }
+                        $('#rules_valor_select').val("").trigger('liszt:updated');
+                  }
+                  , "json");
+                  break;
+            case "date":
+
+                  $("#rules_date_div").show();
+                  $("#fixed_date_div1").show();
+                  $("#radio_date_type_filter1").prop("checked", true);
+                  break;
+      }
+});
 //Rules safety
 $(".values_edit_textarea").on("focus", function()
 {
@@ -1776,12 +1783,10 @@ $("#add_rule_button").click(function()
                                     rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "date", datar);
                               else
                                     rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "date", datar);
-
-
-
                               break;
-                  }
 
+                  }
+                  break;
             case "textarea":
                   switch ($("#rule_trigger_select").val())
                   {
