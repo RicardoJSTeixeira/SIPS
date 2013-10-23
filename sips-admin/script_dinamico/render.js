@@ -884,8 +884,7 @@ function checknif(field, rules, i, options) {
                   if (checkDigit >= 10) {
                         checkDigit = 0;
                   }
-
-                  if (checkDigit === nif.charAt(8)) {
+                  if (checkDigit !== parseInt(nif.charAt(8))) {
 
                         return "Introduza um NIF correto";
                   }
