@@ -9038,6 +9038,7 @@ function getPi() {
        var nomePi = $("#nomePi").html();
        if ((apiPhone !== null && apiPhone !== '') && ( nomePi == null || nomePi == '')) {
        $.post("../client_files/necomplus/soap_api.php",{phone : apiPhone},function(data){
+           if (data.codresultado == '0') {
                $("#nomePi").html(data.nombre_comercio);
                $("#codigoPi").html(data.codigo_comercio);
                $("#moradaPi").html(data.dir_comercio);
@@ -9054,6 +9055,7 @@ function getPi() {
                         $('#ordensPi > tbody:last').append('<tr><td>'+data.datos_num_orden['num_orden_'+i]+'</td><td>'+data.datos_num_orden['tipo_orden_'+i]+'</td><td>'+data.datos_num_orden['estado_'+i]+'</td></tr>'); 
                     }
                }
+           } else { $("#nomePi").html('Sem dados do cliente'); }     
        },'json');
        }
 }
