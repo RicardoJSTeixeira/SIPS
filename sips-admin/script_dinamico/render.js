@@ -185,7 +185,9 @@ function update_info()
                               item.attr("id", this.tag)
                                       .data("id", this.id)
                                       .data("required", this.required)
-                                      .data("type", "datepicker");
+                                      .data("type", "datepicker")
+                                      .data("data_format", this.placeholder);
+
                               items.push([item, this.id_page]);
                               break;
                         case "scheduler":
@@ -235,11 +237,7 @@ function update_info()
                   $("#admin_submit").show();
             }
 
-            $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt"}).keypress(function(e) {
-                  e.preventDefault();
-            }).bind("cut copy paste", function(e) {
-                  e.preventDefault();
-            });
+
 
             rules();
       }, "json");
@@ -260,7 +258,7 @@ function insert_element(opcao, element, data)
                   var pattern = [];
                   if (data.required)
                         pattern.push("required");
-               
+
                   switch (data.param1)
                   {
                         case "normal":
@@ -281,12 +279,15 @@ function insert_element(opcao, element, data)
                         case "nif":
                               pattern.push("funcCall[checknif]");
                               break;
-                        case "credit_card":
-                              pattern.push("creditCard");
+                        case "credit_card_m":
+                              pattern.push("funcCall[isValidMastercard]");
                               break;
-                              
+                        case "credit_card_v":
+                              pattern.push("funcCall[isValidVISA]");
+                              break;
+
                   }
-                                    if (data.param1 != "none")
+                  if (data.param1 != "none")
                         element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
                   break;
             case "radio":
@@ -423,6 +424,28 @@ function insert_element(opcao, element, data)
                   if (data.required)
                         element.find(".form_datetime").addClass("validate[required]");
                   element.find(".form_datetime")[0].name = data.tag;
+                  var data_format = "";
+                  var min_view = 0;
+                  switch (element.data("data_format"))
+                  {
+                        case "0":
+                              data_format = 'yyyy-mm-dd hh:ii';
+                              min_view = 0;
+                              break;
+                        case "1":
+                              data_format = 'yyyy-mm-dd hh';
+                              min_view = 1;
+                              break;
+                        case "2":
+                              data_format = 'yyyy-mm-dd';
+                              min_view = 2;
+                              break;
+                  }
+                  element.find(".form_datetime").datetimepicker({format: data_format, autoclose: true, language: "pt", minView: min_view}).keypress(function(e) {
+                        e.preventDefault();
+                  }).bind("cut copy paste", function(e) {
+                        e.preventDefault();
+                  });
                   break;
             case "scheduler":
                   element.find(".scheduler_button_go").attr("id", element.data("id") + "go_button");
@@ -534,7 +557,7 @@ function rules_work(data)
                   break;
             case "goto":
                   $(".pag_div").hide();
-                  $("#" + data.param2 + "pag").show();
+                  $("#" + data.tag_target + "pag").show();
                   break;
       }
 }
@@ -653,6 +676,68 @@ function rules()
                                           $(document).on("change", "#" + this.tag_trigger, function()//atribuir os ons a cada value
                                           {
                                                 rules_work(data[index]);
+                                          }
+                                          );
+                                          break;
+
+
+                                    case "date":
+                                          $(document).on("change", "#" + this.tag_trigger + " .form_datetime", function()//atribuir os ons a cada value
+                                          {
+                                                var temp = data[index];
+
+                                                if (temp.param2.fd == "fixed") {
+                                                      switch (temp.param2.tipo)
+                                                      {
+                                                            case "menor":
+                                                                  if ($(this).val() < temp.param2.data_inicio)
+                                                                        rules_work(data[index]);
+                                                                  break;
+                                                            case "igual":
+                                                                  if ($(this).val() == temp.param2.data_inicio)
+                                                                        rules_work(data[index]);
+                                                                  break;
+                                                            case "maior":
+
+                                                                  if ($(this).val() > temp.param2.data_inicio)
+                                                                        rules_work(data[index]);
+                                                                  break;
+                                                            case "entre":
+                                                                  if ($(this).val() > temp.param2.data_inicio && $(this).val() < temp.param2.data_fim)
+                                                                        rules_work(data[index]);
+                                                                  break;
+                                                      }
+                                                }
+                                                else
+                                                {
+                                                      var tempo1 = temp.param2.data_inicio.split("/");
+
+                                                      var time1 = moment();
+                                                      time1.add('year', tempo1[0]).add('month', tempo1[1]).add('day', tempo1[2]).add('hour', tempo1[3]);
+                                                      switch (temp.param2.tipo)
+                                                      {
+                                                            case "menor":
+                                                                  if (time1.isAfter(moment($(this).val())))
+                                                                        rules_work(data[index]);
+                                                                  break;
+                                                            case "igual":
+                                                                  if (time1.isSame(moment($(this).val()), "day"))
+                                                                        rules_work(data[index]);
+                                                                  break;
+                                                            case "maior":
+                                                                  if (time1.isBefore(moment($(this).val())))
+                                                                        rules_work(data[index]);
+                                                                  break;
+                                                            case "entre":
+                                                                  var tempo2 = temp.param2.data_fim.split("/");
+                                                                  var time2 = moment();
+                                                                  time2.add('year', tempo2[0]).add('month', tempo2[1]).add('day', tempo2[2]).add('hour', tempo2[3]);
+                                                                  if (time1.isBefore(moment($(this).val())) && time2.isAfter(moment($(this).val())))
+                                                                        rules_work(data[index]);
+                                                                  break;
+                                                      }
+                                                }
+
                                           }
                                           );
                                           break;
@@ -799,8 +884,7 @@ function checknif(field, rules, i, options) {
                   if (checkDigit >= 10) {
                         checkDigit = 0;
                   }
-
-                  if (checkDigit === nif.charAt(8)) {
+                  if (checkDigit !== parseInt(nif.charAt(8))) {
 
                         return "Introduza um NIF correto";
                   }
@@ -812,6 +896,58 @@ function checknif(field, rules, i, options) {
             return "Introduza um NIF correto";
 }
 
+function isValidCard(cardNumber) {
+
+
+      var ccard = new Array(cardNumber.length);
+      var i = 0;
+      var sum = 0;
+
+      // 6 digit is issuer identifier
+      // 1 last digit is check digit
+      // most card number > 11 digit
+      if (cardNumber.length < 11) {
+            return false;
+      }
+      // Init Array with Credit Card Number
+      for (i = 0; i < cardNumber.length; i++) {
+            ccard[i] = parseInt(cardNumber.charAt(i));
+      }
+      // Run step 1-5 above above
+      for (i = 0; i < cardNumber.length; i = i + 2) {
+            ccard[i] = ccard[i] * 2;
+            if (ccard[i] > 9) {
+                  ccard[i] = ccard[i] - 9;
+            }
+      }
+      for (i = 0; i < cardNumber.length; i++) {
+            sum = sum + ccard[i];
+      }
+      return ((sum % 10) == 0);
+}
+
+function isValidVISA(field, rules, i, options) {
+      cardNumber = field.val();
+      if (cardNumber.charAt(0) == '4' && (cardNumber.length == 13 || cardNumber.length == 16)) {
+            if (!isValidCard(cardNumber))
+                  return "Nº de Cartão invalido";
+      }
+      else
+            return "Insira um número de cartão Visa Válido";
+}
+
+function isValidMastercard(field, rules, i, options) {
+      cardNumber = field.val();
+      if (cardNumber.charAt(0) == '5' && (cardNumber.charAt(1) == '1' || cardNumber.charAt(1) == '5') && cardNumber.length == 16) {
+            if (!isValidCard(cardNumber))
+                  return "Nº de Cartão invalido";
+      }
+      else
+            return "Insira um número de cartão Mastercard Válido";
+}
+
+
+
 function getUrlVars() {
       var vars = {};
       var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
@@ -820,7 +956,7 @@ function getUrlVars() {
       return vars;
 }
 
-$("#close_render_admin").on("click",function()
+$("#close_render_admin").on("click", function()
 {
       window.close();
 });

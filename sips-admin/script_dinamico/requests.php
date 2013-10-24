@@ -218,7 +218,7 @@ switch ($action) {
         $query = mysql_query($query, $link) or die(mysql_error());
         $js = array();
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array("id" => $row["id"], "id_script" => $row["id_script"], "tipo_elemento" => $row["tipo_elemento"], "tag_trigger" => $row["tag_trigger"], "tag_trigger2" => json_decode($row["tag_trigger2"]), "tag_target" => json_decode($row["tag_target"]), "tipo" => $row["tipo"], "param1" => $row["param1"], "param2" => $row["param2"]);
+            $js[] = array("id" => $row["id"], "id_script" => $row["id_script"], "tipo_elemento" => $row["tipo_elemento"], "tag_trigger" => $row["tag_trigger"], "tag_trigger2" => json_decode($row["tag_trigger2"]), "tag_target" => json_decode($row["tag_target"]), "tipo" => $row["tipo"], "param1" => $row["param1"], "param2" => json_decode($row["param2"]));
         }
         echo json_encode($js);
         break;
@@ -378,7 +378,7 @@ switch ($action) {
     case "add_rules":
 
         if (!empty($tag_trigger2) && !empty($tag_target)) {
-            $query = "INSERT INTO `asterisk`.`script_rules` (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) VALUES (NULL,$id_script,'$tipo_elemento',$tag_trigger,'" . mysql_real_escape_string(json_encode($tag_trigger2)) . "','" . mysql_real_escape_string(json_encode($tag_target)) . "','$tipo','$param1','$param2')";
+            $query = "INSERT INTO `asterisk`.`script_rules` (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) VALUES (NULL,$id_script,'$tipo_elemento',$tag_trigger,'" . mysql_real_escape_string(json_encode($tag_trigger2)) . "','" . mysql_real_escape_string(json_encode($tag_target)) . "','$tipo','$param1','".mysql_real_escape_string(json_encode($param2))."')";
             $query = mysql_query($query, $link) or die(mysql_error());
             echo json_encode(1);
         }
@@ -468,7 +468,7 @@ switch ($action) {
 
 
     case "delete_rule":
-        $query = "delete from script_rules  where id=$id";
+        $query = "delete from script_rules  where id='$id'";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(1);
         break;
