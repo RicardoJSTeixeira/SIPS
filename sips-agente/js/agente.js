@@ -9033,6 +9033,30 @@ function manNextCall(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnStagE
       }
 }
 
+function getPi() {
+       var apiPhone = $("#phone_number").val();
+       var nomePi = $("#nomePi").html();
+       if ((apiPhone !== null && apiPhone !== '') && ( nomePi == null || nomePi == '')) {
+       $.post("../client_files/necomplus/soap_api.php",{phone : apiPhone},function(data){
+               $("#nomePi").html(data.nombre_comercio);
+               $("#codigoPi").html(data.codigo_comercio);
+               $("#moradaPi").html(data.dir_comercio);
+               $("#contactoPi").html(data.contacto_comercio);
+               for (i=0;i<data.datos_ns.contador_ns;i++) {
+                  var a = i+1;
+                  $('#tpaPi > tbody:last').append('<tr><td>'+data.datos_ns['num_serie_'+a]+'</td><td>'+data.datos_ns['id_tpa_'+a]+'</td></tr>'); 
+                }
+               var flag = true;
+               var b = 1;
+               for (i=1;i<6;i++) {
+                   console.log('in' + data.datos_num_orden['num_orden_'+i]);
+                   if (data.datos_num_orden['num_orden_'+i] !== undefined) { 
+                        $('#ordensPi > tbody:last').append('<tr><td>'+data.datos_num_orden['num_orden_'+i]+'</td><td>'+data.datos_num_orden['tipo_orden_'+i]+'</td><td>'+data.datos_num_orden['estado_'+i]+'</td></tr>'); 
+                    }
+               }
+       },'json');
+       }
+}
 
 // ################################################################################
 // Generate the Presets Chooser span content
