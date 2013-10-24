@@ -8,46 +8,6 @@ var items = [];
 var unique_id = 0;
 var id_script = 0;
 var admin_review = 0;
-$(function() {
-
-
-      array_id["radio"] = 0;
-      array_id["checkbox"] = 0;
-      $.get("items.html", function(data) {
-            page_info = getUrlVars();
-            $("#dummie").html(data);
-            update_script();
-      });
-      $(document).on("click", ".previous_pag", function(e) {
-            e.preventDefault();
-            var temp = $(".pag_div:visible").prev(".pag_div");
-            if (temp.length)
-            {
-                  $(".pag_div").hide();
-                  temp.show();
-            }
-      });
-      $(document).on("click", ".next_pag", function(e) {
-            e.preventDefault();
-            var temp = $(".pag_div:visible").next(".pag_div");
-            if (temp.length)
-            {
-                  $(".pag_div").hide();
-                  temp.show();
-            }
-      });
-      $(document).on("click", ".scheduler_button_go", function(e) {
-            e.preventDefault();
-            var url = '../reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + page_info.user_id + '&lead=' + page_info.lead_id;
-            window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
-      });
-
-      $(document).on("click", ".pdf_button", function(e)
-      {
-            var url = "../script_dinamico/files/" + $(this).attr("file");
-            window.open(url, 'PDF', 'fullscreen=no, scrollbars=auto');
-      });
-});
 
 Object.size = function(a)
 {
@@ -65,7 +25,7 @@ Object.size = function(a)
 
 
 //UPDATES DE INFO
-function update_script()
+function update_script(callback)
 {
       if (page_info.script_id !== undefined)
       {
@@ -75,6 +35,11 @@ function update_script()
                   if (data !== null)
                   {
                         page_info.script_id = data.id;
+                     
+                        if (typeof callback === "function")
+                        {
+                              callback();
+                        }
                         update_info();
                   }
             }, "json");
@@ -97,6 +62,11 @@ function update_script()
                   if (data !== null)
                   {
                         page_info.script_id = data.id;
+               console.log(callback);
+                        if (typeof callback === "function")
+                        {
+                              callback();
+                        }
                         update_info();
                   }
             }, "json");
@@ -217,7 +187,10 @@ function update_info()
                   }
                   insert_element(this.type, item, this);
             });
-            $("#myform").validationEngine();
+
+
+
+
 //FAZER O APPEND DOS ITEMS A LISTA
             $.each(items, function()
             {
@@ -239,7 +212,12 @@ function update_info()
 
 
 
-            rules();
+            rules(tags(populate_script(function() {
+                  $("#myform").validationEngine();
+            })));
+
+
+
       }, "json");
 }
 
@@ -247,6 +225,8 @@ function insert_element(opcao, element, data)
 {
       element.removeAttr("title");
       element.find(".label_titulo").remove();
+
+
       switch (opcao)
       {
             case "texto":
@@ -497,13 +477,14 @@ function insert_element(opcao, element, data)
 }
 
 
-function populate_script()
+function populate_script(callback)
 {
       $.post("requests.php", {action: "get_results_to_populate", lead_id: page_info.lead_id, id_script: page_info.script_id},
       function(data)
       {
 
-            if (data !== null)
+
+            if (Object.size(data))
             {
 
 
@@ -531,6 +512,11 @@ function populate_script()
                   });
             }
 
+            if (typeof callback === "function")
+            {
+
+                  callback();
+            }
       }, "json");
 
 }
@@ -561,8 +547,9 @@ function rules_work(data)
                   break;
       }
 }
-function rules()
+function rules(callback)
 {
+
       $.post("requests.php", {action: "get_rules", id_script: page_info.script_id},
       function(data)
       {
@@ -758,12 +745,15 @@ function rules()
                               break;
                   }
             });
-            $("#myform").validationEngine();
-            tags();
+
+            if (typeof callback === "function")
+            {
+                  callback();
+            }
 
       }, "json");
 }
-function tags()
+function tags(callback)
 {
       var rz = $("#render_zone");
       //tags de valores de elementos da mesma pagina
@@ -791,9 +781,11 @@ function tags()
       {
             var temp2 = rz.html().match(tag_regex2);
             var temp = [];
+
             $.each(temp2, function() {
-                  if ($.inArray(this, temp) === -1)
-                        temp.push(this);
+
+                  if ($.inArray(this.toString(), temp) === -1)
+                        temp.push(this.toString());
 
             });
 
@@ -811,7 +803,12 @@ function tags()
                         });
             }, "json");
       }
-      populate_script();
+
+
+      if (typeof callback === "function")
+      {
+            callback();
+      }
 }
 
 
@@ -959,4 +956,47 @@ function getUrlVars() {
 $("#close_render_admin").on("click", function()
 {
       window.close();
+});
+
+
+
+$(function() {
+
+
+      array_id["radio"] = 0;
+      array_id["checkbox"] = 0;
+      $.get("items.html", function(data) {
+            page_info = getUrlVars();
+            $("#dummie").html(data);
+            update_script(update_info());
+      });
+      $(document).on("click", ".previous_pag", function(e) {
+            e.preventDefault();
+            var temp = $(".pag_div:visible").prev(".pag_div");
+            if (temp.length)
+            {
+                  $(".pag_div").hide();
+                  temp.show();
+            }
+      });
+      $(document).on("click", ".next_pag", function(e) {
+            e.preventDefault();
+            var temp = $(".pag_div:visible").next(".pag_div");
+            if (temp.length)
+            {
+                  $(".pag_div").hide();
+                  temp.show();
+            }
+      });
+      $(document).on("click", ".scheduler_button_go", function(e) {
+            e.preventDefault();
+            var url = '../reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + page_info.user_id + '&lead=' + page_info.lead_id;
+            window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
+      });
+
+      $(document).on("click", ".pdf_button", function(e)
+      {
+            var url = "../script_dinamico/files/" + $(this).attr("file");
+            window.open(url, 'PDF', 'fullscreen=no, scrollbars=auto');
+      });
 });
