@@ -9046,7 +9046,7 @@ function getPi() {
                $("#contactoPi").html(data.contacto_comercio);
                for (i=0;i<data.datos_ns.contador_ns;i++) {
                   var a = i+1;
-                  $('#tpaPi > tbody:last').append('<tr><td>'+(typeof data.datos_ns['num_serie_'+a] == 'object') ? '' : data.datos_ns['num_serie_'+a] +'</td><td>'+ (typeof data.datos_ns['id_tpa_'+a] == 'object') ? '' : data.datos_ns['id_tpa_'+a] +'</td></tr>'); 
+                  $('#tpaPi > tbody:last').append('<tr><td>'+ ((typeof data.datos_ns['num_serie_'+a] == 'object') ? 'Sem dados' : data.datos_ns['num_serie_'+a]) +'</td><td>'+ ((typeof data.datos_ns['id_tpa_'+a] == 'object') ? 'Sem dados' : data.datos_ns['id_tpa_'+a]) +'</td></tr>'); 
                 }
                var flag = true;
                var b = 1;
