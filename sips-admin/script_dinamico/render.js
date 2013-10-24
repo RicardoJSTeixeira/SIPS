@@ -35,12 +35,11 @@ function update_script(callback)
                   if (data !== null)
                   {
                         page_info.script_id = data.id;
-                     
+
                         if (typeof callback === "function")
                         {
                               callback();
                         }
-                        update_info();
                   }
             }, "json");
       }
@@ -62,12 +61,11 @@ function update_script(callback)
                   if (data !== null)
                   {
                         page_info.script_id = data.id;
-               console.log(callback);
+
                         if (typeof callback === "function")
                         {
                               callback();
                         }
-                        update_info();
                   }
             }, "json");
       }
@@ -212,14 +210,18 @@ function update_info()
 
 
 
+
             rules(tags(populate_script(function() {
-                  $("#myform").validationEngine();
+
+                  setTimeout(function(){$("#myform").validationEngine();},100); 
             })));
 
 
-
       }, "json");
+
 }
+
+
 
 function insert_element(opcao, element, data)
 {
@@ -514,7 +516,6 @@ function populate_script(callback)
 
             if (typeof callback === "function")
             {
-
                   callback();
             }
       }, "json");
@@ -801,14 +802,15 @@ function tags(callback)
                               rz.html(rz.html().replace(regExp, data[id.toLowerCase()]));
 
                         });
+
             }, "json");
       }
-
 
       if (typeof callback === "function")
       {
             callback();
       }
+
 }
 
 
@@ -968,7 +970,7 @@ $(function() {
       $.get("items.html", function(data) {
             page_info = getUrlVars();
             $("#dummie").html(data);
-            update_script(update_info());
+            update_script(update_info);
       });
       $(document).on("click", ".previous_pag", function(e) {
             e.preventDefault();
