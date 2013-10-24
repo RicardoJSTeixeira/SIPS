@@ -3502,7 +3502,7 @@ while ($MM_scripts > $h) {
                             <li class=""><a href="#FormPanel" data-toggle="tab" id="tab-FormPanel" >Script</a></li>
                             <li class=""><a href="#LeadLog" data-toggle="tab" onclick="leadlog();" id="tab-FormPanel" >Histórico</a></li>
                      <?php
-                    if ($curClient[0] !== 'necomplus') { ?>        
+                    if ($curClient[0] === 'necomplus') { ?>        
                             <li class=""><a href="#infoPi" data-toggle="tab" onclick="getPi();" id="tab-FormPanel" >Info Pi</a></li>
                     <? } ?>        
                         </ul>
