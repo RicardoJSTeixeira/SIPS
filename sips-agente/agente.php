@@ -2808,7 +2808,7 @@ if ($phone_exists == 0) {
             loop_warning.addUri("/ini/disconnected.ogg", 10000, "disconnected");
             loop.callback(soundsLoaded);
             moment.lang('pt');
-            var clientName = '<? echo $curClient; ?>'; 
+            var clientName = '<? echo $curClient[0]; ?>'; 
             window.name = 'GCC_window';
             var campaign_status = <?= json_encode($campaign_status) ?>;
             var my_callback_option = '<?= $my_callback_option ?>';
