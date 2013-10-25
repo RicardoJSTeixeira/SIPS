@@ -378,7 +378,7 @@ switch ($action) {
     case "add_rules":
 
         if (!empty($tag_trigger2) && !empty($tag_target)) {
-            $query = "INSERT INTO `asterisk`.`script_rules` (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) VALUES (NULL,$id_script,'$tipo_elemento',$tag_trigger,'" . mysql_real_escape_string(json_encode($tag_trigger2)) . "','" . mysql_real_escape_string(json_encode($tag_target)) . "','$tipo','$param1','".mysql_real_escape_string(json_encode($param2))."')";
+            $query = "INSERT INTO `asterisk`.`script_rules` (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) VALUES (NULL,$id_script,'$tipo_elemento',$tag_trigger,'" . mysql_real_escape_string(json_encode($tag_trigger2)) . "','" . mysql_real_escape_string(json_encode($tag_target)) . "','$tipo','$param1','" . mysql_real_escape_string(json_encode($param2)) . "')";
             $query = mysql_query($query, $link) or die(mysql_error());
             echo json_encode(1);
         }
@@ -494,6 +494,9 @@ switch ($action) {
         foreach ($results as $row) {
             if ($row['value'] != "") {
                 $temp = explode(",", $row['name']);
+                if (isset($temp[2]))
+                    $sql[] = "(null,'" . date('Y-m-d H:i:s') . "',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]', '" . $row['value'] . "','$temp[2];$temp[1]')";
+                else
                 $sql[] = "(null,'" . date('Y-m-d H:i:s') . "',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]', '" . $row['value'] . "', '$temp[1]')";
             }
         }
