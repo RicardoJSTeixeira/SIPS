@@ -116,7 +116,9 @@ function send_sms($msg, $gateways_ports, $listas, $camp_id) {
 }
 
 function validate_phone($phone) {
-    if (preg_match('/^96[0-9]{7}$/', $phone)) {
+    if (preg_match('/^9[0-9]{8}$/', $phone)) {
+        return array(TRUE, "9");
+    /*if (preg_match('/^96[0-9]{7}$/', $phone)) {
         return array(TRUE, "96");
     } elseif (preg_match('/^91[0-9]{7}$/', $phone)) {
         return array(TRUE, "91");
@@ -125,9 +127,9 @@ function validate_phone($phone) {
     } elseif (preg_match('/^929[0-9]{6}$/', $phone)) {
         return array(TRUE, "9");
     } elseif (preg_match('/^92[024567][0-9]{6}$/', $phone)) {
-        return array(TRUE, "96");
+        return array(TRUE, "96");*/
     } else {
-        return FALSE;
+        return array(FALSE);
     }
 }
 
