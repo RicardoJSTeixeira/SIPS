@@ -592,6 +592,7 @@ header("Pragma: no-cache");                          // HTTP/1.0
                 $queryClient = "SELECT server_description from servers limit 1";
                 $queryClient = mysql_query($queryClient, $link) or die(mysql_error());
                 $curClient = mysql_fetch_row($queryClient);
+                
                 unset($curLogo);
                 if (file_exists("../client_files/$curClient[0]/logo.gif")) {
                     $curLogo = "client_files/$curClient[0]/logo.gif";
@@ -2772,6 +2773,21 @@ if ($phone_exists == 0) {
         $MMscriptnames = substr("$MMscriptnames", 0, -1);
     }
 }
+
+
+                $queryClient = "SELECT server_description from servers limit 1";
+                $queryClient = mysql_query($queryClient, $link) or die(mysql_error());
+                $curClient = mysql_fetch_row($queryClient);
+           
+                unset($curLogo);
+                if (file_exists("../client_files/$curClient[0]/logo.gif")) {
+                    $curLogo = "client_files/$curClient[0]/logo.gif";
+                    echo "<input type=hidden name=curlogo value=$curLogo />";
+                } else {
+                    unset($curLogo);
+                }
+
+
 ?>
 
 <script type="text/javascript" src="js/mensagens.js"></script>
@@ -2792,6 +2808,7 @@ if ($phone_exists == 0) {
             loop_warning.addUri("/ini/disconnected.ogg", 10000, "disconnected");
             loop.callback(soundsLoaded);
             moment.lang('pt');
+            var clientName = '<? echo $curClient[0]; ?>'; 
             window.name = 'GCC_window';
             var campaign_status = <?= json_encode($campaign_status) ?>;
             var my_callback_option = '<?= $my_callback_option ?>';
@@ -3411,6 +3428,7 @@ while ($MM_scripts > $h) {
                             </tbody>
                         </table>
                     </div>
+                    
 
 
                     <div class="grid" id="AgentViewSpan">
@@ -3478,13 +3496,19 @@ while ($MM_scripts > $h) {
                 return false;">Voltar</a>
                         </p>
                     </span>
-
-                    <ul id="Main-tabs" class="nav nav-tabs tabs-main">
-                        <li class="active"><a href="#MainTable" data-toggle="tab" id="tab-MainTable" >Dados do Cliente</a></li>
-                        <li class=""><a href="#FormPanel" data-toggle="tab" id="tab-FormPanel" >Script</a></li>
-                        <li class=""><a href="#LeadLog" data-toggle="tab" onclick="leadlog();" id="tab-FormPanel" >Histórico</a></li>
-                    </ul>
-
+                   
+                        <ul id="Main-tabs" class="nav nav-tabs tabs-main">
+                            <li class="active"><a href="#MainTable" data-toggle="tab" id="tab-MainTable" >Dados do Cliente</a></li>
+                            <li class=""><a href="#FormPanel" data-toggle="tab" id="tab-FormPanel" >Script</a></li>
+                            <li class=""><a href="#LeadLog" data-toggle="tab" onclick="leadlog();" id="tab-FormPanel" >Histórico</a></li>
+                     <?php
+                    if ($curClient[0] === 'necomplus') { ?>        
+                            <li class=""><a href="#infoPi" data-toggle="tab" onclick="getPi();" id="tab-FormPanel" >Info Pi</a></li>
+                    <? } ?>        
+                        </ul>
+                    
+                        
+                    
 
                     <div class="tab-content tabs-main-content height100">
 
@@ -3509,6 +3533,48 @@ while ($MM_scripts > $h) {
                                 </thead>
                                 <tbody>
 
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div id="infoPi" class="tab-pane tab-overflow-main">
+                            <table class="table table-mod table-striped table-bordered" id="clientePi">
+                                <tbody>
+                                    <tr>
+                                        <td>Nome:</td><td id="nomePi"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Codigo:</td><td id="codigoPi"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Morada:</td><td id="moradaPi"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contacto:</td><td id="contactoPi"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br />
+                            <br />
+                            <table class="table table-mod table-striped table-bordered" id="tpaPi">
+                                <thead>
+                                    <th>ID TPA</th>
+                                    <th>Número de Série</th>
+                                </thead>    
+                                <tbody>
+                                   
+                                </tbody>
+                            </table>
+                            <br />
+                            <br />
+                            <table class="table table-mod table-striped table-bordered" id="ordensPi">
+                                <thead>
+                                    <th>Estado</th>
+                                    <th>Nº Ordem</th>
+                                    <th>Tipo de Ordem</th>
+                                </thead>    
+                                <tbody>
+                                   
                                 </tbody>
                             </table>
                         </div>
