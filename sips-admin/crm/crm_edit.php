@@ -105,7 +105,7 @@ $query = mysql_query($query, $link) or die(mysql_error());
 $fields = mysql_fetch_assoc($query);
 
 ### Construção da Lista de Feedbacks
-$query = "SELECT status,status_name,sale FROM vicidial_campaign_statuses WHERE campaign_id='$lead_info[campaign_id]' AND scheduled_callback!=1";
+$query = "SELECT status,status_name,sale FROM  (select status,status_name,sale from vicidial_campaign_statuses WHERE campaign_id='$lead_info[campaign_id]' AND scheduled_callback!=1) a union all (select status,status_name,sale from vicidial_statuses)";
 $query = mysql_query($query, $link) or die(mysql_error());
 $is_campaign_feedback = 0;
 
@@ -687,9 +687,12 @@ function curPageURL() {
     {
         $("#confirm_feedback").prop('disabled', false);
         $("#confirm_feedback_div").hide(600);
+        if($("#radio_confirm_no").is(":checked"))
+             $("#feedback_list option[value='SP']").prop("selected",true);
         $.post("_requests.php", {action: "add_info_crm", lead_id: lead_id, feedback: $("#feedback_list option:selected").val(), sale: $("#radio_confirm_yes").is(':checked'), campaign: Campaign_id, agent: $("#agente_selector option:selected").val(), comment: $("#textarea_comment").val()},
         function(data)
         {
+       
         }, "json");
     });
 
