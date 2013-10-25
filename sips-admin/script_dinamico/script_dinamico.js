@@ -54,6 +54,7 @@ $(function() {
       $(".chosen-select").chosen({no_results_text: "Sem resultados"});
       array_id["radio"] = 0;
       array_id["checkbox"] = 0;
+      array_id["input"] = 0;
       $.get("items.html", function(data) {
             $("#rigth_list").html(data);
             $(".rightDiv .item").draggable({
@@ -114,7 +115,11 @@ $(function() {
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("tableradio_class"))
                         {
-                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", $(this).data().uiSortable.currentItem.index(), "h", "tableradio", ["mau", "médio", "bom"], 0, ["pergunta1"], 0, 0, 0);
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", $(this).data().uiSortable.currentItem.index(), "h", "tabela de radios", ["mau", "médio", "bom"], 0, ["pergunta1"], 0, 0, 0);
+                        }
+                        if ($(this).data().uiSortable.currentItem.hasClass("tableinput_class"))
+                        {
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableinput", $(this).data().uiSortable.currentItem.index(), "h", "tabela de inputs", ["Manhã", "Tarde", "Noite"], 0, ["Produtos exportados"], 0, 0, 0);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("legend_class"))
                         {
@@ -236,6 +241,10 @@ $(document).on("click", ".element", function(e) {
             case "tableradio":
                   $("#tableradio_layout_editor").show();
                   populate_element("tableradio", $(this));
+                  break;
+            case "tableinput":
+                  $("#tableinput_layout_editor").show();
+                  populate_element("tableinput", $(this));
                   break;
             case "pagination":
                   populate_element("pagination", $(this));
@@ -651,6 +660,18 @@ function update_info()
                                       .data("hidden", this.hidden);
                               insert_element("tableradio", item, this);
                               break;
+                        case "tableinput":
+                              var item = $('.rightDiv .tableinput_class').clone();
+                              item.appendTo('.leftDiv');
+                              item.attr("id", this.id)
+                                      .data("id", this.id)
+                                      .data("tag", this.tag)
+                                      .addClass("element")
+                                      .data("type", "tableinput")
+                                      .data("required", this.required)
+                                      .data("hidden", this.hidden);
+                              insert_element("tableinput", item, this);
+                              break;
                         case "datepicker":
                               var item = $('.rightDiv .datepicker_class').clone();
                               item.appendTo('.leftDiv');
@@ -828,6 +849,23 @@ function populate_element(tipo, element)
                         string_elements += body_tdrow[count].innerHTML + "\n";
                   }
                   $("#tableradio_td_textarea").val(string_elements.slice(0, -1));
+                  break;
+            case "tableinput":
+                  $("#tableinput_edit").val($("#" + id + " .label_geral").html());
+                  var string_elements = "";
+                  var head_td = $("#" + id + " .tr_head td");
+                  for (var count = 1; count < head_td.length; count++)
+                  {
+                        string_elements += head_td[count].innerHTML + "\n";
+                  }
+                  $("#tableinput_th_textarea").val(string_elements.slice(0, -1));
+                  string_elements = "";
+                  var body_tdrow = $("#" + id + " .tr_body .td_row");
+                  for (var count = 0; count < body_tdrow.length; count++)
+                  {
+                        string_elements += body_tdrow[count].innerHTML + "\n";
+                  }
+                  $("#tableinput_td_textarea").val(string_elements.slice(0, -1));
                   break;
             case "datepicker":
                   $("#datepicker_edit").val($("#" + id + " .label_geral").html());
@@ -1027,6 +1065,49 @@ function edit_element(opcao, element, data)
                   }
                   item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", element.index(), "h", $("#tableradio_edit").val(), titulos, 0, perguntas, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   break;
+
+            case "tableinput":
+                  $("#" + id + " .label_geral").html($("#tableinput_edit").val());
+                  var tr_head = $("#" + id + " .tr_head");
+                  tr_head.empty();
+                  $("#tableinput_th_textarea").val($("#tableinput_th_textarea").val().replace(regex_remove_blank, ""));
+                  $("#tableinput_th_textarea").val($("#tableinput_th_textarea").val().replace(regex_replace, ''));
+                  var titulos = $("#tableinput_th_textarea").val().split(regex_split);
+                  for (var i = titulos.length - 1; i >= 0; i--) {
+                        if (titulos[i] === "") {
+                              titulos.splice(i, 1);
+                        }
+                  }
+                  tr_head.append($("<td>"));
+                  for (var count = 0; count < titulos.length; count++)
+                  {
+                        tr_head.append($("<td>").text(titulos[count]));
+                  }
+                  var tr_body = $("#" + id + " .tr_body");
+                  tr_body.empty();
+                  $("#tableinput_td_textarea").val($("#tableinput_td_textarea").val().replace(regex_remove_blank, ""));
+                  $("#tableinput_td_textarea").val($("#tableinput_td_textarea").val().replace(regex_replace, ''));
+                  var perguntas = $("#tableinput_td_textarea").val().split(regex_split);
+                  for (var i = perguntas.length - 1; i >= 0; i--) {
+                        if (perguntas[i] === "") {
+                              perguntas.splice(i, 1);
+                        }
+                  }
+                  for (var count = 0; count < perguntas.length; count++)
+                  {
+                        tr_body.append($("<tr>").append($("<td>").text(perguntas[count]).addClass("td_row")));
+                        temp = $("#" + id + " .tr_body tr:last");
+                        for (var count2 = 0; count2 < titulos.length; count2++)
+                        {
+                              temp.append($("<td>")
+                                      .append($("<input>").addClass("input-mini").attr("type", "text").attr("id", array_id["input"]).attr("name", perguntas[count]))
+                                      );
+                              array_id["input"] = array_id["input"] + 1;
+                        }
+                  }
+                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableinput", element.index(), "h", $("#tableinput_edit").val(), titulos, 0, perguntas, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  break;
+
             case "datepicker":
                   $("#datepicker_edit").val($("#datepicker_edit").val().replace(regex_replace_textbox_tag, ''));
                   $("#" + id + " .label_geral").html($("#datepicker_edit").val());
@@ -1229,6 +1310,38 @@ function insert_element(opcao, element, data)
                                       .attr("for", array_id["radio"])
                                       ));
                               array_id["radio"] = array_id["radio"] + 1;
+                        }
+                  }
+                  break;
+
+            case "tableinput":
+                  $("#" + id + " .label_geral").html(data.texto);
+                  var tr_head = $("#" + id + " .tr_head");
+                  tr_head.empty();
+                  var titulos = data.placeholder;
+                  tr_head.append($("<td>"));
+                  for (var count = 0; count < titulos.length; count++)
+                  {
+                        tr_head.append($("<td>").text(titulos[count]));
+                  }
+                  var tr_body = $("#" + id + " .tr_body");
+                  tr_body.empty();
+                  var perguntas = data.values_text;
+                  var temp = 0;
+                  for (var count = 0; count < perguntas.length; count++)
+                  {
+                        tr_body.append($("<tr>").append($("<td>").text(perguntas[count]).addClass("td_row")));
+                        temp = $("#" + id + " .tr_body tr:last");
+                        for (var count2 = 0; count2 < titulos.length; count2++)
+                        {
+                              temp.append($("<td>")
+                                      .append($("<input>")
+                                      .addClass("input-mini")
+                                      .attr("type", "text")
+                                      .attr("id", array_id["input"])
+
+                                      .attr("name", data.id + "" + count)));
+                              array_id["input"] = array_id["input"] + 1;
                         }
                   }
                   break;
@@ -1462,6 +1575,7 @@ function rules_manager(tipo, element)
             case "multichoice":
                   rts.append(new Option("Valor escolhido", "value_select"));
                   break;
+
             case "tableradio":
                   rts.append(new Option("Resposta", "answer"));
                   rts.append(new Option("Valor escolhido", "value_select"));
@@ -1471,6 +1585,7 @@ function rules_manager(tipo, element)
                   rts.append(new Option("Data", "date"));
                   break;
             case "textarea":
+            case "tableinput":
                   rts.append(new Option("Resposta", "answer"));
                   break;
       }
@@ -1725,6 +1840,18 @@ $("#add_rule_button").click(function()
                               else
                                     rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
                               break;
+                  }
+
+            case "tableinput":
+                  switch ($("#rule_trigger_select").val())
+                  {
+                        case "answer":
+                              if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                              else
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                              break;
+                      
                   }
                   break;
             case "datepicker":

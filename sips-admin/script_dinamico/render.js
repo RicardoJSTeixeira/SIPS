@@ -148,6 +148,14 @@ function update_info()
                                       .data("type", "tableradio");
                               items.push([item, this.id_page]);
                               break;
+                        case "tableinput":
+                              item = $('#dummie .tableinput_class').clone();
+                              item.attr("id", this.tag)
+                                      .data("id", this.id)
+                                      .data("required", this.required)
+                                      .data("type", "tableinput");
+                              items.push([item, this.id_page]);
+                              break;
                         case "datepicker":
                               item = $('#dummie .datepicker_class').clone();
                               item.attr("id", this.tag)
@@ -205,6 +213,7 @@ function update_info()
             }
             else
             {
+                  $(".pagination_class").remove();
                   $("#admin_submit").show();
             }
 
@@ -213,7 +222,9 @@ function update_info()
 
             rules(tags(populate_script(function() {
 
-                  setTimeout(function(){$("#myform").validationEngine();},100); 
+                  setTimeout(function() {
+                        $("#myform").validationEngine();
+                  }, 100);
             })));
 
 
@@ -247,7 +258,7 @@ function insert_element(opcao, element, data)
                               pattern.push("[custom[onlyLetterNumberSymbol]]");
                               break;
                         case "letter":
-                              pattern.push("[custom[onlyLetterSp]]");
+                              pattern.push("[custom[onlyLetters]]");
                               break;
                         case "email":
                               pattern.push("[custom[email]]");
@@ -401,6 +412,43 @@ function insert_element(opcao, element, data)
                         }
                   }
                   break;
+
+            case "tableinput":
+                  element.find(".label_geral")[0].innerHTML = data.texto;
+                  var tr_head = element.find(".tr_head");
+                  tr_head.empty();
+                  var titulos = data.placeholder;
+                  tr_head.append($("<td>"));
+                  for (var count = 0; count < titulos.length; count++)
+                  {
+                        tr_head.append($("<td>").text(titulos[count]));
+                  }
+                  var tr_body = element.find(".tr_body");
+                  tr_body.empty();
+                  var perguntas = data.values_text;
+                  var trbody_last;
+                  for (var count = 0; count < perguntas.length; count++)
+                  {
+                        tr_body.append($("<tr>")
+                                .append($("<td>").text(perguntas[count]).addClass("td_row")));
+                        trbody_last = element.find(".tr_body tr:last");
+                        for (var count2 = 0; count2 < titulos.length; count2++)
+                        {
+                              if (data.required)
+                              {
+                                    trbody_last.append($("<td>")
+                                            .append($("<input>").attr("type", "text").attr("id", array_id["input"] + "tableinput").addClass("validate[required] input-mini").attr("name", data.tag + "," + perguntas[count] + "," + titulos[count2])));
+                              }
+                              else
+                              {
+                                    trbody_last.append($("<td>")
+                                            .append($("<input>").attr("type", "text").attr("id", array_id["input"] + "tableinput").addClass("input-mini").attr("name", data.tag + "," + perguntas[count] + "," + titulos[count2])));
+                              }
+                              array_id["input"] = array_id["input"] + 1;
+                        }
+                  }
+                  break;
+
             case "datepicker":
                   element.find(".label_geral")[0].innerHTML = data.texto;
                   if (data.required)
@@ -656,6 +704,20 @@ function rules(callback)
                                           });
                                           break;
                               }
+                              break;
+                        case "tableinput":
+                              if (this.param1 == "answer")
+                              {
+                                    $(document).on("focusout", "#" + this.tag_trigger + " input", function()
+                                    {
+                                          console.log($("#" + data[index].tag_trigger).find("input[value!='']").length + "--->" + $("#" + data[index].tag_trigger + " .tr_body").find("td").find("input").length);
+
+
+                                          if ($("#" + data[index].tag_trigger).find("input[value!='']").length === ($("#" + data[index].tag_trigger + " .tr_body").find("td").find("input").length))
+                                                rules_work(data[index]);
+                                    });
+                              }
+
                               break;
                         case "datepicker":
                               switch (this.param1)
@@ -967,6 +1029,7 @@ $(function() {
 
       array_id["radio"] = 0;
       array_id["checkbox"] = 0;
+      array_id["input"] = 0;
       $.get("items.html", function(data) {
             page_info = getUrlVars();
             $("#dummie").html(data);

@@ -87,14 +87,24 @@ switch ($action) {
             break;
         }
         $tags = array();
-        $query = "SELECT tag,type,texto,values_text  FROM `script_dinamico` where type not in ('pagination','textfield','scheduler','legend')  and id_script='$id_script' order by tag asc ";
+        $query = "SELECT tag,type,texto,values_text,placeholder  FROM `script_dinamico` where type not in ('pagination','textfield','scheduler','legend')  and id_script='$id_script' order by tag asc ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             if ($row['type'] == "tableradio") {
+
                 $temp = json_decode($row['values_text']);
                 foreach ($temp as $value) {
                     array_push($titles, $row['texto'] . "-" . $value);
                     $tags["m" . $row['tag'] . $value] = "";
+                }
+            } elseif ($row['type'] == "tableinput") {
+                $temp = json_decode($row['values_text']);
+                $temp2 = json_decode($row['placeholder']);
+                foreach ($temp as $value) {
+                    foreach ($temp2 as $value2) {
+                        array_push($titles, $row['texto'] . "-" . $value . "-" . $value2);
+                        $tags["m" . $row['tag'] . $value . $value2] = "";
+                    }
                 }
             } else {
                 array_push($titles, $row['texto']);
@@ -148,6 +158,10 @@ where sr.campaign_id='$campaign_id' and sr.id_script='$id_script' $filtro $date_
             }
             if ($row1["type"] == "tableradio")
                 $client["m" . $row1["tag_elemento"] . $row1["param_1"]] = $row1["valor"];
+            elseif ($row1["type"] == "tableinput") {
+                $temp = split(";", $row1["param_1"]);
+                $client["m" . $row1["tag_elemento"] . $temp[1] . $temp[0]] = $row1["valor"];
+            }
             else
                 $client["m" . $row1["tag_elemento"]] = ($row1["param1"] == "nib") ? "" . $row1["valor"] . "" : $row1["valor"];
         }

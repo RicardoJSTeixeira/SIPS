@@ -122,8 +122,7 @@ switch ($action) {
             WHERE lead_id= '$contact_id'
             
             ";
-        } 
-        elseif ($phone_number != "" && $phone_number != null) {
+        } elseif ($phone_number != "" && $phone_number != null) {
             $sQuery = "
             SELECT first_name, phone_number, address1 ,last_local_call_time, lead_id
             FROM   vicidial_list
@@ -238,11 +237,23 @@ switch ($action) {
         break;
 
 
-        
+
     case "add_info_crm":
-        $query = "INSERT INTO `crm_confirm_feedback`(`id`, `lead_id`, `feedback`, `sale`, `campaign`, `agent`, `comment`,date,admin) VALUES (NULL,$lead_id,'$feedback',$sale,'$campaign','$agent','$comment','" . date('Y-m-d H:i:s') . "','$user->id')";
-        $query = mysql_query($query, $link) or die(mysql_error());
-       $query = "SELECT EXISTS(SELECT * FROM crm_confirm_feedback_last WHERE lead_id='$lead_id') as count";
+
+        if ($sale == "false") {
+            $query = "INSERT INTO `crm_confirm_feedback`(`id`, `lead_id`, `feedback`, `sale`, `campaign`, `agent`, `comment`,date,admin) VALUES (NULL,$lead_id,'SP',$sale,'$campaign','$agent','$comment','" . date('Y-m-d H:i:s') . "','$user->id')";
+            $query = mysql_query($query, $link) or die(mysql_error());
+            $query = "Update vicidial_list set status='SP' where lead_id=$lead_id";
+            $query = mysql_query($query, $link) or die(mysql_error());
+            $query = "Update vicidial_log set status='SP' where lead_id=$lead_id and campaign_id='$campaign_id' order by uniqueid desc limit 1";
+            $query = mysql_query($query, $link) or die(mysql_error());
+        } else {
+            $query = "INSERT INTO `crm_confirm_feedback`(`id`, `lead_id`, `feedback`, `sale`, `campaign`, `agent`, `comment`,date,admin) VALUES (NULL,$lead_id,'$feedback',$sale,'$campaign','$agent','$comment','" . date('Y-m-d H:i:s') . "','$user->id')";
+            $query = mysql_query($query, $link) or die(mysql_error());
+        }
+
+
+        $query = "SELECT EXISTS(SELECT * FROM crm_confirm_feedback_last WHERE lead_id='$lead_id') as count";
         $query = mysql_query($query, $link) or die(mysql_error());
         $row = mysql_fetch_assoc($query);
 
