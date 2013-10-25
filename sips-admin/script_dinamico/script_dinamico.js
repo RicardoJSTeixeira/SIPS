@@ -1101,7 +1101,7 @@ function edit_element(opcao, element, data)
                         {
                               temp.append($("<td>")
                                       .append($("<input>").addClass("input-mini").attr("type", "text").attr("id", array_id["input"]).attr("name", perguntas[count]))
-                                     );
+                                      );
                               array_id["input"] = array_id["input"] + 1;
                         }
                   }
@@ -1575,6 +1575,7 @@ function rules_manager(tipo, element)
             case "multichoice":
                   rts.append(new Option("Valor escolhido", "value_select"));
                   break;
+
             case "tableradio":
                   rts.append(new Option("Resposta", "answer"));
                   rts.append(new Option("Valor escolhido", "value_select"));
@@ -1584,6 +1585,7 @@ function rules_manager(tipo, element)
                   rts.append(new Option("Data", "date"));
                   break;
             case "textarea":
+            case "tableinput":
                   rts.append(new Option("Resposta", "answer"));
                   break;
       }
@@ -1838,6 +1840,18 @@ $("#add_rule_button").click(function()
                               else
                                     rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
                               break;
+                  }
+
+            case "tableinput":
+                  switch ($("#rule_trigger_select").val())
+                  {
+                        case "answer":
+                              if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                              else
+                                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                              break;
+                      
                   }
                   break;
             case "datepicker":

@@ -437,12 +437,12 @@ function insert_element(opcao, element, data)
                               if (data.required)
                               {
                                     trbody_last.append($("<td>")
-                                            .append($("<input>").attr("type", "text").attr("id", array_id["input"] + "tableinput").addClass("validate[required] input-mini").attr("name", data.tag + "," + perguntas[count]+ "," +titulos[count2])));
+                                            .append($("<input>").attr("type", "text").attr("id", array_id["input"] + "tableinput").addClass("validate[required] input-mini").attr("name", data.tag + "," + perguntas[count] + "," + titulos[count2])));
                               }
                               else
                               {
-                                             trbody_last.append($("<td>")
-                                            .append($("<input>").attr("type", "text").attr("id", array_id["input"] + "tableinput").addClass("input-mini").attr("name", data.tag + "," + perguntas[count]+ "," +titulos[count2])));
+                                    trbody_last.append($("<td>")
+                                            .append($("<input>").attr("type", "text").attr("id", array_id["input"] + "tableinput").addClass("input-mini").attr("name", data.tag + "," + perguntas[count] + "," + titulos[count2])));
                               }
                               array_id["input"] = array_id["input"] + 1;
                         }
@@ -704,6 +704,20 @@ function rules(callback)
                                           });
                                           break;
                               }
+                              break;
+                        case "tableinput":
+                              if (this.param1 == "answer")
+                              {
+                                    $(document).on("focusout", "#" + this.tag_trigger + " input", function()
+                                    {
+                                          console.log($("#" + data[index].tag_trigger).find("input[value!='']").length + "--->" + $("#" + data[index].tag_trigger + " .tr_body").find("td").find("input").length);
+
+
+                                          if ($("#" + data[index].tag_trigger).find("input[value!='']").length === ($("#" + data[index].tag_trigger + " .tr_body").find("td").find("input").length))
+                                                rules_work(data[index]);
+                                    });
+                              }
+
                               break;
                         case "datepicker":
                               switch (this.param1)
