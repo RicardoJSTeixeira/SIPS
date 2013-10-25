@@ -205,6 +205,7 @@ function update_info()
             }
             else
             {
+                  $(".pagination_class").remove();
                   $("#admin_submit").show();
             }
 
