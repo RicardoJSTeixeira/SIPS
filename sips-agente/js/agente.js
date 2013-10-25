@@ -4364,6 +4364,7 @@ function  DispoSelect_submit_allowed()
                                     $('#vcFormIFrame', parent.window.document)[0].src = "";
                               });
                         } else {
+                              $("#Main-tabs a:eq(1)").tab("show");
                               return false;
                         }
                   } else {
