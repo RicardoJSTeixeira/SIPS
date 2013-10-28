@@ -8867,7 +8867,7 @@ function manNextCall(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnStagE
                         timer_action_message = campaign_timer_action_message;
                         timer_action_seconds = campaign_timer_action_seconds;
                         timer_action_destination = campaign_timer_action_destination;
-
+                        if (clientName == 'necomplus') { getPi(); }
                         lead_dial_number = dialed_number;
                         var dispnum = dialed_number;
                         var status_display_number = dispnum;
@@ -9037,7 +9037,7 @@ function manNextCall(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnStagE
 function getPi() {
        var apiPhone = $("#phone_number").val();
        var nomePi = $("#nomePi").html();
-       if ((apiPhone !== null && apiPhone !== '') && ( nomePi == null || nomePi == '')) {
+       
        $.post("../client_files/necomplus/soap_api.php",{phone : apiPhone},function(data){
        console.log(data.codresultado)    
            if (data.codresultado == '0') {
@@ -9059,7 +9059,7 @@ function getPi() {
                }
            } else { $("#nomePi").html('Sem dados do cliente'); }     
        },'json');
-       }
+       
       var lead_log_spot = $("#LeadLogPi tbody").empty();
       $.post("vdc_db_query.php",
               {server_ip: server_ip,
@@ -9075,7 +9075,7 @@ function getPi() {
                     campaign: campaign},
       function(data) {
             var lead_log = data.lead_log;
-            $.each(lead_log, function() {
+            $.each(lead_log, function() { 
                   lead_log_spot
                           .append($("<tr>")
                           .append($("<td>").text(this.call_date))
