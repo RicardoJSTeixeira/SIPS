@@ -3498,13 +3498,20 @@ while ($MM_scripts > $h) {
                     </span>
                    
                         <ul id="Main-tabs" class="nav nav-tabs tabs-main">
+                            
+                     <?php
+                    if ($curClient[0] === 'necomplus') { ?>        
+                            
+                           
+                            <li class=""><a href="#MainTable" data-toggle="tab" id="tab-MainTable" >Dados do Cliente</a></li>
+                            <li class=""><a href="#FormPanel" data-toggle="tab" id="tab-FormPanel" >Script</a></li>
+                            <li class=""><a href="#LeadLog" data-toggle="tab" onclick="leadlog();" id="tab-FormPanel" >Histórico</a></li>
+                            <li class="active"><a href="#infoPi" data-toggle="tab" onclick="getPi();" id="tab-FormPanel" >Info Pi</a></li>
+                    <? } else { ?>  
                             <li class="active"><a href="#MainTable" data-toggle="tab" id="tab-MainTable" >Dados do Cliente</a></li>
                             <li class=""><a href="#FormPanel" data-toggle="tab" id="tab-FormPanel" >Script</a></li>
                             <li class=""><a href="#LeadLog" data-toggle="tab" onclick="leadlog();" id="tab-FormPanel" >Histórico</a></li>
-                     <?php
-                    if ($curClient[0] === 'necomplus') { ?>        
-                            <li class=""><a href="#infoPi" data-toggle="tab" onclick="getPi();" id="tab-FormPanel" >Info Pi</a></li>
-                    <? } ?>        
+                    <? } ?>
                         </ul>
                     
                         
@@ -3516,7 +3523,7 @@ while ($MM_scripts > $h) {
                             <iframe src="./vdc_form_display.php?lead_id=&list_id=&stage=WELCOME" style="width:100%;min-height: 70%" scrolling="auto" frameborder="0" allowtransparency="true" id="vcFormIFrame" name="vcFormIFrame" > </iframe>
                             <div class="clear"></div>
                         </div>
-
+                        
                         <div id="LeadLog" class="tab-pane tab-overflow-main">
                             <table class="table table-mod table-striped table-bordered">
                                 <thead>
@@ -3536,8 +3543,8 @@ while ($MM_scripts > $h) {
                                 </tbody>
                             </table>
                         </div>
-                        
-                        <div id="infoPi" class="tab-pane tab-overflow-main">
+                        <? if ($curClient[0] === 'necomplus') { ?>    
+                        <div id="infoPi" class="tab-pane active tab-overflow-main">
                             <table class="table table-mod table-striped table-bordered" id="clientePi">
                                 <tbody>
                                     <tr>
@@ -3577,9 +3584,30 @@ while ($MM_scripts > $h) {
                                    
                                 </tbody>
                             </table>
-                        </div>
+                            <br><br>
+                            <table id="LeadLogPi" class="table table-mod table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Operador</th>
+                                        <th>Tempo (seg.)</th>
+                                        <th>Estado</th>
+                                        <th>Nº</th>
+                                        <th>Campanha</th>
+                                        <th title='Entrada Ou Saida'>IO</th>
+                                        <th>Desligou</th>
+                                    </tr>
+                                </thead> 
+                                <tbody>
 
-                        <div id="MainTable" class="tab-pane active tab-overflow-main">
+                                </tbody>
+                            </table>
+                        </div>
+                         <? } 
+                    if ($curClient[0] === 'necomplus') { ?>    
+                        <div id="MainTable" class="tab-pane  tab-overflow-main">
+                    <? } else { ?>
+                    <div id="MainTable" class="tab-pane active  tab-overflow-main">   <? } ?>
 
                             <input type="hidden" name="lead_id" id="lead_id" value="" />
                             <input type="hidden" name="entry_list_id" id="entry_list_id" value="" />

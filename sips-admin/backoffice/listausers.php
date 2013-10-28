@@ -86,7 +86,11 @@ require(ROOT . "/ini/user.php");
                 $tmp .= "^$rugroups[user]$|";
             }
             $tmp = rtrim($tmp, "|");
+            if(strlen($tmp)){
             $users_regex = "AND user REGEXP '$tmp'";
+            }else{
+            $users_regex = "AND 0";
+            }
         }
         //Users FIM
 
