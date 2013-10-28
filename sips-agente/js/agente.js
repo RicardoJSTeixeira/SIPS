@@ -9074,8 +9074,10 @@ function getPi() {
                     lead_id: $("#lead_id").val(),
                     campaign: campaign},
       function(data) {
+            var i=0;
             var lead_log = data.lead_log;
-            $.each(lead_log, function() { 
+            $.each(lead_log, function() {
+                
                   lead_log_spot
                           .append($("<tr>")
                           .append($("<td>").text(this.call_date))
@@ -9086,6 +9088,8 @@ function getPi() {
                           .append($("<td>").text(this.campaign))
                           .append($("<td>").text(this.io))
                           .append($("<td>").text(this.term_reason)));
+                  i++;
+                  if (i==6) { return false; }
             });
 
       }
