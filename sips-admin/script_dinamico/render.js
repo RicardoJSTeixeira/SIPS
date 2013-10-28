@@ -591,8 +591,15 @@ function rules_work(data)
                   }
                   break;
             case "goto":
-                  $(".pag_div").hide();
-                  $("#" + data.tag_target + "pag").show();
+                  if (page_info.isadmin != "1")
+                  {
+                        if ($("#myform").validationEngine('validate'))
+                        {
+                             
+                              $(".pag_div").hide();
+                              $("#" + data.tag_target + "pag").show();
+                        }
+                  }
                   break;
       }
 }
@@ -1046,11 +1053,15 @@ $(function() {
       });
       $(document).on("click", ".next_pag", function(e) {
             e.preventDefault();
-            var temp = $(".pag_div:visible").next(".pag_div");
-            if (temp.length)
+
+            if ($("#myform").validationEngine('validate'))
             {
-                  $(".pag_div").hide();
-                  temp.show();
+                  var temp = $(".pag_div:visible").next(".pag_div");
+                  if (temp.length)
+                  {
+                        $(".pag_div").hide();
+                        temp.show();
+                  }
             }
       });
       $(document).on("click", ".scheduler_button_go", function(e) {

@@ -44,6 +44,13 @@
 				"regex": /^[0-9a-zA-Z_-]+$/,
 				"alertText": "* Only Letters, Numbers, hyphen(-) and underscore(_) allowed"
 		};
+  
+  		$.validationEngineLanguage.allRules["onlyLetters"] = {
+				// Good for database fields
+				"regex": /^[a-z\u00C0-\u00ff A-Z]+$/,
+				"alertText": "* Apenas letras permitido"
+		};
+  
 	//	# more validations may be added after this point
 	}
 })(jQuery);
