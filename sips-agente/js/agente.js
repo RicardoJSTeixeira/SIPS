@@ -9047,19 +9047,49 @@ function getPi() {
                $("#contactoPi").html(data.contacto_comercio);
                for (i=0;i<data.datos_ns.contador_ns;i++) {
                   var a = i+1;
-                  $('#tpaPi > tbody:last').append('<tr><td>'+ ((typeof data.datos_ns['num_serie_'+a] == 'object') ? 'Sem dados' : data.datos_ns['num_serie_'+a]) +'</td><td>'+ ((typeof data.datos_ns['id_tpa_'+a] == 'object') ? 'Sem dados' : data.datos_ns['id_tpa_'+a]) +'</td></tr>'); 
+                  $('#tpaPi > tbody:last').append('<tr><td>'+ ((typeof data.datos_ns['id_tpa_'+a] == 'object') ? 'Sem dados' : data.datos_ns['id_tpa_'+a]) +'</td><td>'+ ((typeof data.datos_ns['num_serie_'+a] == 'object') ? 'Sem dados' : data.datos_ns['num_serie_'+a]) +'</td></tr>'); 
                 }
                var flag = true;
                var b = 1;
                for (i=1;i<6;i++) {
                    console.log('in' + data.datos_num_orden['num_orden_'+i]);
                    if (data.datos_num_orden['num_orden_'+i] !== undefined) { 
-                        $('#ordensPi > tbody:last').append('<tr><td>'+data.datos_num_orden['num_orden_'+i]+'</td><td>'+data.datos_num_orden['tipo_orden_'+i]+'</td><td>'+data.datos_num_orden['estado_'+i]+'</td></tr>'); 
+                        $('#ordensPi > tbody:last').append('<tr><td>'+data.datos_num_orden['tipo_orden_'+i]+'</td><td>'+data.datos_num_orden['num_orden_'+i]+'</td><td>'+data.datos_num_orden['estado_'+i]+'</td></tr>'); 
                     }
                }
            } else { $("#nomePi").html('Sem dados do cliente'); }     
        },'json');
        }
+      var lead_log_spot = $("#LeadLogPi tbody").empty();
+      $.post("vdc_db_query.php",
+              {server_ip: server_ip,
+                    session_name: session_name,
+                    ACTION: "LEADINFOview",
+                    format: "text",
+                    user: user,
+                    pass: pass,
+                    conf_exten: session_id,
+                    extension: extension,
+                    protocol: protocol,
+                    lead_id: $("#lead_id").val(),
+                    campaign: campaign},
+      function(data) {
+            var lead_log = data.lead_log;
+            $.each(lead_log, function() {
+                  lead_log_spot
+                          .append($("<tr>")
+                          .append($("<td>").text(this.call_date))
+                          .append($("<td>").text(this.user))
+                          .append($("<td>").text(this.length))
+                          .append($("<td>").text(this.status))
+                          .append($("<td>").text(this.phone_number))
+                          .append($("<td>").text(this.campaign))
+                          .append($("<td>").text(this.io))
+                          .append($("<td>").text(this.term_reason)));
+            });
+
+      }
+      , "json");
 }
 
 // ################################################################################

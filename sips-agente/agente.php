@@ -3577,6 +3577,24 @@ while ($MM_scripts > $h) {
                                    
                                 </tbody>
                             </table>
+                            <br><br>
+                            <table id="LeadLogPi" class="table table-mod table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Operador</th>
+                                        <th>Tempo (seg.)</th>
+                                        <th>Estado</th>
+                                        <th>Nº</th>
+                                        <th>Campanha</th>
+                                        <th title='Entrada Ou Saida'>IO</th>
+                                        <th>Desligou</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
                         </div>
 
                         <div id="MainTable" class="tab-pane active tab-overflow-main">
