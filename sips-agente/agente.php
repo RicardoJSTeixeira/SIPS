@@ -3576,6 +3576,7 @@ while ($MM_scripts > $h) {
                             <br />
                             <table class="table table-mod table-striped table-bordered" id="ordensPi">
                                 <thead>
+                                    <th>Data</th>
                                     <th>Estado</th>
                                     <th>Nº Ordem</th>
                                     <th>Tipo de Ordem</th>

@@ -9052,9 +9052,9 @@ function getPi() {
                var flag = true;
                var b = 1;
                for (i=1;i<6;i++) {
-                   console.log('in' + data.datos_num_orden['num_orden_'+i]);
+                   console.log('in' + data.datos_num_orden['num_orden_'+i]); 
                    if (data.datos_num_orden['num_orden_'+i] !== undefined) { 
-                        $('#ordensPi > tbody:last').append('<tr><td>'+data.datos_num_orden['tipo_orden_'+i]+'</td><td>'+data.datos_num_orden['num_orden_'+i]+'</td><td>'+data.datos_num_orden['estado_'+i]+'</td></tr>'); 
+                        $('#ordensPi > tbody:last').append('<tr><td>'+data.datos_num_orden['fechor_'+i]+'</td><td>'+data.datos_num_orden['tipo_orden_'+i]+'</td><td>'+data.datos_num_orden['num_orden_'+i]+'</td><td>'+data.datos_num_orden['estado_'+i]+'</td></tr>'); 
                     }
                }
            } else { $("#nomePi").html('Sem dados do cliente'); }     
