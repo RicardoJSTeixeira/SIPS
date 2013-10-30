@@ -489,6 +489,10 @@ switch ($action) {
         if ($admin_review == "1") {
             $unique_id = time() . "." . rand(1, 1000);
             $user_id = $user->id;
+
+            $query = "INSERT INTO vicidial_log (`uniqueid`, `lead_id`, `list_id`, `campaign_id`, `call_date`, `start_epoch`, `end_epoch`, `length_in_sec`, `status`, `phone_code`, `phone_number`, `user`, `comments`, `processed`, `user_group`, `term_reason`, `alt_dial`)
+                select $unique_id, `lead_id`, `list_id`, `campaign_id`, '".date("Y-m-d H:i:s")."', NULL, NULL, `length_in_sec`, `status`, `phone_code`, `phone_number`, `user`, 'edit', `processed`, `user_group`, `term_reason`, `alt_dial` from vicidial_log where lead_id='$lead_id' order by uniqueid desc limit 1";
+            $query = mysql_query($query, $link) or die(mysql_error());
         }
 
         foreach ($results as $row) {
@@ -497,7 +501,7 @@ switch ($action) {
                 if (isset($temp[2]))
                     $sql[] = "(null,'" . date('Y-m-d H:i:s') . "',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]', '" . $row['value'] . "','$temp[2];$temp[1]')";
                 else
-                $sql[] = "(null,'" . date('Y-m-d H:i:s') . "',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]', '" . $row['value'] . "', '$temp[1]')";
+                    $sql[] = "(null,'" . date('Y-m-d H:i:s') . "',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]', '" . $row['value'] . "', '$temp[1]')";
             }
         }
         $query = "INSERT INTO `script_result`(`id`,date,id_script,user_id,unique_id,campaign_id,lead_id, `tag_elemento`, `valor`,param_1) VALUES " . implode(',', $sql);
