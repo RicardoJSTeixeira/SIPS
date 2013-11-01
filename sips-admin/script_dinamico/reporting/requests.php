@@ -73,15 +73,13 @@ switch ($action) {
         $query = mysql_query($query, $link) or die(mysql_error());
         $row = mysql_fetch_assoc($query);
         $id_script = $row["id_script"];
-        $titles = array('ID', 'Data', 'Script', 'Nome agente', 'Unique id', 'Campanha', 'Lead id', "feedback");
-        $campos = array();
+        $titles = array('ID', 'Data', 'Script', 'Nome agente',  'Campanha',  "Feedback");
         $ref_name = array();
-        $query = "SELECT Name,Display_name  FROM vicidial_list_ref where campaign_id = '$campaign_id' and active='1' ";
+        $query = "SELECT Name,Display_name  FROM vicidial_list_ref where campaign_id = '$campaign_id' and active='1' order by field_order asc";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            array_push($titles, $row['Display_name']);
-            $campos[$row['Name']] = "";
-            array_push($ref_name, $row['Name']);
+            $titles[] = $row['Display_name'];
+            $ref_name[] = $row['Name'];
         }
         if (empty($ref_name)) {
             break;
@@ -94,7 +92,7 @@ switch ($action) {
 
                 $temp = json_decode($row['values_text']);
                 foreach ($temp as $value) {
-                    array_push($titles, $row['texto'] . "-" . $value);
+                    $titles[] = $row['texto'] . "-" . $value;
                     $tags["m" . $row['tag'] . $value] = "";
                 }
             } elseif ($row['type'] == "tableinput") {
@@ -102,12 +100,12 @@ switch ($action) {
                 $temp2 = json_decode($row['placeholder']);
                 foreach ($temp as $value) {
                     foreach ($temp2 as $value2) {
-                        array_push($titles, $row['texto'] . "-" . $value . "-" . $value2);
+                        $titles[] = $row['texto'] . "-" . $value . "-" . $value2;
                         $tags["m" . $row['tag'] . $value . $value2] = "";
                     }
                 }
             } else {
-                array_push($titles, $row['texto']);
+                $titles[] = $row['texto'];
                 $tags["m" . $row['tag']] = "";
             }
         }
@@ -120,13 +118,15 @@ switch ($action) {
         $result = mysql_query($query, $link) or die(mysql_error());
         $lead_info = array();
         while ($row3 = mysql_fetch_assoc($result)) {
-            $lead_info[$row3["lead_id"]] = $row3;
+            $lead_tmp=$row3["lead_id"];
+            unset($row3["lead_id"]);
+            $lead_info[$lead_tmp] = $row3;
         }
         if ($allctc == "false")
             $date_filter = "and sr.date between '$data_inicio' and '$data_fim'";
         else
             $date_filter = "";
-        $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name, sr.unique_id, vc.campaign_name, sr.lead_id,sr.param_1,vcs.status_name, sr.tag_elemento,sr.valor,sd.param1,sd.type FROM `script_result` sr
+        $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name,  vc.campaign_name, sr.lead_id,sr.param_1,vcs.status_name, sr.tag_elemento,sr.valor,sd.param1,sd.type FROM `script_result` sr
 left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id
 left join vicidial_users vu on sr.user_id=vu.user_id
 left join script_dinamico_master sdm on sdm.id=sr.id_script
@@ -136,7 +136,7 @@ left join vicidial_campaign_statuses vcs on vcs.status=vlg.status
 left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script 
 where sr.campaign_id='$campaign_id' and sr.id_script='$id_script' $filtro $date_filter  order by sr.lead_id,tag_elemento";
         $result = mysql_query($query, $link) or die(mysql_error());
-        $final_row = array("id" => "", "date" => "", "name" => "", "full_name" => "", "unique_id" => "", "campaign_name" => "", "lead_id" => "", "status_name" => "");
+        $final_row = array("id" => "", "date" => "", "name" => "", "full_name" => "", "campaign_name" => "", "status_name" => "");
         $lead_id = false;
         $client = array();
         while ($row1 = mysql_fetch_assoc($result)) {
@@ -147,13 +147,12 @@ where sr.campaign_id='$campaign_id' and sr.id_script='$id_script' $filtro $date_
                 $lead_id = $row1["lead_id"];
                 $client = array_merge($final_row, $lead_info[$lead_id], $tags);
                 unset($lead_info[$lead_id]);
-                $client["id"] = $row1["id"];
+                $client["id"] =  $row1["lead_id"];
                 $client["date"] = $row1["date"];
                 $client["name"] = $row1["name"];
                 $client["full_name"] = $row1["full_name"];
-                $client["unique_id"] = $row1["unique_id"];
+             
                 $client["campaign_name"] = $row1["campaign_name"];
-                $client["lead_id"] = $row1["lead_id"];
                 $client["status_name"] = $row1["status_name"];
             }
             if ($row1["type"] == "tableradio")
