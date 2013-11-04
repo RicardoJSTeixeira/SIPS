@@ -101,7 +101,7 @@
                             });
                     </script><?php
                 } else {
-                    $stmt = "INSERT INTO vicidial_user_groups(user_group,group_name,allowed_campaigns) values('$user_group','$group_name',' -');";
+                    $stmt = "INSERT INTO vicidial_user_groups(user_group,group_name,allowed_campaigns,agent_fullscreen) values('$user_group','$group_name',' -','Y');";
                     $rslt = mysql_query($stmt, $link) or die(mysql_error());
                     ?><script>
                             window.location = 'listausersgroups.php?success=1';
