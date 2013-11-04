@@ -228,7 +228,7 @@ switch ($action) {
             $users_regex = "Where user REGEXP '^$tmp'";
         }
         $js = array();
-        $query = "SELECT user,full_name  FROM vicidial_users $users_regex group by user ";
+        $query = "SELECT user,full_name  FROM vicidial_users $users_regex group by user order by full_name ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array("user" => $row["user"], "full_name" => $row["full_name"]);
