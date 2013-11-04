@@ -210,22 +210,30 @@ function update_info()
             {
                   $(".pag_div").hide().first().show();
                   $("#admin_submit").hide();
+                  rules(tags(populate_script(function() {
+
+                        setTimeout(function() {
+                              $("#myform").validationEngine();
+                        }, 100);
+                  })));
             }
             else
             {
                   $(".pagination_class").remove();
                   $("#admin_submit").show();
+                  populate_script(function() {
+                        setTimeout(function() {
+                              $("#myform").validationEngine();
+                        }, 100);
+                  });
+                  $(".item").show();
+
             }
 
 
 
 
-            rules(tags(populate_script(function() {
 
-                  setTimeout(function() {
-                        $("#myform").validationEngine();
-                  }, 100);
-            })));
 
 
       }, "json");
@@ -595,7 +603,7 @@ function rules_work(data)
                   {
                         if ($("#myform").validationEngine('validate'))
                         {
-                             
+
                               $(".pag_div").hide();
                               $("#" + data.tag_target + "pag").show();
                         }
