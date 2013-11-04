@@ -9687,7 +9687,7 @@ function confirm_feedback_load()
 
       $.post("ajax/confirm_feedback.php", {action: "get_info", user: user},
       function(data)
-      {
+      { 
 
             $.each(data, function(index, value) {
                   if (this.has_info)
