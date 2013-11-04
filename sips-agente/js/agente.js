@@ -1224,7 +1224,7 @@ function CalLBacKsCounTCheck()
 // Request list of USERONLY callbacks for this agent
 function CalLBacKsLisTCheck()
 {
-     
+
       if (!callback_limit_reached)
       {
             var go_on = divchecker("cback");
@@ -1259,7 +1259,7 @@ function CalLBacKsLisTCheck()
 
       if (move_on == 1)
       {
-           
+
             LastCallbackViewed = 1;
 
 
@@ -1316,7 +1316,7 @@ function ApagaCallback(cb_id)
             ACTION: "apagacallback",
             cb_id: cb_id
       }, function(data) {
-            
+
             CalLBacKsLisTCheck();
       });
 
@@ -4333,11 +4333,11 @@ function DispoSelect_submit()
                   $.post("ajax/callbacks.php", {campaign_id: campaign, user: user},
                   function(callback_user)
                   {
-                        if (callback_user < max_callback){
-                              callback_limit_reached=false;
+                        if (callback_user < max_callback) {
+                              callback_limit_reached = false;
                               DispoSelect_submit_allowed();
                         }
-                              else
+                        else
                         {
                               alert_box_max_callbacks();
 
@@ -8867,7 +8867,9 @@ function manNextCall(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnStagE
                         timer_action_message = campaign_timer_action_message;
                         timer_action_seconds = campaign_timer_action_seconds;
                         timer_action_destination = campaign_timer_action_destination;
-                        if (clientName == 'necomplus') { getPi(); }
+                        if (clientName == 'necomplus') {
+                              getPi();
+                        }
                         lead_dial_number = dialed_number;
                         var dispnum = dialed_number;
                         var status_display_number = dispnum;
@@ -9035,31 +9037,33 @@ function manNextCall(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnStagE
 }
 
 function getPi() {
-       var apiPhone = $("#phone_number").val();
-       var nomePi = $("#nomePi").html();
-       
-       $.post("../client_files/necomplus/soap_api.php",{phone : apiPhone},function(data){
-       console.log(data.codresultado)    
-           if (data.codresultado == '0') {
-               $("#nomePi").html(data.nombre_comercio);
-               $("#codigoPi").html(data.codigo_comercio);
-               $("#moradaPi").html(data.dir_comercio);
-               $("#contactoPi").html(data.contacto_comercio);
-               for (i=0;i<data.datos_ns.contador_ns;i++) {
-                  var a = i+1;
-                  $('#tpaPi > tbody:last').append('<tr><td>'+ ((typeof data.datos_ns['id_tpa_'+a] == 'object') ? 'Sem dados' : data.datos_ns['id_tpa_'+a]) +'</td><td>'+ ((typeof data.datos_ns['num_serie_'+a] == 'object') ? 'Sem dados' : data.datos_ns['num_serie_'+a]) +'</td></tr>'); 
-                }
-               var flag = true;
-               var b = 1;
-               for (i=1;i<6;i++) {
-                   console.log('in' + data.datos_num_orden['num_orden_'+i]); 
-                   if (data.datos_num_orden['num_orden_'+i] !== undefined) { 
-                        $('#ordensPi > tbody:last').append('<tr><td>'+data.datos_num_orden['fechor_'+i]+'</td><td>'+data.datos_num_orden['tipo_orden_'+i]+'</td><td>'+data.datos_num_orden['num_orden_'+i]+'</td><td>'+data.datos_num_orden['estado_'+i]+'</td></tr>'); 
-                    }
-               }
-           } else { $("#nomePi").html('Sem dados do cliente'); }     
-       },'json');
-       
+      var apiPhone = $("#phone_number").val();
+      var nomePi = $("#nomePi").html();
+
+      $.post("../client_files/necomplus/soap_api.php", {phone: apiPhone}, function(data) {
+            console.log(data.codresultado)
+            if (data.codresultado == '0') {
+                  $("#nomePi").html(data.nombre_comercio);
+                  $("#codigoPi").html(data.codigo_comercio);
+                  $("#moradaPi").html(data.dir_comercio);
+                  $("#contactoPi").html(data.contacto_comercio);
+                  for (i = 0; i < data.datos_ns.contador_ns; i++) {
+                        var a = i + 1;
+                        $('#tpaPi > tbody:last').append('<tr><td>' + ((typeof data.datos_ns['id_tpa_' + a] == 'object') ? 'Sem dados' : data.datos_ns['id_tpa_' + a]) + '</td><td>' + ((typeof data.datos_ns['num_serie_' + a] == 'object') ? 'Sem dados' : data.datos_ns['num_serie_' + a]) + '</td></tr>');
+                  }
+                  var flag = true;
+                  var b = 1;
+                  for (i = 1; i < 6; i++) {
+                        console.log('in' + data.datos_num_orden['num_orden_' + i]);
+                        if (data.datos_num_orden['num_orden_' + i] !== undefined) {
+                              $('#ordensPi > tbody:last').append('<tr><td>' + data.datos_num_orden['fechor_' + i] + '</td><td>' + data.datos_num_orden['tipo_orden_' + i] + '</td><td>' + data.datos_num_orden['num_orden_' + i] + '</td><td>' + data.datos_num_orden['estado_' + i] + '</td></tr>');
+                        }
+                  }
+            } else {
+                  $("#nomePi").html('Sem dados do cliente');
+            }
+      }, 'json');
+
       var lead_log_spot = $("#LeadLogPi tbody").empty();
       $.post("vdc_db_query.php",
               {server_ip: server_ip,
@@ -9074,10 +9078,10 @@ function getPi() {
                     lead_id: $("#lead_id").val(),
                     campaign: campaign},
       function(data) {
-            var i=0;
+            var i = 0;
             var lead_log = data.lead_log;
             $.each(lead_log, function() {
-                
+
                   lead_log_spot
                           .append($("<tr>")
                           .append($("<td>").text(this.call_date))
@@ -9089,7 +9093,9 @@ function getPi() {
                           .append($("<td>").text(this.io))
                           .append($("<td>").text(this.term_reason)));
                   i++;
-                  if (i==6) { return false; }
+                  if (i == 6) {
+                        return false;
+                  }
             });
 
       }
@@ -9656,13 +9662,30 @@ $(document).on("click", ".ligar_comment_log", function()
 });
 
 
+$(document).on("click", ".validar_chamada", function()
+{
+      $("#validar_chamada_modal #validar_chamada_button").data("lead_id",$(this).data("lead_id"));
+      $("#validar_chamada_modal #vc_comment").val("");
+      $("#validar_chamada_modal").modal("show");
+});
+
+$(document).on("click", "#validar_chamada_button", function()
+{
+
+      $.post("ajax/confirm_feedback.php", {action: "validate_call", lead_id: $(this).data("lead_id"), comment: $("#vc_comment").val(), user: user, campaign: campaign},
+      function(data)
+      {
+            $("#confirm_feedback_log").hide();
+      }, "json");
+});
+
 function confirm_feedback_load()
 {
       showDiv('confirm_feedback_log');
 
       $("#comment_log_tbody").empty();
 
-      $.post("ajax/confirm_feedback.php", {user: user},
+      $.post("ajax/confirm_feedback.php", {action: "get_info", user: user},
       function(data)
       {
 
@@ -9671,16 +9694,12 @@ function confirm_feedback_load()
                   {
                         $("#comment_log_tbody").append($("<tr>")
                                 .append($("<td>").text(this.comment))
-
                                 .append($("<td>").text(this.full_name))
                                 .append($("<td>").text(moment(this.date).fromNow())
-                                .append($("<div>").addClass("view-button")
-                                .append($("<button>").addClass("btn btn-mini ligar_comment_log icon-phone").data("lead_id", this.lead_id).data("phone_number", this.phone_number).text(" ligar"))))
-
+                                .append($("<div>").addClass("view-button").append($("<button>").addClass("btn btn-mini validar_chamada icon-ok-sign").data("lead_id", this.lead_id).text(" Validar")))
+                                .append($("<div>").addClass("view-button").append($("<button>").addClass("btn btn-mini ligar_comment_log icon-phone").data("lead_id", this.lead_id).data("phone_number", this.phone_number).text(" ligar"))))
                                 );
-
                   }
-
             });
       }, "json");
       $(".ligar_comment_log").show();
