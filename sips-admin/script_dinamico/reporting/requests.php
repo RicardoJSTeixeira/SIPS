@@ -128,7 +128,7 @@ switch ($action) {
             $date_filter = "";
         $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name,  vc.campaign_name, sr.lead_id,sr.param_1,vcs.status_name, sr.tag_elemento,sr.valor,sd.param1,sd.type FROM `script_result` sr
 left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id
-left join vicidial_users vu on sr.user_id=vu.user_id
+left join vicidial_users vu on sr.user_id=vu.user
 left join script_dinamico_master sdm on sdm.id=sr.id_script
 left join  vicidial_list vl on vl.lead_id=sr.lead_id
 left join vicidial_log vlg on vlg.uniqueid=sr.unique_id
