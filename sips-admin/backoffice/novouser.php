@@ -1,15 +1,9 @@
 <?php
 require("../dbconnect.php");
 
-$user = $_SERVER['PHP_AUTH_USER'];
+require("../../ini/user.php");
+$user_class = new users;
 
-$stmt = "SELECT user_group FROM vicidial_users WHERE user LIKE '$user'";
-
-$grupos = mysql_query($stmt, $link);
-
-$grupos = mysql_fetch_assoc($grupos);
-
-$grupos_a = $grupos['user_group'];
 
 
 $data = date('o-m-d');
@@ -17,10 +11,24 @@ $data = date('o-m-d');
 
 
 
-if ($grupos_a == 'ADMIN') {
+if ($user_class->user_group == 'ADMIN') {
     $grupos = mysql_query("SELECT user_group, group_name FROM vicidial_user_groups", $link) or die(mysql_error());
 } else {
-    $grupos = mysql_query("SELECT user_group, group_name FROM vicidial_user_groups WHERE user_group='$grupos_a'", $link) or die(mysql_error());
+
+    //Users INICIO 
+    $tmp = "";
+    $allowed_camps_regex = implode("|", $user_class->allowed_campaigns);
+    if (!$user_class->is_all_campaigns) {
+        $ret = "WHERE allowed_campaigns REGEXP '$allowed_camps_regex'";
+        $user_groups = "";
+        $result = mysql_query("SELECT `user_group`, `allowed_campaigns` FROM `vicidial_user_groups` $ret ") or die(mysql_error());
+        while ($row1 = mysql_fetch_assoc($result)) {
+            $user_groups .= "'$row1[user_group]',";
+        }
+        $user_groups = rtrim($user_groups, ",");
+
+        $grupos = mysql_query("SELECT user_group, group_name FROM vicidial_user_groups WHERE user_group in ($user_groups)", $link) or die(mysql_error());
+    }
 }
 ?>
 
