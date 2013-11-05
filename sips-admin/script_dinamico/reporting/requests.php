@@ -85,7 +85,7 @@ switch ($action) {
             break;
         }
         $tags = array();
-        $query = "SELECT tag,type,texto,values_text,placeholder  FROM `script_dinamico` where type not in ('pagination','textfield','scheduler','legend')  and id_script='$id_script' order by tag asc ";
+        $query = "SELECT a.tag,a.type,a.texto,a.values_text,a.placeholder  FROM `script_dinamico` a left join script_dinamico_pages b on b.id=a.id_page  where type not in ('pagination','textfield','scheduler','legend')  and a.id_script='$id_script' order by b.pos,a.ordem asc ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             if ($row['type'] == "tableradio") {
