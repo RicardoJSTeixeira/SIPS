@@ -725,7 +725,7 @@ if ($format=='debug')
 	echo "\n<!-- script runtime: $RUNtime seconds -->";
 	echo "\n</body>\n</html>\n";
 	}
-	
+	mysql_close($link);
 exit; 
 
 
