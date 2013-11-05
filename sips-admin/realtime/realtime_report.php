@@ -874,6 +874,17 @@ if (strlen($monitor_phone) > 1) {
 
 <script language="Javascript">
 
+var window_focus=true;
+
+$(window).focus(function() {
+    window_focus = true;
+    $("#info").text("Ligado");
+})
+    .blur(function() {
+    window_focus = false;
+    $("#info").text("Desligado");
+    });
+
     window.onload = startup;
 
     // functions to detect the XY position on the page of the mouse
@@ -1223,7 +1234,8 @@ if (strlen($monitor_phone) > 1) {
             document.getElementById("refresh_countdown").innerHTML = "0";
             ar_seconds = ar_refresh;
             //	window.location.reload();
-            gather_realtime_content();
+            if(window_focus){
+            gather_realtime_content();}
 			<?php if ($LOGuser_group == "demoij") {?>RefreshGraph();<?php } ?>
             setTimeout("realtime_refresh_display()",1000);
         }
@@ -1830,7 +1842,7 @@ $(document).ready(function(){
 
 
 
-echo "<td style=text-align:right> Actualização em: <span id=refresh_countdown name=refresh_countdown></span> segundos</td>\n\n";
+echo "<td style=text-align:right> <span id=info >Ligado</span> Actualização em:<span id=refresh_countdown name=refresh_countdown></span> segundos</td>\n\n";
 echo "<td id=icon32 style='padding-right:12px; padding-left:0;'><img style='cursor:pointer;' src='/images/icons/arrow_refresh.png' onclick=\"update_variables('form_submit','','YES')\" /></td>";
 echo "</tr>";
 echo "</table>";
