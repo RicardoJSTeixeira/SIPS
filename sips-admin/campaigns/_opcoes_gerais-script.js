@@ -245,9 +245,9 @@ function MiscOptionsElemInit()
 
       $("#campaign_callback_limit").spinner({
             min: 0,
-                        spin: function(event, ui)
+            stop: function(event, ui)
             {
-               campaignCallbackLimit();   
+                  campaignCallbackLimit();
             }
       });
 
