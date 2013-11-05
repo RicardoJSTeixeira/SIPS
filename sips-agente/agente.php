@@ -592,7 +592,7 @@ header("Pragma: no-cache");                          // HTTP/1.0
                 $queryClient = "SELECT server_description from servers limit 1";
                 $queryClient = mysql_query($queryClient, $link) or die(mysql_error());
                 $curClient = mysql_fetch_row($queryClient);
-                
+
                 unset($curLogo);
                 if (file_exists("../client_files/$curClient[0]/logo.gif")) {
                     $curLogo = "client_files/$curClient[0]/logo.gif";
@@ -2775,19 +2775,17 @@ if ($phone_exists == 0) {
 }
 
 
-                $queryClient = "SELECT server_description from servers limit 1";
-                $queryClient = mysql_query($queryClient, $link) or die(mysql_error());
-                $curClient = mysql_fetch_row($queryClient);
-           
-                unset($curLogo);
-                if (file_exists("../client_files/$curClient[0]/logo.gif")) {
-                    $curLogo = "client_files/$curClient[0]/logo.gif";
-                    echo "<input type=hidden name=curlogo value=$curLogo />";
-                } else {
-                    unset($curLogo);
-                }
+$queryClient = "SELECT server_description from servers limit 1";
+$queryClient = mysql_query($queryClient, $link) or die(mysql_error());
+$curClient = mysql_fetch_row($queryClient);
 
-
+unset($curLogo);
+if (file_exists("../client_files/$curClient[0]/logo.gif")) {
+    $curLogo = "client_files/$curClient[0]/logo.gif";
+    echo "<input type=hidden name=curlogo value=$curLogo />";
+} else {
+    unset($curLogo);
+}
 ?>
 
 <script type="text/javascript" src="js/mensagens.js"></script>
@@ -2808,7 +2806,7 @@ if ($phone_exists == 0) {
             loop_warning.addUri("/ini/disconnected.ogg", 10000, "disconnected");
             loop.callback(soundsLoaded);
             moment.lang('pt');
-            var clientName = '<? echo $curClient[0]; ?>'; 
+            var clientName = '<? echo $curClient[0]; ?>';
             window.name = 'GCC_window';
             var campaign_status = <?= json_encode($campaign_status) ?>;
             var my_callback_option = '<?= $my_callback_option ?>';
@@ -2885,7 +2883,7 @@ if ($phone_exists == 0) {
             HKstatuses = new Array(<?= $HKstatuses ?>);
             HKstatusnames = new Array(<?= $HKstatusnames ?>);
             var hotkeys = new Array();
-            var callback_limit_reached=false;
+            var callback_limit_reached = false;
 <?php
 $h = 0;
 while ($HK_statuses_camp > $h) {
@@ -3428,7 +3426,7 @@ while ($MM_scripts > $h) {
                             </tbody>
                         </table>
                     </div>
-                    
+
 
 
                     <div class="grid" id="AgentViewSpan">
@@ -3496,26 +3494,25 @@ while ($MM_scripts > $h) {
                 return false;">Voltar</a>
                         </p>
                     </span>
-                   
-                        <ul id="Main-tabs" class="nav nav-tabs tabs-main">
-                            
-                     <?php
-                    if ($curClient[0] === 'necomplus') { ?>        
-                            
-                           
+
+                    <ul id="Main-tabs" class="nav nav-tabs tabs-main">
+
+                        <?php if ($curClient[0] === 'necomplus') { ?>        
+
+
                             <li class=""><a href="#MainTable" data-toggle="tab" id="tab-MainTable" >Dados do Cliente</a></li>
                             <li class=""><a href="#FormPanel" data-toggle="tab" id="tab-FormPanel" >Script</a></li>
                             <li class=""><a href="#LeadLog" data-toggle="tab" onclick="leadlog();" id="tab-FormPanel" >Histórico</a></li>
                             <li class="active"><a href="#infoPi" data-toggle="tab" onclick="getPi();" id="tab-FormPanel" >Info Pi</a></li>
-                    <? } else { ?>  
+                        <? } else { ?>  
                             <li class="active"><a href="#MainTable" data-toggle="tab" id="tab-MainTable" >Dados do Cliente</a></li>
                             <li class=""><a href="#FormPanel" data-toggle="tab" id="tab-FormPanel" >Script</a></li>
                             <li class=""><a href="#LeadLog" data-toggle="tab" onclick="leadlog();" id="tab-FormPanel" >Histórico</a></li>
-                    <? } ?>
-                        </ul>
-                    
-                        
-                    
+                        <? } ?>
+                    </ul>
+
+
+
 
                     <div class="tab-content tabs-main-content height100">
 
@@ -3523,7 +3520,7 @@ while ($MM_scripts > $h) {
                             <iframe src="./vdc_form_display.php?lead_id=&list_id=&stage=WELCOME" style="width:100%;min-height: 70%" scrolling="auto" frameborder="0" allowtransparency="true" id="vcFormIFrame" name="vcFormIFrame" > </iframe>
                             <div class="clear"></div>
                         </div>
-                        
+
                         <div id="LeadLog" class="tab-pane tab-overflow-main">
                             <table class="table table-mod table-striped table-bordered">
                                 <thead>
@@ -3544,280 +3541,282 @@ while ($MM_scripts > $h) {
                             </table>
                         </div>
                         <? if ($curClient[0] === 'necomplus') { ?>    
-                        <div id="infoPi" class="tab-pane active tab-overflow-main">
-                            <table class="table table-mod table-striped table-bordered" id="clientePi">
-                                <tbody>
-                                    <tr>
-                                        <td>Nome:</td><td id="nomePi"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Codigo:</td><td id="codigoPi"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Morada:</td><td id="moradaPi"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Contacto:</td><td id="contactoPi"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <br />
-                            <br />
-                            <table class="table table-mod table-striped table-bordered" id="tpaPi">
-                                <thead>
+                            <div id="infoPi" class="tab-pane active tab-overflow-main">
+                                <table class="table table-mod table-striped table-bordered" id="clientePi">
+                                    <tbody>
+                                        <tr>
+                                            <td>Nome:</td><td id="nomePi"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Codigo:</td><td id="codigoPi"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Morada:</td><td id="moradaPi"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Contacto:</td><td id="contactoPi"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br />
+                                <br />
+                                <table class="table table-mod table-striped table-bordered" id="tpaPi">
+                                    <thead>
                                     <th>ID TPA</th>
                                     <th>Número de Série</th>
-                                </thead>    
-                                <tbody>
-                                   
-                                </tbody>
-                            </table>
-                            <br />
-                            <br />
-                            <table class="table table-mod table-striped table-bordered" id="ordensPi">
-                                <thead>
+                                    </thead>    
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                                <br />
+                                <br />
+                                <table class="table table-mod table-striped table-bordered" id="ordensPi">
+                                    <thead>
                                     <th>Data</th>
                                     <th>Estado</th>
                                     <th>Nº Ordem</th>
                                     <th>Tipo de Ordem</th>
-                                </thead>    
-                                <tbody>
-                                   
-                                </tbody>
-                            </table>
-                            <br><br>
-                            <table id="LeadLogPi" class="table table-mod table-striped table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Data</th>
-                                        <th>Operador</th>
-                                        <th>Tempo (seg.)</th>
-                                        <th>Estado</th>
-                                        <th>Nº</th>
-                                        <th>Campanha</th>
-                                        <th title='Entrada Ou Saida'>IO</th>
-                                        <th>Desligou</th>
-                                    </tr>
-                                </thead> 
-                                <tbody>
+                                    </thead>    
+                                    <tbody>
 
-                                </tbody>
-                            </table>
-                        </div>
-                         <? } 
-                    if ($curClient[0] === 'necomplus') { ?>    
-                        <div id="MainTable" class="tab-pane  tab-overflow-main">
-                    <? } else { ?>
-                    <div id="MainTable" class="tab-pane active  tab-overflow-main">   <? } ?>
+                                    </tbody>
+                                </table>
+                                <br><br>
+                                <table id="LeadLogPi" class="table table-mod table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>Operador</th>
+                                            <th>Tempo (seg.)</th>
+                                            <th>Estado</th>
+                                            <th>Nº</th>
+                                            <th>Campanha</th>
+                                            <th title='Entrada Ou Saida'>IO</th>
+                                            <th>Desligou</th>
+                                        </tr>
+                                    </thead> 
+                                    <tbody>
 
-                            <input type="hidden" name="lead_id" id="lead_id" value="" />
-                            <input type="hidden" name="entry_list_id" id="entry_list_id" value="" />
-                            <input type="hidden" name="called_count" id="called_count" value="" />
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?
+                        }
+                        if ($curClient[0] === 'necomplus') {
+                            ?>    
+                            <div id="MainTable" class="tab-pane  tab-overflow-main">
+<? } else { ?>
+                                <div id="MainTable" class="tab-pane active  tab-overflow-main">   <? } ?>
 
-                            <input type="hidden" name="gmt_offset_now" id="gmt_offset_now" value="" />
+                                <input type="hidden" name="lead_id" id="lead_id" value="" />
+                                <input type="hidden" name="entry_list_id" id="entry_list_id" value="" />
+                                <input type="hidden" name="called_count" id="called_count" value="" />
 
-                            <input type="hidden" name="uniqueid" id="uniqueid" value="" />
-                            <input type="hidden" name="callserverip" id="callserverip" value="" />
-                            <input type="hidden" name="SecondS" id="SecondS" value="" />
+                                <input type="hidden" name="gmt_offset_now" id="gmt_offset_now" value="" />
 
-                            <input type="hidden" name="gender_list" id="gender_list" value="" />
+                                <input type="hidden" name="uniqueid" id="uniqueid" value="" />
+                                <input type="hidden" name="callserverip" id="callserverip" value="" />
+                                <input type="hidden" name="SecondS" id="SecondS" value="" />
 
-                            <div id="MainPanelCustInfo">
+                                <input type="hidden" name="gender_list" id="gender_list" value="" />
 
-
-                                <input type=hidden name=call_notes id=call_notes value= /><span id=CallNotesButtons></span>
-
-                                <div class="grid-content">
-
-                                    <div id="MainStatuSSpan" class="alert alert-info" ></div>
+                                <div id="MainPanelCustInfo">
 
 
-                                    <div style="z-index:1001;" id="CBcommentsBox">
-                                        <table class="table table-bordered" >
-                                            <tr>
-                                                <th colspan="4">Informação sobre call-backs antigos: <button class="close" type="button" onClick="CBcommentsBoxhide();" >×</button></th>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <p>
-                                                        <span class="label label-success">Ultima chamada:</span>
-                                                        <span id="CBcommentsBoxA"></span>
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    <p>
-                                                        <span class="label label-success">CallBack:</span>
-                                                        <span id="CBcommentsBoxB"></span>
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    <p>
-                                                        <span class="label label-success">Agente:</span>
-                                                        <span id="CBcommentsBoxC"></span>
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    <p>
-                                                        <span class="label label-success">Comentários:</span>
-                                                        <span id="CBcommentsBoxD"></span>
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
+                                    <input type=hidden name=call_notes id=call_notes value= /><span id=CallNotesButtons></span>
 
-                                    <span id='phone_numberDISP' style='display:none'></span> 
-                                    <div class="form-horizontal">
+                                    <div class="grid-content">
 
-                                        <?php
-                                        for ($index = 0; $index < count($fields_order); $index++) {
-                                            if ($fields_order[$index][0] == "comments") {
-                                                if ($fields_order[$index][1] == 0) {
-                                                    ?>
-                                                    <input type='hidden' name='comments' id='comments' value='' />
-                                                <?php } else { ?>
-                                                    <div class="control-group">
-                                                        <label class="control-label"><?= $fields_order[$index][3] ?>:</label>
-                                                        <div class="controls">
-                                                            <textarea <?= $fields_order[$index][2] ?> class="span" name='<?= $fields_order[$index][0] ?>' id='<?= $fields_order[$index][0] ?>'></textarea>
+                                        <div id="MainStatuSSpan" class="alert alert-info" ></div>
+
+
+                                        <div style="z-index:1001;" id="CBcommentsBox">
+                                            <table class="table table-bordered" >
+                                                <tr>
+                                                    <th colspan="4">Informação sobre call-backs antigos: <button class="close" type="button" onClick="CBcommentsBoxhide();" >×</button></th>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <p>
+                                                            <span class="label label-success">Ultima chamada:</span>
+                                                            <span id="CBcommentsBoxA"></span>
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p>
+                                                            <span class="label label-success">CallBack:</span>
+                                                            <span id="CBcommentsBoxB"></span>
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p>
+                                                            <span class="label label-success">Agente:</span>
+                                                            <span id="CBcommentsBoxC"></span>
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p>
+                                                            <span class="label label-success">Comentários:</span>
+                                                            <span id="CBcommentsBoxD"></span>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                        <span id='phone_numberDISP' style='display:none'></span> 
+                                        <div class="form-horizontal">
+
+                                            <?php
+                                            for ($index = 0; $index < count($fields_order); $index++) {
+                                                if ($fields_order[$index][0] == "comments") {
+                                                    if ($fields_order[$index][1] == 0) {
+                                                        ?>
+                                                        <input type='hidden' name='comments' id='comments' value='' />
+        <?php } else { ?>
+                                                        <div class="control-group">
+                                                            <label class="control-label"><?= $fields_order[$index][3] ?>:</label>
+                                                            <div class="controls">
+                                                                <textarea <?= $fields_order[$index][2] ?> class="span" name='<?= $fields_order[$index][0] ?>' id='<?= $fields_order[$index][0] ?>'></textarea>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <?php
-                                                }
-                                            } else {
-                                                if ($fields_order[$index][1] == 0) {
-                                                    ?>
-                                                    <input type='hidden' name='<?= $fields_order[$index][0] ?>' id='<?= $fields_order[$index][0] ?>' value='' />
-                                                <?php } else { ?>
-                                                    <div class="control-group">
-                                                        <label class="control-label"><?= $fields_order[$index][3] ?>:</label>
-                                                        <div class="controls">
-                                                            <?= (($fields_order[$index][0] == "address1") ? "<div style=\"display:block;\" class=\"input-append\">" : "") ?>
-                                                            <input <?= $fields_order[$index][2] ?> type=text name='<?= $fields_order[$index][0] ?>' id='<?= $fields_order[$index][0] ?>' class="<?= ($fields_order[$index][0] == "address1") ? "span9" : "span" ?>">
-                                                            <?= (($fields_order[$index][0] == "address1") ? "<span onclick=\"showDiv('pesquisa_morada');\" class=\"btn\" ><i class=\"icon-map-marker\"></i> Pesquisar</span></div>" : "") ?>
+                                                        <?php
+                                                    }
+                                                } else {
+                                                    if ($fields_order[$index][1] == 0) {
+                                                        ?>
+                                                        <input type='hidden' name='<?= $fields_order[$index][0] ?>' id='<?= $fields_order[$index][0] ?>' value='' />
+        <?php } else { ?>
+                                                        <div class="control-group">
+                                                            <label class="control-label"><?= $fields_order[$index][3] ?>:</label>
+                                                            <div class="controls">
+                                                                <?= (($fields_order[$index][0] == "address1") ? "<div style=\"display:block;\" class=\"input-append\">" : "") ?>
+                                                                <input <?= $fields_order[$index][2] ?> type=text name='<?= $fields_order[$index][0] ?>' id='<?= $fields_order[$index][0] ?>' class="<?= ($fields_order[$index][0] == "address1") ? "span9" : "span" ?>">
+            <?= (($fields_order[$index][0] == "address1") ? "<span onclick=\"showDiv('pesquisa_morada');\" class=\"btn\" ><i class=\"icon-map-marker\"></i> Pesquisar</span></div>" : "") ?>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <?php
+                                                        <?php
+                                                    }
                                                 }
                                             }
-                                        }
-                                        ?>
-                                        <div class="clear"></div>
+                                            ?>
+                                            <div class="clear"></div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>	
-                        </div>
-                    </div>
-                </div>
-                <div class="span2">
-
-                    <div class="grid">
-                        <div class="grid-title">
-                            <div class="pull-left" title="Controlo de Chamadas">Controlo</div>
-                            <span style='display:none;' id="dataHeader"></span>
-                            <div class="pull-right">
-                                <div class="grid-title-icon">
-                                    <i class="icon-phone-sign"></i>
-                                </div>
+                                </div>	
                             </div>
                         </div>
-                        <table class="table table-condensed" >
-                            <tr id="DiaLControl" <?= ($auto_dial_level > 0 and $dial_method != "INBOUND_MAN") ? "style='display:none'" : ""; ?>>
-                                <td><i class="fam-control-end"></i></td>
-                                <td>
-                                    <a href="#" onClick="ManualDialNext('', '', '', '', '', '0');">Marcar Seguinte</a>
-                                </td>
-                            </tr>
-                            <tr id="ResumeControl" <?= ($auto_dial_level < 1) ? "style='display:none'" : ""; ?>>
-                                <td><i class="fam-control-play"></i></td>
-                                <td><a href="#" onClick="AutoDial_ReSume_PauSe('VDADready');">Retomar Chamadas</a></td>
-                            </tr>
-                            <tr id="PauseControl" <?= ($auto_dial_level < 1) ? "style='display:none'" : ""; ?>>
-                                <td><i class="fam-control-stop"></i></td>
-                                <td><a href="#" onClick="AutoDial_ReSume_PauSe('VDADpause');">Pausar Chamadas</a></td>
-                            </tr>
-                            <tr id="HangupControl">
-                                <td><i class="fam-control-eject-blue"></i></td>
-                                <td>Desligar</td>
-                            </tr>
+                    </div>
+                    <div class="span2">
 
-
-                            <tr id='ParkControl'>
-                                <td><i class="fam-control-pause-blue"></i></td>
-                                <td>Espera</td>
-                            </tr>
-                            <tr id='XferControl' <?= (!$agent_allow_transfers) ? "style='display:none;'" : "" ?>>
-                                <td><i class="fam-control-repeat-blue"></i></td>
-                                <td>Transferir</td>
-                            </tr>
-                            <tr <?= (!$agent_allow_dtmf) ? "style='display:none;'" : "" ?>>
-                                <td><i class="fam-sitemap-color"></i></td>
-                                <td>
-                                    <a href="#" id="SendDTMF" data-toggle="popover" data-placement="left" data-original-title="Digite o nº" data-content="<div class='input-append'><input type='text'  name='conf_dtmf' id='conf_dtmf' class='span2'  maxlength='10' /><span class='btn btn-primary' onclick='SendConfDTMF(session_id);return false;'>Enviar</span></div>" >DTMF</a> 
-                                </td>
-                            </tr>   
-
-                            <tr onClick="redial();" style='cursor:pointer'>
-                                <td><i class="fam-arrow-undo"></i></td>
-                                <td class='btn-link'>Re-Marcar</td>
-                            </tr>  
-
-                            <tr id='search' onClick="OpeNSearcHForMDisplaYBox();" style='cursor:pointer;<?= ($agent_lead_search == "DISABLED") ? "display:none;" : "" ?>'>
-                                <td><i class="fam-zoom-in"></i></td>
-                                <td class='btn-link'>Procurar</td>
-                            </tr>
-                            <tr id='mdial' onClick="NeWManuaLDiaLCalL('NO');" style='cursor:pointer'>
-                                <td><i class="fam-telephone-delete"></i></td>
-                                <td>
-                                    <span id="MDstatusSpan">
-                                        <a href="#" >Manual</a>
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr id='CallbacksButtons' style='cursor:pointer' data-toggle="tooltip" title="Verdes: prontos. Vermelhos: expirados.">
-                                <td><i class="fam-calendar"></i></td>
-                                <td>
-                                    <span id="CBstatusSpan" >Callbacks</span> 
-                                </td>
-                            </tr>
-                            <tr id='confirm_feedback_log_button' style='cursor:pointer' data-toggle="tooltip" title="Log do feedback">
-                                <td><i class="fam-book-go"></i></td>
-                                <td>
-                                    <span class="btn-link" onclick="confirm_feedback_load();">Vendas não confirmadas</span> 
-                                </td>
-                            </tr>
-                            <?php if ($campaign_allow_inbound == 'Y') { ?>
-                                <tr style='cursor:pointer' onclick="OpeNGrouPSelectioN();">
-                                    <td><i class="fam-group-add"></i></td>
-                                    <td class='btn-link'>Inbound</td>
+                        <div class="grid">
+                            <div class="grid-title">
+                                <div class="pull-left" title="Controlo de Chamadas">Controlo</div>
+                                <span style='display:none;' id="dataHeader"></span>
+                                <div class="pull-right">
+                                    <div class="grid-title-icon">
+                                        <i class="icon-phone-sign"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table table-condensed" >
+                                <tr id="DiaLControl" <?= ($auto_dial_level > 0 and $dial_method != "INBOUND_MAN") ? "style='display:none'" : ""; ?>>
+                                    <td><i class="fam-control-end"></i></td>
+                                    <td>
+                                        <a href="#" onClick="ManualDialNext('', '', '', '', '', '0');">Marcar Seguinte</a>
+                                    </td>
                                 </tr>
-                            <?php } ?>
-
-                            <?php if ($on_hook_agent == "Y") { ?>
-                                <tr style='cursor:pointer' onclick="NoneInSessionCalL();">
-                                    <td><i class="fam-telephone-add"></i></td>
-                                    <td class='btn-link'>Ligação</td>
+                                <tr id="ResumeControl" <?= ($auto_dial_level < 1) ? "style='display:none'" : ""; ?>>
+                                    <td><i class="fam-control-play"></i></td>
+                                    <td><a href="#" onClick="AutoDial_ReSume_PauSe('VDADready');">Retomar Chamadas</a></td>
                                 </tr>
-                            <?php } ?>
-
-                            <tr id="CallHistoryStart" style="cursor:pointer">
-                                <td> <i class="fam-book-delete"></i></td>
-                                <td class='btn-link'>Histórico</td>
-                            </tr>
-                        </table>
-
-                        <?php
-                        $query = "SELECT url,imgpath,label FROM sips_agent_links where grupo='$VU_user_group';";
-                        $result = mysql_query($query, $link);
-
-                        if (mysql_num_rows($result) > 0) {
+                                <tr id="PauseControl" <?= ($auto_dial_level < 1) ? "style='display:none'" : ""; ?>>
+                                    <td><i class="fam-control-stop"></i></td>
+                                    <td><a href="#" onClick="AutoDial_ReSume_PauSe('VDADpause');">Pausar Chamadas</a></td>
+                                </tr>
+                                <tr id="HangupControl">
+                                    <td><i class="fam-control-eject-blue"></i></td>
+                                    <td>Desligar</td>
+                                </tr>
 
 
-                            echo "<div style='border-top:2px solid #e8edff;'>
+                                <tr id='ParkControl'>
+                                    <td><i class="fam-control-pause-blue"></i></td>
+                                    <td>Espera</td>
+                                </tr>
+                                <tr id='XferControl' <?= (!$agent_allow_transfers) ? "style='display:none;'" : "" ?>>
+                                    <td><i class="fam-control-repeat-blue"></i></td>
+                                    <td>Transferir</td>
+                                </tr>
+                                <tr <?= (!$agent_allow_dtmf) ? "style='display:none;'" : "" ?>>
+                                    <td><i class="fam-sitemap-color"></i></td>
+                                    <td>
+                                        <a href="#" id="SendDTMF" data-toggle="popover" data-placement="left" data-original-title="Digite o nº" data-content="<div class='input-append'><input type='text'  name='conf_dtmf' id='conf_dtmf' class='span2'  maxlength='10' /><span class='btn btn-primary' onclick='SendConfDTMF(session_id);return false;'>Enviar</span></div>" >DTMF</a> 
+                                    </td>
+                                </tr>   
+
+                                <tr onClick="redial();" style='cursor:pointer'>
+                                    <td><i class="fam-arrow-undo"></i></td>
+                                    <td class='btn-link'>Re-Marcar</td>
+                                </tr>  
+
+                                <tr id='search' onClick="OpeNSearcHForMDisplaYBox();" style='cursor:pointer;<?= ($agent_lead_search == "DISABLED") ? "display:none;" : "" ?>'>
+                                    <td><i class="fam-zoom-in"></i></td>
+                                    <td class='btn-link'>Procurar</td>
+                                </tr>
+                                <tr id='mdial' onClick="NeWManuaLDiaLCalL('NO');" style='cursor:pointer'>
+                                    <td><i class="fam-telephone-delete"></i></td>
+                                    <td>
+                                        <span id="MDstatusSpan">
+                                            <a href="#" >Manual</a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr id='CallbacksButtons' style='cursor:pointer' data-toggle="tooltip" title="Verdes: prontos. Vermelhos: expirados.">
+                                    <td><i class="fam-calendar"></i></td>
+                                    <td>
+                                        <span id="CBstatusSpan" >Callbacks</span> 
+                                    </td>
+                                </tr>
+                                <tr id='confirm_feedback_log_button' style='cursor:pointer' data-toggle="tooltip" title="Log do feedback">
+                                    <td><i class="fam-book-go"></i></td>
+                                    <td>
+                                        <span class="btn-link" onclick="confirm_feedback_load();">Vendas não confirmadas</span> 
+                                    </td>
+                                </tr>
+<?php if ($campaign_allow_inbound == 'Y') { ?>
+                                    <tr style='cursor:pointer' onclick="OpeNGrouPSelectioN();">
+                                        <td><i class="fam-group-add"></i></td>
+                                        <td class='btn-link'>Inbound</td>
+                                    </tr>
+                                <?php } ?>
+
+<?php if ($on_hook_agent == "Y") { ?>
+                                    <tr style='cursor:pointer' onclick="NoneInSessionCalL();">
+                                        <td><i class="fam-telephone-add"></i></td>
+                                        <td class='btn-link'>Ligação</td>
+                                    </tr>
+<?php } ?>
+
+                                <tr id="CallHistoryStart" style="cursor:pointer">
+                                    <td> <i class="fam-book-delete"></i></td>
+                                    <td class='btn-link'>Histórico</td>
+                                </tr>
+                            </table>
+
+                            <?php
+                            $query = "SELECT url,imgpath,label FROM sips_agent_links where grupo='$VU_user_group';";
+                            $result = mysql_query($query, $link);
+
+                            if (mysql_num_rows($result) > 0) {
+
+
+                                echo "<div style='border-top:2px solid #e8edff;'>
 		<table>";
-                            while ($row = mysql_fetch_assoc($result)) {
+                                while ($row = mysql_fetch_assoc($result)) {
 
-                                echo "<tr>
+                                    echo "<tr>
 				<td>
 					<a target='novapagina' href='" . $row[url] . "'>
 						<img style='vertical-align:middle;' src='" . $row[imgpath] . "'>
@@ -3901,1115 +3900,1115 @@ while ($MM_scripts > $h) {
                      
                 </td>
 			</tr>";
-                            }
+                                }
 
 
-                            echo "</table>
+                                echo "</table>
 		</div>";
-                        }
-                        ?>
-
-                    </div> 
-
-
-                    <div class="grid-transparent">
-                        <? if (isset($curlogo) && $curLogo != "") { ?>
-                            <img class="left" src='<?= "../$curlogo"; ?>' id="menu-hide" > 
-                        <? } else { ?>
-                            <img class="left" src='/images/pictures/go_logo_15.png' id='menu-hide' >
-                        <?php } ?>
-                        <div class='clear'></div>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div id="CallHistoryDialog" style="display:none">
-                <div class="text-center">
-                    <button id="change-lostcalls" class="btn btn-small">Chamadas Perdidas</button>
-                    <button id="change-inbound" class="btn btn-small">Chamadas de Inbound</button>
-                    <button id="change-manual" class="btn btn-small">Chamadas Manuais</button>
-                    <button id="change-outbound" class="btn btn-small">Chamadas de Outbound</button>
-                </div>
-                <div> 
-                    <table id='table-CallHistory' class="table table-mod-2 table-condensed">
-                        <thead></thead>
-                        <tbody></tbody>
-                        <tfoot></tfoot>
-                    </table>
-                </div>		
-            </div>
-            <div id="dialog-agent-msg" style="display:none;"></div>
-
-            <div class="grid-agent" style="width: 1000px; margin-left: -500px; display: none" id="marquee-msg"></div>
-
-            <input type="hidden" name="curlogo" value="<?= $curLogo; ?>" />
-            <input type="hidden" name="extension" id="extension" />
-            <input type="hidden" name="custom_field_values" id="custom_field_values" value="" />
-            <input type="hidden" name="FORM_LOADED" id="FORM_LOADED" value="0" />
-            <input type="hidden" name="custdatetime" id=custdatetime value="">
-            <input type="hidden" name="callchannel" id=callchannel value="">
-            <input type="hidden" name="campaign_id" id=campaign_id value="<?= $VD_campaign; ?>" />
-
-
-
-            <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="Header">
-                <TABLE style='display:none'>
-                    <TR>
-                        <TD>
-                            <span id=status ></span>
-                        </TD>
-                        <TD>
-                            <?php
-                            if ($territoryCT > 0) {
-                                echo "<a href=\"#\" onclick=\"OpeNTerritorYSelectioN();return false;\">TERRITORIES</a>   \n";
                             }
                             ?>
-                            <?php
-                            if ($INgrpCT > 0) {
-                                echo "<a href=\"#\" onclick=\"OpeNGrouPSelectioN();return false;\">GROUPS</a>   \n";
-                            }
-                            ?>
-                        </TD>
-                    </TR>
-                </TABLE>
-            </span> 
 
+                        </div> 
 
 
-            <span style="position:absolute;left:0px;top:13px;z-index:<?= ++$zi ?>; display:none" id="Tabs">
-                <table>
-                    <tr>
-                        <td><a href="#" onClick="MainPanelToFront('NO');"><img src="./images/vdc_tab_vicidial.gif" alt="MAIN"/></a></td>
-                        <?php
-                        if ($custom_fields_enabled > 0) {
-                            echo "<td><a href=\"#\" onclick=\"FormPanelToFront();\"><img src=\"./images/vdc_tab_form.gif\" alt=\"FORM\" width=\"67px\" height=\"30px\" border=\"0\" /></a></td>\n";
-                        }
-                        ?>
-                    </tr>
-                </table>
-            </span>
-
-
-            <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="WelcomeBoxA">
-                <table>
-                    <tr>
-                        <td align="center">
-                            <span id="WelcomeBoxAt">Agent Screen</span>
-                        </td>
-                    </tr>
-                </table>
-            </span>
-
-
-            <span style="display:none;position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="debugbottomspan">
-
-            </span>
-
-            <span style="position:absolute;left:3px;top:380px;z-index:1000; width:1200px; " id="ManuaLDiaLButtons"  valign="center">
-                <span style="position:absolute; left:0px; top:50px; z-index:<?= ++$zi ?>; width:1200px; display:none;" valign="center" id="MaiNfooterspan">
-                    <span id="blind_monitor_notice_span" >
-                        <b>   
-                            <span id="blind_monitor_notice_span_contents"></span>
-                        </b>
-
-                    </span>
-                    <table id="MaiNfooter" >
-                        <TR>
-                            <td>
-                                <IMG SRC="./images/agc_live_call_OFF.gif" NAME=livecall ALT="Live Call" WIDTH=60 HEIGHT=60 BORDER=0>
-
-                                <a href='#' class="btn" onclick="NormalLogout();" />Logout</a>
-
-                            </td>
-                            <td>
-                                <span id="MDstatusSpan">
-                                    <a href="#" class="btn" onClick="NeWManuaLDiaLCalL('NO');
-                return false;">Fazer Chamada Manual</a>
-                                </span>
-                                <a href="#" class="btn" onClick="NeWManuaLDiaLCalL('FAST');
-                return false;"></a>
-                                <br />
-
-                                <span style="z-index:1000;" id="CallLogButtons">
-                                    <span id="CallLogLinkSpan">
-                                        <a href="#" class="btn" onClick="VieWCalLLoG();
-                return false;">Ver o log de chamadas</a>
-                                    </span>
-                                </span>
-
-                                <span style="z-index:<?= ++$zi ?>;" id="AgentViewLinkSpan">
-
-                                    <span id="AgentViewLink">
-                                        <a href="#" class="btn" onClick="AgentsViewOpen('AgentViewSpan', 'open');
-                return false;">Ver colegas +</a>
-                                    </span>
-                                </span>
-
-
-
-
-                                <span id=AgentStatusCalls style="display:none"></span>
-
-                                <span id="RecorDControl" style="display:none">
-                                    <a href="#" class="btn" onClick="conf_send_recording('MonitorConf', session_id, '');
-                return false;">
-                                        <img src="./images/vdc_LB_startrecording_OFF.gif" border="0" alt="Start Recording" />
-                                    </a>
-                                </span>
-                            </td>
-
-                            <td >
-                                <span id="busycallsdebug"></span>
-                                <span id="RecorDingFilename" style="display:none"></span>
-                                <span id="RecorDID" style="display:none"></span>
-
-                                <span style="z-index:<?= ++$zi ?>;" id="AgentMuteSpan" ></span><br><br>
-                                <span style="z-index:<?= ++$zi ?>;" id="VolumeControlSpan" >
-                                    <span id="VolumeUpSpan" >
-                                        <img src="./images/vdc_volume_up_off.gif" border="0" />
-                                    </span>
-                                    <br />
-                                    <span id="VolumeDownSpan" >
-                                        <img src="./images/vdc_volume_down_off.gif" border="0" />
-                                    </span>
-                                </span>
-
-                                <span id="DiaLLeaDPrevieW" style="display:none"> <input type="checkbox" name="LeadPreview" size="1" value="0" checked="checked" /> Preview Chamada<br /></span>
-                                <span id="DiaLDiaLAltPhonE" style="display:none"> <input type="checkbox" name="DiaLAltPhonE" size="1" value="0" /> Marcar Alternativo<br /></span>
-
-                                <br>
-
-                                <span style="z-index:<?= ++$zi ?>;" id="SecondSspan">
-                                    Duração da Chamada: 
-                                    <span id="SecondSDISP"></span>
-                                </span>
-                                <br>
-                                Duração da Espera: <span id="ParkCounterSpan">  </span>
-                                <br />
-
-                            </td>
-                        </tr>
-                    </table>
-
-                    <br>
-                    <table style="display:none">
-                        <tr>
-                            <td >
-                                <span id="ManualQueueNotice" style="display:none"></span>
-                                <span id="ManualQueueChoice" style="display:none"></span>
-
-                                <span style="display:none;" id="WebFormSpan">
-                                    <img src="./images/vdc_LB_webform_OFF.gif" border="0" alt="Web Form" /></span>
-                                <?php
-                                if ($enable_second_webform > 0) {
-                                    echo "<span style=\"display:none;\" id=\"WebFormSpanTwo\"><img src=\"./images/vdc_LB_webform_two_OFF.gif\" border=\"0\" alt=\"Web Form 2\" /></span>\n";
-                                }
-                                ?>
-                                <br />
-
-
-
-                                <?php
-                                if (($ivr_park_call == 'ENABLED') or ($ivr_park_call == 'ENABLED_PARK_ONLY')) {
-                                    echo "<span id=\"ivrParkControl\"><img src=\"./images/vdc_LB_ivrparkcall_OFF.gif\" alt=\"IVR Park Call\" /></span><br />\n";
-                                } else {
-                                    echo "<span id=\"ivrParkControl\"></span>\n";
-                                }
-                                ?>
-
-                                <?php
-                                if ($quick_transfer_button_enabled > 0) {
-                                    echo "<span  id=\"QuickXfer\"><img src=\"./images/vdc_LB_quickxfer_OFF.gif\" alt=\"Quick Transfer\" /></span><br />\n";
-                                }
-                                ?>
-
-                                <span id="ReQueueCall"></span>
-
-                            <td colspan="2"></td>
-                        </tr>
-
-                        <tr>
-                            <td rowspan="5" valign="top" width="288">
-
-
-
-                                <span id="post_phone_time_diff_span">
-                                    <b>
-                                        <font color="red">
-                                        <span id="post_phone_time_diff_span_contents"></span>
-                                        </font>
-                                    </b>
-
-                                </span>
-                                <span id=sessionIDspan style="display:none"></span> 
-
-                                <INPUT TYPE=HIDDEN NAME=extension2> <span id="busycallsdisplay"></span> <span id="CusTInfOSpaN"></span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan=3>
-                                <span id="outboundcallsspan"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan=3>
-                                <span id="AgentAlertSpan">
-                                    <?php
-                                    if ((ereg('ON', $VU_alert_enabled)) and ($AgentAlert_allowed > 0)) {
-                                        echo "<a href=\"#\" onclick=\"alert_control('OFF');return false;\">Alert is ON</a>";
-                                    } else {
-                                        echo "<a href=\"#\" onclick=\"alert_control('ON');return false;\">Alert is OFF</a>";
-                                    }
-                                    ?>
-                                </span>
-                            </td>
-                        </tr>
-                    </table>
-                </span>
-
-                <?php if (($HK_statuses_camp > 0) && ( ($user_level >= $HKuser_level) or ($VU_hotkeys_active > 0) )) { ?>
-                    <span style="position:absolute;left:50%;top:0px;z-index:<?= ++$zi ?>;" id="hotkeysdisplay">
-                        <a href="#" onMouseOver="HotKeys('ON')"><img src="./images/vdc_XB_hotkeysactive_OFF.gif" alt="HOT KEYS INACTIVE" /></a>
-                    </span>
-                <?php } ?>
-
-            </span>
-
-
-
-
-
-
-            <span style="position:absolute;left:35px;top:0px;z-index:<?= ++$zi ?>;" id="AgentStatusSpan">
-                Your Status: <span id="AgentStatusStatus"></span> <br />Calls Dialing: <span id="AgentStatusDiaLs"></span>
-            </span>
-
-            <span style="position:absolute;left:50%;top:0px;z-index:<?= ++$zi ?>;" id="AgentMuteANDPreseTDiaL">
-                <?php
-                if ($PreseT_DiaL_LinKs) {
-                    echo "<a href=\"#\" onclick=\"DtMf_PreSet_a_DiaL();return false;\"><font class=\"body_tiny\">D1 - DIAL</font></a>\n";
-                    echo " <br /> \n";
-                    echo "<a href=\"#\" onclick=\"DtMf_PreSet_b_DiaL();return false;\"><font class=\"body_tiny\">D2 - DIAL</font></a>\n";
-                } else {
-                    echo "<br />\n";
-                }
-                ?>
-                <br /><br />  <br />
-            </span>
-
-
-
-
-            <?php
-            $zi++;
-            if ($webphone_location == 'bar') {
-                echo "<span style=\"position:absolute;left:0px;top:46px;height:" . $webphone_height . "px;width=" . $webphone_width . "px;overflow:hidden;z-index:$zi;background-color:$SIDEBAR_COLOR;\" id=\"webphoneSpan\"><span id=\"webphonecontent\" style=\"overflow:hidden;\">$webphone_content</span></span>\n";
-            } else {
-                echo "<span style=\"position:absolute;left:" . $SBwidth . "px;top:15px;height:500px;overflow:scroll;display:none;z-index:$zi;background-color:$SIDEBAR_COLOR;\" id=\"webphoneSpan\">
-    <span id=\"webphonecontent\">$webphone_content</span></span>\n";
-            }
-            ?>
-
-
-
-
-            <?php
-            if ($is_webphone == 'Y') {
-                ?>
-                <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="webphoneLinkSpan">
-                    <table cellpadding="0" cellspacing="0" border="0" width="120px">
-                        <tr>
-                            <td align="right">
-                                <span id="webphoneLink">
-                                    <a href="#" onClick="webphoneOpen('webphoneSpan', 'close');
-                    return false;">Ver Webphone -</a>
-                                </span>
-                            </td>
-                        </tr>
-                    </table>
-                </span>
-                <?php
-            }
-            ?>
-
-
-            <span style="display:none;position:absolute;left:200px;top:0px;z-index:<?= ++$zi ?>;" id="ScriptPanel">
-                <table>
-                    <tr>
-                        <td align="left" valign="top">
-                            <div class="scroll_script" id="ScriptContents" style="padding: 3px 3px 3px 3px; border:#000000 solid 1px; display:none;">AGENT SCRIPT</div>
-                        </td>
-                    </tr>
-                </table>
-            </span>
-
-            <span style="position:absolute;left:50%;top:0px;z-index:<?= ++$zi ?>;" id="ScriptRefresH">
-                <a href="#" onClick="RefresHScript();"><font class="body_small">refresh</font></a>
-            </span>
-
-
-
-            <span style="position:absolute;left:50%;top:0px;z-index:<?= ++$zi ?>;" id="FormRefresH">
-                <a href="#" onClick="FormContentsLoad();"><font class="body_small">refresh</font></a>
-            </span>
-
-
-            <div class="grid-agent" style="width:500px;margin-left:-250px;margin-top:-100px;z-index:<?= ++$zi ?>;" id="TransferMain">
-                <div class="modal-header">
-                    <button class="close" type="button" onClick="ShoWTransferMain('OFF', 'YES');" >×</button>
-                    Transferencia de chamada - Conferencia
-                </div>
-                <span id="XfeRDiaLGrouPSelecteD"></span>  <span id="XfeRCID"></span>
-                <div class="modal-body">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td align="left" colspan="3">
-                                    <span  style="display:none">
-                                        <span id="XfeRGrouPLisT">
-                                            <select size="1" name="XfeRGrouP" id="XfeRGrouP" class="cust_form" onChange="XferAgentSelectLink();">
-                                                <option>-- SELECT A GROUP TO SEND YOUR CALL TO --</option>
-                                            </select>
-                                        </span>
-                                        <span id="LocalCloser"><img src="./images/vdc_XB_localcloser_OFF.gif" border="0" alt="LOCAL CLOSER" style="vertical-align:middle" /></span>
-                                    </span>	
-                                </td>
-                                <td>
-                                    <span id="HangupXferLine"><img src="/images/icons/telephone_delete_32.png" border="0" alt="Hangup Xfer Line" style="vertical-align:middle" />Desligar o solicitado</span>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td align="left" colspan="2">
-                                    <span style="display:none">
-                                        <label for="xferlength">Segundos</label><input type="text" size="2" name="xferlength" id="xferlength" maxlength="4" style="width:30px" readonly />
-                                        <label for="xferchannel">Canal</label><input type="text" size="12" name="xferchannel" id="xferchannel" maxlength="200" style="width:100px" readonly />
-                                    </span>	
-                                </td>
-                                <td align="left">
-                                    <span id="consultative_checkbox"  style="display:none"><input type="checkbox" name="consultativexfer" id="consultativexfer" size="1" value="0"><label for="consultativexfer" > CONSULTATIVE </label></span>
-                                </td>
-                                <td align="left">
-                                    <span style="display:none"><span id="HangupBothLines"><a href="#" onClick="bothcall_send_hangup();
-                return false;"><img src="./images/vdc_XB_hangupbothlines.gif" border="0" alt="Hangup Both Lines" style="vertical-align:middle" /></a></span></span>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td align="left" colspan="2">
-                                    <div  style="display:inline-block;width:100px;height: 28px;margin-right:10px;"><p>Nº a Chamar</p></div>
-                                    <?php if ($hide_xfer_number_to_dial == 'ENABLED') { ?>
-                                        <input type="hidden" name="xfernumber" id="xfernumber" value="<?= $preset_populate ?>" />
-                                    <?php } else { ?>
-                                        <input type="text" size="20" name="xfernumber" id="xfernumber" maxlength="25" style="width:100px" value="<?= $preset_populate ?>" />
-                                    <?php } ?>
-                                    <span id="agentdirectlink"><font class="body_small_bold"><a href="#" onClick="XferAgentSelectLaunch();
-                return false;">AGENTS</a></font></span>
-                                    <input type="hidden" name="xferuniqueid" id="xferuniqueid" />
-                                    <input type="hidden" name="xfername" id="xfername" />
-                                    <input type="hidden" name="xfernumhidden" id="xfernumhidden" />
-                                </td>
-                                <td align="left">
-                                    <span id="dialoverride_checkbox"  style="display:none"><input type="checkbox" name="xferoverride" id="xferoverride" size="1" value="0"><label for="xferoverride" style="display: inline;"> DIAL OVERRIDE</label></span>
-                                </td>
-                                <td align="left" style="height: 36px; width: 180px;">
-                                    <span style="display:none;float:left;" id="Leave3WayCall">
-                                        <a href="#" onClick="leave_3way_call('FIRST');
-                return false;"><img src="/images/icons/telephone_go_32.png" border="0" alt="LEAVE 3-WAY CALL" style="vertical-align:middle" />Tranferir a Chamada</a>
-                                    </span>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="3"></td>
-                                <td style="height: 36px; width: 180px;">
-                                    <span style="display:none">
-                                        <span id="DialBlindTransfer"><img src="./images/vdc_XB_blindtransfer_OFF.gif" border="0" alt="Dial Blind Transfer" style="vertical-align:middle" /></span>
-                                        <span id="DialWithCustomer">
-                                            <a href="#" onClick="SendManualDial('YES');
-                return false;"><img src="./images/vdc_XB_dialwithcustomer.gif" border="0" alt="Dial With Customer" style="vertical-align:middle" /></a>
-                                        </span>
-                                    </span>
-                                    <span style="float:left;" id="ParkCustomerDial">
-                                        <a href="#" onClick="xfer_park_dial();
-                return false;"><img src="/images/icons/telephone_add_32.png" alt="Park Customer Dial" style="vertical-align:middle" />Solicitar Transferência</a>
-                                    </span>
-
-                                    <?php
-                                    if ($enable_xfer_presets == 'ENABLED') {
-                                        ?>
-                                        <span style="background-color: <?= $MAIN_COLOR ?>" id="PresetPullDown">
-                                            <a href="#" onClick="generate_presets_pulldown();
-                    return false;"><img src="./images/vdc_XB_presetsbutton.gif" border="0" alt="Presets Button" style="vertical-align:middle" /></a>
-                                        </span>
-                                        <?php
-                                    } else {
-                                        ?>
-                                        <span style="display: none;">
-                                            <a href="#" onClick="DtMf_PreSet_a();
-                    return false;">D1</a> 
-                                            <a href="#" onClick="DtMf_PreSet_b();
-                    return false;">D2</a>
-                                            <a href="#" onClick="DtMf_PreSet_c();
-                    return false;">D3</a>
-                                            <a href="#" onClick="DtMf_PreSet_d();
-                    return false;">D4</a>
-                                            <a href="#" onClick="DtMf_PreSet_e();
-                    return false;">D5</a>
-                                        </span>
-                                        <?php
-                                    }
-                                    ?>
-                                    <span style="display: none;">
-                                        <span style="background-color: <?= $MAIN_COLOR ?>" id="DialBlindVMail"><img src="./images/vdc_XB_ammessage_OFF.gif" border="0" alt="Blind Transfer VMail Message" style="vertical-align:middle" /></span>
-                                    </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-            </div>
-
-            <span style="position:absolute;left:0px;top:0px;width:100px;height:200px;overflow:scroll;z-index:<?= ++$zi ?>;" id="AgentXferViewSpan">
-                <center>
-                    Available Agents Transfer: <span id="AgentXferViewSelect"></span>
-                </center>
-
-            </span>
-
-
-            <span style="position:absolute;left:5px;top:0>px;z-index:<?= ++$zi ?>;" id="HotKeyActionBox">
-                <table>
-                    <tr bgcolor="#FFEEBB">
-                        <td height="70px"> Lead Dispositioned As: <br /><br /><center><span id="HotKeyDispo"> - </span></center>
-                    </td>
-                    </tr>
-                </table>
-            </span>
-
-            <span style="position:absolute;left:0px;top:80px;z-index:<?= ++$zi ?>;" id="HotKeyEntriesBox">
-                <table>
-                    <tr>
-                        <td height="20px"> Disposition Hot Keys: </td>
-                    </TR>
-                    <TR>
-                        <td height="10">
-                            When active, simply press the keyboard key for the desired disposition for this call. The call will then be hungup and dispositioned automatically:</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span id="HotKeyBoxA"><?= $HKboxA ?></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span id="HotKeyBoxB"><?= $HKboxB ?></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span id="HotKeyBoxC"><?= $HKboxC ?></span>
-                        </td>
-                    </tr>
-                </table>
-            </span>
-
-
-
-            <span style="position:absolute;left:5px;top:0px;z-index:<?= ++$zi ?>;" id="EAcommentsBox">
-                <table>
-                    <tr bgcolor="#FFFF66">
-                        <td align="left"> Extended Alt Phone Information: </td>
-                        <td align="right"> <a href="#" onClick="EAcommentsBoxhide('YES');
-                return false;"> minimize </a></td>
-                    </tr>
-                    <tr>
-                        <td valign="top">
-                            <span id="EAcommentsBoxC"></span><br />
-                            <span id="EAcommentsBoxB"></span><br />
-                        </td>
-                        <td width="320px" valign="top">
-                            <span id="EAcommentsBoxA"></span><br />
-                            <span id="EAcommentsBoxD"></span>
-                        </td>
-                    </tr>
-                </table>
-            </span>
-
-            <span style="position:absolute;left:695px;top:0px;z-index:<?= ++$zi ?>;" id="EAcommentsMinBox">
-                <table border="0" bgcolor="#FFFFCC" width="40px" height="20px">
-                    <tr bgcolor="#FFFF66">
-                        <td align="left">
-                            <a href="#" onClick="EAcommentsBoxshow();
-                return false;"> maximize </a> <br />Alt Phone Info
-                        </td>
-                    </tr>
-                </table>
-            </span>
-
-            <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="WrapupBox">
-                <table>
-                    <tr>
-                        <td align="center"> Call Wrapup: <span id="WrapupTimer"></span> seconds remaining in wrapup<br /><br />
-                            <span id="WrapupMessage"><?= $wrapup_message ?></span>
-                            <br /><br />
-                            <a href="#" onClick="WrapupFinish();
-                return false;">Finish Wrapup and Move On</a>
-                        </td>
-                    </tr>
-                </table>
-            </span>
-
-            <span  id="TimerSpan" class='modal'> 
-                <div class="modal-header">
-                    <button class="close" type="button" onClick="hideDiv('TimerSpan');
-                return false;" >×</button>
-                    Aviso
-                </div>
-                <div class="modal-body">
-                    <b><p id="TimerContentSpan"></p></b>
-                </div>
-            </span>
-
-            <span style="position:fixed;left:0;top:0;z-index:1001; width:100%; height:100%;" id="LogouTBox" class="form_settings">
-                <table>
-                    <tr>
-                        <td align="center"><span id="LogouTBoxLink">Logout</span></td>
-                    </tr>
-                </table>
-            </span>
-
-            <span style="position:absolute;left:0px;top:70px;z-index:<?= ++$zi ?>;" id="DispoButtonHideA">
-                <table>
-                    <tr>
-                        <td align="center" valign="top"></td>
-                    </tr>
-                </table>
-            </span>
-
-            <span style="position:absolute;left:0px;top:138px;z-index:<?= ++$zi ?>;" id="DispoButtonHideB">
-                <table>
-                    <tr>
-                        <td align="center" valign="top"></td>
-                    </tr>
-                </table>
-            </span>
-
-            <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="DispoButtonHideC">
-                <table>
-                    <tr>
-                        <td align="center" valign="top">Any changes made to the customer information below at this time will not be comitted, You must change customer information before you Hangup the call. </td>
-                    </tr>
-                </table>
-            </span>
-
-            <div style="overflow-y:auto; z-index:<?= ++$zi ?>; width:60%;margin-left: -30%;" class='grid-agent' id="DispoSelectBox">
-                <div class="modal-header box_title label-info">
-                    Resultado da Chamada:<strong id="DispoSelectPhonE"></strong>
-                    <span class="close" style="margin-left:10px">​-</span>​
-                    <div class="input-prepend right" style="margin-top:-5px">
-                        <span style='color:black' class="add-on">Filtro</span><input type=text id=dispo_search >
-                    </div>
-                </div>
-                <div class="notification-mes c_bg-2" id="DispoSelectContent"  style="margin:0;max-height: 330px;overflow-y: auto;">
-
-                </div>
-                <div class="notification-mes  last-item"  style='margin:0;'>
-                    <span id="DispoSelectHAspan"></span> 
-                    <span id="DispoSelectMaxMin"></span>
-                    <span id="Dispo3wayMessage" style="display:none"></span>
-                    <span id="DispoManualQueueMessage" style="display:none"></span>
-                    <span id="PerCallNotesContent" style="display:none"><input type="hidden" name="call_notes_dispo" id="call_notes_dispo" value="" /></span>
-                    <input type="hidden" name="DispoSelection" id="DispoSelection" />
-                    <input type="checkbox" name="DispoSelectStop" id="DispoSelectStop" size="1" value="0" />
-                    <label for="DispoSelectStop"><span></span> Pausa após terminar esta chamada</label>
-                </div>
-
-            </div>
-
-
-            <div style="width:650px;z-index:1002;  margin-left: -300px;margin-top: -300px;" class='grid-agent'  id="CallBackSelectBox">
-                <div class="modal-header">
-                    <button class="close" type="button" onClick="FecharCallbacks();" >×</button>
-                    Marcação de Callbacks
-                </div>
-                <div class="modal-body">
-                    <div id="NoDateSelected" class="alert" style="display:none"></div>
-                    <table>
-                        <tr>
-                            <td style='text-align:right;'>Data do Callback:</td>
-                            <td style='text-align:left; width:225px;'>
-                                <input readonly type="text" class="span2" id="data_callback" value="">
-                            </td>
-                            <td>
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <input type="radio" id="cb_pessoal" <?= ($my_callback_option == "CHECKED") ? "checked='checked'" : "" ?> name="tipo_callback" />
-                                            <label for="cb_pessoal"><span></span>Callback Pessoal</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input type="radio" id="cb_geral" <?= ($my_callback_option != "CHECKED") ? "checked='checked'" : "" ?> name="tipo_callback" />
-                                            <label for="cb_geral"><span></span>Callback Geral</label>
-                                        </td>
-                                    </tr>
-                                </table>
-                        </tr>
-                        <?php
-                        $userlist = "<option></option>";
-                        $results = mysql_query("Select user From vicidial_users Where active='Y'");
-                        while ($result = mysql_fetch_array($results)) {
-                            $userlist.= "<option>$result[0]</option>\n";
-                        }
-                        ?>
-
-                        <tr <?= ($callback_other_user) ? "" : "style='display:none'" ?>>
-                            <td style='text-align:right'>User:</td>
-                            <td style='text-align:left; width:225px;'><select style="width:170px" id="cb_other_username" disabled><?= $userlist ?></select></td>
-                            <td>
-                                <table style='width:100%;'>
-                                    <tr>
-                                        <td>
-                                            <input type="checkbox" id="cb_other_user" name="cb_other_user" />
-                                            <label for="cb_other_user"><span></span> Outro User</label>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style='text-align:right; vertical-align:top;'>Comentários do Callback:</td>
-                            <td colspan="2">
-                                <textarea id="comentarios_callback" style="width:375px; height:150px"></textarea>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="3">
-                                <table class="right">
-                                    <tr>
-                                        <td></td>
-                                        <td>
-                                            <button onClick="CallBackDatE_submit();" class="btn btn-primary">Gravar</button>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-            <div class="grid-agent" style="z-index:1001; width:1000px; margin-left: -500px; margin-top: -305px;" id="CallBacKsLisTBox" >
-                <div class="modal-header">
-                    <button class="close" type="button" onclick="CalLBacKsLisTClose();">×</button>
-                    Lista de Callbacks
-                </div>
-                <div class="modal-body">
-                    <div class="form-inline">
-                        <input type="text" class="input-small" maxlength="4" id="cb_date_1" placeholder="Data Inicio">
-                        <i class="icon-minus"></i>
-                        <input type="text" class="input-small" maxlength="3" id="cb_date_2" placeholder="Data Fim">
-                        <button class="btn" onClick="CalLBacKsLisTCheck();" style="cursor: pointer;"><i class="icon-refresh"></i>Atualizar</button>
-                    </div>
-                    <span class="help-block">Se não preencher as datas com o calendario, apenas aparecerá os callbacks de hoje.</span>
-                    <div class="formRow" style="max-height: 330px;overflow-y: auto;">
-                        <table class="table table-mod table-striped table-bordered table-condensed">
-                            <thead>
-                                <tr>
-                                    <th>Data Call-back</th>
-                                    <th>Nº Telefone</th>
-                                    <th style='width:150px'>Comentário</th>
-                                    <th>Nome</th>
-                                    <th>Estado</th>
-                                    <th>Campanha</th>
-                                    <th>Última Chamada</th>
-                                </tr>
-                            </thead>
-                            <tbody id="CallBacKsLisT" ></tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="grid-agent"  id="NeWManuaLDiaLBox" style="width: 520px;margin-left: -260px;" >
-                <div class="modal-header">
-                    <button class="close" type="button" onClick="ManualDialHide();">×</button>
-                    Chamada Manual
-                </div>
-                <div class="modal-body">
-                    <table style="margin:10px auto;width:95%">
-                        <tr>
-                            <td colspan="3">
-                                <div class="help-inline">Atenção: os nºs novos vão ser associados á lista: <?= $manual_dial_list_id ?></div>
-                            </td>
-                        </tr>
-                        <tr style="display:none">
-                            <td>
-                                <input type="hidden" size="7" maxlength="10" name="MDDiaLCodE" id="MDDiaLCodE" value="1" />
-                                <span style="float: right;"> Portabilidade: </span>
-                            </td>
-                            <td colspan="2">
-                                <span style="float: left;">
-                                    <select id=portabilidade name=portabilidade >
-                                        <option value=0 >Nenhuma</option>
-                                        <option value=1 >TMN</option>
-                                        <option value=2 >Vodafone</option>
-                                        <option value=3 >Optimus</option>
-                                        <option value=4 >Todas</option>
-                                    </select>
-                                </span>
-                            </td>
-                        </tr>	
-                        <tr>
-                            <td>
-                                <span class="right"> Nº de telefone: </span>
-                            </td>
-                            <td colspan="2">
-                                <span class="left"> 
-                                    <span class="input-append">
-                                        <input type="text"  maxlength="18" name="MDPhonENumbeR" id="MDPhonENumbeR" value="" class="num" placeholder="Insere o nº" />
-                                        <a  href="#" onClick="NeWManuaLDiaLCalLSubmiT('PREVIEW');
-                return false;" class="btn btn-primary">Marcar</a>
-                                    </span>
-                                    <input type="hidden" name="MDLeadID" id="MDLeadID" value="" />
-                                    <input type="hidden" name="MDType" id="MDLeadID" value="" />
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="right">Ver BD:</span>
-                            </td>
-                            <td colspan="2">
-                                <span class="left">
-                                    <input type="checkbox" name="LeadLookuP" id="LeadLookuP" size="1" value="0" />
-                                    <label for="LeadLookuP" ><span></span>Procurar na base de dados antes de chamar</label>
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="left" colspan="3">
-                                <span id="ManuaLDiaLGrouPSelecteD"></span><span id="ManuaLDiaLGrouP"></span>
-                                <input type="hidden" size="24" maxlength="20" name="MDDiaLOverridE" id="MDDiaLOverridE" class="cust_form" value="" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="right" style="display:none" colspan="3">
-                                <a href="#" onClick="NeWManuaLDiaLCalLSubmiT('NOW');
-                return false;">Chamar já</a>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-            <div class="grid-agent" id="confirm_feedback_log" style="z-index:1001; width:1000px; margin-left: -500px; display:none;" >
-                <div class="modal-header">
-                    <button class="close" type="button" onclick="hideDiv('confirm_feedback_log');">×</button>
-                    Vendas não confirmadas
-                </div>
-                <div class="modal-body">
-                    <table class="table table-mod table-bordered">
-                        <thead>
-                        <th>Comentário</th>
-
-                        <th> Cliente </th>
-                        <th> Data </th>
-                        </thead>
-                        <tbody id="comment_log_tbody">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-
-            <div class="grid-agent" style="overflow-y: auto;margin-left:-175px;margin-top:-250px; width: 350px; z-index:<?= ++$zi ?>;" id="CloserSelectBox">
-                <div class="modal-header">
-                    Seleccção de Grupos Inbound
-                </div>
-                <div id="CloserSelectContent">
-
-                </div>
-                <div  class="notification-mes c_bg-2" style='margin:0;' >
-                    <input type="hidden" name="CloserSelectList" id="CloserSelectList" />
-                    <?php
-                    if (($outbound_autodial_active > 0) and ($disable_blended_checkbox < 1) and ($dial_method != 'INBOUND_MAN') and ($VU_agent_choose_blended > 0)) {
-                        ?>
-                        <input type="checkbox" name="CloserSelectBlended" id="CloserSelectBlended"  value="0" /><label for="CloserSelectBlended"><span></span> Chamadas <i>Inb/Out Blended</i></label>
-                    <?php } ?>
-                </div>
-                <div  class="notification-mes" >
-                    <div class="right">
-                        <a href="#" onClick="CloserSelectContent_create();
-                return false;" class="btn">Limpar</a>
-                        <a href="#" onClick="CloserSelect_submit();
-                return false;" class="btn btn-primary">Ok</a>
-                    </div>
-                    <div class="clear"></div>
-                </div>
-            </div>
-
-            <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="TerritorySelectBox">
-                <table>
-                    <tr>
-                        <td align="center" valign="top"> TERRITORY SELECTION <br />
-                            <span id="TerritorySelectContent"> Territory Selection </span>
-                            <input type="hidden" name="TerritorySelectList" id="TerritorySelectList" /><br />
-                            <a href="#" onClick="TerritorySelectContent_create();
-                return false;"> RESET </a> | 
-                            <a href="#" onClick="TerritorySelect_submit();
-                return false;">SUBMIT</a>
-                        </td>
-                    </tr>
-                </table>
-            </span>
-
-
-            <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="NothingBox">
-                <span id="DiaLLeaDPrevieWHide"> Channel</span>
-                <span id="DiaLDiaLAltPhonEHide"> Channel</span>
-                <?php
-                if (!$agentonly_callbacks) {
-                    echo "<input type=\"checkbox\" name=\"CallBackOnlyMe\" id=\"CallBackOnlyMe\" size=\"1\" value=\"0\" /> MY CALLBACK ONLY <br />";
-                }
-                if (($outbound_autodial_active < 1) or ($disable_blended_checkbox > 0) or ($dial_method == 'INBOUND_MAN') or ($VU_agent_choose_blended < 1)) {
-                    echo "<input type=\"checkbox\" name=\"CloserSelectBlended\" id=\"CloserSelectBlended\" size=\"1\" value=\"0\" /> BLENDED CALLING<br />";
-                }
-                ?>
-            </span>
-
-            <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="CalLLoGDisplaYBox">
-                <table>
-                    <tr>
-                        <td align="center" valign="top">AGENT CALL LOG:<a href="#" onClick="CalLLoGVieWClose();
-                return false;">close [X]</a>
-                            <br />
-                            <div class="scroll_calllog" id="CallLogSpan"> Call log List </div>
-                            <br />
-                            <br /> 
-                        </td>
-                    </tr>
-                </table>
-            </span>
-            <div class='grid-agent' style="margin-left:-250px;width:500px;z-index:<?= $zi++; ?>;" id="SearcHForMDisplaYBox">
-                <div class="modal-header">
-                    <button class="close" type="button" onClick="LeaDSearcHVieWClose();">×</button>
-                    Procura de Contactos
-                </div>	
-                <div class="modal-body">
-                    <div class="form-horizontal">
-                        <div class="control-group">
-                            <label class="control-label" for="search_field">Seleccione o campo</label>
-                            <div class="controls">
-                                <select id=search_field><?= $search_opt ?></select>
-                            </div>
-                        </div>                            
-                        <div class="control-group">
-                            <label class="control-label" for="search_query">Escreva a pesquisa</label>
-                            <div class="controls">
-                                <input type=text maxlength="20" id=search_query />
-                            </div>
-                        </div>                          
-                        <div class="control-group">
-                            <div class="controls">
-                                <button class="btn" onClick="LeadSearchSubmit();" style="cursor: pointer;"><i class="icon-search"></i>Procurar</button>
-                            </div>
+                        <div class="grid-transparent">
+                            <? if (isset($curlogo) && $curLogo != "") { ?>
+                                <img class="left" src='<?= "../$curlogo"; ?>' id="menu-hide" > 
+                            <? } else { ?>
+                                <img class="left" src='/images/pictures/go_logo_15.png' id='menu-hide' >
+<?php } ?>
+                            <div class='clear'></div>
                         </div>
 
                     </div>
-                </div>
-            </div>
 
-            <div class='grid-agent' style="margin-left:-300px;width:600px;z-index:<?= ++$zi ?>;display:none" id="pesquisa_morada">
-                <div class="modal-header">
-                    <button class="close" type="button" onClick="hideDiv('pesquisa_morada');">×</button>
-                    Procura de Moradas
                 </div>
-                <div class="modal-body">
-                    <div class="form-inline">
-                        <input type="text" class="input-small" id="cp_4" maxlength="4" placeholder="CP4">
-                        <i class="icon-minus"></i>
-                        <input type="text" class="input-small" id="cp_3" maxlength="3" placeholder="CP3" >
-                        <button onClick="pesquisa_morada();" class="btn" >Pesquisar</button>
+
+
+                <div id="CallHistoryDialog" style="display:none">
+                    <div class="text-center">
+                        <button id="change-lostcalls" class="btn btn-small">Chamadas Perdidas</button>
+                        <button id="change-inbound" class="btn btn-small">Chamadas de Inbound</button>
+                        <button id="change-manual" class="btn btn-small">Chamadas Manuais</button>
+                        <button id="change-outbound" class="btn btn-small">Chamadas de Outbound</button>
                     </div>
-                    <div class="formRow" style="height: 140px;overflow-y: auto;">
-                        <table class="table table-striped table-bordered table-condensed table-mod" id="result_moradas">
-                            <thead> 
-                                <tr>
-                                    <th>Rua</th>
-                                    <th>Cód. Postal</th>
-                                    <th>Localidade</th>
-                                    <th>Distrito</th>
-                                    <th>Concelho</th>
-                                    <th>Escolher</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
+                    <div> 
+                        <table id='table-CallHistory' class="table table-mod-2 table-condensed">
+                            <thead></thead>
+                            <tbody></tbody>
+                            <tfoot></tfoot>
                         </table>
-                    </div>
+                    </div>		
                 </div>
-            </div>
+                <div id="dialog-agent-msg" style="display:none;"></div>
 
-            <div class='grid-agent' style="margin-left:-400px;margin-top:-250px;width:800px;height:500px;z-index:<?= ++$zi ?>;" id="SearcHResultSDisplaYBox">
-                <div class="modal-header">
-                    <button class="close" type="button" onClick="hideDiv('SearcHResultSDisplaYBox');">×</button>
-                    Resultado da Procura
-                </div>
-                <div class="modal-body">
-                    <table class="table table-mod table-striped table-bordered table-condensed">
-                        <thead>
-                            <TR>
-                                <TH> Nome </TH>
-                                <TH> Telefone </TH>
-                                <TH> Estado </TH>
-                                <TH> Ultima Chamada </TH>
-                                <TH> Localidade </TH>
-                                <TH> Freguesia </TH>
-                                <TH> Cod. Postal </TH>
-                                <TH> Info </TH>
-                                <TH> Chamar </TH>
-                            </TR>
-                        </thead>
-                        <tbody id="SearcHResultSSpan">
+                <div class="grid-agent" style="width: 1000px; margin-left: -500px; display: none" id="marquee-msg"></div>
 
-                        </tbody>
+                <input type="hidden" name="curlogo" value="<?= $curLogo; ?>" />
+                <input type="hidden" name="extension" id="extension" />
+                <input type="hidden" name="custom_field_values" id="custom_field_values" value="" />
+                <input type="hidden" name="FORM_LOADED" id="FORM_LOADED" value="0" />
+                <input type="hidden" name="custdatetime" id=custdatetime value="">
+                <input type="hidden" name="callchannel" id=callchannel value="">
+                <input type="hidden" name="campaign_id" id=campaign_id value="<?= $VD_campaign; ?>" />
+
+
+
+                <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="Header">
+                    <TABLE style='display:none'>
+                        <TR>
+                            <TD>
+                                <span id=status ></span>
+                            </TD>
+                            <TD>
+                                <?php
+                                if ($territoryCT > 0) {
+                                    echo "<a href=\"#\" onclick=\"OpeNTerritorYSelectioN();return false;\">TERRITORIES</a>   \n";
+                                }
+                                ?>
+                                <?php
+                                if ($INgrpCT > 0) {
+                                    echo "<a href=\"#\" onclick=\"OpeNGrouPSelectioN();return false;\">GROUPS</a>   \n";
+                                }
+                                ?>
+                            </TD>
+                        </TR>
+                    </TABLE>
+                </span> 
+
+
+
+                <span style="position:absolute;left:0px;top:13px;z-index:<?= ++$zi ?>; display:none" id="Tabs">
+                    <table>
+                        <tr>
+                            <td><a href="#" onClick="MainPanelToFront('NO');"><img src="./images/vdc_tab_vicidial.gif" alt="MAIN"/></a></td>
+                            <?php
+                            if ($custom_fields_enabled > 0) {
+                                echo "<td><a href=\"#\" onclick=\"FormPanelToFront();\"><img src=\"./images/vdc_tab_form.gif\" alt=\"FORM\" width=\"67px\" height=\"30px\" border=\"0\" /></a></td>\n";
+                            }
+                            ?>
+                        </tr>
                     </table>
-                </div>
-            </div>
+                </span>
 
-            <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="CalLNotesDisplaYBox">
-                <table>
-                    <tr>
-                        <td align="center" valign="top">CALL NOTES LOG:<a href="#" onClick="hideDiv('CalLNotesDisplaYBox');
-                return false;">close [X]</a><br />
-                            <div class="scroll_calllog" id="CallNotesSpan"> Call Notes List </div>
-                            <br /><br /> 
-                            <a href="#" onClick="hideDiv('CalLNotesDisplaYBox');
-                return false;">Close Info Box</a>
-                        </td>
-                    </tr>
-                </table>
-            </span>
 
-            <div style="margin-left:-500px;margin-top:-305px;z-index:1002;width: 1000px;" id="LeaDInfOBox" class="grid-agent">
-                <div class="modal-header">
-                    <button class="close" type="button" onclick="hideDiv('LeaDInfOBox');" >×</button>
-                    Informação do Cliente
-                </div>
-                <div class="modal-body" id="LeaDInfOSpan">
-                    <div class="span5">
-                        <h4>Informação do Callback</h4>
-                        <table class="table table-mod table-bordered">
-                            <tr>
-                                <th>Estado de Callback:</th>
-                                <td id="cb_status"></td>
-                            </tr>
-                            <tr>
-                                <th>Estado de Lead:</th>
-                                <td id="lead_status"></td>
-                            </tr>
-                            <tr>
-                                <th>Entrada de Callback:</th>
-                                <td id="cb_entry_time"></td>
-                            </tr>
-                            <tr>
-                                <th>Hora de Callback:</th>
-                                <td id="cb_date"></td>
-                            </tr>
-                            <tr>
-                                <th>Comentário de callback:</th>
-                                <td id="cb_comment"></td>
+                <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="WelcomeBoxA">
+                    <table>
+                        <tr>
+                            <td align="center">
+                                <span id="WelcomeBoxAt">Agent Screen</span>
+                            </td>
+                        </tr>
+                    </table>
+                </span>
+
+
+                <span style="display:none;position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="debugbottomspan">
+
+                </span>
+
+                <span style="position:absolute;left:3px;top:380px;z-index:1000; width:1200px; " id="ManuaLDiaLButtons"  valign="center">
+                    <span style="position:absolute; left:0px; top:50px; z-index:<?= ++$zi ?>; width:1200px; display:none;" valign="center" id="MaiNfooterspan">
+                        <span id="blind_monitor_notice_span" >
+                            <b>   
+                                <span id="blind_monitor_notice_span_contents"></span>
+                            </b>
+
+                        </span>
+                        <table id="MaiNfooter" >
+                            <TR>
+                                <td>
+                                    <IMG SRC="./images/agc_live_call_OFF.gif" NAME=livecall ALT="Live Call" WIDTH=60 HEIGHT=60 BORDER=0>
+
+                                    <a href='#' class="btn" onclick="NormalLogout();" />Logout</a>
+
+                                </td>
+                                <td>
+                                    <span id="MDstatusSpan">
+                                        <a href="#" class="btn" onClick="NeWManuaLDiaLCalL('NO');
+                return false;">Fazer Chamada Manual</a>
+                                    </span>
+                                    <a href="#" class="btn" onClick="NeWManuaLDiaLCalL('FAST');
+                return false;"></a>
+                                    <br />
+
+                                    <span style="z-index:1000;" id="CallLogButtons">
+                                        <span id="CallLogLinkSpan">
+                                            <a href="#" class="btn" onClick="VieWCalLLoG();
+                return false;">Ver o log de chamadas</a>
+                                        </span>
+                                    </span>
+
+                                    <span style="z-index:<?= ++$zi ?>;" id="AgentViewLinkSpan">
+
+                                        <span id="AgentViewLink">
+                                            <a href="#" class="btn" onClick="AgentsViewOpen('AgentViewSpan', 'open');
+                return false;">Ver colegas +</a>
+                                        </span>
+                                    </span>
+
+
+
+
+                                    <span id=AgentStatusCalls style="display:none"></span>
+
+                                    <span id="RecorDControl" style="display:none">
+                                        <a href="#" class="btn" onClick="conf_send_recording('MonitorConf', session_id, '');
+                return false;">
+                                            <img src="./images/vdc_LB_startrecording_OFF.gif" border="0" alt="Start Recording" />
+                                        </a>
+                                    </span>
+                                </td>
+
+                                <td >
+                                    <span id="busycallsdebug"></span>
+                                    <span id="RecorDingFilename" style="display:none"></span>
+                                    <span id="RecorDID" style="display:none"></span>
+
+                                    <span style="z-index:<?= ++$zi ?>;" id="AgentMuteSpan" ></span><br><br>
+                                    <span style="z-index:<?= ++$zi ?>;" id="VolumeControlSpan" >
+                                        <span id="VolumeUpSpan" >
+                                            <img src="./images/vdc_volume_up_off.gif" border="0" />
+                                        </span>
+                                        <br />
+                                        <span id="VolumeDownSpan" >
+                                            <img src="./images/vdc_volume_down_off.gif" border="0" />
+                                        </span>
+                                    </span>
+
+                                    <span id="DiaLLeaDPrevieW" style="display:none"> <input type="checkbox" name="LeadPreview" size="1" value="0" checked="checked" /> Preview Chamada<br /></span>
+                                    <span id="DiaLDiaLAltPhonE" style="display:none"> <input type="checkbox" name="DiaLAltPhonE" size="1" value="0" /> Marcar Alternativo<br /></span>
+
+                                    <br>
+
+                                    <span style="z-index:<?= ++$zi ?>;" id="SecondSspan">
+                                        Duração da Chamada: 
+                                        <span id="SecondSDISP"></span>
+                                    </span>
+                                    <br>
+                                    Duração da Espera: <span id="ParkCounterSpan">  </span>
+                                    <br />
+
+                                </td>
                             </tr>
                         </table>
-                    </div>
-                    <div class="span6">
-                        <h4>Informação da Lead</h4>
-                        <table class="table table-mod table-bordered" id="lead_info">
 
+                        <br>
+                        <table style="display:none">
+                            <tr>
+                                <td >
+                                    <span id="ManualQueueNotice" style="display:none"></span>
+                                    <span id="ManualQueueChoice" style="display:none"></span>
+
+                                    <span style="display:none;" id="WebFormSpan">
+                                        <img src="./images/vdc_LB_webform_OFF.gif" border="0" alt="Web Form" /></span>
+                                    <?php
+                                    if ($enable_second_webform > 0) {
+                                        echo "<span style=\"display:none;\" id=\"WebFormSpanTwo\"><img src=\"./images/vdc_LB_webform_two_OFF.gif\" border=\"0\" alt=\"Web Form 2\" /></span>\n";
+                                    }
+                                    ?>
+                                    <br />
+
+
+
+                                    <?php
+                                    if (($ivr_park_call == 'ENABLED') or ($ivr_park_call == 'ENABLED_PARK_ONLY')) {
+                                        echo "<span id=\"ivrParkControl\"><img src=\"./images/vdc_LB_ivrparkcall_OFF.gif\" alt=\"IVR Park Call\" /></span><br />\n";
+                                    } else {
+                                        echo "<span id=\"ivrParkControl\"></span>\n";
+                                    }
+                                    ?>
+
+                                    <?php
+                                    if ($quick_transfer_button_enabled > 0) {
+                                        echo "<span  id=\"QuickXfer\"><img src=\"./images/vdc_LB_quickxfer_OFF.gif\" alt=\"Quick Transfer\" /></span><br />\n";
+                                    }
+                                    ?>
+
+                                    <span id="ReQueueCall"></span>
+
+                                <td colspan="2"></td>
+                            </tr>
+
+                            <tr>
+                                <td rowspan="5" valign="top" width="288">
+
+
+
+                                    <span id="post_phone_time_diff_span">
+                                        <b>
+                                            <font color="red">
+                                            <span id="post_phone_time_diff_span_contents"></span>
+                                            </font>
+                                        </b>
+
+                                    </span>
+                                    <span id=sessionIDspan style="display:none"></span> 
+
+                                    <INPUT TYPE=HIDDEN NAME=extension2> <span id="busycallsdisplay"></span> <span id="CusTInfOSpaN"></span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan=3>
+                                    <span id="outboundcallsspan"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan=3>
+                                    <span id="AgentAlertSpan">
+                                        <?php
+                                        if ((ereg('ON', $VU_alert_enabled)) and ($AgentAlert_allowed > 0)) {
+                                            echo "<a href=\"#\" onclick=\"alert_control('OFF');return false;\">Alert is ON</a>";
+                                        } else {
+                                            echo "<a href=\"#\" onclick=\"alert_control('ON');return false;\">Alert is OFF</a>";
+                                        }
+                                        ?>
+                                    </span>
+                                </td>
+                            </tr>
                         </table>
+                    </span>
+
+<?php if (($HK_statuses_camp > 0) && ( ($user_level >= $HKuser_level) or ($VU_hotkeys_active > 0) )) { ?>
+                        <span style="position:absolute;left:50%;top:0px;z-index:<?= ++$zi ?>;" id="hotkeysdisplay">
+                            <a href="#" onMouseOver="HotKeys('ON')"><img src="./images/vdc_XB_hotkeysactive_OFF.gif" alt="HOT KEYS INACTIVE" /></a>
+                        </span>
+<?php } ?>
+
+                </span>
+
+
+
+
+
+
+                <span style="position:absolute;left:35px;top:0px;z-index:<?= ++$zi ?>;" id="AgentStatusSpan">
+                    Your Status: <span id="AgentStatusStatus"></span> <br />Calls Dialing: <span id="AgentStatusDiaLs"></span>
+                </span>
+
+                <span style="position:absolute;left:50%;top:0px;z-index:<?= ++$zi ?>;" id="AgentMuteANDPreseTDiaL">
+                    <?php
+                    if ($PreseT_DiaL_LinKs) {
+                        echo "<a href=\"#\" onclick=\"DtMf_PreSet_a_DiaL();return false;\"><font class=\"body_tiny\">D1 - DIAL</font></a>\n";
+                        echo " <br /> \n";
+                        echo "<a href=\"#\" onclick=\"DtMf_PreSet_b_DiaL();return false;\"><font class=\"body_tiny\">D2 - DIAL</font></a>\n";
+                    } else {
+                        echo "<br />\n";
+                    }
+                    ?>
+                    <br /><br />  <br />
+                </span>
+
+
+
+
+                <?php
+                $zi++;
+                if ($webphone_location == 'bar') {
+                    echo "<span style=\"position:absolute;left:0px;top:46px;height:" . $webphone_height . "px;width=" . $webphone_width . "px;overflow:hidden;z-index:$zi;background-color:$SIDEBAR_COLOR;\" id=\"webphoneSpan\"><span id=\"webphonecontent\" style=\"overflow:hidden;\">$webphone_content</span></span>\n";
+                } else {
+                    echo "<span style=\"position:absolute;left:" . $SBwidth . "px;top:15px;height:500px;overflow:scroll;display:none;z-index:$zi;background-color:$SIDEBAR_COLOR;\" id=\"webphoneSpan\">
+    <span id=\"webphonecontent\">$webphone_content</span></span>\n";
+                }
+                ?>
+
+
+
+
+                <?php
+                if ($is_webphone == 'Y') {
+                    ?>
+                    <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="webphoneLinkSpan">
+                        <table cellpadding="0" cellspacing="0" border="0" width="120px">
+                            <tr>
+                                <td align="right">
+                                    <span id="webphoneLink">
+                                        <a href="#" onClick="webphoneOpen('webphoneSpan', 'close');
+                    return false;">Ver Webphone -</a>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </span>
+                    <?php
+                }
+                ?>
+
+
+                <span style="display:none;position:absolute;left:200px;top:0px;z-index:<?= ++$zi ?>;" id="ScriptPanel">
+                    <table>
+                        <tr>
+                            <td align="left" valign="top">
+                                <div class="scroll_script" id="ScriptContents" style="padding: 3px 3px 3px 3px; border:#000000 solid 1px; display:none;">AGENT SCRIPT</div>
+                            </td>
+                        </tr>
+                    </table>
+                </span>
+
+                <span style="position:absolute;left:50%;top:0px;z-index:<?= ++$zi ?>;" id="ScriptRefresH">
+                    <a href="#" onClick="RefresHScript();"><font class="body_small">refresh</font></a>
+                </span>
+
+
+
+                <span style="position:absolute;left:50%;top:0px;z-index:<?= ++$zi ?>;" id="FormRefresH">
+                    <a href="#" onClick="FormContentsLoad();"><font class="body_small">refresh</font></a>
+                </span>
+
+
+                <div class="grid-agent" style="width:500px;margin-left:-250px;margin-top:-100px;z-index:<?= ++$zi ?>;" id="TransferMain">
+                    <div class="modal-header">
+                        <button class="close" type="button" onClick="ShoWTransferMain('OFF', 'YES');" >×</button>
+                        Transferencia de chamada - Conferencia
                     </div>
-                    <div class="span12">
-                        <h4>Histórico da Lead</h4>
-                        <table class="table table-mod table-bordered table-striped">
-                            <thead>
+                    <span id="XfeRDiaLGrouPSelecteD"></span>  <span id="XfeRCID"></span>
+                    <div class="modal-body">
+                        <table>
+                            <tbody>
                                 <tr>
-                                    <th>Data</th>
-                                    <th>Operador</th>
-                                    <th>Tempo (seg.)</th>
-                                    <th>Estado</th>
-                                    <th>Nº</th>
-                                    <th>Campanha</th>
-                                    <th title='Entrada Ou Saida'>IO</th>
-                                    <th>Desligou</th>
+                                    <td align="left" colspan="3">
+                                        <span  style="display:none">
+                                            <span id="XfeRGrouPLisT">
+                                                <select size="1" name="XfeRGrouP" id="XfeRGrouP" class="cust_form" onChange="XferAgentSelectLink();">
+                                                    <option>-- SELECT A GROUP TO SEND YOUR CALL TO --</option>
+                                                </select>
+                                            </span>
+                                            <span id="LocalCloser"><img src="./images/vdc_XB_localcloser_OFF.gif" border="0" alt="LOCAL CLOSER" style="vertical-align:middle" /></span>
+                                        </span>	
+                                    </td>
+                                    <td>
+                                        <span id="HangupXferLine"><img src="/images/icons/telephone_delete_32.png" border="0" alt="Hangup Xfer Line" style="vertical-align:middle" />Desligar o solicitado</span>
+                                    </td>
                                 </tr>
+
+                                <tr>
+                                    <td align="left" colspan="2">
+                                        <span style="display:none">
+                                            <label for="xferlength">Segundos</label><input type="text" size="2" name="xferlength" id="xferlength" maxlength="4" style="width:30px" readonly />
+                                            <label for="xferchannel">Canal</label><input type="text" size="12" name="xferchannel" id="xferchannel" maxlength="200" style="width:100px" readonly />
+                                        </span>	
+                                    </td>
+                                    <td align="left">
+                                        <span id="consultative_checkbox"  style="display:none"><input type="checkbox" name="consultativexfer" id="consultativexfer" size="1" value="0"><label for="consultativexfer" > CONSULTATIVE </label></span>
+                                    </td>
+                                    <td align="left">
+                                        <span style="display:none"><span id="HangupBothLines"><a href="#" onClick="bothcall_send_hangup();
+                return false;"><img src="./images/vdc_XB_hangupbothlines.gif" border="0" alt="Hangup Both Lines" style="vertical-align:middle" /></a></span></span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td align="left" colspan="2">
+                                        <div  style="display:inline-block;width:100px;height: 28px;margin-right:10px;"><p>Nº a Chamar</p></div>
+                                        <?php if ($hide_xfer_number_to_dial == 'ENABLED') { ?>
+                                            <input type="hidden" name="xfernumber" id="xfernumber" value="<?= $preset_populate ?>" />
+                                        <?php } else { ?>
+                                            <input type="text" size="20" name="xfernumber" id="xfernumber" maxlength="25" style="width:100px" value="<?= $preset_populate ?>" />
+                                                                                                    <?php } ?>
+                                        <span id="agentdirectlink"><font class="body_small_bold"><a href="#" onClick="XferAgentSelectLaunch();
+                return false;">AGENTS</a></font></span>
+                                        <input type="hidden" name="xferuniqueid" id="xferuniqueid" />
+                                        <input type="hidden" name="xfername" id="xfername" />
+                                        <input type="hidden" name="xfernumhidden" id="xfernumhidden" />
+                                    </td>
+                                    <td align="left">
+                                        <span id="dialoverride_checkbox"  style="display:none"><input type="checkbox" name="xferoverride" id="xferoverride" size="1" value="0"><label for="xferoverride" style="display: inline;"> DIAL OVERRIDE</label></span>
+                                    </td>
+                                    <td align="left" style="height: 36px; width: 180px;">
+                                        <span style="display:none;float:left;" id="Leave3WayCall">
+                                            <a href="#" onClick="leave_3way_call('FIRST');
+                return false;"><img src="/images/icons/telephone_go_32.png" border="0" alt="LEAVE 3-WAY CALL" style="vertical-align:middle" />Tranferir a Chamada</a>
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="3"></td>
+                                    <td style="height: 36px; width: 180px;">
+                                        <span style="display:none">
+                                            <span id="DialBlindTransfer"><img src="./images/vdc_XB_blindtransfer_OFF.gif" border="0" alt="Dial Blind Transfer" style="vertical-align:middle" /></span>
+                                            <span id="DialWithCustomer">
+                                                <a href="#" onClick="SendManualDial('YES');
+                return false;"><img src="./images/vdc_XB_dialwithcustomer.gif" border="0" alt="Dial With Customer" style="vertical-align:middle" /></a>
+                                            </span>
+                                        </span>
+                                        <span style="float:left;" id="ParkCustomerDial">
+                                            <a href="#" onClick="xfer_park_dial();
+                return false;"><img src="/images/icons/telephone_add_32.png" alt="Park Customer Dial" style="vertical-align:middle" />Solicitar Transferência</a>
+                                        </span>
+
+                                        <?php
+                                        if ($enable_xfer_presets == 'ENABLED') {
+                                            ?>
+                                            <span style="background-color: <?= $MAIN_COLOR ?>" id="PresetPullDown">
+                                                <a href="#" onClick="generate_presets_pulldown();
+                    return false;"><img src="./images/vdc_XB_presetsbutton.gif" border="0" alt="Presets Button" style="vertical-align:middle" /></a>
+                                            </span>
+                                            <?php
+                                        } else {
+                                            ?>
+                                            <span style="display: none;">
+                                                <a href="#" onClick="DtMf_PreSet_a();
+                    return false;">D1</a> 
+                                                <a href="#" onClick="DtMf_PreSet_b();
+                    return false;">D2</a>
+                                                <a href="#" onClick="DtMf_PreSet_c();
+                    return false;">D3</a>
+                                                <a href="#" onClick="DtMf_PreSet_d();
+                    return false;">D4</a>
+                                                <a href="#" onClick="DtMf_PreSet_e();
+                    return false;">D5</a>
+                                            </span>
+                                            <?php
+                                        }
+                                        ?>
+                                        <span style="display: none;">
+                                            <span style="background-color: <?= $MAIN_COLOR ?>" id="DialBlindVMail"><img src="./images/vdc_XB_ammessage_OFF.gif" border="0" alt="Blind Transfer VMail Message" style="vertical-align:middle" /></span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+                <span style="position:absolute;left:0px;top:0px;width:100px;height:200px;overflow:scroll;z-index:<?= ++$zi ?>;" id="AgentXferViewSpan">
+                    <center>
+                        Available Agents Transfer: <span id="AgentXferViewSelect"></span>
+                    </center>
+
+                </span>
+
+
+                <span style="position:absolute;left:5px;top:0>px;z-index:<?= ++$zi ?>;" id="HotKeyActionBox">
+                    <table>
+                        <tr bgcolor="#FFEEBB">
+                            <td height="70px"> Lead Dispositioned As: <br /><br /><center><span id="HotKeyDispo"> - </span></center>
+                        </td>
+                        </tr>
+                    </table>
+                </span>
+
+                <span style="position:absolute;left:0px;top:80px;z-index:<?= ++$zi ?>;" id="HotKeyEntriesBox">
+                    <table>
+                        <tr>
+                            <td height="20px"> Disposition Hot Keys: </td>
+                        </TR>
+                        <TR>
+                            <td height="10">
+                                When active, simply press the keyboard key for the desired disposition for this call. The call will then be hungup and dispositioned automatically:</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span id="HotKeyBoxA"><?= $HKboxA ?></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span id="HotKeyBoxB"><?= $HKboxB ?></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span id="HotKeyBoxC"><?= $HKboxC ?></span>
+                            </td>
+                        </tr>
+                    </table>
+                </span>
+
+
+
+                <span style="position:absolute;left:5px;top:0px;z-index:<?= ++$zi ?>;" id="EAcommentsBox">
+                    <table>
+                        <tr bgcolor="#FFFF66">
+                            <td align="left"> Extended Alt Phone Information: </td>
+                            <td align="right"> <a href="#" onClick="EAcommentsBoxhide('YES');
+                return false;"> minimize </a></td>
+                        </tr>
+                        <tr>
+                            <td valign="top">
+                                <span id="EAcommentsBoxC"></span><br />
+                                <span id="EAcommentsBoxB"></span><br />
+                            </td>
+                            <td width="320px" valign="top">
+                                <span id="EAcommentsBoxA"></span><br />
+                                <span id="EAcommentsBoxD"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </span>
+
+                <span style="position:absolute;left:695px;top:0px;z-index:<?= ++$zi ?>;" id="EAcommentsMinBox">
+                    <table border="0" bgcolor="#FFFFCC" width="40px" height="20px">
+                        <tr bgcolor="#FFFF66">
+                            <td align="left">
+                                <a href="#" onClick="EAcommentsBoxshow();
+                return false;"> maximize </a> <br />Alt Phone Info
+                            </td>
+                        </tr>
+                    </table>
+                </span>
+
+                <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="WrapupBox">
+                    <table>
+                        <tr>
+                            <td align="center"> Call Wrapup: <span id="WrapupTimer"></span> seconds remaining in wrapup<br /><br />
+                                <span id="WrapupMessage"><?= $wrapup_message ?></span>
+                                <br /><br />
+                                <a href="#" onClick="WrapupFinish();
+                return false;">Finish Wrapup and Move On</a>
+                            </td>
+                        </tr>
+                    </table>
+                </span>
+
+                <span  id="TimerSpan" class='modal'> 
+                    <div class="modal-header">
+                        <button class="close" type="button" onClick="hideDiv('TimerSpan');
+                return false;" >×</button>
+                        Aviso
+                    </div>
+                    <div class="modal-body">
+                        <b><p id="TimerContentSpan"></p></b>
+                    </div>
+                </span>
+
+                <span style="position:fixed;left:0;top:0;z-index:1001; width:100%; height:100%;" id="LogouTBox" class="form_settings">
+                    <table>
+                        <tr>
+                            <td align="center"><span id="LogouTBoxLink">Logout</span></td>
+                        </tr>
+                    </table>
+                </span>
+
+                <span style="position:absolute;left:0px;top:70px;z-index:<?= ++$zi ?>;" id="DispoButtonHideA">
+                    <table>
+                        <tr>
+                            <td align="center" valign="top"></td>
+                        </tr>
+                    </table>
+                </span>
+
+                <span style="position:absolute;left:0px;top:138px;z-index:<?= ++$zi ?>;" id="DispoButtonHideB">
+                    <table>
+                        <tr>
+                            <td align="center" valign="top"></td>
+                        </tr>
+                    </table>
+                </span>
+
+                <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="DispoButtonHideC">
+                    <table>
+                        <tr>
+                            <td align="center" valign="top">Any changes made to the customer information below at this time will not be comitted, You must change customer information before you Hangup the call. </td>
+                        </tr>
+                    </table>
+                </span>
+
+                <div style="overflow-y:auto; z-index:<?= ++$zi ?>; width:60%;margin-left: -30%;" class='grid-agent' id="DispoSelectBox">
+                    <div class="modal-header box_title label-info">
+                        Resultado da Chamada:<strong id="DispoSelectPhonE"></strong>
+                        <span class="close" style="margin-left:10px">​-</span>​
+                        <div class="input-prepend right" style="margin-top:-5px">
+                            <span style='color:black' class="add-on">Filtro</span><input type=text id=dispo_search >
+                        </div>
+                    </div>
+                    <div class="notification-mes c_bg-2" id="DispoSelectContent"  style="margin:0;max-height: 330px;overflow-y: auto;">
+
+                    </div>
+                    <div class="notification-mes  last-item"  style='margin:0;'>
+                        <span id="DispoSelectHAspan"></span> 
+                        <span id="DispoSelectMaxMin"></span>
+                        <span id="Dispo3wayMessage" style="display:none"></span>
+                        <span id="DispoManualQueueMessage" style="display:none"></span>
+                        <span id="PerCallNotesContent" style="display:none"><input type="hidden" name="call_notes_dispo" id="call_notes_dispo" value="" /></span>
+                        <input type="hidden" name="DispoSelection" id="DispoSelection" />
+                        <input type="checkbox" name="DispoSelectStop" id="DispoSelectStop" size="1" value="0" />
+                        <label for="DispoSelectStop"><span></span> Pausa após terminar esta chamada</label>
+                    </div>
+
+                </div>
+
+
+                <div style="width:650px;z-index:1002;  margin-left: -300px;margin-top: -300px;" class='grid-agent'  id="CallBackSelectBox">
+                    <div class="modal-header">
+                        <button class="close" type="button" onClick="FecharCallbacks();" >×</button>
+                        Marcação de Callbacks
+                    </div>
+                    <div class="modal-body">
+                        <div id="NoDateSelected" class="alert" style="display:none"></div>
+                        <table>
+                            <tr>
+                                <td style='text-align:right;'>Data do Callback:</td>
+                                <td style='text-align:left; width:225px;'>
+                                    <input readonly type="text" class="span2" id="data_callback" value="">
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <input type="radio" id="cb_pessoal" <?= ($my_callback_option == "CHECKED") ? "checked='checked'" : "" ?> name="tipo_callback" />
+                                                <label for="cb_pessoal"><span></span>Callback Pessoal</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="radio" id="cb_geral" <?= ($my_callback_option != "CHECKED") ? "checked='checked'" : "" ?> name="tipo_callback" />
+                                                <label for="cb_geral"><span></span>Callback Geral</label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                            </tr>
+                            <?php
+                            $userlist = "<option></option>";
+                            $results = mysql_query("Select user From vicidial_users Where active='Y'");
+                            while ($result = mysql_fetch_array($results)) {
+                                $userlist.= "<option>$result[0]</option>\n";
+                            }
+                            ?>
+
+                            <tr <?= ($callback_other_user) ? "" : "style='display:none'" ?>>
+                                <td style='text-align:right'>User:</td>
+                                <td style='text-align:left; width:225px;'><select style="width:170px" id="cb_other_username" disabled><?= $userlist ?></select></td>
+                                <td>
+                                    <table style='width:100%;'>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" id="cb_other_user" name="cb_other_user" />
+                                                <label for="cb_other_user"><span></span> Outro User</label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style='text-align:right; vertical-align:top;'>Comentários do Callback:</td>
+                                <td colspan="2">
+                                    <textarea id="comentarios_callback" style="width:375px; height:150px"></textarea>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">
+                                    <table class="right">
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <button onClick="CallBackDatE_submit();" class="btn btn-primary">Gravar</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grid-agent" style="z-index:1001; width:1000px; margin-left: -500px; margin-top: -305px;" id="CallBacKsLisTBox" >
+                    <div class="modal-header">
+                        <button class="close" type="button" onclick="CalLBacKsLisTClose();">×</button>
+                        Lista de Callbacks
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-inline">
+                            <input type="text" class="input-small" maxlength="4" id="cb_date_1" placeholder="Data Inicio">
+                            <i class="icon-minus"></i>
+                            <input type="text" class="input-small" maxlength="3" id="cb_date_2" placeholder="Data Fim">
+                            <button class="btn" onClick="CalLBacKsLisTCheck();" style="cursor: pointer;"><i class="icon-refresh"></i>Atualizar</button>
+                        </div>
+                        <span class="help-block">Se não preencher as datas com o calendario, apenas aparecerá os callbacks de hoje.</span>
+                        <div class="formRow" style="max-height: 330px;overflow-y: auto;">
+                            <table class="table table-mod table-striped table-bordered table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Data Call-back</th>
+                                        <th>Nº Telefone</th>
+                                        <th style='width:150px'>Comentário</th>
+                                        <th>Nome</th>
+                                        <th>Estado</th>
+                                        <th>Campanha</th>
+                                        <th>Última Chamada</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="CallBacKsLisT" ></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="grid-agent"  id="NeWManuaLDiaLBox" style="width: 520px;margin-left: -260px;" >
+                    <div class="modal-header">
+                        <button class="close" type="button" onClick="ManualDialHide();">×</button>
+                        Chamada Manual
+                    </div>
+                    <div class="modal-body">
+                        <table style="margin:10px auto;width:95%">
+                            <tr>
+                                <td colspan="3">
+                                    <div class="help-inline">Atenção: os nºs novos vão ser associados á lista: <?= $manual_dial_list_id ?></div>
+                                </td>
+                            </tr>
+                            <tr style="display:none">
+                                <td>
+                                    <input type="hidden" size="7" maxlength="10" name="MDDiaLCodE" id="MDDiaLCodE" value="1" />
+                                    <span style="float: right;"> Portabilidade: </span>
+                                </td>
+                                <td colspan="2">
+                                    <span style="float: left;">
+                                        <select id=portabilidade name=portabilidade >
+                                            <option value=0 >Nenhuma</option>
+                                            <option value=1 >TMN</option>
+                                            <option value=2 >Vodafone</option>
+                                            <option value=3 >Optimus</option>
+                                            <option value=4 >Todas</option>
+                                        </select>
+                                    </span>
+                                </td>
+                            </tr>	
+                            <tr>
+                                <td>
+                                    <span class="right"> Nº de telefone: </span>
+                                </td>
+                                <td colspan="2">
+                                    <span class="left"> 
+                                        <span class="input-append">
+                                            <input type="text"  maxlength="18" name="MDPhonENumbeR" id="MDPhonENumbeR" value="" class="num" placeholder="Insere o nº" />
+                                            <a  href="#" onClick="NeWManuaLDiaLCalLSubmiT('PREVIEW');
+                return false;" class="btn btn-primary">Marcar</a>
+                                        </span>
+                                        <input type="hidden" name="MDLeadID" id="MDLeadID" value="" />
+                                        <input type="hidden" name="MDType" id="MDLeadID" value="" />
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="right">Ver BD:</span>
+                                </td>
+                                <td colspan="2">
+                                    <span class="left">
+                                        <input type="checkbox" name="LeadLookuP" id="LeadLookuP" size="1" value="0" />
+                                        <label for="LeadLookuP" ><span></span>Procurar na base de dados antes de chamar</label>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" colspan="3">
+                                    <span id="ManuaLDiaLGrouPSelecteD"></span><span id="ManuaLDiaLGrouP"></span>
+                                    <input type="hidden" size="24" maxlength="20" name="MDDiaLOverridE" id="MDDiaLOverridE" class="cust_form" value="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" style="display:none" colspan="3">
+                                    <a href="#" onClick="NeWManuaLDiaLCalLSubmiT('NOW');
+                return false;">Chamar já</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grid-agent" id="confirm_feedback_log" style="z-index:1001; width:1000px; margin-left: -500px; display:none;" >
+                    <div class="modal-header">
+                        <button class="close" type="button" onclick="hideDiv('confirm_feedback_log');">×</button>
+                        Vendas não confirmadas
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-mod table-bordered">
+                            <thead>
+                            <th>Comentário</th>
+
+                            <th> Cliente </th>
+                            <th> Data </th>
                             </thead>
-                            <tbody id="lead_log">
+                            <tbody id="comment_log_tbody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="grid-agent" style="overflow-y: auto;margin-left:-175px;margin-top:-250px; width: 350px; z-index:<?= ++$zi ?>;" id="CloserSelectBox">
+                    <div class="modal-header">
+                        Seleccção de Grupos Inbound
+                    </div>
+                    <div id="CloserSelectContent">
+
+                    </div>
+                    <div  class="notification-mes c_bg-2" style='margin:0;' >
+                        <input type="hidden" name="CloserSelectList" id="CloserSelectList" />
+                        <?php
+                        if (($outbound_autodial_active > 0) and ($disable_blended_checkbox < 1) and ($dial_method != 'INBOUND_MAN') and ($VU_agent_choose_blended > 0)) {
+                            ?>
+                            <input type="checkbox" name="CloserSelectBlended" id="CloserSelectBlended"  value="0" /><label for="CloserSelectBlended"><span></span> Chamadas <i>Inb/Out Blended</i></label>
+<?php } ?>
+                    </div>
+                    <div  class="notification-mes" >
+                        <div class="right">
+                            <a href="#" onClick="CloserSelectContent_create();
+                return false;" class="btn">Limpar</a>
+                            <a href="#" onClick="CloserSelect_submit();
+                return false;" class="btn btn-primary">Ok</a>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+
+                <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="TerritorySelectBox">
+                    <table>
+                        <tr>
+                            <td align="center" valign="top"> TERRITORY SELECTION <br />
+                                <span id="TerritorySelectContent"> Territory Selection </span>
+                                <input type="hidden" name="TerritorySelectList" id="TerritorySelectList" /><br />
+                                <a href="#" onClick="TerritorySelectContent_create();
+                return false;"> RESET </a> | 
+                                <a href="#" onClick="TerritorySelect_submit();
+                return false;">SUBMIT</a>
+                            </td>
+                        </tr>
+                    </table>
+                </span>
+
+
+                <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="NothingBox">
+                    <span id="DiaLLeaDPrevieWHide"> Channel</span>
+                    <span id="DiaLDiaLAltPhonEHide"> Channel</span>
+                    <?php
+                    if (!$agentonly_callbacks) {
+                        echo "<input type=\"checkbox\" name=\"CallBackOnlyMe\" id=\"CallBackOnlyMe\" size=\"1\" value=\"0\" /> MY CALLBACK ONLY <br />";
+                    }
+                    if (($outbound_autodial_active < 1) or ($disable_blended_checkbox > 0) or ($dial_method == 'INBOUND_MAN') or ($VU_agent_choose_blended < 1)) {
+                        echo "<input type=\"checkbox\" name=\"CloserSelectBlended\" id=\"CloserSelectBlended\" size=\"1\" value=\"0\" /> BLENDED CALLING<br />";
+                    }
+                    ?>
+                </span>
+
+                <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="CalLLoGDisplaYBox">
+                    <table>
+                        <tr>
+                            <td align="center" valign="top">AGENT CALL LOG:<a href="#" onClick="CalLLoGVieWClose();
+                return false;">close [X]</a>
+                                <br />
+                                <div class="scroll_calllog" id="CallLogSpan"> Call log List </div>
+                                <br />
+                                <br /> 
+                            </td>
+                        </tr>
+                    </table>
+                </span>
+                <div class='grid-agent' style="margin-left:-250px;width:500px;z-index:<?= $zi++; ?>;" id="SearcHForMDisplaYBox">
+                    <div class="modal-header">
+                        <button class="close" type="button" onClick="LeaDSearcHVieWClose();">×</button>
+                        Procura de Contactos
+                    </div>	
+                    <div class="modal-body">
+                        <div class="form-horizontal">
+                            <div class="control-group">
+                                <label class="control-label" for="search_field">Seleccione o campo</label>
+                                <div class="controls">
+                                    <select id=search_field><?= $search_opt ?></select>
+                                </div>
+                            </div>                            
+                            <div class="control-group">
+                                <label class="control-label" for="search_query">Escreva a pesquisa</label>
+                                <div class="controls">
+                                    <input type=text maxlength="20" id=search_query />
+                                </div>
+                            </div>                          
+                            <div class="control-group">
+                                <div class="controls">
+                                    <button class="btn" onClick="LeadSearchSubmit();" style="cursor: pointer;"><i class="icon-search"></i>Procurar</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class='grid-agent' style="margin-left:-300px;width:600px;z-index:<?= ++$zi ?>;display:none" id="pesquisa_morada">
+                    <div class="modal-header">
+                        <button class="close" type="button" onClick="hideDiv('pesquisa_morada');">×</button>
+                        Procura de Moradas
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-inline">
+                            <input type="text" class="input-small" id="cp_4" maxlength="4" placeholder="CP4">
+                            <i class="icon-minus"></i>
+                            <input type="text" class="input-small" id="cp_3" maxlength="3" placeholder="CP3" >
+                            <button onClick="pesquisa_morada();" class="btn" >Pesquisar</button>
+                        </div>
+                        <div class="formRow" style="height: 140px;overflow-y: auto;">
+                            <table class="table table-striped table-bordered table-condensed table-mod" id="result_moradas">
+                                <thead> 
+                                    <tr>
+                                        <th>Rua</th>
+                                        <th>Cód. Postal</th>
+                                        <th>Localidade</th>
+                                        <th>Distrito</th>
+                                        <th>Concelho</th>
+                                        <th>Escolher</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class='grid-agent' style="margin-left:-400px;margin-top:-250px;width:800px;height:500px;z-index:<?= ++$zi ?>;" id="SearcHResultSDisplaYBox">
+                    <div class="modal-header">
+                        <button class="close" type="button" onClick="hideDiv('SearcHResultSDisplaYBox');">×</button>
+                        Resultado da Procura
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-mod table-striped table-bordered table-condensed">
+                            <thead>
+                                <TR>
+                                    <TH> Nome </TH>
+                                    <TH> Telefone </TH>
+                                    <TH> Estado </TH>
+                                    <TH> Ultima Chamada </TH>
+                                    <TH> Localidade </TH>
+                                    <TH> Freguesia </TH>
+                                    <TH> Cod. Postal </TH>
+                                    <TH> Info </TH>
+                                    <TH> Chamar </TH>
+                                </TR>
+                            </thead>
+                            <tbody id="SearcHResultSSpan">
 
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
 
-            <div style="overflow-y:auto;z-index:1001; width:60%;margin-left: -30%;" class="grid-agent"  id="PauseCodeSelectBox" >
-                <div class="modal-header box_title label-info">
-                    Seleccione o motivo da pausa
-                    <span class="close" onclick="hideDiv('PauseCodeSelectBox');">&times;</span>
+                <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="CalLNotesDisplaYBox">
+                    <table>
+                        <tr>
+                            <td align="center" valign="top">CALL NOTES LOG:<a href="#" onClick="hideDiv('CalLNotesDisplaYBox');
+                return false;">close [X]</a><br />
+                                <div class="scroll_calllog" id="CallNotesSpan"> Call Notes List </div>
+                                <br /><br /> 
+                                <a href="#" onClick="hideDiv('CalLNotesDisplaYBox');
+                return false;">Close Info Box</a>
+                            </td>
+                        </tr>
+                    </table>
+                </span>
+
+                <div style="margin-left:-500px;margin-top:-305px;z-index:1002;width: 1000px;" id="LeaDInfOBox" class="grid-agent">
+                    <div class="modal-header">
+                        <button class="close" type="button" onclick="hideDiv('LeaDInfOBox');" >×</button>
+                        Informação do Cliente
+                    </div>
+                    <div class="modal-body" id="LeaDInfOSpan">
+                        <div class="span5">
+                            <h4>Informação do Callback</h4>
+                            <table class="table table-mod table-bordered">
+                                <tr>
+                                    <th>Estado de Callback:</th>
+                                    <td id="cb_status"></td>
+                                </tr>
+                                <tr>
+                                    <th>Estado de Lead:</th>
+                                    <td id="lead_status"></td>
+                                </tr>
+                                <tr>
+                                    <th>Entrada de Callback:</th>
+                                    <td id="cb_entry_time"></td>
+                                </tr>
+                                <tr>
+                                    <th>Hora de Callback:</th>
+                                    <td id="cb_date"></td>
+                                </tr>
+                                <tr>
+                                    <th>Comentário de callback:</th>
+                                    <td id="cb_comment"></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="span6">
+                            <h4>Informação da Lead</h4>
+                            <table class="table table-mod table-bordered" id="lead_info">
+
+                            </table>
+                        </div>
+                        <div class="span12">
+                            <h4>Histórico da Lead</h4>
+                            <table class="table table-mod table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Operador</th>
+                                        <th>Tempo (seg.)</th>
+                                        <th>Estado</th>
+                                        <th>Nº</th>
+                                        <th>Campanha</th>
+                                        <th title='Entrada Ou Saida'>IO</th>
+                                        <th>Desligou</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lead_log">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body" id="PauseCodeSelectContent"></div>
-                <input type="hidden" name="PauseCodeSelection" id="PauseCodeSelection" />
-            </div>
 
-            <span style="position:absolute;left:50%;top:40px;z-index:<?= ++$zi ?>;" id="PresetsSelectBox">
-                <table>
-                    <tr>
-                        <td align="center" valign="top"> SELECT A PRESET :<br />
-                            <span id="PresetsSelectBoxContent"> Presets Selection </span>
-                            <input type="hidden" name="PresetSelection" id="PresetSelection" />
-                        </td>
-                    </tr>
-                </table>
-            </span>
+                <div style="overflow-y:auto;z-index:1001; width:60%;margin-left: -30%;" class="grid-agent"  id="PauseCodeSelectBox" >
+                    <div class="modal-header box_title label-info">
+                        Seleccione o motivo da pausa
+                        <span class="close" onclick="hideDiv('PauseCodeSelectBox');">&times;</span>
+                    </div>
+                    <div class="modal-body" id="PauseCodeSelectContent"></div>
+                    <input type="hidden" name="PauseCodeSelection" id="PauseCodeSelection" />
+                </div>
 
-            <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="GroupAliasSelectBox">
-                <table>
-                    <tr>
-                        <td align="center" valign="top"> SELECT A GROUP ALIAS :<br />
-                            <span id="GroupAliasSelectContent"> Group Alias Selection </span>
-                            <input type="hidden" name="GroupAliasSelection" id="GroupAliasSelection" />
-                        </td>
-                    </tr>
-                </table>
-            </span>
+                <span style="position:absolute;left:50%;top:40px;z-index:<?= ++$zi ?>;" id="PresetsSelectBox">
+                    <table>
+                        <tr>
+                            <td align="center" valign="top"> SELECT A PRESET :<br />
+                                <span id="PresetsSelectBoxContent"> Presets Selection </span>
+                                <input type="hidden" name="PresetSelection" id="PresetSelection" />
+                            </td>
+                        </tr>
+                    </table>
+                </span>
 
-            <span style="z-index:<?= ++$zi ?>; width:500px; height:200px;" id="blind_monitor_alert_span" class="grid-agent">
-                <table>
-                    <tr>
-                        <td> Alerta :<br />
-                            <b>
-                                <span id="blind_monitor_alert_span_contents"></span>
-                            </b>
-                            <br/>
-                            <br/>
-                            <a href="#" onClick="hideDiv('blind_monitor_alert_span');
+                <span style="position:absolute;left:0px;top:0px;z-index:<?= ++$zi ?>;" id="GroupAliasSelectBox">
+                    <table>
+                        <tr>
+                            <td align="center" valign="top"> SELECT A GROUP ALIAS :<br />
+                                <span id="GroupAliasSelectContent"> Group Alias Selection </span>
+                                <input type="hidden" name="GroupAliasSelection" id="GroupAliasSelection" />
+                            </td>
+                        </tr>
+                    </table>
+                </span>
+
+                <span style="z-index:<?= ++$zi ?>; width:500px; height:200px;" id="blind_monitor_alert_span" class="grid-agent">
+                    <table>
+                        <tr>
+                            <td> Alerta :<br />
+                                <b>
+                                    <span id="blind_monitor_alert_span_contents"></span>
+                                </b>
+                                <br/>
+                                <br/>
+                                <a href="#" onClick="hideDiv('blind_monitor_alert_span');
                 return false;">Voltar</a>
-                        </td>
-                    </tr>
-                </table>
-            </span>
+                            </td>
+                        </tr>
+                    </table>
+                </span>
 
 
-            <span style="z-index:<?= ++$zi ?>;" id="GENDERhideFORieALT"></span>
+                <span style="z-index:<?= ++$zi ?>;" id="GENDERhideFORieALT"></span>
 
         </form>
 
@@ -5040,7 +5039,7 @@ while ($MM_scripts > $h) {
             <div class="modal-body">
                 Atingiu o máximo de callbacks por campanha.
                 <p id="max_callback_info"></p>
-                
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn" onClick="hideDiv('AlertBox_max_callback');">Sair</button>
@@ -5063,6 +5062,35 @@ while ($MM_scripts > $h) {
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="validar_chamada_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button  class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Validar chamada</h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class='formRow'>
+                        <label>Comentário</label>
+                            
+                        <div class='formRight'>
+                            <textarea id='vc_comment'></textarea>
+
+
+                    </div>    
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id='validar_chamada_button'>Validar</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <script>
             setTimeout(function() {
                 window.onbeforeunload = function() {
