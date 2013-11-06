@@ -286,6 +286,9 @@ function insert_element(opcao, element, data)
                         case "credit_card_v":
                               pattern.push("funcCall[isValidVISA]");
                               break;
+                        case "credit_card_d":
+                              pattern.push("funcCall[isValidDebit]");
+                              break;
 
                   }
                   if (data.param1 != "none")
@@ -445,12 +448,12 @@ function insert_element(opcao, element, data)
                               if (data.required)
                               {
                                     trbody_last.append($("<td>")
-                                            .append($("<input>").attr("type", "text").attr("id", array_id["input"] + "tableinput").addClass("validate[required] input-mini").attr("name", data.tag + "," + perguntas[count] + "," + titulos[count2])));
+                                            .append($("<input>").attr("type", "text").attr("titulo", titulos[count2]).attr("id", array_id["input"] + "tableinput").addClass("validate[required] input-mini").attr("name", data.tag + "," + perguntas[count] + "," + titulos[count2])));
                               }
                               else
                               {
                                     trbody_last.append($("<td>")
-                                            .append($("<input>").attr("type", "text").attr("id", array_id["input"] + "tableinput").addClass("input-mini").attr("name", data.tag + "," + perguntas[count] + "," + titulos[count2])));
+                                            .append($("<input>").attr("type", "text").attr("titulo", titulos[count2]).attr("id", array_id["input"] + "tableinput").addClass("input-mini").attr("name", data.tag + "," + perguntas[count] + "," + titulos[count2])));
                               }
                               array_id["input"] = array_id["input"] + 1;
                         }
@@ -562,6 +565,10 @@ function populate_script(callback)
                                     break;
                               case "tableradio":
                                     $("#" + this.tag_elemento + " tbody tr:contains(" + this.param1 + ") :input[value='" + this.valor + "']").attr('checked', true);
+                                    break;
+                              case "tableinput":
+                                    var temp = this.param1.split(";");
+                                    $("#" + this.tag_elemento + " tbody tr:contains(" + temp[1] + ") :input[titulo='" + temp[0] + "']").val(this.valor);
                                     break;
                               case "datepicker":
                                     $("#" + this.tag_elemento + " :input").val(this.valor);
@@ -1022,6 +1029,11 @@ function isValidMastercard(field, rules, i, options) {
             return "Insira um número de cartão Mastercard Válido";
 }
 
+function isValidDebit(field, rules, i, options) {
+      cardNumber = field.val();
+      if (!isValidCard(cardNumber))
+            return "Nº de Cartão de Débito invalido";
+}
 
 
 function getUrlVars() {
@@ -1083,4 +1095,5 @@ $(function() {
             var url = "../script_dinamico/files/" + $(this).attr("file");
             window.open(url, 'PDF', 'fullscreen=no, scrollbars=auto');
       });
-});
+}
+);
