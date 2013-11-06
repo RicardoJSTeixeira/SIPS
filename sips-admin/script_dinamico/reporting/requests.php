@@ -123,7 +123,7 @@ switch ($action) {
             $lead_info[$lead_tmp] = $row3;
         }
         if ($allctc == "false")
-            $date_filter = "and sr.date between '$data_inicio' and '$data_fim'";
+            $date_filter = "and sr.date between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
         else
             $date_filter = "";
         $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name,  vc.campaign_name, sr.lead_id,sr.param_1,vcs.status_name, sr.tag_elemento,sr.valor,sd.param1,sd.type FROM `script_result` sr
