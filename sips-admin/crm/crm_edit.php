@@ -232,11 +232,51 @@ function curPageURL() {
     }
     $pageURL .= "://";
     if ($_SERVER["SERVER_PORT"] != "80") {
-        $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
+        $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"]; //. $_SERVER["REQUEST_URI"];
     } else {
         $pageURL .= $_SERVER["SERVER_NAME"]; //.$_SERVER["REQUEST_URI"];
     }
     return $pageURL;
+}
+
+function get_client_ip() {
+    $ipaddress = '';
+    if ($_SERVER['HTTP_CLIENT_IP'])
+        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+    else if ($_SERVER['HTTP_X_FORWARDED_FOR'])
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    else if ($_SERVER['HTTP_X_FORWARDED'])
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+    else if ($_SERVER['HTTP_FORWARDED_FOR'])
+        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+    else if ($_SERVER['HTTP_FORWARDED'])
+        $ipaddress = $_SERVER['HTTP_FORWARDED'];
+    else if ($_SERVER['REMOTE_ADDR'])
+        $ipaddress = $_SERVER['REMOTE_ADDR'];
+    else
+        $ipaddress = 'UNKNOWN';
+
+    return $ipaddress;
+}
+
+function reserved_ip($ip) {
+    $reserved_ips = array(// not an exhaustive list
+        '167772160' => 184549375, /*    10.0.0.0 -  10.255.255.255 */
+        '3232235520' => 3232301055, /* 192.168.0.0 - 192.168.255.255 */
+        '2130706432' => 2147483647, /*   127.0.0.0 - 127.255.255.255 */
+        '2851995648' => 2852061183, /* 169.254.0.0 - 169.254.255.255 */
+        '2886729728' => 2887778303, /*  172.16.0.0 -  172.31.255.255 */
+        '3758096384' => 4026531839, /*   224.0.0.0 - 239.255.255.255 */
+    );
+
+    $ip_long = sprintf('%u', ip2long($ip));
+
+    foreach ($reserved_ips as $ip_start => $ip_end) {
+        if (($ip_long >= $ip_start) && ($ip_long <= $ip_end)) {
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
 ?>
 
@@ -289,11 +329,11 @@ function curPageURL() {
 
 <h2>Dados da Lead</h2>
 <form class="form-horizontal" id='inputcontainer' >
-    <?php foreach ($fields as $key => $value) { ?>
+<?php foreach ($fields as $key => $value) { ?>
         <div class="control-group">
             <label class="control-label"><?= $fields_SELECT[$key] ?>:</label>
             <div class="controls" >
-                <?php if ($key != "comments") { ?>
+    <?php if ($key != "comments") { ?>
                     <input type=text name='<?= $key ?>' id='<?= $key ?>' class='span9' value='<?= $value ?>'>
                 <?php } else { ?>
                     <textarea name='<?= $key ?>' id='<?= $key ?>' class='span9' ><?= $value ?></textarea>
@@ -301,7 +341,7 @@ function curPageURL() {
                 <span id='td_<?= $fields_SELECT[$key] ?>'></span>
             </div>
         </div>
-    <?php } ?>
+<?php } ?>
 </form>
 
 <h3>Alteração do Feedback</h3>
@@ -394,11 +434,11 @@ function curPageURL() {
         </tr>
     </thead>
     <tbody>
-        <?php
-        while ($row = mysql_fetch_assoc($chamadas_feitas)) {
+<?php
+while ($row = mysql_fetch_assoc($chamadas_feitas)) {
 
-            $duracao = sec_convert($row['length_in_sec'], "H");
-            ?>
+    $duracao = sec_convert($row['length_in_sec'], "H");
+    ?>
 
             <tr>
                 <td><?= $row["data"] ?></td>
@@ -410,7 +450,7 @@ function curPageURL() {
                 <td><?= $row["campaign_name"] ?></td>
                 <td><?= $row["list_name"] ?></td>
             </tr>
-        <?php } ?>
+<?php } ?>
 
         <?php
         while ($row = mysql_fetch_assoc($chamadas_feitas_in)) {
@@ -428,7 +468,7 @@ function curPageURL() {
                 <td><?= $row["campaign_name"] ?></td>
                 <td><?= $row["list_name"] ?></td>
             </tr>
-        <?php } ?>
+<?php } ?>
     </tbody>
 </table>
 
@@ -445,10 +485,10 @@ function curPageURL() {
 
     </thead>
     <tbody>
-        <?php
-        $curpage = curPageURL();
-        while ($row = mysql_fetch_assoc($gravacoes)) {
-            ?>
+<?php
+$curpage = curPageURL();
+while ($row = mysql_fetch_assoc($gravacoes)) {
+    ?>
 
             <tr>
                 <td><?= $row["data"] ?></td>
@@ -457,35 +497,39 @@ function curPageURL() {
                 <td><?= sec_convert($row['length_in_sec'], "H") ?></td>
                 <td><?= $row["full_name"] ?>
 
-                    <?
-                    $mp3File = "#";
+    <?
+    $mp3File = "#";
+    if (strlen($row[location]) > 0) {
+        //if lan
+        if (reserved_ip(get_client_ip())) {
+            $mp3File=$row[location];
+        } else {
+            $tmp = explode("/", $row[location]);
+            $ip = $tmp[2];
+            $tmp = explode(".", $ip);
+            $ip = $tmp[3];
 
-                    if (strlen($row[location]) > 0) {
-                        $tmp = explode("/", $row[location]);
-                        $ip = $tmp[2];
-                        $tmp = explode(".", $ip);
-                        $ip = $tmp[3];
+            switch ($ip) {
+                case "248":
+                    $port = ":20248";
+                    break;
+                case "247":
+                    $port = ":20247";
+                    break;
+                default:
+                    $port = "";
+                    break;
+            }
+        $mp3File = $curpage . $port . "/RECORDINGS/MP3/$row[filename]-all.mp3";
+        }
+        $audioPlayer = "Há gravação";
+    } else {
+        $audioPlayer = "Não há gravação!";
+    }
 
-                        switch ($ip) {
-                            case "248":
-                                $port = ":20248";
-                                break;
-                            case "247":
-                                $port = ":20247";
-                                break;
-                            default:
-                                $port = "";
-                                break;
-                        }
 
-                        $mp3File = $curpage . $port . "/RECORDINGS/MP3/$row[filename]-all.mp3";
-                        $audioPlayer = "Há gravação";
-                    } else {
-                        $audioPlayer = "Não há gravação!";
-                    }
-
-                    $lenghtInMin = date("i:s", $row[length_in_sec]);
-                    ?>
+    $lenghtInMin = date("i:s", $row[length_in_sec]);
+    ?>
 
 
                     <div class="view-button"><a href='<?= $mp3File ?>' target='_self' class="btn btn-mini"><i class="icon-play"></i>Ouvir</a></div>
@@ -509,7 +553,7 @@ function curPageURL() {
 
 
             </tr>
-        <?php } ?>
+<?php } ?>
     </tbody>
 </table>
 
@@ -542,11 +586,10 @@ function curPageURL() {
 
     var Table_chamadas = $('#chamadas_realizadas').dataTable({
         "sPaginationType": "full_numbers",
-        
         "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"},
-        "aaSorting": [[ 0, "desc" ]]
+        "aaSorting": [[0, "desc"]]
     });
-  //  Table_chamadas.fnSort([[1, 'asc']]);
+    //  Table_chamadas.fnSort([[1, 'asc']]);
 
     /* VARS/DIALOGS */
     var lead_id = '<?= $lead_id; ?>';
@@ -554,16 +597,16 @@ function curPageURL() {
     var $error = $('<div></div>')
             .html('Ocorreu um erro.<br><br>Por favor tente novamente.<br><br> Mensagem de Erro: ')
             .dialog({
-        autoOpen: false,
-        title: "<span style='float:left; margin-right: 4px;' class='ui-icon ui-icon-alert'></span> Erro",
-        width: "550",
-        height: "250",
-        show: "fade",
-        hide: "fade",
-        buttons: {"OK": function() {
-                $(this).dialog("close");
-            }}
-    });
+                autoOpen: false,
+                title: "<span style='float:left; margin-right: 4px;' class='ui-icon ui-icon-alert'></span> Erro",
+                width: "550",
+                height: "250",
+                show: "fade",
+                hide: "fade",
+                buttons: {"OK": function() {
+                        $(this).dialog("close");
+                    }}
+            });
     /* FUNCTIONS */
 
 
@@ -687,12 +730,12 @@ function curPageURL() {
     {
         $("#confirm_feedback").prop('disabled', false);
         $("#confirm_feedback_div").hide(600);
-        if($("#radio_confirm_no").is(":checked"))
-             $("#feedback_list option[value='SP']").prop("selected",true);
+        if ($("#radio_confirm_no").is(":checked"))
+            $("#feedback_list option[value='SP']").prop("selected", true);
         $.post("_requests.php", {action: "add_info_crm", lead_id: lead_id, feedback: $("#feedback_list option:selected").val(), sale: $("#radio_confirm_yes").is(':checked'), campaign: Campaign_id, agent: $("#agente_selector option:selected").val(), comment: $("#textarea_comment").val()},
         function(data)
         {
-       
+
         }, "json");
     });
 
