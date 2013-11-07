@@ -9,12 +9,11 @@ foreach ($_GET as $key => $value) {
 
 $destiny = getcwd() . "/files/";
 
+
 switch ($action) {
 
     case "upload":
         $temp = explode(".", $_FILES["file"]["name"]);
-
-
         $extension = end($temp);
         if ($extension == "pdf") {
             if (file_exists($destiny . $_FILES["file"]["name"])) {
@@ -37,9 +36,29 @@ switch ($action) {
         }
         else
             echo "Ficheiro Inválido";
-
-
         break;
+
+
+
+    case "upload_php":
+        $temp = explode(".", $_FILES["file_ajax"]["name"]);
+
+        $extension = end($temp);
+
+      if ($extension == "php") {
+            if (file_exists($destiny . $_FILES["file_ajax"]["name"])) {
+                echo $_FILES["file_ajax"]["name"] . " Já existe. ";
+            } else {
+                if (move_uploaded_file($_FILES["file_ajax"]["tmp_name"], $destiny . $_FILES["file_ajax"]["name"]))
+                    echo "Guardado";
+                else
+                    echo "Não Guardado";
+            }
+      }
+      else
+           echo "Ficheiro Inválido";  
+        break;
+
 
 
     case "delete":

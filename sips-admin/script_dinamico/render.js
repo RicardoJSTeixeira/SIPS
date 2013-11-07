@@ -288,6 +288,16 @@ function insert_element(opcao, element, data)
                               break;
                         case "credit_card_d":
                               pattern.push("funcCall[isValidDebit]");
+                        case "ajax":
+                              pattern.push("ajax["+data.tag+"]]");
+                              $.validationEngineLanguage.allRules[data.tag] = {
+                                    "url": "../script_dinamico/files/"+data.values_text,
+                                    // you may want to pass extra data on the ajax call
+
+                                    "alertText": "* Valor Incorrecto",
+                                    "alertTextOk": "* Validado",
+                                    "alertTextLoad": "* A validar, por favor aguarde"
+                              };
                               break;
 
                   }
@@ -1073,7 +1083,6 @@ $(function() {
       });
       $(document).on("click", ".next_pag", function(e) {
             e.preventDefault();
-
             if ($("#myform").validationEngine('validate'))
             {
                   var temp = $(".pag_div:visible").next(".pag_div");
@@ -1089,11 +1098,18 @@ $(function() {
             var url = '../reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + page_info.user_id + '&lead=' + page_info.lead_id;
             window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
       });
-
       $(document).on("click", ".pdf_button", function(e)
       {
             var url = "../script_dinamico/files/" + $(this).attr("file");
             window.open(url, 'PDF', 'fullscreen=no, scrollbars=auto');
       });
-}
-);
+
+
+
+
+
+
+
+
+
+});

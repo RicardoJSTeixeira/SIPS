@@ -44,6 +44,8 @@ function editor_toggle(tipo)
 
 
 $(function() {
+      update_select_ajax();//FILE UPLOADS
+      update_select();//FILE UPLOADS
       $(".spinner").spinner({});
       $("#rule_creator .form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
       //respostas maximas por feedback TEMPORARIO----------------
@@ -262,7 +264,6 @@ $(document).on("click", ".element", function(e) {
                   populate_element("textarea", $(this));
                   break;
             case "ipl":
-                  update_select();
                   $("#ipl_layout_editor").show();
                   $("#ipl_edit_link").val("");
                   populate_element("ipl", $(this));
@@ -385,15 +386,7 @@ $("#ipl_upload_button").on("click", function(e)
             processData: false
       });
 });
-function submit_file()
-{
-      $.post("upload.php", {results: $("#forma").serializeArray(), action: "upload"}, function(data) {
 
-            return data;
-      }, "json").fail(function() {
-            return false;
-      });
-}
 
 function update_select()
 {
@@ -574,7 +567,8 @@ function update_info()
                                       .data("type", "texto")
                                       .data("required", this.required)
                                       .data("hidden", this.hidden)
-                                      .data("regex", this.param1);
+                                      .data("regex", this.param1)
+                                      .data("php_script", this.values_text);
                               insert_element("texto", item, this);
                               break;
                         case "pagination":
@@ -756,11 +750,19 @@ function populate_element(tipo, element)
       switch (tipo)
       {
             case "texto":
-
+if($("#button_ajax_upload_div").hasClass("btn icon-chevron-up"))
+      $("#button_ajax_upload_div").trigger("click");
                   $("#texto_edit").val($("#" + id + " .label_geral").html());
                   $("#placeholder_edit").val($("#" + id + " .input_texto").attr("placeholder"));
                   $("#max_length_edit").val($("#" + id + " .input_texto").attr("maxLength"));
                   $(".validation input:radio[name='regex_texto'][value=" + element.data("regex") + "]").prop("checked", true);
+
+                  if (element.data("php_script") != "0")
+                        $("#select_ajax_script option[value='" + element.data("php_script") + "']").prop("selected", true);
+                  else
+                        $("#select_ajax_script option[value='']").prop("selected", true);
+
+
                   break;
             case "radio":
                   $("#radio_edit").val($("#" + id + " .label_geral").html());
@@ -931,7 +933,13 @@ function edit_element(opcao, element, data)
                   $("#" + id + " .input_texto").attr("placeholder", $("#placeholder_edit").val());
                   $("#" + id + " .input_texto").attr("maxLength", $("#max_length_edit").val());
                   element.data("regex", $(".validation input:radio[name='regex_texto']:checked").val());
-                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
+                  if ($(".validation input:radio[name='regex_texto']:checked").val() == "ajax")
+                  {
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), $("#select_ajax_script option:selected").val(), $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
+                        element.data("php_script", $("#select_ajax_script option:selected").val());
+                  }
+                  else
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
                   break;
             case "radio":
                   if ($("#vertic_radio").is(':checked'))
@@ -1672,11 +1680,7 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
             {
                   rules_database("get_rules_by_trigger", 0, $("#script_selector option:selected").val(), 0, selected_tag, 0, 0, 0, 0, 0);
             }
-
-      }
-
-
-      , "json");
+      }, "json");
 }
 $(".date_option_radio").on("click", function()
 {
@@ -1851,7 +1855,7 @@ $("#add_rule_button").click(function()
                               else
                                     rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
                               break;
-                      
+
                   }
                   break;
             case "datepicker":
@@ -1940,6 +1944,85 @@ $("#render_go").click(function()
 {
       var window_slave = window.open("/sips-admin/script_dinamico/render_admin.html?script_id=" + $("#script_selector option:selected").val());
 });
+
+
+
+
+//AJAX VALIDATION--------------------------------------------
+$("#validacao_ajax").on("click", function()
+{
+
+});
+
+//AJAX UPLOAD
+$('#ajax_upload_input').change(function() {
+      var re_ext = new RegExp("(php)", "i");
+      var file = this.files[0];
+      var name = file.name;
+      var size = (Math.round((file.size / 1024 / 1024) * 100) / 100);
+      var type = file.type;
+      if (size > 10) {
+            $("#ajax_upload_span").text("O tamanho do ficheiro ultrapassa os 10mb permitidos.");
+            $(this).fileupload('clear');
+      }
+      if (!re_ext.test(type)) {
+            $("#ajax_upload_span").text("A extensão do ficheiro seleccionado não é valida.");
+            $(this).fileupload('clear');
+      }
+      $("#ajax_upload_span").text("");
+});
+$("#ajax_upload_button").on("click", function(e)
+{
+      e.preventDefault();
+      var form = $("#ajax_upload_form");
+      if (form.find('input[type="file"]').val() === '')
+            return false;
+      var formData = new FormData(form[0]);
+      formData.append("action", "upload_php");
+
+      $.ajax({
+            url: 'upload.php',
+            type: 'POST',
+            data: formData,
+            dataType: "json",
+            cache: false,
+            complete: function(data) {
+
+                  $("#ajax_upload_span").text(data.responseText);
+
+                  update_select_ajax();
+            },
+            contentType: false,
+            processData: false
+      });
+});
+
+
+function update_select_ajax()
+{
+      $.post("requests.php", {action: "get_php_ajax"},
+      function(data5)
+      {
+            $("#select_ajax_script").html(data5);
+      }, "json");
+}
+;
+$("#remove_uploaded_file_ajax").on("click", function()
+{
+      $.post("upload.php", {action: "delete", name: $("#select_ajax_script option:selected").val()}, function(data) {
+            $("#ajax_upload_span").text(data);
+            update_select_ajax();
+      });
+});
+
+$("#button_ajax_upload_div").on("click", function()
+{
+      $("#div_ajax_upload").toggle(500);
+      $(this).toggleClass("icon-chevron-up");
+      $(this).toggleClass("icon-chevron-down");
+});
+
+
 //LIMIT DE FEEDBACKS POR SCRIPT----------------------------------------------------000
 $("#open_limit_feedback").on("click", function()
 {
