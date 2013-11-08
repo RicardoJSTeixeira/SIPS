@@ -3121,6 +3121,10 @@ function check_for_auto_incoming()
             if (VDIC_data_VDIG[1].length > 0)
             {
                 inOUT = 'IN';
+                if (clientName == 'necomplus') {
+                    $("#Main-tabs a:eq(3)").tab("show");
+                }
+                
                 if (VDIC_data_VDIG[2].length > 2)
                 {
                     //document.getElementById("MainStatuSSpan").style.background = VDIC_data_VDIG[2];
