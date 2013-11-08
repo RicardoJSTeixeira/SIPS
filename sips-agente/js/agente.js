@@ -9339,7 +9339,7 @@ function MainPanelToFront(resumevar)
     hideDiv('FormRefresH');
     //showDiv('MainPanel');
     if (clientName == 'necomplus') {
-        $("#Main-tabs a:eq(1)").tab("show");
+        $("#Main-tabs a:eq(3)").tab("show");
     } else {
         $("#tab-MainTable").tab("show");
     }
