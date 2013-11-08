@@ -71,7 +71,7 @@ function update_script(callback)
       }
 }
 
-function update_info()
+function update_info(callback)
 {
       $(".datetimepicker").remove();
       $.post("requests.php", {action: "get_data_render", id_script: page_info.script_id},
@@ -191,7 +191,8 @@ function update_info()
                               items.push([item, this.id_page]);
                               break;
                   }
-                  insert_element(this.type, item, this);
+               var last_insert=   insert_element(this.type, item, this);
+              
             });
 
 
@@ -232,7 +233,10 @@ function update_info()
 
 
 
-
+            if (typeof callback === "function")
+            {
+                  callback();
+            }
 
 
 
@@ -256,6 +260,10 @@ function insert_element(opcao, element, data)
                   input.placeholder = data.placeholder;
                   input.maxLength = data.max_length;
                   input.name = data.tag;
+
+
+                  if (data.default_value.toString().length > 2)
+                        input.value = "§" + data.default_value + "§";
                   var pattern = [];
                   if (data.required)
                         pattern.push("required");
@@ -302,12 +310,12 @@ function insert_element(opcao, element, data)
                   if (data.param1 != "none")
                         element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
 
-                           $(document).on("blur", "#" + data.tag + " :input", function()
-                   {
-                   
-                   $("#" + data.tag + " :input").validationEngine("validate");
-                   
-                   });
+                  $(document).on("blur", "#" + data.tag + " :input", function()
+                  {
+
+                        $("#" + data.tag + " :input").validationEngine("validate");
+
+                  });
                   break;
             case "radio":
                   element.empty();
@@ -482,7 +490,7 @@ function insert_element(opcao, element, data)
                   element.find(".form_datetime")[0].name = data.tag;
                   var data_format = "yyyy-mm-dd hh:ii";
                   var min_view = 0;
-                  
+
                   switch (element.data("data_format"))
                   {
                         case "0":
@@ -498,7 +506,7 @@ function insert_element(opcao, element, data)
                               min_view = 2;
                               break;
                   }
-                
+
                   element.find(".form_datetime").datetimepicker({format: data_format, autoclose: true, language: "pt", minView: min_view}).keypress(function(e) {
                         e.preventDefault();
                   }).bind("cut copy paste", function(e) {
@@ -552,6 +560,7 @@ function insert_element(opcao, element, data)
       }
       if (data.hidden)
             element.css("display", "none");
+      return true;
 }
 
 
@@ -859,6 +868,7 @@ function tags(callback)
 {
       var rz = $("#render_zone");
       //tags de valores de elementos da mesma pagina
+
       if (rz.html().match(tag_regex))
       {
             var temp2 = rz.html().match(tag_regex);
@@ -867,6 +877,7 @@ function tags(callback)
                   if ($.inArray(this, temp) === -1)
                         temp.push(this);
             });
+
             $.each(temp, function() {
                   var id = this;
                   id = id.replace(/\@/g, '');
@@ -879,6 +890,7 @@ function tags(callback)
       }
 
 //Tags de nome/morada/telefone etc
+
       if (rz.html().match(tag_regex2))
       {
             var temp2 = rz.html().match(tag_regex2);
@@ -1077,7 +1089,7 @@ $(function() {
       $.get("items.html", function(data) {
             page_info = getUrlVars();
             $("#dummie").html(data);
-            update_script(update_info);
+            update_script(update_info());
       });
       $(document).on("click", ".previous_pag", function(e) {
             e.preventDefault();
@@ -1090,14 +1102,14 @@ $(function() {
       });
       $(document).on("click", ".next_pag", function(e) {
             e.preventDefault();
-         
-                  var temp = $(".pag_div:visible").next(".pag_div");
-                  if (temp.length)
-                  {
-                        $(".pag_div").hide();
-                        temp.show();
-                  }
-            
+
+            var temp = $(".pag_div:visible").next(".pag_div");
+            if (temp.length)
+            {
+                  $(".pag_div").hide();
+                  temp.show();
+            }
+
       });
       $(document).on("click", ".scheduler_button_go", function(e) {
             e.preventDefault();
