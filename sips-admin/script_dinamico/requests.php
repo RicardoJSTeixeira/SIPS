@@ -18,8 +18,7 @@ switch ($action) {
     //------------------------------------------------//    
     //---------------------GET------------------------//  
     //------------------------------------------------//
-
-
+  
     case "get_limit_feedback":
         $query = "SELECT id,feedback,feedback_name,max from script_max_feedback where id_script=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -59,7 +58,6 @@ switch ($action) {
 
 
     case "get_element_tags":
-
         $query = "SELECT tag,type FROM `script_dinamico` WHERE id_script=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
@@ -185,10 +183,10 @@ switch ($action) {
 
 
     case "get_data_render":
-        $query = "SELECT sd.id,sd.tag,sd.id_script,id_page,type,ordem,dispo,texto,placeholder,max_length,values_text,required,hidden,param1 FROM script_dinamico sd inner join script_dinamico_pages sdp on sd.id_page=sdp.id  WHERE sd.id_script=$id_script  order by sdp.pos,sd.ordem asc";
+        $query = "SELECT sd.id,sd.tag,sd.id_script,id_page,type,ordem,dispo,texto,placeholder,max_length,values_text,default_value,required,hidden,param1 FROM script_dinamico sd inner join script_dinamico_pages sdp on sd.id_page=sdp.id  WHERE sd.id_script=$id_script  order by sdp.pos,sd.ordem asc";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
+            $js[] = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "default_value" => $row["default_value"], "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
         }
         echo json_encode($js);
         break;
@@ -198,7 +196,7 @@ switch ($action) {
         $query = "SELECT * FROM `script_dinamico` WHERE id_script=$id_script and id_page=$id_page order by ordem asc";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
+            $js[] = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "default_value" => $row["default_value"], "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
         }
         echo json_encode($js);
         break;
@@ -208,7 +206,7 @@ switch ($action) {
         $query = "SELECT * FROM `script_dinamico` WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         $row = mysql_fetch_assoc($query);
-        $js = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
+        $js = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "default_value" => $row["default_value"], "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
         echo json_encode($js);
         break;
 
@@ -352,7 +350,7 @@ switch ($action) {
 
     case "edit_item":
         $values_text = (!isset($values_text)) ? array() : $values_text;
-        $query = "UPDATE script_dinamico SET id_script=$id_script,id_page=$id_page,type='$type',ordem=$ordem,dispo='$dispo',texto='$texto',placeholder='" . mysql_real_escape_string(json_encode($placeholder)) . "',max_length=$max_length,values_text='" . mysql_real_escape_string(json_encode($values_text)) . "',required=$required,hidden=$hidden,param1='$param1' WHERE id=$id";
+        $query = "UPDATE script_dinamico SET id_script=$id_script,id_page=$id_page,type='$type',ordem=$ordem,dispo='$dispo',texto='$texto',placeholder='" . mysql_real_escape_string(json_encode($placeholder)) . "',max_length=$max_length,values_text='" . mysql_real_escape_string(json_encode($values_text)) . "',default_value='$default_value',required=$required,hidden=$hidden,param1='$param1' WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(1);
         break;
@@ -391,7 +389,7 @@ switch ($action) {
         $query2 = mysql_query($query2, $link) or die(mysql_error());
         $row2 = mysql_fetch_assoc($query2);
         $tag = (!isset($row2["max_tag"])) ? 0 : $row2["max_tag"] + 1;
-        $query = "INSERT INTO `asterisk`.`script_dinamico` (`id`,tag, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required,hidden,param1) VALUES (NULL,$tag, $id_script,$id_page,'$type',$ordem,'$dispo', '$texto', '" . mysql_real_escape_string(json_encode($placeholder)) . "', $max_length, '" . mysql_real_escape_string(json_encode($values_text)) . "',$required,$hidden,'$param1')";
+        $query = "INSERT INTO `asterisk`.`script_dinamico` (`id`,tag, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,default_value,required,hidden,param1) VALUES (NULL,$tag, $id_script,$id_page,'$type',$ordem,'$dispo', '$texto', '" . mysql_real_escape_string(json_encode($placeholder)) . "', $max_length, '" . mysql_real_escape_string(json_encode($values_text)) . "',$default_value,$required,$hidden,'$param1')";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(mysql_insert_id());
         break;
@@ -433,7 +431,7 @@ switch ($action) {
             $query1 = "INSERT INTO script_rules (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) select NULL,$temp_script_page,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1," . mysql_insert_id() . " from script_rules where param2='" . $row['id'] . "' and id_script='$id_script' and tipo='goto'";
             $query1 = mysql_query($query1, $link) or die(mysql_error());
             //elements
-            $query1 = "INSERT INTO script_dinamico (`id`,tag, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required,hidden,param1) select NULL,tag,'$temp_script_page','" . $temp_page . "',type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,required,hidden,param1 from script_dinamico where id_script='$id_script' and id_page= '" . $row['id'] . "'  ";
+            $query1 = "INSERT INTO script_dinamico (`id`,tag, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,default_value,required,hidden,param1) select NULL,tag,'$temp_script_page','" . $temp_page . "',type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,default_value,required,hidden,param1 from script_dinamico where id_script='$id_script' and id_page= '" . $row['id'] . "'  ";
             $query1 = mysql_query($query1, $link) or die(mysql_error());
         }
         echo json_encode(1);
