@@ -329,11 +329,11 @@ function reserved_ip($ip) {
 
 <h2>Dados da Lead</h2>
 <form class="form-horizontal" id='inputcontainer' >
-<?php foreach ($fields as $key => $value) { ?>
+    <?php foreach ($fields as $key => $value) { ?>
         <div class="control-group">
             <label class="control-label"><?= $fields_SELECT[$key] ?>:</label>
             <div class="controls" >
-    <?php if ($key != "comments") { ?>
+                <?php if ($key != "COMMENTS") { ?>
                     <input type=text name='<?= $key ?>' id='<?= $key ?>' class='span9' value='<?= $value ?>'>
                 <?php } else { ?>
                     <textarea name='<?= $key ?>' id='<?= $key ?>' class='span9' ><?= $value ?></textarea>
@@ -341,83 +341,83 @@ function reserved_ip($ip) {
                 <span id='td_<?= $fields_SELECT[$key] ?>'></span>
             </div>
         </div>
-<?php } ?>
+    <?php } ?>
 </form>
-
-<h3>Alteração do Feedback</h3>
-<div class="control-group">
-    <label class="control-label">Feedback Actual:</label>
-    <div class="controls input-append">
-        <select style='width:200px' name=feedback_list id=feedback_list><?= $status_options ?></select>
-        <button class="btn btn-primary" id="confirm_feedback" style="display:none">Confirmação de feedback</button>
+<div class="<?= ($user->id) ? "" : "hide" ?>">
+    <h3>Alteração do Feedback</h3>
+    <div class="control-group">
+        <label class="control-label">Feedback Actual:</label>
+        <div class="controls input-append">
+            <select style='width:200px' name=feedback_list id=feedback_list><?= $status_options ?></select>
+            <button class="btn btn-primary" id="confirm_feedback" style="display:none">Confirmação de feedback</button>
+        </div>
+        <span id=modify_feedback_status class='help-inline'><i>(O feedback deste contacto pode ser alterado neste menu.)</i></Span>
     </div>
-    <span id=modify_feedback_status class='help-inline'><i>(O feedback deste contacto pode ser alterado neste menu.)</i></Span>
+
+
+
+    <div id="confirm_feedback_div"  style="display:none;width:95%">
+
+        <div class="formRow">
+            <label class="control-label">Confirmação de feedback</label>
+            <div class="formRight">
+                <input type="radio" id="radio_confirm_yes" name="radio_confirm_group"><label for="radio_confirm_yes"><span></span>Validado</label>
+            </div>
+            <div class="formRight">
+                <input type="radio" id="radio_confirm_no" name="radio_confirm_group"><label for="radio_confirm_no"><span></span>Retornar para novo contacto</label>
+            </div>
+        </div>
+        <div class="clear"></div>
+
+        <div class="formRow">
+            <label class="control-label">Log de Comentários</label>
+
+            <table class="table table-mod table-bordered">
+                <thead>
+                <th>
+                    Comentario
+                </th>
+                <th>
+                    Venda
+                </th>
+                <th>
+                    Agente
+                </th>
+                <th>
+                    Admin
+                </th>
+                <th>
+                    Data
+                </th>
+                </thead>
+                <tbody id="comment_log_tbody">
+
+                </tbody>
+            </table>
+
+        </div>
+        <div class="formRow">
+            <label class="control-label">Comentários</label>
+            <div class="formRight">
+                <textarea id='textarea_comment'></textarea>
+            </div>
+        </div>
+        <div class="clear"></div>
+
+        <div class="formRow">
+            <label class="control-label">Agente</label>
+            <div class="formRight">
+                <select id='agente_selector'>
+                </select>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="pull-right">
+            <button class='btn btn-action' id='confirm_feedback_button'>Guardar</button>
+        </div>
+    </div>
+
 </div>
-
-
-
-<div id="confirm_feedback_div"  style="display:none;width:95%">
-
-    <div class="formRow">
-        <label class="control-label">Confirmação de feedback</label>
-        <div class="formRight">
-            <input type="radio" id="radio_confirm_yes" name="radio_confirm_group"><label for="radio_confirm_yes"><span></span>Validado</label>
-        </div>
-        <div class="formRight">
-            <input type="radio" id="radio_confirm_no" name="radio_confirm_group"><label for="radio_confirm_no"><span></span>Retornar para novo contacto</label>
-        </div>
-    </div>
-    <div class="clear"></div>
-
-    <div class="formRow">
-        <label class="control-label">Log de Comentários</label>
-
-        <table class="table table-mod table-bordered">
-            <thead>
-            <th>
-                Comentario
-            </th>
-            <th>
-                Venda
-            </th>
-            <th>
-                Agente
-            </th>
-            <th>
-                Admin
-            </th>
-            <th>
-                Data
-            </th>
-            </thead>
-            <tbody id="comment_log_tbody">
-
-            </tbody>
-        </table>
-
-    </div>
-    <div class="formRow">
-        <label class="control-label">Comentários</label>
-        <div class="formRight">
-            <textarea id='textarea_comment'></textarea>
-        </div>
-    </div>
-    <div class="clear"></div>
-
-    <div class="formRow">
-        <label class="control-label">Agente</label>
-        <div class="formRight">
-            <select id='agente_selector'>
-            </select>
-        </div>
-    </div>
-    <div class="clear"></div>
-    <div class="pull-right">
-        <button class='btn btn-action' id='confirm_feedback_button'>Guardar</button>
-    </div>
-</div>
-
-
 
 <h3>Chamadas realizadas para este Contacto</h3>
 <table class='table table-mod table-bordered' id="chamadas_realizadas">
@@ -434,11 +434,11 @@ function reserved_ip($ip) {
         </tr>
     </thead>
     <tbody>
-<?php
-while ($row = mysql_fetch_assoc($chamadas_feitas)) {
+        <?php
+        while ($row = mysql_fetch_assoc($chamadas_feitas)) {
 
-    $duracao = sec_convert($row['length_in_sec'], "H");
-    ?>
+            $duracao = sec_convert($row['length_in_sec'], "H");
+            ?>
 
             <tr>
                 <td><?= $row["data"] ?></td>
@@ -450,7 +450,7 @@ while ($row = mysql_fetch_assoc($chamadas_feitas)) {
                 <td><?= $row["campaign_name"] ?></td>
                 <td><?= $row["list_name"] ?></td>
             </tr>
-<?php } ?>
+        <?php } ?>
 
         <?php
         while ($row = mysql_fetch_assoc($chamadas_feitas_in)) {
@@ -468,104 +468,105 @@ while ($row = mysql_fetch_assoc($chamadas_feitas)) {
                 <td><?= $row["campaign_name"] ?></td>
                 <td><?= $row["list_name"] ?></td>
             </tr>
-<?php } ?>
+        <?php } ?>
     </tbody>
 </table>
 
-
-<h3>Gravações deste Contacto</h3>
-<table class='table table-mod table-bordered'>
-    <thead>
-        <tr>
-            <th>Data</th>
-            <th>Inicio da Gravação</th>
-            <th>Fim da Gravação</th>
-            <th>Duração</th>
-            <th>Operador</th>
-
-    </thead>
-    <tbody>
-<?php
-$curpage = curPageURL();
-while ($row = mysql_fetch_assoc($gravacoes)) {
-    ?>
-
+<div class="<?= ($user->id) ? "" : "hide" ?>">
+    <h3>Gravações deste Contacto</h3>
+    <table class='table table-mod table-bordered'>
+        <thead>
             <tr>
-                <td><?= $row["data"] ?></td>
-                <td><?= $row["hora_inicio"] ?></td>
-                <td><?= $row["hora_fim"] ?></td>
-                <td><?= sec_convert($row['length_in_sec'], "H") ?></td>
-                <td><?= $row["full_name"] ?>
+                <th>Data</th>
+                <th>Inicio da Gravação</th>
+                <th>Fim da Gravação</th>
+                <th>Duração</th>
+                <th>Operador</th>
 
-    <?
-    $mp3File = "#";
-    if (strlen($row[location]) > 0) {
-        //if lan
-        if (reserved_ip(get_client_ip())) {
-            $mp3File=$row[location];
-        } else {
-            $tmp = explode("/", $row[location]);
-            $ip = $tmp[2];
-            $tmp = explode(".", $ip);
-            $ip = $tmp[3];
+        </thead>
+        <tbody>
+            <?php
+            $curpage = curPageURL();
+            while ($row = mysql_fetch_assoc($gravacoes)) {
+                ?>
 
-            switch ($ip) {
-                case "248":
-                    $port = ":20248";
-                    break;
-                case "247":
-                    $port = ":20247";
-                    break;
-                default:
-                    $port = "";
-                    break;
-            }
-        $mp3File = $curpage . $port . "/RECORDINGS/MP3/$row[filename]-all.mp3";
-        }
-        $audioPlayer = "Há gravação";
-    } else {
-        $audioPlayer = "Não há gravação!";
-    }
+                <tr>
+                    <td><?= $row["data"] ?></td>
+                    <td><?= $row["hora_inicio"] ?></td>
+                    <td><?= $row["hora_fim"] ?></td>
+                    <td><?= sec_convert($row['length_in_sec'], "H") ?></td>
+                    <td><?= $row["full_name"] ?>
 
+                        <?
+                        $mp3File = "#";
+                        if (strlen($row[location]) > 0) {
+                            //if lan
+                            if (reserved_ip(get_client_ip())) {
+                                $mp3File = $row[location];
+                            } else {
+                                $tmp = explode("/", $row[location]);
+                                $ip = $tmp[2];
+                                $tmp = explode(".", $ip);
+                                $ip = $tmp[3];
 
-    $lenghtInMin = date("i:s", $row[length_in_sec]);
-    ?>
-
-
-                    <div class="view-button"><a href='<?= $mp3File ?>' target='_self' class="btn btn-mini"><i class="icon-play"></i>Ouvir</a></div>
-                    <?php
-                    $temp = 0;
-                    $query = "SELECT *  FROM script_assoc where id_camp_linha='" . $lead_info[campaign_id] . "'";
-                    $query = mysql_query($query, $link) or die(mysql_error());
-                    while ($row = mysql_fetch_assoc($query)) {
-                        $temp = 1;
-                    }
-
-
-                    if ($temp) {
-                        ?>    
-                        <div class="view-button"><a class="btn btn-mini" target='_new' href='../../sips-admin/script_dinamico/render.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>&isadmin=1'><i class="icon-bookmark"></i>Script</a></div>
-                    <?php } else { ?>
-                        <div class="view-button">  <a class="btn btn-mini" target='_new' href='../../sips-agente/vdc_form_display.php?submit_button=YES&lead_id=<?= $lead_id ?>&list_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>'><i class="icon-bookmark"></i>Script</a></div>
-                    <?php } ?>
-                </td>
+                                switch ($ip) {
+                                    case "248":
+                                        $port = ":20248";
+                                        break;
+                                    case "247":
+                                        $port = ":20247";
+                                        break;
+                                    default:
+                                        $port = "";
+                                        break;
+                                }
+                                $mp3File = $curpage . $port . "/RECORDINGS/MP3/$row[filename]-all.mp3";
+                            }
+                            $audioPlayer = "Há gravação";
+                        } else {
+                            $audioPlayer = "Não há gravação!";
+                        }
 
 
-
-            </tr>
-<?php } ?>
-    </tbody>
-</table>
+                        $lenghtInMin = date("i:s", $row[length_in_sec]);
+                        ?>
 
 
+                        <div class="view-button"><a href='<?= $mp3File ?>' target='_self' class="btn btn-mini"><i class="icon-play"></i>Ouvir</a></div>
+                        <?php
+                        $temp = 0;
+                        $query = "SELECT *  FROM script_assoc where id_camp_linha='" . $lead_info[campaign_id] . "'";
+                        $query = mysql_query($query, $link) or die(mysql_error());
+                        while ($row = mysql_fetch_assoc($query)) {
+                            $temp = 1;
+                        }
 
 
+                        if ($temp) {
+                            ?>    
+                            <div class="view-button"><a class="btn btn-mini" target='_new' href='../../sips-admin/script_dinamico/render.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>&isadmin=1'><i class="icon-bookmark"></i>Script</a></div>
+                        <?php } else { ?>
+                            <div class="view-button">  <a class="btn btn-mini" target='_new' href='../../sips-agente/vdc_form_display.php?submit_button=YES&lead_id=<?= $lead_id ?>&list_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>'><i class="icon-bookmark"></i>Script</a></div>
+                        <?php } ?>
+                    </td>
+
+
+
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+
+
+
+</div>
 
 
 
 <script type="text/javascript">
 
     $(function() {
+<?= ($user->id) ? "" : '$("#inputcontainer").find("input,textarea").prop("disabled",true);' ?>
 
         if ($("#feedback_list option:selected").data("sale") == "Y")
             $("#confirm_feedback").show();
@@ -608,10 +609,6 @@ while ($row = mysql_fetch_assoc($gravacoes)) {
                     }}
             });
     /* FUNCTIONS */
-
-
-
-
 
 
     $("#inputcontainer input").focus(function()

@@ -5,7 +5,7 @@ for ($i = 0; $i < $self - 2; $i++) {
 }
 define("ROOT", $path);
 require(ROOT . "ini/dbconnect.php");
-require(ROOT . "/ini/user.php");
+require(ROOT . "ini/user.php");
 ?>
 
 <!DOCTYPE html>
