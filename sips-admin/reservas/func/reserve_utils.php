@@ -70,7 +70,7 @@ function last_week($date) {
     if($users->id){
         return (date('D') == 'Mon') ? date("Y-m-d", strtotime($date . " 2 mondays ago")) : date("Y-m-d", strtotime($date . " last monday"));
     }else{
-    return date("Y-m-d", strtotime($_GET["dt"] . ' last '.date('l',strtotime('tomorrow'))));
+    return date("Y-m-d", strtotime($_GET["dt"] . ' last '.date('l',strtotime('next weekday'))));
     }
 }
 

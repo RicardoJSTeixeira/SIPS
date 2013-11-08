@@ -63,11 +63,11 @@
 
 
             if (checkDateTime($dt, "Y-m-d")) {
-                $date = date("Y-m-d", strtotime($_GET["dt"] . ' last ' . date('l', strtotime('tomorrow'))));
-                $comeca = date("d-m-Y", strtotime($_GET["dt"] . ' last ' . date('l', strtotime('tomorrow'))));
+                $date = date("Y-m-d", strtotime($_GET["dt"] . ' last ' . date('l', strtotime('next weekday'))));
+                $comeca = date("d-m-Y", strtotime($_GET["dt"] . ' last ' . date('l', strtotime('next weekday'))));
             } else {
-                $date = date("Y-m-d", strtotime('tomorrow')); //(date('D') == 'Mon') ? date("Y-m-d") : date("Y-m-d", strtotime('last monday'));
-                $comeca = date("d-m-Y", strtotime('tomorrow')); //(date('D') == 'Mon') ? date("d-m-Y") : date("d-m-Y", strtotime('last monday'));
+                $date = date("Y-m-d", strtotime('next weekday')); //(date('D') == 'Mon') ? date("Y-m-d") : date("Y-m-d", strtotime('last monday'));
+                $comeca = date("d-m-Y", strtotime('next weekday')); //(date('D') == 'Mon') ? date("d-m-Y") : date("d-m-Y", strtotime('last monday'));
             }
         }
         ?>
