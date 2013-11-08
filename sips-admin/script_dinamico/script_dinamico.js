@@ -766,10 +766,10 @@ function populate_element(tipo, element)
                         $("#not_validado_text").val(element.data("php_script_not_validado"));
                   }
                   else
-                  {                     
+                  {
                         $("#validado_text").val("");
                         $("#not_validado_text").val("");
-                           $("#select_ajax_script option:first").prop("selected", true);
+                        $("#select_ajax_script option:first").prop("selected", true);
                   }
 
                   break;
@@ -947,9 +947,16 @@ function edit_element(opcao, element, data)
                         var ajax_rule = {"file": $("#select_ajax_script option:selected").val(), "validado": $("#validado_text").val(), "not_validado": $("#not_validado_text").val()};
                         item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), ajax_rule, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
                         element.data("php_script", $("#select_ajax_script option:selected").val());
+                        element.data("php_script_validado", $("#validado_text").val());
+                        element.data("php_script_not_validado", $("#not_validado_text").val());
                   }
                   else
+                  {
                         item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
+                        element.data("php_script"," ");
+                        element.data("php_script_validado","");
+                        element.data("php_script_not_validado", "");
+                  }
                   break;
             case "radio":
                   if ($("#vertic_radio").is(':checked'))
