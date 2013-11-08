@@ -403,7 +403,6 @@ function update_select()
 ;
 $("#remove_uploaded_file").on("click", function()
 {
-
       $.post("upload.php", {action: "delete", name: $("#ipl_file_select option:selected").val()}, function(data) {
 
             $("#label_ipl_info").text(data);
@@ -444,6 +443,8 @@ function update_script(callback)
                   });
                   if (typeof callback === "function")
                         callback();
+                  
+                 
                   update_pages();
             }
 
@@ -953,8 +954,8 @@ function edit_element(opcao, element, data)
                   else
                   {
                         item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
-                        element.data("php_script"," ");
-                        element.data("php_script_validado","");
+                        element.data("php_script", " ");
+                        element.data("php_script_validado", "");
                         element.data("php_script_not_validado", "");
                   }
                   break;
@@ -2085,3 +2086,4 @@ $(document).on("click", ".delete_max_feedback", function()
       }, "json");
 });
 //----------------------------------------------------------------------------------000
+

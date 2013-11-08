@@ -18,8 +18,7 @@ switch ($action) {
     //------------------------------------------------//    
     //---------------------GET------------------------//  
     //------------------------------------------------//
-
-
+  
     case "get_limit_feedback":
         $query = "SELECT id,feedback,feedback_name,max from script_max_feedback where id_script=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -59,7 +58,6 @@ switch ($action) {
 
 
     case "get_element_tags":
-
         $query = "SELECT tag,type FROM `script_dinamico` WHERE id_script=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {

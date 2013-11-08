@@ -480,8 +480,9 @@ function insert_element(opcao, element, data)
                   if (data.required)
                         element.find(".form_datetime").addClass("validate[required]");
                   element.find(".form_datetime")[0].name = data.tag;
-                  var data_format = "";
+                  var data_format = "yyyy-mm-dd hh:ii";
                   var min_view = 0;
+                  
                   switch (element.data("data_format"))
                   {
                         case "0":
@@ -497,6 +498,7 @@ function insert_element(opcao, element, data)
                               min_view = 2;
                               break;
                   }
+                  
                   element.find(".form_datetime").datetimepicker({format: data_format, autoclose: true, language: "pt", minView: min_view}).keypress(function(e) {
                         e.preventDefault();
                   }).bind("cut copy paste", function(e) {
