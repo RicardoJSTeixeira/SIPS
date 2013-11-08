@@ -498,7 +498,7 @@ function insert_element(opcao, element, data)
                               min_view = 2;
                               break;
                   }
-                  
+                
                   element.find(".form_datetime").datetimepicker({format: data_format, autoclose: true, language: "pt", minView: min_view}).keypress(function(e) {
                         e.preventDefault();
                   }).bind("cut copy paste", function(e) {
@@ -1090,15 +1090,14 @@ $(function() {
       });
       $(document).on("click", ".next_pag", function(e) {
             e.preventDefault();
-            if ($("#myform").validationEngine('validate'))
-            {
+         
                   var temp = $(".pag_div:visible").next(".pag_div");
                   if (temp.length)
                   {
                         $(".pag_div").hide();
                         temp.show();
                   }
-            }
+            
       });
       $(document).on("click", ".scheduler_button_go", function(e) {
             e.preventDefault();
