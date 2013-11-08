@@ -20,7 +20,7 @@ Object.size = function(a)
       }
       return count;
 };
-
+ 
 
 
 
@@ -611,7 +611,7 @@ function populate_script(callback)
 
 }
 
-//RULES 
+//RULES  
 function rules_work(data)
 {
 
