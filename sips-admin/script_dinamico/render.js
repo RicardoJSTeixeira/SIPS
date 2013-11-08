@@ -289,13 +289,11 @@ function insert_element(opcao, element, data)
                         case "credit_card_d":
                               pattern.push("funcCall[isValidDebit]");
                         case "ajax":
-                              pattern.push("ajax[" + data.tag + "]]");
-                              $.validationEngineLanguage.allRules[data.tag] = {
-                                    "url": "../script_dinamico/files/" + data.values_text,
-                                    // you may want to pass extra data on the ajax call
-
-                                    "alertText": "* Valor Incorrecto",
-                                    "alertTextOk": "* Validado",
+                              pattern.push("ajax[rule" + data.tag + "]]");
+                              $.validationEngineLanguage.allRules["rule" + data.tag] = {
+                                    "url": "../script_dinamico/files/" + data.values_text.file,
+                                    "alertText": data.values_text.not_validado,
+                                    "alertTextOk": data.values_text.validado,
                                     "alertTextLoad": "* A validar, por favor aguarde"
                               };
                               break;
@@ -303,11 +301,13 @@ function insert_element(opcao, element, data)
                   }
                   if (data.param1 != "none")
                         element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
-                  $(document).off("blur", "#" + data.tag + " :input");
-                  $(document).on("blur", "#" + data.tag + " :input", function()
-                  {
-                        $("#" + data.tag + " :input").validationEngine('validate');
-                  });
+
+                           $(document).on("blur", "#" + data.tag + " :input", function()
+                   {
+                   
+                   $("#" + data.tag + " :input").validationEngine("validate");
+                   
+                   });
                   break;
             case "radio":
                   element.empty();

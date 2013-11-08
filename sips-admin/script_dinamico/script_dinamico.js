@@ -568,7 +568,9 @@ function update_info()
                                       .data("required", this.required)
                                       .data("hidden", this.hidden)
                                       .data("regex", this.param1)
-                                      .data("php_script", this.values_text);
+                                      .data("php_script", this.values_text.file)
+                                      .data("php_script_validado", this.values_text.validado)
+                                      .data("php_script_not_validado", this.values_text.not_validado);
                               insert_element("texto", item, this);
                               break;
                         case "pagination":
@@ -750,18 +752,25 @@ function populate_element(tipo, element)
       switch (tipo)
       {
             case "texto":
-if($("#button_ajax_upload_div").hasClass("btn icon-chevron-up"))
-      $("#button_ajax_upload_div").trigger("click");
+                  if ($("#button_ajax_upload_div").hasClass("btn icon-chevron-up"))
+                        $("#button_ajax_upload_div").trigger("click");
                   $("#texto_edit").val($("#" + id + " .label_geral").html());
                   $("#placeholder_edit").val($("#" + id + " .input_texto").attr("placeholder"));
                   $("#max_length_edit").val($("#" + id + " .input_texto").attr("maxLength"));
                   $(".validation input:radio[name='regex_texto'][value=" + element.data("regex") + "]").prop("checked", true);
 
                   if (element.data("php_script") != "0")
+                  {
                         $("#select_ajax_script option[value='" + element.data("php_script") + "']").prop("selected", true);
+                        $("#validado_text").val(element.data("php_script_validado"));
+                        $("#not_validado_text").val(element.data("php_script_not_validado"));
+                  }
                   else
-                        $("#select_ajax_script option[value='']").prop("selected", true);
-
+                  {                     
+                        $("#validado_text").val("");
+                        $("#not_validado_text").val("");
+                           $("#select_ajax_script option:first").prop("selected", true);
+                  }
 
                   break;
             case "radio":
@@ -935,7 +944,8 @@ function edit_element(opcao, element, data)
                   element.data("regex", $(".validation input:radio[name='regex_texto']:checked").val());
                   if ($(".validation input:radio[name='regex_texto']:checked").val() == "ajax")
                   {
-                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), $("#select_ajax_script option:selected").val(), $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
+                        var ajax_rule = {"file": $("#select_ajax_script option:selected").val(), "validado": $("#validado_text").val(), "not_validado": $("#not_validado_text").val()};
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), ajax_rule, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
                         element.data("php_script", $("#select_ajax_script option:selected").val());
                   }
                   else
