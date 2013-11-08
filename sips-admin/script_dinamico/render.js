@@ -71,7 +71,7 @@ function update_script(callback)
       }
 }
 
-function update_info(callback)
+function update_info()
 {
       $(".datetimepicker").remove();
       $.post("requests.php", {action: "get_data_render", id_script: page_info.script_id},
@@ -191,8 +191,8 @@ function update_info(callback)
                               items.push([item, this.id_page]);
                               break;
                   }
-               var last_insert=   insert_element(this.type, item, this);
-              
+                  var last_insert = insert_element(this.type, item, this);
+
             });
 
 
@@ -233,11 +233,7 @@ function update_info(callback)
 
 
 
-            if (typeof callback === "function")
-            {
-                  callback();
-            }
-
+      
 
 
       }, "json");
@@ -250,7 +246,7 @@ function insert_element(opcao, element, data)
 {
       element.removeAttr("title");
       element.find(".label_titulo").remove();
-
+ 
 
       switch (opcao)
       {
@@ -263,7 +259,21 @@ function insert_element(opcao, element, data)
 
 
                   if (data.default_value.toString().length > 2)
-                        input.value = "§" + data.default_value + "§";
+                  {
+               
+                        $.post("requests.php", {action: "get_client_info_by_lead_id", lead_id: page_info.lead_id, user_logged: page_info.user_id},
+                        function(data1)
+                        {
+        
+                              if (Object.size(data1))
+                                    input.value = data1[data.default_value.toString().toLowerCase()];
+ 
+
+                        }, "json");
+
+
+
+                  }
                   var pattern = [];
                   if (data.required)
                         pattern.push("required");
@@ -611,7 +621,7 @@ function populate_script(callback)
 
 }
 
-//RULES 
+//RULES  
 function rules_work(data)
 {
 
@@ -1089,7 +1099,7 @@ $(function() {
       $.get("items.html", function(data) {
             page_info = getUrlVars();
             $("#dummie").html(data);
-            update_script(update_info());
+            update_script(update_info);
       });
       $(document).on("click", ".previous_pag", function(e) {
             e.preventDefault();
