@@ -25,7 +25,7 @@
 
         <?php
         require ('../func/reserve_utils.php');
-
+        $users = new users;
         if (isset($_GET["user"])) {
             $id_user = $_GET["user"];
         } else {
@@ -50,17 +50,26 @@
             exit;
         }
         $slot2change = (isset($_GET["muda"]) ? $_GET["muda"] : 0);
-        $dt=(isset($_GET["dt"])?$_GET["dt"]:"");
-        if (checkDateTime($dt, "Y-m-d")) {
-            $date = (date('D') == 'Mon') ? date("Y-m-d", strtotime($_GET["dt"] . " this monday")) : date("Y-m-d", strtotime($_GET["dt"] . " last monday"));
-            $comeca = (date('D') == 'Mon') ? date("d-m-Y", strtotime($_GET["dt"] . " this monday")) : date("d-m-Y", strtotime($_GET["dt"] . " last monday"));
+        $dt = (isset($_GET["dt"]) ? $_GET["dt"] : "");
+        if ($users->id) {
+            if (checkDateTime($dt, "Y-m-d")) {
+                $date = (date('D') == 'Mon') ? date("Y-m-d", strtotime($_GET["dt"] . " this monday")) : date("Y-m-d", strtotime($_GET["dt"] . " last monday"));
+                $comeca = (date('D') == 'Mon') ? date("d-m-Y", strtotime($_GET["dt"] . " this monday")) : date("d-m-Y", strtotime($_GET["dt"] . " last monday"));
+            } else {
+                $date = (date('D') == 'Mon') ? date("Y-m-d") : date("Y-m-d", strtotime('last monday'));
+                $comeca = (date('D') == 'Mon') ? date("d-m-Y") : date("d-m-Y", strtotime('last monday'));
+            }
         } else {
-            $date = (date('D') == 'Mon') ? date("Y-m-d") : date("Y-m-d", strtotime('last monday'));
-            $comeca = (date('D') == 'Mon') ? date("d-m-Y") : date("d-m-Y", strtotime('last monday'));
+
+
+            if (checkDateTime($dt, "Y-m-d")) {
+                $date = date("Y-m-d", strtotime($_GET["dt"] . ' last ' . date('l', strtotime('tomorrow'))));
+                $comeca = date("d-m-Y", strtotime($_GET["dt"] . ' last ' . date('l', strtotime('tomorrow'))));
+            } else {
+                $date = date("Y-m-d", strtotime('tomorrow')); //(date('D') == 'Mon') ? date("Y-m-d") : date("Y-m-d", strtotime('last monday'));
+                $comeca = date("d-m-Y", strtotime('tomorrow')); //(date('D') == 'Mon') ? date("d-m-Y") : date("d-m-Y", strtotime('last monday'));
+            }
         }
-        $acaba = date("d-m-Y", strtotime($comeca . ' next sunday'));
-        $begin_sys = $date;
-        $end_sys = date("Y-m-d", strtotime($comeca . ' next sunday +1 day'));
         ?>
         <style>
 
@@ -180,6 +189,17 @@
                 $r_types[$index] = $row;
                 echo ".t" . $r_types[$index]["id_reservations_types"] . " {background: " . $r_types[$index]["color"] . ";}\n";
             }
+
+            if ($users - id) {
+
+                $acaba = date("d-m-Y", strtotime($comeca . ' next sunday'));
+                $begin_sys = $date;
+                $end_sys = date("Y-m-d", strtotime($comeca . ' next sunday +1 day'));
+            } else {
+                $acaba = date("d-m-Y", strtotime($comeca . ' +' . $resources[0]["days_visible"] . 'days '));
+                $begin_sys = $date;
+                $end_sys = date("Y-m-d", strtotime($comeca . ' +' . $resources[0]["days_visible"] . 'days '));
+            }
             ?>
         </style>
     <body>
@@ -201,7 +221,7 @@
             } elseif (isset($_GET["rsc"])) {
                 $query = "SELECT id_reservation, start_date, end_date, id_resource,id_user,a.lead_id,id_reservation_type,display_text, c.postal_code FROM sips_sd_reservations a  INNER JOIN sips_sd_reservations_types b ON a.id_reservation_type=b.id_reservations_types LEFT JOIN vicidial_list c ON a.lead_id = c.lead_id WHERE id_resource=$id_resource And start_date <='$end_sys' And start_date >='$begin_sys'";
             }
-            
+
             $result = mysql_query($query, $link) or die("Não foi encontrado nenhum calendário... 2");
             for ($i = 0; $i < mysql_num_rows($result); $i++) {
                 $reservas[$i] = mysql_fetch_assoc($result);
@@ -216,7 +236,7 @@
 
 
             $result = mysql_query($query, $link) or die("Não foi encontrado nenhum calendário... 2.1");
-            $i_reservas=array();
+            $i_reservas = array();
             for ($i = 0; $i < mysql_num_rows($result); $i++) {
                 $i_reservas[$i] = mysql_fetch_assoc($result);
             }
@@ -229,7 +249,7 @@
             }
 
             $result = mysql_query($query, $link) or die("Não foi encontrado nenhum calendário... 3");
-            $series=Array();
+            $series = Array();
             for ($i = 0; $i < mysql_num_rows($result); $i++) {
                 $series[$i] = mysql_fetch_assoc($result);
             }
@@ -242,19 +262,20 @@
             }
 
             $result = mysql_query($query, $link) or die("Não foi encontrado nenhum calendário... 4");
-            $execoes=array();
+            $execoes = array();
             for ($i = 0; $i < mysql_num_rows($result); $i++) {
                 $execoes[$i] = mysql_fetch_assoc($result);
             }
             //End execoes
             ?>
-            <div id="nav">
+            <div id="nav" class="<?=(!$users->id and $resources[0]["days_visible"]<7)?'hide':''   ?>">
                 <span id="anterior" class='btn btn-mini icon-alone'><i class='icon-arrow-left'></i></span>
                 <span><?= $comeca . " - " . $acaba ?></span>
                 <span id="seguinte" class='btn btn-mini icon-alone'><i class='icon-arrow-right'></i></span>
             </div>
             <div class="grid" id="conteiner">
                 <?php
+                $resources[0]["days_visible"]=($users->id)?7:$resources[0]["days_visible"];
                 for ($ii = 0; $ii < $resources[0]["days_visible"]; $ii++) {
                     $display_date = date("d/m/Y", strtotime($date));
                     $tab = array();
@@ -268,14 +289,16 @@
                         //end of the row
 
                         for ($iii = 0; $iii < count($resources); $iii++) {
-                            if(!isset($tab[$iii + 1])){$tab[$iii + 1]="";}
+                            if (!isset($tab[$iii + 1])) {
+                                $tab[$iii + 1] = "";
+                            }
                             $tab[$iii + 1] .= ($i == $resources[0]["begin_time"]) ? "\t<tr class='slots'>\n\t\t<td class='nome'><span>" . $resources[$iii]["display_text"] . "</span></td>\n" : "";
                             //title first column 
                             $beg = date("Y-m-d H:i:s", strtotime($date . "+$i minutes"));
                             $end = date("Y-m-d H:i:s", strtotime($date . "+" . ($i + $resources[0]["blocks"] - 1) . " minutes"));
                             $dados = set_estado($beg, $end, $resources[$iii]["id_resource"], $reservas, $series, $resources[$iii]["restrict_days"], $execoes, $date, $i, $id_user, $slot2change, $i_reservas);
                             $title = (($dados["type"] != "") ? " title='$dados[type]'" : "");
-                            $tab[$iii + 1] .= "\t\t<td class='slot" . $dados["stat"] . "'$title >".(!is_null($dados["postal"])?"<span class='postal'>$dados[postal]</span>":"")."
+                            $tab[$iii + 1] .= "\t\t<td class='slot" . $dados["stat"] . "'$title >" . (!is_null($dados["postal"]) ? "<span class='postal'>$dados[postal]</span>" : "") . "
                                                 <input type=hidden class='beg' value='" . $beg . "'/>
                                                 <input type=hidden class='end' value='" . $end . "'/>
                                                 <input type=hidden class='rsc' value='" . $resources[$iii]["id_resource"] . "'/>
@@ -445,7 +468,7 @@
                         return false;
                     }
                     $("#loader").show();
-                    $.post('../../../sips-agente/crm-agent/crm_edit.php', {
+                    $.post('../../crm/crm_edit.php', {
                         lead_id: $('.lead', bloco_res).val()
                     },
                     function(data) {

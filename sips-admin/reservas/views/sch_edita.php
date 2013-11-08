@@ -76,10 +76,10 @@
                             <input type="text" maxlength="255" value="<?= $row["alias_code"] ?>" name="alias_code" class="span"/>
                         </div>
                     </div>
-                    <div class="control-group" style="display:none">
+                    <div class="control-group">
                         <label class="control-label">Dias visiveis:</label>
                         <div class="controls">
-                            <input type="text" maxlength="3" value="<?= $row["days_visible"] ?>" name="display_days" class="span1"/>
+                            <input type="text" maxlength="1" value="<?= $row["days_visible"] ?>" name="display_days" class="span1"/>
                         </div>
                     </div>
                     <div class="control-group">
