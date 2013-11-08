@@ -25,7 +25,7 @@
 
         <?php
         require ('../func/reserve_utils.php');
-        $users = new users;
+        $users = new user;
         if (isset($_GET["user"])) {
             $id_user = $_GET["user"];
         } else {
@@ -268,7 +268,7 @@
             }
             //End execoes
             ?>
-            <div id="nav" class="<?=(!$users->user_level>5 and $resources[0]["days_visible"]<7)?'hide':''   ?>">
+            <div id="nav" class="<?=($users->user_level<5 and $resources[0]["days_visible"]<7)?'hide':''   ?>">
                 <span id="anterior" class='btn btn-mini icon-alone'><i class='icon-arrow-left'></i></span>
                 <span><?= $comeca . " - " . $acaba ?></span>
                 <span id="seguinte" class='btn btn-mini icon-alone'><i class='icon-arrow-right'></i></span>

@@ -4361,6 +4361,9 @@ function  DispoSelect_submit_allowed()
     var DispoChoice = document.vicidial_form.DispoSelection.value;
     var isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback;
     var isSALE = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].sale;
+    var unique_id_hack=document.vicidial_form.uniqueid.value,
+            lead_id_hack=lead_id.value;
+    
     if (custom_fields_enabled && !isCB) {
 
         if (script_dinamico) {
@@ -4368,7 +4371,7 @@ function  DispoSelect_submit_allowed()
             if (isSALE) {
                 if (vcFormIFrame.validate_manual()) {
                     vcFormIFrame.submit_manual(function() {
-                         $.post('ajax/sale_actions.php', { uniqueid: document.vicidial_form.uniqueid.value, lead_id : lead_id.value, dispo : DispoChoice, dispoAtt : campaign_status[DispoChoice], campaign_id : campaign_id.value, user : user, client : clientName  }, function(data) {
+                         $.post('ajax/sale_actions.php', { uniqueid: unique_id_hack, lead_id : lead_id_hack, dispo : DispoChoice, dispoAtt : campaign_status[DispoChoice], campaign_id : campaign_id.value, user : user, client : clientName  }, function(data) {
                             console.log(data);
                         });
                         $('#vcFormIFrame', parent.window.document)[0].src = "";
