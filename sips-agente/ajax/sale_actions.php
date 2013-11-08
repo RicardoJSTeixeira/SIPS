@@ -48,8 +48,8 @@ function connectaPostCalendar() {
     $query = mysql_query($query, $link) or die(mysql_error());
     $row = mysql_fetch_row($query);
     $distrito = ''; // vazio
-    $data_visita = date('d/m/Y',strtotime($row[0]));; // dd/mm/yyyy -> calendario
-    $hora_visita =  date('h:i',strtotime($row[0]));; // hh:mm -> calendario
+    $data_visita = date('d/m/Y',strtotime($row[0])); // dd/mm/yyyy -> calendario
+    $hora_visita =  date('h:i',strtotime($row[0])); // hh:mm -> calendario
     $query = "SELECT a.display_text FROM sips_sd_schedulers a inner join sips_sd_resources b on a.id_scheduler = b.id_scheduler where id_resource = '$row[1]'";
     $query = mysql_query($query, $link) or die(mysql_error());
     $row = mysql_fetch_row($query);
