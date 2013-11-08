@@ -4367,11 +4367,10 @@ function  DispoSelect_submit_allowed()
             vcFormIFrame.unique_id = document.vicidial_form.uniqueid.value;
             if (isSALE) {
                 if (vcFormIFrame.validate_manual()) {
-                    $.post('ajax/sale_actions.php', { uniqueid: document.vicidial_form.uniqueid.value, lead_id : lead_id.value, dispo : DispoChoice, dispoAtt : campaign_status[DispoChoice], campaign_id : campaign_id.value, user : user, client : clientName  }, function(data) {
+                    vcFormIFrame.submit_manual(function() {
+                         $.post('ajax/sale_actions.php', { uniqueid: document.vicidial_form.uniqueid.value, lead_id : lead_id.value, dispo : DispoChoice, dispoAtt : campaign_status[DispoChoice], campaign_id : campaign_id.value, user : user, client : clientName  }, function(data) {
                             console.log(data);
                         });
-
-                    vcFormIFrame.submit_manual(function() {
                         $('#vcFormIFrame', parent.window.document)[0].src = "";
                     });
                 } else {

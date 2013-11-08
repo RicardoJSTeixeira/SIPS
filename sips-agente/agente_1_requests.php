@@ -124,12 +124,11 @@ $aColumns = array( 'first_name', 'phone_number', 'call_date_pt', 'term_reason', 
 			FROM vicidial_log A INNER JOIN vicidial_list B ON A.lead_id = B.lead_id
 			WHERE A.user='$sent_user_id'
 			AND A.call_date > '$today' 
-			AND A.comments != 'MANUAL'
 			ORDER BY A.call_date DESC
 			";
 	//echo $sQuery;
 	$rResult = mysql_query( $sQuery, $link ) or die(mysql_error());
-	$output = array("aaData" => array()	);
+	$output = array("aaData" => array());
 		
 	while ( $aRow = mysql_fetch_array( $rResult ) )
 	{
