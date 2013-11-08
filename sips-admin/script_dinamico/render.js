@@ -286,10 +286,28 @@ function insert_element(opcao, element, data)
                         case "credit_card_v":
                               pattern.push("funcCall[isValidVISA]");
                               break;
+                        case "credit_card_d":
+                              pattern.push("funcCall[isValidDebit]");
+                        case "ajax":
+                              pattern.push("ajax[" + data.tag + "]]");
+                              $.validationEngineLanguage.allRules[data.tag] = {
+                                    "url": "../script_dinamico/files/" + data.values_text,
+                                    // you may want to pass extra data on the ajax call
+
+                                    "alertText": "* Valor Incorrecto",
+                                    "alertTextOk": "* Validado",
+                                    "alertTextLoad": "* A validar, por favor aguarde"
+                              };
+                              break;
 
                   }
                   if (data.param1 != "none")
                         element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
+                  $(document).off("blur", "#" + data.tag + " :input");
+                  $(document).on("blur", "#" + data.tag + " :input", function()
+                  {
+                        $("#" + data.tag + " :input").validationEngine('validate');
+                  });
                   break;
             case "radio":
                   element.empty();
@@ -445,12 +463,12 @@ function insert_element(opcao, element, data)
                               if (data.required)
                               {
                                     trbody_last.append($("<td>")
-                                            .append($("<input>").attr("type", "text").attr("id", array_id["input"] + "tableinput").addClass("validate[required] input-mini").attr("name", data.tag + "," + perguntas[count] + "," + titulos[count2])));
+                                            .append($("<input>").attr("type", "text").attr("titulo", titulos[count2]).attr("id", array_id["input"] + "tableinput").addClass("validate[required] input-mini").attr("name", data.tag + "," + perguntas[count] + "," + titulos[count2])));
                               }
                               else
                               {
                                     trbody_last.append($("<td>")
-                                            .append($("<input>").attr("type", "text").attr("id", array_id["input"] + "tableinput").addClass("input-mini").attr("name", data.tag + "," + perguntas[count] + "," + titulos[count2])));
+                                            .append($("<input>").attr("type", "text").attr("titulo", titulos[count2]).attr("id", array_id["input"] + "tableinput").addClass("input-mini").attr("name", data.tag + "," + perguntas[count] + "," + titulos[count2])));
                               }
                               array_id["input"] = array_id["input"] + 1;
                         }
@@ -562,6 +580,10 @@ function populate_script(callback)
                                     break;
                               case "tableradio":
                                     $("#" + this.tag_elemento + " tbody tr:contains(" + this.param1 + ") :input[value='" + this.valor + "']").attr('checked', true);
+                                    break;
+                              case "tableinput":
+                                    var temp = this.param1.split(";");
+                                    $("#" + this.tag_elemento + " tbody tr:contains(" + temp[1] + ") :input[titulo='" + temp[0] + "']").val(this.valor);
                                     break;
                               case "datepicker":
                                     $("#" + this.tag_elemento + " :input").val(this.valor);
@@ -1022,6 +1044,11 @@ function isValidMastercard(field, rules, i, options) {
             return "Insira um número de cartão Mastercard Válido";
 }
 
+function isValidDebit(field, rules, i, options) {
+      cardNumber = field.val();
+      if (!isValidCard(cardNumber))
+            return "Nº de Cartão de Débito invalido";
+}
 
 
 function getUrlVars() {
@@ -1061,7 +1088,6 @@ $(function() {
       });
       $(document).on("click", ".next_pag", function(e) {
             e.preventDefault();
-
             if ($("#myform").validationEngine('validate'))
             {
                   var temp = $(".pag_div:visible").next(".pag_div");
@@ -1077,10 +1103,18 @@ $(function() {
             var url = '../reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + page_info.user_id + '&lead=' + page_info.lead_id;
             window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
       });
-
       $(document).on("click", ".pdf_button", function(e)
       {
             var url = "../script_dinamico/files/" + $(this).attr("file");
             window.open(url, 'PDF', 'fullscreen=no, scrollbars=auto');
       });
+
+
+
+
+
+
+
+
+
 });

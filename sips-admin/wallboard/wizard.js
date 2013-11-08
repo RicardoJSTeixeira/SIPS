@@ -10,173 +10,6 @@ var layouts = [];
 var id_wallboard;
 var id_dataset;
 var edit_dataset = false;
-$("#add_layout_button").click(function()
-{
-      sql_basic("insert_Layout", 0, 0);
-});
-$("#fullscreen_button").click(function()
-{
-      fullScreen();
-});
-$("#linhas_serie").change(function()
-{
-      $(".graph_advance_option").hide();
-      switch ($("#linhas_serie").val())
-      {
-            case '1':
-                  $("#gao_user").show();
-                  break;
-            case '2':
-                  $("#gao_userGroup").show();
-                  break;
-            case '3':
-                  $("#gao_campaign").show();
-                  break;
-            case '5':
-                  $("#gao_inbound").show();
-                  break;
-      }
-});
-$("#linhas_filtro").change(function()
-{
-      $(".option_filtro").hide();
-      switch ($("#linhas_filtro").val())
-      {
-            case '1':
-                  $("#gao_chamadas").show();
-                  break;
-            case '2':
-                  $("#gao_status").show();
-                  break;
-      }
-});
-$("#dataTable_opcao").change(function()
-{
-      $(".dataTable_options").hide();
-      switch ($("#dataTable_opcao").val())
-      {
-            case "1":
-                  $("#campaign_id_dataTable_div").show();
-                  break;
-            case "2":
-                  $("#grupo_inbound_dataTable_div").show();
-                  break;
-            case "3":
-                  $("#grupo_user_dataTable_div").show();
-                  $("#radio_datatable_div").show();
-                  break;
-      }
-});
-$("#pie_opcao").change(function()
-{
-      $(".pie_select").hide();
-      switch ($("#pie_opcao").val())
-      {
-            case "1":
-                  $("#campaign_id_pie_div").show();
-                  break;
-            case "3":
-                  $("#grupo_inbound_pie_div").show();
-                  break;
-
-      }
-});
-
-$("#opcao_layout_button").click(function()
-{
-
-      $("#fullscreen_link").html((document.URL).split(".org")[0] + ".org" + "/sips-admin/wallboard/full_screen_render.html?id=" + idLayout);
-});
-
-
-
-function radio_checks()
-{
-
-      var chamadas = $("#chamadas");
-      //INBOUND
-      if ($("#resultado_dataset_1").prop('checked'))
-      {
-
-
-            if ($("#linhas_serie").val() === "3")
-            {
-                  $("#linhas_serie").val(0);
-                  $(".graph_advance_option").hide();
-                  $("#gao_user").show();
-            }
-
-            if (chamadas.val() === "3")
-            {
-                  chamadas.val(0);
-
-            }
-
-            $("#linhas_serie option[value='3']").prop('disabled', true);
-            $("#linhas_serie option[value='5']").prop('disabled', false);
-
-            $("#chamadas option[value='3']").prop('disabled', true);
-            $("#chamadas option[value='1']").prop('disabled', false);
-      }
-
-//OUTBOUND
-      if ($("#resultado_dataset_2").prop('checked'))
-      {
-
-            if ($("#linhas_serie").val() === "5")
-            {
-                  $("#linhas_serie").val(0);
-                  $(".graph_advance_option").hide();
-                  $("#gao_user").show();
-            }
-
-            if (chamadas.val() === "1")
-            {
-                  chamadas.val(2);
-            }
-            $("#linhas_serie option[value='5']").prop('disabled', true);
-            $("#linhas_serie option[value='3']").prop('disabled', false);
-
-            $("#chamadas option[value='1']").prop('disabled', true);
-            $("#chamadas option[value='3']").prop('disabled', false);
-      }
-
-      //BLENDED
-      if ($("#resultado_dataset_3").prop('checked'))
-      {
-
-            if ($("#linhas_serie").val() === "3" || ($("#linhas_serie").val() === "5"))
-            {
-                  $("#linhas_serie").val(0);
-                  $(".graph_advance_option").hide();
-                  $("#gao_user").show();
-            }
-
-            $("#linhas_serie option[value='3']").prop('disabled', true);
-            $("#linhas_serie option[value='5']").prop('disabled', true);
-
-
-
-            $("#chamadas option[value='1']").prop('disabled', false);
-            $("#chamadas option[value='3']").prop('disabled', false);
-      }
-
-}
-
-
-
-$("#resultado_dataset_1").change(function()
-{
-      radio_checks();
-});
-$("#resultado_dataset_2").change(function()
-{
-      radio_checks();
-});
-$("#resultado_dataset_3").change(function()
-{
-      radio_checks();
-});
 
 
 $(function() {
@@ -624,6 +457,181 @@ $(function() {
       flot_extra_init();
 
 });
+
+
+
+
+
+$("#add_layout_button").click(function()
+{
+      sql_basic("insert_Layout", 0, 0);
+});
+$("#fullscreen_button").click(function()
+{
+      fullScreen();
+});
+$("#linhas_serie").change(function()
+{
+      $(".graph_advance_option").hide();
+      switch ($("#linhas_serie").val())
+      {
+            case '1':
+                  $("#gao_user").show();
+                  break;
+            case '2':
+                  $("#gao_userGroup").show();
+                  break;
+            case '3':
+                  $("#gao_campaign").show();
+                  break;
+            case '5':
+                  $("#gao_inbound").show();
+                  break;
+      }
+});
+$("#linhas_filtro").change(function()
+{
+      $(".option_filtro").hide();
+      switch ($("#linhas_filtro").val())
+      {
+            case '1':
+                  $("#gao_chamadas").show();
+                  break;
+            case '2':
+                  $("#gao_status").show();
+                  break;
+      }
+});
+$("#dataTable_opcao").change(function()
+{
+      $(".dataTable_options").hide();
+      switch ($("#dataTable_opcao").val())
+      {
+            case "1":
+                  $("#campaign_id_dataTable_div").show();
+                  break;
+            case "2":
+                  $("#grupo_inbound_dataTable_div").show();
+                  break;
+            case "3":
+                  $("#grupo_user_dataTable_div").show();
+                  $("#radio_datatable_div").show();
+                  break;
+      }
+});
+$("#pie_opcao").change(function()
+{
+      $(".pie_select").hide();
+      switch ($("#pie_opcao").val())
+      {
+            case "1":
+                  $("#campaign_id_pie_div").show();
+                  break;
+            case "3":
+                  $("#grupo_inbound_pie_div").show();
+                  break;
+
+      }
+});
+
+$("#opcao_layout_button").click(function()
+{
+
+      $("#fullscreen_link").html((document.URL).split(".org")[0] + ".org" + "/sips-admin/wallboard/full_screen_render.html?id=" + idLayout);
+});
+
+
+
+function radio_checks()
+{
+
+      var chamadas = $("#chamadas");
+      //INBOUND
+      if ($("#resultado_dataset_1").prop('checked'))
+      {
+
+
+            if ($("#linhas_serie").val() === "3")
+            {
+                  $("#linhas_serie").val(0);
+                  $(".graph_advance_option").hide();
+                  $("#gao_user").show();
+            }
+
+            if (chamadas.val() === "3")
+            {
+                  chamadas.val(0);
+
+            }
+
+            $("#linhas_serie option[value='3']").prop('disabled', true);
+            $("#linhas_serie option[value='5']").prop('disabled', false);
+
+            $("#chamadas option[value='3']").prop('disabled', true);
+            $("#chamadas option[value='1']").prop('disabled', false);
+      }
+
+//OUTBOUND
+      if ($("#resultado_dataset_2").prop('checked'))
+      {
+
+            if ($("#linhas_serie").val() === "5")
+            {
+                  $("#linhas_serie").val(0);
+                  $(".graph_advance_option").hide();
+                  $("#gao_user").show();
+            }
+
+            if (chamadas.val() === "1")
+            {
+                  chamadas.val(2);
+            }
+            $("#linhas_serie option[value='5']").prop('disabled', true);
+            $("#linhas_serie option[value='3']").prop('disabled', false);
+
+            $("#chamadas option[value='1']").prop('disabled', true);
+            $("#chamadas option[value='3']").prop('disabled', false);
+      }
+
+      //BLENDED
+      if ($("#resultado_dataset_3").prop('checked'))
+      {
+
+            if ($("#linhas_serie").val() === "3" || ($("#linhas_serie").val() === "5"))
+            {
+                  $("#linhas_serie").val(0);
+                  $(".graph_advance_option").hide();
+                  $("#gao_user").show();
+            }
+
+            $("#linhas_serie option[value='3']").prop('disabled', true);
+            $("#linhas_serie option[value='5']").prop('disabled', true);
+
+
+
+            $("#chamadas option[value='1']").prop('disabled', false);
+            $("#chamadas option[value='3']").prop('disabled', false);
+      }
+
+}
+
+
+
+$("#resultado_dataset_1").change(function()
+{
+      radio_checks();
+});
+$("#resultado_dataset_2").change(function()
+{
+      radio_checks();
+});
+$("#resultado_dataset_3").change(function()
+{
+      radio_checks();
+});
+
+
+
 function get_query(codigo)
 {
       var i = 0;
@@ -892,6 +900,7 @@ function load_dados(opcao, id_layouT)
       $.post("Requests.php", {action: opcao, id_layout: id_layouT},
       function(data)
       {
+            console.log(data+"a");
             if (data === null)
             {
                   $("#MainLayout .PanelWB").remove();

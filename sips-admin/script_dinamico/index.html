@@ -366,6 +366,31 @@
                                                       <div class="formRight">
                                                             <label class="radio inline"  for="validacao_credit_card">Cartão de Crédito MasterCard<input type="radio" id="validacao_credit_card_m" name="regex_texto" value="credit_card_m"/></label>
                                                       </div>
+                                                      <div class="formRight">
+                                                            <label class="radio inline"  for="validacao_credit_card">Cartão de Débito<input type="radio" id="validacao_credit_card_d" name="regex_texto" value="credit_card_d"/></label>
+                                                      </div>
+                                                      <div class="formRight">
+                                                            <label class="radio inline"  for="validacao_ajax">Validação por script<input type="radio" id="validacao_ajax" name="regex_texto" value="ajax"/></label>
+
+                                                            <button class="btn icon-chevron-down" id="button_ajax_upload_div"></button>  
+                                                            <div id="div_ajax_upload" class="formRow" style="display:none">
+                                                                  <form enctype="multipart/form-data" action="" method="POST" id="ajax_upload_form">
+                                                                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                                                                              <div class="input-append">
+                                                                                    <div class="uneditable-input"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Escolha um ficheiro</span><span class="fileupload-exists">Alterar</span><input type="file" name="file_ajax" id="ajax_upload_input" /></span><a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remover</a>
+                                                                              </div>
+                                                                        </div>
+                                                                       <button class="btn left" id="ajax_upload_button"  >upload</button>
+                                                                  </form>
+                                                                  <select id="select_ajax_script" class="right"></select><button class="btn btn-mini btn-danger icon-remove right" id="remove_uploaded_file_ajax"></button>
+                                                                  <div class="formRow">
+                                                                        <span  id="ajax_upload_span"></span>
+                                                                  </div>
+
+                                                            </div>
+
+
+                                                      </div>
                                                 </div>
                                           </div>
                                           <!--RADIO-->
