@@ -53,11 +53,13 @@ function connectaPostCalendar() {
     $query = "SELECT a.display_text FROM sips_sd_schedulers a inner join sips_sd_resources b on a.id_scheduler = b.id_scheduler where id_resource = '$row[1]'";
     $query = mysql_query($query, $link) or die(mysql_error());
     $row = mysql_fetch_row($query);
-    $concelho = utf8_decode($row[0]); // provincia -> ref
+    $concelho = $row[0]; // provincia -> ref
     
     $query = "SELECT DISTRITO FROM Distritos_BarclayCard where CONCELHO = '$concelho'";
     $query = mysql_query($query, $link) or die(mysql_error());
     $row = mysql_fetch_row($query);
+    
+    $concelho = utf8_decode($concelho);
     
     $distrito = utf8_decode($row[0]);
     //$query_final = "exec clientes.InserirVisita 'TESTE' , 1, 'TESTE'  , 'TEST'  , '25/01/2014', '10:00', 'TESTE'  , 'TESTE'  , '1234-123'  , 'TESTE'  , 'Lisboa'  , '918099390'  , '918099390'  , 34, 'CO'  , 'Cartão GOLD' , 1, '123456789', 'S' , 'Lisboa', 'teste de marcação por sp'";
