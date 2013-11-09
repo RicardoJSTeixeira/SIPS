@@ -29,7 +29,7 @@ function connectaPostCalendar() {
         $results[$row[0]] = $row[1];
     }
     
-    print_r($results);
+  //  print_r($results);
 
     $tipo_vencimento = $results[20]; // cp co ->script 20
     $nome_cliente = utf8_decode($results[73]); // first_name 73
@@ -65,8 +65,8 @@ function connectaPostCalendar() {
     //$query_final = "exec clientes.InserirVisita 'TESTE' , 1, 'TESTE'  , 'TEST'  , '25/01/2014', '10:00', 'TESTE'  , 'TESTE'  , '1234-123'  , 'TESTE'  , 'Lisboa'  , '918099390'  , '918099390'  , 34, 'CO'  , 'Cartão GOLD' , 1, '123456789', 'S' , 'Lisboa', 'teste de marcação por sp'";
     //exec clientes.InserirVisita 'Alcobaça' , 168029, 'barc1'  , 'barc1'  , '11/11/2013', '10:00', 'asdasdas'  , 'asdasdasd'  , '1234-123'  , 'asdasd'  , 'Alcobaça'  , '1231231'  , 'Gold'  , 12, 'CO'  , '229722210' , S, '', '' , 'Leiria', '1'
       $query_final = "exec clientes.InserirVisita '$origem' , $lead_id, '$user'  , '$user'  , '$data_visita', '$hora_visita', '$nome_cliente'  , '$morada'  , '$cod_postal'  , '$localidade'  , '$concelho'  , '$telefone'  , '$telefone_alternativo'  , $idade, '$tipo_vencimento'  , '$tipo_cartao' , $num_cartoes, '$nif', '$tem_credito' , '$distrito', '$observações'";
-          echo $query_final;
-      $link = mssql_connect('172.16.5.2', 'gocontact', '') or die(mssql_get_last_message());
-    $sql = @mssql_query($query_final, $link) or die(mssql_get_last_message());
-    
+     //echo $query_final;
+     $link = mssql_connect('172.16.5.2', 'gocontact', '') or die(mssql_get_last_message());
+     $sql = @mssql_query($query_final, $link) or die(mssql_get_last_message());
+     mssql_get_last_message();
 }
