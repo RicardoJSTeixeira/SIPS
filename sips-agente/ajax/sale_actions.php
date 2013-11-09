@@ -20,30 +20,30 @@ function connectaPostCalendar() {
     $query = mysql_query($query, $link) or die(mysql_error());
     $row = mysql_fetch_assoc($query);
     $origem = $row['middle_initial']; // middle_initial
-    $query = "SELECT valor FROM `script_result` WHERE tag_elemento IN ('20','73', '76', '78', '79', '80', '75', '77', '74', '81', '82', '87', '88') and unique_id = '$unique_id' order by tag_elemento ASC";
+    $query = "SELECT tag_elemento,valor FROM `script_result` WHERE tag_elemento IN ('20','73', '76', '78', '79', '80', '75', '77', '74', '81', '82', '87', '88') and unique_id = '$unique_id' order by tag_elemento ASC";
     
     $query = mysql_query($query, $link) or die(mysql_error());
     
     for ($i = 0; $i < mysql_num_rows($query); $i++) {
         $row = mysql_fetch_row($query);
-        $results[$i] = $row[0];
+        $results[$row[0]] = $row[1];
     }
     
     print_r($results);
 
-    $tipo_vencimento = $results[0]; // cp co ->script 
-    $nome_cliente = $results[1]; // first_name 73
-    $idade = $results[2]; // ->script 74
-    $morada = $results[3]; // script 75
-    $localidade = $results[4]; // city 76
-    $cod_postal = $results[5]; // 1234-567 script 77
-    $telefone = $results[6]; // phone_number 78
-    $telefone_alternativo = $results[7]; // alt_phone or address3 79
-    $observações = $results[8]; // comments 80
-    $tipo_cartao = $results[9]; // ->script 81
-    $num_cartoes = $results[10]; // ->script 82
-    $nif = $results[11]; // ->script  87
-    $tem_credito = $results[12];
+    $tipo_vencimento = $results[20]; // cp co ->script 20
+    $nome_cliente = $results[73]; // first_name 73
+    $idade = $results[74]; // ->script 74
+    $morada = $results[75]; // script 75
+    $localidade = $results[76]; // city 76
+    $cod_postal = $results[77]; // 1234-567 script 77
+    $telefone = $results[78]; // phone_number 78
+    $telefone_alternativo = $results[79]; // alt_phone or address3 79
+    $observações = $results[80]; // comments 80
+    $tipo_cartao = $results[81]; // ->script 81
+    $num_cartoes = $results[82]; // ->script 82
+    $nif = $results[87]; // ->script  87
+    $tem_credito = $results[88]; // script 88
     $query = "SELECT start_date, id_resource FROM sips_sd_reservations where lead_id = '$lead_id' and start_date > DATE(NOW()) LIMIT 1";
     $query = mysql_query($query, $link) or die(mysql_error());
     $row = mysql_fetch_row($query);
