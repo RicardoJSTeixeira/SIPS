@@ -2143,7 +2143,7 @@ function UpdateFieldsData()
 
 
 function redial() {
-    redial_number = redial_number.replace(/[^0-9\.]+/g, '');
+    
     var go_on = divchecker("redial");
     if (!go_on) {
         return;
@@ -2171,7 +2171,7 @@ function redial() {
     }
     if (segue == 1)
     {
-
+        redial_number = redial_number.replace(/[^0-9\.]+/g, '');
         NewRedialSubmiT(redial_number);
 
     }
