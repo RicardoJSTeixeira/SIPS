@@ -19,7 +19,7 @@ function connectaPostCalendar() {
     $query = "SELECT middle_initial FROM `vicidial_list` WHERE lead_id = '$lead_id'";
     $query = mysql_query($query, $link) or die(mysql_error());
     $row = mysql_fetch_assoc($query);
-    $origem = $row['middle_initial']; // middle_initial
+    $origem = utf8_encode($row['middle_initial']); // middle_initial
     $query = "SELECT tag_elemento,valor FROM `script_result` WHERE tag_elemento IN ('20','73', '76', '78', '79', '80', '75', '77', '74', '81', '82', '87', '88') and unique_id = '$unique_id' order by tag_elemento ASC";
     
     $query = mysql_query($query, $link) or die(mysql_error());
