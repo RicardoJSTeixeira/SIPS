@@ -32,14 +32,14 @@ function connectaPostCalendar() {
     print_r($results);
 
     $tipo_vencimento = $results[20]; // cp co ->script 20
-    $nome_cliente = $results[73]; // first_name 73
+    $nome_cliente = utf8_decode($results[73]); // first_name 73
     $idade = $results[74]; // ->script 74
-    $morada = $results[75]; // script 75
-    $localidade = $results[76]; // city 76
+    $morada = utf8_decode($results[75]); // script 75
+    $localidade = utf8_decode($results[76]); // city 76
     $cod_postal = $results[77]; // 1234-567 script 77
     $telefone = $results[78]; // phone_number 78
     $telefone_alternativo = $results[79]; // alt_phone or address3 79
-    $observações = $results[80]; // comments 80
+    $observações = utf8_decode($results[80]); // comments 80
     $tipo_cartao = $results[81]; // ->script 81
     $num_cartoes = $results[82]; // ->script 82
     $nif = $results[87]; // ->script  87
@@ -53,13 +53,13 @@ function connectaPostCalendar() {
     $query = "SELECT a.display_text FROM sips_sd_schedulers a inner join sips_sd_resources b on a.id_scheduler = b.id_scheduler where id_resource = '$row[1]'";
     $query = mysql_query($query, $link) or die(mysql_error());
     $row = mysql_fetch_row($query);
-    $concelho = $row[0]; // provincia -> ref
+    $concelho = utf8_decode($row[0]); // provincia -> ref
     
     $query = "SELECT DISTRITO FROM Distritos_BarclayCard where CONCELHO = '$concelho'";
     $query = mysql_query($query, $link) or die(mysql_error());
     $row = mysql_fetch_row($query);
     
-    $distrito = $row[0];
+    $distrito = utf8_decode($row[0]);
     //$query_final = "exec clientes.InserirVisita 'TESTE' , 1, 'TESTE'  , 'TEST'  , '25/01/2014', '10:00', 'TESTE'  , 'TESTE'  , '1234-123'  , 'TESTE'  , 'Lisboa'  , '918099390'  , '918099390'  , 34, 'CO'  , 'Cartão GOLD' , 1, '123456789', 'S' , 'Lisboa', 'teste de marcação por sp'";
     //exec clientes.InserirVisita 'Alcobaça' , 168029, 'barc1'  , 'barc1'  , '11/11/2013', '10:00', 'asdasdas'  , 'asdasdasd'  , '1234-123'  , 'asdasd'  , 'Alcobaça'  , '1231231'  , 'Gold'  , 12, 'CO'  , '229722210' , S, '', '' , 'Leiria', '1'
       $query_final = "exec clientes.InserirVisita '$origem' , $lead_id, '$user'  , '$user'  , '$data_visita', '$hora_visita', '$nome_cliente'  , '$morada'  , '$cod_postal'  , '$localidade'  , '$concelho'  , '$telefone'  , '$telefone_alternativo'  , $idade, '$tipo_vencimento'  , '$tipo_cartao' , $num_cartoes, '$nif', '$tem_credito' , '$distrito', '$observações'";
