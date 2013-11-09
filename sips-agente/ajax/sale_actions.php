@@ -64,4 +64,5 @@ function connectaPostCalendar() {
       $query_final = "exec clientes.InserirVisita '$origem' , $lead_id, '$user'  , '$user'  , '$data_visita', '$hora_visita', '$nome_cliente'  , '$morada'  , '$cod_postal'  , '$localidade'  , '$concelho'  , '$telefone'  , '$telefone_alternativo'  , $idade, '$tipo_vencimento'  , '$tipo_cartao' , $num_cartoes, '$nif', '$tem_credito' , '$distrito', '$observações'";
       $link = mssql_connect('172.16.5.2', 'gocontact', '') or die(mssql_get_last_message());
     $sql = @mssql_query($query_final, $link) or die(mssql_get_last_message());
+        echo $query_final;
 }
