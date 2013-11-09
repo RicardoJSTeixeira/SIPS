@@ -666,7 +666,6 @@
                         "Ok": function() {
                             reservation.create(b);
                             $(this).dialog("close");
-                            window.close();
                         },
                         Cancel: function() {
                             $(this).dialog("close");
