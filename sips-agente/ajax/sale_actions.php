@@ -1,6 +1,6 @@
 <?php
 
-$client = $_POST['client'];
+if (isset($_GET['client'])) { $client = $_GET['client']; } else { $client = $_POST['client']; }
 
 
 switch ($client) { 
@@ -10,9 +10,9 @@ switch ($client) {
 }
     
 function connectaPostCalendar() {
-    $lead_id = $_POST['lead_id'];
-    $unique_id = $_POST['uniqueid'];
-    $user = $_POST['user']; 
+    if (isset($_GET['lead_id'])) { $lead_id = $_GET['lead_id']; } else { $lead_id = $_POST['lead_id']; }
+    if (isset($_GET['uniqueid'])) { $unique_id = $_GET['uniqueid']; } else { $unique_id = $_POST['uniqueid']; }
+    if (isset($_GET['user'])) { $user = $_GET['user']; } else { $user = $_POST['user']; }
     
     $link = mysql_connect("172.16.7.25:3306", "sipsadmin", "sipsps2012");
     mysql_select_db("asterisk");
@@ -28,8 +28,8 @@ function connectaPostCalendar() {
         $row = mysql_fetch_row($query);
         $results[$i] = $row[0];
     }
-
-
+    
+    print_r($results);
 
     $tipo_vencimento = $results[0]; // cp co ->script 
     $nome_cliente = $results[1]; // first_name 73
@@ -61,6 +61,7 @@ function connectaPostCalendar() {
     
     $distrito = $row[0];
     //$query_final = "exec clientes.InserirVisita 'TESTE' , 1, 'TESTE'  , 'TEST'  , '25/01/2014', '10:00', 'TESTE'  , 'TESTE'  , '1234-123'  , 'TESTE'  , 'Lisboa'  , '918099390'  , '918099390'  , 34, 'CO'  , 'Cartão GOLD' , 1, '123456789', 'S' , 'Lisboa', 'teste de marcação por sp'";
+    //exec clientes.InserirVisita 'Alcobaça' , 168029, 'barc1'  , 'barc1'  , '11/11/2013', '10:00', 'asdasdas'  , 'asdasdasd'  , '1234-123'  , 'asdasd'  , 'Alcobaça'  , '1231231'  , 'Gold'  , 12, 'CO'  , '229722210' , S, '', '' , 'Leiria', '1'
       $query_final = "exec clientes.InserirVisita '$origem' , $lead_id, '$user'  , '$user'  , '$data_visita', '$hora_visita', '$nome_cliente'  , '$morada'  , '$cod_postal'  , '$localidade'  , '$concelho'  , '$telefone'  , '$telefone_alternativo'  , $idade, '$tipo_vencimento'  , '$tipo_cartao' , $num_cartoes, '$nif', '$tem_credito' , '$distrito', '$observações'";
           echo $query_final;
       $link = mssql_connect('172.16.5.2', 'gocontact', '') or die(mssql_get_last_message());
