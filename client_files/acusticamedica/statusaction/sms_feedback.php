@@ -215,6 +215,7 @@ if (mysql_num_rows($rslt)) {
     $list = array(array(phone_number => $nr, lead_id => $lead_id, first_name => ""));
 
     $gateways_brute = mysql_query("Select IP,user,pass,port,descricao,type from gsm_gateways WHERE ext like '$match' and active=1  order by rand();", $link);
+   usleep(200000);
     if (mysql_num_rows($gateways_brute)) {
         $gateways_ports = mysql_fetch_assoc($gateways_brute);
         for ($i = 0; $i < count($msg); $i++) {
@@ -224,5 +225,4 @@ if (mysql_num_rows($rslt)) {
         }
     }
 }
-?>
 
