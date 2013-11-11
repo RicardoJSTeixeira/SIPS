@@ -29,7 +29,7 @@
         if (isset($_GET["user"])) {
             $id_user = $_GET["user"];
         } else {
-            $id_user = $user->id;
+            $id_user = $users->id;
         }
 
         if (isset($_GET["lead"])) {
