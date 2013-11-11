@@ -569,7 +569,7 @@ function insert_element(opcao, element, data)
                   {
                         if (data.values_text.length > 0)
                         {
-                              element.append($("<button>").addClass("pdf_button").attr("file", data.values_text).text("Ver PDF"));
+                              element.append($("<button>").addClass("pdf_button btn btn-primary").attr("file", data.values_text).text("Ver PDF"));
                         }
                   }
                   else
