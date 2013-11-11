@@ -9795,7 +9795,7 @@ if ($enable_fast_refresh < 1) {
                 {
                     var DispoChoice = document.vicidial_form.DispoSelection.value;
                     
-                    if (DispoChoice === "FL0001") {
+                   /* if (DispoChoice === "FL0001") {
                         
                         if ($("#vcFormIFrame").contents().find(".hour-required").val() === "---") {
                               alert_box("Campo da Hora da Marcação com erros de preenchimento ou vazio.");
@@ -9810,7 +9810,7 @@ if ($enable_fast_refresh < 1) {
                               return false;
                         }
 
-                    }
+                    }*/
                   
                     /*$('#fb_timeout').html('25');
                      clearInterval(fb_timer);*/
