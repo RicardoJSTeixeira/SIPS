@@ -66,7 +66,7 @@ function m2h($min, $full = false) {
 
 //end design
 //nav
-function last_week($date) {
+function last_week($date,$users) {
     if($users->user_level>5){
         return (date('D') == 'Mon') ? date("Y-m-d", strtotime($date . " 2 mondays ago")) : date("Y-m-d", strtotime($date . " last monday"));
     }else{
@@ -80,7 +80,7 @@ function next_week($date) {
 
 //end nav
 //is reserva
-function set_estado($beg, $end, $rsc, &$reservas, $series, $inverted, $execoes, $date, $min, $user, $slot2change, $i_reservas) {
+function set_estado($beg, $end, $rsc, &$reservas, $series, $inverted, $execoes, $date, $min, $slot2change, $i_reservas,$users) {
 
     $estado = "";
 
@@ -100,7 +100,7 @@ function set_estado($beg, $end, $rsc, &$reservas, $series, $inverted, $execoes, 
     for ($i = 0; $i < count($reservas); $i++) {
         //if (check2DateTimeEqual($beg, $reservas[$i][start_date]) && check2DateTimeEqual($end, $reservas[$i][end_date]) && ($rsc == $reservas[$i][id_resource])) {
         if (checkReserva($beg, $end, $reservas[$i]["start_date"], $reservas[$i]["end_date"]) && ($rsc == $reservas[$i]["id_resource"])) {
-            if ($reservas[$i]["id_user"] != $user) {
+            if ($reservas[$i]["id_user"] != $users->id AND $users->user_level<5) {
                 $estado.=" deles";
             }
             $lead_id = $reservas[$i]["lead_id"];

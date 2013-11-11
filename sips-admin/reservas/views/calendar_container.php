@@ -29,7 +29,7 @@
         if (isset($_GET["user"])) {
             $id_user = $_GET["user"];
         } else {
-            $id_user = "admin";
+            $id_user = $user->id;
         }
 
         if (isset($_GET["lead"])) {
@@ -296,7 +296,7 @@
                             //title first column 
                             $beg = date("Y-m-d H:i:s", strtotime($date . "+$i minutes"));
                             $end = date("Y-m-d H:i:s", strtotime($date . "+" . ($i + $resources[0]["blocks"] - 1) . " minutes"));
-                            $dados = set_estado($beg, $end, $resources[$iii]["id_resource"], $reservas, $series, $resources[$iii]["restrict_days"], $execoes, $date, $i, $id_user, $slot2change, $i_reservas);
+                            $dados = set_estado($beg, $end, $resources[$iii]["id_resource"], $reservas, $series, $resources[$iii]["restrict_days"], $execoes, $date, $i, $slot2change, $i_reservas,$users);
                             $title = (($dados["type"] != "") ? " title='$dados[type]'" : "");
                             $tab[$iii + 1] .= "\t\t<td class='slot" . $dados["stat"] . "'$title >" . (!is_null($dados["postal"]) ? "<span class='postal'>$dados[postal]</span>" : "") . "
                                                 <input type=hidden class='beg' value='" . $beg . "'/>
@@ -642,7 +642,7 @@
 
                 //Start nav
                 $("#anterior").click(function() {
-                    ChangeDate('<?= last_week($date) ?>');
+                    ChangeDate('<?= last_week($date,$users) ?>');
                 });
 
                 $("#seguinte").click(function() {
