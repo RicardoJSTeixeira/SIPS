@@ -2808,6 +2808,7 @@ if (file_exists("../client_files/$curClient[0]/logo.gif")) {
             moment.lang('pt');
             var clientName = '<? echo $curClient[0]; ?>';
             window.name = 'GCC_window';
+            var unique_id_hack;
             var campaign_status = <?= json_encode($campaign_status) ?>;
             var my_callback_option = '<?= $my_callback_option ?>';
             var MTvar;
