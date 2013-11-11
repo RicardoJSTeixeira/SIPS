@@ -25,7 +25,7 @@
 
         <?php
         require ('../func/reserve_utils.php');
-        $users = new users;
+        $users = new user;
         if (isset($_GET["user"])) {
             $id_user = $_GET["user"];
         } else {
@@ -51,7 +51,7 @@
         }
         $slot2change = (isset($_GET["muda"]) ? $_GET["muda"] : 0);
         $dt = (isset($_GET["dt"]) ? $_GET["dt"] : "");
-        if ($users->id) {
+        if ($users->user_level>5) {
             if (checkDateTime($dt, "Y-m-d")) {
                 $date = (date('D') == 'Mon') ? date("Y-m-d", strtotime($_GET["dt"] . " this monday")) : date("Y-m-d", strtotime($_GET["dt"] . " last monday"));
                 $comeca = (date('D') == 'Mon') ? date("d-m-Y", strtotime($_GET["dt"] . " this monday")) : date("d-m-Y", strtotime($_GET["dt"] . " last monday"));
@@ -190,7 +190,7 @@
                 echo ".t" . $r_types[$index]["id_reservations_types"] . " {background: " . $r_types[$index]["color"] . ";}\n";
             }
 
-            if ($users - id) {
+            if ($users->user_level>5) {
 
                 $acaba = date("d-m-Y", strtotime($comeca . ' next sunday'));
                 $begin_sys = $date;
@@ -268,14 +268,14 @@
             }
             //End execoes
             ?>
-            <div id="nav" class="<?=(!$users->id and $resources[0]["days_visible"]<7)?'hide':''   ?>">
+            <div id="nav" class="<?=($users->user_level<5 and $resources[0]["days_visible"]<7)?'hide':''   ?>">
                 <span id="anterior" class='btn btn-mini icon-alone'><i class='icon-arrow-left'></i></span>
                 <span><?= $comeca . " - " . $acaba ?></span>
                 <span id="seguinte" class='btn btn-mini icon-alone'><i class='icon-arrow-right'></i></span>
             </div>
             <div class="grid" id="conteiner">
                 <?php
-                $resources[0]["days_visible"]=($users->id)?7:$resources[0]["days_visible"];
+                $resources[0]["days_visible"]=($users->user_level>5)?7:$resources[0]["days_visible"];
                 for ($ii = 0; $ii < $resources[0]["days_visible"]; $ii++) {
                     $display_date = date("d/m/Y", strtotime($date));
                     $tab = array();
@@ -666,7 +666,6 @@
                         "Ok": function() {
                             reservation.create(b);
                             $(this).dialog("close");
-
                         },
                         Cancel: function() {
                             $(this).dialog("close");

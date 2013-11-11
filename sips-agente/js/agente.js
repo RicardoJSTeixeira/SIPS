@@ -2143,7 +2143,7 @@ function UpdateFieldsData()
 
 
 function redial() {
-    redial_number = redial_number.replace(/[^0-9\.]+/g, '');
+    
     var go_on = divchecker("redial");
     if (!go_on) {
         return;
@@ -2171,7 +2171,7 @@ function redial() {
     }
     if (segue == 1)
     {
-
+        redial_number = redial_number.replace(/[^0-9\.]+/g, '');
         NewRedialSubmiT(redial_number);
 
     }
@@ -3121,6 +3121,10 @@ function check_for_auto_incoming()
             if (VDIC_data_VDIG[1].length > 0)
             {
                 inOUT = 'IN';
+                if (clientName == 'necomplus') {
+                    $("#Main-tabs a:eq(3)").tab("show");
+                }
+                
                 if (VDIC_data_VDIG[2].length > 2)
                 {
                     //document.getElementById("MainStatuSSpan").style.background = VDIC_data_VDIG[2];
@@ -4357,17 +4361,19 @@ function  DispoSelect_submit_allowed()
     var DispoChoice = document.vicidial_form.DispoSelection.value;
     var isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback;
     var isSALE = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].sale;
+    var unique_id_hack=document.vicidial_form.uniqueid.value,
+            lead_id_hack=lead_id.value;
+    
     if (custom_fields_enabled && !isCB) {
 
         if (script_dinamico) {
             vcFormIFrame.unique_id = document.vicidial_form.uniqueid.value;
             if (isSALE) {
                 if (vcFormIFrame.validate_manual()) {
-                    $.post('ajax/sale_actions.php', { uniqueid: document.vicidial_form.uniqueid.value, lead_id : lead_id.value, dispo : DispoChoice, dispoAtt : campaign_status[DispoChoice], campaign_id : campaign_id.value, user : user, client : clientName  }, function(data) {
+                    vcFormIFrame.submit_manual(function() {
+                         $.post('ajax/sale_actions.php', { uniqueid: unique_id_hack, lead_id : lead_id_hack, dispo : DispoChoice, dispoAtt : campaign_status[DispoChoice], campaign_id : campaign_id.value, user : user, client : clientName  }, function(data) {
                             console.log(data);
                         });
-
-                    vcFormIFrame.submit_manual(function() {
                         $('#vcFormIFrame', parent.window.document)[0].src = "";
                     });
                 } else {
