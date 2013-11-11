@@ -50,6 +50,30 @@ switch ($action) {
         break;
 
 
+    case "get_fields_to_order":
+        $js = array();
+        $query = "SELECT Name,Display_name  FROM vicidial_list_ref where campaign_id = '$campaign_id' and active='1' order by field_order asc";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array("id" => $row["Name"], "display_name" => $row["Display_name"]);
+        }
+
+
+
+
+        $query = "SELECT id_script from script_assoc where id_camp_linha='$campaign_id'";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        $row = mysql_fetch_assoc($query);
+        $id_script = $row["id_script"];
+        $query = "SELECT a.tag,a.type,a.texto  FROM `script_dinamico` a left join script_dinamico_pages b on b.id=a.id_page  where type not in ('pagination','textfield','scheduler','legend','button')  and a.id_script='$id_script' order by b.pos,a.ordem asc ";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = array("id" => $row["tag"], "type" => $row["type"], "texto" => $row["texto"]);
+        }
+        echo json_encode($js);
+        break;
+
+
 
     case "report":
 
@@ -73,7 +97,7 @@ switch ($action) {
         $query = mysql_query($query, $link) or die(mysql_error());
         $row = mysql_fetch_assoc($query);
         $id_script = $row["id_script"];
-        $titles = array('ID', 'Data', 'Script', 'Nome agente',  'Campanha',  "Feedback");
+        $titles = array('ID', 'Data', 'Script', 'Nome agente', 'Campanha', "Feedback");
         $ref_name = array();
         $query = "SELECT Name,Display_name  FROM vicidial_list_ref where campaign_id = '$campaign_id' and active='1' order by field_order asc";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -85,7 +109,7 @@ switch ($action) {
             break;
         }
         $tags = array();
-        $query = "SELECT a.tag,a.type,a.texto,a.values_text,a.placeholder  FROM `script_dinamico` a left join script_dinamico_pages b on b.id=a.id_page  where type not in ('pagination','textfield','scheduler','legend')  and a.id_script='$id_script' order by b.pos,a.ordem asc ";
+        $query = "SELECT a.tag,a.type,a.texto,a.values_text,a.placeholder  FROM `script_dinamico` a left join script_dinamico_pages b on b.id=a.id_page  where type not in ('pagination','textfield','scheduler','legend','button')  and a.id_script='$id_script'  order by b.pos,a.ordem asc ";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             if ($row['type'] == "tableradio") {
@@ -118,7 +142,7 @@ switch ($action) {
         $result = mysql_query($query, $link) or die(mysql_error());
         $lead_info = array();
         while ($row3 = mysql_fetch_assoc($result)) {
-            $lead_tmp=$row3["lead_id"];
+            $lead_tmp = $row3["lead_id"];
             unset($row3["lead_id"]);
             $lead_info[$lead_tmp] = $row3;
         }
@@ -145,13 +169,31 @@ where sr.campaign_id='$campaign_id' and sr.id_script='$id_script' $filtro $date_
                     fputcsv($output, $client, ";", '"');
                 }
                 $lead_id = $row1["lead_id"];
-                $client = array_merge($final_row, $lead_info[$lead_id], $tags);
+
+                $temp_array = array_merge($lead_info[$lead_id], $tags);
+                $temp = 0;
+
+                for ($a = 0; $a < count($column_order); $a++) {
+                    if (is_int($column_order[$a])) {
+                        $temp = $temp_array[$a];
+                        $temp_array[$a] = $column_order[$a];
+                    }
+                    else
+                    {}
+                }
+
+
+               
+                $client = array_merge($final_row, $temp_array);
+
+
+
                 unset($lead_info[$lead_id]);
-                $client["id"] =  $row1["lead_id"];
+                $client["id"] = $row1["lead_id"];
                 $client["date"] = $row1["date"];
                 $client["name"] = $row1["name"];
                 $client["full_name"] = $row1["full_name"];
-             
+
                 $client["campaign_name"] = $row1["campaign_name"];
                 $client["status_name"] = $row1["status_name"];
             }
@@ -170,6 +212,7 @@ where sr.campaign_id='$campaign_id' and sr.id_script='$id_script' $filtro $date_
             fputcsv($output, $client, ";", '"'); // necessário para imprimir a info da ultima lead0
         }
         fclose($output);
+        //ORDER BY  FIELD(tag,$ordered_tags);
         break;
 }
 ?>

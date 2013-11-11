@@ -329,7 +329,7 @@
                                                             <input  maxlength="65" class="span texto_input" id="placeholder_edit" type="text" placeholder="Placeholder exemplo" />
                                                       </div>
                                                 </div>
-                                                    <div class="formRow" >
+                                                <div class="formRow" >
                                                       <label class="label label-inverse" >Valor por defeito:</label>
                                                       <div class="formRight">
                                                             <select id="select_default_value"></select>
@@ -355,6 +355,9 @@
                                                             <label class="radio inline"  for="validacao_texto_letter">Apenas letras<input type="radio" id="validacao_texto_letter" name="regex_texto" value="letter" /></label>
                                                       </div> 
                                                       <div class="formRight">
+                                                            <label class="radio inline"  for="validacao_number">Apenas números<input type="radio" id="validacao_number" name="regex_texto" value="number"/></label>
+                                                      </div>
+                                                      <div class="formRight">
                                                             <label class="radio inline"  for="validacao_texto_email">Email<input type="radio" id="validacao_texto_email" name="regex_texto" value="email"/></label>
                                                       </div>
                                                       <div class="formRight">
@@ -375,6 +378,7 @@
                                                       <div class="formRight">
                                                             <label class="radio inline"  for="validacao_credit_card">Cartão de Débito<input type="radio" id="validacao_credit_card_d" name="regex_texto" value="credit_card_d"/></label>
                                                       </div>
+
                                                       <div class="formRight">
                                                             <label class="radio inline"  for="validacao_ajax">Validação por script<input type="radio" id="validacao_ajax" name="regex_texto" value="ajax"/></label>
 
@@ -678,6 +682,7 @@
                                                       </div>
                                                 </div>
                                           </div>
+                                  
                                           <!--ipl-->
                                           <div class="editor_layout" id="ipl_layout_editor" style="display:none">
                                                 <div class="formRow" >
@@ -733,6 +738,22 @@
                                                       </div>
                                                 </div>
                                           </div>
+
+
+
+                                          <!--button-->
+                                          <div class="editor_layout" id="button_layout_editor" style="display:none">
+                                                <div class="formRow" >
+                                                      <label class="label label-inverse" >Texto</label>
+
+                                                      <div class="formRight">
+                                                            <input  maxlength="50" class="span button_input" id="button_edit" type="text" placeholder="Texto do Botão" />
+                                                      </div>
+                                                </div>
+                                          </div>
+
+
+
                                           <!------------------------------------------------------------------------------>
                                           <!-------------------------COMUM A TODOS OS ELEMENTOS-------------------------->
                                           <!------------------------------------------------------------------------------>
