@@ -18,7 +18,7 @@ switch ($action) {
     //------------------------------------------------//    
     //---------------------GET------------------------//  
     //------------------------------------------------//
-  
+
     case "get_limit_feedback":
         $query = "SELECT id,feedback,feedback_name,max from script_max_feedback where id_script=$id_script";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -519,13 +519,14 @@ switch ($action) {
             if ($row['value'] != "") {
                 $temp = explode(",", $row['name']);
                 if (isset($temp[2]))
-                    $sql[] = "(null,'" . date('Y-m-d H:i:s') . "',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]', '" . $row['value'] . "','$temp[2];$temp[1]')";
+                    $sql[] = "(null,'" . date('Y-m-d H:i:s') . "',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]','" . mysql_real_escape_string($row['value']) . "','$temp[2];$temp[1]')";
                 else
-                    $sql[] = "(null,'" . date('Y-m-d H:i:s') . "',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]', '" . $row['value'] . "', '$temp[1]')";
+                    $sql[] = "(null,'" . date('Y-m-d H:i:s') . "',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]', '" . mysql_real_escape_string($row['value']) . "', '$temp[1]')";
             }
         }
         $query = "INSERT INTO `script_result`(`id`,date,id_script,user_id,unique_id,campaign_id,lead_id, `tag_elemento`, `valor`,param_1) VALUES " . implode(',', $sql);
         $query = mysql_query($query, $link) or die(mysql_error());
+
         echo json_encode(1);
         break;
 }
