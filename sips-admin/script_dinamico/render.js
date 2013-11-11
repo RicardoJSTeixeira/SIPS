@@ -941,12 +941,21 @@ function tags(callback)
 //FORM MANIPULATION
 $("#myform").on("submit", function(e)
 {
+ 
       e.preventDefault();
 });
 $("#admin_submit").on("click", function()
 {
       admin_review = 1;
       submit_manual();
+});
+
+$('html').bind('keypress', function(e)
+{
+   if(e.keyCode == 13)
+   {
+      return false;
+   }
 });
 
 function submit_manual(callback)
