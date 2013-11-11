@@ -4365,7 +4365,6 @@ function  DispoSelect_submit_allowed()
     var DispoChoice = document.vicidial_form.DispoSelection.value;
     var isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback;
     var isSALE = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].sale;
-            lead_id_hack=lead_id.value;
     
     if (custom_fields_enabled && !isCB) {
 
