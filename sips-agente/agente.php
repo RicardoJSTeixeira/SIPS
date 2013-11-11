@@ -2808,6 +2808,7 @@ if (file_exists("../client_files/$curClient[0]/logo.gif")) {
             moment.lang('pt');
             var clientName = '<? echo $curClient[0]; ?>';
             window.name = 'GCC_window';
+            var unique_id_hack;
             var campaign_status = <?= json_encode($campaign_status) ?>;
             var my_callback_option = '<?= $my_callback_option ?>';
             var MTvar;
@@ -3765,7 +3766,7 @@ while ($MM_scripts > $h) {
                                     <td><i class="fam-zoom-in"></i></td>
                                     <td class='btn-link'>Procurar</td>
                                 </tr>
-                                <tr id='mdial' onClick="NeWManuaLDiaLCalL('NO');" style='cursor:pointer'>
+                                <tr id='mdial' onClick="NeWManuaLDiaLCalL('NO');" style='cursor:pointer;<?=($curClient[0]=="connecta")?"display:none":""?>'>
                                     <td><i class="fam-telephone-delete"></i></td>
                                     <td>
                                         <span id="MDstatusSpan">

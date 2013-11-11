@@ -1071,6 +1071,7 @@ function DialLog(taskMDstage, nodeletevdac)
         {
             UID_test = epoch_sec + '.' + random;
             document.vicidial_form.uniqueid.value = UID_test;
+            unique_id_hack=document.vicidial_form.uniqueid.value;
         }
     }
     else
@@ -1753,6 +1754,7 @@ function ManualDialCheckChanneL(taskCheckOR)
                 if ((MDchannel.match(regMDL)) && (asterisk_version != '1.0.8') && (asterisk_version != '1.0.9'))
                 {
                     document.vicidial_form.uniqueid.value = MDlookResponse_array[0];
+            unique_id_hack=document.vicidial_form.uniqueid.value;
                     document.getElementById("callchannel").value = MDlookResponse_array[1];
                     // bad grab of Local channel, try again
                     MD_ring_secondS++;
@@ -1762,6 +1764,7 @@ function ManualDialCheckChanneL(taskCheckOR)
                     custchannellive = 1;
 
                     document.vicidial_form.uniqueid.value = MDlookResponse_array[0];
+            unique_id_hack=document.vicidial_form.uniqueid.value;
                     document.getElementById("callchannel").value = MDlookResponse_array[1];
                     lastcustchannel = MDlookResponse_array[1];
 
@@ -2948,6 +2951,7 @@ function check_for_auto_incoming()
 
             document.vicidial_form.lead_id.value = VDIC_data_VDAC[0];
             document.vicidial_form.uniqueid.value = VDIC_data_VDAC[1];
+            unique_id_hack=document.vicidial_form.uniqueid.value;
             CIDcheck = VDIC_data_VDAC[2];
             CalLCID = VDIC_data_VDAC[2];
             LastCallCID = VDIC_data_VDAC[2];
@@ -4361,8 +4365,6 @@ function  DispoSelect_submit_allowed()
     var DispoChoice = document.vicidial_form.DispoSelection.value;
     var isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback;
     var isSALE = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].sale;
-    var unique_id_hack=document.vicidial_form.uniqueid.value,
-            lead_id_hack=lead_id.value;
     
     if (custom_fields_enabled && !isCB) {
 

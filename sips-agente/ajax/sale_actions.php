@@ -49,7 +49,7 @@ function connectaPostCalendar() {
     $row = mysql_fetch_row($query);
     $distrito = ''; // vazio
     $data_visita = date('d/m/Y',strtotime($row[0])); // dd/mm/yyyy -> calendario
-    $hora_visita =  date('h:i',strtotime($row[0])); // hh:mm -> calendario
+    $hora_visita =  date('H:i',strtotime($row[0])); // hh:mm -> calendario
     $query = "SELECT a.display_text FROM sips_sd_schedulers a inner join sips_sd_resources b on a.id_scheduler = b.id_scheduler where id_resource = '$row[1]'";
     $query = mysql_query($query, $link) or die(mysql_error());
     $row = mysql_fetch_row($query);
@@ -65,7 +65,7 @@ function connectaPostCalendar() {
     //$query_final = "exec clientes.InserirVisita 'TESTE' , 1, 'TESTE'  , 'TEST'  , '25/01/2014', '10:00', 'TESTE'  , 'TESTE'  , '1234-123'  , 'TESTE'  , 'Lisboa'  , '918099390'  , '918099390'  , 34, 'CO'  , 'Cartão GOLD' , 1, '123456789', 'S' , 'Lisboa', 'teste de marcação por sp'";
     //exec clientes.InserirVisita 'Alcobaça' , 168029, 'barc1'  , 'barc1'  , '11/11/2013', '10:00', 'asdasdas'  , 'asdasdasd'  , '1234-123'  , 'asdasd'  , 'Alcobaça'  , '1231231'  , 'Gold'  , 12, 'CO'  , '229722210' , S, '', '' , 'Leiria', '1'
       $query_final = "exec clientes.InserirVisita '$origem' , $lead_id, '$user'  , '$user'  , '$data_visita', '$hora_visita', '$nome_cliente'  , '$morada'  , '$cod_postal'  , '$localidade'  , '$concelho'  , '$telefone'  , '$telefone_alternativo'  , $idade, '$tipo_vencimento'  , '$tipo_cartao' , $num_cartoes, '$nif', '$tem_credito' , '$distrito', '$observações'";
-     //echo $query_final;
+     echo $query_final;
      $link = mssql_connect('172.16.5.2', 'gocontact', '') or die(mssql_get_last_message());
      $sql = @mssql_query($query_final, $link) or die(mssql_get_last_message());
      mssql_get_last_message();
