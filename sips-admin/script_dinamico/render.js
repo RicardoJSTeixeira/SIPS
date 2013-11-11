@@ -589,6 +589,7 @@ function populate_script(callback)
 
                         switch (this.type)
                         {
+                              case "textarea":
                               case "texto":
                                     $("#" + this.tag_elemento + " :input").val(this.valor);
                                     break;
