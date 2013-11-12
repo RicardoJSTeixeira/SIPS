@@ -200,10 +200,10 @@ function update_info()
                   }
 
                   if (!$("#" + this.id_page + "pag").length) {
-                        $("#script_div").append($("<div>").addClass("pag_div").attr("id", this.id_page+ "pag"));
+                        $("#script_div").append($("<div>").addClass("pag_div").attr("id", this.id_page + "pag"));
                   }
-                  $("#" +this.id_page + "pag").append(item);
-                 
+                  $("#" + this.id_page + "pag").append(item);
+
                   var last_insert = insert_element(this.type, item, this);
 
             });
@@ -212,7 +212,7 @@ function update_info()
 
 
 //FAZER O APPEND DOS ITEMS A LISTA
-       
+
 
             if (page_info.isadmin !== "1")
             {
@@ -578,9 +578,7 @@ function insert_element(opcao, element, data)
                   }
                   break;
             case "button":
-                  element.find(".botao").text (data.texto);
-                  element.find(".botao")[0].name = data.tag;
-
+                  element.find(".botao").text(data.texto);
                   break;
       }
       if (data.hidden)
@@ -640,7 +638,7 @@ function populate_script(callback)
 //RULES  
 function rules_work(data)
 {
-
+      console.log(data.tipo_elemento);
       switch (data.tipo)
       {
             case "hide":
@@ -660,13 +658,22 @@ function rules_work(data)
             case "goto":
                   if (page_info.isadmin != "1")
                   {
-                        if ($("#myform").validationEngine('validate'))
+                        if (data.tipo_elemento == "button")
                         {
-
                               $(".pag_div").hide();
                               $("#" + data.tag_target + "pag").show();
                         }
+                        else
+                        {
+                              if ($("#myform").validationEngine('validate'))
+                              {
+                                    $(".pag_div").hide();
+                                    $("#" + data.tag_target + "pag").show();
+
+                              }
+                        }
                   }
+
                   break;
       }
 }
