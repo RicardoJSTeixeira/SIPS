@@ -1147,8 +1147,13 @@ $(function() {
       });
       $(document).on("click", ".scheduler_button_go", function(e) {
             e.preventDefault();
-            var url = '../reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + page_info.user_id + '&lead=' + page_info.lead_id;
-            window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
+            var select = $(this).prev("select");
+            if (select.find("option:selected").val()>0)
+                  
+            {
+                  var url = '../reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + page_info.user_id + '&lead=' + page_info.lead_id;
+                  window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
+            }
       });
       $(document).on("click", ".pdf_button", function(e)
       {
