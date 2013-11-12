@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
-require "../functions.php";
+require ROOT.'sips-admin/functions.php';
 
 $self = count(explode('/', $_SERVER['PHP_SELF']));
 for ($i = 0; $i < $self - 2; $i++) {
