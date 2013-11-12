@@ -1,7 +1,6 @@
 <?php
 error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
-require ROOT.'sips-admin/functions.php';
 
 $self = count(explode('/', $_SERVER['PHP_SELF']));
 for ($i = 0; $i < $self - 2; $i++) {
@@ -10,6 +9,7 @@ for ($i = 0; $i < $self - 2; $i++) {
 define("ROOT", $header);
 
 //includes
+require ROOT.'sips-admin/functions.php';
 require(ROOT . "ini/dbconnect.php");
 require(ROOT . "ini/user.php");
 $user=new user;
