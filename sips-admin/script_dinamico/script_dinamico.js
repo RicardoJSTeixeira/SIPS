@@ -1628,7 +1628,7 @@ $("#save_button_layout").click(function()//Fecha o dialog e grava as alteraçõe
 //------------------RULES----------------------------000000000
 function rules_manager(tipo, element)
 {
-
+ $("#rule_target_select option").prop('disabled', false).trigger("liszt:updated");
       $("#rule_creator").hide();
       var rts = $("#rule_trigger_select");
       rts.empty();
@@ -1661,6 +1661,8 @@ function rules_manager(tipo, element)
                   break;
 
       }
+      console.log(element.data("tag"));
+      $("#rule_target_select option[value='"+element.data("tag")+"']").prop('disabled', true).trigger("liszt:updated");
       rts.trigger("change");
 }
 function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trigger2, Id_target, Tipo, Param1, Param2)
