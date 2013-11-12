@@ -37,7 +37,7 @@ if (checkDateTime($_GET["dt"], "Y-m-d")) {
     $date = date("Y-m-d", strtotime($date . ' +1 weekdays')); //(date('D') == 'Mon') ? date("Y-m-d") : date("Y-m-d", strtotime('last monday'));
 }
 
-$date_end = date("Y-m-d", strtotime($date . ' +2 weekdays'));
+$date_end = $date;//date("Y-m-d", strtotime($date . ' +2 weekdays'));
 
 $days = floor((strtotime($date_end) - strtotime($date)) / (60 * 60 * 24));
 $days = ($days == 0) ? 1 : $days;

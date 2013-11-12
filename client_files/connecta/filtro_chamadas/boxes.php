@@ -145,7 +145,7 @@ $boxes="";
                         <span><i class='icon-hand-right $colors[$range]'></i></span>
                         <input type='text' readonly='' class='min-input' value='$max'>
                     </span>
-                    <span style='display:inline' class='$colors[$range]'>".round($perc)."%</span>
+                    <span style='display:inline' class='$colors[$range]'>".round($perc*1.2)."%</span>
                     <span class='pull-right led'></span>
                 </div>
             </div>
