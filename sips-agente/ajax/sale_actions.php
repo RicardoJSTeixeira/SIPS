@@ -55,7 +55,7 @@ function connectaPostCalendar() {
     $row = mysql_fetch_row($query);
     $concelho = $row[0]; // provincia -> ref
     
-    $query = "SELECT DISTRITO FROM Distritos_BarclayCard where CONCELHO = '$concelho'";
+    $query = "SELECT DISTRITO FROM Distritos_BarclayCard where CONCELHO like '$concelho'";
     $query = mysql_query($query, $link) or die(mysql_error());
     $row = mysql_fetch_row($query);
     
