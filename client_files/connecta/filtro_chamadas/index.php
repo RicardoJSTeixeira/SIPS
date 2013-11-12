@@ -15,8 +15,7 @@ require(ROOT . "ini/user.php");
 $user=new user;
 
 require (ROOT.'/sips-admin/reservas/func/reserve_utils.php');
-
-		$LOGallowed_campaignsSQL = 'and campaign_id IN("'.implode(',',$user->allowed_campaigns).'")';
+$LOGallowed_campaignsSQL=($user->is_all_campaigns)?'':$LOGallowed_campaignsSQL = 'and campaign_id IN("'.implode(',',$user->allowed_campaigns).'")';
 		
 $stmt="SELECT campaign_id,campaign_name from vicidial_campaigns where active='Y' $LOGallowed_campaignsSQL order by campaign_id;";
 	$rslt=mysql_query($stmt, $link);
