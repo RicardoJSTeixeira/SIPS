@@ -4362,9 +4362,11 @@ function DispoSelect_submit()
 }
 function  DispoSelect_submit_allowed()
 {
-    var DispoChoice = document.vicidial_form.DispoSelection.value;
-    var isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback;
-    var isSALE = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].sale;
+    var 
+    DispoChoice = document.vicidial_form.DispoSelection.value,
+    isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback,
+    isSALE = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].sale,
+    lead_id_hack = $("#lead_id").val();
     
     if (custom_fields_enabled && !isCB) {
 
@@ -4472,7 +4474,6 @@ function  DispoSelect_submit_allowed()
         {
 
             inOUT_hack = inOUT;
-            lead_id_hack = $("#lead_id").val();
             DSupdate_query = {server_ip: server_ip, session_name: session_name, ACTION: "updateDISPO", format: "text", user: user, pass: pass, dispo_choice: DispoChoice, lead_id: document.vicidial_form.lead_id.value, campaign: campaign, auto_dial_level: auto_dial_level, agent_log_id: agent_log_id, CallBackDatETimE: CallBackDatETimE, list_id: document.vicidial_form.list_id.value, recipient: CallBackrecipient, use_internal_dnc: use_internal_dnc, use_campaign_dnc: use_campaign_dnc, MDnextCID: LasTCID, stage: group, vtiger_callback_id: vtiger_callback_id, phone_number: document.vicidial_form.phone_number.value, phone_code: document.vicidial_form.phone_code.value, dial_method: dial_method, uniqueid: document.vicidial_form.uniqueid.value, CallBackLeadStatus: CallBackLeadStatus, comments: CallBackCommenTs, custom_field_names: custom_field_names, call_notes: document.vicidial_form.call_notes_dispo.value, cb_to_other_user: cb_to_other_user, cb_to_other_username: cb_to_other_username};
             $.post('vdc_db_query.php', DSupdate_query, function(data) {
                 if (nc_live && nc_live_id !== undefined) {
