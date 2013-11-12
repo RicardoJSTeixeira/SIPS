@@ -316,7 +316,8 @@ $("#checkbox_scheduler_all").click(function()
 });
 $("#apagar_elemento").click(function()
 {
-      item_database("delete_item", list_item.attr("id"), 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), 0, list_item.index(), 0, 0, 0, 0, 0, 0, 0);
+      
+      item_database("delete_item", list_item.attr("id"), 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), 0, list_item.index(), 0, 0, 0, 0, 0, 0, 0,0,list_item.data("tag"));
       list_ui.item.remove();
       editor_toggle("off");
       $("#rule_target_select option[value=" + list_item.attr("id") + "] ").remove();
