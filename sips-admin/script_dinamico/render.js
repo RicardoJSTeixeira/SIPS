@@ -569,7 +569,7 @@ function insert_element(opcao, element, data)
                   {
                         if (data.values_text.length > 0)
                         {
-                              element.append($("<button>").addClass("pdf_button btn btn-primary").attr("file", data.values_text).text("Ver PDF"));
+                              element.append($("<button>").addClass("pdf_button btn btn-primary icon-folder-open").attr("file", data.values_text).text(" Ver PDF"));
                         }
                   }
                   else
@@ -578,7 +578,7 @@ function insert_element(opcao, element, data)
                   }
                   break;
             case "button":
-                  element.find(".botao")[0].text = data.texto;
+                  element.find(".botao").text (data.texto);
                   element.find(".botao")[0].name = data.tag;
 
                   break;
