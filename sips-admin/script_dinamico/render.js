@@ -198,6 +198,12 @@ function update_info()
                               items.push([item, this.id_page]);
                               break;
                   }
+
+                  if (!$("#" + this.id_page + "pag").length) {
+                        $("#script_div").append($("<div>").addClass("pag_div").attr("id", this.id_page+ "pag"));
+                  }
+                  $("#" +this.id_page + "pag").append(item);
+                 
                   var last_insert = insert_element(this.type, item, this);
 
             });
@@ -206,13 +212,7 @@ function update_info()
 
 
 //FAZER O APPEND DOS ITEMS A LISTA
-            $.each(items, function()
-            {
-                  if (!$("#" + this[1] + "pag").length) {
-                        $("#script_div").append($("<div>").addClass("pag_div").attr("id", this[1] + "pag"));
-                  }
-                  $("#" + this[1] + "pag").append(this[0]);
-            });
+       
 
             if (page_info.isadmin !== "1")
             {
