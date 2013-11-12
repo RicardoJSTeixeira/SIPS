@@ -4369,7 +4369,7 @@ function  DispoSelect_submit_allowed()
     if (custom_fields_enabled && !isCB) {
 
         if (script_dinamico) {
-            vcFormIFrame.unique_id = document.vicidial_form.uniqueid.value;
+            vcFormIFrame.unique_id = unique_id_hack;
             if (isSALE) {
                 if (vcFormIFrame.validate_manual()) {
                     vcFormIFrame.submit_manual(function() {
