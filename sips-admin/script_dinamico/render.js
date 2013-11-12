@@ -4,7 +4,7 @@ var array_id = [];
 var tag_regex = /\@(\d{1,5})\@/g;
 var tag_regex2 = /\§(.*?)\§/g;
 var page_info = [];
-var items = [];
+
 var unique_id = 0;
 var id_script = 0;
 var admin_review = 0;
@@ -88,7 +88,6 @@ function update_info()
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "texto");
-                              items.push([item, this.id_page]);
                               break;
                         case "pagination":
                               item = $('#dummie .pagination_class').clone();
@@ -96,7 +95,6 @@ function update_info()
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "pagination");
-                              items.push([item, this.id_page]);
                               break;
                         case "radio":
                               item = $('#dummie .radio_class').clone();
@@ -105,7 +103,6 @@ function update_info()
                                       .data("required", this.required)
                                       .data("type", "radio")
                                       .data("dispo", this.dispo);
-                              items.push([item, this.id_page]);
                               break;
                         case "checkbox":
                               item = $('#dummie .checkbox_class').clone();
@@ -114,7 +111,6 @@ function update_info()
                                       .data("required", this.required)
                                       .data("dispo", this.dispo)
                                       .data("type", "checkbox");
-                              items.push([item, this.id_page]);
                               break;
                         case "multichoice":
                               item = $('#dummie .multichoice_class').clone();
@@ -122,7 +118,6 @@ function update_info()
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "multichoice");
-                              items.push([item, this.id_page]);
                               break;
                         case "textfield":
                               item = $('#dummie .textfield_class').clone();
@@ -130,7 +125,6 @@ function update_info()
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "textfield");
-                              items.push([item, this.id_page]);
                               break;
                         case "legend":
                               item = $('#dummie .legend_class').clone();
@@ -138,7 +132,6 @@ function update_info()
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "legend");
-                              items.push([item, this.id_page]);
                               break;
                         case "tableradio":
                               item = $('#dummie .tableradio_class').clone();
@@ -146,7 +139,6 @@ function update_info()
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "tableradio");
-                              items.push([item, this.id_page]);
                               break;
                         case "tableinput":
                               item = $('#dummie .tableinput_class').clone();
@@ -154,7 +146,6 @@ function update_info()
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "tableinput");
-                              items.push([item, this.id_page]);
                               break;
                         case "datepicker":
                               item = $('#dummie .datepicker_class').clone();
@@ -163,8 +154,6 @@ function update_info()
                                       .data("required", this.required)
                                       .data("type", "datepicker")
                                       .data("data_format", this.placeholder);
-
-                              items.push([item, this.id_page]);
                               break;
                         case "scheduler":
                               item = $('#dummie .scheduler_class').clone();
@@ -172,7 +161,6 @@ function update_info()
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "scheduler");
-                              items.push([item, this.id_page]);
                               break;
                         case "textarea":
                               item = $('#dummie .textarea_class').clone();
@@ -180,7 +168,6 @@ function update_info()
                                       .data("id", this.id)
                                       .data("required", this.required)
                                       .data("type", "textarea");
-                              items.push([item, this.id_page]);
                               break;
                         case "ipl":
                               item = $('#dummie .ipl_class').clone();
@@ -188,14 +175,12 @@ function update_info()
                                       .data("id", this.id)
                                       .data("option", this.param1)
                                       .data("type", "ipl");
-                              items.push([item, this.id_page]);
                               break;
                         case "button":
                               item = $('#dummie .button_class').clone();
                               item.attr("id", this.tag)
                                       .data("id", this.id)
                                       .data("type", "button");
-                              items.push([item, this.id_page]);
                               break;
                   }
 
@@ -527,7 +512,7 @@ function insert_element(opcao, element, data)
                               break;
                   }
 
-                  element.find(".form_datetime").datetimepicker({format: data_format, autoclose: true, language: "pt", minView: min_view}).keypress(function(e) {
+                  $("#" + data.tag + " .form_datetime").datetimepicker({format: data_format, autoclose: true, language: "pt", minView: min_view}).keypress(function(e) {
                         e.preventDefault();
                   }).bind("cut copy paste", function(e) {
                         e.preventDefault();
@@ -638,7 +623,7 @@ function populate_script(callback)
 //RULES  
 function rules_work(data)
 {
-      console.log(data.tipo_elemento);
+
       switch (data.tipo)
       {
             case "hide":
