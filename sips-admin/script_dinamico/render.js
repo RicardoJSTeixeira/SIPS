@@ -190,7 +190,20 @@ function update_info()
                                       .data("type", "ipl");
                               items.push([item, this.id_page]);
                               break;
+                        case "button":
+                              item = $('#dummie .button_class').clone();
+                              item.attr("id", this.tag)
+                                      .data("id", this.id)
+                                      .data("type", "button");
+                              items.push([item, this.id_page]);
+                              break;
                   }
+
+                  if (!$("#" + this.id_page + "pag").length) {
+                        $("#script_div").append($("<div>").addClass("pag_div").attr("id", this.id_page + "pag"));
+                  }
+                  $("#" + this.id_page + "pag").append(item);
+
                   var last_insert = insert_element(this.type, item, this);
 
             });
@@ -199,13 +212,7 @@ function update_info()
 
 
 //FAZER O APPEND DOS ITEMS A LISTA
-            $.each(items, function()
-            {
-                  if (!$("#" + this[1] + "pag").length) {
-                        $("#script_div").append($("<div>").addClass("pag_div").attr("id", this[1] + "pag"));
-                  }
-                  $("#" + this[1] + "pag").append(this[0]);
-            });
+
 
             if (page_info.isadmin !== "1")
             {
@@ -233,7 +240,7 @@ function update_info()
 
 
 
-      
+
 
 
       }, "json");
@@ -246,7 +253,7 @@ function insert_element(opcao, element, data)
 {
       element.removeAttr("title");
       element.find(".label_titulo").remove();
- 
+
 
       switch (opcao)
       {
@@ -260,14 +267,14 @@ function insert_element(opcao, element, data)
 
                   if (data.default_value.toString().length > 2)
                   {
-               
+
                         $.post("requests.php", {action: "get_client_info_by_lead_id", lead_id: page_info.lead_id, user_logged: page_info.user_id},
                         function(data1)
                         {
-        
+
                               if (Object.size(data1))
                                     input.value = data1[data.default_value.toString().toLowerCase()];
- 
+
 
                         }, "json");
 
@@ -284,7 +291,10 @@ function insert_element(opcao, element, data)
                               pattern.push("[custom[onlyLetterNumberSymbol]]");
                               break;
                         case "letter":
-                              pattern.push("[custom[onlyLetters]]");
+                              pattern.push("[custom[onlyLetterSp]]");
+                              break;
+                        case "number":
+                              pattern.push("[custom[onlyNumberSp]]");
                               break;
                         case "email":
                               pattern.push("[custom[email]]");
@@ -559,13 +569,16 @@ function insert_element(opcao, element, data)
                   {
                         if (data.values_text.length > 0)
                         {
-                              element.append($("<button>").addClass("pdf_button").attr("file", data.values_text).text("Ver PDF"));
+                              element.append($("<button>").addClass("pdf_button btn btn-primary icon-folder-open").attr("file", data.values_text).text(" Ver PDF"));
                         }
                   }
                   else
                   {
                         element.append($("<a>").attr("href", "http://" + data.values_text).text(data.values_text));
                   }
+                  break;
+            case "button":
+                  element.find(".botao").text(data.texto);
                   break;
       }
       if (data.hidden)
@@ -589,6 +602,7 @@ function populate_script(callback)
 
                         switch (this.type)
                         {
+                              case "textarea":
                               case "texto":
                                     $("#" + this.tag_elemento + " :input").val(this.valor);
                                     break;
@@ -624,7 +638,7 @@ function populate_script(callback)
 //RULES  
 function rules_work(data)
 {
-
+      console.log(data.tipo_elemento);
       switch (data.tipo)
       {
             case "hide":
@@ -644,13 +658,22 @@ function rules_work(data)
             case "goto":
                   if (page_info.isadmin != "1")
                   {
-                        if ($("#myform").validationEngine('validate'))
+                        if (data.tipo_elemento == "button")
                         {
-
                               $(".pag_div").hide();
                               $("#" + data.tag_target + "pag").show();
                         }
+                        else
+                        {
+                              if ($("#myform").validationEngine('validate'))
+                              {
+                                    $(".pag_div").hide();
+                                    $("#" + data.tag_target + "pag").show();
+
+                              }
+                        }
                   }
+
                   break;
       }
 }
@@ -864,6 +887,13 @@ function rules(callback)
                                           break;
                               }
                               break;
+                        case "button":
+                              $(document).on("click", "#" + this.tag_trigger, function()//atribuir os ons a cada value
+                              {
+                                    rules_work(data[index]);
+                              }
+                              );
+                              break;
                   }
             });
 
@@ -941,7 +971,7 @@ function tags(callback)
 //FORM MANIPULATION
 $("#myform").on("submit", function(e)
 {
- 
+
       e.preventDefault();
 });
 $("#admin_submit").on("click", function()
@@ -952,10 +982,10 @@ $("#admin_submit").on("click", function()
 
 $('html').bind('keypress', function(e)
 {
-   if(e.keyCode == 13)
-   {
-      return false;
-   }
+      if (e.keyCode == 13)
+      {
+            return false;
+      }
 });
 
 function submit_manual(callback)
