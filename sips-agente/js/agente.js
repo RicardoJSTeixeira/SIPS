@@ -4365,7 +4365,7 @@ function  DispoSelect_submit_allowed()
     var 
     DispoChoice = document.vicidial_form.DispoSelection.value,
     isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback,
-    isSALE = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].sale,
+    isSALE = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].sale;
     lead_id_hack = $("#lead_id").val();
     
     if (custom_fields_enabled && !isCB) {
