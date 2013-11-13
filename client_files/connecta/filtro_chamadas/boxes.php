@@ -9,28 +9,18 @@ define("ROOT", $header);
 
 //includes
 require(ROOT . "ini/dbconnect.php");
+require(ROOT . "ini/user.php");
+$user=new user;
 
-$PHP_AUTH_USER=$_POST["user"];
-$PHP_AUTH_PW=$_POST["pass"];
 $campaign_id=$_POST["campaign"];
 
-if ( (strlen($PHP_AUTH_USER)<2) or (strlen($PHP_AUTH_PW)<2) )
+if ( !$user->id)
 	{
 	Header("WWW-Authenticate: Basic realm=\"SIPS\"");
 	Header("HTTP/1.0 401 Unauthorized");
 	exit;
 	}
-        
-$stmt="SELECT user_group from vicidial_users where user='".mysql_real_escape_string($PHP_AUTH_USER)."' and pass='".mysql_real_escape_string($PHP_AUTH_PW)."';";
-	$rslt=mysql_query($stmt, $link);
-	$row=mysql_fetch_row($rslt);
 
-    if(mysql_num_rows($rslt)==0) 
-	{
-	Header("WWW-Authenticate: Basic realm=\"SIPS\"");
-	Header("HTTP/1.0 401 Unauthorized");
-	exit;
-	} 
         
 if(isset($_POST["campaign"])){
      
@@ -49,7 +39,7 @@ if(isset($_POST["campaign"])){
      $days=$_POST["dias"];
     
 
-require_once ('../reservas/func/reserve_utils.php');
+require_once (ROOT.'sips-admin/reservas/func/reserve_utils.php');
 
 $total = 0;
 
@@ -155,7 +145,7 @@ $boxes="";
                         <span><i class='icon-hand-right $colors[$range]'></i></span>
                         <input type='text' readonly='' class='min-input' value='$max'>
                     </span>
-                    <span style='display:inline' class='$colors[$range]'>".round($perc)."%</span>
+                    <span style='display:inline' class='$colors[$range]'>".round($perc*1.2)."%</span>
                     <span class='pull-right led'></span>
                 </div>
             </div>
@@ -163,4 +153,3 @@ $boxes="";
     }
 return $boxes;
 }
-?>
