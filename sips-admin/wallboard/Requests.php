@@ -13,6 +13,9 @@ foreach ($_GET as $key => $value) {
 
 $user = new user;
 if(!$user->id)
+{
+    exit;
+}
 switch ($action) {
 
 
@@ -686,4 +689,5 @@ union all
 
 //flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------
 }
-?> 
+
+ 

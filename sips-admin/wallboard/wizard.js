@@ -537,7 +537,7 @@ $("#pie_opcao").change(function()
 $("#opcao_layout_button").click(function()
 {
 
-      $("#fullscreen_link").html((document.URL).split(".org")[0] + ".org" + "/sips-admin/wallboard/full_screen_render.html?id=" + idLayout);
+      $("#fullscreen_link").html((document.URL).split(".org")[0] + ".org" + "/sips-admin/wallboard/full_screen_render.php?id=" + idLayout);
 });
 
 
@@ -651,7 +651,7 @@ function get_query(codigo)
 
 function fullScreen()
 {
-      var window_slave = window.open("/sips-admin/wallboard/full_screen_render.html?id=" + idLayout);
+      var window_slave = window.open("/sips-admin/wallboard/full_screen_render.php?id=" + idLayout);
 
 }
 
