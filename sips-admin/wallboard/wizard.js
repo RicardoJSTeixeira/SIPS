@@ -651,7 +651,7 @@ function get_query(codigo)
 
 function fullScreen()
 {
-      var window_slave = window.open("/sips-admin/wallboard/full_screen_render.html?id=" + idLayout);
+      var window_slave = window.open("/sips-admin/wallboard/full_screen_render.php?id=" + idLayout);
 
 }
 
