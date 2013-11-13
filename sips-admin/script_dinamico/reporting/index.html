@@ -35,7 +35,8 @@
             <style>
 
 
-
+                  #column_order li { margin: 0 5px 5px 5px; padding: 3px; font-size: 1.1em; width: 70%; }
+                 
 
             </style>
       </head>
@@ -62,11 +63,11 @@
                         </div> 
                         <div class="formRight">
 
-                              <input  type="radio" id="radio2" class="radio_opcao" name="ra" value="2" >
+                              <input  type="radio" id="radio2" class="radio_opcao" name="ra" value="2" disabled="disabled" >
                               <label class=" radio inline"  for="radio2"><span></span>Linha de inbound</label> 
                         </div> 
                         <div class="formRight">
-                              <input  type="radio" id="radio3" class="radio_opcao"  name="ra" value="3">
+                              <input  type="radio" id="radio3" class="radio_opcao"  name="ra" value="3" disabled="disabled">
                               <label class="radio inline"  for="radio3"><span></span>Base de Dados</label> 
                         </div>
                         <div class="formRight time_div">
@@ -114,12 +115,12 @@
                         </div>
 
                         <div id="column_order_div" >
-                              <label>Ordenação de colunas</label>
-                              <ul id="column_order">
+                              <h5>Ordenação de colunas</h5>
+                              <ul  class="connectedSortable ui-helper-reset" id="column_order">
 
                               </ul>
                         </div>
-                  
+
                   </div>
 
 

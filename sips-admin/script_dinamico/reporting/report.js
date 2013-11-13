@@ -76,23 +76,22 @@ $("#download_report").on("click", function(e)
 
       e.preventDefault();
 
-      var ordered_tags = new Array();
+      var 
+      ordered_tags = new Array(),
+      that;
       $("#column_order li").each(function()
       {
-
-            ordered_tags.push( $(this).data("id"));
+            that=$(this).data();
+            
+            ordered_tags.push({id:that.id,type:that.type,text:that.text});
       });
-
 
 
       if ($("#form_filter").validationEngine('validate'))
       {
-
-
             if ($("#radio1").is(":checked"))
             {
-
-                  document.location.href = "requests.php?action=report&tipo=1&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_campanha option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked")+"&column_order="+ordered_tags;
+                  document.location.href = "requests.php?action=report&tipo=1&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_campanha option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + JSON.stringify(ordered_tags);
             }
             else if ($("#radio2").is(":checked"))
             {
@@ -121,17 +120,17 @@ $("#select_campanha").on("change", function()
                   $.each(data, function()
                   {
                         if ($.isNumeric(this.id))
-                              $("#column_order").append("<li data-id=" + this.id + ">" + this.id + ":" + get_name_by_type(this.type) + "->" + this.texto + "</li>");
+                              $("#column_order").append("<li class='ui-state-default' id=" + this.id + " data-id='m" + this.id + "' data-type='" + this.type + "' data-text='0'>" + this.id + ":" + get_name_by_type(this.type) + "->" + this.texto + "</li>");
                         else
-                              $("#column_order").append("<li data-id=" + this.id + ">"+ (this.display_name)+"</li>");
+                              $("#column_order").append("<li class='ui-state-default' id=" + this.id + " data-id='" + this.id + "' data-type='campo_dinamico' data-text='" + this.display_name + "'>" + (this.display_name) + "</li>");
                   });
             }
             else
                   $("#column_order").append("<li>Sem Script</li>");
 
       }, "json");
-      
-       
+
+
 });
 
 
