@@ -66,7 +66,7 @@
                     </thead>
                     <tbody>
                         <?php
-                        $query = "SELECT id_resource,b.display_text,b.alias_code,a.days_visible,a.blocks,a.begin_time,a.end_time,b.active FROM sips_sd_schedulers a INNER JOIN sips_sd_resources b ON a.id_scheduler=b.id_scheduler WHERE b.active=1 AND a.id_scheduler=$id_scheduler;";
+                        $query = "SELECT id_resource,b.display_text,b.alias_code,a.days_visible,a.blocks,a.begin_time,a.end_time,b.active FROM sips_sd_schedulers a INNER JOIN sips_sd_resources b ON a.id_scheduler=b.id_scheduler WHERE a.id_scheduler=$id_scheduler;";
                         $result = mysql_query($query, $link);
                         while ($row = mysql_fetch_assoc($result)) {
                             ?>
