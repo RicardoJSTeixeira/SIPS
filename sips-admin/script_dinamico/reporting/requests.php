@@ -14,7 +14,7 @@ foreach ($_GET as $key => $value) {
 error_reporting();
 ini_set('display_errors', '1');
 
-
+header('Content-Disposition: attachment; filename=Report_Script_' . date("Y-m-d_H:i:s") . '.csv');
 
 
 
@@ -117,14 +117,11 @@ switch ($action) {
 
     case "report":
 
-        $toExcel = New PHPExcel();
-        $sheet = $toExcel->getActiveSheet(0);
-//propriedades do documento
-        $toExcel->getProperties()->setCreator("utilizador")
-                ->setTitle("Report de script")
-                ->setLastModifiedBy("modificado por...")
-                ->setSubject("Relatório")
-                ->setDescription("Relatório de script dinâmico");
+        header('Content-Encoding: UTF-8');
+        header('Content-type: text/csv; charset=UTF-8');
+        echo "\xEF\xBB\xBF";
+       $output = fopen('php://output', 'w');
+
 // Nome das tabelas
 
         
@@ -246,12 +243,13 @@ switch ($action) {
             echo("Sem resultados");
             exit;
         }
-        $count=2;
+        
+          fputcsv($output, $titulos, ";", '"');
         $lead_id = false;
         while ($row1 = mysql_fetch_assoc($result)) {
             if ($lead_id != $row1["lead_id"]) {
                 if ($lead_id) {
-                        $sheet->fromArray($temp_d, NULL, 'A'.$count++);
+                          fputcsv($output, $temp_d, ";", '"');
                 }
                 $temp_d = $final_row[$row1["lead_id"]];
                 unset($final_row[$row1["lead_id"]]);
@@ -275,35 +273,13 @@ switch ($action) {
                 $temp_d["m" . $row1["tag_elemento"]] = ($row1["param1"] == "nib") ? "" . $row1["valor"] . "" : $row1["valor"];
             
         }
-             $sheet->fromArray($temp_d, NULL, 'A'.$count);
+              fputcsv($output, $temp_d, ";", '"');
 
-
-
-
-
-        $sheet->fromArray($titulos, null, 'A1');
-// informacao das tabelas
-  
-
-
-        //faz um autoresize a cada tabela com informacao
-        for ($col = 'A'; $sheet->getCell($col . '1')->getValue() != NULL; $col++) {
-            $sheet->getColumnDimension($col)->setAutoSize(true);
-        }
-        //mete a negrito a row do nome das tabelas
-        $sheet->getStyle('A1:' . $col . '1')->getFont()->setBold(true);
-//enviar ficheiro para o browser "save"
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename=Report_Script_' . date("Y-m-d_H:i:s") . '.xls');
-        header('Cache-Control: max-age=0');
-        $writeExcel = PHPExcel_IOFactory::createWriter($toExcel, 'Excel5');
-        $writeExcel->save('php://output');
-        exit;
-
+fclose($output);
 
 
 
 
         break;
 }
-?>
+
