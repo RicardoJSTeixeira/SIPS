@@ -14,7 +14,7 @@ foreach ($_GET as $key => $value) {
 error_reporting();
 ini_set('display_errors', '1');
 
-
+header('Content-Disposition: attachment; filename=Report_Script_' . date("Y-m-d_H:i:s") . '.csv');
 
 
 
