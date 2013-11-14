@@ -39,8 +39,7 @@ switch ($action) {
 
         $query = "SELECT a.lead_id,b.first_name,d.campaign_name,a.entry_time,a.callback_time,a.comments,a.callback_id from vicidial_callbacks a 
             left join vicidial_list b on a.lead_id=b.lead_id
-  
-            left join vicidial_campaigns d on d.campaign_id=a.campaign_id where a.status<>'INACTIVE' and a.user='$user' $date limit 100";
+            left join vicidial_campaigns d on d.campaign_id=a.campaign_id where a.status<>'INACTIVE' and a.recipient='USERONLY' and a.user='$user' $date limit 100";
 
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
@@ -181,4 +180,3 @@ switch ($action) {
         echo("1");
         break;
 }
-?>
