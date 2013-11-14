@@ -45,7 +45,27 @@ $(function() {
       }, "json");
 
 
-      $("#column_order").sortable({});
+      $("#column_order").sortable({
+            stop: function(event, ui) {
+                  var elements = new Array();
+                  var items = $("#column_order  li");
+                  for (var count = 0; count < items.length; count++)
+                  {
+                        elements.push(items[count].id);
+                  }
+                  $.post("requests.php", {action: "update_elements_order",elements:elements,campaign:$("#select_campanha option:selected").val()},
+                  function(data)
+                  {
+
+
+                  }, "json");
+
+
+
+
+
+
+            }});
 
 
 
@@ -76,14 +96,14 @@ $("#download_report").on("click", function(e)
 
       e.preventDefault();
 
-      var 
-      ordered_tags = new Array(),
-      that;
+      var
+              ordered_tags = new Array(),
+              that;
       $("#column_order li").each(function()
       {
-            that=$(this).data();
-            
-            ordered_tags.push({id:that.id,type:that.type,text:that.text});
+            that = $(this).data();
+
+            ordered_tags.push({id: that.id, type: that.type, text: that.text});
       });
 
 
@@ -115,10 +135,12 @@ $("#select_campanha").on("change", function()
       $.post("requests.php", {action: "get_fields_to_order", campaign_id: $("#select_campanha option:selected").val()},
       function(data)
       {
+              console.log(data.length);
             if (data.length)
             {
                   $.each(data, function()
                   {
+                      
                         if ($.isNumeric(this.id))
                               $("#column_order").append("<li class='ui-state-default' id=" + this.id + " data-id='m" + this.id + "' data-type='" + this.type + "' data-text='0'>" + this.id + ":" + get_name_by_type(this.type) + "->" + this.texto + "</li>");
                         else
