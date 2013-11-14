@@ -225,7 +225,7 @@ switch ($action) {
           left join vicidial_log vlg on vlg.uniqueid=sr.unique_id
           left join vicidial_campaign_statuses vcs on vcs.status=vlg.status
           left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script
-          where sr.campaign_id='$campaign_id' and sr.id_script='$id_script' $filtro $date_filter ";
+          where sr.campaign_id='$campaign_id' and sr.id_script='$id_script' $filtro $date_filter order by sr.lead_id ";
         $result = mysql_query($query, $link) or die(mysql_error());
         if (mysql_num_rows($result) < 1) {
             echo("Sem resultados");
@@ -257,8 +257,7 @@ switch ($action) {
             }
             else
                 $temp_d["m" . $row1["tag_elemento"]] = ($row1["param1"] == "nib") ? "" . $row1["valor"] . "" : $row1["valor"];
-
-            $temp_d[array_search("Sem titulo", $temp_d)] = "";
+            
         }
         $final_row[$lead_id] = $temp_d;
 
