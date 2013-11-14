@@ -87,7 +87,10 @@ switch ($action) {
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array("id" => $row["tag"], "type" => $row["type"], "texto" => $row["texto"]);
         }
-
+        if (mysql_num_rows($query) < 1) {
+           echo json_encode(array());
+            exit;
+        }
 
         $oo = array();
         $query = "SELECT id,elements,campaign  FROM  report_order where campaign='$campaign_id'";

@@ -135,7 +135,7 @@ $("#select_campanha").on("change", function()
       $.post("requests.php", {action: "get_fields_to_order", campaign_id: $("#select_campanha option:selected").val()},
       function(data)
       {
-              console.log(data.length);
+             
             if (data.length)
             {
                   $.each(data, function()
