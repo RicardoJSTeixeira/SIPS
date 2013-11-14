@@ -766,6 +766,7 @@ function populate_element(tipo, element)
 {
       rules_manager(tipo, element);
       $("#tabs").tabs("enable");
+      $("#select_default_value").val("");
       $("#item_edit_comum div").show();
       if (element.data("required"))
             $("#item_required").attr('checked', true);
