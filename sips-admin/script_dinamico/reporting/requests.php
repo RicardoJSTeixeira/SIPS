@@ -254,7 +254,7 @@ switch ($action) {
                         $sheet->fromArray($temp_d, NULL, 'A'.$count++);
                 }
                 $temp_d = $final_row[$row1["lead_id"]];
-
+                unset($final_row[$row1["lead_id"]]);
 
                 $lead_id = $row1["lead_id"];
                 $temp_d["id"] = $row1["lead_id"];
