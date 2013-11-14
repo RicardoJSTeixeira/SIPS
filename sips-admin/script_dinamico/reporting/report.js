@@ -53,7 +53,7 @@ $(function() {
                   {
                         elements.push(items[count].id);
                   }
-                  $.post("requests.php", {action: "update_elements_order",elements:elements,campaign:$("#select_campanha option:selected").val()},
+                  $.post("requests.php", {action: "update_elements_order", elements: elements, campaign: $("#select_campanha option:selected").val()},
                   function(data)
                   {
 
@@ -132,15 +132,23 @@ $("#allcontacts").on("click", function()
 $("#select_campanha").on("change", function()
 {
       $("#column_order").empty();
-      $.post("requests.php", {action: "get_fields_to_order", campaign_id: $("#select_campanha option:selected").val()},
+
+      var campanha = "";
+      if ($("#radio1").is(":checked"))
+            campanha = $("#select_campanha option:selected").val();
+      if ($("#radio3").is(":checked"))
+            campanha = $("#select_base_dados option:selected").data("campaign_id");
+
+
+      $.post("requests.php", {action: "get_fields_to_order", campaign_id: campanha},
       function(data)
       {
-             
+
             if (data.length)
             {
                   $.each(data, function()
                   {
-                      
+
                         if ($.isNumeric(this.id))
                               $("#column_order").append("<li class='ui-state-default' id=" + this.id + " data-id='m" + this.id + "' data-type='" + this.type + "' data-text='0'>" + this.id + ":" + get_name_by_type(this.type) + "->" + this.texto + "</li>");
                         else
