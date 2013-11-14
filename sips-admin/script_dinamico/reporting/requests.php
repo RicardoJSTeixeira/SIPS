@@ -51,9 +51,10 @@ switch ($action) {
 
 
     case "update_elements_order":
-        $query = "SELECT count(id) from report_order where campaign='$campaign'";
+        $query = "SELECT count(id) as count from report_order where campaign='$campaign'";
         $result = mysql_query($query, $link) or die(mysql_error());
-        if (mysql_num_rows($result) == 0) {
+        $row = mysql_fetch_assoc($result);
+        if ($row["count"] == 0) {
             $query = "insert into report_order (id,elements,campaign) values (NULL, '" . json_encode($elements) . "','$campaign')";
             $query = mysql_query($query, $link) or die(mysql_error());
         } else {
@@ -67,8 +68,6 @@ switch ($action) {
 
     case "get_fields_to_order":
 
-
-
         $js = array();
 
         $query = "SELECT Name,Display_name  FROM vicidial_list_ref where campaign_id = '$campaign_id' and active='1' order by field_order asc";
@@ -76,7 +75,6 @@ switch ($action) {
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array("id" => $row["Name"], "type" => "campo_dinamico", "display_name" => $row["Display_name"]);
         }
-
 
         $query = "SELECT id_script from script_assoc where id_camp_linha='$campaign_id'";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -88,21 +86,20 @@ switch ($action) {
             $js[] = array("id" => $row["tag"], "type" => $row["type"], "texto" => $row["texto"]);
         }
         if (mysql_num_rows($query) < 1) {
-           echo json_encode(array());
+            echo json_encode(array());
             exit;
         }
 
         $oo = array();
         $query = "SELECT id,elements,campaign  FROM  report_order where campaign='$campaign_id'";
         $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            $oo = json_decode($row["elements"]);
-        }
+        $row = mysql_fetch_assoc($query);
+        $oo = json_decode($row["elements"]);
+
         if (mysql_num_rows($query) > 0) {
             $temp = $js;
             $js = array();
             foreach ($oo as $key) {
-
                 foreach ($temp as $value) {
                     if ($key == $value['id']) {
                         $js[] = $value;
@@ -110,6 +107,8 @@ switch ($action) {
                     }
                 }
             }
+
+            //  $js = $js+ $temp;
         }
         echo json_encode($js);
         break;
