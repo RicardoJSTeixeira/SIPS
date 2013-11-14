@@ -116,6 +116,19 @@ switch ($action) {
 
 
     case "report":
+
+        $toExcel = New PHPExcel();
+        $sheet = $toExcel->getActiveSheet(0);
+//propriedades do documento
+        $toExcel->getProperties()->setCreator("utilizador")
+                ->setTitle("Report de script")
+                ->setLastModifiedBy("modificado por...")
+                ->setSubject("Relatório")
+                ->setDescription("Relatório de script dinâmico");
+// Nome das tabelas
+
+        
+        
         $cd_title = array();
         $cd_name = array();
         $cd_values = array();
@@ -233,11 +246,12 @@ switch ($action) {
             echo("Sem resultados");
             exit;
         }
+        $count=2;
         $lead_id = false;
         while ($row1 = mysql_fetch_assoc($result)) {
             if ($lead_id != $row1["lead_id"]) {
                 if ($lead_id) {
-                    $final_row[$lead_id] = $temp_d;
+                        $sheet->fromArray($temp_d, NULL, 'A'.$count++);
                 }
                 $temp_d = $final_row[$row1["lead_id"]];
 
@@ -261,25 +275,15 @@ switch ($action) {
                 $temp_d["m" . $row1["tag_elemento"]] = ($row1["param1"] == "nib") ? "" . $row1["valor"] . "" : $row1["valor"];
             
         }
-        $final_row[$lead_id] = $temp_d;
+             $sheet->fromArray($temp_d, NULL, 'A'.$count);
 
 
-
-        $toExcel = New PHPExcel();
-        $sheet = $toExcel->getActiveSheet(0);
-//propriedades do documento
-        $toExcel->getProperties()->setCreator("utilizador")
-                ->setTitle("Report de script")
-                ->setLastModifiedBy("modificado por...")
-                ->setSubject("Relatório")
-                ->setDescription("Relatório de script dinâmico");
-// Nome das tabelas
 
 
 
         $sheet->fromArray($titulos, null, 'A1');
 // informacao das tabelas
-        $sheet->fromArray($final_row, NULL, 'A2');
+  
 
 
         //faz um autoresize a cada tabela com informacao
