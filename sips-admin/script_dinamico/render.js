@@ -154,6 +154,7 @@ function update_info()
                                       .data("required", this.required)
                                       .data("type", "datepicker")
                                       .data("data_format", this.placeholder);
+                              item.find(".form_datetime").datetimepicker({});
                               break;
                         case "scheduler":
                               item = $('#dummie .scheduler_class').clone();
@@ -197,14 +198,11 @@ function update_info()
 
 
 //FAZER O APPEND DOS ITEMS A LISTA
-
-
             if (page_info.isadmin !== "1")
             {
                   $(".pag_div").hide().first().show();
                   $("#admin_submit").hide();
                   rules(tags(populate_script(function() {
-
                         setTimeout(function() {
                               $("#myform").validationEngine();
                         }, 100);
@@ -220,14 +218,7 @@ function update_info()
                         }, 100);
                   });
                   $(".item").show();
-
             }
-
-
-
-
-
-
       }, "json");
 
 }
@@ -495,7 +486,6 @@ function insert_element(opcao, element, data)
                   element.find(".form_datetime")[0].name = data.tag;
                   var data_format = "yyyy-mm-dd hh:ii";
                   var min_view = 0;
-
                   switch (element.data("data_format"))
                   {
                         case "0":
@@ -510,13 +500,16 @@ function insert_element(opcao, element, data)
                               data_format = 'yyyy-mm-dd';
                               min_view = 2;
                               break;
+                        default:
+                              data_format = 'yyyy-mm-dd';
+                              min_view = 2;
+                              break;
                   }
-
-                  $("#" + data.tag + " .form_datetime").datetimepicker({format: data_format, autoclose: true, language: "pt", minView: min_view}).keypress(function(e) {
+               /*   $("#" + data.tag + " .form_datetime").datetimepicker({format: data_format, autoclose: true, language: "pt", minView: min_view}).keypress(function(e) {
                         e.preventDefault();
                   }).bind("cut copy paste", function(e) {
                         e.preventDefault();
-                  });
+                  });*/
                   break;
             case "scheduler":
                   element.find(".scheduler_button_go").attr("id", element.data("id") + "go_button");
@@ -568,7 +561,11 @@ function insert_element(opcao, element, data)
       }
       if (data.hidden)
             element.css("display", "none");
-      return true;
+
+
+
+
+      return element;
 }
 
 
@@ -1148,8 +1145,8 @@ $(function() {
       $(document).on("click", ".scheduler_button_go", function(e) {
             e.preventDefault();
             var select = $(this).prev("select");
-            if (select.find("option:selected").val()>0)
-                  
+            if (select.find("option:selected").val() > 0)
+
             {
                   var url = '../reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + page_info.user_id + '&lead=' + page_info.lead_id;
                   window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
