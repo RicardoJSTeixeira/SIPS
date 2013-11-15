@@ -64,7 +64,10 @@ switch ($action) {
         break;
 
 
-
+    case "reset_elements_order":
+        $query = "delete from report_order where campaign='$campaign_id'";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        break;
 
     case "get_fields_to_order":
 
@@ -120,12 +123,12 @@ switch ($action) {
         header('Content-Encoding: UTF-8');
         header('Content-type: text/csv; charset=UTF-8');
         echo "\xEF\xBB\xBF";
-       $output = fopen('php://output', 'w');
+        $output = fopen('php://output', 'w');
 
 // Nome das tabelas
 
-        
-        
+
+
         $cd_title = array();
         $cd_name = array();
         $cd_values = array();
@@ -144,16 +147,16 @@ switch ($action) {
             $date_filter = "and sr.date between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
         else
             $date_filter = "";
-        
-        
-        $filtro = "";
-        if ($tipo == "1" || $tipo == "2") {
-            $filtro = "and sr.campaign_id = '$campaign_id'";
-            $contact_filter = "left join `script_result` sr on a.lead_id=sr.lead_id where id_script='$id_script' and  sr.campaign_id = '$campaign_id' $date_filter";
-        } else {
-            $filtro = "and vl.list_id = '$list_id'";
-            $contact_filter = " where a.list_id= '$list_id'";
-        }
+
+
+
+
+        $contact_filter = "left join `script_result` sr on a.lead_id=sr.lead_id where id_script='$id_script' and  sr.campaign_id = '$campaign_id' $date_filter";
+
+
+
+
+
 
         $titulos = array();
         $data_row = array();
@@ -237,19 +240,19 @@ switch ($action) {
           left join vicidial_log vlg on vlg.uniqueid=sr.unique_id
           left join vicidial_campaign_statuses vcs on vcs.status=vlg.status
           left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script
-          where sr.id_script='$id_script' $filtro $date_filter order by sr.lead_id ";
+          where sr.id_script='$id_script' and sr.campaign_id = '$campaign_id'  $date_filter order by sr.lead_id ";
         $result = mysql_query($query, $link) or die(mysql_error());
         if (mysql_num_rows($result) < 1) {
             echo("Sem resultados");
             exit;
         }
-        
-          fputcsv($output, $titulos, ";", '"');
+
+        fputcsv($output, $titulos, ";", '"');
         $lead_id = false;
         while ($row1 = mysql_fetch_assoc($result)) {
             if ($lead_id != $row1["lead_id"]) {
                 if ($lead_id) {
-                          fputcsv($output, $temp_d, ";", '"');
+                    fputcsv($output, $temp_d, ";", '"');
                 }
                 $temp_d = $final_row[$row1["lead_id"]];
                 unset($final_row[$row1["lead_id"]]);
@@ -271,11 +274,10 @@ switch ($action) {
             }
             else
                 $temp_d["m" . $row1["tag_elemento"]] = ($row1["param1"] == "nib") ? "" . $row1["valor"] . "" : $row1["valor"];
-            
         }
-              fputcsv($output, $temp_d, ";", '"');
+        fputcsv($output, $temp_d, ";", '"');
 
-fclose($output);
+        fclose($output);
 
 
 
