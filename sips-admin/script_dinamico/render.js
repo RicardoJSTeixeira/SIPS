@@ -154,7 +154,7 @@ function update_info()
                                       .data("required", this.required)
                                       .data("type", "datepicker")
                                       .data("data_format", this.placeholder);
-                              item.find(".form_datetime").datetimepicker({});
+                             
                               break;
                         case "scheduler":
                               item = $('#dummie .scheduler_class').clone();
