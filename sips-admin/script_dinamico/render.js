@@ -505,11 +505,11 @@ function insert_element(opcao, element, data)
                               min_view = 2;
                               break;
                   }
-               /*   $("#" + data.tag + " .form_datetime").datetimepicker({format: data_format, autoclose: true, language: "pt", minView: min_view}).keypress(function(e) {
+                  $("#" + data.tag + " .form_datetime").datetimepicker({format: data_format, autoclose: true, language: "pt", minView: min_view}).keypress(function(e) {
                         e.preventDefault();
                   }).bind("cut copy paste", function(e) {
                         e.preventDefault();
-                  });*/
+                  });
                   break;
             case "scheduler":
                   element.find(".scheduler_button_go").attr("id", element.data("id") + "go_button");
