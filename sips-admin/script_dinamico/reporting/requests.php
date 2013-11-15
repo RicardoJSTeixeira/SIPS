@@ -14,7 +14,7 @@ foreach ($_GET as $key => $value) {
 error_reporting();
 ini_set('display_errors', '1');
 
-
+header('Content-Disposition: attachment; filename=Report_Script_' . date("Y-m-d_H:i:s") . '.csv');
 
 
 
@@ -51,9 +51,10 @@ switch ($action) {
 
 
     case "update_elements_order":
-        $query = "SELECT count(id) from report_order where campaign='$campaign'";
+        $query = "SELECT count(id) as count from report_order where campaign='$campaign'";
         $result = mysql_query($query, $link) or die(mysql_error());
-        if (mysql_num_rows($result) == 0) {
+        $row = mysql_fetch_assoc($result);
+        if ($row["count"] == 0) {
             $query = "insert into report_order (id,elements,campaign) values (NULL, '" . json_encode($elements) . "','$campaign')";
             $query = mysql_query($query, $link) or die(mysql_error());
         } else {
@@ -63,11 +64,12 @@ switch ($action) {
         break;
 
 
-
+    case "reset_elements_order":
+        $query = "delete from report_order where campaign='$campaign_id'";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        break;
 
     case "get_fields_to_order":
-
-
 
         $js = array();
 
@@ -76,7 +78,6 @@ switch ($action) {
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array("id" => $row["Name"], "type" => "campo_dinamico", "display_name" => $row["Display_name"]);
         }
-
 
         $query = "SELECT id_script from script_assoc where id_camp_linha='$campaign_id'";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -88,21 +89,20 @@ switch ($action) {
             $js[] = array("id" => $row["tag"], "type" => $row["type"], "texto" => $row["texto"]);
         }
         if (mysql_num_rows($query) < 1) {
-           echo json_encode(array());
+            echo json_encode(array());
             exit;
         }
 
         $oo = array();
         $query = "SELECT id,elements,campaign  FROM  report_order where campaign='$campaign_id'";
         $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            $oo = json_decode($row["elements"]);
-        }
+        $row = mysql_fetch_assoc($query);
+        $oo = json_decode($row["elements"]);
+
         if (mysql_num_rows($query) > 0) {
             $temp = $js;
             $js = array();
             foreach ($oo as $key) {
-
                 foreach ($temp as $value) {
                     if ($key == $value['id']) {
                         $js[] = $value;
@@ -110,6 +110,8 @@ switch ($action) {
                     }
                 }
             }
+
+            //  $js = $js+ $temp;
         }
         echo json_encode($js);
         break;
@@ -117,6 +119,16 @@ switch ($action) {
 
 
     case "report":
+
+        header('Content-Encoding: UTF-8');
+        header('Content-type: text/csv; charset=UTF-8');
+        echo "\xEF\xBB\xBF";
+        $output = fopen('php://output', 'w');
+
+// Nome das tabelas
+
+
+
         $cd_title = array();
         $cd_name = array();
         $cd_values = array();
@@ -131,15 +143,20 @@ switch ($action) {
         $row = mysql_fetch_assoc($query);
         $id_script = $row["id_script"];
 
+        if ($allctc == "false")
+            $date_filter = "and sr.date between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
+        else
+            $date_filter = "";
 
-        $filtro = "";
-        if ($tipo == "1" || $tipo == "2") {
-            $filtro = "and sr.campaign_id = '$campaign_id'";
-            $contact_filter = "left join `script_result` b on a.lead_id=b.lead_id where id_script='$id_script' and  b.campaign_id = '$campaign_id'";
-        } else {
-            $filtro = "and vl.list_id = '$list_id'";
-            $contact_filter = " where a.list_id= '$list_id'";
-        }
+
+
+
+        $contact_filter = "left join `script_result` sr on a.lead_id=sr.lead_id where id_script='$id_script' and  sr.campaign_id = '$campaign_id' $date_filter";
+
+
+
+
+
 
         $titulos = array();
         $data_row = array();
@@ -213,10 +230,7 @@ switch ($action) {
             $final_row[$lead_tmp] = $temp_d;
         }
 
-        if ($allctc == "false")
-            $date_filter = "and sr.date between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
-        else
-            $date_filter = "";
+
         //DADOS DO SCRIPT
         $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name,  vc.campaign_name, sr.lead_id,sr.param_1,vcs.status_name, sr.tag_elemento,sr.valor,sd.param1,sd.type FROM `script_result` sr
           left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id
@@ -226,20 +240,22 @@ switch ($action) {
           left join vicidial_log vlg on vlg.uniqueid=sr.unique_id
           left join vicidial_campaign_statuses vcs on vcs.status=vlg.status
           left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script
-          where sr.campaign_id='$campaign_id' and sr.id_script='$id_script' $filtro $date_filter  order by sr.lead_id,tag_elemento";
+          where sr.id_script='$id_script' and sr.campaign_id = '$campaign_id'  $date_filter order by sr.lead_id ";
         $result = mysql_query($query, $link) or die(mysql_error());
         if (mysql_num_rows($result) < 1) {
             echo("Sem resultados");
             exit;
         }
+
+        fputcsv($output, $titulos, ";", '"');
         $lead_id = false;
         while ($row1 = mysql_fetch_assoc($result)) {
             if ($lead_id != $row1["lead_id"]) {
                 if ($lead_id) {
-                    $final_row[$lead_id] = $temp_d;
+                    fputcsv($output, $temp_d, ";", '"');
                 }
                 $temp_d = $final_row[$row1["lead_id"]];
-
+                unset($final_row[$row1["lead_id"]]);
 
                 $lead_id = $row1["lead_id"];
                 $temp_d["id"] = $row1["lead_id"];
@@ -258,48 +274,14 @@ switch ($action) {
             }
             else
                 $temp_d["m" . $row1["tag_elemento"]] = ($row1["param1"] == "nib") ? "" . $row1["valor"] . "" : $row1["valor"];
-
-            $temp_d[array_search("Sem titulo", $temp_d)] = "";
         }
-        $final_row[$lead_id] = $temp_d;
+        fputcsv($output, $temp_d, ";", '"');
 
-
-
-        $toExcel = New PHPExcel();
-        $sheet = $toExcel->getActiveSheet(0);
-//propriedades do documento
-        $toExcel->getProperties()->setCreator("utilizador")
-                ->setTitle("Report de script")
-                ->setLastModifiedBy("modificado por...")
-                ->setSubject("Relatório")
-                ->setDescription("Relatório de script dinâmico");
-// Nome das tabelas
-
-
-
-        $sheet->fromArray($titulos, null, 'A1');
-// informacao das tabelas
-        $sheet->fromArray($final_row, NULL, 'A2');
-
-
-        //faz um autoresize a cada tabela com informacao
-        for ($col = 'A'; $sheet->getCell($col . '1')->getValue() != NULL; $col++) {
-            $sheet->getColumnDimension($col)->setAutoSize(true);
-        }
-        //mete a negrito a row do nome das tabelas
-        $sheet->getStyle('A1:' . $col . '1')->getFont()->setBold(true);
-//enviar ficheiro para o browser "save"
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename=Report_Script_' . date("Y-m-d_H:i:s") . '.xls');
-        header('Cache-Control: max-age=0');
-        $writeExcel = PHPExcel_IOFactory::createWriter($toExcel, 'Excel5');
-        $writeExcel->save('php://output');
-        exit;
-
+        fclose($output);
 
 
 
 
         break;
 }
-?>
+

@@ -36,11 +36,31 @@
 
 
                   #column_order li { margin: 0 5px 5px 5px; padding: 3px; font-size: 1.1em; width: 70%; }
-                 
+
 
             </style>
       </head>
       <body> 
+
+
+
+            <div id="co_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+                  <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">Ordenação de colunas</h3>
+                  </div>
+                  <div class="modal-body">
+                        <h5>Ordenação de colunas</h5>
+                        <ul  class="connectedSortable ui-helper-reset" id="column_order">
+
+                        </ul>
+                  </div>
+                  <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Sair</button>
+                        <button class="btn btn-primary" id="co_reset_button">Reset/Refresh</button>
+                  </div>
+            </div>
+
 
 
 
@@ -67,7 +87,7 @@
                               <label class=" radio inline"  for="radio2"><span></span>Linha de inbound</label> 
                         </div> 
                         <div class="formRight">
-                              <input  type="radio" id="radio3" class="radio_opcao"  name="ra" value="3" disabled="disabled">
+                              <input  type="radio" id="radio3" class="radio_opcao"  name="ra" value="3" >
                               <label class="radio inline"  for="radio3"><span></span>Base de Dados</label> 
                         </div>
                         <div class="formRight time_div">
@@ -98,27 +118,23 @@
                         <div id="report_campanha" class="select_opcao">
 
                               <label>Campanha</label>
-                              <select id="select_campanha" class=" chzn-select " data-placeholder="Selecione uma campanha"></select>
+                              <select id="select_campanha" class=" chzn-select select_opcao" data-placeholder="Selecione uma campanha"></select>
 
                         </div>
                         <div id="report_linha_inbound" class="select_opcao">
 
                               <label>Linha de inbound</label>
-                              <select id="select_linha_inbound" class=" chzn-select " data-placeholder="Selecione uma linha de inbound"></select>
+                              <select id="select_linha_inbound" class=" chzn-select  select_opcao " data-placeholder="Selecione uma linha de inbound"></select>
 
                         </div>
                         <div id="report_bd" class="select_opcao">
 
                               <label>Base de dados</label>
-                              <select id="select_base_dados" class=" chzn-select " data-placeholder="Selecione uma base de dados"></select>
+                              <select id="select_base_dados" class=" chzn-select  select_opcao" data-placeholder="Selecione uma base de dados"></select>
 
                         </div>
-
-                        <div id="column_order_div" >
-                              <h5>Ordenação de colunas</h5>
-                              <ul  class="connectedSortable ui-helper-reset" id="column_order">
-
-                              </ul>
+                        <div class="formRow">
+                              <button class="btn" id="order_columns_modal">Organizar Colunas</button>
                         </div>
 
                   </div>

@@ -53,7 +53,7 @@ $(function() {
                   {
                         elements.push(items[count].id);
                   }
-                  $.post("requests.php", {action: "update_elements_order",elements:elements,campaign:$("#select_campanha option:selected").val()},
+                  $.post("requests.php", {action: "update_elements_order", elements: elements, campaign: $("#select_campanha option:selected").val()},
                   function(data)
                   {
 
@@ -71,21 +71,6 @@ $(function() {
 
 });
 
-
-$(".radio_opcao").on("change", function()
-{
-      $("#column_order_div").hide();
-      $(".select_opcao").hide();
-      if ($(this).val() == "1")
-      {
-            $("#report_campanha").show();
-            $("#column_order_div").show();
-      }
-      else if ($(this).val() == "2")
-            $("#report_linha_inbound").show();
-      else
-            $("#report_bd").show();
-});
 
 
 
@@ -119,7 +104,7 @@ $("#download_report").on("click", function(e)
             }
             else
             {
-                  document.location.href = "requests.php?action=report&tipo=3&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&list_id=" + $("#select_base_dados option:selected").val() + "&campaign_id=" + $("#select_base_dados option:selected").data("campaign_id") + "&allctc=" + $("#allcontacts").is(":checked");
+                  document.location.href = "requests.php?action=report&tipo=3&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&list_id=" + $("#select_base_dados option:selected").val() + "&campaign_id=" + $("#select_base_dados option:selected").data("campaign_id") + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + JSON.stringify(ordered_tags);
             }
       }
 });
@@ -129,18 +114,35 @@ $("#allcontacts").on("click", function()
       $(".time_div").toggle(500);
 });
 
-$("#select_campanha").on("change", function()
+$(".radio_opcao").on("click", function()
 {
-      $("#column_order").empty();
-      $.post("requests.php", {action: "get_fields_to_order", campaign_id: $("#select_campanha option:selected").val()},
+      $(".select_opcao").hide();
+      if ($(this).val() == "1")
+      {
+            $("#report_campanha").show();
+      }
+      else if ($(this).val() == "2")
+            $("#report_linha_inbound").show();
+      else
+      {
+            $("#report_bd").show();
+      }
+
+
+});
+
+
+function get_campaign_fields(campaign)
+{
+
+      $.post("requests.php", {action: "get_fields_to_order", campaign_id: campaign},
       function(data)
       {
-             
+            $("#column_order").empty();
             if (data.length)
             {
                   $.each(data, function()
                   {
-                      
                         if ($.isNumeric(this.id))
                               $("#column_order").append("<li class='ui-state-default' id=" + this.id + " data-id='m" + this.id + "' data-type='" + this.type + "' data-text='0'>" + this.id + ":" + get_name_by_type(this.type) + "->" + this.texto + "</li>");
                         else
@@ -149,11 +151,8 @@ $("#select_campanha").on("change", function()
             }
             else
                   $("#column_order").append("<li>Sem Script</li>");
-
       }, "json");
-
-
-});
+}
 
 
 function get_name_by_type(type)
@@ -199,3 +198,27 @@ function get_name_by_type(type)
       }
 
 }
+
+
+$("#order_columns_modal").on("click", function()
+{
+      var campaign = "";
+      if ($("#radio1").is(":checked"))
+            campaign = $("#select_campanha option:selected").val();
+      if ($("#radio3").is(":checked"))
+            campaign = $("#select_base_dados option:selected").data("campaign_id");
+
+      $("#co_reset_button").data("campaign", campaign);
+      get_campaign_fields(campaign);
+      $("#co_modal").modal("show");
+
+});
+
+$("#co_reset_button").on("click", function() {
+      
+      console.log($("#co_modal #co_reset_button").data("campaign"));
+      $.post("requests.php", {action: "reset_elements_order", campaign_id: $("#co_modal #co_reset_button").data("campaign")},function(data)
+      {
+            get_campaign_fields($("#co_modal #co_reset_button").data("campaign"));
+      });
+});
