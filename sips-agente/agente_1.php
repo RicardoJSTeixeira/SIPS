@@ -9795,22 +9795,22 @@ if ($enable_fast_refresh < 1) {
                 {
                     var DispoChoice = document.vicidial_form.DispoSelection.value;
                     
-                   /* if (DispoChoice === "FL0001") {
+                    if (DispoChoice === "FL0001") {
                         
-                        if ($("#vcFormIFrame").contents().find(".hour-required").val() === "---") {
+                        if ($("#vcFormIFrame").contents().find("#marcdata").val() === "") {
                               alert_box("Campo da Hora da Marcação com erros de preenchimento ou vazio.");
                               return false;
                         }
-                        if ($("#vcFormIFrame").contents().find(".minute-required").val() === "---") {
+                        /*if ($("#vcFormIFrame").contents().find(".minute-required").val() === "---") {
                               alert_box("Campo dos Minutos da Marcação com erros de preenchimento ou vazio.");
                               return false;
                         }
                         if ($("#vcFormIFrame").contents().find(".date-required").length <= 0) {
                               alert_box("Campo da Data da Marcação com erros de preenchimento ou vazio.");
                               return false;
-                        }
+                        }*/
 
-                    }*/
+                    }
                   
                     /*$('#fb_timeout').html('25');
                      clearInterval(fb_timer);*/
