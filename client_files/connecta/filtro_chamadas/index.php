@@ -13,10 +13,8 @@ require ROOT.'sips-admin/functions.php';
 require(ROOT . "ini/dbconnect.php");
 require(ROOT . "ini/user.php");
 $user=new user;
-
 require (ROOT.'/sips-admin/reservas/func/reserve_utils.php');
-$LOGallowed_campaignsSQL=($user->is_all_campaigns)?'': 'and campaign_id IN("'.implode(',',$user->allowed_campaigns).'")';
-		
+$LOGallowed_campaignsSQL=($user->is_all_campaigns)?'': "and campaign_id IN('".implode("','",$user->allowed_campaigns)."')";
 $stmt="SELECT campaign_id,campaign_name from vicidial_campaigns where active='Y' $LOGallowed_campaignsSQL order by campaign_id;";
 	$rslt=mysql_query($stmt, $link);
 	$IGcampaigns_to_print = mysql_num_rows($rslt);
@@ -291,7 +289,7 @@ $days = ($days == 0) ? 1 : $days;
                     console.log("fuck");
                         }    
                     },"json").fail(function(){
-                    makeAlert("#wr","Ups Ocurreu um erro ao activar/inactivar os CATOS/BRANCHS","Peço desculpa.",1,true,false);
+                    makeAlert("#wr","Ups Ocurreu um erro ao activar/inactivar os filtros","Peço desculpa.",1,true,false);
                 });
                 };
             $(function(){
@@ -336,7 +334,7 @@ $days = ($days == 0) ? 1 : $days;
                     });
                 },"json")
                         .fail(function(){
-                    makeAlert("#wr","Ups Ocurreu um erro ao carregar os CATOS/BRANCHS","Peço desculpa.",1,true,false);
+                    makeAlert("#wr","Ups Ocurreu um erro ao carregar os filtros","Peço desculpa.",1,true,false);
                         });
                 });
             });
