@@ -9,24 +9,23 @@ for ($i = 0; $i < $self - 2; $i++) {
 define("ROOT", $header);
 
 //includes
-require ROOT.'sips-admin/functions.php';
+require ROOT . 'sips-admin/functions.php';
 require(ROOT . "ini/dbconnect.php");
 require(ROOT . "ini/user.php");
-$user=new user;
-require (ROOT.'/sips-admin/reservas/func/reserve_utils.php');
-$LOGallowed_campaignsSQL=($user->is_all_campaigns)?'': "and campaign_id IN('".implode("','",$user->allowed_campaigns)."')";
-$stmt="SELECT campaign_id,campaign_name from vicidial_campaigns where active='Y' $LOGallowed_campaignsSQL order by campaign_id;";
-	$rslt=mysql_query($stmt, $link);
-	$IGcampaigns_to_print = mysql_num_rows($rslt);
-	$IGcampaign_id_list=array();
-	$i=0;
-	while ($i < $IGcampaigns_to_print)
-		{
-		$row=mysql_fetch_row($rslt);
-		$campaign_list[$row[0]]= $row[1];
-		$i++;
-		}
-                 
+$user = new user;
+require (ROOT . '/sips-admin/reservas/func/reserve_utils.php');
+$LOGallowed_campaignsSQL = ($user->is_all_campaigns) ? '' : "and campaign_id IN('" . implode("','", $user->allowed_campaigns) . "')";
+$stmt = "SELECT campaign_id,campaign_name from vicidial_campaigns where active='Y' $LOGallowed_campaignsSQL order by campaign_id;";
+$rslt = mysql_query($stmt, $link);
+$IGcampaigns_to_print = mysql_num_rows($rslt);
+$IGcampaign_id_list = array();
+$i = 0;
+while ($i < $IGcampaigns_to_print) {
+    $row = mysql_fetch_row($rslt);
+    $campaign_list[$row[0]] = $row[1];
+    $i++;
+}
+
 
 if (checkDateTime($_GET["dt"], "Y-m-d")) {
     $date = (date('D') == 'Mon') ? date("Y-m-d", strtotime($_GET[dt] . " this monday")) : date("Y-m-d", strtotime($_GET[dt] . " last monday"));
@@ -34,7 +33,7 @@ if (checkDateTime($_GET["dt"], "Y-m-d")) {
     $date = date("Y-m-d", strtotime($date . ' +1 weekdays')); //(date('D') == 'Mon') ? date("Y-m-d") : date("Y-m-d", strtotime('last monday'));
 }
 
-$date_end = $date;//date("Y-m-d", strtotime($date . ' +2 weekdays'));
+$date_end = $date; //date("Y-m-d", strtotime($date . ' +2 weekdays'));
 
 $days = floor((strtotime($date_end) - strtotime($date)) / (60 * 60 * 24));
 $days = ($days == 0) ? 1 : $days;
@@ -67,7 +66,7 @@ $days = ($days == 0) ? 1 : $days;
             .glow,.glow input{
                 cursor: pointer !important;
             }
-            
+
             .glow {
                 zoom:0.75;
                 -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
@@ -196,7 +195,7 @@ $days = ($days == 0) ? 1 : $days;
         <div class="content">   
             <div class="grid">
                 <div class="grid-title">
-                    <div class="pull-left">Filtro de Agendas. De <?= $date . "  a  " . $date_end."." ?> // Total:<b id="total"></b></div>
+                    <div class="pull-left">Filtro de Agendas. De <?= $date . "  a  " . $date_end . "." ?> // Total:<b id="total"></b></div>
                     <div class="pull-right"></div>
                     <div class="clear"></div>
                 </div>
@@ -205,10 +204,10 @@ $days = ($days == 0) ? 1 : $days;
 
                     <div class="row-fluid">
                         <p class="span4 text-left">
-                                <input type="checkbox" class="b2" id="hoff" checked />
-                                <label for="hoff">Desligados<span></span></label>
-                                <input type="checkbox" class="b2" id="hon" checked />
-                                <label for="hon">Ligados<span></span></label>
+                            <input type="checkbox" class="b2" id="hoff" checked />
+                            <label for="hoff">Desligados<span></span></label>
+                            <input type="checkbox" class="b2" id="hon" checked />
+                            <label for="hon">Ligados<span></span></label>
                         </p>
                         <p class="span4 text-center">
                             <label for="campaigns_list">Campanhas</label>
@@ -218,12 +217,12 @@ $days = ($days == 0) ? 1 : $days;
                             </select>
                         </p>
                         <p class="span4 text-right-right">
-                                <input type="checkbox" class="b2" id="hred" checked />
-                                <label for="hred">Vermelhos<span></span></label>
-                                <input type="checkbox" class="b2" id="hyel" checked />
-                                <label for="hyel">Laranja<span></span></label>
-                                <input type="checkbox" class="b2" id="hgreen" checked />
-                                <label for="hgreen">Verdes<span></span></label>
+                            <input type="checkbox" class="b2" id="hred" checked />
+                            <label for="hred">Vermelhos<span></span></label>
+                            <input type="checkbox" class="b2" id="hyel" checked />
+                            <label for="hyel">Laranja<span></span></label>
+                            <input type="checkbox" class="b2" id="hgreen" checked />
+                            <label for="hgreen">Verdes<span></span></label>
                         </p>
                     </div>
                     <div class="clear"></div>
@@ -235,107 +234,109 @@ $days = ($days == 0) ? 1 : $days;
         </div>
 
         <script>
-            var total=0;
-            var boxes=undefined;
-            function filtro(id,target){
-                $("#"+id).change(function(){
-                    if(this.checked){
+            var total = 0;
+            var boxes = undefined;
+            function filtro(id, target) {
+                $("#" + id).change(function() {
+                    if (this.checked) {
                         $(target).removeClass("hide");
-                    }else{
+                    } else {
                         $(target).addClass("hide");
                     }
                 });
                 return true;
             }
-            
-            var activator=function(e){
-                if($(this).attr("data-campaign")===""){return false;}
-                    console.log($(this).attr("data-resource"));
-                    var block=this;
-                    $(block).find(".play")
-                    .removeClass("icon-pause")
-                    .removeClass("icon-play")
-                    .addClass("icon-time")
-                    .parent()
-                    .parent()
-                    .parent()
-                    .find(".led")
-                    .removeClass("led-red")
-                    .removeClass("led-green");
-                    $.post("ativa.php",
-                    {branch:$(this).attr("data-resource"),campaign:$(this).attr("data-campaign")},
-                    function(data){
-                        if(data.active===1){
-                            $(block).attr("data-active",data).find(".play")
-                            .removeClass("icon-time")
-                            .addClass("icon-pause")
-                            .parent()
-                            .parent()
-                            .parent()
-                            .find(".led")
-                            .removeClass("led-red")
-                            .addClass("led-green");
-                    console.log("true");
-                        }else{
-                            $(block).attr("data-active",data).find(".play")
-                            .removeClass("icon-time")
-                            .addClass("icon-play")
-                            .parent()
-                            .parent()
-                            .parent()
-                            .find(".led")
-                            .removeClass("led-green")
-                            .addClass("led-red");
-                    console.log("fuck");
-                        }    
-                    },"json").fail(function(){
-                    makeAlert("#wr","Ups Ocurreu um erro ao activar/inactivar os filtros","Peço desculpa.",1,true,false);
+            $("#loader").fadeOut("slow");
+            var activator = function(e) {
+                if ($(this).attr("data-campaign") === "") {
+                    return false;
+                }
+                //  console.log($(this).attr("data-resource"));
+                var block = this;
+                $(block).find(".play")
+                        .removeClass("icon-pause")
+                        .removeClass("icon-play")
+                        .addClass("icon-time")
+                        .parent()
+                        .parent()
+                        .parent()
+                        .find(".led")
+                        .removeClass("led-red")
+                        .removeClass("led-green");
+                $.post("ativa.php",
+                        {branch: $(this).attr("data-resource"), campaign: $(this).attr("data-campaign")},
+                function(data) {
+                    if (data.active === 1) {
+                        $(block).attr("data-active", data).find(".play")
+                                .removeClass("icon-time")
+                                .addClass("icon-pause")
+                                .parent()
+                                .parent()
+                                .parent()
+                                .find(".led")
+                                .removeClass("led-red")
+                                .addClass("led-green");
+                        console.log("true");
+                    } else {
+                        $(block).attr("data-active", data).find(".play")
+                                .removeClass("icon-time")
+                                .addClass("icon-play")
+                                .parent()
+                                .parent()
+                                .parent()
+                                .find(".led")
+                                .removeClass("led-green")
+                                .addClass("led-red");
+                        console.log("fuck");
+                    }
+                }, "json").fail(function() {
+                    makeAlert("#wr", "Ups Ocurreu um erro ao activar/inactivar os filtros", "Peço desculpa.", 1, true, false);
                 });
-                };
-            $(function(){
-                
-                
-                
-                filtro("hred",".glow.error");
-                filtro("hyel",".glow.warning");
-                filtro("hgreen",".glow.success");
-                
-                filtro("hoff","div[data-active=0]");
-                filtro("hon","div[data-active=1]");
-                
-                
-                   
-                
+            };
+            $(function() {
+
+
+
+                filtro("hred", ".glow.error");
+                filtro("hyel", ".glow.warning");
+                filtro("hgreen", ".glow.success");
+
+                filtro("hoff", "div[data-active=0]");
+                filtro("hon", "div[data-active=1]");
+
+
+
+
                 $(".chzn-select").chosen({no_results_text: "Não foi encontrado."});
-                
-            
-                $.post("boxes.php",{data_i:"<?= $date?>",data_f:"<?= $date_end?>",dias:<?= $days?>},
-                function(data){
-                    $("#total").text(data.total);
-                    $("#box-container").html(data.boxes);
-                    $("[data-t=tooltip]").tooltip();
-                    boxes=$("#box-container > div[data-resource]");
-                $("#loader").fadeOut("slow");
-                boxes.click(activator);
-                },"json")
-                        .fail(function(){
-                    makeAlert("#wr","Ups Ocurreu um erro ao carregar os CATOS/BRANCHS","Peço desculpa.",1,true,false);
+
+
+
+
+                $("#campaigns_list").change(function() {
+                    $("#box-container").html('');
+                    var camp = $(this).val();
+                    $.post("boxes.php", {campaign: camp, data_i: "<?= $date ?>", data_f: "<?= $date_end ?>", dias:<?= $days ?>},
+                    function(data) {
+                        if (!data.boxes) {
+                            return;
+                        }
+                        $("#total").text(data.total);
+                        $("#box-container").html(data.boxes);
+                        $("[data-t=tooltip]").tooltip();
+                        boxes = $("#box-container > div[data-resource]");
+                        boxes.click(activator);
+                        boxes.each(function(index) {
+                            $(this).attr("data-campaign", camp).attr("data-active", 0).find(".play").attr("class", "play icon-play").parent().parent().parent().find(".led").attr("class", "pull-right led led-red");
                         });
-                
-                $("#campaigns_list").change(function(){
-                var camp=$(this).val();
-                
-                $.post("boxes.php",{campaign:camp},function(data){
-                    boxes.each(function(index){
-                       $(this).attr("data-campaign",camp).attr("data-active",0).find(".play").attr("class","play icon-play").parent().parent().parent().find(".led").attr("class","pull-right led led-red"); 
-                    });
-                    $(data).each(function(index){
-                       boxes.parent().find("[data-resource="+this+"]").attr("data-active",1).find(".play").attr("class","play icon-pause").parent().parent().parent().find(".led").attr("class","pull-right led led-green");
-                    });
-                },"json")
-                        .fail(function(){
-                    makeAlert("#wr","Ups Ocurreu um erro ao carregar os filtros","Peço desculpa.",1,true,false);
+                        $(data).each(function(index) {
+                           // console.log(this);
+                            boxes.parent().find("[data-resource=" + this + "]").attr("data-active", 1).find(".play").attr("class", "play icon-pause").parent().parent().parent().find(".led").attr("class", "pull-right led led-green");
                         });
+                    }, "json")
+                            .fail(function() {
+                                makeAlert("#wr", "Ups Ocorreu um erro ao carregar os filtros", "Peço desculpa.", 1, true, false);
+                            });
+
                 });
             });
         </script>
