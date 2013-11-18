@@ -30,7 +30,7 @@ function RecycleListBuilder($CampaignID, $CampaignLists, $RecycleID, $RecycleNam
 
 		$CampaignLists = implode("','", $CampaignLists);
 		$campaign_recycle = implode("','", $js['recycle']);
-		$query = "SELECT status, count(*) FROM vicidial_list WHERE list_id IN ('$CampaignLists') AND status IN ('$campaign_recycle') GROUP BY status";
+		$query = "SELECT status, count(*) FROM vicidial_list a inner join vicidial_lists b on a.list_id = b.list_id WHERE list_id IN ('$CampaignLists') AND status IN ('$campaign_recycle') and b.active = 'Y' GROUP BY status";
 		$query = mysql_query($query, $link) or die(mysql_error());
 		if(mysql_num_rows($query) > 0)
 		{
