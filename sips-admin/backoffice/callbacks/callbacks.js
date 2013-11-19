@@ -101,6 +101,7 @@ function get_table_data()
                   {"name": "user", "value": user},
                   {"name": "data_inicio", "value": $("#data_inicio").val()},
                   {"name": "data_fim", "value": $("#data_fim").val()},
+                  {"name": "recipient", "value": $("#radioall").is(":checked")},
                   {"name": "data_filtro", "value": $("#radio_date1").is(":checked")}
                   );
             },
