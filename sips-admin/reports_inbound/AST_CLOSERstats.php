@@ -37,10 +37,7 @@
                 margin-left: -33px;
                 margin-top: -33px;
             }
-            input[type="checkbox"]
-            {
-                display:inline;
-            }
+         
         </style>
     </head>
     <body> 
@@ -342,7 +339,7 @@
 
                     $MAIN.=" <INPUT TYPE=submit class=btn NAME=ENVIAR VALUE=Pedir>
                         <div><input type='checkbox' id='all_select_options'  value='1'>
-      <label  for='all_select_options'>Todas as opções &nbsp</label></div></div>
+      <label  for='all_select_options'>Todas as opções &nbsp<span></span></label></div></div>
       </p>";
                     $MAIN.="";
                     $MAIN.="<div class=clear ></div> <p class=text-center><h3>Inbound Call Stats: $group_string          $NOW_TIME</h3></p>\n\n";
@@ -2989,18 +2986,18 @@
                 $(".chzn-select").chosen({no_results_text: "Não foi encontrado."});
                 $(".date").datepicker();
                 $("#loader").fadeOut("slow");
+                $("#all_select_options").click(function()
+                {
+                    if ($(this).is(":checked"))
+                        $(".chzn-select option").prop("selected", true).trigger('liszt:updated');
+                    else
+                        $(".chzn-select option").prop("selected", false).trigger('liszt:updated');
+
+
+                });
             });
 
 
-            $(document).on("click", "#all_select_options", function()
-            {
-                if ($(this).is(":checked"))
-                    $(".chzn-select option").prop("selected", true).trigger('liszt:updated');
-                else
-                    $(".chzn-select option").prop("selected", false).trigger('liszt:updated');
-
-
-            });
 
         </script>
     </body>
