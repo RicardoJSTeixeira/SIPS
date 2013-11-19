@@ -45,7 +45,7 @@ function editor_toggle(tipo)
 
 $(function() {
       update_select_ajax();//FILE UPLOADS
-      update_select();//FILE UPLOADS
+   
       $(".spinner").spinner({});
       $("#rule_creator .form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
       //respostas maximas por feedback TEMPORARIO----------------
@@ -193,6 +193,7 @@ $(function() {
             //--------------------------------------//
             editor_toggle("off");
             update_script();
+               update_select();
       });
       $("#edit_div").draggable({handle: "a"});
       $("#tabs").tabs();
@@ -269,6 +270,7 @@ $(document).on("click", ".element", function(e) {
                   populate_element("textarea", $(this));
                   break;
             case "ipl":
+               
                   $("#ipl_layout_editor").show();
                   $("#ipl_edit_link").val("");
                   populate_element("ipl", $(this));
@@ -382,15 +384,7 @@ $("#ipl_upload_button").on("click", function(e)
 
                   $("#label_ipl_info").text(data.responseText);
                   $("#ipl_file_select").empty();
-                  $.post("requests.php", {action: "get_image_pdf"},
-                  function(data5)
-                  {
-                        $("#ipl_file_select").html(data5);
-                        if ($("#radio_ipl_image").is(":checked"))
-                              $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
-                        if ($("#radio_ipl_pdf").is(":checked"))
-                              $("#ipl_file_select option[data-type='image']").prop("disabled", true);
-                  }, "json");
+                  update_select();
             },
             contentType: false,
             processData: false
@@ -936,6 +930,7 @@ function populate_element(tipo, element)
                         $("#ipl_ip_div").show();
                         $("#ipl_link_div").hide();
                         $("#ipl_file_select option[value='" + $("#" + id + " .ipl_link").text() + "']").prop("selected", true);
+                console.log( $("#ipl_file_select option[value='" + $("#" + id + " .ipl_link").text() + "']"));
                         $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
                   }
                   else if (element.data("option") == "2")
@@ -1670,7 +1665,7 @@ function rules_manager(tipo, element)
                   break;
 
       }
-      console.log(element.data("tag"));
+
       $("#rule_target_select option[value='" + element.data("tag") + "']").prop('disabled', true).trigger("liszt:updated");
       rts.trigger("change");
 }
