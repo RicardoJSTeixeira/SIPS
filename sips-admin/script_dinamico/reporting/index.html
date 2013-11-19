@@ -35,8 +35,15 @@
             <style>
 
 
-                  #column_order li { margin: 0 5px 5px 5px; padding: 3px; font-size: 1.1em; width: 70%; }
-
+                  #column_order li { margin: 0 5px 5px 5px; padding: 3px; font-size: 1.1em;  }
+               
+   #column_order li input { margin-bottom: 0px;}
+                  .remove_list_item_button
+                  {
+                        float: right;
+                        height:1.1em;
+                       
+                  }
 
             </style>
       </head>
@@ -50,14 +57,36 @@
                         <h3 id="myModalLabel">Ordenação de colunas</h3>
                   </div>
                   <div class="modal-body">
+                        
+                        <div id="template_div">
+                              
+                              <h5>Template</h5>
+                              <span  class="input-append">
+                                     <select id="oc_template"></select>
+                              <button class="btn btn-primary icon-plus" id="new_template_div_opener_button"> Novo</button>
+                              <button class="btn btn-warning  icon-pencil" id="edit_template_div_opener_button"> Editar</button>
+                              <button class="btn btn-danger icon-remove " id="delete_template_button"> Apagar</button>
+                              </span>
+                             
+                              <div  class="input-append" id="new_template_div" style="display:none">
+                                   
+                                    <input id="new_template_input" maxlength="45" type="text" placeholder="Nome do template novo">
+                                    <button class="btn" id="new_template_button">Criar</button>
+                              </div> 
+                              <div  class="input-append" id="edit_template_div" style="display:none">
+                                    <input id="edit_template_input" maxlength="45" type="text">
+                                    <button class="btn" id="edit_template_button">Gravar</button>
+                              </div> 
+                       </div>   
                         <h5>Ordenação de colunas</h5>
                         <ul  class="connectedSortable ui-helper-reset" id="column_order">
 
                         </ul>
                   </div>
                   <div class="modal-footer">
+                        <button class="btn btn-primary" id="download_report_button">Download Relatório</button>
                         <button class="btn" data-dismiss="modal" aria-hidden="true">Sair</button>
-                        <button class="btn btn-primary" id="co_reset_button">Reset/Refresh</button>
+
                   </div>
             </div>
 
@@ -133,9 +162,7 @@
                               <select id="select_base_dados" class=" chzn-select  select_opcao" data-placeholder="Selecione uma base de dados"></select>
 
                         </div>
-                        <div class="formRow">
-                              <button class="btn" id="order_columns_modal">Organizar Colunas</button>
-                        </div>
+
 
                   </div>
 

@@ -563,8 +563,6 @@ function insert_element(opcao, element, data)
             element.css("display", "none");
 
 
-
-
       return element;
 }
 
@@ -983,7 +981,8 @@ function submit_manual(callback)
 
 
       }, "json").fail(function() {
-            console.log("FAIL saving data");
+            console.log("FAIL saving data because-->id_script-"+page_info.script_id+"|user_id->"+page_info.user_id+"|unique_id->"+unique_id+"|campaign_id->"+page_info.campaign_id+"|lead_id->"+page_info.lead_id+"|admin_review->"+admin_review);
+            
       });
 }
 

@@ -487,7 +487,7 @@ function update_script(callback)
                         switch (this.type)
                         {
                               case "texto":
-                                    temp_type = "caixa de texto";
+                                    temp_type = "Caixa de texto";
                                     break;
                               case "pagination":
                                     temp_type = "Paginação";
