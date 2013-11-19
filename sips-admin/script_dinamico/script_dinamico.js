@@ -316,8 +316,8 @@ $("#checkbox_scheduler_all").click(function()
 });
 $("#apagar_elemento").click(function()
 {
-      
-      item_database("delete_item", list_item.attr("id"), 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), 0, list_item.index(), 0, 0, 0, 0, 0, 0, 0,0,list_item.data("tag"));
+
+      item_database("delete_item", list_item.attr("id"), 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), 0, list_item.index(), 0, 0, 0, 0, 0, 0, 0, 0, list_item.data("tag"));
       list_ui.item.remove();
       editor_toggle("off");
       $("#rule_target_select option[value=" + list_item.attr("id") + "] ").remove();
@@ -1010,14 +1010,16 @@ function edit_element(opcao, element, data)
                   }
                   for (var count = 0; count < radios.length; count++)
                   {
-                        element.append($("<label>")
-                                .addClass("radio_name radio inline")
-                                .attr("for", array_id["radio"] + "radio")
-                                .text(radios[count]).append($("<input>")
+                        element.append($("<input>")
                                 .attr("type", "radio")
                                 .attr("id", array_id["radio"] + "radio")
                                 .attr("name", element.data("id")))
-                                );
+                                .append($("<label>")
+                                        .addClass("radio_name radio inline")
+                                        .attr("for", array_id["radio"] + "radio")
+                                        .html("<span></span>" + radios[count])
+
+                                        );
                         if (element.data("dispo") === "v")
                               element.append($("<br>"));
                         array_id["radio"] = array_id["radio"] + 1;
@@ -1041,14 +1043,15 @@ function edit_element(opcao, element, data)
                   }
                   for (var count = 0; count < checkboxs.length; count++)
                   {
-                        element.append($("<label>")
-                                .addClass("checkbox_name checkbox inline")
-                                .attr("for", array_id["checkbox"] + "checkbox")
-                                .text(checkboxs[count]).append($("<input>")
+                        element.append($("<input>")
                                 .attr("type", "checkbox")
                                 .attr("id", array_id["checkbox"] + "checkbox")
                                 .attr("name", element.data("id")))
-                                );
+                                .append($("<label>")
+                                        .addClass("checkbox_name checkbox inline")
+                                        .attr("for", array_id["checkbox"] + "checkbox")
+                                        .html("<span></span>" + checkboxs[count])
+                                        );
                         if (element.data("dispo") === "v")
                               element.append($("<br>"));
                         array_id["checkbox"] = array_id["checkbox"] + 1;
@@ -1119,7 +1122,7 @@ function edit_element(opcao, element, data)
                         {
                               temp.append($("<td>")
                                       .append($("<input>").attr("type", "radio").attr("id", array_id["radio"]).attr("name", perguntas[count]))
-                                      .append($("<label>").addClass("radio_name radio inline").attr("for", array_id["radio"])));
+                                      .append($("<label>").addClass("radio_name radio inline").attr("for", array_id["radio"]).html("<span></span>")));
                               array_id["radio"] = array_id["radio"] + 1;
                         }
                   }
@@ -1289,15 +1292,16 @@ function insert_element(opcao, element, data)
                   var radios = data.values_text;
                   for (var count = 0; count < radios.length; count++)
                   {
-                        element.append($("<label>")
-                                .addClass("radio_name radio inline")
-                                .attr("for", array_id["radio"] + "radio")
-                                .text(radios[count]).append($("<input>")
+                        element.append($("<input>")
                                 .attr("type", "radio")
                                 .attr("value", count + 1)
                                 .attr("id", array_id["radio"] + "radio")
                                 .attr("name", data.id))
-                                );
+                                .append($("<label>")
+                                        .addClass("radio_name radio inline")
+                                        .attr("for", array_id["radio"] + "radio")
+                                        .html("<span></span> " + radios[count]))
+                                ;
                         if (data.dispo === "v")
                               element.append($("<br>"));
                         array_id["radio"] = array_id["radio"] + 1;
@@ -1310,15 +1314,18 @@ function insert_element(opcao, element, data)
                   var checkboxs = data.values_text;
                   for (var count = 0; count < checkboxs.length; count++)
                   {
-                        element.append($("<label>")
-                                .addClass("checkbox_name checkbox inline")
-                                .attr("for", array_id["checkbox"] + "checkbox")
-                                .text(checkboxs[count]).append($("<input>")
+                        element.append($("<input>")
                                 .attr("type", "checkbox")
                                 .attr("value", count + 1)
                                 .attr("id", array_id["checkbox"] + "checkbox")
                                 .attr("name", data.id))
-                                );
+                                .append($("<label>")
+                                        .addClass("checkbox_name checkbox inline")
+                                        .attr("for", array_id["checkbox"] + "checkbox")
+                                        .html("<span></span>" + checkboxs[count])
+                                        )
+                                ;
+
                         if (data.dispo === "v")
                               element.append($("<br>"));
                         array_id["checkbox"] = array_id["checkbox"] + 1;
@@ -1365,15 +1372,16 @@ function insert_element(opcao, element, data)
                         {
                               temp.append($("<td>")
                                       .append($("<input>")
-                                      .attr("type", "radio")
-                                      .attr("id", array_id["radio"])
-                                      .attr("value", count2 + 1)
-                                      .attr("name", data.id + "" + count))
+                                              .attr("type", "radio")
+                                              .attr("id", array_id["radio"])
+                                              .attr("value", count2 + 1)
+                                              .attr("name", data.id + "" + count))
 
                                       .append($("<label>")
-                                      .addClass("radio_name radio inline")
-                                      .attr("for", array_id["radio"])
-                                      ));
+                                              .addClass("radio_name radio inline")
+                                              .attr("for", array_id["radio"])
+                                              .html("<span></span>")
+                                              ));
                               array_id["radio"] = array_id["radio"] + 1;
                         }
                   }
@@ -1401,11 +1409,11 @@ function insert_element(opcao, element, data)
                         {
                               temp.append($("<td>")
                                       .append($("<input>")
-                                      .addClass("input-mini")
-                                      .attr("type", "text")
-                                      .attr("id", array_id["input"])
+                                              .addClass("input-mini")
+                                              .attr("type", "text")
+                                              .attr("id", array_id["input"])
 
-                                      .attr("name", data.id + "" + count)));
+                                              .attr("name", data.id + "" + count)));
                               array_id["input"] = array_id["input"] + 1;
                         }
                   }
@@ -1622,14 +1630,14 @@ $("#save_button_layout").click(function()//Fecha o dialog e grava as alteraçõe
             update_script();
       }, "json")
               .fail(function(xhr, textStatus, errorThrown) {
-            alert("A campanha/linha de inbound escolhida ja tem um script associado");
-      });
+                    alert("A campanha/linha de inbound escolhida ja tem um script associado");
+              });
 });
 //---------------------------------------------0000
 //------------------RULES----------------------------000000000
 function rules_manager(tipo, element)
 {
- $("#rule_target_select option").prop('disabled', false).trigger("liszt:updated");
+      $("#rule_target_select option").prop('disabled', false).trigger("liszt:updated");
       $("#rule_creator").hide();
       var rts = $("#rule_trigger_select");
       rts.empty();
@@ -1663,7 +1671,7 @@ function rules_manager(tipo, element)
 
       }
       console.log(element.data("tag"));
-      $("#rule_target_select option[value='"+element.data("tag")+"']").prop('disabled', true).trigger("liszt:updated");
+      $("#rule_target_select option[value='" + element.data("tag") + "']").prop('disabled', true).trigger("liszt:updated");
       rts.trigger("change");
 }
 function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trigger2, Id_target, Tipo, Param1, Param2)
