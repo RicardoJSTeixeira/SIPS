@@ -1,22 +1,6 @@
 {
       "concessionarios": [
-                 {
-                  "nome": "Testes",
-                  "servico": "",
-                  "interlocutores": [
-                        {
-                              "nome": "Mario Garcez",
-                              "email": "mariogarcez@viragem.com"
-                        },
-                        
-                        {
-                            
-                                                            "nome": "Catarina Livramento",
-                              "email": "catarinalivramento@viragem.com"
-                        }
-                  ]
-            },
-            {
+                         {
                   "nome": "SGA Alcabideche - Opel e Chevrolet",
                   "servico": "APV",
                   "interlocutores": [
