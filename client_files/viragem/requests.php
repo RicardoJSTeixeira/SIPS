@@ -188,7 +188,7 @@ switch ($action) {
                         </span>
                       </b>
                       <span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
-                        &nbsp;'. $row["date_of_birth"] .'
+                        &nbsp;'. $row["country_code"] .'
                         <u>
                         </u>
                         <u>
@@ -270,7 +270,7 @@ switch ($action) {
                     <div>
                       <p class="MsoNormal">
                         <span style="font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
-                          Marca:&nbsp;'.$row["address2"].'
+                          Marca:&nbsp;'.$row["extra5"].'
                         </span>
                         <span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
                           <u>
@@ -283,7 +283,7 @@ switch ($action) {
                     <div>
                       <p class="MsoNormal">
                         <span style="font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
-                          Modelo:&nbsp;'.$row["last_name"].'
+                          Modelo:&nbsp;'.$row["city"].'
                         </span>
                         <span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
                           <u>
@@ -296,7 +296,7 @@ switch ($action) {
                     <div>
                       <p class="MsoNormal">
                         <span style="font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
-                          Matrícula:&nbsp;'.$row["middle_initial"].'
+                          Matrícula:&nbsp;'.$row["title"].'
                         </span>
                         <span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
                           <u>
