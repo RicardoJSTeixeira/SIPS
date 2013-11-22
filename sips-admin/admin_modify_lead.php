@@ -283,6 +283,7 @@ $query="SELECT
             
 $query=mysql_query($query,$link) or die(mysql_error());
 $fields_count = mysql_num_rows($query);
+
 for ($i=0;$i<$fields_count;$i++)
 {
 	$row = mysql_fetch_row($query);
