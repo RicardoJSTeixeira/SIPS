@@ -237,12 +237,12 @@ $query="SELECT
 			vdl.phone_number
 			
 		FROM 
-			vicidial_lists vdlf 
-		INNER JOIN 
 			vicidial_list vdl 
+		left JOIN 
+			vicidial_lists vdlf 
 		ON 
 			vdl.list_id=vdlf.list_id 						
-		INNER JOIN 
+		left JOIN 
 			vicidial_campaigns vdc 
 		ON 
 			vdc.campaign_id=vdlf.campaign_id
@@ -260,7 +260,7 @@ $query="SELECT
 			vdcs.status=vdl.status
 		WHERE 
 			lead_id='$lead_id'
-		LIMIT 1";
+		LIMIT 1;";
 			
 $query=mysql_query($query,$link) or die(mysql_error());
 $lead_info=mysql_fetch_assoc($query);
