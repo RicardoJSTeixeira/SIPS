@@ -11,17 +11,14 @@
         <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/demo_table.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/animate.min.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
 
         <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
-        <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="/bootstrap/js/moment.min.js"></script>
         <script type="text/javascript" src="/bootstrap/js/moment.langs.min.js"></script>
         <script type="text/javascript" src="/jquery/jqueryUI/jquery-ui-1.9.0.custom.min.js"></script>
-        <script type="text/javascript" src="/jquery/jqueryUI/plugins/datetimepicker.js"></script>
-        <script type="text/javascript" src="/jquery/jqueryUI/language/pt-pt.js"></script>
-        <script type="text/javascript" src="/jquery/jsdatatable/plugins/plugin.fnAjaxReload.js"></script>
-        <script type="text/javascript" src="/ini/SeamlessLoop.js"></script>
-        <script type="text/javascript" src="/jquery/scrollto/jquery.scrollTo-1.4.3.1-min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt.js"></script>
 
         <?php
         require ('../func/reserve_utils.php');
@@ -51,7 +48,7 @@
         }
         $slot2change = (isset($_GET["muda"]) ? $_GET["muda"] : 0);
         $dt = (isset($_GET["dt"]) ? $_GET["dt"] : "");
-        if ($users->user_level>5) {
+        if ($users->user_level > 5) {
             if (checkDateTime($dt, "Y-m-d")) {
                 $date = (date('D') == 'Mon') ? date("Y-m-d", strtotime($_GET["dt"] . " this monday")) : date("Y-m-d", strtotime($_GET["dt"] . " last monday"));
                 $comeca = (date('D') == 'Mon') ? date("d-m-Y", strtotime($_GET["dt"] . " this monday")) : date("d-m-Y", strtotime($_GET["dt"] . " last monday"));
@@ -164,13 +161,13 @@
             <?php
             //start struct
             if (isset($_GET["sch"])) {
-                $query = "SELECT b.display_text,days_visible,blocks,begin_time,end_time,a.id_scheduler,b.id_resource,b.restrict_days,a.user_group FROM sips_sd_schedulers a INNER JOIN sips_sd_resources b ON a.id_scheduler=b.id_scheduler WHERE b.id_scheduler=$id_scheduler AND b.active=1 AND a.active=1;";
+                $query = "SELECT b.display_text,days_visible,blocks,begin_time,end_time,a.id_scheduler,b.id_resource,b.restrict_days,a.user_group FROM sips_sd_schedulers a INNER JOIN sips_sd_resources b ON a.id_scheduler=b.id_scheduler WHERE b.id_scheduler=$id_scheduler " . (($users->user_level > 5) ? "" : "AND b.active=1 AND a.active=1") . ";";
             } elseif (isset($_GET["rsc"])) {
-                $query = "SELECT b.display_text,days_visible,blocks,begin_time,end_time,a.id_scheduler,b.id_resource,b.restrict_days,a.user_group FROM sips_sd_schedulers a INNER JOIN sips_sd_resources b ON a.id_scheduler=b.id_scheduler WHERE b.id_resource=$id_resource AND b.active=1 AND a.active=1;";
+                $query = "SELECT b.display_text,days_visible,blocks,begin_time,end_time,a.id_scheduler,b.id_resource,b.restrict_days,a.user_group FROM sips_sd_schedulers a INNER JOIN sips_sd_resources b ON a.id_scheduler=b.id_scheduler WHERE b.id_resource=$id_resource " . (($users->user_level > 5) ? "" : "AND b.active=1 AND a.active=1") . "";
             } elseif (isset($_GET["cp"])) {
-                $query = "SELECT b.display_text,days_visible,blocks,begin_time,end_time,a.id_scheduler,b.id_resource,b.restrict_days,a.user_group FROM sips_sd_schedulers a INNER JOIN sips_sd_resources b ON a.id_scheduler=b.id_scheduler INNER JOIN sips_sd_cp c ON a.alias_code=c.tecnico WHERE c.cp='$cp' AND b.active=1 AND a.active=1";
+                $query = "SELECT b.display_text,days_visible,blocks,begin_time,end_time,a.id_scheduler,b.id_resource,b.restrict_days,a.user_group FROM sips_sd_schedulers a INNER JOIN sips_sd_resources b ON a.id_scheduler=b.id_scheduler INNER JOIN sips_sd_cp c ON a.alias_code=c.tecnico WHERE c.cp='$cp' " . (($users->user_level > 5) ? "" : "AND b.active=1 AND a.active=1") . "";
             } elseif (isset($_GET["ref"])) {
-                $query = "SELECT b.display_text,days_visible,blocks,begin_time,end_time,a.id_scheduler,b.id_resource,b.restrict_days,a.user_group FROM sips_sd_schedulers a INNER JOIN sips_sd_resources b ON a.id_scheduler=b.id_scheduler WHERE a.alias_code='" . mysql_real_escape_string($ref) . "' AND b.active=1 AND a.active=1;";
+                $query = "SELECT b.display_text,days_visible,blocks,begin_time,end_time,a.id_scheduler,b.id_resource,b.restrict_days,a.user_group FROM sips_sd_schedulers a INNER JOIN sips_sd_resources b ON a.id_scheduler=b.id_scheduler WHERE a.alias_code='" . mysql_real_escape_string($ref) . "' " . (($users->user_level > 5) ? "" : "AND b.active=1 AND a.active=1") . ";";
             }
 
 
@@ -190,7 +187,7 @@
                 echo ".t" . $r_types[$index]["id_reservations_types"] . " {background: " . $r_types[$index]["color"] . ";}\n";
             }
 
-            if ($users->user_level>5) {
+            if ($users->user_level > 5) {
 
                 $acaba = date("d-m-Y", strtotime($comeca . ' next sunday'));
                 $begin_sys = $date;
@@ -206,8 +203,7 @@
         <div class='grid' >
             <div class="grid-title">
                 <div class="pull-left">Calendário</div>
-                <div class="pull-right">
-                </div>
+                <div class="pull-right"><button class="btn btn-success <?= (isset($_GET["rsc"]) ? "" : "hide") ?>" id="exp-btn"><i class="icon-plus"></i>Excepção</button></div>
             </div>
 
             <?php
@@ -268,14 +264,14 @@
             }
             //End execoes
             ?>
-            <div id="nav" class="<?=($users->user_level<5 and $resources[0]["days_visible"]<7)?'hide':''   ?>">
+            <div id="nav" class="<?= ($users->user_level < 5 and $resources[0]["days_visible"] < 7) ? 'hide' : '' ?>">
                 <span id="anterior" class='btn btn-mini icon-alone'><i class='icon-arrow-left'></i></span>
                 <span><?= $comeca . " - " . $acaba ?></span>
                 <span id="seguinte" class='btn btn-mini icon-alone'><i class='icon-arrow-right'></i></span>
             </div>
             <div class="grid" id="conteiner">
                 <?php
-                $resources[0]["days_visible"]=($users->user_level>5)?7:$resources[0]["days_visible"];
+                $resources[0]["days_visible"] = ($users->user_level > 5) ? 7 : $resources[0]["days_visible"];
                 for ($ii = 0; $ii < $resources[0]["days_visible"]; $ii++) {
                     $display_date = date("d/m/Y", strtotime($date));
                     $tab = array();
@@ -296,7 +292,7 @@
                             //title first column 
                             $beg = date("Y-m-d H:i:s", strtotime($date . "+$i minutes"));
                             $end = date("Y-m-d H:i:s", strtotime($date . "+" . ($i + $resources[0]["blocks"] - 1) . " minutes"));
-                            $dados = set_estado($beg, $end, $resources[$iii]["id_resource"], $reservas, $series, $resources[$iii]["restrict_days"], $execoes, $date, $i, $slot2change, $i_reservas,$users);
+                            $dados = set_estado($beg, $end, $resources[$iii]["id_resource"], $reservas, $series, $resources[$iii]["restrict_days"], $execoes, $date, $i, $slot2change, $i_reservas, $users);
                             $title = (($dados["type"] != "") ? " title='$dados[type]'" : "");
                             $tab[$iii + 1] .= "\t\t<td class='slot" . $dados["stat"] . "'$title >" . (!is_null($dados["postal"]) ? "<span class='postal'>$dados[postal]</span>" : "") . "
                                                 <input type=hidden class='beg' value='" . $beg . "'/>
@@ -345,6 +341,38 @@
                 </fieldset>
             </form>
         </div>
+
+        <div id="dialog-form-exp" title="Marcação por excepção"  style="display: none;">
+            <form id="form-exp">
+                <fieldset>
+                    <label for="exp-marcData">Data</label>
+                    <input type="text" name="exp-marcData" id="exp-marcData" value="" required class="text ui-widget-content ui-corner-all" />
+
+                    <select id="exp-rtype" required>
+                        <option value="">Escolha um tipo de reserva</option>
+                        <?php
+                        for ($index1 = 0; $index1 < count($r_types); $index1++) {
+                            if ($r_types[$index1]["active"] == 1) {
+                                echo "<option value='" . $r_types[$index1]["id_reservations_types"] . "'>" . $r_types[$index1]["display_text"] . "</option>";
+                            }
+                        }
+                        ?>
+                    </select>
+                    <button class="btn btn-success">Verificar</button>
+                </fieldset>
+            </form>
+            <form id="form-login"  style="display: none;">
+                <fieldset>
+                    <h5>A marcar para:</h5>
+                    <p id="exp-Data"></p>
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" value="" required class="text ui-widget-content ui-corner-all" />
+                    <button class="btn btn-primary">Marcar</button>
+                    <button style="margin-left: 5px" id="exp-voltar" class="btn icon-alone"><i class="icon-arrow-left"></i></button>
+                </fieldset>
+            </form>
+            <p></p>
+        </div>
         <div id="crm" class='grid' style='display:none'>
             <div class="grid-title">
                 <div class="pull-left">Gestão de Leads</div>
@@ -354,283 +382,295 @@
         </div>
 
         <script>
-            var lead = '<?= $id_lead; ?>';
-            var user = '<?= $id_user; ?>';
-            var slot2change = <?= (isset($_GET["muda"]) ? $_GET["muda"] : 0) ?>;
-            var bloco_res;
-            var b;
+            $(function() {
+                var
+                        lead = '<?= $id_lead; ?>',
+                        user = '<?= $id_user; ?>',
+                        slot2change = <?= (isset($_GET["muda"]) ? $_GET["muda"] : 0) ?>,
+                        bloco_res,
+                        rsc_id = <?= (isset($_GET["rsc"]) ? $_GET["rsc"] : 0) ?>,
+                        b,
+                        time_block =<?= $resources[0]["blocks"] ?>;
 
-            function ChangeDate(data) {
-                RedirectToSelf("dt", /dt=\d{4}-\d{2}-\d{2}/i, "dt=" + data, slot2change);
-            }
-
-            function RedirectToSelf(queryStringParam, regexMatch, substitution, extra) {
-                var val = new RegExp('(\\?|\\&)muda=.*?(?=(&|$))');
-                var url = location.href.replace(val, '');
-                var newUrl = url;
-                if (url.indexOf(queryStringParam + "=") != -1) {
-                    newUrl = url.replace(regexMatch, substitution);
-                } else if (url.indexOf("?") != -1) {
-                    newUrl = url + "&" + substitution;
-                } else {
-                    newUrl = url + "?" + substitution;
+                function ChangeDate(data) {
+                    RedirectToSelf("dt", /dt=\d{4}-\d{2}-\d{2}/i, "dt=" + data, slot2change);
                 }
-                newUrl = newUrl.replace("#", "");
-                var mudar = "";
-                if (extra != 0) {
-                    mudar = "&muda=" + extra;
+
+                function RedirectToSelf(queryStringParam, regexMatch, substitution, extra) {
+                    var val = new RegExp('(\\?|\\&)muda=.*?(?=(&|$))');
+                    var url = location.href.replace(val, '');
+                    var newUrl = url;
+                    if (url.indexOf(queryStringParam + "=") != -1) {
+                        newUrl = url.replace(regexMatch, substitution);
+                    } else if (url.indexOf("?") != -1) {
+                        newUrl = url + "&" + substitution;
+                    } else {
+                        newUrl = url + "?" + substitution;
+                    }
+                    newUrl = newUrl.replace("#", "");
+                    var mudar = "";
+                    if (extra != 0) {
+                        mudar = "&muda=" + extra;
+                    }
+                    location = newUrl + mudar;
                 }
-                location = newUrl + mudar;
-            }
 
 
-            function showDialog(msg) {
-                $('#alertbox').html(msg);
-                $('#dialog-confirm').dialog({
-                    modal: true,
-                    buttons: {
-                        Ok: function() {
-                            $(this).dialog("close");
+                function showDialog(msg) {
+                    $('#alertbox').html(msg);
+                    $('#dialog-confirm').dialog({
+                        modal: true,
+                        buttons: {
+                            Ok: function() {
+                                $(this).dialog("close");
+                            }
                         }
-                    }
-                });
-            }
-
-            function confirma(msg) {
-                var def = $.Deferred();
-
-                $('#alertbox').html(msg);
-                $("#dialog-confirm").dialog({
-                    resizable: false,
-                    height: 170,
-                    modal: true,
-                    buttons: {
-                        Sim: function() {
-                            def.resolve();
-                            $(this).dialog("close");
-                        },
-                        Cancelar: function() {
-                            def.reject();
-                            $(this).dialog("close");
-                        }
-                    },
-                    close: function() {
-                    }
-                });
-                return def.promise();
-            }
-            function confirma_alt(msg) {
-                var def = $.Deferred();
-
-                $('#alertbox').html(msg);
-                $("#dialog-confirm").dialog({
-                    resizable: false,
-                    width: "350px",
-                    modal: true,
-                    buttons: {
-                        Sim: function() {
-                            $(this).dialog("close");
-                            def.resolve();
-                        },
-                        Cancelar: function() {
-                            $(this).dialog("close");
-                            def.reject();
-                        },
-                        Eliminar: function() {
-                            $(this).dialog("close");
-                            reservation.elimina();
-                            def.reject();
-                        },
-                        Info: function() {
-                            $(this).dialog("close");
-                            crm.open();
-                            def.reject();
-                        }
-                    },
-                    close: function() {
-                    }
-                });
-                return def.promise();
-            }
-
-
-            var crm = {
-                close: function()
-                {
-                    $("#loader").hide();
-                    $("#crm").fadeOut()
-                            .find(".grid-content")
-                            .empty();
-                },
-                open: function() {
-                    if ($('.lead', bloco_res).val() == 0) {
-                        showDialog("Esta reserva não tem lead atribuida...");
-                        return false;
-                    }
-                    $("#loader").show();
-                    $.post('../../crm/crm_edit.php', {
-                        lead_id: $('.lead', bloco_res).val()
-                    },
-                    function(data) {
-                        $("#crm .grid-content").html(data).parent().fadeIn();
-
-                    }, "html").fail(function() {
-                        alert('Erro de conecção ao servidor.');
-                        $("#loader").hide();
                     });
                 }
-            };
-            var reservation = {
-                //Start reservation
-                create: function(b) {
-<?php if (isset($_GET["cp"]) OR isset($_GET["ref"])) { ?>
-                        if (opener.marcado) {
+
+                function confirma(msg) {
+                    var def = $.Deferred();
+
+                    $('#alertbox').html(msg);
+                    $("#dialog-confirm").dialog({
+                        resizable: false,
+                        height: 170,
+                        modal: true,
+                        buttons: {
+                            Sim: function() {
+                                def.resolve();
+                                $(this).dialog("close");
+                            },
+                            Cancelar: function() {
+                                def.reject();
+                                $(this).dialog("close");
+                            }
+                        },
+                        close: function() {
+                        }
+                    });
+                    return def.promise();
+                }
+                function confirma_alt(msg) {
+                    var def = $.Deferred();
+
+                    $('#alertbox').html(msg);
+                    $("#dialog-confirm").dialog({
+                        resizable: false,
+                        width: "350px",
+                        modal: true,
+                        buttons: {
+                            Sim: function() {
+                                $(this).dialog("close");
+                                def.resolve();
+                            },
+                            Cancelar: function() {
+                                $(this).dialog("close");
+                                def.reject();
+                            },
+                            Eliminar: function() {
+                                $(this).dialog("close");
+                                reservation.elimina();
+                                def.reject();
+                            },
+                            Info: function() {
+                                $(this).dialog("close");
+                                crm.open();
+                                def.reject();
+                            }
+                        },
+                        close: function() {
+                        }
+                    });
+                    return def.promise();
+                }
+
+
+                var crm = {
+                    close: function()
+                    {
+                        $("#loader").hide();
+                        $("#crm").fadeOut()
+                                .find(".grid-content")
+                                .empty();
+                    },
+                    open: function() {
+                        if ($('.lead', bloco_res).val() == 0) {
+                            showDialog("Esta reserva não tem lead atribuida...");
                             return false;
                         }
-<?php } ?>
-                    if (slot2change != 0) {
-                        return false;
-                    }
-                    var bloco = b;
-                    $("#loader").show();
-                    var rtype = $("#rtype option:selected");
-                    $.post('../ajax/reservas.php', {
-                        start: $('.beg', bloco).val(),
-                        end: $('.end', bloco).val(),
-                        resource: $('.rsc', bloco).val(),
-                        user: user,
-                        lead: lead,
-                        rtype: rtype.val()
-                    },
-                    function(data) {
-                        if (data.sucess == "1") {
-                            $(bloco).removeClass("reservavel").addClass("reservado").addClass("t" + rtype.val()).attr("title", rtype.text());
-<?php if (isset($_GET["cp"]) OR isset($_GET["ref"])) { ?>
-                                $("#marcdata", opener.document).val($('.beg', bloco).val().substr(0, 10));
-                                $("#HOUR_marchora", opener.document).val($('.beg', bloco).val().substr(11, 2));
-                                $("#MINUTE_marchora", opener.document).val($('.beg', bloco).val().substr(14, 2));
-                                opener.marcado = true;
-                                close();
-<?php } ?>
-                            $("#loader").hide();
-                        } else if (data.sucess == "0") {
-                            $("#loader").hide();
-                            confirma("Esta slot já se encontra reservada.\n Deseja fazer um reload?").done(function() {
-                                location.reload();
-                            }).fail(function() {
-                                $(bloco).removeClass("reservavel").addClass("reservado").addClass("limbo");
-                                $("#loader").hide();
-                            })
-                        }
-                    }, "json").fail(function() {
-                        $("#loader").hide();
-                        alert('Erro de conecção ao servidor.');
-                    })
-                },
-                elimina: function() {
-                    $("#loader").show();
-                    $.post('../ajax/apaga_reservas.php', {
-                        start: $('.beg', bloco_res).val(),
-                        end: $('.end', bloco_res).val(),
-                        resource: $('.rsc', bloco_res).val()
-                    },
-                    function(data) {
-                        if (data.sucess == "1") {
-                            $(bloco_res).removeClass("reservado").removeClass(function(index, css) {
-                                return (css.match(/\bt\S+/g) || []).join(' ');
-                            }).removeAttr("title").addClass("reservavel");
-<?php if (isset($_GET["cp"]) OR isset($_GET["ref"])) { ?>
-                                opener.marcado = false;
-<?php } ?>
-                            $("#loader").hide();
-                        } else if (data.sucess == "0") {
-                            $("#loader").hide();
-                            alert("Ocorreu-se um erro não identificado...");
-                        }
-                    }, "json").fail(function() {
-                        alert('Erro de conecção ao servidor.');
-                        $("#loader").hide();
-                    });
-                }
-
-            }
-            var alterReservation = {
-                Start: function() {
-                    bloco_res = this;
-                    if (slot2change != 0) {
-                        return false;
-                    }
-                    confirma_alt("Deseja mudar a marcação?").done(function() {
                         $("#loader").show();
-                        $.post('../ajax/altera_reservas.php', {
-                            pedido: 1,
+                        $.post('../../crm/crm_edit.php', {
+                            lead_id: $('.lead', bloco_res).val()
+                        },
+                        function(data) {
+                            $("#crm .grid-content").html(data).parent().fadeIn();
+
+                        }, "html").fail(function() {
+                            alert('Erro de conecção ao servidor.');
+                            $("#loader").hide();
+                        });
+                    }
+                };
+                var reservation = {
+                    //Start reservation
+                    create: function(b) {
+<?php if (isset($_GET["cp"]) OR isset($_GET["ref"])) { ?>
+                            if (opener.marcado) {
+                                return false;
+                            }
+<?php } ?>
+                        if (slot2change != 0) {
+                            return false;
+                        }
+                        var bloco = b;
+                        $("#loader").show();
+                        var rtype = $("#rtype option:selected");
+                        $.post('../ajax/reservas.php', {
+                            start: $('.beg', bloco).val(),
+                            end: $('.end', bloco).val(),
+                            resource: $('.rsc', bloco).val(),
+                            user: user,
+                            lead: lead,
+                            rtype: rtype.val()
+                        },
+                        function(data) {
+                            if (data.sucess == "1") {
+                                $(bloco).removeClass("reservavel").addClass("reservado").addClass("t" + rtype.val()).attr("title", rtype.text());
+<?php if (isset($_GET["cp"]) OR isset($_GET["ref"])) { ?>
+                                    $("#marcdata", opener.document).val($('.beg', bloco).val().substr(0, 10));
+                                    $("#HOUR_marchora", opener.document).val($('.beg', bloco).val().substr(11, 2));
+                                    $("#MINUTE_marchora", opener.document).val($('.beg', bloco).val().substr(14, 2));
+                                    opener.marcado = true;
+<?php } ?>
+                                if (lead) {
+                                    close();
+                                }
+                                $("#loader").hide();
+                            } else if (data.sucess == "0") {
+                                $("#loader").hide();
+                                confirma("Esta slot já se encontra reservada.\n Deseja fazer um reload?").done(function() {
+                                    location.reload();
+                                }).fail(function() {
+                                    $(bloco).removeClass("reservavel").addClass("reservado").addClass("limbo");
+                                    $("#loader").hide();
+                                });
+                            }
+                        }, "json").fail(function() {
+                            $("#loader").hide();
+                            alert('Erro de conecção ao servidor.');
+                        });
+                    },
+                    elimina: function() {
+                        $("#loader").show();
+                        $.post('../ajax/apaga_reservas.php', {
                             start: $('.beg', bloco_res).val(),
                             end: $('.end', bloco_res).val(),
                             resource: $('.rsc', bloco_res).val()
                         },
                         function(data) {
                             if (data.sucess == "1") {
-                                cl4ss = $(bloco_res).attr("class");
-                                $('.slot').removeClass("reservavel").not('.reservado').not('.bloqueado').not('.past').addClass("disponivel");
-                                $(bloco_res).removeClass("reservado").addClass("muda");
-                                slot2change = data.id;
+                                $(bloco_res).removeClass("reservado").removeClass(function(index, css) {
+                                    return (css.match(/\bt\S+/g) || []).join(' ');
+                                }).removeAttr("title").addClass("reservavel");
+<?php if (isset($_GET["cp"]) OR isset($_GET["ref"])) { ?>
+                                    opener.marcado = false;
+<?php } ?>
                                 $("#loader").hide();
+                            } else if (data.sucess == "0") {
+                                $("#loader").hide();
+                                alert("Ocorreu-se um erro não identificado...");
                             }
-                            ;
                         }, "json").fail(function() {
                             alert('Erro de conecção ao servidor.');
                             $("#loader").hide();
                         });
-                    });
-                },
-                Submit: function() {
-                    var bloco = this;
-                    $("#loader").show();
-                    $.post('../ajax/altera_reservas.php', {
-                        pedido: 2,
-                        start: $('.beg', bloco).val(),
-                        end: $('.end', bloco).val(),
-                        resource: $('.rsc', bloco).val(),
-                        id: slot2change
-                    },
-                    function(data) {
-                        if (data.sucess == "1") {
-                            var muda = $('.muda');
-                            var title = muda.attr("title");
-                            $(bloco).addClass(cl4ss).attr("title", title);
-                            muda.removeClass(function(index, css) {
-                                return (css.match(/\bt\S+/g) || []).join(' ');
-                            }).removeAttr("title").removeClass("muda");
-                            $('.slot').removeClass("disponivel").not('.reservado').not('.bloqueado').addClass("reservavel");
-<?php if (isset($_GET["cp"]) OR isset($_GET["ref"])) { ?>
-                                $("#marcdata", opener.document).val($('.beg', bloco).val().substr(0, 10));
-                                $("#HOUR_marchora", opener.document).val($('.beg', bloco).val().substr(11, 2));
-                                $("#MINUTE_marchora", opener.document).val($('.beg', bloco).val().substr(14, 2));
-                                close();
-<?php } ?>
-                            $("#loader").hide();
-                            slot2change = 0;
-                        } else if (data.sucess == "0") {
-                            $("#loader").hide();
-                            confirma("Esta slot já se encontra reservada.\n Deseja fazer um reload?").done(function() {
-                                location.reload();
-                            }).fail(function() {
-                                $(bloco).removeClass("disponivel").addClass("reservado").addClass("limbo");
-                                $('.muda').removeClass("muda").addClass("reservado");
-                                $('.disponivel').removeClass("disponivel").addClass("reservavel");
-                                slot2change = 0;
+                    }
+
+                }
+                var alterReservation = {
+                    Start: function() {
+                        bloco_res = this;
+                        if (slot2change != 0) {
+                            return false;
+                        }
+                        confirma_alt("Deseja mudar a marcação?").done(function() {
+                            $("#loader").show();
+                            $.post('../ajax/altera_reservas.php', {
+                                pedido: 1,
+                                start: $('.beg', bloco_res).val(),
+                                end: $('.end', bloco_res).val(),
+                                resource: $('.rsc', bloco_res).val()
+                            },
+                            function(data) {
+                                if (data.sucess == "1") {
+                                    cl4ss = $(bloco_res).attr("class");
+                                    $('.slot').removeClass("reservavel").not('.reservado').not('.bloqueado').not('.past').addClass("disponivel");
+                                    $(bloco_res).removeClass("reservado").addClass("muda");
+                                    slot2change = data.id;
+                                    $("#loader").hide();
+                                }
+                                ;
+                            }, "json").fail(function() {
+                                alert('Erro de conecção ao servidor.');
                                 $("#loader").hide();
                             });
-                        }
-                    }, "json").fail(function() {
-                        alert('Erro de conecção ao servidor.');
-                        $("#loader").hide();
-                    });
-                }
-            };
+                        });
+                    },
+                    Submit: function() {
+                        var bloco = this;
+                        $("#loader").show();
+                        $.post('../ajax/altera_reservas.php', {
+                            pedido: 2,
+                            start: $('.beg', bloco).val(),
+                            end: $('.end', bloco).val(),
+                            resource: $('.rsc', bloco).val(),
+                            id: slot2change
+                        },
+                        function(data) {
+                            if (data.sucess == "1") {
+                                var muda = $('.muda');
+                                var title = muda.attr("title");
+                                $(bloco).addClass(cl4ss).attr("title", title);
+                                muda.removeClass(function(index, css) {
+                                    return (css.match(/\bt\S+/g) || []).join(' ');
+                                }).removeAttr("title").removeClass("muda");
+                                $('.slot').removeClass("disponivel").not('.reservado').not('.bloqueado').addClass("reservavel");
+<?php if (isset($_GET["cp"]) OR isset($_GET["ref"])) { ?>
+                                    $("#marcdata", opener.document).val($('.beg', bloco).val().substr(0, 10));
+                                    $("#HOUR_marchora", opener.document).val($('.beg', bloco).val().substr(11, 2));
+                                    $("#MINUTE_marchora", opener.document).val($('.beg', bloco).val().substr(14, 2));
+                                    close();
+<?php } ?>
+                                $("#loader").hide();
+                                slot2change = 0;
+                            } else if (data.sucess == "0") {
+                                $("#loader").hide();
+                                confirma("Esta slot já se encontra reservada.\n Deseja fazer um reload?").done(function() {
+                                    location.reload();
+                                }).fail(function() {
+                                    $(bloco).removeClass("disponivel").addClass("reservado").addClass("limbo");
+                                    $('.muda').removeClass("muda").addClass("reservado");
+                                    $('.disponivel').removeClass("disponivel").addClass("reservavel");
+                                    slot2change = 0;
+                                    $("#loader").hide();
+                                });
+                            }
+                        }, "json").fail(function() {
+                            alert('Erro de conecção ao servidor.');
+                            $("#loader").hide();
+                        });
+                    }
+                };
+
+                var excepcao = {
+                    btn: $("#exp-btn"),
+                    dialog: $("#dialog-form-exp"),
+                    marcar: function() {
+                    }
+                };
 
 
-            $(function() {
                 //Start Design
 
                 $('.slot').hover(function() {
@@ -642,7 +682,7 @@
 
                 //Start nav
                 $("#anterior").click(function() {
-                    ChangeDate('<?= last_week($date,$users) ?>');
+                    ChangeDate('<?= last_week($date, $users) ?>');
                 });
 
                 $("#seguinte").click(function() {
@@ -676,7 +716,7 @@
                 });
                 //reservation tipe
 
-
+                $("#exp-marcData").datetimepicker({format: 'yyyy-mm-dd hh:ii', minuteStep: time_block, autoclose: true, language: "pt", });
                 //Change reservation first step 
 
                 var cl4ss;
@@ -700,7 +740,57 @@
                     });
                 });
 
+                excepcao.btn.click(function() {
+                    excepcao.dialog.dialog({modal: true});
+                });
+                excepcao
+                        .dialog
+                        .find("#form-exp")
+                        .submit(function(e) {
+                            e.preventDefault();
+                            var dataT = excepcao.dialog.find("#exp-marcData").val() + " - " + moment(excepcao.dialog.find("#exp-marcData").val() + ":00").add('minutes', time_block - 1).format("YYYY-MM-DD HH:mm");
+                            console.log(x);
+                            $(this)
+                                    .hide()
+                                    .next()
+                                    .find("#exp-Data")
+                                    .text(dataT)
+                                    .end()
+                                    .show();
+                        })
+                        .next()
+                        .submit(function(e) {
+                            e.preventDefault();
+                            $.post("../ajax/reserva_excepcao.php", {
+                                start: excepcao.dialog.find("#exp-marcData").val() + ":00",
+                                end: moment(excepcao.dialog.find("#exp-marcData").val() + ":00").add('minutes', time_block - 1).format("YYYY-MM-DD HH:mm:ss"),
+                                resource: rsc_id,
+                                user: user,
+                                lead: lead,
+                                rtype: excepcao.dialog.find("#exp-rtype").val(),
+                                pass: excepcao.dialog.find("#password").val()},
+                            function(data) {
+                                alert(data.message);
+                                if (data.success) {
+                                    if (lead) {
+                                        close();
+                                    }
+                                }
+                            }, "json");
+                        })
+                        .find("#exp-voltar")
+                        .click(function(e) {
+                            e.preventDefault();
+                            $(this)
+                                    .parent()
+                                    .parent()
+                                    .hide()
+                                    .prev()
+                                    .show()[0].reset();
+                        });
+
             });
+            var x;
         </script>
     </body>
 </html>

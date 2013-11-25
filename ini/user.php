@@ -271,6 +271,14 @@ class users extends user {
         return false;
     }
 
-}
+    public function isAdminPass($pass) {
 
-?>
+        global $link;
+
+        $query = "Select count(*) from vicidial_users where pass='" . mysql_real_escape_string($pass) . "'";
+        $result = mysql_query($query) or die(mysql_error());
+        $row = mysql_fetch_row($result);
+        return ($row[0]) ? true : false;
+    }
+
+}
