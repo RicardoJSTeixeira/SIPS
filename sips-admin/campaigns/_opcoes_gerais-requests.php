@@ -189,7 +189,7 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
         //$query = mysql_fetch_assoc(mysql_query("SELECT allowed_campaigns FROM vicidial_user_groups WHERE user_group='$user_group[user_group]';", $link)) or die(mysql_error());
         //$js['allowed'] = "'" . preg_replace("/ /","','" , preg_replace("/ -/",'',trim($query['allowed_campaigns']))) . "'";	
 
-        $query = mysql_query("SELECT list_id FROM vicidial_lists WHERE campaign_id='$CampaignID'") or die(mysql_error());
+        $query = mysql_query("SELECT list_id FROM vicidial_lists WHERE campaign_id='$CampaignID' and active='Y'") or die(mysql_error());
 
         while ($row = mysql_fetch_row($query)) {
             $js['campaign_lists'][] = $row[0];
