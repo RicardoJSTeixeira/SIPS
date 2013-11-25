@@ -23,29 +23,31 @@ if ( !$user->id)
 
         
 if(isset($_POST["campaign"])){
+    $date=$_POST["data_i"];
+    $date_end=$_POST["data_f"];
+    $days=$_POST["dias"];
+    require_once (ROOT.'sips-admin/reservas/func/reserve_utils.php');
+    $total = 0;
+    echo json_encode(array("boxes"=>cria_listagem($_POST["campaign"]),"total"=>$total));
+    
+    
      
-    $box_stats=array();
-        $query = "SELECT id_resource FROM `sips_sd_filter` WHERE  campaign_id='".mysql_real_escape_string($campaign_id)."'";
-        $rs = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_row($rs)) {
-        $box_stats[]=$row[0];
-        }
-        echo json_encode($box_stats);
-        exit;
+//    $box_stats=array();
+//        $query = "SELECT id_resource FROM `sips_sd_filter` WHERE  campaign_id='".mysql_real_escape_string($campaign_id)."'";
+//        
+//        $rs = mysql_query($query, $link) or die(mysql_error());
+//        while ($row = mysql_fetch_row($rs)) {
+//        $box_stats[]=$row[0];
+//        }
+//        echo json_encode($box_stats);
+//        exit;
 }        
 
-     $date=$_POST["data_i"];
-     $date_end=$_POST["data_f"];
-     $days=$_POST["dias"];
     
 
-require_once (ROOT.'sips-admin/reservas/func/reserve_utils.php');
 
-$total = 0;
 
-echo json_encode(array("boxes"=>cria_listagem(),"total"=>$total));
-
-function cria_listagem() {
+function cria_listagem($campaign) {
     global $total;
     global $link;
     global $date;
@@ -59,9 +61,25 @@ function cria_listagem() {
     $colors = array("red", "orange", "green");
 
     $color_head = array("Concluido" => "success", "Medio" => "warning", "Fraco" => "error");
-
-    $query = "SELECT b.id_resource, b.display_text, b.alias_code, a.blocks, a.begin_time, a.end_time+a.blocks end_time, count(c.id_resource) 'marc', b.`restrict_days` FROM `sips_sd_schedulers` a INNER JOIN `sips_sd_resources` b ON a.id_scheduler=b.id_scheduler left JOIN `sips_sd_reservations` c ON b.id_resource=c.id_resource and a.active=1 and b.active=1 and start_date between '$date 00:00:00' and '$date_end 23:59:59' group by b.id_resource";
-    $result = mysql_query($query, $link) or die(mysql_error($link));
+    
+    $q1 = "select TRIM(BOTH ']' from (select TRIM(BOTH '[' from values_text) from script_dinamico a inner join script_assoc b on a.id_script = b.id_script where type like 'scheduler' and id_camp_linha like '$campaign')) as resource_list";
+    $r1 = mysql_query($q1,$link);
+    $r1 = mysql_fetch_row($r1);
+    $resources_list = $r1[0];
+    if ($resources_list != null && $resources_list != '') {
+    $q2 ="select a.id_scheduler, a.display_text, count(b.id_resource) as childs_cound, GROUP_CONCAT(b.id_resource) as childs,  a.blocks, a.begin_time, a.end_time+blocks as end_time, b.restrict_days from sips_sd_schedulers a inner join sips_sd_resources b on a.id_scheduler = b.id_scheduler where a.active = 1 and b.active = 1 and a.id_scheduler in ($resources_list) group by id_scheduler;";
+    $result = mysql_query($q2,$link);
+    
+   
+    
+//    $query = "SELECT "
+//            . "b.id_resource, b.display_text, b.alias_code, a.blocks, a.begin_time, a.end_time+a.blocks end_time, count(c.id_resource) 'marc', b.`restrict_days` "
+//            . "FROM `sips_sd_schedulers` a "
+//                . "INNER JOIN `sips_sd_resources` b "
+//            . "ON a.id_scheduler=b.id_scheduler "
+//                . "left JOIN `sips_sd_reservations` c ON b.id_resource=c.id_resource where a.active=1 and b.active=1 and a.id_scheduler in (select values_text from script_dinamico a inner join script_assoc b on a.id_script = b.id_script where type like 'scheduler' and id_camp_linha like '$campaign') and start_date between '$date 00:00:00' and '$date_end 23:59:59' group by b.id_resource";
+//    echo $query;
+//    $result = mysql_query($query, $link) or die(mysql_error($link));
 $boxes="";
     //começa a calcular as marcações. CADA CICLO CORRESPONDE A UM RESOURCE!
     for ($index = 0; $index < mysql_num_rows($result); $index++) {
@@ -71,7 +89,7 @@ $boxes="";
         $slots = 0;
 
         //coloca uma todas as series num array
-        $qry = "SELECT `start_time`, `end_time`, `day_of_week_start`, `day_of_week_end` FROM `sips_sd_series` WHERE `id_resource` =$schdl[id_resource]";
+        $qry = "SELECT `start_time`, `end_time`, `day_of_week_start`, `day_of_week_end` FROM `sips_sd_series` WHERE `id_resource` IN ($schdl[childs])";
         $rslts = mysql_query($qry, $link) or die(mysql_error($link));
         $series = array();
         for ($index1 = 0; $index1 < mysql_num_rows($rslts); $index1++) {
@@ -79,7 +97,7 @@ $boxes="";
         }
 
         //coloca uma todas as execoes num array
-        $qry = "SELECT `start_date`, `end_date` FROM `sips_sd_execoes` WHERE `id_resource` = $schdl[id_resource]";
+        $qry = "SELECT `start_date`, `end_date` FROM `sips_sd_execoes` WHERE `id_resource` IN ($schdl[childs])";
         $rslts = mysql_query($qry, $link) or die(mysql_error($link));
         $execoes = array();
         for ($index1 = 0; $index1 < mysql_num_rows($rslts); $index1++) {
@@ -116,13 +134,15 @@ $boxes="";
             }
             $date = date("Y-m-d", strtotime($date . " +1 day"));
         }
-
-        $total+=$schdl["marc"];
+        $q4 = "select count(id_resource) as marc from sips_sd_reservations where id_resource in ($schdl[childs]) and start_date between '$date_end 00:00:00' and '$date_end 23:59:59'";
+   //     echo $q4;
+        $nMarc = mysql_fetch_assoc(mysql_query($q4,$link));
+        $total+=$nMarc["marc"];
 
         $max = $slots;
 
         if ($slots){
-          $perc = round($schdl["marc"] * 100 / $max);
+          $perc = round($nMarc["marc"] * 100 / $max);
         $range = (($perc < 33) ? 0 : (($perc < 66) ? 1 : 2));
   
         }else{
@@ -131,7 +151,7 @@ $boxes="";
         }
           
         
-        $boxes.="<div class='grid span2 cantouchthis glow ".$color_head[$labels_ref[$range]]."' data-resource='$schdl[id_resource]' data-campaign='' data-active='' >
+        $boxes.="<div class='grid span2 cantouchthis glow ".$color_head[$labels_ref[$range]]."' data-resource='$schdl[id_scheduler]' data-campaign='' data-active='' >
             <div class='grid-title box_title ".$labels[$labels_ref[$range]]."'>
                 <div class='pull-left  tooltip-top' data-t='tooltip' title='$schdl[display_text]'>$schdl[display_text]</div>
                 <div class='pull-right'><i class='play '></i></div>
@@ -141,7 +161,7 @@ $boxes="";
             <div class='grid-content ".((round($perc) < 33) ? $labels['Fraco'] : '')."'>
                 <div class='btn-modal'>
                     <span class='control-group ".$color_head[$labels_ref[$range]]."'>
-                        <input type='text' readonly='' class='min-input' value='$schdl[marc]'>
+                        <input type='text' readonly='' class='min-input' value='$nMarc[marc]'>
                         <span><i class='icon-hand-right $colors[$range]'></i></span>
                         <input type='text' readonly='' class='min-input' value='$max'>
                     </span>
@@ -152,4 +172,5 @@ $boxes="";
         </div>";
     }
 return $boxes;
-}
+} else return false;
+} 

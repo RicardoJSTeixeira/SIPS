@@ -77,6 +77,7 @@
 
         $query = "SELECT campaign_name, campaign_id FROM vicidial_campaigns $whereLOGallowed_campaignsSQL order by campaign_name";
         $query = mysql_query($query);
+        $select_campaigns .= "<option value='all'>Todas</option>";
         while ($row = mysql_fetch_assoc($query)) {
             $select_campaigns .= "<option value='$row[campaign_id]'>$row[campaign_name]</option>";
         }
@@ -167,7 +168,7 @@
                                 <div class="control-group">
                                     <label class="control-label" for="inputEmail">Campanha</label>
                                     <div class="controls">
-                                        <select  class="chosen-select" id='filtro_campanha'><?= $select_campaigns; ?></select>
+                                        <select  class="chosen-select"  id='filtro_campanha'><?= $select_campaigns; ?></select>
                                     </div>
                                 </div>
                                 <div class="control-group">

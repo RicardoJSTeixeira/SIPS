@@ -47,8 +47,7 @@
                   .modal-body, .modal{overflow:visible;}
 
                   .formRow .formRight{width:75%;}
-                  input[type="checkbox"]{display:inline;}
-                  input[type="radio"]{display:inline;}
+
                   .radio, .checkbox {padding-left: 1px;padding-right: 16px;}
                   .grid-title select{width:auto;max-width: 200px;margin-bottom: 0px;}
                   .grid-title {height:auto;}
@@ -346,41 +345,41 @@
                                                       <label class="label label-inverse" >Validação:</label>
 
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="validacao_texto_none">Sem validação<input type="radio" id="validacao_texto_none" name="regex_texto" value="none" /></label>
+                                                            <input type="radio" id="validacao_texto_none" name="regex_texto" value="none" /> <label class="radio inline"  for="validacao_texto_none"><span></span>Sem validação</label>
                                                       </div> 
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="validacao_texto_normal">Numeros e letras<input type="radio" id="validacao_texto_normal" name="regex_texto" value="normal" /></label>
+                                                            <input type="radio" id="validacao_texto_normal" name="regex_texto" value="normal" />  <label class="radio inline"  for="validacao_texto_normal"><span></span>Numeros e letras</label>
                                                       </div> 
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="validacao_texto_letter">Apenas letras<input type="radio" id="validacao_texto_letter" name="regex_texto" value="letter" /></label>
+                                                            <input type="radio" id="validacao_texto_letter" name="regex_texto" value="letter" /> <label class="radio inline"  for="validacao_texto_letter"><span></span>Apenas letras</label>
                                                       </div> 
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="validacao_number">Apenas números<input type="radio" id="validacao_number" name="regex_texto" value="number"/></label>
+                                                            <input type="radio" id="validacao_number" name="regex_texto" value="number"/> <label class="radio inline"  for="validacao_number"><span></span>Apenas números</label>
                                                       </div>
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="validacao_texto_email">Email<input type="radio" id="validacao_texto_email" name="regex_texto" value="email"/></label>
+                                                            <input type="radio" id="validacao_texto_email" name="regex_texto" value="email"/>  <label class="radio inline"  for="validacao_texto_email"><span></span>Email</label>
                                                       </div>
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="validacao_texto_nib">NIB<input type="radio" id="validacao_texto_nib" name="regex_texto" value="nib"/></label>
+                                                            <input type="radio" id="validacao_texto_nib" name="regex_texto" value="nib"/>  <label class="radio inline"  for="validacao_texto_nib"><span></span>NIB</label>
                                                       </div>
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="validacao_texto_nif">NIF<input type="radio" id="validacao_texto_nif" name="regex_texto" value="nif" /></label>
+                                                            <input type="radio" id="validacao_texto_nif" name="regex_texto" value="nif" />  <label class="radio inline"  for="validacao_texto_nif"><span></span>NIF</label>
                                                       </div>
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="validacao_texto_postal">Codigo-postal<input type="radio" id="validacao_texto_postal" name="regex_texto" value="postal"/></label>
+                                                            <input type="radio" id="validacao_texto_postal" name="regex_texto" value="postal"/> <label class="radio inline"  for="validacao_texto_postal"><span></span>Codigo-postal</label>
                                                       </div>
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="validacao_credit_card">Cartão de Crédito Visa<input type="radio" id="validacao_credit_card_v" name="regex_texto" value="credit_card_v"/></label>
+                                                            <input type="radio" id="validacao_credit_card_v" name="regex_texto" value="credit_card_v"/>   <label class="radio inline"  for="validacao_credit_card"><span></span>Cartão de Crédito Visa</label>
                                                       </div>
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="validacao_credit_card">Cartão de Crédito MasterCard<input type="radio" id="validacao_credit_card_m" name="regex_texto" value="credit_card_m"/></label>
+                                                            <input type="radio" id="validacao_credit_card_m" name="regex_texto" value="credit_card_m"/> <label class="radio inline"  for="validacao_credit_card"><span></span>Cartão de Crédito MasterCard</label>
                                                       </div>
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="validacao_credit_card">Cartão de Débito<input type="radio" id="validacao_credit_card_d" name="regex_texto" value="credit_card_d"/></label>
+                                                            <input type="radio" id="validacao_credit_card_d" name="regex_texto" value="credit_card_d"/> <label class="radio inline"  for="validacao_credit_card"><span></span>Cartão de Débito</label>
                                                       </div>
 
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="validacao_ajax">Validação por script<input type="radio" id="validacao_ajax" name="regex_texto" value="ajax"/></label>
+                                                            <input type="radio" id="validacao_ajax" name="regex_texto" value="ajax"/><label class="radio inline"  for="validacao_ajax"><span></span>Validação por script</label>
 
                                                             <button class="btn icon-chevron-down" id="button_ajax_upload_div"></button>  
                                                             <div id="div_ajax_upload" class="formRow" style="display:none">
@@ -435,9 +434,9 @@
                                                 <div class="formRow" >
                                                       <label class="label label-inverse" >Disposição:</label>
                                                       <div class="formRight">
-                                                            <label class="radio_dispo"  for="horiz_radio">Horizontal <input type="radio" class='radio inline' id="horiz_radio" name="rdispo" checked="checked"></label>
+                                                            <input type="radio" class='radio inline' id="horiz_radio" name="rdispo" checked="checked">   <label class="radio_dispo"  for="horiz_radio"><span></span>Horizontal </label>
                                                       </div> <div class="formRight">
-                                                            <label class="radio_dispo"  for="vertic_radio">Vertical <input type="radio"  class='radio inline' id="vertic_radio" name="rdispo" ></label>
+                                                            <input type="radio"  class='radio inline' id="vertic_radio" name="rdispo" >  <label class="radio_dispo"  for="vertic_radio"><span></span>Vertical </label>
                                                       </div>
                                                 </div>
                                           </div>
@@ -458,11 +457,11 @@
                                                 <div class="formRow" >
                                                       <label class="label label-inverse" >Disposição:</label>
                                                       <div class="formRight">
-                                                            <label class="checkbox_dispo"  for="horiz_checkbox">Horizontal <input type="radio" class='radio inline' id="horiz_checkbox" name="cdispo" checked="checked"></label>
+                                                            <input type="radio" class='radio inline' id="horiz_checkbox" name="cdispo" checked="checked">     <label class="checkbox_dispo"  for="horiz_checkbox"><span></span>Horizontal </label>
 
 
                                                       </div>   <div class="formRight">
-                                                            <label class="checkbox_dispo"  for="vertic_checkbox">Vertical  <input type="radio" class='radio inline' id="vertic_checkbox" name="cdispo" ></label>
+                                                            <input type="radio" class='radio inline' id="vertic_checkbox" name="cdispo" >      <label class="checkbox_dispo"  for="vertic_checkbox"><span></span>Vertical  </label>
                                                       </div>
                                                 </div>
                                           </div>
@@ -626,14 +625,14 @@
                                                       <label class="label label-inverse" >Formatação</label>
 
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="time_format_day">AAAA-MM-DD<input type="radio" id="time_format_day" name="time_format" value="2" checked="checked"/></label>
+                                                            <input type="radio" id="time_format_day" name="time_format" value="2" checked="checked"/><label class="radio inline"  for="time_format_day"><span></span>AAAA-MM-DD</label>
                                                       </div>
 
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="time_format_hour">AAAA-MM-DD HH<input type="radio" id="time_format_hour" name="time_format" value="1" /></label>
+                                                            <input type="radio" id="time_format_hour" name="time_format" value="1" />   <label class="radio inline"  for="time_format_hour"><span></span>AAAA-MM-DD HH</label>
                                                       </div>
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="time_format_minute">AAAA-MM-DD HH:MM<input type="radio" id="time_format_minute" name="time_format" value="0"/></label>
+                                                            <input type="radio" id="time_format_minute" name="time_format" value="0"/>     <label class="radio inline"  for="time_format_minute"><span></span>AAAA-MM-DD HH:MM</label>
                                                       </div>
 
                                                 </div>
@@ -656,7 +655,7 @@
                                                       </div>
                                                       <div class="formRight">
                                                             <input   type="checkbox" id="checkbox_scheduler_all" name="cc" value="1">
-                                                            <label class="checkbox inline" for="checkbox_scheduler_all">Selecionar todos</label>
+                                                            <label class="checkbox inline" for="checkbox_scheduler_all"><span></span>Selecionar todos</label>
                                                       </div>
                                                 </div>  
                                                 <div class="formRow">
@@ -682,7 +681,7 @@
                                                       </div>
                                                 </div>
                                           </div>
-                                  
+
                                           <!--ipl-->
                                           <div class="editor_layout" id="ipl_layout_editor" style="display:none">
                                                 <div class="formRow" >
@@ -715,12 +714,9 @@
                                                       <label class="label label-inverse">Opções:</label>
 
                                                       <div class="formRight">
-                                                            <label class="radio inline"  for="radio_ipl_image"><input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_image" name="ripl" value="1"> Imagem</label> 
-
-                                                            <label class=" radio inline"  for="radio_ipl_pdf"><input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_pdf" name="ripl" value="2" >PDF</label> 
-
-                                                            <label class=" radio inline"  for="radio_ipl_link"><input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_link" name="ripl" value="3"  >Link</label>    
-
+                                                            <input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_image" name="ripl" value="1"><label class="radio inline"  for="radio_ipl_image"><span></span> Imagem</label> 
+                                                            <input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_pdf" name="ripl" value="2" >  <label class=" radio inline"  for="radio_ipl_pdf"><span></span>PDF</label> 
+                                                            <input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_link" name="ripl" value="3"  >  <label class=" radio inline"  for="radio_ipl_link"><span></span>Link</label>    
                                                       </div>
 
 
@@ -765,7 +761,7 @@
                                                       <label class="label label-inverse" >Obrigatório:</label>
                                                       <div class="formRight">
                                                             <input  type="checkbox" id="item_required" name="required" value="1">
-                                                            <label for="item_required"></label>
+                                                            <label for="item_required"><span></span></label>
                                                             <i class="icon-star"></i>
                                                       </div>
                                                       <div class="formRight">
@@ -777,7 +773,7 @@
                                                       <label class="label label-inverse" >Escondido:</label>
                                                       <div class="formRight">
                                                             <input  type="checkbox" id="item_hidden" name="hidden" value="1">
-                                                            <label for="item_hidden"></label>
+                                                            <label for="item_hidden"><span></span></label>
                                                             <i class="icon-eye-open">​</i> / <i class="icon-eye-close">​</i>
                                                       </div>
                                                 </div>
@@ -882,12 +878,12 @@
 
                                                       <div class="formRight">
                                                             <input  class="date_option_radio" type="radio" id="radio_date_type_filter1" name="rdtf" checked="checked" value="1">
-                                                            <label class="radio_name radio inline"  for="radio_date_type_filter1">Data Fixa</label> 
+                                                            <label class="radio_name radio inline"  for="radio_date_type_filter1"><span></span>Data Fixa</label> 
 
                                                       </div> 
                                                       <div class="formRight">
                                                             <input class="date_option_radio"  type="radio" id="radio_date_type_filter2" name="rdtf" value="2" >
-                                                            <label class="radio_name radio inline"  for="radio_date_type_filter2">Data Dinâmica</label> 
+                                                            <label class="radio_name radio inline"  for="radio_date_type_filter2"><span></span>Data Dinâmica</label> 
                                                       </div> 
                                                 </div>
 

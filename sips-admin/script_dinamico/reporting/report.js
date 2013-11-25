@@ -1,3 +1,6 @@
+var script_id = 0;
+var campaign = "";
+var current_template = 0;
 $(function() {
       $("#report_bd").hide();
       $("#report_linha_inbound").hide();
@@ -47,28 +50,8 @@ $(function() {
 
       $("#column_order").sortable({
             stop: function(event, ui) {
-                  var elements = new Array();
-                  var items = $("#column_order  li");
-                  for (var count = 0; count < items.length; count++)
-                  {
-                        elements.push(items[count].id);
-                  }
-                  $.post("requests.php", {action: "update_elements_order", elements: elements, campaign: $("#select_campanha option:selected").val()},
-                  function(data)
-                  {
-
-
-                  }, "json");
-
-
-
-
-
-
+                  update_elements();
             }});
-
-
-
 });
 
 
@@ -78,36 +61,57 @@ $(function() {
 
 $("#download_report").on("click", function(e)
 {
-
       e.preventDefault();
-
-      var
-              ordered_tags = new Array(),
-              that;
-      $("#column_order li").each(function()
+      if ($("#form_filter").validationEngine('validate'))
       {
-            that = $(this).data();
 
-            ordered_tags.push({id: that.id, type: that.type, text: that.text});
+            if ($("#radio1").is(":checked"))
+                  campaign = $("#select_campanha option:selected").val();
+            if ($("#radio3").is(":checked"))
+                  campaign = $("#select_base_dados option:selected").data("campaign_id");
+
+            $("#co_modal").data("campaign", campaign);
+            get_templates(campaign);
+            $("#co_modal").modal("show");
+
+      }
+
+});
+
+
+
+
+$("#download_report_button").on("click", function()
+{
+
+
+      var ordered_tags = new Array();
+      var items = $("#column_order  li input");
+      $.each(items, function()
+      {
+
+            ordered_tags.push({"id": this.id, "type": this.getAttribute("data-type"), "texto": this.value});
+
       });
 
 
-      if ($("#form_filter").validationEngine('validate'))
+      if ($("#radio1").is(":checked"))
       {
-            if ($("#radio1").is(":checked"))
-            {
-                  document.location.href = "requests.php?action=report&tipo=1&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_campanha option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + JSON.stringify(ordered_tags);
-            }
-            else if ($("#radio2").is(":checked"))
-            {
-                  document.location.href = "requests.php?action=report&tipo=2&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_linha_inbound option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked");
-            }
-            else
-            {
-                  document.location.href = "requests.php?action=report&tipo=3&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&list_id=" + $("#select_base_dados option:selected").val() + "&campaign_id=" + $("#select_base_dados option:selected").data("campaign_id") + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + JSON.stringify(ordered_tags);
-            }
+            document.location.href = "requests.php?action=report&tipo=1&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_campanha option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + JSON.stringify(ordered_tags);
       }
+      else if ($("#radio2").is(":checked"))
+      {
+            document.location.href = "requests.php?action=report&tipo=2&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_linha_inbound option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked");
+      }
+      else
+      {
+            document.location.href = "requests.php?action=report&tipo=3&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&list_id=" + $("#select_base_dados option:selected").val() + "&campaign_id=" + $("#select_base_dados option:selected").data("campaign_id") + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + JSON.stringify(ordered_tags);
+      }
+
 });
+
+
+
 
 $("#allcontacts").on("click", function()
 {
@@ -127,32 +131,173 @@ $(".radio_opcao").on("click", function()
       {
             $("#report_bd").show();
       }
+});
+
+
+function update_elements(type)
+{
+      var elements = new Array();
+      var items = $("#column_order  li input");
+      $.each(items, function()
+      {
+            elements.push({"id": this.id, "type": this.getAttribute("data-type"), "texto": this.value});
+      });
+
+
+      $.post("requests.php", {action: "update_elements_order", elements: elements, id: $("#oc_template option:selected").val()}, function()
+      {
+            if (type == "delete")
+            {
+                  get_elements_by_template($("#oc_template option:selected").val());
+            }
+      }, "json");
+}
+
+
+
+
+
+//MODAL-----------------------------------------------------------------------------------
+
+
+function get_templates(campaign)
+{
+
+      $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
+      function(data)
+      {
+            if (data.length)
+            {
+                  script_id = data;
+                  $("#download_report_button").prop("disabled", false);
+                  $("#edit_template_div_opener_button").prop("disabled", false);
+                  $("#delete_template_button").prop("disabled", false);
+                  $("#template_div").show();
+                  $("#oc_template").empty();
+
+                  $.post("requests.php", {action: "get_template", campaign_id: campaign, script_id: data},
+                  function(data1)
+                  {
+                        if (data1.length)
+                        {
+                              $.each(data1, function()
+                              {
+                                    if (this.id == current_template)
+                                          $("#oc_template").append("<option value=" + this.id + " selected>" + this.template + "</option>");
+                                    else
+                                          $("#oc_template").append("<option value=" + this.id + ">" + this.template + "</option>");
+
+                              });
+                              $("#oc_template").trigger("change");
+                        }
+                        else
+                        {
+                              $("#column_order").empty();
+                              $("#download_report_button").prop("disabled", true);
+                              $("#edit_template_div_opener_button").prop("disabled", true);
+                              $("#delete_template_button").prop("disabled", true);
+                              $("#oc_template").append("<option>Crie um template</option>");
+                        }
+                  }, "json");
+            }
+            else
+            {
+                  $("#column_order").empty();
+                  $("#column_order").append("<li>Sem Script</li>");
+                  $("#template_div").hide();
+
+                  $("#download_report_button").prop("disabled", true);
+
+            }
+      }, "json");
+}
+
+function get_elements_by_template(template)
+{
+      $.post("requests.php", {action: "get_elements_by_template", id: template}, function(data)
+      {
+            $("#column_order").empty();
+            $.each(data, function()
+            {
+                  $("#column_order").append("<li class='ui-state-default'><input id=" + this.id + "    type='text'   data-type='" + this.type + "' value='" + this.texto + "'>" + ((this.type === "campo_dinamico") ? "" : "<span class='label'>" + this.id + "</span>" + get_name_by_type(this.type)) + "<span class='btn icon-alone remove_list_item_button icon-remove btn-link' data-id='" + this.id + "'></span></li>");
+            });
+
+      }, "json");
+}
+
+$("#oc_template").on("change", function()
+{
+      get_elements_by_template($("#oc_template option:selected").val());
+
+});
+
+$("#new_template_div_opener_button").on("click", function()
+{
+      $("#new_template_div").toggle(500);
+      $("#new_template_input").val("");
+});
+
+$("#new_template_button").on("click", function()
+{
+      if ($("#new_template_input").val() != "")
+      {
+              
+            $.post("requests.php", {action: "create_template", campaign_id: $("#co_modal").data("campaign"), template: $("#new_template_input").val(), script_id: script_id}, "json");
+            $("#new_template_div").toggle(500);
+            get_templates($("#co_modal").data("campaign"));
+      }
+    
+});
+
+
+$("#edit_template_div_opener_button").on("click", function()
+{
+      $("#edit_template_div").toggle(500);
+      $("#edit_template_input").val($("#oc_template option:selected").text());
+});
+
+$("#edit_template_button").on("click", function()
+{
+
+      $.post("requests.php", {action: "edit_template", id: $("#oc_template option:selected").val(), template: $("#edit_template_input").val()}, function()
+      {
+            current_template = $("#oc_template option:selected").val();
+            $("#edit_template_div").toggle(500);
+
+            get_templates(campaign);
+      }, "json");
 
 
 });
 
 
-function get_campaign_fields(campaign)
+$("#delete_template_button").on("click", function()
+{
+      $.post("requests.php", {action: "delete_template", id: $("#oc_template option:selected").val()}, function()
+      {
+            get_templates(campaign);
+      }, "json");
+});
+
+$(document).off("click", ".remove_list_item_button");
+$(document).on("click", ".remove_list_item_button", function()
+{
+      $(this).closest("li")[0].remove();
+      update_elements("delete");
+
+});
+
+
+$(document).off("change", "#column_order li input");
+$(document).on("change", "#column_order li input", function()
 {
 
-      $.post("requests.php", {action: "get_fields_to_order", campaign_id: campaign},
-      function(data)
-      {
-            $("#column_order").empty();
-            if (data.length)
-            {
-                  $.each(data, function()
-                  {
-                        if ($.isNumeric(this.id))
-                              $("#column_order").append("<li class='ui-state-default' id=" + this.id + " data-id='m" + this.id + "' data-type='" + this.type + "' data-text='0'>" + this.id + ":" + get_name_by_type(this.type) + "->" + this.texto + "</li>");
-                        else
-                              $("#column_order").append("<li class='ui-state-default' id=" + this.id + " data-id='" + this.id + "' data-type='campo_dinamico' data-text='" + this.display_name + "'>" + (this.display_name) + "</li>");
-                  });
-            }
-            else
-                  $("#column_order").append("<li>Sem Script</li>");
-      }, "json");
-}
+      update_elements("edit");
+
+});
+
+//MODAL-----------------------------------------------------------------------------------
+
 
 
 function get_name_by_type(type)
@@ -160,7 +305,7 @@ function get_name_by_type(type)
       switch (type)
       {
             case "texto":
-                  return "caixa de texto";
+                  return "Caixa de texto";
                   break;
             case "pagination":
                   return "Paginação";
@@ -196,29 +341,4 @@ function get_name_by_type(type)
                   return  "Imagem/PDF/Link";
                   break;
       }
-
 }
-
-
-$("#order_columns_modal").on("click", function()
-{
-      var campaign = "";
-      if ($("#radio1").is(":checked"))
-            campaign = $("#select_campanha option:selected").val();
-      if ($("#radio3").is(":checked"))
-            campaign = $("#select_base_dados option:selected").data("campaign_id");
-
-      $("#co_reset_button").data("campaign", campaign);
-      get_campaign_fields(campaign);
-      $("#co_modal").modal("show");
-
-});
-
-$("#co_reset_button").on("click", function() {
-      
-      console.log($("#co_modal #co_reset_button").data("campaign"));
-      $.post("requests.php", {action: "reset_elements_order", campaign_id: $("#co_modal #co_reset_button").data("campaign")},function(data)
-      {
-            get_campaign_fields($("#co_modal #co_reset_button").data("campaign"));
-      });
-});

@@ -154,7 +154,7 @@ function update_info()
                                       .data("required", this.required)
                                       .data("type", "datepicker")
                                       .data("data_format", this.placeholder);
-                             
+
                               break;
                         case "scheduler":
                               item = $('#dummie .scheduler_class').clone();
@@ -321,26 +321,29 @@ function insert_element(opcao, element, data)
                   for (var count = 0; count < radios.length; count++)
                   {
                         if (data.required)
-                              element.append($("<label>")
-                                      .addClass("radio_name radio inline")
-                                      .attr("for", array_id["radio"] + "radio")
-                                      .text(radios[count]).append($("<input>")
+                              element.append($("<input>")
                                       .attr("type", "radio")
                                       .addClass("validate[required]")
                                       .attr("value", radios[count])
                                       .attr("id", array_id["radio"] + "radio")
                                       .attr("name", data.tag))
-                                      );
+                                      .append($("<label>")
+                                              .addClass("radio_name radio inline")
+                                              .attr("for", array_id["radio"] + "radio")
+                                              .html("<span></span>" + radios[count])
+
+                                              );
                         else
-                              element.append($("<label>")
-                                      .addClass("radio_name radio inline")
-                                      .attr("for", array_id["radio"] + "radio")
-                                      .text(radios[count]).append($("<input>")
+                              element.append($("<input>")
                                       .attr("type", "radio")
                                       .attr("value", radios[count])
                                       .attr("id", array_id["radio"] + "radio")
                                       .attr("name", data.tag))
-                                      );
+                                      .append($("<label>")
+                                              .addClass("radio_name radio inline")
+                                              .attr("for", array_id["radio"] + "radio")
+                                              .html("<span></span>" + radios[count])
+                                              );
                         if (data.dispo === "v")
                               element.append($("<br>"));
                         array_id["radio"] = array_id["radio"] + 1;
@@ -354,28 +357,30 @@ function insert_element(opcao, element, data)
                   for (var count = 0; count < checkboxs.length; count++)
                   {
                         if (data.required)
-                              element.append($("<label>")
-                                      .addClass("checkbox_name checkbox inline")
-                                      .attr("for", array_id["checkbox"] + "checkbox")
-                                      .text(checkboxs[count]).
+                              element.
                                       append($("<input>")
-                                      .attr("type", "checkbox")
-                                      .addClass("validate[minCheckbox[1]]")
-                                      .attr("value", checkboxs[count])
-                                      .attr("id", array_id["checkbox"] + "checkbox")
-                                      .attr("name", data.tag))
-                                      );
+                                              .attr("type", "checkbox")
+                                              .addClass("validate[minCheckbox[1]]")
+                                              .attr("value", checkboxs[count])
+                                              .attr("id", array_id["checkbox"] + "checkbox")
+                                              .attr("name", data.tag))
+                                      .append($("<label>")
+                                              .addClass("checkbox_name checkbox inline")
+                                              .attr("for", array_id["checkbox"] + "checkbox")
+                                               .html("<span></span>"+checkboxs[count])
+                                              );
                         else
-                              element.append($("<label>")
-                                      .addClass("checkbox_name checkbox inline")
-                                      .attr("for", array_id["checkbox"] + "checkbox")
-                                      .text(checkboxs[count])
-                                      .append($("<input>")
+                              element.append($("<input>")
                                       .attr("type", "checkbox")
                                       .attr("value", checkboxs[count])
                                       .attr("id", array_id["checkbox"] + "checkbox")
                                       .attr("name", data.tag))
-                                      );
+                                      .append($("<label>")
+                                              .addClass("checkbox_name checkbox inline")
+                                              .attr("for", array_id["checkbox"] + "checkbox")
+                                              .html("<span></span>"+checkboxs[count])
+
+                                              );
                         if (data.dispo === "v")
                               element.append($("<br>"));
                         array_id["checkbox"] = array_id["checkbox"] + 1;
@@ -430,13 +435,13 @@ function insert_element(opcao, element, data)
                               {
                                     trbody_last.append($("<td>")
                                             .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").addClass("validate[required]").attr("value", titulos[count2]).attr("name", data.tag + "," + perguntas[count]))
-                                            .append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "tableradio")));
+                                            .append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "tableradio").html("<span></span>")));
                               }
                               else
                               {
                                     trbody_last.append($("<td>")
                                             .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").attr("value", titulos[count2]).attr("name", data.tag + "," + perguntas[count]))
-                                            .append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "tableradio")));
+                                            .append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "tableradio").html("<span></span>")));
                               }
                               array_id["radio"] = array_id["radio"] + 1;
                         }
@@ -561,8 +566,6 @@ function insert_element(opcao, element, data)
       }
       if (data.hidden)
             element.css("display", "none");
-
-
 
 
       return element;
@@ -983,7 +986,8 @@ function submit_manual(callback)
 
 
       }, "json").fail(function() {
-            console.log("FAIL saving data");
+            console.log("FAIL saving data because-->id_script-" + page_info.script_id + "|user_id->" + page_info.user_id + "|unique_id->" + unique_id + "|campaign_id->" + page_info.campaign_id + "|lead_id->" + page_info.lead_id + "|admin_review->" + admin_review);
+
       });
 }
 

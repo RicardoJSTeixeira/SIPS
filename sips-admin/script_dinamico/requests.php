@@ -463,8 +463,6 @@ switch ($action) {
     case "delete_item":
         $query = "UPDATE script_dinamico SET ordem=ordem-1 where ordem>$ordem and id_page=$id_page ";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "delete from script_result where id_script=$id_script and tag_elemento=$param1";
-        $query = mysql_query($query, $link) or die(mysql_error());
         $query = "delete from script_rules where tag_trigger=$param1";
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "delete from script_dinamico where id=$id";
@@ -505,15 +503,15 @@ switch ($action) {
     //------------------------------------------------//
     case "save_form_result":
         $sql = array();
+      
+            if ($admin_review == "1") {
+                $unique_id = time() . "." . rand(1, 1000);
+                $user_id = $user->id;
 
-        if ($admin_review == "1") {
-            $unique_id = time() . "." . rand(1, 1000);
-            $user_id = $user->id;
-
-            $query = "INSERT INTO vicidial_log (`uniqueid`, `lead_id`, `list_id`, `campaign_id`, `call_date`, `start_epoch`, `end_epoch`, `length_in_sec`, `status`, `phone_code`, `phone_number`, `user`, `comments`, `processed`, `user_group`, `term_reason`, `alt_dial`)
+                $query = "INSERT INTO vicidial_log (`uniqueid`, `lead_id`, `list_id`, `campaign_id`, `call_date`, `start_epoch`, `end_epoch`, `length_in_sec`, `status`, `phone_code`, `phone_number`, `user`, `comments`, `processed`, `user_group`, `term_reason`, `alt_dial`)
                 select $unique_id, `lead_id`, `list_id`, `campaign_id`, '" . date("Y-m-d H:i:s") . "', NULL, NULL, `length_in_sec`, 'ESA', `phone_code`, `phone_number`, `user`, 'edit', `processed`, `user_group`, `term_reason`, `alt_dial` from vicidial_log where lead_id='$lead_id' order by uniqueid desc limit 1";
-            $query = mysql_query($query, $link) or die(mysql_error());
-        }
+                $query = mysql_query($query, $link) or die(mysql_error());
+            }
 
         foreach ($results as $row) {
             if ($row['value'] != "") {
@@ -528,6 +526,8 @@ switch ($action) {
         $query = mysql_query($query, $link) or die(mysql_error());
 
         echo json_encode(1);
+       
+
         break;
 }
-?>
+
