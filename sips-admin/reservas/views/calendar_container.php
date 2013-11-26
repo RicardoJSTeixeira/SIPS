@@ -14,11 +14,15 @@
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
 
         <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="/bootstrap/js/moment.min.js"></script>
         <script type="text/javascript" src="/bootstrap/js/moment.langs.min.js"></script>
         <script type="text/javascript" src="/jquery/jqueryUI/jquery-ui-1.9.0.custom.min.js"></script>
-        <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
-        <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt.js"></script>
+        <script type="text/javascript" src="/jquery/jqueryUI/plugins/datetimepicker.js"></script>
+        <script type="text/javascript" src="/jquery/jqueryUI/language/pt-pt.js"></script>
+        <script type="text/javascript" src="/jquery/jsdatatable/plugins/plugin.fnAjaxReload.js"></script>
+        <script type="text/javascript" src="/ini/SeamlessLoop.js"></script>
+        <script type="text/javascript" src="/jquery/scrollto/jquery.scrollTo-1.4.3.1-min.js"></script>
 
         <?php
         require ('../func/reserve_utils.php');
