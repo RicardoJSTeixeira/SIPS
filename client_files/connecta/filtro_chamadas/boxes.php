@@ -43,9 +43,6 @@ if(isset($_POST["campaign"])){
 //        exit;
 }        
 
-    
-
-
 
 function cria_listagem($campaign) {
     global $total;
@@ -139,7 +136,7 @@ $boxes="";
         $nMarc = mysql_fetch_assoc(mysql_query($q4,$link));
         $total+=$nMarc["marc"];
 
-        $max = $slots;
+        $max = $slots*count(explode(",",$schdl[childs]));
 
         if ($slots){
           $perc = round($nMarc["marc"] * 100 / $max);
@@ -153,7 +150,7 @@ $boxes="";
         
         $boxes.="<div class='grid span2 cantouchthis glow ".$color_head[$labels_ref[$range]]."' data-resource='$schdl[id_scheduler]' data-campaign='' data-active='' >
             <div class='grid-title box_title ".$labels[$labels_ref[$range]]."'>
-                <div class='pull-left  tooltip-top' data-t='tooltip' title='$schdl[display_text]'>$schdl[display_text]</div>
+                <div class='pull-left tooltip-top' data-t='tooltip' title='$schdl[display_text]'>$schdl[display_text]</div>
                 <div class='pull-right'><i class='play '></i></div>
                 <div class='clear'></div>   
             </div>

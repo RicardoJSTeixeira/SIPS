@@ -205,9 +205,9 @@ $days = ($days == 0) ? 1 : $days;
                     <div class="row-fluid">
                         <p class="span4 text-left">
                             <input type="checkbox" class="b2" id="hoff" checked />
-                            <label for="hoff">Desligados<span></span></label>
+                            <label for="hoff"><span></span>Desligados</label>
                             <input type="checkbox" class="b2" id="hon" checked />
-                            <label for="hon">Ligados<span></span></label>
+                            <label for="hon"><span></span>Ligados</label>
                         </p>
                         <p class="span4 text-center">
                             <label for="campaigns_list">Campanhas</label>
@@ -218,11 +218,11 @@ $days = ($days == 0) ? 1 : $days;
                         </p>
                         <p class="span4 text-right-right">
                             <input type="checkbox" class="b2" id="hred" checked />
-                            <label for="hred">Vermelhos<span></span></label>
+                            <label for="hred"><span></span>Vermelhos</label>
                             <input type="checkbox" class="b2" id="hyel" checked />
-                            <label for="hyel">Laranja<span></span></label>
+                            <label for="hyel"><span></span>Laranja</label>
                             <input type="checkbox" class="b2" id="hgreen" checked />
-                            <label for="hgreen">Verdes<span></span></label>
+                            <label for="hgreen"><span></span>Verdes</label>
                         </p>
                     </div>
                     <div class="clear"></div>
