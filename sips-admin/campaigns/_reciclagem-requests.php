@@ -39,13 +39,13 @@ function RecycleListBuilder($CampaignID, $CampaignLists, $RecycleID, $RecycleNam
 			foreach($js['recycle'] as $index => $value)
 			{
 				if($row[0] == $value)
-				{
-					$js['recycle_count'][$index] = $row[1]; break;
+				{       
+                                        $query = "SELECT count(lead_id) FROM vicidial_list a inner join vicidial_lists b on a.list_id = b.list_id WHERE a.list_id IN ('$CampaignLists') AND status IN ('$campaign_recycle') and b.active = 'Y' andSUBSTRING_INDEX(a.called_since_last_reset,'Y', -1) < (select attempt_maximum from vicidial_lead_recycle where campaign_id like '$CampaignID' and status like '$value') GROUP BY status";
+                                        $query = mysql_query($query, $link) or die(mysql_error());
+                                        $row = mysql_fetch_row($query);
+					$js['recycle_count'][$index] = $row[0]; break;
 				}
-				else
-				{
-					if($js['recycle_count'][$index] == 0){$js['recycle_count'][$index] = 0;}
-				}
+				
 			}
 		}
 		}
