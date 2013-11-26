@@ -40,7 +40,7 @@ if ($_POST['nc_flag'] == "nc_post") {
 ####################################################
 
 
-    $query = "INSERT INTO custom_" . strtoupper($campanha) . "(lead_id, tipoconsulta, consultorio, consultoriodois, marchora, obs, marcdata)
+    $query = "INSERT INTO custom_" . (($inout=="out")?strtoupper($campanha):$campanha) . "(lead_id, tipoconsulta, consultorio, consultoriodois, marchora, obs, marcdata)
 			VALUES ('$last_insert_id','$tipoconsulta','$consultorio','$consultoriodois','$marchora','$obs','$marcdata')";
     mysql_query($query, $link) or die(mysql_error() . header('HTTP/1.1 500 Internal Server Error'));
 
