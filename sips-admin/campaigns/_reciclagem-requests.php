@@ -197,22 +197,39 @@ function DialogEditRecycleOnSave($RecycleID, $RecycleDelay, $RecycleTries, $Camp
 	mysql_query("UPDATE vicidial_lead_recycle SET attempt_delay = '$RecycleDelay', attempt_maximum='$RecycleTries' WHERE campaign_id='$CampaignID' AND status='$RecycleID'", $link) or die(mysql_error());
 }
 
-function EditRecycleResetSingleTries($RecycleID, $Index, $CampaignLists, $link)
-{
-	$CampaignLists = implode("','", $CampaignLists);
-	
-	if($Index == 1){ $Index = "Y"; } else { $Index = "Y".($Index-1); }
-	
-	mysql_query("UPDATE vicidial_list SET called_since_last_reset = 'N' WHERE list_id IN ('$CampaignLists') AND status='$RecycleID' AND called_since_last_reset = '$Index'") or die(mysql_error());
+function EditRecycleResetSingleTries($RecycleID, $Index, $CampaignLists, $link) {
+    global $user;
+
+    foreach ($CampaignLists as $value) {
+
+
+        if ($Index == 1) {
+            $Index = "Y";
+        } else {
+            $Index = "Y" . ($Index - 1);
+        }
+        $query1 = "UPDATE vicidial_list SET called_since_last_reset = 'N' WHERE list_id = '$value' AND status='$RecycleID' AND called_since_last_reset = '$Index'";
+        mysql_query($query1) or die(mysql_error());
+
+        $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
+                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','LISTS','RESET','$value','ADMIN RESET LIST STATUS','" . mysql_real_escape_string($query1) . "')";
+        mysql_query($query) or die(mysql_error());
+    }
 }
 
-function EditRecycleResetAllTries($RecycleID, $CampaignLists, $link)
-{
-	//$CampaignLists = preg_replace("/,/" , "/','/", $CampaignLists);
-	
-	//echo "UPDATE vicidial_list SET called_since_last_reset = 'N' WHERE list_id IN ('$campaign_lists') AND status='$sent_recycle'";
-	
-	mysql_query("UPDATE vicidial_list SET called_since_last_reset = 'N' WHERE list_id IN ('".implode("','", $CampaignLists)."') AND status='$RecycleID'") or die(mysql_error());
+function EditRecycleResetAllTries($RecycleID, $CampaignLists, $link) {
+    global $user;
+
+
+    foreach ($CampaignLists as $value) {
+
+        $query1 = "UPDATE vicidial_list SET called_since_last_reset = 'N' WHERE list_id IN ('" . implode("','", $CampaignLists) . "') AND status='$RecycleID'";
+        mysql_query($query1) or die(mysql_error());
+
+        $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
+                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','LISTS','RESET','$value','ADMIN RESET LIST STATUS','" . mysql_real_escape_string($query1) . "')";
+        mysql_query($query) or die(mysql_error());
+    }
 }
 
 // dialog contact details
