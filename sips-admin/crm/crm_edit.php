@@ -544,11 +544,12 @@ function reserved_ip($ip) {
 
                         if ($temp) {
                             ?>    
-                            <div class="view-button"><a class="btn btn-mini" target='_new' href='../../sips-admin/script_dinamico/render.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>&isadmin=1'><i class="icon-bookmark"></i>Script</a></div>
+                            <div class="view-button"><a class="btn btn-mini" target='_new' href='script_placeholder.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>&isadmin=1&unique_id=<?= $row["vicidial_id"] ?>'><i class="icon-bookmark"></i>Script</a></div>
                         <?php } else { ?>
                             <div class="view-button">  <a class="btn btn-mini" target='_new' href='../../sips-agente/vdc_form_display.php?submit_button=YES&lead_id=<?= $lead_id ?>&list_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>'><i class="icon-bookmark"></i>Script</a></div>
                         <?php } ?>
                     </td>
+
 
 
 
