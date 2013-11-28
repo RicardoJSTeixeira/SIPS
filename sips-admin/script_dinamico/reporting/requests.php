@@ -231,7 +231,7 @@ switch ($action) {
             }
             $final_row[$lead_tmp] = $temp_d;
         }
-        var_dump($final_row);exit;
+
 
         //DADOS DO SCRIPT
         $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name,  vc.campaign_name, sr.lead_id,sr.param_1,vcs.status_name, sr.tag_elemento,sr.valor,sd.param1,sd.type FROM `script_result` sr
