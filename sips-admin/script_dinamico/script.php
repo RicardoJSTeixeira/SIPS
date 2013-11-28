@@ -559,7 +559,7 @@ class script {
         $query = "INSERT INTO `script_result`(`date`,`id_script`,`user_id`,`unique_id`,`campaign_id`,`lead_id`, `tag_elemento`, `valor`,`param_1`) VALUES  " . implode(',', $sql);
 
         $stmt = $this->db->prepare($query);
-        return $stmt->execute() . $query;
+        return  $stmt->execute() ;
          
     }
 
