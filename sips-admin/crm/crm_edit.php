@@ -111,7 +111,6 @@ $is_campaign_feedback = 0;
 
 for ($i = 0; $i < mysql_num_rows($query); $i++) {
     $row = mysql_fetch_assoc($query) or die(mysql_query());
-
     if ($row['status'] == $lead_info['status']) { # feedback actual (selected)
         $status_options .= "<option data-sale='$row[sale]' selected value='$row[status]'>$row[status_name]</option>\n";
         $is_campaign_feedback = 1;
