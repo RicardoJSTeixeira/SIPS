@@ -241,12 +241,12 @@ $("#new_template_button").on("click", function()
 {
       if ($("#new_template_input").val() != "")
       {
-              
             $.post("requests.php", {action: "create_template", campaign_id: $("#co_modal").data("campaign"), template: $("#new_template_input").val(), script_id: script_id}, "json");
             $("#new_template_div").toggle(500);
             get_templates($("#co_modal").data("campaign"));
       }
-    
+      else
+            $("#new_template_input").attr("placeholder", "Escreva o nome da template antes de criar");;
 });
 
 

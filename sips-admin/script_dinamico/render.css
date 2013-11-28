@@ -1,0 +1,33 @@
+#script_div .item 
+{
+      text-align:center;padding:10px;font-size:140%;
+}
+#script_div legend
+{
+      border-bottom: 8px  double   #a1a1a9;margin-bottom: 0px;
+}
+#script_div .modal-footer
+{
+      font-size:170%;text-align: center;
+}
+#script_div div
+{
+      -moz-border-radius: 5px;border-radius: 15px;
+}
+
+#script_div .radio, .checkbox 
+{
+      padding-left: 1px;padding-right: 16px;
+     
+}
+#script_div .chzn-select
+{
+      width: 350px;
+}
+
+#script_div input[type="radio"],input[type="checkbox"]
+{
+      display: inline;
+      position:absolute;
+    opacity:0;
+}
