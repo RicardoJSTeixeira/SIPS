@@ -954,6 +954,9 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             window.close();
       });
 };
+
+
+
 function checknif(field, rules, i, options) {
 
       var nif = field.val();
@@ -982,6 +985,24 @@ function checknif(field, rules, i, options) {
             return "Introduza um NIF correto";
 }
 
+function checknib(field, rules, i, options) {
+      if (field.val().match(/^\d+$/))
+      {
+            var pin_nib = field.val();
+            var w_dig_controlo = pin_nib.substr(19, 2) * 1;
+            var w_total = 0;
+            for (w_index = 0; w_index <= 18; w_index++) {
+                  var w_digito = pin_nib.substr(w_index, 1) * 1;
+                  w_total = ((w_total + w_digito) * 10) % 97;
+            }
+            w_total = 98 - ((w_total * 10) % 97);
+            if (w_total !== w_dig_controlo) {
+                  return "Introduza um NIB correto";
+            }
+      }
+      else
+            return "Introduza um NIB correto";
+}
 
 function scheduler_verif(field, rules, i, options) {
       var live = parseInt(field.data("live_marc"));
@@ -1051,25 +1072,3 @@ function isValidDebit(field, rules, i, options) {
             return "Nº de Cartão de Débito invalido";
 }
 
-
-
-
-
-function checknib(field, rules, i, options) {
-      if (field.val().match(/^\d+$/))
-      {
-            var pin_nib = field.val();
-            var w_dig_controlo = pin_nib.substr(19, 2) * 1;
-            var w_total = 0;
-            for (w_index = 0; w_index <= 18; w_index++) {
-                  var w_digito = pin_nib.substr(w_index, 1) * 1;
-                  w_total = ((w_total + w_digito) * 10) % 97;
-            }
-            w_total = 98 - ((w_total * 10) % 97);
-            if (w_total !== w_dig_controlo) {
-                  return "Introduza um NIB correto";
-            }
-      }
-      else
-            return "Introduza um NIB correto";
-}

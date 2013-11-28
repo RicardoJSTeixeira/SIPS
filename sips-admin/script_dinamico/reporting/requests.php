@@ -214,11 +214,13 @@ switch ($action) {
 
 
 
-
-
+        if ($only_with_result == "true")
+            $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a right join script_result b on a.lead_id=b.lead_id where list_id='$list_id' ";
+        else
+            $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a where list_id='$list_id' ";
 
         // DADOS DA LEAD
-        $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a where list_id='$list_id' ";
+     
 
         $result = mysql_query($query, $link) or die(mysql_error());
 
