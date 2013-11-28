@@ -94,7 +94,7 @@ function RecycleListBuilder($CampaignID, $CampaignLists, $RecycleID, $RecycleNam
 
 function RecycleAvailFeeds($CampaignID, $link)
 {
-	$query = "SELECT A.status, A.status_name FROM vicidial_campaign_statuses A  LEFT OUTER JOIN vicidial_lead_recycle B ON A.status = B.status AND A.campaign_id = B.campaign_id WHERE A.campaign_id = '$CampaignID' AND B.status IS NULL ORDER BY A.status_name ";
+	$query = "SELECT A.status, A.status_name FROM (select status,status_name,campaign_id from vicidial_campaign_statuses  where campaign_id = '$CampaignID'  union all select status,status_name,'$CampaignID' campaign_id from vicidial_statuses) A  LEFT OUTER JOIN vicidial_lead_recycle B ON A.status = B.status AND A.campaign_id = B.campaign_id WHERE B.status IS NULL ORDER BY A.status_name ";
 	$query = mysql_query($query, $link) or die(mysql_error());
 	
 	while($row = mysql_fetch_assoc($query))
