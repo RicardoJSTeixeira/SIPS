@@ -550,9 +550,9 @@ class script {
             if ($row['value'] != "") {
                 $temp = explode(",", $row['name']);
                 if (isset($temp[2])) {
-                    $sql[] = "('" . date('Y-m-d H:i:s') . "',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]','" . mysql_real_escape_string($row['value']) . "','$temp[2];$temp[1]')";
+                    $sql[] = "('" . date('Y-m-d H:i:s') . "','$id_script','$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]','" . mysql_real_escape_string($row['value']) . "','$temp[2];$temp[1]')";
                 } else {
-                    $sql[] = "('" . date('Y-m-d H:i:s') . "',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]', '" . mysql_real_escape_string($row['value']) . "', '$temp[1]')";
+                    $sql[] = "('" . date('Y-m-d H:i:s') . "','$id_script','$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]', '" . mysql_real_escape_string($row['value']) . "', '$temp[1]')";
                 }
             }
         }
