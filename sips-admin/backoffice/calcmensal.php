@@ -3,7 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 <body>
-<?
+<?php
+require("../../ini/dbconnect.php");
 $whereGrp = "";
 if (isset($_POST['datainicio'])) { $startDate = $_POST['datainicio']; }
 if (isset($_POST['datafim'])) { $endDate = $_POST['datafim']; }
@@ -20,14 +21,8 @@ if (isset($_POST['usergroup'])) { $userGroup = $_POST['usergroup']; $whereGrp = 
 <br>
 </form>
 <?php 
-		$con = mysql_connect("localhost","sipsadmin", "sipsps2012");
-				if (!$con)
-				{
-					die('Não me consegui ligar' . mysql_error());
-				}
-				mysql_select_db("asterisk", $con);
-                                
-		$dbusers = mysql_query("SELECT user, event, event_date, user_group user FROM vicidial_user_log WHERE event_date >= '$startDate' AND event_date < '$endDate' AND user <> 'admin' $whereGrp ORDER BY event_date ASC") or die(mysql_error());
+		                                
+		$dbusers = mysql_query("SELECT user, event, event_date, user_group user FROM vicidial_user_log WHERE event_date >= '$startDate' AND event_date < '$endDate' AND user <> 'admin' $whereGrp ORDER BY event_date ASC", $link) or die(mysql_error());
 		$loginArray = "";
 		$maxUsers = 0;
 		$perDayArray = "";
