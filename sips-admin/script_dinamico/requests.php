@@ -177,6 +177,6 @@ switch ($action) {
     //-----------------FORM---------------------------//
     //------------------------------------------------//
     case "save_form_result":
-        echo $script->save_form_result($id_script, $results, $user_id, $unique_id, $campaign_id, $lead_id, $admin_review);
+        echo json_encode( $script->save_form_result($id_script, $results, $user_id, $unique_id, $campaign_id, $lead_id, $admin_review));
         break;
 }
