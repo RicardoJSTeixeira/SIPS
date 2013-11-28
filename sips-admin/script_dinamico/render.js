@@ -1,4 +1,3 @@
-
 var render = function(script_zone, file_path, script_id, lead_id, unique_id, user_id, campaign_id, admin_review)
 {
 
@@ -530,11 +529,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                               break;
                         case "button":
                               element.find(".botao").text(info.texto);
-                              $(element).on("click", function(e)
-                              {
-                                    e.preventDefault();
-
-                              });
+                           
                               break;
                   }
             });
@@ -1070,4 +1065,9 @@ function isValidDebit(field, rules, i, options) {
       if (!isValidCard(cardNumber))
             return "Nº de Cartão de Débito invalido";
 }
-
+ $(document).on("click",".botao",function()
+            {
+                 
+                  e.preventDefault();
+            });
+            
