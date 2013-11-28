@@ -135,7 +135,7 @@ $(function() {
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("scheduler_class"))
                         {
-                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_scheduler")[0].innerHTML, 0, 0, [], 0, 0, 0, 1);
+                              item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_scheduler")[0].innerHTML, 0, 5, [], 0, 0, 0, 1);
                         }
                         if ($(this).data().uiSortable.currentItem.hasClass("textarea_class"))
                         {
@@ -319,6 +319,19 @@ $("#checkbox_scheduler_all").click(function()
             $("#scheduler_edit_select option").prop("selected", false);
       $("#scheduler_edit_select").trigger("liszt:updated");
 });
+$("#scheduler_edit_marcação").on("change", function()
+{
+      var option_selected = $("#scheduler_edit_marcação option:selected").val();
+      if (option_selected < $("#scheduler_edit_obrigatorio option:selected").val())
+            $("#scheduler_edit_obrigatorio").val(option_selected);
+      $("#scheduler_edit_obrigatorio option").prop("disabled", false);
+      $.each($("#scheduler_edit_obrigatorio option"), function()
+      {
+            if ($(this).val() > option_selected)
+                  $(this).prop("disabled", true);
+      });
+});
+
 $("#apagar_elemento").click(function()
 {
 
@@ -705,7 +718,9 @@ function update_info()
                                       .addClass("element")
                                       .data("type", "scheduler")
                                       .data("required", this.required)
-                                      .data("hidden", this.hidden);
+                                      .data("hidden", this.hidden)
+                                      .data("max_marc", this.max_length)
+                                      .data("obrig_marc", this.param1);
                               insert_element("scheduler", item, this);
                               break;
                         case "textarea":
@@ -911,6 +926,7 @@ function populate_element(tipo, element)
                   break;
             case "scheduler":
                   $("#tabs").tabs("disable", 1);
+                  $(".required_class").hide();
                   $("#scheduler_edit").val($("#" + id + " .label_geral").html());
                   $("#checkbox_scheduler_all").prop("checked", false);
                   var select = $("#" + id + " .scheduler_select>option");
@@ -918,6 +934,12 @@ function populate_element(tipo, element)
                         return $(this).val();
                   });
                   $("#scheduler_edit_select").val(values).trigger("liszt:updated");
+
+
+                  $("#scheduler_edit_marcação").val(element.data("max_marc"));
+                  $("#scheduler_edit_obrigatorio").val(element.data("obrig_marc"));
+
+
                   break;
             case "textarea":
                   $("#textarea_edit").val($("#" + id + " .label_geral").html());
@@ -1243,7 +1265,12 @@ function edit_element(opcao, element, data)
                               select.append(options);
                         $("#scheduler_edit").val($("#scheduler_edit").val().replace(regex_replace_textbox_tag, ''));
                         $("#" + id + " .label_geral").html($("#scheduler_edit").val());
-                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), "1", 0, valores, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $("#scheduler_edit_marcação option:selected").val());
+
+
+                        element.data("max_marc", $("#scheduler_edit_marcação option:selected").val());
+                        element.data("obrig_marc", $("#scheduler_edit_obrigatorio option:selected").val());
+
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), "1", $("#scheduler_edit_marcação option:selected").val(), valores, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $("#scheduler_edit_obrigatorio option:selected").val());
                   }
                   break;
             case "textarea":

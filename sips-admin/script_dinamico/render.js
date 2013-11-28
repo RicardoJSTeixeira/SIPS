@@ -7,12 +7,12 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
       var array_id = [];
       var tag_regex = /\@(\d{1,5})\@/g;
       var tag_regex2 = /\§(.*?)\§/g;
-      this.script_id=script_id;
-      this.lead_id=lead_id;
+      this.script_id = script_id;
+      this.lead_id = lead_id;
       this.unique_id = unique_id;
-      this.user_id=user_id;
-      this.campaign_id=campaign_id;
-      this.admin_review=admin_review;
+      this.user_id = user_id;
+      this.campaign_id = campaign_id;
+      this.admin_review = admin_review;
 
 
 
@@ -58,7 +58,8 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                   var select = $(this).prev("select");
                   if (select.find("option:selected").val() > 0)
                   {
-                        var url = '../reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + user_id + '&lead=' + lead_id;
+                        console.log($(this).prev("select").data());
+                        var url = '../reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + user_id + '&lead=' + lead_id + '&id_elemento=' + $(this).prev("select").data("element_tag");
                         window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
                   }
             });
@@ -125,7 +126,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
                         if (data !== null)
                         {
-                             me.script_id = data.id;
+                              me.script_id = data.id;
                               if (typeof callback === "function")
                               {
 
@@ -148,7 +149,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                   {
                         if (data !== null)
                         {
-                             me.script_id = data.id;
+                              me.script_id = data.id;
 
                               if (typeof callback === "function")
                               {
@@ -492,8 +493,12 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                     select.val("").trigger("liszt:updated");
                               }, "json");
                               element.find(".label_geral")[0].innerHTML = info.texto;
-                              if (info.required)
-                                    element.find(".scheduler_select").addClass("validate[required]");
+
+                              element.find(".scheduler_select").addClass("validate[funcCall[scheduler_verif]]")
+                                      .data("element_tag", info.tag)
+                                      .data("max_marc", info.max_length)
+                                      .data("obrig_marc", info.param1).data("live_marc", 0);
+
                               break;
                         case "textarea":
                               element.find(".label_geral")[0].innerHTML = info.texto;
@@ -531,7 +536,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                     e.preventDefault();
 
                               });
-
                               break;
                   }
             });
@@ -540,10 +544,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
                   callback();
             }
-
-
-
-
       }
 
       this.populate_script = function(callback)
@@ -907,8 +907,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
       }
 
-
-
 //FORM MANIPULATION
       $("#script_form").on("submit", function(e)
       {
@@ -931,7 +929,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
       this.submit_manual = function(callback)
       {
-            $.post(file_path + "requests.php", {action: "save_form_result", id_script:me.script_id, results: $("#script_form").serializeArray(), user_id: me.user_id, unique_id: me.unique_id, campaign_id: me.campaign_id, lead_id: me.lead_id, admin_review: me.admin_review},
+            $.post(file_path + "requests.php", {action: "save_form_result", id_script: me.script_id, results: $("#script_form").serializeArray(), user_id: me.user_id, unique_id: me.unique_id, campaign_id: me.campaign_id, lead_id: me.lead_id, admin_review: me.admin_review},
             function() {
                   admin_review = 0;
                   if (typeof callback === "function")
@@ -951,124 +949,126 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
       {
             return $("#script_form").validationEngine('validate');
       };
-
-      function checknib(field, rules, i, options) {
-            if (field.val().match(/^\d+$/))
-            {
-                  var pin_nib = field.val();
-                  var w_dig_controlo = pin_nib.substr(19, 2) * 1;
-                  var w_total = 0;
-                  for (w_index = 0; w_index <= 18; w_index++) {
-                        var w_digito = pin_nib.substr(w_index, 1) * 1;
-                        w_total = ((w_total + w_digito) * 10) % 97;
-                  }
-                  w_total = 98 - ((w_total * 10) % 97);
-                  if (w_total !== w_dig_controlo) {
-                        return "Introduza um NIB correto";
-                  }
-            }
-            else
-                  return "Introduza um NIB correto";
-      }
-
-      function checknif(field, rules, i, options) {
-
-            var nif = field.val();
-            var c;
-            var checkDigit = 0;
-            if (nif != null && nif.length == 9) {
-                  c = nif.charAt(0);
-                  if (c == '1' || c == '2' || c == '5' || c == '6' || c == '8' || c == '9') {
-                        checkDigit = c * 9;
-                        for (i = 2; i <= 8; i++) {
-                              checkDigit += nif.charAt(i - 1) * (10 - i);
-                        }
-                        checkDigit = 11 - (checkDigit % 11);
-                        if (checkDigit >= 10) {
-                              checkDigit = 0;
-                        }
-                        if (checkDigit !== parseInt(nif.charAt(8))) {
-
-                              return "Introduza um NIF correto";
-                        }
-                  }
-                  else
-                        return "Introduza um NIF correto";
-            }
-            else
-                  return "Introduza um NIF correto";
-      }
-
-      function isValidCard(cardNumber) {
-
-
-            var ccard = new Array(cardNumber.length);
-            var i = 0;
-            var sum = 0;
-
-            // 6 digit is issuer identifier
-            // 1 last digit is check digit
-            // most card number > 11 digit
-            if (cardNumber.length < 11) {
-                  return false;
-            }
-            // Init Array with Credit Card Number
-            for (i = 0; i < cardNumber.length; i++) {
-                  ccard[i] = parseInt(cardNumber.charAt(i));
-            }
-            // Run step 1-5 above above
-            for (i = 0; i < cardNumber.length; i = i + 2) {
-                  ccard[i] = ccard[i] * 2;
-                  if (ccard[i] > 9) {
-                        ccard[i] = ccard[i] - 9;
-                  }
-            }
-            for (i = 0; i < cardNumber.length; i++) {
-                  sum = sum + ccard[i];
-            }
-            return ((sum % 10) == 0);
-      }
-
-      function isValidVISA(field, rules, i, options) {
-            cardNumber = field.val();
-            if (cardNumber.charAt(0) == '4' && (cardNumber.length == 13 || cardNumber.length == 16)) {
-                  if (!isValidCard(cardNumber))
-                        return "Nº de Cartão invalido";
-            }
-            else
-                  return "Insira um número de cartão Visa Válido";
-      }
-
-      function isValidMastercard(field, rules, i, options) {
-            cardNumber = field.val();
-            if (cardNumber.charAt(0) == '5' && (cardNumber.charAt(1) == '1' || cardNumber.charAt(1) == '5') && cardNumber.length == 16) {
-                  if (!isValidCard(cardNumber))
-                        return "Nº de Cartão invalido";
-            }
-            else
-                  return "Insira um número de cartão Mastercard Válido";
-      }
-
-      function isValidDebit(field, rules, i, options) {
-            cardNumber = field.val();
-            if (!isValidCard(cardNumber))
-                  return "Nº de Cartão de Débito invalido";
-      }
-
-
-
-
       $("#close_render_admin").on("click", function()
       {
             window.close();
       });
-
-
-
-
-
-
-
-
 };
+
+
+
+function checknif(field, rules, i, options) {
+
+      var nif = field.val();
+      var c;
+      var checkDigit = 0;
+      if (nif != null && nif.length == 9) {
+            c = nif.charAt(0);
+            if (c == '1' || c == '2' || c == '5' || c == '6' || c == '8' || c == '9') {
+                  checkDigit = c * 9;
+                  for (i = 2; i <= 8; i++) {
+                        checkDigit += nif.charAt(i - 1) * (10 - i);
+                  }
+                  checkDigit = 11 - (checkDigit % 11);
+                  if (checkDigit >= 10) {
+                        checkDigit = 0;
+                  }
+                  if (checkDigit !== parseInt(nif.charAt(8))) {
+
+                        return "Introduza um NIF correto";
+                  }
+            }
+            else
+                  return "Introduza um NIF correto";
+      }
+      else
+            return "Introduza um NIF correto";
+}
+
+function checknib(field, rules, i, options) {
+      if (field.val().match(/^\d+$/))
+      {
+            var pin_nib = field.val();
+            var w_dig_controlo = pin_nib.substr(19, 2) * 1;
+            var w_total = 0;
+            for (w_index = 0; w_index <= 18; w_index++) {
+                  var w_digito = pin_nib.substr(w_index, 1) * 1;
+                  w_total = ((w_total + w_digito) * 10) % 97;
+            }
+            w_total = 98 - ((w_total * 10) % 97);
+            if (w_total !== w_dig_controlo) {
+                  return "Introduza um NIB correto";
+            }
+      }
+      else
+            return "Introduza um NIB correto";
+}
+
+function scheduler_verif(field, rules, i, options) {
+      var live = parseInt(field.data("live_marc"));
+      var obrig = parseInt(field.data("obrig_marc"));
+      if (live < obrig)
+      {
+            if (obrig - live == 1)
+                  return "Falta 1 marcação";
+            else
+                  return "Faltam " + (obrig - live) + " marcações";
+      }
+}
+
+function isValidCard(cardNumber) {
+
+
+      var ccard = new Array(cardNumber.length);
+      var i = 0;
+      var sum = 0;
+
+      // 6 digit is issuer identifier
+      // 1 last digit is check digit
+      // most card number > 11 digit
+      if (cardNumber.length < 11) {
+            return false;
+      }
+      // Init Array with Credit Card Number
+      for (i = 0; i < cardNumber.length; i++) {
+            ccard[i] = parseInt(cardNumber.charAt(i));
+      }
+      // Run step 1-5 above above
+      for (i = 0; i < cardNumber.length; i = i + 2) {
+            ccard[i] = ccard[i] * 2;
+            if (ccard[i] > 9) {
+                  ccard[i] = ccard[i] - 9;
+            }
+      }
+      for (i = 0; i < cardNumber.length; i++) {
+            sum = sum + ccard[i];
+      }
+      return ((sum % 10) == 0);
+}
+
+function isValidVISA(field, rules, i, options) {
+      cardNumber = field.val();
+      if (cardNumber.charAt(0) == '4' && (cardNumber.length == 13 || cardNumber.length == 16)) {
+            if (!isValidCard(cardNumber))
+                  return "Nº de Cartão invalido";
+      }
+      else
+            return "Insira um número de cartão Visa Válido";
+}
+
+function isValidMastercard(field, rules, i, options) {
+      cardNumber = field.val();
+      if (cardNumber.charAt(0) == '5' && (cardNumber.charAt(1) == '1' || cardNumber.charAt(1) == '5') && cardNumber.length == 16) {
+            if (!isValidCard(cardNumber))
+                  return "Nº de Cartão invalido";
+      }
+      else
+            return "Insira um número de cartão Mastercard Válido";
+}
+
+function isValidDebit(field, rules, i, options) {
+      cardNumber = field.val();
+      if (!isValidCard(cardNumber))
+            return "Nº de Cartão de Débito invalido";
+}
 
