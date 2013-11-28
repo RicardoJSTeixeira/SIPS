@@ -20,7 +20,7 @@
 <div class="item texto_class" title="Caixa de Texto">
       <label class="label_titulo label label-success">Caixa de Texto</label>
       <label class="label_texto label_geral" >Titulo da Caixa de Texto:</label>
-      <input class="input_texto " maxlength="100" type="text" placeholder="Texto padrão" />
+      <input class="input_texto " maxlength="100" type="text" />
 </div>
 
 
@@ -48,19 +48,11 @@
       <label class="label_tableradio label_geral">Tabela</label>
       <table   style="width:100%;">
             <thead  class="tr_head">
-                  <tr >
-                        <td>
-
-                        </td>
-                        <td>
-                              Mau
-                        </td>
-                        <td>
-                              Médio
-                        </td>
-                        <td>
-                              Bom
-                        </td>
+                  <tr>
+                        <td></td>
+                        <td>Mau</td>
+                        <td>Médio</td>
+                        <td>Bom</td>
                   </tr>
             </thead >
             <tbody class="tr_body">
@@ -151,10 +143,13 @@
 <div class="item scheduler_class" title="Selector de calendários">
       <label class="label_titulo label label-success">Selector de calendários</label>
       <label class="label_scheduler label_geral">Titulo dos calenários</label>
-      <select class="scheduler_select">
+      <div class="input-append">
+            <select class="scheduler_select">
             <option value="" selected>Selecione um calendário</option>
       </select>
-      <button class="scheduler_button_go btn" >Go</button>
+            <button class="scheduler_button_go btn icon-alone btn-primary " ><i class="icon-calendar"></i></button>
+      </div>
+      
 
 </div>
 

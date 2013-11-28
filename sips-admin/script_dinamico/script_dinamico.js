@@ -1,5 +1,6 @@
 var temp_value_holder = "";
 var current_page_pos = 0;
+
 var selected_id = 0;
 var selected_tag = 0;
 var selected_type = "";
@@ -45,13 +46,14 @@ function editor_toggle(tipo)
 
 $(function() {
       update_select_ajax();//FILE UPLOADS
-   
+
       $(".spinner").spinner({});
       $("#rule_creator .form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
       //respostas maximas por feedback TEMPORARIO----------------
       $("#max_feedback_div").hide();
       $("#table_max_feedback").hide();
       $("#open_limit_feedback").hide();
+      $(".form_edit_element").validationEngine();
 //_:-------------------------
       $(".chosen-select").chosen({no_results_text: "Sem resultados"});
       array_id["radio"] = 0;
@@ -155,9 +157,10 @@ $(function() {
             $.post("requests.php", {action: "get_campaign_linha_inbound"},
             function(data1)
             {
-                  $.each(data1.campaign, function() {
-                        $("#script_campanha_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
-                  });
+                  -
+                          $.each(data1.campaign, function() {
+                                $("#script_campanha_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
+                          });
                   $.each(data1.linha_inbound, function() {
                         $("#script_linha_inbound_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
                   });
@@ -165,7 +168,7 @@ $(function() {
             $.post("requests.php", {action: "iscloud"},
             function(data2)
             {
-                  if (data2.iscloud)
+                  if (data2)
                         $(".linha_inbound_div").hide();
                   else
                         $(".linha_inbound_div").show();
@@ -193,7 +196,7 @@ $(function() {
             //--------------------------------------//
             editor_toggle("off");
             update_script();
-               update_select();
+            update_select();
       });
       $("#edit_div").draggable({handle: "a"});
       $("#tabs").tabs();
@@ -270,7 +273,7 @@ $(document).on("click", ".element", function(e) {
                   populate_element("textarea", $(this));
                   break;
             case "ipl":
-               
+
                   $("#ipl_layout_editor").show();
                   $("#ipl_edit_link").val("");
                   populate_element("ipl", $(this));
@@ -289,7 +292,7 @@ $(".cancel_edit").click(function()
 });
 $("#save_edit").click(function()
 {
-      editor_toggle("off");
+
       edit_element(selected_type, $("#" + selected_id), 0);
 });
 $("#tags_select").change(function()
@@ -540,12 +543,13 @@ function update_pages(callback)
             {
                   $(".leftDiv").show();
                   $("#opcao_page_button").prop('disabled', false);
-                  var pag = $("#page_selector").val();
+                  var pag = $("#page_selector option:selected").val()
                   $("#page_selector").empty();
                   $("#go_to_select").empty();
                   $("#page_position").empty();
-                  $.each(data, function(index, value) {
-                        if (pag === this.id)
+                  $.each(data, function() {
+
+                        if (pag == this.id)
                               $("#page_selector").append("<option data-pos=" + this.pos + " value=" + this.id + " selected>" + this.name + "</option>");
                         else
                               $("#page_selector").append("<option data-pos=" + this.pos + " value=" + this.id + ">" + this.name + "</option>");
@@ -930,7 +934,7 @@ function populate_element(tipo, element)
                         $("#ipl_ip_div").show();
                         $("#ipl_link_div").hide();
                         $("#ipl_file_select option[value='" + $("#" + id + " .ipl_link").text() + "']").prop("selected", true);
-                console.log( $("#ipl_file_select option[value='" + $("#" + id + " .ipl_link").text() + "']"));
+                        console.log($("#ipl_file_select option[value='" + $("#" + id + " .ipl_link").text() + "']"));
                         $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
                   }
                   else if (element.data("option") == "2")
@@ -964,285 +968,337 @@ function edit_element(opcao, element, data)
       switch (opcao)
       {
             case "texto":
-                  $("#texto_edit").val($("#texto_edit").val().replace(regex_replace_textbox_tag, ''));
-                  $("#placeholder_edit").val($("#placeholder_edit").val().replace(regex_replace_textbox, ''));
-                  $("#max_length_edit").val($("#max_length_edit").val().replace(/[^0-9]/g, ''));
-                  $("#" + id + " .label_geral").html($("#texto_edit").val());
-                  $("#" + id + " .input_texto").attr("placeholder", $("#placeholder_edit").val());
-                  $("#" + id + " .input_texto").attr("maxLength", $("#max_length_edit").val());
-                  element.data("regex", $(".validation input:radio[name='regex_texto']:checked").val());
-                  if ($(".validation input:radio[name='regex_texto']:checked").val() == "ajax")
+                  if ($("#text_layout_editor .form_edit_element").validationEngine('validate'))
                   {
-                        var ajax_rule = {"file": $("#select_ajax_script option:selected").val(), "validado": $("#validado_text").val(), "not_validado": $("#not_validado_text").val()};
-                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), ajax_rule, $("#select_default_value option:selected").val(), $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
-                        element.data("php_script", $("#select_ajax_script option:selected").val());
-                        element.data("php_script_validado", $("#validado_text").val());
-                        element.data("php_script_not_validado", $("#not_validado_text").val());
+                        editor_toggle("off");
+                        $("#texto_edit").val($("#texto_edit").val().replace(regex_replace_textbox_tag, ''));
+                        $("#placeholder_edit").val($("#placeholder_edit").val().replace(regex_replace_textbox, ''));
+                        $("#max_length_edit").val($("#max_length_edit").val().replace(/[^0-9]/g, ''));
+                        $("#" + id + " .label_geral").html($("#texto_edit").val());
+                        $("#" + id + " .input_texto").attr("placeholder", $("#placeholder_edit").val());
+                        $("#" + id + " .input_texto").attr("maxLength", $("#max_length_edit").val());
+                        element.data("regex", $(".validation input:radio[name='regex_texto']:checked").val());
+                        if ($(".validation input:radio[name='regex_texto']:checked").val() == "ajax")
+                        {
+                              var ajax_rule = {"file": $("#select_ajax_script option:selected").val(), "validado": $("#validado_text").val(), "not_validado": $("#not_validado_text").val()};
+                              item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), ajax_rule, $("#select_default_value option:selected").val(), $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
+                              element.data("php_script", $("#select_ajax_script option:selected").val());
+                              element.data("php_script_validado", $("#validado_text").val());
+                              element.data("php_script_not_validado", $("#not_validado_text").val());
+                        }
+                        else
+                        {
+                              item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, $("#select_default_value option:selected").val(), $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
+                              element.data("php_script", " ");
+                              element.data("php_script_validado", "");
+                              element.data("php_script_not_validado", "");
+                        }
+                        element.data("default_value", $("#select_default_value option:selected").val());
+
                   }
-                  else
-                  {
-                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, $("#select_default_value option:selected").val(), $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
-                        element.data("php_script", " ");
-                        element.data("php_script_validado", "");
-                        element.data("php_script_not_validado", "");
-                  }
-                  element.data("default_value", $("#select_default_value option:selected").val());
                   break;
             case "radio":
-                  if ($("#vertic_radio").is(':checked'))
-                        element.data("dispo", "v");
-                  else
-                        element.data("dispo", "h");
-                  element.empty();
-                  $("#radio_edit").val($("#radio_edit").val().replace(regex_replace_textbox_tag, ''));
-                  element.append($("<label>").addClass("label_radio label_geral").text($("#radio_edit").val()));
-                  $("#radio_textarea").val($("#radio_textarea").val().replace(regex_replace, ''));
-                  var radios = $("#radio_textarea").val().split(regex_split);
-                  for (var i = radios.length - 1; i >= 0; i--) {
-                        if (radios[i] === "") {
-                              radios.splice(i, 1);
-                        }
-                  }
-                  for (var count = 0; count < radios.length; count++)
+                  if ($("#radio_layout_editor .form_edit_element").validationEngine('validate'))
                   {
-                        element.append($("<input>")
-                                .attr("type", "radio")
-                                .attr("id", array_id["radio"] + "radio")
-                                .attr("name", element.data("id")))
-                                .append($("<label>")
-                                        .addClass("radio_name radio inline")
-                                        .attr("for", array_id["radio"] + "radio")
-                                        .html("<span></span>" + radios[count])
-
-                                        );
-                        if (element.data("dispo") === "v")
-                              element.append($("<br>"));
-                        array_id["radio"] = array_id["radio"] + 1;
-                  }
-                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", element.index(), element.data("dispo"), $("#radio_edit").val(), 0, 0, radios, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
-                  break;
-            case "checkbox":
-                  if ($("#vertic_checkbox").is(':checked'))
-                        element.data("dispo", "v");
-                  else
-                        element.data("dispo", "h");
-                  element.empty();
-                  $("#checkbox_edit").val($("#checkbox_edit").val().replace(regex_replace_textbox_tag, ''));
-                  element.append($("<label>").addClass("label_checkbox label_geral").text($("#checkbox_edit").val()));
-                  $("#checkbox_textarea").val($("#checkbox_textarea").val().replace(regex_replace, ''));
-                  var checkboxs = $("#checkbox_textarea").val().split(regex_split);
-                  for (var i = checkboxs.length - 1; i >= 0; i--) {
-                        if (checkboxs[i] === "") {
-                              checkboxs.splice(i, 1);
+                        editor_toggle("off");
+                        if ($("#vertic_radio").is(':checked'))
+                              element.data("dispo", "v");
+                        else
+                              element.data("dispo", "h");
+                        element.empty();
+                        $("#radio_edit").val($("#radio_edit").val().replace(regex_replace_textbox_tag, ''));
+                        element.append($("<label>").addClass("label_radio label_geral").text($("#radio_edit").val()));
+                        $("#radio_textarea").val($("#radio_textarea").val().replace(regex_replace, ''));
+                        var radios = $("#radio_textarea").val().split(regex_split);
+                        for (var i = radios.length - 1; i >= 0; i--) {
+                              if (radios[i] === "") {
+                                    radios.splice(i, 1);
+                              }
                         }
-                  }
-                  for (var count = 0; count < checkboxs.length; count++)
-                  {
-                        element.append($("<input>")
-                                .attr("type", "checkbox")
-                                .attr("id", array_id["checkbox"] + "checkbox")
-                                .attr("name", element.data("id")))
-                                .append($("<label>")
-                                        .addClass("checkbox_name checkbox inline")
-                                        .attr("for", array_id["checkbox"] + "checkbox")
-                                        .html("<span></span>" + checkboxs[count])
-                                        );
-                        if (element.data("dispo") === "v")
-                              element.append($("<br>"));
-                        array_id["checkbox"] = array_id["checkbox"] + 1;
-                  }
-                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "checkbox", element.index(), element.data("dispo"), $("#checkbox_edit").val(), 0, 0, checkboxs, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
-                  break;
-            case "multichoice":
-                  element.empty();
-                  $("#multichoice_edit").val($("#multichoice_edit").val().replace(regex_replace_textbox_tag, ''));
-                  element.append($("<label>").addClass("label_multichoice label_geral").text($("#multichoice_edit").val()));
-                  $("#multichoice_textarea").val($("#multichoice_textarea").val().replace(regex_replace, ''));
-                  var multichoices = $("#multichoice_textarea").val().split(regex_split);
-                  for (var i = multichoices.length - 1; i >= 0; i--) {
-                        if (multichoices[i] === "") {
-                              multichoices.splice(i, 1);
-                        }
-                  }
-                  element.append($("<select>").addClass("multichoice_select"));
-                  var select = $("#" + id + " .multichoice_select");
-                  for (var count = 0; count < multichoices.length; count++)
-                  {
-                        select.append("<option value='" + multichoices[count] + "'>" + multichoices[count] + "</option>");
-                  }
-                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", element.index(), "h", $("#multichoice_edit").val(), 0, 0, multichoices, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
-                  break;
-            case "textfield":
-                  $("#textfield_edit").html($("#textfield_edit").html().replace(regex_text, ''));
-                  $("#" + id + " .label_geral").html($("#textfield_edit").html());
-                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", element.index(), "h", "textfield", 0, 0, $("#textfield_edit").html(), 0, false, $("#item_hidden").is(':checked'));
-                  break;
-            case "legend":
-                  $("#legend_edit").val($("#legend_edit").val().replace(regex_text, ''));
-                  $("#" + id + " .label_geral").html($("#legend_edit").val());
-                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "legend", element.index(), "h", "legend", 0, 0, $("#legend_edit").val(), 0, false, $("#item_hidden").is(':checked'));
-                  break;
-            case "tableradio":
-                  $("#" + id + " .label_geral").html($("#tableradio_edit").val());
-                  var tr_head = $("#" + id + " .tr_head");
-                  tr_head.empty();
-                  $("#tableradio_th_textarea").val($("#tableradio_th_textarea").val().replace(regex_remove_blank, ""));
-                  $("#tableradio_th_textarea").val($("#tableradio_th_textarea").val().replace(regex_replace, ''));
-                  var titulos = $("#tableradio_th_textarea").val().split(regex_split);
-                  for (var i = titulos.length - 1; i >= 0; i--) {
-                        if (titulos[i] === "") {
-                              titulos.splice(i, 1);
-                        }
-                  }
-                  tr_head.append($("<td>"));
-                  for (var count = 0; count < titulos.length; count++)
-                  {
-                        tr_head.append($("<td>").text(titulos[count]));
-                  }
-                  var tr_body = $("#" + id + " .tr_body");
-                  tr_body.empty();
-                  $("#tableradio_td_textarea").val($("#tableradio_td_textarea").val().replace(regex_remove_blank, ""));
-                  $("#tableradio_td_textarea").val($("#tableradio_td_textarea").val().replace(regex_replace, ''));
-                  var perguntas = $("#tableradio_td_textarea").val().split(regex_split);
-                  for (var i = perguntas.length - 1; i >= 0; i--) {
-                        if (perguntas[i] === "") {
-                              perguntas.splice(i, 1);
-                        }
-                  }
-                  for (var count = 0; count < perguntas.length; count++)
-                  {
-                        tr_body.append($("<tr>").append($("<td>").text(perguntas[count]).addClass("td_row")));
-                        temp = $("#" + id + " .tr_body tr:last");
-                        for (var count2 = 0; count2 < titulos.length; count2++)
+                        for (var count = 0; count < radios.length; count++)
                         {
-                              temp.append($("<td>")
-                                      .append($("<input>").attr("type", "radio").attr("id", array_id["radio"]).attr("name", perguntas[count]))
-                                      .append($("<label>").addClass("radio_name radio inline").attr("for", array_id["radio"]).html("<span></span>")));
+                              element.append($("<input>")
+                                      .attr("type", "radio")
+                                      .attr("id", array_id["radio"] + "radio")
+                                      .attr("name", element.data("id")))
+                                      .append($("<label>")
+                                              .addClass("radio_name radio inline")
+                                              .attr("for", array_id["radio"] + "radio")
+                                              .html("<span></span>" + radios[count]));
+                              if (element.data("dispo") === "v")
+                                    element.append($("<br>"));
                               array_id["radio"] = array_id["radio"] + 1;
                         }
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "radio", element.index(), element.data("dispo"), $("#radio_edit").val(), 0, 0, radios, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   }
-                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", element.index(), "h", $("#tableradio_edit").val(), titulos, 0, perguntas, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  break;
+            case "checkbox":
+                  if ($("#checkbox_layout_editor .form_edit_element").validationEngine('validate'))
+                  {
+                        editor_toggle("off");
+                        if ($("#vertic_checkbox").is(':checked'))
+                              element.data("dispo", "v");
+                        else
+                              element.data("dispo", "h");
+                        element.empty();
+                        $("#checkbox_edit").val($("#checkbox_edit").val().replace(regex_replace_textbox_tag, ''));
+                        element.append($("<label>").addClass("label_checkbox label_geral").text($("#checkbox_edit").val()));
+                        $("#checkbox_textarea").val($("#checkbox_textarea").val().replace(regex_replace, ''));
+                        var checkboxs = $("#checkbox_textarea").val().split(regex_split);
+                        for (var i = checkboxs.length - 1; i >= 0; i--) {
+                              if (checkboxs[i] === "") {
+                                    checkboxs.splice(i, 1);
+                              }
+                        }
+                        for (var count = 0; count < checkboxs.length; count++)
+                        {
+                              element.append($("<input>")
+                                      .attr("type", "checkbox")
+                                      .attr("id", array_id["checkbox"] + "checkbox")
+                                      .attr("name", element.data("id")))
+                                      .append($("<label>")
+                                              .addClass("checkbox_name checkbox inline")
+                                              .attr("for", array_id["checkbox"] + "checkbox")
+                                              .html("<span></span>" + checkboxs[count])
+                                              );
+                              if (element.data("dispo") === "v")
+                                    element.append($("<br>"));
+                              array_id["checkbox"] = array_id["checkbox"] + 1;
+                        }
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "checkbox", element.index(), element.data("dispo"), $("#checkbox_edit").val(), 0, 0, checkboxs, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  }
+                  break;
+            case "multichoice":
+                  if ($("#multichoice_layout_editor .form_edit_element").validationEngine('validate'))
+                  {
+                        editor_toggle("off");
+                        element.empty();
+                        $("#multichoice_edit").val($("#multichoice_edit").val().replace(regex_replace_textbox_tag, ''));
+                        element.append($("<label>").addClass("label_multichoice label_geral").text($("#multichoice_edit").val()));
+                        $("#multichoice_textarea").val($("#multichoice_textarea").val().replace(regex_replace, ''));
+                        var multichoices = $("#multichoice_textarea").val().split(regex_split);
+                        for (var i = multichoices.length - 1; i >= 0; i--) {
+                              if (multichoices[i] === "") {
+                                    multichoices.splice(i, 1);
+                              }
+                        }
+                        element.append($("<select>").addClass("multichoice_select"));
+                        var select = $("#" + id + " .multichoice_select");
+                        for (var count = 0; count < multichoices.length; count++)
+                        {
+                              select.append("<option value='" + multichoices[count] + "'>" + multichoices[count] + "</option>");
+                        }
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "multichoice", element.index(), "h", $("#multichoice_edit").val(), 0, 0, multichoices, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  }
+                  break;
+            case "textfield":
+                  if ($("#textfield_layout_editor .form_edit_element").validationEngine('validate'))
+                  {
+                        editor_toggle("off");
+                        $("#textfield_edit").html($("#textfield_edit").html().replace(regex_text, ''));
+                        $("#" + id + " .label_geral").html($("#textfield_edit").html());
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", element.index(), "h", "textfield", 0, 0, $("#textfield_edit").html(), 0, false, $("#item_hidden").is(':checked'));
+                  }
+                  break;
+            case "legend":
+                  if ($("#legend_layout_editor .form_edit_element").validationEngine('validate'))
+                  {
+                        editor_toggle("off");
+                        $("#legend_edit").val($("#legend_edit").val().replace(regex_text, ''));
+                        $("#" + id + " .label_geral").html($("#legend_edit").val());
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "legend", element.index(), "h", "legend", 0, 0, $("#legend_edit").val(), 0, false, $("#item_hidden").is(':checked'));
+                  }
+                  break;
+            case "tableradio":
+                  if ($("#tableradio_layout_editor .form_edit_element").validationEngine('validate'))
+                  {
+                        editor_toggle("off");
+                        $("#" + id + " .label_geral").html($("#tableradio_edit").val());
+                        var tr_head = $("#" + id + " .tr_head");
+                        tr_head.empty();
+                        $("#tableradio_th_textarea").val($("#tableradio_th_textarea").val().replace(regex_remove_blank, ""));
+                        $("#tableradio_th_textarea").val($("#tableradio_th_textarea").val().replace(regex_replace, ''));
+                        var titulos = $("#tableradio_th_textarea").val().split(regex_split);
+                        for (var i = titulos.length - 1; i >= 0; i--) {
+                              if (titulos[i] === "") {
+                                    titulos.splice(i, 1);
+                              }
+                        }
+                        tr_head.append($("<td>"));
+                        for (var count = 0; count < titulos.length; count++)
+                        {
+                              tr_head.append($("<td>").text(titulos[count]));
+                        }
+                        var tr_body = $("#" + id + " .tr_body");
+                        tr_body.empty();
+                        $("#tableradio_td_textarea").val($("#tableradio_td_textarea").val().replace(regex_remove_blank, ""));
+                        $("#tableradio_td_textarea").val($("#tableradio_td_textarea").val().replace(regex_replace, ''));
+                        var perguntas = $("#tableradio_td_textarea").val().split(regex_split);
+                        for (var i = perguntas.length - 1; i >= 0; i--) {
+                              if (perguntas[i] === "") {
+                                    perguntas.splice(i, 1);
+                              }
+                        }
+                        for (var count = 0; count < perguntas.length; count++)
+                        {
+                              tr_body.append($("<tr>").append($("<td>").text(perguntas[count]).addClass("td_row")));
+                              temp = $("#" + id + " .tr_body tr:last");
+                              for (var count2 = 0; count2 < titulos.length; count2++)
+                              {
+                                    temp.append($("<td>")
+                                            .append($("<input>").attr("type", "radio").attr("id", array_id["radio"]).attr("name", perguntas[count]))
+                                            .append($("<label>").addClass("radio_name radio inline").attr("for", array_id["radio"]).html("<span></span>")));
+                                    array_id["radio"] = array_id["radio"] + 1;
+                              }
+                        }
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", element.index(), "h", $("#tableradio_edit").val(), titulos, 0, perguntas, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  }
                   break;
 
             case "tableinput":
-                  $("#" + id + " .label_geral").html($("#tableinput_edit").val());
-                  var tr_head = $("#" + id + " .tr_head");
-                  tr_head.empty();
-                  $("#tableinput_th_textarea").val($("#tableinput_th_textarea").val().replace(regex_remove_blank, ""));
-                  $("#tableinput_th_textarea").val($("#tableinput_th_textarea").val().replace(regex_replace, ''));
-                  var titulos = $("#tableinput_th_textarea").val().split(regex_split);
-                  for (var i = titulos.length - 1; i >= 0; i--) {
-                        if (titulos[i] === "") {
-                              titulos.splice(i, 1);
-                        }
-                  }
-                  tr_head.append($("<td>"));
-                  for (var count = 0; count < titulos.length; count++)
+                  if ($("#tableinput_layout_editor .form_edit_element").validationEngine('validate'))
                   {
-                        tr_head.append($("<td>").text(titulos[count]));
-                  }
-                  var tr_body = $("#" + id + " .tr_body");
-                  tr_body.empty();
-                  $("#tableinput_td_textarea").val($("#tableinput_td_textarea").val().replace(regex_remove_blank, ""));
-                  $("#tableinput_td_textarea").val($("#tableinput_td_textarea").val().replace(regex_replace, ''));
-                  var perguntas = $("#tableinput_td_textarea").val().split(regex_split);
-                  for (var i = perguntas.length - 1; i >= 0; i--) {
-                        if (perguntas[i] === "") {
-                              perguntas.splice(i, 1);
+                        editor_toggle("off");
+                        $("#" + id + " .label_geral").html($("#tableinput_edit").val());
+                        var tr_head = $("#" + id + " .tr_head");
+                        tr_head.empty();
+                        $("#tableinput_th_textarea").val($("#tableinput_th_textarea").val().replace(regex_remove_blank, ""));
+                        $("#tableinput_th_textarea").val($("#tableinput_th_textarea").val().replace(regex_replace, ''));
+                        var titulos = $("#tableinput_th_textarea").val().split(regex_split);
+                        for (var i = titulos.length - 1; i >= 0; i--) {
+                              if (titulos[i] === "") {
+                                    titulos.splice(i, 1);
+                              }
                         }
-                  }
-                  for (var count = 0; count < perguntas.length; count++)
-                  {
-                        tr_body.append($("<tr>").append($("<td>").text(perguntas[count]).addClass("td_row")));
-                        temp = $("#" + id + " .tr_body tr:last");
-                        for (var count2 = 0; count2 < titulos.length; count2++)
+                        tr_head.append($("<td>"));
+                        for (var count = 0; count < titulos.length; count++)
                         {
-                              temp.append($("<td>")
-                                      .append($("<input>").addClass("input-mini").attr("type", "text").attr("id", array_id["input"]).attr("name", perguntas[count]))
-                                      );
-                              array_id["input"] = array_id["input"] + 1;
+                              tr_head.append($("<td>").text(titulos[count]));
                         }
+                        var tr_body = $("#" + id + " .tr_body");
+                        tr_body.empty();
+                        $("#tableinput_td_textarea").val($("#tableinput_td_textarea").val().replace(regex_remove_blank, ""));
+                        $("#tableinput_td_textarea").val($("#tableinput_td_textarea").val().replace(regex_replace, ''));
+                        var perguntas = $("#tableinput_td_textarea").val().split(regex_split);
+                        for (var i = perguntas.length - 1; i >= 0; i--) {
+                              if (perguntas[i] === "") {
+                                    perguntas.splice(i, 1);
+                              }
+                        }
+                        for (var count = 0; count < perguntas.length; count++)
+                        {
+                              tr_body.append($("<tr>").append($("<td>").text(perguntas[count]).addClass("td_row")));
+                              temp = $("#" + id + " .tr_body tr:last");
+                              for (var count2 = 0; count2 < titulos.length; count2++)
+                              {
+                                    temp.append($("<td>")
+                                            .append($("<input>").addClass("input-mini").attr("type", "text").attr("id", array_id["input"]).attr("name", perguntas[count]))
+                                            );
+                                    array_id["input"] = array_id["input"] + 1;
+                              }
+                        }
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableinput", element.index(), "h", $("#tableinput_edit").val(), titulos, 0, perguntas, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   }
-                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableinput", element.index(), "h", $("#tableinput_edit").val(), titulos, 0, perguntas, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
                   break;
 
             case "datepicker":
-                  $("#datepicker_edit").val($("#datepicker_edit").val().replace(regex_replace_textbox_tag, ''));
-                  $("#" + id + " .label_geral").html($("#datepicker_edit").val());
-                  var data_format = 0;
-                  if ($("#time_format_day").is(':checked'))
+                  if ($("#datepicker_layout_editor .form_edit_element").validationEngine('validate'))
                   {
-                        element.data("data_format", 2);
-                        data_format = 2;
-                  }
-                  else if ($("#time_format_hour").is(':checked')) {
-                        element.data("data_format", 1);
-                        data_format = 1;
-                  }
-                  else {
-                        data_format = 0;
-                        element.data("data_format", 0);
-                  }
+                        editor_toggle("off");
+                        $("#datepicker_edit").val($("#datepicker_edit").val().replace(regex_replace_textbox_tag, ''));
+                        $("#" + id + " .label_geral").html($("#datepicker_edit").val());
+                        var data_format = 0;
+                        if ($("#time_format_day").is(':checked'))
+                        {
+                              element.data("data_format", 2);
+                              data_format = 2;
+                        }
+                        else if ($("#time_format_hour").is(':checked')) {
+                              element.data("data_format", 1);
+                              data_format = 1;
+                        }
+                        else {
+                              data_format = 0;
+                              element.data("data_format", 0);
+                        }
 
 
-                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", element.index(), "h", $("#datepicker_edit").val(), data_format, 0, 0, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", element.index(), "h", $("#datepicker_edit").val(), data_format, 0, 0, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  }
                   break;
             case "scheduler":
-                  var options = $("#scheduler_edit_select > option:selected").clone();
-                  var valores = [];
-                  $.each(options, function()
+                  if ($("#scheduler_layout_editor .form_edit_element").validationEngine('validate'))
                   {
-                        valores.push(this.value);
-                  });
-                  var select = $("#" + id + " .scheduler_select");
-                  select.empty();
-                  select.append("<option value='' selected>Selecione um calendário</option>");
-                  if (options.length > 0)
-                        select.append(options);
-                  $("#scheduler_edit").val($("#scheduler_edit").val().replace(regex_replace_textbox_tag, ''));
-                  $("#" + id + " .label_geral").html($("#scheduler_edit").val());
-                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), "1", 0, valores, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $("#scheduler_edit_marcação option:selected").val());
+                        editor_toggle("off");
+                        var options = $("#scheduler_edit_select > option:selected").clone();
+                        var valores = [];
+                        $.each(options, function()
+                        {
+                              valores.push(this.value);
+                        });
+                        var select = $("#" + id + " .scheduler_select");
+                        select.empty();
+                        select.append("<option value='' selected>Selecione um calendário</option>");
+                        if (options.length > 0)
+                              select.append(options);
+                        $("#scheduler_edit").val($("#scheduler_edit").val().replace(regex_replace_textbox_tag, ''));
+                        $("#" + id + " .label_geral").html($("#scheduler_edit").val());
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), "1", 0, valores, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $("#scheduler_edit_marcação option:selected").val());
+                  }
                   break;
             case "textarea":
-                  $("#textarea_edit").val($("#textarea_edit").val().replace(regex_text, ''));
-                  $("#" + id + " .label_geral").html($("#textarea_edit").val());
-                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textarea", element.index(), "h", $("#textarea_edit").val(), 0, 0, 0, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  if ($("#textarea_layout_editor .form_edit_element").validationEngine('validate'))
+                  {
+                        editor_toggle("off");
+                        $("#textarea_edit").val($("#textarea_edit").val().replace(regex_text, ''));
+                        $("#" + id + " .label_geral").html($("#textarea_edit").val());
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textarea", element.index(), "h", $("#textarea_edit").val(), 0, 0, 0, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                  }
                   break;
             case "ipl":
-                  $("#ipl_edit").val($("#ipl_edit").val().replace(regex_text, ''));
-                  $("#" + id + " .label_geral").html($("#ipl_edit").val());
-                  if ($("#radio_ipl_image").is(":checked"))
+                  if ($("#ipl_layout_editor .form_edit_element").validationEngine('validate'))
                   {
-                        var temp = $("#ipl_file_select option:selected").val();
-                        if (temp == "")
-                              temp = [];
-                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, temp, 0, false, $("#item_hidden").is(':checked'), 1);
-                        $("#" + id + " .ipl_link").text($("#ipl_file_select option:selected").val());
-                        element.data("option", "1");
-                  }
-                  else if ($("#radio_ipl_pdf").is(":checked"))
-                  {
-                        var temp = $("#ipl_file_select option:selected").val();
-                        if (temp == "")
-                              temp = [];
-                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, temp, 0, false, $("#item_hidden").is(':checked'), 2);
-                        $("#" + id + " .ipl_link").text($("#ipl_file_select option:selected").val());
-                        element.data("option", "2");
-                  } else {
-                        var temp = $("#ipl_edit_link").val();
-                        if (temp == "")
-                              temp = [];
-                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, temp, 0, false, $("#item_hidden").is(':checked'), 3);
-                        $("#" + id + " .ipl_link").text($("#ipl_edit_link").val());
-                        element.data("option", "3");
+                        editor_toggle("off");
+                        $("#ipl_edit").val($("#ipl_edit").val().replace(regex_text, ''));
+                        $("#" + id + " .label_geral").html($("#ipl_edit").val());
+                        if ($("#radio_ipl_image").is(":checked"))
+                        {
+                              var temp = $("#ipl_file_select option:selected").val();
+                              if (temp == "")
+                                    temp = [];
+                              item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, temp, 0, false, $("#item_hidden").is(':checked'), 1);
+                              $("#" + id + " .ipl_link").text($("#ipl_file_select option:selected").val());
+                              element.data("option", "1");
+                        }
+                        else if ($("#radio_ipl_pdf").is(":checked"))
+                        {
+                              var temp = $("#ipl_file_select option:selected").val();
+                              if (temp == "")
+                                    temp = [];
+                              item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, temp, 0, false, $("#item_hidden").is(':checked'), 2);
+                              $("#" + id + " .ipl_link").text($("#ipl_file_select option:selected").val());
+                              element.data("option", "2");
+                        } else {
+                              var temp = $("#ipl_edit_link").val();
+                              if (temp == "")
+                                    temp = [];
+                              item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "ipl", element.index(), "h", $("#ipl_edit").val(), 0, 0, temp, 0, false, $("#item_hidden").is(':checked'), 3);
+                              $("#" + id + " .ipl_link").text($("#ipl_edit_link").val());
+                              element.data("option", "3");
+                        }
                   }
                   break;
             case "button":
-                  $("#button_edit").val($("#button_edit").val().replace(regex_text, ''));
-                  $("#" + id + " .botao").text($("#button_edit").val());
-                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "button", element.index(), "h", $("#button_edit").val(), 0, 0, 0, 0, 0, $("#item_hidden").is(':checked'));
+                  if ($("#button_layout_editor .form_edit_element").validationEngine('validate'))
+                  {
+                        editor_toggle("off");
+                        $("#button_edit").val($("#button_edit").val().replace(regex_text, ''));
+                        $("#" + id + " .botao").text($("#button_edit").val());
+                        item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "button", element.index(), "h", $("#button_edit").val(), 0, 0, 0, 0, 0, $("#item_hidden").is(':checked'));
+                  }
                   break;
       }
+
       $("#" + id + " .div_info_item").remove();
       element.prepend($("<div>").css("float", "right").addClass("div_info_item span1"));
       var temp = $("#" + id + " .div_info_item");
@@ -1557,6 +1613,7 @@ $("#save_button_page").click(function()//Fecha o dialog e grava as alterações
       $.post("requests.php", {action: "edit_page", id_script: $("#script_selector option:selected").val(), name: $("#pages_name_edit").val(), id_pagina: $("#page_selector option:selected").val(), old_pos: current_page_pos, new_pos: $("#page_position option:selected").val()},
       function(data)
       {
+
             $('#dialog_page').modal('hide');
             update_pages();
       }, "json");
@@ -1603,17 +1660,30 @@ $("#opcao_script_button").click(function()//chama o edit do nome do script
       {
             var campaign = [];
             var linha_inbound = [];
+            $("#script_campanha_selector option").prop("disabled", false);
+            $("#script_linha_inbound_selector option").prop("disabled", false);
+
+            var this_script = $("#script_selector option:selected").val();
             $.each(data, function(index, value) {
-                  if (this.tipo === "campaign")
-                        campaign.push(this.id_camp_linha);
+
+                  if (this.id_script == this_script)
+                  {
+                        if (this.tipo === "campaign")
+                              campaign.push(this.id_camp_linha);
+                        else
+                              linha_inbound.push(this.id_camp_linha);
+                  }
                   else
-                        linha_inbound.push(this.id_camp_linha);
+                  {
+                        if (this.tipo === "campaign")
+                              $("#script_campanha_selector option[value='" + this.id_camp_linha + "']").prop("disabled", true);
+                        else
+                              $("#script_linha_inbound_selector option[value='" + this.id_camp_linha + "']").prop("disabled", true);
+                  }
             });
             $("#script_campanha_selector").val(campaign).trigger("liszt:updated");
             $("#script_linha_inbound_selector").val(linha_inbound).trigger("liszt:updated");
       }, "json");
-      $("#add_limit_feedback_div").hide();
-      get_limit_feedback();
       $("#script_name_edit").val($("#script_selector option:selected").text());
 });
 $("#save_button_layout").click(function()//Fecha o dialog e grava as alterações
@@ -1623,10 +1693,7 @@ $("#save_button_layout").click(function()//Fecha o dialog e grava as alteraçõe
       {
             $('#dialog_layout').modal('hide');
             update_script();
-      }, "json")
-              .fail(function(xhr, textStatus, errorThrown) {
-                    alert("A campanha/linha de inbound escolhida ja tem um script associado");
-              });
+      }, "json");
 });
 //---------------------------------------------0000
 //------------------RULES----------------------------000000000
@@ -1856,7 +1923,7 @@ $(".values_edit_textarea").on("blur", function()
 });
 $("#open_rule_creator").click(function()//Fecha o dialog e grava as alterações 
 {
-          $("#rule_creator").toggle(800);
+      $("#rule_creator").toggle(800);
 });
 $("#add_rule_button").click(function()
 {
@@ -2021,7 +2088,7 @@ $("#rule_form").on("submit", function(e)
 //RENDER/FULLSCREEN 
 $("#render_go").click(function()
 {
-      var window_slave = window.open("/sips-admin/script_dinamico/render_admin.html?script_id=" + $("#script_selector option:selected").val());
+      var window_slave = window.open("/sips-admin/script_dinamico/fullscreen.html?script_id=" + $("#script_selector option:selected").val());
 });
 
 
@@ -2101,50 +2168,4 @@ $("#button_ajax_upload_div").on("click", function()
       $(this).toggleClass("icon-chevron-down");
 });
 
-
-//LIMIT DE FEEDBACKS POR SCRIPT----------------------------------------------------000
-$("#open_limit_feedback").on("click", function()
-{
-      $("#add_limit_feedback_div").toggle(400);
-});
-$("#add_limit_feedback").on("click", function()
-{
-      if ($("#select_feedback option:selected").text() != "")
-            $.post("requests.php", {action: "add_limit_feedback", id_script: $("#script_selector option:selected").val(), feedback: $("#select_feedback option:selected").val(), feedback_name: $("#select_feedback option:selected").text(), max: $("#max_feedback_number").val()},
-            function(data)
-            {
-                  get_limit_feedback();
-            }, "json");
-});
-function get_limit_feedback()
-{
-      //Busca os limites de feedbacks para  este  script
-      $.post("requests.php", {action: "get_limit_feedback", id_script: $("#script_selector option:selected").val()},
-      function(data5)
-      {
-            if (Object.size(data5))
-            {
-                  $("#table_max_feedback").show();
-                  $("#table_max_feedback_tbody").empty();
-                  var temp = "";
-                  $.each(data5, function() {
-                        temp += "<tr><td>" + this.feedback_name + "</td><td>" + this.max + "</td><td><button class='delete_max_feedback btn' value=" + this.id + ">Apagar</button></td></tr>";
-                  });
-                  $("#table_max_feedback_tbody").append(temp);
-            }
-            else
-                  $("#table_max_feedback").hide();
-      }, "json");
-}
-
-$(document).on("click", ".delete_max_feedback", function()
-{
-      var id = $(this).val();
-      $.post("requests.php", {action: "delete_limit_feedback", id: id},
-      function(data5)
-      {
-            get_limit_feedback();
-      }, "json");
-});
-//----------------------------------------------------------------------------------000
 

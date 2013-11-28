@@ -12,6 +12,7 @@ class user {
     public $allowed_campaigns_raw;
     public $is_all_campaigns = FALSE;
     public $is_script_dinamico = FALSE;
+    public $ip;
 
     public function __construct($username = "", $password = "") {
         if (!strlen($username)) {
@@ -34,6 +35,7 @@ class user {
                 $this->is_all_campaigns = preg_match("/-ALL-CAMPAIGNS-/", $this->allowed_campaigns_raw);
                 $this->allowed_campaigns = explode(" ", trim(rtrim($this->allowed_campaigns_raw, " -")));
                 $this->is_script_dinamico = $row["agent_fullscreen"] == "Y";
+                     $this->ip = filter_var($_SERVER['REMOTE_ADDR']);
             }
         }
     }

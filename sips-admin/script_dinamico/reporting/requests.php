@@ -100,12 +100,12 @@ switch ($action) {
 
     case "get_select_options":
         $js = array("campanha" => array(), "bd" => array(), "linha_inbound" => array());
-        $query = "SELECT campaign_id,campaign_name FROM `vicidial_campaigns` where active='Y' $temp";
+        $query = "SELECT campaign_id,campaign_name FROM `vicidial_campaigns` where active='Y'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js["campanha"][] = array("id" => $row["campaign_id"], "name" => $row["campaign_name"]);
         }
-        $query = "SELECT list_id,list_name,campaign_id FROM vicidial_lists where active='Y' $temp";
+        $query = "SELECT list_id,list_name,campaign_id FROM vicidial_lists where active='Y'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js["bd"][] = array("id" => $row["list_id"], "name" => $row["list_name"], "campaign_id" => $row["campaign_id"]);
@@ -159,12 +159,19 @@ switch ($action) {
             $date_filter = "";
 
 
-        $contact_filter = "left join `script_result` sr on a.lead_id=sr.lead_id where id_script='$id_script' and  sr.campaign_id = '$campaign_id' $date_filter";
+        $query = "SELECT list_id from vicidial_lists where campaign_id='$campaign_id' and active='Y'";
+        $query = mysql_query($query, $link) or die(mysql_error());
+        $row = mysql_fetch_assoc($query);
+        $list_id = $row["list_id"];
+
+        // $contact_filter = "left join `script_result` sr on a.lead_id=sr.lead_id where id_script='$id_script' and  sr.campaign_id = '$campaign_id' $date_filter";
 
         $titulos = array();
         $data_row = array();
+        $temp_lead_data = array();
         foreach ($field_data as $key => $value) {
             if ($value->type == "campo_dinamico") {
+                $temp_lead_data[] = $value->id;
                 $data_row[$value->id] = $value->texto;
             } else {
                 $tags[] = $value->id;
@@ -196,32 +203,35 @@ switch ($action) {
                 $data_row = array_slice($data_row, 0, array_search("m" . $row["tag"], array_keys($data_row)), true) + $script_values + array_slice($data_row, array_search("m" . $row["tag"], array_keys($data_row)), count($data_row) - 1, true);
                 unset($data_row["m" . $row["tag"]]);
             } else
-                $data_row["m" . $row["tag"]] = ($row['texto'] == "") ? "Sem titulo" :$data_row["m" . $row["tag"]];
+                $data_row["m" . $row["tag"]] = ($row['texto'] == "") ? "Sem titulo" : $data_row["m" . $row["tag"]];
         };
+
         $data_row = array_merge(array("id" => "ID", "date" => "Data", "name" => "Nome", "full_name" => "Agente", "campaign_name" => "Nome da campanha", "status_name" => "Feedback"), $data_row);
         $titulos = $data_row;
-        foreach ($data_row as &$value) {
-            $value = "";
+        foreach ($data_row as $key => $value) {
+            $data_row[$key] = "";
         }
-        $temp = array();
-        foreach ($field_data as $key => $value) {
-            if ($value->type == "campo_dinamico")
-                $temp[] = $value->id;
-        }
+
+
+
+
+
+
         // DADOS DA LEAD
-        $query = "SELECT a.lead_id, " . implode(",", $temp) . " from vicidial_list a  $contact_filter  group by a.lead_id";
+        $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a where list_id='$list_id' ";
+
         $result = mysql_query($query, $link) or die(mysql_error());
 
         while ($row3 = mysql_fetch_assoc($result)) {
             $lead_tmp = $row3["lead_id"];
-            unset($row3["lead_id"]);
-
             $temp_d = $data_row;
+            unset($row3["lead_id"]);
             foreach ($row3 as $key => $value) {
                 $temp_d[$key] = $value;
             }
             $final_row[$lead_tmp] = $temp_d;
         }
+
 
         //DADOS DO SCRIPT
         $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name,  vc.campaign_name, sr.lead_id,sr.param_1,vcs.status_name, sr.tag_elemento,sr.valor,sd.param1,sd.type FROM `script_result` sr
@@ -232,7 +242,7 @@ switch ($action) {
           left join vicidial_log vlg on vlg.uniqueid=sr.unique_id
           left join vicidial_campaign_statuses vcs on vcs.status=vlg.status
           left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script
-          where sr.id_script='$id_script' and sr.campaign_id = '$campaign_id'  $date_filter  and sr.tag_elemento in ('" . join("','", $tags) . "') order by sr.lead_id ";
+          where sr.id_script='$id_script' and sr.campaign_id = '$campaign_id'  $date_filter   and vl.list_id='$list_id' and sr.tag_elemento in ('" . join("','", $tags) . "') order by sr.lead_id ";
 
         $result = mysql_query($query, $link) or die(mysql_error());
         if (mysql_num_rows($result) < 1) {
@@ -244,32 +254,37 @@ switch ($action) {
         $lead_id = false;
         while ($row1 = mysql_fetch_assoc($result)) {
 
-         
-                if ($lead_id != $row1["lead_id"]) {
-                    if ($lead_id) {
-                        fputcsv($output, $temp_d, ";", '"');
-                    }
-                    $temp_d = $final_row[$row1["lead_id"]];
-                    unset($final_row[$row1["lead_id"]]);
-                    $lead_id = $row1["lead_id"];
-                    $temp_d["id"] = $row1["lead_id"];
-                    $temp_d["date"] = $row1["date"];
-                    $temp_d["name"] = $row1["name"];
-                    $temp_d["full_name"] = $row1["full_name"];
-                    $temp_d["campaign_name"] = $row1["campaign_name"];
-                    $temp_d["status_name"] = $row1["status_name"];
-                }
 
-                if ($row1["type"] == "tableradio")
-                    $temp_d["m" . $row1["tag_elemento"] . $row1["param_1"]] = $row1["valor"];
-                elseif ($row1["type"] == "tableinput") {
-                    $temp = split(";", $row1["param_1"]);
-                    $temp_d["m" . $row1["tag_elemento"] . $temp[1] . $temp[0]] = $row1["valor"];
-                } else
-                    $temp_d["m" . $row1["tag_elemento"]] = ($row1["param1"] == "nib") ? "" . $row1["valor"] . "" : $row1["valor"];
-            
+            if ($lead_id != $row1["lead_id"]) {
+                if ($lead_id) {
+                    $final_row[$lead_id] = $temp_d;
+                }
+                $temp_d = $final_row[$row1["lead_id"]];
+
+                $lead_id = $row1["lead_id"];
+                $temp_d["id"] = $row1["lead_id"];
+                $temp_d["date"] = $row1["date"];
+                $temp_d["name"] = $row1["name"];
+                $temp_d["full_name"] = $row1["full_name"];
+                $temp_d["campaign_name"] = $row1["campaign_name"];
+                $temp_d["status_name"] = $row1["status_name"];
+            }
+
+            if ($row1["type"] == "tableradio")
+                $temp_d["m" . $row1["tag_elemento"] . $row1["param_1"]] = $row1["valor"];
+            elseif ($row1["type"] == "tableinput") {
+                $temp = split(";", $row1["param_1"]);
+                $temp_d["m" . $row1["tag_elemento"] . $temp[1] . $temp[0]] = $row1["valor"];
+            } else
+                $temp_d["m" . $row1["tag_elemento"]] = ($row1["param1"] == "nib") ? "" . $row1["valor"] . "" : $row1["valor"];
         }
-        fputcsv($output, $temp_d, ";", '"');
+
+
+        foreach ($final_row as $value) {
+            fputcsv($output, $value, ";", '"');
+        }
+
+
         fclose($output);
         break;
 }

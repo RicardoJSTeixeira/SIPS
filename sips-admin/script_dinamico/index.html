@@ -13,6 +13,7 @@
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
             <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-wysihtml5.css" />
+            <link type="text/css" rel="stylesheet" href="/bootstrap/css/validationEngine.jquery.css" />
 
 
             <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
@@ -39,7 +40,7 @@
 
                   .leftDiv, .rightDiv { padding:5px; }
                   .grid{border: 1px inset #000000;}
-                  .leftDiv .item { text-align:center; border:1px solid #EEF; background-color:#FFF;padding:3px; margin-bottom: 11px; min-height: 35px; }
+                  .leftDiv .item { text-align:center; border:1px solid #EEF; background-color:#FFF;padding:3px; margin-bottom: 3px; min-height: 35px; }
                   .rightDiv .item { text-align:center; border:1px dashed #AAA; background-color:#FFF;padding:3px;}
                   .helperPick {border:4px solid #288dd4!important; text-align:center;width:auto}
                   #add_rule_button{margin:12px;}
@@ -52,6 +53,7 @@
                   .grid-title select{width:auto;max-width: 200px;margin-bottom: 0px;}
                   .grid-title {height:auto;}
                   .chosen-select{width: 200%;}
+                  #dialog_layout .chosen-select{width: 300%;}
                   .hidden{display:none!important;}
                   #textfield_edit   
                   {
@@ -72,6 +74,12 @@
                   #textfield_layout_editor ul
                   {
                         min-width: 0px;
+                  }
+
+                  .vertical_align
+                  {
+                        vertical-align: middle; 
+                        margin: 0px;  
                   }
             </style>
       </head>
@@ -144,42 +152,6 @@
                               <button class="btn btn-inverse" id="open_limit_feedback" title="Cria um limite de feedbacks para este script">Criar limite de feedback</button>
                         </div>
 
-
-                        <div id="max_feedback_div">
-                              <div id="add_limit_feedback_div">
-                                    <div class="formRow">
-                                          <label class="label label-inverse" >Feedback</label>
-                                          <div class="formRight">
-                                                <select id="select_feedback" class="chosen-select"  data-placeholder="Selecione um feedback"   ></select>
-                                          </div> 
-                                    </div>
-                                    <div class="formRow">
-                                          <label class="label label-inverse" >Máximo</label>
-                                          <div class="formRight">
-                                                <input type="number" value="50" id="max_feedback_number">
-                                          </div> 
-                                    </div>
-                                    <div class="formRow">
-                                          <button id="add_limit_feedback" class="btn btn-success">Adicionar</button>
-                                    </div>
-                              </div>
-                        </div>
-                        <table id="table_max_feedback" class="table table-condensed">
-                              <thead>
-                              <th>
-                                    feedback
-                              </th>
-                              <th>
-                                    Max
-                              </th>
-                              <th>
-                                    Opção
-                              </th>
-                              </thead>
-                              <tbody id="table_max_feedback_tbody">
-
-                              </tbody>
-                        </table> 
                   </div>
                   <div class="clear"></div>
                   <div class="modal-footer">
@@ -316,30 +288,33 @@
                                     <div id="tabs-1"><!--------------------------EDIÇÂO DOS ELEMENTOS----------------->
                                           <!--TEXTO-->
                                           <div class="editor_layout" id="text_layout_editor" style="display:none">
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Texto:</label>
-                                                      <div class="formRight">
-                                                            <input  maxlength="150" class="span texto_input" id="texto_edit" type="text" placeholder="Texto exemplo" />
+                                                <form class="form_edit_element">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Texto:</label>
+                                                            <div class="formRight">
+                                                                  <input  maxlength="150" class="span texto_input validate[required]" id="texto_edit" name="texto_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
                                                       </div>
-                                                </div>
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Placeholder:</label>
-                                                      <div class="formRight">
-                                                            <input  maxlength="65" class="span texto_input" id="placeholder_edit" type="text" placeholder="Placeholder exemplo" />
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Placeholder:</label>
+                                                            <div class="formRight">
+                                                                  <input  maxlength="65" class="span texto_input" id="placeholder_edit" type="text" placeholder="Placeholder exemplo" />
+                                                            </div>
                                                       </div>
-                                                </div>
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Valor por defeito:</label>
-                                                      <div class="formRight">
-                                                            <select id="select_default_value"></select>
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Valor por defeito:</label>
+                                                            <div class="formRight">
+                                                                  <select id="select_default_value"></select>
+                                                            </div>
                                                       </div>
-                                                </div>
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Tamanho maximo:</label>
-                                                      <div class="formRight">
-                                                            <input  maxlength="3" class="texto_input" id="max_length_edit" type="text" placeholder="Numero Máximo de caracteres" />
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Tamanho maximo:</label>
+                                                            <div class="formRight">
+                                                                  <input  maxlength="3" class="texto_input validate[required]" id="max_length_edit" name="max_length_edit" type="text" placeholder="Numero Máximo de caracteres" />
+                                                            </div>
                                                       </div>
-                                                </div>
+                                                </form>
+
 
                                                 <div class="formRow validation" >
                                                       <label class="label label-inverse" >Validação:</label>
@@ -419,207 +394,226 @@
                                           </div>
                                           <!--RADIO-->
                                           <div class="editor_layout" id="radio_layout_editor" style="display:none">
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Texto:</label>
-                                                      <div class="formRight">
-                                                            <input  maxlength="150" class="span" id="radio_edit" type="text" placeholder="Texto" />
+                                                <form class="form_edit_element">
+
+
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Texto:</label>
+                                                            <div class="formRight">
+                                                                  <input  maxlength="150" class="span validate[required]" id="radio_edit" name="radio_edit" type="text" placeholder="Texto" />
+                                                            </div>
                                                       </div>
-                                                </div>
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Valores:</label>
-                                                      <div class="formRight">
-                                                            <textarea class="values_edit_textarea" id="radio_textarea" rows="4" cols="50"></textarea>
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Valores:</label>
+                                                            <div class="formRight">
+                                                                  <textarea  class="values_edit_textarea validate[required]" id="radio_textarea" name="radio_textarea" rows="4" cols="50"></textarea>
+                                                            </div>
                                                       </div>
-                                                </div>
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Disposição:</label>
-                                                      <div class="formRight">
-                                                            <input type="radio" class='radio inline' id="horiz_radio" name="rdispo" checked="checked">   <label class="radio_dispo"  for="horiz_radio"><span></span>Horizontal </label>
-                                                      </div> <div class="formRight">
-                                                            <input type="radio"  class='radio inline' id="vertic_radio" name="rdispo" >  <label class="radio_dispo"  for="vertic_radio"><span></span>Vertical </label>
-                                                      </div>
-                                                </div>
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Disposição:</label>
+                                                            <div class="formRight">
+                                                                  <input type="radio"  id="horiz_radio" name="rdispo" checked="checked">   <label class="radio_dispo radio inline"  for="horiz_radio"><span></span>Horizontal </label>
+                                                            </div> <div class="formRight">
+                                                                  <input type="radio"   id="vertic_radio" name="rdispo" >  <label class="radio_dispo radio inline"  for="vertic_radio"><span></span>Vertical </label>
+                                                            </div>
+                                                      </div> 
+                                                </form>
                                           </div>
                                           <!--CHECKBOX-->
                                           <div class="editor_layout" id="checkbox_layout_editor" style="display:none">
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Texto:</label>
-                                                      <div class="formRight">
-                                                            <input  maxlength="150" class="span" id="checkbox_edit" type="text" placeholder="Texto" />
+                                                <form class="form_edit_element">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Texto:</label>
+                                                            <div class="formRight">
+                                                                  <input  maxlength="150" class="span validate[required]" id="checkbox_edit" name="checkbox_edit" type="text" placeholder="Texto" />
+                                                            </div>
                                                       </div>
-                                                </div>
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Valores:</label>
-                                                      <div class="formRight">
-                                                            <textarea class="values_edit_textarea" id="checkbox_textarea" rows="4" cols="50"></textarea>
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Valores:</label>
+                                                            <div class="formRight">
+                                                                  <textarea class="values_edit_textarea validate[required]" id="checkbox_textarea" name="checkbox_textarea" rows="4" cols="50"></textarea>
+                                                            </div>
                                                       </div>
-                                                </div>
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Disposição:</label>
-                                                      <div class="formRight">
-                                                            <input type="radio" class='radio inline' id="horiz_checkbox" name="cdispo" checked="checked">     <label class="checkbox_dispo"  for="horiz_checkbox"><span></span>Horizontal </label>
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Disposição:</label>
+                                                            <div class="formRight">
+                                                                  <input type="radio"  id="horiz_checkbox" name="cdispo" checked="checked">     <label class="checkbox_dispo radio inline"  for="horiz_checkbox"><span></span>Horizontal </label>
 
 
-                                                      </div>   <div class="formRight">
-                                                            <input type="radio" class='radio inline' id="vertic_checkbox" name="cdispo" >      <label class="checkbox_dispo"  for="vertic_checkbox"><span></span>Vertical  </label>
+                                                            </div>   <div class="formRight">
+                                                                  <input type="radio"  id="vertic_checkbox" name="cdispo" >      <label class="checkbox_dispo radio inline"  for="vertic_checkbox"><span></span>Vertical  </label>
+                                                            </div>
                                                       </div>
-                                                </div>
+                                                </form>
                                           </div>
                                           <!--MULTICHOISE-->
                                           <div class="editor_layout" id="multichoice_layout_editor" style="display:none">
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Texto:</label>
-                                                      <div class="formRight">
-                                                            <input  maxlength="150" class="span texto_input" id="multichoice_edit" type="text" placeholder="Texto exemplo" />
+                                                <form class="form_edit_element">
+
+
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Texto:</label>
+                                                            <div class="formRight">
+                                                                  <input  maxlength="150" class="span texto_input validate[required]" id="multichoice_edit" name="multichoice_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
                                                       </div>
-                                                </div>
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Valores:</label>
-                                                      <div class="formRight">
-                                                            <textarea class="values_edit_textarea" id="multichoice_textarea" rows="4" cols="50"></textarea>
-                                                      </div>
-                                                </div>
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Valores:</label>
+                                                            <div class="formRight">
+                                                                  <textarea class="values_edit_textarea validate[required]" id="multichoice_textarea" name="multichoice_textarea" rows="4" cols="50"></textarea>
+                                                            </div>
+                                                      </div> 
+                                                </form>
                                           </div>
                                           <!--TEXTFIELD-->
                                           <div class="editor_layout" id="textfield_layout_editor" style="display:none">
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Texto:</label>
-                                                      <div class="formRight">
-                                                            <div class="btn-toolbar" data-role="editor-toolbar" data-target="#textfield_edit" style="float:right">
+                                                <form class="form_edit_element">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Texto:</label>
+                                                            <div class="formRight">
+                                                                  <div class="btn-toolbar" data-role="editor-toolbar" data-target="#textfield_edit" style="float:right">
 
 
-                                                                  <div class="btn-group">
-                                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="color" ><i class="fam-color-swatch" style="padding-right: 0px"></i></a>
-                                                                        <div  class="dropdown-menu">
-                                                                              <ul>
-                                                                                    <li> <a class="btn icon-tint " data-edit="foreColor #ff0024" style="color:#ff0024  " > </a></li>   
-                                                                                    <li>  <a class="btn icon-tint" data-edit="foreColor #54bc00" style="color:#54bc00  " > </a></li>   
-                                                                                    <li> <a class="btn icon-tint" data-edit="foreColor #22aeff" style="color:#22aeff  " > </a></li>   
-                                                                                    <li> <a class="btn icon-tint" data-edit="foreColor #ff8400" style="color:#ff8400  " > </a></li>   
-                                                                                    <li> <a class="btn icon-tint" data-edit="foreColor #999999" style="color:#999999  " > </a></li>   
-                                                                                    <li> <a class="btn icon-tint" data-edit="foreColor #000000" style="color:#000000  " > </a></li>   
+                                                                        <div class="btn-group">
+                                                                              <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="color" ><i class="fam-color-swatch" style="padding-right: 0px"></i></a>
+                                                                              <div  class="dropdown-menu">
+                                                                                    <ul>
+                                                                                          <li> <a class="btn icon-tint " data-edit="foreColor #ff0024" style="color:#ff0024  " > </a></li>   
+                                                                                          <li>  <a class="btn icon-tint" data-edit="foreColor #54bc00" style="color:#54bc00  " > </a></li>   
+                                                                                          <li> <a class="btn icon-tint" data-edit="foreColor #22aeff" style="color:#22aeff  " > </a></li>   
+                                                                                          <li> <a class="btn icon-tint" data-edit="foreColor #ff8400" style="color:#ff8400  " > </a></li>   
+                                                                                          <li> <a class="btn icon-tint" data-edit="foreColor #999999" style="color:#999999  " > </a></li>   
+                                                                                          <li> <a class="btn icon-tint" data-edit="foreColor #000000" style="color:#000000  " > </a></li>   
+                                                                              </div>
                                                                         </div>
-                                                                  </div>
-                                                                  <div class="btn-group">
-                                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font"><i class="icon-font"></i><b class="caret"></b></a>
-                                                                        <div  class="dropdown-menu">
-                                                                              <ul>
-                                                                                    <li><a data-edit="fontName Serif" style="font-family:'Serif'">Serif</a></li>
-                                                                                    <li><a data-edit="fontName Sans" style="font-family:'Sans'">Sans</a></li>
-                                                                                    <li><a data-edit="fontName Arial" style="font-family:'Arial'">Arial</a></li>
-                                                                                    <li><a data-edit="fontName Arial Black" style="font-family:'Arial Black'">Arial Black</a></li>
-                                                                                    <li><a data-edit="fontName Courier" style="font-family:'Courier'">Courier</a></li>
-                                                                                    <li><a data-edit="fontName Courier New" style="font-family:'Courier New'">Courier New</a></li>
-                                                                                    <li><a data-edit="fontName Comic Sans MS" style="font-family:'Comic Sans MS'">Comic Sans MS</a></li>
-                                                                                    <li><a data-edit="fontName Helvetica" style="font-family:'Helvetica'">Helvetica</a></li>
-                                                                                    <li><a data-edit="fontName Impact" style="font-family:'Impact'">Impact</a></li>
-                                                                                    <li><a data-edit="fontName Lucida Grande" style="font-family:'Lucida Grande'">Lucida Grande</a></li>
-                                                                                    <li><a data-edit="fontName Lucida Sans" style="font-family:'Lucida Sans'">Lucida Sans</a></li>
-                                                                                    <li><a data-edit="fontName Tahoma" style="font-family:'Tahoma'">Tahoma</a></li>
-                                                                                    <li><a data-edit="fontName Times" style="font-family:'Times'">Times</a></li>
-                                                                                    <li><a data-edit="fontName Times New Roman" style="font-family:'Times New Roman'">Times New Roman</a></li>
-                                                                                    <li><a data-edit="fontName Verdana" style="font-family:'Verdana'">Verdana</a></li></ul>
+                                                                        <div class="btn-group">
+                                                                              <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font"><i class="icon-font"></i><b class="caret"></b></a>
+                                                                              <div  class="dropdown-menu">
+                                                                                    <ul>
+                                                                                          <li><a data-edit="fontName Serif" style="font-family:'Serif'">Serif</a></li>
+                                                                                          <li><a data-edit="fontName Sans" style="font-family:'Sans'">Sans</a></li>
+                                                                                          <li><a data-edit="fontName Arial" style="font-family:'Arial'">Arial</a></li>
+                                                                                          <li><a data-edit="fontName Arial Black" style="font-family:'Arial Black'">Arial Black</a></li>
+                                                                                          <li><a data-edit="fontName Courier" style="font-family:'Courier'">Courier</a></li>
+                                                                                          <li><a data-edit="fontName Courier New" style="font-family:'Courier New'">Courier New</a></li>
+                                                                                          <li><a data-edit="fontName Comic Sans MS" style="font-family:'Comic Sans MS'">Comic Sans MS</a></li>
+                                                                                          <li><a data-edit="fontName Helvetica" style="font-family:'Helvetica'">Helvetica</a></li>
+                                                                                          <li><a data-edit="fontName Impact" style="font-family:'Impact'">Impact</a></li>
+                                                                                          <li><a data-edit="fontName Lucida Grande" style="font-family:'Lucida Grande'">Lucida Grande</a></li>
+                                                                                          <li><a data-edit="fontName Lucida Sans" style="font-family:'Lucida Sans'">Lucida Sans</a></li>
+                                                                                          <li><a data-edit="fontName Tahoma" style="font-family:'Tahoma'">Tahoma</a></li>
+                                                                                          <li><a data-edit="fontName Times" style="font-family:'Times'">Times</a></li>
+                                                                                          <li><a data-edit="fontName Times New Roman" style="font-family:'Times New Roman'">Times New Roman</a></li>
+                                                                                          <li><a data-edit="fontName Verdana" style="font-family:'Verdana'">Verdana</a></li></ul>
+                                                                              </div>
                                                                         </div>
-                                                                  </div>
 
-                                                                  <div class="btn-group">
-                                                                        <a class="btn btn-info" data-edit="justifyleft" title="" data-original-title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
-                                                                        <a class="btn" data-edit="justifycenter" title="" data-original-title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
-                                                                        <a class="btn" data-edit="justifyright" title="" data-original-title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
-                                                                        <a class="btn" data-edit="justifyfull" title="" data-original-title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
+                                                                        <div class="btn-group">
+                                                                              <a class="btn btn-info" data-edit="justifyleft" title="" data-original-title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
+                                                                              <a class="btn" data-edit="justifycenter" title="" data-original-title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
+                                                                              <a class="btn" data-edit="justifyright" title="" data-original-title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
+                                                                              <a class="btn" data-edit="justifyfull" title="" data-original-title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
 
-                                                                  </div>
-                                                                  <div class="btn-group">
-                                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font Size"><i class="icon-text-height"></i>&nbsp;<b class="caret"></b></a>
-                                                                        <div  class="dropdown-menu">
-                                                                              <ul >
-                                                                                    <li><a data-edit="fontSize 5"><font size="5">Huge</font></a></li>
-                                                                                    <li><a data-edit="fontSize 3"><font size="3">Normal</font></a></li>
-                                                                                    <li><a data-edit="fontSize 1"><font size="1">Small</font></a></li>
-                                                                              </ul>
                                                                         </div>
-                                                                  </div>
+                                                                        <div class="btn-group">
+                                                                              <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font Size"><i class="icon-text-height"></i>&nbsp;<b class="caret"></b></a>
+                                                                              <div  class="dropdown-menu">
+                                                                                    <ul >
+                                                                                          <li><a data-edit="fontSize 5"><font size="5">Huge</font></a></li>
+                                                                                          <li><a data-edit="fontSize 3"><font size="3">Normal</font></a></li>
+                                                                                          <li><a data-edit="fontSize 1"><font size="1">Small</font></a></li>
+                                                                                    </ul>
+                                                                              </div>
+                                                                        </div>
 
-                                                                  <div class="btn-group">
-                                                                        <a class="btn" data-edit="bold" title="" data-original-title="Bold (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
-                                                                        <a class="btn" data-edit="italic" title="" data-original-title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
-                                                                        <a class="btn" data-edit="strikethrough" title="" data-original-title="Strikethrough"><i class="icon-strikethrough"></i></a>
-                                                                        <a class="btn" data-edit="underline" title="" data-original-title="Underline (Ctrl/Cmd+U)"><i class="icon-underline"></i></a>
+                                                                        <div class="btn-group">
+                                                                              <a class="btn" data-edit="bold" title="" data-original-title="Bold (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
+                                                                              <a class="btn" data-edit="italic" title="" data-original-title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
+                                                                              <a class="btn" data-edit="strikethrough" title="" data-original-title="Strikethrough"><i class="icon-strikethrough"></i></a>
+                                                                              <a class="btn" data-edit="underline" title="" data-original-title="Underline (Ctrl/Cmd+U)"><i class="icon-underline"></i></a>
+                                                                        </div>
                                                                   </div>
                                                             </div>
-                                                      </div>
 
-                                                      <div id="textfield_edit" class="span textfield_input" contenteditable="true"></div>
-                                                </div>
+                                                            <div id="textfield_edit" class="span textfield_input"  contenteditable="true"></div>
+                                                      </div>
+                                                </form>
                                           </div>
                                           <!--LEGEND-->
                                           <div class="editor_layout" id="legend_layout_editor" style="display:none">
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Texto:</label>
-                                                      <div class="formRight">
-                                                            <input  maxlength="250" class="span legend_input" id="legend_edit" type="text" placeholder="Texto exemplo" />
+                                                <form class="form_edit_element">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Texto:</label>
+                                                            <div class="formRight">
+                                                                  <input  maxlength="250" class="span legend_input validate[required]"  id="legend_edit" name="legend_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
                                                       </div>
-                                                </div>
+                                                </form>
                                           </div>
                                           <!--TABLERADIO-->
                                           <div class="editor_layout" id="tableradio_layout_editor" style="display:none">
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Texto:</label>
-                                                      <div class="formRight">
-                                                            <input  maxlength="150" class="span tableradio_input" id="tableradio_edit" type="text" placeholder="Texto exemplo" />
+                                                <form class="form_edit_element">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Texto:</label>
+                                                            <div class="formRight">
+                                                                  <input  maxlength="150" class="span tableradio_input validate[required]" id="tableradio_edit" name="tableradio_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
                                                       </div>
-                                                </div>
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Titulos:</label>
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Titulos:</label>
 
-                                                      <div class="formRight">
-                                                            <textarea class="values_edit_textarea" id="tableradio_th_textarea" maxlength="250" rows="4" cols="50"></textarea>
+                                                            <div class="formRight">
+                                                                  <textarea class="values_edit_textarea validate[required]" id="tableradio_th_textarea" name="tableradio_th_textarea" maxlength="250" rows="4" cols="50"></textarea>
+                                                            </div>
                                                       </div>
-                                                </div>
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Perguntas:</label>
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Perguntas:</label>
 
-                                                      <div class="formRight">
-                                                            <textarea class="values_edit_textarea" id="tableradio_td_textarea" rows="4" cols="50"></textarea>
+                                                            <div class="formRight">
+                                                                  <textarea class="values_edit_textarea validate[required]" id="tableradio_td_textarea" name="tableradio_td_textarea" rows="4" cols="50"></textarea>
+                                                            </div>
                                                       </div>
-                                                </div>
+                                                </form>
                                           </div>
                                           <!--TABLEINPUT-->
                                           <div class="editor_layout" id="tableinput_layout_editor" style="display:none">
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Texto:</label>
-                                                      <div class="formRight">
-                                                            <input  maxlength="150" class="span tableinput_input" id="tableinput_edit" type="text" placeholder="Texto exemplo" />
+                                                <form class="form_edit_element">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Texto:</label>
+                                                            <div class="formRight">
+                                                                  <input  maxlength="150" class="span tableinput_input validate[required]" id="tableinput_edit" name="tableinput_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
                                                       </div>
-                                                </div>
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Titulos:</label>
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Titulos:</label>
 
-                                                      <div class="formRight">
-                                                            <textarea class="values_edit_textarea" id="tableinput_th_textarea" maxlength="250" rows="4" cols="50"></textarea>
+                                                            <div class="formRight">
+                                                                  <textarea class="values_edit_textarea validate[required]" id="tableinput_th_textarea" name="tableinput_th_textarea" maxlength="250" rows="4" cols="50"></textarea>
+                                                            </div>
                                                       </div>
-                                                </div>
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Perguntas:</label>
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Perguntas:</label>
 
-                                                      <div class="formRight">
-                                                            <textarea class="values_edit_textarea" id="tableinput_td_textarea" rows="4" cols="50"></textarea>
+                                                            <div class="formRight">
+                                                                  <textarea class="values_edit_textarea validate[required]" id="tableinput_td_textarea" name="tableinput_td_textarea" rows="4" cols="50"></textarea>
+                                                            </div>
                                                       </div>
-                                                </div>
+                                                </form>
                                           </div>
 
 
                                           <!--DATEPICKER-->
                                           <div class="editor_layout" id="datepicker_layout_editor" style="display:none">
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Texto:</label>
+                                                <form class="form_edit_element">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Texto:</label>
 
-                                                      <div class="formRight">
-                                                            <input  maxlength="250" class="span datepicker_input" id="datepicker_edit" type="text" placeholder="Texto exemplo" />
+                                                            <div class="formRight">
+                                                                  <input  maxlength="250" class="span datepicker_input validate[required]" id="datepicker_edit" name="datepicker_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
                                                       </div>
-                                                </div>
 
-
+                                                </form>
 
                                                 <div class="formRow" >
                                                       <label class="label label-inverse" >Formatação</label>
@@ -640,57 +634,63 @@
 
                                           <!--SCHEDULER-->
                                           <div class="editor_layout" id="scheduler_layout_editor" style="display:none">
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Texto:</label>
-                                                      <div class="formRight">
-                                                            <input  maxlength="150" class="scheduler_input" id="scheduler_edit" type="text" placeholder="Texto exemplo" />
+                                                <form class="form_edit_element">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Texto:</label>
+                                                            <div class="formRight">
+                                                                  <input  maxlength="150" class="scheduler_input validate[required]" id="scheduler_edit" name="scheduler_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
                                                       </div>
-                                                </div>
 
 
-                                                <div class="formRow">
-                                                      <label class="label label-inverse" >Calendários:</label>
-                                                      <div class="formRight">
-                                                            <select id="scheduler_edit_select" class="chosen-select"  multiple data-placeholder="Selecione um/vários calendários"   ></select>
-                                                      </div>
-                                                      <div class="formRight">
-                                                            <input   type="checkbox" id="checkbox_scheduler_all" name="cc" value="1">
-                                                            <label class="checkbox inline" for="checkbox_scheduler_all"><span></span>Selecionar todos</label>
-                                                      </div>
-                                                </div>  
-                                                <div class="formRow">
-                                                      <label class="label label-inverse" >Marcações max.</label>
-                                                      <div class="formRight">
-                                                            <select id="scheduler_edit_marcação" >
-                                                                  <option value="1">1</option>
-                                                                  <option value="2">2</option>
-                                                                  <option value="3">3</option>
-                                                                  <option value="4">4</option>
-                                                                  <option value="5">5</option>
-                                                            </select>
+                                                      <div class="formRow">
+                                                            <label class="label label-inverse" >Calendários:</label>
+                                                            <div class="formRight">
+                                                                  <select id="scheduler_edit_select" class="chosen-select"  multiple data-placeholder="Selecione um/vários calendários"   ></select>
+                                                            </div>
+                                                            <div class="formRight">
+                                                                  <input   type="checkbox" id="checkbox_scheduler_all" name="cc" value="1">
+                                                                  <label class="checkbox inline" for="checkbox_scheduler_all"><span></span>Selecionar todos</label>
+                                                            </div>
                                                       </div>  
-                                                </div>
+                                                      <div class="formRow">
+                                                            <label class="label label-inverse" >Marcações max.</label>
+                                                            <div class="formRight">
+                                                                  <select id="scheduler_edit_marcação" >
+                                                                        <option value="1">1</option>
+                                                                        <option value="2">2</option>
+                                                                        <option value="3">3</option>
+                                                                        <option value="4">4</option>
+                                                                        <option value="5">5</option>
+                                                                  </select>
+                                                            </div>  
+                                                      </div>
+                                                </form>
                                           </div>
                                           <!--Textarea-->
                                           <div class="editor_layout" id="textarea_layout_editor" style="display:none">
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Titulo</label>
+                                                <form class="form_edit_element">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Titulo</label>
 
-                                                      <div class="formRight">
-                                                            <input  maxlength="150" class="span textarea_input" id="textarea_edit" type="text" placeholder="Texto exemplo" />
+                                                            <div class="formRight">
+                                                                  <input  maxlength="150" class="span textarea_input validate[required]" id="textarea_edit" name="textarea_edit" type="text" placeholder="Texto exemplo" />
+                                                            </div>
                                                       </div>
-                                                </div>
+                                                </form>
                                           </div>
 
                                           <!--ipl-->
                                           <div class="editor_layout" id="ipl_layout_editor" style="display:none">
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >titulo:</label>
+                                                <form class="form_edit_element">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >titulo:</label>
 
-                                                      <div class="formRight">
-                                                            <input  maxlength="250" class="span ipl_input" id="ipl_edit" type="text" placeholder="Titulo" />
+                                                            <div class="formRight">
+                                                                  <input  maxlength="250" class="span ipl_input validate[required]" id="ipl_edit" name="ipl_edit" type="text" placeholder="Titulo" />
+                                                            </div>
                                                       </div>
-                                                </div>
+                                                </form>
                                                 <div class="formRow" id="ipl_div" >
                                                       <label class="label label-inverse" >Upload de ficheiros</label>
                                                       <div class="formRight">
@@ -739,13 +739,15 @@
 
                                           <!--button-->
                                           <div class="editor_layout" id="button_layout_editor" style="display:none">
-                                                <div class="formRow" >
-                                                      <label class="label label-inverse" >Texto</label>
+                                                <form class="form_edit_element">
+                                                      <div class="formRow" >
+                                                            <label class="label label-inverse" >Texto</label>
 
-                                                      <div class="formRight">
-                                                            <input  maxlength="50" class="span button_input" id="button_edit" type="text" placeholder="Texto do Botão" />
+                                                            <div class="formRight">
+                                                                  <input  maxlength="50" class="span button_input validate[required]" id="button_edit" name="button_edit" type="text" placeholder="Texto do Botão" />
+                                                            </div>
                                                       </div>
-                                                </div>
+                                                </form>
                                           </div>
 
 
