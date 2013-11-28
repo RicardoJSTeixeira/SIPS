@@ -1065,7 +1065,7 @@ function isValidDebit(field, rules, i, options) {
       if (!isValidCard(cardNumber))
             return "Nº de Cartão de Débito invalido";
 }
- $(document).on("click",".botao",function()
+ $(document).on("click",".botao",function(e)
             {
                  
                   e.preventDefault();
