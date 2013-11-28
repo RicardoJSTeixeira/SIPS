@@ -1,5 +1,4 @@
 
-
 var render = function(script_zone, file_path, script_id, lead_id, unique_id, user_id, campaign_id, admin_review)
 {
 
@@ -59,7 +58,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                   if (select.find("option:selected").val() > 0)
                   {
                         console.log($(this).prev("select").data());
-                        var url = '../reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + user_id + '&lead=' + lead_id + '&id_elemento=' + $(this).prev("select").data("element_tag");
+                        var url = '/sips-admin/reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + user_id + '&lead=' + lead_id + '&id_elemento=' + $(this).prev("select").data("element_tag");
                         window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
                   }
             });
