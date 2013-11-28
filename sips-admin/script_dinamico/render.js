@@ -902,7 +902,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
       }
 
 //FORM MANIPULATION
-      $("#script_form").on("submit", function(e)
+        $(document).on("submit", "#script_form", function(e)
       {
 
             e.preventDefault();
