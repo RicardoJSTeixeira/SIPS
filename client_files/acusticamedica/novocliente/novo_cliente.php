@@ -285,6 +285,7 @@ if ($_POST['nc_flag'] == "nc_post") {
                                         <option value="C/LOL"> Loulé </option>
                                         <option value="C/LOR"> Loures </option>
                                         <option value="C/LSA"> Lousã </option>
+                                        <option value="C/ILH"> Ilhavo </option>
                                         <option value="C/MFA"> Mafra </option>
                                         <option value="C/MAI"> Maia </option>
                                         <option value="C/MGL"> Mangualde </option>
@@ -372,6 +373,7 @@ if ($_POST['nc_flag'] == "nc_post") {
                                         <option value="B/MTJ"> Consultório Montijo </option>
                                         <option value="B/MTS"> Consultório Matosinhos </option>
                                         <option value="B/ODI"> Consultório Odivelas </option>
+                                        <option value="B/BROE"> Consultório Oeiras </option> 
                                         <option value="B/OMT"> Consultório Lisboa - Avenidas Novas </option>
                                         <option value="B/OUR"> Consultório Lisboa - Campo de Ourique </option>
                                         <option value="B/PEN"> Consultório Penafiel </option>

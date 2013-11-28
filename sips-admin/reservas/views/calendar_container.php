@@ -14,15 +14,14 @@
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
 
         <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
-        <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="/bootstrap/js/moment.min.js"></script>
         <script type="text/javascript" src="/bootstrap/js/moment.langs.min.js"></script>
         <script type="text/javascript" src="/jquery/jqueryUI/jquery-ui-1.9.0.custom.min.js"></script>
-        <script type="text/javascript" src="/jquery/jqueryUI/plugins/datetimepicker.js"></script>
-        <script type="text/javascript" src="/jquery/jqueryUI/language/pt-pt.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="/jquery/jsdatatable/plugins/plugin.fnAjaxReload.js"></script>
-        <script type="text/javascript" src="/ini/SeamlessLoop.js"></script>
-        <script type="text/javascript" src="/jquery/scrollto/jquery.scrollTo-1.4.3.1-min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt.js"></script>
+
 
         <?php
         require ('../func/reserve_utils.php');
@@ -37,6 +36,12 @@
             $id_lead = $_GET["lead"];
         } else {
             $id_lead = 0;
+        }
+
+        if (isset($_GET["id_elemento"])) {
+            $id_elemento = $_GET["id_elemento"];
+        } else {
+            $id_elemento = 0;
         }
 
         if (isset($_GET["sch"])) {
@@ -394,7 +399,8 @@
                         bloco_res,
                         rsc_id = <?= (isset($_GET["rsc"]) ? $_GET["rsc"] : 0) ?>,
                         b,
-                        time_block =<?= $resources[0]["blocks"] ?>;
+                        time_block =<?= $resources[0]["blocks"] ?>,
+                        id_elemento =<?= $id_elemento ?>;
 
                 function ChangeDate(data) {
                     RedirectToSelf("dt", /dt=\d{4}-\d{2}-\d{2}/i, "dt=" + data, slot2change);
@@ -524,6 +530,13 @@
                                 return false;
                             }
 <?php } ?>
+                        if (id_elemento) {
+                            var elemento = opener.window.$("#" + id_elemento + " select");
+                            if (elemento.data().live_marc === elemento.data().max_marc) {
+                                showDialog("Já completou o Maximo de marcações.");
+                                return false;
+                            }
+                        }
                         if (slot2change != 0) {
                             return false;
                         }
@@ -547,6 +560,10 @@
                                     $("#MINUTE_marchora", opener.document).val($('.beg', bloco).val().substr(14, 2));
                                     opener.marcado = true;
 <?php } ?>
+                                if (id_elemento) {
+                                    var elemento = opener.window.$("#" + id_elemento + " select");
+                                    elemento.data().live_marc++;
+                                }
                                 if (lead) {
                                     close();
                                 }
@@ -580,6 +597,10 @@
 <?php if (isset($_GET["cp"]) OR isset($_GET["ref"])) { ?>
                                     opener.marcado = false;
 <?php } ?>
+                                if (id_elemento) {
+                                    var elemento = opener.window.$("#" + id_elemento + " select");
+                                    elemento.data().live_marc--;
+                                }
                                 $("#loader").hide();
                             } else if (data.sucess == "0") {
                                 $("#loader").hide();
