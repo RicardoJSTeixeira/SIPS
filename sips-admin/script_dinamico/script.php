@@ -450,16 +450,16 @@ class script {
 
 // DELETE
     public function delete_page($pos, $id_script, $id_pagina) {
-          $js = array();
-          $query = "update script_dinamico_pages set pos=pos-1 where pos>:pos and id_script=:id_script ";
-          $stmt = $this->db->prepare($query);
-          $stmt->execute(array(":pos" => $pos, ":id_script" => $id_script));
+        $js = array();
+        $query = "update script_dinamico_pages set pos=pos-1 where pos>:pos and id_script=:id_script ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array(":pos" => $pos, ":id_script" => $id_script));
 
-          $query = "delete from script_dinamico_pages  where id=:id_pagina";
-          $stmt = $this->db->prepare($query);
-          $stmt->execute(array(":id_pagina" => $id_pagina));
-         
-          
+        $query = "delete from script_dinamico_pages  where id=:id_pagina";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array(":id_pagina" => $id_pagina));
+
+
         $query = "select sd.tag as tag from script_dinsd inner join script_rules sr on sd.tag=sr.tag_trigger where sd.id_page=:id_pagina";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_pagina" => $id_pagina));
@@ -538,24 +538,28 @@ class script {
 
             $query = "INSERT INTO vicidial_log (`uniqueid`, `lead_id`, `list_id`, `campaign_id`, `call_date`, `start_epoch`, `end_epoch`, `length_in_sec`, `status`, `phone_code`, `phone_number`, `user`, `comments`, `processed`, `user_group`, `term_reason`, `alt_dial`)
                 select :unique_id, `lead_id`, `list_id`, `campaign_id`, :date, NULL, NULL, `length_in_sec`, 'ESA', `phone_code`, `phone_number`, `user`, 'edit', `processed`, `user_group`, `term_reason`, `alt_dial` from vicidial_log where lead_id=:lead_id order by uniqueid desc limit 1";
-
             $stmt = $this->db->prepare($query);
             $stmt->execute(array(":unique_id" => $unique_id, ":date" => date("Y-m-d H:i:s"), ":lead_id" => $lead_id));
+
+            $query = "Update vicidial_list set status='ESA' where lead_id=:lead_id ";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute(array(":lead_id" => $lead_id));
         }
 
         foreach ($results as $row) {
             if ($row['value'] != "") {
                 $temp = explode(",", $row['name']);
-                if (isset($temp[2]))
-                    $sql[] = "(null,'" . date('Y-m-d H:i:s') . "',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]','" . mysql_real_escape_string($row['value']) . "','$temp[2];$temp[1]')";
-                else
-                    $sql[] = "(null,'" . date('Y-m-d H:i:s') . "',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]', '" . mysql_real_escape_string($row['value']) . "', '$temp[1]')";
+                if (isset($temp[2])) {
+                    $sql[] = "('" . date('Y-m-d H:i:s') . "',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]','" . mysql_real_escape_string($row['value']) . "','$temp[2];$temp[1]')";
+                } else {
+                    $sql[] = "('" . date('Y-m-d H:i:s') . "',$id_script,'$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]', '" . mysql_real_escape_string($row['value']) . "', '$temp[1]')";
+                }
             }
         }
-        $query = "INSERT INTO `script_result`(`id`,date,id_script,user_id,unique_id,campaign_id,lead_id, `tag_elemento`, `valor`,param_1) VALUES  " . implode(',', $sql);
+        $query = "INSERT INTO `script_result`(date,id_script,user_id,unique_id,campaign_id,lead_id, `tag_elemento`, `valor`,param_1) VALUES  " . implode(',', $sql);
         $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        return 1;
+        return $stmt->execute() . $query;
+         
     }
 
 }
