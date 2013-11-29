@@ -161,8 +161,11 @@ switch ($action) {
 
         $query = "SELECT list_id from vicidial_lists where campaign_id='$campaign_id' and active='Y'";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $row = mysql_fetch_assoc($query);
-        $list_id = $row["list_id"];
+           while ($row = mysql_fetch_assoc($query)) {
+               
+                $list_id[] = $row["list_id"];
+           }
+       
 
       
 
@@ -215,9 +218,9 @@ switch ($action) {
 
 
         if ($only_with_result == "true")
-            $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a right join script_result b on a.lead_id=b.lead_id where list_id='$list_id' ";
+            $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a right join script_result b on a.lead_id=b.lead_id where list_id in ('" . join("','", $list_id) . "')  ";
         else
-            $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a where list_id='$list_id' ";
+            $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a where list_id in ('" . join("','", $list_id) . "')  ";
 
         // DADOS DA LEAD
      
@@ -244,7 +247,7 @@ switch ($action) {
           left join vicidial_log vlg on vlg.uniqueid=sr.unique_id
           left join vicidial_campaign_statuses vcs on vcs.status=vlg.status
           left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script
-          where sr.id_script='$id_script' and sr.campaign_id = '$campaign_id'  $date_filter   and vl.list_id='$list_id' and sr.tag_elemento in ('" . join("','", $tags) . "') order by sr.lead_id ";
+          where sr.id_script='$id_script' and sr.campaign_id = '$campaign_id'  $date_filter   and vl.list_id in ('" . join("','", $list_id) . "') and sr.tag_elemento in ('" . join("','", $tags) . "') order by sr.lead_id ";
 
         $result = mysql_query($query, $link) or die(mysql_error());
         if (mysql_num_rows($result) < 1) {
