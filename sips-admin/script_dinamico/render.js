@@ -485,10 +485,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
                     element.find(".label_geral")[0].innerHTML = info.texto;
 
-                    element.find(".scheduler_select").data("element_tag", info.tag)
-                            .data("max_marc", info.max_length)
-                            .data("obrig_marc", info.param1).data("live_marc", 0);
-
+                   
                     element.find(".scheduler_select").addClass("validate[funcCall[scheduler_verif]]");
                     $.post(file_path + "requests.php", {action: "get_schedule_by_id", ids: info.values_text.join(",")},
                     function(info3)
@@ -497,7 +494,11 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             select.append("<option value=" + this.id + ">" + this.text + "</option>");
                         });
                         select.val("").trigger("liszt:updated");
+ 
                     }, "json");
+ element.find(".scheduler_select").data("element_tag", info.tag)
+                            .data("max_marc", info.max_length)
+                            .data("obrig_marc", info.param1).data("live_marc", 0);
 
 
                     break;
