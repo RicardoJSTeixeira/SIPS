@@ -492,7 +492,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                               }, "json");
                               element.find(".label_geral")[0].innerHTML = info.texto;
 
-                              element.find(".scheduler_select").addClass("validate[funcCall[scheduler_verif]]")
+                              select.addClass("validate[funcCall[scheduler_verif]]")
                                       .data("element_tag", info.tag)
                                       .data("max_marc", info.max_length)
                                       .data("obrig_marc", info.param1).data("live_marc", 0);
