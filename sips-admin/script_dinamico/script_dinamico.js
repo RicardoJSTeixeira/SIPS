@@ -13,7 +13,7 @@ var regex_text = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔº�
 var regex_split = /\n/g;
 var list_ui;
 var list_item;
-//mostra/esconde os elementos associados ao edit
+//mostra/esconde os elementos associados ao edit               
 function editor_toggle(tipo)
 {
       $(".item").removeClass("helperPick");
