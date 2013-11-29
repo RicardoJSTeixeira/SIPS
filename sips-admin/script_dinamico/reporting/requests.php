@@ -46,7 +46,7 @@ switch ($action) {
 
     case "get_template":
 
-        //Se 0 vai buscar defaults
+//Se 0 vai buscar defaults
         $query = "SELECT id,campaign,template from report_order where campaign='$campaign_id'";
         $query = mysql_query($query, $link) or die(mysql_error());
 
@@ -148,7 +148,7 @@ switch ($action) {
 
         $script_values = array();
         $field_data = json_decode($field_data);
-        //GET ID SCRIPT
+//GET ID SCRIPT
         $query = "SELECT id_script from script_assoc where id_camp_linha='$campaign_id'";
         $query = mysql_query($query, $link) or die(mysql_error());
         $row = mysql_fetch_assoc($query);
@@ -159,15 +159,17 @@ switch ($action) {
             $date_filter = "";
 
 
-        $query = "SELECT list_id from vicidial_lists where campaign_id='$campaign_id' and active='Y'";
-        $query = mysql_query($query, $link) or die(mysql_error());
-           while ($row = mysql_fetch_assoc($query)) {
-               
-                $list_id[] = $row["list_id"];
-           }
-       
+        if (isset($list_id)) {
+            $list_id = str_split($list_id);
+        } else {
+            $query = "SELECT list_id from vicidial_lists where campaign_id='$campaign_id' and active='Y'";
+            $query = mysql_query($query, $link) or die(mysql_error());
+            while ($row = mysql_fetch_assoc($query)) {
 
-      
+                $list_id[] = $row["list_id"];
+            }
+        }
+
 
         $titulos = array();
         $data_row = array();
@@ -217,27 +219,41 @@ switch ($action) {
 
 
 
-        if ($only_with_result == "true")
-            $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a right join script_result b on a.lead_id=b.lead_id where list_id in ('" . join("','", $list_id) . "')  ";
-        else
-            $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a where list_id in ('" . join("','", $list_id) . "')  ";
+        if ($only_with_result == "true") {
 
-        // DADOS DA LEAD
-     
+            foreach ($list_id as $value) {
+                $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a right join script_result sr on a.lead_id=sr.lead_id where list_id ='$value' $date_filter";
+                $result = mysql_query($query, $link) or die(mysql_error());
+                while ($row3 = mysql_fetch_assoc($result)) {
 
-        $result = mysql_query($query, $link) or die(mysql_error());
-
-        while ($row3 = mysql_fetch_assoc($result)) {
-            $lead_tmp = $row3["lead_id"];
-            $temp_d = $data_row;
-            unset($row3["lead_id"]);
-            foreach ($row3 as $key => $value) {
-                $temp_d[$key] = $value;
+                    $lead_tmp = $row3["lead_id"];
+                    $temp_d = $data_row;
+                    unset($row3["lead_id"]);
+                    foreach ($row3 as $key => $value) {
+                        $temp_d[$key] = $value;
+                    }
+                    $final_row[$lead_tmp] = $temp_d;
+                }
             }
-            $final_row[$lead_tmp] = $temp_d;
+        } else {
+            foreach ($list_id as $value) {
+                $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a where list_id ='$value'";
+                $result = mysql_query($query, $link) or die(mysql_error());
+                while ($row3 = mysql_fetch_assoc($result)) {
+                    $lead_tmp = $row3["lead_id"];
+                    $temp_d = $data_row;
+                    unset($row3["lead_id"]);
+                    foreach ($row3 as $key => $value) {
+                        $temp_d[$key] = $value;
+                    }
+                    $final_row[$lead_tmp] = $temp_d;
+                }
+            }
         }
 
 
+
+        // DADOS DA LEAD
         //DADOS DO SCRIPT
         $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name,  vc.campaign_name, sr.lead_id,sr.param_1,vcs.status_name, sr.tag_elemento,sr.valor,sd.param1,sd.type FROM `script_result` sr
           left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id
@@ -294,3 +310,4 @@ switch ($action) {
         break;
 }
 
+    

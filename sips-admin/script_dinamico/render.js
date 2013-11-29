@@ -602,7 +602,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                   case "goto":
                         if (admin_review != "1")
                         {
-                              if (data.tipo_elemento == "button")
+                              if (data.tipo_elemento == "button" || data.tipo_elemento=="datepicker")
                               {
                                     $(".pag_div").hide();
                                     $("#script_div #" + data.tag_target + "pag").show();
