@@ -222,7 +222,7 @@ switch ($action) {
         if ($only_with_result == "true") {
 
             foreach ($list_id as $value) {
-                $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a right join script_result sr on a.lead_id=sr.lead_id where list_id ='$value' $date_filter";
+                $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a left join script_result sr on a.lead_id=sr.lead_id where list_id ='$value' $date_filter";
                 $result = mysql_query($query, $link) or die(mysql_error());
                 while ($row3 = mysql_fetch_assoc($result)) {
 
