@@ -164,7 +164,7 @@ switch ($action) {
         $row = mysql_fetch_assoc($query);
         $list_id = $row["list_id"];
 
-        // $contact_filter = "left join `script_result` sr on a.lead_id=sr.lead_id where id_script='$id_script' and  sr.campaign_id = '$campaign_id' $date_filter";
+      
 
         $titulos = array();
         $data_row = array();
