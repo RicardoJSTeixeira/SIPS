@@ -245,7 +245,7 @@ switch ($action) {
           left join vicidial_campaign_statuses vcs on vcs.status=vlg.status
           left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script
           where sr.id_script='$id_script' and sr.campaign_id = '$campaign_id'  $date_filter   and vl.list_id='$list_id' and sr.tag_elemento in ('" . join("','", $tags) . "') order by sr.lead_id ";
-echo($query);
+
         $result = mysql_query($query, $link) or die(mysql_error());
         if (mysql_num_rows($result) < 1) {
             echo("Sem resultados");
