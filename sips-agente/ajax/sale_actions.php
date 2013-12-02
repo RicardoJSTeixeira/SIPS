@@ -1,12 +1,53 @@
 <?php
 
 if (isset($_GET['client'])) { $client = $_GET['client']; } else { $client = $_POST['client']; }
-
+if (isset($_GET['campaign_id']))  { $campaign_id = $_GET['campaign_id']; } else { $campaign_id = $_POST['campaign_id']; }
 
 switch ($client) { 
     case 'connecta' : {
-            connectaPostCalendar();
+            switch ($campaign_id) {
+                case 'W00003' : connectaPostCalendar(); break;
+                case 'W00004' : connectaMensageiros(); break;
+            }
+            break;
         }
+}
+
+function connectaMensageiros() {
+    if (isset($_GET['lead_id'])) { $lead_id = $_GET['lead_id']; } else { $lead_id = $_POST['lead_id']; }
+    if (isset($_GET['uniqueid'])) { $unique_id = $_GET['uniqueid']; } else { $unique_id = $_POST['uniqueid']; }
+    if (isset($_GET['user'])) { $user = $_GET['user']; } else { $user = $_POST['user']; }
+    
+    $link = mysql_connect("172.16.7.25:3306", "sipsadmin", "sipsps2012");
+    mysql_select_db("asterisk");
+    $query = "SELECT tag_elemento,valor FROM `script_result` WHERE tag_elemento IN ('159','153', '155', '160', '156', '157', '154', '161', '165') and unique_id = '$unique_id' order by tag_elemento ASC";
+    
+    $query = mysql_query($query, $link) or die(mysql_error());
+    
+    for ($i = 0; $i < mysql_num_rows($query); $i++) {
+        $row = mysql_fetch_row($query);
+        $results[$row[0]] = $row[1];
+    }
+    
+   // $lead_id;
+   // $user;
+    $data_visita = $row[159];
+    $hora_visita = '09h-18h';
+    $nome = $row[153];
+    $morada = $row[155];
+    $cp = $row[160];
+    $localidade = $row[156];
+    $concelho = $row[157];
+    $telefone = $row[154];
+    $entrega_docs = $row[161];
+    $observacoes = $row[165];
+    
+    $query_final = "exec clientes.InserirVisitaMensageiros $lead_id , '$user', '$data_visita'  , '$hora_visita'  , '$nome', '$morada', '$cp'  , '$localidade'  , '$concelho'  , '$telefone'  , '$entrega_docs'  , '$observacoes'";
+    echo $query_final;
+    $link = mssql_connect('172.16.5.2', 'gocontact', '') or die(mssql_get_last_message());
+    $sql = @mssql_query($query_final, $link) or die(mssql_get_last_message());
+    mssql_get_last_message();
+    
 }
     
 function connectaPostCalendar() {
@@ -64,7 +105,7 @@ function connectaPostCalendar() {
     $distrito = utf8_decode($row[0]);
     //$query_final = "exec clientes.InserirVisita 'TESTE' , 1, 'TESTE'  , 'TEST'  , '25/01/2014', '10:00', 'TESTE'  , 'TESTE'  , '1234-123'  , 'TESTE'  , 'Lisboa'  , '918099390'  , '918099390'  , 34, 'CO'  , 'Cartão GOLD' , 1, '123456789', 'S' , 'Lisboa', 'teste de marcação por sp'";
     //exec clientes.InserirVisita 'Alcobaça' , 168029, 'barc1'  , 'barc1'  , '11/11/2013', '10:00', 'asdasdas'  , 'asdasdasd'  , '1234-123'  , 'asdasd'  , 'Alcobaça'  , '1231231'  , 'Gold'  , 12, 'CO'  , '229722210' , S, '', '' , 'Leiria', '1'
-      $query_final = "exec clientes.InserirVisita '$origem' , $lead_id, '$user'  , '$user'  , '$data_visita', '$hora_visita', '$nome_cliente'  , '$morada'  , '$cod_postal'  , '$localidade'  , '$concelho'  , '$telefone'  , '$telefone_alternativo'  , $idade, '$tipo_vencimento'  , '$tipo_cartao' , $num_cartoes, '$nif', '$tem_credito' , '$distrito', '$observações'";
+     $query_final = "exec clientes.InserirVisita '$origem' , $lead_id, '$user'  , '$user'  , '$data_visita', '$hora_visita', '$nome_cliente'  , '$morada'  , '$cod_postal'  , '$localidade'  , '$concelho'  , '$telefone'  , '$telefone_alternativo'  , $idade, '$tipo_vencimento'  , '$tipo_cartao' , $num_cartoes, '$nif', '$tem_credito' , '$distrito', '$observações'";
      echo $query_final;
      $link = mssql_connect('172.16.5.2', 'gocontact', '') or die(mssql_get_last_message());
      $sql = @mssql_query($query_final, $link) or die(mssql_get_last_message());
