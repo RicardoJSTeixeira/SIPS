@@ -5018,7 +5018,7 @@ while ($MM_scripts > $h) {
             <input type="hidden" name="inert_button" id="inert_button" onClick="return false;" />
         </form>
 
-        <div style="margin-left:-200px;z-index:<?= ++$zi ?>; overflow-y:auto" id="AlertBox" class="grid-agent" >
+        <div style="margin-left:-200px;z-index:20000; overflow-y:auto" id="AlertBox" class="grid-agent" >
             <div class="modal-header box_title label-warning">
                 <button class="close" type="button" onClick="hideDiv('AlertBox');">×</button>
                 <h3>Alerta!</h3>
