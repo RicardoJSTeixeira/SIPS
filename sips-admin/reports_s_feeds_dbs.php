@@ -20,7 +20,7 @@ $query = "	SELECT 	list_id, list_name
 $query = mysql_query($query, $link)or die(mysql_error());
 
 
-while ($row1 = mysql_fetch_assoc($query)) {
+while ($row = mysql_fetch_assoc($query)) {
     $list_options .= "<option value=$row[list_id]>$row[list_name]</option>";
 }
 ##################################################

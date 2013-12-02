@@ -64,7 +64,9 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
 			status_display_fields,
 			use_auto_hopper,
 			auto_trim_hopper,
-                                                                  my_callback_option
+                        my_callback_option,
+                        use_internal_dnc,
+                        use_campaign_dnc
 			)
 			VALUES      (
 			'$js[new_campaign_id]',
@@ -99,7 +101,9 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
 			'NONE',
 			'Y',
 			'Y',
-                                                                    'CHECKED'); ";
+                        'CHECKED',
+			'Y',
+			'Y');";
         mysql_query($query, $link) or die(mysql_error());
 
 
