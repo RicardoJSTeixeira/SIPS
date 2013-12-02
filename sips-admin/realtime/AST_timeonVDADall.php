@@ -2993,7 +2993,7 @@ echo "
                         </tr>
                         <tr>
                             <td id=icon16><img src='/images/icons/blackberry_16.png' /></td><td style=text-align:left>Uteis / Hora:  $uteis_hour </td> 
-                            <td id=icon16><img src='/images/icons/blackberry_16.png' /></td><td style=text-align:left>Agendamentos:  $agendamentos </td>     
+                            <td id=icon16><img src='/images/icons/blackberry_16.png' /></td><td style=text-align:left>Call-Backs:  $agendamentos </td>     
                         </tr>
 			
                         </table></div>
