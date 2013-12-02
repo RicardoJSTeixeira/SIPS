@@ -25,7 +25,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         });
     };
 
-    $.get(file_path + "items.html", function(data) {
+    $.get(file_path + "items/items.html", function(data) {
         script_zone.append($("<div>").attr("id", "script_dummie").css("display", "none"));
         script_zone.append($("<form>").attr("id", "script_form").addClass("formular"));
         script_zone.find("#script_form").append($("<div>").attr("id", "script_div").css("width", "100%").css("margin", "0 auto"));
@@ -86,10 +86,11 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
     function starter(callback)
     {
-        if (admin_review !== "1")
+
+        if (admin_review !== 1)
         {
-            $("#script_div .pag_div").hide().first().show();
-            $("#admin_submit").hide();
+            $("#script_form .pag_div").hide().first().show();
+            $("#script_form #admin_submit").hide();
             rules(function() {
                 tags(function() {
                     me.populate_script(function() {
@@ -100,12 +101,13 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         }
         else
         {
-            $(".pagination_class").remove();
-            $("#admin_submit").show();
-            me.populate_script(function() {
-                $("#script_form").validationEngine();
-            });
+            
+            $("#script_form .pagination_class").remove();
+             $("#script_form .botao").remove();
+            $("#script_form #admin_submit").show();
+            me.populate_script();
             $(".item").show();
+
         }
         if (typeof callback === "function")
         {
@@ -485,7 +487,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
                     element.find(".label_geral")[0].innerHTML = info.texto;
 
-                   
+
                     element.find(".scheduler_select").addClass("validate[funcCall[scheduler_verif]]");
                     $.post(file_path + "requests.php", {action: "get_schedule_by_id", ids: info.values_text.join(",")},
                     function(info3)
@@ -494,9 +496,9 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             select.append("<option value=" + this.id + ">" + this.text + "</option>");
                         });
                         select.val("").trigger("liszt:updated");
- 
+
                     }, "json");
- element.find(".scheduler_select").data("element_tag", info.tag)
+                    element.find(".scheduler_select").data("element_tag", info.tag)
                             .data("max_marc", info.max_length)
                             .data("obrig_marc", info.param1).data("live_marc", 0);
 
