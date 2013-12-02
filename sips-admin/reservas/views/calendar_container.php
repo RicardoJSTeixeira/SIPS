@@ -212,7 +212,7 @@
         <div class='grid' >
             <div class="grid-title">
                 <div class="pull-left">Calendário</div>
-                <div class="pull-right"><button class="btn btn-success <?= (isset($_GET["rsc"]) ? "" : "hide") ?>" id="exp-btn"><i class="icon-plus"></i>Excepção</button></div>
+                <div class="pull-right"><button class="btn btn-success" id="exp-btn"><i class="icon-plus"></i>Excepção</button></div>
             </div>
 
             <?php
@@ -357,6 +357,14 @@
                     <label for="exp-marcData">Data</label>
                     <input type="text" name="exp-marcData" id="exp-marcData" value="" required class="text ui-widget-content ui-corner-all" />
 
+                    <select id="exp-rsc" required>
+                        <option value="">Escolha o recurso</option>
+                        <?php
+                        for ($index1 = 0; $index1 < count($resources); $index1++) {
+                                echo "<option value='" . $resources[$index1]["id_resource"] . "'>" . $resources[$index1]["display_text"] . "</option>";
+                            }
+                        ?>
+                    </select>
                     <select id="exp-rtype" required>
                         <option value="">Escolha um tipo de reserva</option>
                         <?php
@@ -690,9 +698,7 @@
 
                 var excepcao = {
                     btn: $("#exp-btn"),
-                    dialog: $("#dialog-form-exp"),
-                    marcar: function() {
-                    }
+                    dialog: $("#dialog-form-exp")
                 };
 
 
@@ -789,7 +795,7 @@
                             $.post("../ajax/reserva_excepcao.php", {
                                 start: excepcao.dialog.find("#exp-marcData").val() + ":00",
                                 end: moment(excepcao.dialog.find("#exp-marcData").val() + ":00").add('minutes', time_block - 1).format("YYYY-MM-DD HH:mm:ss"),
-                                resource: rsc_id,
+                                resource: excepcao.dialog.find("#exp-rsc").val(),
                                 user: user,
                                 lead: lead,
                                 rtype: excepcao.dialog.find("#exp-rtype").val(),
@@ -797,6 +803,10 @@
                             function(data) {
                                 alert(data.message);
                                 if (data.success) {
+                                    if (id_elemento) {
+                                    var elemento = opener.window.$("#" + id_elemento + " select");
+                                    elemento.data().live_marc++;
+                                }
                                     if (lead) {
                                         close();
                                     }
