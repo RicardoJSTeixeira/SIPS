@@ -18,7 +18,7 @@ $query = mysql_query($query, $link) or die(mysql_error());
 
 $num_camps = mysql_num_rows($query);
 
-while ($row1 = mysql_fetch_assoc($query)) {
+while ($row = mysql_fetch_assoc($query)) {
 	$camp_options .= "<option value=$row[campaign_id]>$row[campaign_name]</option>";
 }
 

@@ -17,7 +17,7 @@ $query = "	SELECT	campaign_name, campaign_id
 			FROM 	vicidial_campaigns $where;";
 $query=  mysql_query($query)or die(mysql_error());
 
-while ($row1 = mysql_fetch_assoc($query)) {
+while ($row = mysql_fetch_assoc($query)) {
     $camp_options .= "<option value=$row[campaign_id]>$row[campaign_name]</option>";
 }
 ?>
