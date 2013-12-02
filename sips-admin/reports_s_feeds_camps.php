@@ -13,14 +13,12 @@ $where=" WHERE campaign_id in('".  implode("','", $user->allowed_campaigns)."')"
 
 $today = date("o-m-d");
 ##################################################
-$query = "	SELECT 	campaign_id, campaign_name 
-			FROM 	vicidial_campaigns $where";
+$query = "SELECT campaign_id, campaign_name FROM vicidial_campaigns $where";
 $query = mysql_query($query, $link) or die(mysql_error());
 
 $num_camps = mysql_num_rows($query);
 
 while ($row1 = mysql_fetch_assoc($query)) {
-	$row = mysql_fetch_assoc($query);
 	$camp_options .= "<option value=$row[campaign_id]>$row[campaign_name]</option>";
 }
 
