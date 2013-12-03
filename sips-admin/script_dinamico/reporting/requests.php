@@ -153,19 +153,20 @@ switch ($action) {
         $query = mysql_query($query, $link) or die(mysql_error());
         $row = mysql_fetch_assoc($query);
         $id_script = $row["id_script"];
-        if ($allctc == "false")
-            $date_filter = "and sr.date between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
-        else
-            $date_filter = "";
+        if ($allctc == "false"){
+        $date_filter = "and sr.date between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
+        }
+        else{
+        $date_filter = "";
+        }
 
 
         if (isset($list_id)) {
-            $list_id = str_split($list_id);
+            $list_id[] = $list_id;
         } else {
             $query = "SELECT list_id from vicidial_lists where campaign_id='$campaign_id' and active='Y'";
             $query = mysql_query($query, $link) or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
-
                 $list_id[] = $row["list_id"];
             }
         }
@@ -201,23 +202,25 @@ switch ($action) {
                 $temp2 = json_decode($row['placeholder']);
                 foreach ($temp as $value) {
                     foreach ($temp2 as $value2) {
-
                         $script_values["m" . $row['tag'] . $value . $value2] = $data_row["m" . $row["tag"]] . "-" . $value . "-" . $value2;
                     }
                 }
                 $data_row = array_slice($data_row, 0, array_search("m" . $row["tag"], array_keys($data_row)), true) + $script_values + array_slice($data_row, array_search("m" . $row["tag"], array_keys($data_row)), count($data_row) - 1, true);
                 unset($data_row["m" . $row["tag"]]);
-            } else
-                $data_row["m" . $row["tag"]] = ($row['texto'] == "") ? "Sem titulo" : $data_row["m" . $row["tag"]];
-        };
+            } else {
+            $data_row["m" . $row["tag"]] = ($row['texto'] == "") ? "Sem titulo" : $data_row["m" . $row["tag"]];
+            }
+        }
+        unset($row);
+        unset($temp);
+        unset($temp2);
+        unset($script_values);
 
         $data_row = array_merge(array("id" => "ID", "date" => "Data", "name" => "Nome", "full_name" => "Agente", "campaign_name" => "Nome da campanha", "status_name" => "Feedback"), $data_row);
         $titulos = $data_row;
         foreach ($data_row as $key => $value) {
             $data_row[$key] = "";
         }
-
-
 
         if ($only_with_result == "true") {
 
@@ -250,10 +253,10 @@ switch ($action) {
                 }
             }
         }
+        unset($lead_tmp);
+        unset($temp_d);
 
 
-
-        // DADOS DA LEAD
         //DADOS DO SCRIPT
         $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name,  vc.campaign_name, sr.lead_id,sr.param_1,vcs.status_name, sr.tag_elemento,sr.valor,sd.param1,sd.type FROM `script_result` sr
           left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id
@@ -278,7 +281,8 @@ switch ($action) {
 
             if ($lead_id != $row1["lead_id"]) {
                 if ($lead_id) {
-                    $final_row[$lead_id] = $temp_d;
+                    fputcsv($output, $temp_d, ";", '"');
+                    //$final_row[$lead_id] = $temp_d;
                 }
                 $temp_d = $final_row[$row1["lead_id"]];
 
@@ -300,9 +304,9 @@ switch ($action) {
                 $temp_d["m" . $row1["tag_elemento"]] = ($row1["param1"] == "nib") ? "" . $row1["valor"] . "" : $row1["valor"];
         }
 
-
+fputcsv($output, $temp_d, ";", '"');
         foreach ($final_row as $value) {
-            fputcsv($output, $value, ";", '"');
+            
         }
 
 
