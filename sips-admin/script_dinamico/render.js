@@ -25,7 +25,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         });
     };
 
-    $.get(file_path + "items.html", function(data) {
+    $.get(file_path + "/items/items.html", function(data) {
         script_zone.append($("<div>").attr("id", "script_dummie").css("display", "none"));
         script_zone.append($("<form>").attr("id", "script_form").addClass("formular"));
         script_zone.find("#script_form").append($("<div>").attr("id", "script_div").css("width", "100%").css("margin", "0 auto"));

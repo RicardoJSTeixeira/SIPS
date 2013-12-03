@@ -433,9 +433,15 @@ $("#ipl_upload_button").on("click", function(e)
 function update_select()
 {
     $.post("requests.php", {action: "get_image_pdf"},
-    function(data5)
+    function(data)
     {
-        $("#ipl_file_select").html(data5);
+        $.each(data,function()
+        {
+             $("#ipl_file_select").append("<option data-type="+this.type+" value="+this.value+">"+this.value+"</option>");
+        });
+        
+        
+       
         if ($("#radio_ipl_image").is(":checked"))
             $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
         if ($("#radio_ipl_pdf").is(":checked"))
