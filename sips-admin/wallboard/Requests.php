@@ -11,8 +11,8 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 
-$user = new user;
-if(!$user->id)
+$user_class = new user;
+if(!$user_class->id)
 {
     exit;
 }
@@ -167,7 +167,7 @@ switch ($action) {
 
 
     case 'insert_dataset':
-        $query = "INSERT INTO WallBoard_Dataset (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1,param2) VALUES ($id_wallboard, $codigo_query,$tempo,'$user','$user_group','$campaign_id','$linha_inbound',$mode,'$status_feedback','$chamadas','$param1','$param2')";
+        $query = "INSERT INTO WallBoard_Dataset (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1,param2) VALUES ($id_wallboard, $codigo_query,'$tempo','$user','$user_group','$campaign_id','$linha_inbound','$mode','$status_feedback','$chamadas','$param1','$param2')";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;

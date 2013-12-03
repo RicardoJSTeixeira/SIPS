@@ -7,7 +7,7 @@ var date_limit = function(selector, limit)
     {
         selector.empty();
 
-        var html = ' <div class="formRight">\n\
+        var html = ' <div class="formRow">\n\
                                  <input class="date_option_radio" type="radio" id="radio_date_type_filter1' + me.geral_name + '" name="rdtf' + me.geral_name + '" checked="checked" value="1"> <label class="radio_name radio inline" for="radio_date_type_filter1' + me.geral_name + '"><span></span>Data Fixa</label>\n\
                                 <input class="date_option_radio" type="radio" id="radio_date_type_filter2' + me.geral_name + '" name="rdtf' + me.geral_name + '" value="2" > <label class="radio_name radio inline" for="radio_date_type_filter2' + me.geral_name + '"><span></span>Data Dinâmica</label>\n\
                             </div> \n\

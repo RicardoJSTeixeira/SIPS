@@ -2,6 +2,7 @@
 
 require("../../../ini/dbconnect.php");
 require("../../../ini/user.php");
+require("../../../ini/db.php");
 require("PHPExcel.php");
 
 foreach ($_POST as $key => $value) {
@@ -33,9 +34,11 @@ switch ($action) {
 
     case "check_has_script":
 
-        $query = "SELECT id_script from script_assoc where id_camp_linha='$campaign_id'";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        $row = mysql_fetch_assoc($query);
+        $query = "SELECT id_script from script_assoc where id_camp_linha=:campaign_id";
+
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":campaign_id" => $campaign_id));
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $script_id = $row["id_script"];
         if (isset($script_id)) {
             echo json_encode($script_id);
@@ -44,52 +47,59 @@ switch ($action) {
         }
         break;
 
+
+
     case "get_template":
 
 //Se 0 vai buscar defaults
-        $query = "SELECT id,campaign,template from report_order where campaign='$campaign_id'";
-        $query = mysql_query($query, $link) or die(mysql_error());
-
-        if (mysql_num_rows($query) < 1) {
-            echo json_encode(array());
-            exit;
-        } else {
-            while ($row = mysql_fetch_assoc($query)) {
-                $js[] = array("id" => $row["id"], "template" => $row["template"]);
-            }
-        };
+        $query = "SELECT id,campaign,template from report_order where campaign=:campaign_id";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":campaign_id" => $campaign_id));
+        $js = array();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $js[] = array("id" => $row["id"], "template" => $row["template"]);
+        }
         echo json_encode($js);
         break;
+
+
     case "delete_template":
-        $query = "Delete from report_order where id=$id";
-        $query = mysql_query($query, $link) or die(mysql_error());
+        $query = "Delete from report_order where id=:id";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":id" => $id));
         break;
+
     case "edit_template":
-        $query = "UPDATE `report_order` set `template`='$template' WHERE id=$id";
-        $query = mysql_query($query, $link) or die(mysql_error());
+        $query = "UPDATE `report_order` set `template`=:template WHERE id=:id";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":template" => $template, ":id" => $id));
         break;
     case "create_template":
-        $query = "SELECT Name,Display_name  FROM vicidial_list_ref where campaign_id = '$campaign_id' and active='1' order by field_order asc";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
+        $query = "SELECT Name,Display_name  FROM vicidial_list_ref where campaign_id = :campaign_id and active='1' order by field_order asc";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":campaign_id" => $campaign_id));
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $js[] = array("id" => $row["Name"], "type" => "campo_dinamico", "texto" => $row["Display_name"]);
         }
-        $query = "SELECT a.tag,a.type,a.texto  FROM `script_dinamico` a left join script_dinamico_pages b on b.id=a.id_page  where type not in ('pagination','textfield','scheduler','legend','button','ipl')  and a.id_script='$script_id' order by b.pos,a.ordem asc ";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
+        $query = "SELECT a.tag,a.type,a.texto  FROM `script_dinamico` a left join script_dinamico_pages b on b.id=a.id_page  where type not in ('pagination','textfield','scheduler','legend','button','ipl')  and a.id_script=:script_id order by b.pos,a.ordem asc ";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":script_id" => $script_id));
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $js[] = array("id" => $row["tag"], "type" => $row["type"], "texto" => $row["texto"]);
         }
 
-        $query = "INSERT INTO `report_order`(`id`, `elements`, `campaign`, `template`) VALUES (NULL, '" . mysql_real_escape_string(json_encode($js)) . "','$campaign_id','$template')";
-        $query = mysql_query($query, $link) or die(mysql_error());
+        $query = "INSERT INTO `report_order`(`id`, `elements`, `campaign`, `template`) VALUES (NULL, :js,:campaign_id,:template)";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":js" => json_encode($js), ":campaign_id" => $campaign_id, ":template" => $template));
         break;
 
 
 
     case "get_elements_by_template":
-        $query = "SELECT elements from report_order where id='$id'";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        $row = mysql_fetch_assoc($query);
+        $query = "SELECT elements from report_order where id=:id";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":id" => $id));
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $js = json_decode($row["elements"]);
 
         echo json_encode($js);
@@ -101,31 +111,30 @@ switch ($action) {
     case "get_select_options":
         $js = array("campanha" => array(), "bd" => array(), "linha_inbound" => array());
         $query = "SELECT campaign_id,campaign_name FROM `vicidial_campaigns` where active='Y'";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $js["campanha"][] = array("id" => $row["campaign_id"], "name" => $row["campaign_name"]);
         }
         $query = "SELECT list_id,list_name,campaign_id FROM vicidial_lists where active='Y'";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $js["bd"][] = array("id" => $row["list_id"], "name" => $row["list_name"], "campaign_id" => $row["campaign_id"]);
         }
         $query = "SELECT group_id,group_name FROM vicidial_inbound_groups where active='Y'";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $js["linha_inbound"][] = array("id" => $row["group_id"], "name" => $row["group_name"]);
         }
         echo json_encode($js);
         break;
 
-
-
-
-
-
     case "update_elements_order":
-        $query = "update report_order set elements='" . mysql_real_escape_string(json_encode($elements)) . "'  where id=$id";
-        $query = mysql_query($query, $link) or die(mysql_error());
+        $query = "update report_order set elements=:elements  where id=:id";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":id" => $id, ":elements" => $elements));
         break;
 
 
@@ -149,15 +158,16 @@ switch ($action) {
         $script_values = array();
         $field_data = json_decode($field_data);
 //GET ID SCRIPT
-        $query = "SELECT id_script from script_assoc where id_camp_linha='$campaign_id'";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        $row = mysql_fetch_assoc($query);
+        $query = "SELECT id_script from script_assoc where id_camp_linha=:campaign_id";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":campaign_id" => $campaign_id));
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
         $id_script = $row["id_script"];
-        if ($allctc == "false"){
-        $date_filter = "and sr.date between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
-        }
-        else{
-        $date_filter = "";
+        if ($allctc == "false") {
+            $date_filter = "and sr.date between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
+        } else {
+            $date_filter = "";
         }
 
 
@@ -166,10 +176,16 @@ switch ($action) {
             $list_id = array();
             $list_id[] = $tmp;
         } else {
-            $query = "SELECT list_id from vicidial_lists where campaign_id='$campaign_id' and active='Y'";
-            $query = mysql_query($query, $link) or die(mysql_error());
-            while ($row = mysql_fetch_assoc($query)) {
+            $query = "SELECT list_id from vicidial_lists where campaign_id=:campaign_id and active='Y'";
+            $stmt = $db->prepare($query);
+            $stmt->execute(array(":campaign_id" => $campaign_id));
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $list_id[] = $row["list_id"];
+            }
+            if (!isset($list_id)) {
+                echo("Não ha base de dados activa para esta campanha");
+                exit;
             }
         }
 
@@ -187,10 +203,11 @@ switch ($action) {
             }
         }
 
-        $query = "SELECT a.tag,a.type,a.texto,a.values_text,a.placeholder  FROM `script_dinamico` a left join script_dinamico_pages b on b.id=a.id_page  where type not in ('pagination','textfield','scheduler','legend','button','ipl')  and a.id_script='$id_script' and a.tag in ('" . join("','", $tags) . "')   ";
+        $query = "SELECT a.tag,a.type,a.texto,a.values_text,a.placeholder  FROM `script_dinamico` a left join script_dinamico_pages b on b.id=a.id_page  where type not in ('pagination','textfield','scheduler','legend','button','ipl')  and a.id_script=:id_script and a.tag in ('" . join("','", $tags) . "')   ";
 
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":id_script" => $id_script));
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $script_values = array();
             if ($row['type'] == "tableradio") {
                 $temp = json_decode($row['values_text']);
@@ -210,9 +227,13 @@ switch ($action) {
                 $data_row = array_slice($data_row, 0, array_search("m" . $row["tag"], array_keys($data_row)), true) + $script_values + array_slice($data_row, array_search("m" . $row["tag"], array_keys($data_row)), count($data_row) - 1, true);
                 unset($data_row["m" . $row["tag"]]);
             } else {
-            $data_row["m" . $row["tag"]] = ($row['texto'] == "") ? "Sem titulo" : $data_row["m" . $row["tag"]];
+                $data_row["m" . $row["tag"]] = ($row['texto'] == "") ? "Sem titulo" : $data_row["m" . $row["tag"]];
             }
         }
+
+
+
+
         unset($row);
         unset($temp);
         unset($temp2);
@@ -227,14 +248,14 @@ switch ($action) {
         if ($only_with_result == "true") {
 
             foreach ($list_id as $value) {
-                $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a left join script_result sr on a.lead_id=sr.lead_id where list_id ='$value' $date_filter";
-                $result = mysql_query($query, $link) or die(mysql_error());
-                while ($row3 = mysql_fetch_assoc($result)) {
-
-                    $lead_tmp = $row3["lead_id"];
+                $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a left join script_result sr on a.lead_id=sr.lead_id where list_id =:value $date_filter";
+                $stmt = $db->prepare($query);
+                $stmt->execute(array(":value" => $value));
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $lead_tmp = $row["lead_id"];
                     $temp_d = $data_row;
-                    unset($row3["lead_id"]);
-                    foreach ($row3 as $key => $value) {
+                    unset($row["lead_id"]);
+                    foreach ($row as $key => $value) {
                         $temp_d[$key] = $value;
                     }
                     $final_row[$lead_tmp] = $temp_d;
@@ -242,13 +263,14 @@ switch ($action) {
             }
         } else {
             foreach ($list_id as $value) {
-                $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a where list_id ='$value'";
-                $result = mysql_query($query, $link) or die(mysql_error());
-                while ($row3 = mysql_fetch_assoc($result)) {
-                    $lead_tmp = $row3["lead_id"];
+                $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a where list_id =:value";
+                $stmt = $db->prepare($query);
+                $stmt->execute(array(":value" => $value));
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $lead_tmp = $row["lead_id"];
                     $temp_d = $data_row;
-                    unset($row3["lead_id"]);
-                    foreach ($row3 as $key => $value) {
+                    unset($row["lead_id"]);
+                    foreach ($row as $key => $value) {
                         $temp_d[$key] = $value;
                     }
                     $final_row[$lead_tmp] = $temp_d;
@@ -260,36 +282,44 @@ switch ($action) {
 
 
         //DADOS DO SCRIPT
-        $query = "SELECT sr.id,sr.date, sdm.name, vu.full_name,  vc.campaign_name, sr.lead_id,sr.param_1,vcs.status_name, sr.tag_elemento,sr.valor,sd.param1,sd.type FROM `script_result` sr
-          left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id
-          left join vicidial_users vu on sr.user_id=vu.user
-          left join script_dinamico_master sdm on sdm.id=sr.id_script
-          left join  vicidial_list vl on vl.lead_id=sr.lead_id
-          left join vicidial_log vlg on vlg.uniqueid=sr.unique_id
-          left join vicidial_campaign_statuses vcs on vcs.status=vlg.status
-          left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script
-          where sr.id_script='$id_script' and sr.campaign_id = '$campaign_id'  $date_filter   and vl.list_id in ('" . join("','", $list_id) . "') and sr.tag_elemento in ('" . join("','", $tags) . "') order by sr.lead_id ";
+        $query = "SELECT sr.lead_id,sr.tag_elemento,sr.valor,sr.param_1,sd.param1,sd.type FROM `script_result` sr
+               left join  vicidial_list vl on vl.lead_id=sr.lead_id
+                  left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script
+          where sr.id_script=:id_script and sr.campaign_id = :campaign_id  $date_filter   and vl.list_id in ('" . join("','", $list_id) . "') and sr.tag_elemento in ('" . join("','", $tags) . "') order by sr.lead_id ";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":id_script" => $id_script, ":campaign_id" => $campaign_id));
 
-        $result = mysql_query($query, $link) or die(mysql_error());
-        if (mysql_num_rows($result) < 1) {
-            echo("Sem resultados");
-            exit;
-        }
+        $count_results = 0;
 
         fputcsv($output, $titulos, ";", '"');
         $lead_id = false;
-        while ($row1 = mysql_fetch_assoc($result)) {
 
 
-            if ($lead_id != $row1["lead_id"]) {
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $count_results++;
+
+            if ($lead_id != $row["lead_id"]) {
                 if ($lead_id) {
                     fputcsv($output, $temp_d, ";", '"');
-                    //$final_row[$lead_id] = $temp_d;
+                    unset($final_row[$lead_id]);
                 }
-                $temp_d = $final_row[$row1["lead_id"]];
+                $query1 = "SELECT sr.date, sdm.name, vu.full_name,  vc.campaign_name,vcs.status_name FROM `script_result` sr
+                left join script_dinamico_master sdm on sdm.id=sr.id_script
+                left join vicidial_users vu on sr.user_id=vu.user
+                left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id
+                left join vicidial_log vlg on vlg.uniqueid=sr.unique_id
+                left join vicidial_campaign_statuses vcs on vcs.status=vlg.status
+                where sr.lead_id=:lead_id";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute(array(":lead_id" => $row["lead_id"]));
+                $row1 = $stmt1->fetch(PDO::FETCH_ASSOC);
 
-                $lead_id = $row1["lead_id"];
-                $temp_d["id"] = $row1["lead_id"];
+
+                $temp_d = $final_row[$row["lead_id"]];
+
+                $lead_id = $row["lead_id"];
+                $temp_d["id"] = $row["lead_id"];
                 $temp_d["date"] = $row1["date"];
                 $temp_d["name"] = $row1["name"];
                 $temp_d["full_name"] = $row1["full_name"];
@@ -297,21 +327,27 @@ switch ($action) {
                 $temp_d["status_name"] = $row1["status_name"];
             }
 
-            if ($row1["type"] == "tableradio")
-                $temp_d["m" . $row1["tag_elemento"] . $row1["param_1"]] = $row1["valor"];
-            elseif ($row1["type"] == "tableinput") {
-                $temp = split(";", $row1["param_1"]);
-                $temp_d["m" . $row1["tag_elemento"] . $temp[1] . $temp[0]] = $row1["valor"];
+            if ($row["type"] == "tableradio")
+                $temp_d["m" . $row["tag_elemento"] . $row["param_1"]] = $row["valor"];
+            elseif ($row["type"] == "tableinput") {
+                $temp = split(";", $row["param_1"]);
+                $temp_d["m" . $row["tag_elemento"] . $temp[1] . $temp[0]] = $row["valor"];
             } else
-                $temp_d["m" . $row1["tag_elemento"]] = ($row1["param1"] == "nib") ? "" . $row1["valor"] . "" : $row1["valor"];
+                $temp_d["m" . $row["tag_elemento"]] = ($row["param1"] == "nib") ? "" . $row["valor"] . "" : $row["valor"];
         }
 
-fputcsv($output, $temp_d, ";", '"');
-        foreach ($final_row as $value) {
-            
+        if (!$count_results) {
+            echo("sem resultados");
+            exit;
         }
 
+        fputcsv($output, $temp_d, ";", '"');
 
+        if ($only_with_result != "true") {
+            foreach ($final_row as $value) {
+                fputcsv($output, $value, ";", '"');
+            }
+        }
         fclose($output);
         break;
 }
