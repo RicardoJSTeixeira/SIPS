@@ -15,13 +15,13 @@ var list_ui;
 var list_item;
 
 //mostra/esconde os elementos associados ao edit               
-function editor_toggle(tipo)
+function editor_slideToggle(tipo)
 {
     $(".item").removeClass("helperPick");
     $("#tabs").tabs("option", "active", 0);
     if (tipo === "on")
     {
-        $("#edit_div").show(300);
+        $("#edit_div").fadeIn();
         $("#tabs").tabs("enable");
         $("#item_edit_comum").show();
         $("#rule_manager").show();
@@ -33,7 +33,7 @@ function editor_toggle(tipo)
     }
     if (tipo === "off")
     {
-        $("#edit_div").hide(300);
+        $("#edit_div").hide();
         $("#tabs").tabs("disable", 0);
         $("#tabs").tabs("disable", 1);
         $("#item_edit_comum").hide();
@@ -90,7 +90,7 @@ $(function() {
                 {
                     item_database("edit_item_order", items[count].id, 0, 0, 0, 0, $("#" + items[count].id).index(), 0, 0, 0, 0, 0, 0, 0);
                 }
-                editor_toggle("off");
+                editor_slideToggle("off");
             },
             receive: function(event, ui) {
 
@@ -151,7 +151,7 @@ $(function() {
                     item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "button", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .botao")[0].innerHTML, 0, 0, [], 0, 0, 0, 0);
                 }
 
-                editor_toggle("off");
+                editor_slideToggle("off");
             }
         });
         //Get de todas as campanhas allowed
@@ -195,7 +195,7 @@ $(function() {
             $("#select_feedback").trigger("liszt:updated");
         }, "json");
         //--------------------------------------//
-        editor_toggle("off");
+        editor_slideToggle("off");
         update_script();
         update_select();
     });
@@ -217,7 +217,7 @@ $(document).on("click", ".element", function(e) {
     $("#edit_div").css("top", $(this).position().top)
             .css("left", $(this).position().left)
             .css("position", "absolute");
-    editor_toggle("on");
+    editor_slideToggle("on");
     selected_id = $(this).data("id");
     selected_tag = $(this).data("tag");
     selected_type = $(this).data("type");
@@ -268,12 +268,12 @@ $(document).on("click", ".element", function(e) {
             $("#datepicker_layout_editor").data("data_limit_element", date_limit_element);
             if (date_limit_element.has_limit())
             {
-                $("#limite_datas_toggle").prop("checked", true);
+                $("#limite_datas_slideToggle").prop("checked", true);
                 $("#date_limit_placeholder").show();
             }
             else
             {
-                $("#limite_datas_toggle").prop("checked", false);
+                $("#limite_datas_slideToggle").prop("checked", false);
                 $("#date_limit_placeholder").hide();
             }
 
@@ -304,7 +304,7 @@ $(document).on("click", ".element", function(e) {
 //FOOTER EDIT BUTTONS
 $(".cancel_edit").click(function()
 {
-    editor_toggle("off");
+    editor_slideToggle("off");
 });
 $("#save_edit").click(function()
 {
@@ -348,9 +348,9 @@ $("#scheduler_edit_marcação").on("change", function()
     });
 });
 
-$("#limite_datas_toggle").on("click", function()
+$("#limite_datas_slideToggle").on("click", function()
 {
-    $("#date_limit_placeholder").toggle(500);
+    $("#date_limit_placeholder").slideToggle(500);
 
 });
 
@@ -359,13 +359,13 @@ $("#apagar_elemento").click(function()
 
     item_database("delete_item", list_item.attr("id"), 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), 0, list_item.index(), 0, 0, 0, 0, 0, 0, 0, 0, list_item.data("tag"));
     list_ui.item.remove();
-    editor_toggle("off");
+    editor_slideToggle("off");
     $("#rule_target_select option[value=" + list_item.attr("id") + "] ").remove();
     $('#rule_target_select').val('').trigger('liszt:updated');
 });
 //not introduced feature, still to do 
 $("#quota_required").on("click", function() {
-    $("#div_quota").toggle(500);
+    $("#div_quota").slideToggle(500);
 });
 //FILE UPLOADS------------------------------------
 $(".ipl_radio_options").on("click", function()
@@ -495,16 +495,19 @@ function update_script(callback)
         function(data4)
         {
             $("#tags_select .tag_group").remove();
-            $("#select_default_value").empty();
+           
+            var temp = "";
             $.each(data4, function() {
                 $("#tags_select").append("<optgroup class='tag_group' label='" + this.text + "'></optgroup>");
-                var temp = "";
+                temp = "";
                 $.each(this.lista, function() {
                     temp = temp + "<option value='" + this.value + "'>" + this.name + "</option>";
                 });
                 $("#tags_select optgroup:last").append(temp);
+                 $("#select_default_value").empty();
                 $("#select_default_value").append("<option value='0'>Selecione um campo dinamico</option>");
                 $("#select_default_value").append(temp);
+ 
             });
             $("#tags_select").trigger("liszt:updated");
             $("#tag_label").text("§" + $("#tags_select option:selected").val() + "§");
@@ -1015,7 +1018,7 @@ function edit_element(opcao, element, data)
         case "texto":
             if ($("#text_layout_editor .form_edit_element").validationEngine('validate'))
             {
-                editor_toggle("off");
+                editor_slideToggle("off");
                 $("#texto_edit").val($("#texto_edit").val().replace(regex_replace_textbox_tag, ''));
                 $("#placeholder_edit").val($("#placeholder_edit").val().replace(regex_replace_textbox, ''));
                 $("#max_length_edit").val($("#max_length_edit").val().replace(/[^0-9]/g, ''));
@@ -1045,7 +1048,7 @@ function edit_element(opcao, element, data)
         case "radio":
             if ($("#radio_layout_editor .form_edit_element").validationEngine('validate'))
             {
-                editor_toggle("off");
+                editor_slideToggle("off");
                 if ($("#vertic_radio").is(':checked'))
                     element.data("dispo", "v");
                 else
@@ -1080,7 +1083,7 @@ function edit_element(opcao, element, data)
         case "checkbox":
             if ($("#checkbox_layout_editor .form_edit_element").validationEngine('validate'))
             {
-                editor_toggle("off");
+                editor_slideToggle("off");
                 if ($("#vertic_checkbox").is(':checked'))
                     element.data("dispo", "v");
                 else
@@ -1116,7 +1119,7 @@ function edit_element(opcao, element, data)
         case "multichoice":
             if ($("#multichoice_layout_editor .form_edit_element").validationEngine('validate'))
             {
-                editor_toggle("off");
+                editor_slideToggle("off");
                 element.empty();
                 $("#multichoice_edit").val($("#multichoice_edit").val().replace(regex_replace_textbox_tag, ''));
                 element.append($("<label>").addClass("label_multichoice label_geral").text($("#multichoice_edit").val()));
@@ -1139,7 +1142,7 @@ function edit_element(opcao, element, data)
         case "textfield":
             if ($("#textfield_layout_editor .form_edit_element").validationEngine('validate'))
             {
-                editor_toggle("off");
+                editor_slideToggle("off");
                 $("#textfield_edit").html($("#textfield_edit").html().replace(regex_text, ''));
                 $("#" + id + " .label_geral").html($("#textfield_edit").html());
                 item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textfield", element.index(), "h", "textfield", 0, 0, $("#textfield_edit").html(), 0, false, $("#item_hidden").is(':checked'));
@@ -1148,7 +1151,7 @@ function edit_element(opcao, element, data)
         case "legend":
             if ($("#legend_layout_editor .form_edit_element").validationEngine('validate'))
             {
-                editor_toggle("off");
+                editor_slideToggle("off");
                 $("#legend_edit").val($("#legend_edit").val().replace(regex_text, ''));
                 $("#" + id + " .label_geral").html($("#legend_edit").val());
                 item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "legend", element.index(), "h", "legend", 0, 0, $("#legend_edit").val(), 0, false, $("#item_hidden").is(':checked'));
@@ -1157,7 +1160,7 @@ function edit_element(opcao, element, data)
         case "tableradio":
             if ($("#tableradio_layout_editor .form_edit_element").validationEngine('validate'))
             {
-                editor_toggle("off");
+                editor_slideToggle("off");
                 $("#" + id + " .label_geral").html($("#tableradio_edit").val());
                 var tr_head = $("#" + id + " .tr_head");
                 tr_head.empty();
@@ -1203,7 +1206,7 @@ function edit_element(opcao, element, data)
         case "tableinput":
             if ($("#tableinput_layout_editor .form_edit_element").validationEngine('validate'))
             {
-                editor_toggle("off");
+                editor_slideToggle("off");
                 $("#" + id + " .label_geral").html($("#tableinput_edit").val());
                 var tr_head = $("#" + id + " .tr_head");
                 tr_head.empty();
@@ -1249,7 +1252,7 @@ function edit_element(opcao, element, data)
         case "datepicker":
             if ($("#datepicker_layout_editor .form_edit_element").validationEngine('validate'))
             {
-                editor_toggle("off");
+                editor_slideToggle("off");
                 $("#datepicker_edit").val($("#datepicker_edit").val().replace(regex_replace_textbox_tag, ''));
                 $("#" + id + " .label_geral").html($("#datepicker_edit").val());
                 var data_format = 0;
@@ -1267,7 +1270,7 @@ function edit_element(opcao, element, data)
                     element.data("data_format", 0);
                 }
 
-                if ($("#limite_datas_toggle").is(":checked"))
+                if ($("#limite_datas_slideToggle").is(":checked"))
                     element.data("limit", $("#datepicker_layout_editor").data("data_limit_element").get_time());
                 else
                     element.data("limit", "0");
@@ -1277,7 +1280,7 @@ function edit_element(opcao, element, data)
         case "scheduler":
             if ($("#scheduler_layout_editor .form_edit_element").validationEngine('validate'))
             {
-                editor_toggle("off");
+                editor_slideToggle("off");
                 var options = $("#scheduler_edit_select > option:selected").clone();
                 var valores = [];
                 $.each(options, function()
@@ -1302,7 +1305,7 @@ function edit_element(opcao, element, data)
         case "textarea":
             if ($("#textarea_layout_editor .form_edit_element").validationEngine('validate'))
             {
-                editor_toggle("off");
+                editor_slideToggle("off");
                 $("#textarea_edit").val($("#textarea_edit").val().replace(regex_text, ''));
                 $("#" + id + " .label_geral").html($("#textarea_edit").val());
                 item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "textarea", element.index(), "h", $("#textarea_edit").val(), 0, 0, 0, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
@@ -1311,7 +1314,7 @@ function edit_element(opcao, element, data)
         case "ipl":
             if ($("#ipl_layout_editor .form_edit_element").validationEngine('validate'))
             {
-                editor_toggle("off");
+                editor_slideToggle("off");
                 $("#ipl_edit").val($("#ipl_edit").val().replace(regex_text, ''));
                 $("#" + id + " .label_geral").html($("#ipl_edit").val());
                 if ($("#radio_ipl_image").is(":checked"))
@@ -1344,7 +1347,7 @@ function edit_element(opcao, element, data)
         case "button":
             if ($("#button_layout_editor .form_edit_element").validationEngine('validate'))
             {
-                editor_toggle("off");
+                editor_slideToggle("off");
                 $("#button_edit").val($("#button_edit").val().replace(regex_text, ''));
                 $("#" + id + " .botao").text($("#button_edit").val());
                 item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "button", element.index(), "h", $("#button_edit").val(), 0, 0, 0, 0, 0, $("#item_hidden").is(':checked'));
@@ -1602,7 +1605,7 @@ function pagescript_database(opcao, Id_script, Id_pagina, Pos)
     $.post("requests.php", {action: opcao, id_script: Id_script, id_pagina: Id_pagina, pos: Pos},
     function(data)
     {
-        editor_toggle("off");
+        editor_slideToggle("off");
         if (opcao === "delete_page")
         {
             $.jGrowl('Página removida com sucesso', {life: 3000});
@@ -1646,13 +1649,13 @@ $("#page_remove_button").click(function()
 });
 $("#page_remove_button_modal").click(function()
 {
-    editor_toggle("off");
+    editor_slideToggle("off");
     pagescript_database("delete_page", $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), $("#page_selector option:selected").data("pos"));
     $('#page_modal').modal('hide');
 });
 $('#page_selector').change(function()
 {
-    editor_toggle("off");
+    editor_slideToggle("off");
     update_info();
 });
 $("#opcao_page_button").click(function()//chama o edit do nome da pagina
@@ -1683,7 +1686,7 @@ $("#script_remove_button").click(function()
 });
 $("#script_remove_button_modal").click(function()
 {
-    editor_toggle("off");
+    editor_slideToggle("off");
     pagescript_database("delete_script", $("#script_selector option:selected").val(), 0);
     $('#script_modal').modal('hide');
 });
@@ -1701,7 +1704,7 @@ $('#script_selector').change(function()
 {
     $("#script_campanha_selector").val("").trigger("liszt:updated");
     $("#script_linha_inbound_selector").val("").trigger("liszt:updated");
-    editor_toggle("off");
+    editor_slideToggle("off");
     update_script();
 });
 $("#opcao_script_button").click(function()//chama o edit do nome do script
@@ -1889,6 +1892,7 @@ $("#rule_trigger_select").change(function()
 {
     $(".rules_valor_dates").hide();
     $(".rules_valor").hide();
+    $("#date_limit_rule_placeholder").hide();
     switch ($("#rule_trigger_select option:selected").val())
     {
         case "value_input":
@@ -1953,7 +1957,7 @@ $(".values_edit_textarea").on("blur", function()
 });
 $("#open_rule_creator").click(function()//Fecha o dialog e grava as alterações 
 {
-    $("#rule_creator").toggle(800);
+    $("#rule_creator").slideToggle(350);
 });
 $("#add_rule_button").click(function()
 {
@@ -2083,24 +2087,19 @@ $("#render_go").click(function()
 
 
 
-
-//AJAX VALIDATION--------------------------------------------
-$("#validacao_ajax").on("click", function()
-{
-
-});
-
 //AJAX UPLOAD
 $('#ajax_upload_input').change(function() {
     var re_ext = new RegExp("(php)", "i");
     var file = this.files[0];
     var name = file.name;
     var size = (Math.round((file.size / 1024 / 1024) * 100) / 100);
-    var type = file.type;
+    var type = name.substr(name.lastIndexOf('.') + 1);
     if (size > 10) {
         $("#ajax_upload_span").text("O tamanho do ficheiro ultrapassa os 10mb permitidos.");
         $(this).fileupload('clear');
     }
+
+
     if (!re_ext.test(type)) {
         $("#ajax_upload_span").text("A extensão do ficheiro seleccionado não é valida.");
         $(this).fileupload('clear');
@@ -2122,6 +2121,7 @@ $("#ajax_upload_button").on("click", function(e)
         data: formData,
         dataType: "json",
         cache: false,
+        action: "upload_php",
         complete: function(data) {
 
             $("#ajax_upload_span").text(data.responseText);
@@ -2137,9 +2137,14 @@ $("#ajax_upload_button").on("click", function(e)
 function update_select_ajax()
 {
     $.post("requests.php", {action: "get_php_ajax"},
-    function(data5)
+    function(data)
     {
-        $("#select_ajax_script").html(data5);
+        $("#select_ajax_script").append("<option>Selecione uma opção</option>")
+        $.each(data, function()
+        {
+            $("#select_ajax_script").append("<option value=" + this + ">" + this + "</option>");
+        });
+
     }, "json");
 }
 ;
@@ -2151,11 +2156,12 @@ $("#remove_uploaded_file_ajax").on("click", function()
     });
 });
 
-$("#button_ajax_upload_div").on("click", function()
+$("#button_ajax_upload_div").on("click", function(e)
 {
-    $("#div_ajax_upload").toggle(500);
-    $(this).toggleClass("icon-chevron-up");
-    $(this).toggleClass("icon-chevron-down");
+    e.preventDefault();
+    $("#div_ajax_upload").slideToggle(500);
+    $(this).slideToggleClass("icon-chevron-up");
+    $(this).slideToggleClass("icon-chevron-down");
 });
 
 

@@ -167,7 +167,8 @@ function get_templates(campaign)
     $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
     function(data)
     {
-        if (data.length)
+console.log(data);
+        if (data>0)
         {
             script_id = data;
             $("#download_report_button").prop("disabled", false);

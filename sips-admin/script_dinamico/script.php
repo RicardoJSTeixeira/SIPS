@@ -268,9 +268,6 @@ class script {
         $js = array();
         $path = getcwd() . "/files/";
         $show = array('.jpg', '.gif', '.png', '.jpeg', '.pdf');
-
-        $select = "<select name=\"select_box\">";
-        $select .= "<option value='' selected>Selecione uma opção</option>\n";
         $dh = @opendir($path);
         $temp_ext = "";
         while (false !== ( $file = readdir($dh) )) {
@@ -281,32 +278,29 @@ class script {
                 } else {
                     $temp_ext = "image";
                 }
-                $select .= "<option data-type='$temp_ext' value='$file'>$file</option>\n";
+                $js[] = ["data-type" => $temp_ext, "value" => $file];
             }
         }
-        $select .= "</select>";
+
         closedir($dh);
-        return $select;
+        return $js;
     }
 
     public function get_php_ajax() {
-        $js = array();
         $path = getcwd() . "/files/";
         $show = array('.php');
-
-        $select = "<select name=\"select_box1\">";
-        $select .= "<option value=''>Selecione uma opção</option>\n";
+        $js = array();
         $dh = @opendir($path);
         $temp_ext = "";
         while (false !== ( $file = readdir($dh) )) {
             $ext = substr($file, -4, 4);
             if (in_array($ext, $show)) {
-                $select .= "<option  value='$file'>$file</option>\n";
+                $js[] = $file;
             }
         }
-        $select .= "</select>";
+
         closedir($dh);
-        return $select;
+        return $js;
     }
 
 //EDIT
@@ -556,16 +550,14 @@ class script {
                 }
             }
         }
-        
-        if(count($sql))
-        {
-        $query = "INSERT INTO `script_result`(`date`,`id_script`,`user_id`,`unique_id`,`campaign_id`,`lead_id`, `tag_elemento`, `valor`,`param_1`) VALUES  " . implode(',', $sql);
 
-        $stmt = $this->db->prepare($query);
-    return  $stmt->execute() ;
-        }
-        else
-            return  "no Data to be saved" ;
+        if (count($sql)) {
+            $query = "INSERT INTO `script_result`(`date`,`id_script`,`user_id`,`unique_id`,`campaign_id`,`lead_id`, `tag_elemento`, `valor`,`param_1`) VALUES  " . implode(',', $sql);
+
+            $stmt = $this->db->prepare($query);
+            return $stmt->execute();
+        } else
+            return "no Data to be saved";
     }
 
 }

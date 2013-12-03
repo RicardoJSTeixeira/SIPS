@@ -7,7 +7,9 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 
+
 $destiny = getcwd() . "/files/";
+
 
 
 switch ($action) {
@@ -52,7 +54,7 @@ switch ($action) {
                 if (move_uploaded_file($_FILES["file_ajax"]["tmp_name"], $destiny . $_FILES["file_ajax"]["name"]))
                     echo "Guardado";
                 else
-                    echo "Não Guardado";
+                     echo "Não Guardado";
             }
       }
       else
