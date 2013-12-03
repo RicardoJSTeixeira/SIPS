@@ -162,7 +162,9 @@ switch ($action) {
 
 
         if (isset($list_id)) {
-            $list_id[] = $list_id;
+            $tmp = $list_id;
+            $list_id = array();
+            $list_id[] = $tmp;
         } else {
             $query = "SELECT list_id from vicidial_lists where campaign_id='$campaign_id' and active='Y'";
             $query = mysql_query($query, $link) or die(mysql_error());
