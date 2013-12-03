@@ -9258,7 +9258,7 @@ if ($ACTION == 'get_tempo_pausa') {
         $result = mysql_query($query, $link);
         $result = mysql_fetch_assoc($result);
         $itv = number_format($result['tempo'] / 60, 0);
-        $max = number_format($ze / 60, 0);
+        $max = (int)$ze;
         $js[] = array("pause" => $nowPausa, "time" => ($max - $itv)."m", "exceed" => ($max < $itv));
     }
         echo json_encode($js);
