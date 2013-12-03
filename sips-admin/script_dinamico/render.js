@@ -25,7 +25,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         });
     };
 
-    $.get(file_path + "items/items.html", function(data) {
+    $.get(file_path + "items.html", function(data) {
         script_zone.append($("<div>").attr("id", "script_dummie").css("display", "none"));
         script_zone.append($("<form>").attr("id", "script_form").addClass("formular"));
         script_zone.find("#script_form").append($("<div>").attr("id", "script_div").css("width", "100%").css("margin", "0 auto"));
@@ -101,9 +101,9 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         }
         else
         {
-            
+
             $("#script_form .pagination_class").remove();
-             $("#script_form .botao").remove();
+            $("#script_form .botao").remove();
             $("#script_form #admin_submit").show();
             me.populate_script();
             $(".item").show();
@@ -222,7 +222,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     var pattern = [];
                     if (info.required)
                         pattern.push("required");
-
                     switch (info.param1)
                     {
                         case "normal":
@@ -263,7 +262,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                     "alertTextOk": info.values_text.validado,
                                     "alertTextLoad": "* A validar, por favor aguarde"
                                 };
-
                                 $(document).on("blur", "#script_div #" + info.tag + " :input", function()
                                 {
                                     $("#script_div #" + info.tag + " :input").validationEngine("validate");
@@ -273,8 +271,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     }
                     if (pattern.length > 0)
                         element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
-
-
                     break;
                 case "radio":
                     element.empty();
@@ -410,7 +406,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         }
                     }
                     break;
-
                 case "tableinput":
                     element.find(".label_geral")[0].innerHTML = info.texto;
                     var tr_head = element.find(".tr_head");
@@ -446,35 +441,80 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         }
                     }
                     break;
-
                 case "datepicker":
                     element.find(".label_geral")[0].innerHTML = info.texto;
                     if (info.required)
                         element.find(".form_datetime").addClass("validate[required]");
                     element.find(".form_datetime")[0].name = info.tag;
-                    var info_format = "yyyy-mm-dd hh:ii";
-                    var min_view = 0;
-
+                    var options = {};
+                    options.format = "yyyy-mm-dd hh:ii";
+                    options.minView = 0;
+                    options.autoclose = true;
+                    options.language = "pt";
                     switch (info.placeholder)
                     {
                         case "0":
-                            info_format = 'yyyy-mm-dd hh:ii';
-                            min_view = 0;
+                            options.format = 'yyyy-mm-dd hh:ii';
+                            options.minView = 0;
                             break;
                         case "1":
-                            info_format = 'yyyy-mm-dd hh';
-                            min_view = 1;
+                            options.format = 'yyyy-mm-dd hh';
+                            options.minView = 1;
                             break;
                         case "2":
-                            info_format = 'yyyy-mm-dd';
-                            min_view = 2;
+                            options.format = 'yyyy-mm-dd';
+                            options.minView = 2;
                             break;
                         default:
-                            info_format = 'yyyy-mm-dd';
-                            min_view = 2;
+                            options.format = 'yyyy-mm-dd';
+                            options.minView = 2;
                             break;
                     }
-                    $("#script_div #" + info.tag + " .form_datetime").datetimepicker({format: info_format, autoclose: true, language: "pt", minView: min_view}).keypress(function(e) {
+
+                    if (info.values_text.type == "dynamic")//dynamic
+                    {
+
+                        if (info.values_text.data_inicial != "#|#|#|#")
+                        {
+                            var tempo1 = info.values_text.data_inicial.split("|");
+                            var time1 = moment();
+
+                            if (tempo1[0] != "#")
+                                time1.add('year', tempo1[0]);
+
+                            if (tempo1[1] != "#")
+                                time1.add('month', tempo1[1]);
+                            if (tempo1[2] != "#")
+                                time1.add('day', tempo1[2]);
+                            if (tempo1[3] != "#")
+                                time1.add('hour', tempo1[3]);
+
+                            options.startDate = time1.toDate();
+                        }
+
+                        if (info.values_text.data_final != "#|#|#|#")
+                        {
+                            var tempo2 = info.values_text.data_final.split("|");
+                            var time2 = moment();
+                            if (tempo2[0] != "#")
+                                time2.add('year', tempo2[0]);
+                            if (tempo2[1] != "#")
+                                time2.add('month', tempo2[1]);
+                            if (tempo2[2] != "#")
+                                time2.add('day', tempo2[2]);
+                            if (tempo2[3] != "#")
+                                time2.add('hour', tempo2[3]);
+
+                            options.endDate = time2.toDate();
+                        }
+                    } else//fixed
+                    {
+                        options.startDate = info.values_text.data_inicial;
+                        options.endDate = info.values_text.data_final;
+                    }
+
+
+                    $("#script_div #" + info.tag + " .form_datetime").datetimepicker(options).keypress(function(e) {
                         e.preventDefault();
                     }).bind("cut copy paste", function(e) {
                         e.preventDefault();
@@ -538,7 +578,8 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
                     break;
             }
-        });
+        }
+        );
         if (typeof callback === "function")
         {
 
@@ -758,56 +799,81 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 {
                                     var temp = data[index];
 
-                                    if (temp.param2.fd == "fixed") {
-                                        switch (temp.param2.tipo)
-                                        {
-                                            case "menor":
-                                                if ($(this).val() < temp.param2.data_inicio)
-                                                    rules_work(data[index]);
-                                                break;
-                                            case "igual":
-                                                if ($(this).val() == temp.param2.data_inicio)
-                                                    rules_work(data[index]);
-                                                break;
-                                            case "maior":
+                                    if (temp.param2.type == "fixed") {
 
-                                                if ($(this).val() > temp.param2.data_inicio)
+                                        if (temp.param2.data_inicial != "" && temp.param2.data_final != "")
+                                        {
+                                            if ($(this).val() >= temp.param2.data_inicial && $(this).val() <= temp.param2.data_final)
+                                                rules_work(data[index]);
+                                        }
+                                        else
+                                        {
+                                            if (temp.param2.data_inicial != "")
+                                                if ($(this).val() >= temp.param2.data_inicial)
                                                     rules_work(data[index]);
-                                                break;
-                                            case "entre":
-                                                if ($(this).val() > temp.param2.data_inicio && $(this).val() < temp.param2.data_fim)
+                                            if (temp.param2.data_final != "")
+                                                if ($(this).val() <= temp.param2.data_final)
                                                     rules_work(data[index]);
-                                                break;
                                         }
                                     }
                                     else
                                     {
-                                        var tempo1 = temp.param2.data_inicio.split("/");
 
+
+                                        var tempo1 = temp.param2.data_inicial.split("|");
                                         var time1 = moment();
-                                        time1.add('year', tempo1[0]).add('month', tempo1[1]).add('day', tempo1[2]).add('hour', tempo1[3]);
-                                        switch (temp.param2.tipo)
+                                        var tempo2 = temp.param2.data_final.split("|");
+                                        var time2 = moment();
+
+                                        if (temp.param2.data_inicial != "#|#|#|#")
                                         {
-                                            case "menor":
-                                                if (time1.isAfter(moment($(this).val())))
-                                                    rules_work(data[index]);
-                                                break;
-                                            case "igual":
-                                                if (time1.isSame(moment($(this).val()), "day"))
-                                                    rules_work(data[index]);
-                                                break;
-                                            case "maior":
-                                                if (time1.isBefore(moment($(this).val())))
-                                                    rules_work(data[index]);
-                                                break;
-                                            case "entre":
-                                                var tempo2 = temp.param2.data_fim.split("/");
-                                                var time2 = moment();
-                                                time2.add('year', tempo2[0]).add('month', tempo2[1]).add('day', tempo2[2]).add('hour', tempo2[3]);
-                                                if (time1.isBefore(moment($(this).val())) && time2.isAfter(moment($(this).val())))
-                                                    rules_work(data[index]);
-                                                break;
+                                            if (tempo1[0] != "#")
+                                                time1.add('year', tempo1[0]);
+                                            if (tempo1[1] != "#")
+                                                time1.add('month', tempo1[1]);
+                                            if (tempo1[2] != "#")
+                                                time1.add('day', tempo1[2]);
+                                            if (tempo1[3] != "#")
+                                                time1.add('hour', tempo1[3]);
                                         }
+
+
+                                        if (temp.param2.data_final != "#|#|#|#")
+                                        {
+                                            if (tempo2[0] != "#")
+                                                time2.add('year', tempo2[0]);
+                                            if (tempo2[1] != "#")
+                                                time2.add('month', tempo2[1]);
+                                            if (tempo2[2] != "#")
+                                                time2.add('day', tempo2[2]);
+                                            if (tempo2[3] != "#")
+                                                time2.add('hour', tempo2[3]);
+                                        }
+
+
+                                        if (temp.param2.data_inicial != "#|#|#|#" && temp.param2.data_final != "#|#|#|#")
+                                        {
+
+
+
+                                            if (time1.isBefore($(this).val()) && time2.isAfter($(this).val()))
+                                                rules_work(data[index]);
+                                        }
+                                        else
+                                        {
+                                            if (temp.param2.data_inicial != "#|#|#|#")
+                                            {
+                                                if (time1.isAfter($(this).val()))
+                                                    rules_work(data[index]);
+                                            }
+                                            if (temp.param2.data_final != "#|#|#|#")
+                                            {
+                                                if (time2.isBefore($(this).val()))
+                                                    rules_work(data[index]);
+                                            }
+                                        }
+
+
                                     }
 
                                 }

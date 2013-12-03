@@ -13,6 +13,7 @@ var regex_text = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔº�
 var regex_split = /\n/g;
 var list_ui;
 var list_item;
+
 //mostra/esconde os elementos associados ao edit               
 function editor_toggle(tipo)
 {
@@ -264,7 +265,18 @@ $(document).on("click", ".element", function(e) {
 
             var date_limit_element = new date_limit($("#date_limit_placeholder"), $(this).data("limit"));
             date_limit_element.init();
-            $("#datepicker_layout_editor").data("date_limit_element", date_limit_element);
+            $("#datepicker_layout_editor").data("data_limit_element", date_limit_element);
+            if (date_limit_element.has_limit())
+            {
+                $("#limite_datas_toggle").prop("checked", true);
+                $("#date_limit_placeholder").show();
+            }
+            else
+            {
+                $("#limite_datas_toggle").prop("checked", false);
+                $("#date_limit_placeholder").hide();
+            }
+
             $("#datepicker_layout_editor").show();
             populate_element("datepicker", $(this));
             break;
@@ -336,11 +348,10 @@ $("#scheduler_edit_marcação").on("change", function()
     });
 });
 
-$("#button_date_limit_togle").on("click", function()
+$("#limite_datas_toggle").on("click", function()
 {
     $("#date_limit_placeholder").toggle(500);
-    $(this).toggleClass("icon-chevron-up");
-    $(this).toggleClass("icon-chevron-down");
+
 });
 
 $("#apagar_elemento").click(function()
@@ -1255,7 +1266,12 @@ function edit_element(opcao, element, data)
                     data_format = 0;
                     element.data("data_format", 0);
                 }
-                  item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", element.index(), "h", $("#datepicker_edit").val(), data_format, 0,$("#datepicker_layout_editor").data("date_limit_element").get_time(), 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+
+                if ($("#limite_datas_toggle").is(":checked"))
+                    element.data("limit", $("#datepicker_layout_editor").data("data_limit_element").get_time());
+                else
+                    element.data("limit", "0");
+                item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", element.index(), "h", $("#datepicker_edit").val(), data_format, 0, element.data("limit"), 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
             }
             break;
         case "scheduler":
@@ -1816,21 +1832,12 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
                 if (this.tipo_elemento == "datepicker")
                 {
                     var temp_text = "";
-                    switch (this.param2.tipo)
+                    if (this.param2.type == "fixed")
                     {
-                        case "menor":
-                            temp_text = "data menor que " + this.param2.data_inicio;
-                            break;
-                        case "igual":
-                            temp_text = "data igual a " + this.param2.data_inicio;
-                            break;
-                        case "maior":
-                            temp_text = "data maior que " + this.param2.data_inicio;
-                            break;
-                        case "entre":
-                            temp_text = "data entre " + this.param2.data_inicio + " e " + this.param2.data_fim;
-                            break;
+                        temp_text = "data fixa " + this.param2.data_inicial + " a " + this.param2.data_final;
                     }
+                    else
+                        temp_text = "data dinamica " + this.param2.data_inicial + " a " + this.param2.data_final;
 
                     $("#rule_manager_list").append($("<tr>")
                             .append($("<td>").text((this.param1 == "date") ? temp_text : "Resposta"))
@@ -1877,21 +1884,7 @@ $(".date_option_radio").on("click", function()
     }
 
 });
-$("#rules_data_select").on("change", function()
-{
-    if ($(this).val() == "3")
-    {
-        if ($("#radio_date_type_filter1").is(":checked"))
-            $("#fixed_date_div2").show();
-        else
-            $("#dinamic_date_div2").show();
-    }
-    else
-    {
-        $("#fixed_date_div2").hide();
-        $("#dinamic_date_div2").hide();
-    }
-});
+
 $("#rule_trigger_select").change(function()
 {
     $(".rules_valor_dates").hide();
@@ -1934,10 +1927,10 @@ $("#rule_trigger_select").change(function()
             , "json");
             break;
         case "date":
-
-            $("#rules_date_div").show();
-            $("#fixed_date_div1").show();
-            $("#radio_date_type_filter1").prop("checked", true);
+            $("#date_limit_rule_placeholder").show();
+            var date_limit_element2 = new date_limit($("#date_limit_rule_placeholder"), 0);
+            date_limit_element2.init();
+            $("#open_rule_creator").data("date_limit_element", date_limit_element2);
             break;
     }
 });
@@ -2043,52 +2036,12 @@ $("#add_rule_button").click(function()
                         rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
                     break;
                 case "date":
-                    var datar = [];
-                    switch ($("#rules_data_select option:selected").val())
-                    {
-                        case "0"://MENOR QUE DATA
-                            if ($("#radio_date_type_filter1").is(":checked"))//fixa
-                                datar = {tipo: "menor", fd: "fixed", data_inicio: $("#fixed_date1").val()};
-                            else//dinamica
-                            {
-                                var temp = $("#table_date1 .date_year").val() + "/" + $("#table_date1 .date_month").val() + "/" + $("#table_date1 .date_day").val() + "/" + $("#table_date1 .date_hour").val();
-                                datar = {tipo: "menor", fd: "dynamic", data_inicio: temp};
-                            }
-                            break;
-                        case "1"://IGUAL A DATA
-                            if ($("#radio_date_type_filter1").is(":checked"))//fixa
-                                datar = {tipo: "igual", fd: "fixed", data_inicio: $("#fixed_date1").val()};
-                            else//dinamica
-                            {
-                                var temp = $("#table_date1 .date_year").val() + "/" + $("#table_date1 .date_month").val() + "/" + $("#table_date1 .date_day").val() + "/" + $("#table_date1 .date_hour").val();
-                                datar = {tipo: "igual", fd: "dynamic", data_inicio: temp};
-                            }
-                            break;
-                        case "2"://MAIOR QUE DATA
-                            if ($("#radio_date_type_filter1").is(":checked"))//fixa
-                                datar = {tipo: "maior", fd: "fixed", data_inicio: $("#fixed_date1").val()};
-                            else//dinamica
-                            {
-                                var temp = $("#table_date1 .date_year").val() + "/" + $("#table_date1 .date_month").val() + "/" + $("#table_date1 .date_day").val() + "/" + $("#table_date1 .date_hour").val();
-                                datar = {tipo: "maior", fd: "dynamic", data_inicio: temp};
-                            }
-                            break;
-                        case "3"://ENTRE DATAS
-                            if ($("#radio_date_type_filter1").is(":checked"))//fixa
-                                datar = {tipo: "entre", fd: "fixed", data_inicio: $("#fixed_date1").val(), data_fim: $("#fixed_date2").val()};
-                            else//dinamica
-                            {
-                                var temp = $("#table_date1 .date_year").val() + "/" + $("#table_date1 .date_month").val() + "/" + $("#table_date1 .date_day").val() + "/" + $("#table_date1 .date_hour").val();
-                                var temp2 = $("#table_date2 .date_year").val() + "/" + $("#table_date2 .date_month").val() + "/" + $("#table_date2 .date_day").val() + "/" + $("#table_date2 .date_hour").val();
-                                datar = {tipo: "entre", fd: "dynamic", data_inicio: temp, data_fim: temp2};
-                            }
-                            break;
-                    }
+
 
                     if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "date", datar);
+                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "date", $("#open_rule_creator").data("date_limit_element").get_time());
                     else
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "date", datar);
+                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "date", $("#open_rule_creator").data("date_limit_element").get_time());
                     break;
 
             }
