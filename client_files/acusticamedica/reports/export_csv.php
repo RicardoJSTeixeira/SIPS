@@ -74,7 +74,8 @@ if (isset($report_marc_outbound)) {
     header("Content-Disposition: attachment; filename=" . $filename . ".csv");
     $output = fopen('php://output', 'w');
 
-    fputcsv($output, array('Title',
+    fputcsv($output, array(
+        'Title',
         'Campaign No.',
         'First Name',
         'Middle Name',
@@ -195,7 +196,8 @@ if (isset($report_feedback_outbound)) {
     header("Content-Disposition: attachment; filename=" . $filename . ".csv");
     $output = fopen('php://output', 'w');
 
-    fputcsv($output, array('Title',
+    fputcsv($output, array(
+        'Title',
         'Campaign No.',
         'First Name',
         'Middle Name',
@@ -213,6 +215,7 @@ if (isset($report_feedback_outbound)) {
         'Phone No.',
         'Mobile Phone No.',
         'Work Phone No.',
+        'Email',
         'Date of Birth',
         'No.',
         'Update contact',
@@ -284,6 +287,7 @@ if (isset($report_feedback_outbound)) {
                 $row['phone_number'],
                 $row['alt_phone'],
                 "",
+                $row['email'],
                 $row['date_of_birth'],
                 $no,
                 "",
