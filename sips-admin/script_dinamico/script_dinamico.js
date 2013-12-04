@@ -1417,7 +1417,7 @@ function insert_element(opcao, element, data)
                         .append($("<label>")
                                 .addClass("radio_name radio inline")
                                 .attr("for", array_id["radio"] + "radio")
-                                .html("<span></span> " + radios[count]))
+                                .html("<span></span>" + radios[count]))
                         ;
                 if (data.dispo === "v")
                     element.append($("<br>"));
@@ -1439,7 +1439,7 @@ function insert_element(opcao, element, data)
                         .append($("<label>")
                                 .addClass("checkbox_name checkbox inline")
                                 .attr("for", array_id["checkbox"] + "checkbox")
-                                .html("<span></span>" + checkboxs[count])
+                                .html("<span></span>"+ checkboxs[count])
                                 )
                         ;
 
