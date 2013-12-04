@@ -1417,7 +1417,7 @@ function insert_element(opcao, element, data)
                         .append($("<label>")
                                 .addClass("radio_name radio inline")
                                 .attr("for", array_id["radio"] + "radio")
-                                .html("<span></span> " + radios[count]))
+                                .html("<span></span>" + radios[count]))
                         ;
                 if (data.dispo === "v")
                     element.append($("<br>"));
@@ -1439,7 +1439,7 @@ function insert_element(opcao, element, data)
                         .append($("<label>")
                                 .addClass("checkbox_name checkbox inline")
                                 .attr("for", array_id["checkbox"] + "checkbox")
-                                .html("<span></span>" + checkboxs[count])
+                                .html("<span></span>"+ checkboxs[count])
                                 )
                         ;
 
@@ -2124,7 +2124,8 @@ $("#ajax_upload_button").on("click", function(e)
         return false;
     var formData = new FormData(form[0]);
     formData.append("action", "upload_php");
-
+$("#validado_text").val("");
+$("#not_validado_text").val("");
     $.ajax({
         url: 'upload.php',
         type: 'POST',
@@ -2133,9 +2134,7 @@ $("#ajax_upload_button").on("click", function(e)
         cache: false,
         action: "upload_php",
         complete: function(data) {
-
             $("#ajax_upload_span").text(data.responseText);
-
             update_select_ajax();
         },
         contentType: false,
@@ -2149,15 +2148,18 @@ function update_select_ajax()
     $.post("requests.php", {action: "get_php_ajax"},
     function(data)
     {
-        $("#select_ajax_script").append("<option>Selecione uma opção</option>")
+        $("#select_ajax_script").empty();
         $.each(data, function()
         {
             $("#select_ajax_script").append("<option value=" + this + ">" + this + "</option>");
         });
-
     }, "json");
-}
-;
+};
+$("#select_ajax_script").on("change",function()
+{
+    $("#validado_text").val("");
+    $("#not_validado_text").val("");
+});
 $("#remove_uploaded_file_ajax").on("click", function()
 {
     $.post("upload.php", {action: "delete", name: $("#select_ajax_script option:selected").val()}, function(data) {
@@ -2170,8 +2172,8 @@ $("#button_ajax_upload_div").on("click", function(e)
 {
     e.preventDefault();
     $("#div_ajax_upload").slideToggle(500);
-    $(this).slideToggleClass("icon-chevron-up");
-    $(this).slideToggleClass("icon-chevron-down");
+    $(this).toggleClass("icon-chevron-up");
+    $(this).toggleClass("icon-chevron-down");
 });
 
 

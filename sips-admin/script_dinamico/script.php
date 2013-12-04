@@ -72,7 +72,6 @@ class script {
         $query = "SELECT id_camp_linha FROM script_assoc where id_script=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
-
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $campaigns[] = $row["id_camp_linha"];
         }
@@ -82,7 +81,6 @@ class script {
             $stmt->execute(array(":value" => $value));
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $js[$value]["text"] = $row['campaign_name'];
-
             $query = "SELECT indice,Name,Display_name FROM `vicidial_list_ref`  where campaign_id =:value and active='1'  GROUP BY name";
             $stmt = $this->db->prepare($query);
             $stmt->execute(array(":value" => $value));
@@ -96,7 +94,6 @@ class script {
 
     public function get_camp_linha_by_id_script() {
         $js = array();
-
         $query = "SELECT * FROM script_assoc ";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
@@ -244,7 +241,6 @@ class script {
     }
 
     public function iscloud() {
-        $js = array();
         $query = "SELECT cloud FROM servers";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
@@ -253,7 +249,6 @@ class script {
     }
 
     public function has_rules($tag) {
-        $js = array();
         $temp = 0;
         $query = "SELECT count(id) as count FROM script_rules where tag_trigger=:tag";
         $stmt = $this->db->prepare($query);
@@ -307,7 +302,6 @@ class script {
 
 
     public function edit_script($name, $id_script, $campaign) {
-        $js = array();
         $query = "update script_dinamico_master set name=:name where id=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script, ":name" => $name));
@@ -328,20 +322,16 @@ class script {
     }
 
     public function edit_page($old_pos, $new_pos, $id_script, $name, $id_pagina) {
-        $js = array();
         $query = "update script_dinamico_pages set pos=:old_pos where pos=:new_pos and  id_script=:id_script";
-
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script, ":old_pos" => $old_pos, ":new_pos" => $new_pos));
         $query = "update script_dinamico_pages set name=:name,pos=:new_pos where id=:id_pagina";
-
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_pagina" => $id_pagina, ":name" => $name, ":new_pos" => $new_pos));
         return 1;
     }
 
     public function edit_item($id_script, $id_page, $type, $ordem, $dispo, $texto, $placeholder, $max_length, $values_text, $default_value, $required, $hidden, $param1, $id) {
-        $js = array();
         $values_text = (!isset($values_text)) ? array() : $values_text;
         $query = "UPDATE script_dinamico SET id_script=?,id_page=?,type=?,ordem=?,dispo=?,texto=?,placeholder=?,max_length=?,values_text=?,default_value=?,required=?,hidden=?,param1=? WHERE id=?";
         $stmt = $this->db->prepare($query);
@@ -350,7 +340,6 @@ class script {
     }
 
     public function edit_item_order($ordem, $id) {
-        $js = array();
         $query = "UPDATE script_dinamico SET ordem=:ordem WHERE id=:id";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":ordem" => $ordem, ":id" => $id));
@@ -360,7 +349,6 @@ class script {
 //  ADD
 
     public function add_page($id_script, $pos) {
-        $js = array();
         $query = "INSERT INTO `asterisk`.`script_dinamico_pages` (id,id_script,name,pos) VALUES (NULL,:id_script,'Página nova',:pos)";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script, ":pos" => $pos));
@@ -368,7 +356,6 @@ class script {
     }
 
     public function add_script($user_group) {
-        $js = array();
         $query = "INSERT INTO `asterisk`.`script_dinamico_master` (id,name,user_group) VALUES (NULL,'Script novo',?)";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($user_group));
@@ -380,7 +367,6 @@ class script {
     }
 
     public function add_item($id_page, $id_script, $type, $ordem, $dispo, $texto, $placeholder, $max_length, $values_text, $default_value, $required, $hidden, $param1) {
-        $js = array();
         $query = "UPDATE script_dinamico SET ordem=ordem+1 where ordem>=? and id_page=? ";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($ordem, $id_page));
@@ -411,7 +397,6 @@ class script {
     }
 
     public function duplicate_script($user_group, $nome_script, $id_script) {
-        $js = array();
         $query = "INSERT INTO script_dinamico_master (id,name,user_group) VALUES (NULL,?,?)";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($nome_script . " duplicado", $user_group));
@@ -478,15 +463,12 @@ class script {
     }
 
     public function delete_item($ordem, $id_page, $param1, $id) {
-        $js = array();
         $query = "UPDATE script_dinamico SET ordem=ordem-1 where ordem>:ordem and id_page=:id_page ";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":ordem" => $ordem, ":id_page" => $id_page));
-
         $query = "delete from script_rules where tag_trigger=:param1";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":param1" => $param1));
-
         $query = "delete from script_dinamico where id=:id";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id" => $id));
@@ -494,7 +476,6 @@ class script {
     }
 
     public function delete_script($id_script) {
-        $js = array();
         $query = "delete from script_assoc where id_script=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
@@ -510,10 +491,10 @@ class script {
         $query = "delete from script_rules where id_script=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
+           return 1; 
     }
 
     public function delete_rule($id) {
-        $js = array();
         $query = "delete from script_rules  where id=:id";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id" => $id));
@@ -523,7 +504,6 @@ class script {
     // FORM
 
     public function save_form_result($id_script, $results, $user_id, $unique_id, $campaign_id, $lead_id, $admin_review) {
-        $js = array();
         $sql = array();
 
         if ($admin_review == "1") {
@@ -553,7 +533,6 @@ class script {
 
         if (count($sql)) {
             $query = "INSERT INTO `script_result`(`date`,`id_script`,`user_id`,`unique_id`,`campaign_id`,`lead_id`, `tag_elemento`, `valor`,`param_1`) VALUES  " . implode(',', $sql);
-
             $stmt = $this->db->prepare($query);
             return $stmt->execute();
         } else
