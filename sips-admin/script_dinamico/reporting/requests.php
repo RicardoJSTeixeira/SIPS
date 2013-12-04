@@ -248,13 +248,13 @@ switch ($action) {
         if ($only_with_result == "true") {
 
             foreach ($list_id as $value) {
-                $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a right join script_result sr on a.lead_id=sr.lead_id where list_id =:value $date_filter";
+                $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a left join script_result sr on a.lead_id=sr.lead_id where list_id =:value $date_filter";
                 $stmt = $db->prepare($query);
                 $stmt->execute(array(":value" => $value));
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     $lead_tmp = $row["lead_id"];
                     $temp_d = $data_row;
-
+                    unset($row["lead_id"]);
                     foreach ($row as $key => $value) {
                         $temp_d[$key] = $value;
                     }
@@ -269,7 +269,7 @@ switch ($action) {
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     $lead_tmp = $row["lead_id"];
                     $temp_d = $data_row;
-
+                    unset($row["lead_id"]);
                     foreach ($row as $key => $value) {
                         $temp_d[$key] = $value;
                     }
@@ -280,78 +280,68 @@ switch ($action) {
         unset($lead_tmp);
         unset($temp_d);
 
-        fputcsv($output, $titulos, ";", '"');
+
+        //DADOS DO SCRIPT
+        $query = "SELECT sr.lead_id,sr.tag_elemento,sr.valor,sr.param_1,sd.param1,sd.type FROM `script_result` sr
+               left join  vicidial_list vl on vl.lead_id=sr.lead_id
+                  left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script
+          where sr.id_script=:id_script and sr.campaign_id = :campaign_id  $date_filter   and vl.list_id in ('" . join("','", $list_id) . "') and sr.tag_elemento in ('" . join("','", $tags) . "') order by sr.lead_id ";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":id_script" => $id_script, ":campaign_id" => $campaign_id));
 
         $count_results = 0;
-        foreach ($final_row as &$value) {
+
+        fputcsv($output, $titulos, ";", '"');
+        $lead_id = false;
 
 
 
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $count_results++;
 
-
-            $query1 = "SELECT sr.date, sdm.name, vu.full_name,  vc.campaign_name,vcs.status_name FROM `script_result` sr
+            if ($lead_id != $row["lead_id"]) {
+                if ($lead_id) {
+                    fputcsv($output, $temp_d, ";", '"');
+                    unset($final_row[$lead_id]);
+                }
+                $query1 = "SELECT sr.date, sdm.name, vu.full_name,  vc.campaign_name,vcs.status_name FROM `script_result` sr
                 left join script_dinamico_master sdm on sdm.id=sr.id_script
                 left join vicidial_users vu on sr.user_id=vu.user
                 left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id
                 left join vicidial_log vlg on vlg.uniqueid=sr.unique_id
                 left join vicidial_campaign_statuses vcs on vcs.status=vlg.status
                 where sr.lead_id=:lead_id";
-            $stmt1 = $db->prepare($query1);
-            $stmt1->execute(array(":lead_id" => $value["lead_id"]));
-            $row1 = $stmt1->fetch(PDO::FETCH_ASSOC);
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute(array(":lead_id" => $row["lead_id"]));
+                $row1 = $stmt1->fetch(PDO::FETCH_ASSOC);
 
 
+                $temp_d = $final_row[$row["lead_id"]];
 
-
-
-            $value["id"] = $value["lead_id"];
-            $value["date"] = $row1["date"];
-            $value["name"] = $row1["name"];
-            $value["full_name"] = $row1["full_name"];
-            $value["campaign_name"] = $row1["campaign_name"];
-            $value["status_name"] = $row1["status_name"];
-
-
-
-
-
-
-
-            $query = "SELECT sr.lead_id,sr.tag_elemento,sr.valor,sr.param_1,sd.param1,sd.type FROM `script_result` sr
-                  left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script
-          where sr.id_script=:id_script and sr.campaign_id = :campaign_id  $date_filter and sr.lead_id=:lead_id   and sr.tag_elemento in ('" . join("','", $tags) . "') order by sr.lead_id ";
-            $stmt = $db->prepare($query);
-            $stmt->execute(array(":id_script" => $id_script, ":campaign_id" => $campaign_id, ":lead_id" => $value["lead_id"]));
-
-
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $count_results++;
-
-                if ($row["type"] == "tableradio")
-                    $value["m" . $row["tag_elemento"] . $row["param_1"]] = $row["valor"];
-                elseif ($row["type"] == "tableinput") {
-                    $temp = split(";", $row["param_1"]);
-                    $value["m" . $row["tag_elemento"] . $temp[1] . $temp[0]] = $row["valor"];
-                } else
-                    $value["m" . $row["tag_elemento"]] = ($row["param1"] == "nib") ? "" . $row["valor"] . "" : $row["valor"];
+                $lead_id = $row["lead_id"];
+                $temp_d["id"] = $row["lead_id"];
+                $temp_d["date"] = $row1["date"];
+                $temp_d["name"] = $row1["name"];
+                $temp_d["full_name"] = $row1["full_name"];
+                $temp_d["campaign_name"] = $row1["campaign_name"];
+                $temp_d["status_name"] = $row1["status_name"];
             }
 
-            unset($value["lead_id"]);
-            fputcsv($output, $value, ";", '"');
+            if ($row["type"] == "tableradio")
+                $temp_d["m" . $row["tag_elemento"] . $row["param_1"]] = $row["valor"];
+            elseif ($row["type"] == "tableinput") {
+                $temp = split(";", $row["param_1"]);
+                $temp_d["m" . $row["tag_elemento"] . $temp[1] . $temp[0]] = $row["valor"];
+            } else
+                $temp_d["m" . $row["tag_elemento"]] = ($row["param1"] == "nib") ? "" . $row["valor"] . "" : $row["valor"];
         }
-
-
-
-
 
         if (!$count_results) {
             echo("sem resultados");
             exit;
         }
-        //DADOS DO SCRIPT
 
-
-
+        fputcsv($output, $temp_d, ";", '"');
 
         if ($only_with_result != "true") {
             foreach ($final_row as $value) {
