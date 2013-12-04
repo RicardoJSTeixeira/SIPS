@@ -747,7 +747,7 @@
                 });
                 //reservation tipe
 
-                $("#exp-marcData").datetimepicker({format: 'yyyy-mm-dd hh:ii', minuteStep: time_block, autoclose: true, language: "pt", });
+                $("#exp-marcData").datetimepicker({format: 'yyyy-mm-dd hh:ii', minuteStep: time_block, autoclose: true, language: "pt"});
                 //Change reservation first step 
 
                 var cl4ss;
