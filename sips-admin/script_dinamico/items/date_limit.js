@@ -13,13 +13,13 @@ var date_limit = function(selector, limit)
                             </div> \n\
                             <div id="date_fixed' + me.geral_name + '" style="display:none"> \n\
 <div class="formRow" > \n\
-<label class="label label-inverse">Data Inicial</label> \n\
+<strong>Data Inicial</strong> \n\
 <div class="formRight "> \n\
 <input size="16" type="text" class="datelimit_datetime " name="fixed_date1' + me.geral_name + '" id="fixed_date1' + me.geral_name + '"> \n\
 </div>\n\
  </div>\n\
  <div class="formRow"> \n\
-<label class="label label-inverse">Data Final</label>\n\
+<strong>Data Final</strong>\n\
  <div class="formRight "> \n\
 <input size="16" type="text" class="datelimit_datetime " name="fixed_date2' + me.geral_name + '" id="fixed_date2' + me.geral_name + '"> \n\
 </div> \n\
@@ -27,7 +27,7 @@ var date_limit = function(selector, limit)
  </div>\n\
  <div id="date_dynamic' + me.geral_name + '" style="display:none">\n\
  <div class="formRow">\n\
- <label class="label label-inverse">Data Inicial</label>\n\
+ <strong>Data Inicial</strong>\n\
  <div class="formRight">\n\
  <table id="table_date1' + me.geral_name + '">\n\
  <thead><th>anos</th><th>Meses</th><th>Dias</th><th>Horas</th></thead>\n\
@@ -40,7 +40,8 @@ var date_limit = function(selector, limit)
 </table> \n\
 </div> \n\
 </div>\n\
-<div class="formRow"> <label class="label label-inverse">Data Final</label> \n\
+<div class="formRow"> \n\
+<strong>Data Final</strong> \n\
 <div class="formRight"> \n\
 <table id="table_date2' + me.geral_name + '">\n\
  <thead><th>anos</th><th>Meses</th><th>Dias</th><th>Horas</th></thead>\n\

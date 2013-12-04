@@ -36,21 +36,27 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         $(document).off("click", "#script_div .previous_pag");
         $(document).on("click", "#script_div .previous_pag", function(e) {
             e.preventDefault();
-            var temp = $(".pag_div:visible").prev(".pag_div");
-            if (temp.length)
+            if (me.validate_manual())
             {
-                $(".pag_div").hide();
-                temp.show();
+                var temp = $(".pag_div:visible").prev(".pag_div");
+                if (temp.length)
+                {
+                    $(".pag_div").hide();
+                    temp.show();
+                }
             }
         });
         $(document).off("click", "#script_div .next_pag");
         $(document).on("click", "#script_div .next_pag", function(e) {
             e.preventDefault();
-            var temp = $(".pag_div:visible").next(".pag_div");
-            if (temp.length)
+            if (me.validate_manual())
             {
-                $(".pag_div").hide();
-                temp.show();
+                var temp = $(".pag_div:visible").next(".pag_div");
+                if (temp.length)
+                {
+                    $(".pag_div").hide();
+                    temp.show();
+                }
             }
         });
         $(document).off("click", "#script_div .scheduler_button_go");
@@ -262,7 +268,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 pattern.push("ajax[rule" + info.tag + "]]");
                                 $.validationEngineLanguage.allRules["rule" + info.tag] = {
                                     "url": file_path + "files/" + info.values_text.file,
-                                    "alertText":info.values_text.not_validado,
+                                    "alertText": info.values_text.not_validado,
                                     "alertTextOk": info.values_text.validado,
                                     "alertTextLoad": "* A validar, por favor aguarde"
                                 };
@@ -652,21 +658,12 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 }
                 break;
             case "goto":
+
                 if (admin_review != "1")
                 {
-                    if (data.tipo_elemento == "button" || data.tipo_elemento == "datepicker")
-                    {
-                        $(".pag_div").hide();
-                        $("#script_div #" + data.tag_target + "pag").show();
-                    }
-                    else
-                    {
-                        if ($("#script_form").validationEngine('validate'))
-                        {
-                            $(".pag_div").hide();
-                            $("#script_div #" + data.tag_target + "pag").show();
-                        }
-                    }
+                    $(".pag_div").hide();
+                    $("#script_div #" + data.tag_target + "pag").show();
+
                 }
                 break;
         }
@@ -749,7 +746,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                     $(document).off("change", "#script_div #" + this.tag_trigger);
                                     $(document).on("change", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                     {
-                                        if ($("#script_div #" + data[index].tag_trigger + " option:selected").val() === data[index].tag_trigger2)
+                                        if (data[index].tag_trigger2.indexOf($("#script_div #" + data[index].tag_trigger + " option:selected").val()) > -1)
                                             rules_work(data[index]);
                                     });
                                 }
@@ -887,7 +884,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         }
                         break;
                     case "textarea":
-
                         switch (this.param1)
                         {
                             case "answer":
@@ -1021,6 +1017,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
     this.validate_manual = function validate_manual()
     {
+      
         return $("#script_form").validationEngine('validate');
     };
     $("#close_render_admin").on("click", function()
