@@ -709,7 +709,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 var values = this.tag_trigger2;
                                 for (var count = 0; count < values.length; count++)
                                 {
-                               //     $(document).off("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']");
+                                    $(document).off("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']");
                                     $(document).on("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                     {
                                         rules_work(data[index]);
