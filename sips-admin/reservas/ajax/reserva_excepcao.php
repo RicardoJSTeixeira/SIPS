@@ -23,7 +23,7 @@ if (isset($_POST['start']) && isset($_POST['end']) && isset($_POST['resource']) 
 			exit;
 		}
 		                
-                $query="Select count(*) existe FROM sips_sd_reservations 
+               /* $query="Select count(*) existe FROM sips_sd_reservations 
 		WHERE id_resource='".mysql_real_escape_string($resource)."' 
 		AND start_date='".$start."' AND end_date='".$end."';";
 		
@@ -33,7 +33,7 @@ if (isset($_POST['start']) && isset($_POST['end']) && isset($_POST['resource']) 
 		if ($row[existe]>0) {
 			echo json_encode(array("success" => 0,"message" => "Já existe."));
 			exit;
-		}
+		}*/
 		
 		$query="INSERT INTO `sips_sd_reservations` 
 		(`start_date`, `end_date`, `has_accessories`, `id_reservation_type`, `id_resource`,`id_user`,`lead_id`)

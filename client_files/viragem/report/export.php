@@ -25,7 +25,7 @@
         fputcsv($output, array(" ", "Campanha", $camp_name), ";");
         fputcsv($output, array(" ", "Operador", "N Total Uteis", "N Total Registos Trabalhados", "Taxa de Conversao"), ";");
 
-        $qry_user = "select a.user,b.full_name from vicidial_log a inner join vicidial_users b on a.user = b.user where call_date between '$data_inicial 01:00:00' and '$data_final 23:00:00' and campaign_id = '$campanha' and b.user_group = '$user->user_group' group by a.user";
+        $qry_user = "select a.user,b.full_name from vicidial_log a inner join vicidial_users b on a.user = b.user where call_date between '$data_inicial 01:00:00' and '$data_final 23:00:00' and campaign_id = '$campanha' group by a.user";
 
         $goUsers = mysql_query($qry_user, $link) or die(mysql_error());
 

@@ -9257,8 +9257,8 @@ if ($ACTION == 'get_tempo_pausa') {
         $query = "SELECT Sum(pause_sec) tempo FROM  vicidial_agent_log a INNER JOIN vicidial_pause_codes b ON a.sub_status = b.pause_code WHERE b.campaign_id = '$campaign' AND pause_code_name = '$nowPausa' AND event_time between CURDATE() AND NOW() AND user = '$user'";
         $result = mysql_query($query, $link);
         $result = mysql_fetch_assoc($result);
-        $itv = number_format($result['tempo'] / 60, 0);
-        $max = (int)$ze;
+        $itv = (int)($result['tempo'] / 60);
+        $max = (int)$ze/60;
         $js[] = array("pause" => $nowPausa, "time" => ($max - $itv)."m", "exceed" => ($max < $itv));
     }
         echo json_encode($js);
