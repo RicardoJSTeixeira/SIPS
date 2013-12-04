@@ -25,7 +25,7 @@
         fputcsv($output, array(" ", "Campanha", $camp_name), ";");
         fputcsv($output, array(" ", "Operador", "N Total Uteis", "N Total Registos Trabalhados", "Taxa de Conversao"), ";");
 
-        $qry_user = "select a.user,b.full_name from vicidial_log a inner join vicidial_users b on a.user = b.user where call_date between '$data_inicial 01:00:00' and '$data_final 23:00:00' and campaign_id = '$campanha' group by a.user";
+        $qry_user = "select a.user,b.full_name from vicidial_log a inner join vicidial_users b on a.user = b.user where call_date between '$data_inicial 01:00:00' and '$data_final 23:00:00' and campaign_id = '$campanha' and b.user_group = 'Agentes' group by a.user";
 
         $goUsers = mysql_query($qry_user, $link) or die(mysql_error());
 
@@ -34,20 +34,39 @@
 
             $curUserid = $curUser[0];
 
-            $qry_status = "select status, count(status), user from (select * from (select * from (select status, lead_id, user from vicidial_log where call_date between '$data_inicial 01:00:00' and '$data_final 23:00:00' and campaign_id = '$campanha' order by call_date DESC) b group by lead_id) c where user LIKE '$curUser') d group by status";
+            $qry_status = "select count(status) from (select * from (select * from (select status, lead_id, user from vicidial_log where call_date between '$data_inicial 01:00:00' and '$data_final 23:00:00' and campaign_id = '$campanha' order by call_date DESC) b group by lead_id) c where user LIKE '$curUserid') d";
+            //echo $qry_status;
             $qry_status = mysql_query($qry_status, $link) or die(mysql_error());
+            $qry_status = mysql_fetch_row($qry_status);
+            $total = $qry_status[0];
 
 
-            $query_marc = "select count(a.status) from (select * from (select user, status, campaign_id, lead_id from vicidial_log where campaign_id LIKE '$campanha' and user like '$curUserid' AND call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' order by call_date DESC) a group by lead_id) a left join vicidial_campaign_statuses b on a.status=b.status where b.customer_contact='Y' ";
-            //echo $query_marc;
+            $query_marc = "select count(*) from "
+                    . "(select * from "
+                        . "(select user, status, campaign_id, lead_id "
+                            . "from vicidial_log "
+                            . "where"
+                                . " campaign_id LIKE '$campanha' and"
+                                . " user like '$curUserid' AND"
+                                . " call_date BETWEEN '$data_inicial 01:00:00' AND"
+                                . " '$data_final 23:00:00' order by call_date DESC)"
+                            . " a group by lead_id)"
+                            . " a inner join "
+                    . "(select * "
+                        . "from vicidial_campaign_statuses "
+                        . "where "
+                            . "campaign_id LIKE '$campanha' and"
+                            . " customer_contact='Y' ) b "
+                            . "on a.status=b.status ";
+        //echo $query_marc;
             $query_marc = mysql_query($query_marc, $link) or die(mysql_error());
             $query_marc = mysql_fetch_row($query_marc);
-            $tot_marc = $query_marc[0];
+            $contactos_uteis = $query_marc[0];
 
 
-            $conv_rate = round(($tot_marc / $contactos_uteis), 4) * 100;
+            $conv_rate = round(($contactos_uteis / $total), 4) * 100;
             //if ($tot_marc > 0) {
-                fputcsv($output, array(" ", $curUser[1], $tot_marc, $contactos_uteis, $conv_rate . "%"), ";");
+                fputcsv($output, array(" ", $curUser[1], $contactos_uteis, $total, $conv_rate . "%"), ";");
             //}
 
 
