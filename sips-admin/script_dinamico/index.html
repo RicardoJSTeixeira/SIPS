@@ -37,10 +37,10 @@
         <script type="text/javascript" src="/bootstrap/js/validation/contrib/other-validations.js"></script>
 
         <style>
-.input-append select,.input-append input,.input-append button
-{
-    font-size:14px;
-}
+            .input-append select,.input-append input,.input-append button
+            {
+                font-size:14px;
+            }
             .leftDiv, .rightDiv { padding:5px; }
             .grid{border: 1px inset #000000;}
             .leftDiv .item { text-align:center; border:1px solid #EEF; background-color:#FFF;padding:3px; margin-bottom: 3px; min-height: 35px; }
@@ -241,21 +241,24 @@
             <!--barra de paginas e scripts-->
 
             <div class="grid-title">
-                <div class="pull-right " >
 
-                    Scripts           
-                    <select id="script_selector" ></select>                        
-                    <button data-t="tooltip-right" title="Opções do Script" data-toggle="modal" data-target="#dialog_layout"  class="btn btn-warning icon-alone" id="opcao_script_button"><i class="icon-cogs"></i></button>
-                    <button class="btn btn-primary icon-plus" id="script_add_button" title="Adiciona um Script Novo"></button>
-                    <button class="btn btn-danger icon-remove "  id="script_remove_button" title="Remove o Script selecionado"></button>  
-
+                <div class=" left" id="page_selector_div">
+                    <div  class=" input-prepend input-append " >
+                        <span class="add-on">Páginas</span>     
+                        <select id="page_selector"></select>
+                        <button data-t="tooltip-right" title="Opções da Página" data-toggle="modal" data-target="#dialog_page"  class="btn btn-warning icon-alone" id="opcao_page_button"><i class="icon-cogs"></i></button>
+                        <button class="btn btn-primary icon-alone" id="page_add_button" title="Adicionar uma nova página a este Script"><i class="icon-plus"></i></button>
+                        <button class="btn btn-danger icon-alone "  id="page_remove_button" title="Remover esta página" ><i class="icon-remove"></i></button>         
+                    </div>
                 </div>
-                <div class="pull-left" id="page_selector_div">
-                    Páginas     
-                    <select id="page_selector"></select>
-                    <button data-t="tooltip-right" title="Opções da Página" data-toggle="modal" data-target="#dialog_page"  class="btn btn-warning icon-alone" id="opcao_page_button"><i class="icon-cogs"></i></button>
-                    <button class="btn btn-primary icon-plus" id="page_add_button" title="Adiciona uma nova página a este Script"></button>
-                    <button class="btn btn-danger icon-remove "  id="page_remove_button" title="Remove esta página" ></button>         
+                <div class= "right" >
+                    <div  class=" input-prepend input-append " >
+                        <span class="add-on">Scripts</span>            
+                        <select id="script_selector" ></select>                        
+                        <button data-t="tooltip-right" title="Opções do Script" data-toggle="modal" data-target="#dialog_layout"  class="btn btn-warning icon-alone" id="opcao_script_button"><i class="icon-cogs"></i></button>
+                        <button class="btn btn-primary icon-alone" id="script_add_button" title="Adicionar um Script Novo"><i class="icon-plus"></i></button>
+                        <button class="btn btn-danger icon-alone "  id="script_remove_button" title="Remover o Script selecionado"><i class="icon-remove"></i></button>  
+                    </div>
                 </div>
             </div>
 
@@ -313,19 +316,19 @@
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                          <strong>Placeholder:</strong>
+                                        <strong>Placeholder:</strong>
                                         <div class="formRight">
                                             <input  maxlength="65" class="span texto_input" id="placeholder_edit" type="text" placeholder="Placeholder exemplo" />
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                          <strong>Valor por defeito:</strong>
+                                        <strong>Valor por defeito:</strong>
                                         <div class="formRight">
                                             <select id="select_default_value"></select>
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                          <strong>Tamanho maximo:</strong>
+                                        <strong>Tamanho maximo:</strong>
                                         <div class="formRight">
                                             <input  maxlength="3" class="texto_input validate[required] input-mini" id="max_length_edit" name="max_length_edit" type="text" placeholder="Numero Máximo de caracteres" />
                                         </div>
@@ -334,7 +337,7 @@
 
 
                                 <div class="formRow validation" >
-                                      <strong>Validação:</strong>
+                                    <strong>Validação:</strong>
 
                                     <div class="formRight">
                                         <input type="radio" id="validacao_texto_none" name="regex_texto" value="none" /> <label class="radio inline"  for="validacao_texto_none"><span></span>Sem validação</label>
@@ -375,13 +378,13 @@
 
                                         <button class="btn icon-chevron-down" id="button_ajax_upload_div"></button>  
                                     </div>
-                                    
-                                    
-                                    
-                                    
-                                    
+
+
+
+
+
                                     <div id="div_ajax_upload" class="formRow" style="display:none">
-                                           <div class="formRow">
+                                        <div class="formRow">
                                             <span >Selector de ficheiros</span>
                                             <div class="formRight">
                                                 <div class="input-append">
@@ -391,15 +394,15 @@
                                             </div>
                                         </div>
                                         <div class="formRow">
-                                        <form enctype="multipart/form-data" action="" method="POST" id="ajax_upload_form">
+                                            <form enctype="multipart/form-data" action="" method="POST" id="ajax_upload_form">
                                                 <div class="fileupload fileupload-new" data-provides="fileupload">
                                                     <div class="input-append">
-                                                    <div class="uneditable-input"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Escolha um ficheiro</span><span class="fileupload-exists">Alterar</span><input type="file" name="file_ajax" id="ajax_upload_input" /></span><a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remover</a>
+                                                        <div class="uneditable-input"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Escolha um ficheiro</span><span class="fileupload-exists">Alterar</span><input type="file" name="file_ajax" id="ajax_upload_input" /></span><a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remover</a>
+                                                    </div>
                                                 </div>
-                                                </div>
-                                        <button class="btn left" id="ajax_upload_button"><i class="icon-upload"></i>Upload</button>
-                                        </form>
-                                                </div>
+                                                <button class="btn left" id="ajax_upload_button"><i class="icon-upload"></i>Upload</button>
+                                            </form>
+                                        </div>
                                         <div class="formRow">
                                             <label>Texto validado:</label>
                                             <div class="formRight">
@@ -428,19 +431,19 @@
 
 
                                     <div class="formRow" >
-                                          <strong>Texto:</strong>
+                                        <strong>Texto:</strong>
                                         <div class="formRight">
                                             <input  maxlength="150" class="span validate[required]" id="radio_edit" name="radio_edit" type="text" placeholder="Texto" />
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                          <strong>Valores:</strong>
+                                        <strong>Valores:</strong>
                                         <div class="formRight">
                                             <textarea  class="values_edit_textarea validate[required]" id="radio_textarea" name="radio_textarea" rows="4" cols="50"></textarea>
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                          <strong>Disposição:</strong>
+                                        <strong>Disposição:</strong>
                                         <div class="formRight">
                                             <input type="radio"  id="horiz_radio" name="rdispo" checked="checked">   <label class="radio_dispo radio inline"  for="horiz_radio"><span></span>Horizontal </label>
                                         </div> <div class="formRight">
@@ -453,19 +456,19 @@
                             <div class="editor_layout" id="checkbox_layout_editor" style="display:none">
                                 <form class="form_edit_element">
                                     <div class="formRow" >
-                                          <strong>Texto:</strong>
+                                        <strong>Texto:</strong>
                                         <div class="formRight">
                                             <input  maxlength="150" class="span validate[required]" id="checkbox_edit" name="checkbox_edit" type="text" placeholder="Texto" />
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                          <strong>Valores:</strong>
+                                        <strong>Valores:</strong>
                                         <div class="formRight">
                                             <textarea class="values_edit_textarea validate[required]" id="checkbox_textarea" name="checkbox_textarea" rows="4" cols="50"></textarea>
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                          <strong>Disposição:</strong>
+                                        <strong>Disposição:</strong>
                                         <div class="formRight">
                                             <input type="radio"  id="horiz_checkbox" name="cdispo" checked="checked">     <label class="checkbox_dispo radio inline"  for="horiz_checkbox"><span></span>Horizontal </label>
 
@@ -482,13 +485,13 @@
 
 
                                     <div class="formRow" >
-                                          <strong>Texto:</strong>
+                                        <strong>Texto:</strong>
                                         <div class="formRight">
                                             <input  maxlength="150" class="span texto_input validate[required]" id="multichoice_edit" name="multichoice_edit" type="text" placeholder="Texto exemplo" />
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                          <strong>Valores:</strong>
+                                        <strong>Valores:</strong>
                                         <div class="formRight">
                                             <textarea class="values_edit_textarea validate[required]" id="multichoice_textarea" name="multichoice_textarea" rows="4" cols="50"></textarea>
                                         </div>
@@ -499,7 +502,7 @@
                             <div class="editor_layout" id="textfield_layout_editor" style="display:none">
                                 <form class="form_edit_element">
                                     <div class="formRow" >
-                                          <strong>Texto:</strong>
+                                        <strong>Texto:</strong>
                                         <div class="formRight">
                                             <div class="btn-toolbar" data-role="editor-toolbar" data-target="#textfield_edit" style="float:right">
 
@@ -573,7 +576,7 @@
                             <div class="editor_layout" id="legend_layout_editor" style="display:none">
                                 <form class="form_edit_element">
                                     <div class="formRow" >
-                                          <strong>Texto:</strong>
+                                        <strong>Texto:</strong>
                                         <div class="formRight">
                                             <input  maxlength="250" class="span legend_input validate[required]"  id="legend_edit" name="legend_edit" type="text" placeholder="Texto exemplo" />
                                         </div>
@@ -584,20 +587,20 @@
                             <div class="editor_layout" id="tableradio_layout_editor" style="display:none">
                                 <form class="form_edit_element">
                                     <div class="formRow" >
-                                          <strong>Texto:</strong>
+                                        <strong>Texto:</strong>
                                         <div class="formRight">
                                             <input  maxlength="150" class="span tableradio_input validate[required]" id="tableradio_edit" name="tableradio_edit" type="text" placeholder="Texto exemplo" />
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                          <strong>Titulos:</strong>
+                                        <strong>Titulos:</strong>
 
                                         <div class="formRight">
                                             <textarea class="values_edit_textarea validate[required]" id="tableradio_th_textarea" name="tableradio_th_textarea" maxlength="250" rows="4" cols="50"></textarea>
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                          <strong>Perguntas:</strong>
+                                        <strong>Perguntas:</strong>
 
                                         <div class="formRight">
                                             <textarea class="values_edit_textarea validate[required]" id="tableradio_td_textarea" name="tableradio_td_textarea" rows="4" cols="50"></textarea>
@@ -609,20 +612,20 @@
                             <div class="editor_layout" id="tableinput_layout_editor" style="display:none">
                                 <form class="form_edit_element">
                                     <div class="formRow" >
-                                          <strong>Texto:</strong>
+                                        <strong>Texto:</strong>
                                         <div class="formRight">
                                             <input  maxlength="150" class="span tableinput_input validate[required]" id="tableinput_edit" name="tableinput_edit" type="text" placeholder="Texto exemplo" />
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                          <strong>Titulos:</strong>
+                                        <strong>Titulos:</strong>
 
                                         <div class="formRight">
                                             <textarea class="values_edit_textarea validate[required]" id="tableinput_th_textarea" name="tableinput_th_textarea" maxlength="250" rows="4" cols="50"></textarea>
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                          <strong>Perguntas:</strong>
+                                        <strong>Perguntas:</strong>
 
                                         <div class="formRight">
                                             <textarea class="values_edit_textarea validate[required]" id="tableinput_td_textarea" name="tableinput_td_textarea" rows="4" cols="50"></textarea>
@@ -636,7 +639,7 @@
                             <div class="editor_layout" id="datepicker_layout_editor" style="display:none">
                                 <form class="form_edit_element">
                                     <div class="formRow" >
-                                          <strong>Texto:</strong>
+                                        <strong>Texto:</strong>
 
                                         <div class="formRight">
                                             <input  maxlength="250" class="span datepicker_input validate[required]" id="datepicker_edit" name="datepicker_edit" type="text" placeholder="Texto exemplo" />
@@ -646,7 +649,7 @@
                                 </form>
 
                                 <div class="formRow" >
-                                      <strong>Formatação</strong>
+                                    <strong>Formatação</strong>
 
                                     <div class="formRight">
                                         <input type="radio" id="time_format_day" name="time_format" value="2" checked="checked"/><label class="radio inline"  for="time_format_day"><span></span>AAAA-MM-DD</label>
@@ -676,7 +679,7 @@
                             <div class="editor_layout" id="scheduler_layout_editor" style="display:none">
                                 <form class="form_edit_element">
                                     <div class="formRow" >
-                                          <strong>Texto:</strong>
+                                        <strong>Texto:</strong>
                                         <div class="formRight">
                                             <input  maxlength="150" class="scheduler_input validate[required]" id="scheduler_edit" name="scheduler_edit" type="text" placeholder="Texto exemplo" />
                                         </div>
@@ -684,7 +687,7 @@
 
 
                                     <div class="formRow">
-                                          <strong>Calendários:</strong>
+                                        <strong>Calendários:</strong>
                                         <div class="formRight">
                                             <select id="scheduler_edit_select" class="chosen-select"  multiple data-placeholder="Selecione um/vários calendários"   ></select>
                                         </div>
@@ -694,7 +697,7 @@
                                         </div>
                                     </div>  
                                     <div class="formRow">
-                                          <strong>Marcações max.</strong>
+                                        <strong>Marcações max.</strong>
                                         <div class="formRight">
                                             <select id="scheduler_edit_marcação" >
                                                 <option value="1">1</option>
@@ -708,7 +711,7 @@
 
 
                                     <div class="formRow">
-                                          <strong>Marcações obrigatórias</strong>
+                                        <strong>Marcações obrigatórias</strong>
                                         <div class="formRight">
                                             <select id="scheduler_edit_obrigatorio" >   
                                                 <option value="0">0</option>
@@ -730,7 +733,7 @@
                             <div class="editor_layout" id="textarea_layout_editor" style="display:none">
                                 <form class="form_edit_element">
                                     <div class="formRow" >
-                                          <strong>Titulo</strong>
+                                        <strong>Titulo</strong>
 
                                         <div class="formRight">
                                             <input  maxlength="150" class="span textarea_input validate[required]" id="textarea_edit" name="textarea_edit" type="text" placeholder="Texto exemplo" />
@@ -743,7 +746,7 @@
                             <div class="editor_layout" id="ipl_layout_editor" style="display:none">
                                 <form class="form_edit_element">
                                     <div class="formRow" >
-                                          <strong>titulo:</strong>
+                                        <strong>titulo:</strong>
 
                                         <div class="formRight">
                                             <input  maxlength="250" class="span ipl_input validate[required]" id="ipl_edit" name="ipl_edit" type="text" placeholder="Titulo" />
@@ -751,7 +754,7 @@
                                     </div>
                                 </form>
                                 <div class="formRow" id="ipl_div" >
-                                      <strong>Upload de ficheiros</strong>
+                                    <strong>Upload de ficheiros</strong>
                                     <div class="formRight">
 
                                         <form enctype="multipart/form-data" action="" method="POST" id="form_ipl">
@@ -770,24 +773,25 @@
                                     </div>
                                 </div>
                                 <div class="formRow">
-                                    <label class="label label-inverse">Opções:</label>
+                                    <strong>Opções:</strong>
 
                                     <div class="formRight">
-                                        <input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_image" name="ripl" value="1"><label class="radio inline"  for="radio_ipl_image"><span></span> Imagem  </strong>
-                                        <input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_pdf" name="ripl" value="2" >  <label class=" radio inline"  for="radio_ipl_pdf"><span></span>PDF  </strong>
-                                        <input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_link" name="ripl" value="3"  >  <label class=" radio inline"  for="radio_ipl_link"><span></span>Link  </strong>   
+                                        <input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_image" name="ripl" value="1"><label class="radio inline"  for="radio_ipl_image"><span></span> Imagem  </label>
+                                        <input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_pdf" name="ripl" value="2" >  <label class=" radio inline"  for="radio_ipl_pdf"><span></span>PDF  </label>
+                                        <input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_link" name="ripl" value="3"  >  <label class=" radio inline"  for="radio_ipl_link"><span></span>Link   </label>   
                                     </div>
 
 
                                 </div>
                                 <div class="formRow" id="ipl_ip_div">
-                                    <label class="label label-inverse">Imagem/Pdf</label>
-                                    <div class="formRight">
-                                        <select id="ipl_file_select" ></select><button class="btn btn-mini btn-danger icon-remove" id="remove_uploaded_file"></button>
+                                    <strong>Imagem/Pdf</strong>
+                                    <div class="formRight input-append">
+                                        <select id="ipl_file_select" ></select>
+                                        <button class="btn btn-danger icon-alone" id="remove_uploaded_file"><i class="icon-remove"></i></button>
                                     </div>
                                 </div>
                                 <div class="formRow" id="ipl_link_div"  >
-                                    <label class="label label-inverse">Link</label>
+                                    <strong>Link</strong>
                                     <div class="formRight">
                                         <input type="text" placeholder="Exemplo: www.google.pt" id="ipl_edit_link">
                                     </div>
@@ -800,7 +804,7 @@
                             <div class="editor_layout" id="button_layout_editor" style="display:none">
                                 <form class="form_edit_element">
                                     <div class="formRow" >
-                                          <strong>Texto</label>
+                                        <strong>Texto</strong>
 
                                         <div class="formRight">
                                             <input  maxlength="50" class="span button_input validate[required]" id="button_edit" name="button_edit" type="text" placeholder="Texto do Botão" />
@@ -819,60 +823,60 @@
 
                                 <!----------------------------------------------REQUIRED------------------------------------------->
                                 <div class="formRow required_class" >
-                                      <strong>Obrigatório:</label>
-                                    <div class="formRight">
-                                        <input  type="checkbox" id="item_required" name="required" value="1">
-                                        <label for="item_required"><span></span></label>
-                                        <i class="icon-star"></i>
-                                    </div>
-                                    <div class="formRight">
-                                        <label>(Apenas obrigatório quando visivel)</label>
-                                    </div>
+                                    <strong>Obrigatório:</label>
+                                        <div class="formRight">
+                                            <input  type="checkbox" id="item_required" name="required" value="1">
+                                            <label for="item_required"><span></span></label>
+                                            <i class="icon-star"></i>
+                                        </div>
+                                        <div class="formRight">
+                                            <label>(Apenas obrigatório quando visivel)</label>
+                                        </div>
                                 </div>
                                 <!-----------------------------HIDDEN-------------------------------------------------------->
                                 <div class="formRow hidden_class" >
-                                      <strong>Escondido:</label>
-                                    <div class="formRight">
-                                        <input  type="checkbox" id="item_hidden" name="hidden" value="1">
-                                        <label for="item_hidden"><span></span></label>
-                                        <i class="icon-eye-open">​</i> / <i class="icon-eye-close">​</i>
-                                    </div>
+                                    <strong>Escondido:</label>
+                                        <div class="formRight">
+                                            <input  type="checkbox" id="item_hidden" name="hidden" value="1">
+                                            <label for="item_hidden"><span></span></label>
+                                            <i class="icon-eye-open">​</i> / <i class="icon-eye-close">​</i>
+                                        </div>
                                 </div>
                                 <!------------------------------------TAGS---------------------------------------------->
                                 <div class="formRow" id="tag_edit" >
-                                      <strong>Tag associativo:</label>
-                                    <div class="formRight">
-                                        <label  id="label_tag"></label>
-                                    </div>
+                                    <strong>Tag associativo:</label>
+                                        <div class="formRight">
+                                            <label  id="label_tag"></label>
+                                        </div>
                                 </div>
                                 <div class="formRow"  >
-                                      <strong>Tags campos dinâmicos:</label>
-                                    <div class="formRight">
-                                        <select id="tags_select" class="chosen-select" data-placeholder="Selecione uma tag" >
-                                            <optgroup label="Campos Gerais">
-                                                <option value="nome_operador" selected>Nome do operador</option>
-                                            </optgroup>
+                                    <strong>Tags campos dinâmicos:</label>
+                                        <div class="formRight">
+                                            <select id="tags_select" class="chosen-select" data-placeholder="Selecione uma tag" >
+                                                <optgroup label="Campos Gerais">
+                                                    <option value="nome_operador" selected>Nome do operador</option>
+                                                </optgroup>
 
-                                        </select>
-                                        <i class="icon-tag" ></i>
-                                    </div> 
+                                            </select>
+                                            <i class="icon-tag" ></i>
+                                        </div> 
                                 </div>
                                 <div class="formRow" >
-                                      <strong>Tag a copiar:</label>
-                                    <div class="formRight">
-                                        <label id="tag_label"></label>
-                                    </div>
+                                    <strong>Tag a copiar:</label>
+                                        <div class="formRight">
+                                            <label id="tag_label"></label>
+                                        </div>
                                 </div>
                                 <!-----------------------------QUOTAS-------------------------------------------------------->
                                 <div class="formRow quota_class hidden" >
-                                      <strong>Quota:</label>
+                                    <strong>Quota:</label>
 
-                                    <div class="formRight">
-                                        <input  type="checkbox" id="quota_required" name="quota_required" value="1"> Número max. de respostas por pergunta
-                                    </div>
-                                    <div class="formRight" id="div_quota" >
-                                        <input class="span2" type="number" id="quota_input" name="quota_input" min="1" max="1000" value="1">max.1000
-                                    </div>
+                                        <div class="formRight">
+                                            <input  type="checkbox" id="quota_required" name="quota_required" value="1"> Número max. de respostas por pergunta
+                                        </div>
+                                        <div class="formRight" id="div_quota" >
+                                            <input class="span2" type="number" id="quota_input" name="quota_input" min="1" max="1000" value="1">max.1000
+                                        </div>
                                 </div>
                             </div>
                             <div class="clear"></div>
@@ -908,49 +912,49 @@
                                 <label class="label label-warning">Certifique-se que a edição do elemento  está concluida antes de criar as regras.</label>
                                 <!--TRIGGER-->
                                 <div class="formRow" >
-                                      <strong>Evento:</label>
-                                    <div class="formRight">
-                                        <select id="rule_trigger_select" ></select>
-                                    </div> 
+                                    <strong>Evento:</label>
+                                        <div class="formRight">
+                                            <select id="rule_trigger_select" ></select>
+                                        </div> 
                                 </div>
 
                                 <div id="date_limit_rule_placeholder" style="display: none"></div>
                                 <div class="formRow rules_valor" id="rules_valor_select_div" style="display:none"  >
-                                      <strong>Valores:</label>
-                                    <div class="formRight">
-                                        <select id="rules_valor_select" class="chosen-select"  multiple data-placeholder="Selecione um/vários valores" name="rules_valores_select"   ></select>
-                                    </div> 
+                                    <strong>Valores:</label>
+                                        <div class="formRight">
+                                            <select id="rules_valor_select" class="chosen-select"  multiple data-placeholder="Selecione um/vários valores" name="rules_valores_select"   ></select>
+                                        </div> 
                                 </div>
                                 <div class="formRow rules_valor" id="rules_valor_input_div" style="display:none" >
-                                      <strong>Valor:</label>
-                                    <div class="formRight">
-                                        <input  id="rules_valor_input"  type="text" placeholder="Valor que despoleta o evento" name="rules_valor_select" />
-                                    </div> 
+                                    <strong>Valor:</label>
+                                        <div class="formRight">
+                                            <input  id="rules_valor_input"  type="text" placeholder="Valor que despoleta o evento" name="rules_valor_select" />
+                                        </div> 
                                 </div>
 
                                 <div class="formRow" >
-                                      <strong>Tipo:</label>
-                                    <div class="formRight">
-                                        <select id="regra_select">
-                                            <option value="show">Mostrar Elemento</option>   
-                                            <option value="hide" >Esconder Elemento</option>
-                                            <option value="goto">Ir para página</option>
-                                        </select>
-                                    </div> 
+                                    <strong>Tipo:</label>
+                                        <div class="formRight">
+                                            <select id="regra_select">
+                                                <option value="show">Mostrar Elemento</option>   
+                                                <option value="hide" >Esconder Elemento</option>
+                                                <option value="goto">Ir para página</option>
+                                            </select>
+                                        </div> 
                                 </div>
                                 <div class="formRow rule_target" >
-                                      <strong>Alvo:</label>
-                                    <div class="formRight">
-                                        <select  id="rule_target_select" multiple class="chosen-select" name="rules_target_select" data-placeholder="Selecione um/vários elementos">
+                                    <strong>Alvo:</label>
+                                        <div class="formRight">
+                                            <select  id="rule_target_select" multiple class="chosen-select" name="rules_target_select" data-placeholder="Selecione um/vários elementos">
 
-                                        </select>
-                                    </div> 
+                                            </select>
+                                        </div> 
                                 </div>
                                 <div class="formRow" id="go_to_div" style="display:none" >
-                                      <strong>Ir para:</label>
-                                    <div class="formRight">
-                                        <select id="go_to_select" ></select>
-                                    </div> 
+                                    <strong>Ir para:</label>
+                                        <div class="formRight">
+                                            <select id="go_to_select" ></select>
+                                        </div> 
                                 </div>
                                 <div class="clear"></div>
                                 <div class="pull-right">    

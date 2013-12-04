@@ -278,7 +278,7 @@ class script {
                 } else {
                     $temp_ext = "image";
                 }
-                $js[] = ["data-type" => $temp_ext, "value" => $file];
+                $js[] = array("type" => $temp_ext, "value" => $file);
             }
         }
 
