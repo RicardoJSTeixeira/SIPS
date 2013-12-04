@@ -46,7 +46,6 @@ function editor_slideToggle(tipo)
 
 
 $(function() {
-    update_select_ajax();//FILE UPLOADS
 
 
     $("#rule_creator .form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
@@ -197,7 +196,7 @@ $(function() {
         //--------------------------------------//
         editor_slideToggle("off");
         update_script();
-        update_select();
+
     });
     $("#edit_div").draggable({handle: "a"});
     $("#tabs").tabs();
@@ -227,8 +226,10 @@ $(document).on("click", ".element", function(e) {
     switch ($(this).data("type"))
     {
         case "texto":
+            update_select_ajax();
             $("#text_layout_editor").show();
             populate_element("texto", $(this));
+
             break;
         case "radio":
             $("#radio_layout_editor").show();
@@ -289,7 +290,7 @@ $(document).on("click", ".element", function(e) {
             populate_element("textarea", $(this));
             break;
         case "ipl":
-
+            update_select();
             $("#ipl_layout_editor").show();
             $("#ipl_edit_link").val("");
             populate_element("ipl", $(this));
@@ -370,7 +371,7 @@ $("#quota_required").on("click", function() {
 //FILE UPLOADS------------------------------------
 $(".ipl_radio_options").on("click", function()
 {
-    $("#ipl_file_select").val("");
+
     $("#ipl_link_div").hide();
     $("#ipl_ip_div").show();
     $("#ipl_file_select option").prop("disabled", false);
@@ -387,6 +388,7 @@ $(".ipl_radio_options").on("click", function()
         $("#ipl_ip_div").hide();
         $("#ipl_link_div").show();
     }
+    $("#ipl_file_select").val("");
 });
 $('#file_upload').change(function() {
     var re_ext = new RegExp("(gif|jpeg|jpg|png|pdf)", "i");
@@ -435,13 +437,15 @@ function update_select()
     $.post("requests.php", {action: "get_image_pdf"},
     function(data)
     {
-        $.each(data,function()
+        $("#ipl_file_select").empty();
+        $.each(data, function()
         {
-             $("#ipl_file_select").append("<option data-type="+this.type+" value="+this.value+">"+this.value+"</option>");
+
+            $("#ipl_file_select").append("<option data-type=" + this.type + " value=" + this.value + ">" + this.value + "</option>");
         });
-        
-        
-       
+
+
+
         if ($("#radio_ipl_image").is(":checked"))
             $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
         if ($("#radio_ipl_pdf").is(":checked"))
@@ -501,7 +505,7 @@ function update_script(callback)
         function(data4)
         {
             $("#tags_select .tag_group").remove();
-           
+
             var temp = "";
             $.each(data4, function() {
                 $("#tags_select").append("<optgroup class='tag_group' label='" + this.text + "'></optgroup>");
@@ -510,10 +514,10 @@ function update_script(callback)
                     temp = temp + "<option value='" + this.value + "'>" + this.name + "</option>";
                 });
                 $("#tags_select optgroup:last").append(temp);
-                 $("#select_default_value").empty();
+                $("#select_default_value").empty();
                 $("#select_default_value").append("<option value='0'>Selecione um campo dinamico</option>");
                 $("#select_default_value").append(temp);
- 
+
             });
             $("#tags_select").trigger("liszt:updated");
             $("#tag_label").text("§" + $("#tags_select option:selected").val() + "§");
