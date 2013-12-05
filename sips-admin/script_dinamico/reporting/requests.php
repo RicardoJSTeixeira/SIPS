@@ -146,6 +146,7 @@ switch ($action) {
 
 
     case "report":
+        ini_set('memory_limit', '-1');
         header('Content-Encoding: UTF-8');
         header('Content-type: text/csv; charset=UTF-8');
         echo "\xEF\xBB\xBF";
