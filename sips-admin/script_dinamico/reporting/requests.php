@@ -327,7 +327,7 @@ switch ($action) {
                             . "left join vicidial_log vlg on vlg.uniqueid=sr.unique_id "
                             . "left join vicidial_campaign_statuses vcs on vcs.status=vlg.status "
                         . "where "
-                            . "sr.lead_id=:lead_id limit 1";
+                            . "sr.lead_id=:lead_id order by date DESC limit 1";
                 //echo $query1;
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute(array(":lead_id" => $row["lead_id"]));
