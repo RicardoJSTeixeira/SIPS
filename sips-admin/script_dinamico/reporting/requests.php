@@ -150,12 +150,8 @@ switch ($action) {
         header('Content-type: text/csv; charset=UTF-8');
         echo "\xEF\xBB\xBF";
         $output = fopen('php://output', 'w');
-// Nome das tabelas
 
 
-
-
-        $script_values = array();
         $field_data = json_decode($field_data);
 //GET ID SCRIPT
         $query = "SELECT id_script from script_assoc where id_camp_linha=:campaign_id";
@@ -184,13 +180,12 @@ switch ($action) {
                 $list_id[] = $row["list_id"];
             }
             if (!isset($list_id)) {
-                echo("Não ha base de dados activa para esta campanha");
+                echo "Não ha base de dados activa para esta campanha";
                 exit;
             }
         }
 
-
-        $titulos = array();
+//GET COLUMN SORT
         $data_row = array();
         $temp_lead_data = array();
         foreach ($field_data as $key => $value) {
@@ -203,10 +198,20 @@ switch ($action) {
             }
         }
 
-        $query = "SELECT a.tag,a.type,a.texto,a.values_text,a.placeholder  FROM `script_dinamico` a left join script_dinamico_pages b on b.id=a.id_page  where type not in ('pagination','textfield','scheduler','legend','button','ipl')  and a.id_script=:id_script and a.tag in ('" . join("','", $tags) . "')   ";
+        //GET COLUMNS FROM DB
+        $query = "SELECT a.tag,a.type,a.texto,a.values_text,a.placeholder "
+                . "FROM `script_dinamico` a "
+                    . "left join script_dinamico_pages b "
+                    . "on b.id=a.id_page "
+                . "where "
+                    . "type not in ('pagination','textfield','scheduler','legend','button','ipl') "
+                    . "and a.id_script=:id_script "
+                    . "and a.tag in ('" . join("','", $tags) . "')   ";
 
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
+        
+        //MAKE COLUMNS STRUCTURE WITH DATA PROVIDED EM DATA FROM DB
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $script_values = array();
             if ($row['type'] == "tableradio") {
@@ -231,15 +236,14 @@ switch ($action) {
             }
         }
 
-
-
-
         unset($row);
         unset($temp);
         unset($temp2);
         unset($script_values);
 
         $data_row = array_merge(array("id" => "ID", "date" => "Data", "name" => "Nome", "full_name" => "Agente", "campaign_name" => "Nome da campanha", "status_name" => "Feedback"), $data_row);
+        
+        $titulos = array();
         $titulos = $data_row;
         foreach ($data_row as $key => $value) {
             $data_row[$key] = "";
@@ -282,10 +286,20 @@ switch ($action) {
 
 
         //DADOS DO SCRIPT
-        $query = "SELECT sr.lead_id,sr.tag_elemento,sr.valor,sr.param_1,sd.param1,sd.type FROM `script_result` sr
-               left join  vicidial_list vl on vl.lead_id=sr.lead_id
-                  left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script
-          where sr.id_script=:id_script and sr.campaign_id = :campaign_id  $date_filter   and vl.list_id in ('" . join("','", $list_id) . "') and sr.tag_elemento in ('" . join("','", $tags) . "') order by sr.lead_id ";
+        $query = "SELECT sr.lead_id,sr.tag_elemento,sr.valor,sr.param_1,sd.param1,sd.type "
+                . "FROM `script_result` sr FORCE INDEX (lead_id)"
+                    . "left join  vicidial_list vl "
+                    . "on vl.lead_id=sr.lead_id "
+                    . "left join script_dinamico sd "
+                    . "on sd.tag=sr.tag_elemento "
+                    . "and sd.id_script=sr.id_script "
+                . "where sr.id_script=:id_script "
+                    . "and sr.campaign_id = :campaign_id "
+                    . "$date_filter "
+                    . "and vl.list_id in ('" . implode("','", $list_id) . "') "
+                    . "and sr.tag_elemento in ('" . implode("','", $tags) . "') "
+                . "order by sr.lead_id ";
+        
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script, ":campaign_id" => $campaign_id));
 
@@ -293,8 +307,6 @@ switch ($action) {
 
         fputcsv($output, $titulos, ";", '"');
         $lead_id = false;
-
-
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $count_results++;
@@ -304,13 +316,18 @@ switch ($action) {
                     fputcsv($output, $temp_d, ";", '"');
                     unset($final_row[$lead_id]);
                 }
-                $query1 = "SELECT sr.date, sdm.name, vu.full_name,  vc.campaign_name,vcs.status_name FROM `script_result` sr
-                left join script_dinamico_master sdm on sdm.id=sr.id_script
-                left join vicidial_users vu on sr.user_id=vu.user
-                left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id
-                left join vicidial_log vlg on vlg.uniqueid=sr.unique_id
-                left join vicidial_campaign_statuses vcs on vcs.status=vlg.status
-                where sr.lead_id=:lead_id";
+                $query1 = "SELECT sr.date, sdm.name, vu.full_name, vc.campaign_name,vcs.status_name "
+                        . "FROM `script_result` sr "
+                            . "left join script_dinamico_master sdm "
+                            . "on sdm.id=sr.id_script "
+                            . "left join vicidial_users vu "
+                            . "on sr.user_id=vu.user "
+                            . "left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id "
+                            . "left join vicidial_log vlg on vlg.uniqueid=sr.unique_id "
+                            . "left join vicidial_campaign_statuses vcs on vcs.status=vlg.status "
+                        . "where "
+                            . "sr.lead_id=:lead_id limit 1";
+                //echo $query1;
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute(array(":lead_id" => $row["lead_id"]));
                 $row1 = $stmt1->fetch(PDO::FETCH_ASSOC);
@@ -327,13 +344,15 @@ switch ($action) {
                 $temp_d["status_name"] = $row1["status_name"];
             }
 
-            if ($row["type"] == "tableradio")
-                $temp_d["m" . $row["tag_elemento"] . $row["param_1"]] = $row["valor"];
+            if ($row["type"] == "tableradio"){
+            $temp_d["m" . $row["tag_elemento"] . $row["param_1"]] = $row["valor"];
+            }
             elseif ($row["type"] == "tableinput") {
                 $temp = split(";", $row["param_1"]);
                 $temp_d["m" . $row["tag_elemento"] . $temp[1] . $temp[0]] = $row["valor"];
-            } else
-                $temp_d["m" . $row["tag_elemento"]] = ($row["param1"] == "nib") ? "" . $row["valor"] . "" : $row["valor"];
+            } else{
+            $temp_d["m" . $row["tag_elemento"]] = ($row["param1"] == "nib") ? "" . $row["valor"] . "" : $row["valor"];
+            }
         }
 
         if (!$count_results) {
