@@ -400,29 +400,33 @@ class script {
         $query = "INSERT INTO script_dinamico_master (id,name,user_group) VALUES (NULL,?,?)";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($nome_script . " duplicado", $user_group));
-        $temp_script_page = $this->db->lastInsertId();
+        $temp_script_id = $this->db->lastInsertId();
 
         $query = "INSERT INTO script_rules (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) select NULL,?,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2 from script_rules where id_script=? and tipo!='goto'";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array($temp_script_page, $id_script));
+        $stmt->execute(array($temp_script_id, $id_script));
         $query = "SELECT id,id_script,name,pos FROM script_dinamico_pages where id_script=?";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($id_script));
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 //pages
-            $query = "INSERT INTO script_dinamico_pages (id,id_script,name,pos) values(NULL, ?,?,?)";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute(array($temp_script_page, $row['name'], $row['pos']));
-            $temp_page = $this->db->lastInsertId();
+
+
+
+            $query1 = "INSERT INTO script_dinamico_pages (`id_script`,`name`,`pos`) values(?,?,?)";
+            $stmt1 = $this->db->prepare($query1);
+            $stmt1->execute(array($temp_script_id, $row['name'], $row['pos']));
+             $temp_page = $this->db->lastInsertId();
 //rules de go-to
-            $query = "INSERT INTO script_rules (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) select NULL,?,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,? from script_rules where param2=? and id_script=? and tipo='goto'";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute(array($temp_script_page, $this->db->lastInsertId(), $row['id'], $id_script));
+
+            $query2 = "INSERT INTO script_rules (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) select NULL,?,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,? from script_rules where param2=? and id_script=? and tipo='goto'";
+            $stmt2 = $this->db->prepare($query2);
+            $stmt2->execute(array($temp_script_id, $this->db->lastInsertId(), $row['id'], $id_script));
 //elements
-            $query = "INSERT INTO script_dinamico (`id`,tag, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,default_value,required,hidden,param1) select NULL,tag,?,?,type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,default_value,required,hidden,param1 from script_dinamico where id_script=? and id_page= ?  ";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute(array($temp_script_page, $temp_page, $id_script, $row['id']));
+            $query3 = "INSERT INTO script_dinamico (`id`,tag, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,default_value,required,hidden,param1) select NULL,tag,?,?,type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,default_value,required,hidden,param1 from script_dinamico where id_script=? and id_page= ?  ";
+            $stmt3 = $this->db->prepare($query3);
+            $stmt3->execute(array($temp_script_id, $temp_page, $id_script, $row['id']));
         }
         return 1;
     }
@@ -439,7 +443,7 @@ class script {
         $stmt->execute(array(":id_pagina" => $id_pagina));
 
 
-        $query = "select sd.tag as tag from script_dinsd inner join script_rules sr on sd.tag=sr.tag_trigger where sd.id_page=:id_pagina";
+        $query = "select sd.tag as tag from script_dinamico sd inner join script_rules sr on sd.tag=sr.tag_trigger where sd.id_page=:id_pagina";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_pagina" => $id_pagina));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -447,7 +451,7 @@ class script {
         }
         $js = implode(",", $js);
         if (sizeof($js) > 0) {
-            $query = "delete from  script_rules where tag_trigger in($js)";
+            $query = "delete from  script_rules where tag_trigger in('$js')";
             $stmt = $this->db->prepare($query);
             $stmt->execute();
         }
@@ -491,7 +495,7 @@ class script {
         $query = "delete from script_rules where id_script=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
-           return 1; 
+        return 1;
     }
 
     public function delete_rule($id) {
