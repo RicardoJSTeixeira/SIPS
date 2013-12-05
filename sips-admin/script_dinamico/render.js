@@ -275,7 +275,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 $(document).off("blur", "#script_div #" + info.tag + " :input");
                                 $(document).on("blur", "#script_div #" + info.tag + " :input", function()
                                 {
-                                    $("#script_div #" + info.tag + " :input").validationEngine("validate");
+                              //      $("#script_div #" + info.tag + " :input").validationEngine("validate");
                                 });
                             }
                             break;
