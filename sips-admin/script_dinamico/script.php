@@ -76,17 +76,20 @@ class script {
             $campaigns[] = $row["id_camp_linha"];
         }
         foreach ($campaigns as $value) {
-            $query = "Select campaign_name from vicidial_campaigns where campaign_id = :value;";
+
+
+
+            $query = "Select campaign_name from vicidial_campaigns where campaign_id = :campaign_id";
             $stmt = $this->db->prepare($query);
-            $stmt->execute(array(":value" => $value));
+            $stmt->execute(array(":campaign_id" => $value));
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $js[$value]["text"] = $row['campaign_name'];
-            $query = "SELECT indice,Name,Display_name FROM `vicidial_list_ref`  where campaign_id =:value and active='1'  GROUP BY name";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute(array(":value" => $value));
+            $query1 = "SELECT indice,Name,Display_name FROM `vicidial_list_ref`  where campaign_id =:campaign_id and active='1'  GROUP BY name";
+            $stmt1 = $this->db->prepare($query1);
+            $stmt1->execute(array(":campaign_id" => $value));
             $js[$value]["lista"] = array();
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $js[$row["campaign_id"]]["lista"][] = array("id" => $row["indice"], "value" => $row["Name"], "name" => $row["Display_name"]);
+            while ($row = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+                $js[$value]["lista"][] = array("id" => $row["indice"], "value" => $row["Name"], "name" => $row["Display_name"]);
             }
         }
         return $js;
@@ -244,7 +247,7 @@ class script {
         $query = "SELECT cloud FROM servers";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $row = $stmt->fetch(PDO::FETCH_BOTH);
         return ($row[0] == "1");
     }
 
@@ -308,15 +311,19 @@ class script {
         $query = "delete from script_assoc where id_script=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
-        foreach ($campaign as $value) {
-            $query = "INSERT INTO `script_assoc` values(:id_script,:value,'campaign')";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute(array(":id_script" => $id_script, ":value" => $value));
+        if (count($campaign)) {
+            foreach ($campaign as $value) {
+                $query = "INSERT INTO `script_assoc` values(:id_script,:value,'campaign')";
+                $stmt = $this->db->prepare($query);
+                $stmt->execute(array(":id_script" => $id_script, ":value" => $value));
+            }
         }
-        foreach ($linha_inbound as $value) {
-            $query = "INSERT INTO `script_assoc` values(:id_script,:value,'linha_inbound')";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute(array(":id_script" => $id_script, ":value" => $value));
+        if (count($linha_inbound)) {
+            foreach ($linha_inbound as $value) {
+                $query = "INSERT INTO `script_assoc` values(:id_script,:value,'linha_inbound')";
+                $stmt = $this->db->prepare($query);
+                $stmt->execute(array(":id_script" => $id_script, ":value" => $value));
+            }
         }
         return 1;
     }
@@ -417,7 +424,7 @@ class script {
             $query1 = "INSERT INTO script_dinamico_pages (`id_script`,`name`,`pos`) values(?,?,?)";
             $stmt1 = $this->db->prepare($query1);
             $stmt1->execute(array($temp_script_id, $row['name'], $row['pos']));
-             $temp_page = $this->db->lastInsertId();
+            $temp_page = $this->db->lastInsertId();
 //rules de go-to
 
             $query2 = "INSERT INTO script_rules (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) select NULL,?,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,? from script_rules where param2=? and id_script=? and tipo='goto'";
@@ -443,18 +450,22 @@ class script {
         $stmt->execute(array(":id_pagina" => $id_pagina));
 
 
-        $query = "select sd.tag as tag from script_dinamico sd inner join script_rules sr on sd.tag=sr.tag_trigger where sd.id_page=:id_pagina";
+
+        $query = "select sd.tag as tag from script_dinamico sd inner join script_rules sr on sd.tag=sr.tag_trigger where sd.id_page=:id_pagina group by tag";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_pagina" => $id_pagina));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $js[] = "'" . $row["tag"] . "'";
+            $js[] = $row["tag"];
         }
-        $js = implode(",", $js);
-        if (sizeof($js) > 0) {
+
+        $js = implode("','", $js);
+
+        if (count($js)) {
             $query = "delete from  script_rules where tag_trigger in('$js')";
             $stmt = $this->db->prepare($query);
             $stmt->execute();
         }
+
         $query = "delete from  script_dinamico where id_page=:id_pagina";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_pagina" => $id_pagina));
