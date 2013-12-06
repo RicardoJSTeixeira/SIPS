@@ -52,6 +52,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
             me.validate_manual(function() {
                 var temp = $(".pag_div:visible").next(".pag_div");
+             
                 if (temp.length)
                 {
                     $(".pag_div").hide();
@@ -114,15 +115,16 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                     {
 
                                         if (status) {
-
-                                            if (typeof validado_function === "function")
+    
+                                            if (typeof me.validado_function === "function")
                                             {
+                                            
                                                 me.validado_function();
                                             }
 
 
                                         } else {
-                                            if (typeof validado_function === "function")
+                                            if (typeof me.validado_function === "function")
                                             {
                                                 me.validado_function();
                                             }

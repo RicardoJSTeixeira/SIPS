@@ -814,6 +814,7 @@ Object.size = function(a)
 };
 function populate_element(tipo, element)
 {
+
     rules_manager(tipo, element);
     $("#tabs").tabs("enable");
     $("#select_default_value").val("");
