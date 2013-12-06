@@ -196,7 +196,8 @@ $(function() {
         //--------------------------------------//
         editor_toggle("off");
         update_script();
-
+    update_select_ajax();
+        update_select();
     });
     $("#edit_div").draggable({handle: "a"});
     $("#tabs").tabs();
@@ -226,7 +227,7 @@ $(document).on("click", ".element", function(e) {
     switch ($(this).data("type"))
     {
         case "texto":
-            update_select_ajax();
+        
             $("#text_layout_editor").show();
             populate_element("texto", $(this));
 
@@ -290,7 +291,7 @@ $(document).on("click", ".element", function(e) {
             populate_element("textarea", $(this));
             break;
         case "ipl":
-            update_select();
+           
             $("#ipl_layout_editor").show();
             $("#ipl_edit_link").val("");
             populate_element("ipl", $(this));
@@ -839,6 +840,7 @@ function populate_element(tipo, element)
             $("#select_default_value option[value=" + element.data("default_value") + "]").prop("selected", true);
             if (element.data("php_script") != "0")
             {
+
                 $("#select_ajax_script option[value='" + element.data("php_script") + "']").prop("selected", true);
                 $("#validado_text").val(element.data("php_script_validado"));
                 $("#not_validado_text").val(element.data("php_script_not_validado"));
@@ -1439,7 +1441,7 @@ function insert_element(opcao, element, data)
                         .append($("<label>")
                                 .addClass("checkbox_name checkbox inline")
                                 .attr("for", array_id["checkbox"] + "checkbox")
-                                .html("<span></span>"+ checkboxs[count])
+                                .html("<span></span>" + checkboxs[count])
                                 )
                         ;
 
@@ -2124,8 +2126,8 @@ $("#ajax_upload_button").on("click", function(e)
         return false;
     var formData = new FormData(form[0]);
     formData.append("action", "upload_php");
-$("#validado_text").val("");
-$("#not_validado_text").val("");
+    $("#validado_text").val("");
+    $("#not_validado_text").val("");
     $.ajax({
         url: 'upload.php',
         type: 'POST',
@@ -2154,8 +2156,9 @@ function update_select_ajax()
             $("#select_ajax_script").append("<option value=" + this + ">" + this + "</option>");
         });
     }, "json");
-};
-$("#select_ajax_script").on("change",function()
+}
+;
+$("#select_ajax_script").on("change", function()
 {
     $("#validado_text").val("");
     $("#not_validado_text").val("");
