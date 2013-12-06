@@ -18,7 +18,7 @@ function connectaMensageiros() {
     if (isset($_GET['uniqueid'])) { $unique_id = $_GET['uniqueid']; } else { $unique_id = $_POST['uniqueid']; }
     if (isset($_GET['user'])) { $user = $_GET['user']; } else { $user = $_POST['user']; }
     
-    $link = mysql_connect("172.16.7.25:3306", "sipsadmin", "sipsps2012");
+    $link = mysql_connect("172.16.7.25", "sipsadmin", "sipsps2012");
     mysql_select_db("asterisk");
     $query = "SELECT tag_elemento,valor FROM `script_result` WHERE tag_elemento IN ('159','153', '155', '160', '156', '157', '154', '161', '165') and unique_id = '$unique_id' order by tag_elemento ASC";
     
