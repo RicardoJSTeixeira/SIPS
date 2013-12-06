@@ -4384,10 +4384,7 @@ function  DispoSelect_submit_allowed()
                                 });
                                 DispoSelect_submit_allowed();
                                 $('#vcFormIFrame', parent.window.document)[0].src = "";
-                            },
-                                    function() {
-
-                                    });
+                            });
                         }, function() {
                     $("#Main-tabs a:eq(1)").tab("show");
                 });
