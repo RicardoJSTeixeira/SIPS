@@ -11,8 +11,8 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     this.user_id = user_id;
     this.campaign_id = campaign_id;
     this.admin_review = admin_review;
-
-
+    this.validado_function = false;
+    this.nao_validado_function = false;
 
     this.init = function()
     {
@@ -36,28 +36,29 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         $(document).off("click", "#script_div .previous_pag");
         $(document).on("click", "#script_div .previous_pag", function(e) {
             e.preventDefault();
-            if (me.validate_manual())
+
+            var temp = $(".pag_div:visible").prev(".pag_div");
+            if (temp.length)
             {
-                var temp = $(".pag_div:visible").prev(".pag_div");
-                if (temp.length)
-                {
-                    $(".pag_div").hide();
-                    temp.show();
-                }
+                $(".pag_div").hide();
+                temp.show();
             }
+
         });
         $(document).off("click", "#script_div .next_pag");
         $(document).on("click", "#script_div .next_pag", function(e) {
             e.preventDefault();
-            if (me.validate_manual())
-            {
+
+
+            me.validate_manual(function() {
                 var temp = $(".pag_div:visible").next(".pag_div");
                 if (temp.length)
                 {
                     $(".pag_div").hide();
                     temp.show();
                 }
-            }
+
+            }, false);
         });
         $(document).off("click", "#script_div .scheduler_button_go");
         $(document).on("click", "#script_div .scheduler_button_go", function(e) {
@@ -94,6 +95,9 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
 
 
+
+
+
     function starter(callback)
     {
 
@@ -104,7 +108,27 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             rules(function() {
                 tags(function() {
                     me.populate_script(function() {
-                        $("#script_form").validationEngine();
+                        $("#script_form").validationEngine(
+                                {
+                                    onValidationComplete: function(form, status)
+                                    {
+
+                                        if (status) {
+
+                                            if (typeof validado_function === "function")
+                                            {
+                                                me.validado_function();
+                                            }
+
+
+                                        } else {
+                                            if (typeof validado_function === "function")
+                                            {
+                                                me.validado_function();
+                                            }
+                                        }
+                                    }
+                                });
                     });
                 });
             });
@@ -272,11 +296,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                     "alertTextOk": info.values_text.validado,
                                     "alertTextLoad": "* A validar, por favor aguarde"
                                 };
-                                $(document).off("blur", "#script_div #" + info.tag + " :input");
-                                $(document).on("blur", "#script_div #" + info.tag + " :input", function()
-                                {
-                              //      $("#script_div #" + info.tag + " :input").validationEngine("validate");
-                                });
+
                             }
                             break;
                     }
@@ -1015,10 +1035,15 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         });
     };
 
-    this.validate_manual = function validate_manual()
+    this.validate_manual = function(validado, nao_validado)
     {
-      
-        return $("#script_form").validationEngine('validate');
+
+        me.validado_function = validado;
+        me.nao_validado_function = nao_validado;
+
+        $("#script_form").submit();
+
+
     };
     $("#close_render_admin").on("click", function()
     {
