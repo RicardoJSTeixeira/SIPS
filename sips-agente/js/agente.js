@@ -4358,8 +4358,11 @@ function DispoSelect_submit()
         }
     }
     else
+    {
         DispoSelect_submit_allowed();
+    }
 }
+
 function  DispoSelect_submit_allowed()
 {
     var 
@@ -4371,21 +4374,26 @@ function  DispoSelect_submit_allowed()
     if (custom_fields_enabled && !isCB) {
 
         if (script_dinamico) {
- vcFormIFrame.script.unique_id = unique_id_hack;
+            vcFormIFrame.script.unique_id = unique_id_hack;
             if (isSALE) {
-                if (vcFormIFrame.validate_manual()) {
-                    vcFormIFrame.submit_manual(function() {
-                         $.post('ajax/sale_actions.php', { uniqueid: unique_id_hack, lead_id : lead_id_hack, dispo : DispoChoice, dispoAtt : campaign_status[DispoChoice], campaign_id : campaign_id.value, user : user, client : clientName  }, function(data) {
-                            console.log(data);
-                        });
-                        $('#vcFormIFrame', parent.window.document)[0].src = "";
-                    });
-                } else {
+                vcFormIFrame.validate_manual(
+                        function() {
+                            vcFormIFrame.submit_manual(function() {
+                                $.post('ajax/sale_actions.php', {uniqueid: unique_id_hack, lead_id: lead_id_hack, dispo: DispoChoice, dispoAtt: campaign_status[DispoChoice], campaign_id: campaign_id.value, user: user, client: clientName}, function(data) {
+                                    console.log(data);
+                                });
+                                DispoSelect_submit_allowed();
+                                $('#vcFormIFrame', parent.window.document)[0].src = "";
+                            },
+                                    function() {
+
+                                    });
+                        }, function() {
                     $("#Main-tabs a:eq(1)").tab("show");
-                    return false;
-                }
+                });
             } else {
                 vcFormIFrame.submit_manual(function() {
+                    DispoSubmitFinalStep();
                     $('#vcFormIFrame', parent.window.document)[0].src = "";
                 });
             }
@@ -4432,10 +4440,19 @@ function  DispoSelect_submit_allowed()
 
             }
             vcFormIFrame.document.form_custom_fields.submit();
+            DispoSubmitFinalStep()
         }
 
     }
 
+}
+
+function DispoSubmitFinalStep(){
+    
+    var 
+    DispoChoice = document.vicidial_form.DispoSelection.value,
+    isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback;
+    
     CustomerData_update();
     if (VDCL_group_id.length > 1)
     {
