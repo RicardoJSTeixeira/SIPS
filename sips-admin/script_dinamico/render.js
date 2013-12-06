@@ -1023,9 +1023,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             {
                 callback();
             }
-            return true;
-
-
         }, "json").fail(function() {
             console.log("FAIL saving data because-->id_script-" + me.script_id + "|user_id->" + me.user_id + "|unique_id->" + me.unique_id + "|campaign_id->" + me.campaign_id + "|lead_id->" + me.lead_id + "|admin_review->" + me.admin_review);
 
