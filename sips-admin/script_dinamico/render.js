@@ -119,14 +119,15 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                             if (typeof me.validado_function === "function")
                                             {
                                             
+                           
                                                 me.validado_function();
                                             }
 
 
                                         } else {
-                                            if (typeof me.validado_function === "function")
+                                            if (typeof me.nao_validado_function === "function")
                                             {
-                                                me.validado_function();
+                                                me.nao_validado_function();
                                             }
                                         }
                                     }
