@@ -347,7 +347,7 @@ function reserved_ip($ip) {
     <div class="control-group">
         <label class="control-label">Feedback Actual:</label>
         <div class="controls input-append">
-            <select style='width:200px' name=feedback_list id=feedback_list><?= $status_options ?></select>
+            <select style='width:300px' name=feedback_list id=feedback_list><?= $status_options ?></select>
             <button class="btn btn-primary" id="confirm_feedback" style="display:none">Confirmação de feedback</button>
         </div>
         <span id=modify_feedback_status class='help-inline'><i>(O feedback deste contacto pode ser alterado neste menu.)</i></Span>
@@ -447,7 +447,10 @@ function reserved_ip($ip) {
                 <td><?= $row["full_name"] ?></td>
                 <td><?= $row["status_name"] ?></td>
                 <td><?= $row["campaign_name"] ?></td>
-                <td><?= $row["list_name"] ?></td>
+                <td><?= $row["list_name"] ?>
+                 <div class="view-button"><a class="btn btn-mini" target='_new' href='script_placeholder.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>&isadmin=1&unique_id=<?= $row["uniqueid"]?>'><i class="icon-bookmark"></i>Script</a></div>
+            
+                </td>
             </tr>
         <?php } ?>
 
@@ -465,7 +468,13 @@ function reserved_ip($ip) {
                 <td><?= $row["full_name"] ?></td>
                 <td><?= $row["status_name"] ?></td>
                 <td><?= $row["campaign_name"] ?></td>
-                <td><?= $row["list_name"] ?></td>
+                <td><?= $row["list_name"] ?>
+                            
+                 <div class="view-button"><a class="btn btn-mini" target='_new' href='script_placeholder.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>&isadmin=1&unique_id=<?= $row["uniqueid"]?>'><i class="icon-bookmark"></i>Script</a></div>
+            
+
+
+                </td>
             </tr>
         <?php } ?>
     </tbody>
@@ -499,31 +508,31 @@ function reserved_ip($ip) {
                         <?
                         $mp3File = "#";
                         if (strlen($row[location]) > 0) {
-                            //if lan
-                            if (reserved_ip(get_client_ip())) {
-                                $mp3File = $row[location];
-                            } else {
-                                $tmp = explode("/", $row[location]);
-                                $ip = $tmp[2];
-                                $tmp = explode(".", $ip);
-                                $ip = $tmp[3];
-
-                                switch ($ip) {
-                                    case "248":
-                                        $port = ":20248";
-                                        break;
-                                    case "247":
-                                        $port = ":20247";
-                                        break;
-                                    default:
-                                        $port = "";
-                                        break;
-                                }
-                                $mp3File = $curpage . $port . "/RECORDINGS/MP3/$row[filename]-all.mp3";
-                            }
-                            $audioPlayer = "Há gravação";
+                        //if lan
+                        if (reserved_ip(get_client_ip())) {
+                        $mp3File = $row[location];
                         } else {
-                            $audioPlayer = "Não há gravação!";
+                        $tmp = explode("/", $row[location]);
+                        $ip = $tmp[2];
+                        $tmp = explode(".", $ip);
+                        $ip = $tmp[3];
+
+                        switch ($ip) {
+                        case "248":
+                        $port = ":20248";
+                        break;
+                        case "247":
+                        $port = ":20247";
+                        break;
+                        default:
+                        $port = "";
+                        break;
+                        }
+                        $mp3File = $curpage . $port . "/RECORDINGS/MP3/$row[filename]-all.mp3";
+                        }
+                        $audioPlayer = "Há gravação";
+                        } else {
+                        $audioPlayer = "Não há gravação!";
                         }
 
 
@@ -532,21 +541,7 @@ function reserved_ip($ip) {
 
 
                         <div class="view-button"><a href='<?= $mp3File ?>' target='_self' class="btn btn-mini"><i class="icon-play"></i>Ouvir</a></div>
-                        <?php
-                        $temp = 0;
-                        $query = "SELECT *  FROM script_assoc where id_camp_linha='" . $lead_info[campaign_id] . "'";
-                        $query = mysql_query($query, $link) or die(mysql_error());
-                        while ($row = mysql_fetch_assoc($query)) {
-                            $temp = 1;
-                        }
 
-
-                        if ($temp) {
-                            ?>    
-                            <div class="view-button"><a class="btn btn-mini" target='_new' href='script_placeholder.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>&isadmin=1&unique_id=<?= $row["vicidial_id"] ?>'><i class="icon-bookmark"></i>Script</a></div>
-                        <?php } else { ?>
-                            <div class="view-button">  <a class="btn btn-mini" target='_new' href='../../sips-agente/vdc_form_display.php?submit_button=YES&lead_id=<?= $lead_id ?>&list_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>'><i class="icon-bookmark"></i>Script</a></div>
-                        <?php } ?>
                     </td>
 
 

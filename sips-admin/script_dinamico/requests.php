@@ -67,7 +67,7 @@ switch ($action) {
         break;
 
     case "get_results_to_populate":
-        echo json_encode($script->get_results_to_populate($lead_id, $id_script));
+        echo json_encode($script->get_results_to_populate($lead_id, $id_script,$unique_id));
         break;
 
     case "get_pages":

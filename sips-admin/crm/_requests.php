@@ -63,7 +63,10 @@ switch ($action) {
 
     /* Actualização das Dropdowns qnd se muda de campanha */
     case "campaign_change_db":
-        $query = "SELECT list_id, list_name FROM vicidial_lists WHERE campaign_id='$sent_campaign'";
+        if ($sent_campaign == "all")
+            $query = "SELECT list_id, list_name FROM vicidial_lists";
+        else
+            $query = "SELECT list_id, list_name FROM vicidial_lists WHERE campaign_id='$sent_campaign'";
         $query = mysql_query($query, $link);
 
         $rows = array();
@@ -93,18 +96,34 @@ switch ($action) {
 # Contrução do Filtro das Datas
         if ($dataflag == 1) {
 
-            $data_QUERY = " AND last_local_call_time >= '$datai 00:00:00' AND last_local_call_time <= '$dataf 23:59:59' ";
+            $data_QUERY = "last_local_call_time between '$datai 00:00:00' AND '$dataf 23:59:59' ";
         } else {
-            $data_QUERY = " AND entry_date >= '$datai 00:00:00' AND entry_date <= '$dataf 23:59:59' ";
+            $data_QUERY = "entry_date between '$datai 00:00:00' AND '$dataf 23:59:59' ";
         }
 # Construção do Filtro das Campanhas/BDs
-        if ($filtro_dbs == "all") {
-            $query = "SELECT list_id FROM vicidial_lists WHERE campaign_id='$filtro_campanha'";
-            $query = mysql_query($query, $link);
-            $list_IN = Query2IN($query, 0);
+        if ($filtro_campanha == "all") {
+            if ($filtro_dbs == "all") {
+                $filtro_dbs_QUERY = "";
+            } else {
+                $filtro_dbs_QUERY = " and list_id ='$filtro_dbs' ";
+            }
         } else {
-            $list_IN = "'" . $filtro_dbs . "'";
+
+            if ($filtro_dbs == "all") {
+                $query = "SELECT list_id, list_name FROM vicidial_lists WHERE campaign_id='$filtro_campanha'";
+                $query = mysql_query($query, $link);
+
+                $rows = array();
+                while ($r = mysql_fetch_assoc($query)) {
+                    $rows[] = $r["list_id"];
+                }
+                $filtro_dbs_QUERY = " and list_id in('" . join("','", $rows) . "')";
+            } else {
+                $filtro_dbs_QUERY = " and list_id ='$filtro_dbs' ";
+            }
         }
+
+
 # Construção dos Filtros dos Operadores
         if ($filtro_operador != 'all') {
             $operador_QUERY = " AND user='$filtro_operador'";
@@ -119,27 +138,28 @@ switch ($action) {
             $sQuery = "
             SELECT first_name, phone_number, address1 ,last_local_call_time, lead_id
             FROM   vicidial_list
-            WHERE lead_id= '$contact_id'
+            WHERE $data_QUERY and lead_id= '$contact_id' 
             
             ";
         } elseif ($phone_number != "" && $phone_number != null) {
             $sQuery = "
             SELECT first_name, phone_number, address1 ,last_local_call_time, lead_id
             FROM   vicidial_list
-            WHERE phone_number= '$phone_number'
+            WHERE $data_QUERY and phone_number= '$phone_number' 
          
             ";
         } else {
             $sQuery = "
             SELECT first_name, phone_number, address1 ,last_local_call_time, lead_id
             FROM   vicidial_list
-            WHERE list_id IN($list_IN)
+            where
             $data_QUERY
-            $operador_QUERY
-            $feedback_QUERY
-            LIMIT 3000
-            ";
+           $filtro_dbs_QUERY
+                        $operador_QUERY
+            $feedback_QUERY            ";
         }
+
+
 //echo $sQuery;
         $rResult = mysql_query($sQuery, $link) or die(mysql_error());
         $output = array("aaData" => array());
@@ -149,7 +169,7 @@ switch ($action) {
             for ($i = 0; $i < count($aColumns); $i++) {
 
                 if ($aColumns[$i] == 'last_local_call_time') {
-                    $row[] = $aRow[$aColumns[$i]] . "<div class='view-button' ><span class='btn btn-mini' onclick='LoadHTML($aRow[lead_id]);' ><i class='icon-edit'></i>Ver</span></div>";
+                    $row[] = $aRow[$aColumns[$i]] . "<div class='view-button' ><span class='btn btn-mini icon-alone' onclick='LoadHTML($aRow[lead_id]);' ><i class='icon-edit'></i>Ver</span></div>";
                 } else {
                     $row[] = $aRow[$aColumns[$i]];
                 }

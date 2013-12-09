@@ -620,7 +620,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
     this.populate_script = function(callback)
     {
-        $.post(file_path + "requests.php", {action: "get_results_to_populate", lead_id: lead_id, id_script: me.script_id},
+        $.post(file_path + "requests.php", {action: "get_results_to_populate", lead_id: me.lead_id, id_script: me.script_id,unique_id:me.unique_id},
         function(data)
         {
             if (Object.size(data))

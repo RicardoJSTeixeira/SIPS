@@ -134,13 +134,13 @@
                                 <div class="control-group">
                                     <label class="control-label" for="inputEmail">Data Inicial</label>
                                     <div class="controls">
-                                        <input readonly="readonly" class="datepicker-input" type="text" id="datai" value="<?= $daystart; ?>">
+                                        <input readonly="readonly" class="datepicker-input validate[required]" type="text" id="datai" value="<?= $daystart; ?>">
                                     </div>
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label" for="inputPassword">Data Final</label>
                                     <div class="controls">
-                                        <input readonly="readonly" class="datepicker-input" type="text" id="dataf" value="<?= $dayend; ?>">
+                                        <input readonly="readonly" class="datepicker-input validate[required]" type="text" id="dataf" value="<?= $dayend; ?>">
                                     </div>
                                 </div>
 
@@ -148,14 +148,14 @@
 
 
                                     <div class="controls">
-                                        <input  type="radio" id="dcarregamento" name="data-search-type" /><label for='dcarregamento'>Por data de carregamento<span></span></label>
+                                        <input  type="radio" id="dcarregamento" name="data-search-type" /><label for='dcarregamento'><span></span>Por data de carregamento</label>
                                     </div>
                                 </div>
 
                                 <div class="control-group">
 
                                     <div class="controls">
-                                        <input type="radio" id="dultima" checked="checked" name="data-search-type" /><label for="dultima">Por data da ultima chamada<span></span></label>
+                                        <input type="radio" id="dultima" checked="checked" name="data-search-type" /><label for="dultima"><span></span>Por data da ultima chamada</label>
                                     </div>
                                 </div>
 
@@ -258,6 +258,7 @@
                 var campaign = $('#filtro_campanha').val();
                 var db_list = "";
                 var feed_list = "";
+
                 $.ajax({
                     type: "POST",
                     dataType: "json",
@@ -265,15 +266,17 @@
                     data: {action: "campaign_change_db", sent_campaign: campaign},
                     success: function(data)
                     {
-                        if (data == "") {
-                            $("#filtro_dbs").html("<option value=''>Nenhuma Base de Dados Associada</option>").prop("disabled", true);
+
+                        $("#filtro_dbs").empty();
+                        if (!data) {
+                            $("#filtro_dbs").append("<option value=''>Nenhuma Base de Dados Associada</option>");
                         } else {
                             db_list = "<option value='all'>Todas</option>";
                             $.each(data.db_list, function(key, obj) {
                                 db_list += "<option value='" + obj.list_id + "'>" + obj.list_name + "</option>";
                             });
-                            $("#filtro_dbs").html(db_list).prop("disabled", false);
-                             $("#filtro_dbs").val("").trigger("liszt:updated");
+                            $("#filtro_dbs").append(db_list);
+                            $("#filtro_dbs").val("").trigger("liszt:updated");
                         }
                         $.ajax({
                             type: "POST",
@@ -290,7 +293,7 @@
                                         feed_list += "<option value='" + obj.status + "'>" + obj.status_name + "</option>";
                                     });
                                     $("#filtro_feedback").html(feed_list).prop("disabled", false);
-                                     $("#filtro_feedback").val("").trigger("liszt:updated");
+                                    $("#filtro_feedback").val("").trigger("liszt:updated");
                                 }
                             }
                         });
@@ -301,47 +304,49 @@
             /* Função que realiza a pesquisa e que mostra a tabela com os resultados */
             $("#form_pesquisa").submit(function(e) {
                 e.preventDefault();
-                $('#contact_list').hide();
-                var datai = $("#datai").val();
-                var dataf = $("#dataf").val();
-                var filtro_campanha = $("#filtro_campanha").val();
-                var filtro_dbs = $("#filtro_dbs").val();
-                var filtro_operador = $("#filtro_operador").val();
-                var filtro_feedback = $("#filtro_feedback").val();
-                var dataflag = "";
-                if ($("input[name='data-search-type']:checked").attr("id") == 'dcarregamento') {
-                    dataflag = 0;
-                } else {
-                    dataflag = 1;
+
+                if ($("#form_pesquisa").validationEngine("validate"))
+                {
+                    $('#contact_list').hide();
+                    var datai = $("#datai").val();
+                    var dataf = $("#dataf").val();
+                    var filtro_campanha = $("#filtro_campanha").val();
+                    var filtro_dbs = $("#filtro_dbs").val();
+                    var filtro_operador = $("#filtro_operador").val();
+                    var filtro_feedback = $("#filtro_feedback").val();
+                    var dataflag = "";
+                    if ($("input[name='data-search-type']:checked").attr("id") == 'dcarregamento') {
+                        dataflag = 0;
+                    } else {
+                        dataflag = 1;
+                    }
+
+                    var oTable = $('#contact_list').dataTable({
+                        "bSortClasses": false,
+                        "bProcessing": true,
+                        "bDestroy": true,
+                        "sPaginationType": "full_numbers",
+                        "sAjaxSource": '_requests.php',
+                        "fnServerParams": function(aoData) {
+                            aoData.push(
+                                    {"name": "action", "value": "get_table_data"},
+                            {"name": "datai", "value": datai},
+                            {"name": "dataf", "value": dataf},
+                            {"name": "filtro_campanha", "value": filtro_campanha},
+                            {"name": "filtro_dbs", "value": filtro_dbs},
+                            {"name": "filtro_operador", "value": filtro_operador},
+                            {"name": "filtro_feedback", "value": filtro_feedback},
+                            {"name": "dataflag", "value": dataflag},
+                            {"name": "contact_id", "value": $("#crm-contact-id").val()},
+                            {"name": "phone_number", "value": $("#crm-contact-phone").val()})
+                        },
+                        "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Morada"}, {"sTitle": "Ultima Chamada"}],
+                        "fnDrawCallback": function(oSettings, json) {
+                            $('#contact_list').show();
+                        },
+                        "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
+                    });
                 }
-
-                var oTable = $('#contact_list').dataTable({
-                    "bSortClasses": false,
-                    "bProcessing": true,
-                    "bDestroy": true,
-                    "sPaginationType": "full_numbers",
-                    "sAjaxSource": '_requests.php',
-                    "fnServerParams": function(aoData) {
-                        aoData.push(
-                                {"name": "action", "value": "get_table_data"},
-                        {"name": "datai", "value": datai},
-                        {"name": "dataf", "value": dataf},
-                        {"name": "filtro_campanha", "value": filtro_campanha},
-                        {"name": "filtro_dbs", "value": filtro_dbs},
-                        {"name": "filtro_operador", "value": filtro_operador},
-                        {"name": "filtro_feedback", "value": filtro_feedback},
-                        {"name": "dataflag", "value": dataflag},
-                        {"name": "contact_id", "value": $("#crm-contact-id").val()},
-                        {"name": "phone_number", "value": $("#crm-contact-phone").val()}
-                        )
-                    },
-                    "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Morada"}, {"sTitle": "Ultima Chamada"}],
-                    "fnDrawCallback": function(oSettings, json) {
-                        $('#contact_list').show();
-                    },
-                    "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
-                });
-
             });
             /* Função que força uma pesquisa "Todas" quando se filtra por data de carregamento */
             $("input:radio[name=data-search-type]").change(function() {
@@ -382,6 +387,11 @@
             $(/* Inicialização da página conforme a primeira campanha da dropdown */
                     function()
                     {
+
+
+                        $("#form_pesquisa").validationEngine({});
+
+
 
                         $("#datai").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).keypress(function(e) {
                             e.preventDefault();
@@ -434,7 +444,7 @@
                                                 feed_list += "<option value='" + obj.status + "'>" + obj.status_name + "</option>";
                                             });
                                             $("#filtro_feedback").html(feed_list).prop("disabled", false);
-                                             $("#filtro_feedback").val("").trigger("liszt:updated");
+                                            $("#filtro_feedback").val("").trigger("liszt:updated");
                                         }
                                     }
                                 });
