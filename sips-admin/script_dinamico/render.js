@@ -49,7 +49,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         $(document).on("click", "#script_div .next_pag", function(e) {
             e.preventDefault();
 
-
             me.validate_manual(function() {
                 var temp = $(".pag_div:visible").next(".pag_div");
 
@@ -116,9 +115,11 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 {
                                     onValidationComplete: function(form, status)
                                     {
+                                        console.log(status + "a");
                                         if (status) {
                                             if (typeof me.validado_function === "function")
                                             {
+
                                                 me.validado_function();
                                             }
                                         } else {
@@ -652,8 +653,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     }
                 });
             }
+
             if (typeof callback === "function")
             {
+
                 callback();
             }
         }, "json");
@@ -967,15 +970,19 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         {
             var temp2 = script_zone.html().match(tag_regex2);
             var temp = [];
+
             $.each(temp2, function() {
+
                 if ($.inArray(this.toString(), temp) === -1)
                     temp.push(this.toString());
+
             });
 
             $.post(file_path + "requests.php", {action: "get_client_info_by_lead_id", lead_id: lead_id, user_logged: user_id},
             function(data)
             {
-                if (Object.size(data))
+
+                if (Object.size(data)) {
                     $.each(temp, function() {
                         var id = this;
                         id = id.replace(/\§/g, '');
@@ -983,15 +990,19 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         script_zone.html(script_zone.html().replace(regExp, data[id.toLowerCase()]));
 
                     });
-
+                }
+                if (typeof callback === "function")
+                {
+                    callback();
+                }
             }, "json");
-        }
+        } else {
 
-        if (typeof callback === "function")
-        {
-            callback();
+            if (typeof callback === "function")
+            {
+                callback();
+            }
         }
-
     }
 
 //FORM MANIPULATION
@@ -1034,6 +1045,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
         me.validado_function = validado;
         me.nao_validado_function = nao_validado;
+
 
         $("#script_form").submit();
 
