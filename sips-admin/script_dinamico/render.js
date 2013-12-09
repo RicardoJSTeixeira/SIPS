@@ -33,7 +33,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         array_id["radio"] = 0;
         array_id["checkbox"] = 0;
         array_id["input"] = 0;
- 
+
         $(document).on("click", "#script_div .previous_pag", function(e) {
             e.preventDefault();
 
@@ -45,10 +45,9 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             }
 
         });
-      
+
         $(document).on("click", "#script_div .next_pag", function(e) {
             e.preventDefault();
-
 
             me.validate_manual(function() {
                 var temp = $(".pag_div:visible").next(".pag_div");
@@ -72,7 +71,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
             }
         });
-     
+
         $(document).on("click", "#script_div .pdf_button", function(e)
         {
             var url = file_path + "files/" + $(this).attr("file");
@@ -116,9 +115,11 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 {
                                     onValidationComplete: function(form, status)
                                     {
+                                        console.log(status + "a");
                                         if (status) {
                                             if (typeof me.validado_function === "function")
                                             {
+
                                                 me.validado_function();
                                             }
                                         } else {
@@ -620,7 +621,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
     this.populate_script = function(callback)
     {
-        $.post(file_path + "requests.php", {action: "get_results_to_populate", lead_id: lead_id, id_script: me.script_id},
+        $.post(file_path + "requests.php", {action: "get_results_to_populate", lead_id: me.lead_id, id_script: me.script_id, unique_id: me.unique_id},
         function(data)
         {
             if (Object.size(data))
@@ -652,8 +653,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     }
                 });
             }
+
             if (typeof callback === "function")
             {
+
                 callback();
             }
         }, "json");
@@ -667,22 +670,22 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 var target = data.tag_target;
                 for (var count2 = 0; count2 < target.length; count2++)
                 {
-                    $("#script_div #" + target[count2]).fadeOut(400);
+                    $("#script_div #" + target[count2]).fadeOut(200);
                 }
                 break;
             case "show":
                 var target = data.tag_target;
                 for (var count2 = 0; count2 < target.length; count2++)
                 {
-                    $("#script_div #" + target[count2]).fadeIn(400);
+                    $("#script_div #" + target[count2]).fadeIn(250);
                 }
                 break;
             case "goto":
 
                 if (admin_review != "1")
                 {
-                    $(".pag_div").hide();
-                    $("#script_div #" + data.tag_target + "pag").show();
+                    $(".pag_div").fadeOut(250);
+                    $("#script_div #" + data.tag_target + "pag").fadeIn(300);
 
                 }
                 break;
@@ -700,7 +703,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         switch (this.param1)
                         {
                             case "value_input":
-                             
+
                                 $(document).on("keyup", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                 {
                                     var pattern = new RegExp('\\b' + data[index].tag_trigger2, 'i');
@@ -712,7 +715,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 );
                                 break;
                             case "answer":
-                              
+
                                 $(document).on("focusout", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                 {
                                     rules_work(data[index]);
@@ -723,16 +726,16 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         break;
                     case "radio":
                         switch (this.param1)
-                        { 
+                        {
                             case "value_select":
 
                                 var values = this.tag_trigger2;
                                 for (var count = 0; count < values.length; count++)
                                 {
-                                        
+
                                     $(document).on("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                     {
-                                
+
                                         rules_work(data[index]);
                                     }
                                     );
@@ -740,14 +743,14 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 break;
                         }
                         break;
-                    case "checkbox": 
+                    case "checkbox":
                         switch (this.param1)
                         {
                             case "value_select":
                                 var values = this.tag_trigger2;
                                 for (var count = 0; count < values.length; count++)
                                 {
-                                   
+
                                     $(document).on("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                     {
                                         rules_work(data[index]);
@@ -764,7 +767,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 var values = this.tag_trigger2;
                                 for (var count = 0; count < values.length; count++)
                                 {
-                                    
+
                                     $(document).on("change", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                     {
                                         if (data[index].tag_trigger2.indexOf($("#script_div #" + data[index].tag_trigger + " option:selected").val()) > -1)
@@ -782,7 +785,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 for (var count = 0; count < linhas.length; count++)
                                 {
                                     var values = linhas[count].split(";");
-                                   
+
                                     $(document).on("click", "#script_div #" + this.tag_trigger + " tr:contains('" + values[0] + "') input[value='" + values[1] + "']", function()
                                     {
                                         rules_work(data[index]);
@@ -791,7 +794,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 }
                                 break;
                             case "answer":
-                              
+
                                 $(document).on("click", "#script_div #" + this.tag_trigger + " input", function()
                                 {
                                     if ($("#script_div #" + data[index].tag_trigger).find("input:checked").length === ($("#script_div #" + data[index].tag_trigger + " .tr_body").find("tr").length))
@@ -803,7 +806,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     case "tableinput":
                         if (this.param1 == "answer")
                         {
-                            
+
                             $(document).on("focusout", "#script_div #" + this.tag_trigger + " input", function()
                             {
                                 if ($("#script_div #" + data[index].tag_trigger).find("input[value!='']").length === ($("#script_div #" + data[index].tag_trigger + " .tr_body").find("td").find("input").length))
@@ -816,7 +819,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         switch (this.param1)
                         {
                             case "answer":
-                              
+
                                 $(document).on("change", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                 {
                                     rules_work(data[index]);
@@ -826,7 +829,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
 
                             case "date":
-                                
+
                                 $(document).on("change", "#script_div #" + this.tag_trigger + " .form_datetime", function()//atribuir os ons a cada value
                                 {
                                     var temp = data[index];
@@ -908,7 +911,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         switch (this.param1)
                         {
                             case "answer":
-                              
+
                                 $(document).on("focusout", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                 {
                                     rules_work(data[index]);
@@ -918,7 +921,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         }
                         break;
                     case "button":
-                       
+
                         $(document).on("click", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                         {
                             rules_work(data[index]);
@@ -954,7 +957,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 id = id.replace(/\@/g, '');
                 var regExp = new RegExp(this, "g");
                 script_zone.html(script_zone.html().replace(regExp, "<span class='" + id + "tag'></span>"));
-                
+
                 $(document).on("change", "#script_div #" + id + " input,#" + id + " select", function() {
                     $("." + id + "tag").text($(this).val());
                 });
@@ -979,7 +982,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             function(data)
             {
 
-                if (Object.size(data))
+                if (Object.size(data)) {
                     $.each(temp, function() {
                         var id = this;
                         id = id.replace(/\§/g, '');
@@ -987,15 +990,19 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         script_zone.html(script_zone.html().replace(regExp, data[id.toLowerCase()]));
 
                     });
-
+                }
+                if (typeof callback === "function")
+                {
+                    callback();
+                }
             }, "json");
-        }
+        } else {
 
-        if (typeof callback === "function")
-        {
-            callback();
+            if (typeof callback === "function")
+            {
+                callback();
+            }
         }
-
     }
 
 //FORM MANIPULATION
@@ -1038,6 +1045,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
         me.validado_function = validado;
         me.nao_validado_function = nao_validado;
+
 
         $("#script_form").submit();
 

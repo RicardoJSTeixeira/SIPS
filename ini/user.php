@@ -35,7 +35,7 @@ class user {
                 $this->is_all_campaigns = preg_match("/-ALL-CAMPAIGNS-/", $this->allowed_campaigns_raw);
                 $this->allowed_campaigns = explode(" ", trim(rtrim($this->allowed_campaigns_raw, " -")));
                 $this->is_script_dinamico = $row["agent_fullscreen"] == "Y";
-                     $this->ip = filter_var($_SERVER['REMOTE_ADDR']);
+                $this->ip = filter_var($_SERVER['REMOTE_ADDR']);
             }
         }
     }
