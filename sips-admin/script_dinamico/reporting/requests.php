@@ -198,7 +198,10 @@ switch ($action) {
                 $data_row["m" . $value->id] = $value->texto;
             }
         }
-
+if(!count($tags)){
+    echo ((isset($list_id))?'Base de dados':'Campanha').' sem script associado, ou script sem elementos de introdução de dados.'; 
+    exit;
+}
         //GET COLUMNS FROM DB
         $query = "SELECT a.tag,a.type,a.texto,a.values_text,a.placeholder "
                 . "FROM `script_dinamico` a "
