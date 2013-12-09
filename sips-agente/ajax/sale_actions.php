@@ -18,7 +18,7 @@ function connectaMensageiros() {
     if (isset($_GET['uniqueid'])) { $unique_id = $_GET['uniqueid']; } else { $unique_id = $_POST['uniqueid']; }
     if (isset($_GET['user'])) { $user = $_GET['user']; } else { $user = $_POST['user']; }
     
-    $link = mysql_connect("172.16.7.25:3306", "sipsadmin", "sipsps2012");
+    $link = mysql_connect("172.16.7.25", "sipsadmin", "sipsps2012");
     mysql_select_db("asterisk");
     $query = "SELECT tag_elemento,valor FROM `script_result` WHERE tag_elemento IN ('159','153', '155', '160', '156', '157', '154', '161', '165') and unique_id = '$unique_id' order by tag_elemento ASC";
     
@@ -31,16 +31,16 @@ function connectaMensageiros() {
     
    // $lead_id;
    // $user;
-    $data_visita = $row[159];
+    $data_visita = $results[159];
     $hora_visita = '09h-18h';
-    $nome = $row[153];
-    $morada = $row[155];
-    $cp = $row[160];
-    $localidade = $row[156];
-    $concelho = $row[157];
-    $telefone = $row[154];
-    $entrega_docs = $row[161];
-    $observacoes = $row[165];
+    $nome = $results[153];
+    $morada = $results[155];
+    $cp = $results[160];
+    $localidade = $results[156];
+    $concelho = $results[157];
+    $telefone = $results[154];
+    $entrega_docs = $results[161];
+    $observacoes = $results[165];
     
     $query_final = "exec clientes.InserirVisitaMensageiros $lead_id , '$user', '$data_visita'  , '$hora_visita'  , '$nome', '$morada', '$cp'  , '$localidade'  , '$concelho'  , '$telefone'  , '$entrega_docs'  , '$observacoes'";
     echo $query_final;

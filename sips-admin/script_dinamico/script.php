@@ -451,9 +451,9 @@ class script {
 
 
 
-        $query = "select sd.tag as tag from script_dinamico sd inner join script_rules sr on sd.tag=sr.tag_trigger where sd.id_page=:id_pagina group by tag";
+        $query = "select sd.tag as tag from script_dinamico sd inner join script_rules sr on sd.tag=sr.tag_trigger where sd.id_page=:id_pagina and sd.id_script=:id_script group by tag";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":id_pagina" => $id_pagina));
+        $stmt->execute(array(":id_pagina" => $id_pagina, ":id_script" => $id_script));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $js[] = $row["tag"];
         }
@@ -461,9 +461,9 @@ class script {
         $js = implode("','", $js);
 
         if (count($js)) {
-            $query = "delete from  script_rules where tag_trigger in('$js')";
+            $query = "delete from  script_rules where tag_trigger in('$js') and id_script=:id_script";
             $stmt = $this->db->prepare($query);
-            $stmt->execute();
+            $stmt->execute(array(":id_script" => $id_script));
         }
 
         $query = "delete from  script_dinamico where id_page=:id_pagina";
@@ -477,13 +477,13 @@ class script {
         return 1;
     }
 
-    public function delete_item($ordem, $id_page, $param1, $id) {
+    public function delete_item($ordem, $id_page, $param1, $id, $id_script) {
         $query = "UPDATE script_dinamico SET ordem=ordem-1 where ordem>:ordem and id_page=:id_page ";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":ordem" => $ordem, ":id_page" => $id_page));
-        $query = "delete from script_rules where tag_trigger=:param1";
+        $query = "delete from script_rules where tag_trigger=:param1 and id_script=:id_script";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":param1" => $param1));
+        $stmt->execute(array(":param1" => $param1, ":id_script" => $id_script));
         $query = "delete from script_dinamico where id=:id";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id" => $id));
@@ -549,10 +549,9 @@ class script {
         if (count($sql)) {
             $query = "INSERT INTO `script_result`(`date`,`id_script`,`user_id`,`unique_id`,`campaign_id`,`lead_id`, `tag_elemento`, `valor`,`param_1`) VALUES  " . implode(',', $sql);
             $stmt = $this->db->prepare($query);
-            echo(" ");
             return $stmt->execute();
         } else
             return "no Data to be saved";
-        }
+    }
 
 }

@@ -28,9 +28,9 @@ $(function()
 });
 
 
-function validate_manual()
+function validate_manual(validado,nao_validado)
 {
-      return  script.validate_manual();
+      return  script.validate_manual(validado,nao_validado);
 }
 
 function submit_manual(callback)

@@ -52,6 +52,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
             me.validate_manual(function() {
                 var temp = $(".pag_div:visible").next(".pag_div");
+             
                 if (temp.length)
                 {
                     $(".pag_div").hide();
@@ -112,19 +113,15 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 {
                                     onValidationComplete: function(form, status)
                                     {
-
                                         if (status) {
-
-                                            if (typeof validado_function === "function")
+                                                if (typeof me.validado_function === "function")
                                             {
-                                                me.validado_function();
+                                                                                                                       me.validado_function();
                                             }
-
-
                                         } else {
-                                            if (typeof validado_function === "function")
+                                            if (typeof me.nao_validado_function === "function")
                                             {
-                                                me.validado_function();
+                                                me.nao_validado_function();
                                             }
                                         }
                                     }
@@ -1026,9 +1023,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             {
                 callback();
             }
-            return true;
-
-
         }, "json").fail(function() {
             console.log("FAIL saving data because-->id_script-" + me.script_id + "|user_id->" + me.user_id + "|unique_id->" + me.unique_id + "|campaign_id->" + me.campaign_id + "|lead_id->" + me.lead_id + "|admin_review->" + me.admin_review);
 

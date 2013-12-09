@@ -4379,23 +4379,31 @@ function  DispoSelect_submit_allowed()
                 vcFormIFrame.validate_manual(
                         function() {
                             vcFormIFrame.submit_manual(function() {
-                                $.post('ajax/sale_actions.php', {uniqueid: unique_id_hack, lead_id: lead_id_hack, dispo: DispoChoice, dispoAtt: campaign_status[DispoChoice], campaign_id: campaign_id.value, user: user, client: clientName}, function(data) {
+                                $.post('ajax/sale_actions.php', {
+                                    uniqueid: unique_id_hack,
+                                    lead_id: lead_id_hack,
+                                    dispo: DispoChoice,
+                                    dispoAtt: campaign_status[DispoChoice],
+                                    campaign_id: campaign_id.value,
+                                    user: user,
+                                    client: clientName
+                                }, function(data) {
                                     console.log(data);
                                 });
-                                DispoSelect_submit_allowed();
+                                DispoSubmitFinalStep();
                                 $('#vcFormIFrame', parent.window.document)[0].src = "";
-                            },
-                                    function() {
-
-                                    });
+                            });
                         }, function() {
                     $("#Main-tabs a:eq(1)").tab("show");
                 });
+                  return true;
             } else {
                 vcFormIFrame.submit_manual(function() {
                     DispoSubmitFinalStep();
                     $('#vcFormIFrame', parent.window.document)[0].src = "";
+                  
                 });
+                  return true;
             }
         }
         else
@@ -4440,11 +4448,12 @@ function  DispoSelect_submit_allowed()
 
             }
             vcFormIFrame.document.form_custom_fields.submit();
-            DispoSubmitFinalStep()
+            DispoSubmitFinalStep();
+            return true;
         }
 
     }
-
+ DispoSubmitFinalStep();
 }
 
 function DispoSubmitFinalStep(){

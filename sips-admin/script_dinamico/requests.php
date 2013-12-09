@@ -4,8 +4,7 @@ require("../../ini/dbconnect.php");
 require("../../ini/user.php");
 require("../../ini/db.php");
 require("script.php");
-require_once "../../ini/htmlpurifier/HTMLPurifier.standalone.php";
-
+require("../../ini/htmlpurifier/HTMLPurifier.standalone.php");
 
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
@@ -14,10 +13,10 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 
-
+header('Content-Type: text/html; charset=utf-8');
+header('Content-type: application/json');
 
 $user = new users;
-
 
 $purifier = new HTMLPurifier();
 
@@ -130,10 +129,11 @@ switch ($action) {
         break;
 
     case "edit_item":
-if(is_string($values_text))
-        $clean_text = $purifier->purify($values_text); 
-        else
-        $clean_text = $values_text;
+        if (is_string($values_text)) {
+            $clean_text = $purifier->purify($values_text);
+        } else {
+            $clean_text = $values_text;
+        }
         echo json_encode($script->edit_item($id_script, $id_page, $type, $ordem, $dispo, $texto, $placeholder, $max_length, $clean_text, $default_value, ($required == "true") ? "1" : "0", ($hidden == "true") ? "1" : "0", $param1, $id));
         break;
 
@@ -184,7 +184,8 @@ if(is_string($values_text))
     //-----------------FORM---------------------------//
     //------------------------------------------------//
     case "save_form_result":
-        echo json_encode($script->save_form_result($id_script, $results, $user_id, $unique_id, $campaign_id, $lead_id, $admin_review));
-      
+        $temp = json_encode($script->save_form_result($id_script, $results, $user_id, $unique_id, $campaign_id, $lead_id, $admin_review));
+        echo $temp;
         break;
 }
+
