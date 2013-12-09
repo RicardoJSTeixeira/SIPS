@@ -667,22 +667,22 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 var target = data.tag_target;
                 for (var count2 = 0; count2 < target.length; count2++)
                 {
-                    $("#script_div #" + target[count2]).fadeOut(400);
+                    $("#script_div #" + target[count2]).fadeOut(200);
                 }
                 break;
             case "show":
                 var target = data.tag_target;
                 for (var count2 = 0; count2 < target.length; count2++)
                 {
-                    $("#script_div #" + target[count2]).fadeIn(400);
+                    $("#script_div #" + target[count2]).fadeIn(250);
                 }
                 break;
             case "goto":
 
                 if (admin_review != "1")
                 {
-                    $(".pag_div").hide();
-                    $("#script_div #" + data.tag_target + "pag").show();
+                    $(".pag_div").fadeOut(250);
+                    $("#script_div #" + data.tag_target + "pag").fadeIn(300);
 
                 }
                 break;
