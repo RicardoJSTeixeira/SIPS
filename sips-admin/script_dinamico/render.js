@@ -33,7 +33,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         array_id["radio"] = 0;
         array_id["checkbox"] = 0;
         array_id["input"] = 0;
-        $(document).off("click", "#script_div .previous_pag");
+ 
         $(document).on("click", "#script_div .previous_pag", function(e) {
             e.preventDefault();
 
@@ -45,14 +45,14 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             }
 
         });
-        $(document).off("click", "#script_div .next_pag");
+      
         $(document).on("click", "#script_div .next_pag", function(e) {
             e.preventDefault();
 
 
             me.validate_manual(function() {
                 var temp = $(".pag_div:visible").next(".pag_div");
-             
+
                 if (temp.length)
                 {
                     $(".pag_div").hide();
@@ -61,7 +61,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
             }, false);
         });
-        $(document).off("click", "#script_div .scheduler_button_go");
+
         $(document).on("click", "#script_div .scheduler_button_go", function(e) {
             e.preventDefault();
             var select = $(this).prev("select");
@@ -72,7 +72,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
             }
         });
-        $(document).off("click", "#script_div .pdf_button");
+     
         $(document).on("click", "#script_div .pdf_button", function(e)
         {
             var url = file_path + "files/" + $(this).attr("file");
@@ -102,6 +102,9 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     function starter(callback)
     {
 
+
+        $(document).off("#script_div");
+
         if (admin_review !== 1)
         {
             $("#script_form .pag_div").hide().first().show();
@@ -114,9 +117,9 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                     onValidationComplete: function(form, status)
                                     {
                                         if (status) {
-                                                if (typeof me.validado_function === "function")
+                                            if (typeof me.validado_function === "function")
                                             {
-                                                                                                                       me.validado_function();
+                                                me.validado_function();
                                             }
                                         } else {
                                             if (typeof me.nao_validado_function === "function")
@@ -697,7 +700,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         switch (this.param1)
                         {
                             case "value_input":
-                                $(document).off("keyup", "#script_div #" + this.tag_trigger);
+                             
                                 $(document).on("keyup", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                 {
                                     var pattern = new RegExp('\\b' + data[index].tag_trigger2, 'i');
@@ -709,7 +712,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 );
                                 break;
                             case "answer":
-                                $(document).off("focusout", "#script_div #" + this.tag_trigger);
+                              
                                 $(document).on("focusout", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                 {
                                     rules_work(data[index]);
@@ -720,15 +723,16 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         break;
                     case "radio":
                         switch (this.param1)
-                        {
+                        { 
                             case "value_select":
 
                                 var values = this.tag_trigger2;
                                 for (var count = 0; count < values.length; count++)
                                 {
-                                    $(document).off("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']");
+                                        
                                     $(document).on("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                     {
+                                
                                         rules_work(data[index]);
                                     }
                                     );
@@ -736,14 +740,14 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 break;
                         }
                         break;
-                    case "checkbox":
+                    case "checkbox": 
                         switch (this.param1)
                         {
                             case "value_select":
                                 var values = this.tag_trigger2;
                                 for (var count = 0; count < values.length; count++)
                                 {
-                                    $(document).off("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']");
+                                   
                                     $(document).on("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                     {
                                         rules_work(data[index]);
@@ -760,7 +764,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 var values = this.tag_trigger2;
                                 for (var count = 0; count < values.length; count++)
                                 {
-                                    $(document).off("change", "#script_div #" + this.tag_trigger);
+                                    
                                     $(document).on("change", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                     {
                                         if (data[index].tag_trigger2.indexOf($("#script_div #" + data[index].tag_trigger + " option:selected").val()) > -1)
@@ -778,7 +782,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 for (var count = 0; count < linhas.length; count++)
                                 {
                                     var values = linhas[count].split(";");
-                                    $(document).off("click", "#script_div #" + this.tag_trigger + " tr:contains('" + values[0] + "') input[value='" + values[1] + "']");
+                                   
                                     $(document).on("click", "#script_div #" + this.tag_trigger + " tr:contains('" + values[0] + "') input[value='" + values[1] + "']", function()
                                     {
                                         rules_work(data[index]);
@@ -787,7 +791,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 }
                                 break;
                             case "answer":
-                                $(document).off("click", "#script_div #" + this.tag_trigger + " input");
+                              
                                 $(document).on("click", "#script_div #" + this.tag_trigger + " input", function()
                                 {
                                     if ($("#script_div #" + data[index].tag_trigger).find("input:checked").length === ($("#script_div #" + data[index].tag_trigger + " .tr_body").find("tr").length))
@@ -799,7 +803,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     case "tableinput":
                         if (this.param1 == "answer")
                         {
-                            $(document).off("focusout", "#script_div #" + this.tag_trigger + " input");
+                            
                             $(document).on("focusout", "#script_div #" + this.tag_trigger + " input", function()
                             {
                                 if ($("#script_div #" + data[index].tag_trigger).find("input[value!='']").length === ($("#script_div #" + data[index].tag_trigger + " .tr_body").find("td").find("input").length))
@@ -812,7 +816,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         switch (this.param1)
                         {
                             case "answer":
-                                $(document).off("change", "#script_div #" + this.tag_trigger);
+                              
                                 $(document).on("change", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                 {
                                     rules_work(data[index]);
@@ -822,7 +826,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
 
                             case "date":
-                                $(document).off("change", "#script_div #" + this.tag_trigger + " .form_datetime");
+                                
                                 $(document).on("change", "#script_div #" + this.tag_trigger + " .form_datetime", function()//atribuir os ons a cada value
                                 {
                                     var temp = data[index];
@@ -904,7 +908,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         switch (this.param1)
                         {
                             case "answer":
-                                $(document).off("focusout", "#script_div #" + this.tag_trigger);
+                              
                                 $(document).on("focusout", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                 {
                                     rules_work(data[index]);
@@ -914,7 +918,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         }
                         break;
                     case "button":
-                        $(document).off("click", "#script_div #" + this.tag_trigger);
+                       
                         $(document).on("click", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                         {
                             rules_work(data[index]);
@@ -950,7 +954,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 id = id.replace(/\@/g, '');
                 var regExp = new RegExp(this, "g");
                 script_zone.html(script_zone.html().replace(regExp, "<span class='" + id + "tag'></span>"));
-                $(document).off("change", "#script_div #" + id + " input,#" + id + " select");
+                
                 $(document).on("change", "#script_div #" + id + " input,#" + id + " select", function() {
                     $("." + id + "tag").text($(this).val());
                 });
@@ -995,7 +999,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     }
 
 //FORM MANIPULATION
-    $(document).off("submit", "#script_form");
+
     $(document).on("submit", "#script_form", function(e)
     {
         e.preventDefault();
@@ -1161,7 +1165,7 @@ function isValidDebit(field, rules, i, options) {
     if (!isValidCard(cardNumber))
         return "Nº de Cartão de Débito invalido";
 }
-$(document).off("click", ".botao");
+
 $(document).on("click", ".botao", function(e)
 {
     e.preventDefault();
