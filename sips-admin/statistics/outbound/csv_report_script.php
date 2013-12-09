@@ -60,7 +60,7 @@ if (mysql_num_rows($rslt)>0){
 //echo $lists_IN;
 
 $script_query = (($tem_Script == 1) ? "LEFT JOIN custom_$campanha_id B ON A.lead_id = B.lead_id" : "");
-$stmt=" SELECT  X.list_name AS 'Base de Dados', vcdlog.call_date AS 'Data da Chamada', DateTries AS 'Chamadas para este Número', Z.full_name AS 'Operador',A.lead_id as Lead_ID, $campos, vcs.status_name as 'Feedback', D.callback_time AS 'Data do Call-Back', D.comments AS 'Comentários do Call-Back' 
+$stmt=" SELECT  X.list_name AS 'Base de Dados', A.entry_date AS 'Data de Entrada', vcdlog.call_date AS 'Data da Chamada', DateTries AS 'Chamadas para este Número', Z.full_name AS 'Operador',A.lead_id as Lead_ID, $campos, vcs.status_name as 'Feedback', D.callback_time AS 'Data do Call-Back', D.comments AS 'Comentários do Call-Back' 
         FROM vicidial_list A 
         $script_query 
         INNER JOIN $status vcs ON vcs.status = A.status

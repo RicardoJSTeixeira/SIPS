@@ -2367,9 +2367,7 @@ function ManualDialSkip()
 // Send the Manual Dial Only - dial the previewed lead
 function ManualDialOnly(taskaltnum)
 {
-    if (clientName == 'necomplus') {
-        $("#Main-tabs a:eq(3)").tab("show");
-    }
+ 
     in_lead_preview_state = 0;
     inOUT = 'OUT';
     alt_dial_status_display = 0;
@@ -3056,7 +3054,9 @@ function check_for_auto_incoming()
             document.vicidial_form.extra14.value = check_VDIC_array[64];
             document.vicidial_form.extra15.value = check_VDIC_array[65];
 
-
+            if (clientName == 'necomplus') {
+                    getPi();
+                }
 
             if (hide_gender > 0)
             {
@@ -3125,10 +3125,7 @@ function check_for_auto_incoming()
             if (VDIC_data_VDIG[1].length > 0)
             {
                 inOUT = 'IN';
-                if (clientName == 'necomplus') {
-                    $("#Main-tabs a:eq(3)").tab("show");
-                }
-                
+                              
                 if (VDIC_data_VDIG[2].length > 2)
                 {
                     //document.getElementById("MainStatuSSpan").style.background = VDIC_data_VDIG[2];
@@ -9084,7 +9081,7 @@ function getPi() {
     var nomePi = $("#nomePi").html();
 
     $.post("../client_files/necomplus/soap_api.php", {phone: apiPhone}, function(data) {
-        console.log(data.codresultado)
+        console.log(data.codresultado);
         if (data.codresultado == '0') {
             $("#nomePi").html(data.nombre_comercio);
             $("#codigoPi").html(data.codigo_comercio);
