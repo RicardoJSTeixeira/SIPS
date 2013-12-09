@@ -3497,19 +3497,9 @@ while ($MM_scripts > $h) {
                     </span>
 
                     <ul id="Main-tabs" class="nav nav-tabs tabs-main">
-
-                        <?php if ($curClient[0] === 'necomplus') { ?>        
-
-
-                            <li class=""><a href="#MainTable" data-toggle="tab" id="tab-MainTable" >Dados do Cliente</a></li>
-                            <li class=""><a href="#FormPanel" data-toggle="tab" id="tab-FormPanel" >Script</a></li>
-                            <li class=""><a href="#LeadLog" data-toggle="tab" onclick="leadlog();" id="tab-FormPanel" >Histórico</a></li>
-                            <li class="active"><a href="#infoPi" data-toggle="tab" onclick="getPi();" id="tab-FormPanel" >Info Pi</a></li>
-                        <? } else { ?>  
                             <li class="active"><a href="#MainTable" data-toggle="tab" id="tab-MainTable" >Dados do Cliente</a></li>
                             <li class=""><a href="#FormPanel" data-toggle="tab" id="tab-FormPanel" >Script</a></li>
                             <li class=""><a href="#LeadLog" data-toggle="tab" onclick="leadlog();" id="tab-FormPanel" >Histórico</a></li>
-                        <? } ?>
                     </ul>
 
 
@@ -3541,74 +3531,9 @@ while ($MM_scripts > $h) {
                                 </tbody>
                             </table>
                         </div>
-                        <? if ($curClient[0] === 'necomplus') { ?>    
-                            <div id="infoPi" class="tab-pane active tab-overflow-main">
-                                <table class="table table-mod table-striped table-bordered" id="clientePi">
-                                    <tbody>
-                                        <tr>
-                                            <td>Nome:</td><td id="nomePi"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Codigo:</td><td id="codigoPi"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Morada:</td><td id="moradaPi"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Contacto:</td><td id="contactoPi"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <br />
-                                <br />
-                                <table class="table table-mod table-striped table-bordered" id="tpaPi">
-                                    <thead>
-                                    <th>ID TPA</th>
-                                    <th>Número de Série</th>
-                                    </thead>    
-                                    <tbody>
-
-                                    </tbody>
-                                </table>
-                                <br />
-                                <br />
-                                <table class="table table-mod table-striped table-bordered" id="ordensPi">
-                                    <thead>
-                                    <th>Data</th>
-                                    <th>Estado</th>
-                                    <th>Nº Ordem</th>
-                                    <th>Tipo de Ordem</th>
-                                    </thead>    
-                                    <tbody>
-
-                                    </tbody>
-                                </table>
-                                <br><br>
-                                <table id="LeadLogPi" class="table table-mod table-striped table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Data</th>
-                                            <th>Operador</th>
-                                            <th>Tempo (seg.)</th>
-                                            <th>Estado</th>
-                                            <th>Nº</th>
-                                            <th>Campanha</th>
-                                            <th title='Entrada Ou Saida'>IO</th>
-                                            <th>Desligou</th>
-                                        </tr>
-                                    </thead> 
-                                    <tbody>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        <?
-                        }
-                        if ($curClient[0] === 'necomplus') {
-                            ?>    
-                            <div id="MainTable" class="tab-pane  tab-overflow-main">
-<? } else { ?>
-                                <div id="MainTable" class="tab-pane active  tab-overflow-main">   <? } ?>
+                           
+                           
+                                <div id="MainTable" class="tab-pane active tab-overflow-main">
 
                                 <input type="hidden" name="lead_id" id="lead_id" value="" />
                                 <input type="hidden" name="entry_list_id" id="entry_list_id" value="" />
@@ -3702,6 +3627,70 @@ while ($MM_scripts > $h) {
                                                 }
                                             }
                                             ?>
+                                                        
+                                                        <?php if ($curClient[0] === 'necomplus') { ?>    
+                            <div id="infoPi" >
+                                <table class="table table-mod table-striped table-bordered" id="clientePi">
+                                    <tbody>
+                                        <tr>
+                                            <td>Nome:</td><td id="nomePi"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Codigo:</td><td id="codigoPi"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Morada:</td><td id="moradaPi"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Contacto:</td><td id="contactoPi"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br />
+                                <br />
+                                <table class="table table-mod table-striped table-bordered" id="tpaPi">
+                                    <thead>
+                                    <th>ID TPA</th>
+                                    <th>Número de Série</th>
+                                    </thead>    
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                                <br />
+                                <br />
+                                <table class="table table-mod table-striped table-bordered" id="ordensPi">
+                                    <thead>
+                                    <th>Data</th>
+                                    <th>Estado</th>
+                                    <th>Nº Ordem</th>
+                                    <th>Tipo de Ordem</th>
+                                    </thead>    
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                                <br><br>
+                                <table id="LeadLogPi" class="table table-mod table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>Operador</th>
+                                            <th>Tempo (seg.)</th>
+                                            <th>Estado</th>
+                                            <th>Nº</th>
+                                            <th>Campanha</th>
+                                            <th title='Entrada Ou Saida'>IO</th>
+                                            <th>Desligou</th>
+                                        </tr>
+                                    </thead> 
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php } ?> 
+                                                        
                                             <div class="clear"></div>
                                         </div>
                                     </div>
