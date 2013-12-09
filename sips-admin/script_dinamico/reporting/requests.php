@@ -207,7 +207,7 @@ switch ($action) {
                 . "where "
                     . "type not in ('pagination','textfield','scheduler','legend','button','ipl') "
                     . "and a.id_script=:id_script "
-                    . "and a.tag in ('" . join("','", $tags) . "')   ";
+                    . "and a.tag in ('" . implode("','", $tags) . "')   ";
 
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
