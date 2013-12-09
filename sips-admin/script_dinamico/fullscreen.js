@@ -33,4 +33,8 @@ $(function()
 
     });
 
+  $("#close_render_admin").on("click", function()
+    {
+        window.close();
+    });
 });

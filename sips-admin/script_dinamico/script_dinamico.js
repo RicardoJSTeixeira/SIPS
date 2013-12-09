@@ -1,6 +1,5 @@
 var temp_value_holder = "";
 var current_page_pos = 0;
-
 var selected_id = 0;
 var selected_tag = 0;
 var selected_type = "";
@@ -13,7 +12,6 @@ var regex_text = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔº�
 var regex_split = /\n/g;
 var list_ui;
 var list_item;
-
 //mostra/esconde os elementos associados ao edit               
 function editor_toggle(tipo)
 {
@@ -53,7 +51,6 @@ $(function() {
     $("#max_feedback_div").hide();
     $("#table_max_feedback").hide();
     $("#open_limit_feedback").hide();
-
 //_:-------------------------
     $(".chosen-select").chosen({no_results_text: "Sem resultados"});
     array_id["radio"] = 0;
@@ -196,7 +193,7 @@ $(function() {
         //--------------------------------------//
         editor_toggle("off");
         update_script();
-    update_select_ajax();
+        update_select_ajax();
         update_select();
     });
     $("#edit_div").draggable({handle: "a"});
@@ -206,7 +203,6 @@ $(function() {
     $('#ipl_link').wysiwyg();
     $(document).on("click", ".rule_delete_icon", function(e) {
         rules_database("delete_rule", $(this).data("id"), 0, 0, 0, 0, 0, 0, 0, 0);
-
     });
 });
 // ON CLICK DE UM QUALQUER ELEMENTO
@@ -227,10 +223,9 @@ $(document).on("click", ".element", function(e) {
     switch ($(this).data("type"))
     {
         case "texto":
-        
+
             $("#text_layout_editor").show();
             populate_element("texto", $(this));
-
             break;
         case "radio":
             $("#radio_layout_editor").show();
@@ -291,7 +286,7 @@ $(document).on("click", ".element", function(e) {
             populate_element("textarea", $(this));
             break;
         case "ipl":
-           
+
             $("#ipl_layout_editor").show();
             $("#ipl_edit_link").val("");
             populate_element("ipl", $(this));
@@ -349,13 +344,10 @@ $("#scheduler_edit_marcação").on("change", function()
             $(this).prop("disabled", true);
     });
 });
-
 $("#limite_datas_toggle").on("click", function()
 {
     $("#date_limit_placeholder").fadeToggle(100);
-
 });
-
 $("#apagar_elemento").click(function()
 {
 
@@ -431,8 +423,6 @@ $("#ipl_upload_button").on("click", function(e)
         processData: false
     });
 });
-
-
 function update_select()
 {
     $.post("requests.php", {action: "get_image_pdf"},
@@ -444,9 +434,6 @@ function update_select()
 
             $("#ipl_file_select").append("<option data-type=" + this.type + " value=" + this.value + ">" + this.value + "</option>");
         });
-
-
-
         if ($("#radio_ipl_image").is(":checked"))
             $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
         if ($("#radio_ipl_pdf").is(":checked"))
@@ -496,8 +483,6 @@ function update_script(callback)
             });
             if (typeof callback === "function")
                 callback();
-
-
             update_pages();
         }
 
@@ -506,7 +491,6 @@ function update_script(callback)
         function(data4)
         {
             $("#tags_select .tag_group").remove();
-
             var temp = "";
             $.each(data4, function() {
                 $("#tags_select").append("<optgroup class='tag_group' label='" + this.text + "'></optgroup>");
@@ -518,7 +502,6 @@ function update_script(callback)
                 $("#select_default_value").empty();
                 $("#select_default_value").append("<option value='0'>Selecione um campo dinamico</option>");
                 $("#select_default_value").append(temp);
-
             });
             $("#tags_select").trigger("liszt:updated");
             $("#tag_label").text("§" + $("#tags_select option:selected").val() + "§");
@@ -818,7 +801,6 @@ function populate_element(tipo, element)
     rules_manager(tipo, element);
     $("#tabs").tabs("enable");
     $("#select_default_value").val("");
-
     if (element.data("required"))
         $("#item_required").attr('checked', true);
     else
@@ -973,12 +955,8 @@ function populate_element(tipo, element)
                 return $(this).val();
             });
             $("#scheduler_edit_select").val(values).trigger("liszt:updated");
-
-
             $("#scheduler_edit_marcação").val(element.data("max_marc"));
             $("#scheduler_edit_obrigatorio").val(element.data("obrig_marc"));
-
-
             break;
         case "textarea":
             $("#textarea_edit").val($("#" + id + " .label_geral").html());
@@ -1014,7 +992,6 @@ function populate_element(tipo, element)
                 $("#ipl_edit_link").val($("#" + id + " .ipl_link").text());
             }
             break;
-
         case "button":
             $("#button_edit").val($("#" + id + " .botao").text());
             $(".required_class").hide();
@@ -1055,7 +1032,6 @@ function edit_element(opcao, element, data)
                     element.data("php_script_not_validado", "");
                 }
                 element.data("default_value", $("#select_default_value option:selected").val());
-
             }
             break;
         case "radio":
@@ -1215,7 +1191,6 @@ function edit_element(opcao, element, data)
                 item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableradio", element.index(), "h", $("#tableradio_edit").val(), titulos, 0, perguntas, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
             }
             break;
-
         case "tableinput":
             if ($("#tableinput_layout_editor .form_edit_element").validationEngine('validate'))
             {
@@ -1261,7 +1236,6 @@ function edit_element(opcao, element, data)
                 item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "tableinput", element.index(), "h", $("#tableinput_edit").val(), titulos, 0, perguntas, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
             }
             break;
-
         case "datepicker":
             if ($("#datepicker_layout_editor .form_edit_element").validationEngine('validate'))
             {
@@ -1307,11 +1281,8 @@ function edit_element(opcao, element, data)
                     select.append(options);
                 $("#scheduler_edit").val($("#scheduler_edit").val().replace(regex_replace_textbox_tag, ''));
                 $("#" + id + " .label_geral").html($("#scheduler_edit").val());
-
-
                 element.data("max_marc", $("#scheduler_edit_marcação option:selected").val());
                 element.data("obrig_marc", $("#scheduler_edit_obrigatorio option:selected").val());
-
                 item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", element.index(), "h", $("#scheduler_edit").val(), "1", $("#scheduler_edit_marcação option:selected").val(), valores, 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $("#scheduler_edit_obrigatorio option:selected").val());
             }
             break;
@@ -1445,7 +1416,6 @@ function insert_element(opcao, element, data)
                                 .html("<span></span>" + checkboxs[count])
                                 )
                         ;
-
                 if (data.dispo === "v")
                     element.append($("<br>"));
                 array_id["checkbox"] = array_id["checkbox"] + 1;
@@ -1506,7 +1476,6 @@ function insert_element(opcao, element, data)
                 }
             }
             break;
-
         case "tableinput":
             $("#" + id + " .label_geral").html(data.texto);
             var tr_head = $("#" + id + " .tr_head");
@@ -1731,7 +1700,6 @@ $("#opcao_script_button").click(function()//chama o edit do nome do script
         var linha_inbound = [];
         $("#script_campanha_selector option").prop("disabled", false);
         $("#script_linha_inbound_selector option").prop("disabled", false);
-
         var this_script = $("#script_selector option:selected").val();
         $.each(data, function(index, value) {
 
@@ -1783,7 +1751,6 @@ function rules_manager(tipo, element)
         case "multichoice":
             rts.append(new Option("Valor escolhido", "value_select"));
             break;
-
         case "tableradio":
             rts.append(new Option("Resposta", "answer"));
             rts.append(new Option("Valor escolhido", "value_select"));
@@ -1799,7 +1766,6 @@ function rules_manager(tipo, element)
         case "button":
             rts.append(new Option("Click", "click"));
             break;
-
     }
 
     $("#rule_target_select option[value='" + element.data("tag") + "']").prop('disabled', true).trigger("liszt:updated");
@@ -1854,7 +1820,6 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
                     }
                     else
                         temp_text = "data dinamica " + this.param2.data_inicial + " a " + this.param2.data_final;
-
                     $("#rule_manager_list").append($("<tr>")
                             .append($("<td>").text((this.param1 == "date") ? temp_text : "Resposta"))
                             .append($("<td>").text(this.tipo))
@@ -1900,7 +1865,6 @@ $(".date_option_radio").on("click", function()
     }
 
 });
-
 $("#rule_trigger_select").change(function()
 {
     $(".rules_valor_dates").hide();
@@ -1974,118 +1938,118 @@ $("#open_rule_creator").click(function()//Fecha o dialog e grava as alterações
 });
 $("#add_rule_button").click(function()
 {
-    switch (selected_type)
+    if ($("#rule_creator .form_edit_element").validationEngine('validate'))
     {
-        case "texto":
-            switch ($("#rule_trigger_select").val())
-            {
-                case "answer":
-                    if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
-                    else
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
-                    break;
-                case "value_input":
-                    if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_input").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_input", "0");
-                    else
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_input").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_input", 0);
-                    break;
-            }
-            break;
-        case "radio":
-            if ($("#rule_trigger_select").val() === "value_select")
-                if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
-                else
-                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
-            break;
-        case "checkbox":
-            if ($("#rule_trigger_select").val() === "value_select")
-                if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
-                else
-                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
-            break;
-        case"multichoice":
-            if ($("#rule_trigger_select").val() === "value_select")
-                if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
-                else
-                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
-            break;
-        case "tableradio":
-            switch ($("#rule_trigger_select").val())
-            {
-                case "answer":
-                    if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
-                    else
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
-                    break;
-                case "value_select":
+        switch (selected_type)
+        {
+            case "texto":
+                switch ($("#rule_trigger_select").val())
+                {
+                    case "answer":
+                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                        else
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                        break;
+                    case "value_input":
+                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_input").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_input", "0");
+                        else
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_input").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_input", 0);
+                        break;
+                }
+                break;
+            case "radio":
+                if ($("#rule_trigger_select").val() === "value_select")
                     if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
                         rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
                     else
                         rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
-                    break;
-            }
-
-        case "tableinput":
-            switch ($("#rule_trigger_select").val())
-            {
-                case "answer":
+                break;
+            case "checkbox":
+                if ($("#rule_trigger_select").val() === "value_select")
                     if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
                     else
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
-                    break;
-
-            }
-            break;
-        case "datepicker":
-            switch ($("#rule_trigger_select").val())
-            {
-                case "answer":
+                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
+                break;
+            case"multichoice":
+                if ($("#rule_trigger_select").val() === "value_select")
                     if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
                     else
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
-                    break;
-                case "date":
+                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
+                break;
+            case "tableradio":
+                switch ($("#rule_trigger_select").val())
+                {
+                    case "answer":
+                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                        else
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                        break;
+                    case "value_select":
+                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
+                        else
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
+                        break;
+                }
+
+            case "tableinput":
+                switch ($("#rule_trigger_select").val())
+                {
+                    case "answer":
+                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                        else
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                        break;
+                }
+                break;
+            case "datepicker":
+                switch ($("#rule_trigger_select").val())
+                {
+                    case "answer":
+                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                        else
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                        break;
+                    case "date":
 
 
-                    if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "date", $("#open_rule_creator").data("date_limit_element").get_time());
-                    else
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "date", $("#open_rule_creator").data("date_limit_element").get_time());
-                    break;
-
-            }
-            break;
-        case "textarea":
-            switch ($("#rule_trigger_select").val())
-            {
-                case "answer":
-                    if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
-                    else
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
-                    break;
-            }
-            break;
-        case "button":
-            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#rule_target_select").val(), $("#regra_select").val(), "click", 0);
-            else
-                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#go_to_select").val(), $("#regra_select").val(), "click", 0);
-
-
-
-    }
-    $("#rule_target_select").val("").trigger("liszt:updated");
+                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "date", $("#open_rule_creator").data("date_limit_element").get_time());
+                        else
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "date", $("#open_rule_creator").data("date_limit_element").get_time());
+                        break;
+                }
+                break;
+            case "textarea":
+                switch ($("#rule_trigger_select").val())
+                {
+                    case "answer":
+                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                        else
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                        break;
+                }
+                break;
+            case "button":
+                if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#rule_target_select").val(), $("#regra_select").val(), "click", 0);
+                else
+                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#go_to_select").val(), $("#regra_select").val(), "click", 0);
+        }
+         $("#rule_target_select").val("").trigger("liszt:updated");
     $("#rules_valor_select").val("").trigger("liszt:updated");
+    }
+   
 });
+
 //--------------------------------------------------000000000
 //FORM MANIPULATION
 $("#rule_form").on("submit", function(e)
@@ -2097,9 +2061,6 @@ $("#render_go").click(function()
 {
     var window_slave = window.open("/sips-admin/script_dinamico/fullscreen.html?script_id=" + $("#script_selector option:selected").val());
 });
-
-
-
 //AJAX UPLOAD
 $('#ajax_upload_input').change(function() {
     var re_ext = new RegExp("(php)", "i");
@@ -2144,8 +2105,6 @@ $("#ajax_upload_button").on("click", function(e)
         processData: false
     });
 });
-
-
 function update_select_ajax()
 {
     $.post("requests.php", {action: "get_php_ajax"},
@@ -2171,7 +2130,6 @@ $("#remove_uploaded_file_ajax").on("click", function()
         update_select_ajax();
     });
 });
-
 $("#button_ajax_upload_div").on("click", function(e)
 {
     e.preventDefault();
@@ -2180,4 +2138,10 @@ $("#button_ajax_upload_div").on("click", function(e)
     $(this).toggleClass("icon-chevron-down");
 });
 
-
+function ifSelectNotEmpty(field, rules, i, options){
+    alert("a");
+  if ($(field).find("option:selected").length == 0) {
+     // this allows the use of i18 for the error msgs
+     return "* This field is required";
+  }
+}
