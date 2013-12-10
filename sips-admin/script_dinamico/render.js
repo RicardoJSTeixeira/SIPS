@@ -543,14 +543,14 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
                             options.endDate = time2.toDate();
                         }
-                    } else//fixed
+                    } else if (info.values_text.type == "fixed")//fixed
                     {
                         options.startDate = info.values_text.data_inicial;
                         options.endDate = info.values_text.data_final;
                     }
 
 
-                    $("#script_div #" + info.tag + " .form_datetime").datetimepicker(options).keypress(function(e) {
+                    script_zone.find("#" + info.tag + " .form_datetime").datetimepicker(options).keypress(function(e) {
                         e.preventDefault();
                     }).bind("cut copy paste", function(e) {
                         e.preventDefault();
