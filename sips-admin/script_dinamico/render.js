@@ -987,6 +987,8 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             {
 
                 if (Object.size(data)) {
+                    
+                    var html=script_zone.html();
                     $.each(temp, function() {
                         var id = this;
                         id = id.replace(/\§/g, '');
@@ -995,12 +997,15 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         console.log("regex->"+regExp);
                         console.log("ahahah->"+String(data[id.toLowerCase()]));
                         console.log("regex->"+script_zone.html().match(regExp));
-                        script_zone.html(script_zone.html().replace(regExp, String(data[id.toLowerCase()])));
-
+                       html=html.replace(regExp, String(data[id.toLowerCase()]));
+console.log("AAAAAAAAAAAAAA");
                     });
+                                      
+                    script_zone.html(html);
                 }
                 if (typeof callback === "function")
                 {
+console.log("BAAAAAAAAABBBAAA");
                     callback();
                 }
             }, "json");
