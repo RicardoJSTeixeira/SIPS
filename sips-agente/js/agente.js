@@ -1071,7 +1071,7 @@ function DialLog(taskMDstage, nodeletevdac)
         {
             UID_test = epoch_sec + '.' + random;
             document.vicidial_form.uniqueid.value = UID_test;
-            unique_id_hack=document.vicidial_form.uniqueid.value;
+            unique_id_hack = document.vicidial_form.uniqueid.value;
         }
     }
     else
@@ -1754,7 +1754,7 @@ function ManualDialCheckChanneL(taskCheckOR)
                 if ((MDchannel.match(regMDL)) && (asterisk_version != '1.0.8') && (asterisk_version != '1.0.9'))
                 {
                     document.vicidial_form.uniqueid.value = MDlookResponse_array[0];
-            unique_id_hack=document.vicidial_form.uniqueid.value;
+                    unique_id_hack = document.vicidial_form.uniqueid.value;
                     document.getElementById("callchannel").value = MDlookResponse_array[1];
                     // bad grab of Local channel, try again
                     MD_ring_secondS++;
@@ -1764,7 +1764,7 @@ function ManualDialCheckChanneL(taskCheckOR)
                     custchannellive = 1;
 
                     document.vicidial_form.uniqueid.value = MDlookResponse_array[0];
-            unique_id_hack=document.vicidial_form.uniqueid.value;
+                    unique_id_hack = document.vicidial_form.uniqueid.value;
                     document.getElementById("callchannel").value = MDlookResponse_array[1];
                     lastcustchannel = MDlookResponse_array[1];
 
@@ -2146,7 +2146,7 @@ function UpdateFieldsData()
 
 
 function redial() {
-    
+
     var go_on = divchecker("redial");
     if (!go_on) {
         return;
@@ -2367,7 +2367,7 @@ function ManualDialSkip()
 // Send the Manual Dial Only - dial the previewed lead
 function ManualDialOnly(taskaltnum)
 {
- 
+
     in_lead_preview_state = 0;
     inOUT = 'OUT';
     alt_dial_status_display = 0;
@@ -2949,7 +2949,7 @@ function check_for_auto_incoming()
 
             document.vicidial_form.lead_id.value = VDIC_data_VDAC[0];
             document.vicidial_form.uniqueid.value = VDIC_data_VDAC[1];
-            unique_id_hack=document.vicidial_form.uniqueid.value;
+            unique_id_hack = document.vicidial_form.uniqueid.value;
             CIDcheck = VDIC_data_VDAC[2];
             CalLCID = VDIC_data_VDAC[2];
             LastCallCID = VDIC_data_VDAC[2];
@@ -3055,8 +3055,8 @@ function check_for_auto_incoming()
             document.vicidial_form.extra15.value = check_VDIC_array[65];
 
             if (clientName == 'necomplus') {
-                    getPi();
-                }
+                getPi();
+            }
 
             if (hide_gender > 0)
             {
@@ -3125,7 +3125,7 @@ function check_for_auto_incoming()
             if (VDIC_data_VDIG[1].length > 0)
             {
                 inOUT = 'IN';
-                              
+
                 if (VDIC_data_VDIG[2].length > 2)
                 {
                     //document.getElementById("MainStatuSSpan").style.background = VDIC_data_VDIG[2];
@@ -4362,12 +4362,12 @@ function DispoSelect_submit()
 
 function  DispoSelect_submit_allowed()
 {
-    var 
-    DispoChoice = document.vicidial_form.DispoSelection.value,
-    isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback,
-    isSALE = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].sale;
+    var
+            DispoChoice = document.vicidial_form.DispoSelection.value,
+            isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback,
+            isSALE = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].sale;
     lead_id_hack = $("#lead_id").val();
-    
+
     if (custom_fields_enabled && !isCB) {
 
         if (script_dinamico) {
@@ -4393,14 +4393,14 @@ function  DispoSelect_submit_allowed()
                         }, function() {
                     $("#Main-tabs a:eq(1)").tab("show");
                 });
-                  return true;
+                return true;
             } else {
                 vcFormIFrame.submit_manual(function() {
                     DispoSubmitFinalStep();
                     $('#vcFormIFrame', parent.window.document)[0].src = "";
-                  
+
                 });
-                  return true;
+                return true;
             }
         }
         else
@@ -4450,15 +4450,15 @@ function  DispoSelect_submit_allowed()
         }
 
     }
- DispoSubmitFinalStep();
+    DispoSubmitFinalStep();
 }
 
-function DispoSubmitFinalStep(){
-    
-    var 
-    DispoChoice = document.vicidial_form.DispoSelection.value,
-    isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback;
-    
+function DispoSubmitFinalStep() {
+
+    var
+            DispoChoice = document.vicidial_form.DispoSelection.value,
+            isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback;
+
     CustomerData_update();
     if (VDCL_group_id.length > 1)
     {
@@ -6616,12 +6616,12 @@ function FormContentsLoad()
     var form_entry_list_id = document.vicidial_form.entry_list_id.value;
 
 
- if (script_dinamico) {
+    if (script_dinamico) {
 //linha 4306
-                        document.getElementById('vcFormIFrame').src = 'script_render.html?lead_id=' + document.vicidial_form.lead_id.value + '&user_id=' + user + '&pass=' + pass + '&campaign_id=' + campaign + '&in_group_id=' + VDCL_group_id;
-      } else {
-            document.getElementById('vcFormIFrame').src = './vdc_form_display.php?in_group_id=' + VDCL_group_id + '&lead_id=' + document.vicidial_form.lead_id.value + '&list_id=' + form_list_id + '&user=' + user + '&pass=' + pass + '&campaign=' + campaign + '&server_ip=' + server_ip + '&uniqueid=' + document.vicidial_form.uniqueid.value + '&stage=DISPLAY' + "&campaign=" + campaign + "&phone_login=" + phone_login + "&original_phone_login=" + original_phone_login + "&phone_pass=" + phone_pass + "&fronter=" + fronter + "&closer=" + user + "&group=" + group + "&channel_group=" + group + "&SQLdate=" + SQLdate + "&epoch=" + UnixTime + "&uniqueid=" + document.vicidial_form.uniqueid.value + "&customer_zap_channel=" + lastcustchannel + "&customer_server_ip=" + lastcustserverip + "&server_ip=" + server_ip + "&SIPexten=" + extension + "&session_id=" + session_id + "&phone=" + document.vicidial_form.phone_number.value + "&parked_by=" + document.vicidial_form.lead_id.value + "&dispo=" + LeaDDispO + '' + "&dialed_number=" + dialed_number + '' + "&dialed_label=" + dialed_label + '' + "&camp_script=" + campaign_script + '' + "&in_script=" + CalL_ScripT_id + '' + "&script_width=" + script_width + '' + "&script_height=" + script_height + '' + "&fullname=" + LOGfullname + '' + "&recording_filename=" + recording_filename + '' + "&recording_id=" + recording_id + '' + "&user_custom_one=" + VU_custom_one + '' + "&user_custom_two=" + VU_custom_two + '' + "&user_custom_three=" + VU_custom_three + '' + "&user_custom_four=" + VU_custom_four + '' + "&user_custom_five=" + VU_custom_five + '' + "&preset_number_a=" + CalL_XC_a_NuMber + '' + "&preset_number_b=" + CalL_XC_b_NuMber + '' + "&preset_number_c=" + CalL_XC_c_NuMber + '' + "&preset_number_d=" + CalL_XC_d_NuMber + '' + "&preset_number_e=" + CalL_XC_e_NuMber + '' + "&preset_dtmf_a=" + CalL_XC_a_Dtmf + '' + "&preset_dtmf_b=" + CalL_XC_b_Dtmf + '' + "&did_id=" + did_id + '' + "&did_extension=" + did_extension + '' + "&did_pattern=" + did_pattern + '' + "&did_description=" + did_description + '' + "&closecallid=" + closecallid + '' + "&xfercallid=" + xfercallid + '' + "&agent_log_id=" + agent_log_id + '' + "&web_vars=" + LIVE_web_vars + '';
-      }
+        document.getElementById('vcFormIFrame').src = 'script_files/script_render.html?lead_id=' + document.vicidial_form.lead_id.value + '&user_id=' + user + '&pass=' + pass + '&campaign_id=' + campaign + '&in_group_id=' + VDCL_group_id;
+    } else {
+        document.getElementById('vcFormIFrame').src = './vdc_form_display.php?in_group_id=' + VDCL_group_id + '&lead_id=' + document.vicidial_form.lead_id.value + '&list_id=' + form_list_id + '&user=' + user + '&pass=' + pass + '&campaign=' + campaign + '&server_ip=' + server_ip + '&uniqueid=' + document.vicidial_form.uniqueid.value + '&stage=DISPLAY' + "&campaign=" + campaign + "&phone_login=" + phone_login + "&original_phone_login=" + original_phone_login + "&phone_pass=" + phone_pass + "&fronter=" + fronter + "&closer=" + user + "&group=" + group + "&channel_group=" + group + "&SQLdate=" + SQLdate + "&epoch=" + UnixTime + "&uniqueid=" + document.vicidial_form.uniqueid.value + "&customer_zap_channel=" + lastcustchannel + "&customer_server_ip=" + lastcustserverip + "&server_ip=" + server_ip + "&SIPexten=" + extension + "&session_id=" + session_id + "&phone=" + document.vicidial_form.phone_number.value + "&parked_by=" + document.vicidial_form.lead_id.value + "&dispo=" + LeaDDispO + '' + "&dialed_number=" + dialed_number + '' + "&dialed_label=" + dialed_label + '' + "&camp_script=" + campaign_script + '' + "&in_script=" + CalL_ScripT_id + '' + "&script_width=" + script_width + '' + "&script_height=" + script_height + '' + "&fullname=" + LOGfullname + '' + "&recording_filename=" + recording_filename + '' + "&recording_id=" + recording_id + '' + "&user_custom_one=" + VU_custom_one + '' + "&user_custom_two=" + VU_custom_two + '' + "&user_custom_three=" + VU_custom_three + '' + "&user_custom_four=" + VU_custom_four + '' + "&user_custom_five=" + VU_custom_five + '' + "&preset_number_a=" + CalL_XC_a_NuMber + '' + "&preset_number_b=" + CalL_XC_b_NuMber + '' + "&preset_number_c=" + CalL_XC_c_NuMber + '' + "&preset_number_d=" + CalL_XC_d_NuMber + '' + "&preset_number_e=" + CalL_XC_e_NuMber + '' + "&preset_dtmf_a=" + CalL_XC_a_Dtmf + '' + "&preset_dtmf_b=" + CalL_XC_b_Dtmf + '' + "&did_id=" + did_id + '' + "&did_extension=" + did_extension + '' + "&did_pattern=" + did_pattern + '' + "&did_description=" + did_description + '' + "&closecallid=" + closecallid + '' + "&xfercallid=" + xfercallid + '' + "&agent_log_id=" + agent_log_id + '' + "&web_vars=" + LIVE_web_vars + '';
+    }
 
 }
 
@@ -9378,9 +9378,9 @@ function MainPanelToFront(resumevar)
     hideDiv('ScriptRefresH');
     hideDiv('FormRefresH');
     //showDiv('MainPanel');
-    
-        $("#tab-MainTable").tab("show");
-    
+
+    $("#tab-MainTable").tab("show");
+
     ShoWGenDerPulldown();
 
     if (resumevar != 'NO')

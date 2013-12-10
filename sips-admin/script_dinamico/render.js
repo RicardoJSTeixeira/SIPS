@@ -29,30 +29,22 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         });
     };
 
-
-
-
-
     function before_all(callback)
     {
-
         if (me.lead_id)
         {
-
             $.post(file_path + "requests.php", {action: "get_client_info_by_lead_id", lead_id: me.lead_id, user_logged: user_id},
             function(info1)
             {
                 if (Object.size(info1))
-                    client_info = info1;
-
-
+                    me.client_info = info1;
+              
                 if (typeof callback === "function")
                 {
                     callback();
                 }
 
             }, "json");
-
         }
         else
         if (typeof callback === "function")
@@ -63,85 +55,8 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
 
 
-    $.get(file_path + "items/items.html", function(data) {
-        script_zone.append($("<div>").attr("id", "script_dummie").css("display", "none"));
-        script_zone.append($("<form>").attr("id", "script_form").addClass("formular"));
-        script_zone.find("#script_form").append($("<div>").attr("id", "script_div").css("width", "100%").css("margin", "0 auto"));
-        script_zone.find("#script_dummie").html(data);
-        array_id["radio"] = 0;
-        array_id["checkbox"] = 0;
-        array_id["input"] = 0;
-
-        $(script_zone).on("click", "#script_div .previous_pag", function(e) {
-            e.preventDefault();
-
-            var temp = script_zone.find(".pag_div:visible").prev(".pag_div");
-            if (temp.length)
-            {
-                $(".pag_div").hide();
-                temp.show();
-            }
-
-        });
-
-        $(script_zone).on("click", "#script_div .next_pag", function(e) {
-            e.preventDefault();
-
-            me.validate_manual(function() {
-                var temp = script_zone.find(".pag_div:visible").next(".pag_div");
-
-                if (temp.length)
-                {
-                    $(".pag_div").hide();
-                    temp.show();
-                }
-
-            }, false);
-        });
-
-        $(script_zone).on("click", "#script_div .scheduler_button_go", function(e) {
-            e.preventDefault();
-            var select = $(this).prev("select");
-            if (select.find("option:selected").val() > 0)
-            {
-
-                var url = '/sips-admin/reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + user_id + '&lead=' + lead_id + '&id_elemento=' + $(this).prev("select").data("element_tag");
-                window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
-            }
-        });
-
-        $(script_zone).on("click", "#script_div .pdf_button", function(e)
-        {
-            var url = file_path + "files/" + $(this).attr("file");
-            window.open(url, 'PDF', 'fullscreen=no, scrollbars=auto');
-        });
-
-    });
-
-
-    Object.size = function(a)
-    {
-        var count = 0;
-        var i;
-        for (i in a) {
-            if (a.hasOwnProperty(i)) {
-                count++;
-            }
-        }
-        return count;
-    };
-
-
-
-
-
-
     function starter(callback)
     {
-
-
-
-
         if (admin_review !== 1)
         {
             $("#script_form .pag_div").hide().first().show();
@@ -187,6 +102,66 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         }
     }
 
+
+
+
+
+
+
+    $.get(file_path + "items/items.html", function(data) {
+        script_zone.append($("<div>").attr("id", "script_dummie").css("display", "none"));
+        script_zone.append($("<form>").attr("id", "script_form").addClass("formular"));
+        script_zone.find("#script_form").append($("<div>").attr("id", "script_div").css("width", "100%").css("margin", "0 auto"));
+        script_zone.find("#script_dummie").html(data);
+        array_id["radio"] = 0;
+        array_id["checkbox"] = 0;
+        array_id["input"] = 0;
+
+        $(script_zone).on("click", "#script_div .previous_pag", function(e) {
+            e.preventDefault();
+            var temp = script_zone.find(".pag_div:visible").prev(".pag_div");
+            if (temp.length)
+            {
+                $(".pag_div").hide();
+                temp.show();
+            }
+        });
+
+        $(script_zone).on("click", "#script_div .next_pag", function(e) {
+            e.preventDefault();
+            me.validate_manual(function() {
+                var temp = script_zone.find(".pag_div:visible").next(".pag_div");
+                if (temp.length)
+                {
+                    $(".pag_div").hide();
+                    temp.show();
+                }
+            }, false);
+        });
+
+        $(script_zone).on("click", "#script_div .scheduler_button_go", function(e) {
+            e.preventDefault();
+            var select = $(this).prev("select");
+            if (select.find("option:selected").val() > 0)
+            {
+                var url = '/sips-admin/reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + user_id + '&lead=' + lead_id + '&id_elemento=' + $(this).prev("select").data("element_tag");
+                window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
+            }
+        });
+
+        $(script_zone).on("click", "#script_div .pdf_button", function(e)
+        {
+            var url = file_path + "files/" + $(this).attr("file");
+            window.open(url, 'PDF', 'fullscreen=no, scrollbars=auto');
+        });
+    });
+
+
+
+
+
+
+
 //UPDATES DE INFO
     function update_script(callback)
     {
@@ -209,9 +184,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         }
         else
         {
-
             var camp_linha = 0;
-
             if (campaign_id !== "")
             {
                 camp_linha = campaign_id;
@@ -238,13 +211,11 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         $.post(file_path + "requests.php", {action: "get_data_render", id_script: me.script_id},
         function(data)
         {
-
             $("#script_div").empty();
             var item;
             $.each(data, function() {
                 item = script_zone.find('#script_dummie .' + this.type + '_class').clone();
                 item.attr("id", this.tag).data("info", this);
-
                 if (!script_zone.find("#script_div #" + this.id_page + "pag").length) {
                     script_zone.find("#script_div").append($("<div>").addClass("pag_div").attr("id", this.id_page + "pag"));
                 }
@@ -252,7 +223,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             });
             if (typeof callback === "function")
             {
-
                 callback();
             }
         }, "json");
@@ -265,13 +235,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         var info = [];
         var element = 0;
         $.each(script_zone.find("#script_div .pag_div .item"), function() {
-
             element = $(this);
             element.removeAttr("title");
             element.find(".label_titulo").remove();
-
             info = $(this).data("info");
-
             if (info.hidden)
                 element.css("display", "none");
             switch (info.type)
@@ -282,9 +249,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     input.placeholder = info.placeholder;
                     input.maxLength = info.max_length;
                     input.name = info.tag;
-
-                    if (info.default_value.toString().length > 2 && me.client_info.length)
+            
+                    if (info.default_value.toString().length > 2 && Object.size(me.client_info))
                     {
+                   
                         input.value = me.client_info[info.default_value.toString().toLowerCase()];
                     }
                     var pattern = [];
@@ -331,11 +299,9 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                     "alertTextOk": info.values_text.validado,
                                     "alertTextLoad": "* A validar, por favor aguarde"
                                 };
-
                             }
                             break;
                     }
-
                     if (pattern.length > 0)
                         element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
                     break;
@@ -357,7 +323,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                             .addClass("radio_name radio inline tagReplace")
                                             .attr("for", array_id["radio"] + "radio")
                                             .html("<span></span>" + radios[count])
-
                                             );
                         else
                             element.append($("<input>")
@@ -405,7 +370,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                             .addClass("checkbox_name checkbox inline tagReplace")
                                             .attr("for", array_id["checkbox"] + "checkbox")
                                             .html("<span></span>" + checkboxs[count])
-
                                             );
                         if (info.dispo === "v")
                             element.append($("<br>"));
@@ -537,28 +501,22 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             options.minView = 2;
                             break;
                     }
-
                     if (info.values_text.type == "dynamic")//dynamic
                     {
-
                         if (info.values_text.data_inicial != "#|#|#|#")
                         {
                             var tempo1 = info.values_text.data_inicial.split("|");
                             var time1 = moment();
-
                             if (tempo1[0] != "#")
                                 time1.add('year', tempo1[0]);
-
                             if (tempo1[1] != "#")
                                 time1.add('month', tempo1[1]);
                             if (tempo1[2] != "#")
                                 time1.add('day', tempo1[2]);
                             if (tempo1[3] != "#")
                                 time1.add('hour', tempo1[3]);
-
                             options.startDate = time1.toDate();
                         }
-
                         if (info.values_text.data_final != "#|#|#|#")
                         {
                             var tempo2 = info.values_text.data_final.split("|");
@@ -571,7 +529,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 time2.add('day', tempo2[2]);
                             if (tempo2[3] != "#")
                                 time2.add('hour', tempo2[3]);
-
                             options.endDate = time2.toDate();
                         }
                     } else if (info.values_text.type == "fixed")//fixed
@@ -579,8 +536,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         options.startDate = info.values_text.data_inicial;
                         options.endDate = info.values_text.data_final;
                     }
-
-
                     script_zone.find("input[name='" + info.tag + "']").datetimepicker(options).keypress(function(e) {
                         e.preventDefault();
                     }).bind("cut copy paste", function(e) {
@@ -588,13 +543,9 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     });
                     break;
                 case "scheduler":
-
                     element.find(".scheduler_button_go").attr("id", info.id + "go_button");
                     var select = element.find(".scheduler_select");
-
                     element.find(".label_geral")[0].innerHTML = info.texto;
-
-
                     element.find(".scheduler_select").addClass("validate[funcCall[scheduler_verif]]");
                     $.post(file_path + "requests.php", {action: "get_schedule_by_id", ids: info.values_text.join(",")},
                     function(info3)
@@ -603,13 +554,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             select.append("<option value=" + this.id + ">" + this.text + "</option>");
                         });
                         select.val("").trigger("liszt:updated");
-
                     }, "json");
                     element.find(".scheduler_select").data("element_tag", info.tag)
                             .data("max_marc", info.max_length)
                             .data("obrig_marc", info.param1).data("live_marc", 0);
-
-
                     break;
                 case "textarea":
                     element.find(".label_geral")[0].innerHTML = info.texto;
@@ -618,7 +566,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         element.find(".input_textarea").addClass("validate[required]");
                     break;
                 case "ipl":
-
                     element.find(".label_geral")[0].innerHTML = info.texto;
                     element.find("span").remove();
                     if (info.param1 == "1")
@@ -642,14 +589,11 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     break;
                 case "button":
                     element.find(".botao").text(info.texto);
-
                     break;
-            }
-        }
-        );
+                }
+        });
         if (typeof callback === "function")
         {
-
             callback();
         }
     }
@@ -691,7 +635,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
             if (typeof callback === "function")
             {
-
                 callback();
             }
         }, "json");
@@ -721,7 +664,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 {
                     script_zone.find(".pag_div").fadeOut(250);
                     script_zone.find("#script_div #" + data.tag_target + "pag").fadeIn(300);
-
                 }
                 break;
         }
@@ -763,11 +705,9 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         switch (this.param1)
                         {
                             case "value_select":
-
                                 var values = this.tag_trigger2;
                                 for (var count = 0; count < values.length; count++)
                                 {
-
                                     $(script_zone).on("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                     {
 
@@ -785,7 +725,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 var values = this.tag_trigger2;
                                 for (var count = 0; count < values.length; count++)
                                 {
-
                                     $(script_zone).on("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                     {
                                         rules_work(data[index]);
@@ -802,7 +741,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 var values = this.tag_trigger2;
                                 for (var count = 0; count < values.length; count++)
                                 {
-
                                     $(script_zone).on("change", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                     {
                                         if (data[index].tag_trigger2.indexOf($("#script_div #" + data[index].tag_trigger + " option:selected").val()) > -1)
@@ -820,7 +758,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 for (var count = 0; count < linhas.length; count++)
                                 {
                                     var values = linhas[count].split(";");
-
                                     $(script_zone).on("click", "#script_div #" + this.tag_trigger + " tr:contains('" + values[0] + "') input[value='" + values[1] + "']", function()
                                     {
                                         rules_work(data[index]);
@@ -829,7 +766,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 }
                                 break;
                             case "answer":
-
                                 $(script_zone).on("click", "#script_div #" + this.tag_trigger + " input", function()
                                 {
                                     if (script_zone.find("#script_div #" + data[index].tag_trigger).find("input:checked").length === (script_zone.find("#script_div #" + data[index].tag_trigger + " .tr_body").find("tr").length))
@@ -841,30 +777,24 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     case "tableinput":
                         if (this.param1 == "answer")
                         {
-
                             $(script_zone).on("focusout", "#script_div #" + this.tag_trigger + " input", function()
                             {
                                 if (script_zone.find("#script_div #" + data[index].tag_trigger).find("input[value!='']").length === (script_zone.find("#script_div #" + data[index].tag_trigger + " .tr_body").find("td").find("input").length))
                                     rules_work(data[index]);
                             });
                         }
-
                         break;
                     case "datepicker":
                         switch (this.param1)
                         {
                             case "answer":
-
                                 $(script_zone).on("change", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                 {
                                     rules_work(data[index]);
                                 }
                                 );
                                 break;
-
-
                             case "date":
-
                                 $(script_zone).on("change", "#script_div #" + this.tag_trigger + " .form_datetime", function()//atribuir os ons a cada value
                                 {
                                     var temp = data[index];
@@ -946,7 +876,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         switch (this.param1)
                         {
                             case "answer":
-
                                 $(script_zone).on("focusout", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                 {
                                     rules_work(data[index]);
@@ -956,7 +885,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         }
                         break;
                     case "button":
-
                         $(script_zone).on("click", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                         {
                             rules_work(data[index]);
@@ -1015,7 +943,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         $("." + id + "tag").text($(this).val());
                     });
                 });
-                if (me.client_info.length)
+                if (Object.size(me.client_info))
                 {
                     $.each(tag2, function() {
                         var id = this;
@@ -1079,7 +1007,17 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         e.preventDefault();
     });
 
-
+    Object.size = function(a)
+    {
+        var count = 0;
+        var i;
+        for (i in a) {
+            if (a.hasOwnProperty(i)) {
+                count++;
+            }
+        }
+        return count;
+    };
 
 };
 

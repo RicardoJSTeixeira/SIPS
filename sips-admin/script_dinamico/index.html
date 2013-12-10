@@ -53,10 +53,10 @@
             .formRow .formRight{width:75%;}
 
             .radio, .checkbox {padding-left: 1px;padding-right: 16px;}
-            .grid-title select{width:auto;max-width: 200px;margin-bottom: 0px;}
+            .grid-title select{width:auto;max-width: 450px;margin-bottom: 0px;}
             .grid-title {height:auto;}
             .chosen-select{width: 225%;}
-            #dialog_layout .chosen-select{width: 300%;}
+
             #dialog_layout .chosen-select{width: 400%;}
             .hidden{display:none!important;}
             #textfield_edit   
@@ -232,7 +232,7 @@
             <div class="pull-left" ><i class="fam-script-error"></i> Scripts Dinâmicos </div>
             <div class="pull-right">
                 <a class="btn btn-inverse" id="relatorio_go" href="/sips-admin/script_dinamico/reporting/index.html" target="_self">Relatório</a>                        
-                <button class="btn btn-inverse" id="render_go">Visualisação</button>
+                <button class="btn btn-inverse" id="render_go"><i class="icon-external-link"></i>Visualisação</button>
             </div>
         </div>
         <div class="grid-content">
@@ -855,7 +855,7 @@
                                     <div class="formRight">
                                         <select id="tags_select" class="chosen-select" data-placeholder="Selecione uma tag" >
                                             <optgroup label="Campos Gerais">
-                                                <option value="nome_operador" selected>Nome do operador</option>
+                                                <option value="NOME_OPERADOR" selected>Nome do operador</option>
                                             </optgroup>
 
                                         </select>
@@ -868,22 +868,12 @@
                                         <label id="tag_label"></strong>
                                     </div>
                                 </div>
-                                <!-----------------------------QUOTAS-------------------------------------------------------->
-                                <div class="formRow quota_class hidden" >
-                                    <strong>Quota:</strong>
 
-                                    <div class="formRight">
-                                        <input  type="checkbox" id="quota_required" name="quota_required" value="1"> Número max. de respostas por pergunta
-                                    </div>
-                                    <div class="formRight" id="div_quota" >
-                                        <input class="span2" type="number" id="quota_input" name="quota_input" min="1" max="1000" value="1">max.1000
-                                    </div>
-                                </div>
                             </div>
                             <div class="clear"></div>
                             <div class=" modal-footer footer_save_cancel">
-                                <button class="btn btn-primary" id="save_edit">Guardar</button>
-                                <button class="btn cancel_edit" >Cancelar</button>
+                                <button class="btn btn-primary" id="save_edit"><i class="icon-save"></i>Guardar</button>
+                                <button class="btn cancel_edit" ><i class="icon-remove-sign"></i>Cancelar</button>
                             </div>
                         </div><!--------------------------FIM DA EDIÇÂO DOS ELEMENTOS----------------->
                         <div id="tabs-2"><!--------------------------REGRAS------------------------------->
@@ -909,7 +899,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div id="rule_creator" style="display:none;">
+                            <div id="rule_creator" >
                                 <form class="form_edit_element">
                                     <!--TRIGGER-->
                                     <div class="formRow" >
@@ -947,7 +937,7 @@
                                     <div class="formRow rule_target" >
                                         <strong>Alvo:</strong>
                                         <div class="formRight">
-                                            <select  id="rule_target_select" multiple class="chosen-select validate[funcCall[ifSelectNotEmpty]]" name="rules_target_select" data-placeholder="Selecione um/vários elementos">
+                                            <select  id="rule_target_select" multiple class="chosen-select " name="rules_target_select" data-placeholder="Selecione um/vários elementos">
 
                                             </select>
                                         </div> 
@@ -958,18 +948,18 @@
                                             <select id="go_to_select" ></select>
                                         </div> 
                                     </div>  
-     </form>
-                                    <div class="clear"></div>
-                                    <div class="pull-right">    
-                                        <span class="p-warning">Certifique-se que a edição do elemento  está concluida antes de criar as regras.</span>
-                                        <button class="btn btn-large btn-primary" id="add_rule_button" style="float:right;">Adicionar</button>
-                                    </div>
-                           
+                                </form>
+                                <div class="clear"></div>
+                                <div class="pull-right">    
+                                    <span class="p-warning">Certifique-se que a edição do elemento  está concluida antes de criar as regras.</span>
+                                    <button class="btn btn-large btn-primary" id="add_rule_button" style="float:right;"><i class="icon-plus-sign"></i>Adicionar</button>
+                                </div>
+
                                 <div class="clear"></div>
                             </div>
                             <div class="modal-footer ">
-                                <button class="btn"  id="open_rule_creator">Criar nova regra</button>
-                                <button class="btn cancel_edit" >Sair</button>
+
+                                <button class="btn cancel_edit" ><i class="icon-remove-sign"></i>Sair</button>
                             </div>
                         </div><!--------------------------FIM DAS REGRAS------------------------------->
                     </div>
