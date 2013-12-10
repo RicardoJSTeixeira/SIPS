@@ -290,6 +290,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             break;
                         case "credit_card_d":
                             pattern.push("funcCall[isValidDebit]");
+                            break;
                         case "ajax":
                             {
                                 pattern.push("ajax[rule" + info.tag + "]]");
@@ -303,6 +304,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             }
                             break;
                     }
+     
                     if (pattern.length > 0)
                         element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
                     break;
