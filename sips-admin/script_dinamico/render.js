@@ -991,7 +991,9 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         var id = this;
                         id = id.replace(/\§/g, '');
                         var regExp = new RegExp(this, "g");
-                        script_zone.html(script_zone.html().replace(regExp, data[id.toLowerCase()]));
+                        
+                        
+                   //     script_zone.html(script_zone.html().replace(regExp, data[id.toLowerCase()]));
 
                     });
                 }
