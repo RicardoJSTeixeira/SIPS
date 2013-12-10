@@ -466,7 +466,25 @@
         },
         {
           "nome": "Mario Garcez",
-          "email": "Mariogarcez@viragem.com"
+          "email": "mariogarcez@viragem.com"
+        }
+      ]
+    },
+    {
+      "nome": "Ascendum",
+      "servico": "APV",
+      "interlocutores": [
+        {
+          "nome": "Ricardo Mota",
+          "email": "ricardo.mota@ascendumveiculos.pt"
+        },
+        {
+          "nome": "Catarina Livramento",
+          "email": " Catarinalivramento@viragem.com"
+        },
+        {
+          "nome": "Mario Garcez",
+          "email": "mariogarcez@viragem.com"
         }
       ]
     }
