@@ -304,7 +304,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             }
                             break;
                     }
-     
+
                     if (pattern.length > 0)
                         element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
                     break;
@@ -987,25 +987,28 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             {
 
                 if (Object.size(data)) {
-                    
-                    var html=script_zone.html();
-                    $.each(temp, function() {
-                        var id = this;
-                        id = id.replace(/\§/g, '');
-                        var regExp = new RegExp(this, "g");
-                        
-                        console.log("regex->"+regExp);
-                        console.log("ahahah->"+String(data[id.toLowerCase()]));
-                        console.log("regex->"+script_zone.html().match(regExp));
-                       html=html.replace(regExp, String(data[id.toLowerCase()]));
-console.log("AAAAAAAAAAAAAA");
+
+                    $.each(script_zone.find(".label_geral"), function()
+                    {
+                        var this_label = $(this);
+
+                        $.each(temp, function() {
+                            var id = this;
+                            id = id.replace(/\§/g, '');
+                            var regExp = new RegExp(this, "g");
+
+                            this_label.html(this_label.html().replace(regExp, String(data[id.toLowerCase()])));
+
+                        });
                     });
-                                      
-                    script_zone.html(html);
+
+
+
+
                 }
                 if (typeof callback === "function")
                 {
-console.log("BAAAAAAAAABBBAAA");
+
                     callback();
                 }
             }, "json");
