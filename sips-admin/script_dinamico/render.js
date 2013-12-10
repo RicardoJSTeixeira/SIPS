@@ -992,7 +992,9 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         id = id.replace(/\§/g, '');
                         var regExp = new RegExp(this, "g");
                         
-                        
+                        console.log("regex->"+regExp);
+                        console.log("ahahah->"+String(data[id.toLowerCase()]));
+                        console.log("regex->"+script_zone.html().match(regExp));
                         script_zone.html(script_zone.html().replace(regExp, String(data[id.toLowerCase()])));
 
                     });
