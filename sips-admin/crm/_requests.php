@@ -138,14 +138,14 @@ switch ($action) {
             $sQuery = "
             SELECT first_name, phone_number, address1 ,last_local_call_time, lead_id
             FROM   vicidial_list
-            WHERE $data_QUERY and lead_id= '$contact_id' 
+            WHERE  lead_id= '$contact_id' 
             
             ";
         } elseif ($phone_number != "" && $phone_number != null) {
             $sQuery = "
             SELECT first_name, phone_number, address1 ,last_local_call_time, lead_id
             FROM   vicidial_list
-            WHERE $data_QUERY and phone_number= '$phone_number' 
+            WHERE   phone_number= '$phone_number' or address3='$phone_number' or alt_phone='$phone_number'
          
             ";
         } else {
@@ -169,7 +169,7 @@ switch ($action) {
             for ($i = 0; $i < count($aColumns); $i++) {
 
                 if ($aColumns[$i] == 'last_local_call_time') {
-                    $row[] = $aRow[$aColumns[$i]] . "<div class='view-button' ><span class='btn btn-mini icon-alone' onclick='LoadHTML($aRow[lead_id]);' ><i class='icon-edit'></i>Ver</span></div>";
+                    $row[] = $aRow[$aColumns[$i]] . "<div class='view-button' ><span class='btn btn-mini' onclick='LoadHTML($aRow[lead_id]);' ><i class='icon-edit'></i>Ver</span></div>";
                 } else {
                     $row[] = $aRow[$aColumns[$i]];
                 }

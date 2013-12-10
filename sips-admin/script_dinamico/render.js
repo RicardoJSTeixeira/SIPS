@@ -4,7 +4,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     var me = this;
     var array_id = [];
     var tag_regex = /\@(\d{1,5})\@/g;
-    var tag_regex2 = /\§(.*?)\§/g;
+    var tag_regex2 = /\§[A-Z\_]+\§/g;
     this.script_id = script_id;
     this.lead_id = lead_id;
     this.unique_id = unique_id;
@@ -290,6 +290,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             break;
                         case "credit_card_d":
                             pattern.push("funcCall[isValidDebit]");
+                            break;
                         case "ajax":
                             {
                                 pattern.push("ajax[rule" + info.tag + "]]");
@@ -303,6 +304,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             }
                             break;
                     }
+
                     if (pattern.length > 0)
                         element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
                     break;
@@ -541,14 +543,14 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
                             options.endDate = time2.toDate();
                         }
-                    } else//fixed
+                    } else if (info.values_text.type == "fixed")//fixed
                     {
                         options.startDate = info.values_text.data_inicial;
                         options.endDate = info.values_text.data_final;
                     }
 
 
-                    $("#script_div #" + info.tag + " .form_datetime").datetimepicker(options).keypress(function(e) {
+                    script_zone.find("input[name='" + info.tag + "']").datetimepicker(options).keypress(function(e) {
                         e.preventDefault();
                     }).bind("cut copy paste", function(e) {
                         e.preventDefault();
@@ -985,16 +987,28 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             {
 
                 if (Object.size(data)) {
-                    $.each(temp, function() {
-                        var id = this;
-                        id = id.replace(/\§/g, '');
-                        var regExp = new RegExp(this, "g");
-                        script_zone.html(script_zone.html().replace(regExp, data[id.toLowerCase()]));
 
+                    $.each(script_zone.find(".label_geral"), function()
+                    {
+                        var this_label = $(this);
+
+                        $.each(temp, function() {
+                            var id = this;
+                            id = id.replace(/\§/g, '');
+                            var regExp = new RegExp(this, "g");
+
+                            this_label.html(this_label.html().replace(regExp, String(data[id.toLowerCase()])));
+
+                        });
                     });
+
+
+
+
                 }
                 if (typeof callback === "function")
                 {
+
                     callback();
                 }
             }, "json");
