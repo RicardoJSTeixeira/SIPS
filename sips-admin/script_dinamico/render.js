@@ -550,7 +550,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     }
 
 
-                    script_zone.find("#" + info.tag + " .form_datetime").datetimepicker(options).keypress(function(e) {
+                    script_zone.find("#" + info.tag + " input").datetimepicker(options).keypress(function(e) {
                         e.preventDefault();
                     }).bind("cut copy paste", function(e) {
                         e.preventDefault();
