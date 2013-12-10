@@ -11,20 +11,55 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     this.user_id = user_id;
     this.campaign_id = campaign_id;
     this.admin_review = admin_review;
+    this.client_info = new Array();
     this.validado_function = false;
     this.nao_validado_function = false;
 
+
     this.init = function()
     {
-        update_script(function() {
-            update_info(function() {
-                insert_element(function() {
-                    starter();
+        before_all(function() {
+            update_script(function() {
+                update_info(function() {
+                    insert_element(function() {
+                        starter();
+                    });
                 });
             });
         });
     };
 
+
+
+
+
+    function before_all(callback)
+    {
+
+        if (me.lead_id)
+        {
+
+            $.post(file_path + "requests.php", {action: "get_client_info_by_lead_id", lead_id: me.lead_id, user_logged: user_id},
+            function(info1)
+            {
+                if (Object.size(info1))
+                    client_info = info1;
+
+
+                if (typeof callback === "function")
+                {
+                    callback();
+                }
+
+            }, "json");
+
+        }
+        else
+        if (typeof callback === "function")
+        {
+            callback();
+        }
+    }
 
 
 
@@ -247,14 +282,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     input.placeholder = info.placeholder;
                     input.maxLength = info.max_length;
                     input.name = info.tag;
-                    if (info.default_value.toString().length > 2)
+
+                    if (info.default_value.toString().length > 2 && me.client_info.length)
                     {
-                        $.post(file_path + "requests.php", {action: "get_client_info_by_lead_id", lead_id: lead_id, user_logged: user_id},
-                        function(info1)
-                        {
-                            if (Object.size(info1))
-                                input.value = info1[info.default_value.toString().toLowerCase()];
-                        }, "json");
+                        input.value = me.client_info[info.default_value.toString().toLowerCase()];
                     }
                     var pattern = [];
                     if (info.required)
@@ -323,7 +354,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                     .attr("id", array_id["radio"] + "radio")
                                     .attr("name", info.tag))
                                     .append($("<label>")
-                                            .addClass("radio_name radio inline")
+                                            .addClass("radio_name radio inline tagReplace")
                                             .attr("for", array_id["radio"] + "radio")
                                             .html("<span></span>" + radios[count])
 
@@ -335,7 +366,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                     .attr("id", array_id["radio"] + "radio")
                                     .attr("name", info.tag))
                                     .append($("<label>")
-                                            .addClass("radio_name radio inline")
+                                            .addClass("radio_name radio inline tagReplace")
                                             .attr("for", array_id["radio"] + "radio")
                                             .html("<span></span>" + radios[count])
                                             );
@@ -360,7 +391,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                             .attr("id", array_id["checkbox"] + "checkbox")
                                             .attr("name", info.tag))
                                     .append($("<label>")
-                                            .addClass("checkbox_name checkbox inline")
+                                            .addClass("checkbox_name checkbox inline tagReplace")
                                             .attr("for", array_id["checkbox"] + "checkbox")
                                             .html("<span></span>" + checkboxs[count])
                                             );
@@ -371,7 +402,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                     .attr("id", array_id["checkbox"] + "checkbox")
                                     .attr("name", info.tag))
                                     .append($("<label>")
-                                            .addClass("checkbox_name checkbox inline")
+                                            .addClass("checkbox_name checkbox inline tagReplace")
                                             .attr("for", array_id["checkbox"] + "checkbox")
                                             .html("<span></span>" + checkboxs[count])
 
@@ -383,7 +414,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     break;
                 case "multichoice":
                     element.empty();
-                    element.append($("<label>").addClass("label_multichoice label_geral").text(info.texto));
+                    element.append($("<label>").addClass("label_multichoice label_geral tagReplace").text(info.texto));
                     var multichoices = info.values_text;
                     if (info.required)
                         element.append($("<select>").addClass("multichoice_select validate[required]").attr("name", info.tag));
@@ -944,94 +975,69 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     }
     function tags(callback)
     {
-
+        var has_replace = false;
         //tags de valores de elementos da mesma pagina
-
+        var tag1 = [];
+        var tag2 = [];
         if (script_zone.html().match(tag_regex))
         {
+            has_replace = true;
             var temp2 = script_zone.html().match(tag_regex);
-            var temp = [];
+
             $.each(temp2, function() {
-                if ($.inArray(this, temp) === -1)
-                    temp.push(this);
-            });
-
-            $.each(temp, function() {
-                var id = this;
-                id = id.replace(/\@/g, '');
-                var regExp = new RegExp(this, "g");
-                script_zone.html(script_zone.html().replace(regExp, "<span class='" + id + "tag'></span>"));
-
-                $(script_zone).on("change", "#script_div #" + id + " input,#" + id + " select", function() {
-                    $("." + id + "tag").text($(this).val());
-                });
+                if ($.inArray(this, tag1) === -1)
+                    tag1.push(this);
             });
         }
-
-//Tags de nome/morada/telefone etc
-
+        //Tags de nome/morada/telefone etc
         if (script_zone.html().match(tag_regex2))
         {
+            has_replace = true;
             var temp2 = script_zone.html().match(tag_regex2);
-            var temp = [];
-
             $.each(temp2, function() {
 
-                if ($.inArray(this.toString(), temp) === -1)
-                    temp.push(this.toString());
-
+                if ($.inArray(this.toString(), tag2) === -1)
+                    tag2.push(this.toString());
             });
+        }
 
-            $.post(file_path + "requests.php", {action: "get_client_info_by_lead_id", lead_id: lead_id, user_logged: user_id},
-            function(data)
+        if (has_replace)
+        {
+            $.each(script_zone.find(".tagReplace"), function()
             {
-
-                if (Object.size(data)) {
-
-                    $.each(script_zone.find(".label_geral"), function()
-                    {
-                        var this_label = $(this);
-
-                        $.each(temp, function() {
-                            var id = this;
-                            id = id.replace(/\§/g, '');
-                            var regExp = new RegExp(this, "g");
-
-                            this_label.html(this_label.html().replace(regExp, String(data[id.toLowerCase()])));
-
-                        });
+                var this_label = $(this);
+                $.each(tag1, function() {
+                    var id = this;
+                    id = id.replace(/\@/g, '');
+                    var regExp = new RegExp(this, "g");
+                    this_label.html(this_label.html().replace(regExp, "<span class='" + id + "tag'></span>"));
+                    $(script_zone).on("change", "#script_div #" + id + " input,#" + id + " select", function() {
+                        $("." + id + "tag").text($(this).val());
                     });
-
-
-
-
-                }
-                if (typeof callback === "function")
+                });
+                if (me.client_info.length)
                 {
+                    $.each(tag2, function() {
+                        var id = this;
+                        id = id.replace(/\§/g, '');
+                        var regExp = new RegExp(this, "g");
 
-                    callback();
+                        this_label.html(this_label.html().replace(regExp, String(me.client_info[id.toLowerCase()])));
+                    });
                 }
-            }, "json");
-        } else {
-
-            if (typeof callback === "function")
-            {
-                callback();
-            }
+            });
+        }
+        if (typeof callback === "function")
+        {
+            callback();
         }
     }
-
 //FORM MANIPULATION
-
     $(script_zone).on("submit", "#script_form", function(e)
     {
         e.preventDefault();
     });
-    $("#admin_submit").on("click", function()
-    {
-        admin_review = 1;
-        submit_manual();
-    });
+
 
     $('html').bind('keypress', function(e)
     {
@@ -1079,6 +1085,8 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
 
 
+
+// VALIDATION ENGINE ESPECIFIC RULES
 function checknif(field, rules, i, options) {
 
     var nif = field.val();

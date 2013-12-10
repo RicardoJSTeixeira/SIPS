@@ -2139,7 +2139,7 @@ $("#button_ajax_upload_div").on("click", function(e)
 });
 
 function ifSelectNotEmpty(field, rules, i, options){
-    alert("a");
+
   if ($(field).find("option:selected").length == 0) {
      // this allows the use of i18 for the error msgs
      return "* This field is required";
