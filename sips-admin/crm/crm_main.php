@@ -211,9 +211,9 @@
                                 </div>
 
                             </div>
+                        <button class="btn btn-success right" id="search_button" >Pesquisa</button>
                         </form>   
 
-                        <button class="btn btn-success right" id="search_button" >Pesquisa</button>
 
 
                         <div class="clear"></div>
@@ -305,12 +305,6 @@
             /* Função que realiza a pesquisa e que mostra a tabela com os resultados */
             $("#form_pesquisa").submit(function(e) {
                 e.preventDefault();
-            });
-
-
-
-            $("#search_button").on("click", function(e) {
-                e.preventDefault();
 
                 if ($("#crm-contact-id").val() != "" || $("#crm-contact-phone").val() != "")
                 {
@@ -319,10 +313,13 @@
                 }
                 else if ($("#form_pesquisa").validationEngine("validate"))
                 {
-
                     search();
                 }
             });
+
+
+
+          
 
 
             function search()
@@ -374,25 +371,15 @@
 
 
 
-            /* Função que força uma pesquisa "Todas" quando se filtra por data de carregamento 
-             $("input:radio[name=data-search-type]").change(function() {
-             if ($("input:radio[name=data-search-type]:checked").attr("id") == "dcarregamento")
-             {
-             $("#filtro_dbs").val("all").prop("disabled", true);
-             } else {
-             $("#filtro_dbs").val("all").prop("disabled", false);
-             }*/
 
 
             $("#crm-close").on("click", function()
-
             {
                 $('#crm').hide();
                 $("#main_content").show();
             });
             function LoadHTML(lead_id)
             {
-
 
                 $.post("crm_edit.php", {lead_id: lead_id, campaign_id: $("#filtro_campanha option:selected").val()},
                 function(msg)
@@ -408,9 +395,7 @@
                     function()
                     {
 
-
-                        $("#form_pesquisa").validationEngine({});
-                        $("#datai").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).keypress(function(e) {
+                       $("#datai").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).keypress(function(e) {
                             e.preventDefault();
                         }).bind("cut copy paste", function(e) {
                             e.preventDefault();
