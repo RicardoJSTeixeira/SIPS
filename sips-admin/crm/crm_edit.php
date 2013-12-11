@@ -448,7 +448,7 @@ function reserved_ip($ip) {
                 <td><?= $row["status_name"] ?></td>
                 <td><?= $row["campaign_name"] ?></td>
                 <td><?= $row["list_name"] ?>
-                 <div class="view-button"><a class="btn btn-mini" target='_new' href='script_placeholder.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>&isadmin=1&unique_id=<?= $row["uniqueid"]?>'><i class="icon-bookmark"></i>Script</a></div>
+                    <div class="view-button"><a class="btn btn-mini" target='_new' href='/sips-admin/crm/script_placeholder.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>&isadmin=1&unique_id=<?= $row["uniqueid"]?>'><i class="icon-bookmark"></i>Script</a></div>
             
                 </td>
             </tr>

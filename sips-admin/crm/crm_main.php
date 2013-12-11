@@ -134,13 +134,13 @@
                                 <div class="control-group">
                                     <label class="control-label" for="inputEmail">Data Inicial</label>
                                     <div class="controls">
-                                        <input readonly="readonly" class="datepicker-input validate[required]" type="text" id="datai" value="<?= $daystart; ?>">
+                                        <input readonly="readonly" class="datepicker-input validate[required] text-input datepicker" type="text" id="datai" value="<?= $daystart; ?>">
                                     </div>
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label" for="inputPassword">Data Final</label>
                                     <div class="controls">
-                                        <input readonly="readonly" class="datepicker-input validate[required]" type="text" id="dataf" value="<?= $dayend; ?>">
+                                        <input readonly="readonly" class="datepicker-input validate[required] text-input datepicker" type="text" id="dataf" value="<?= $dayend; ?>">
                                     </div>
                                 </div>
 
