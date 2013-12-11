@@ -3,8 +3,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
     var me = this;
     var array_id = [];
-    var tag_regex = /\@(\d{1,5})\@/g;
-    var tag_regex2 = /\§[A-Z\_]+\§/g;
+
     this.script_id = script_id;
     this.lead_id = lead_id;
     this.unique_id = unique_id;
@@ -38,7 +37,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             {
                 if (Object.size(info1))
                     me.client_info = info1;
-              
+
                 if (typeof callback === "function")
                 {
                     callback();
@@ -208,7 +207,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     function update_info(callback)
     {
         script_zone.find(".datetimepicker").remove();
-        $.post(file_path + "requests.php", {action: "get_data_render", id_script: me.script_id},
+        $.post(file_path + "requests.php", {action: "get_data_render", id_script: me.script_id, lead_id: me.lead_id},
         function(data)
         {
             $("#script_div").empty();
@@ -249,10 +248,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     input.placeholder = info.placeholder;
                     input.maxLength = info.max_length;
                     input.name = info.tag;
-            
+
                     if (info.default_value.toString().length > 2 && Object.size(me.client_info))
                     {
-                   
+
                         input.value = me.client_info[info.default_value.toString().toLowerCase()];
                     }
                     var pattern = [];
@@ -303,7 +302,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             break;
                     }
                     if (pattern.length > 0)
-                        element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
+                        element.find(".input_texto").addClass(" validate[" + pattern.join(",") + "]");
                     break;
                 case "radio":
                     element.empty();
@@ -461,12 +460,12 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             if (info.required)
                             {
                                 trbody_last.append($("<td>")
-                                        .append($("<input>").attr("type", "text").attr("titulo", titulos[count2]).attr("id", array_id["input"] + "tableinput").addClass("validate[required] input-mini").attr("name", info.tag + "," + perguntas[count] + "," + titulos[count2])));
+                                        .append($("<input>").attr("type", "text").attr("maxLength", 25).attr("titulo", titulos[count2]).attr("id", array_id["input"] + "tableinput").addClass("input-medium validate[required] ").attr("name", info.tag + "," + perguntas[count] + "," + titulos[count2])));
                             }
                             else
                             {
                                 trbody_last.append($("<td>")
-                                        .append($("<input>").attr("type", "text").attr("titulo", titulos[count2]).attr("id", array_id["input"] + "tableinput").addClass("input-mini").attr("name", info.tag + "," + perguntas[count] + "," + titulos[count2])));
+                                        .append($("<input>").attr("type", "text").attr("maxLength", 25).attr("titulo", titulos[count2]).attr("id", array_id["input"] + "tableinput").addClass("input-medium").attr("name", info.tag + "," + perguntas[count] + "," + titulos[count2])));
                             }
                             array_id["input"] = array_id["input"] + 1;
                         }
@@ -475,7 +474,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 case "datepicker":
                     element.find(".label_geral")[0].innerHTML = info.texto;
                     if (info.required)
-                        element.find(".form_datetime").addClass("validate[required]");
+                        element.find(".form_datetime").addClass("validate[required] text-input datepicker");
                     element.find(".form_datetime")[0].name = info.tag;
                     var options = {};
                     options.format = "yyyy-mm-dd hh:ii";
@@ -590,7 +589,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 case "button":
                     element.find(".botao").text(info.texto);
                     break;
-                }
+            }
         });
         if (typeof callback === "function")
         {
@@ -806,16 +805,16 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                         if (temp.param2.data_inicial != "" && temp.param2.data_final != "")
                                         {
 
-                                            if (time1.isBefore($(this).val()) && time2.isAfter($(this).val()))
+                                            if ((time1.isBefore($(this).val()) || time1.isSame($(this).val())) && (time2.isAfter($(this).val()) || time2.isSame($(this).val())))
                                                 rules_work(data[index]);
                                         }
                                         else
                                         {
                                             if (temp.param2.data_inicial != "")
-                                                if (time1.isAfter($(this).val()))
+                                                if (time1.isBefore($(this).val()) || time1.isSame($(this).val()))
                                                     rules_work(data[index]);
                                             if (temp.param2.data_final != "")
-                                                if (time2.isBefore($(this).val()))
+                                                if (time2.isAfter($(this).val()) || time2.isSame($(this).val()))
                                                     rules_work(data[index]);
                                         }
                                     }
@@ -848,21 +847,23 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                             if (tempo2[3] != "#")
                                                 time2.add('hour', tempo2[3]);
                                         }
+
                                         if (temp.param2.data_inicial != "#|#|#|#" && temp.param2.data_final != "#|#|#|#")
                                         {
-                                            if (time1.isBefore($(this).val()) && time2.isAfter($(this).val()))
+                                            if ((time1.isBefore($(this).val()) || time1.isSame($(this).val())) && (time2.isAfter($(this).val()) || time2.isSame($(this).val())))
                                                 rules_work(data[index]);
                                         }
                                         else
                                         {
                                             if (temp.param2.data_inicial != "#|#|#|#")
                                             {
-                                                if (time1.isBefore($(this).val()))
+
+                                                if (time1.isBefore($(this).val()) || time1.isSame($(this).val()))
                                                     rules_work(data[index]);
                                             }
                                             if (temp.param2.data_final != "#|#|#|#")
                                             {
-                                                if (time2.isAfter($(this).val()))
+                                                if (time2.isAfter($(this).val()) || time2.isSame($(this).val()))
                                                     rules_work(data[index]);
                                             }
                                         }
@@ -903,58 +904,14 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     }
     function tags(callback)
     {
-        var has_replace = false;
-        //tags de valores de elementos da mesma pagina
-        var tag1 = [];
-        var tag2 = [];
-        if (script_zone.html().match(tag_regex))
+        $.each(script_zone.find(".tagReplace"), function()
         {
-            has_replace = true;
-            var temp2 = script_zone.html().match(tag_regex);
+            var this_label = $(this);
 
-            $.each(temp2, function() {
-                if ($.inArray(this, tag1) === -1)
-                    tag1.push(this);
+            $(script_zone).on("change", "#script_div #" + this_label.data("id") + " input,#" + this_label.data("id") + " select", function() {
+                $("." + this_label.data("id") + "tag").text($(this).val());
             });
-        }
-        //Tags de nome/morada/telefone etc
-        if (script_zone.html().match(tag_regex2))
-        {
-            has_replace = true;
-            var temp2 = script_zone.html().match(tag_regex2);
-            $.each(temp2, function() {
-
-                if ($.inArray(this.toString(), tag2) === -1)
-                    tag2.push(this.toString());
-            });
-        }
-
-        if (has_replace)
-        {
-            $.each(script_zone.find(".tagReplace"), function()
-            {
-                var this_label = $(this);
-                $.each(tag1, function() {
-                    var id = this;
-                    id = id.replace(/\@/g, '');
-                    var regExp = new RegExp(this, "g");
-                    this_label.html(this_label.html().replace(regExp, "<span class='" + id + "tag'></span>"));
-                    $(script_zone).on("change", "#script_div #" + id + " input,#" + id + " select", function() {
-                        $("." + id + "tag").text($(this).val());
-                    });
-                });
-                if (Object.size(me.client_info))
-                {
-                    $.each(tag2, function() {
-                        var id = this;
-                        id = id.replace(/\§/g, '');
-                        var regExp = new RegExp(this, "g");
-
-                        this_label.html(this_label.html().replace(regExp, String(me.client_info[id.toLowerCase()])));
-                    });
-                }
-            });
-        }
+        });
         if (typeof callback === "function")
         {
             callback();

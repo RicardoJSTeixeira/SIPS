@@ -78,6 +78,7 @@ $(function() {
                     list_item = $(this).data().uiSortable.currentItem;
                     list_ui = ui;
                     $('#dialog_elements').modal('show');
+
                 }
             },
             update: function(event, ui) {
@@ -355,8 +356,8 @@ $("#apagar_elemento").click(function()
     item_database("delete_item", list_item.attr("id"), 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), 0, list_item.index(), 0, 0, 0, 0, 0, 0, 0, 0, list_item.data("tag"));
     list_ui.item.remove();
     editor_toggle("off");
-    $("#rule_target_select option[value=" + list_item.attr("id") + "] ").remove();
-    $('#rule_target_select').val('').trigger('liszt:updated');
+    rules_update_targets();
+
 });
 
 function update_script(callback)
@@ -414,58 +415,7 @@ function update_script(callback)
             $("#tags_select").trigger("liszt:updated");
             $("#tag_label").text("§" + $("#tags_select option:selected").val() + "§");
         }, "json");
-//Get o tipo e tag de todos os elementos para o select dos alvos (regras)
-        $.post("requests.php", {action: "get_element_tags", id_script: $("#script_selector option:selected").val()},
-        function(data5)
-        {
-            $("#rule_target_select").empty();
-            var temp_type = "";
-            $.each(data5, function(index, value) {
-                switch (this.type)
-                {
-                    case "texto":
-                        temp_type = "Caixa de texto";
-                        break;
-                    case "pagination":
-                        temp_type = "Paginação";
-                        break;
-                    case "radio":
-                        temp_type = "Botão radio";
-                        break;
-                    case "checkbox":
-                        temp_type = "Botão resposta multipla";
-                        break;
-                    case "multichoice":
-                        temp_type = "Lista de Opções";
-                        break;
-                    case "textfield":
-                        temp_type = "Campo de Texto";
-                        break;
-                    case "legend":
-                        temp_type = "Titulo";
-                        break;
-                    case "tableradio":
-                        temp_type = "Tabela botões radio";
-                        break;
-                    case "datepicker":
-                        temp_type = "Seletor tempo e hora";
-                        break;
-                    case "scheduler":
-                        temp_type = "Calendário";
-                        break;
-                    case "textarea":
-                        temp_type = "Input de texto";
-                        break;
-                    case "ipl":
-                        temp_type = "Imagem/PDF/Link";
-                    case "button":
-                        temp_type = "Botão";
-                        break;
-                }
-                $("#rule_target_select").append("<option value=" + this.tag + ">" + this.tag + " --- " + temp_type + "</option>"); //povoar os alvos com as tags e tipos dos elementos
-            });
-            $('#rule_target_select').trigger('liszt:updated');
-        }, "json");
+
     }, "json");
 }
 function update_pages(callback)
@@ -688,6 +638,7 @@ function update_info()
                     break;
             }
         });
+        rules_update_targets();
     }, "json");
 }
 
@@ -907,7 +858,7 @@ function edit_element(opcao, element, data)
             {
                 editor_toggle("off");
                 $("#texto_edit").val($("#texto_edit").val().replace(regex_replace_textbox_tag, ''));
-                $("#placeholder_edit").val($("#placeholder_edit").val().replace(regex_replace_textbox, ''));
+                $("#placeholder_edit").val($("#placeholder_edit").val().replace(regex_replace_textbox_tag, ''));
                 $("#max_length_edit").val($("#max_length_edit").val().replace(/[^0-9]/g, ''));
                 $("#" + id + " .label_geral").html($("#texto_edit").val());
                 $("#" + id + " .input_texto").attr("placeholder", $("#placeholder_edit").val());
@@ -1395,7 +1346,7 @@ function insert_element(opcao, element, data)
                 {
                     temp.append($("<td>")
                             .append($("<input>")
-                                    .addClass("input-mini")
+                                    .addClass("input-medium")
                                     .attr("type", "text")
                                     .attr("id", array_id["input"])
 
@@ -1644,7 +1595,7 @@ $("#save_button_layout").click(function()//Fecha o dialog e grava as alteraçõe
 //-------------------------------------------------------------------------------------RULES
 function rules_manager(tipo, element)
 {
-    $("#rule_target_select option").prop('disabled', false).trigger("liszt:updated");
+
 
     var rts = $("#rule_trigger_select");
     rts.empty();
@@ -1679,6 +1630,64 @@ function rules_manager(tipo, element)
     $("#rule_target_select option[value='" + element.data("tag") + "']").prop('disabled', true).trigger("liszt:updated");
     rts.trigger("change");
 }
+
+
+function rules_update_targets()
+{
+    //Get o tipo e tag de todos os elementos para o select dos alvos (regras)
+    $.post("requests.php", {action: "get_element_tags", id_script: $("#script_selector option:selected").val()},
+    function(data5)
+    {
+        $("#rule_target_select").empty();
+        var temp_type = "";
+        $.each(data5, function(index, value) {
+            switch (this.type)
+            {
+                case "texto":
+                    temp_type = "Caixa de texto";
+                    break;
+                case "pagination":
+                    temp_type = "Paginação";
+                    break;
+                case "radio":
+                    temp_type = "Botão radio";
+                    break;
+                case "checkbox":
+                    temp_type = "Botão resposta multipla";
+                    break;
+                case "multichoice":
+                    temp_type = "Lista de Opções";
+                    break;
+                case "textfield":
+                    temp_type = "Campo de Texto";
+                    break;
+                case "legend":
+                    temp_type = "Titulo";
+                    break;
+                case "tableradio":
+                    temp_type = "Tabela botões radio";
+                    break;
+                case "datepicker":
+                    temp_type = "Seletor tempo e hora";
+                    break;
+                case "scheduler":
+                    temp_type = "Calendário";
+                    break;
+                case "textarea":
+                    temp_type = "Input de texto";
+                    break;
+                case "ipl":
+                    temp_type = "Imagem/PDF/Link";
+                case "button":
+                    temp_type = "Botão";
+                    break;
+            }
+            $("#rule_target_select").append("<option value=" + this.tag + ">" + this.tag + " --- " + temp_type + "</option>"); //povoar os alvos com as tags e tipos dos elementos
+        });
+        $('#rule_target_select').trigger('liszt:updated');
+    }, "json");
+}
+
 function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trigger2, Id_target, Tipo, Param1, Param2)
 {
     $.post("requests.php", {action: opcao,
@@ -1721,13 +1730,7 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
 
                 if (this.tipo_elemento == "datepicker")
                 {
-                    var temp_text = "";
-                    if (this.param2.type == "fixed")
-                    {
-                        temp_text = "data fixa " + this.param2.data_inicial + " a " + this.param2.data_final;
-                    }
-                    else
-                        temp_text = "data dinamica " + this.param2.data_inicial + " a " + this.param2.data_final;
+                    var temp_text = datepicker_date_decoder(this);
                     $("#rule_manager_list").append($("<tr>")
                             .append($("<td>").text((this.param1 == "date") ? temp_text : "Resposta"))
                             .append($("<td>").text(this.tipo))
@@ -1756,6 +1759,90 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
         }
     }, "json");
 }
+
+function datepicker_date_decoder(info)
+{
+    var temp_text = "";
+    if (info.param2.type == "fixed")
+    {
+        if (info.param2.data_inicial && info.param2.data_final)
+            temp_text = "data fixa de " + info.param2.data_inicial + " a " + info.param2.data_final;
+        else if (info.param2.data_inicial)
+            temp_text = "data fixa a partir de " + info.param2.data_inicial;
+        else
+            temp_text = "data fixa até " + info.param2.data_final;
+
+    }
+    else
+    {
+
+        var data_inicial;
+        var data_inicial_text = "";
+        var data_final;
+        var data_final_text = "";
+        if (info.param2.data_inicial)
+        {
+            data_inicial = info.param2.data_inicial.split("|");
+            if (data_inicial[0] != "#")
+                if (data_inicial[0] != 1 && data_inicial[0] != -1)
+                    data_inicial_text = data_inicial[0] + " Anos ";
+                else
+                    data_inicial_text = data_inicial[0] + " Ano ";
+            if (data_inicial[1] != "#")
+                if (data_inicial[1] != 1 && data_inicial[1] != -1)
+                    data_inicial_text = data_inicial_text + data_inicial[1] + " Meses ";
+                else
+                    data_inicial_text = data_inicial_text + data_inicial[1] + " Mês ";
+            if (data_inicial[2] != "#")
+                if (data_inicial[2] != 1 && data_inicial[2] != -1)
+                    data_inicial_text = data_inicial_text + data_inicial[2] + " Dias ";
+                else
+                    data_inicial_text = data_inicial_text + data_inicial[2] + " Dia ";
+            if (data_inicial[3] != "#")
+                if (data_inicial[3] != 1 && data_inicial[3] != -1)
+                    data_inicial_text = data_inicial_text + data_inicial[3] + " Horas ";
+                else
+                    data_inicial_text = data_inicial_text + data_inicial[3] + " Hora ";
+
+
+        }
+        if (info.param2.data_final)
+        {
+            data_final = info.param2.data_final.split("|");
+            if (data_final[0] != "#")
+                if (data_final[0] != 1 && data_final[0] != -1)
+                    data_final_text = data_final[0] + " Anos ";
+                else
+                    data_final_text = data_final[0] + " Ano ";
+            if (data_final[1] != "#")
+                if (data_final[1] != 1 && data_final[1] != -1)
+                    data_final_text = data_final_text + data_final[1] + " Meses ";
+                else
+                    data_final_text = data_final_text + data_final[1] + " Mês ";
+            if (data_final[2] != "#")
+                if (data_final[2] != 1 && data_final[2] != -1)
+                    data_final_text = data_final_text + data_final[2] + " Dias ";
+                else
+                    data_final_text = data_final_text + data_final[2] + " Dia ";
+            if (data_final[3] != "#")
+                if (data_final[3] != 1 && data_final[3] != -1)
+                    data_final_text = data_final_text + data_final[3] + " Horas ";
+                else
+                    data_final_text = data_final_text + data_final[3] + " Hora ";
+        }
+        if (data_inicial_text && data_final_text)
+            temp_text = "data dinamica de " + data_inicial_text + " até " + data_final_text;
+        else if (data_inicial_text)
+            temp_text = "data dinamica a partir de " + data_inicial_text;
+        else
+            temp_text = "data dinamica até " + data_final_text;
+
+
+    }
+    return temp_text;
+}
+
+
 $(".date_option_radio").on("click", function()
 {
     $(".rules_valor_dates").hide();
