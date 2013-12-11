@@ -197,23 +197,33 @@ class script {
 // CAMPOS DINAMICOS -> §
             if (isset($lead_id)) {
                 $temp = "";
-                if (preg_match("/\§[A-Z0-9\_]+\§/", $row["texto"], $temp)) {
-                    $temp = str_replace("§", "", $temp);
-                    $row["texto"] = preg_replace("/\§[A-Z0-9\_]+\§/", $client_info[strtolower($temp[0])], $row["texto"]);
+                if (preg_match_all("/\§[A-Z0-9\_]+\§/", $row["texto"], $temp)) {
+                    $temp = $temp[0];
+                    foreach ($temp as $value) {
+                   $value1 = str_replace("§", "", $value);
+                        $row["texto"] = preg_replace("/\§[A-Z0-9\_]+\§/", $client_info[strtolower($value1)], $row["texto"]);
+                    }
                 }
                 if ($row["type"] == "texto") {
                     $placeholder = json_decode($row["placeholder"]);
-                    if (preg_match("/\§[A-Z0-9\_]+\§/", $placeholder, $temp)) {
-                        $temp = str_replace("§", "", $temp);
-                        $placeholder = preg_replace("/\§[A-Z0-9\_]+\§/", $client_info[strtolower($temp[0])], $placeholder);
+                    if (preg_match_all("/\§[A-Z0-9\_]+\§/", $placeholder, $temp)) {
+                        $temp = $temp[0];
+                        foreach ($temp as $value) {
+                              $value1 = str_replace("§", "", $value);
+                            $placeholder = preg_replace("/\§[A-Z0-9\_]+\§/", $client_info[strtolower($value1)], $placeholder);
+                        }
                         $row["placeholder"] = json_encode($placeholder);
                     }
                 }
                 if ($row["type"] == "legend" || $row["type"] == "textarea" || $row["type"] == "textfield") {
                     $values_text = json_decode($row["values_text"]);
-                    if (preg_match("/\§[A-Z0-9\_]+\§/", $values_text, $temp)) {
-                        $temp = str_replace("§", "", $temp);
-                        $values_text = preg_replace("/\§[A-Z0-9\_]+\§/", $client_info[strtolower($temp[0])], $values_text);
+
+                    if (preg_match_all("/\§[A-Z0-9\_]+\§/", $values_text, $temp)) {
+                        $temp = $temp[0];
+                        foreach ($temp as $value) {
+                            $value1 = str_replace("§", "", $value);
+                            $values_text = preg_replace("/" . $value . "/", $client_info[strtolower($value1)], $values_text);
+                        }
                         $row["values_text"] = json_encode($values_text);
                     }
                 }
