@@ -342,7 +342,7 @@ function reserved_ip($ip) {
         </div>
     <?php } ?>
 </form>
-<div class="<?= ($user->id) ? "" : "hide" ?>">
+<div class="<?= ($user->user_level>5) ? "" : "hide" ?>">
     <h3>Alteração do Feedback</h3>
     <div class="control-group">
         <label class="control-label">Feedback Actual:</label>
@@ -448,7 +448,7 @@ function reserved_ip($ip) {
                 <td><?= $row["status_name"] ?></td>
                 <td><?= $row["campaign_name"] ?></td>
                 <td><?= $row["list_name"] ?>
-                    <div class="view-button"><a class="btn btn-mini" target='_new' href='/sips-admin/crm/script_placeholder.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>&isadmin=1&unique_id=<?= $row["uniqueid"]?>'><i class="icon-bookmark"></i>Script</a></div>
+                    <div class="view-button <?= ($user->user_level>5) ? "" : "hide" ?>"><a class="btn btn-mini" target='_new' href='/sips-admin/crm/script_placeholder.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>&isadmin=1&unique_id=<?= $row["uniqueid"]?>'><i class="icon-bookmark"></i>Script</a></div>
             
                 </td>
             </tr>
@@ -480,7 +480,7 @@ function reserved_ip($ip) {
     </tbody>
 </table>
 
-<div class="<?= ($user->id) ? "" : "hide" ?>">
+<div class="<?= ($user->user_level>5) ? "" : "hide" ?>">
     <h3>Gravações deste Contacto</h3>
     <table class='table table-mod table-bordered'>
         <thead>
