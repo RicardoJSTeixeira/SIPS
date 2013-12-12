@@ -76,9 +76,6 @@ class script {
             $campaigns[] = $row["id_camp_linha"];
         }
         foreach ($campaigns as $value) {
-
-
-
             $query = "Select campaign_name from vicidial_campaigns where campaign_id = :campaign_id";
             $stmt = $this->db->prepare($query);
             $stmt->execute(array(":campaign_id" => $value));
@@ -179,7 +176,6 @@ class script {
         $js = array();
         $client_info = array();
         if (isset($lead_id)) {
-
             $query = "SELECT * from vicidial_list where lead_id=:lead_id";
             $stmt = $this->db->prepare($query);
             $stmt->execute(array(":lead_id" => $lead_id));
