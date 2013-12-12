@@ -4333,15 +4333,20 @@ function DispoSelect_submit()
             $.post("ajax/callbacks.php", {campaign_id: campaign, user: user},
             function(data)
             {
-                if (max_callback_geral <= data.ANYONE)
+                if (max_callback_geral <= data.ANYONE && max_callback_geral !== 0)
                 {
                     callback_limit_reached_geral = true;
                 }
-                if (max_callback_individual <= data.USERONLY)
+                if (max_callback_individual <= data.USERONLY && max_callback_individual !== 0)
                 {
                     callback_limit_reached_individual = true;
                 }
-                if (!(callback_limit_reached_geral && callback_limit_reached_individual))
+
+    
+
+                if (callback_limit_reached_geral && callback_limit_reached_individual)
+                    alert_box_max_callbacks();
+                else
                 {
                     if (callback_limit_reached_geral)
                     {
@@ -4357,10 +4362,11 @@ function DispoSelect_submit()
                     }
                     DispoSelect_submit_allowed();
                 }
-                else
-                {
-                    alert_box_max_callbacks();
-                }
+
+
+
+
+
 
             }, "json");
         }
