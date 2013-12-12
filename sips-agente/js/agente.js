@@ -1225,23 +1225,7 @@ function CalLBacKsCounTCheck()
 // Request list of USERONLY callbacks for this agent
 function CalLBacKsLisTCheck()
 {
-
-    if (!callback_limit_reached)
-    {
-        var go_on = divchecker("cback");
-        if (!go_on) {
-            return;
-        }
-        if (AgentDispoing > 0) {
-            alert_box('Termine Wrap-up da chamada.');
-            return;
-        }
-
-        if (AutoDialReady == 0 && auto_dial_level > 0 && pause_code_counter == 0) {
-            alert_box('Seleccione o motivo de pausa por favor.');
-            return;
-        }
-    }
+    hideDiv("CallBackSelectBox");
     var move_on = 1;
     if (/*(AutoDialWaiting == 1) ||*/ (VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1))
     {
@@ -4334,23 +4318,50 @@ function DispoSelect_submit()
 
     if (isCB)
     {
-        if (max_callback === "0")
+        $("#cb_geral").prop("disabled", false);
+        $("#cb_pessoal").prop("disabled", false);
+        $("#maxcb_individual_info").text("");
+        $("#maxcb_geral_info").text("");
+        $("#maxcb_geral_info").hide();
+        $("#maxcb_individual_info").hide();
+        if (max_callback_geral === 0 && max_callback_individual === 0)
             DispoSelect_submit_allowed();
         else
         {
+            callback_limit_reached_geral = false;
+            callback_limit_reached_individual = false;
             $.post("ajax/callbacks.php", {campaign_id: campaign, user: user},
-            function(callback_user)
+            function(data)
             {
-                if (callback_user < max_callback) {
-                    callback_limit_reached = false;
+                if (max_callback_geral <= data.ANYONE)
+                {
+                    callback_limit_reached_geral = true;
+                }
+                if (max_callback_individual <= data.USERONLY)
+                {
+                    callback_limit_reached_individual = true;
+                }
+                if (!(callback_limit_reached_geral && callback_limit_reached_individual))
+                {
+                    if (callback_limit_reached_geral)
+                    {
+                        $("#cb_geral").prop("disabled", true);
+                        $("#cb_pessoal").prop("checked", true);
+                        $("#maxcb_geral_info").show().text("Máximo de " + max_callback_geral + " Callbacks gerais atingido");
+                    }
+                    if (callback_limit_reached_individual)
+                    {
+                        $("#cb_geral").prop("checked", true);
+                        $("#cb_pessoal").prop("disabled", true);
+                        $("#maxcb_individual_info").show().text("Máximo de " + max_callback_individual + " Callbacks pessoais atingido");
+                    }
                     DispoSelect_submit_allowed();
                 }
                 else
                 {
                     alert_box_max_callbacks();
-
-
                 }
+
             }, "json");
         }
     }
@@ -9750,13 +9761,15 @@ function confirm_feedback_load()
 }
 function alert_box_max_callbacks()
 {
-    $("#max_callback_info").html("Máximo definido:" + max_callback);
+    $("#max_callback_info").html("Máximo Geral definido->" + max_callback_geral + " e Máximo Pessoal Definido->" + max_callback_individual);
     showDiv('AlertBox_max_callback');
 }
 
 $(document).on("click", "#alertbox_eliminar_callbacks", function()
 {
-    hideDiv('AlertBox_max_callback');
-    callback_limit_reached = true;
     CalLBacKsLisTCheck();
 });
+
+
+
+
