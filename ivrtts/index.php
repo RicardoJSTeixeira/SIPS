@@ -55,11 +55,18 @@ $login_flag = (count($_SESSION)) ? 1 : 0;
                         </div>
 
                         <div class="footer-login">
+                                  <div class="pull-left ">Don't have an account?</div> 
+                                  <div class="pull-right"><a class="animate-login-form" href="#">Create Account</a></div> 
                             <div class="clear"></div>
                         </div>
 
                     </form>
                     <div id="alert-box-login" class="info-message"></div>
+                    <!--   <div class="info-message">
+                           <div class="alert alert-info">        
+                           If you need a new profile, click "Creative Account"
+                           </div>
+                       </div> -->
 
                 </div>
 
@@ -71,15 +78,15 @@ $login_flag = (count($_SESSION)) ? 1 : 0;
 
                             <div class="inputs">
 
-                                <i style="margin-top:10px" class="icon-user animated input-register-first-name-icon"></i><input  id="input-register-first-name" name="" type="text" class="first-input input-class" placeholder="first name" />
+                                <i style="margin-top:10px" class="icon-user animated input-register-first-name-icon"></i><input  id="input-register-first-name" name="" type="text" class="first-input input-class" placeholder="First name" />
                                 <div class="clear"></div>
-                                <i class="icon-user animated input-register-last-name-icon"></i><input id="input-register-last-name" name="" type="text" class="last-input input-class" placeholder="last name" />
+                                <i class="icon-user animated input-register-last-name-icon"></i><input id="input-register-last-name" name="" type="text" class="last-input input-class" placeholder="Last name" />
 
 
 
-                                <i style="margin-top:15px" class="icon-envelope-alt first-icon animated input-register-email-icon"></i><input style="margin-top:6px" id="input-register-email" name="" type="text" class="first-input input-class" placeholder="email" /> 
+                                <i style="margin-top:15px" class="icon-envelope-alt first-icon animated input-register-email-icon"></i><input style="margin-top:6px" id="input-register-email" name="" type="text" class="first-input input-class" placeholder="Email" /> 
                                 <div class="clear"></div>
-                                <i class="icon-key animated input-register-password-icon"></i><input id="input-register-password" name="" type="password" class="last-input input-class" placeholder="password" />
+                                <i class="icon-key animated input-register-password-icon"></i><input id="input-register-password" name="" type="password" class="last-input input-class" placeholder="Password" />
 
                             </div>
 
