@@ -517,31 +517,11 @@ if (isLogged()) {
 
                     return false;
 
-                })
-
-
-
-
-
-            </script>
-
-
-
-            <script>
-                var User = <?php echo $_SESSION['id_user']; ?>;
-                var CurrentMessages = new Array();
-
-                /*$("body").click(function(e){
-                 // console.log(e.target);
-                 });*/
-
-                $("#temp_trigger").click(function() {
-                    /*  console.log(CurrentMessages.admin_global);
-                     delete CurrentMessages.admin_global.messages[3];
-                     console.log(CurrentMessages.admin_global); */
                 });
 
-
+                var User = <?php echo $_SESSION['id_user']; ?>;
+                var CurrentMessages = new Array();
+      
 
                 $(".show-messages").live("mousedown", function() {
                     ReadMessagesArray();
@@ -563,7 +543,7 @@ if (isLogged()) {
 
                 $("#campaign-enabler-search").live("input", function() {
                     ReadMessagesArray("enabler");
-                })
+                });
 
 
                 $(".read-message").live("click", function() {
@@ -574,8 +554,6 @@ if (isLogged()) {
 
                     //  console.log(CurrentCampaign); 
                     //  console.log(CurrentCampaignID);
-
-
 
 
                     if (!$("#get-campaign-enabler").parent().hasClass("open")) {

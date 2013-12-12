@@ -46,19 +46,19 @@ if (count($_SESSION) > 0) {
         <!-- -->
         <link href="mod_login/login.css" rel="stylesheet">
 
-        <script src="tools/security/validation.js"></script>
-        <script src="tools/session/functions.js"></script>
-        <script src="tools/javascript/functions/warnings.js"></script>
-        <script src="tools/javascript/jquery/jquery.min.js"></script>
+        <script src="security/validation.js"></script>
+        <script src="session/functions.js"></script>
+        <script src="js/functions/warnings.js"></script>
+        <script src="js/jquery/jquery.min.js"></script>
 
-        <script src="tools/security/sha512.js"></script>
+        <script src="security/sha512.js"></script>
 
-        <script src="tools/javascript/bootstrap/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="tools/javascript/bootstrap/css/bootstrap.sweetdreams.css"> 
-        <link rel="stylesheet" href="tools/javascript/bootstrap/css/bootstrap-responsive.min.css">
+        <script src="js/bootstrap/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="js/bootstrap/css/bootstrap.sweetdreams.css"> 
+        <link rel="stylesheet" href="js/bootstrap/css/bootstrap-responsive.min.css">
 
-        <link rel="stylesheet" href="tools/css/font-awesome/font-awesome.css">
-        <link rel="stylesheet" href="tools/css/animate/animate.min.css">
+        <link rel="stylesheet" href="css/font-awesome/font-awesome.css">
+        <link rel="stylesheet" href="css/animate/animate.min.css">
 
 
 
