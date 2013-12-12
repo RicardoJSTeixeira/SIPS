@@ -1,4 +1,5 @@
 <?php require("../../ini/dbconnect.php");
+require("../../ini/user.php");
 
 foreach ($_POST as $key => $value) { 
     ${$key} = $value;
@@ -6,6 +7,8 @@ foreach ($_POST as $key => $value) {
 foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
+
+$user = new users();
 
 function FieldsListBuilder($CampaignID, $AllFields, $FieldID, $FieldDisplayName, $FieldReadOnly, $Flag, $link)
 {
@@ -80,17 +83,7 @@ function FieldsListBuilder($CampaignID, $AllFields, $FieldID, $FieldDisplayName,
 		{
 			$js['duplicate'] = "error";
 		}
-		
-
-	
-	
 	}
-	
-	
-	
-	
-	
-
 echo json_encode($js);  
 
 
@@ -115,6 +108,12 @@ function RemoveField($CampaignID, $FieldID, $link)
 	mysql_query("UPDATE vicidial_list_ref SET field_order = field_order - 1 WHERE field_order > $result[0] AND campaign_id='$CampaignID'") or die(mysql_error());
 	mysql_query("UPDATE vicidial_list_ref SET Display_name = Name, readonly=0, active=0, field_order=0 WHERE campaign_id='$CampaignID' AND Name='$FieldID'") or die(mysql_error());
 	mysql_query("UPDATE sips_campaign_stats SET dynamic_fields = dynamic_fields - 1 WHERE campaign_id='$CampaignID'") or die(mysql_query());
+    
+    
+        $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
+                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','DYNAMIC_FIELD','DELETE','$CampaignID','ADMIN DELETE DYNAMIC FIELD','several queries->campaigns/_campos_dinamicos-request->function RemoveField')";
+        mysql_query($query) or die(mysql_error());
+    
 }
 
 function DialogFieldsEditOnSave($CampaignID, $FieldID, $FieldName, $link)

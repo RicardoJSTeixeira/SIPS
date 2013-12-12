@@ -4537,52 +4537,41 @@ $h++;
                 <div class="modal-body">
                     <div id="NoDateSelected" class="alert" style="display:none"></div>
                     <div class="row-fluid">
-                        <div class="span6">
+                        <div class="span7">
                             <label for="data_callback"> Data do Callback:</label>
-                            <input readonly type="text" class="span7" id="data_callback" value="">
+                            <input readonly type="text" class="span5" id="data_callback" value="">
+
                         </div>
-                        <div class="span6">
+                        <div class="span5">
                             <input type="radio" id="cb_pessoal" <?= ($my_callback_option == "CHECKED") ? "checked='checked'" : "" ?> name="tipo_callback" />
                             <label for="cb_pessoal"><span></span>Callback Pessoal</label><div class="alert alert-info" id="maxcb_individual_info"></div>
 
                             <input type="radio" id="cb_geral" <?= ($my_callback_option != "CHECKED") ? "checked='checked'" : "" ?> name="tipo_callback" />
                             <label for="cb_geral"><span></span>Callback Geral</label><div class="alert alert-info" id="maxcb_geral_info"></div>
+                            <?php
+                            $userlist = "<option></option>";
+                            $results = mysql_query("Select user From vicidial_users Where active='Y'");
+                            while ($result = mysql_fetch_array($results)) {
+                                $userlist.= "<option>$result[0]</option>\n";
+                            }
+                            ?>
+                            <div      <?= ($callback_other_user) ? "" : "style='display:none'" ?>>
+                                <input type="checkbox" id="cb_other_user" name="cb_other_user" />
+                                <label for="cb_other_user"><span></span> Outro User</label>
+                                <select id="cb_other_username" disabled><?= $userlist ?></select>
+                            </div>
                         </div>
                     </div>
-
-                    <?php
-                    $userlist = "<option></option>";
-                    $results = mysql_query("Select user From vicidial_users Where active='Y'");
-                    while ($result = mysql_fetch_array($results)) {
-                        $userlist.= "<option>$result[0]</option>\n";
-                    }
-                    ?>
-                    <div class="span6"  <?= ($callback_other_user) ? "" : "style='display:none'" ?>>
-                        <select style="width:170px" id="cb_other_username" disabled><?= $userlist ?></select>
-                        <input type="checkbox" id="cb_other_user" name="cb_other_user" />
-                        <label for="cb_other_user"><span></span> Outro User</label>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <label>Comentários do Callback:</label>
+                            <textarea id="comentarios_callback" style="width:99%; height:150px"></textarea>
+                        </div>
                     </div>
-
-
-
-                    <div class="span6">
-                        <span>Comentários do Callback:</span>
-                        <textarea id="comentarios_callback" style="width:375px; height:150px"></textarea>
+                    <div class="row-fluid">
+                        <button onClick=" CalLBacKsLisTCheck();" class="btn btn-info"><i class="icon-external-link"></i>Ver Lista Callbacks</button>
+                        <button onClick="CallBackDatE_submit();" class="btn btn-success right"><i class="icon-save"></i>Gravar</button>
                     </div>
-
-
-
-
-                    <button onClick=" CalLBacKsLisTCheck();" class="btn btn-primary"><i class="icon-external-link"></i>Ver Lista Callbacks</button>
-
-                    <button onClick="CallBackDatE_submit();" class="btn btn-primary"><i class="icon-save"></i>Gravar</button>
-
-
-
-
-
-
-
                 </div>
             </div>
 
