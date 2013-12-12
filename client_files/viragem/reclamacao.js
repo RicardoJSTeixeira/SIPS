@@ -10,6 +10,8 @@ var concess_mail = [];
 
 $(function()
 {
+    $.ajaxSetup({cache: false});
+
       $("#form_enviar_mail").validationEngine();
       $("#dateform").validationEngine();
       $(".chzn-select").chosen({no_results_text: "Sem resultados"});
