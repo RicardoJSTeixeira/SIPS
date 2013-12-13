@@ -84,4 +84,3 @@ switch($action)
 	case "SubmitCopyScript": SubmitCopyScript($CampaignID, $ScriptToCopy, $link); break;
 	case "SubmitRemoveScript": SubmitRemoveScript($CampaignID, $link); break;
 }
-?>

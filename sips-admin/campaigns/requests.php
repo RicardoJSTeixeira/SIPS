@@ -145,4 +145,3 @@ if($action=="iscloud"){
     $row = mysql_fetch_row($result);
     echo json_encode(array("iscloud"=>$row[0]=="1"));
 }
-?>
