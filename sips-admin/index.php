@@ -1,4 +1,4 @@
-<?
+<?php
 #HEADER
 $self = count(explode('/', $_SERVER['PHP_SELF']));
 for ($i = 0; $i < $self - 2; $i++) {
@@ -105,9 +105,9 @@ if (!mysql_num_rows($r)) {
         <div id='cc-header' class="row-fluid">
             <div class="span3">
 
-                <? if (isset($curlogo) && $curLogo != "") { ?>
+                <?php if (isset($curlogo) && $curLogo != "") { ?>
                     <img class="left" src='<?= "../$curlogo"; ?>' id="menu-hide" > 
-                <? } else { ?>
+                <?php } else { ?>
                     <img class="left" src='/images/pictures/go_logo_15.png' id='menu-hide' >
                 <?php } ?>
             </div>
@@ -151,7 +151,7 @@ if (!mysql_num_rows($r)) {
                                     $curLink = mysql_fetch_assoc($rslt);
                                     $admin_link = $curLink['url'];
                                     ?>
-                                    <tr  onclick=open_page('<?= $admin_link ?>'); >
+                                    <tr  onclick="open_page('<?= $admin_link.(preg_match("/\?/", $admin_link)?"&":"?").time() ?>');" >
                                         <td><img src='<?= $curLink[imgpath] ?>' /></td>
                                         <td><?= $curLink[label] ?></td>
                                     </tr>
@@ -206,7 +206,7 @@ if (!mysql_num_rows($r)) {
                                     for ($ii = 0; $ii < count($links); $ii++) {
                                         if ($links[$ii][id_menu_groups] == $groups[$i][id_menu_group]) {
                                             ?>
-                                            <tr onClick="open_page('<?= $links[$ii][url] ?>')">
+                                    <tr onClick="open_page('<?= $links[$ii]['url'].(preg_match("/\?/", $links[$ii]['url'])?"&":"?").time()  ?>')">
                                                 <td><img src='/images/icons/<?= $links[$ii][img] ?>' /></td><td><?= $links[$ii][title] ?></td>
                                             </tr>
                                             <?php
