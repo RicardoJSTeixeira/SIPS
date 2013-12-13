@@ -39,6 +39,8 @@ if (isLogged()) {
             <link rel="stylesheet" href="../css/jquery.stepy.css" />
             <link rel="stylesheet" href="../file-upload/bootstrap-fileupload.css" />
             <link rel="stylesheet" href="../css/color/black.css" />
+            <link rel="stylesheet" href="../css/xcharts.min.css"/>
+            <link rel="stylesheet" href="../css/jquery.easy-pie-chart.css"/>
 
 
 
@@ -137,7 +139,7 @@ if (isLogged()) {
             <!--Content Start-->
             <div id="content">
 
-
+                
                 <!--SpeedBar Start-->
                 <div class="speedbar">
                     <div class="speedbar-content">
@@ -157,7 +159,7 @@ if (isLogged()) {
 
 
                         <div class='span' style='width:400px; margin-top:12px;'> 
-                            <b style='color: #F2A500'>Campaign:</b><span style='margin:0px 6px 0px 6px; color:#FFFFFF' class='active-campaign'></span><b style='color: #F2A500; margin-left:12px'> Status: </b><span style='margin:0px 6px 0px 6px;' class='status-campaign'></span> 
+                            <b style='color: #F2A500'>Campaign: </b><span style='margin:0px 6px 0px 6px; color:#FFFFFF' class='active-campaign'></span><b style='color: #F2A500; margin-left:12px'> Status: </b><span style='margin:0px 6px 0px 6px;' class='status-campaign'></span> 
                             <div class='clear'></div> 
                         </div>
 
@@ -189,7 +191,10 @@ if (isLogged()) {
 
                 <!--CONTENT MAIN START-->
                 <div class="content inner-content" style='min-height:850px'>
-
+                   
+                    
+                    <div id="graphs"></div>
+                    <div id="kant"></div>
 
 
 
@@ -213,7 +218,7 @@ if (isLogged()) {
             <script src="../js/google-code-prettify/prettify.js"></script>
 
             <script src="../js/jquery.flot.min.js"></script>
-            <script src="../js/jquery.flot.pie.js"></script>
+            <script src="../js/jquery.flot.pie.min.js"></script>
             <script src="../js/jquery.flot.orderBars.js"></script>
             <script src="../js/jquery.flot.resize.js"></script>
             <script src="../js/graphtable.js"></script>
@@ -266,7 +271,18 @@ if (isLogged()) {
 
             <script src="../session/functions.js"></script>
             <script src="../notifications/functions.js"></script>
-
+            <!-- Marco -->
+            <script src="../js/graphs/d3.min.js"></script>
+            <script src="../js/graphs/jquery.knob.js"></script>
+            <script src="../js/graphs/jquery.knob.modified.min.js"></script>
+            <script src="../js/graphs/justgage.1.0.1.min.js"></script>
+            <script src="../js/graphs/moment.min.js"></script>
+            <script src="../js/graphs/xcharts.min.js"></script>
+            <script src="../js/graphsapi/api.js"></script>
+            <script src="../js/graphsapi/graphcs.js"></script>
+            <script src="../intra_realtime/scripts.js" ></script>
+            
+            <!----->
 
             <script>
                 // INI
@@ -279,7 +295,9 @@ if (isLogged()) {
 
                 var CurrentCampaignID;
 
+                
 
+                
 
 
                 function PopulateDropDownAndCurrentCampaign(Reload)
@@ -298,7 +316,7 @@ if (isLogged()) {
                             {
                                 if (typeof CurrentCampaign !== 'undefined') {
                                     $(".dropdown-scroll").append("<li><a href='#'>There are no Campaigns created.</li>");
-                                    $(".inner-content").html("<br><center><b>No Campaigns.</b></a><img style='margin-left:8px' src='../images/users/icon_emotion_sad_32.png'></center>");
+                                    $("#kant").html("<br><center><b>No Campaigns.</b></a><img style='margin-left:8px' src='../images/users/icon_emotion_sad_32.png'></center>");
                                     $('.dropdown-scroll').slimScroll({
                                         position: 'right',
                                         height: '30px',
@@ -383,11 +401,11 @@ if (isLogged()) {
 
 
 
-                function GetRealtime()
+               function GetRealtime()
                 {
 
-
-                    $.ajax({
+                   dashboard();
+                  /* $.ajax({
                         type: "POST",
                         url: "../intra_realtime/requests.php",
                         dataType: "JSON",
@@ -433,7 +451,7 @@ if (isLogged()) {
                                                 },
                                                 success: function(data2) {
 
-                                                    $(".inner-content").html(data2);
+                                                    $("#kant").html(data2);
                                                 }
                                             });
                                         }
@@ -444,7 +462,7 @@ if (isLogged()) {
 
                         }
                     });
-
+                        */
 
                 }
 
@@ -459,7 +477,7 @@ if (isLogged()) {
                         type: "GET",
                         url: $(this).attr("href"),
                         success: function(data) {
-                            $(".inner-content").html(data);
+                            $("#kant").html(data);
                         }
                     });
                     $(".speedbar-nav").removeClass("act_link");
@@ -477,7 +495,7 @@ if (isLogged()) {
                             GetRealtime();
                         } else {
                             $(".dropdown-scroll").append("<li><a href='#'>There are no Campaigns created.</li>");
-                            $(".inner-content").html("<br><center><b>No Campaigns.</b></a><img style='margin-left:8px' src='../images/users/icon_emotion_sad_32.png'></center>");
+                            $("#kant").html("<br><center><b>No Campaigns.</b></a><img style='margin-left:8px' src='../images/users/icon_emotion_sad_32.png'></center>");
                             $('.dropdown-scroll').slimScroll({
                                 position: 'right',
                                 height: '30px',
@@ -495,7 +513,7 @@ if (isLogged()) {
                             type: "GET",
                             url: $(this).attr("pagetoload"),
                             success: function(data) {
-                                $(".inner-content").html(data);
+                                $("#kant").html(data);
                             }
                         });
 
@@ -517,6 +535,28 @@ if (isLogged()) {
 
                     return false;
 
+                });
+
+
+
+
+
+            </script>
+
+
+
+            <script>
+                var User = <?php echo $_SESSION['id_user']; ?>;
+                var CurrentMessages = new Array();
+
+                /*$("body").click(function(e){
+                 // console.log(e.target);
+                 });*/
+
+                $("#temp_trigger").click(function() {
+                    /*  console.log(CurrentMessages.admin_global);
+                     delete CurrentMessages.admin_global.messages[3];
+                     console.log(CurrentMessages.admin_global); */
                 });
 
                 var User = <?php echo $_SESSION['id_user']; ?>;
@@ -568,6 +608,10 @@ if (isLogged()) {
                 $(document).ready(function() {
                     BuildNotifications(User);
                     PopulateDropDownAndCurrentCampaign(false);
+                    
+                   
+                    
+                    
                 });
             </script>    
             <style>
