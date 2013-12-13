@@ -45,7 +45,7 @@ function editor_toggle(tipo)
 
 $(function() {
 
-
+    $('#rule_target_formright').tooltip({trigger: "manual"});
     $("#rule_creator .form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
     //respostas maximas por feedback TEMPORARIO----------------
     $("#max_feedback_div").hide();
@@ -1932,112 +1932,122 @@ $("#add_rule_button").click(function()
 {
     if ($("#rule_creator .form_edit_element").validationEngine('validate'))
     {
-        switch (selected_type)
+        if ($("#rule_target_select option:selected").length)
         {
-            case "texto":
-                switch ($("#rule_trigger_select").val())
-                {
-                    case "answer":
-                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
-                        else
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
-                        break;
-                    case "value_input":
-                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_input").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_input", "0");
-                        else
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_input").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_input", 0);
-                        break;
-                }
-                break;
-            case "radio":
-                if ($("#rule_trigger_select").val() === "value_select")
-                    if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
-                    else
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
-                break;
-            case "checkbox":
-                if ($("#rule_trigger_select").val() === "value_select")
-                    if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
-                    else
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
-                break;
-            case"multichoice":
-                if ($("#rule_trigger_select").val() === "value_select")
-                    if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
-                    else
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
-                break;
-            case "tableradio":
-                switch ($("#rule_trigger_select").val())
-                {
-                    case "answer":
-                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
-                        else
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
-                        break;
-                    case "value_select":
+            $('#rule_target_formright').tooltip("hide");
+            switch (selected_type)
+            {
+                case "texto":
+                    switch ($("#rule_trigger_select").val())
+                    {
+                        case "answer":
+                            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                            else
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                            break;
+                        case "value_input":
+                            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_input").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_input", "0");
+                            else
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_input").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_input", 0);
+                            break;
+                    }
+                    break;
+                case "radio":
+                    if ($("#rule_trigger_select").val() === "value_select")
                         if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
                             rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
                         else
                             rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
-                        break;
-                }
+                    break;
+                case "checkbox":
+                    if ($("#rule_trigger_select").val() === "value_select")
+                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
+                        else
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
+                    break;
+                case"multichoice":
+                    if ($("#rule_trigger_select").val() === "value_select")
+                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
+                        else
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
+                    break;
+                case "tableradio":
+                    switch ($("#rule_trigger_select").val())
+                    {
+                        case "answer":
+                            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                            else
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                            break;
+                        case "value_select":
+                            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
+                            else
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
+                            break;
+                    }
 
-            case "tableinput":
-                switch ($("#rule_trigger_select").val())
-                {
-                    case "answer":
-                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
-                        else
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
-                        break;
-                }
-                break;
-            case "datepicker":
-                switch ($("#rule_trigger_select").val())
-                {
-                    case "answer":
-                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
-                        else
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
-                        break;
-                    case "date":
+                case "tableinput":
+                    switch ($("#rule_trigger_select").val())
+                    {
+                        case "answer":
+                            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                            else
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                            break;
+                    }
+                    break;
+                case "datepicker":
+                    switch ($("#rule_trigger_select").val())
+                    {
+                        case "answer":
+                            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                            else
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                            break;
+                        case "date":
 
 
-                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "date", $("#add_rule_button").data("date_limit_element").get_time());
-                        else
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "date", $("#add_rule_button").data("date_limit_element").get_time());
-                        break;
-                }
-                break;
-            case "textarea":
-                switch ($("#rule_trigger_select").val())
-                {
-                    case "answer":
-                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
-                        else
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
-                        break;
-                }
-                break;
-            case "button":
-                if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#rule_target_select").val(), $("#regra_select").val(), "click", 0);
-                else
-                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#go_to_select").val(), $("#regra_select").val(), "click", 0);
+                            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "date", $("#add_rule_button").data("date_limit_element").get_time());
+                            else
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "date", $("#add_rule_button").data("date_limit_element").get_time());
+                            break;
+                    }
+                    break;
+                case "textarea":
+                    switch ($("#rule_trigger_select").val())
+                    {
+                        case "answer":
+                            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                            else
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                            break;
+                    }
+                    break;
+                case "button":
+                    if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#rule_target_select").val(), $("#regra_select").val(), "click", 0);
+                    else
+                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#go_to_select").val(), $("#regra_select").val(), "click", 0);
+            }
+            $("#rule_target_select").val("").trigger("liszt:updated");
+            $("#rules_valor_select").val("").trigger("liszt:updated");
+
         }
-        $("#rule_target_select").val("").trigger("liszt:updated");
-        $("#rules_valor_select").val("").trigger("liszt:updated");
+        else
+        {
+            $('#rule_target_formright').tooltip("show");
+        }
+
     }
 
 });

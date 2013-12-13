@@ -153,7 +153,7 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
             mysql_query("INSERT INTO vicidial_campaign_statuses (status, status_name, selectable, human_answered, scheduled_callback, campaign_id, visible) VALUES ('$row[0]', '$row[1]', 'N', '$row[2]', '$row[3]', '$js[new_campaign_id]', '$row[4]')") or die(mysql_error());
         }
     } else {
-        $query = mysql_query("SELECT campaign_name, campaign_description, active, dial_method, auto_dial_level, campaign_recording, lead_order, next_agent_call, my_callback_option, campaign_allow_inbound, agent_display_dialable_leads, display_queue_count, view_calls_in_queue, agent_lead_search, agent_allow_transfers, agent_allow_dtmf,callback_hours_block FROM vicidial_campaigns WHERE campaign_id='$CampaignID' LIMIT 1", $link) or die(mysql_error());
+        $query = mysql_query("SELECT campaign_name, campaign_description, active, dial_method, auto_dial_level, campaign_recording, lead_order, next_agent_call, my_callback_option, campaign_allow_inbound, agent_display_dialable_leads, display_queue_count, view_calls_in_queue, agent_lead_search, agent_allow_transfers, agent_allow_dtmf,callback_hours_block,call_count_limit FROM vicidial_campaigns WHERE campaign_id='$CampaignID' LIMIT 1", $link) or die(mysql_error());
         $result = mysql_fetch_assoc($query) or die(mysql_error());
 
         $js['c_name'] = $result['campaign_name'];
@@ -179,9 +179,10 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
         $js['c_agent_allow_transfers'] = $result['agent_allow_transfers'];
 
         $js['c_agent_allow_dtmf'] = $result['agent_allow_dtmf'];
-        
+
         //callbacks limit
         $js['callback_hours_block'] = $result['callback_hours_block'];
+         $js['call_count_limit'] = $result['call_count_limit'];
 
 
         $js['selected_user_groups'] = array();
@@ -396,7 +397,11 @@ function CampaignDTMF($CampaignID, $Checked, $link) {
     mysql_query("UPDATE vicidial_campaigns SET agent_allow_dtmf = '$Checked' WHERE campaign_id='$CampaignID'", $link) or die(mysql_error());
 }
 
-function CampaignCBLimit($CampaignID, $max, $link) {
+function CampaignCBLimit_individual($CampaignID, $max, $link) {
+    mysql_query("UPDATE vicidial_campaigns SET call_count_limit = '$max' WHERE campaign_id='$CampaignID'", $link) or die(mysql_error());
+}
+
+function CampaignCBLimit_geral($CampaignID, $max, $link) {
     mysql_query("UPDATE vicidial_campaigns SET callback_hours_block = '$max' WHERE campaign_id='$CampaignID'", $link) or die(mysql_error());
 }
 
@@ -451,7 +456,9 @@ switch ($action) {
         break;
     case "CampaignDTMF": CampaignDTMF($CampaignID, $Checked, $link);
         break;
-    case "CampaignCallbackLimit": CampaignCBLimit($CampaignID, $max, $link);
+    case "CampaignCallbackLimit_individual": CampaignCBLimit_individual($CampaignID, $max, $link);
+        break;
+    case "CampaignCallbackLimit_geral": CampaignCBLimit_geral($CampaignID, $max, $link);
         break;
 }
 ?>
