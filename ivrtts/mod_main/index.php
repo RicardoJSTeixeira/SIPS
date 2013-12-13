@@ -249,19 +249,7 @@ if (isLogged()) {
             <script src="../file-upload/bootstrap-fileupload.js"></script>
             <script src="../js/functions/warnings.js"></script>
 
-            <script src="../js/jqplot/jquery.jqplot.js"></script>
-
-            <script src="../js/jqplot/plugins/jqplot.barRenderer.min.js"></script>
-            <script src="../js/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
-            <script src="../js/jqplot/plugins/jqplot.pointLabels.min.js"></script>
-
-            <script src="../js/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
-            <script src="../js/jqplot/plugins/jqplot.donutRenderer.min.js"></script>
-            <script src="../js/jqplot/plugins/jqplot.canvasTextRenderer.min.js"></script>
-            <script src="../js/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
-            <script src="../js/jqplot/plugins/jqplot.dateAxisRenderer.js"></script>
-
-
+    
             <script type="text/javascript" src="../js/jqueryui/js/jquery-ui-1.10.0.custom.min.js"></script>
 
 
