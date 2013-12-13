@@ -98,15 +98,15 @@ $("#download_report_button").on("click", function()
 
     if ($("#radio1").is(":checked"))
     {
-        document.location.href = "requests.php?action=report&tipo=1&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_campanha option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + JSON.stringify(ordered_tags) + "&only_with_result=" + $("#crs_contacts").is(":checked");
+        document.location.href = "requests.php?action=report&tipo=1&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_campanha option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + JSON.stringify(ordered_tags) + "&only_with_result=" + $("#crs_contacts").is(":checked")+"&only_active_db="+$("#so_bd_activas").is(":checked");
     }
     else if ($("#radio2").is(":checked"))
     {
-        document.location.href = "requests.php?action=report&tipo=2&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_linha_inbound option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked") + "&only_with_result=" + $("#crs_contacts").is(":checked");
+        document.location.href = "requests.php?action=report&tipo=2&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_linha_inbound option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked") + "&only_with_result=" + $("#crs_contacts").is(":checked")+"&only_active_db=false";
     }
     else
     {
-        document.location.href = "requests.php?action=report&tipo=3&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&list_id=" + $("#select_base_dados option:selected").val() + "&campaign_id=" + $("#select_base_dados option:selected").data("campaign_id") + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + JSON.stringify(ordered_tags) + "&only_with_result=" + $("#crs_contacts").is(":checked");
+        document.location.href = "requests.php?action=report&tipo=3&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&list_id=" + $("#select_base_dados option:selected").val() + "&campaign_id=" + $("#select_base_dados option:selected").data("campaign_id") + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + JSON.stringify(ordered_tags) + "&only_with_result=" + $("#crs_contacts").is(":checked")+"&only_active_db=false";
     }
 
 });
@@ -176,7 +176,7 @@ function get_templates(campaign)
             $("#delete_template_button").prop("disabled", false);
             $("#template_div").show();
             $("#oc_template").empty();
-            $("#div_crs").show();
+  
             $.post("requests.php", {action: "get_template", campaign_id: campaign, script_id: data},
             function(data1)
             {
@@ -193,6 +193,9 @@ function get_templates(campaign)
                     $("#oc_template").trigger("change");
                     $("#column_order_title").show().text("Ordernação de colunas");
                     $("#div_crs").show();
+                      
+                    if($("#radio1").is(":checked"))
+                    $("#div_idb").show();
                 }
                 else
                 {
@@ -203,6 +206,7 @@ function get_templates(campaign)
                     $("#oc_template").append("<option>Crie um template</option>");
                     $("#column_order_title").hide();
                     $("#div_crs").hide();
+                          $("#div_idb").hide();
                 }
             }, "json");
         }
@@ -212,6 +216,7 @@ function get_templates(campaign)
             $("#column_order").append("<li>Sem Script</li>");
             $("#template_div").hide();
             $("#div_crs").hide();
+                  $("#div_idb").hide();
 
             $("#download_report_button").prop("disabled", true);
 
