@@ -16,11 +16,7 @@ ini_set('display_errors', '1');
 
 header('Content-Disposition: attachment; filename=Report_Script_' . date("Y-m-d_H:i:s") . '.csv');
 
-
-
 $user = new users;
-
-
 
 $temp = "";
 if (!$user->is_all_campaigns) {
@@ -28,8 +24,6 @@ if (!$user->is_all_campaigns) {
 }
 $js = array();
 switch ($action) {
-
-
 
     case "check_has_script":
 
@@ -46,8 +40,6 @@ switch ($action) {
         }
         break;
 
-
-
     case "get_template":
 
 //Se 0 vai buscar defaults
@@ -60,7 +52,6 @@ switch ($action) {
         }
         echo json_encode($js);
         break;
-
 
     case "delete_template":
         $query = "Delete from report_order where id=:id";
@@ -92,8 +83,6 @@ switch ($action) {
         $stmt->execute(array(":js" => json_encode($js), ":campaign_id" => $campaign_id, ":template" => $template));
         break;
 
-
-
     case "get_elements_by_template":
         $query = "SELECT elements from report_order where id=:id";
         $stmt = $db->prepare($query);
@@ -103,9 +92,6 @@ switch ($action) {
 
         echo json_encode($js);
         break;
-
-
-
 
     case "get_select_options":
         $js = array("campanha" => array(), "bd" => array(), "linha_inbound" => array());
@@ -133,16 +119,8 @@ switch ($action) {
     case "update_elements_order":
         $query = "update report_order set elements=:elements  where id=:id";
         $stmt = $db->prepare($query);
-        $stmt->execute(array(":id" => $id, ":elements" => $elements));
+        $stmt->execute(array(":id" => $id, ":elements" => json_encode($elements)));
         break;
-
-
-
-
-
-
-
-
 
     case "report":
         ini_set('memory_limit', '-1');
@@ -150,7 +128,6 @@ switch ($action) {
         header('Content-type: text/csv; charset=UTF-8');
         echo "\xEF\xBB\xBF";
         $output = fopen('php://output', 'w');
-
 
         $field_data = json_decode($field_data);
 //GET ID SCRIPT
@@ -165,14 +142,18 @@ switch ($action) {
         } else {
             $date_filter = "";
         }
-
-
+        
         if (isset($list_id)) {
             $tmp = $list_id;
             $list_id = array();
             $list_id[] = $tmp;
         } else {
-            $query = "SELECT list_id from vicidial_lists where campaign_id=:campaign_id and active='Y'";
+            
+            if ($only_active_db){
+                $onlyActive=" and active='Y'";
+            }
+                    
+            $query = "SELECT list_id from vicidial_lists where campaign_id=:campaign_id $onlyActive";
             $stmt = $db->prepare($query);
             $stmt->execute(array(":campaign_id" => $campaign_id));
 
@@ -252,12 +233,11 @@ switch ($action) {
             $data_row[$key] = "";
         }
 
-
         foreach ($list_id as $value) {
             if ($only_with_result == "true") {
-                $query = "SELECT a.lead_id id,status_name, a.entry_date, " . implode(",", $temp_lead_data) . " from vicidial_list a left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join script_result sr on a.lead_id=sr.lead_id where list_id =:value $date_filter";
+                $query = "SELECT a.lead_id id,status_name, a.entry_date, modify_date date, " . implode(",", $temp_lead_data) . " from vicidial_list a left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join script_result sr on a.lead_id=sr.lead_id where list_id =:value $date_filter";
             } else {
-                $query = "SELECT a.lead_id id,status_name, a.entry_date, " . implode(",", $temp_lead_data) . " from vicidial_list a left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status where list_id =:value";
+                $query = "SELECT a.lead_id id,status_name, a.entry_date, modify_date date, " . implode(",", $temp_lead_data) . " from vicidial_list a left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status where list_id =:value";
             }
             $stmt = $db->prepare($query);
             $stmt->execute(array(":value" => $value));
@@ -322,7 +302,6 @@ switch ($action) {
                 $stmt1->execute(array(":lead_id" => $row["lead_id"]));
                 $row1 = $stmt1->fetch(PDO::FETCH_ASSOC);
 
-
                 $temp_d = $final_row[$row["lead_id"]];
 
                 $lead_id = $row["lead_id"];
@@ -337,7 +316,7 @@ switch ($action) {
             if ($row["type"] == "tableradio") {
                 $temp_d["m" . $row["tag_elemento"] . $row["param_1"]] = $row["valor"];
             } elseif ($row["type"] == "tableinput") {
-                $temp = split(";", $row["param_1"]);
+                $temp = explode(";", $row["param_1"]);
                 $temp_d["m" . $row["tag_elemento"] . $temp[1] . $temp[0]] = $row["valor"];
             } else {
                 $temp_d["m" . $row["tag_elemento"]] = ($row["param1"] == "nib") ? "" . $row["valor"] . "" : $row["valor"];
@@ -360,5 +339,3 @@ switch ($action) {
         fclose($output);
         break;
 }
-
-    
