@@ -161,11 +161,11 @@ var graph = function() {
                         },
                         {
                             "x": "2012-11-20",
-                            "y": getRandomInt(122, 322)
+                            "y": getRandomInt(12, 322)
                         },
                         {
                             "x": "2012-11-21",
-                            "y": getRandomInt(122, 322)
+                            "y": getRandomInt(1, 322)
                         },
                         {
                             "x": "2012-11-22",
@@ -173,15 +173,15 @@ var graph = function() {
                         },
                         {
                             "x": "2012-11-23",
-                            "y": getRandomInt(122, 322)
+                            "y": getRandomInt(1, 322)
                         },
                         {
                             "x": "2012-11-24",
-                            "y": getRandomInt(122, 322)
+                            "y": getRandomInt(2, 322)
                         },
                         {
                             "x": "2012-11-25",
-                            "y": getRandomInt(122, 322)
+                            "y": getRandomInt(12, 322)
                         }
                     ]
                 },
@@ -190,19 +190,19 @@ var graph = function() {
                     "data": [
                         {
                             "x": "2012-11-19",
-                            "y": getRandomInt(1, 122)
+                            "y": getRandomInt(100, 122)
                         },
                         {
                             "x": "2012-11-20",
-                            "y": getRandomInt(1, 122)
+                            "y": getRandomInt(100, 122)
                         },
                         {
                             "x": "2012-11-21",
-                            "y": getRandomInt(1, 122)
+                            "y": getRandomInt(100, 122)
                         },
                         {
                             "x": "2012-11-22",
-                            "y": getRandomInt(1, 122)
+                            "y": getRandomInt(100, 122)
                         },
                         {
                             "x": "2012-11-23",
@@ -210,11 +210,77 @@ var graph = function() {
                         },
                         {
                             "x": "2012-11-24",
-                            "y": getRandomInt(1, 122)
+                            "y": getRandomInt(100, 122)
                         },
                         {
                             "x": "2012-11-25",
                             "y": getRandomInt(1, 122)
+                        }
+                    ]
+                },
+                {
+                    "className": '.uteis1',
+                    "data": [
+                        {
+                            "x": "2012-11-19",
+                            "y": getRandomInt(5, 100)
+                        },
+                        {
+                            "x": "2012-11-20",
+                            "y": getRandomInt(50, 100)
+                        },
+                        {
+                            "x": "2012-11-21",
+                            "y": getRandomInt(50, 100)
+                        },
+                        {
+                            "x": "2012-11-22",
+                            "y": getRandomInt(50, 100)
+                        },
+                        {
+                            "x": "2012-11-23",
+                            "y": getRandomInt(50, 100)
+                        },
+                        {
+                            "x": "2012-11-24",
+                            "y": getRandomInt(50, 100)
+                        },
+                        {
+                            "x": "2012-11-25",
+                            "y": getRandomInt(50, 122)
+                        }
+                    ]
+                },
+                {
+                    "className": '.uteis2',
+                    "data": [
+                        {
+                            "x": "2012-11-19",
+                            "y": getRandomInt(1, 50)
+                        },
+                        {
+                            "x": "2012-11-20",
+                            "y": getRandomInt(1,50)
+                        },
+                        {
+                            "x": "2012-11-21",
+                            "y": getRandomInt(1,50)
+                        },
+                        {
+                            "x": "2012-11-22",
+                            "y": getRandomInt(1, 50)
+                        },
+                        {
+                            "x": "2012-11-23",
+                            "y": getRandomInt(1, 50)
+                        },
+                        {
+                            "x": "2012-11-24",
+                            "y": getRandomInt(1,50)
+                        },
+                        {
+                            "x": "2012-11-25",
+                            "y": getRandomInt(1, 50)
                         }
                     ]
                 }

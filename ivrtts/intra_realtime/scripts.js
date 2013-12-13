@@ -8,6 +8,7 @@ var Dashboard = function() {
 
     this.ini = function() {
         $('#kant').load('../intra_realtime/index.php', function(){
+         
         graficos.line('#Graph1', 'data');
         graficos.line('#Graph2', 'data');
         graficos.bar('#Graph3', 'data');
