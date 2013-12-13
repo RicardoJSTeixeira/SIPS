@@ -123,13 +123,14 @@ if ($key === 1) {
     //	Set the position where the chart should appear in the worksheet
     $chart->setTopLeftPosition('A'.$topr+22);
     $chart->setBottomRightPosition('Q'.$botl+22);
+    //	Add the chart to the worksheet
+    $sheet->addChart($chart);
    }
 
 
 
 
-//	Add the chart to the worksheet
-    $sheet->addChart($chart);
+
 
     //cor do fundo
     //enviar ficheiro para o browser "save"
