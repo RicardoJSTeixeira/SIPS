@@ -9,9 +9,11 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 
-$js = array();
-$query = "SELECT count(callback_id) as total FROM `vicidial_callbacks` WHERE campaign_id='$campaign_id' and user='$user' and recipient='USERONLY' and status <> 'INACTIVE'";
+$js = array("ANYONE"=>0,"USERONLY"=>0);
+$query = "SELECT count(callback_id) as total,recipient FROM `vicidial_callbacks` WHERE campaign_id='$campaign_id' and user='$user'  and status <> 'INACTIVE' group by recipient";
 $query = mysql_query($query, $link) or die(mysql_error());
-$row = mysql_fetch_assoc($query);
-echo json_encode($row["total"]);
-?>
+while ($row = mysql_fetch_assoc($query)) {
+
+    $js[$row["recipient"]] =  (int)$row["total"];
+}
+echo json_encode($js);

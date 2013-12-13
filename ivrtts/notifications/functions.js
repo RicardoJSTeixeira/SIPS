@@ -232,7 +232,7 @@ $(".click-avatar-image").live("click", function() {
 
         $.ajax({
             type: "POST",
-            url: "../tools/notifications/requests.php",
+            url: "../notifications/requests.php",
             data: {ZERO: "CampaignEnableNotifications", sent_campaign: $(this).attr("campaign_id"), sent_active: "Y", sent_status: "ACTIVE"},
             success: function(data) {
 
@@ -250,7 +250,7 @@ $(".click-avatar-image").live("click", function() {
 
         $.ajax({
             type: "POST",
-            url: "../tools/notifications/requests.php",
+            url: "../notifications/requests.php",
             data: {ZERO: "CampaignEnableNotifications", sent_campaign: $(this).attr("campaign_id"), sent_active: "N", sent_status: "INACTIVE"},
             success: function(data) {
 

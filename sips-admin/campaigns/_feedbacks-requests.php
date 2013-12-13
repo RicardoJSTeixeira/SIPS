@@ -1,4 +1,4 @@
-<? require("../../ini/dbconnect.php");
+<?php require("../../ini/dbconnect.php");
 
 foreach ($_POST as $key => $value) { 
     ${$key} = $value;
@@ -217,5 +217,4 @@ switch($action)
         case "GetFeedAttributes": GetFeedAttributes($FeedID, $CampaignID, $link); break;
         case "SaveEditedAtt": SaveEditedAtt($FeedID, $CampaignID, $EditedAttID, $EditedAttActive, $link); break;
 }
-?>
 

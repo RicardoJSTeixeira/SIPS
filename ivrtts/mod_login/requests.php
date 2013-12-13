@@ -1,7 +1,7 @@
 <?php
 
 // database & mysqli
-require("../database/db_connect.php");
+require("../../ini/db.php");
 ini_set("display_errors", "1");
 // post & get
 foreach ($_POST as $key => $value) {
@@ -22,7 +22,9 @@ switch ($zero) {
 // functions    
 function InsertNewUser($email, $password, $db, $firstname, $lastname) {
     $params0 = array($email);
-    $result0 = $db->rawQuery("SELECT id_user FROM zero.users WHERE email = ?", $params0);
+    $stmt = $db->prepare("SELECT id_user FROM zero.users WHERE email=?");
+    $stmt->execute($params0);
+    $result0 = $stmt->fetchAll(PDO::FETCH_BOTH);
     if (count($result0) === 0) {
 
 
@@ -30,15 +32,19 @@ function InsertNewUser($email, $password, $db, $firstname, $lastname) {
         $password = hash('sha512', $password . $salt);
 
         $params1 = array($email, $password, $salt);
-        $db->rawInsert("INSERT INTO zero.users (email, password, salt) VALUES (?, ?, ?)", $params1);
 
-        $lastID = $db->getInsertId();
+
+        $stmt = $db->prepare("INSERT INTO zero.users (email, password, salt) VALUES (?, ?, ?)");
+        $stmt->execute($params1);
+        $lastID = $db->lastInsertId();
 
         $params2 = array($lastID, $firstname, $lastname);
-        $db->rawInsert("INSERT INTO zero.user_info (id_user, name, last_name) VALUES (?, ?, ?)", $params2);
+        $stmt = $db->prepare("INSERT INTO zero.user_info (id_user, name, last_name) VALUES (?, ?, ?)");
+        $stmt->execute($params2);
 
         $params3 = array($lastID, 1);
-        $db->rawInsert("INSERT INTO zero.user_notifications (id_user, admin_global) VALUES (?, ?)", $params3);
+        $stmt = $db->prepare("INSERT INTO zero.user_notifications (id_user, admin_global) VALUES (?, ?)");
+        $stmt->execute($params3);
         $js['result'] = array(true, "User Created");
         echo json_encode($js);
     } else {
@@ -46,5 +52,3 @@ function InsertNewUser($email, $password, $db, $firstname, $lastname) {
         echo json_encode($js);
     }
 }
-
-?>

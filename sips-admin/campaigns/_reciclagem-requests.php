@@ -1,4 +1,4 @@
-<? require("../../ini/dbconnect.php");
+<?php require("../../ini/dbconnect.php");
 
 foreach ($_POST as $key => $value) { 
     ${$key} = $value;
@@ -335,4 +335,3 @@ switch($action)
 	case "EditRecycleContactDetailsDisableSingle": EditRecycleContactDetailsDisableSingle($LeadID, $link); break;
         case "DialogRecycleResetCallbacksOnSave": DialogRecycleResetCallbacksOnSave($CampaignID, $link); break;
 }
-?>

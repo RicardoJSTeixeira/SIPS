@@ -28,4 +28,3 @@ function isLogged() {
         } else { return false; }
     } else { return false; }   
 }
-?>
