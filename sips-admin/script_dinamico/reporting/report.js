@@ -167,8 +167,8 @@ function get_templates(campaign)
     $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
     function(data)
     {
-console.log(data);
-        if (data>0)
+        console.log(data);
+        if (data > 0)
         {
             script_id = data;
             $("#download_report_button").prop("disabled", false);
@@ -191,6 +191,8 @@ console.log(data);
 
                     });
                     $("#oc_template").trigger("change");
+                    $("#column_order_title").show().text("Ordernação de colunas");
+                    $("#div_crs").show();
                 }
                 else
                 {
@@ -199,6 +201,8 @@ console.log(data);
                     $("#edit_template_div_opener_button").prop("disabled", true);
                     $("#delete_template_button").prop("disabled", true);
                     $("#oc_template").append("<option>Crie um template</option>");
+                    $("#column_order_title").hide();
+                    $("#div_crs").hide();
                 }
             }, "json");
         }
@@ -215,16 +219,34 @@ console.log(data);
     }, "json");
 }
 
+
+Object.size = function(a)
+{
+    var count = 0;
+    var i;
+    for (i in a) {
+        if (a.hasOwnProperty(i)) {
+            count++;
+        }
+    }
+    return count;
+};
+
 function get_elements_by_template(template)
 {
     $.post("requests.php", {action: "get_elements_by_template", id: template}, function(data)
     {
         $("#column_order").empty();
-        $.each(data, function()
+        if (Object.size(data))
         {
-            $("#column_order").append("<li class='ui-state-default'><input id=" + this.id + "    type='text'   data-type='" + this.type + "' value='" + this.texto + "'>" + ((this.type === "campo_dinamico") ? "" : "<span class='label'>" + this.id + "</span>" + get_name_by_type(this.type)) + "<span class='btn icon-alone remove_list_item_button icon-remove btn-link' data-id='" + this.id + "'></span></li>");
-        });
-
+            $("#column_order_title").text("Ordernação de colunas");
+            $.each(data, function()
+            {
+                $("#column_order").append("<li class='ui-state-default'><input id=" + this.id + "    type='text'   data-type='" + this.type + "' value='" + this.texto + "'>" + ((this.type === "campo_dinamico") ? "" : "<span class='label'>" + this.id + "</span>" + get_name_by_type(this.type)) + "<span class='btn icon-alone remove_list_item_button icon-remove btn-link' data-id='" + this.id + "'></span></li>");
+            });
+        }
+        else
+            $("#column_order_title").text("Houve uma alteração nos campos do script, apague esta template e crie outra para actualizar os campos.");
     }, "json");
 }
 
