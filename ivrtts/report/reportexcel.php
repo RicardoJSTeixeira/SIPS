@@ -41,7 +41,7 @@ if ($key === 1) {
             'right' => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM)
         )
     );
-    $toExcel->getActiveSheet()->getStyle('A1:Q60')->applyFromArray($backGround);
+   
     //dummy data 
    
     $toExcel->getSheet(1)->fromArray(
@@ -80,8 +80,21 @@ if ($key === 1) {
 
 
 
-//	Build the dataseries
-    $series = new PHPExcel_Chart_DataSeries(
+    
+
+//	Set the chart legend
+    $legend = new PHPExcel_Chart_Legend(PHPExcel_Chart_Legend::POSITION_TOPRIGHT, NULL, false);
+
+    $title = new PHPExcel_Chart_Title('Totais+');
+    $yAxisLabel = new PHPExcel_Chart_Title('Totais');
+
+
+   $topr = 1;
+   $botl = 22;        
+  for($i=0;$i < 4 ;$i++){
+       
+      //	Build the dataseries
+    $series [] = new PHPExcel_Chart_DataSeries(
             PHPExcel_Chart_DataSeries::TYPE_LINECHART, // plotType
             PHPExcel_Chart_DataSeries::GROUPING_STACKED, // plotGrouping
             range(0, count($dataSeriesValues) - 1), // plotOrder
@@ -92,21 +105,10 @@ if ($key === 1) {
 
     
     
-    
+  
 
 //	Set the series in the plot area
     $plotarea = new PHPExcel_Chart_PlotArea(NULL, array($series));
-//	Set the chart legend
-    $legend = new PHPExcel_Chart_Legend(PHPExcel_Chart_Legend::POSITION_TOPRIGHT, NULL, false);
-
-    $title = new PHPExcel_Chart_Title('Totais+');
-    $yAxisLabel = new PHPExcel_Chart_Title('Totais');
-
-
-   $topr = 1;
-   $botl = 22;        
-  // for($i=0;$i < 4 ;$i++){
-       
        //	Create the chart
     $chart = new PHPExcel_Chart(
             'chart', // name
@@ -121,15 +123,15 @@ if ($key === 1) {
     );
     
     //	Set the position where the chart should appear in the worksheet
-    $chart->setTopLeftPosition('A'.$topr+22);
-    $chart->setBottomRightPosition('Q'.$botl+22);
+    $chart->setTopLeftPosition('A'. $topr);
+    $chart->setBottomRightPosition('Q'. $botl);
+    
+    $topr+= 22;
+    $botl +=22;
     //	Add the chart to the worksheet
     $sheet->addChart($chart);
- //  }
-
-
-
-
+  }
+ $toExcel->getActiveSheet()->getStyle('A1:Q'.$botl)->applyFromArray($backGround);
 
 
     //cor do fundo
