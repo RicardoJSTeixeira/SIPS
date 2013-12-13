@@ -173,15 +173,15 @@ var graph = function() {
                         },
                         {
                             "x": "2012-11-23",
-                            "y": getRandomInt(1, 322)
+                            "y": getRandomInt(122, 322)
                         },
                         {
                             "x": "2012-11-24",
-                            "y": getRandomInt(2, 322)
+                            "y": getRandomInt(200, 322)
                         },
                         {
                             "x": "2012-11-25",
-                            "y": getRandomInt(12, 322)
+                            "y": getRandomInt(102, 322)
                         }
                     ]
                 },
