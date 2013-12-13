@@ -105,11 +105,11 @@ if ($key === 1) {
 
    $topr = 1;
    $botl = 22;        
-   for($i=0;$i < 4 ;$i++){
+  // for($i=0;$i < 4 ;$i++){
        
        //	Create the chart
     $chart = new PHPExcel_Chart(
-            'chart'.$i, // name
+            'chart', // name
             $title, // title
             $legend, // legend
             $plotarea, // plotArea
@@ -125,7 +125,7 @@ if ($key === 1) {
     $chart->setBottomRightPosition('Q'.$botl+22);
     //	Add the chart to the worksheet
     $sheet->addChart($chart);
-   }
+ //  }
 
 
 
