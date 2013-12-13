@@ -82,20 +82,3 @@ switch($action)
     case "CampaignTimeout": CampaignTimeout($CampaignID, $Timeout, $link); break; 
     case "CampaignCID": CampaignCID($CampaignID, $CID, $link); break; 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-?>

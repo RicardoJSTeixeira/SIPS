@@ -1,4 +1,4 @@
-<? require("../../ini/dbconnect.php");
+<?php require("../../ini/dbconnect.php");
 
 foreach ($_POST as $key => $value) { 
     ${$key} = $value;
@@ -187,44 +187,3 @@ switch($action)
 	case "ApplyPausesToAllCampaings": ApplyPausesToAllCampaings($PauseIDs, $PauseNames, $PauseStatus, $PauseTimes, $link); break;
 	case "PauseBillable": PauseBillable($CampaignID, $PauseID, $PauseBillable, $link); break;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-?>
