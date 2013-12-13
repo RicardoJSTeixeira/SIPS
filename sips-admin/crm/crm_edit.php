@@ -479,7 +479,7 @@ function reserved_ip($ip) {
         <?php } ?>
     </tbody>
 </table>
-
+<div class="clear"></div>
 <div class="<?= ($user->user_level>5) ? "" : "hide" ?>">
     <h3>Gravações deste Contacto</h3>
     <table class='table table-mod table-bordered'>

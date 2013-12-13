@@ -41,9 +41,9 @@
             {
                 font-size:14px;
             }
-            .leftDiv, .rightDiv { padding:5px; }
+            .leftDiv, .rightDiv {padding:5px; }
             .grid{border: 1px inset #000000;}
-            .leftDiv .item { text-align:center; border:1px solid #EEF; background-color:#FFF;padding:3px; margin-bottom: 3px; min-height: 35px; }
+            .leftDiv .item { text-align:center; border:1px solid #EEF; background-color:#FFF;padding:3px; margin-bottom: 2px; min-height: 35px; }
             .rightDiv .item { text-align:center; border:1px dashed #AAA; background-color:#FFF;padding:3px;}
             .helperPick {border:4px solid #288dd4!important; text-align:center;width:auto}
             #add_rule_button{margin:12px;}
@@ -233,39 +233,45 @@
         <div id="popover_div"></div>
 
 
+
+
+        <!--barra de paginas e scripts-->
+        <h2>Scripts Dinâmicos </h2>
+
+        
+
+    
+            
+      
+
         <div class="grid-title">
-            <div class="pull-left" ><i class="fam-script-error"></i> Scripts Dinâmicos </div>
-            <div class="pull-right">
-                <a class="btn btn-inverse" id="relatorio_go" href="/sips-admin/script_dinamico/reporting/index.html" target="_self">Relatório</a>                        
-                <button class="btn btn-inverse" id="render_go"><i class="icon-external-link"></i>Visualisação</button>
+
+
+            <div class=" left" id="page_selector_div">
+                <div  class=" input-prepend input-append " >
+                    <span class="add-on">Páginas</span>     
+                    <select id="page_selector"></select>
+                    <button data-t="tooltip-right" title="Opções da Página" data-toggle="modal" data-target="#dialog_page"  class="btn btn-warning icon-alone" id="opcao_page_button"><i class="icon-cogs"></i></button>
+                    <button class="btn btn-primary icon-alone" id="page_add_button" title="Adicionar uma nova página a este Script"><i class="icon-plus"></i></button>
+                    <button class="btn btn-danger icon-alone "  id="page_remove_button" title="Remover esta página" ><i class="icon-remove"></i></button>         
+                </div>
+            </div>
+                 
+            <div class= "right" >
+                <div  class=" input-prepend input-append " >
+                    <span class="add-on">Scripts</span>            
+                    <select id="script_selector" ></select>                        
+                    <button data-t="tooltip-right" title="Opções do Script" data-toggle="modal" data-target="#dialog_layout"  class="btn btn-warning icon-alone" id="opcao_script_button"><i class="icon-cogs"></i></button>
+                    <button class="btn btn-primary icon-alone" id="script_add_button" title="Adicionar um Script Novo"><i class="icon-plus"></i></button>
+                    <button class="btn btn-danger icon-alone "  id="script_remove_button" title="Remover o Script selecionado"><i class="icon-remove"></i></button>  
+                      <a class="btn btn-inverse right" id="relatorio_go" href="/sips-admin/script_dinamico/reporting/index.html" target="_self"><i class="icon-book"></i>Relatórios</a>       
+                </div>
+                
             </div>
         </div>
         <div class="grid-content">
 
 
-            <!--barra de paginas e scripts-->
-
-            <div class="grid-title">
-
-                <div class=" left" id="page_selector_div">
-                    <div  class=" input-prepend input-append " >
-                        <span class="add-on">Páginas</span>     
-                        <select id="page_selector"></select>
-                        <button data-t="tooltip-right" title="Opções da Página" data-toggle="modal" data-target="#dialog_page"  class="btn btn-warning icon-alone" id="opcao_page_button"><i class="icon-cogs"></i></button>
-                        <button class="btn btn-primary icon-alone" id="page_add_button" title="Adicionar uma nova página a este Script"><i class="icon-plus"></i></button>
-                        <button class="btn btn-danger icon-alone "  id="page_remove_button" title="Remover esta página" ><i class="icon-remove"></i></button>         
-                    </div>
-                </div>
-                <div class= "right" >
-                    <div  class=" input-prepend input-append " >
-                        <span class="add-on">Scripts</span>            
-                        <select id="script_selector" ></select>                        
-                        <button data-t="tooltip-right" title="Opções do Script" data-toggle="modal" data-target="#dialog_layout"  class="btn btn-warning icon-alone" id="opcao_script_button"><i class="icon-cogs"></i></button>
-                        <button class="btn btn-primary icon-alone" id="script_add_button" title="Adicionar um Script Novo"><i class="icon-plus"></i></button>
-                        <button class="btn btn-danger icon-alone "  id="script_remove_button" title="Remover o Script selecionado"><i class="icon-remove"></i></button>  
-                    </div>
-                </div>
-            </div>
 
 
 
@@ -274,7 +280,7 @@
                 <div class="grid span8">
                     <div class="grid-title"> 
                         <div class="pull-left">Formulário</div>
-                        <div class="pull-right"></div>
+                        <div class="pull-right">            <button class="btn btn-inverse " id="render_go"><i class="icon-external-link"></i>Visualisação</button></div>
                     </div>
                     <div class="grid-content">
                         <div class="leftDiv span">
@@ -450,8 +456,8 @@
                                     </div>
                                     <div class="formRow" >
                                         <i class="icon-question-sign" 
-title="Valores do elemento, separado por parágrafos.
-Não suporta Tags."></i>   
+                                           title="Valores do elemento, separado por parágrafos.
+                                           Não suporta Tags."></i>   
                                         <strong>Valores:</strong>
                                         <div class="formRight">
                                             <textarea  class="values_edit_textarea validate[required]" id="radio_textarea" name="radio_textarea" rows="4" cols="50"></textarea>
@@ -480,8 +486,8 @@ Não suporta Tags."></i>
                                     </div>
                                     <div class="formRow" >
                                         <i class="icon-question-sign" 
-title="Valores do elemento, separado por parágrafos.
-Não suporta Tags."></i>   
+                                           title="Valores do elemento, separado por parágrafos.
+                                           Não suporta Tags."></i>   
                                         <strong>Valores:</strong>
                                         <div class="formRight">
                                             <textarea class="values_edit_textarea validate[required]" id="checkbox_textarea" name="checkbox_textarea" rows="4" cols="50"></textarea>
@@ -511,8 +517,8 @@ Não suporta Tags."></i>
                                     </div>
                                     <div class="formRow" >
                                         <i class="icon-question-sign" 
-title="Valores do elemento, separado por parágrafos.
-Não suporta Tags."></i>   
+                                           title="Valores do elemento, separado por parágrafos.
+                                           Não suporta Tags."></i>   
                                         <strong>Valores:</strong>
                                         <div class="formRight">
                                             <textarea class="values_edit_textarea validate[required]" id="multichoice_textarea" name="multichoice_textarea" rows="4" cols="50"></textarea>
@@ -615,8 +621,8 @@ Não suporta Tags."></i>
                                     </div>
                                     <div class="formRow" >
                                         <i class="icon-question-sign" 
-title="Valores do elemento, separado por parágrafos.
-Não suporta Tags."></i>   
+                                           title="Valores do elemento, separado por parágrafos.
+                                           Não suporta Tags."></i>   
                                         <strong>Titulos:</strong>
 
                                         <div class="formRight">
@@ -625,8 +631,8 @@ Não suporta Tags."></i>
                                     </div>
                                     <div class="formRow" >
                                         <i class="icon-question-sign" 
-title="Cada linha de pergunta do elemento, separado por parágrafos.
-Não suporta Tags."></i>   
+                                           title="Cada linha de pergunta do elemento, separado por parágrafos.
+                                           Não suporta Tags."></i>   
                                         <strong>Perguntas:</strong>
 
                                         <div class="formRight">
@@ -646,8 +652,8 @@ Não suporta Tags."></i>
                                     </div>
                                     <div class="formRow" >
                                         <i class="icon-question-sign" 
-title="Valores do elemento, separado por parágrafos.
-Não suporta Tags."></i>   
+                                           title="Valores do elemento, separado por parágrafos.
+                                           Não suporta Tags."></i>   
                                         <strong>Titulos:</strong>
 
                                         <div class="formRight">
@@ -656,8 +662,8 @@ Não suporta Tags."></i>
                                     </div>
                                     <div class="formRow" >
                                         <i class="icon-question-sign"
-title="Cada linha de pergunta do elemento, separado por parágrafos.
-Não suporta Tags."></i>   
+                                           title="Cada linha de pergunta do elemento, separado por parágrafos.
+                                           Não suporta Tags."></i>   
                                         <strong>Perguntas:</strong>
 
                                         <div class="formRight">
@@ -875,8 +881,8 @@ Não suporta Tags."></i>
                                 <!-----------------------------HIDDEN-------------------------------------------------------->
                                 <div class="formRow hidden_class" >
                                     <i class="icon-question-sign"
-title="O elemento não será visivel.
-O seu estado pode ser alterado através de regras que o tornem visivel."></i>   
+                                       title="O elemento não será visivel.
+                                       O seu estado pode ser alterado através de regras que o tornem visivel."></i>   
                                     <strong>Escondido:</strong>
                                     <div class="formRight">
                                         <input  type="checkbox" id="item_hidden" name="hidden" value="1">
@@ -887,9 +893,9 @@ O seu estado pode ser alterado através de regras que o tornem visivel."></i>
                                 <!------------------------------------TAGS---------------------------------------------->
                                 <div class="formRow" id="tag_edit" >
                                     <i class="icon-question-sign"
-title="Esta tag representa o valor deste elemento.
-Por exemplo,se for copiada para o titulo de outro elemento , ao alterar o valor deste elemento, essa alteração será visivel no local onde esta tag se encontrar.
-Copie exactamente como mostrado (número da tag e delimitador @)"></i>   
+                                       title="Esta tag representa o valor deste elemento.
+                                       Por exemplo,se for copiada para o titulo de outro elemento , ao alterar o valor deste elemento, essa alteração será visivel no local onde esta tag se encontrar.
+                                       Copie exactamente como mostrado (número da tag e delimitador @)"></i>   
                                     <strong>Tag associativo:</strong>
                                     <div class="formRight">
                                         <label  id="label_tag"></label>
@@ -910,8 +916,8 @@ Copie exactamente como mostrado (número da tag e delimitador @)"></i>
                                 </div>
                                 <div class="formRow" >
                                     <i class="icon-question-sign"
-title="Escolha o campo dinamico no selector em cima e depois copie  esta tag para ser substituida pelo respectivo campo durante o preenchimento do script.
-Copie exactamente como mostrado (Letras maiúsculas e delimitador §)"></i>   
+                                       title="Escolha o campo dinamico no selector em cima e depois copie  esta tag para ser substituida pelo respectivo campo durante o preenchimento do script.
+                                       Copie exactamente como mostrado (Letras maiúsculas e delimitador §)"></i>   
                                     <strong>Tag a copiar:</strong>
                                     <div class="formRight">
                                         <label id="tag_label"></strong>
@@ -974,7 +980,7 @@ Copie exactamente como mostrado (Letras maiúsculas e delimitador §)"></i>
                                     </div>
 
                                     <div class="formRow" >
-                                          <i class="icon-question-sign" title="Ao ser despoletada a regra, escolha o tipo de acção que será executada."></i>   
+                                        <i class="icon-question-sign" title="Ao ser despoletada a regra, escolha o tipo de acção que será executada."></i>   
                                         <strong>Tipo:</strong>
                                         <div class="formRight">
                                             <select id="regra_select">
@@ -1015,9 +1021,9 @@ Copie exactamente como mostrado (Letras maiúsculas e delimitador §)"></i>
                         </div><!--------------------------FIM DAS REGRAS------------------------------->
                     </div>
                 </div>
+
+
             </div>
-
-
 
         </div> 
 
