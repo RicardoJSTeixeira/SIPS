@@ -205,7 +205,7 @@ if ($sthArows > 0)
 	$sthA->finish();
 	}
 $agi_string = "++++++ STEP 2 +++++++++";   &agi_output;
-$stmtA = "SELECT dial_timeout,cpd_amd_action FROM vicidial_campaigns where campaign_id='$campaign_id' limit 1;";
+$stmtA = "SELECT dial_timeout,cpd_amd_action,campaign_description FROM vicidial_campaigns where campaign_id='$campaign_id' limit 1;";
 $sthA = $dbhA->prepare($stmtA) or die "preparing: ",$dbhA->errstr;
 $sthA->execute or die "executing: $stmtA ", $dbhA->errstr;
 $sthArows=$sthA->rows;
@@ -214,6 +214,7 @@ if ($sthArows > 0)
 	{
 	@aryA = $sthA->fetchrow_array;
 	$auto_dial_timeout =	$aryA[0];
+        $voice = $aryA[2];
 	# only set if auto-dial call
 	if ($callerid =~ /^V/)
 		{
@@ -297,7 +298,7 @@ $comments =~ s/ /_/gi;
 $called_count =~ s/ /+/gi;
 $last_local_call_time =~ s/ /+/gi;
 $rank =~ s/ /+/gi;
-$owner =~ s/ /+/gi;
+$voice =~ s/ /+/gi;
 $campaign_id =~ s/ /+/gi;
 $dialed_number =~ s/ /+/gi;
 
@@ -307,6 +308,7 @@ $AGI->exec("EXEC Set(phone_number=$phone_number)");
 $AGI->exec("EXEC Set(frase_um=$comments)");
 $AGI->exec("EXEC Set(frase_dois=$email)");
 $AGI->exec("EXEC Set(campaign_id=$campaign_id)");
+$AGI->exec("EXEC Set(voice=$voice)");
 
 
 $agi_string = "++++++ STEP 5 +++++++++";   &agi_output;

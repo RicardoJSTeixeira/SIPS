@@ -21,12 +21,13 @@ while (<STDIN>) {
 	$AGI{$1} = $2 if (/^agi_(\w+)\:\s+(.*)$/);
 }
 ($AGI{arg_1}, $AGI{arg_2}, $AGI{arg_3}, $AGI{arg_4}, $AGI{arg_5}) = @ARGV;
- 
+
+
 $AGI{arg_1} =~ s/\+/ /g;
 $AGI{arg_1} =~ s/_/ /g;
 $file_name = "/srv/www/htdocs/ivrtts/dixi/files/$AGI{arg_2}_$AGI{arg_3}_$AGI{arg_4}.mp3"; 
 $agifile->exec("EXEC Set(nome_ficheiro=$file_name)");
-exec("python /usr/share/Dixi/tts.py Vicente $AGI{arg_1} > $file_name") or print STDERR "couldn't exec tts translation";
+exec("python /usr/share/Dixi/tts.py $AGI{arg_5} $AGI{arg_1} > $file_name") or print STDERR "couldn't exec tts translation";
 exit 1;
 
 

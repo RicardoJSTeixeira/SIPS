@@ -31,17 +31,17 @@ if ($action == "GetPreview") {
 
 
     $file = fopen("/tmp/$sent_converted_file", "r");
-
+    
     $buffer = rtrim(fgets($file, 4096)); // headers!
-
+   
     $counter = 0;
     while ($counter < 3) {
         $buffer = rtrim(fgets($file, 4096));
-
+       
         $js['buffer'][] = $buffer;
 
         $rows = explode("\t", $buffer);
-
+        
         $js[$counter][] = $rows[0];
         $js[$counter][] = utf8_decode($rows[1]);
         $js[$counter][] = utf8_decode($rows[2]);
@@ -61,14 +61,17 @@ if ($action == "CreateCampaign") {
         $TempCampaignID = "0" . $TempCampaignID;
     }
     $CampaignID = "CT" . $TempCampaignID;
-
+    switch ($lang) {
+        case 'pt-male' : $voice = 'Vicente'; break;
+        case 'pt-female' : $voice = 'Violeta'; break;
+    }
     // ALLOWED CAMPAIGNS
     $params = array($CampaignID);
     $db->rawInsert("INSERT INTO	zero.allowed_campaigns (campaigns) VALUES (?)", $params);
 
 
     // CREATE CAMPAIGNS
-    $params1 = array($CampaignID, $sent_campaign_name, 'N', 'DOWN', 'Y', '50', '1', 'longest_wait_time', '24hours', '35', '0134', '0', 'ALLFORCE', 'FULLDATE_CUSTPHONE', '0', 'HANGUP', 'RATIO', '3', 'Y', 'DC PU PDROP ERI NA DROP B NEW -', 'Y', 'ALT_AND_ADDR3');
+    $params1 = array($CampaignID, $sent_campaign_name, 'N', 'DOWN', 'Y', '50', '1', 'longest_wait_time', '24hours', '35', '0134', '0', 'ALLFORCE', 'FULLDATE_CUSTPHONE', '0', 'HANGUP', 'RATIO', '3', 'Y', 'DC PU PDROP ERI NA DROP B NEW -', 'Y', 'ALT_AND_ADDR3', $voice);
     $db->rawInsert("INSERT INTO vicidial_campaigns
 	(
 	campaign_id,
@@ -92,9 +95,10 @@ if ($action == "CreateCampaign") {
 	no_hopper_leads_logins,
 	dial_statuses,
 	omit_phone_code,
-	auto_alt_dial
+	auto_alt_dial,
+        campaign_description
 	)
-	VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", $params1);
+	VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", $params1);
 
     // CAMPAING STATS
     $params2 = array($CampaignID);
