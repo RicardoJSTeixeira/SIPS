@@ -14,6 +14,38 @@ switch ($client) {
 }
 
 function connectaMensageiros() {
+
+function query($sQuery, $hDb_conn, $sError, $bDebug)
+{
+    if(!$rQuery = @mssql_query($sQuery, $hDb_conn))
+    {
+        $sMssql_get_last_message = mssql_get_last_message();
+        $sQuery_added  = "BEGIN TRY\n";
+        $sQuery_added .= "\t".$sQuery."\n";
+        $sQuery_added .= "END TRY\n";
+        $sQuery_added .= "BEGIN CATCH\n";
+        $sQuery_added .= "\tSELECT 'Error: '  + ERROR_MESSAGE()\n";
+        $sQuery_added .= "END CATCH";
+        $rRun2= @mssql_query($sQuery_added, $hDb_conn);
+        $aReturn = @mssql_fetch_assoc($rRun2);
+        if(empty($aReturn))
+        {
+            echo $sError.'. MSSQL returned: '.$sMssql_get_last_message.'.<br>Executed query: '.nl2br($sQuery);
+        }
+        elseif(isset($aReturn['computed']))
+        {
+            echo $sError.'. MSSQL returned: '.$aReturn['computed'].'.<br>Executed query: '.nl2br($sQuery);
+        }
+        return FALSE;
+    }
+    else
+    {
+        return $rQuery;
+    }
+}
+
+
+
     if (isset($_GET['lead_id'])) { $lead_id = $_GET['lead_id']; } else { $lead_id = $_POST['lead_id']; }
     if (isset($_GET['uniqueid'])) { $unique_id = $_GET['uniqueid']; } else { $unique_id = $_POST['uniqueid']; }
     if (isset($_GET['user'])) { $user = $_GET['user']; } else { $user = $_POST['user']; }
@@ -41,12 +73,19 @@ function connectaMensageiros() {
     $telefone = $results[154];
     $entrega_docs = $results[161];
     $observacoes = $results[165];
-    
-    $query_final = "exec clientes.InserirVisitaMensageiros $lead_id , '$user', '$data_visita'  , '$hora_visita'  , '$nome', '$morada', '$cp'  , '$localidade'  , '$concelho'  , '$telefone'  , '$entrega_docs'  , '$observacoes'";
-    echo $query_final;
+                
+   // $query_final = "exec clientes.InserirVisitaMensageiros $lead_id, '$user', '$data_visita', '$hora_visita', '$nome', '$morada', '$cp', '$localidade', '$concelho', '$telefone', '$entrega_docs', '$observacoes'";
+   // echo $query_final;
+
     $link = mssql_connect('172.16.5.2', 'gocontact', '') or die(mssql_get_last_message());
-    $sql = @mssql_query($query_final, $link) or die(mssql_get_last_message());
-    mssql_get_last_message();
+    mssql_select_db('Clientes', $link) or die(mssql_get_last_message());
+    
+    $query_final = utf8_decode("INSERT INTO Clientes.[532_Agenda] (idagenda, comercial, estado, operador, datamarcacao, horamarcacao, datavisita, horavisita, idcliente, nome, contacto, morada, codpostal, localidade, concelho, [observações], mensageirova, entregadocs) SELECT (SELECT MAX(idagenda) + 1 as ultimo from Clientes.[532_Agenda]), 'mensageiros', -1, '$user', convert(smalldatetime,getdate(),105), convert(varchar(5),getdate(),108), convert(smalldatetime,'$data_visita',105), '$hora_visita', '$lead_id', '$nome', '$telefone', '$morada', '$cp', '$localidade', '$concelho', '$observacoes', '2', '$entrega_docs'");
+    
+    query($query_final, $link);
+    echo $query_final;
+   // $sql = mssql_query($query_final, $link) or die(mssql_get_last_message());
+   // mssql_get_last_message();
     
 }
     
