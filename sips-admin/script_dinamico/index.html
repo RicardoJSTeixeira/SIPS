@@ -238,11 +238,11 @@
         <!--barra de paginas e scripts-->
         <h2>Scripts Dinâmicos </h2>
 
-        
 
-    
-            
-      
+
+
+
+
 
         <div class="grid-title">
 
@@ -256,7 +256,7 @@
                     <button class="btn btn-danger icon-alone "  id="page_remove_button" title="Remover esta página" ><i class="icon-remove"></i></button>         
                 </div>
             </div>
-                 
+
             <div class= "right" >
                 <div  class=" input-prepend input-append " >
                     <span class="add-on">Scripts</span>            
@@ -264,9 +264,9 @@
                     <button data-t="tooltip-right" title="Opções do Script" data-toggle="modal" data-target="#dialog_layout"  class="btn btn-warning icon-alone" id="opcao_script_button"><i class="icon-cogs"></i></button>
                     <button class="btn btn-primary icon-alone" id="script_add_button" title="Adicionar um Script Novo"><i class="icon-plus"></i></button>
                     <button class="btn btn-danger icon-alone "  id="script_remove_button" title="Remover o Script selecionado"><i class="icon-remove"></i></button>  
-                      <a class="btn btn-inverse right" id="relatorio_go" href="/sips-admin/script_dinamico/reporting/index.html" target="_self"><i class="icon-book"></i>Relatórios</a>       
+                    <a class="btn btn-inverse right" id="relatorio_go" href="/sips-admin/script_dinamico/reporting/index.html" target="_self"><i class="icon-book"></i>Relatórios</a>       
                 </div>
-                
+
             </div>
         </div>
         <div class="grid-content">
@@ -703,13 +703,17 @@
                                     <div class="formRight">
                                         <input type="radio" id="time_format_day" name="time_format" value="2" checked="checked"/><label class="radio inline"  for="time_format_day"><span></span>AAAA-MM-DD</label>
                                     </div>
-
+                                    <div class="formRight">
+                                        <input type="radio" id="time_format_day_inverted" name="time_format" value="3" /><label class="radio inline"  for="time_format_day_inverted"><span></span>DD-MM-AAAA</label>
+                                    </div>
                                     <div class="formRight">
                                         <input type="radio" id="time_format_hour" name="time_format" value="1" />   <label class="radio inline"  for="time_format_hour"><span></span>AAAA-MM-DD HH</label>
                                     </div>
                                     <div class="formRight">
                                         <input type="radio" id="time_format_minute" name="time_format" value="0"/>     <label class="radio inline"  for="time_format_minute"><span></span>AAAA-MM-DD HH:MM</label>
                                     </div>
+
+
 
                                 </div>
 
