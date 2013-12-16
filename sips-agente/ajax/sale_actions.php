@@ -80,7 +80,7 @@ function query($sQuery, $hDb_conn, $sError, $bDebug)
     $link = mssql_connect('172.16.5.2', 'gocontact', '') or die(mssql_get_last_message());
     mssql_select_db('Clientes', $link) or die(mssql_get_last_message());
     
-    $query_final = utf8_decode("INSERT INTO Clientes.[532_Agenda] (idagenda, comercial, estado, operador, datamarcacao, horamarcacao, datavisita, horavisita, idcliente, nome, contacto, morada, codpostal, localidade, concelho, [observações], mensageirova, entregadocs) SELECT (SELECT MAX(idagenda) + 1 as ultimo from Clientes.[532_Agenda_teste]), 'mensageiros', -1, '$user', convert(smalldatetime,getdate(),105), convert(varchar(5),getdate(),108), convert(smalldatetime,'$data_visita',105), '$hora_visita', '$lead_id', '$nome', '$telefone', '$morada', '$cp', '$localidade', '$concelho', '$observacoes', '2', '$entrega_docs'");
+    $query_final = utf8_decode("INSERT INTO Clientes.[532_Agenda] (idagenda, comercial, estado, operador, datamarcacao, horamarcacao, datavisita, horavisita, idcliente, nome, contacto, morada, codpostal, localidade, concelho, [observações], mensageirova, entregadocs) SELECT (SELECT MAX(idagenda) + 1 as ultimo from Clientes.[532_Agenda]), 'mensageiros', -1, '$user', convert(smalldatetime,getdate(),105), convert(varchar(5),getdate(),108), convert(smalldatetime,'$data_visita',105), '$hora_visita', '$lead_id', '$nome', '$telefone', '$morada', '$cp', '$localidade', '$concelho', '$observacoes', '2', '$entrega_docs'");
     
     query($query_final, $link);
     echo $query_final;
