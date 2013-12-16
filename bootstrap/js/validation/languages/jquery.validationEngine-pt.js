@@ -99,15 +99,15 @@
                               "alertText": "* Só é permitido números"
                         },
                         "onlyLetterSp": {
-                              "regex": /^[a-zA-Z\ \']+$/,
+                              "regex": /^[a-zA-ZÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËéèêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ\ \']+$/,
                               "alertText": "* Só é permitido letras"
                         },
                         "onlyLetterNumber": {
-                              "regex": /^[0-9a-zA-Z]+$/,
+                              "regex": /^[0-9a-zA-ZÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËéèêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ]+$/,
                               "alertText": "* Só é permitido letras e números"
                         },
                         "onlyLetterNumberSymbol": {
-                              "regex": /^[0-9a-zA-Z\-\_\ ]+$/,
+                              "regex": /^[0-9a-zA-ZÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËéèêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ\-\_\ ]+$/,
                               "alertText": "* Só é permitido letras, números, hifen(-) e underscore(_)"
                         },
                         // --- CUSTOM RULES -- Those are specific to the demos, they can be removed or changed to your likings

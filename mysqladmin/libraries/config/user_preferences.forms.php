@@ -33,7 +33,8 @@ $forms['Features']['General'] = array(
     'MaxDbList',
     'MaxTableList',
     'NumRecentTables',
-    'ShowHint');
+    'ShowHint',
+    'SendErrorReports');
 $forms['Features']['Text_fields'] = array(
     'CharEditing',
     'MinSizeForInputField',
@@ -93,7 +94,7 @@ $forms['Navi_panel']['Navi_tables'] = array(
     'NavigationTreeDefaultTabTable',
     'NavigationTreeTableSeparator',
     'NavigationTreeTableLevel',
-    'ShowTooltip');
+);
 $forms['Main_panel']['Startup'] = array(
     'ShowCreateDb',
     'ShowStats',
@@ -105,8 +106,8 @@ $forms['Main_panel']['DbStructure'] = array(
 $forms['Main_panel']['TableStructure'] = array(
     'HideStructureActions');
 $forms['Main_panel']['Browse'] = array(
-    'NavigationBarIconic',
-    'PropertiesIconic',
+    'TableNavigationLinksMode',
+    'ActionLinksMode',
     'ShowAll',
     'MaxRows',
     'Order',
@@ -129,6 +130,7 @@ $forms['Main_panel']['Edit'] = array(
     'ForeignKeyDropdownOrder',
     'ForeignKeyMaxLimit');
 $forms['Main_panel']['Tabs'] = array(
+    'TabsMode',
     'DefaultTabServer',
     'DefaultTabDatabase',
     'DefaultTabTable');
@@ -187,6 +189,7 @@ $forms['Export']['Sql'] = array(
         ':group:end',
     'Export/sql_use_transaction',
     'Export/sql_disable_fk',
+    'Export/sql_views_as_tables',
     'Export/sql_compatibility',
     ':group:' . __('Database export options'),
         'Export/sql_drop_database',

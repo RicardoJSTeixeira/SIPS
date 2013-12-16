@@ -75,7 +75,7 @@ switch ($action) {
         break;
 
     case "get_data_render":
-        echo json_encode($script->get_data_render($id_script));
+        echo json_encode($script->get_data_render($id_script,$lead_id,$user->getUser($user_logged)));
         break;
 
     case "get_data":

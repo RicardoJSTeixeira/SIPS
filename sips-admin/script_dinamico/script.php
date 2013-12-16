@@ -45,7 +45,7 @@ class script {
 
     public function get_element_tags($id_script) {
         $js = array();
-        $query = "SELECT tag,type FROM `script_dinamico` WHERE id_script=:id_script";
+        $query = "SELECT tag,type FROM `script_dinamico` WHERE id_script=:id_script order by ordem";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -76,9 +76,6 @@ class script {
             $campaigns[] = $row["id_camp_linha"];
         }
         foreach ($campaigns as $value) {
-
-
-
             $query = "Select campaign_name from vicidial_campaigns where campaign_id = :campaign_id";
             $stmt = $this->db->prepare($query);
             $stmt->execute(array(":campaign_id" => $value));
@@ -175,12 +172,79 @@ class script {
         return $js;
     }
 
-    public function get_data_render($id_script) {
+    public function get_data_render($id_script, $lead_id, $user_group) {
         $js = array();
+        $client_info = array();
+        if (isset($lead_id)) {
+            $query = "SELECT * from vicidial_list where lead_id=:lead_id";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute(array(":lead_id" => $lead_id));
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $row["nome_operador"] = $user_logged["full_name"];
+                $client_info = $row;
+            }
+        }
+
         $query = "SELECT sd.id,sd.tag,sd.id_script,id_page,type,ordem,dispo,texto,placeholder,max_length,values_text,default_value,required,hidden,param1 FROM script_dinamico sd inner join script_dinamico_pages sdp on sd.id_page=sdp.id  WHERE sd.id_script=:id_script  order by sdp.pos,sd.ordem asc";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+// CAMPOS DINAMICOS -> §
+            if (isset($lead_id)) {
+                $temp = "";
+                if (preg_match_all("/\§[A-Z0-9\_]+\§/", $row["texto"], $temp)) {
+                    $temp = $temp[0];
+                    foreach ($temp as $value) {
+                        $value1 = str_replace("§", "", $value);
+                        $row["texto"] = preg_replace("/$value/", $client_info[strtolower($value1)], $row["texto"]);
+                    }
+                }
+                if ($row["type"] == "texto") {
+                    $placeholder = json_decode($row["placeholder"]);
+                    if (preg_match_all("/\§[A-Z0-9\_]+\§/", $placeholder, $temp)) {
+                        $temp = $temp[0];
+                        foreach ($temp as $value) {
+                            $value1 = str_replace("§", "", $value);
+                            $placeholder = preg_replace("/$value/", $client_info[strtolower($value1)], $placeholder);
+                        }
+                        $row["placeholder"] = json_encode($placeholder);
+                    }
+                }
+                if ($row["type"] == "legend" || $row["type"] == "textfield") {
+                    $values_text = json_decode($row["values_text"]);
+
+                    if (preg_match_all("/\§[A-Z0-9\_]+\§/", $values_text, $temp)) {
+                        $temp = $temp[0];
+                        foreach ($temp as $value) {
+                            $value1 = str_replace("§", "", $value);
+                            $values_text = preg_replace("/$value/", $client_info[strtolower($value1)], $values_text);
+                        }
+                        $row["values_text"] = json_encode($values_text);
+                    }
+                }
+            }
+            // TAGS -> @          
+            $temp = "";
+            if (preg_match_all("/\@(\d{1,5})\@/", $row["texto"], $temp)) {
+                $temp = $temp[0];
+                foreach ($temp as $value) {
+                    $value1 = str_replace("@", "", $value);
+
+                    $row["texto"] = preg_replace("/$value/", "<span data-id=" . $value1 . " class='" . $value1 . "tag tagReplace'></span>", $row["texto"]);
+                }
+            }
+            if ($row["type"] == "legend" || $row["type"] == "textfield") {
+                $values_text = json_decode($row["values_text"]);
+                if (preg_match_all("/\@(\d{1,5})\@/", $values_text, $temp)) {
+                    $temp = $temp[0];
+                    foreach ($temp as $value) {
+                        $value1 = str_replace("@", "", $value);
+                        $values_text = preg_replace("/\@(\d{1,5})\@/", "<span data-id=" . $value . " class='" . $value . "tag tagReplace'></span>", $values_text);
+                    }
+                    $row["values_text"] = json_encode($values_text);
+                }
+            }
             $js[] = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "default_value" => $row["default_value"], "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
         }
         return $js;
@@ -319,14 +383,15 @@ class script {
         $query = "delete from script_assoc where id_script=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
-        if (count($campaign)) {
+
+        if ($campaign != "") {
             foreach ($campaign as $value) {
                 $query = "INSERT INTO `script_assoc` values(:id_script,:value,'campaign')";
                 $stmt = $this->db->prepare($query);
                 $stmt->execute(array(":id_script" => $id_script, ":value" => $value));
             }
         }
-        if (count($linha_inbound)) {
+        if ($linha_inbound != "") {
             foreach ($linha_inbound as $value) {
                 $query = "INSERT INTO `script_assoc` values(:id_script,:value,'linha_inbound')";
                 $stmt = $this->db->prepare($query);
@@ -495,6 +560,9 @@ class script {
         $query = "delete from script_dinamico where id=:id";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id" => $id));
+        $query = "delete from script_result where id_script=:id_script and tag_elemento=:tag";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array(":id_script" => $id_script, ":tag"=>$param1));
         return 1;
     }
 

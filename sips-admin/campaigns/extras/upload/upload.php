@@ -1,4 +1,4 @@
-<? foreach ($_POST as $key => $value) { 
+<?php foreach ($_POST as $key => $value) { 
 	${$key} = $value;
 }
 foreach ($_GET as $key => $value) {
@@ -13,20 +13,6 @@ move_uploaded_file($_FILES['input-db-wizard-upload']['tmp_name'], "/tmp/".$Uploa
 $ConvertCommand = "/srv/www/htdocs/sips-admin/campaigns/extras/upload/sheet2tab.pl /tmp/$UploadedFile /tmp/$ConvertedFile";
 passthru("$ConvertCommand");
 echo $ConvertedFile;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*
 
@@ -113,26 +99,7 @@ if($action=="submit_campaign_fields")
 exit();
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 //print_r($_FILES);
-
-
-
-
-
-
 
 /*
 
@@ -151,5 +118,3 @@ passthru("$convert");
 echo $convertedfilename;
 
 */
-
-?>

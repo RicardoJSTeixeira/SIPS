@@ -41,6 +41,7 @@ $cfg['Servers'][$i]['AllowNoPassword'] = false;
 
 /* User used to manipulate with storage */
 // $cfg['Servers'][$i]['controlhost'] = '';
+// $cfg['Servers'][$i]['controlport'] = '';
 // $cfg['Servers'][$i]['controluser'] = 'pma';
 // $cfg['Servers'][$i]['controlpass'] = 'pmapass';
 
@@ -58,6 +59,9 @@ $cfg['Servers'][$i]['AllowNoPassword'] = false;
 // $cfg['Servers'][$i]['designer_coords'] = 'pma__designer_coords';
 // $cfg['Servers'][$i]['userconfig'] = 'pma__userconfig';
 // $cfg['Servers'][$i]['recent'] = 'pma__recent';
+// $cfg['Servers'][$i]['users'] = 'pma__users';
+// $cfg['Servers'][$i]['usergroups'] = 'pma__usergroups';
+// $cfg['Servers'][$i]['navigationhiding'] = 'pma__navigationhiding';
 /* Contrib / Swekey authentication */
 // $cfg['Servers'][$i]['auth_swekey_config'] = '/etc/swekey-pma.conf';
 
@@ -133,6 +137,13 @@ $cfg['SaveDir'] = '';
  * default = 25
  */
 //$cfg['QueryHistoryMax'] = 100;
+
+/**
+ * Should error reporting be enabled for JavaScript errors
+ *
+ * default = 'ask' 
+ */
+//$cfg['SendErrorReports'] = 'ask';
 
 /*
  * You can find more configuration options in the documentation

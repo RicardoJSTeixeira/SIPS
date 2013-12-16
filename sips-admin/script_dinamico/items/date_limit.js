@@ -30,7 +30,7 @@ var date_limit = function(selector, limit)
  <strong>Data Inicial</strong>\n\
  <div class="formRight">\n\
  <table id="table_date1' + me.geral_name + '">\n\
- <thead><th>anos</th><th>Meses</th><th>Dias</th><th>Horas</th></thead>\n\
+ <thead><th>Anos</th><th>Meses</th><th>Dias</th><th>Horas</th></thead>\n\
  <tbody> <tr>\n\
 <td> <input id="year_i' + me.geral_name + '" name="year_i" class="input-mini spinner " > </td>\n\
  <td><input id="month_i' + me.geral_name + '" name="month_i" class="input-mini spinner " > </td>\n\
@@ -44,7 +44,7 @@ var date_limit = function(selector, limit)
 <strong>Data Final</strong> \n\
 <div class="formRight"> \n\
 <table id="table_date2' + me.geral_name + '">\n\
- <thead><th>anos</th><th>Meses</th><th>Dias</th><th>Horas</th></thead>\n\
+ <thead><th>Anos</th><th>Meses</th><th>Dias</th><th>Horas</th></thead>\n\
  <tbody> <tr>\n\
 <td> <input id="year_f' + me.geral_name + '" name="year_f" class="input-mini spinner " > </td> \n\
 <td><input id="month_f' + me.geral_name + '" name="month_f" class="input-mini spinner " > </td> \n\

@@ -23,7 +23,7 @@ function editor_toggle(tipo)
         $("#tabs").tabs("enable");
         $("#item_edit_comum").show();
         $("#rule_manager").show();
-        $("#open_rule_creator").prop('disabled', false); //botoes de edit
+
         $(".editor_layout").hide(); // esconde os edits de todos
         $(".footer_save_cancel button").prop('disabled', false); //botoes de edit
 
@@ -36,7 +36,7 @@ function editor_toggle(tipo)
         $("#tabs").tabs("disable", 1);
         $("#item_edit_comum").hide();
         $("#rule_manager").hide();
-        $("#open_rule_creator").prop('disabled', true);
+
         $(".editor_layout").hide();
         $(".footer_save_cancel button").prop('disabled', true);
     }
@@ -45,7 +45,7 @@ function editor_toggle(tipo)
 
 $(function() {
 
-
+    $('#rule_target_formright').tooltip({trigger: "manual"});
     $("#rule_creator .form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
     //respostas maximas por feedback TEMPORARIO----------------
     $("#max_feedback_div").hide();
@@ -78,6 +78,7 @@ $(function() {
                     list_item = $(this).data().uiSortable.currentItem;
                     list_ui = ui;
                     $('#dialog_elements').modal('show');
+
                 }
             },
             update: function(event, ui) {
@@ -308,6 +309,7 @@ $("#save_edit").click(function()
 
     edit_element(selected_type, $("#" + selected_id), 0);
 });
+
 $("#tags_select").change(function()
 {
     $("#tag_label").text("§" + $(this).val() + "§");
@@ -354,102 +356,9 @@ $("#apagar_elemento").click(function()
     item_database("delete_item", list_item.attr("id"), 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), 0, list_item.index(), 0, 0, 0, 0, 0, 0, 0, 0, list_item.data("tag"));
     list_ui.item.remove();
     editor_toggle("off");
-    $("#rule_target_select option[value=" + list_item.attr("id") + "] ").remove();
-    $('#rule_target_select').val('').trigger('liszt:updated');
-});
-//not introduced feature, still to do 
-$("#quota_required").on("click", function() {
-    $("#div_quota").slideToggle(500);
-});
-//FILE UPLOADS------------------------------------
-$(".ipl_radio_options").on("click", function()
-{
+    rules_update_targets();
 
-    $("#ipl_link_div").hide();
-    $("#ipl_ip_div").show();
-    $("#ipl_file_select option").prop("disabled", false);
-    if (this.value == "1")
-    {
-        $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
-    }
-    else if (this.value == "2")
-    {
-        $("#ipl_file_select option[data-type='image']").prop("disabled", true);
-    }
-    else
-    {
-        $("#ipl_ip_div").hide();
-        $("#ipl_link_div").show();
-    }
-    $("#ipl_file_select").val("");
 });
-$('#file_upload').change(function() {
-    var re_ext = new RegExp("(gif|jpeg|jpg|png|pdf)", "i");
-    var file = this.files[0];
-    var name = file.name;
-    var size = (Math.round((file.size / 1024 / 1024) * 100) / 100);
-    var type = file.type;
-    if (size > 10) {
-        $("#label_ipl_info").text("O tamanho do ficheiro ultrapassa os 10mb permitidos.");
-        $(this).fileupload('clear');
-    }
-    if (!re_ext.test(type)) {
-        $("#label_ipl_info").text("A extensão do ficheiro seleccionado não é valida.");
-        $(this).fileupload('clear');
-    }
-    $("#label_ipl_info").text("");
-});
-$("#ipl_upload_button").on("click", function(e)
-{
-    e.preventDefault();
-    var form = $("#form_ipl");
-    if (form.find('input[type="file"]').val() === '')
-        return false;
-    var formData = new FormData(form[0]);
-    formData.append("action", "upload");
-    $.ajax({
-        url: 'upload.php',
-        type: 'POST',
-        data: formData,
-        dataType: "json",
-        cache: false,
-        complete: function(data) {
-
-            $("#label_ipl_info").text(data.responseText);
-            $("#ipl_file_select").empty();
-            update_select();
-        },
-        contentType: false,
-        processData: false
-    });
-});
-function update_select()
-{
-    $.post("requests.php", {action: "get_image_pdf"},
-    function(data)
-    {
-        $("#ipl_file_select").empty();
-        $.each(data, function()
-        {
-
-            $("#ipl_file_select").append("<option data-type=" + this.type + " value=" + this.value + ">" + this.value + "</option>");
-        });
-        if ($("#radio_ipl_image").is(":checked"))
-            $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
-        if ($("#radio_ipl_pdf").is(":checked"))
-            $("#ipl_file_select option[data-type='image']").prop("disabled", true);
-    }, "json");
-}
-;
-$("#remove_uploaded_file").on("click", function()
-{
-    $.post("upload.php", {action: "delete", name: $("#ipl_file_select option:selected").val()}, function(data) {
-
-        $("#label_ipl_info").text(data);
-        update_select();
-    });
-});
-//FILE UPLOADS------------------------------------
 
 function update_script(callback)
 {
@@ -506,58 +415,7 @@ function update_script(callback)
             $("#tags_select").trigger("liszt:updated");
             $("#tag_label").text("§" + $("#tags_select option:selected").val() + "§");
         }, "json");
-//Get o tipo e tag de todos os elementos para o select dos alvos (regras)
-        $.post("requests.php", {action: "get_element_tags", id_script: $("#script_selector option:selected").val()},
-        function(data5)
-        {
-            $("#rule_target_select").empty();
-            var temp_type = "";
-            $.each(data5, function(index, value) {
-                switch (this.type)
-                {
-                    case "texto":
-                        temp_type = "Caixa de texto";
-                        break;
-                    case "pagination":
-                        temp_type = "Paginação";
-                        break;
-                    case "radio":
-                        temp_type = "Botão radio";
-                        break;
-                    case "checkbox":
-                        temp_type = "Botão resposta multipla";
-                        break;
-                    case "multichoice":
-                        temp_type = "Lista de Opções";
-                        break;
-                    case "textfield":
-                        temp_type = "Campo de Texto";
-                        break;
-                    case "legend":
-                        temp_type = "Titulo";
-                        break;
-                    case "tableradio":
-                        temp_type = "Tabela botões radio";
-                        break;
-                    case "datepicker":
-                        temp_type = "Seletor tempo e hora";
-                        break;
-                    case "scheduler":
-                        temp_type = "Calendário";
-                        break;
-                    case "textarea":
-                        temp_type = "Input de texto";
-                        break;
-                    case "ipl":
-                        temp_type = "Imagem/PDF/Link";
-                    case "button":
-                        temp_type = "Botão";
-                        break;
-                }
-                $("#rule_target_select").append("<option value=" + this.tag + ">" + this.tag + " --- " + temp_type + "</option>"); //povoar os alvos com as tags e tipos dos elementos
-            });
-            $('#rule_target_select').trigger('liszt:updated');
-        }, "json");
+
     }, "json");
 }
 function update_pages(callback)
@@ -780,21 +638,11 @@ function update_info()
                     break;
             }
         });
+        rules_update_targets();
     }, "json");
 }
 
 
-Object.size = function(a)
-{
-    var count = 0;
-    var i;
-    for (i in a) {
-        if (a.hasOwnProperty(i)) {
-            count++;
-        }
-    }
-    return count;
-};
 function populate_element(tipo, element)
 {
 
@@ -895,7 +743,7 @@ function populate_element(tipo, element)
             $("#tag_edit").hide();
             $("#tabs").tabs("disable", 1);
             $("#rule_manager").hide();
-            $("#open_rule_creator").prop('disabled', true);
+
             $(".required_class").hide();
             $("#textfield_edit").html($("#" + id + " .label_geral").html());
             break;
@@ -904,7 +752,7 @@ function populate_element(tipo, element)
             $("#tag_edit").hide();
             $("#tabs").tabs("disable", 1);
             $("#rule_manager").hide();
-            $("#open_rule_creator").prop('disabled', true);
+
             $(".required_class").hide();
             break;
         case "tableradio":
@@ -942,6 +790,7 @@ function populate_element(tipo, element)
             $("#tableinput_td_textarea").val(string_elements.slice(0, -1));
             break;
         case "datepicker":
+            console.log(element.data());
             $("#datepicker_edit").val($("#" + id + " .label_geral").html());
             $("#datepicker_layout_editor input:radio[name='time_format'][value=" + element.data("data_format") + "]").prop("checked", true);
             break;
@@ -965,7 +814,7 @@ function populate_element(tipo, element)
             $("#tag_edit").hide();
             $("#tabs").tabs("disable", 1);
             $("#rule_manager").hide();
-            $("#open_rule_creator").prop('disabled', true);
+
             $(".required_class").hide();
             $("#ipl_edit").val($("#" + id + " .label_geral").html());
             if (element.data("option") == "1") {
@@ -1010,7 +859,7 @@ function edit_element(opcao, element, data)
             {
                 editor_toggle("off");
                 $("#texto_edit").val($("#texto_edit").val().replace(regex_replace_textbox_tag, ''));
-                $("#placeholder_edit").val($("#placeholder_edit").val().replace(regex_replace_textbox, ''));
+                $("#placeholder_edit").val($("#placeholder_edit").val().replace(regex_replace_textbox_tag, ''));
                 $("#max_length_edit").val($("#max_length_edit").val().replace(/[^0-9]/g, ''));
                 $("#" + id + " .label_geral").html($("#texto_edit").val());
                 $("#" + id + " .input_texto").attr("placeholder", $("#placeholder_edit").val());
@@ -1248,14 +1097,21 @@ function edit_element(opcao, element, data)
                     element.data("data_format", 2);
                     data_format = 2;
                 }
+                else if ($("#time_format_day_inverted").is(':checked'))
+                {
+                    data_format = 3;
+                    element.data("data_format",3);
+                }
                 else if ($("#time_format_hour").is(':checked')) {
                     element.data("data_format", 1);
                     data_format = 1;
                 }
-                else {
+                else if ($("#time_format_minute").is(':checked')) {
                     data_format = 0;
                     element.data("data_format", 0);
                 }
+
+
 
                 if ($("#limite_datas_toggle").is(":checked"))
                     element.data("limit", $("#datepicker_layout_editor").data("data_limit_element").get_time());
@@ -1498,7 +1354,7 @@ function insert_element(opcao, element, data)
                 {
                     temp.append($("<td>")
                             .append($("<input>")
-                                    .addClass("input-mini")
+                                    .addClass("input-medium")
                                     .attr("type", "text")
                                     .attr("id", array_id["input"])
 
@@ -1551,6 +1407,17 @@ function insert_element(opcao, element, data)
 }
 
 
+Object.size = function(a)
+{
+    var count = 0;
+    var i;
+    for (i in a) {
+        if (a.hasOwnProperty(i)) {
+            count++;
+        }
+    }
+    return count;
+};
 
 
 
@@ -1617,7 +1484,7 @@ function pagescript_database(opcao, Id_script, Id_pagina, Pos)
 
 
 
-//PAGES------------------------------------------0000
+//------------------------------------------------------------------------------------------PAGES
 $("#page_add_button").click(function()
 {
     var value1 = 0;
@@ -1656,8 +1523,8 @@ $("#save_button_page").click(function()//Fecha o dialog e grava as alterações
         update_pages();
     }, "json");
 });
-//------------------------------------------------0000
-//SCRIPTS-----------------------------------------0000
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//-------------------------------------------------------------------------------------SCRIPTS
 $("#script_add_button").click(function()
 {
     pagescript_database("add_script", 0, 0);
@@ -1732,12 +1599,12 @@ $("#save_button_layout").click(function()//Fecha o dialog e grava as alteraçõe
         update_script();
     }, "json");
 });
-//---------------------------------------------0000
-//------------------RULES----------------------------000000000
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//-------------------------------------------------------------------------------------RULES
 function rules_manager(tipo, element)
 {
-    $("#rule_target_select option").prop('disabled', false).trigger("liszt:updated");
-    $("#rule_creator").hide();
+
+
     var rts = $("#rule_trigger_select");
     rts.empty();
     switch (tipo)
@@ -1771,6 +1638,64 @@ function rules_manager(tipo, element)
     $("#rule_target_select option[value='" + element.data("tag") + "']").prop('disabled', true).trigger("liszt:updated");
     rts.trigger("change");
 }
+
+
+function rules_update_targets()
+{
+    //Get o tipo e tag de todos os elementos para o select dos alvos (regras)
+    $.post("requests.php", {action: "get_element_tags", id_script: $("#script_selector option:selected").val()},
+    function(data5)
+    {
+        $("#rule_target_select").empty();
+        var temp_type = "";
+        $.each(data5, function(index, value) {
+            switch (this.type)
+            {
+                case "texto":
+                    temp_type = "Caixa de texto";
+                    break;
+                case "pagination":
+                    temp_type = "Paginação";
+                    break;
+                case "radio":
+                    temp_type = "Botão radio";
+                    break;
+                case "checkbox":
+                    temp_type = "Botão resposta multipla";
+                    break;
+                case "multichoice":
+                    temp_type = "Lista de Opções";
+                    break;
+                case "textfield":
+                    temp_type = "Campo de Texto";
+                    break;
+                case "legend":
+                    temp_type = "Titulo";
+                    break;
+                case "tableradio":
+                    temp_type = "Tabela botões radio";
+                    break;
+                case "datepicker":
+                    temp_type = "Seletor tempo e hora";
+                    break;
+                case "scheduler":
+                    temp_type = "Calendário";
+                    break;
+                case "textarea":
+                    temp_type = "Input de texto";
+                    break;
+                case "ipl":
+                    temp_type = "Imagem/PDF/Link";
+                case "button":
+                    temp_type = "Botão";
+                    break;
+            }
+            $("#rule_target_select").append("<option value=" + this.tag + ">" + this.tag + " --- " + temp_type + "</option>"); //povoar os alvos com as tags e tipos dos elementos
+        });
+        $('#rule_target_select').trigger('liszt:updated');
+    }, "json");
+}
+
 function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trigger2, Id_target, Tipo, Param1, Param2)
 {
     $.post("requests.php", {action: opcao,
@@ -1813,13 +1738,7 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
 
                 if (this.tipo_elemento == "datepicker")
                 {
-                    var temp_text = "";
-                    if (this.param2.type == "fixed")
-                    {
-                        temp_text = "data fixa " + this.param2.data_inicial + " a " + this.param2.data_final;
-                    }
-                    else
-                        temp_text = "data dinamica " + this.param2.data_inicial + " a " + this.param2.data_final;
+                    var temp_text = datepicker_date_decoder(this);
                     $("#rule_manager_list").append($("<tr>")
                             .append($("<td>").text((this.param1 == "date") ? temp_text : "Resposta"))
                             .append($("<td>").text(this.tipo))
@@ -1848,6 +1767,90 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
         }
     }, "json");
 }
+
+function datepicker_date_decoder(info)
+{
+    var temp_text = "";
+    if (info.param2.type == "fixed")
+    {
+        if (info.param2.data_inicial && info.param2.data_final)
+            temp_text = "data fixa de " + info.param2.data_inicial + " a " + info.param2.data_final;
+        else if (info.param2.data_inicial)
+            temp_text = "data fixa a partir de " + info.param2.data_inicial;
+        else
+            temp_text = "data fixa até " + info.param2.data_final;
+
+    }
+    else
+    {
+
+        var data_inicial;
+        var data_inicial_text = "";
+        var data_final;
+        var data_final_text = "";
+        if (info.param2.data_inicial)
+        {
+            data_inicial = info.param2.data_inicial.split("|");
+            if (data_inicial[0] != "#")
+                if (data_inicial[0] != 1 && data_inicial[0] != -1)
+                    data_inicial_text = data_inicial[0] + " Anos ";
+                else
+                    data_inicial_text = data_inicial[0] + " Ano ";
+            if (data_inicial[1] != "#")
+                if (data_inicial[1] != 1 && data_inicial[1] != -1)
+                    data_inicial_text = data_inicial_text + data_inicial[1] + " Meses ";
+                else
+                    data_inicial_text = data_inicial_text + data_inicial[1] + " Mês ";
+            if (data_inicial[2] != "#")
+                if (data_inicial[2] != 1 && data_inicial[2] != -1)
+                    data_inicial_text = data_inicial_text + data_inicial[2] + " Dias ";
+                else
+                    data_inicial_text = data_inicial_text + data_inicial[2] + " Dia ";
+            if (data_inicial[3] != "#")
+                if (data_inicial[3] != 1 && data_inicial[3] != -1)
+                    data_inicial_text = data_inicial_text + data_inicial[3] + " Horas ";
+                else
+                    data_inicial_text = data_inicial_text + data_inicial[3] + " Hora ";
+
+
+        }
+        if (info.param2.data_final)
+        {
+            data_final = info.param2.data_final.split("|");
+            if (data_final[0] != "#")
+                if (data_final[0] != 1 && data_final[0] != -1)
+                    data_final_text = data_final[0] + " Anos ";
+                else
+                    data_final_text = data_final[0] + " Ano ";
+            if (data_final[1] != "#")
+                if (data_final[1] != 1 && data_final[1] != -1)
+                    data_final_text = data_final_text + data_final[1] + " Meses ";
+                else
+                    data_final_text = data_final_text + data_final[1] + " Mês ";
+            if (data_final[2] != "#")
+                if (data_final[2] != 1 && data_final[2] != -1)
+                    data_final_text = data_final_text + data_final[2] + " Dias ";
+                else
+                    data_final_text = data_final_text + data_final[2] + " Dia ";
+            if (data_final[3] != "#")
+                if (data_final[3] != 1 && data_final[3] != -1)
+                    data_final_text = data_final_text + data_final[3] + " Horas ";
+                else
+                    data_final_text = data_final_text + data_final[3] + " Hora ";
+        }
+        if (data_inicial_text && data_final_text)
+            temp_text = "data dinamica de " + data_inicial_text + " até " + data_final_text;
+        else if (data_inicial_text)
+            temp_text = "data dinamica a partir de " + data_inicial_text;
+        else
+            temp_text = "data dinamica até " + data_final_text;
+
+
+    }
+    return temp_text;
+}
+
+
 $(".date_option_radio").on("click", function()
 {
     $(".rules_valor_dates").hide();
@@ -1911,7 +1914,7 @@ $("#rule_trigger_select").change(function()
             $("#date_limit_rule_placeholder").show();
             var date_limit_element2 = new date_limit($("#date_limit_rule_placeholder"), 0);
             date_limit_element2.init();
-            $("#open_rule_creator").data("date_limit_element", date_limit_element2);
+            $("#add_rule_button").data("date_limit_element", date_limit_element2);
             break;
     }
 });
@@ -1932,136 +1935,142 @@ $(".values_edit_textarea").on("blur", function()
         }, "json");
     }
 });
-$("#open_rule_creator").click(function()//Fecha o dialog e grava as alterações 
-{
-    $("#rule_creator").slideToggle(350);
-});
+
 $("#add_rule_button").click(function()
 {
     if ($("#rule_creator .form_edit_element").validationEngine('validate'))
     {
-        switch (selected_type)
+        if ($("#rule_target_select option:selected").length)
         {
-            case "texto":
-                switch ($("#rule_trigger_select").val())
-                {
-                    case "answer":
-                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
-                        else
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
-                        break;
-                    case "value_input":
-                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_input").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_input", "0");
-                        else
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_input").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_input", 0);
-                        break;
-                }
-                break;
-            case "radio":
-                if ($("#rule_trigger_select").val() === "value_select")
-                    if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
-                    else
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
-                break;
-            case "checkbox":
-                if ($("#rule_trigger_select").val() === "value_select")
-                    if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
-                    else
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
-                break;
-            case"multichoice":
-                if ($("#rule_trigger_select").val() === "value_select")
-                    if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
-                    else
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
-                break;
-            case "tableradio":
-                switch ($("#rule_trigger_select").val())
-                {
-                    case "answer":
-                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
-                        else
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
-                        break;
-                    case "value_select":
+            $('#rule_target_formright').tooltip("hide");
+            switch (selected_type)
+            {
+                case "texto":
+                    switch ($("#rule_trigger_select").val())
+                    {
+                        case "answer":
+                            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                            else
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                            break;
+                        case "value_input":
+                            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_input").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_input", "0");
+                            else
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_input").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_input", 0);
+                            break;
+                    }
+                    break;
+                case "radio":
+                    if ($("#rule_trigger_select").val() === "value_select")
                         if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
                             rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
                         else
                             rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
-                        break;
-                }
+                    break;
+                case "checkbox":
+                    if ($("#rule_trigger_select").val() === "value_select")
+                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
+                        else
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
+                    break;
+                case"multichoice":
+                    if ($("#rule_trigger_select").val() === "value_select")
+                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
+                        else
+                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
+                    break;
+                case "tableradio":
+                    switch ($("#rule_trigger_select").val())
+                    {
+                        case "answer":
+                            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                            else
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                            break;
+                        case "value_select":
+                            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#rule_target_select").val(), $("#regra_select").val(), "value_select", "0");
+                            else
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, $("#rules_valor_select").val(), $("#go_to_select").val(), $("#regra_select").val(), "value_select", 0);
+                            break;
+                    }
 
-            case "tableinput":
-                switch ($("#rule_trigger_select").val())
-                {
-                    case "answer":
-                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
-                        else
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
-                        break;
-                }
-                break;
-            case "datepicker":
-                switch ($("#rule_trigger_select").val())
-                {
-                    case "answer":
-                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
-                        else
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
-                        break;
-                    case "date":
+                case "tableinput":
+                    switch ($("#rule_trigger_select").val())
+                    {
+                        case "answer":
+                            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                            else
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                            break;
+                    }
+                    break;
+                case "datepicker":
+                    switch ($("#rule_trigger_select").val())
+                    {
+                        case "answer":
+                            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                            else
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                            break;
+                        case "date":
 
 
-                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "date", $("#open_rule_creator").data("date_limit_element").get_time());
-                        else
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "date", $("#open_rule_creator").data("date_limit_element").get_time());
-                        break;
-                }
-                break;
-            case "textarea":
-                switch ($("#rule_trigger_select").val())
-                {
-                    case "answer":
-                        if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
-                        else
-                            rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
-                        break;
-                }
-                break;
-            case "button":
-                if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#rule_target_select").val(), $("#regra_select").val(), "click", 0);
-                else
-                    rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#go_to_select").val(), $("#regra_select").val(), "click", 0);
+                            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "date", $("#add_rule_button").data("date_limit_element").get_time());
+                            else
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "date", $("#add_rule_button").data("date_limit_element").get_time());
+                            break;
+                    }
+                    break;
+                case "textarea":
+                    switch ($("#rule_trigger_select").val())
+                    {
+                        case "answer":
+                            if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                            else
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                            break;
+                    }
+                    break;
+                case "button":
+                    if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
+                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#rule_target_select").val(), $("#regra_select").val(), "click", 0);
+                    else
+                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#go_to_select").val(), $("#regra_select").val(), "click", 0);
+            }
+            $("#rule_target_select").val("").trigger("liszt:updated");
+            $("#rules_valor_select").val("").trigger("liszt:updated");
+
         }
-         $("#rule_target_select").val("").trigger("liszt:updated");
-    $("#rules_valor_select").val("").trigger("liszt:updated");
-    }
-   
-});
+        else
+        {
+            $('#rule_target_formright').tooltip("show");
+        }
 
-//--------------------------------------------------000000000
-//FORM MANIPULATION
+    }
+
+});
 $("#rule_form").on("submit", function(e)
 {
     e.preventDefault();
 });
-//RENDER/FULLSCREEN 
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+//------------------------RENDER/FULLSCREEN 
 $("#render_go").click(function()
 {
     var window_slave = window.open("/sips-admin/script_dinamico/fullscreen.html?script_id=" + $("#script_selector option:selected").val());
 });
-//AJAX UPLOAD
+//-------------------------------------------------------------------------AJAX UPLOAD
 $('#ajax_upload_input').change(function() {
     var re_ext = new RegExp("(php)", "i");
     var file = this.files[0];
@@ -2137,11 +2146,93 @@ $("#button_ajax_upload_div").on("click", function(e)
     $(this).toggleClass("icon-chevron-up");
     $(this).toggleClass("icon-chevron-down");
 });
+//000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//------------------------------------------------------------------------FILE UPLOADS
+$(".ipl_radio_options").on("click", function()
+{
 
-function ifSelectNotEmpty(field, rules, i, options){
-    alert("a");
-  if ($(field).find("option:selected").length == 0) {
-     // this allows the use of i18 for the error msgs
-     return "* This field is required";
-  }
+    $("#ipl_link_div").hide();
+    $("#ipl_ip_div").show();
+    $("#ipl_file_select option").prop("disabled", false);
+    if (this.value == "1")
+    {
+        $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
+    }
+    else if (this.value == "2")
+    {
+        $("#ipl_file_select option[data-type='image']").prop("disabled", true);
+    }
+    else
+    {
+        $("#ipl_ip_div").hide();
+        $("#ipl_link_div").show();
+    }
+    $("#ipl_file_select").val("");
+});
+$('#file_upload').change(function() {
+    var re_ext = new RegExp("(gif|jpeg|jpg|png|pdf)", "i");
+    var file = this.files[0];
+    var name = file.name;
+    var size = (Math.round((file.size / 1024 / 1024) * 100) / 100);
+    var type = file.type;
+    if (size > 10) {
+        $("#label_ipl_info").text("O tamanho do ficheiro ultrapassa os 10mb permitidos.");
+        $(this).fileupload('clear');
+    }
+    if (!re_ext.test(type)) {
+        $("#label_ipl_info").text("A extensão do ficheiro seleccionado não é valida.");
+        $(this).fileupload('clear');
+    }
+    $("#label_ipl_info").text("");
+});
+$("#ipl_upload_button").on("click", function(e)
+{
+    e.preventDefault();
+    var form = $("#form_ipl");
+    if (form.find('input[type="file"]').val() === '')
+        return false;
+    var formData = new FormData(form[0]);
+    formData.append("action", "upload");
+    $.ajax({
+        url: 'upload.php',
+        type: 'POST',
+        data: formData,
+        dataType: "json",
+        cache: false,
+        complete: function(data) {
+
+            $("#label_ipl_info").text(data.responseText);
+            $("#ipl_file_select").empty();
+            update_select();
+        },
+        contentType: false,
+        processData: false
+    });
+});
+function update_select()
+{
+    $.post("requests.php", {action: "get_image_pdf"},
+    function(data)
+    {
+        $("#ipl_file_select").empty();
+        $.each(data, function()
+        {
+
+            $("#ipl_file_select").append("<option data-type=" + this.type + " value=" + this.value + ">" + this.value + "</option>");
+        });
+        if ($("#radio_ipl_image").is(":checked"))
+            $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
+        if ($("#radio_ipl_pdf").is(":checked"))
+            $("#ipl_file_select option[data-type='image']").prop("disabled", true);
+    }, "json");
 }
+;
+$("#remove_uploaded_file").on("click", function()
+{
+    $.post("upload.php", {action: "delete", name: $("#ipl_file_select option:selected").val()}, function(data) {
+
+        $("#label_ipl_info").text(data);
+        update_select();
+    });
+});
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000

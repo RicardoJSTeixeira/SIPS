@@ -170,8 +170,14 @@ function NewDB($CampaignID, $DBName, $link) {
     $js['db'] = $result[0] + 1000000;
     $js['name'] = $DBName;
 
-    mysql_query("INSERT INTO vicidial_lists (list_id, list_name, list_description, campaign_id, active, visible) VALUES ('$js[db]', '$DBName', 0, '$CampaignID', 'Y', '1')") or die(mysql_error());
+    $query1="INSERT INTO vicidial_lists (list_id, list_name, list_description, campaign_id, active, visible) VALUES ('$js[db]', '$DBName', 0, '$CampaignID', 'Y', '1')";
+    mysql_query($query1) or die(mysql_error());
 
+    
+        $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
+                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','LISTS','ADD','$js[db]','ADMIN CREATE DB','" . mysql_real_escape_string($query1) . "')";
+        mysql_query($query) or die(mysql_error());
+    
     echo json_encode($js);
 }
 
@@ -329,7 +335,6 @@ function DBWizardMatchFields($DBID, $MatchFields, $ListFields, $ConvertedFile, $
 
     echo json_encode($js);
 }
-
 function DBWizardDenyLeads($LeadsToDelete, $DBID, $link) {
     foreach ($LeadsToDelete as $index => $value) {
         if ($value != null)
@@ -337,7 +342,6 @@ function DBWizardDenyLeads($LeadsToDelete, $DBID, $link) {
     }
     mysql_query("UPDATE vicidial_lists SET list_description = list_description - ($index + 1) WHERE list_id = '$DBID'") or die(mysql_query());
 }
-
 function DBResetGetDBList($CampaignID, $link) {
     $query = "SELECT list_id, list_name FROM vicidial_lists WHERE campaign_id = '$CampaignID' AND list_id <> '998%'";
     $result = mysql_query($query, $link) or die(mysql_error());
@@ -349,7 +353,6 @@ function DBResetGetDBList($CampaignID, $link) {
 
     echo json_encode($js);
 }
-
 function DBResetLists($Lists2Reset, $link) {
     foreach ($Lists2Reset as $value) {
         $query1 = "UPDATE vicidial_list SET called_since_last_reset='N' WHERE list_id = '$value'";
@@ -366,12 +369,7 @@ function ForceLoadDuplicates($DuplicatesInserts, $DBID, $link) {
         mysql_query("$value", $link) or die(mysql_error());
         $js['inserted_ids'][] = mysql_insert_id();
     }
-
-
-
-
     mysql_query("UPDATE vicidial_lists SET list_description = (list_description + " . count($js['inserted_ids']) . ") WHERE list_id = '$DBID'", $link) or die(mysql_error());
-
     echo json_encode($js);
 }
 
@@ -411,4 +409,3 @@ switch ($action) {
     case "ForceLoadDuplicates" : ForceLoadDuplicates($DuplicatesInserts, $DBID, $link);
         break;
 }
-?>

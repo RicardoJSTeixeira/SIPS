@@ -3,110 +3,61 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
     var me = this;
     var array_id = [];
-    var tag_regex = /\@(\d{1,5})\@/g;
-    var tag_regex2 = /\§(.*?)\§/g;
+
     this.script_id = script_id;
     this.lead_id = lead_id;
     this.unique_id = unique_id;
     this.user_id = user_id;
     this.campaign_id = campaign_id;
     this.admin_review = admin_review;
+    this.client_info = new Array();
     this.validado_function = false;
     this.nao_validado_function = false;
 
+
     this.init = function()
     {
-        update_script(function() {
-            update_info(function() {
-                insert_element(function() {
-                    starter();
+        $.ajaxSetup({cache: false});
+        before_all(function() {
+            update_script(function() {
+                update_info(function() {
+                    insert_element(function() {
+                        starter();
+                    });
                 });
             });
         });
     };
 
+    function before_all(callback)
+    {
 
-
-
-    $.get(file_path + "items/items.html", function(data) {
-        script_zone.append($("<div>").attr("id", "script_dummie").css("display", "none"));
-        script_zone.append($("<form>").attr("id", "script_form").addClass("formular"));
-        script_zone.find("#script_form").append($("<div>").attr("id", "script_div").css("width", "100%").css("margin", "0 auto"));
-        script_zone.find("#script_dummie").html(data);
-        array_id["radio"] = 0;
-        array_id["checkbox"] = 0;
-        array_id["input"] = 0;
-
-        $(script_zone).on("click", "#script_div .previous_pag", function(e) {
-            e.preventDefault();
-
-            var temp = script_zone.find(".pag_div:visible").prev(".pag_div");
-            if (temp.length)
+        if (me.lead_id)
+        {
+            $.post(file_path + "requests.php", {action: "get_client_info_by_lead_id", lead_id: me.lead_id, user_logged: user_id},
+            function(info1)
             {
-                $(".pag_div").hide();
-                temp.show();
-            }
+                if (Object.size(info1))
+                    me.client_info = info1;
 
-        });
-
-        $(script_zone).on("click", "#script_div .next_pag", function(e) {
-            e.preventDefault();
-
-            me.validate_manual(function() {
-                var temp = script_zone.find(".pag_div:visible").next(".pag_div");
-
-                if (temp.length)
+                if (typeof callback === "function")
                 {
-                    $(".pag_div").hide();
-                    temp.show();
+                    callback();
                 }
 
-            }, false);
-        });
-
-        $(script_zone).on("click", "#script_div .scheduler_button_go", function(e) {
-            e.preventDefault();
-            var select = $(this).prev("select");
-            if (select.find("option:selected").val() > 0)
-            {
-
-                var url = '/sips-admin/reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + user_id + '&lead=' + lead_id + '&id_elemento=' + $(this).prev("select").data("element_tag");
-                window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
-            }
-        });
-
-        $(script_zone).on("click", "#script_div .pdf_button", function(e)
-        {
-            var url = file_path + "files/" + $(this).attr("file");
-            window.open(url, 'PDF', 'fullscreen=no, scrollbars=auto');
-        });
-
-    });
-
-
-    Object.size = function(a)
-    {
-        var count = 0;
-        var i;
-        for (i in a) {
-            if (a.hasOwnProperty(i)) {
-                count++;
-            }
+            }, "json");
         }
-        return count;
-    };
-
-
-
+        else
+        if (typeof callback === "function")
+        {
+            callback();
+        }
+    }
 
 
 
     function starter(callback)
     {
-
-
-
-
         if (admin_review !== 1)
         {
             $("#script_form .pag_div").hide().first().show();
@@ -152,6 +103,66 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         }
     }
 
+
+
+
+
+
+
+    $.get(file_path + "items/items.html", function(data) {
+        script_zone.append($("<div>").attr("id", "script_dummie").css("display", "none"));
+        script_zone.append($("<form>").attr("id", "script_form").addClass("formular"));
+        script_zone.find("#script_form").append($("<div>").attr("id", "script_div").css("width", "100%").css("margin", "0 auto"));
+        script_zone.find("#script_dummie").html(data);
+        array_id["radio"] = 0;
+        array_id["checkbox"] = 0;
+        array_id["input"] = 0;
+
+        $(script_zone).on("click", "#script_div .previous_pag", function(e) {
+            e.preventDefault();
+            var temp = script_zone.find(".pag_div:visible").prev(".pag_div");
+            if (temp.length)
+            {
+                $(".pag_div").hide();
+                temp.show();
+            }
+        });
+
+        $(script_zone).on("click", "#script_div .next_pag", function(e) {
+            e.preventDefault();
+            me.validate_manual(function() {
+                var temp = script_zone.find(".pag_div:visible").next(".pag_div");
+                if (temp.length)
+                {
+                    $(".pag_div").hide();
+                    temp.show();
+                }
+            }, false);
+        });
+
+        $(script_zone).on("click", "#script_div .scheduler_button_go", function(e) {
+            e.preventDefault();
+            var select = $(this).prev("select");
+            if (select.find("option:selected").val() > 0)
+            {
+                var url = '/sips-admin/reservas/views/calendar_container.php?sch=' + $(this).prev("select").val() + '&user=' + user_id + '&lead=' + lead_id + '&id_elemento=' + $(this).prev("select").data("element_tag");
+                window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
+            }
+        });
+
+        $(script_zone).on("click", "#script_div .pdf_button", function(e)
+        {
+            var url = file_path + "files/" + $(this).attr("file");
+            window.open(url, 'PDF', 'fullscreen=no, scrollbars=auto');
+        });
+    });
+
+
+
+
+
+
+
 //UPDATES DE INFO
     function update_script(callback)
     {
@@ -174,9 +185,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         }
         else
         {
-
             var camp_linha = 0;
-
             if (campaign_id !== "")
             {
                 camp_linha = campaign_id;
@@ -200,16 +209,14 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     function update_info(callback)
     {
         script_zone.find(".datetimepicker").remove();
-        $.post(file_path + "requests.php", {action: "get_data_render", id_script: me.script_id},
+        $.post(file_path + "requests.php", {action: "get_data_render", id_script: me.script_id, lead_id: me.lead_id},
         function(data)
         {
-
             $("#script_div").empty();
             var item;
             $.each(data, function() {
                 item = script_zone.find('#script_dummie .' + this.type + '_class').clone();
                 item.attr("id", this.tag).data("info", this);
-
                 if (!script_zone.find("#script_div #" + this.id_page + "pag").length) {
                     script_zone.find("#script_div").append($("<div>").addClass("pag_div").attr("id", this.id_page + "pag"));
                 }
@@ -217,7 +224,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             });
             if (typeof callback === "function")
             {
-
                 callback();
             }
         }, "json");
@@ -230,13 +236,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         var info = [];
         var element = 0;
         $.each(script_zone.find("#script_div .pag_div .item"), function() {
-
             element = $(this);
             element.removeAttr("title");
             element.find(".label_titulo").remove();
-
             info = $(this).data("info");
-
             if (info.hidden)
                 element.css("display", "none");
             switch (info.type)
@@ -247,14 +250,11 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     input.placeholder = info.placeholder;
                     input.maxLength = info.max_length;
                     input.name = info.tag;
-                    if (info.default_value.toString().length > 2)
+
+                    if (info.default_value.toString().length > 2 && Object.size(me.client_info))
                     {
-                        $.post(file_path + "requests.php", {action: "get_client_info_by_lead_id", lead_id: lead_id, user_logged: user_id},
-                        function(info1)
-                        {
-                            if (Object.size(info1))
-                                input.value = info1[info.default_value.toString().toLowerCase()];
-                        }, "json");
+
+                        input.value = me.client_info[info.default_value.toString().toLowerCase()];
                     }
                     var pattern = [];
                     if (info.required)
@@ -290,6 +290,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             break;
                         case "credit_card_d":
                             pattern.push("funcCall[isValidDebit]");
+                            break;
                         case "ajax":
                             {
                                 pattern.push("ajax[rule" + info.tag + "]]");
@@ -299,12 +300,11 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                     "alertTextOk": info.values_text.validado,
                                     "alertTextLoad": "* A validar, por favor aguarde"
                                 };
-
                             }
                             break;
                     }
                     if (pattern.length > 0)
-                        element.find(".input_texto").addClass("validate[" + pattern.join(",") + "]");
+                        element.find(".input_texto").addClass(" validate[" + pattern.join(",") + "]");
                     break;
                 case "radio":
                     element.empty();
@@ -321,10 +321,9 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                     .attr("id", array_id["radio"] + "radio")
                                     .attr("name", info.tag))
                                     .append($("<label>")
-                                            .addClass("radio_name radio inline")
+                                            .addClass("radio_name radio inline tagReplace")
                                             .attr("for", array_id["radio"] + "radio")
                                             .html("<span></span>" + radios[count])
-
                                             );
                         else
                             element.append($("<input>")
@@ -333,7 +332,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                     .attr("id", array_id["radio"] + "radio")
                                     .attr("name", info.tag))
                                     .append($("<label>")
-                                            .addClass("radio_name radio inline")
+                                            .addClass("radio_name radio inline tagReplace")
                                             .attr("for", array_id["radio"] + "radio")
                                             .html("<span></span>" + radios[count])
                                             );
@@ -358,7 +357,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                             .attr("id", array_id["checkbox"] + "checkbox")
                                             .attr("name", info.tag))
                                     .append($("<label>")
-                                            .addClass("checkbox_name checkbox inline")
+                                            .addClass("checkbox_name checkbox inline tagReplace")
                                             .attr("for", array_id["checkbox"] + "checkbox")
                                             .html("<span></span>" + checkboxs[count])
                                             );
@@ -369,10 +368,9 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                     .attr("id", array_id["checkbox"] + "checkbox")
                                     .attr("name", info.tag))
                                     .append($("<label>")
-                                            .addClass("checkbox_name checkbox inline")
+                                            .addClass("checkbox_name checkbox inline tagReplace")
                                             .attr("for", array_id["checkbox"] + "checkbox")
                                             .html("<span></span>" + checkboxs[count])
-
                                             );
                         if (info.dispo === "v")
                             element.append($("<br>"));
@@ -381,7 +379,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     break;
                 case "multichoice":
                     element.empty();
-                    element.append($("<label>").addClass("label_multichoice label_geral").text(info.texto));
+                    element.append($("<label>").addClass("label_multichoice label_geral tagReplace").text(info.texto));
                     var multichoices = info.values_text;
                     if (info.required)
                         element.append($("<select>").addClass("multichoice_select validate[required]").attr("name", info.tag));
@@ -464,12 +462,12 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             if (info.required)
                             {
                                 trbody_last.append($("<td>")
-                                        .append($("<input>").attr("type", "text").attr("titulo", titulos[count2]).attr("id", array_id["input"] + "tableinput").addClass("validate[required] input-mini").attr("name", info.tag + "," + perguntas[count] + "," + titulos[count2])));
+                                        .append($("<input>").attr("type", "text").attr("maxLength", 25).attr("titulo", titulos[count2]).attr("id", array_id["input"] + "tableinput").addClass("input-medium validate[required] ").attr("name", info.tag + "," + perguntas[count] + "," + titulos[count2])));
                             }
                             else
                             {
                                 trbody_last.append($("<td>")
-                                        .append($("<input>").attr("type", "text").attr("titulo", titulos[count2]).attr("id", array_id["input"] + "tableinput").addClass("input-mini").attr("name", info.tag + "," + perguntas[count] + "," + titulos[count2])));
+                                        .append($("<input>").attr("type", "text").attr("maxLength", 25).attr("titulo", titulos[count2]).attr("id", array_id["input"] + "tableinput").addClass("input-medium").attr("name", info.tag + "," + perguntas[count] + "," + titulos[count2])));
                             }
                             array_id["input"] = array_id["input"] + 1;
                         }
@@ -478,7 +476,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 case "datepicker":
                     element.find(".label_geral")[0].innerHTML = info.texto;
                     if (info.required)
-                        element.find(".form_datetime").addClass("validate[required]");
+                        element.find(".form_datetime").addClass("validate[required] text-input datepicker");
                     element.find(".form_datetime")[0].name = info.tag;
                     var options = {};
                     options.format = "yyyy-mm-dd hh:ii";
@@ -499,33 +497,31 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             options.format = 'yyyy-mm-dd';
                             options.minView = 2;
                             break;
+                        case "3":
+                            options.format = 'dd-mm-yyyy';
+                            options.minView = 2;
+                            break;
                         default:
                             options.format = 'yyyy-mm-dd';
                             options.minView = 2;
                             break;
                     }
-
                     if (info.values_text.type == "dynamic")//dynamic
                     {
-
                         if (info.values_text.data_inicial != "#|#|#|#")
                         {
                             var tempo1 = info.values_text.data_inicial.split("|");
                             var time1 = moment();
-
                             if (tempo1[0] != "#")
                                 time1.add('year', tempo1[0]);
-
                             if (tempo1[1] != "#")
                                 time1.add('month', tempo1[1]);
                             if (tempo1[2] != "#")
                                 time1.add('day', tempo1[2]);
                             if (tempo1[3] != "#")
                                 time1.add('hour', tempo1[3]);
-
                             options.startDate = time1.toDate();
                         }
-
                         if (info.values_text.data_final != "#|#|#|#")
                         {
                             var tempo2 = info.values_text.data_final.split("|");
@@ -538,30 +534,24 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 time2.add('day', tempo2[2]);
                             if (tempo2[3] != "#")
                                 time2.add('hour', tempo2[3]);
-
                             options.endDate = time2.toDate();
                         }
-                    } else//fixed
+                    } else if (info.values_text.type == "fixed")//fixed
                     {
                         options.startDate = info.values_text.data_inicial;
                         options.endDate = info.values_text.data_final;
                     }
-
-
-                    $("#script_div #" + info.tag + " .form_datetime").datetimepicker(options).keypress(function(e) {
+                    console.log(options);
+                    script_zone.find("input[name='" + info.tag + "']").datetimepicker(options).keypress(function(e) {
                         e.preventDefault();
                     }).bind("cut copy paste", function(e) {
                         e.preventDefault();
                     });
                     break;
                 case "scheduler":
-
                     element.find(".scheduler_button_go").attr("id", info.id + "go_button");
                     var select = element.find(".scheduler_select");
-
                     element.find(".label_geral")[0].innerHTML = info.texto;
-
-
                     element.find(".scheduler_select").addClass("validate[funcCall[scheduler_verif]]");
                     $.post(file_path + "requests.php", {action: "get_schedule_by_id", ids: info.values_text.join(",")},
                     function(info3)
@@ -570,13 +560,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             select.append("<option value=" + this.id + ">" + this.text + "</option>");
                         });
                         select.val("").trigger("liszt:updated");
-
                     }, "json");
                     element.find(".scheduler_select").data("element_tag", info.tag)
                             .data("max_marc", info.max_length)
                             .data("obrig_marc", info.param1).data("live_marc", 0);
-
-
                     break;
                 case "textarea":
                     element.find(".label_geral")[0].innerHTML = info.texto;
@@ -585,7 +572,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         element.find(".input_textarea").addClass("validate[required]");
                     break;
                 case "ipl":
-
                     element.find(".label_geral")[0].innerHTML = info.texto;
                     element.find("span").remove();
                     if (info.param1 == "1")
@@ -609,14 +595,11 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     break;
                 case "button":
                     element.find(".botao").text(info.texto);
-
                     break;
             }
-        }
-        );
+        });
         if (typeof callback === "function")
         {
-
             callback();
         }
     }
@@ -658,7 +641,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
             if (typeof callback === "function")
             {
-
                 callback();
             }
         }, "json");
@@ -688,7 +670,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 {
                     script_zone.find(".pag_div").fadeOut(250);
                     script_zone.find("#script_div #" + data.tag_target + "pag").fadeIn(300);
-
                 }
                 break;
         }
@@ -730,11 +711,9 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         switch (this.param1)
                         {
                             case "value_select":
-
                                 var values = this.tag_trigger2;
                                 for (var count = 0; count < values.length; count++)
                                 {
-
                                     $(script_zone).on("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                     {
 
@@ -752,7 +731,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 var values = this.tag_trigger2;
                                 for (var count = 0; count < values.length; count++)
                                 {
-
                                     $(script_zone).on("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']", function()//atribuir os ons a cada value
                                     {
                                         rules_work(data[index]);
@@ -769,7 +747,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 var values = this.tag_trigger2;
                                 for (var count = 0; count < values.length; count++)
                                 {
-
                                     $(script_zone).on("change", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                     {
                                         if (data[index].tag_trigger2.indexOf($("#script_div #" + data[index].tag_trigger + " option:selected").val()) > -1)
@@ -787,7 +764,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 for (var count = 0; count < linhas.length; count++)
                                 {
                                     var values = linhas[count].split(";");
-
                                     $(script_zone).on("click", "#script_div #" + this.tag_trigger + " tr:contains('" + values[0] + "') input[value='" + values[1] + "']", function()
                                     {
                                         rules_work(data[index]);
@@ -796,7 +772,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 }
                                 break;
                             case "answer":
-
                                 $(script_zone).on("click", "#script_div #" + this.tag_trigger + " input", function()
                                 {
                                     if (script_zone.find("#script_div #" + data[index].tag_trigger).find("input:checked").length === (script_zone.find("#script_div #" + data[index].tag_trigger + " .tr_body").find("tr").length))
@@ -808,30 +783,24 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     case "tableinput":
                         if (this.param1 == "answer")
                         {
-
                             $(script_zone).on("focusout", "#script_div #" + this.tag_trigger + " input", function()
                             {
                                 if (script_zone.find("#script_div #" + data[index].tag_trigger).find("input[value!='']").length === (script_zone.find("#script_div #" + data[index].tag_trigger + " .tr_body").find("td").find("input").length))
                                     rules_work(data[index]);
                             });
                         }
-
                         break;
                     case "datepicker":
                         switch (this.param1)
                         {
                             case "answer":
-
                                 $(script_zone).on("change", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                 {
                                     rules_work(data[index]);
                                 }
                                 );
                                 break;
-
-
                             case "date":
-
                                 $(script_zone).on("change", "#script_div #" + this.tag_trigger + " .form_datetime", function()//atribuir os ons a cada value
                                 {
                                     var temp = data[index];
@@ -843,16 +812,16 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                         if (temp.param2.data_inicial != "" && temp.param2.data_final != "")
                                         {
 
-                                            if (time1.isBefore($(this).val()) && time2.isAfter($(this).val()))
+                                            if ((time1.isBefore($(this).val()) || time1.isSame($(this).val())) && (time2.isAfter($(this).val()) || time2.isSame($(this).val())))
                                                 rules_work(data[index]);
                                         }
                                         else
                                         {
                                             if (temp.param2.data_inicial != "")
-                                                if (time1.isAfter($(this).val()))
+                                                if (time1.isBefore($(this).val()) || time1.isSame($(this).val()))
                                                     rules_work(data[index]);
                                             if (temp.param2.data_final != "")
-                                                if (time2.isBefore($(this).val()))
+                                                if (time2.isAfter($(this).val()) || time2.isSame($(this).val()))
                                                     rules_work(data[index]);
                                         }
                                     }
@@ -885,21 +854,23 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                             if (tempo2[3] != "#")
                                                 time2.add('hour', tempo2[3]);
                                         }
+
                                         if (temp.param2.data_inicial != "#|#|#|#" && temp.param2.data_final != "#|#|#|#")
                                         {
-                                            if (time1.isBefore($(this).val()) && time2.isAfter($(this).val()))
+                                            if ((time1.isBefore($(this).val()) || time1.isSame($(this).val())) && (time2.isAfter($(this).val()) || time2.isSame($(this).val())))
                                                 rules_work(data[index]);
                                         }
                                         else
                                         {
                                             if (temp.param2.data_inicial != "#|#|#|#")
                                             {
-                                                if (time1.isBefore($(this).val()))
+
+                                                if (time1.isBefore($(this).val()) || time1.isSame($(this).val()))
                                                     rules_work(data[index]);
                                             }
                                             if (temp.param2.data_final != "#|#|#|#")
                                             {
-                                                if (time2.isAfter($(this).val()))
+                                                if (time2.isAfter($(this).val()) || time2.isSame($(this).val()))
                                                     rules_work(data[index]);
                                             }
                                         }
@@ -913,7 +884,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         switch (this.param1)
                         {
                             case "answer":
-
                                 $(script_zone).on("focusout", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                                 {
                                     rules_work(data[index]);
@@ -923,7 +893,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         }
                         break;
                     case "button":
-
                         $(script_zone).on("click", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                         {
                             rules_work(data[index]);
@@ -942,82 +911,25 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     }
     function tags(callback)
     {
-
-        //tags de valores de elementos da mesma pagina
-
-        if (script_zone.html().match(tag_regex))
+        $.each(script_zone.find(".tagReplace"), function()
         {
-            var temp2 = script_zone.html().match(tag_regex);
-            var temp = [];
-            $.each(temp2, function() {
-                if ($.inArray(this, temp) === -1)
-                    temp.push(this);
+            var this_label = $(this);
+
+            $(script_zone).on("change", "#script_div #" + this_label.data("id") + " input,#" + this_label.data("id") + " select", function() {
+                $("." + this_label.data("id") + "tag").text($(this).val());
             });
-
-            $.each(temp, function() {
-                var id = this;
-                id = id.replace(/\@/g, '');
-                var regExp = new RegExp(this, "g");
-                script_zone.html(script_zone.html().replace(regExp, "<span class='" + id + "tag'></span>"));
-
-                $(script_zone).on("change", "#script_div #" + id + " input,#" + id + " select", function() {
-                    $("." + id + "tag").text($(this).val());
-                });
-            });
-        }
-
-//Tags de nome/morada/telefone etc
-
-        if (script_zone.html().match(tag_regex2))
+        });
+        if (typeof callback === "function")
         {
-            var temp2 = script_zone.html().match(tag_regex2);
-            var temp = [];
-
-            $.each(temp2, function() {
-
-                if ($.inArray(this.toString(), temp) === -1)
-                    temp.push(this.toString());
-
-            });
-
-            $.post(file_path + "requests.php", {action: "get_client_info_by_lead_id", lead_id: lead_id, user_logged: user_id},
-            function(data)
-            {
-
-                if (Object.size(data)) {
-                    $.each(temp, function() {
-                        var id = this;
-                        id = id.replace(/\§/g, '');
-                        var regExp = new RegExp(this, "g");
-                        script_zone.html(script_zone.html().replace(regExp, data[id.toLowerCase()]));
-
-                    });
-                }
-                if (typeof callback === "function")
-                {
-                    callback();
-                }
-            }, "json");
-        } else {
-
-            if (typeof callback === "function")
-            {
-                callback();
-            }
+            callback();
         }
     }
-
 //FORM MANIPULATION
-
     $(script_zone).on("submit", "#script_form", function(e)
     {
         e.preventDefault();
     });
-    $("#admin_submit").on("click", function()
-    {
-        admin_review = 1;
-        submit_manual();
-    });
+
 
     $('html').bind('keypress', function(e)
     {
@@ -1059,12 +971,24 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         e.preventDefault();
     });
 
-
+    Object.size = function(a)
+    {
+        var count = 0;
+        var i;
+        for (i in a) {
+            if (a.hasOwnProperty(i)) {
+                count++;
+            }
+        }
+        return count;
+    };
 
 };
 
 
 
+
+// VALIDATION ENGINE ESPECIFIC RULES
 function checknif(field, rules, i, options) {
 
     var nif = field.val();

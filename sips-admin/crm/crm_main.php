@@ -130,30 +130,26 @@
 
 
                         <form class="form-horizontal" id="form_pesquisa">
-                            <div class="span5">
+                            <div class="span6">
                                 <div class="control-group">
                                     <label class="control-label" for="inputEmail">Data Inicial</label>
                                     <div class="controls">
-                                        <input readonly="readonly" class="datepicker-input validate[required]" type="text" id="datai" value="<?= $daystart; ?>">
+                                        <input readonly="readonly" class="datepicker-input validate[required] text-input datepicker" type="text" id="datai" value="<?= $daystart; ?>">
                                     </div>
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label" for="inputPassword">Data Final</label>
                                     <div class="controls">
-                                        <input readonly="readonly" class="datepicker-input validate[required]" type="text" id="dataf" value="<?= $dayend; ?>">
+                                        <input readonly="readonly" class="datepicker-input validate[required] text-input datepicker" type="text" id="dataf" value="<?= $dayend; ?>">
                                     </div>
                                 </div>
 
                                 <div class="control-group">
-
-
                                     <div class="controls">
                                         <input  type="radio" id="dcarregamento" name="data-search-type" /><label for='dcarregamento'><span></span>Por data de carregamento</label>
                                     </div>
                                 </div>
-
                                 <div class="control-group">
-
                                     <div class="controls">
                                         <input type="radio" id="dultima" checked="checked" name="data-search-type" /><label for="dultima"><span></span>Por data da ultima chamada</label>
                                     </div>
@@ -164,7 +160,7 @@
 
 
 
-                            <div class="span5">
+                            <div class="span6">
                                 <div class="control-group">
                                     <label class="control-label" for="inputEmail">Campanha</label>
                                     <div class="controls">
@@ -213,11 +209,13 @@
 
                                     </div>
                                 </div>
-                                <button class="btn btn-success right" >Pesquisa</button>
+
                             </div>
+                        <button class="btn btn-success right" id="search_button" >Pesquisa</button>
+                        </form>   
 
 
-                        </form>
+
                         <div class="clear"></div>
                     </div>
                 </div>
@@ -301,77 +299,87 @@
                     }
                 });
             });
+
+
+
             /* Função que realiza a pesquisa e que mostra a tabela com os resultados */
             $("#form_pesquisa").submit(function(e) {
                 e.preventDefault();
 
-                if ($("#form_pesquisa").validationEngine("validate"))
+                if ($("#crm-contact-id").val() != "" || $("#crm-contact-phone").val() != "")
                 {
-                    $('#contact_list').hide();
-                    var datai = $("#datai").val();
-                    var dataf = $("#dataf").val();
-                    var filtro_campanha = $("#filtro_campanha").val();
-                    var filtro_dbs = $("#filtro_dbs").val();
-                    var filtro_operador = $("#filtro_operador").val();
-                    var filtro_feedback = $("#filtro_feedback").val();
-                    var dataflag = "";
-                    if ($("input[name='data-search-type']:checked").attr("id") == 'dcarregamento') {
-                        dataflag = 0;
-                    } else {
-                        dataflag = 1;
-                    }
-
-                    var oTable = $('#contact_list').dataTable({
-                        "bSortClasses": false,
-                        "bProcessing": true,
-                        "bDestroy": true,
-                        "sPaginationType": "full_numbers",
-                        "sAjaxSource": '_requests.php',
-                        "fnServerParams": function(aoData) {
-                            aoData.push(
-                                    {"name": "action", "value": "get_table_data"},
-                            {"name": "datai", "value": datai},
-                            {"name": "dataf", "value": dataf},
-                            {"name": "filtro_campanha", "value": filtro_campanha},
-                            {"name": "filtro_dbs", "value": filtro_dbs},
-                            {"name": "filtro_operador", "value": filtro_operador},
-                            {"name": "filtro_feedback", "value": filtro_feedback},
-                            {"name": "dataflag", "value": dataflag},
-                            {"name": "contact_id", "value": $("#crm-contact-id").val()},
-                            {"name": "phone_number", "value": $("#crm-contact-phone").val()})
-                        },
-                        "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Morada"}, {"sTitle": "Ultima Chamada"}],
-                        "fnDrawCallback": function(oSettings, json) {
-                            $('#contact_list').show();
-                        },
-                        "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
-                    });
+                    $("#form_pesquisa").validationEngine("hide");
+                    search();
+                }
+                else if ($("#form_pesquisa").validationEngine("validate"))
+                {
+                    search();
                 }
             });
-            /* Função que força uma pesquisa "Todas" quando se filtra por data de carregamento */
-            $("input:radio[name=data-search-type]").change(function() {
-                if ($("input:radio[name=data-search-type]:checked").attr("id") == "dcarregamento")
-                {
-                    $("#filtro_dbs").val("all").prop("disabled", true);
+
+
+
+          
+
+
+            function search()
+            {
+                $('#contact_list').hide();
+                var datai = $("#datai").val();
+                var dataf = $("#dataf").val();
+                var filtro_campanha = $("#filtro_campanha").val();
+                var filtro_dbs = $("#filtro_dbs").val();
+                var filtro_operador = $("#filtro_operador").val();
+                var filtro_feedback = $("#filtro_feedback").val();
+                var dataflag = "";
+                if ($("input[name='data-search-type']:checked").attr("id") == 'dcarregamento') {
+                    dataflag = 0;
                 } else {
-                    $("#filtro_dbs").val("all").prop("disabled", false);
+                    dataflag = 1;
                 }
 
-            });
+                var oTable = $('#contact_list').dataTable({
+                    "bSortClasses": false,
+                    "bProcessing": true,
+                    "bDestroy": true,
+                    "sPaginationType": "full_numbers",
+                    "sAjaxSource": '_requests.php',
+                    "fnServerParams": function(aoData) {
+                        aoData.push(
+                                {"name": "action", "value": "get_table_data"},
+                        {"name": "datai", "value": datai},
+                        {"name": "dataf", "value": dataf},
+                        {"name": "filtro_campanha", "value": filtro_campanha},
+                        {"name": "filtro_dbs", "value": filtro_dbs},
+                        {"name": "filtro_operador", "value": filtro_operador},
+                        {"name": "filtro_feedback", "value": filtro_feedback},
+                        {"name": "dataflag", "value": dataflag},
+                        {"name": "contact_id", "value": $("#crm-contact-id").val()},
+                        {"name": "phone_number", "value": $("#crm-contact-phone").val()})
+                    },
+                    "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Morada"}, {"sTitle": "Ultima Chamada"}],
+                    "fnDrawCallback": function(oSettings, json) {
+                        $('#contact_list').show();
+                    },
+                    "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
+                });
+            }
+            ;
+
+
+
+
+
 
 
 
             $("#crm-close").on("click", function()
-
             {
                 $('#crm').hide();
                 $("#main_content").show();
-
             });
-
             function LoadHTML(lead_id)
             {
-
 
                 $.post("crm_edit.php", {lead_id: lead_id, campaign_id: $("#filtro_campanha option:selected").val()},
                 function(msg)
@@ -380,7 +388,6 @@
                     $("#main_content").hide();
                 }
                 );
-
             }
 
 
@@ -388,12 +395,7 @@
                     function()
                     {
 
-
-                        $("#form_pesquisa").validationEngine({});
-
-
-
-                        $("#datai").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).keypress(function(e) {
+                       $("#datai").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).keypress(function(e) {
                             e.preventDefault();
                         }).bind("cut copy paste", function(e) {
                             e.preventDefault();
@@ -403,12 +405,7 @@
                         }).bind("cut copy paste", function(e) {
                             e.preventDefault();
                         });
-
-
                         $(".chosen-select").chosen({no_results_text: "Sem resultados"});
-
-
-
                         var campaign = $('#filtro_campanha').val();
                         var db_list = "";
                         var feed_list = "";
@@ -448,7 +445,6 @@
                                         }
                                     }
                                 });
-
                             }
                         });
                     }

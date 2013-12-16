@@ -1,0 +1,142 @@
+	.header {
+		background: #288dd4; /* Old browsers */
+		background: -moz-linear-gradient(top, #288dd4 1%, #288dd4 100%); /* FF3.6+ */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#288dd4), color-stop(100%,#288dd4)); /* Chrome,Safari4+ */
+		background: -webkit-linear-gradient(top, #288dd4 1%,#288dd4 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top, #288dd4 1%,#288dd4 100%); /* Opera 11.10+ */
+		background: -ms-linear-gradient(top, #288dd4 1%,#288dd4 100%); /* IE10+ */
+		background: linear-gradient(to bottom, #288dd4 1%,#288dd4 100%); /* W3C */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#288dd4', endColorstr='#288dd4',GradientType=0 ); /* IE6-9 */
+		border-bottom: none;	
+		-webkit-box-shadow: none;
+		-moz-box-shadow:    none;
+		box-shadow:         none;	
+	}
+	.btn-group.open .btn-profile.btn.dropdown-toggle {
+		background: #3ba7ea; /* Old browsers */
+		background: -moz-linear-gradient(top, #3ba7ea 0%, #3ba7ea 100%); /* FF3.6+ */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3ba7ea), color-stop(100%,#3ba7ea)); /* Chrome,Safari4+ */
+		background: -webkit-linear-gradient(top, #3ba7ea 0%,#3ba7ea 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top, #3ba7ea 0%,#3ba7ea 100%); /* Opera 11.10+ */
+		background: -ms-linear-gradient(top, #3ba7ea 0%,#3ba7ea 100%); /* IE10+ */
+		background: linear-gradient(to bottom, #3ba7ea 0%,#3ba7ea 100%); /* W3C */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3ba7ea', endColorstr='#3ba7ea',GradientType=0 ); /* IE6-9 */
+		border:1px solid #3ba8eb;
+	}
+	#button-profile {
+		-webkit-box-shadow: none;
+		-moz-box-shadow: none;
+		box-shadow: none;
+	}
+	.speedbar {
+		background: #f0f4f8; /* Old browsers */
+		background: -moz-linear-gradient(top, #f0f4f8 1%, #f0f4f8 100%); /* FF3.6+ */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#f0f4f8), color-stop(100%,#f0f4f8)); /* Chrome,Safari4+ */
+		background: -webkit-linear-gradient(top, #f0f4f8 1%,#f0f4f8 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top, #f0f4f8 1%,#f0f4f8 100%); /* Opera 11.10+ */
+		background: -ms-linear-gradient(top, #f0f4f8 1%,#f0f4f8 100%); /* IE10+ */
+		background: linear-gradient(to bottom, #f0f4f8 1%,#f0f4f8 100%); /* W3C */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f4f8', endColorstr='#f0f4f8',GradientType=0 ); /* IE6-9 */
+		border-bottom: none;
+		-webkit-box-shadow: none;
+		-moz-box-shadow:    none;
+		box-shadow:         none;	
+	}
+	.notifications-head a.dropdown-toggle .caret, .item_m .caret, a.btn-profile .caret {
+		border-top: 4px solid #3aa8eb;
+	}
+	.menu-speedbar li a, ul.menu-drop li a i, ul.menu-drop [class^="icon-"]::before, ul.menu-drop [class*=" icon-"]::before {
+		color:#849195;
+		text-shadow:none;
+	}
+	.menu-sidebar li a {
+		color:#e0e0de;
+	}
+	.menu-speedbar li a:hover,.menu-speedbar li a.act_link {
+		color:#3bb2ea;
+		border:1px solid #d4dade;
+		background: #ffffff; /* Old browsers */
+		background: -moz-linear-gradient(top, #ffffff 0%, #ffffff 100%); /* FF3.6+ */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */
+		background: -webkit-linear-gradient(top, #ffffff 0%,#ffffff 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top, #ffffff 0%,#ffffff 100%); /* Opera 11.10+ */
+		background: -ms-linear-gradient(top, #ffffff 0%,#ffffff 100%); /* IE10+ */
+		background: linear-gradient(to bottom, #ffffff 0%,#ffffff 100%); /* W3C */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+		-webkit-box-shadow: none;
+		-moz-box-shadow: none;
+		box-shadow: none;
+	}
+	.notifications-head .btn-group.open .dropdown-toggle {
+		background-image:url(../../images/colors/metro/active.png);
+	}
+	.ichat {
+		background:#3bb2ea;
+		border:1px solid #288dd4;
+	}
+	.triangle-2 {
+		background-image:url(../../images/colors/metro/triangle2.png);
+	}
+	.dropdown-menu .r_link a {
+		color:#288dd4;
+	}
+	html, body, #sidebar, #content {
+		background-image:url(../../images/colors/bg_sidebar.png);
+		background-repeat: repeat-y;
+	}
+	.menu-sidebar li a.active, .menu-sidebar li:hover a {
+		text-shadow: none;
+		-webkit-transition:color 200ms ease-in;
+		-moz-transition:color 200ms ease-in;
+		-o-transition:color 200ms ease-in;
+		transition:color 200ms ease-in;
+		color:#3bb2ea;
+	}
+	textarea:focus,
+	input[type="text"]:focus,
+	input[type="password"]:focus,
+	input[type="datetime"]:focus,
+	input[type="datetime-local"]:focus,
+	input[type="date"]:focus,
+	input[type="month"]:focus,
+	input[type="time"]:focus,
+	input[type="week"]:focus,
+	input[type="number"]:focus,
+	input[type="email"]:focus,
+	input[type="url"]:focus,
+	input[type="search"]:focus,
+	input[type="tel"]:focus,
+	input[type="color"]:focus,
+	.uneditable-input:focus,
+	form.search-form input,
+	.avatar {
+	  border-color: rgba(212,218,222, 0.8);
+	}
+	.notification {
+		background: #3ba8eb;
+		background: -moz-linear-gradient(top, #3ba8eb 0%, #3ba8eb 100%);
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3ba8eb), color-stop(100%,#3ba8eb));
+		background: -webkit-linear-gradient(top, #3ba8eb 0%,#3ba8eb 100%);
+		background: -o-linear-gradient(top, #3ba8eb 0%,#3ba8eb 100%);
+		background: -ms-linear-gradient(top, #3ba8eb 0%,#3ba8eb 100%);
+		background: linear-gradient(to bottom, #3ba8eb 0%,#3ba8eb 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3ba8eb', endColorstr='#3ba8eb',GradientType=0 );
+		color:#fff;
+		border:none;
+	}
+	.triangle-1 {
+		background: none;
+	}
+	.dropdown-menu a.iview {
+		border-right:1px solid #288dd4;
+	}
+	.ichat-messages {
+		border:1px solid #288dd4;
+	}
+	.notifications-head .dropdown-toggle [class^="icon-"]::before, .notifications-head .dropdown-toggle [class*=" icon-"]::before {
+		text-shadow:none;
+	}
+	@media (max-width: 520px) {
+	  #sidebar { display:none;}
+	  #content, html, body { padding-left:0; background:none #f9f9f9; }
+	}

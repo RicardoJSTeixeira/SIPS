@@ -3,7 +3,6 @@
 require("../../../ini/dbconnect.php");
 require("../../../ini/user.php");
 require("../../../ini/db.php");
-require("PHPExcel.php");
 
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
@@ -17,11 +16,7 @@ ini_set('display_errors', '1');
 
 header('Content-Disposition: attachment; filename=Report_Script_' . date("Y-m-d_H:i:s") . '.csv');
 
-
-
 $user = new users;
-
-
 
 $temp = "";
 if (!$user->is_all_campaigns) {
@@ -29,8 +24,6 @@ if (!$user->is_all_campaigns) {
 }
 $js = array();
 switch ($action) {
-
-
 
     case "check_has_script":
 
@@ -47,8 +40,6 @@ switch ($action) {
         }
         break;
 
-
-
     case "get_template":
 
 //Se 0 vai buscar defaults
@@ -61,7 +52,6 @@ switch ($action) {
         }
         echo json_encode($js);
         break;
-
 
     case "delete_template":
         $query = "Delete from report_order where id=:id";
@@ -93,8 +83,6 @@ switch ($action) {
         $stmt->execute(array(":js" => json_encode($js), ":campaign_id" => $campaign_id, ":template" => $template));
         break;
 
-
-
     case "get_elements_by_template":
         $query = "SELECT elements from report_order where id=:id";
         $stmt = $db->prepare($query);
@@ -104,9 +92,6 @@ switch ($action) {
 
         echo json_encode($js);
         break;
-
-
-
 
     case "get_select_options":
         $js = array("campanha" => array(), "bd" => array(), "linha_inbound" => array());
@@ -134,16 +119,8 @@ switch ($action) {
     case "update_elements_order":
         $query = "update report_order set elements=:elements  where id=:id";
         $stmt = $db->prepare($query);
-        $stmt->execute(array(":id" => $id, ":elements" => $elements));
+        $stmt->execute(array(":id" => $id, ":elements" => json_encode($elements)));
         break;
-
-
-
-
-
-
-
-
 
     case "report":
         ini_set('memory_limit', '-1');
@@ -151,7 +128,6 @@ switch ($action) {
         header('Content-type: text/csv; charset=UTF-8');
         echo "\xEF\xBB\xBF";
         $output = fopen('php://output', 'w');
-
 
         $field_data = json_decode($field_data);
 //GET ID SCRIPT
@@ -166,14 +142,18 @@ switch ($action) {
         } else {
             $date_filter = "";
         }
-
-
+        
         if (isset($list_id)) {
             $tmp = $list_id;
             $list_id = array();
             $list_id[] = $tmp;
         } else {
-            $query = "SELECT list_id from vicidial_lists where campaign_id=:campaign_id and active='Y'";
+            
+            if ($only_active_db){
+                $onlyActive=" and active='Y'";
+            }
+                    
+            $query = "SELECT list_id from vicidial_lists where campaign_id=:campaign_id $onlyActive";
             $stmt = $db->prepare($query);
             $stmt->execute(array(":campaign_id" => $campaign_id));
 
@@ -198,23 +178,23 @@ switch ($action) {
                 $data_row["m" . $value->id] = $value->texto;
             }
         }
-if(!count($tags)){
-    echo ((isset($list_id))?'Base de dados':'Campanha').' sem script associado, ou script sem elementos de introdução de dados.'; 
-    exit;
-}
+        if (!count($tags)) {
+            echo ((isset($list_id)) ? 'Base de dados' : 'Campanha') . ' sem script associado, ou script sem elementos de introdução de dados.';
+            exit;
+        }
         //GET COLUMNS FROM DB
         $query = "SELECT a.tag,a.type,a.texto,a.values_text,a.placeholder "
                 . "FROM `script_dinamico` a "
-                    . "left join script_dinamico_pages b "
-                    . "on b.id=a.id_page "
+                . "left join script_dinamico_pages b "
+                . "on b.id=a.id_page "
                 . "where "
-                    . "type not in ('pagination','textfield','scheduler','legend','button','ipl') "
-                    . "and a.id_script=:id_script "
-                    . "and a.tag in ('" . implode("','", $tags) . "')   ";
+                . "type not in ('pagination','textfield','scheduler','legend','button','ipl') "
+                . "and a.id_script=:id_script "
+                . "and a.tag in ('" . implode("','", $tags) . "')   ";
 
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
-        
+
         //MAKE COLUMNS STRUCTURE WITH DATA PROVIDED EM DATA FROM DB
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $script_values = array();
@@ -245,46 +225,32 @@ if(!count($tags)){
         unset($temp2);
         unset($script_values);
 
-        $data_row = array_merge(array("id" => "ID", "date" => "Data", "name" => "Nome", "full_name" => "Agente", "campaign_name" => "Nome da campanha", "status_name" => "Feedback"), $data_row);
-        
+        $data_row = array_merge(array("id" => "ID", "entry_date" => "Data Entrada", "date" => "Data", "name" => "Nome", "full_name" => "Agente", "campaign_name" => "Nome da campanha", "status_name" => "Feedback"), $data_row);
+
         $titulos = array();
         $titulos = $data_row;
         foreach ($data_row as $key => $value) {
             $data_row[$key] = "";
         }
 
-        if ($only_with_result == "true") {
-
-            foreach ($list_id as $value) {
-                $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a left join script_result sr on a.lead_id=sr.lead_id where list_id =:value $date_filter";
-                $stmt = $db->prepare($query);
-                $stmt->execute(array(":value" => $value));
-                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    $lead_tmp = $row["lead_id"];
-                    $temp_d = $data_row;
-                    unset($row["lead_id"]);
-                    foreach ($row as $key => $value) {
-                        $temp_d[$key] = $value;
-                    }
-                    $final_row[$lead_tmp] = $temp_d;
-                }
+        foreach ($list_id as $value) {
+            if ($only_with_result == "true") {
+                $query = "SELECT a.lead_id id,status_name, a.entry_date, modify_date date, " . implode(",", $temp_lead_data) . " from vicidial_list a left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join script_result sr on a.lead_id=sr.lead_id where list_id =:value $date_filter";
+            } else {
+                $query = "SELECT a.lead_id id,status_name, a.entry_date, modify_date date, " . implode(",", $temp_lead_data) . " from vicidial_list a left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status where list_id =:value";
             }
-        } else {
-            foreach ($list_id as $value) {
-                $query = "SELECT a.lead_id, " . implode(",", $temp_lead_data) . " from vicidial_list a where list_id =:value";
-                $stmt = $db->prepare($query);
-                $stmt->execute(array(":value" => $value));
-                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    $lead_tmp = $row["lead_id"];
-                    $temp_d = $data_row;
-                    unset($row["lead_id"]);
-                    foreach ($row as $key => $value) {
-                        $temp_d[$key] = $value;
-                    }
-                    $final_row[$lead_tmp] = $temp_d;
+            $stmt = $db->prepare($query);
+            $stmt->execute(array(":value" => $value));
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $temp_d = $data_row;
+                foreach ($row as $key => $value) {
+                    $temp_d[$key] = $value;
                 }
+                    
+                $final_row[$row['id']] = $temp_d;
             }
         }
+
         unset($lead_tmp);
         unset($temp_d);
 
@@ -292,18 +258,18 @@ if(!count($tags)){
         //DADOS DO SCRIPT
         $query = "SELECT sr.lead_id,sr.tag_elemento,sr.valor,sr.param_1,sd.param1,sd.type "
                 . "FROM `script_result` sr FORCE INDEX (lead_id)"
-                    . "left join  vicidial_list vl "
-                    . "on vl.lead_id=sr.lead_id "
-                    . "left join script_dinamico sd "
-                    . "on sd.tag=sr.tag_elemento "
-                    . "and sd.id_script=sr.id_script "
+                . "left join  vicidial_list vl "
+                . "on vl.lead_id=sr.lead_id "
+                . "left join script_dinamico sd "
+                . "on sd.tag=sr.tag_elemento "
+                . "and sd.id_script=sr.id_script "
                 . "where sr.id_script=:id_script "
-                    . "and sr.campaign_id = :campaign_id "
-                    . "$date_filter "
-                    . "and vl.list_id in ('" . implode("','", $list_id) . "') "
-                    . "and sr.tag_elemento in ('" . implode("','", $tags) . "') "
+                . "and sr.campaign_id = :campaign_id "
+                . "$date_filter "
+                . "and vl.list_id in ('" . implode("','", $list_id) . "') "
+                . "and sr.tag_elemento in ('" . implode("','", $tags) . "') "
                 . "order by sr.lead_id ";
-        
+
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script, ":campaign_id" => $campaign_id));
 
@@ -322,20 +288,19 @@ if(!count($tags)){
                 }
                 $query1 = "SELECT sr.date, sdm.name, vu.full_name, vc.campaign_name,vcs.status_name "
                         . "FROM `script_result` sr "
-                            . "left join script_dinamico_master sdm "
-                            . "on sdm.id=sr.id_script "
-                            . "left join vicidial_users vu "
-                            . "on sr.user_id=vu.user "
-                            . "left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id "
-                            . "left join vicidial_log vlg on vlg.uniqueid=sr.unique_id "
-                            . "left join vicidial_campaign_statuses vcs on vcs.status=vlg.status "
+                        . "left join script_dinamico_master sdm "
+                        . "on sdm.id=sr.id_script "
+                        . "left join vicidial_users vu "
+                        . "on sr.user_id=vu.user "
+                        . "left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id "
+                        . "left join vicidial_log vlg on vlg.uniqueid=sr.unique_id "
+                        . "left join vicidial_campaign_statuses vcs on vcs.status=vlg.status "
                         . "where "
-                            . "sr.lead_id=:lead_id order by date DESC limit 1";
+                        . "sr.lead_id=:lead_id order by date DESC limit 1";
                 //echo $query1;
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute(array(":lead_id" => $row["lead_id"]));
                 $row1 = $stmt1->fetch(PDO::FETCH_ASSOC);
-
 
                 $temp_d = $final_row[$row["lead_id"]];
 
@@ -348,14 +313,13 @@ if(!count($tags)){
                 $temp_d["status_name"] = $row1["status_name"];
             }
 
-            if ($row["type"] == "tableradio"){
-            $temp_d["m" . $row["tag_elemento"] . $row["param_1"]] = $row["valor"];
-            }
-            elseif ($row["type"] == "tableinput") {
-                $temp = split(";", $row["param_1"]);
+            if ($row["type"] == "tableradio") {
+                $temp_d["m" . $row["tag_elemento"] . $row["param_1"]] = $row["valor"];
+            } elseif ($row["type"] == "tableinput") {
+                $temp = explode(";", $row["param_1"]);
                 $temp_d["m" . $row["tag_elemento"] . $temp[1] . $temp[0]] = $row["valor"];
-            } else{
-            $temp_d["m" . $row["tag_elemento"]] = ($row["param1"] == "nib") ? "" . $row["valor"] . "" : $row["valor"];
+            } else {
+                $temp_d["m" . $row["tag_elemento"]] = ($row["param1"] == "nib") ? "" . $row["valor"] . "" : $row["valor"];
             }
         }
 
@@ -365,6 +329,7 @@ if(!count($tags)){
         }
 
         fputcsv($output, $temp_d, ";", '"');
+        unset($final_row[$lead_id]);
 
         if ($only_with_result != "true") {
             foreach ($final_row as $value) {
@@ -374,5 +339,3 @@ if(!count($tags)){
         fclose($output);
         break;
 }
-
-    
