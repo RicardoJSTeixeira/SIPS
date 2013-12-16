@@ -31,7 +31,8 @@ function connectaMensageiros() {
     
    // $lead_id;
    // $user;
-    $data_visita = $results[159];
+   // $data_visita = $results[159];
+    $data_visita = date('d-m-Y',strtotime($row[159]));
     $hora_visita = '09h-18h';
     $nome = $results[153];
     $morada = $results[155];
