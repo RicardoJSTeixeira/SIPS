@@ -260,17 +260,27 @@ switch ($action) {
 
     case "add_info_crm":
 
-        if ($sale == "false") {
-            $query = "INSERT INTO `crm_confirm_feedback`(`id`, `lead_id`, `feedback`, `sale`, `campaign`, `agent`, `comment`,date,admin) VALUES (NULL,$lead_id,'SP',$sale,'$campaign','$agent','$comment','" . date('Y-m-d H:i:s') . "','$user->id')";
+        if ($option == "1") {
+            $feedback = "validado";
+            $query = "INSERT INTO `crm_confirm_feedback`(`id`, `lead_id`, `feedback`, `sale`, `campaign`, `agent`, `comment`,date,admin) VALUES (NULL,$lead_id,'$feedback',1,'$campaign','$agent','$comment','" . date('Y-m-d H:i:s') . "','$user->id')";
             $query = mysql_query($query, $link) or die(mysql_error());
-            $query = "Update vicidial_list set status='SP' where lead_id=$lead_id";
+            $query = "Update vicidial_list set validation='S' where lead_id=$lead_id";
             $query = mysql_query($query, $link) or die(mysql_error());
-            $query = "Update vicidial_log set status='SP' where lead_id=$lead_id and campaign_id='$campaign_id' order by uniqueid desc limit 1";
+        } else if ($option == "0") {
+            $feedback = "não validado";
+            $query = "INSERT INTO `crm_confirm_feedback`(`id`, `lead_id`, `feedback`, `sale`, `campaign`, `agent`, `comment`,date,admin) VALUES (NULL,$lead_id,'$feedback',0,'$campaign','$agent','$comment','" . date('Y-m-d H:i:s') . "','$user->id')";
+            $query = mysql_query($query, $link) or die(mysql_error());
+            $query = "Update vicidial_list set validation='N' where lead_id=$lead_id";
             $query = mysql_query($query, $link) or die(mysql_error());
         } else {
-            $query = "INSERT INTO `crm_confirm_feedback`(`id`, `lead_id`, `feedback`, `sale`, `campaign`, `agent`, `comment`,date,admin) VALUES (NULL,$lead_id,'$feedback',$sale,'$campaign','$agent','$comment','" . date('Y-m-d H:i:s') . "','$user->id')";
+            $feedback = "por validar";
+            $query = "INSERT INTO `crm_confirm_feedback`(`id`, `lead_id`, `feedback`, `sale`, `campaign`, `agent`, `comment`,date,admin) VALUES (NULL,$lead_id,'$feedback',2,'$campaign','$agent','$comment','" . date('Y-m-d H:i:s') . "','$user->id')";
+         
+            $query = mysql_query($query, $link) or die(mysql_error());
+            $query = "Update vicidial_list set validation='R' where lead_id=$lead_id";
             $query = mysql_query($query, $link) or die(mysql_error());
         }
+
 
 
         $query = "SELECT EXISTS(SELECT * FROM crm_confirm_feedback_last WHERE lead_id='$lead_id') as count";
@@ -278,36 +288,28 @@ switch ($action) {
         $row = mysql_fetch_assoc($query);
 
         if ($row['count'] == "0") {
-            $query = "INSERT INTO `crm_confirm_feedback_last`(`id`, `lead_id`, `feedback`, `sale`, `campaign`, `agent`, `comment`,date,admin) VALUES (NULL,$lead_id,'$feedback',$sale,'$campaign','$agent','$comment','" . date('Y-m-d H:i:s') . "','$user->id')";
+            $query = "INSERT INTO `crm_confirm_feedback_last`(`id`, `lead_id`, `feedback`, `sale`, `campaign`, `agent`, `comment`,date,admin) VALUES (NULL,$lead_id,'$feedback',$option,'$campaign','$agent','$comment','" . date('Y-m-d H:i:s') . "','$user->id')";
             $query = mysql_query($query, $link) or die(mysql_error());
         } else {
-            $query = "UPDATE crm_confirm_feedback_last SET feedback='$feedback',sale=$sale,agent='$agent',comment='$comment',date='" . date('Y-m-d H:i:s') . "',admin='$user->id' WHERE lead_id='$lead_id'";
+            $query = "UPDATE crm_confirm_feedback_last SET feedback='$feedback',sale=$option,agent='$agent',comment='$comment',date='" . date('Y-m-d H:i:s') . "',admin='$user->id' WHERE lead_id='$lead_id'";
             $query = mysql_query($query, $link) or die(mysql_error());
         }
 
-        echo json_encode(array(1));
+        echo json_encode(1);
         break;
 
 
 
     case "get_info_crm":
         $js = array();
-        $query = "SELECT `id`, `lead_id`, `feedback`, `sale`, `campaign`,admin, `agent`, `comment`,date FROM crm_confirm_feedback where lead_id=$lead_id order by id asc";
+        $query = "SELECT `id`, `lead_id`, `feedback`, `sale`, `campaign`,admin, `agent`, `comment`,date FROM crm_confirm_feedback where lead_id='$lead_id' order by id asc";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
 
-            $js[] = array("has_info" => true, "id" => $row["id"], "lead_id" => $row["lead_id"], "feedback" => $row["feedback"], "sale" => $row["sale"] == 1, "campaign" => $row["campaign"], "admin" => $row["admin"], "agent" => $row["agent"], "comment" => $row["comment"], "date" => $row["date"]);
+            $js[] = array("id" => $row["id"], "lead_id" => $row["lead_id"], "feedback" => $row["feedback"], "sale" => $row["sale"], "campaign" => $row["campaign"], "admin" => $row["admin"], "agent" => $row["agent"], "comment" => $row["comment"], "date" => $row["date"]);
         }
 
-        if (sizeof($js) < 1) {
-            $query = "SELECT * FROM vicidial_campaign_statuses vcs inner join vicidial_campaigns vc on vcs.campaign_id=vc.campaign_id WHERE status='$status' and vc.campaign_id='$campaign_id'";
-            $query = mysql_query($query, $link) or die(mysql_error());
-            while ($row = mysql_fetch_assoc($query)) {
-                $js[] = array("has_info" => false, "status" => $row["status"], "sale" => $row["sale"]);
-            }
-        }
         echo json_encode($js);
 
         break;
 }
-?> 
