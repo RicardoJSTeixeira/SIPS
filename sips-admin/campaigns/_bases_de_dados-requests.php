@@ -170,8 +170,14 @@ function NewDB($CampaignID, $DBName, $link) {
     $js['db'] = $result[0] + 1000000;
     $js['name'] = $DBName;
 
-    mysql_query("INSERT INTO vicidial_lists (list_id, list_name, list_description, campaign_id, active, visible) VALUES ('$js[db]', '$DBName', 0, '$CampaignID', 'Y', '1')") or die(mysql_error());
+    $query1="INSERT INTO vicidial_lists (list_id, list_name, list_description, campaign_id, active, visible) VALUES ('$js[db]', '$DBName', 0, '$CampaignID', 'Y', '1')";
+    mysql_query($query1) or die(mysql_error());
 
+    
+        $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
+                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','LISTS','ADD','$js[db]','ADMIN CREATE DB','" . mysql_real_escape_string($query1) . "')";
+        mysql_query($query) or die(mysql_error());
+    
     echo json_encode($js);
 }
 
