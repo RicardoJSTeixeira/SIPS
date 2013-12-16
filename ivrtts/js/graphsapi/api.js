@@ -17,7 +17,7 @@ var API = function() {
             case 'database' :
             case 'call' :
                 {
-                    if (data.id !== '') {
+                    if (data.id !== "") {
                         return domain + port + prefix + data.datatype + data.id;
 
                     } else {

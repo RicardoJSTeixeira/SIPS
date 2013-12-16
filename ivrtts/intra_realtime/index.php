@@ -9,7 +9,7 @@
                 <figure class="demo" id="Graph1" style="height: 300px;"></figure>
             </div>
             <div class="grid span2">
-                <label class="label label-info">Total Chamadas</label><label class="label label-success">Total Úteis</label>
+                <label class="label label-info" >Total Chamadas</label><label class="label label-success">Total Úteis</label>
                 <label class="label label-warning">Total Chamadas</label><label class="label label-danger" style="background-color:#C6080D;">Total Úteis</label>
             </div>
             <div class="clearfix"></div>
