@@ -7,31 +7,33 @@ var dashboard = function() {
     this.graph = function() {
         $('#kant').load('../intra_realtime/index.php', function() {
 
-            api.get({'datatype': 'contacts', 'by': {'filter': ['database', 'status', 'month']}}, function(data) {
+            api.get({'datatype': 'min.max'}, function(data) {
 
-                max = '2014-01-01';
-                min = '2010-01-01';
-
-                ano = moment(max).diff(min, 'year');
-                mes = moment(max).diff(min, 'month');
-                semana = moment(max).diff(min, 'week');
-                dia = moment(max).diff(min, 'day');
+                max = moment(this.max).format('YYYY-MM-DD');
+                min = moment(this.min).format('YYYY-MM-DD');
+                
+                dia = moment(max).diff(min,'day');
+                semana = moment(max).diff(min,'week');
+                mes = moment(max).diff(min,'month');
+                ano = moment(max).diff(min,'year');
+                console.log('Maximo:'+max);
+                console.log('Min:'+min);
                 console.log('dia' + dia);
                 console.log('semana' + semana);
                 console.log('mes' + mes);
                 console.log('year' + ano);
-
-                if (dia < 15) {
-                    console.log('Fazemos dia!');
-                } else if (dia > 15) {
-                    console.log('Fazemos semana');
-                } else if (ano < 1) {
-                    console.log('mesl!');
-                } else if (ano < 6) {
-                    console.log('Fazemos Semestre');
-                } else if (ano > 6) {
-                    console.log('Fazemos anual ');
-                }
+//
+//                if (dia < 15) {
+//                    console.log('Fazemos dia!');
+//                } else if (dia > 15) {
+//                    console.log('Fazemos semana');
+//                } else if (ano < 1) {
+//                    console.log('mesl!');
+//                } else if (ano < 6) {
+//                    console.log('Fazemos Semestre');
+//                } else if (ano > 6) {
+//                    console.log('Fazemos anual ');
+//                }
 
 //           $.each(data,function(){
 //           numero = this._id.month;
@@ -88,7 +90,7 @@ var dashboard = function() {
                 });
                 
                 arr.push({
-                    "label": "Outros",
+                    "label": "Feedbacks de Sistema",
                     "data": outros/1000
                 });
 
