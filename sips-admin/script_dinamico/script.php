@@ -211,7 +211,7 @@ class script {
                         $row["placeholder"] = json_encode($placeholder);
                     }
                 }
-                if ($row["type"] == "legend" || $row["type"] == "textarea" || $row["type"] == "textfield") {
+                if ($row["type"] == "legend" || $row["type"] == "textfield") {
                     $values_text = json_decode($row["values_text"]);
 
                     if (preg_match_all("/\§[A-Z0-9\_]+\§/", $values_text, $temp)) {
@@ -234,7 +234,7 @@ class script {
                     $row["texto"] = preg_replace("/$value/", "<span data-id=" . $value1 . " class='" . $value1 . "tag tagReplace'></span>", $row["texto"]);
                 }
             }
-            if ($row["type"] == "legend" || $row["type"] == "textarea" || $row["type"] == "textfield") {
+            if ($row["type"] == "legend" || $row["type"] == "textfield") {
                 $values_text = json_decode($row["values_text"]);
                 if (preg_match_all("/\@(\d{1,5})\@/", $values_text, $temp)) {
                     $temp = $temp[0];
@@ -560,6 +560,9 @@ class script {
         $query = "delete from script_dinamico where id=:id";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id" => $id));
+        $query = "delete from script_result where id_script=:id_script and tag_elemento=:tag";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array(":id_script" => $id_script, ":tag"=>$param1));
         return 1;
     }
 

@@ -17,6 +17,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
     this.init = function()
     {
+        $.ajaxSetup({cache: false});
         before_all(function() {
             update_script(function() {
                 update_info(function() {
@@ -30,6 +31,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
     function before_all(callback)
     {
+
         if (me.lead_id)
         {
             $.post(file_path + "requests.php", {action: "get_client_info_by_lead_id", lead_id: me.lead_id, user_logged: user_id},

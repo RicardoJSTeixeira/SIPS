@@ -1,7 +1,7 @@
 <?php
 
 ini_set("display_errors", "1");
-require("../tools/database/dbconnect_old.php");
+require("../../ini/dbconnect.php");
 
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
@@ -14,22 +14,31 @@ foreach ($_GET as $key => $value) {
 
 
 switch ($action) {
-    case 'browser-listen' : { browserListen($data, $user); break; }
-    case 'browser-phone' : { browserPhone($data, $user, $phone, $link); break; }
+    case 'browser-listen' : { browserListen($data, $user, $lang); break; }
+    case 'browser-phone' : { browserPhone($data, $user, $phone, $link, $lang); break; }
 }
 
 
-function browserListen($data, $user) {
+function browserListen($data, $user, $lang) {
+    
+    switch ($lang) {
+        case 'pt-male' : $voice = 'Vicente'; break;
+        case 'pt-female' : $voice = 'Violeta'; break;
+    }
     
     $fileName = $user. '_' . date("Y-m-d_H-i-s") . '_web-listen';
-    system("python /usr/share/Dixi/tts.py Vicente '$data' > /srv/www/htdocs/ivrtts/dixi/files/$fileName.mp3", $retval);
+    system("python /usr/share/Dixi/tts.py $voice '$data' > /srv/www/htdocs/ivrtts/dixi/files/$fileName.mp3", $retval);
     echo $fileName;
 }
 
-function browserPhone($data, $user, $phone, $link) {
+function browserPhone($data, $user, $phone, $link, $lang) {
+    switch ($lang) {
+        case 'pt-male' : $voice = 'Vicente'; break;
+        case 'pt-female' : $voice = 'Violeta'; break;
+    }
     
     $fileName = $user. '_' . date("Y-m-d_H-i-s") . '_web-phone';
-    system("python /usr/share/Dixi/tts.py Vicente '$data' > /srv/www/htdocs/ivrtts/dixi/files/$fileName.mp3", $retval);
+    system("python /usr/share/Dixi/tts.py $voice '$data' > /srv/www/htdocs/ivrtts/dixi/files/$fileName.mp3", $retval);
     $path = "/srv/www/htdocs/ivrtts/dixi/files/$fileName.mp3";
     $NOW_TIME = date("Y-m-d H:i:s");
                 
