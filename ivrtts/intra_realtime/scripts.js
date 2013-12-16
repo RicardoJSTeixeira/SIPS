@@ -1,12 +1,10 @@
 var ap = new API(),
         graficos = new graph();
 
-
-
-var Dashboard = function() {
+var dashboard = function() {
     var me = this;
 
-    this.ini = function() {
+    this.graph = function() {
         $('#kant').load('../intra_realtime/index.php', function(){
          
         graficos.line('#Graph1', 'data');
@@ -16,28 +14,10 @@ var Dashboard = function() {
         graficos.pie('#piechart', 'data');
        });
     };
-    
-    this.refresh = function(){
-        $('#kant').load('../intra_realtime/index.php', function(){
-        graficos.line('#Graph1', 'data');
-        graficos.line('#Graph2', 'data');
-        graficos.bar('#Graph3', 'data');
-        graficos.bar('#Graph4', 'data');
-        graficos.pie('#piechart', 'data');
-       });
-    };
-    
+   
     
 };
 
-function dashboard() {
-    $("#kant").load('../intra_realtime/index.php', function() {
-        graficos.line('#Graph1', 'data');
-        graficos.line('#Graph2', 'data');
-        graficos.bar('#Graph3', 'data');
-        graficos.bar('#Graph4', 'data');
-        graficos.pie('#piechart', 'data');
-
-    });
-
+function dashboardMain() {
+   dash.graph();
 }

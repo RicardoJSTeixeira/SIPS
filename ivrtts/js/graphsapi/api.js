@@ -1,6 +1,6 @@
 var API = function() {
     var me = this,
-            domain = 'http://10.0.0.113',
+            domain = 'http://goviragem.dyndns.org',
             port = ':10000',
             prefix = '/ccstats/v0/',
             count = 'count/',
@@ -17,7 +17,7 @@ var API = function() {
             case 'database' :
             case 'call' :
                 {
-                    if (data.id !== '') {
+                    if (data.id !== "") {
                         return domain + port + prefix + data.datatype + data.id;
 
                     } else {
