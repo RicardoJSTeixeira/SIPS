@@ -20,7 +20,7 @@ switch ($action) {
 
 
     case 'layout':
-        $query = "SELECT * from WallBoard_Layout";
+        $query = "SELECT * from wallboard_layout";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array(id => $row["id"], name => $row["name"]);
@@ -29,7 +29,7 @@ switch ($action) {
         break;
 
     case 'get_layout':
-        $query = "SELECT * from WallBoard_Layout where id=$id";
+        $query = "SELECT * from wallboard_layout where id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js[] = array(id => $row["id"], name => $row["name"]);
@@ -37,28 +37,28 @@ switch ($action) {
         echo json_encode($js);
         break;
 
-    case 'insert_Layout':
-        $query = "INSERT INTO WallBoard_Layout (name) VALUES ('Layout Nova')";
+    case 'insert_layout':
+        $query = "INSERT INTO wallboard_layout (name) VALUES ('layout Nova')";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
 
-    case 'remove_Layout':
-        $query = "DELETE  WallBoard_Dataset FROM WallBoard_Dataset inner join WallBoard on WallBoard_Dataset.id_wallboard=WallBoard.id WHERE WallBoard.id_layout=$id_layout";
+    case 'remove_layout':
+        $query = "DELETE  wallboard_dataset FROM wallboard_dataset inner join wallboard on wallboard_dataset.id_wallboard=wallboard.id WHERE wallboard.id_layout=$id_layout";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "DELETE  WallBoard_DataTop FROM WallBoard_DataTop inner join WallBoard on WallBoard_DataTop.id_wallboard=WallBoard.id WHERE WallBoard.id_layout=$id_layout";
+        $query = "DELETE  wallboard_datatop FROM wallboard_datatop inner join wallboard on wallboard_datatop.id_wallboard=wallboard.id WHERE wallboard.id_layout=$id_layout";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "DELETE FROM WallBoard WHERE id_layout=$id_layout";
+        $query = "DELETE FROM wallboard WHERE id_layout=$id_layout";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "DELETE FROM WallBoard_Layout WHERE id=$id_layout";
+        $query = "DELETE FROM wallboard_layout WHERE id=$id_layout";
         $query = mysql_query($query, $link) or die(mysql_error());
 
 
         echo json_encode(array(1));
         break;
 
-    case 'edit_Layout':
-        $query = "UPDATE WallBoard_Layout SET Name='$name'  WHERE id=$id";
+    case 'edit_layout':
+        $query = "UPDATE wallboard_layout SET Name='$name'  WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
@@ -67,12 +67,12 @@ switch ($action) {
 
     case 'insert_wbe':
         if ($graph_type === "4") {
-            $query = "INSERT INTO WallBoard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,10000,4)";
+            $query = "INSERT INTO wallboard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,10000,4)";
             $query = mysql_query($query, $link) or die(mysql_error());
-            $query = "INSERT INTO `WallBoard_Dataset` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1,param2) VALUES (LAST_INSERT_ID(), 0,1,0,0,0,$param1,2,0,0,'$param2',0)";
+            $query = "INSERT INTO `wallboard_dataset` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1,param2) VALUES (LAST_INSERT_ID(), 0,1,0,0,0,$param1,2,0,0,'$param2',0)";
             $query = mysql_query($query, $link) or die(mysql_error());
         } else {
-            $query = "INSERT INTO WallBoard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
+            $query = "INSERT INTO wallboard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
             $query = mysql_query($query, $link) or die(mysql_error());
         }
 
@@ -82,9 +82,9 @@ switch ($action) {
 
 
     case 'insert_pie':
-        $query = "INSERT INTO WallBoard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
+        $query = "INSERT INTO wallboard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "INSERT INTO `WallBoard_Dataset` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1,param2) 
+        $query = "INSERT INTO `wallboard_dataset` (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1,param2) 
             VALUES (LAST_INSERT_ID(), $codigo_query,$tempo,'$user','$user_group','$campaign_id','$linha_inbound',$mode,$status_feedback,'$chamadas','$param1','$param2')";
         $query = mysql_query($query, $link) or die(mysql_error());
 
@@ -94,9 +94,9 @@ switch ($action) {
 
 
     case 'insert_dataTop':
-        $query = "INSERT INTO WallBoard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
+        $query = "INSERT INTO wallboard (name,id_layout,pos_x,pos_y,width, height, update_time,graph_type) VALUES ('$name',$id_layout,$pos_x,$pos_y,$width,$height,$update_time,$graph_type)";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "INSERT INTO `WallBoard_DataTop` (`id`, `id_wallboard`, `tempo`, `campanha`, `grupo_inbound`, `grupo_user`, `status_feedback`, `limit`, `custom_colum_name`,mode,param1)
+        $query = "INSERT INTO `wallboard_datatop` (`id`, `id_wallboard`, `tempo`, `campanha`, `grupo_inbound`, `grupo_user`, `status_feedback`, `limit`, `custom_colum_name`,mode,param1)
             VALUES(NULL,LAST_INSERT_ID() , $tempo, '$campanha', '$grupo_inbound', '$grupo_user', $status_feedback, '$limit', '$custom_colum_name',$mode,'$param1')";
 
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -108,17 +108,17 @@ switch ($action) {
 
 
     case 'edit_WBE':http:
-        $query = "UPDATE WallBoard SET  pos_x=$pos_x, pos_y=$pos_y, width=$width,height=$height  WHERE id=$id";
+        $query = "UPDATE wallboard SET  pos_x=$pos_x, pos_y=$pos_y, width=$width,height=$height  WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
 
     case 'delete_WBE':
-        $query = "DELETE FROM WallBoard_Dataset WHERE id_wallboard=$id";
+        $query = "DELETE FROM wallboard_dataset WHERE id_wallboard=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "DELETE FROM WallBoard_DataTop WHERE id_wallboard=$id";
+        $query = "DELETE FROM wallboard_datatop WHERE id_wallboard=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $query = "DELETE FROM WallBoard WHERE id=$id";
+        $query = "DELETE FROM wallboard WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
 
         echo json_encode(array(1));
@@ -126,11 +126,11 @@ switch ($action) {
 
 
     case 'wbe':
-        $query = "SELECT * FROM  WallBoard  where id_layout='$id_layout'";
+        $query = "SELECT * FROM  wallboard  where id_layout='$id_layout'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             if ($row["graph_type"] == "5") {
-                $query_dataset = "SELECT * FROM `WallBoard_DataTop` WHERE `id_wallboard`='$row[id]'";
+                $query_dataset = "SELECT * FROM `wallboard_datatop` WHERE `id_wallboard`='$row[id]'";
                 $query_dataset = mysql_query($query_dataset, $link) or die(mysql_error());
                 $dataset = array();
                 while ($row1 = mysql_fetch_assoc($query_dataset)) {
@@ -138,11 +138,11 @@ switch ($action) {
                 }
                 $js[] = array(id => $row["id"], id_layout => $row["id_layout"], name => $row["name"], pos_x => $row["pos_x"], pos_y => $row["pos_y"], width => $row["width"], height => $row["height"], update_time => $row["update_time"], graph_type => $row["graph_type"], dataset => $dataset);
             } else {
-                $query_dataset = "SELECT * FROM `WallBoard_Dataset` WHERE `id_wallboard`='$row[id]'";
+                $query_dataset = "SELECT * FROM `wallboard_dataset` WHERE `id_wallboard`='$row[id]'";
                 $query_dataset = mysql_query($query_dataset, $link) or die(mysql_error());
                 $dataset = array();
                 while ($row1 = mysql_fetch_assoc($query_dataset)) {
-                    $query2 = "SELECT * FROM  WallBoard_Query  where codigo=$row1[codigo_query]";
+                    $query2 = "SELECT * FROM  wallboard_query  where codigo=$row1[codigo_query]";
                     $query2 = mysql_query($query2, $link) or die(mysql_error());
                     $row2 = mysql_fetch_assoc($query2);
                     $dataset[] = array(id => $row1["id"], id_wallboard => $row1["id_wallboard"], codigo_query => $row1["codigo_query"], opcao_query => $row2["opcao_query"], tempo => $row1["tempo"], user => $row1["user"], user_group => $row1["user_group"], campaign_id => $row1["campaign_id"], linha_inbound => $row1["linha_inbound"], mode => $row1["mode"], status_feedback => $row1["status_feedback"], chamadas => $row1["chamadas"], param1 => $row1["param1"], param2 => $row1["param2"], hasData => true);
@@ -160,21 +160,21 @@ switch ($action) {
 
 
     case 'remove_dataset':
-        $query = "Delete from WallBoard_Dataset where id='$id' ";
+        $query = "Delete from wallboard_dataset where id='$id' ";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
 
 
     case 'insert_dataset':
-        $query = "INSERT INTO WallBoard_Dataset (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1,param2) VALUES ($id_wallboard, $codigo_query,'$tempo','$user','$user_group','$campaign_id','$linha_inbound','$mode','$status_feedback','$chamadas','$param1','$param2')";
+        $query = "INSERT INTO wallboard_dataset (id_wallboard, codigo_query,tempo,user,user_group,campaign_id,linha_inbound,mode,status_feedback,chamadas,param1,param2) VALUES ($id_wallboard, $codigo_query,'$tempo','$user','$user_group','$campaign_id','$linha_inbound','$mode','$status_feedback','$chamadas','$param1','$param2')";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
 
 
     case 'edit_dataset':
-        $query = "UPDATE WallBoard_Dataset SET  codigo_query=$codigo_query,user='$user',user_group='$user_group',campaign_id='$campaign_id',linha_inbound='$linha_inbound',mode=$mode,status_feedback='$status_feedback',chamadas='$chamadas',param1='$param1',param2='$param2'  WHERE id=$id";
+        $query = "UPDATE wallboard_dataset SET  codigo_query=$codigo_query,user='$user',user_group='$user_group',campaign_id='$campaign_id',linha_inbound='$linha_inbound',mode=$mode,status_feedback='$status_feedback',chamadas='$chamadas',param1='$param1',param2='$param2'  WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(array(1));
         break;
@@ -182,7 +182,7 @@ switch ($action) {
 
 
     case 'get_query':
-        $query = "SELECT * from WallBoard_Query";
+        $query = "SELECT * from wallboard_query";
 
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
@@ -199,10 +199,10 @@ switch ($action) {
 
 
         for ($i = 0; $i < count($datasets); $i++) {
-            $query = "SELECT * FROM `WallBoard_Dataset` WHERE `id`=" . $datasets[$i]["id"];
+            $query = "SELECT * FROM `wallboard_dataset` WHERE `id`=" . $datasets[$i]["id"];
             $query = mysql_query($query, $link) or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
-                $query2 = "SELECT * from WallBoard_Query where codigo=" . $row['codigo_query'];
+                $query2 = "SELECT * from wallboard_query where codigo=" . $row['codigo_query'];
                 $query2 = mysql_query($query2, $link) or die(mysql_error());
                 while ($row2 = mysql_fetch_assoc($query2)) {
                     $temp = array();
@@ -307,10 +307,10 @@ switch ($action) {
 
 
         for ($i = 0; $i < count($datasets); $i++) {
-            $query = "SELECT * FROM `WallBoard_Dataset` WHERE `id`=" . $datasets[$i]["id"];
+            $query = "SELECT * FROM `wallboard_dataset` WHERE `id`=" . $datasets[$i]["id"];
             $query = mysql_query($query, $link) or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
-                $query2 = "SELECT * from WallBoard_Query where codigo=" . $row['codigo_query'];
+                $query2 = "SELECT * from wallboard_query where codigo=" . $row['codigo_query'];
                 $query2 = mysql_query($query2, $link) or die(mysql_error());
                 while ($row2 = mysql_fetch_assoc($query2)) {
                     $temp = array();

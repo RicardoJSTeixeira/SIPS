@@ -1,11 +1,12 @@
 var API = function() {
     var me = this,
-            domain = 'http://10.0.0.113',
+            domain = 'http://goviragem.dyndns.org',
             port = ':10000',
             prefix = '/ccstats/v0/',
             count = 'count/',
+            sum = 'sum/',
             by = '?by=',
-            data = {'datatype': '', 'id': '', 'timeline': {'start':'0', 'end':'0'}, 'by': {'group': false, 'campaign': false, 'calls': []}};
+            data = {'datatype': '', 'id': '', 'timeline': {'start':'0', 'end':'0'}, 'by': {'group': false, 'campaign': false, 'calls': [] , 'filter':[] }};
     this.creat = function(obj) {
         options = obj;
         $.extend(data, options);
@@ -21,7 +22,7 @@ var API = function() {
                         return domain + port + prefix + data.datatype + data.id;
 
                     } else {
-                        console.log(domain+ port + prefix +data.datatype +'s');
+                       // console.log(domain+ port + prefix +data.datatype +'s');
                         return domain+ port + prefix +data.datatype +'s';
                         
                     }
@@ -62,30 +63,37 @@ var API = function() {
             case 'calls' :
                 {
                     if (data.by.calls.length) {
-                        return domain + port + prefix + count + data.datatype + by + data.by.calls.join(',');
+                        console.log(domain + port + prefix + count + data.datatype + by + data.by.calls.join(',') + '&' + data.by.filter.join(','));
+                        return domain + port + prefix + count + data.datatype + by + data.by.calls.join(',') + '&' + data.by.filter.join(',');
                     } else {
                         return domain + port + prefix + count + data.datatype;
                     }
 
                     break;
                 }
-            case 'calles' :
-                {
-                    if(data.timeline.start !== 0 && data.timeline.end !==0){
-                        console.log('Pesquisa Temporal!!');
-                        if(data.timeline.start !== data.timeline.end)
-                        {
-                            console.log('Range');
-                            break;
-                        }else{
-                            console.log('Dia');
-                            break;
-                        }
+          
+            case 'contacts':{
+                    if (data.by.filter.length>0){
+                        //console.log(domain + port + prefix + count + data.datatype +by+data.by.filter.join(',') );
+                        return domain + port + prefix + count + data.datatype +by+data.by.calls.join(',')+'&'+data.by.filter.join(',') ;
+                    }else{
+                        //  ( domain + port + prefix + count + data.datatype);
+                        return domain + port + prefix + count + data.datatype;
                     }
                     break;
                 }
-          
-
+            case 'min.max':{
+                    return domain + port + prefix  + 'min,max/calls/start_date';
+            } 
+            
+            case 'sum':{
+                    if(data.by.filter.length>0){
+                        return domain + port + prefix + 'sum/calls/length_in_sec'+by+data.by.calls.join(',')+'&'+data.by.filter.join(',');
+                    }else{
+                    return domain + port + prefix +'sum/calls/length_in_sec';
+                }
+                break;
+            }
         }
 
 

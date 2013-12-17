@@ -33,6 +33,13 @@
                         </div>
                     </div>
                 </form>
+                <div>
+                    <label for="new-voice-selector">Choose the Voice</label>
+                    <select id="lang" class="form-control">
+                        <option value='pt-male' selected>Português - Masculino</option>
+                        <option value='pt-female' selected>Português - Feminino</option>
+                    </select>
+                </div>  
                 <div id="div-error-msg" style="border:1px solid white; margin: 16px 0px 16px 0px; max-height:40px; min-height:40px;" class="span"></div>
             </div>
             <button id="button-clear" class="left btn input-campaign">Clear</button>
@@ -186,7 +193,7 @@
             type: "POST",
             url: "../intra_newcampaign/requests.php",
             dataType: "JSON",
-            data: {action: "CreateCampaign", sent_campaign_name: CampaignName},
+            data: {action: "CreateCampaign", sent_campaign_name: CampaignName, lang: $("#lang").val()},
             success: function(data)
             {
                 CampaignID = data.result[0];

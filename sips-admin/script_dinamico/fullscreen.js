@@ -7,7 +7,7 @@ $(function()
 
 
 
-    var render1 = new render($("#render_placeholder_div"), "/sips-admin/script_dinamico/", info.script_id, 9197798, undefined, undefined, undefined, 0);
+    var render1 = new render($("#render_placeholder_div"), "/sips-admin/script_dinamico/", info.script_id, undefined, undefined, undefined, undefined, 0);
 
     render1.init();
 

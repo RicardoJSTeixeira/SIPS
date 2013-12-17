@@ -37,22 +37,14 @@ var graph = function() {
     };
 
     this.bar = function(selector, data) {
-        var arr = new Array();
-        for (var i = 0; i < 5; i++) // i< data.length
-        {
-            var obj = {
-                "x": getRandomInt(1, 222),
-                "y": getRandomInt(1, 222)
-            };
-            arr.push(obj);
-        }
+
         var data1 = {
             "xScale": 'ordinal',
             "yScale": "linear",
             "main": [
                 {
-                    "className": ".teste",
-                    "data": arr
+                    "className": ".bar",
+                    "data": data
                 }
             ]
         };
@@ -62,7 +54,9 @@ var graph = function() {
         tt.className = 'ex-tooltip';
         document.body.appendChild(tt);
         tt.style.zIndex = 1000;
-        var opts = {"mouseover": function(d, i) {
+        var opts = {
+             "tickHintX": 10,
+            "mouseover": function(d, i) {
                 var pos = $(this).offset();
                 $(tt).text((d.x) + ': ' + d.y)
                         .css({top: currentMousePos.y + 5, left: currentMousePos.x - 2})
@@ -117,7 +111,9 @@ var graph = function() {
         tt.className = 'ex-tooltip';
         document.body.appendChild(tt);
         tt.style.zIndex = 1000;
-        var opts = {"mouseover": function(d, i) {
+        var opts = {
+            "tickHintX": 20,
+            "mouseover": function(d, i) {
                 var pos = $(this).offset();
                 $(tt).text((d.x) + ': ' + d.y)
                         .css({top: currentMousePos.y + 5, left: currentMousePos.x - 2})
@@ -137,155 +133,23 @@ var graph = function() {
 
     this.line = function(selector, data) {
 
-        var arr = new Array();
-        var numero = getRandomInt(1, 20);
-        for (var i = 0; i < 5; i++) // i<data.length
-        {
-
-            var obj = {
-                "x": '2013-12-' + numero,
-                "y": getRandomInt(1, 222)
-            };
-            arr.push(obj);
-            numero++;
-        }
+//        var arr = new Array();
+//        var numero = getRandomInt(1, 20);
+//        for (var i = 0; i < 5; i++) // i<data.length
+//        {
+//
+//            var obj = {
+//                "x": '2013-12-' + numero,
+//                "y": getRandomInt(1, 222)
+//            };
+//            arr.push(obj);
+//            numero++;
+//        }
         var data1 = {
-            "xScale": 'time',
+            "xScale": 'ordinal',
             "yScale": 'linear',
-            "main": [{
-                    "className": '.chamadas',
-                    "data": [
-                        {
-                            "x": "2012-11-19",
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": "2012-11-20",
-                            "y": getRandomInt(12, 322)
-                        },
-                        {
-                            "x": "2012-11-21",
-                            "y": getRandomInt(1, 322)
-                        },
-                        {
-                            "x": "2012-11-22",
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": "2012-11-23",
-                            "y": getRandomInt(1, 322)
-                        },
-                        {
-                            "x": "2012-11-24",
-                            "y": getRandomInt(2, 322)
-                        },
-                        {
-                            "x": "2012-11-25",
-                            "y": getRandomInt(12, 322)
-                        }
-                    ]
-                },
-                {
-                    "className": '.uteis',
-                    "data": [
-                        {
-                            "x": "2012-11-19",
-                            "y": getRandomInt(100, 122)
-                        },
-                        {
-                            "x": "2012-11-20",
-                            "y": getRandomInt(100, 122)
-                        },
-                        {
-                            "x": "2012-11-21",
-                            "y": getRandomInt(100, 122)
-                        },
-                        {
-                            "x": "2012-11-22",
-                            "y": getRandomInt(100, 122)
-                        },
-                        {
-                            "x": "2012-11-23",
-                            "y": getRandomInt(1, 122)
-                        },
-                        {
-                            "x": "2012-11-24",
-                            "y": getRandomInt(100, 122)
-                        },
-                        {
-                            "x": "2012-11-25",
-                            "y": getRandomInt(1, 122)
-                        }
-                    ]
-                },
-                {
-                    "className": '.uteis1',
-                    "data": [
-                        {
-                            "x": "2012-11-19",
-                            "y": getRandomInt(5, 100)
-                        },
-                        {
-                            "x": "2012-11-20",
-                            "y": getRandomInt(50, 100)
-                        },
-                        {
-                            "x": "2012-11-21",
-                            "y": getRandomInt(50, 100)
-                        },
-                        {
-                            "x": "2012-11-22",
-                            "y": getRandomInt(50, 100)
-                        },
-                        {
-                            "x": "2012-11-23",
-                            "y": getRandomInt(50, 100)
-                        },
-                        {
-                            "x": "2012-11-24",
-                            "y": getRandomInt(50, 100)
-                        },
-                        {
-                            "x": "2012-11-25",
-                            "y": getRandomInt(50, 122)
-                        }
-                    ]
-                },
-                {
-                    "className": '.uteis2',
-                    "data": [
-                        {
-                            "x": "2012-11-19",
-                            "y": getRandomInt(1, 50)
-                        },
-                        {
-                            "x": "2012-11-20",
-                            "y": getRandomInt(1,50)
-                        },
-                        {
-                            "x": "2012-11-21",
-                            "y": getRandomInt(1,50)
-                        },
-                        {
-                            "x": "2012-11-22",
-                            "y": getRandomInt(1, 50)
-                        },
-                        {
-                            "x": "2012-11-23",
-                            "y": getRandomInt(1, 50)
-                        },
-                        {
-                            "x": "2012-11-24",
-                            "y": getRandomInt(1,50)
-                        },
-                        {
-                            "x": "2012-11-25",
-                            "y": getRandomInt(1, 50)
-                        }
-                    ]
-                }
-            ]
-        };
+            "main": data
+         };
 
 
         var tt = document.createElement('div'),
@@ -296,20 +160,22 @@ var graph = function() {
         var opts = {
             "axisPaddingRight": 15,
             "axisPaddingLeft": 15,
-            "tickHintX": 7,
+           "tickHintX": 31, /*
             "dataFormatX": function(x) {
-                return d3.time.format('%Y-%m-%d').parse(x);
+                console.log (d3.time.format('%Y-%m-%d').parse(x));
+                return d3.time.format('%Y-%m').parse(x);
             },
             "tickFormatX": function(x) {
-                return d3.time.format('%A')(x);
-            },
+                return d3.time.format('%m')(x);
+            },*/
             "mouseover": function(d, i) {
                 var pos = $(this).offset();
                 ($(this));
-                $(tt).text(d3.time.format('%A')(d.x) + ': ' + d.y)
+                $(tt).text(d.x+' ' + d.y)
                         .css({top: topOffset + pos.top, left: pos.left + leftOffset, zIndex: 1111})
                         .show();
             },
+            "sortX":function(a, b) {return a.x-b.x; },
             "mouseout": function(x) {
                 $(tt).hide();
             }
@@ -320,13 +186,26 @@ var graph = function() {
 
     };
 
-    this.pie = function(selector, data1) {
-        var data = [
-            {label: "Desktop", data: 212},
-            {label: "Mobile", data: 27},
-            {label: "Mac", data: 100}
+    this.pie = function(selector, data) {
+        /* var arr=[];
+        for (var i = 0; i < data.length ; i++) // i<data.length
+        {
 
-        ];
+            var obj = {
+                          "label": data[i]._id.status.designation,
+                         "data": data[i].count
+            };
+            arr.push(obj);
+           
+        }
+        
+        console.log(arr);*/
+//        var data = [
+//            {label: "Desktop", data: 212},
+//            {label: "Mobile", data: 27},
+//            {label: "Mac", data: 100}
+//
+//        ];
 
         if ($(selector).length)
         {

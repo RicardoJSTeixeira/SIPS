@@ -41,9 +41,9 @@
             {
                 font-size:14px;
             }
-            .leftDiv, .rightDiv { padding:5px; }
+            .leftDiv, .rightDiv {padding:5px; }
             .grid{border: 1px inset #000000;}
-            .leftDiv .item { text-align:center; border:1px solid #EEF; background-color:#FFF;padding:3px; margin-bottom: 3px; min-height: 35px; }
+            .leftDiv .item { text-align:center; border:1px solid #EEF; background-color:#FFF;padding:3px; margin-bottom: 2px; min-height: 35px; }
             .rightDiv .item { text-align:center; border:1px dashed #AAA; background-color:#FFF;padding:3px;}
             .helperPick {border:4px solid #288dd4!important; text-align:center;width:auto}
             #add_rule_button{margin:12px;}
@@ -233,39 +233,45 @@
         <div id="popover_div"></div>
 
 
+
+
+        <!--barra de paginas e scripts-->
+        <h2>Scripts Dinâmicos </h2>
+
+
+
+
+
+
+
         <div class="grid-title">
-            <div class="pull-left" ><i class="fam-script-error"></i> Scripts Dinâmicos </div>
-            <div class="pull-right">
-                <a class="btn btn-inverse" id="relatorio_go" href="/sips-admin/script_dinamico/reporting/index.html" target="_self">Relatório</a>                        
-                <button class="btn btn-inverse" id="render_go"><i class="icon-external-link"></i>Visualisação</button>
+
+
+            <div class=" left" id="page_selector_div">
+                <div  class=" input-prepend input-append " >
+                    <span class="add-on">Páginas</span>     
+                    <select id="page_selector"></select>
+                    <button data-t="tooltip-right" title="Opções da Página" data-toggle="modal" data-target="#dialog_page"  class="btn btn-warning icon-alone" id="opcao_page_button"><i class="icon-cogs"></i></button>
+                    <button class="btn btn-primary icon-alone" id="page_add_button" title="Adicionar uma nova página a este Script"><i class="icon-plus"></i></button>
+                    <button class="btn btn-danger icon-alone "  id="page_remove_button" title="Remover esta página" ><i class="icon-remove"></i></button>         
+                </div>
+            </div>
+
+            <div class= "right" >
+                <div  class=" input-prepend input-append " >
+                    <span class="add-on">Scripts</span>            
+                    <select id="script_selector" ></select>                        
+                    <button data-t="tooltip-right" title="Opções do Script" data-toggle="modal" data-target="#dialog_layout"  class="btn btn-warning icon-alone" id="opcao_script_button"><i class="icon-cogs"></i></button>
+                    <button class="btn btn-primary icon-alone" id="script_add_button" title="Adicionar um Script Novo"><i class="icon-plus"></i></button>
+                    <button class="btn btn-danger icon-alone "  id="script_remove_button" title="Remover o Script selecionado"><i class="icon-remove"></i></button>  
+                    <a class="btn btn-inverse right" id="relatorio_go" href="/sips-admin/script_dinamico/reporting/index.html" target="_self"><i class="icon-book"></i>Relatórios</a>       
+                </div>
+
             </div>
         </div>
         <div class="grid-content">
 
 
-            <!--barra de paginas e scripts-->
-
-            <div class="grid-title">
-
-                <div class=" left" id="page_selector_div">
-                    <div  class=" input-prepend input-append " >
-                        <span class="add-on">Páginas</span>     
-                        <select id="page_selector"></select>
-                        <button data-t="tooltip-right" title="Opções da Página" data-toggle="modal" data-target="#dialog_page"  class="btn btn-warning icon-alone" id="opcao_page_button"><i class="icon-cogs"></i></button>
-                        <button class="btn btn-primary icon-alone" id="page_add_button" title="Adicionar uma nova página a este Script"><i class="icon-plus"></i></button>
-                        <button class="btn btn-danger icon-alone "  id="page_remove_button" title="Remover esta página" ><i class="icon-remove"></i></button>         
-                    </div>
-                </div>
-                <div class= "right" >
-                    <div  class=" input-prepend input-append " >
-                        <span class="add-on">Scripts</span>            
-                        <select id="script_selector" ></select>                        
-                        <button data-t="tooltip-right" title="Opções do Script" data-toggle="modal" data-target="#dialog_layout"  class="btn btn-warning icon-alone" id="opcao_script_button"><i class="icon-cogs"></i></button>
-                        <button class="btn btn-primary icon-alone" id="script_add_button" title="Adicionar um Script Novo"><i class="icon-plus"></i></button>
-                        <button class="btn btn-danger icon-alone "  id="script_remove_button" title="Remover o Script selecionado"><i class="icon-remove"></i></button>  
-                    </div>
-                </div>
-            </div>
 
 
 
@@ -274,7 +280,7 @@
                 <div class="grid span8">
                     <div class="grid-title"> 
                         <div class="pull-left">Formulário</div>
-                        <div class="pull-right"></div>
+                        <div class="pull-right">            <button class="btn btn-inverse " id="render_go"><i class="icon-external-link"></i>Visualisação</button></div>
                     </div>
                     <div class="grid-content">
                         <div class="leftDiv span">
@@ -321,21 +327,21 @@
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="O texto padrao do elemento"></i>   
+                                        <i class="icon-question-sign" title="O texto padrao do elemento."></i>   
                                         <strong>Placeholder:</strong>
                                         <div class="formRight">
                                             <input  maxlength="65" class="span texto_input" id="placeholder_edit" type="text" placeholder="Placeholder exemplo" />
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="Campo dinâmico da base de dados"></i>   
+                                        <i class="icon-question-sign" title="Campo dinâmico da base de dados."></i>   
                                         <strong>Valor por defeito:</strong>
                                         <div class="formRight">
                                             <select id="select_default_value"></select>
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="Número máximo de caracteres"></i>   
+                                        <i class="icon-question-sign" title="Número máximo de caracteres."></i>   
                                         <strong>Tamanho maximo:</strong>
                                         <div class="formRight">
                                             <input  maxlength="3" class="texto_input validate[required] input-mini" id="max_length_edit" name="max_length_edit" type="text" placeholder="Numero Máximo de caracteres" />
@@ -345,7 +351,7 @@
 
 
                                 <div class="formRow validation" >
-                                    <i class="icon-question-sign" title="Tipo de validação aplicada ao valor introduzido no elemento"></i>   
+                                    <i class="icon-question-sign" title="Tipo de validação aplicada ao valor introduzido no elemento."></i>   
                                     <strong>Validação:</strong>
 
                                     <div class="formRight">
@@ -394,7 +400,7 @@
 
                                     <div id="div_ajax_upload" class="formRow" style="display:none">
                                         <div class="formRow">
-                                            <i class="icon-question-sign" title="Escolha do ficheiro a ser aplicado como validação"></i>   
+                                            <i class="icon-question-sign" title="Escolha do ficheiro a ser aplicado como validação."></i>   
                                             <span >Selector de ficheiros</span>
                                             <div class="formRight">
                                                 <div class="input-append">
@@ -414,14 +420,14 @@
                                             </form>
                                         </div>
                                         <div class="formRow">
-                                            <i class="icon-question-sign" title="Caso o ficheiro não envie mensagem, este é o texto a ser mostrado caso seja validado"></i>   
+                                            <i class="icon-question-sign" title="Caso o ficheiro não envie mensagem, este é o texto a ser mostrado caso seja validado."></i>   
                                             <strong>Texto validado:</strong>
                                             <div class="formRight">
                                                 <input id="validado_text" type="text" >
                                             </div>
                                         </div>
                                         <div class="formRow">
-                                            <i class="icon-question-sign" title="Caso o ficheiro não envie mensagem, este é o texto a ser mostrado caso não seja validado"></i>  
+                                            <i class="icon-question-sign" title="Caso o ficheiro não envie mensagem, este é o texto a ser mostrado caso não seja validado."></i>  
                                             <strong>Texto não validado:</strong>
                                             <div class="formRight">
                                                 <input id="not_validado_text" type="text" >
@@ -449,14 +455,16 @@
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="Valores do elemento, separado por parágrafos. Não suporta Tags"></i>   
+                                        <i class="icon-question-sign" 
+                                           title="Valores do elemento, separado por parágrafos.
+                                           Não suporta Tags."></i>   
                                         <strong>Valores:</strong>
                                         <div class="formRight">
                                             <textarea  class="values_edit_textarea validate[required]" id="radio_textarea" name="radio_textarea" rows="4" cols="50"></textarea>
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="Disposição vertical ou horizontal do elemento"></i>   
+                                        <i class="icon-question-sign" title="Disposição vertical ou horizontal do elemento."></i>   
                                         <strong>Disposição:</strong>
                                         <div class="formRight">
                                             <input type="radio"  id="horiz_radio" name="rdispo" checked="checked">   <label class="radio_dispo radio inline"  for="horiz_radio"><span></span>Horizontal </label>
@@ -477,14 +485,16 @@
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="Valores do elemento, separado por parágrafos. Não suporta Tags"></i>   
+                                        <i class="icon-question-sign" 
+                                           title="Valores do elemento, separado por parágrafos.
+                                           Não suporta Tags."></i>   
                                         <strong>Valores:</strong>
                                         <div class="formRight">
                                             <textarea class="values_edit_textarea validate[required]" id="checkbox_textarea" name="checkbox_textarea" rows="4" cols="50"></textarea>
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="Disposição vertical ou horizontal do elemento"></i>   
+                                        <i class="icon-question-sign" title="Disposição vertical ou horizontal do elemento."></i>   
                                         <strong>Disposição:</strong>
                                         <div class="formRight">
                                             <input type="radio"  id="horiz_checkbox" name="cdispo" checked="checked">     <label class="checkbox_dispo radio inline"  for="horiz_checkbox"><span></span>Horizontal </label>
@@ -506,7 +516,9 @@
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="Valores do elemento, separado por parágrafos. Não suporta Tags"></i>   
+                                        <i class="icon-question-sign" 
+                                           title="Valores do elemento, separado por parágrafos.
+                                           Não suporta Tags."></i>   
                                         <strong>Valores:</strong>
                                         <div class="formRight">
                                             <textarea class="values_edit_textarea validate[required]" id="multichoice_textarea" name="multichoice_textarea" rows="4" cols="50"></textarea>
@@ -608,7 +620,9 @@
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="Valores do elemento, separado por parágrafos. Não suporta Tags"></i>   
+                                        <i class="icon-question-sign" 
+                                           title="Valores do elemento, separado por parágrafos.
+                                           Não suporta Tags."></i>   
                                         <strong>Titulos:</strong>
 
                                         <div class="formRight">
@@ -616,7 +630,9 @@
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="Cada linha de pergunta do elemento, separado por parágrafos. Não suporta Tags"></i>   
+                                        <i class="icon-question-sign" 
+                                           title="Cada linha de pergunta do elemento, separado por parágrafos.
+                                           Não suporta Tags."></i>   
                                         <strong>Perguntas:</strong>
 
                                         <div class="formRight">
@@ -635,7 +651,9 @@
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="Valores do elemento, separado por parágrafos. Não suporta Tags"></i>   
+                                        <i class="icon-question-sign" 
+                                           title="Valores do elemento, separado por parágrafos.
+                                           Não suporta Tags."></i>   
                                         <strong>Titulos:</strong>
 
                                         <div class="formRight">
@@ -643,7 +661,9 @@
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="Cada linha de pergunta do elemento, separado por parágrafos. Não suporta Tags"></i>   
+                                        <i class="icon-question-sign"
+                                           title="Cada linha de pergunta do elemento, separado por parágrafos.
+                                           Não suporta Tags."></i>   
                                         <strong>Perguntas:</strong>
 
                                         <div class="formRight">
@@ -670,26 +690,30 @@
                                 <div class="clear"></div>
                                 <div class="formRow" >
 
-                                    <i class="icon-question-sign" title="Limitar as possiveis datas de selecção "></i>   
+                                    <i class="icon-question-sign" title="Limitar as possiveis datas de selecção."></i>   
                                     <input type="checkbox" id="limite_datas_toggle"/>     <label class="checkbox inline"  for="limite_datas_toggle"><span></span>Limite de Escolha de Datas</label>
                                     <div id="date_limit_placeholder" style="display: none"></div>
 
                                 </div>
 
                                 <div class="formRow" >
-                                    <i class="icon-question-sign" title="Formatação da data"></i>   
+                                    <i class="icon-question-sign" title="Formatação da data."></i>   
                                     <strong>Formatação</strong>
 
                                     <div class="formRight">
                                         <input type="radio" id="time_format_day" name="time_format" value="2" checked="checked"/><label class="radio inline"  for="time_format_day"><span></span>AAAA-MM-DD</label>
                                     </div>
-
+                                    <div class="formRight">
+                                        <input type="radio" id="time_format_day_inverted" name="time_format" value="3" /><label class="radio inline"  for="time_format_day_inverted"><span></span>DD-MM-AAAA</label>
+                                    </div>
                                     <div class="formRight">
                                         <input type="radio" id="time_format_hour" name="time_format" value="1" />   <label class="radio inline"  for="time_format_hour"><span></span>AAAA-MM-DD HH</label>
                                     </div>
                                     <div class="formRight">
                                         <input type="radio" id="time_format_minute" name="time_format" value="0"/>     <label class="radio inline"  for="time_format_minute"><span></span>AAAA-MM-DD HH:MM</label>
                                     </div>
+
+
 
                                 </div>
 
@@ -708,7 +732,7 @@
 
 
                                     <div class="formRow">
-                                        <i class="icon-question-sign" title="Selecione os calendários que serão apresentados para escolha"></i>   
+                                        <i class="icon-question-sign" title="Selecione os calendários que serão apresentados para escolha."></i>   
                                         <strong>Calendários:</strong>
                                         <div class="formRight">
                                             <select id="scheduler_edit_select" class="chosen-select"  multiple data-placeholder="Selecione um/vários calendários"   ></select>
@@ -719,7 +743,7 @@
                                         </div>
                                     </div>  
                                     <div class="formRow">
-                                        <i class="icon-question-sign" title="Número máximo de marcações por calendário"></i>   
+                                        <i class="icon-question-sign" title="Número máximo de marcações por calendário."></i>   
                                         <strong>Marcações max.</strong>
                                         <div class="formRight">
                                             <select id="scheduler_edit_marcação" >
@@ -734,7 +758,7 @@
 
 
                                     <div class="formRow">
-                                        <i class="icon-question-sign" title="Número me marcações obrigatórias por calendário"></i>   
+                                        <i class="icon-question-sign" title="Número me marcações obrigatórias por calendário."></i>   
                                         <strong>Marcações obrigatórias</strong>
                                         <div class="formRight">
                                             <select id="scheduler_edit_obrigatorio" >   
@@ -796,7 +820,7 @@
                                     </div>
                                 </div>
                                 <div class="formRow">
-                                    <i class="icon-question-sign" title="Escolha o tipo que este elemento representará"></i>   
+                                    <i class="icon-question-sign" title="Escolha o tipo que este elemento representará."></i>   
                                     <strong>Opções:</strong>
 
                                     <div class="formRight">
@@ -847,7 +871,7 @@
 
                                 <!----------------------------------------------REQUIRED------------------------------------------->
                                 <div class="formRow required_class" >
-                                    <i class="icon-question-sign" title="Este elemento tem que ser preenchido obrigatóriamente"></i>   
+                                    <i class="icon-question-sign" title="Este elemento tem que ser preenchido obrigatóriamente."></i>   
                                     <strong>Obrigatório:</strong>
                                     <div class="formRight">
                                         <input  type="checkbox" id="item_required" name="required" value="1">
@@ -860,7 +884,9 @@
                                 </div>
                                 <!-----------------------------HIDDEN-------------------------------------------------------->
                                 <div class="formRow hidden_class" >
-                                    <i class="icon-question-sign" title="O elemento não será visivel. O seu estado pode ser alterado através de regras que o tornem visivel"></i>   
+                                    <i class="icon-question-sign"
+                                       title="O elemento não será visivel.
+                                       O seu estado pode ser alterado através de regras que o tornem visivel."></i>   
                                     <strong>Escondido:</strong>
                                     <div class="formRight">
                                         <input  type="checkbox" id="item_hidden" name="hidden" value="1">
@@ -870,7 +896,10 @@
                                 </div>
                                 <!------------------------------------TAGS---------------------------------------------->
                                 <div class="formRow" id="tag_edit" >
-                                    <i class="icon-question-sign" title="Esta tag representa o valor deste elemento.Por exemplo,se for copiada para o titulo de outro elemento , ao alterar o valor deste elemento, essa alteração será visivel no local onde esta tag se encontrar"></i>   
+                                    <i class="icon-question-sign"
+                                       title="Esta tag representa o valor deste elemento.
+                                       Por exemplo,se for copiada para o titulo de outro elemento , ao alterar o valor deste elemento, essa alteração será visivel no local onde esta tag se encontrar.
+                                       Copie exactamente como mostrado (número da tag e delimitador @)"></i>   
                                     <strong>Tag associativo:</strong>
                                     <div class="formRight">
                                         <label  id="label_tag"></label>
@@ -890,7 +919,9 @@
                                     </div> 
                                 </div>
                                 <div class="formRow" >
-                                    <i class="icon-question-sign" title="Escolha o campo dinamico em cima e depois copie  esta tag para ser substituida pelo respectivo campo durante o preenchimento do script"></i>   
+                                    <i class="icon-question-sign"
+                                       title="Escolha o campo dinamico no selector em cima e depois copie  esta tag para ser substituida pelo respectivo campo durante o preenchimento do script.
+                                       Copie exactamente como mostrado (Letras maiúsculas e delimitador §)"></i>   
                                     <strong>Tag a copiar:</strong>
                                     <div class="formRight">
                                         <label id="tag_label"></strong>
@@ -931,7 +962,7 @@
                                 <form class="form_edit_element">
                                     <!--TRIGGER-->
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="O evento que despoleta a regra"></i>   
+                                        <i class="icon-question-sign" title="O evento que despoleta a regra."></i>   
                                         <strong>Evento:</strong>
                                         <div class="formRight">
                                             <select id="rule_trigger_select" ></select>
@@ -953,7 +984,7 @@
                                     </div>
 
                                     <div class="formRow" >
-                                          <i class="icon-question-sign" title="Ao ser despoletada a regra, escolha o tipo de acção que será executada"></i>   
+                                        <i class="icon-question-sign" title="Ao ser despoletada a regra, escolha o tipo de acção que será executada."></i>   
                                         <strong>Tipo:</strong>
                                         <div class="formRight">
                                             <select id="regra_select">
@@ -994,9 +1025,9 @@
                         </div><!--------------------------FIM DAS REGRAS------------------------------->
                     </div>
                 </div>
+
+
             </div>
-
-
 
         </div> 
 

@@ -342,7 +342,7 @@ function reserved_ip($ip) {
         </div>
     <?php } ?>
 </form>
-<div class="<?= ($user->user_level>5) ? "" : "hide" ?>">
+<div class="<?= ($user->user_level > 5) ? "" : "hide" ?>">
     <h3>Alteração do Feedback</h3>
     <div class="control-group">
         <label class="control-label">Feedback Actual:</label>
@@ -360,24 +360,27 @@ function reserved_ip($ip) {
         <div class="formRow">
             <label class="control-label">Confirmação de feedback</label>
             <div class="formRight">
-                <input type="radio" id="radio_confirm_yes" name="radio_confirm_group"><label for="radio_confirm_yes"><span></span>Validado</label>
+                <input type="radio" id="radio_confirm_yes" name="radio_confirm_group" value="1"><label for="radio_confirm_yes"><span></span>Validado</label>
             </div>
             <div class="formRight">
-                <input type="radio" id="radio_confirm_no" name="radio_confirm_group"><label for="radio_confirm_no"><span></span>Retornar para novo contacto</label>
+                <input type="radio" id="radio_confirm_return" name="radio_confirm_group" value="2"><label for="radio_confirm_return"><span></span>Retornar para novo contacto</label>
+            </div>
+            <div class="formRight">
+                <input type="radio" id="radio_confirm_no" name="radio_confirm_group" value="0"><label for="radio_confirm_no"><span></span>Não validado</label>
             </div>
         </div>
         <div class="clear"></div>
 
-        <div class="formRow">
+        <div class="formRow" id="div_comentarios">
             <label class="control-label">Log de Comentários</label>
 
-            <table class="table table-mod table-bordered">
+            <table class="table table-mod table-bordered" id="comment_log_table">
                 <thead>
                 <th>
                     Comentario
                 </th>
                 <th>
-                    Venda
+                    Estado
                 </th>
                 <th>
                     Agente
@@ -398,7 +401,7 @@ function reserved_ip($ip) {
         <div class="formRow">
             <label class="control-label">Comentários</label>
             <div class="formRight">
-                <textarea id='textarea_comment'></textarea>
+                <textarea id='textarea_comment' placeholder="Escreva aqui um comentario e escolha o tipo de validação e agente, depois clique em 'Guardar'" style="width: 300px;height:150px"></textarea>
             </div>
         </div>
         <div class="clear"></div>
@@ -448,8 +451,8 @@ function reserved_ip($ip) {
                 <td><?= $row["status_name"] ?></td>
                 <td><?= $row["campaign_name"] ?></td>
                 <td><?= $row["list_name"] ?>
-                    <div class="view-button <?= ($user->user_level>5) ? "" : "hide" ?>"><a class="btn btn-mini" target='_new' href='/sips-admin/crm/script_placeholder.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>&isadmin=1&unique_id=<?= $row["uniqueid"]?>'><i class="icon-bookmark"></i>Script</a></div>
-            
+                    <div class="view-button <?= ($user->user_level > 5) ? "" : "hide" ?>"><a class="btn btn-mini" target='_new' href='/sips-admin/crm/script_placeholder.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>&isadmin=1&unique_id=<?= $row["uniqueid"] ?>'><i class="icon-bookmark"></i>Script</a></div>
+
                 </td>
             </tr>
         <?php } ?>
@@ -469,9 +472,9 @@ function reserved_ip($ip) {
                 <td><?= $row["status_name"] ?></td>
                 <td><?= $row["campaign_name"] ?></td>
                 <td><?= $row["list_name"] ?>
-                            
-                 <div class="view-button"><a class="btn btn-mini" target='_new' href='script_placeholder.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>&isadmin=1&unique_id=<?= $row["uniqueid"]?>'><i class="icon-bookmark"></i>Script</a></div>
-            
+
+                    <div class="view-button"><a class="btn btn-mini" target='_new' href='script_placeholder.html?lead_id=<?= $lead_id ?>&campaign_id=<?= $lead_info[campaign_id] ?>&user=<?= $user->id ?>&pass=<?= $user->password ?>&isadmin=1&unique_id=<?= $row["uniqueid"] ?>'><i class="icon-bookmark"></i>Script</a></div>
+
 
 
                 </td>
@@ -479,8 +482,8 @@ function reserved_ip($ip) {
         <?php } ?>
     </tbody>
 </table>
-
-<div class="<?= ($user->user_level>5) ? "" : "hide" ?>">
+<div class="clear"></div>
+<div class="<?= ($user->user_level > 5) ? "" : "hide" ?>">
     <h3>Gravações deste Contacto</h3>
     <table class='table table-mod table-bordered'>
         <thead>
@@ -578,6 +581,10 @@ function reserved_ip($ip) {
                     $("#agente_selector").append("<option value=" + this.user + ">" + this.full_name + "</option>");
             });
         }, "json");
+
+        get_validation();
+
+
     });
 
     var Table_chamadas = $('#chamadas_realizadas').dataTable({
@@ -680,56 +687,79 @@ function reserved_ip($ip) {
 
     $("#confirm_feedback").on("click", function()
     {
-        $("#confirm_feedback_div").show(600);
-        $(this).prop('disabled', true);
-        $("#comment_log_tbody").empty();
-        $.post("_requests.php", {action: "get_info_crm", lead_id: lead_id, status: $("#feedback_list option:selected").val(), campaign_id: Campaign_id},
-        function(data)
-        {
-            $("#radio_confirm_no").prop("checked", true);
-            $.each(data, function() {
-                if (this.has_info)
-                {
-                    $("#comment_log_tbody").append($("<tr>")
-                            .append($("<td>").text(this.comment))
-                            .append($("<td>").text(this.sale ? "Sim" : "Não"))
-                            .append($("<td>").text($("#agente_selector option[value=" + this.agent + "]").text()))
-                            .append($("<td>").text(this.admin))
-                            .append($("<td>").text(this.date))
-                            );
-                    if (this.sale)
-                        $("#radio_confirm_yes").prop("checked", true);
-                    else
-                        $("#radio_confirm_no").prop("checked", true);
 
-                    $("#agente_selector option[value=" + this.agent + "]").prop("selected", true);
-                    $("#textarea_comment").val("");
-                }
-                else
-                {
-                    $("#radio_confirm_no").prop("checked", true);
-                }
-
+        if (!$("#confirm_feedback_div").is(":visible"))
+            get_validation(function() {
+                $("#confirm_feedback_div").show(600);
             });
-
-
-        }, "json");
+        else
+            $("#confirm_feedback_div").hide(400);
     });
 
 
     //insere nova entrada
     $("#confirm_feedback_button").on("click", function()
     {
-        $("#confirm_feedback").prop('disabled', false);
-        $("#confirm_feedback_div").hide(600);
-        if ($("#radio_confirm_no").is(":checked"))
-            $("#feedback_list option[value='SP']").prop("selected", true);
-        $.post("_requests.php", {action: "add_info_crm", lead_id: lead_id, feedback: $("#feedback_list option:selected").val(), sale: $("#radio_confirm_yes").is(':checked'), campaign: Campaign_id, agent: $("#agente_selector option:selected").val(), comment: $("#textarea_comment").val()},
+        if ($("#textarea_comment").val().length)
+            $.post("_requests.php", {action: "add_info_crm", lead_id: lead_id, option: $('input[name="radio_confirm_group"]:checked').val(), campaign: Campaign_id, agent: $("#agente_selector option:selected").val(), comment: $("#textarea_comment").val()},
+            function(data)
+            {
+                get_validation();
+            }, "json");
+    });
+
+
+    function get_validation(callback)
+    {
+        $("#comment_log_tbody").empty();
+        $.post("_requests.php", {action: "get_info_crm", lead_id: lead_id, status: $("#feedback_list option:selected").val(), campaign_id: Campaign_id},
         function(data)
         {
-
+            $("#radio_confirm_no").prop("checked", true);
+            if (Object.size(data))
+            {
+                $.each(data, function() {
+                    $("#comment_log_tbody").append($("<tr>")
+                            .append($("<td>").text(this.comment))
+                            .append($("<td>").text(this.feedback))
+                            .append($("<td>").text($("#agente_selector option[value=" + this.agent + "]").text()))
+                            .append($("<td>").text(this.admin))
+                            .append($("<td>").text(this.date))
+                            );
+                    if (this.sale == "1")
+                        $("#radio_confirm_yes").prop("checked", true);
+                    else if (this.sale == "0")
+                        $("#radio_confirm_no").prop("checked", true);
+                    else
+                        $("#radio_confirm_return").prop("checked", true);
+                    $("#agente_selector option[value=" + this.agent + "]").prop("selected", true);
+                    $("#div_comentarios").show();
+                    $("#textarea_comment").val("");
+                });
+            }
+            else
+            {
+                $("#textarea_comment").val("");
+                $("#div_comentarios").hide();
+                $("#radio_confirm_no").prop("checked", true);
+            }
+            if (typeof callback === "function")
+                callback();
         }, "json");
-    });
+    }
+
+
+    Object.size = function(a)
+    {
+        var count = 0;
+        var i;
+        for (i in a) {
+            if (a.hasOwnProperty(i)) {
+                count++;
+            }
+        }
+        return count;
+    };
 
 
 </script>

@@ -17,6 +17,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
     this.init = function()
     {
+        $.ajaxSetup({cache: false});
         before_all(function() {
             update_script(function() {
                 update_info(function() {
@@ -30,6 +31,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
     function before_all(callback)
     {
+
         if (me.lead_id)
         {
             $.post(file_path + "requests.php", {action: "get_client_info_by_lead_id", lead_id: me.lead_id, user_logged: user_id},
@@ -495,6 +497,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             options.format = 'yyyy-mm-dd';
                             options.minView = 2;
                             break;
+                        case "3":
+                            options.format = 'dd-mm-yyyy';
+                            options.minView = 2;
+                            break;
                         default:
                             options.format = 'yyyy-mm-dd';
                             options.minView = 2;
@@ -535,6 +541,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         options.startDate = info.values_text.data_inicial;
                         options.endDate = info.values_text.data_final;
                     }
+                    console.log(options);
                     script_zone.find("input[name='" + info.tag + "']").datetimepicker(options).keypress(function(e) {
                         e.preventDefault();
                     }).bind("cut copy paste", function(e) {
