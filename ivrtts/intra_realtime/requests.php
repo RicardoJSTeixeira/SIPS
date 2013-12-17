@@ -20,14 +20,18 @@ if ($action == "GetCampaignTotals") {
     $js['naoatendidas'] = 0;
 
     $params = array($sent_campaign);
-    $result0 = $db->rawQuery("SELECT count(*) as count FROM vicidial_log WHERE campaign_id = ?", $params);
+    $stmt = $db->prepare("SELECT count(*) as count FROM vicidial_log WHERE campaign_id = ?");
+    $stmt->execute($params);
+    $result0 = $stmt->fetchAll(PDO::FETCH_BOTH);
 
     $js['feitas'] = $result0[0]['count'];
 
 
     $params = array($sent_campaign);
-    $result1 = $db->rawQuery("SELECT status, count(*) as count FROM vicidial_log WHERE campaign_id = ? GROUP BY status", $params);
 
+    $stmt = $db->prepare("SELECT status, count(*) as count FROM vicidial_log WHERE campaign_id = ? GROUP BY status");
+    $stmt->execute($params);
+    $result1 = $stmt->fetchAll(PDO::FETCH_BOTH);
 
     foreach ($result1 as $key => $value) {
         switch ($value['status']) {
@@ -66,10 +70,16 @@ if ($action == "GetDatabaseTotals") {
     $js['OUTROS'] = 0;
 
     $params0 = array($sent_campaign);
-    $result0 = $db->rawQuery("SELECT list_id FROM vicidial_lists WHERE campaign_id = ?", $params0);
+
+    $stmt = $db->prepare("SELECT list_id FROM vicidial_lists WHERE campaign_id = ?");
+    $stmt->execute($params0);
+    $result0 = $stmt->fetchAll(PDO::FETCH_BOTH);
 
     $params1 = array($result0[0]['list_id']);
-    $result1 = $db->rawQuery("SELECT status FROM vicidial_list WHERE list_id = ?", $params1);
+
+    $stmt = $db->prepare("SELECT status FROM vicidial_list WHERE list_id = ?");
+    $stmt->execute($params1);
+    $result1 = $stmt->fetchAll(PDO::FETCH_BOTH);
 
     foreach ($result1 as $key => $value) {
         switch ($value['status']) {
@@ -129,8 +139,9 @@ if ($action == "GetRealtimeTotals") {
 
     $today = date("Y-m-d");
     $params0 = array($sent_campaign, $today);
-    $result0 = $db->rawQuery("SELECT Hour(call_date) AS Hour, count(status) AS Count, status FROM vicidial_log WHERE campaign_id= ? AND call_date > ? GROUP BY Hour(call_date), status ORDER BY call_date", $params0);
-
+    $stmt = $db->prepare("SELECT Hour(call_date) AS Hour, count(status) AS Count, status FROM vicidial_log WHERE campaign_id= ? AND call_date > ? GROUP BY Hour(call_date), status ORDER BY call_date");
+    $stmt->execute($params0);
+    $result0 = $stmt->fetchAll(PDO::FETCH_BOTH);
 
     foreach ($result0 as $key0 => $value0) {
 
@@ -170,10 +181,5 @@ if ($action == "GetRealtimeTotals") {
     }
 
 
-
-
-
-
     echo json_encode($js);
 }
-?>
