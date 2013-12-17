@@ -14,63 +14,158 @@
 class excelwraper {
 
     protected $phpexcel;
-    protected $currentSheet;
-    protected $currentSheetNr;
     protected $options = array();
-    protected $letter = 'A', $number = 1;
+    protected $letter = 'B', $number = 1;
+    protected $writeExcel;
+    protected $dataseriesLabels,
+            $xAxisTickValues,
+            $dataSeriesValues;
+    protected  $axis=array(
+        "r"=>'PHPExcel_Chart_Legend::POSITION_RIGHT',
+        "l"=>"PHPExcel_Chart_Legend::POSITION_LEFT",
+        "b"=>"PHPExcel_Chart_Legend::POSITION_TOPRIGHT",
+        "t"=>"PHPExcel_Chart_Legend::POSITION_TOPRIGHT",
+        "tr"=>"PHPExcel_Chart_Legend::POSITION_TOPRIGHT"
+    );
 
-    public function __construct($excel, $options) {
-         $this->phpexcel = $excel;
+    public function __construct($excel, $zeroSheet) {
+
+
+        $this->phpexcel = $excel;
+        $this->phpexcel->getActiveSheet()->setTitle($zeroSheet);
     }
 
-    protected function maketable($data) {
+    public function maketable($data) {
 
 
-        $this->fromArray($data, NULL, 'A' . $number);
+        $this->phpexcel->getActiveSheet()->fromArray($data, NULL, 'A' . (string) $this->number);
     }
 
-    protected function battleshiprow() {
+    public function makegraph($title, $yLabel, $charName, $legendPosition) {
+        var_dump(constant($this->axis[$legendPosition]));
+        exit();
 
-        for ($row = $number; $this->getCell('A' . $row)->getValue() != NULL; $row++) {
+        $activeSheet = $this->phpexcel->getActiveSheet();
+
+        $this->dataSeriesValues();
+
+        $this->xAxisTickValues();
+
+        $this->battlesheetcol();
+        //	Build the dataseries
+        $series = new PHPExcel_Chart_DataSeries(
+                PHPExcel_Chart_DataSeries::TYPE_LINECHART, // plotType
+                PHPExcel_Chart_DataSeries::GROUPING_STACKED, // plotGrouping
+                range(0, count($this->dataSeriesValues) - 1), // plotOrder
+                $this->dataseriesLabels, // plotLabel
+                $this->xAxisTickValues, // plotCategory
+                $this->dataSeriesValues        // plotValues
+        );
+
+
+//	Set the series in the plot area
+        $plotarea = new PHPExcel_Chart_PlotArea(NULL, array($series));
+
+        //	Create the chart
+        $chart = new PHPExcel_Chart(
+                $charName, // name
+                new PHPExcel_Chart_Title($title), // title
+                new PHPExcel_Chart_Legend(constant($this->axis[$legendPosition]), NULL, false), // legend
+                $plotarea, // plotArea
+                true, // plotVisibleOnly
+                0, // displayBlanksAs
+                NULL, // xAxisLabel
+                new PHPExcel_Chart_Title($yLabel)  // yAxisLabel
+        );
+
+
+        //	Set the position where the chart should appear in the worksheet
+        $chart->setTopLeftPosition($this->letter . $this->number);
+        $this->battlesheetrow();
+        $chart->setBottomRightPosition('Q' . $this->number);
+        $this->number +=5;
+
+
+        //	Add the chart to the worksheet
+
+        $activeSheet->addChart($chart);
+    }
+
+    protected function dataSeriesValues() {
+        $activeSheet = $this->phpexcel->getActiveSheet();
+
+        for ($col = $this->letter; $activeSheet->getCell($col . '' . ($this->number + 1))->getValue() != NULL; $col++) {
+            for ($row = $this->number; $activeSheet->getCell($col . $row)->getValue() != NULL; $row++) {
+                
+            }
+            $this->dataSeriesValues [] = new PHPExcel_Chart_DataSeriesValues('Number', $this->phpexcel->getActiveSheet()->getTitle() . '!$' . $col . '$' . ($this->number + 1) . ':$' . $col . '$' . $row, NULL);
+        }
+    }
+
+    protected function xAxisTickValues() {
+        $activeSheet = $this->phpexcel->getActiveSheet();
+
+        for ($row = $this->number; $activeSheet->getCell('A' . ($row + 1))->getValue() != NULL; $row++) {
             
         }
-        $number = $row;
+        $this->xAxisTickValues [] = new PHPExcel_Chart_DataSeriesValues('String', $this->phpexcel->getActiveSheet()->getTitle() . '!$A$' . $this->number . ':$A$' . $row, NULL); //dias da semana
     }
 
-    protected function battleshipcol() {
+    protected function battlesheetrow() {
+        $activeSheet = $this->phpexcel->getActiveSheet();
 
-        for ($col = $letter; $this->getCell($col . '' . $number)->getValue() != NULL; $col++) {
+        for ($row = $this->number; $activeSheet->getCell('B' . $row)->getValue() != NULL; $row++) {
             
         }
-        $letter = $col;
+
+        $this->number = $row;
+    }
+
+    protected function battlesheetcol() {
+        $activeSheet = $this->phpexcel->getActiveSheet();
+
+        for ($col = $this->letter; $activeSheet->getCell($col . '' . $this->number)->getValue() != NULL; $col++) {
+
+            $this->dataseriesLabels [] = new PHPExcel_Chart_DataSeriesValues('String', $this->phpexcel->getActiveSheet()->getTitle() . '!$' . $col . '$' . $this->number, NULL);
+        }
+
+        //var_dump($this->dataseriesLabels);
+        // exit();
+
+        $this->letter = $col;
     }
 
     public function addsheet($title) {
-        $this->phpexcel->addSheet(new PHPExcel_Worksheet($this, $title));
-        $this->currentSheet=$this->phpexcel->getActiveSheet();
+
+
+
+        $this->phpexcel->addSheet(new PHPExcel_Worksheet($this->phpexcel, $title));
+
+        $this->phpexcel->setActiveSheetIndexByName($title);
     }
 
     public function selectsheet($nr) {
-        $this->currentSheet=$this->phpexcel->getActiveSheet($nr);
+        $this->phpexcel->setActiveSheetIndex($nr);
     }
-    
-    public function save($name) {
-        $writeExcel = PHPExcel_IOFactory::createWriter($this->phpexcel, 'Excel2007');
-    $writeExcel->setIncludeCharts(TRUE);
-    
-    header('Pragma: public');
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-    header('Content-Type: application/force-download');
-    header('Content-Type: application/octet-stream');
-    header('Content-Type: application/download');
-    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    header("Content-Disposition: attachment;filename=$name.xlsx");
-    header('Content-Transfer-Encoding: binary');
+
+    public function save($name, $includeCharts) {
+
+        $this->writeExcel = PHPExcel_IOFactory::createWriter($this->phpexcel, 'Excel2007');
+        $this->writeExcel->setIncludeCharts($includeCharts);
+        header('Pragma: public');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Content-Type: application/force-download');
+        header('Content-Type: application/octet-stream');
+        header('Content-Type: application/download');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header("Content-Disposition: attachment;filename=$name.xlsx");
+        header('Content-Transfer-Encoding: binary');
     }
-    
+
     public function send() {
-        $writeExcel->save('php://output');
+
+        $this->writeExcel->save('php://output');
     }
 
 }
