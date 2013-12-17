@@ -22,7 +22,7 @@ var API = function() {
                         return domain + port + prefix + data.datatype + data.id;
 
                     } else {
-                        console.log(domain+ port + prefix +data.datatype +'s');
+                       // console.log(domain+ port + prefix +data.datatype +'s');
                         return domain+ port + prefix +data.datatype +'s';
                         
                     }
@@ -74,10 +74,10 @@ var API = function() {
           
             case 'contacts':{
                     if (data.by.filter.length>0){
-                        console.log(domain + port + prefix + count + data.datatype +by+data.by.filter.join(',') );
-                        return domain + port + prefix + count + data.datatype +by+data.by.filter.join(',') ;
+                        //console.log(domain + port + prefix + count + data.datatype +by+data.by.filter.join(',') );
+                        return domain + port + prefix + count + data.datatype +by+data.by.calls.join(',')+'&'+data.by.filter.join(',') ;
                     }else{
-                        console.log( domain + port + prefix + count + data.datatype);
+                        //  ( domain + port + prefix + count + data.datatype);
                         return domain + port + prefix + count + data.datatype;
                     }
                     break;
@@ -85,6 +85,15 @@ var API = function() {
             case 'min.max':{
                     return domain + port + prefix  + 'min,max/calls/start_date';
             } 
+            
+            case 'sum':{
+                    if(data.by.filter.length>0){
+                        return domain + port + prefix + 'sum/calls/length_in_sec'+by+data.by.calls.join(',')+'&'+data.by.filter.join(',');
+                    }else{
+                    return domain + port + prefix +'sum/calls/length_in_sec';
+                }
+                break;
+            }
         }
 
 

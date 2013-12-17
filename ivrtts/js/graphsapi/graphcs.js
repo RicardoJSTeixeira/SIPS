@@ -37,22 +37,14 @@ var graph = function() {
     };
 
     this.bar = function(selector, data) {
-        var arr = new Array();
-        for (var i = 0; i < 5; i++) // i< data.length
-        {
-            var obj = {
-                "x": getRandomInt(1, 222),
-                "y": getRandomInt(1, 222)
-            };
-            arr.push(obj);
-        }
+
         var data1 = {
             "xScale": 'ordinal',
             "yScale": "linear",
             "main": [
                 {
-                    "className": ".teste",
-                    "data": arr
+                    "className": ".bar",
+                    "data": data
                 }
             ]
         };
@@ -62,7 +54,9 @@ var graph = function() {
         tt.className = 'ex-tooltip';
         document.body.appendChild(tt);
         tt.style.zIndex = 1000;
-        var opts = {"mouseover": function(d, i) {
+        var opts = {
+             "tickHintX": 10,
+            "mouseover": function(d, i) {
                 var pos = $(this).offset();
                 $(tt).text((d.x) + ': ' + d.y)
                         .css({top: currentMousePos.y + 5, left: currentMousePos.x - 2})
@@ -117,7 +111,9 @@ var graph = function() {
         tt.className = 'ex-tooltip';
         document.body.appendChild(tt);
         tt.style.zIndex = 1000;
-        var opts = {"mouseover": function(d, i) {
+        var opts = {
+            "tickHintX": 20,
+            "mouseover": function(d, i) {
                 var pos = $(this).offset();
                 $(tt).text((d.x) + ': ' + d.y)
                         .css({top: currentMousePos.y + 5, left: currentMousePos.x - 2})
@@ -137,272 +133,23 @@ var graph = function() {
 
     this.line = function(selector, data) {
 
-        var arr = new Array();
-        var numero = getRandomInt(1, 20);
-        for (var i = 0; i < 5; i++) // i<data.length
-        {
-
-            var obj = {
-                "x": '2013-12-' + numero,
-                "y": getRandomInt(1, 222)
-            };
-            arr.push(obj);
-            numero++;
-        }
+//        var arr = new Array();
+//        var numero = getRandomInt(1, 20);
+//        for (var i = 0; i < 5; i++) // i<data.length
+//        {
+//
+//            var obj = {
+//                "x": '2013-12-' + numero,
+//                "y": getRandomInt(1, 222)
+//            };
+//            arr.push(obj);
+//            numero++;
+//        }
         var data1 = {
             "xScale": 'ordinal',
             "yScale": 'linear',
-            "main": [{
-                    "className": '.chamadas',
-                    "data": [
-                        {
-                            "x": 1,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 2,
-                            "y": getRandomInt(12, 322)
-                        },
-                        {
-                            "x": 3,
-                            "y": getRandomInt(1, 322)
-                        },
-                        {
-                            "x": 4,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 5,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 6,
-                            "y": getRandomInt(200, 322)
-                        },
-                        {
-                            "x": 7,
-                            "y": getRandomInt(102, 322)
-                        },
-                        {
-                            "x": 8,
-                            "y": getRandomInt(102, 322)
-                        },
-                        {
-                            "x": 9,
-                            "y": getRandomInt(102, 322)
-                        },{
-                            "x": 10,
-                            "y": getRandomInt(102, 322)
-                        },
-                        {
-                            "x": 11,
-                            "y": getRandomInt(102, 322)
-                        },
-                        {
-                            "x": 12,
-                            "y": getRandomInt(102, 322)
-                        },{
-                            "x": 13,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 14,
-                            "y": getRandomInt(12, 322)
-                        },
-                        {
-                            "x": 15,
-                            "y": getRandomInt(1, 322)
-                        },
-                        {
-                            "x": 16,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 17,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 18,
-                            "y": getRandomInt(200, 322)
-                        },
-                        {
-                            "x": 19,
-                            "y": getRandomInt(102, 322)
-                        },
-                        {
-                            "x": 20,
-                            "y": getRandomInt(102, 322)
-                        },
-                        {
-                            "x": 21,
-                            "y": getRandomInt(102, 322)
-                        },{
-                            "x": 22,
-                            "y": getRandomInt(102, 322)
-                        },
-                        {
-                            "x": 23,
-                            "y": getRandomInt(102, 322)
-                        },
-                        {
-                            "x": 24,
-                            "y": getRandomInt(102, 322)
-                        },{
-                            "x": 25,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 26,
-                            "y": getRandomInt(12, 322)
-                        },
-                        {
-                            "x": 27,
-                            "y": getRandomInt(1, 322)
-                        },
-                        {
-                            "x": 28,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 29,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 30,
-                            "y": getRandomInt(200, 322)
-                        },
-                        {
-                            "x": 31,
-                            "y": getRandomInt(102, 322)
-                        }
-                    ]
-                },{
-                    "className": '.chamadas1',
-                    "data": [
-                        {
-                            "x": 1,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 2,
-                            "y": getRandomInt(12, 322)
-                        },
-                        {
-                            "x": 3,
-                            "y": getRandomInt(1, 322)
-                        },
-                        {
-                            "x": 4,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 5,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 6,
-                            "y": getRandomInt(200, 322)
-                        },
-                        {
-                            "x": 7,
-                            "y": getRandomInt(102, 322)
-                        },
-                        {
-                            "x": 8,
-                            "y": getRandomInt(102, 322)
-                        },
-                        {
-                            "x": 9,
-                            "y": getRandomInt(102, 322)
-                        },{
-                            "x": 10,
-                            "y": getRandomInt(102, 322)
-                        },
-                        {
-                            "x": 11,
-                            "y": getRandomInt(102, 322)
-                        },
-                        {
-                            "x": 12,
-                            "y": getRandomInt(102, 322)
-                        },{
-                            "x": 13,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 14,
-                            "y": getRandomInt(12, 322)
-                        },
-                        {
-                            "x": 15,
-                            "y": getRandomInt(1, 322)
-                        },
-                        {
-                            "x": 16,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 17,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 18,
-                            "y": getRandomInt(200, 322)
-                        },
-                        {
-                            "x": 19,
-                            "y": getRandomInt(102, 322)
-                        },
-                        {
-                            "x": 20,
-                            "y": getRandomInt(102, 322)
-                        },
-                        {
-                            "x": 21,
-                            "y": getRandomInt(102, 322)
-                        },{
-                            "x": 22,
-                            "y": getRandomInt(102, 322)
-                        },
-                        {
-                            "x": 23,
-                            "y": getRandomInt(102, 322)
-                        },
-                        {
-                            "x": 24,
-                            "y": getRandomInt(102, 322)
-                        },{
-                            "x": 25,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 26,
-                            "y": getRandomInt(12, 322)
-                        },
-                        {
-                            "x": 27,
-                            "y": getRandomInt(1, 322)
-                        },
-                        {
-                            "x": 28,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 29,
-                            "y": getRandomInt(122, 322)
-                        },
-                        {
-                            "x": 30,
-                            "y": getRandomInt(200, 322)
-                        },
-                        {
-                            "x": 31,
-                            "y": getRandomInt(102, 322)
-                        }
-                    ]
-                }
-            ]
-        };
+            "main": data
+         };
 
 
         var tt = document.createElement('div'),

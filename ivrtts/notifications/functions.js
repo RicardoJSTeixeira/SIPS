@@ -179,9 +179,6 @@ function ReadMessagesArray(Msg) {
                 }
             }
 
-
-
-
         });
     }
 
@@ -198,7 +195,7 @@ function getDB(campaign) {
     
     //var url = "http://sipscloud.dyndns.org/oldb/vicidial/call_report_export.php?campaign[]=" + campaign + "&query_date=2013-01-01&end_date=" + date + "&status[]=---ALL---&list[]=---ALL---&run_export=1&SUBMIT=SUBMIT&export_fields=EXTENDED&header_row=YES";
     
-   var url = "http://192.168.1.101/ivrtts/report/reportexcel.php?1" ;
+   var url = "../report/reportexcel.php?1" ;
     
     window.open(url);
     
@@ -238,8 +235,6 @@ $(".click-avatar-image").live("click", function() {
 
             }
         });
-
-
 
     }
     else
