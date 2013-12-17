@@ -790,6 +790,7 @@ function populate_element(tipo, element)
             $("#tableinput_td_textarea").val(string_elements.slice(0, -1));
             break;
         case "datepicker":
+            console.log(element.data());
             $("#datepicker_edit").val($("#" + id + " .label_geral").html());
             $("#datepicker_layout_editor input:radio[name='time_format'][value=" + element.data("data_format") + "]").prop("checked", true);
             break;
@@ -1096,14 +1097,21 @@ function edit_element(opcao, element, data)
                     element.data("data_format", 2);
                     data_format = 2;
                 }
+                else if ($("#time_format_day_inverted").is(':checked'))
+                {
+                    data_format = 3;
+                    element.data("data_format",3);
+                }
                 else if ($("#time_format_hour").is(':checked')) {
                     element.data("data_format", 1);
                     data_format = 1;
                 }
-                else {
+                else if ($("#time_format_minute").is(':checked')) {
                     data_format = 0;
                     element.data("data_format", 0);
                 }
+
+
 
                 if ($("#limite_datas_toggle").is(":checked"))
                     element.data("limit", $("#datepicker_layout_editor").data("data_limit_element").get_time());
