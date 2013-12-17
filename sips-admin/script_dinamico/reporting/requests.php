@@ -169,7 +169,7 @@ switch ($action) {
         $query = "SELECT campaign_name from vicidial_campaigns where campaign_id=:campaign_id";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":campaign_id" => $campaign_id));
-       $row=$stmt->fetch(PDO::FETCH_ASSOC);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $campaign_name = $row["campaign_name"];
 
 
@@ -178,7 +178,7 @@ switch ($action) {
         $temp_lead_data = array();
         foreach ($field_data as $key => $value) {
             if ($value->type == "campo_dinamico") {
-                $temp_lead_data[] = $value->id;
+                $temp_lead_data[] = "a." . $value->id;
                 $data_row[$value->id] = $value->texto;
             } else {
                 $tags[] = $value->id;
@@ -259,9 +259,9 @@ switch ($action) {
 
         foreach ($list_id as $value) {
             if ($only_with_result == "true") {
-                $query = "SELECT a.lead_id id,status_name,vcs.status, a.entry_date, modify_date date ,called_since_last_reset  max_tries, " . implode(",", $temp_lead_data) . " from vicidial_list a left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join script_result sr on a.lead_id=sr.lead_id where list_id =:value $date_filter";
+                $query = "SELECT a.lead_id id,status_name,vcs.status, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries, " . implode(",", $temp_lead_data) . " from vicidial_list a left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join vicidial_users vu on vu.user=a.user left join script_result sr on a.lead_id=sr.lead_id where list_id =:value $date_filter";
             } else {
-                $query = "SELECT a.lead_id id,status_name,vcs.status, a.entry_date, modify_date date ,called_since_last_reset  max_tries, " . implode(",", $temp_lead_data) . " from vicidial_list a left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status where list_id =:value";
+                $query = "SELECT a.lead_id id,status_name,vcs.status, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries, " . implode(",", $temp_lead_data) . " from vicidial_list a left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join vicidial_users vu on vu.user=a.user where list_id =:value";
             }
             $stmt = $db->prepare($query);
             $stmt->execute(array(":value" => $value));
@@ -282,7 +282,8 @@ switch ($action) {
                     $temp_d[$key] = $value;
                 }
                 unset($temp_d["status"]);
-                $temp_d["campaign_name"]=$campaign_name;
+                $temp_d["campaign_name"] = $campaign_name;
+          
                 $final_row[$row['id']] = $temp_d;
             }
         }
