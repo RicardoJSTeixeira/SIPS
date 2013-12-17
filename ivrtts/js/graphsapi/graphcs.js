@@ -37,22 +37,14 @@ var graph = function() {
     };
 
     this.bar = function(selector, data) {
-        var arr = new Array();
-        for (var i = 0; i < 5; i++) // i< data.length
-        {
-            var obj = {
-                "x": getRandomInt(1, 222),
-                "y": getRandomInt(1, 222)
-            };
-            arr.push(obj);
-        }
+
         var data1 = {
             "xScale": 'ordinal',
             "yScale": "linear",
             "main": [
                 {
-                    "className": ".teste",
-                    "data": arr
+                    "className": ".bar",
+                    "data": data
                 }
             ]
         };
@@ -62,7 +54,9 @@ var graph = function() {
         tt.className = 'ex-tooltip';
         document.body.appendChild(tt);
         tt.style.zIndex = 1000;
-        var opts = {"mouseover": function(d, i) {
+        var opts = {
+             "tickHintX": 10,
+            "mouseover": function(d, i) {
                 var pos = $(this).offset();
                 $(tt).text((d.x) + ': ' + d.y)
                         .css({top: currentMousePos.y + 5, left: currentMousePos.x - 2})
@@ -117,7 +111,9 @@ var graph = function() {
         tt.className = 'ex-tooltip';
         document.body.appendChild(tt);
         tt.style.zIndex = 1000;
-        var opts = {"mouseover": function(d, i) {
+        var opts = {
+            "tickHintX": 20,
+            "mouseover": function(d, i) {
                 var pos = $(this).offset();
                 $(tt).text((d.x) + ': ' + d.y)
                         .css({top: currentMousePos.y + 5, left: currentMousePos.x - 2})
