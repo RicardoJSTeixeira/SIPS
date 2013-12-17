@@ -142,17 +142,17 @@ switch ($action) {
         } else {
             $date_filter = "";
         }
-        
+
         if (isset($list_id)) {
             $tmp = $list_id;
             $list_id = array();
             $list_id[] = $tmp;
         } else {
-            
-            if ($only_active_db){
-                $onlyActive=" and active='Y'";
+
+            if ($only_active_db) {
+                $onlyActive = " and active='Y'";
             }
-                    
+
             $query = "SELECT list_id from vicidial_lists where campaign_id=:campaign_id $onlyActive";
             $stmt = $db->prepare($query);
             $stmt->execute(array(":campaign_id" => $campaign_id));
@@ -165,6 +165,9 @@ switch ($action) {
                 exit;
             }
         }
+
+
+
 
 //GET COLUMN SORT
         $data_row = array();
@@ -225,7 +228,7 @@ switch ($action) {
         unset($temp2);
         unset($script_values);
 
-        $data_row = array_merge(array("id" => "ID", "entry_date" => "Data Entrada", "date" => "Data", "name" => "Nome", "full_name" => "Agente", "campaign_name" => "Nome da campanha", "status_name" => "Feedback"), $data_row);
+        $data_row = array_merge(array("id" => "ID", "entry_date" => "Data Entrada", "date" => "Data", "name" => "Nome", "full_name" => "Agente", "campaign_name" => "Nome da campanha", "status_name" => "Feedback", "max_tries" => "Máximo Tentativas"), $data_row);
 
         $titulos = array();
         $titulos = $data_row;
@@ -233,23 +236,57 @@ switch ($action) {
             $data_row[$key] = "";
         }
 
+
+
+
+
+        // MAX TRIES RECYCLE
+        $recycle = array();
+        $query = "select status,attempt_maximum from vicidial_lead_recycle where campaign_id=:campaign_id and active='Y'";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":campaign_id" => $campaign_id));
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $recycle[$row["status"]] = $row["attempt_maximum"];
+        }
+
+
+
+
+
+
+
         foreach ($list_id as $value) {
             if ($only_with_result == "true") {
-                $query = "SELECT a.lead_id id,status_name, a.entry_date, modify_date date, " . implode(",", $temp_lead_data) . " from vicidial_list a left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join script_result sr on a.lead_id=sr.lead_id where list_id =:value $date_filter";
+                $query = "SELECT a.lead_id id,status_name,vcs.status, a.entry_date, modify_date date ,called_since_last_reset  max_tries, " . implode(",", $temp_lead_data) . " from vicidial_list a left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join script_result sr on a.lead_id=sr.lead_id where list_id =:value $date_filter";
             } else {
-                $query = "SELECT a.lead_id id,status_name, a.entry_date, modify_date date, " . implode(",", $temp_lead_data) . " from vicidial_list a left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status where list_id =:value";
+                $query = "SELECT a.lead_id id,status_name,vcs.status, a.entry_date, modify_date date ,called_since_last_reset  max_tries, " . implode(",", $temp_lead_data) . " from vicidial_list a left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status where list_id =:value";
             }
             $stmt = $db->prepare($query);
             $stmt->execute(array(":value" => $value));
+
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $temp_d = $data_row;
+                if (isset($recycle[$row["status"]])) {
+                    if ($temp > $recycle[$row["status"]]) {
+                        $row["max_tries"] = "Sim";
+                    } else {
+                        $row["max_tries"] = "Não";
+                    }
+                } else {
+                    $row["max_tries"] = "";
+                }
                 foreach ($row as $key => $value) {
                     $temp_d[$key] = $value;
                 }
-                    
+                unset($temp_d["status"]);
                 $final_row[$row['id']] = $temp_d;
             }
         }
+
+
+
+
+
 
         unset($lead_tmp);
         unset($temp_d);
@@ -286,7 +323,7 @@ switch ($action) {
                     fputcsv($output, $temp_d, ";", '"');
                     unset($final_row[$lead_id]);
                 }
-                $query1 = "SELECT sr.date, sdm.name, vu.full_name, vc.campaign_name,vcs.status_name "
+                $query1 = "SELECT sr.date, sdm.name, vu.full_name, vc.campaign_name,vcs.status_name,vcs.status "
                         . "FROM `script_result` sr "
                         . "left join script_dinamico_master sdm "
                         . "on sdm.id=sr.id_script "
