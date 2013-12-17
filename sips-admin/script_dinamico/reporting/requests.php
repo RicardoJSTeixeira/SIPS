@@ -266,8 +266,9 @@ switch ($action) {
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $temp_d = $data_row;
+                $temp = (int) str_replace("Y", "", $row["max_tries"]);
                 if (isset($recycle[$row["status"]])) {
-                    if ($temp > $recycle[$row["status"]]) {
+                    if ($temp >= $recycle[$row["status"]]) {
                         $row["max_tries"] = "Sim";
                     } else {
                         $row["max_tries"] = "Não";
