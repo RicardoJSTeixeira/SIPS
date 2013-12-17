@@ -26,6 +26,8 @@ switch ($action) {
         $query = mysql_query($query, $link) or die(mysql_error());
         $query = "UPDATE crm_confirm_feedback_last SET sale=1,agent='$user',comment='$comment',date='" . date('Y-m-d H:i:s') . "',admin='NULL' WHERE lead_id='$lead_id'";
         $query = mysql_query($query, $link) or die(mysql_error());
+          $query = "UPDATE vicidial_list SET validation=NULL WHERE lead_id='$lead_id'";
+        $query = mysql_query($query, $link) or die(mysql_error());
         echo json_encode(1);
         break;
 }
