@@ -10,7 +10,7 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 
-$user = new users();
+$user_class = new user();
 
 function FieldsListBuilder($CampaignID, $AllFields, $FieldID, $FieldDisplayName, $FieldReadOnly, $Flag, $link) {
 
@@ -112,7 +112,7 @@ function RemoveField($CampaignID, $FieldID, $link) {
 
 
     $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','DYNAMIC_FIELD','DELETE','$CampaignID','ADMIN DELETE DYNAMIC FIELD','several queries->campaigns/_campos_dinamicos-request->function RemoveField')";
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','DYNAMIC_FIELD','DELETE','$CampaignID','ADMIN DELETE DYNAMIC FIELD','several queries->campaigns/_campos_dinamicos-request->function RemoveField')";
     mysql_query($query) or die(mysql_error());
 }
 

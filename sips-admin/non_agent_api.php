@@ -55,6 +55,8 @@ $build = '110424-0854';
 $startMS = microtime();
 
 require("dbconnect.php");
+require("../ini/user.php");
+$user_class = new user();
 
 ### If you have globals turned off uncomment these lines
 if (isset($_GET["user"]))						{$user=$_GET["user"];}
@@ -2380,8 +2382,21 @@ if ($function == 'change_dial_level')
 	{ 
 	echo "Não foi possivel alterar o Rácio de Marcação. \n\n - O Rácio de Marcação só aceita números inteiros ou separados por pontos. \n\n - O Rácio de Marcação não pode ser inferior a 1."; exit;
 	}
+    
+    
 $stmt="UPDATE vicidial_campaigns SET auto_dial_level='$new_dial_level' where campaign_id='$campaign_id';";
 $rslt=mysql_query($stmt, $link);
+
+
+
+
+
+        $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CAMPAIGNS','MODIFY','$campaign_id','ADMIN CHANGE RATIO','" . mysql_real_escape_string($stmt) . "')";
+    mysql_query($query) or die(mysql_error());
+    
+
+
 exit;}
 //}
 
