@@ -1,6 +1,6 @@
 <?php
 
-require("../database/db_connect.php");
+require("../../ini/db.php");
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -8,8 +8,6 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 ini_set("display_errors", "1");
-
-
 
 if ($action == "RollbackEverything") {
     $params0 = array($sent_campaign_id);
@@ -29,9 +27,6 @@ if ($action == "RollbackEverything") {
     $stmt = $db->prepare("DELETE FROM vicidial_list WHERE list_id IN (?)");
     $stmt->execute($params1);
 }
-
-
-
 
 if ($action == "GetPreview") {
 
@@ -181,11 +176,6 @@ if ($action == "CreateCampaign") {
         $stmt->execute($params);
     }
 
-
-
-
-
-
     $js['result'][] = $CampaignID;
     $js['result'][] = $ListID;
 
@@ -214,8 +204,6 @@ if ($action == "LoadLeads") {
             $buffer = stripslashes($buffer);
             $buffer = explode("\t", $buffer);
 
-
-
             $ErrorCode = 0;
 
             $PhoneNumber = preg_replace("/[^0-9]/", "", $buffer[0]);
@@ -232,10 +220,6 @@ if ($action == "LoadLeads") {
                 
             }
 
-
-
-
-
             if ($ErrorCode == 0) {
                 $params0 = array($PhoneNumber, utf8_decode($Msg1), utf8_decode($Msg2), $entry_date, 'N', 0, "2008-01-01 00:00:00", $sent_list_id, 'NEW');
                 $stmt = $db->prepare("INSERT INTO vicidial_list (phone_number, comments, email, entry_date, called_since_last_reset, gmt_offset_now, last_local_call_time, list_id, status ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -245,8 +229,6 @@ if ($action == "LoadLeads") {
                     case 1: $js['errortext'][] = "The phone number ($buffer[0]) in line: " . ($LineCounter + 1) . ", contains errors.";
                 }
             }
-
-
 
 
             $LineCounter++;
@@ -266,4 +248,3 @@ if ($action == "LoadLeads") {
 
     echo json_encode($js);
 }
-?>

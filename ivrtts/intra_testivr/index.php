@@ -1,5 +1,4 @@
-
-<? $campaign_id = "testeivr"; ?>
+<?php $campaign_id = "testeivr"; ?>
 
 <div class="row-fluid">
 
@@ -121,7 +120,7 @@
             var texto = $("#texto").val();
             var lingua = $("#lang").val();
 
-            $.post('../dixi/requests.php', {action: 'browser-phone', data: texto, lang: lingua, phone: phone, campaign_id: "<? echo $campaign_id; ?>", velocidade: velocidade}, function(data) {
+            $.post('../dixi/requests.php', {action: 'browser-phone', data: texto, lang: lingua, phone: phone, campaign_id: "<?= $campaign_id; ?>", velocidade: velocidade}, function(data) {
 
 
             });

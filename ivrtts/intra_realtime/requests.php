@@ -1,6 +1,6 @@
 <?php
 
-require("../database/db_connect.php");
+require("../../ini/dbconnect.php");
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -8,9 +8,6 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 ini_set("display_errors", "1");
-
-
-
 
 if ($action == "GetCampaignTotals") {
     $js['feitas'] = 0;

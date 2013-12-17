@@ -1,6 +1,5 @@
 <?php
 
-// database & mysqli
 require("../../ini/db.php");
 
 // post & get
@@ -13,7 +12,7 @@ foreach ($_GET as $key => $value) {
 
 // function filter
 switch ($zero) {
-    case 'SpeedbarLinks' : SpeedbarLinks($link_id,$db);
+    case 'SpeedbarLinks' : SpeedbarLinks($link_id, $db);
         break;
     case 'GetActiveCampaignsDropDownList' :GetActiveCampaignsDropDownList($db);
         break;
@@ -21,12 +20,12 @@ switch ($zero) {
         exit;
 }
 
-function SpeedbarLinks($link_id,$db) {
+function SpeedbarLinks($link_id, $db) {
     $params = array($link_id);
-      $stmt=$db->prepare("SELECT path, label FROM zero.menu_sub_links WHERE id_menu_link = ? AND visible = 1");
-        $stmt->execute($params);
-        $results=$stmt->fetchAll(PDO::FETCH_BOTH);
-        $speedbar_html = "";
+    $stmt = $db->prepare("SELECT path, label FROM zero.menu_sub_links WHERE id_menu_link = ? AND visible = 1");
+    $stmt->execute($params);
+    $results = $stmt->fetchAll(PDO::FETCH_BOTH);
+    $speedbar_html = "";
     for ($i = 0; $i < count($results); $i++) {
         if ($i == 0) {
             $speedbar_active = "act_link";
@@ -39,10 +38,11 @@ function SpeedbarLinks($link_id,$db) {
 }
 
 function GetActiveCampaignsDropDownList($db) {
-     $stmt=$db->prepare("SELECT A.campaign_name, A.campaign_id, A.active FROM vicidial_campaigns A INNER JOIN zero.allowed_campaigns B ON A.campaign_id=B.campaigns ORDER BY A.campaign_name");
-        $stmt->execute();
-        $results=$stmt->fetchAll(PDO::FETCH_BOTH);
-        foreach ($results as $key => $value) {
+    $stmt = $db->prepare("SELECT A.campaign_name, A.campaign_id, A.active FROM vicidial_campaigns A INNER JOIN zero.allowed_campaigns B ON A.campaign_id=B.campaigns ORDER BY A.campaign_name");
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_BOTH);
+    $js=array('camp_list'=>array());
+    foreach ($results as $value) {
         $js['camp_list'][] = $value;
     }
     echo json_encode($js);
