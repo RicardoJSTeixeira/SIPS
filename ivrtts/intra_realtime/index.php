@@ -19,7 +19,7 @@
 <div class="row-fluid">
     <div class="grid">
         <div class="grid-title">
-            <div class="pull-left">Totais %</div>
+            <div class="pull-left">Media da Duração da Chamada em Segundos</div>
             <div class="pull-right"></div>
             <div class="clear"></div>
         </div>
