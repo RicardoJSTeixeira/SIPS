@@ -87,7 +87,7 @@ var dashboard = function() {
 
 
             //Barras total Chamadas Feedback
-            api.get({'datatype': 'contacts', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=W00003']}}, function(data) {
+            api.get({'datatype': 'calls', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=W00003']}}, function(data) {
                 var arr = [],
                         outro = 0;
                 $.each(data, function() {
@@ -118,7 +118,8 @@ var dashboard = function() {
                 });
                 graficos.bar('#Graph3', arr);
             });
-
+            
+             //barra total temporal Chamadas Feedback
             api.get({'datatype': 'sum', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=W00003']}}, function(data) {
                 var arr = [],
                         outr = 0;
