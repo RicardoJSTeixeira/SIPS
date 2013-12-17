@@ -2,7 +2,7 @@
 
 ini_set("display_errors", "1");
 
-require("../database/dbconnect_old.php");
+require("../../ini/dbconnect.php");
 //require("../functions/functions.php");
 
 
@@ -271,4 +271,3 @@ if (isset($_POST['ficheiro_processar'])) {
 
 
 // Guardar ficheiro a utilizar
-?>

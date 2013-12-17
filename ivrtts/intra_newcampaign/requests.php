@@ -1,6 +1,6 @@
 <?php
 
-require("../database/db_connect.php");
+require("../../ini/db.php");
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -9,39 +9,40 @@ foreach ($_GET as $key => $value) {
 }
 ini_set("display_errors", "1");
 
-
-
 if ($action == "RollbackEverything") {
     $params0 = array($sent_campaign_id);
     $params1 = array($sent_list_id);
 
-    $db->rawDelete("DELETE FROM vicidial_campaigns WHERE campaign_id IN (?)", $params0);
-    $db->rawDelete("DELETE FROM vicidial_campaign_stats WHERE campaign_id IN (?)", $params0);
-    $db->rawDelete("DELETE FROM vicidial_campaign_statuses WHERE campaign_id IN (?)", $params0);
-    $db->rawDelete("DELETE FROM vicidial_lead_recycle WHERE campaign_id IN (?)", $params0);
+    $stmt = $db->prepare("DELETE FROM vicidial_campaigns WHERE campaign_id IN (?)");
+    $stmt->execute($params0);
+    $stmt = $db->prepare("DELETE FROM vicidial_campaign_stats WHERE campaign_id IN (?)");
+    $stmt->execute($params0);
+    $stmt = $db->prepare("DELETE FROM vicidial_campaign_statuses WHERE campaign_id IN (?)");
+    $stmt->execute($params0);
+    $stmt = $db->prepare("DELETE FROM vicidial_lead_recycle WHERE campaign_id IN (?)");
+    $stmt->execute($params0);
 
-    $db->rawDelete("DELETE FROM vicidial_lists WHERE list_id IN (?)", $params1);
-    $db->rawDelete("DELETE FROM vicidial_list WHERE list_id IN (?)", $params1);
+    $stmt = $db->prepare("DELETE FROM vicidial_lists WHERE list_id IN (?)");
+    $stmt->execute($params1);
+    $stmt = $db->prepare("DELETE FROM vicidial_list WHERE list_id IN (?)");
+    $stmt->execute($params1);
 }
-
-
-
 
 if ($action == "GetPreview") {
 
 
     $file = fopen("/tmp/$sent_converted_file", "r");
-    
+
     $buffer = rtrim(fgets($file, 4096)); // headers!
-   
+
     $counter = 0;
     while ($counter < 3) {
         $buffer = rtrim(fgets($file, 4096));
-       
+
         $js['buffer'][] = $buffer;
 
         $rows = explode("\t", $buffer);
-        
+
         $js[$counter][] = $rows[0];
         $js[$counter][] = utf8_decode($rows[1]);
         $js[$counter][] = utf8_decode($rows[2]);
@@ -55,24 +56,29 @@ if ($action == "GetPreview") {
 
 
 if ($action == "CreateCampaign") {
-    $result_camps = $db->rawQuery("SELECT count(*) FROM vicidial_campaigns");
+    $stmt = $db->prepare("SELECT count(*) FROM vicidial_campaigns");
+    $stmt->execute();
+    $result_camps = $stmt->fetchAll(PDO::FETCH_BOTH);
     $TempCampaignID = $result_camps[0]['count(*)'];
     while (strlen($TempCampaignID) < 4) {
         $TempCampaignID = "0" . $TempCampaignID;
     }
     $CampaignID = "CT" . $TempCampaignID;
     switch ($lang) {
-        case 'pt-male' : $voice = 'Vicente'; break;
-        case 'pt-female' : $voice = 'Violeta'; break;
+        case 'pt-male' : $voice = 'Vicente';
+            break;
+        case 'pt-female' : $voice = 'Violeta';
+            break;
     }
     // ALLOWED CAMPAIGNS
     $params = array($CampaignID);
-    $db->rawInsert("INSERT INTO	zero.allowed_campaigns (campaigns) VALUES (?)", $params);
+    $stmt = $db->prepare("INSERT INTO	zero.allowed_campaigns (campaigns) VALUES (?)");
+    $stmt->execute($params);
 
 
     // CREATE CAMPAIGNS
     $params1 = array($CampaignID, $sent_campaign_name, 'N', 'DOWN', 'Y', '50', '1', 'longest_wait_time', '24hours', '35', '0134', '0', 'ALLFORCE', 'FULLDATE_CUSTPHONE', '0', 'HANGUP', 'RATIO', '3', 'Y', 'DC PU PDROP ERI NA DROP B NEW -', 'Y', 'ALT_AND_ADDR3', $voice);
-    $db->rawInsert("INSERT INTO vicidial_campaigns
+    $stmt = $db->prepare("INSERT INTO vicidial_campaigns
 	(
 	campaign_id,
 	campaign_name,
@@ -98,26 +104,33 @@ if ($action == "CreateCampaign") {
 	auto_alt_dial,
         campaign_description
 	)
-	VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", $params1);
+	VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+    $stmt->execute($params1);
 
     // CAMPAING STATS
     $params2 = array($CampaignID);
-    $db->rawInsert("INSERT INTO	vicidial_campaign_stats (campaign_id) VALUES (?)", $params2);
+    $stmt = $db->prepare("INSERT INTO vicidial_campaign_stats (campaign_id) VALUES (?)");
+    $stmt->execute($params2);
     $params3 = array($CampaignID, 'demoij');
-    $db->rawInsert("UPDATE vicidial_user_groups SET allowed_campaigns = CONCAT(?, allowed_campaigns) WHERE user_group LIKE ?", $params3);
+    $stmt = $db->prepare("UPDATE vicidial_user_groups SET allowed_campaigns = CONCAT(?, allowed_campaigns) WHERE user_group LIKE ?");
+    $stmt->execute($params3);
 
 
     // CREATE DBS
 
-    $result1 = $db->rawQuery("SELECT count(*) FROM vicidial_lists");
+    $stmt = $db->prepare("SELECT count(*) FROM vicidial_lists");
+    $stmt->execute($params3);
+    $result1 = $stmt->fetchAll(PDO::FETCH_BOTH);
     $ListID = ($result1[0]['count(*)'] + 50000);
 
     $params3 = array($ListID, $sent_campaign_name, $CampaignID, 'Y');
-    $db->rawInsert("INSERT INTO	vicidial_lists (list_id, list_name, campaign_id, active) VALUES (?, ?, ?, ?)", $params3);
+    $stmt = $db->prepare("INSERT INTO vicidial_lists (list_id, list_name, campaign_id, active) VALUES (?, ?, ?, ?)");
+    $stmt->execute($params3);
 
     // RECYCLE
 
-    $params4 = array(array($CampaignID, 'B', 1800, 10, 'Y'),
+    $params4 = array(
+        array($CampaignID, 'B', 1800, 10, 'Y'),
         array($CampaignID, 'DC', 1800, 10, 'Y'),
         array($CampaignID, 'DROP', 120, 10, 'Y'),
         array($CampaignID, 'ERI', 1800, 10, 'Y'),
@@ -127,7 +140,8 @@ if ($action == "CreateCampaign") {
     );
 
     for ($i = 0; $i < count($params4); $i++) {
-        $db->rawInsert("INSERT INTO	vicidial_lead_recycle (campaign_id, status, attempt_delay, attempt_maximum, active) VALUES (?, ?, ?, ?, ?)", $params4[$i]);
+        $stmt = $db->prepare("INSERT INTO vicidial_lead_recycle (campaign_id, status, attempt_delay, attempt_maximum, active) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute($params4[$i]);
     }
 
     // STATS
@@ -141,7 +155,8 @@ if ($action == "CreateCampaign") {
         array('MSG007', 'Solicitou Contacto', 'N', $CampaignID, 'Y', 'N')
     );
     for ($i = 0; $i < count($params5); $i++) {
-        $db->rawInsert("INSERT INTO	vicidial_campaign_statuses (status, status_name, selectable, campaign_id, human_answered, scheduled_callback) VALUES (?, ?, ?, ?, ?, ?)", $params5[$i]);
+        $stmt = $db->prepare("INSERT INTO vicidial_campaign_statuses (status, status_name, selectable, campaign_id, human_answered, scheduled_callback) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute($params5[$i]);
     }
 
 
@@ -153,16 +168,13 @@ if ($action == "CreateCampaign") {
 
     for ($i = 0; $i < 10; $i++) {
         $params = array($result_camps[0]['count(*)'] . "00" . $i, 1, $ServerIP, 787778, "INACTIVE", $CampaignID);
-        $db->rawInsert("INSERT INTO vicidial_remote_agents (user_start, number_of_lines ,server_ip, conf_exten, status, campaign_id) values(?,?,?,?,?,?)", $params);
+        $stmt = $db->prepare("INSERT INTO vicidial_remote_agents (user_start, number_of_lines ,server_ip, conf_exten, status, campaign_id) values(?,?,?,?,?,?)");
+        $stmt->execute($params);
 
         $params = array($result_camps[0]['count(*)'] . "00" . $i, 1234, $CampaignID, "Y");
-        $db->rawInsert("INSERT INTO vicidial_users (user, pass, full_name, active) VALUES (?, ?, ?, ?)", $params);
+        $stmt = $db->prepare("INSERT INTO vicidial_users (user, pass, full_name, active) VALUES (?, ?, ?, ?)");
+        $stmt->execute($params);
     }
-
-
-
-
-
 
     $js['result'][] = $CampaignID;
     $js['result'][] = $ListID;
@@ -192,8 +204,6 @@ if ($action == "LoadLeads") {
             $buffer = stripslashes($buffer);
             $buffer = explode("\t", $buffer);
 
-
-
             $ErrorCode = 0;
 
             $PhoneNumber = preg_replace("/[^0-9]/", "", $buffer[0]);
@@ -210,13 +220,10 @@ if ($action == "LoadLeads") {
                 
             }
 
-
-
-
-
             if ($ErrorCode == 0) {
                 $params0 = array($PhoneNumber, utf8_decode($Msg1), utf8_decode($Msg2), $entry_date, 'N', 0, "2008-01-01 00:00:00", $sent_list_id, 'NEW');
-                $db->rawInsert("INSERT INTO vicidial_list (phone_number, comments, email, entry_date, called_since_last_reset, gmt_offset_now, last_local_call_time, list_id, status ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", $params0);
+                $stmt = $db->prepare("INSERT INTO vicidial_list (phone_number, comments, email, entry_date, called_since_last_reset, gmt_offset_now, last_local_call_time, list_id, status ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute($params0);
             } else {
                 switch ($ErrorCode) {
                     case 1: $js['errortext'][] = "The phone number ($buffer[0]) in line: " . ($LineCounter + 1) . ", contains errors.";
@@ -224,14 +231,13 @@ if ($action == "LoadLeads") {
             }
 
 
-
-
             $LineCounter++;
         }
     }
 
     $params = array($LineCounter, $sent_list_id);
-    $db->rawUpdate("UPDATE vicidial_lists SET list_description = ? WHERE list_id = ?", $params);
+    $stmt = $db->prepare("UPDATE vicidial_lists SET list_description = ? WHERE list_id = ?");
+    $stmt->execute($params);
 
 
     //$buffer = rtrim(fgets($file, 4096));
@@ -242,4 +248,3 @@ if ($action == "LoadLeads") {
 
     echo json_encode($js);
 }
-?>

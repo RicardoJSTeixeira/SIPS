@@ -67,6 +67,7 @@ function GetMessages($User, $Get) {
                 $stmt = $db->prepare("SELECT id_notification, viewed, user_auth_log FROM zero.notifications WHERE id_user = ? AND event_time >= $Today ORDER BY id_notification DESC");
                 $stmt->execute($params);
                 $results = $stmt->fetchAll(PDO::FETCH_BOTH);
+                $js = array('messages' => array());
                 for ($i = 0; $i < count($results); $i++) {
                     foreach ($results[$i] as $key => $value) {
                         if ($value !== 0) {
@@ -94,7 +95,7 @@ function GetMessages($User, $Get) {
                 $stmt = $db->prepare("SELECT A.campaign_name, A.campaign_id, A.active, B.list_description  FROM vicidial_campaigns A INNER JOIN vicidial_lists B ON A.campaign_id=B.campaign_id INNER JOIN zero.allowed_campaigns C ON A.campaign_id=C.campaigns ORDER BY A.campaign_name");
                 $stmt->execute($params);
                 $results = $stmt->fetchAll(PDO::FETCH_BOTH);
-
+                $js = array('messages' => array());
                 foreach ($results as $key => $value) {
                     $js['messages'][] = $value;
                 }

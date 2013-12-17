@@ -1,5 +1,5 @@
 <?php
-require("../database/db_connect.php");
+require("../../ini/dbconnect.php");
 require("../session/functions.php");
 ini_set("display_errors", "1");
 if (isLogged()) {
@@ -282,6 +282,5 @@ if (isLogged()) {
         </body>
     </html>
 <?php } else {
-    header("Location: /error_503.html");
-} ?>
-
+    header('HTTP/1.0 401 Unauthorized');
+}
