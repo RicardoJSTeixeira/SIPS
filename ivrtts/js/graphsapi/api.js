@@ -63,8 +63,8 @@ var API = function() {
             case 'calls' :
                 {
                     if (data.by.calls.length) {
-                        console.log(domain + port + prefix + count + data.datatype + by + data.by.calls.join(',') + '&' + data.by.filter.join(','));
-                        return domain + port + prefix + count + data.datatype + by + data.by.calls.join(',') + '&' + data.by.filter.join(',');
+                        console.log(domain + port + prefix + count + data.datatype + by + data.by.calls.join(',') + '&' + data.by.filter.join('&'));
+                        return domain + port + prefix + count + data.datatype + by + data.by.calls.join(',') + '&' + data.by.filter.join('&');
                     } else {
                         return domain + port + prefix + count + data.datatype;
                     }
@@ -75,7 +75,7 @@ var API = function() {
             case 'contacts':{
                     if (data.by.filter.length>0){
                         //console.log(domain + port + prefix + count + data.datatype +by+data.by.filter.join(',') );
-                        return domain + port + prefix + count + data.datatype +by+data.by.calls.join(',')+'&'+data.by.filter.join(',') ;
+                        return domain + port + prefix + count + data.datatype +by+data.by.calls.join(',')+'&'+data.by.filter.join('&') ;
                     }else{
                         //  ( domain + port + prefix + count + data.datatype);
                         return domain + port + prefix + count + data.datatype;
@@ -88,7 +88,7 @@ var API = function() {
             
             case 'sum':{
                     if(data.by.filter.length>0){
-                        return domain + port + prefix + 'sum/calls/length_in_sec'+by+data.by.calls.join(',')+'&'+data.by.filter.join(',');
+                        return domain + port + prefix + 'sum/calls/length_in_sec'+by+data.by.calls.join(',')+'&'+data.by.filter.join('&');
                     }else{
                     return domain + port + prefix +'sum/calls/length_in_sec';
                 }
