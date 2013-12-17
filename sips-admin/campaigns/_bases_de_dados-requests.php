@@ -10,7 +10,7 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 
-$user = new users();
+$user_class = new user();
 
 function DBListBuilder($CampaignID, $Flag, $link) {
 
@@ -175,7 +175,7 @@ function NewDB($CampaignID, $DBName, $link) {
 
     
         $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','LISTS','ADD','$js[db]','ADMIN CREATE DB','" . mysql_real_escape_string($query1) . "')";
+                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','LISTS','ADD','$js[db]','ADMIN CREATE DB','" . mysql_real_escape_string($query1) . "')";
         mysql_query($query) or die(mysql_error());
     
     echo json_encode($js);
@@ -359,7 +359,7 @@ function DBResetLists($Lists2Reset, $link) {
         mysql_query($query1) or die(mysql_error());
 
         $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','LISTS','RESET','$value','ADMIN RESET LIST','" . mysql_real_escape_string($query1) . "')";
+                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','LISTS','RESET','$value','ADMIN RESET LIST','" . mysql_real_escape_string($query1) . "')";
         mysql_query($query) or die(mysql_error());
     }
 }
