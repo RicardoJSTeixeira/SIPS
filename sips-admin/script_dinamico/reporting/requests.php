@@ -181,10 +181,8 @@ switch ($action) {
                 $data_row["m" . $value->id] = $value->texto;
             }
         }
-        if (!count($tags)) {
-            echo ((isset($list_id)) ? 'Base de dados' : 'Campanha') . ' sem script associado, ou script sem elementos de introdução de dados.';
-            exit;
-        }
+        if (count($tags)) {
+        
         //GET COLUMNS FROM DB
         $query = "SELECT a.tag,a.type,a.texto,a.values_text,a.placeholder "
                 . "FROM `script_dinamico` a "
@@ -227,7 +225,7 @@ switch ($action) {
         unset($temp);
         unset($temp2);
         unset($script_values);
-
+}
         $data_row = array_merge(array("id" => "ID", "entry_date" => "Data Entrada", "date" => "Data", "name" => "Nome", "full_name" => "Agente", "campaign_name" => "Nome da campanha", "status_name" => "Feedback", "max_tries" => "Máximo Tentativas"), $data_row);
 
         $titulos = array();
@@ -291,8 +289,8 @@ switch ($action) {
 
         unset($lead_tmp);
         unset($temp_d);
-
-
+    fputcsv($output, $titulos, ";", '"');
+if (count($tags)) {
         //DADOS DO SCRIPT
         $query = "SELECT sr.lead_id,sr.tag_elemento,sr.valor,sr.param_1,sd.param1,sd.type "
                 . "FROM `script_result` sr FORCE INDEX (lead_id)"
@@ -313,7 +311,7 @@ switch ($action) {
 
         $count_results = 0;
 
-        fputcsv($output, $titulos, ";", '"');
+    
         $lead_id = false;
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -368,8 +366,8 @@ switch ($action) {
 
         fputcsv($output, $temp_d, ";", '"');
         unset($final_row[$lead_id]);
-
-        if ($only_with_result != "true") {
+}
+        if ($only_with_result != "true" or !count($tags)) {
             foreach ($final_row as $value) {
                 fputcsv($output, $value, ";", '"');
             }
