@@ -230,7 +230,7 @@ switch ($action) {
             unset($temp2);
             unset($script_values);
         }
-        $data_row = array_merge(array("id" => "ID", "entry_date" => "Data Entrada", "date" => "Data", "name" => "Nome do Script", "full_name" => "Agente", "campaign_name" => "Nome da campanha","list_name"=>"Nome da Lista", "status_name" => "Feedback", "max_tries" => "Máximo Tentativas"), $data_row);
+        $data_row = array_merge(array("id" => "ID", "entry_date" => "Data Entrada", "date" => "Data", "name" => "Nome do Script", "full_name" => "Agente", "campaign_name" => "Nome da campanha","list_name"=>"Nome da Base Dados", "status_name" => "Feedback", "max_tries" => "Máximo Tentativas"), $data_row);
 
         $titulos = array();
         $titulos = $data_row;
