@@ -244,8 +244,8 @@ if ($action == "LoadLeads") {
     //$buffer = rtrim(fgets($file, 4096));
     //$buffer = explode("\t", $buffer);
     fclose($file);
-    $js['leads'][] = $LineCounter;
-    $js['errors'][] = $Errors;
+    $js['leads'] = $LineCounter;
+    $js['errors'] = $Errors;
 
     echo json_encode($js);
 }
