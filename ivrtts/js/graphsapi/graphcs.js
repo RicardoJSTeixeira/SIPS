@@ -223,7 +223,7 @@ var graph = function() {
                         legend: {
                             show: false
                         },
-                        colors: ["#FA5833", "#2FABE9"]
+                        colors: ["#FA5833", "#2FABE9", "#FABB3D", "#78CD51"]
                     });
 
         }

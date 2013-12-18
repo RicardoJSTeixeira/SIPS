@@ -190,9 +190,9 @@ function getDB(campaign) {
             tempo = ['year'];
         }
 
-        var url = "../report/reportexcel.php?tempo=" + encodeURIComponent(tempo) + "&campaign_id=" + encodeURIComponent(CurrentCampaignID);
+        var url = "../report/reportexcel.php?tempo=" + JSON.stringify(tempo) + "&campaign_id=" + encodeURIComponent(CurrentCampaignID);
 
-        window.open(url);
+        document.location.href=url;
     });
 }
 
