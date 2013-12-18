@@ -15,7 +15,7 @@ foreach ($_GET as $key => $value) {
 
 switch ($action) {
     case 'browser-listen' : { browserListen($data, $user, $lang); break; }
-    case 'browser-phone' : { browserPhone($data, $user, $phone, $link, $lang); break; }
+    case 'browser-phone' : { browserPhone($data, $user, $phone, $link, $lang,$VARDB_server); break; }
 }
 
 
@@ -31,7 +31,7 @@ function browserListen($data, $user, $lang) {
     echo $fileName;
 }
 
-function browserPhone($data, $user, $phone, $link, $lang) {
+function browserPhone($data, $user, $phone, $link, $lang,$VARDB_server) {
     switch ($lang) {
         case 'pt-male' : $voice = 'Vicente'; break;
         case 'pt-female' : $voice = 'Violeta'; break;
