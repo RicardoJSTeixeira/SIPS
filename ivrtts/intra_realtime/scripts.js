@@ -9,10 +9,12 @@ var dashboard = function() {
 
             api.get({'datatype': 'min.max','by':{ 'calls':['database.campaign'],'filter':['database.campaign.oid='+ CurrentCampaignID] }}, function(data) {
                 var total =[], total1=[], tempo;
+                
+                if (data.lenght){
                 data =data[0];
                 max = moment(data.max);
                 min = moment(data.min);
-                
+            
                 minuto = max.diff(min, 'minute');
                 horas = max.diff(min, 'hour');
                 dia = max.diff(min, 'day');
@@ -34,7 +36,7 @@ var dashboard = function() {
                 }else {
                     tempo =['year'];
                 }
-               
+            }
                 
                 $.post('../intra_realtime/total.php', {tempo: tempo, id: CurrentCampaignID}, function(data) { //CurrentCampaignID
                     //console.log(data);
