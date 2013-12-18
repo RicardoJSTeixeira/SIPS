@@ -15,7 +15,7 @@ foreach ($_GET as $key => $value) {
 
 switch ($action) {
     case 'browser-listen' : { browserListen($data, $user, $lang); break; }
-    case 'browser-phone' : { browserPhone($data, $user, $phone, $link, $lang,$VARDB_server); break; }
+    case 'browser-phone' : { browserPhone($data, $user, $phone, $link, $lang,$_SERVER['SERVER_ADDR']); break; }
 }
 
 
