@@ -262,9 +262,6 @@ header('Location: mod_main/index.php');
 
             });
 
-
-
-
             // Login
             var login_flag = <?= $login_flag; ?>;
             $(document).on("click", "#alert-box-force-logout", function() {
@@ -310,9 +307,6 @@ header('Location: mod_main/index.php');
                 }
                 , "json");
             });
-
-
-
 
         </script>  
 
