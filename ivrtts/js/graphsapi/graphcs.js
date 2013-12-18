@@ -171,7 +171,7 @@ var graph = function() {
             "mouseover": function(d, i) {
                 var pos = $(this).offset();
                 ($(this));
-                $(tt).text(d.x+' ' + d.y)
+                $(tt).text(d.x+' : ' + d.y)
                         .css({top: topOffset + pos.top, left: pos.left + leftOffset, zIndex: 1111})
                         .show();
             },
