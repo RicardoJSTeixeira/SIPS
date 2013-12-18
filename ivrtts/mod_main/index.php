@@ -29,7 +29,6 @@ header('Location: ../index.php');
             <link rel="stylesheet" href="../css/colorpicker.css">
             <link rel="stylesheet" href="../css/glisse.css?1.css">
             <link rel="stylesheet" href="../css/jquery.jgrowl.css">
-            <link rel="stylesheet" href="../js/elfinder/css/elfinder.css" media="screen" />
             <link rel="stylesheet" href="../css/jquery.tagsinput.css" />
             <link rel="stylesheet" href="../css/demo_table.css" >
             <link rel="stylesheet" href="../js/export/css/TableTools.css" >
@@ -194,7 +193,6 @@ header('Location: ../index.php');
             <script src="../js/bootstrap/js/bootstrap.js"></script>
             <script src="../js/bootstrap-datepicker.js"></script>
             <script src="../js/bootstrap-colorpicker.js"></script>
-            <script src="../js/google-code-prettify/prettify.js"></script>
 
             <script src="../js/jquery.flot.min.js"></script>
             <script src="../js/jquery.flot.pie.min.js"></script>
