@@ -19,7 +19,7 @@ var dashboard = function() {
                 semana = max.diff(min, 'week');
                 mes = max.diff(min, 'month');
                 ano = max.diff(min, 'year');
-              console.log(horas);
+              //console.log(horas);
                // console.log('dia:' + dia + ' semana:' + semana + ' mes:' + mes + ' ano:' + ano);
                 if(horas<0){
                     tempo=['minute'];
