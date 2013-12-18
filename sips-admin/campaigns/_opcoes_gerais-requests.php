@@ -8,7 +8,7 @@ foreach ($_POST as $key => $value) {
 foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
-$user = new users();
+$user = new user();
 
 function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $Flag, $link) {
     $query = "SELECT user_group, group_name FROM vicidial_user_groups";
@@ -109,7 +109,7 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
         mysql_query($query1, $link) or die(mysql_error());
         
   $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','CAMPAIGNS','MODIFY','$campaign_number','ADMIN CREATE CAMPAIGN','" . mysql_real_escape_string($query1) . "')";
+                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CAMPAIGNS','MODIFY','$campaign_number','ADMIN CREATE CAMPAIGN','" . mysql_real_escape_string($query1) . "')";
         mysql_query($query) or die(mysql_error());
 
         $query = "
@@ -214,7 +214,7 @@ function EditCampaignRatio($CampaignID, $Ratio, $link) {
     mysql_query($query1, $link) or die(mysql_error());
 
     $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE RATIO','" . mysql_real_escape_string($query1) . "')";
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE RATIO','" . mysql_real_escape_string($query1) . "')";
     mysql_query($query) or die(mysql_error());
 }
 
@@ -238,7 +238,7 @@ function EditCallAtrib($CampaignID, $Value, $link) {
 
     $query1 = "UPDATE vicidial_campaigns SET next_agent_call='$campaign_next_call' WHERE campaign_id='$CampaignID'";
     $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE CALL ATRIB','" . mysql_real_escape_string($query1) . "')";
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE CALL ATRIB','" . mysql_real_escape_string($query1) . "')";
 
 
     mysql_query($query) or die(mysql_error());
@@ -309,7 +309,7 @@ function SaveCampaignDialStatus($CampaignID, $EditedDialStatus, $link) {
     mysql_query($query1, $link) or die(mysql_error());
 
     $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE CAMPAIGN DIAL STATUS','" . mysql_real_escape_string($query1) . "')";
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE CAMPAIGN DIAL STATUS','" . mysql_real_escape_string($query1) . "')";
     mysql_query($query) or die(mysql_error());
 }
 
@@ -325,7 +325,7 @@ function EditCampaignAllowedGroups($CampaignID, $EditedUserGroup, $AddOrRemove, 
 
 
     $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE ALLOWED GROUPS','" . mysql_real_escape_string($query1) . "')";
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE ALLOWED GROUPS','" . mysql_real_escape_string($query1) . "')";
     mysql_query($query) or die(mysql_error());
 }
 
@@ -339,7 +339,7 @@ function EditCampaignAllowedGroupsALL($CampaignID, $AllGroups, $link) {
 
 
     $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE ALLOWED GROUPS ALL','" . mysql_real_escape_string($query2) . "')";
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE ALLOWED GROUPS ALL','" . mysql_real_escape_string($query2) . "')";
     mysql_query($query) or die(mysql_error());
 }
 
@@ -353,7 +353,7 @@ function EditCampaignAllowedGroupsNONE($CampaignID, $NoGroups, $link) {
     }
 
     $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE ALLOWED GROUPS NONE','" . mysql_real_escape_string($query2) . "')";
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE ALLOWED GROUPS NONE','" . mysql_real_escape_string($query2) . "')";
     mysql_query($query) or die(mysql_error());
 }
 
@@ -362,7 +362,7 @@ function EditCampaignActive($CampaignID, $CampaignActive, $link) {
     mysql_query($query1, $link) or die(mysql_error());
 
     $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE CAMPAIGN ACTIVE','" . mysql_real_escape_string($query1) . "')";
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE CAMPAIGN ACTIVE','" . mysql_real_escape_string($query1) . "')";
     mysql_query($query) or die(mysql_error());
 }
 
@@ -371,7 +371,7 @@ function EditCampaignType($CampaignID, $CampaignType, $TempRatio, $link) {
     mysql_query($query1, $link) or die(mysql_error());
 
     $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE CAMPAIGN TYPE','" . mysql_real_escape_string($query1) . "')";
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE CAMPAIGN TYPE','" . mysql_real_escape_string($query1) . "')";
     mysql_query($query) or die(mysql_error());
 }
 
@@ -380,7 +380,7 @@ function EditCampaignRecording($CampaignID, $CampaignRecording, $link) {
     mysql_query($query1, $link) or die(mysql_error());
 
     $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE CAMPAIGN RECORDING','" . mysql_real_escape_string($query1) . "')";
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE CAMPAIGN RECORDING','" . mysql_real_escape_string($query1) . "')";
     mysql_query($query) or die(mysql_error());
 }
 
@@ -389,7 +389,7 @@ function EditLeadOrder($CampaignID, $LeadOrder, $link) {
     mysql_query($query1, $link) or die(mysql_error());
 
     $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE LEAD ORDER','" . mysql_real_escape_string($query1) . "')";
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE LEAD ORDER','" . mysql_real_escape_string($query1) . "')";
     mysql_query($query) or die(mysql_error());
 }
 
@@ -398,7 +398,7 @@ function EditCampaignName($CampaignID, $CampaignName, $link) {
     mysql_query($query1, $link) or die(mysql_error());
 
     $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE CAMPAIGN NAME','" . mysql_real_escape_string($query1) . "')";
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE CAMPAIGN NAME','" . mysql_real_escape_string($query1) . "')";
     mysql_query($query) or die(mysql_error());
 }
 
@@ -407,7 +407,7 @@ function EditCampaignDescription($CampaignID, $CampaignDescription, $link) {
     mysql_query($query1, $link) or die(mysql_error());
 
     $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE CAMPAIGN DESCRIPTION','" . mysql_real_escape_string($query1) . "')";
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE CAMPAIGN DESCRIPTION','" . mysql_real_escape_string($query1) . "')";
     mysql_query($query) or die(mysql_error());
 }
 
@@ -416,7 +416,7 @@ function CampaignCallbackType($CampaignID, $Type, $link) {
     mysql_query($query1, $link) or die(mysql_error());
 
     $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE CAMPAIGN CALLBACK TYPE','" . mysql_real_escape_string($query1) . "')";
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE CAMPAIGN CALLBACK TYPE','" . mysql_real_escape_string($query1) . "')";
     mysql_query($query) or die(mysql_error());
 }
 
@@ -478,7 +478,7 @@ function CampaignTransfers($CampaignID, $Checked, $link) {
     
     
      $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN ALLOW AGENTS TRANFERS','" . mysql_real_escape_string($query1) . "')";
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN ALLOW AGENTS TRANFERS','" . mysql_real_escape_string($query1) . "')";
     mysql_query($query) or die(mysql_error());
 }
 

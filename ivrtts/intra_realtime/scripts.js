@@ -8,82 +8,40 @@ var dashboard = function() {
         $('#kant').load('../intra_realtime/index.php', function() {
 
             api.get({'datatype': 'min.max'}, function(data) {
-
+                var total =[], total1=[];
                 max = moment(data.max);
                 min = moment(data.min);
-                console.log('Maximo:' + data.max + ' Min:' + data.min);
+                //console.log('Maximo:' + data.max + ' Min:' + data.min);
 
                 dia = max.diff(min, 'day');
                 semana = max.diff(min, 'week');
                 mes = max.diff(min, 'month');
                 ano = max.diff(min, 'year');
 
-                console.log('dia:' + dia + ' semana:' + semana + ' mes:' + mes + ' ano:' + ano);
-
-                if (dia < 1) {
-                    console.log('Fazendo por horas');
-                    var totalContacts = [];
-                    api.get({'datatype': 'contacts', 'by': {'calls': ['database.campaign', 'hour'], 'filter': ['database.campaign.oid=W00003']}}, function(data) {
-                        for (var i = 0; i < data.length; i++)
-                        {
-                            var obj = {
-                                'x': data._id.hour,
-                                'y': data.count
-                            };
-                            totalContacts.push(obj);
-                        }
-                        console.log(totalContacts);
-                    });
-
-                } else if (dia < 15) {
-                    console.log('Fazemos ao dia');
-                    api.get({'datatype': 'contacts', 'by': {'calls': ['database.campaign', 'day'], 'filter': ['database.campaign.oid=W00003']}}, function(data) {
-                        console.log(data);
-                    });
-                } else if (dia > 15) {
-                    console.log('Fazemos semana'); //Solicitado ao Pedro a criação de timeline por weeks
-                    //Teste
-
-                    api.get({'datatype': 'contacts', 'by': {'calls': ['database.campaign', 'hour'], 'filter': ['database.campaign.oid=W00003']}}, function(data) {
-                        var arr = [];
-
-                        $.each(data, function() {
-                            arr.push({
-                                'x': this._id.hour,
-                                'y': this.count
-                            });
-
-
-                        });
-
-                        var total = [{'className': 'totalCalls', 'data': arr}];
-                        console.log(total);
-                        graficos.line('#Graph1', total);
-
-
-                    });
-
-
-                    //
-                } else if (ano < 1) {
-                    console.log('mesl!');
-                    api.get({'datatype': 'contacts', 'by': {'calls': ['database.campaign', 'month'], 'filter': ['database.campaign.oid=W00003']}}, function(data) {
-                        console.log(data);
-                    });
-                } else if (ano < 6) {
-                    console.log('Fazemos Semestre');
-                    api.get({'datatype': 'contacts', 'by': {'calls': ['database.campaign', 'semester'], 'filter': ['database.campaign.oid=W00003']}}, function(data) {
-                        console.log(data);
-                    });
-                } else if (ano > 6) {
-                    console.log('Fazemos anual ');
-                    api.get({'datatype': 'contacts', 'by': {'calls': ['database.campaign', 'year'], 'filter': ['database.campaign.oid=W00003']}}, function(data) {
-                        console.log(data);
-                    });
-                }
-
-
+                // console.log('dia:' + dia + ' semana:' + semana + ' mes:' + mes + ' ano:' + ano);
+                tempo = 'day';
+                $.post('../intra_realtime/total.php', {temporal: tempo, id: 'W00003'}, function(data) { //CurrentCampaignID
+                    //console.log(data);
+                    total.push({'className':'.total', 'data': data.total},{'className':'.msg', 'data': data.msg}, {'className':'.sys', 'data':data.sys});
+                    //console.log(total);
+                    graficos.line('#Graph1', total);
+                    
+                }, 'json');
+                
+                $.post('../intra_realtime/avg.php', {temporal: tempo, id: 'W00003'}, function(data1) {
+                    console.log(data);
+                    total1.push({'className':'.total', 'data': data1.total},{'className':'.msg', 'data': data1.msg}, {'className':'.sys', 'data':data1.sys});
+                    console.log(total1);
+                    graficos.line('#Graph2', total1);
+                    
+                }, 'json');
+                
+                
             });
+
+
+
+
 
 
             //Barras total Chamadas Feedback
@@ -113,13 +71,13 @@ var dashboard = function() {
 
                 });
                 arr.push({
-                    "x": "Feedbacks de Sistema",
+                    "x": "Outros",
                     "y": outro
                 });
                 graficos.bar('#Graph3', arr);
             });
-            
-             //barra total temporal Chamadas Feedback
+
+            //barra total temporal Chamadas Feedback
             api.get({'datatype': 'sum', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=W00003']}}, function(data) {
                 var arr = [],
                         outr = 0;
@@ -141,20 +99,20 @@ var dashboard = function() {
 
                     arr.push({
                         "x": this._id.status.oid,
-                        "y":  Math.floor(this.sum / (60 * 60))
+                        "y": Math.floor(this.sum / (60 * 60))
                     });
 
                 });
                 arr.push({
-                    "x": "Feedbacks de Sistema",
+                    "x": "Outros",
                     "y": Math.floor(outr / (60 * 60))
                 });
-                console.log('Outros:'+ outr);
+
                 graficos.bar('#Graph4', arr);
             });
 
 
-          
+
 
             api.get({'datatype': 'calls', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=W00003']}}, function(data) {
                 var
@@ -171,7 +129,6 @@ var dashboard = function() {
                         case "MSG006":
                         case "MSG007":
                         case "NEW":
-                        case "S00022":
                             break;
                         default :
                             outros += this.count;
@@ -185,8 +142,8 @@ var dashboard = function() {
                 });
 
                 arr.push({
-                    "label": "Feedbacks de Sistema",
-                    "data": outros / 1000
+                    "label": "Outros",
+                    "data": outros
                 });
 
                 graficos.pie('#piechart', arr);
