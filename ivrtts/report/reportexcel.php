@@ -1,5 +1,9 @@
 <?php
 
+ function transpose($array) {
+    array_unshift($array, null);
+    return call_user_func_array('array_map', $array);
+}
 //ob_start();
 //vai dissecar a váriaveis  que vêm do Post e Get
 foreach ($_POST as $key => $value) {
@@ -11,196 +15,254 @@ foreach ($_GET as $key => $value) {
 
 //PHPExcel/Classes/Writer/Excel2007/Chart.php file ficheiro alterado(linha 109 -119)hardcoded
 //caso a variavel seja 1 entra no if e devolve o excell,se não:exit;
-if ($key === 1) {
-    //inclui o ficheiro PHPExcel
-    require '../../ini/phpexcel/PHPExcel.php';
+//inclui o ficheiro PHPExcel
+require '../../ini/phpexcel/PHPExcel.php';
 
-    require("./excelwraper.php");
+require("./excelwraper.php");
 
-    $campaign_id = 'W00003';
 
+$tempo = json_decode($tempo, true);
+
+
+
+$campaign_id = 'W00003';
+
+
+$dataLinha1_Core = file_get_contents("http://localhost:10000/ccstats/v0/count/calls?by=database.campaign,status," . implode($tempo, ',') . "&database.campaign.oid=$campaign_id");
+$dataLinha1 = json_decode($dataLinha1_Core, true);
+
+$dataLinha2_Core = file_get_contents("http://localhost:10000/ccstats/v0/avg/calls/length_in_sec?by=database.campaign,status," . implode($tempo, ',') . "&database.campaign.oid=$campaign_id");
+$dataLinha2 = json_decode($dataLinha2_Core, true);
+
+$dataTotal_Core = file_get_contents("http://localhost:10000/ccstats/v0/count/calls?by=database.campaign,status&database.campaign.oid=$campaign_id");
+$dataTotal = json_decode($dataTotal_Core, true);
+
+$dataTotalPie_Core = file_get_contents("http://localhost:10000/ccstats/v0/count/calls?by=database.campaign,status&database.campaign.oid=$campaign_id");
+$dataTotalPie = json_decode($dataTotalPie_Core, true);
+
+$dataTotalHora_Core = file_get_contents("http://localhost:10000/ccstats/v0/sum/calls/length_in_sec?by=database.campaign,status&database.campaign.oid=$campaign_id");
+$dataTotalHora = json_decode($dataTotalHora_Core, true);
+
+
+//var_dump($dataTotal);exit;
+//START FILE
+$toExcel = new excelwraper(New PHPExcel(), "report");
+
+//TRANSFORM LINHA1
+$p = array();
+$pOutros = array('Outros');
+$header=array('');
+foreach ($dataLinha1 as $value) {
+    $ref="";
+    foreach ($tempo as $tempinho) {
+        $ref.="-".$value['_id'][$tempinho];
+    }
+    $ref=ltrim($ref, '-');
     
-    
-    $dataTotal = file_get_contents("http://localhost:10000/ccstats/v0/count/calls?by=database.campaign,status&database.campaign.oid=$campaign_id");
-    
-    $dataTotalPie = file_get_contents("http://localhost:10000/ccstats/v0/count/calls?by=database.campaign,status&database.campaign.oid=$campaign_id");
-
-    $dataTotalHora = file_get_contents("http://localhost:10000/ccstats/v0/sum/calls/length_in_sec?by=database.campaign,status&database.campaign.oid=$campaign_id");
-    
-    $datalinha1 =file_get_contents("http://goviragem.dyndns.org:10000/ccstats/v0/count/calls?by=database.campaign,".implode($tempo,',').",status&database.campaign.oid=$id");
-            
-    $datalinha2 =file_get_contents("http://goviragem.dyndns.org:10000/ccstats/v0/avg/calls/length_in_sec?by=database.campaign,status,".implode($tempo,',')."&database.campaign.oid=$id");
-
-    $dataTotal = json_decode($dataTotal, true);
-
-    
-    $dataTotalHora = json_decode($dataTotalHora, true);
-    
-   
-    $toExcel = new excelwraper(New PHPExcel(), "report");
-
-    
-    foreach ($dataTotal as $value) {
-
-        // $p['total']+=$value['count'];//total de chamadas da campanha
-
-       
-        switch ($value['_id']['status']['oid']) {
-            case "MSG001":
-            case "MSG002":
-            case "MSG003":
-            case "MSG004":
-            case "MSG005":
-            case "MSG006":
-            case "MSG007":
-            case "NEW":
-                $p[$value['_id']['status']['designation']] = $value['count'];
-
-                break;
-
-            default :
-                $p['outros']+= $value['count'];
-                break;
-        }
+    if(!isset($header[$ref])){
+        $header[$ref]=$ref;
     }
     
-    
-    if ($p['NEW'] === NULL) {
-
-        $p['NEW'] = 'n\a';
+    switch ($value['_id']['status']['oid']) {
+        case "MSG001":
+        case "MSG002":
+        case "MSG003":
+        case "MSG004":
+        case "MSG005":
+        case "MSG006":
+        case "MSG007":
+        case "NEW":
+            if(!isset($p[$value['_id']['status']['oid']])){
+                $p[$value['_id']['status']['oid']]['title'] = $value['_id']['status']['designation'];
+            }
+            break;
+        default :
+            $pOutros[$ref]+= $value['count'];
+            break;
     }
-    
-       $dataExcel = array(
-        array('', 'total'),
-        array('outros', $p['outros']),
-        array('New', $p['NEW']),
+}
+$dataExcel=array();
+$dataExcel[]=$header;
 
-    );
-    
+foreach ($p as $value) {
+    $dataExcel[]=$value;
+}
 
-    $toExcel->maketable( $dataExcel);
+$dataExcel[]=$pOutros;
 
-    $toExcel->makegraph("title", '', "chart1", "r", 'bars', 'bars', TRUE, TRUE);
-    
-    unset($p);
-    unset($dataExcel);
-    foreach ($dataTotalHora as $value) {
+$toExcel->maketable(transpose($dataExcel));
 
-        // $p['total']+=$value['count'];//total de chamadas da campanha
+$toExcel->makegraph("Totais+", '', "chart0", "r", 'lines', 'lines', TRUE, TRUE);
 
-       
-        switch ($value['_id']['status']['oid']) {
-            case "MSG001":
-            case "MSG002":
-            case "MSG003":
-            case "MSG004":
-            case "MSG005":
-            case "MSG006":
-            case "MSG007":
-            case "NEW":
-                $p[$value['_id']['status']['designation']] = $value['count'];
+//TRANSFORM LINHA2
+$p = array();
+$pOutros = array('Outros');
+$header=array('');
 
-                break;
-
-            default :
-                $p['outros']+= round(($value['sum']/3600));
-                break;
-        }
+foreach ($dataLinha2 as $value) {
+    $ref="";
+    foreach ($tempo as $tempinho) {
+        $ref.="-".$value['_id'][$tempinho];
     }
+    $ref=ltrim($ref, '-');
     
-   
-    
-    if ($p['NEW'] === NULL) {
-
-        $p['NEW'] = 'n\a';
+    if(!isset($header[$ref])){
+        $header[$ref]=$ref;
     }
-    
-       $dataExcel = array(
-        array('', 'total'),
-        array('outros', $p['outros']),
-        array('New', $p['NEW']),
-
-    );
-    
-    
-    $toExcel->maketable($dataExcel);
-
-    $toExcel->makegraph("title", '', "chart2", "r", 'bars', 'bars', TRUE, TRUE);
-    
-    unset($p);
-    unset($dataExcel);
-    
-    foreach ($dataTotalpie as $value) {
-
-        // $p['total']+=$value['count'];//total de chamadas da campanha
-
-       
-        switch ($value['_id']['status']['oid']) {
-            case "MSG001":
-            case "MSG002":
-            case "MSG003":
-            case "MSG004":
-            case "MSG005":
-            case "MSG006":
-            case "MSG007":
-            case "NEW":
-                $p[$value['_id']['status']['designation']] = $value['count'];
-
-                break;
-
-            default :
-                $p['outros']+= $value['count'];
-                break;
-        }
+    switch ($value['_id']['status']['oid']) {
+        case "MSG001":
+        case "MSG002":
+        case "MSG003":
+        case "MSG004":
+        case "MSG005":
+        case "MSG006":
+        case "MSG007":
+        case "NEW":
+            if(!isset($p[$value['_id']['status']['oid']])){
+            $p[$value['_id']['status']['oid']]['title'] = $value['_id']['status']['designation'];
+            }
+            $p[$value['_id']['status']['oid']][$ref] = $value['count'];
+            break;
+        default :
+            $pOutros[$ref]+= round($value['avg']);
+            break;
     }
-    
-   
-    
-    if ($p['NEW'] === NULL) {
+}
+$dataExcel=array();
+$dataExcel[]=$header;
 
-        $p['NEW'] = 'n\a';
+foreach ($p as $value) {
+    $dataExcel[]=$value;
+}
+
+$dataExcel[]=$pOutros;
+
+
+$toExcel->maketable(transpose($dataExcel));
+
+$toExcel->makegraph("Media da Duração da Chamada em Minutos", '', "chart1", "r", 'lines', 'lines', TRUE, TRUE);
+
+
+//TRANSFORM TOTAL
+$p = array();
+$pOutros = array('Outros');
+$header=array('','Total');
+foreach ($dataTotal as $value) {
+    switch ($value['_id']['status']['oid']) {
+        case "MSG001":
+        case "MSG002":
+        case "MSG003":
+        case "MSG004":
+        case "MSG005":
+        case "MSG006":
+        case "MSG007":
+        case "NEW":
+              if(!isset($p[$value['_id']['status']['oid']])){
+            $p[$value['_id']['status']['oid']]['title'] = $value['_id']['status']['designation'];
+            }
+            $p[$value['_id']['status']['oid']][$ref] = $value['count'];
+            break;
+        default :
+            $pOutros[$ref]+= $value['count'];
+            break;
     }
-    
-       $dataExcel = array(
-        array('', 'total'),
-        array('outros', $p['outros']),
-        array('New', $p['NEW']),
+}
+$dataExcel=array();
+$dataExcel[]=$header;
 
-    );
-    
-   
-    
-    $toExcel->maketable($dataExcel);
+foreach ($p as $value) {
+    $dataExcel[]=$value;
+}
 
-    $toExcel->makegraph("title",'',"chart2",'t','pie','pie',TRUE,TRUE);
-    
-    /*
-      $toExcel->makegraph("title",'',"chart0","r",'lines','lines',TRUE,TRUE);
+$dataExcel[]=$pOutros;
 
-      $toExcel->maketable($data2);
+$toExcel->maketable(transpose($dataExcel));
 
-      $toExcel->makegraph("title",'',"chart1","r",'lines','lines',TRUE,TRUE);
-
-      $toExcel->maketable($data);
-
-      $toExcel->makegraph("title",'',"chart2","r",'bars','bars',TRUE,TRUE);
+$toExcel->makegraph("Barras", '', "chart2", "r", 'bars', 'bars', TRUE, TRUE);
 
 
-      $toExcel->maketable($data2);
 
-      $toExcel->makegraph("title",'',"chart3","r",'bars','bars',TRUE,TRUE);
+//TRANFORM total/3600
+$p = array();
+$pOutros = array('Outros');
+$header=array('','Total');
+foreach ($dataTotalHora as $value) {
+    switch ($value['_id']['status']['oid']) {
+        case "MSG001":
+        case "MSG002":
+        case "MSG003":
+        case "MSG004":
+        case "MSG005":
+        case "MSG006":
+        case "MSG007":
+        case "NEW":
+              if(!isset($p[$value['_id']['status']['oid']])){
+            $p[$value['_id']['status']['oid']]['title'] = $value['_id']['status']['designation'];
+            }
+            $p[$value['_id']['status']['oid']][$ref] = $value['count'];
+            break;
+        default :
+            $pOutros[$ref]+= round($value['sum']);
+            break;
+    }
+}
+
+$dataExcel=array();
+$dataExcel[]=$header;
+
+foreach ($p as $value) {
+    $dataExcel[]=$value;
+}
+
+$dataExcel[]=$pOutros;
 
 
-      $toExcel->maketable($data3);
+$toExcel->maketable(transpose($dataExcel));
 
-      $toExcel->makegraph("title",'',"chart4",'t','pie','pie',TRUE,TRUE);
-     */
-    $toExcel->backGroundStyle('FFFFFF');
+$toExcel->makegraph("Barras", '', "chart1", "r", 'bars', 'bars', TRUE, TRUE);
 
-    $toExcel->save('Report', TRUE);
-    //ob_end_clean();
-    $toExcel->send();
-} else {
-    
-}  
 
+//Transform Pie
+
+$p = array();
+$pOutros = array('Outros');
+$header=array('','Total');
+foreach ($dataTotalPie as $value) {
+    switch ($value['_id']['status']['oid']) {
+        case "MSG001":
+        case "MSG002":
+        case "MSG003":
+        case "MSG004":
+        case "MSG005":
+        case "MSG006":
+        case "MSG007":
+        case "NEW":
+            if(!isset($p[$value['_id']['status']['oid']])){
+            $p[$value['_id']['status']['oid']]['title'] = $value['_id']['status']['designation'];
+            }
+            $p[$value['_id']['status']['oid']][$ref] = $value['count'];
+            break;
+        default :
+            $pOutros[$ref]+= $value['count'];
+            break;
+    }
+}
+$dataExcel=array();
+$dataExcel[]=$header;
+
+foreach ($p as $value) {
+    $dataExcel[]=$value;
+}
+
+$dataExcel[]=$pOutros;
+
+
+$toExcel->maketable(transpose($dataExcel));
+
+$toExcel->makegraph("Pie", '', "chart1", "r", 'pie', 'pie', TRUE, TRUE);
+
+$toExcel->backGroundStyle('FFFFFF');
+
+$toExcel->save('Report', TRUE);
+//ob_end_clean();
+$toExcel->send();
