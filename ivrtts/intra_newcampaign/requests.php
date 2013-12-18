@@ -162,9 +162,10 @@ if ($action == "CreateCampaign") {
 
     // REMOTE AGENTS
 
-    $result8 = $db->rawQuery("SELECT server_ip FROM servers");
+    $stmt = $db->prepare("SELECT server_ip FROM servers");
+    $stmt->execute();
+    $result8 = $stmt->fetchAll(PDO::FETCH_BOTH);
     $ServerIP = $result8[0]['server_ip'];
-
 
     for ($i = 0; $i < 10; $i++) {
         $params = array($result_camps[0]['count(*)'] . "00" . $i, 1, $ServerIP, 787778, "INACTIVE", $CampaignID);
