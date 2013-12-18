@@ -4,7 +4,7 @@
     array_unshift($array, null);
     return call_user_func_array('array_map', $array);
 }
-//ob_start();
+ob_start();
 //vai dissecar a váriaveis  que vêm do Post e Get
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
@@ -264,5 +264,5 @@ $toExcel->makegraph("Pie", '', "chart1", "r", 'pie', 'pie', TRUE, TRUE);
 $toExcel->backGroundStyle('FFFFFF');
 
 $toExcel->save('Report', TRUE);
-//ob_end_clean();
+ob_end_clean();
 $toExcel->send();
