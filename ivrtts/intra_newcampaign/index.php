@@ -1,6 +1,8 @@
-
-<!-- <div><button id="purge">PURGE ALL DATA :( </button> </div> -->
-
+<style>
+    .div-wrapper { height:205px; }
+    .div-loader { margin-bottom: 8px; }
+    .link { font-weight:bold; text-decoration:underline; cursor:pointer; }
+</style>
 <div class="row-fluid">
 
     <!-- CAMPAING NAME & DATABASE -->
@@ -118,17 +120,6 @@
     </div>
 </div> 
 
-
-
-
-
-<style>
-    .div-wrapper { height:205px; }
-    .div-loader { margin-bottom: 8px; }
-    .link { font-weight:bold; text-decoration:underline; cursor:pointer; }
-</style>
-
-
 <script>
     var ConvertedFile;
     var CampaignID;
@@ -146,12 +137,12 @@
     $("#button-preview").click(function()
     {
         $("#div-error-msg").empty();
-        if ($("#new-campaign-name").val() == "" || $("#new-campaign-name").val() == null)
+        if ($("#new-campaign-name").val() === "" || $("#new-campaign-name").val() === null)
         {
             makeAlert("#div-error-msg", "Campaign Name is Empty!", "Please choose a Campaign Name.", 2, 1, 0);
         }
         else
-        if ($(".fileupload-preview").html() == "" || $(".fileupload-preview").html() == null)
+        if ($(".fileupload-preview").html() === "" || $(".fileupload-preview").html() === null)
         {
             makeAlert("#div-error-msg", "No File to Upload!", "Please choose a file to Upload.", 2, 1, 0);
         }
@@ -171,14 +162,12 @@
 // BUTTON CANCEL
     $("#button-cancel").click(function()
     {
-        $.ajax({
-            type: "GET",
-            url: "../intra_newcampaign/index.php",
-            success: function(data)
-            {
-                $(".inner-content").html(data);
-            }
-        });
+        $.get("../intra_newcampaign/index.php",
+                function(data)
+                {
+                    $(".inner-content").html(data);
+                },
+                "json");
     });
 
 
@@ -189,103 +178,88 @@
         $("#button-cancel").attr("disabled", "disabled");
         $("#button-create-campaign").attr("disabled", "disabled");
         $("#loader-content").append("<div class='div-loader'><span>Creating the Campaign...</span><span id='campaign-load-icon' class='right'><img src='../images/load/1.gif'></span><div>");
-        $.ajax({
-            type: "POST",
-            url: "../intra_newcampaign/requests.php",
-            dataType: "JSON",
-            data: {action: "CreateCampaign", sent_campaign_name: CampaignName, lang: $("#lang").val()},
-            success: function(data)
+        $.post("../intra_newcampaign/requests.php",
+                {action: "CreateCampaign", sent_campaign_name: CampaignName, lang: $("#lang").val()},
+        function(data)
+        {
+            CampaignID = data.result[0];
+            ListID = data.result[1];
+            $("#campaign-load-icon").html("<span class='label label-success'>Done!</span>");
+            $("#loader-content").append("<div class='div-loader'><span>Loading new leads...</span><span id='leads-load-icon' class='right'><img src='../images/load/1.gif'></span><div>");
+            $.post("../intra_newcampaign/requests.php",
+                    {action: "LoadLeads", sent_converted_file: ConvertedFile, sent_list_id: ListID},
+            function(data)
             {
-                CampaignID = data.result[0];
-                ListID = data.result[1];
-                $("#campaign-load-icon").html("<span class='label label-success'>Done!</span>");
-                $("#loader-content").append("<div class='div-loader'><span>Loading new leads...</span><span id='leads-load-icon' class='right'><img src='../images/load/1.gif'></span><div>");
-                $.ajax({
-                    type: "POST",
-                    url: "../intra_newcampaign/requests.php",
-                    data: {action: "LoadLeads", sent_converted_file: ConvertedFile, sent_list_id: ListID},
-                    dataType: "JSON",
-                    success: function(data)
+                BuildNotifications(User);
+                $("#main-div-preview").hide();
+                if (data.errors === 0)
+                {
+                    $("#leads-load-icon").html("<span class='label label-success'>Done!</span>");
+                    $(".error-log").append("<div>" + data.leads + " leads loaded sucessfully.<div>");
+                    makeAlert("#div-error-msg2", "Campaign sucessfully created!", "", 4, 1, 0);
+                    $("#main-div-error").show();
+                    CurrentCampaignID = CampaignID;
+                    CurrentCampaign = CampaignName;
+                }
+                else
+                {
+                    $("#leads-load-icon").html("<span class='label label-warning'>Done, with some errors.</span>");
+                    makeAlert("#div-error-msg2", "Campaign created, but some errors were found.", "Click <span class='link link3'>here</span> to cancel this campaign and start over.", 2, 1, 0);
+                    $(".error-log").empty();
+                    var ok_leads = (data.leads - data.errors);
+                    $(".error-log").append("<div><b>Total Leads: " + data.leads + "</b></div>").append("<div><b>Loaded: " + ok_leads + "</b></div>").append("<div style='margin-bottom:16px'><b>With Errors: " + data.errors + "</b></div>");
+                    $.each(data.errortext, function(index, value)
                     {
-                        BuildNotifications(User);
-                        $("#main-div-preview").hide();
-                        if (data.errors == 0)
-                        {
-                            $("#leads-load-icon").html("<span class='label label-success'>Done!</span>");
-                            $(".error-log").append("<div>" + data.leads + " leads loaded sucessfully.<div>");
-                            makeAlert("#div-error-msg2", "Campaign sucessfully created!", "", 4, 1, 0);
-                            $("#main-div-error").show();
-                            CurrentCampaignID = CampaignID;
-                            CurrentCampaign = CampaignName;
-                        }
-                        else
-                        {
-                            $("#leads-load-icon").html("<span class='label label-warning'>Done, with some errors.</span>");
-                            makeAlert("#div-error-msg2", "Campaign created, but some errors were found.", "Click <span class='link link3'>here</span> to cancel this campaign and start over.", 2, 1, 0);
-                            $(".error-log").empty();
-                            var ok_leads = (data.leads - data.errors);
-                            $(".error-log").append("<div><b>Total Leads: " + data.leads + "</b></div>").append("<div><b>Loaded: " + ok_leads + "</b></div>").append("<div style='margin-bottom:16px'><b>With Errors: " + data.errors + "</b></div>");
-                            $.each(data.errortext, function(index, value)
-                            {
-                                $(".error-log").append("<div>" + value + "<div>");
-                            })
-                            $("#main-div-error").show();
-                        }
-                    }
-                });
-            }
-        });
+                        $(".error-log").append("<div>" + value + "<div>");
+                    });
+                    $("#main-div-error").show();
+                }
+            },
+                    'json');
+        },
+                'json');
     });
 
 
 // LINKS INSIDE ALERTS
     $(".link1").live("click", function()
     {
-        $.ajax({
-            type: "GET",
-            url: "../intra_newcampaign/index.php",
-            success: function(data)
-            {
-                $(".inner-content").html(data);
+        $.get("../intra_newcampaign/index.php",
+                function(data)
+                {
+                    $(".inner-content").html(data);
 
-            }
-        });
-    })
+                },
+                "json");
+    });
 
-    $(".link2").live("click", function()
+    $(document).on("click", ".link2", function()
     {
-        $.ajax({
-            type: "GET",
-            url: "../intra_realtime/index.php",
-            success: function(data)
-            {
-                $(".inner-content").html(data);
-                $(".sidebar-nav").removeClass("active");
-                $("a[menuid=3]").addClass("active");
-            }
-        });
-    })
+        $.get("../intra_realtime/index.php",
+                function(data)
+                {
+                    $(".inner-content").html(data);
+                    $(".sidebar-nav").removeClass("active");
+                    $("a[menuid=3]").addClass("active");
+                },
+                "json");
+    });
 
-    $(".link3").live("click", function()
+    $(document).on("click", ".link3", function()
     {
-        $.ajax({
-            type: "POST",
-            url: "../intra_newcampaign/requests.php",
-            data: {action: "RollbackEverything", sent_campaign_id: CampaignID, sent_list_id: ListID},
-            success: function(data)
-            {
-                BuildNotifications(User);
-                $.ajax({
-                    type: "GET",
-                    url: "../intra_newcampaign/index.php",
-                    success: function(data)
-                    {
+        $.post("../intra_newcampaign/requests.php",
+                {action: "RollbackEverything", sent_campaign_id: CampaignID, sent_list_id: ListID},
+        function(data)
+        {
+            BuildNotifications(User);
+            $.get("../intra_newcampaign/index.php",
+                    function(data) {
                         $(".inner-content").html(data);
-                    }
-                });
-            }
-        });
-    })
+                    },
+                    "json");
+        },
+                "json");
+    });
 
 // LOADER ENGINE
     function UploadFile()
@@ -293,17 +267,11 @@
         var FileData = new FormData();
         FileData.append("file-to-upload", document.getElementById('file-to-upload').files[0]);
         var xhr = new XMLHttpRequest();
-        xhr.upload.addEventListener("progress", uploadProgress, false);
         xhr.addEventListener("load", uploadComplete, false);
         xhr.addEventListener("error", uploadFailed, false);
         xhr.addEventListener("abort", uploadCanceled, false);
         xhr.open("POST", "../intra_newcampaign/upload.php");
         xhr.send(FileData);
-    }
-
-
-    function uploadProgress(evt)
-    {
     }
 
 
@@ -322,52 +290,39 @@
         ConvertedFile = evt.target.responseText;
         $("#file-load-icon").html("<span class='label label-success'>Done!</span>");
         $("#loader-content").append("<div class='div-loader'><span>Generating the preview...</span><span id='preview-load-icon' class='right'><img src='../images/load/1.gif'></span><div>");
-        $.ajax({
-            type: "POST",
-            url: "../intra_newcampaign/requests.php",
-            data: {action: "GetPreview", sent_converted_file: ConvertedFile},
-            dataType: "JSON",
-            success: function(data)
-            {
-                console.log(data);
-                $.each($("#tr1").children(), function(index, value) {
-                    if (index != 0) {
-                        $(this).html(data[0][index - 1]);
-                    }
-                })
-                $.each($("#tr2").children(), function(index, value) {
-                    if (index != 0) {
-                        $(this).html(data[1][index - 1]);
-                    }
-                })
-                $.each($("#tr3").children(), function(index, value) {
-                    if (index != 0) {
-                        $(this).html(data[2][index - 1]);
-                    }
-                })
-                $("#main-div-preview").show();
-                $("#preview-load-icon").html("<span class='label label-success'>Done!</span>");
-                $("#button-create-campaign").html("<b>Create Campaign</b>");
-            }
-        });
+        $.post("../intra_newcampaign/requests.php",
+                {action: "GetPreview", sent_converted_file: ConvertedFile},
+        function(data)
+        {
+            console.log(data);
+            $.each($("#tr1").children(), function(index, value) {
+                if (index !== 0) {
+                    $(this).html(data[0][index - 1]);
+                }
+            });
+            $.each($("#tr2").children(), function(index, value) {
+                if (index !== 0) {
+                    $(this).html(data[1][index - 1]);
+                }
+            });
+            $.each($("#tr3").children(), function(index, value) {
+                if (index !== 0) {
+                    $(this).html(data[2][index - 1]);
+                }
+            });
+            $("#main-div-preview").show();
+            $("#preview-load-icon").html("<span class='label label-success'>Done!</span>");
+            $("#button-create-campaign").html("<b>Create Campaign</b>");
+        },
+                "json");
         $(".input-campaign").attr("disabled", "disabled").attr("onclick", "return false;");
         $("#button-create-campaign").removeAttr("disabled");
         $("#button-cancel").removeAttr("disabled");
     }
 
-
-
-
-
 // TEMPORARY PURGER
     $("#purge").click(function() {
-        $.ajax({
-            type: "POST",
-            url: "../intra_newcampaign/requests.php",
-            data: {action: "PURGE"},
-            success: function(data) {
-            }
-        });
-    })
+        $.post("../intra_newcampaign/requests.php", {action: "PURGE"});
+    });
 
 </script>

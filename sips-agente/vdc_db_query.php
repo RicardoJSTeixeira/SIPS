@@ -7918,7 +7918,7 @@ if (($ACTION == 'VDADpause') || ($ACTION == 'VDADready')) {
 		}
 		if ($ACTION == 'VDADpause') {
 			if ((eregi("NULL", $dispo_epoch)) or ($dispo_epoch < 1000)) {
-				$stmt = "UPDATE vicidial_agent_log set wait_sec='$wait_sec' where agent_log_id='$agent_log_id';";
+				$stmt = "UPDATE vicidial_agent_log set  pause_sec='$pause_sec',wait_sec='$wait_sec' where agent_log_id='$agent_log_id';";
 				if ($format == 'debug') {echo "\n<!-- $stmt -->";
 				}
 				$rslt = mysql_query($stmt, $link);
@@ -9242,24 +9242,19 @@ if(mysql_num_rows($query) > 0)
 if ($ACTION == 'get_tempo_pausa') {
 
 
-    $smt = "SELECT pause_code_name, max_time from vicidial_pause_codes WHERE campaign_id = '$campaign' AND max_time > 0 and active=1";
+    $smt = "SELECT pause_code,pause_code_name, max_time from vicidial_pause_codes WHERE campaign_id = '$campaign' AND max_time > 0 and active=1";
     $rsl = mysql_query($smt, $link);
 
 
     $js = array();
+    while($curPausa = mysql_fetch_assoc($rsl)){
 
-    for ($i = 0; $i < mysql_num_rows($rsl); $i++) {
-        $curPausa = mysql_fetch_row($rsl);
-        $nowPausa = $curPausa[0];
-        $ze = $curPausa[1];
-
-
-        $query = "SELECT Sum(pause_sec) tempo FROM  vicidial_agent_log a INNER JOIN vicidial_pause_codes b ON a.sub_status = b.pause_code WHERE b.campaign_id = '$campaign' AND pause_code_name = '$nowPausa' AND event_time between CURDATE() AND NOW() AND user = '$user'";
+        $query = "SELECT Sum(pause_sec) tempo FROM  vicidial_agent_log a INNER JOIN vicidial_pause_codes b ON a.sub_status = b.pause_code WHERE b.campaign_id = '$campaign' AND pause_code = '".$curPausa['pause_code']."' AND event_time between CURDATE() AND NOW() AND user = '$user'";
         $result = mysql_query($query, $link);
         $result = mysql_fetch_assoc($result);
         $itv = (int)($result['tempo'] / 60);
-        $max = (int)$ze/60;
-        $js[] = array("pause" => $nowPausa, "time" => ($max - $itv)."m", "exceed" => ($max < $itv));
+        $max = (int)$curPausa['max_time']/60;
+        $js[] = array("pause" => $curPausa['pause_code_name'], "time" => ($max - $itv)."m", "exceed" => ($max < $itv));
     }
         echo json_encode($js);
 }
@@ -9333,5 +9328,3 @@ function hangup_cause_description($code) {
 		return "Unidentified Hangup Cause Code.";
 	}
 }
-
-?>
