@@ -13,15 +13,17 @@ var dashboard = function() {
                 max = moment(data.max);
                 min = moment(data.min);
                 
-
+                minuto = max.diff(min, 'minute');
+                horas = max.diff(min, 'hour');
                 dia = max.diff(min, 'day');
                 semana = max.diff(min, 'week');
                 mes = max.diff(min, 'month');
                 ano = max.diff(min, 'year');
-              
+              console.log(horas);
                // console.log('dia:' + dia + ' semana:' + semana + ' mes:' + mes + ' ano:' + ano);
-                
-                if(dia<0){
+                if(horas<0){
+                    tempo=['minute'];
+                }else if(dia<0){
                     tempo = ['hour'];
                 }else if(mes < 0){
                     tempo =['day'];
