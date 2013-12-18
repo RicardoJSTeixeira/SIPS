@@ -78,13 +78,13 @@ function browserPhone($data, $user, $phone, $link, $lang) {
                 $uniqueid = $epoch_sec.".".$random;
                 
                 // Insert na manager para iniciar a chamada
-                $stmt = "INSERT INTO vicidial_manager values('','','$NOW_TIME','NEW','N','192.168.1.101','','Originate','$MqueryCID','Exten: 0155$phone','Context: default','Channel: Local/0155" . $phone . "@default','Priority: 1','Callerid: $CIDstring','Timeout: 120000','','Variable: var_teste=$path','','');";
+                $stmt = "INSERT INTO vicidial_manager values('','','$NOW_TIME','NEW','N','$VARDB_server','','Originate','$MqueryCID','Exten: 0155$phone','Context: default','Channel: Local/0155" . $phone . "@default','Priority: 1','Callerid: $CIDstring','Timeout: 120000','','Variable: var_teste=$path','','');";
                 $updateQRY = mysql_query($stmt, $link) or die(mysql_error());
                 // Insert na auto calls
-                $stmt = "INSERT INTO vicidial_auto_calls (server_ip,campaign_id,status,lead_id,callerid,phone_code,phone_number,call_time,call_type) values('192.168.1.101','$campaign_id','SENT','$lead_id','$MqueryCID','1','$phone','$NOW_TIME','OUT')";
+                $stmt = "INSERT INTO vicidial_auto_calls (server_ip,campaign_id,status,lead_id,callerid,phone_code,phone_number,call_time,call_type) values('$VARDB_server','$campaign_id','SENT','$lead_id','$MqueryCID','1','$phone','$NOW_TIME','OUT')";
                 $updateQRY = mysql_query($stmt, $link) or die(mysql_error());
                 // Insert na user call log para efeitos de logging
-                $stmt = "INSERT INTO user_call_log (user,call_date,call_type,server_ip,phone_number,number_dialed,lead_id,callerid,group_alias_id) values('adminij','$NOW_TIME','MANUAL_DIALNOW','192.168.1.101','$phone','$phone','$lead_id','','')";
+                $stmt = "INSERT INTO user_call_log (user,call_date,call_type,server_ip,phone_number,number_dialed,lead_id,callerid,group_alias_id) values('adminij','$NOW_TIME','MANUAL_DIALNOW','$VARDB_server','$phone','$phone','$lead_id','','')";
                 $updateQRY = mysql_query($stmt, $link) or die(mysql_error());
                 // Faz update ao vicidial_log    
                 
