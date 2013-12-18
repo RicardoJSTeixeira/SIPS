@@ -1,16 +1,25 @@
 <?php
 
-$tempo = $_POST['temporal'];
-$id = $_POST['id'];
+foreach ($_POST as $key => $value) {
+    ${$key} = $value;
+}
+foreach ($_GET as $key => $value) {
+    ${$key} = $value;
+}
 
-$file = file_get_contents("http://localhost:10000/ccstats/v0/count/calls?by=database.campaign,$tempo,status&database.campaign.oid=$id");
+$file = file_get_contents("http://goviragem.dyndns.org:10000/ccstats/v0/count/calls?by=database.campaign,".implode($tempo,',').",status&database.campaign.oid=$id");
 
 $content = json_decode($file, true);
 
 $p = array('msg' => array(), 'sys' => array(), 'total' => array());
 foreach ($content as $value) {
-
-    $p['total'][$value['_id'][$tempo]]+=$value['count'];
+    $ref="";
+    foreach ($tempo as $tempinho) {
+        $ref.="-".$value['_id'][$tempinho];
+    }
+    $ref=ltrim($ref, '-');
+    
+    $p['total'][$ref]+=$value['count'];
 
     switch (this . _id . status . oid) {
         case "MSG001":
@@ -21,10 +30,10 @@ foreach ($content as $value) {
         case "MSG006":
         case "MSG007":
         case "NEW":
-            $p['msg'][$value['_id'][$tempo]]+=$value['count'];
+            $p['msg'][$ref]+=$value['count'];
             break;
         default :
-            $p['sys'][$value['_id'][$tempo]]+=$value['count'];
+            $p['sys'][$ref]+=$value['count'];
             break;
     }
 }

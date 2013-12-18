@@ -1,6 +1,6 @@
 var API = function() {
     var me = this,
-            domain = 'http://goviragem.dyndns.org',
+            domain = window.location.protocol +'//'+ window.location.host,
             port = ':10000',
             prefix = '/ccstats/v0/',
             count = 'count/',
@@ -83,7 +83,8 @@ var API = function() {
                     break;
                 }
             case 'min.max':{
-                    return domain + port + prefix  + 'min,max/calls/start_date';
+                    //console.log('Max-Min: '+domain + port + prefix  + 'min,max/calls/start_date'+by+data.by.calls.join(',')+'&'+data.by.filter.join('&'));
+                    return domain + port + prefix  + 'min,max/calls/start_date'+by+data.by.calls.join(',')+'&'+data.by.filter.join('&');
             } 
             
             case 'sum':{

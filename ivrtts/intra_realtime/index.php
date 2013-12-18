@@ -9,8 +9,8 @@
                 <figure class="demo" id="Graph1" style="height: 300px;"></figure>
             </div>
             <div class="grid span2">
-                <label class="label label-info" >Total Chamadas</label><label class="label label-success">Total Úteis</label>
-                <label class="label label-warning">Total Chamadas</label><label class="label label-danger" style="background-color:#C6080D;">Total Úteis</label>
+                <label class="label label-info" >Total Chamadas</label><label class="label label-success">Total Mensagens</label>
+                <label class="label label-warning">Total Feedbacks de Sistema</label>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -19,7 +19,7 @@
 <div class="row-fluid">
     <div class="grid">
         <div class="grid-title">
-            <div class="pull-left">Media da Duração da Chamada em Segundos</div>
+            <div class="pull-left">Media da Duração da Chamada em Minutos</div>
             <div class="pull-right"></div>
             <div class="clear"></div>
         </div>
@@ -28,8 +28,8 @@
                 <figure class="demo" id="Graph2" style="height: 300px;"></figure>
             </div>
             <div class="grid span2">
-                <label class="label label-info">Total Chamadas</label><label class="label label-success">Total Úteis</label>
-                <label class="label label-warning">Total Chamadas</label><label class="label label-danger" style="background-color:#C6080D;">Total Úteis</label>
+                <label class="label label-info">Média Duração Chamada</label><label class="label label-success">Média Duração Mensagem</label>
+                <label class="label label-warning">Média Dur. de Feedbacks de Sistema</label>
             </div>
             <div class="clearfix"></div>
         </div>

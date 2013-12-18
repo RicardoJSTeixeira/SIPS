@@ -166,7 +166,7 @@ $(function() {
         }
         PopulateDropDownAndCurrentCampaign(true); 
 
-        setTimeout(arguments.callee, 10000);
+        setTimeout(arguments.callee, 60000);
 
 
     })();

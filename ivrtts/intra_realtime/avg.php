@@ -1,16 +1,25 @@
 <?php
 
-$tempo = $_POST['temporal'];
-$id = $_POST['id'];
+foreach ($_POST as $key => $value) {
+    ${$key} = $value;
+}
+foreach ($_GET as $key => $value) {
+    ${$key} = $value;
+}
 
-$file = file_get_contents("http://localhost:10000/ccstats/v0/avg/calls/length_in_sec?by=database.campaign,status,$tempo&database.campaign.oid=$id");
+$file = file_get_contents("http://goviragem.dyndns.org:10000/ccstats/v0/avg/calls/length_in_sec?by=database.campaign,status,".implode($tempo,',')."&database.campaign.oid=$id");
 
 $content = json_decode($file, true);
 
 $p = array('msg' => array(), 'sys' => array(), 'total' => array());
 foreach ($content as $value) {
-
-    $p['total'][$value['_id'][$tempo]]+=$value['avg'];
+    $ref="";
+    foreach ($tempo as $tempinho) {
+        $ref.="-".$value['_id'][$tempinho];
+    }
+    $ref=ltrim($ref, '-');
+    
+    $p['total'][$ref]+=intval($value['avg'])/60;
 
     switch (this . _id . status . oid) {
         case "MSG001":
@@ -21,10 +30,10 @@ foreach ($content as $value) {
         case "MSG006":
         case "MSG007":
         case "NEW":
-            $p['msg'][$value['_id'][$tempo]]+=$value['avg'];
+            $p['msg'][$ref]+= intval($value['avg'])/60;
             break;
         default :
-            $p['sys'][$value['_id'][$tempo]]+=$value['avg'];
+            $p['sys'][$ref]+= intval($value['avg'])/60;
             break;
     }
 }

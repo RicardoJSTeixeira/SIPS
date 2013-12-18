@@ -3,24 +3,40 @@ var api = new API(),
 
 var dashboard = function() {
     var me = this;
-
+    
     this.graph = function() {
         $('#kant').load('../intra_realtime/index.php', function() {
 
-            api.get({'datatype': 'min.max'}, function(data) {
-                var total =[], total1=[];
+            api.get({'datatype': 'min.max','by':{ 'calls':['database.campaign'],'filter':['database.campaign.oid='+ CurrentCampaignID] }}, function(data) {
+                var total =[], total1=[], tempo;
+                data =data[0];
                 max = moment(data.max);
                 min = moment(data.min);
-                //console.log('Maximo:' + data.max + ' Min:' + data.min);
-
+                
+                minuto = max.diff(min, 'minute');
+                horas = max.diff(min, 'hour');
                 dia = max.diff(min, 'day');
                 semana = max.diff(min, 'week');
                 mes = max.diff(min, 'month');
                 ano = max.diff(min, 'year');
-
-                // console.log('dia:' + dia + ' semana:' + semana + ' mes:' + mes + ' ano:' + ano);
-                tempo = 'day';
-                $.post('../intra_realtime/total.php', {temporal: tempo, id: 'W00003'}, function(data) { //CurrentCampaignID
+              //console.log(horas);
+               // console.log('dia:' + dia + ' semana:' + semana + ' mes:' + mes + ' ano:' + ano);
+                if(horas<0){
+                    tempo=['minute'];
+                }else if(dia<0){
+                    tempo = ['hour'];
+                }else if(mes < 0){
+                    tempo =['day'];
+                }else if(ano<2){
+                    tempo=['year','month'];
+                }else if(ano<6){
+                    tempo=['year','trimester'];
+                }else {
+                    tempo =['year'];
+                }
+               
+                
+                $.post('../intra_realtime/total.php', {tempo: tempo, id: CurrentCampaignID}, function(data) { //CurrentCampaignID
                     //console.log(data);
                     total.push({'className':'.total', 'data': data.total},{'className':'.msg', 'data': data.msg}, {'className':'.sys', 'data':data.sys});
                     //console.log(total);
@@ -28,10 +44,10 @@ var dashboard = function() {
                     
                 }, 'json');
                 
-                $.post('../intra_realtime/avg.php', {temporal: tempo, id: 'W00003'}, function(data1) {
-                    console.log(data);
+                $.post('../intra_realtime/avg.php', {tempo: tempo, id: CurrentCampaignID}, function(data1) {
+                    //console.log(data);
                     total1.push({'className':'.total', 'data': data1.total},{'className':'.msg', 'data': data1.msg}, {'className':'.sys', 'data':data1.sys});
-                    console.log(total1);
+                    //console.log(total1);
                     graficos.line('#Graph2', total1);
                     
                 }, 'json');
@@ -45,7 +61,7 @@ var dashboard = function() {
 
 
             //Barras total Chamadas Feedback
-            api.get({'datatype': 'calls', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=W00003']}}, function(data) {
+            api.get({'datatype': 'calls', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid='+CurrentCampaignID]}}, function(data) {
                 var arr = [],
                         outro = 0;
                 $.each(data, function() {
@@ -78,7 +94,7 @@ var dashboard = function() {
             });
 
             //barra total temporal Chamadas Feedback
-            api.get({'datatype': 'sum', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=W00003']}}, function(data) {
+            api.get({'datatype': 'sum', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid='+ CurrentCampaignID]}}, function(data) {
                 var arr = [],
                         outr = 0;
                 $.each(data, function() {
@@ -114,7 +130,7 @@ var dashboard = function() {
 
 
 
-            api.get({'datatype': 'calls', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=W00003']}}, function(data) {
+            api.get({'datatype': 'calls', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid='+ CurrentCampaignID]}}, function(data) {
                 var
                         arr = [],
                         outros = 0;
