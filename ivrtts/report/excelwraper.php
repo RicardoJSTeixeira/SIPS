@@ -11,6 +11,7 @@
  *
  * @author pedro.pedroso
  */
+
 class excelwraper {
 
     protected $phpexcel;
@@ -253,7 +254,7 @@ class excelwraper {
     }
 
     public function send() {
-
+        
         $this->writeExcel->save('php://output');
     }
 
