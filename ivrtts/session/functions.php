@@ -12,9 +12,8 @@ function SessionStart() {
     session_regenerate_id(true); // regenerated the session, delete the old one. 
 }
 
-function isLogged() {
+function isLogged($db) {
     SessionStart();
-    global $db;
     if (isset($_SESSION['id_user'], $_SESSION['login_string'])) {
         $id_user = $_SESSION['id_user'];
         $login_string = $_SESSION['login_string'];
