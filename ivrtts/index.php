@@ -4,6 +4,9 @@ require("session/functions.php");
 SessionStart();
 $login_flag = (count($_SESSION)) ? 1 : 0;
 
+if(isLogged($db)){
+header('Location: mod_main/index.php');
+}
 //print_r($_SESSION);
 ?>
 <!DOCTYPE html>

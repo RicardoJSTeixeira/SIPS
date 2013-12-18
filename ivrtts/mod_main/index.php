@@ -2,7 +2,9 @@
 require("../../ini/db.php");
 require("../session/functions.php");
 ini_set("display_errors", "1");
-if (isLogged($db)) {
+if(!isLogged($db)){
+header('Location: ../index.php');
+}
     ?>
 
     <!DOCTYPE html>
@@ -19,7 +21,6 @@ if (isLogged($db)) {
 
             <!-- ADDED -->
             <link rel="stylesheet" href="style.css" />
-            <link rel="stylesheet" href="../js/jqplot/jquery.jqplot.css" />
 
             <link rel="stylesheet" href="../css/jquery-ui-1.8.16.custom.css" media="screen"  />
             <link rel="stylesheet" href="../css/fullcalendar.css" media="screen"  />
@@ -41,16 +42,6 @@ if (isLogged($db)) {
 
             <link rel="stylesheet" href="../css/icon/font-awesome.css">    <link rel="stylesheet" href="../css/bootstrap-responsive.css">
 
-            <link rel="alternate stylesheet" type="text/css" media="screen" title="green-theme" href="../css/color/green.css" />
-            <link rel="alternate stylesheet" type="text/css" media="screen" title="red-theme" href="../css/color/red.css" />
-            <link rel="alternate stylesheet" type="text/css" media="screen" title="black-theme" href="../css/color/black.css" />
-            <link rel="alternate stylesheet" type="text/css" media="screen" title="orange-theme" href="../css/color/orange.css" />
-            <link rel="alternate stylesheet" type="text/css" media="screen" title="purple-theme" href="../css/color/purple.css" />
-            <link rel="alternate stylesheet" type="text/css" media="screen" title="silver-theme" href="../css/color/silver.css" />
-            <link rel="alternate stylesheet" type="text/css" media="screen" title="metro-theme" href="../css/color/metro.css" />
-
-
-            <link rel="shortcut icon" href="../images/icons/favicon.ico">
 
         </head>
 
@@ -269,7 +260,3 @@ if (isLogged($db)) {
             </style>
         </body>
     </html>
-    <?php
-} else {
-    header('HTTP/1.0 401 Unauthorized');
-}
