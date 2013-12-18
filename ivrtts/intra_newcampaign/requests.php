@@ -119,7 +119,7 @@ if ($action == "CreateCampaign") {
     // CREATE DBS
 
     $stmt = $db->prepare("SELECT count(*) FROM vicidial_lists");
-    $stmt->execute($params3);
+    $stmt->execute();
     $result1 = $stmt->fetchAll(PDO::FETCH_BOTH);
     $ListID = ($result1[0]['count(*)'] + 50000);
 
