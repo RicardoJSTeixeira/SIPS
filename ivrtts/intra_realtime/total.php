@@ -15,13 +15,13 @@ $p = array('msg' => array(), 'sys' => array(), 'total' => array());
 foreach ($content as $value) {
     $ref="";
     foreach ($tempo as $tempinho) {
-        $ref.="-".$value['_id'][$tempinho];
+        $ref.=str_pad($value['_id'][$tempinho], 2, '0', STR_PAD_LEFT);
     }
-    $ref=ltrim($ref, '-');
-    
+    //$ref=ltrim($ref, '-');
     $p['total'][$ref]+=$value['count'];
 
-    switch (this . _id . status . oid) {
+    //switch (this . _id . status . oid) {
+    switch ($value[_id][status][oid]) {
         case "MSG001":
         case "MSG002":
         case "MSG003":

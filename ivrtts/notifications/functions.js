@@ -181,12 +181,12 @@ function getDB(campaign) {
                     mes = max.diff(min, 'month');
                     ano = max.diff(min, 'year');
                     //console.log(horas);
-                   console.log('horas:'+hora+'dia:' + dia + ' semana:' + semana + ' mes:' + mes + ' ano:' + ano);
+                   //console.log('horas:'+hora+'dia:' + dia + ' semana:' + semana + ' mes:' + mes + ' ano:' + ano);
                    
-                    if (hora < 1) {
+                   if (hora < 1) {
                         tempo = ['hour','minute'];
                     } else if (  dia < 1) {
-                        tempo = ['hour'];
+                        tempo = ['day','hour'];
                     } else if (mes < 1) {
                         tempo = ['day'];
                     } else if (ano < 2) {
@@ -196,8 +196,8 @@ function getDB(campaign) {
                     } else {
                         tempo = ['year'];
                     }
-
-        var url = "../report/reportexcel.php?tempo=" + JSON.stringify(tempo) + "&campaign_id=" + encodeURIComponent(CurrentCampaignID);
+                    
+        var url = "../report/reportexcel.php?tempo=" + JSON.stringify(tempo) + "&campaign_id=" + encodeURIComponent(campaign);
 
         document.location.href=url;
     }
