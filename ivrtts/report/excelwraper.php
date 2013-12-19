@@ -50,12 +50,13 @@ class excelwraper {
     protected function tableBoardBolt() {
         $activeSheet = $this->phpexcel->getActiveSheet();
 
-        for ($col = $this->letter; $activeSheet->getCell(chr($col) . '' . ($this->number + 1))->getValue() != NULL; $col++) {
+        for ($col = 65; $activeSheet->getCell(chr($col) . '' . ($this->number ))->getValue() != NULL; $col++) {
             for ($row = $this->number; $activeSheet->getCell(chr($col) . $row)->getValue() != NULL; $row++) {
                 
             }
             
             $activeSheet->getStyle('A' . $this->number . ':'.chr($col) . ($row-1) )->applyFromArray($this->board);
+            
             $activeSheet->getStyle('A' . ($this->number + 1). ':A' . ($row - 1))->getFont()->setBold(true);
         }
         
