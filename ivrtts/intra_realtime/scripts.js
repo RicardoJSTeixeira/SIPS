@@ -17,29 +17,42 @@ var dashboard = function() {
                     min = moment(data1.min);
                     //console.log(max);
                     //console.log(min);
-                   // minuto = max.diff(min, 'minute');
+                    minuto = max.diff(min, 'minute');
                     hora= max.diff(min, 'hour');
                     dia = max.diff(min, 'day');
                     semana = max.diff(min, 'week');
                     mes = max.diff(min, 'month');
                     ano = max.diff(min, 'year');
                     //console.log(horas);
-                   console.log('horas:'+hora+'dia:' + dia + ' semana:' + semana + ' mes:' + mes + ' ano:' + ano);
+                   //console.log('minutos:'+minuto+' horas:'+hora+' dia:' + dia + ' semana:' + semana + ' mes:' + mes + ' ano:' + ano);
                    
                     if (hora < 1) {
                         tempo = ['hour','minute'];
+                        $('#intervaloTotais').html('Hora Minutos [ HHMM ]');
+                        $('#intervaloAVG').html('Hora Minutos [ HHMM ]');
                     } else if (  dia < 1) {
-                        tempo = ['hour'];
+                        tempo = ['day','hour'];
+                        $('#intervaloTotais').html('Dia Hora [ DDHH ]');
+                        $('#intervaloAVG').html('Dia Hora [ DDHH ]');
                     } else if (mes < 1) {
-                        tempo = ['day'];
+                        tempo = ['month','day'];
+                        $('#intervaloTotais').html('Mes Dia [ MMDD ]');
+                        $('#intervaloAVG').html('Mes Dia [ MMDD ]');
                     } else if (ano < 2) {
                         tempo = ['year', 'month'];
+                        $('#intervaloTotais').html('Ano Mes [ AAMM ]');
+                        $('#intervaloAVG').html('Ano Mes [ AAMM ]');
                     } else if (ano < 6) {
                         tempo = ['year', 'trimester'];
+                        $('#intervaloTotais').html('Ano Trimestre [ AATT ]');
+                        $('#intervaloAVG').html('Ano Trimestre [ AATT ]');
                     } else {
                         tempo = ['year'];
+                         $('#intervaloTotais').html('Ano Trimestre [ AA ]');
+                        $('#intervaloAVG').html('Ano Trimestre [ AA ]');
                     }
-                    //tempo=['hour','minute'];
+                    //console.log(tempo);
+                    //tempo=['day'];
                     $.post('../intra_realtime/total.php', {tempo: tempo, id: CurrentCampaignID}, function(data) { //CurrentCampaignID
                         //console.log(data);
                         total.push({'className': '.total', 'data': data.total}, {'className': '.msg', 'data': data.msg}, {'className': '.sys', 'data': data.sys});

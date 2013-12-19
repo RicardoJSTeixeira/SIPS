@@ -9,9 +9,16 @@
             <div class="grid span10">
                 <figure class="demo" id="Graph1" style="height: 300px;"></figure>
             </div>
-            <div class="grid span2">
-                <label class="label label-info" >Total Chamadas</label><label class="label label-success">Total Mensagens</label>
+            <div class="span2">
+            <div class="grid">
+                <label class="label label-info" >Total Chamadas</label>
+                <label class="label label-success">Total Mensagens</label>
                 <label class="label label-warning">Total Feedbacks de Sistema</label>
+            </div>
+            <div class="grid">
+                <div class="grid-title"><div class="pull-left">Intervalo</div></div>
+                <label class="label" id="intervaloTotais">  </label>
+            </div>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -28,9 +35,16 @@
             <div class="grid span10">
                 <figure class="demo" id="Graph2" style="height: 300px;"></figure>
             </div>
-            <div class="grid span2">
-                <label class="label label-info">Média Duração Chamada</label><label class="label label-success">Média Duração Mensagem</label>
-                <label class="label label-warning">Média Dur. Feedbacks de Sistema</label>
+             <div class="span2">
+            <div class="grid">
+                <label class="label label-info" >Média Duração Chamada</label>
+                <label class="label label-success">Média Duração Mensagem</label>
+                <label class="label label-warning">Média Dur. Feedback de Sistema</label>
+            </div>
+            <div class="grid">
+                <div class="grid-title"><div class="pull-left">Intervalo</div></div>
+                <label class="label" id="intervaloAVG">  </label>
+            </div>
             </div>
             <div class="clearfix"></div>
         </div>
