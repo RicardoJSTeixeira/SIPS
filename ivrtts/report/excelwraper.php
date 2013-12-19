@@ -16,8 +16,8 @@ class excelwraper {
         'tr' => 'PHPExcel_Chart_Legend::POSITION_TOPRIGHT'
     );
     protected $graphType = array(
-        'lines' => 'PHPExcel_Chart_DataSeries::TYPE_LINECHART',
         'bars' => 'PHPExcel_Chart_DataSeries::TYPE_BARCHART',
+        'lines' => 'PHPExcel_Chart_DataSeries::TYPE_LINECHART',      
         'pie' => 'PHPExcel_Chart_DataSeries::TYPE_PIECHART'
     );
     protected $graphGrouping = array(
@@ -51,14 +51,25 @@ class excelwraper {
         $activeSheet = $this->phpexcel->getActiveSheet();
 
         for ($col = 65; $activeSheet->getCell(chr($col) . '' . ($this->number ))->getValue() != NULL; $col++) {
+           
             for ($row = $this->number; $activeSheet->getCell(chr($col) . $row)->getValue() != NULL; $row++) {
+                
+                
+                $activeSheet->getStyle('A' . $this->number . ':'.chr($col) . ($row) )->applyFromArray($this->board);
                 
             }
             
-            $activeSheet->getStyle('A' . $this->number . ':'.chr($col) . ($row-1) )->applyFromArray($this->board);
+           
             
             $activeSheet->getStyle('A' . ($this->number + 1). ':A' . ($row - 1))->getFont()->setBold(true);
+            
+            
         }
+        
+  
+         
+        
+       //var_dump('A' . $this->number . ':'.chr($col-1) . ($row-1) );
         
         $activeSheet->getStyle(chr($this->letter) . $this->number . ':'.chr($col) . $this->number)->getFont()->setBold(true);
         
@@ -70,14 +81,14 @@ class excelwraper {
         $activeSheet = $this->phpexcel->getActiveSheet();
 
 
-        for ($col = 65; $activeSheet->getCell(chr($col) . '' . ($this->number + 1))->getValue() != NULL; $col++) {
+        for ($col = 66; $activeSheet->getCell(chr($col) . '' . ($this->number + 1))->getValue() != NULL; $col++) {
 
             $activeSheet->getColumnDimension(chr($col))->setAutoSize(true);
         }
     }
 
     public function makegraph($title, $yLabel, $charName, $legendPosition, $graphType, $graphGrouping,$ShowVal,$ShowPerc) {
-
+        
 
         $activeSheet = $this->phpexcel->getActiveSheet();
 
@@ -122,9 +133,10 @@ class excelwraper {
         $chart->setBottomRightPosition('X' . ($this->number+8));
      
         $this->number +=18;
-    
+        
         //	Add the chart to the worksheet
         $activeSheet->addChart($chart);
+       
 
       
     }
