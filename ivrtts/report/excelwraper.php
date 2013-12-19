@@ -1,17 +1,4 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of excelwraper
- *
- * @author pedro.pedroso
- */
-
 class excelwraper {
 
     protected $phpexcel;
@@ -54,7 +41,7 @@ class excelwraper {
     public function maketable($data) {
 
 
-        $this->phpexcel->getActiveSheet()->fromArray($data, NULL, 'A' . (string) $this->number);
+        $this->phpexcel->getActiveSheet()->fromArray($data, '0', 'A' . (string) $this->number);
 
         $this->autoSizeCol();
         $this->tableBoardBolt();
@@ -63,19 +50,19 @@ class excelwraper {
     protected function tableBoardBolt() {
         $activeSheet = $this->phpexcel->getActiveSheet();
 
-        for ($col = $this->letter; $activeSheet->getCell(chr($col) . '' . ($this->number + 1))->getValue() != NULL; $col++) {
+        for ($col = 65; $activeSheet->getCell(chr($col) . '' . ($this->number ))->getValue() != NULL; $col++) {
             for ($row = $this->number; $activeSheet->getCell(chr($col) . $row)->getValue() != NULL; $row++) {
                 
             }
             
             $activeSheet->getStyle('A' . $this->number . ':'.chr($col) . ($row-1) )->applyFromArray($this->board);
+            
             $activeSheet->getStyle('A' . ($this->number + 1). ':A' . ($row - 1))->getFont()->setBold(true);
         }
         
         $activeSheet->getStyle(chr($this->letter) . $this->number . ':'.chr($col) . $this->number)->getFont()->setBold(true);
         
     }
-    
     
 
     protected function autoSizeCol() {
@@ -142,8 +129,7 @@ class excelwraper {
       
     }
     
-  
-
+ 
     protected function dataseriesLabels() {
 
         $activeSheet = $this->phpexcel->getActiveSheet();
@@ -188,11 +174,9 @@ class excelwraper {
         $activeSheet = $this->phpexcel->getActiveSheet();
 
         for ($row = $this->number; $activeSheet->getCell('B' . $row)->getValue() != NULL; $row++) {
-            
-          
+                    
         }
-        
-        
+              
         $this->number = $row;
     }
 
@@ -253,9 +237,7 @@ class excelwraper {
         header('Content-Transfer-Encoding: binary');
     }
 
-    public function send() {
-        
+    public function send() {        
         $this->writeExcel->save('php://output');
     }
-
 }
