@@ -204,8 +204,6 @@ header('Location: ../index.php');
             <script src="../js/autoresize.jquery.min.js"></script>
             <script src="../js/jquery.tagsinput.min.js"></script>
             <script src="../js/jquery.autotab.js"></script>
-            <script src="../js/elfinder/js/elfinder.min.js" charset="utf-8"></script>
-            <script src="../js/tiny_mce/tiny_mce.js"></script>
             <script src="../js/validation/languages/jquery.validationEngine-en.js" charset="utf-8"></script>
             <script src="../js/validation/jquery.validationEngine.js" charset="utf-8"></script>
             <script src="../js/jquery.jgrowl_minimized.js"></script>

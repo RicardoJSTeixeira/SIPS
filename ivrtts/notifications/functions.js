@@ -166,33 +166,41 @@ function ReadMessagesArray(Msg) {
 
 function getDB(campaign) {
 
-    api.get({'datatype': 'min.max', 'by': {'calls': ['database.campaign'], 'filter': ['database.campaign.oid=W00003'/*CurrentCampaignID*/]}}, function(data) {
-        var tempo;
-        data = data[0];
-        max = moment(data.max);
-        min = moment(data.min);
-
-
-        dia = max.diff(min, 'day');
-        semana = max.diff(min, 'week');
-        mes = max.diff(min, 'month');
-        ano = max.diff(min, 'year');
-
-        if (dia < 0) {
-            tempo = ['hour'];
-        } else if (mes < 0) {
-            tempo = ['day'];
-        } else if (ano < 2) {
-            tempo = ['year', 'month'];
-        } else if (ano < 6) {
-            tempo = ['year', 'trimester'];
-        } else {
-            tempo = ['year'];
-        }
+    api.get({'datatype': 'min.max', 'by': {'calls': ['database.campaign'], 'filter': ['database.campaign.oid='+campaign]}}, function(data) {
+         if (data.length) {
+                  var tempo;  
+                    data1 = data[0];
+                    max = moment(data1.max);
+                    min = moment(data1.min);
+                    //console.log(max);
+                    //console.log(min);
+                   // minuto = max.diff(min, 'minute');
+                    hora= max.diff(min, 'hour');
+                    dia = max.diff(min, 'day');
+                    semana = max.diff(min, 'week');
+                    mes = max.diff(min, 'month');
+                    ano = max.diff(min, 'year');
+                    //console.log(horas);
+                   console.log('horas:'+hora+'dia:' + dia + ' semana:' + semana + ' mes:' + mes + ' ano:' + ano);
+                   
+                    if (hora < 1) {
+                        tempo = ['hour','minute'];
+                    } else if (  dia < 1) {
+                        tempo = ['hour'];
+                    } else if (mes < 1) {
+                        tempo = ['day'];
+                    } else if (ano < 2) {
+                        tempo = ['year', 'month'];
+                    } else if (ano < 6) {
+                        tempo = ['year', 'trimester'];
+                    } else {
+                        tempo = ['year'];
+                    }
 
         var url = "../report/reportexcel.php?tempo=" + JSON.stringify(tempo) + "&campaign_id=" + encodeURIComponent(CurrentCampaignID);
 
         document.location.href=url;
+    }
     });
 }
 
