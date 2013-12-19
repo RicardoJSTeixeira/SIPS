@@ -197,7 +197,7 @@ function getDB(campaign) {
                         tempo = ['year'];
                     }
 
-        var url = "../report/reportexcel.php?tempo=" + JSON.stringify(tempo) + "&campaign_id=" + encodeURIComponent(CurrentCampaignID);
+        var url = "../report/reportexcel.php?tempo=" + JSON.stringify(tempo) + "&campaign_id=" + encodeURIComponent(campaign);
 
         document.location.href=url;
     }
