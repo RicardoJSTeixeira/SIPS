@@ -1,5 +1,6 @@
 <?php
 ob_start();
+ date_default_timezone_set('Europe/London');
  function transpose($array) {
     array_unshift($array, null);
     return call_user_func_array('array_map', $array);
@@ -20,6 +21,7 @@ require '../../ini/phpexcel/PHPExcel.php';
 
 require("./excelwraper.php");
 
+
 $tempo = json_decode($tempo, true);
 
 $dataLinha1_Core = file_get_contents("http://localhost:10000/ccstats/v0/count/calls?by=database.campaign,status," . implode($tempo, ',') . "&database.campaign.oid=$campaign_id");
@@ -38,9 +40,10 @@ $dataTotalHora_Core = file_get_contents("http://localhost:10000/ccstats/v0/sum/c
 $dataTotalHora = json_decode($dataTotalHora_Core, true);
 
 
+var_dump($dataLinha1);exit;
 
 //START FILE
-$toExcel = new excelwraper(New PHPExcel(), "report");
+$toExcel = new excelwraper(New PHPExcel(),"report");
 
 //TRANSFORM LINHA1
 $p = array();
@@ -87,7 +90,7 @@ $dataExcel[]=$pOutros;
 
 $toExcel->maketable(transpose($dataExcel));
 
-$toExcel->makegraph("Totais+", '', "chart0", "r", 'lines', 'lines', TRUE, TRUE);
+//$toExcel->makegraph('Totais+', '', 'chart0', 'r', 'lines', 'lines', TRUE, TRUE);
 
 //TRANSFORM LINHA2
 $p = array();
@@ -135,8 +138,7 @@ $dataExcel[]=$pOutros;
 
 $toExcel->maketable(transpose($dataExcel));
 
-$toExcel->makegraph("Media da Duração da Chamada em Minutos", '', "chart1", "r", 'lines', 'lines', TRUE, TRUE);
-
+//$toExcel->makegraph('Media da Duração da Chamada em Minutos', '', 'chart1', 'r', 'lines', 'lines', TRUE, TRUE);
 
 //TRANSFORM TOTAL
 $p = array();
@@ -173,9 +175,7 @@ $dataExcel[]=$pOutros;
 
 $toExcel->maketable(transpose($dataExcel));
 
-$toExcel->makegraph("Barras", '', "chart2", "r", 'bars', 'bars', TRUE, TRUE);
-
-
+//$toExcel->makegraph('Barras', '', 'chart2', 'r', 'lines', 'lines', TRUE, TRUE);
 
 //TRANFORM total/3600
 $p = array();
@@ -214,8 +214,7 @@ $dataExcel[]=$pOutros;
 
 $toExcel->maketable(transpose($dataExcel));
 
-$toExcel->makegraph("Barras", '', "chart1", "r", 'bars', 'bars', TRUE, TRUE);
-
+//$toExcel->makegraph('Barras', '', 'chart3', 'r', 'lines', 'lines', TRUE, TRUE);
 
 //Transform Pie
 
@@ -254,7 +253,7 @@ $dataExcel[]=$pOutros;
 
 $toExcel->maketable(transpose($dataExcel));
 
-$toExcel->makegraph("Pie", '', "chart1", "r", 'pie', 'pie', TRUE, TRUE);
+//$toExcel->makegraph('Pie', '', 'chart4', 'r', 'lines', 'lines', TRUE, TRUE);
 
 $toExcel->backGroundStyle('FFFFFF');
 
