@@ -26,11 +26,11 @@ var dashboard = function() {
                     //console.log(horas);
                    console.log('horas:'+hora+'dia:' + dia + ' semana:' + semana + ' mes:' + mes + ' ano:' + ano);
                    
-                    if (hora < 0) {
-                        tempo = ['minute'];
-                    } else if (  dia < 0) {
+                    if (hora < 1) {
+                        tempo = ['hour','minute'];
+                    } else if (  dia < 1) {
                         tempo = ['hour'];
-                    } else if (mes < 0) {
+                    } else if (mes < 1) {
                         tempo = ['day'];
                     } else if (ano < 2) {
                         tempo = ['year', 'month'];
@@ -39,7 +39,7 @@ var dashboard = function() {
                     } else {
                         tempo = ['year'];
                     }
-                    tempo=['hour','minute'];
+                    //tempo=['hour','minute'];
                     $.post('../intra_realtime/total.php', {tempo: tempo, id: CurrentCampaignID}, function(data) { //CurrentCampaignID
                         //console.log(data);
                         total.push({'className': '.total', 'data': data.total}, {'className': '.msg', 'data': data.msg}, {'className': '.sys', 'data': data.sys});
