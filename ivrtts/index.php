@@ -58,8 +58,8 @@ header('Location: mod_main/index.php');
                         </div>
 
                         <div class="footer-login">
-                                  <div class="pull-left ">Don't have an account?</div> 
-                                  <div class="pull-right"><a class="animate-login-form" href="#">Create Account</a></div> 
+                                  <div class="pull-left hide">Don't have an account?</div> 
+                                  <div class="pull-right hide"><a class="animate-login-form" href="#">Create Account</a></div> 
                             <div class="clear"></div>
                         </div>
 
