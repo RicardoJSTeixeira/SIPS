@@ -1100,7 +1100,7 @@ function edit_element(opcao, element, data)
                 else if ($("#time_format_day_inverted").is(':checked'))
                 {
                     data_format = 3;
-                    element.data("data_format",3);
+                    element.data("data_format", 3);
                 }
                 else if ($("#time_format_hour").is(':checked')) {
                     element.data("data_format", 1);
@@ -1938,11 +1938,15 @@ $(".values_edit_textarea").on("blur", function()
 
 $("#add_rule_button").click(function()
 {
+
     if ($("#rule_creator .form_edit_element").validationEngine('validate'))
     {
-        if ($("#rule_target_select option:selected").length)
+  
+        if ($("#rule_target_select option:selected").length || $("#regra_select option:selected").val()=="goto")
         {
+
             $('#rule_target_formright').tooltip("hide");
+       
             switch (selected_type)
             {
                 case "texto":
@@ -2042,10 +2046,13 @@ $("#add_rule_button").click(function()
                     }
                     break;
                 case "button":
+                 
                     if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
                         rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#rule_target_select").val(), $("#regra_select").val(), "click", 0);
                     else
                         rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#go_to_select").val(), $("#regra_select").val(), "click", 0);
+
+
             }
             $("#rule_target_select").val("").trigger("liszt:updated");
             $("#rules_valor_select").val("").trigger("liszt:updated");
@@ -2217,7 +2224,6 @@ function update_select()
         $("#ipl_file_select").empty();
         $.each(data, function()
         {
-
             $("#ipl_file_select").append("<option data-type=" + this.type + " value=" + this.value + ">" + this.value + "</option>");
         });
         if ($("#radio_ipl_image").is(":checked"))
