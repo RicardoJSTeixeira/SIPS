@@ -1,5 +1,5 @@
-var api = new API(),
-        graficos = new graph(),
+//var api = new API();
+  var  graficos = new graph(),
       info = new GetMongoInfo();
 
 var dashboard = function() {
