@@ -241,6 +241,7 @@ header('Location: ../index.php');
             <script src="../js/graphs/justgage.1.0.1.min.js"></script>
             <script src="../js/graphs/moment.min.js"></script>
             <script src="../js/graphs/xcharts.min.js"></script>
+            <script src="../js/graphsapi/api-final.js"></script>
             <script src="../js/graphsapi/api.js"></script>
             <script src="../js/graphsapi/graphcs.js"></script>
             <script src="../intra_realtime/scripts.js" ></script>
