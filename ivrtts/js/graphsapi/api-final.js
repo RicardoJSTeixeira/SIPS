@@ -1,8 +1,8 @@
 var GetMongoInfo = function() {
 
     var me = this,
-            //domain = window.location.protocol + '//' + window.location.host,
-            domain = 'http://goviragem.dyndns.org',
+            domain = window.location.protocol + '//' + window.location.host,
+            //domain = 'http://goviragem.dyndns.org',
             port = ':10000',
             prefix = '/ccstats/v0/',
             count = 'count/',
