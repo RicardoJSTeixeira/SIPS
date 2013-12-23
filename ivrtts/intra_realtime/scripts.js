@@ -1,6 +1,6 @@
 var api = new API(),
         graficos = new graph(),
-        info = new GetMongoInfo();
+      info = new GetMongoInfo();
 
 var dashboard = function() {
     var me = this;
@@ -9,7 +9,7 @@ var dashboard = function() {
         $('#kant').load('../intra_realtime/index.php', function() {
 
             info.get({ 'type':'min,max', 'by':{ 'calls':['database.campaign'] , 'filter':['database.campaign.oid='+ CurrentCampaignID] } }, function(data){
-            //api.get({'datatype': 'min.max', 'by': {'calls': ['database.campaign'], 'filter': ['database.campaign.oid=' + CurrentCampaignID]}}, function(data) {
+
                 var total = [], total1 = [], tempo;
                 
                 if (data.length) {
@@ -81,7 +81,8 @@ var dashboard = function() {
 
 
             //Barras total Chamadas Feedback
-            api.get({'datatype': 'calls', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=' + CurrentCampaignID]}}, function(data) {
+            info.get({'datatype': 'calls', 'type':'count' ,'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=' + CurrentCampaignID]}}, function(data) {
+
                 var arr = [],
                         outro = 0;
                 $.each(data, function() {
@@ -114,7 +115,8 @@ var dashboard = function() {
             });
 
             //barra total temporal Chamadas Feedback
-            api.get({'datatype': 'sum', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=' + CurrentCampaignID]}}, function(data) {
+            info.get({'datatype': 'calls','type':'sum', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=' + CurrentCampaignID]}}, function(data) {
+
                 var arr = [],
                         outr = 0;
                 $.each(data, function() {
@@ -149,8 +151,8 @@ var dashboard = function() {
 
 
 
+            info.get({'datatype': 'calls', 'type':'count' ,'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=' + CurrentCampaignID]}}, function(data) {
 
-            api.get({'datatype': 'calls', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=' + CurrentCampaignID]}}, function(data) {
                 var
                         arr = [],
                         outros = 0;
