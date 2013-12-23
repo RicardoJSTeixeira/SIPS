@@ -1,6 +1,6 @@
 var API = function() {
     var me = this,
-            domain = 'http://goviragem.dyndns.org',
+            domain = window.location.protocol +'//'+ window.location.host,
             port = ':10000',
             prefix = '/ccstats/v0/',
             count = 'count/',
@@ -63,8 +63,8 @@ var API = function() {
             case 'calls' :
                 {
                     if (data.by.calls.length) {
-                        console.log(domain + port + prefix + count + data.datatype + by + data.by.calls.join(',') + '&' + data.by.filter.join(','));
-                        return domain + port + prefix + count + data.datatype + by + data.by.calls.join(',') + '&' + data.by.filter.join(',');
+                        console.log(domain + port + prefix + count + data.datatype + by + data.by.calls.join(',') + '&' + data.by.filter.join('&'));
+                        return domain + port + prefix + count + data.datatype + by + data.by.calls.join(',') + '&' + data.by.filter.join('&');
                     } else {
                         return domain + port + prefix + count + data.datatype;
                     }
@@ -75,7 +75,7 @@ var API = function() {
             case 'contacts':{
                     if (data.by.filter.length>0){
                         //console.log(domain + port + prefix + count + data.datatype +by+data.by.filter.join(',') );
-                        return domain + port + prefix + count + data.datatype +by+data.by.calls.join(',')+'&'+data.by.filter.join(',') ;
+                        return domain + port + prefix + count + data.datatype +by+data.by.calls.join(',')+'&'+data.by.filter.join('&') ;
                     }else{
                         //  ( domain + port + prefix + count + data.datatype);
                         return domain + port + prefix + count + data.datatype;
@@ -83,12 +83,13 @@ var API = function() {
                     break;
                 }
             case 'min.max':{
-                    return domain + port + prefix  + 'min,max/calls/start_date';
+                    //console.log('Max-Min: '+domain + port + prefix  + 'min,max/calls/start_date'+by+data.by.calls.join(',')+'&'+data.by.filter.join('&'));
+                    return domain + port + prefix  + 'min,max/calls/start_date'+by+data.by.calls.join(',')+'&'+data.by.filter.join('&');
             } 
             
             case 'sum':{
                     if(data.by.filter.length>0){
-                        return domain + port + prefix + 'sum/calls/length_in_sec'+by+data.by.calls.join(',')+'&'+data.by.filter.join(',');
+                        return domain + port + prefix + 'sum/calls/length_in_sec'+by+data.by.calls.join(',')+'&'+data.by.filter.join('&');
                     }else{
                     return domain + port + prefix +'sum/calls/length_in_sec';
                 }

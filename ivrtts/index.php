@@ -4,6 +4,9 @@ require("session/functions.php");
 SessionStart();
 $login_flag = (count($_SESSION)) ? 1 : 0;
 
+if(isLogged($db)){
+header('Location: mod_main/index.php');
+}
 //print_r($_SESSION);
 ?>
 <!DOCTYPE html>
@@ -55,8 +58,8 @@ $login_flag = (count($_SESSION)) ? 1 : 0;
                         </div>
 
                         <div class="footer-login">
-                                  <div class="pull-left ">Don't have an account?</div> 
-                                  <div class="pull-right"><a class="animate-login-form" href="#">Create Account</a></div> 
+                                  <div class="pull-left hide">Don't have an account?</div> 
+                                  <div class="pull-right hide"><a class="animate-login-form" href="#">Create Account</a></div> 
                             <div class="clear"></div>
                         </div>
 
@@ -259,9 +262,6 @@ $login_flag = (count($_SESSION)) ? 1 : 0;
 
             });
 
-
-
-
             // Login
             var login_flag = <?= $login_flag; ?>;
             $(document).on("click", "#alert-box-force-logout", function() {
@@ -307,9 +307,6 @@ $login_flag = (count($_SESSION)) ? 1 : 0;
                 }
                 , "json");
             });
-
-
-
 
         </script>  
 

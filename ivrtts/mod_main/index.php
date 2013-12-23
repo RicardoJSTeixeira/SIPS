@@ -1,8 +1,10 @@
 <?php
-require("../../ini/dbconnect.php");
+require("../../ini/db.php");
 require("../session/functions.php");
 ini_set("display_errors", "1");
-if (isLogged()) {
+if(!isLogged($db)){
+header('Location: ../index.php');
+}
     ?>
 
     <!DOCTYPE html>
@@ -17,12 +19,8 @@ if (isLogged()) {
             <link href="../css/style.css" rel="stylesheet">
             <link href="../css/bootstrap.css" rel="stylesheet">
 
-
-
             <!-- ADDED -->
             <link rel="stylesheet" href="style.css" />
-            <link rel="stylesheet" href="../js/jqplot/jquery.jqplot.css" />
-
 
             <link rel="stylesheet" href="../css/jquery-ui-1.8.16.custom.css" media="screen"  />
             <link rel="stylesheet" href="../css/fullcalendar.css" media="screen"  />
@@ -31,7 +29,6 @@ if (isLogged()) {
             <link rel="stylesheet" href="../css/colorpicker.css">
             <link rel="stylesheet" href="../css/glisse.css?1.css">
             <link rel="stylesheet" href="../css/jquery.jgrowl.css">
-            <link rel="stylesheet" href="../js/elfinder/css/elfinder.css" media="screen" />
             <link rel="stylesheet" href="../css/jquery.tagsinput.css" />
             <link rel="stylesheet" href="../css/demo_table.css" >
             <link rel="stylesheet" href="../js/export/css/TableTools.css" >
@@ -42,25 +39,12 @@ if (isLogged()) {
             <link rel="stylesheet" href="../css/xcharts.min.css"/>
             <link rel="stylesheet" href="../css/jquery.easy-pie-chart.css"/>
 
-
-
             <link rel="stylesheet" href="../css/icon/font-awesome.css">    <link rel="stylesheet" href="../css/bootstrap-responsive.css">
 
-            <link rel="alternate stylesheet" type="text/css" media="screen" title="green-theme" href="../css/color/green.css" />
-            <link rel="alternate stylesheet" type="text/css" media="screen" title="red-theme" href="../css/color/red.css" />
-            <link rel="alternate stylesheet" type="text/css" media="screen" title="black-theme" href="../css/color/black.css" />
-            <link rel="alternate stylesheet" type="text/css" media="screen" title="orange-theme" href="../css/color/orange.css" />
-            <link rel="alternate stylesheet" type="text/css" media="screen" title="purple-theme" href="../css/color/purple.css" />
-            <link rel="alternate stylesheet" type="text/css" media="screen" title="silver-theme" href="../css/color/silver.css" />
-            <link rel="alternate stylesheet" type="text/css" media="screen" title="metro-theme" href="../css/color/metro.css" />
-
-
-            <link rel="shortcut icon" href="../images/icons/favicon.ico">
 
         </head>
 
         <body>
-
 
             <style>
             </style>
@@ -68,11 +52,14 @@ if (isLogged()) {
             <!--Header Start-->
             <div class="header" >
 
-
                 <!--Button User Start--> 
-                <?
+                <?php
                 $params_logged_user = array($_SESSION['id_user']);
-                $results_logged_user = $db->rawQuery("SELECT name, last_name FROM zero.user_info WHERE id_user = ? LIMIT 1", $params_logged_user);
+
+                $stmt = $db->prepare("SELECT name, last_name FROM zero.user_info WHERE id_user = ? LIMIT 1");
+                $stmt->execute($params_logged_user);
+                $results_logged_user = $stmt->fetchAll(PDO::FETCH_BOTH);
+
                 $LoggedUser = $results_logged_user[0]["name"] . " " . $results_logged_user[0]["last_name"];
                 ?> 
                 <div class="btn-group pull-right" >
@@ -90,23 +77,14 @@ if (isLogged()) {
                 </div>
                 <!--Button User END-->  
 
-
-
-
                 <!-- Notifications -->      
                 <div class="pull-right">
                     <div class="notifications-head">
 
 
-
-
-
                     </div>
                 </div>      
                 <!-- Notifications END -->      
-
-
-
 
 
             </div>
@@ -116,7 +94,11 @@ if (isLogged()) {
             <!--SIDEBAR START-->
             <?php
             $params_sidebar = array($_SESSION['id_user']);
-            $results_sidebar = $db->rawQuery("SELECT id_menu_link, path, icon, label FROM zero.menu_links WHERE id_user = ? AND visible = 1", $params_sidebar);
+
+            $stmt = $db->prepare("SELECT id_menu_link, path, icon, label FROM zero.menu_links WHERE id_user = ? AND visible = 1");
+            $stmt->execute($params_sidebar);
+            $results_sidebar = $stmt->fetchAll(PDO::FETCH_BOTH);
+
             $sidebar_html = "";
             for ($i = 0; $i < count($results_sidebar); $i++) {
                 if ($i == 0) {
@@ -127,19 +109,14 @@ if (isLogged()) {
                 }
                 $sidebar_html .= "<li><a menuid='" . $results_sidebar[$i]['id_menu_link'] . "' class='sidebar-nav $sidebar_active' href='#'><i pagetoload='" . $results_sidebar[$i]['path'] . "' class='" . $results_sidebar[$i]['icon'] . " sidebar-page-loader'></i><span pagetoload='" . $results_sidebar[$i]['path'] . "' class='sidebar-page-loader'>" . $results_sidebar[$i]['label'] . "</span></a></li>";
             }
-            print "<div id='sidebar'>    
-        <ul class='menu-sidebar'>
-            $sidebar_html
-        </ul>
-    </div>    
-    ";
+            print "<div id='sidebar'><ul class='menu-sidebar'>$sidebar_html</ul></div>";
             ?>
             <!--SIDEBAR END-->
 
             <!--Content Start-->
             <div id="content">
 
-                
+
                 <!--SpeedBar Start-->
                 <div class="speedbar">
                     <div class="speedbar-content">
@@ -166,7 +143,11 @@ if (isLogged()) {
                         <!--SPEEDBAR LINKS-->     
                         <?php
                         $params_speedbar = array($sidebar_active_id);
-                        $results_speedbar = $db->rawQuery("SELECT path, label FROM zero.menu_sub_links WHERE id_menu_link = ? AND visible = 1", $params_speedbar);
+
+                        $stmt = $db->prepare("SELECT path, label FROM zero.menu_sub_links WHERE id_menu_link = ? AND visible = 1");
+                        $stmt->execute($params_speedbar);
+                        $results_speedbar = $stmt->fetchAll(PDO::FETCH_BOTH);
+
                         $speedbar_html = "";
                         for ($i = 0; $i < count($results_speedbar); $i++) {
                             if ($i == 0) {
@@ -176,10 +157,7 @@ if (isLogged()) {
                             }
                             $speedbar_html .= "<li><a class='speedbar-nav " . $speedbar_active . "' href='" . $results_speedbar[$i]['path'] . "'>" . $results_speedbar[$i]['label'] . "</a></li>";
                         }
-                        print "<ul class='menu-speedbar inner-speedbar'>
-        $speedbar_html
-    </ul>
-    ";
+                        print "<ul class='menu-speedbar inner-speedbar'>$speedbar_html</ul>";
                         ?>
                         <!--SPEEDBAR LINKS END-->
 
@@ -191,8 +169,8 @@ if (isLogged()) {
 
                 <!--CONTENT MAIN START-->
                 <div class="content inner-content" style='min-height:850px'>
-                   
-                    
+
+
                     <div id="graphs"></div>
                     <div id="kant"></div>
 
@@ -215,7 +193,6 @@ if (isLogged()) {
             <script src="../js/bootstrap/js/bootstrap.js"></script>
             <script src="../js/bootstrap-datepicker.js"></script>
             <script src="../js/bootstrap-colorpicker.js"></script>
-            <script src="../js/google-code-prettify/prettify.js"></script>
 
             <script src="../js/jquery.flot.min.js"></script>
             <script src="../js/jquery.flot.pie.min.js"></script>
@@ -227,8 +204,6 @@ if (isLogged()) {
             <script src="../js/autoresize.jquery.min.js"></script>
             <script src="../js/jquery.tagsinput.min.js"></script>
             <script src="../js/jquery.autotab.js"></script>
-            <script src="../js/elfinder/js/elfinder.min.js" charset="utf-8"></script>
-            <script src="../js/tiny_mce/tiny_mce.js"></script>
             <script src="../js/validation/languages/jquery.validationEngine-en.js" charset="utf-8"></script>
             <script src="../js/validation/jquery.validationEngine.js" charset="utf-8"></script>
             <script src="../js/jquery.jgrowl_minimized.js"></script>
@@ -249,7 +224,7 @@ if (isLogged()) {
             <script src="../file-upload/bootstrap-fileupload.js"></script>
             <script src="../js/functions/warnings.js"></script>
 
-    
+
             <script type="text/javascript" src="../js/jqueryui/js/jquery-ui-1.10.0.custom.min.js"></script>
 
 
@@ -273,14 +248,11 @@ if (isLogged()) {
             <!----->
 
             <script>
-                  var User = <?= $_SESSION['id_user']; ?>;
-                 
+                var User = <?= $_SESSION['id_user']; ?>;
+
             </script>    
             <style>
                 .border-test { border: 1px solid black; }
             </style>
         </body>
     </html>
-<?php } else {
-    header('HTTP/1.0 401 Unauthorized');
-}

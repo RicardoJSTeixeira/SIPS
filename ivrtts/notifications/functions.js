@@ -1,42 +1,36 @@
 function BuildNotifications(User) {
-    $.ajax({
-        type: "POST",
-        dataType: "JSON",
-        url: "../notifications/requests.php",
-        data: {ZERO: "BuildNotifications", User: User},
-        success: function(data) {
-            $(".notifications-head").empty();
+    $.post("../notifications/requests.php", {ZERO: "BuildNotifications", User: User}, function(data) {
+        $(".notifications-head").empty();
 
-            if (typeof data.camp_enabler !== 'undefined') {
+        if (typeof data.camp_enabler !== 'undefined') {
 
-                $(".notifications-head").prepend("<div class='btn-group m_left hide-mobile' >\n\
-                                    <div><a id='get-campaign-enabler' class='dropdown-toggle show-messages pointer' data-toggle='dropdown' data-target='#'>\n\
-                                        <span class='notification campaign-enabler-message-counter'>" + data.camp_enabler[0] + "</span><span class='triangle-1'></span><i class='icon-flag'></i><span class='caret'></span>\n\
-                                    </a>\n\
-                                    <div class='dropdown-menu'>\n\
-                                        <span class='triangle-2'></span>\n\
-                                         <div class='ichat ichat-600 notification-box-600'>\n\
-                                            <div class='ichat-messages'>\n\
-                                                <div class='ichat-title '>\n\
-                                                    <div class='pull-left '>Campaign List</div>\n\
-                                                    <div class='pull-right '><span style='margin-right:3px'>Search</span><input id='campaign-enabler-search' type='text' style='margin:0px -3px 0px 0px; width:150px; height:12px' ></div>\n\
-                                                    <div class='clear'></div>\n\
+            $(".notifications-head").prepend("<div class='btn-group m_left hide-mobile' >\n\
+                                                    <div><a id='get-campaign-enabler' class='dropdown-toggle show-messages pointer' data-toggle='dropdown' data-target='#'>\n\
+                                                        <span class='notification campaign-enabler-message-counter'>" + data.camp_enabler[0] + "</span><span class='triangle-1'></span><i class='icon-flag'></i><span class='caret'></span>\n\
+                                                    </a>\n\
+                                                    <div class='dropdown-menu'>\n\
+                                                        <span class='triangle-2'></span>\n\
+                                                         <div class='ichat ichat-600 notification-box-600'>\n\
+                                                            <div class='ichat-messages'>\n\
+                                                                <div class='ichat-title '>\n\
+                                                                    <div class='pull-left '>Campaign List</div>\n\
+                                                                    <div class='pull-right '><span style='margin-right:3px'>Search</span><input id='campaign-enabler-search' type='text' style='margin:0px -3px 0px 0px; width:150px; height:12px' ></div>\n\
+                                                                    <div class='clear'></div>\n\
+                                                                </div>\n\
+                                                                <div id='campaign-enabler-messages' class='slimscroll2'></div>\n\
+                                                            </div>\n\
+                                                        </div>\n\
+                                                    </div>\n\
                                                 </div>\n\
-                                                <div id='campaign-enabler-messages' class='slimscroll2'></div>\n\
-                                            </div>\n\
-                                            <a class='iview pointer cc-enable-all' style='width:234px;'>Start All</a> <a class='imark pointer cc-disable-all' style='width:234px;'>Stop All</a>\n\
-                                        </div>\n\
-                                    </div>\n\
-                                </div>\n\
-							</div>");
+                                        </div>");
 
 
-                BuildMessagesArray("get-campaign-enabler");
-            }
-
-
+            BuildMessagesArray("get-campaign-enabler");
         }
-    });
+
+
+    },
+            "json");
 
 }
 
@@ -46,32 +40,24 @@ function BuildMessagesArray(Get) {
     switch (Get) {
         case "get-admin-global-messages":
             {
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: "../notifications/requests.php",
-                    data: {ZERO: "GetMessages", User: User, Get: Get},
-                    success: function(Data) {
-                        CurrentMessages.adminglobal = Data;
+                $.post("../notifications/requests.php",
+                        {ZERO: "GetMessages", User: User, Get: Get},
+                function(Data) {
+                    CurrentMessages.adminglobal = Data;
 
-                    }
-
-                });
+                },
+                        "json");
                 break;
             }
         case "get-campaign-enabler":
             {
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: "../notifications/requests.php",
-                    data: {ZERO: "GetMessages", User: User, Get: Get},
-                    success: function(Data) {
-                        CurrentMessages.campaign_enabler = Data;
-                        //console.log(CurrentMessages.campaign_enabler);
-                    }
-
-                });
+                $.post("../notifications/requests.php",
+                        {ZERO: "GetMessages", User: User, Get: Get},
+                function(Data) {
+                    CurrentMessages.campaign_enabler = Data;
+                    //console.log(CurrentMessages.campaign_enabler);
+                },
+                        "json");
                 break;
             }
     }
@@ -85,8 +71,6 @@ function ReadMessagesArray(Msg) {
 
         $("#admin-global-messages").html("");
         $.each(CurrentMessages.adminglobal.messages, function(Index, Message) {
-
-
 
             switch (Message.message_type) {
                 case "user_auth_log":
@@ -123,8 +107,6 @@ function ReadMessagesArray(Msg) {
                     }
             }
 
-
-
         });
     }
 
@@ -133,8 +115,6 @@ function ReadMessagesArray(Msg) {
 
         $("#campaign-enabler-messages").html("");
         $.each(CurrentMessages.campaign_enabler.messages, function(Index, Message) {
-
-
 
             if (Message.active == "Y")
             {
@@ -167,7 +147,7 @@ function ReadMessagesArray(Msg) {
                             </div>";
 
 
-            if ($("#campaign-enabler-search").val() == "")
+            if ($("#campaign-enabler-search").val() === "")
             {
                 $("#campaign-enabler-messages").append(CE_HTML);
             }
@@ -185,55 +165,70 @@ function ReadMessagesArray(Msg) {
 }
 
 function getDB(campaign) {
-    
-    var date = new Date();
-    var dia = date.getUTCDate();
-    var ano = date.getFullYear();
-    var mes = date.getUTCMonth() + 1;
 
-    var date = ano + '-' + mes + '-' + dia;
-    
-    //var url = "http://sipscloud.dyndns.org/oldb/vicidial/call_report_export.php?campaign[]=" + campaign + "&query_date=2013-01-01&end_date=" + date + "&status[]=---ALL---&list[]=---ALL---&run_export=1&SUBMIT=SUBMIT&export_fields=EXTENDED&header_row=YES";
-    
-   var url = "../report/reportexcel.php?1" ;
-    
-    window.open(url);
-    
+    api.get({'datatype': 'min.max', 'by': {'calls': ['database.campaign'], 'filter': ['database.campaign.oid='+campaign]}}, function(data) {
+         if (data.length) {
+                  var tempo;  
+                    data1 = data[0];
+                    max = moment(data1.max);
+                    min = moment(data1.min);
+                    //console.log(max);
+                    //console.log(min);
+                   // minuto = max.diff(min, 'minute');
+                    hora= max.diff(min, 'hour');
+                    dia = max.diff(min, 'day');
+                    semana = max.diff(min, 'week');
+                    mes = max.diff(min, 'month');
+                    ano = max.diff(min, 'year');
+                    //console.log(horas);
+                   //console.log('horas:'+hora+'dia:' + dia + ' semana:' + semana + ' mes:' + mes + ' ano:' + ano);
+                   
+                   if (hora < 1) {
+                        tempo = ['hour','minute'];
+                    } else if (  dia < 1) {
+                        tempo = ['day','hour'];
+                    } else if (mes < 1) {
+                        tempo = ['day'];
+                    } else if (ano < 2) {
+                        tempo = ['year', 'month'];
+                    } else if (ano < 6) {
+                        tempo = ['year', 'trimester'];
+                    } else {
+                        tempo = ['year'];
+                    }
+                    
+        var url = "../report/reportexcel.php?tempo=" + JSON.stringify(tempo) + "&campaign_id=" + encodeURIComponent(campaign);
+
+        document.location.href=url;
+    }
+    });
 }
 
 
-$(".click-live-report").live("click", function() {
+$(document).on("click", ".click-live-report", function() {
 
     CurrentCampaign = $(this).attr("campaign");
     CurrentCampaignID = $(this).attr("campaign_id");
 
     $(".active-campaign").html(CurrentCampaign);
-    if ($(this).attr("campaign_active") == 'Y') {
-        $(".status-campaign").html("<span style='background-color:#468847' class='label label-success'>Running</span>")
+    if ($(this).attr("campaign_active") === 'Y') {
+        $(".status-campaign").html("<span style='background-color:#468847' class='label label-success'>Running</span>");
     } else {
-        $(".status-campaign").html("<span style='background-color:#b94a48' class='label label-important'>Stopped</span>")
+        $(".status-campaign").html("<span style='background-color:#b94a48' class='label label-important'>Stopped</span>");
     }
-
-
-    // GetRealtime();
 
     $(".sidebar-page-loader[pagetoload='../intra_realtime/index.php']").click();
 
-})
+});
 
-$(".click-avatar-image").live("click", function() {
+$(document).on("click", ".click-avatar-image", function() {
 
     if ($(this).attr("src").match("off"))
     {
         $(this).attr("src", "../images/users/icon_on_48.png");
 
-        $.ajax({
-            type: "POST",
-            url: "../notifications/requests.php",
-            data: {ZERO: "CampaignEnableNotifications", sent_campaign: $(this).attr("campaign_id"), sent_active: "Y", sent_status: "ACTIVE"},
-            success: function(data) {
-
-            }
+        $.post("../notifications/requests.php", {ZERO: "CampaignEnableNotifications", sent_campaign: $(this).attr("campaign_id"), sent_active: "Y", sent_status: "ACTIVE"}, function() {
+            BuildNotifications(User);
         });
 
     }
@@ -241,30 +236,16 @@ $(".click-avatar-image").live("click", function() {
     {
         $(this).attr("src", "../images/users/icon_off_48.png");
 
-
-
-        $.ajax({
-            type: "POST",
-            url: "../notifications/requests.php",
-            data: {ZERO: "CampaignEnableNotifications", sent_campaign: $(this).attr("campaign_id"), sent_active: "N", sent_status: "INACTIVE"},
-            success: function(data) {
-
-            }
+        $.post("../notifications/requests.php", {ZERO: "CampaignEnableNotifications", sent_campaign: $(this).attr("campaign_id"), sent_active: "N", sent_status: "INACTIVE"}, function() {
+            BuildNotifications(User);
         });
 
-
-
     }
-
-
-})
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 function DeleteMessageArray(ClickedElement) {
-
-    //console.log(ClickedElement.closest(".imessage").css("opacity"));
 
     if (ClickedElement.closest(".imessage").hasClass("opacity") || ClickedElement.closest(".imessage").css("opacity") === '0.5') {
         return false;
@@ -279,40 +260,10 @@ function DeleteMessageArray(ClickedElement) {
     var counter = parseInt($("." + ClickedElement.attr("delete-type") + "-message-counter").html(), 10);
     $("." + ClickedElement.attr("delete-type") + "-message-counter").html(counter - 1);
 
-    $.ajax({
-        type: "POST",
-        dataType: "JSON",
-        url: "../notifications/requests.php",
-        data: {ZERO: "ReadMessage", MessageID: ClickedElement.attr("delete-id")},
-        success: function(data) {
-
-        }
-    });
+    $.post("../notifications/requests.php",
+            {ZERO: "ReadMessage", MessageID: ClickedElement.attr("delete-id")});
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function DateToTimeAgo(time) {
     var date = new Date((time || "").replace(/-/g, "/").replace(/[TZ]/g, " ")),

@@ -135,7 +135,7 @@
 
                 texto_ivr = data;
                 //alert(texto_ivr);
-                var audioplayer = $('#wavplayer');
+                var audioplayer = $('#wavplayer').prop("autoplay",true);
                 audioplayer.empty();
 
                 $("<source>").attr("src", "../dixi/files/" + data + ".mp3").appendTo(audioplayer);
