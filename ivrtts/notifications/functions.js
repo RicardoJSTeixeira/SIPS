@@ -165,8 +165,8 @@ function ReadMessagesArray(Msg) {
 }
 
 function getDB(campaign) {
-
-    api.get({'datatype': 'min.max', 'by': {'calls': ['database.campaign'], 'filter': ['database.campaign.oid='+campaign]}}, function(data) {
+      info.get({'type': 'min,max', 'by': {'calls': ['database.campaign'], 'filter': ['database.campaign.oid='+campaign]}}, function(data) {
+//    api.get({'datatype': 'min.max', 'by': {'calls': ['database.campaign'], 'filter': ['database.campaign.oid='+campaign]}}, function(data) {
          if (data.length) {
                   var tempo;  
                     data1 = data[0];
