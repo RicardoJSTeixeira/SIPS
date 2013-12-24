@@ -16,9 +16,9 @@ class excelwraper {
         'tr' => 'PHPExcel_Chart_Legend::POSITION_TOPRIGHT'
     );
     protected $graphType = array(
-        'bars' => 'PHPExcel_Chart_DataSeries::TYPE_BARCHART',
-        'lines' => 'PHPExcel_Chart_DataSeries::TYPE_LINECHART',      
-        'pie' => 'PHPExcel_Chart_DataSeries::TYPE_PIECHART'
+        'bars' => 'PHPExcel_Chart_DataSeries::TYPE_BARCHART_3D',
+        'lines' => 'PHPExcel_Chart_DataSeries::TYPE_LINECHART_3D',      
+        'pie' => 'PHPExcel_Chart_DataSeries::TYPE_PIECHART_3D'
     );
     protected $graphGrouping = array(
         'bars' => 'PHPExcel_Chart_DataSeries::GROUPING_CLUSTERED',
@@ -41,7 +41,7 @@ class excelwraper {
     public function maketable($data) {
 
 
-        $this->phpexcel->getActiveSheet()->fromArray($data, '0', 'A' . (string) $this->number);
+        $this->phpexcel->getActiveSheet()->fromArray($data, '0', 'A' .$this->number);
 
         $this->autoSizeCol();
         $this->tableBoardBolt();
@@ -87,7 +87,7 @@ class excelwraper {
         }
     }
 
-    public function makegraph($title, $yLabel, $charName, $legendPosition, $graphType, $graphGrouping,$ShowVal,$ShowPerc) {
+    public function makegraph($title, $yLabel,$xLabel, $charName, $legendPosition, $graphType, $graphGrouping,$ShowVal,$ShowPerc) {
         
 
         $activeSheet = $this->phpexcel->getActiveSheet();
@@ -100,13 +100,14 @@ class excelwraper {
                 constant($this->graphGrouping[$graphGrouping]), // plotGrouping
                 range(0, count($this->dataSeriesValues()) - 1), // plotOrder
                 $this->dataseriesLabels(), // plotLabel
-                $this->xAxisTickValues(), // plotCategory
-                $this->dataSeriesValues()        // plotValues
+              $this->xAxisTickValues(), // plotCategory
+                $this->dataSeriesValues()  // plotValues
+               
+                
         );
-
-        
        
-        
+        $series->setPlotDirection(PHPExcel_Chart_DataSeries::DIRECTION_COL);
+  
 //	Set the series in the plot area
         $plotarea = new PHPExcel_Chart_PlotArea($layout1 = new PHPExcel_Chart_Layout(), array($series));
         
@@ -121,7 +122,7 @@ class excelwraper {
                 $plotarea, // plotArea
                 true, // plotVisibleOnly
                 0, // displayBlanksAs
-                NULL, // xAxisLabel
+                new PHPExcel_Chart_Title($xLabel), // xAxisLabel
                 new PHPExcel_Chart_Title($yLabel)  // yAxisLabel
         );
 
@@ -136,12 +137,9 @@ class excelwraper {
         
         //	Add the chart to the worksheet
         $activeSheet->addChart($chart);
-       
-
-      
+         
     }
-    
- 
+     
     protected function dataseriesLabels() {
 
         $activeSheet = $this->phpexcel->getActiveSheet();
@@ -151,10 +149,11 @@ class excelwraper {
 
             $dataseriesLabels[] = new PHPExcel_Chart_DataSeriesValues('String', $this->phpexcel->getActiveSheet()->getTitle() . '!$' . chr($col) . '$' . $this->number, NULL);
         }
-
+        
         return $dataseriesLabels;
+        
     }
-
+    
     protected function dataSeriesValues() {
         $activeSheet = $this->phpexcel->getActiveSheet();
 
@@ -168,8 +167,9 @@ class excelwraper {
 
             $dataSeriesValues[] = new PHPExcel_Chart_DataSeriesValues('Number', $this->phpexcel->getActiveSheet()->getTitle() . '!$' . chr($col) . '$' . ($this->number + 1) . ':$' . chr($col) . '$' . ($row - 1), NULL);
         }
-
+        
         return $dataSeriesValues;
+        
     }
 
     protected function xAxisTickValues() {
