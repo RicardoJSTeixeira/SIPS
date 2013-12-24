@@ -15,7 +15,7 @@
         width : 'auto',
         height : '250px',
         size : '7px',
-        color: '#000',
+        color: '#999',
         position : 'right',
         distance : '1px',
         start : 'top',
