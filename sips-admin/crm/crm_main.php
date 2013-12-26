@@ -28,7 +28,8 @@
         <script type="text/javascript" src="/bootstrap/js/validation/jquery.validationEngine.js"></script>
         <script type="text/javascript" src="/bootstrap/js/validation/languages/jquery.validationEngine-pt.js"></script>
         <script type="text/javascript" src="/bootstrap/js/validation/contrib/other-validations.js"></script>
-
+        <script type="text/javascript" src="/bootstrap/js/moment.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/moment.langs.min.js"></script>
 
         <script type="text/javascript" src="/sips-admin/crm/crm_edit/crm_edit.js"></script>
 
@@ -239,16 +240,22 @@
 
 
 
-        <button class="btn right btn-danger btn-large" id="btn_close_crm"  style='display:none'><i class="icon-remove"></i></button>
-        <div id="crm" class='grid' style='display:none'>
 
+        <div class='grid' style='display:none'>
+            <div class="grid-title">
+                <div class="pull-left"></div>
+                <div class="pull-right">
+                    <button class="btn btn-danger icon-alone" id="btn_close_crm"  style='display:none'><i class="icon-remove"></i></button>
+                </div>
+            </div>
+            <div class="grid-content" id="crm"></div>
         </div>
 
 
 
 
         <script>
- var crm_edit_object;
+            var crm_edit_object;
             /* Função que actualiza as dropdowns qnd se muda de campanha */
             $('#filtro_campanha').change(function()
             {
@@ -374,10 +381,10 @@
 
             $("#btn_close_crm").on("click", function()
             {
-                $('#crm').hide();
-                  $("#btn_close_crm").hide();
+                $('#crm').parent().hide();
+                $("#btn_close_crm").hide();
                 $("#main_content").show();
-                 crm_edit_object.destroy();
+                crm_edit_object.destroy();
             });
             function LoadHTML(lead_id)
             {
@@ -385,7 +392,7 @@
                 crm_edit_object = new crm_edit($("#crm"), "/sips-admin/crm/crm_edit/", lead_id);
                 crm_edit_object.init();
                 $("#main_content").hide();
-                $("#crm").show();
+                $("#crm").parent().show();
                 $("#btn_close_crm").show();
 
             }
@@ -394,7 +401,7 @@
             $(/* Inicialização da página conforme a primeira campanha da dropdown */
                     function()
                     {
-
+                        moment.lang('pt');
                         $("#datai").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).keypress(function(e) {
                             e.preventDefault();
                         }).bind("cut copy paste", function(e) {

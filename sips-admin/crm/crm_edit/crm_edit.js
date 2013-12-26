@@ -53,14 +53,14 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                                     get_dynamic_fields();
                                                     crm_edit_zone.find("#lead_edit_save_button").hide();
                                                     crm_edit_zone.find("#lead_edit_button").text("Editar Dados do Cliente");
-                                                    crm_edit_zone.find("#dynamic_field_div input,textarea").prop("disabled", true);
+                                                    crm_edit_zone.find(".dynamic_field_divs input,textarea").prop("disabled", true);
                                                     me.edit_dynamic_field = 0;
                                                 }
                                                 else//EDITA
                                                 {
                                                     crm_edit_zone.find("#lead_edit_save_button").show();
                                                     crm_edit_zone.find("#lead_edit_button").text("Cancelar Edição");
-                                                    crm_edit_zone.find("#dynamic_field_div input,textarea").prop("disabled", false);
+                                                    crm_edit_zone.find(".dynamic_field_divs input,textarea").prop("disabled", false);
                                                     me.edit_dynamic_field = 1;
                                                 }
                                             });
@@ -154,9 +154,6 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         {
             var data_load = moment(data.data_load);
             var data_last = moment(data.data_last);
-
-
-
             me.campaign_id = data.campaign_id;
             me.feedback = data.status;
             crm_edit_zone.find("#lead_info_tbody").append("<tr><td>" + me.lead_id + "</td>" +
@@ -166,10 +163,13 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                     "<td>" + data.full_name + "</td>" +
                     "<td>" + data.status_name + "</td>" +
                     "<td>" + data.called_count + "</td></tr>");
-            crm_edit_zone.find("#lead_info_time_tbody").append("<tr><td>" +(data_load) ? data_load.lang("pt").format("D-MMMM-YYYY HH-mm-ss"):"" + "</td>" +
-                    "<td>" + (data_load) ? data_load.fromNow() : "" + "</td>" +
-                    "<td>" + (data_last) ? data_last.lang("pt").format("D-MMMM-YYYY HH-mm-ss") : "" + "</td>" +
-                    "<td>" + (data_last) ? data_last.fromNow() : "" + "</td></tr>");
+            crm_edit_zone.find("#lead_info_time_tbody").append("<tr><td>" + data_load.format("D-MMMM-YYYY HH:mm:ss") + "</td>" +
+                    "<td>" + data_load.fromNow() + "</td>" +
+                    "<td>" + data_last.format("D-MMMM-YYYY HH:mm:ss") + "</td>" +
+                    "<td>" + data_last.fromNow() + "</td></tr>");
+
+            if (data_last.isBefore(moment().subtract('month', 2)))
+                 $.jGrowl('As chamadas carregadas pertencem à tabela de arquivo(+ de 2 Meses)', {life: 5000});
             if (typeof callback === "function")
             {
                 callback();
@@ -184,11 +184,12 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         {
             var dynamic_fields = "";
             var dynamic_field = "";
-            crm_edit_zone.find("#dynamic_field_div").empty();
-
+            crm_edit_zone.find("#dynamic_field_div1").empty();
+            crm_edit_zone.find("#dynamic_field_div2").empty();
             if (Object.size(data))
             {
                 me.has_dynamic_fields = true;
+                var controler = 1;
                 $.each(data, function()
                 {
                     dynamic_field =
@@ -196,19 +197,28 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                             "     <label class='control-label'>" + this.display_name + "</label>" +
                             "          <div class='controls' >";
                     if (this.name == "COMMENTS")
-                        dynamic_field += "<textarea disabled name=" + this.name + " id=" + this.name + " class='span9' >" + this.value + "</textarea>";
+                    {
+                        dynamic_field += "<textarea disabled name=" + this.name + " id=" + this.name + "  >" + this.value + "</textarea>";
+                    }
                     else
-                        dynamic_field += "     <input disabled type=text name=" + this.name + " id=" + this.name + " class='span9' value=" + this.value + ">";
+                        dynamic_field += "     <input disabled type=text name=" + this.name + " id=" + this.name + "  value=" + this.value + ">";
                     dynamic_field += "   <span id=" + this.name + "></span>" +
                             "   </div>" +
                             "   </div>";
-                    dynamic_fields = dynamic_fields + dynamic_field;
+                    if (controler) {
+                        controler = 0;
+                        crm_edit_zone.find("#dynamic_field_div1").append(dynamic_field);
+                    }
+                    else
+                    {
+                        controler = 1;
+                        crm_edit_zone.find("#dynamic_field_div2").append(dynamic_field);
+                    }
                 });
-                crm_edit_zone.find("#dynamic_field_div").append(dynamic_fields);
             }
             else
             {
-                crm_edit_zone.find("#dynamic_field_div").append("<span>Sem Campos Dinamicos</span>");
+                crm_edit_zone.find("#dynamic_field_div1").append("<span>Sem Campos Dinamicos</span>");
                 me.has_dynamic_fields = false;
             }
             if (typeof callback === "function")
@@ -281,10 +291,11 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     function save_dynamic_fields()
     {
         var fields = new Array();
-        $.each(crm_edit_zone.find("#dynamic_field_div input,textarea"), function()
+        $.each(crm_edit_zone.find(".dynamic_field_divs input,textarea"), function()
         {
             fields.push({"name": this.name, "value": $(this).val()});
         });
+
         $.post(file_path + "crm_edit_request.php", {action: "save_dynamic_fields", lead_id: me.lead_id, fields: fields},
         function(data)
         {
