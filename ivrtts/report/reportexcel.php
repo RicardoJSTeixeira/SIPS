@@ -93,7 +93,7 @@ if (count($pOutros) > 1) {
 
 $toExcel->maketable(transpose($dataExcel));
 
-$toExcel->makegraph('Totais', NULL,NULL, 'chart0', 'r', 'lines', 'lines', TRUE, TRUE);
+//$toExcel->makegraph('Totais', NULL,NULL, 'chart0', 'r', 'lines', 'lines', TRUE, TRUE);
 
 //TRANSFORM LINHA2
 $p = array();
@@ -145,7 +145,7 @@ $toExcel->maketable(transpose($dataExcel));
 
 $toExcel->makegraph('Media da Duração da Chamada em Minutos', NULL,NULL, 'chart1', 'r', 'lines', 'lines', TRUE, TRUE);
 
-
+/*
 //TRANSFORM TOTAL
 $p = array();
 $pOutros = array('Outros');
@@ -269,10 +269,12 @@ if (count($pOutros) > 1) {
 
 $toExcel->maketable($dataExcel);
 
-$toExcel->makegraph('Feedbacks',NULL ,NULL, 'chart4', 'r', 'pie', 'pie', TRUE, TRUE);
-
+$toExcel->makegraph('Feedbacks',NULL ,NULL, 'chart4', null, 'pie', NULL, TRUE, TRUE);
+*/
 $toExcel->backGroundStyle('FFFFFF');
 
 $toExcel->save('Report', TRUE);
 ob_end_clean();
+
 $toExcel->send();
+
