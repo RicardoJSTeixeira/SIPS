@@ -1,6 +1,6 @@
 <?php
 
-//ob_start();
+ob_start();
 date_default_timezone_set('Europe/London');
 
 function transpose($array) {
@@ -295,6 +295,6 @@ $toExcel->backGroundStyle('FFFFFF');
 $toExcel->selectsheet(0);
 
 $toExcel->save('Report', TRUE);
-//ob_end_clean();
+ob_end_clean();
 
 $toExcel->send();
