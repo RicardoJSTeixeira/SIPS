@@ -87,7 +87,7 @@ class excelwraper {
             $activeSheet->getColumnDimension(chr($col))->setAutoSize(true);
         }
     }
-/*
+
     public function makegraph($title, $yLabel, $xLabel, $charName, $legendPosition, $graphType, $graphGrouping, $ShowVal, $ShowPerc) {
 
 
@@ -137,7 +137,7 @@ class excelwraper {
         //	Add the chart to the worksheet
         $activeSheet->addChart($chart);
     }
-*/
+
     protected function dataseriesLabels() {
 
         $activeSheet = $this->phpexcel->getActiveSheet();
@@ -250,14 +250,7 @@ class excelwraper {
     }
 
 }
-class graph {
-    
-    
-    
-    
-    
-    
-}
+
 
 
 //localhost 10.0.2.2 no virtual machine
