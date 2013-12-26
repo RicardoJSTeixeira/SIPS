@@ -1,0 +1,177 @@
+<link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css">    
+<script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
+<div class="row-fluid">
+    <div class="span12">
+        <h2>Informação do Cliente</h2>   
+        <table class='table table-mod table-bordered'>
+            <thead> 
+                <tr>
+                    <th>ID do Contacto</th>
+                    <th>Número de Telefone</th>
+                    <th>Base de Dados</th>
+                    <th>Campanha</th>
+                    <th>Operador</th>
+                    <th>Feedback</th>
+                    <th>Nº de Chamadas</th>
+                </tr>
+            </thead>
+            <tbody id="lead_info_tbody">
+            </tbody>
+        </table>     
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="span12">
+        <table class='table table-mod table-bordered'>
+            <thead> 
+                <tr>
+                    <th>Data de Carregamento</th>
+                    <th>Momento de Carregamento</th>
+                    <th>Data da Última Chamada</th>
+                    <th>Momento da Última Chamada</th>
+                </tr>
+            </thead>
+            <tbody id="lead_info_time_tbody">
+            </tbody>
+        </table>  
+    </div>
+</div>
+
+<div class="row-fluid">
+    <div class="span12">
+        <h2>Dados da Lead</h2>    
+        <form class="form-horizontal" id='inputcontainer' >
+            <div id="dynamic_field_div1" class="span6 dynamic_field_divs">
+            </div>
+            <div id="dynamic_field_div2"  class="span6 dynamic_field_divs">
+            </div>
+        </form>
+        <div id="dynamic_field_edit_div">
+            <button class="btn right btn-primary" id="lead_edit_button">Editar Dados do Cliente</button>
+            <button class="btn right" id="lead_edit_save_button" style="display:none"><i class="icon-save"></i>Gravar</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="row-fluid">
+    <div class="span12">
+        <h3>Alteração do Feedback</h3>
+        <div class="control-group">
+            <label class="control-label">Feedback Actual:</label>
+            <div class="controls input-append">
+                <select style='width:300px' name=feedback_list id=feedback_list></select>
+                <button class="btn btn-primary " id="confirm_feedback" style="display:none">Confirmação de feedback</button>
+            </div>
+            <span id=modify_feedback_status class='help-inline'><i>(O feedback deste contacto pode ser alterado neste menu.)</i></Span>
+
+            <div id="confirm_feedback_div"   style="display:none;width:95%">
+                <div class="formRow">
+                    <label class="control-label">Confirmação de feedback</label>
+                    <div class="formRight">
+                        <input type="radio" id="radio_confirm_yes" name="radio_confirm_group" value="1"><label for="radio_confirm_yes"><span></span>Validado</label>
+                    </div>
+                    <div class="formRight">
+                        <input type="radio" id="radio_confirm_return" name="radio_confirm_group" value="2"><label for="radio_confirm_return"><span></span>Retornar para novo contacto</label>
+                    </div>
+                    <div class="formRight">
+                        <input type="radio" id="radio_confirm_no" name="radio_confirm_group" value="0"><label for="radio_confirm_no"><span></span>Não validado</label>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="formRow" id="div_comentarios">
+                    <label class="control-label">Log de Comentários</label>
+                    <table class="table table-mod table-bordered" id="comment_log_table">
+                        <thead>
+                        <th>
+                            Comentario
+                        </th>
+                        <th>
+                            Estado
+                        </th>
+                        <th>
+                            Agente
+                        </th>
+                        <th>
+                            Admin
+                        </th>
+                        <th>
+                            Data
+                        </th>
+                        </thead>
+                        <tbody id="comment_log_tbody">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="formRow">
+                    <label class="control-label">Comentários</label>
+                    <div class="formRight">
+                        <textarea id='textarea_comment' placeholder="Escreva aqui um comentario e escolha o tipo de validação e agente, depois clique em 'Guardar'" style="width: 300px;height:150px"></textarea>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="formRow">
+                    <label class="control-label">Agente</label>
+                    <div class="formRight">
+                        <select id='agente_selector'>
+                        </select>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <button class='btn btn-action' id='confirm_feedback_button'>Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row-fluid">
+    <div class="span12">
+        <h3>Chamadas</h3>
+        <table class='table table-mod table-bordered' id="chamadas_realizadas">
+            <thead>
+                <tr>
+                    <th>Data</th>
+
+                    <th>Duração</th>
+                    <th>Número</th>
+                    <th>Operador</th>
+                    <th>Feedback</th>
+                    <th>Campanha</th>
+                    <th>Base de Dados</th>
+                </tr>
+            </thead>
+            <tbody id="calls_tbody">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="row-fluid">
+    <div class="span12">
+        <h3>Gravações</h3>
+        <table class='table table-mod table-bordered' id="chamadas_gravadas">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Inicio da Gravação</th>
+                    <th>Fim da Gravação</th>
+                    <th>Duração</th>
+                    <th>Operador</th>
+            </thead>
+            <tbody id="recordings_tbody">
+            </tbody>
+        </table> 
+    </div>
+
+
+
+
+</div>
+
+
+

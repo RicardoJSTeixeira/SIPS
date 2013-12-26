@@ -1,0 +1,149 @@
+
+
+<div class="grid-content">
+    <table id="table_client_info" class="table table-mod table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Morada</th>
+                <th>Data de Nascimento</th>
+            </tr>
+        </thead>
+        <tbody id="table_client_info_body">
+
+        </tbody>
+    </table>
+</div>
+
+
+
+
+<div class="grid-title"> 
+    <div class="pull-left">
+        Consulta
+    </div>
+</div>
+
+<div class="grid-content">
+
+
+
+
+
+
+    <div class="formRow" id="inicial_option_div">
+        <label>Preencher audiograma?</label>
+        <div class="formRight">
+            <input  type="radio" id="pa_yes" name="ra" >
+            <label class="radio inline"  for="pa_yes"><span></span>Sim</label> 
+            <input  type="radio" id="pa_no" name="ra" >
+            <label class="radio inline"  for="pa_no"><span></span>Não</label> 
+        </div>      
+    </div>
+
+
+
+
+
+
+
+    <div id="no_exam_div" style="display:none">
+        <div class="formRow">
+            <label>Não há exame</label>
+            <div class="formRight">
+                <input   type="checkbox" id="ne_l" name="ne" value="Limpeza">
+                <label class="checkbox inline" for="ne_l"><span></span>Limpeza</label>
+                <input   type="checkbox" id="ne_a" name="ne" value="Assistência">
+                <label class="checkbox inline" for="ne_a"><span></span>Assistência</label>
+                <input   type="checkbox" id="ne_p" name="ne" value="Pilhas">
+                <label class="checkbox inline" for="ne_p"><span></span>Pilhas</label>
+                <input   type="checkbox" id="ne_o" name="ne" value="Otorrino">
+                <label class="checkbox inline" for="ne_o"><span></span>Otorrino</label>
+                <input   type="checkbox" id="ne_i" name="ne" value="Informação">
+                <label class="checkbox inline" for="ne_i"><span></span>Informação</label>
+            </div>      
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <div class="clear"></div>
+
+
+
+
+    <div id="yes_exam_div" style="display:none" >
+        <h3>Audiograma</h3>
+        <div id="audiograma_placeholder" class="grid">            </div>
+        <h3>Script</h3>
+        <div class="grid" id="script_placeholder">            </div>
+        <button class="btn right" id="save_script"><i class="icon-save"></i>Gravar/Validar Script</button>
+        <div class='formRow' id='venda_confirm_div' style="display:none">
+            <label>Venda:</label>
+            <div class='formRight'>
+                <input  type="radio" id="venda_yes" name="vp_a">
+                <label class="radio inline"  for="venda_yes"><span></span>Sim</label>
+                <input  type="radio" id="venda_no" name="vp_a">
+                <label class="radio inline"  for="venda_no"><span></span>Não</label>
+            </div>       
+        </div>
+        <div id="venda_div"  style="display:none">
+            <div class="formRow">
+                <label>Tipo de Aparelho</label>
+                <div class="formRight">
+                    <input  type="radio" id="vp_mono" name="v_ta" value='Monoural' checked='checked'>
+                    <label class="radio inline"  for="vp_mono"><span></span>Monoural</label> 
+                    <input  type="radio" id="vp_bi" name="v_ta" value='Binaural'>
+                    <label class="radio inline"  for="vp_bi"><span></span>Binaural</label> 
+                </div>      
+            </div>
+            <div class="formRow">
+                <label>Descrição do Aparelho</label>
+                <div class="formRight">
+                    <select id='dma'>
+                        <option>xpto 2000</option>
+                        <option>capitão 300+</option>
+                    </select>
+                </div>      
+            </div>
+        </div>
+        <div id="no_venda_div"  style="display:none">
+            <div class='formRow'>
+                <label>Razão</label>
+                <div class='formRight'>
+                    <select id='no_venda_select'>
+                        <option>Preço</option>
+                        <option>Familiar</option>
+                        <option>Perda Aguda</option>
+                        <option>Concorrência</option>
+                        <option>Pensador</option>
+                    </select>
+                </div>       
+            </div>
+        </div>
+
+    </div>
+
+    <div class="formRow">
+        <button class='btn btn-success right' id='terminar_consulta'>Terminar Consulta</button>
+    </div>
+
+
+
+
+
+
+
+
+
+</div>
+<script type="text/javascript" src="/sips-admin/script_dinamico/render.js?v=1"></script>
+<script type="text/javascript" src="js/consulta.js"></script>
+
