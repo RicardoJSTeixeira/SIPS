@@ -1,8 +1,8 @@
 var GetMongoInfo = function() {
 
     var me = this,
-            domain = window.location.protocol + '//' + window.location.host,
-            //domain = 'http://goviragem.dyndns.org',
+            //domain = window.location.protocol + '//' + window.location.host,
+            domain = 'http://goviragem.dyndns.org',
             port = ':10000',
             prefix = '/ccstats/v0/',
             count = 'count/',
@@ -15,7 +15,7 @@ var GetMongoInfo = function() {
             data = {'datatype': '', 'type': '', 'id': '', 'timeline': {'start': '', 'end': ''}, 'by': {'calls': [], 'filter': []}};
     this.creat = function(obj) {
         options = obj;
-        $.extend(data, options);
+        $.extend(true,data, options);
         switch (data.type) {
             case 'id':
                 {
@@ -24,9 +24,9 @@ var GetMongoInfo = function() {
                 }
             case 'datatype':
                 {
-                    if (data.by.calls.length > 0 && data.by.filter.length < 0) {
+                    if (data.by.calls.length && !data.by.filter.length) {
                         return domain + port + prefix + data.datatype + by + data.by.calls.join(',');
-                    } else if (data.by.calls.length > 0 && data.by.filter.length > 0) {
+                    } else if (data.by.calls.length && data.by.filter.length) {
                         return domain + port + prefix + data.datatype + by + data.by.calls.join(',') + and + data.by.filter.join('&');
                     } else {
                         return domain + port + prefix + data.datatype;
@@ -35,9 +35,9 @@ var GetMongoInfo = function() {
                 }
             case 'sum':
                 {
-                    if (data.by.calls.length > 0 && data.by.filter.length < 0) {
+                    if (data.by.calls.length && !data.by.filter.length) {
                         return domain + port + prefix + sum + callsSecond + by + data.by.calls.join(',');
-                    } else if (data.by.calls.length > 0 && data.by.filter.length > 0) {
+                    } else if (data.by.calls.length && !data.by.filter.length) {
                         return domain + port + prefix + sum + callsSecond + by + data.by.calls.join(',') + and + data.by.filter.join('&');
                     } else {
                         return domain + port + prefix + sum + callsSecond;
@@ -46,9 +46,9 @@ var GetMongoInfo = function() {
                 }
             case 'avg':
                 {
-                    if (data.by.calls.length > 0 && data.by.filter.length < 0) {
+                    if (data.by.calls.length && !data.by.filter.length) {
                         return domain + port + prefix + avg + callsSecond + by + data.by.calls.join(',');
-                    } else if (data.by.calls.length > 0 && data.by.filter.length > 0) {
+                    } else if (data.by.calls.length  && data.by.filter.length) {
                         return domain + port + prefix + avg + callsSecond + by + data.by.calls.join(',') + and + data.by.filter.join('&');
                     } else {
                         return domain + port + prefix + avg + callsSecond;
@@ -57,9 +57,9 @@ var GetMongoInfo = function() {
                 }
             case 'count':
                 {
-                    if (data.by.calls.length > 0 && data.by.filter.length < 0) {
+                    if (data.by.calls.length && !data.by.filter.length) {
                         return domain + port + prefix + count + data.datatype + by + data.by.calls.join(',');
-                    } else if (data.by.calls.length > 0 && data.by.filter.length > 0) {
+                    } else if (data.by.calls.length  && data.by.filter.length ) {
                         return domain + port + prefix + count + data.datatype + by + data.by.calls.join(',') + and + data.by.filter.join('&');
                     } else {
                         return domain + port + prefix + count + data.datatype;
@@ -71,10 +71,10 @@ var GetMongoInfo = function() {
             case 'min,max':
                 {
 
-                    if (data.by.calls.length > 0 && data.by.filter.length < 0) {
+                    if (data.by.calls.length  && !data.by.filter.length ) {
                         return domain + port + prefix + data.type + startDate + by + data.by.calls.join(',');
                         break;
-                    } else if (data.by.calls.length > 0 && data.by.filter.length > 0) {
+                    } else if (data.by.calls.length && data.by.filter.length) {
                         return domain + port + prefix + data.type + startDate + by + data.by.calls.join(',') + and + data.by.filter.join('&');
                         break;
                     } else {
