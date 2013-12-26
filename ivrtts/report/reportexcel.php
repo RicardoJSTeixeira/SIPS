@@ -21,7 +21,7 @@ foreach ($_GET as $key => $value) {
 //inclui o ficheiro PHPExcel
 require '../../ini/phpexcel/PHPExcel.php';
 
-require("./excelwraper.php");
+require './excelwraper.php';
 
 
 $tempo = json_decode($tempo, true);
@@ -42,9 +42,29 @@ $dataTotalHora_Core = file_get_contents("http://localhost:10000/ccstats/v0/sum/c
 $dataTotalHora = json_decode($dataTotalHora_Core, true);
 
 
-//var_dump($dataLinha1);exit;
-//START FILE
+$data=(array(
+		array('+',	2010,	2011,	2012),
+		array('Q1',   12,   15,		21),
+		array('Q2',   56,   73,		86),
+		array('Q3',   52,   61,		69),
+		array('Q4',   30,   32,		0),
+	));
+
 $toExcel = new excelwraper(New PHPExcel(), "report");
+
+$toExcel->maketable($data, FALSE);
+$toExcel->maketable($data, FALSE);
+$toExcel->maketable($data, FALSE);
+$toExcel->maketable($data, FALSE);
+$toExcel->backGroundStyle('FFFFFF');
+$toExcel->addsheet('MoreTables');
+$toExcel->maketable($data, FALSE);
+$toExcel->maketable($data, FALSE);
+$toExcel->maketable($data, FALSE);
+$toExcel->maketable($data, FALSE);
+$toExcel->backGroundStyle('FFFFFF');
+
+$toExcel->addsheet('ReportGraph');
 
 //TRANSFORM LINHA1
 $p = array();
@@ -91,9 +111,9 @@ if (count($pOutros) > 1) {
     $dataExcel[] = $pOutros;
 }
 
-$toExcel->maketable(transpose($dataExcel));
+$toExcel->maketable(transpose($dataExcel),TRUE, 'Totais', NULL, NULL, 'chart1', 'r', 'lines', 'lines', TRUE, TRUE);
 
-//$toExcel->makegraph('Totais', NULL,NULL, 'chart0', 'r', 'lines', 'lines', TRUE, TRUE);
+
 
 //TRANSFORM LINHA2
 $p = array();
@@ -141,11 +161,10 @@ if (count($pOutros) > 1) {
     $dataExcel[] = $pOutros;
 }
 
-$toExcel->maketable(transpose($dataExcel));
+$toExcel->maketable(transpose($dataExcel), TRUE, 'Media da Duração da Chamada em Minutos', NULL, NULL, 'chart1', 'r', 'lines', 'lines', TRUE, TRUE);
 
-$toExcel->makegraph('Media da Duração da Chamada em Minutos', NULL,NULL, 'chart1', 'r', 'lines', 'lines', TRUE, TRUE);
 
-/*
+
 //TRANSFORM TOTAL
 $p = array();
 $pOutros = array('Outros');
@@ -183,9 +202,9 @@ if (count($pOutros) > 1) {
 }
 
 
-$toExcel->maketable(transpose($dataExcel));
+$toExcel->maketable(transpose($dataExcel), TRUE, 'Total Chamadas por Feedback', NULL, NULL, 'chart2', 'r', 'bars', 'bars', TRUE, TRUE);
 
-$toExcel->makegraph('Total Chamadas por Feedback', NULL,NULL, 'chart2', 'r', 'bars', 'bars', TRUE, TRUE);
+
 
 //TRANFORM total/3600
 $p = array();
@@ -226,9 +245,9 @@ if (count($pOutros) > 1) {
 
 
 
-$toExcel->maketable(transpose($dataExcel));
+$toExcel->maketable(transpose($dataExcel), TRUE, 'Duração total por Feedback', NULL, NULL, 'chart3', 'r', 'bars', 'bars', TRUE, TRUE);
 
-$toExcel->makegraph('Duração total por Feedback', NULL,NULL, 'chart3', 'r', 'bars', 'bars', TRUE, TRUE);
+
 
 
 //Transform Pie
@@ -267,14 +286,15 @@ if (count($pOutros) > 1) {
 }
 
 
-$toExcel->maketable($dataExcel);
+$toExcel->maketable(($dataExcel), TRUE, 'Feedbacks', NULL, NULL, 'chart4', null, 'pie', NULL, TRUE, TRUE);
 
-$toExcel->makegraph('Feedbacks',NULL ,NULL, 'chart4', null, 'pie', NULL, TRUE, TRUE);
-*/
+
+
 $toExcel->backGroundStyle('FFFFFF');
+
+$toExcel->selectsheet(0);
 
 $toExcel->save('Report', TRUE);
 ob_end_clean();
 
 $toExcel->send();
-

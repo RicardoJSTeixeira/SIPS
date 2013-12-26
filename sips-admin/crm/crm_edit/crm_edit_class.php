@@ -52,7 +52,9 @@ class crm_edit_class {
                         vdlf.list_name,
                         vu.full_name,
                         vdl.called_count,
-                        
+                        vdl.modify_date data_last,
+                        vstatus.status_name,
+                        vstatus.status,
                          vdl.last_local_call_time data_last,
                        vstatus.status_name,
                         vstatus.status,
@@ -60,14 +62,50 @@ class crm_edit_class {
                      vdl.entry_date AS data_load,
                         vdl.phone_number
                         FROM vicidial_lists vdlf
-                INNER JOIN vicidial_list vdl ON  vdl.list_id=vdlf.list_id                                                 
-                INNER JOIN vicidial_campaigns vdc ON vdc.campaign_id=vdlf.campaign_id
+                    
+                left JOIN vicidial_list vdl ON  vdl.list_id=vdlf.list_id                                                 
+                left JOIN vicidial_campaigns vdc ON vdc.campaign_id=vdlf.campaign_id
                 LEFT JOIN vicidial_users vu ON vu.user=vdl.user
                  LEFT JOIN   (select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b) vstatus on vstatus.status=vdl.status
                 WHERE lead_id=:lead_id";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         $js = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        $query = "SELECT vl.call_date data_last,vstatus.status_name,vstatus.status FROM vicidial_log vl
+                 LEFT JOIN   (select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b) vstatus on vstatus.status=vl.status
+                WHERE lead_id=:lead_id order by call_date desc limit 1 ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array(":lead_id" => $lead_id));
+        $count = $stmt->rowCount();
+        if ($count) {
+            
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $js["data_last"] = $row["data_last"];
+            $js["status_name"] = $row["status_name"];
+            $js["status"] = $row["status"];
+            
+        } else {
+            $query = "SELECT vl.call_date data_last,vstatus.status_name,vstatus.status FROM vicidial_log_archive vl
+                 LEFT JOIN   (select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b) vstatus on vstatus.status=vl.status
+                WHERE lead_id=:lead_id order by call_date desc limit 1 ";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute(array(":lead_id" => $lead_id));
+            $count = $stmt->rowCount();
+            if ($count) {
+                
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                $js["data_last"] = $row["data_last"];
+                $js["status_name"] = $row["status_name"];
+                $js["status"] = $row["status"];
+            }
+        }
+
+
+
+
+
+
         return $js;
     }
 
@@ -89,6 +127,8 @@ class crm_edit_class {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
             foreach ($row as $key => $value) {
+
+                $value = str_replace('!N', "\r\n", $value);
                 $dfields[$key]["value"] = $value;
             }
         }
@@ -97,7 +137,7 @@ class crm_edit_class {
     }
 
     public function get_feedbacks($feedback, $campaign_id) {
-        $feedback_options = [];
+        $feedback_options = array();
         $query = "SELECT status,status_name,sale FROM  (select status,status_name,sale from vicidial_campaign_statuses WHERE campaign_id=:campaign_id AND scheduled_callback!=1) a union all (select status,status_name,sale from vicidial_statuses)";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":campaign_id" => $campaign_id));
@@ -114,6 +154,7 @@ class crm_edit_class {
         $output = array("aaData" => array());
         $js1 = array();
         $js2 = array();
+        
         $query = "SELECT vl.uniqueid, 
                         vl.lead_id, 
                         vl.list_id,
@@ -148,6 +189,7 @@ class crm_edit_class {
 
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
+        $count = $stmt->rowCount();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
             if ($user_level > 5)
@@ -190,6 +232,7 @@ class crm_edit_class {
                 DESC;";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
+        $count = $count + $stmt->rowCount();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
             if ($user_level > 5)
@@ -197,6 +240,53 @@ class crm_edit_class {
             else
                 $preview_button = "";
             $output['aaData'][] = array("0" => $row["data"], "1" => gmdate("H:i:s", $row["length_in_sec"]), "2" => $row["phone_number"], "3" => $row["full_name"], "4" => $row["status_name"], "5" => $row["campaign_name"], "6" => $row["list_name"] . $preview_button);
+        }
+
+        if ($count == 0) {
+            $query = "SELECT vl.uniqueid, 
+                        vl.lead_id, 
+                        vl.list_id,
+                        vl.campaign_id,
+                        vl.call_date AS data,
+                        vl.start_epoch,
+                        vl.end_epoch,
+                        vl.length_in_sec,
+                        vl.phone_code,
+                        vl.phone_number,
+                        vl.user,
+                        vl.comments,
+                        vl.processed,
+                        vl.user_group,
+                        vl.term_reason,
+                        vl.alt_dial,
+                        vu.full_name,
+                        vstatus.status_name,
+                        vc.campaign_name,
+                        vls.list_name
+                FROM 
+                        vicidial_log_archive vl
+                left JOIN vicidial_users vu ON vl.user=vu.user
+                left JOIN vicidial_campaigns vc ON vl.campaign_id=vc.campaign_id 
+                left JOIN vicidial_lists vls ON vl.list_id=vls.list_id
+                        left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vl.status
+                WHERE 
+                        vl.lead_id=:lead_id 
+                ORDER BY
+                        end_epoch 
+                DESC;";
+
+            $stmt = $this->db->prepare($query);
+            $stmt->execute(array(":lead_id" => $lead_id));
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                if ($user_level > 5)
+                    $preview_button = " <div class='view-button edit_item'><a class='btn btn-mini btn-primary' target='_new' href='" . $file_path . "script_placeholder.html?lead_id=$lead_id&campaign_id=$campaign_id&user=$user_name&pass=$user_pass&isadmin=1&unique_id=" . $row["uniqueid"] . "'><i class='icon-bookmark'></i>Script</a></div>";
+                else
+                    $preview_button = "";
+
+                $output['aaData'][] = array("0" => $row["data"], "1" => gmdate("H:i:s", $row["length_in_sec"]), "2" => $row["phone_number"], "3" => $row["full_name"], "4" => $row["status_name"], "5" => $row["campaign_name"], "6" => $row["list_name"] . $preview_button);
+            }
         }
 
 
