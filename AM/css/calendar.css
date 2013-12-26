@@ -1,0 +1,25 @@
+.external-event { 
+    margin: 10px 0;
+    padding: 2px 4px;
+    position: relative;
+    color: #fff;
+    font-size: .85em;
+    cursor: pointer;
+    border-radius: 2px;
+    border:1px solid #3a87ad;
+}
+.greyclass{
+    background-color: grey !important;
+    border-color: grey !important;
+}
+
+.bloqueado{
+    background-image: url("/images/icons/stripes.png");
+}
+#refs input[type="radio"] + label span,#refs label  {
+    margin:0;
+    padding:0;
+}
+.popover {
+     z-index: 1001 !important;
+}

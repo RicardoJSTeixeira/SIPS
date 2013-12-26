@@ -1,5 +1,6 @@
-var api = new API(),
-        graficos = new graph();
+//var api = new API();
+  var  graficos = new graph(),
+      info = new GetMongoInfo();
 
 var dashboard = function() {
     var me = this;
@@ -7,7 +8,8 @@ var dashboard = function() {
     this.graph = function() {
         $('#kant').load('../intra_realtime/index.php', function() {
 
-            api.get({'datatype': 'min.max', 'by': {'calls': ['database.campaign'], 'filter': ['database.campaign.oid=' + CurrentCampaignID]}}, function(data) {
+            info.get({ 'type':'min,max', 'by':{ 'calls':['database.campaign'] , 'filter':['database.campaign.oid='+ CurrentCampaignID] } }, function(data){
+
                 var total = [], total1 = [], tempo;
                 
                 if (data.length) {
@@ -15,8 +17,8 @@ var dashboard = function() {
                     data1 = data[0];
                     max = moment(data1.max);
                     min = moment(data1.min);
-                    //console.log(max);
-                    //console.log(min);
+//                    console.log(max);
+//                    console.log(min);
                     minuto = max.diff(min, 'minute');
                     hora= max.diff(min, 'hour');
                     dia = max.diff(min, 'day');
@@ -79,7 +81,8 @@ var dashboard = function() {
 
 
             //Barras total Chamadas Feedback
-            api.get({'datatype': 'calls', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=' + CurrentCampaignID]}}, function(data) {
+            info.get({'datatype': 'calls', 'type':'count' ,'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=' + CurrentCampaignID]}}, function(data) {
+
                 var arr = [],
                         outro = 0;
                 $.each(data, function() {
@@ -104,17 +107,20 @@ var dashboard = function() {
                     });
 
                 });
+                if(outro>0){
                 arr.push({
                     "x": "Outros",
                     "y": outro
                 });
+            }
                 graficos.bar('#Graph3', arr);
             });
 
             //barra total temporal Chamadas Feedback
-            api.get({'datatype': 'sum', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=' + CurrentCampaignID]}}, function(data) {
+            info.get({'datatype': 'calls','type':'sum', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=' + CurrentCampaignID]}}, function(data) {
+
                 var arr = [],
-                        outr = 0;
+                        outro = 0;
                 $.each(data, function() {
                     switch (this._id.status.oid) {
                         case "MSG001":
@@ -127,7 +133,7 @@ var dashboard = function() {
                         case "NEW":
                             break;
                         default :
-                            outr += this.sum;
+                            outro += this.sum;
                             return;
                     }
 
@@ -137,18 +143,20 @@ var dashboard = function() {
                     });
 
                 });
+                if(outro>0){
                 arr.push({
                     "x": "Outros",
-                    "y": outr//Math.floor(outr / (60 * 60))
+                    "y": outro//Math.floor(outr / (60 * 60))
                 });
+            }
 
                 graficos.bar('#Graph4', arr);
             });
 
 
 
+            info.get({'datatype': 'calls', 'type':'count' ,'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=' + CurrentCampaignID]}}, function(data) {
 
-            api.get({'datatype': 'calls', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=' + CurrentCampaignID]}}, function(data) {
                 var
                         arr = [],
                         outros = 0;

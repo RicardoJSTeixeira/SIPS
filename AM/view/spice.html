@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+        <meta charset="utf-8">
+        <title>Spice</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="Finesource">
+
+        <!-- Le styles -->
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
+
+
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen-1.min.css" />
+        <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/demo_table.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/animate.min.css" />
+
+
+
+        <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.css">
+
+        <link rel="stylesheet" type="text/css" media="screen" title="red-theme" href="css/red.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/validationEngine.jquery.css" />      
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css">
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/fullcalendar.css" />
+
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        <!-- Le fav and touch icons -->
+        <link rel="shortcut icon" href="/images/icons/favicon.ico">
+
+    </head>
+
+    <body>
+
+        <!--Header Start-->
+        <div class="header" >
+
+            <a href="dashboard.html" class="logo"><h1>SPICE</h1></a>
+
+            <div class="pull-right">
+
+                <!--Notifications Start-->  
+                <div class="notifications-head">
+
+                    <!--Messages Start-->
+                    <div class="btn-group m_left hide-mobile" >
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="notification">10</span><span class="triangle-1"></span><i class="icon-comments"></i><span class="caret"></span>
+                        </a>
+                        <div class="dropdown-menu">
+
+                            <span class="triangle-2"></span>
+                            <div class="ichat">
+                                <div class="ichat-messages">
+                                    <div class="ichat-title">
+                                        <div class="pull-left">New Messages</div>
+                                        <div class="pull-right"><span>Update 4*</span></div>
+                                        <div class="clear"></div>
+                                    </div>
+
+                                    <div class="imessage">
+                                        <div class="iavatar"></div>
+                                        <div class="imes">
+                                            <div class="iauthor">Alan Cook</div>
+                                            <div class="itext">All right. Thank you.</div>
+                                        </div>
+                                        <div class="idelete"><a href="#"><span><i class="icon-remove"></i></span></a></div>
+                                        <div class="clear"></div>
+                                    </div>
+
+                                    <div class="ichat-link"><a href="#">InBox</a> <a href="#">OutBox</a> <a href="#">Spam</a> <a href="#">Trash</a>
+                                        <div class="clear"></div>
+                                    </div>
+
+                                </div>
+                                <a href="#" class="iview">View all</a><a href="#" class="imark">Mark all read</a>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--Messages END--> 
+
+                    <!--Recent Activity Start-->
+                    <div class="btn-group pull-left hide-mobile" >
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="notification">11</span><span class="triangle-1"></span><i class="icon-bell"></i><span class="caret"></span>
+                        </a>
+                        <div class="dropdown-menu">
+
+                            <span class="triangle-2"></span>
+                            <div class="ichat">
+                                <div class="ichat-messages">
+                                    <div class="ichat-title">
+                                        <div class="pull-left">Recent Activity</div>
+                                        <div class="pull-right"><span>Update 14*</span></div>
+                                        <div class="clear"></div>
+                                    </div>
+
+                                    <div class="r_activity">
+                                        <div class="imessage">
+                                            <div class="r_icon"><a href="#"><i class="icon-camera"></i></a></div>
+                                            <div class="r_info">
+                                                <div class="r_name"><strong>Alan Cook</strong> a new photo</div>
+                                                <div class="r_text"><i class="icon-time"></i> 3 hours ago</div>
+                                                <div class="r_link"><a href="#">View...</a></div>
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="#" class="iview">View all</a><a href="#" class="imark">Mark all read</a>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--Recent Activity END--> 
+
+                </div><!--Notifications END-->
+
+                <!--Button User Start-->  
+                <div class="btn-group pull-right" >
+                    <a class="btn btn-profile dropdown-toggle" id="button-profile" data-toggle="dropdown" href="#">
+                        <span class="name-user"><strong>Bem vindo</strong>, <span id="user-name"></span></span> 
+                        <span class="avatar"></span> 
+                        <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu" id="prof_dropdown">
+                        <div class="item_m"><span class="caret"></span></div>
+                        <ul class="clear_ul" >
+                            <li><a href="#"><i class="icon-globe"></i> Geral</a></li>
+                            <li><a href="#"><i class="icon-comments"></i> Mensagens</a></li>
+                            <li><a href="logout.php"><i class="icon-off"></i> Sign Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!--Button User END-->  
+
+            </div>
+        </div>
+        <!--Header END-->
+
+
+        <!--Sidebar Start--> 
+        <div id="sidebar">
+            <ul class="menu-sidebar">
+                <li><a href="view/dashboard.html" class="active"><i class="icon-home"></i> <span>Geral</span></a></li>
+               
+                <li><a href="view/calendar.html"><i class="icon-calendar"></i> <span>Agenda</span></a></li>
+                <li><a href="view/create_client.html"><i class="icon-plus-sign"></i> <span>Novo Cliente</span></a></li>
+                <li><a href="view/crm_main.html"><i class="icon-edit"></i> <span>CRM</span></a></li>
+                <li><a href="view/webdocs.html"><i class="icon-briefcase"></i> <span>WebDocs</span></a></li>
+                </ul>
+
+
+        </div>
+        <!--Sidebar END-->
+
+        <!--Content Start-->
+        <div id="content">
+
+
+            <!--SpeedBar Start-->
+            <div class="speedbar">
+                <div class="speedbar-content">
+
+                    <ul class="menu-speedbar">
+                        <!--<li><a href="dashboard.html" class="act_link">Here</a></li>
+                        <li><a href="charts.html">There</a></li>-->
+                    </ul>
+
+
+                </div>
+            </div>
+            <!--SpeedBar END-->
+
+
+            <!--CONTENT MAIN START-->
+            <div class="content" id="principal">
+
+
+            </div>
+        </div>
+
+        <script src="/jquery/jquery-1.9.1.js"></script>
+        <script src="/jquery/jqueryUI/jquery-ui-1.10.2.custom.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/chosen-1.jquery.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/moment.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/moment.langs.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/validation/jquery.validationEngine.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/validation/languages/jquery.validationEngine-pt.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/validation/contrib/other-validations.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/fullcalendar.min.js"></script>
+
+        <script type="text/javascript" src="js/aplication.js"></script>
+    </body>
+</html>

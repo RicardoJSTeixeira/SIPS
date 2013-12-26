@@ -1,0 +1,71 @@
+                
+<style>
+      #iframe_parent {
+            height: 60em;
+      }
+
+      #script_frame
+      {
+            background-color: transparent;
+            border: 0px none transparent;
+            padding: 0px;
+            overflow: hidden;
+            width:100%;
+            height:100%;
+
+      }
+</style>
+
+<div id="div_master">
+      <div id="criar_marcacao" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Client" aria-hidden="true">
+            <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                  <h3 id="myModalLabel">Criar Marcação</h3>
+            </div>
+            <div class="modal-body">
+                  Deseja criar uma marcação para este novo cliente?
+            </div>
+            <div class="modal-footer" style="text-align: inherit !important;">
+                  <span class="right">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button>
+
+                        <button class="btn btn-success" id="btn_criar_marcacao">Criar Marcação</button>
+                  </span>
+            </div>
+      </div>
+      <div class="grid-title">
+            <div class="pull-left">Info do Novo Cliente </div>
+      </div>
+      <div class="grid-content">
+            <form id="verif_client_data" class="formular" >
+                  <div id="inputs_div">
+
+                  </div>      
+            </form>
+
+            <div class="formRow">
+                  <button class="btn btn-inverse right" id="create_client_button">Criar cliente</button>
+            </div>
+      </div>
+</div>
+
+
+
+<div id="div_calendar" style="display: none">
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="js/create_client.js"></script>

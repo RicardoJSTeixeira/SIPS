@@ -251,9 +251,8 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     input.maxLength = info.max_length;
                     input.name = info.tag;
 
-                    if (info.default_value.toString().length > 2 && Object.size(me.client_info))
+                    if (info.default_value.toString().length > 2 && Object.size(me.client_info) && !me.admin_review)
                     {
-
                         input.value = me.client_info[info.default_value.toString().toLowerCase()];
                     }
                     var pattern = [];

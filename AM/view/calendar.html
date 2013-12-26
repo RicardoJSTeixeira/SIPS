@@ -1,0 +1,75 @@
+<link type="text/css" rel="stylesheet" href="css/calendar.css" />
+<style id="reserve_types"></style>
+<div class="content">
+    <div class="row-fluid" id="c_master">
+        <div class="span2">
+
+            <div class="grid hide" id="client">
+                <div class="grid-title"><div class="pull-left">Cliente</div></div>
+                <div class="user c_bg-2">
+                        <div class="user-name">Nome</div>
+                        <div class="user-email">Morada</div>
+                        <div class="user-date">Cod. Postal</div>
+                    <ul class="user-actions">
+                        <li><a href="#" title="Voltar"><i class=" icon-circle-arrow-left"></i></a></li>
+                    </ul>
+                    <div class="clear"></div>
+                </div>
+            </div>
+
+            <div class="grid" id="refs">
+                <div class="grid-title"><div class="pull-left">Calendários</div></div>
+                <table class="table table-striped table-mod archives">
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="grid hide" id='external-events'>
+                <div class="grid-title"><div class="pull-left">Tipo de Reservas</div></div>
+                <div class="grid-content">
+                </div>
+            </div>
+
+        </div>
+        <div class="span10">
+            <div  class="grid">
+                <div id="calendar" class="grid-content"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row-fluid hide" id="c_consult">
+        <div class="span12">
+            <div  class="grid">
+                <div class="grid-content">
+                    questionário
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="calendar_client" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Client" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Cliente</h3>
+    </div>
+    <div class="modal-body">
+        <dl class="dl-horizontal" id="client_info">
+        </dl>
+    </div>
+    <div class="modal-footer" style="text-align: inherit !important;">
+        <span class="left">
+            <button class="btn btn-danger icon-alone" id="btn_trash" ><i class="icon-trash"></i></button>
+            <button class="btn btn-info" disabled>Mudar hora</button>
+        </span>
+        <span class="right">
+            <button class="btn btn-link" data-dismiss="modal" aria-hidden="true">Fechar</button>
+            <button class="btn btn-warning" id="btn_no_consult">Não há Consulta</button>
+            <button class="btn btn-success" id="btn_init_consult">Iniciar Consulta</button>
+        </span>
+    </div>
+</div>
+
+<script src="js/calendar.js"></script>
+<script src="js/calendar_view.js"></script>

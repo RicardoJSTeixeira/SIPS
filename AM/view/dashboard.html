@@ -1,0 +1,64 @@
+<link type="text/css" rel="stylesheet" href="css/calendar.css" />
+<style  id="reserve_types"></style>
+
+
+<div id="div_master" class="content">
+    <div class="row-fluid">
+        <div class="span12">
+            <ul id="tabs" class="nav nav-tabs tabs-main">
+                <li class="active"><a href="#Todas" data-toggle="tab">Todas as Marcações</a></li>
+                <li><a href="#NovoCli" data-toggle="tab">Novos Clientes Sem Marcação</a></li>
+            </ul>
+            <div class="tab-content tabs-main-content">
+                <div class="tab-pane tab-overflow-main" id="NovoCli">
+                    <table class="table table-mod table-bordered table-striped" id='table_ncsm'></table>
+                </div>
+                <div class="tab-pane active tab-overflow-main" id="Todas">
+                    <table class="table table-mod table-bordered table-striped" id='table_allm'></table>      
+                </div>
+            </div>   
+        </div>   
+    </div>
+
+
+
+
+    <div class="row-fluid">
+        <div class="span6">
+            <div  class="grid">
+                <div id="calendar_day" class="grid-content"> </div>
+            </div>
+        </div>
+        <div class="span6">
+            <div class="grid hide" id='ext-events'>
+                <div class="grid-title"><div class="pull-left">Tipo de Reservas</div></div>
+                <div class="grid-content">
+                </div>
+            </div>
+            <div class="grid"  style="overflow: auto;max-height:35em">
+                <div class="grid-title"><div class="pull-left">Marcações Pendentes</div></div>
+                <table class="table table-mod archives" id='table_mp'>
+                    <thead>
+                    <th>
+                        Nome
+                    </th>
+                    <th>
+                        Data
+                    </th>
+                    </thead>
+                    <tbody id='table_tbody_mp'>
+
+                    </tbody>
+
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="div_calendar" style="display: none" >
+
+</div>
+
+<script src="js/calendar.js" ></script>
+<script src="js/dashboard.js" ></script>
