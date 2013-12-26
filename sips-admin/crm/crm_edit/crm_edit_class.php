@@ -97,7 +97,7 @@ class crm_edit_class {
     }
 
     public function get_feedbacks($feedback, $campaign_id) {
-        $feedback_options = [];
+        $feedback_options = array();
         $query = "SELECT status,status_name,sale FROM  (select status,status_name,sale from vicidial_campaign_statuses WHERE campaign_id=:campaign_id AND scheduled_callback!=1) a union all (select status,status_name,sale from vicidial_statuses)";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":campaign_id" => $campaign_id));
