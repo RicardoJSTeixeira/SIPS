@@ -143,7 +143,7 @@ class crm_edit_class {
                 WHERE 
                         vl.lead_id=:lead_id 
                 ORDER BY
-                        uniqueid 
+                        end_epoch 
                 DESC;";
 
         $stmt = $this->db->prepare($query);
@@ -186,7 +186,7 @@ class crm_edit_class {
                 WHERE 
                        vl.lead_id=:lead_id 
                 ORDER BY
-                        uniqueid 
+                        end_epoch 
                 DESC;";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));

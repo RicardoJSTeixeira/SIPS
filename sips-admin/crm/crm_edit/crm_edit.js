@@ -236,7 +236,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     function get_calls(callback)
     {
         var Table_chamadas = crm_edit_zone.find('#chamadas_realizadas').dataTable({
-            "bSortClasses": false,
+            "bSortClasses": true,
             "bProcessing": true,
             "bDestroy": true,
             "sPaginationType": "full_numbers",
