@@ -107,10 +107,12 @@ var dashboard = function() {
                     });
 
                 });
+                if(outro>0){
                 arr.push({
                     "x": "Outros",
                     "y": outro
                 });
+            }
                 graficos.bar('#Graph3', arr);
             });
 
@@ -118,7 +120,7 @@ var dashboard = function() {
             info.get({'datatype': 'calls','type':'sum', 'by': {'calls': ['database.campaign', 'status'], 'filter': ['database.campaign.oid=' + CurrentCampaignID]}}, function(data) {
 
                 var arr = [],
-                        outr = 0;
+                        outro = 0;
                 $.each(data, function() {
                     switch (this._id.status.oid) {
                         case "MSG001":
@@ -131,7 +133,7 @@ var dashboard = function() {
                         case "NEW":
                             break;
                         default :
-                            outr += this.sum;
+                            outro += this.sum;
                             return;
                     }
 
@@ -141,10 +143,12 @@ var dashboard = function() {
                     });
 
                 });
+                if(outro>0){
                 arr.push({
                     "x": "Outros",
-                    "y": outr//Math.floor(outr / (60 * 60))
+                    "y": outro//Math.floor(outr / (60 * 60))
                 });
+            }
 
                 graficos.bar('#Graph4', arr);
             });

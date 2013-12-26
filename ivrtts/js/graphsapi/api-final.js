@@ -7,35 +7,37 @@ var GetMongoInfo = function() {
             prefix = '/ccstats/v0/',
             count = 'count/',
             sum = 'sum',
-            callsSecond ='/calls/length_in_sec',
+            callsSecond = '/calls/length_in_sec',
             startDate = '/calls/start_date',
             avg = 'avg',
             by = '?by=',
             and = '&',
-            data = {'datatype': '', 'type': '', 'id': '', 'timeline': {'start': '', 'end': ''}, 'by': {'calls': [], 'filter': [] }};
-
-
+            data = {'datatype': '', 'type': '', 'id': '', 'timeline': {'start': '', 'end': ''}, 'by': {'calls': [], 'filter': []}};
     this.creat = function(obj) {
         options = obj;
         $.extend(data, options);
-        
-        
-        
         switch (data.type) {
             case 'id':
                 {
-                    return domain + port + prefix + data.datatype +'/'+ data.id;
+                    return domain + port + prefix + data.datatype + '/' + data.id;
                     break;
                 }
-            case 'datatype':{
-                    return domain + port + prefix + data.datatype;
+            case 'datatype':
+                {
+                    if (data.by.calls.length > 0 && data.by.filter.length < 0) {
+                        return domain + port + prefix + data.datatype + by + data.by.calls.join(',');
+                    } else if (data.by.calls.length > 0 && data.by.filter.length > 0) {
+                        return domain + port + prefix + data.datatype + by + data.by.calls.join(',') + and + data.by.filter.join('&');
+                    } else {
+                        return domain + port + prefix + data.datatype;
+                    }
                     break;
-            }
+                }
             case 'sum':
                 {
-                    if (data.by.calls.length > 0 && data.by.filter.length<0) {
+                    if (data.by.calls.length > 0 && data.by.filter.length < 0) {
                         return domain + port + prefix + sum + callsSecond + by + data.by.calls.join(',');
-                    } else if(data.by.calls.length>0 && data.by.filter.length > 0){
+                    } else if (data.by.calls.length > 0 && data.by.filter.length > 0) {
                         return domain + port + prefix + sum + callsSecond + by + data.by.calls.join(',') + and + data.by.filter.join('&');
                     } else {
                         return domain + port + prefix + sum + callsSecond;
@@ -44,9 +46,9 @@ var GetMongoInfo = function() {
                 }
             case 'avg':
                 {
-                    if (data.by.calls.length >0 && data.by.filter.length<0) {
+                    if (data.by.calls.length > 0 && data.by.filter.length < 0) {
                         return domain + port + prefix + avg + callsSecond + by + data.by.calls.join(',');
-                    } else if(data.by.calls.length>0 && data.by.filter.length > 0) {
+                    } else if (data.by.calls.length > 0 && data.by.filter.length > 0) {
                         return domain + port + prefix + avg + callsSecond + by + data.by.calls.join(',') + and + data.by.filter.join('&');
                     } else {
                         return domain + port + prefix + avg + callsSecond;
@@ -55,34 +57,34 @@ var GetMongoInfo = function() {
                 }
             case 'count':
                 {
-                    if (data.by.calls.length >0 && data.by.filter.length<0){
+                    if (data.by.calls.length > 0 && data.by.filter.length < 0) {
                         return domain + port + prefix + count + data.datatype + by + data.by.calls.join(',');
-                    }else if(data.by.calls.length>0 && data.by.filter.length>0){
+                    } else if (data.by.calls.length > 0 && data.by.filter.length > 0) {
                         return domain + port + prefix + count + data.datatype + by + data.by.calls.join(',') + and + data.by.filter.join('&');
-                    }else {
+                    } else {
                         return domain + port + prefix + count + data.datatype;
                     }
                     break;
                 }
             case 'min':
             case 'max':
-            case 'min,max':{
-                    
-                    if (data.by.calls.length > 0 && data.by.filter.length < 0){
+            case 'min,max':
+                {
+
+                    if (data.by.calls.length > 0 && data.by.filter.length < 0) {
                         return domain + port + prefix + data.type + startDate + by + data.by.calls.join(',');
                         break;
-                    }else if(data.by.calls.length > 0 && data.by.filter.length > 0){
+                    } else if (data.by.calls.length > 0 && data.by.filter.length > 0) {
                         return domain + port + prefix + data.type + startDate + by + data.by.calls.join(',') + and + data.by.filter.join('&');
                         break;
-                    }else{
+                    } else {
                         return domain + port + prefix + data.type + startDate;
                         break;
                     }
                     break;
-            }
+                }
         }
     };
-
     this.get = function(obj, callback) {
         if (me.creat(obj) === false) {
             console.log('Api Error: Call error!!');
@@ -92,6 +94,4 @@ var GetMongoInfo = function() {
             });
         }
     };
-
-
 };
