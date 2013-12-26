@@ -361,8 +361,8 @@
                         <option value="">Escolha o recurso</option>
                         <?php
                         for ($index1 = 0; $index1 < count($resources); $index1++) {
-                                echo "<option value='" . $resources[$index1]["id_resource"] . "'>" . $resources[$index1]["display_text"] . "</option>";
-                            }
+                            echo "<option value='" . $resources[$index1]["id_resource"] . "'>" . $resources[$index1]["display_text"] . "</option>";
+                        }
                         ?>
                     </select>
                     <select id="exp-rtype" required>
@@ -503,14 +503,13 @@
                     return def.promise();
                 }
 
-
+                var crm_edit_object;
                 var crm = {
                     close: function()
                     {
                         $("#loader").hide();
-                        $("#crm").fadeOut()
-                                .find(".grid-content")
-                                .empty();
+                        $("#crm").hide();
+                        crm_edit_object.destroy();
                     },
                     open: function() {
                         if ($('.lead', bloco_res).val() == 0) {
@@ -518,16 +517,10 @@
                             return false;
                         }
                         $("#loader").show();
-                        $.post('../../crm/crm_edit.php', {
-                            lead_id: $('.lead', bloco_res).val()
-                        },
-                        function(data) {
-                            $("#crm .grid-content").html(data).parent().fadeIn();
+                        $("#crm").show();
+                        crm_edit_object = new crm_edit($("#crm .grid-content"), "/sips-admin/crm/crm_edit/", $('.lead', bloco_res).val());
+                        crm_edit_object.init();
 
-                        }, "html").fail(function() {
-                            alert('Erro de conecção ao servidor.');
-                            $("#loader").hide();
-                        });
                     }
                 };
                 var reservation = {
@@ -804,9 +797,9 @@
                                 alert(data.message);
                                 if (data.success) {
                                     if (id_elemento) {
-                                    var elemento = opener.window.$("#" + id_elemento + " select");
-                                    elemento.data().live_marc++;
-                                }
+                                        var elemento = opener.window.$("#" + id_elemento + " select");
+                                        elemento.data().live_marc++;
+                                    }
                                     if (lead) {
                                         close();
                                     }
@@ -827,5 +820,7 @@
             });
             var x;
         </script>
+
+        <script type="text/javascript" src="/sips-admin/crm/crm_edit/crm_edit.js"></script>
     </body>
 </html>
