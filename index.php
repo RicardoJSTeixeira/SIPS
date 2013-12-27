@@ -18,20 +18,18 @@
         error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
         ini_set('display_errors', '1');
         require("ini/dbconnect.php");
+        require("ini/user.php");
 
+        $user = new user;
 
-
-        $user = $_SERVER['PHP_AUTH_USER'];
-        $pass = $_SERVER['PHP_AUTH_PW'];
 
         if (isset($_GET['logout'])) {
-
             Header("WWW-Authenticate: Basic realm=\"Go Contact Center\"");
             Header("HTTP/1.0 401 Unauthorized");
             ?>
-        <div class='grid-content'>
-            <div class='alert alert-info'>Logout com sucesso <i>coloque as novas credencias ou prima <ins>cancelar</ins></i></div>
-        </div>
+            <div class='grid-content'>
+                <div class='alert alert-info'>Logout com sucesso <i>coloque as novas credencias ou prima <ins>cancelar</ins></i></div>
+            </div>
             <script>
                 $(function() {
                     top.location = 'index.php';
@@ -42,13 +40,13 @@
             exit;
         } else {
 
-            if (empty($_SERVER['PHP_AUTH_USER'])) {
+            if (!$user->id) {
                 header("WWW-Authenticate: Basic realm=\"Go Contact Center\"");
                 header('HTTP/1.0 401 Unauthorized');
                 exit;
             }
         }
-        
+
         $queryClient = "SELECT server_description from servers limit 1";
         $queryClient = mysql_query($queryClient, $link) or die(mysql_error());
         $curClient = mysql_fetch_row($queryClient);
@@ -58,30 +56,25 @@
         }
 
 
-        $query = "SELECT user_level FROM vicidial_users where user='$user' and pass='$pass'";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        $row = mysql_fetch_row($query);
-
-
         if (isset($_POST['first_login'])) {
-
 
             $username = $_POST['sips_username'];
             $password = $_POST['sips_password'];
-            $query = "SELECT user_level FROM vicidial_users where user='$username' and pass='$password'";
-            $query = mysql_query($query, $link) or die(mysql_error());
-            $row = mysql_fetch_row($query);
+            $user_loggin = new user($username, $password);
 
-            if (mysql_num_rows($query) == 0) {
+
+            if (!$user_loggin->id) {
                 $navigation = 'fail';
-            } elseif ($row[0] > 5) {
+            } elseif ($user_loggin->user_level > 5) {
                 ?>
                 <form id='adminlogin' action='sips-admin/index.php' method='post'>
                     <input type='hidden' name='useradmin' value='<?= $username ?>' />
                     <input type='hidden' name='passadmin' value='<?= $password ?>' />
-        <? if (isset($curLogo) && $curLogo != "") {
-            echo "<input type=hidden name=curlogo value=$curLogo />";
-        } ?>
+                    <?
+                    if (isset($curLogo) && $curLogo != "") {
+                        echo "<input type=hidden name=curlogo value=$curLogo />";
+                    }
+                    ?>
                 </form>
 
                 <script>
@@ -92,15 +85,17 @@
                 <form id='agentlogin' action='sips-agente/agente.php' method='post'>
                     <input type='hidden' name='sips_login' value='<?= $username ?>' />
                     <input type='hidden' name='sips_pass' value='<?= $password ?>' />
-                    <? if (isset($curLogo) && $curLogo != "") {
+                    <?
+                    if (isset($curLogo) && $curLogo != "") {
                         echo "<input type=hidden name=curlogo value=$curLogo />";
-                    } ?>
+                    }
+                    ?>
                 </form>
 
                 <script>
                     document.getElementById("agentlogin").submit();
                 </script>
-            <?php
+                <?php
             }
         }
         if (isset($_POST['reset_login'])) {
@@ -116,11 +111,11 @@
                     <div class="grid-content">
 
                         <form name='sips_login' id=sips_login action='index.php' class="form-horizontal" method=POST>
-    <?php
-    if (isset($curLogo) && $curLogo != "") {
-        echo "<input type=hidden name=curlogo value=$curLogo />";
-    }
-    ?>
+                            <?php
+                            if (isset($curLogo) && $curLogo != "") {
+                                echo "<input type=hidden name=curlogo value=$curLogo />";
+                            }
+                            ?>
                             <input type=hidden value=go name=first_login>
                             <div class="control-group">
                                 <label class="control-label">Username: </label>
@@ -145,16 +140,17 @@
                         </form>
                     </div>    
                 </div>
-            <?php
-            if (isset($curLogo) && $curLogo != "") {
-                echo "<br><br><img src=$curLogo />";
-            }
-            ?>
+                <?php
+                if (isset($curLogo) && $curLogo != "") {
+                    echo "<br><br><img src=$curLogo />";
+                }
+                ?>
             </div>
-<?php }
+            <?php
+        }
 
-if ($navigation == 'fail') {
-    ?>
+        if ($navigation == 'fail') {
+            ?>
             <div style="width: 490px;margin: auto;">
                 <img style='margin-top:10%;' src=../images/pictures/go_logo_35.png />
 
@@ -162,9 +158,11 @@ if ($navigation == 'fail') {
                     <div class="grid-content">
 
                         <form name=sips_login id=sips_login action=index.php method=POST>
-    <? if (isset($curLogo) && $curLogo != "") {
-        echo "<input type=hidden name=curlogo value=$curLogo />";
-    } ?>
+                            <?
+                            if (isset($curLogo) && $curLogo != "") {
+                                echo "<input type=hidden name=curlogo value=$curLogo />";
+                            }
+                            ?>
                             <input type=hidden value=go name=reset_login>
                             <div class="formRow">
                                 <div class='alert'><b>Log In Errado </b><a href='index.php' class='btn'>Tentar Novamente</a></div>
@@ -174,20 +172,20 @@ if ($navigation == 'fail') {
                         </form>
                     </div>
                 </div>
-    <?php
-    if (isset($curLogo) && $curLogo != "") {
-        echo "<br><br><img style='width:600px;heigth:200px' src=$curLogo />";
-    }
-    ?>
+                <?php
+                if (isset($curLogo) && $curLogo != "") {
+                    echo "<br><br><img style='width:600px;heigth:200px' src=$curLogo />";
+                }
+                ?>
             </div>
-<?php } ?>
+        <?php } ?>
 
 
 
 
         <script>
-            document.getElementById("sips_username").value = '<?= $user ?>';
-            document.getElementById("sips_password").value = '<?= $pass ?>';
+            document.getElementById("sips_username").value = '<?= $user->id ?>';
+            document.getElementById("sips_password").value = '<?= $user->password ?>';
         </script>
 
     </body>

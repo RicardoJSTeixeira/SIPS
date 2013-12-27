@@ -238,10 +238,6 @@ switch ($action) {
             $data_row[$key] = "";
         }
 
-
-
-
-
         // MAX TRIES RECYCLE
         $recycle = array();
         $query = "select status,attempt_maximum from vicidial_lead_recycle where campaign_id=:campaign_id and active='Y'";
@@ -250,12 +246,6 @@ switch ($action) {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $recycle[$row["status"]] = $row["attempt_maximum"];
         }
-
-
-
-
-
-
 
         foreach ($list_id as $value) {
             if ($only_with_result == "true") {
@@ -287,11 +277,6 @@ switch ($action) {
                 $final_row[$row['id']] = $temp_d;
             }
         }
-
-
-
-
-
 
         unset($lead_tmp);
         unset($temp_d);
@@ -338,7 +323,7 @@ switch ($action) {
                             . "left join vicidial_log vlg on vlg.uniqueid=sr.unique_id "
                             . "left join vicidial_campaign_statuses vcs on vcs.status=vlg.status "
                             . "where "
-                            . "sr.lead_id=:lead_id order by date DESC limit 1";
+                            . "sr.lead_id=:lead_id $date_filter order by date DESC limit 1";
                     //echo $query1;
                     $stmt1 = $db->prepare($query1);
                     $stmt1->execute(array(":lead_id" => $row["lead_id"]));
