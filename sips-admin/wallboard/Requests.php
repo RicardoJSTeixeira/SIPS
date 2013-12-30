@@ -431,8 +431,8 @@ switch ($action) {
 
 
         $stmtB = "select sum(calls_today),sum(drops_today),sum(answers_today),sum(hold_sec_stat_one),sum(hold_sec_stat_two),sum(hold_sec_answer_calls),sum(hold_sec_drop_calls),sum(hold_sec_queue_calls),AVG(drops_today_pct) from vicidial_campaign_stats where campaign_id in($linha_inbound)";
-        echo($stmtB);
-        $rslt = mysql_query($stmtB, $link);
+        
+        $rslt = mysql_query($stmtB, $link) or die(mysql_error());
         while ($row = mysql_fetch_row($rslt)) {
             $hold_sec_stat_one = $row[3];
             $hold_sec_stat_two = $row[4];
@@ -477,8 +477,8 @@ switch ($action) {
                 $PCThold_sec_stat_two = 0;
                 $AVGhold_sec_answer_calls = 0;
             }
-            $today = date("o-m-d");
-            $tomorrow = date("o-m-d", strtotime("+1 day"));
+            $today = date("Y-m-d") . " 00:00:00";
+            $tomorrow = date("Y-m-d")." 23:59:59";
 
 
 
@@ -488,7 +488,7 @@ switch ($action) {
             $answersTODAY = 0;
 
             $query = "select status,count(status) as status1 from vicidial_closer_log where  call_date between '$today' and '$tomorrow'  and campaign_id in($linha_inbound) and status not like ('AFTHRS') group by status";
-            $query = mysql_query($query, $link);
+                $query = mysql_query($query, $link) or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
                 $callsTODAY+=$row["status1"];
                 if ($row["status"] === "DROP")
@@ -499,7 +499,7 @@ switch ($action) {
 
 
             $query = "select ifnull(sum(length_in_sec),0) as total_sec, ifnull(sum(queue_seconds),0) as queue_seconds from vicidial_closer_log where  call_date between '$today' and '$tomorrow' and campaign_id in($linha_inbound) and lead_id is not null";
-            $query = mysql_query($query, $link);
+            $query = mysql_query($query, $link) or die(mysql_error());
             $row2 = mysql_fetch_assoc($query);
             $js[] = array(
                 chamadas_recebidas => $callsTODAY,
