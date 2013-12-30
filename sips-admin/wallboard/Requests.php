@@ -431,6 +431,7 @@ switch ($action) {
 
 
         $stmtB = "select sum(calls_today),sum(drops_today),sum(answers_today),sum(hold_sec_stat_one),sum(hold_sec_stat_two),sum(hold_sec_answer_calls),sum(hold_sec_drop_calls),sum(hold_sec_queue_calls),AVG(drops_today_pct) from vicidial_campaign_stats where campaign_id in($linha_inbound)";
+        echo($stmtB);
         $rslt = mysql_query($stmtB, $link);
         while ($row = mysql_fetch_row($rslt)) {
             $hold_sec_stat_one = $row[3];
