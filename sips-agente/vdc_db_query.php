@@ -10548,7 +10548,7 @@ if ($ACTION == 'apagacallback') {
     $rslt = mysql_query($query, $link) OR die(mysql_error());
 
     if (mysql_num_rows($rslt) == 1) {
-        $query = "update vicidial_list set status='CBDEL' where lead_id='$temp_LEAD'";
+        $query = "UPDATE vicidial_list SET status= CASE WHEN status='CBHOLD' THEN 'CBDEL' ELSE status END WHERE lead_id='$temp_LEAD'";
         $query = mysql_query($query, $link) OR die(mysql_error());
     }
 
