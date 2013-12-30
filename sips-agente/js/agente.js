@@ -7995,8 +7995,9 @@ function check_for_conf_calls(taskconfnum, taskforce)
                     {
                         if (PausENotifYCounTer > 10)
                         {
-                            alert_box('A sua sessão está em pausa');
-                            AutoDial_ReSume_PauSe("VDADpause", pause_create_div, '', '', '', '1', '');
+                            //alert_box('A sua sessão está em pausa');
+                            //AutoDial_ReSume_PauSe("VDADpause", pause_create_div, '', '', '', '1', '');
+                                AutoDial_ReSume_PauSe("VDADready");
                             PausENotifYCounTer = 0;
                         }
                         else {
