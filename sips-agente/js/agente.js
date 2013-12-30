@@ -9113,7 +9113,7 @@ function getPi() {
             for (i = 1; i < 6; i++) {
                 console.log('in' + data.datos_num_orden['num_orden_' + i]);
                 if (data.datos_num_orden['num_orden_' + i] !== undefined) {
-                    $('#ordensPi > tbody:last').append('<tr><td>' + data.datos_num_orden['fechor_' + i] + '</td><td>' + data.datos_num_orden['tipo_orden_' + i] + '</td><td>' + data.datos_num_orden['num_orden_' + i] + '</td><td>' + data.datos_num_orden['estado_' + i] + '</td></tr>');
+                    $('#ordensPi > tbody:last').append('<tr><td>' + data.datos_num_orden['fechor_' + i] + '</td><td>' + data.datos_num_orden['estado_' + i] + '</td><td>' + data.datos_num_orden['num_orden_' + i] + '</td><td>' + data.datos_num_orden['tipo_orden_' + i] + '</td></tr>');
                 }
             }
         } else {

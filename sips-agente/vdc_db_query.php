@@ -9166,7 +9166,7 @@ if (($ACTION == 'VDADpause') || ($ACTION == 'VDADready')) {
         }
         if ($ACTION == 'VDADpause') {
             if ((eregi("NULL", $dispo_epoch)) or ($dispo_epoch < 1000)) {
-                $stmt = "UPDATE vicidial_agent_log set  pause_sec='$pause_sec',wait_sec='$wait_sec' where agent_log_id='$agent_log_id';";
+                $stmt = "UPDATE vicidial_agent_log set wait_sec='$wait_sec' where agent_log_id='$agent_log_id';";
                 if ($format == 'debug') {
                     echo "\n<!-- $stmt -->";
                 }
