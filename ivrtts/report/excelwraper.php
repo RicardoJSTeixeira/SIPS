@@ -7,7 +7,8 @@ class excelwraper {
     protected $lettNum = array();
     private $cord_template = array(
         'letter' => 66,
-        'number' => 10
+        'number',
+        'space'
     );
     protected $selectedSheet = 0;
     protected $graphSize = 0;
@@ -37,19 +38,18 @@ class excelwraper {
         )
     );
 
-    public function __construct($excel, $zeroSheet) {
+    public function __construct($excel, $zeroSheet,$zeroSpace,$inicialSpace) {
 
         $this->phpexcel = $excel;
         $this->phpexcel->getActiveSheet()->setTitle($zeroSheet);
         $this->lettNum[] = (object)$this->cord_template;
+        $this->lettNum[$this->selectedSheet]->space=$zeroSpace;
+         $this->lettNum[$this->selectedSheet]->number=$inicialSpace;
     }
 
     public function maketable($data, $graph, $title = NULL, $yLabel = NULL, $xLabel = NULL, $charName = NULL, $legendPosition = NULL, $graphType = NULL, $graphGrouping = NULL, $ShowVal = NULL, $ShowPerc = NULL) {
-
-
-        //var_dump(chr($this->lettNum[$this->selectedSheet]->letter) . $this->lettNum[$this->selectedSheet]->number );exit;
-        
-        $this->phpexcel->getActiveSheet()->fromArray($data, NULL, 'A' . $this->lettNum[$this->selectedSheet]->number);
+      
+        $this->phpexcel->getActiveSheet()->fromArray($data, NULL, 'A' . $this->lettNum[$this->selectedSheet]->number,TRUE);
   
         $this->autoSizeCol();
         $this->tableBoardBolt();
@@ -62,7 +62,7 @@ class excelwraper {
         }
 
         $this->battlesheetrow();
-        $this->lettNum[$this->selectedSheet]->number +=18;
+        $this->lettNum[$this->selectedSheet]->number +=$this->lettNum[$this->selectedSheet]->space;
     }
 
     protected function tableBoardBolt() {
@@ -93,7 +93,7 @@ class excelwraper {
         $activeSheet = $this->phpexcel->getActiveSheet();
 
        
-        for ($col = 66; $activeSheet->getCell(chr($col) . '' . $this->lettNum[$this->selectedSheet]->number )->getValue() != NULL; $col++) {
+        for ($col = 65; $activeSheet->getCell(chr($col) . '' . $this->lettNum[$this->selectedSheet]->number )->getValue() != NULL; $col++) {
             
             $activeSheet->getColumnDimension(chr($col))->setAutoSize(true);
         }
@@ -143,7 +143,7 @@ class excelwraper {
         $this->battlesheetrow();
         $chart->setBottomRightPosition('X' . ($this->lettNum[$this->selectedSheet]->number + 8));
 
-        $this->lettNum[$this->selectedSheet]->number +=18;
+        $this->lettNum[$this->selectedSheet]->number +=$this->lettNum[$this->selectedSheet]->space;
 
         //	Add the chart to the worksheet
         $activeSheet->addChart($chart);
@@ -209,7 +209,7 @@ class excelwraper {
         return chr($col);
     }
 
-    public function addsheet($title) {
+    public function addsheet($title,$space,$inicialSpace) {
 
         $this->phpexcel->addSheet(new PHPExcel_Worksheet($this->phpexcel, $title));
 
@@ -217,8 +217,14 @@ class excelwraper {
     
         $this->selectedSheet=count($this->phpexcel->getAllSheets())-1;
         
+       
         
         $this->lettNum[] = (object)$this->cord_template;
+        
+        
+        
+         $this->lettNum[$this->selectedSheet]->space=$space;
+         $this->lettNum[$this->selectedSheet]->number=$inicialSpace;
     }
 
     public function selectsheet($nr) {
@@ -266,5 +272,6 @@ class excelwraper {
     public function send() {
         $this->writeExcel->save('php://output');
     }
+    
 
 }

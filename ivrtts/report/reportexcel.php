@@ -1,6 +1,7 @@
 <?php
-
-ob_start();
+ini_set('memory_limit', '256M');
+require("../../ini/db.php");
+//ob_start();
 date_default_timezone_set('Europe/London');
 
 function transpose($array) {
@@ -23,7 +24,6 @@ require '../../ini/phpexcel/PHPExcel.php';
 
 require './excelwraper.php';
 
-
 $tempo = json_decode($tempo, true);
 
 $dataLinha1_Core = file_get_contents("http://localhost:10000/ccstats/v0/count/calls?by=database.campaign,status," . implode($tempo, ',') . "&database.campaign.oid=$campaign_id");
@@ -42,29 +42,7 @@ $dataTotalHora_Core = file_get_contents("http://localhost:10000/ccstats/v0/sum/c
 $dataTotalHora = json_decode($dataTotalHora_Core, true);
 
 
-$data=(array(
-		array('+',	2010,	2011,	2012),
-		array('Q1',   12,   15,		21),
-		array('Q2',   56,   73,		86),
-		array('Q3',   52,   61,		69),
-		array('Q4',   30,   32,		0),
-	));
-
-$toExcel = new excelwraper(New PHPExcel(), "report");
-
-$toExcel->maketable($data, FALSE);
-$toExcel->maketable($data, FALSE);
-$toExcel->maketable($data, FALSE);
-$toExcel->maketable($data, FALSE);
-$toExcel->backGroundStyle('FFFFFF');
-$toExcel->addsheet('MoreTables');
-$toExcel->maketable($data, FALSE);
-$toExcel->maketable($data, FALSE);
-$toExcel->maketable($data, FALSE);
-$toExcel->maketable($data, FALSE);
-$toExcel->backGroundStyle('FFFFFF');
-
-$toExcel->addsheet('ReportGraph');
+$toExcel = new excelwraper(New PHPExcel(), "report",18,10);
 
 //TRANSFORM LINHA1
 $p = array();
@@ -111,9 +89,7 @@ if (count($pOutros) > 1) {
     $dataExcel[] = $pOutros;
 }
 
-$toExcel->maketable(transpose($dataExcel),TRUE, 'Totais', NULL, NULL, 'chart1', 'r', 'lines', 'lines', TRUE, TRUE);
-
-
+$toExcel->maketable(transpose($dataExcel), TRUE, 'Totais', NULL, NULL, 'chart1', 'r', 'lines', 'lines', TRUE, TRUE);
 
 //TRANSFORM LINHA2
 $p = array();
@@ -163,8 +139,6 @@ if (count($pOutros) > 1) {
 
 $toExcel->maketable(transpose($dataExcel), TRUE, 'Media da Duração da Chamada em Minutos', NULL, NULL, 'chart1', 'r', 'lines', 'lines', TRUE, TRUE);
 
-
-
 //TRANSFORM TOTAL
 $p = array();
 $pOutros = array('Outros');
@@ -204,8 +178,6 @@ if (count($pOutros) > 1) {
 
 $toExcel->maketable(transpose($dataExcel), TRUE, 'Total Chamadas por Feedback', NULL, NULL, 'chart2', 'r', 'bars', 'bars', TRUE, TRUE);
 
-
-
 //TRANFORM total/3600
 $p = array();
 $pOutros = array('Outros');
@@ -243,12 +215,7 @@ if (count($pOutros) > 1) {
     $dataExcel[] = $pOutros;
 }
 
-
-
 $toExcel->maketable(transpose($dataExcel), TRUE, 'Duração total por Feedback', NULL, NULL, 'chart3', 'r', 'bars', 'bars', TRUE, TRUE);
-
-
-
 
 //Transform Pie
 $p = array();
@@ -285,16 +252,76 @@ if (count($pOutros) > 1) {
     $dataExcel[] = $pOutros;
 }
 
-
 $toExcel->maketable(($dataExcel), TRUE, 'Feedbacks', NULL, NULL, 'chart4', null, 'pie', NULL, TRUE, TRUE);
 
-
-
 $toExcel->backGroundStyle('FFFFFF');
+
+$toExcel->addsheet('Leads',3,0);
+
+$header = array( 'Campanha:');
+
+$title[]=$header;
+
+$queryData="SELECT `campaign_name` FROM `vicidial_campaigns` WHERE `campaign_id`=?";
+
+$stmt = $db->prepare($queryData);
+
+$stmt->execute(array($campaign_id));
+
+$title[] =$stmt->fetch(PDO::FETCH_NUM);
+
+
+
+$toExcel->maketable($title, FALSE);
+
+////////////////////////////////////////////////////////////////////////////-------------------------------------------------
+$data = array();
+
+//MAX TRIES RECYCLE
+$recycle = array();
+$query = "select status,attempt_maximum from vicidial_lead_recycle where campaign_id=:campaign_id and active='Y'";
+$stmt = $db->prepare($query);
+$stmt->execute(array(":campaign_id" => $campaign_id));
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $recycle[$row["status"]] = $row["attempt_maximum"];
+}
+
+$header = array( 'Data Chamada', 'Duração Chamada (Sec.)', 'Estado Final', 'Nº Tentativas Total', 'Nº Telefone', 'Lead ID', 'Mensagem 1', 'Mensagem 2', 'Max Tries');
+
+$data[]=$header;
+
+$queryData ="SELECT  vlg.call_date,vlg.length_in_sec,vstatus.status,vstatus.status_name,vl.called_count,vl.phone_number,vl.lead_id,vl.comments,vl.email,vl.called_since_last_reset FROM `vicidial_list` vl FORCE INDEX(list_id)
+LEFT JOIN `vicidial_lists`vls ON vl.list_id = vls.list_id
+LEFT JOIN vicidial_log vlg On vlg.lead_id = vl.lead_id
+LEFT JOIN (SELECT vstat.status,vstat.status_name FROM vicidial_statuses vstat UNION ALL SELECT vcstat.status,vcstat.status_name FROM vicidial_campaign_statuses vcstat WHERE vcstat.campaign_id =?) vstatus ON vstatus.status =vlg.status WHERE vls.campaign_id=?" ;
+
+
+$stmt = $db->prepare($queryData);
+$stmt->execute(array($campaign_id,$campaign_id,));
+
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    
+    $temp = (int) str_replace("Y", "", $row["called_since_last_reset"]);
+
+if (isset($recycle[$row["status"]])) {
+    if ($temp >= $recycle[$row["status"]]) {
+        $row["called_since_last_reset"] = "Sim";
+    } else {
+        $row["called_since_last_reset"] = "Não";
+    }
+} else {
+    $row["called_since_last_reset"] = "Sem limite";
+}
+    unset($row["status"]);
+  $data[]=$row;  
+}
+
+$toExcel->maketable($data, FALSE);
+
 
 $toExcel->selectsheet(0);
 
 $toExcel->save('Report', TRUE);
-ob_end_clean();
+//ob_end_clean();
 
 $toExcel->send();
