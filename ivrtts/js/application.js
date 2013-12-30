@@ -598,7 +598,7 @@ $(function(){
 				bodyStyle.backgroundColor = ev.color.toHex();
 			});
 });
-/*  TinyMCE - Javascript WYSIWYG Editor */
+/*  TinyMCE - Javascript WYSIWYG Editor 
 tinyMCE.init({
         // General options
         mode:"exact", // selected textareas
@@ -632,7 +632,7 @@ tinyMCE.init({
                 staffid : "991234"
         }
 		
-});
+});*/
 //********************* Automatic Infinite Carousel (CHAT)  *********************//
 $(document).ready(function(){ 
     
@@ -666,6 +666,7 @@ $(document).ready(function(){
         
 });
 //*********************  File explorer  *********************//
+/*
 	$(document).ready(function(){
 			
 			var f = $('#finder').elfinder({
@@ -693,7 +694,7 @@ $(document).ready(function(){
 				$('#finder').elfinder($(this).attr('id'));
 			})
 			
-		});	
+		});*/	
 		
 /* Placeholder IE */ 
 (function($) {

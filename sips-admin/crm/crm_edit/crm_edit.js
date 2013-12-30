@@ -50,17 +50,17 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                             {
                                                 if (me.edit_dynamic_field)//CANCELA
                                                 {
-                                                    get_dynamic_fields();
+                                                    $("#inputcontainer")[0].reset();
                                                     crm_edit_zone.find("#lead_edit_save_button").hide();
                                                     crm_edit_zone.find("#lead_edit_button").text("Editar Dados do Cliente");
-                                                    crm_edit_zone.find(".dynamic_field_divs input,textarea").prop("disabled", true);
+                                                    crm_edit_zone.find(".dynamic_field_divs input,textarea").prop("readonly", true);
                                                     me.edit_dynamic_field = 0;
                                                 }
                                                 else//EDITA
                                                 {
                                                     crm_edit_zone.find("#lead_edit_save_button").show();
                                                     crm_edit_zone.find("#lead_edit_button").text("Cancelar Edição");
-                                                    crm_edit_zone.find(".dynamic_field_divs input,textarea").prop("disabled", false);
+                                                    crm_edit_zone.find(".dynamic_field_divs input,textarea").prop("readonly", false);
                                                     me.edit_dynamic_field = 1;
                                                 }
                                             });
@@ -182,7 +182,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         $.post(file_path + "crm_edit_request.php", {action: "get_dynamic_fields", lead_id: me.lead_id, campaign_id: me.campaign_id},
         function(data)
         {
-            var dynamic_fields = "";
+            
             var dynamic_field = "";
             crm_edit_zone.find("#dynamic_field_div1").empty();
             crm_edit_zone.find("#dynamic_field_div2").empty();
@@ -198,10 +198,10 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                             "          <div class='controls' >";
                     if (this.name == "COMMENTS")
                     {
-                        dynamic_field += "<textarea disabled name=" + this.name + " id=" + this.name + "  >" + this.value + "</textarea>";
+                        dynamic_field += "<textarea readonly name=" + this.name + " id=" + this.name + "  >" + this.value + "</textarea>";
                     }
                     else
-                        dynamic_field += "     <input disabled type=text name=" + this.name + " id=" + this.name + "  value=" + this.value + ">";
+                        dynamic_field += "     <input readonly type=text name=" + this.name + " id=" + this.name + "  value=" + this.value + ">";
                     dynamic_field += "   <span id=" + this.name + "></span>" +
                             "   </div>" +
                             "   </div>";
