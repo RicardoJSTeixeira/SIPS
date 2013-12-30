@@ -9,10 +9,10 @@ require(ROOT."ini/header.php");
 
 
 <?
-$data = date('o-m-d');
+$data = date('Y-m-d');
     
-    if (isset($_POST['data'])) { $data = $_POST['data']; } else { $data = date('o-m-d'); }
-    $datafim = date("o-m-d", strtotime("+1 day".$_POST['data']));
+    if (isset($_POST['data'])) { $data = $_POST['data']; } else { $data = date('Y-m-d'); }
+    $datafim = date("Y-m-d", strtotime("+1 day".$_POST['data']));
 
     
     ?>

@@ -19,7 +19,7 @@ aSelect.options[0].selected = false;
 </script>
 <?php
 require('../../../../ini/dbconnect.php');
-$today = date("o-m-d");
+$today = date("Y-m-d");
 ##################################################
 $query = "	SELECT 	list_id, list_name 
 			FROM 	vicidial_lists WHERE list_id NOT IN ('0', '998', '999')";

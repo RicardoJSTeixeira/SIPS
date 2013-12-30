@@ -21,7 +21,7 @@ aSelect.options[0].selected = false;
 error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
 require('../../../ini/dbconnect.php');
-$today = date("o-m-d");
+$today = date("Y-m-d");
 ##################################################
 
 $query1 = mysql_fetch_assoc(mysql_query("SELECT user_group FROM vicidial_users WHERE user='$_SERVER[PHP_AUTH_USER]';", $link)) or die(mysql_error());

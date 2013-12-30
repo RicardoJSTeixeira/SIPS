@@ -6,7 +6,7 @@
 <link href="../../../../css/style.css" rel="stylesheet" type="text/css" />
 <script language="JavaScript" src="../../../../calendar/calendar_db.js"></script>
 <link rel="stylesheet" href="../../../../calendar/calendar.css" />
-<?php $today = date("o-m-d"); ?>
+<?php $today = date("Y-m-d"); ?>
 </head>
 <body>
 <form name="report" action="exportcsv_fc.php" target="_self" method="post">

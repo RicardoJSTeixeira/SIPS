@@ -18,7 +18,7 @@ if($action == "get_msgs"){
     $js['msg_alert']['type'][] = $row[2];
     $js['msg_alert']['date'][] = $row[3];
     
-    $today = date("o-m-d");
+    $today = date("Y-m-d");
     
     $query = "SELECT `from`, `msg`, `type`, DATE_FORMAT(event_date,'%H:%i:%s') FROM sips_msg WHERE `to`='$sent_agent' AND type='fixed' AND event_date > '$today' ORDER BY event_date";
     $query = mysql_query($query) or die(mysql_error());

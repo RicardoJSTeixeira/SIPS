@@ -12,7 +12,7 @@ if ($user->user_group != "ADMIN") {
     $where = " WHERE b.campaign_id in('" . implode("','", $user->allowed_campaigns) . "')";
 }
 
-$today = date("o-m-d");
+$today = date("Y-m-d");
 ##################################################
 $query = "	SELECT 	list_id, list_name 
 			FROM 	vicidial_lists a left join vicidial_campaigns b on a.campaign_id=b.campaign_id

@@ -6,7 +6,7 @@ $user_class = new users;
 
 
 
-$data = date('o-m-d');
+$data = date('Y-m-d');
 
 
 

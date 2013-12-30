@@ -125,11 +125,11 @@ $output = fopen('php://output', 'w');
 // output the column headings
 
 if (isset($_POST['data_inicial'])) {$data_inicial = $_POST['data_inicial'];} 
-if (isset($_POST['data_final'])) {$data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final']));} 
-#if ($data_inicial == $data_final) {$data_final = date("o-m-d", strtotime("+1 day".$data_inicial));}
+if (isset($_POST['data_final'])) {$data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final']));} 
+#if ($data_inicial == $data_final) {$data_final = date("Y-m-d", strtotime("+1 day".$data_inicial));}
 
 
-#$datafim = date("o-m-d", strtotime("+1 day".$data));
+#$datafim = date("Y-m-d", strtotime("+1 day".$data));
 
 fputcsv($output, array('Title',
         'Campaign Number',
@@ -183,7 +183,7 @@ $con = mysql_connect("localhost","sipsadmin","sipsps2012");
 	
 	#mysql_query("SET NAMES 'UTF8'"); */
 		
-	$datafim = date("o-m-d", strtotime("+1 day".$data)); 
+	$datafim = date("Y-m-d", strtotime("+1 day".$data)); 
 	$datainicio = $data;
 	mysql_select_db("asterisk", $con);
 	
@@ -297,11 +297,11 @@ $output = fopen('php://output', 'w');
 // output the column headings
 
 if (isset($_POST['data_inicial'])) {$data_inicial = $_POST['data_inicial'];} 
-if (isset($_POST['data_final'])) {$data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final']));} 
-#if ($data_inicial == $data_final) {$data_final = date("o-m-d", strtotime("+1 day".$data_inicial));}
+if (isset($_POST['data_final'])) {$data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final']));} 
+#if ($data_inicial == $data_final) {$data_final = date("Y-m-d", strtotime("+1 day".$data_inicial));}
 
 
-#$datafim = date("o-m-d", strtotime("+1 day".$data));
+#$datafim = date("Y-m-d", strtotime("+1 day".$data));
 
 fputcsv($output, array('Title',
         'Campaign Number',
@@ -355,7 +355,7 @@ $con = mysql_connect("localhost","sipsadmin","sipsps2012");
 	
 	#mysql_query("SET NAMES 'UTF8'"); */
 		
-	$datafim = date("o-m-d", strtotime("+1 day".$data)); 
+	$datafim = date("Y-m-d", strtotime("+1 day".$data)); 
 	$datainicio = $data;
 	mysql_select_db("asterisk", $con);
 	
@@ -442,7 +442,7 @@ $con = mysql_connect("localhost","sipsadmin","sipsps2012");
 #######################################################################################################################
 if (isset($_POST['totais_db'])) {
 if (isset($_POST['data_inicial'])) {$data_inicial = $_POST['data_inicial'];} 
-if (isset($_POST['data_final'])) {$data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final']));} 
+if (isset($_POST['data_final'])) {$data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final']));} 
 if (isset($_POST['db_options'])) {$db_options = $_POST['db_options'];}
 ##################################################### Nome da Base de Dados
 $query = "	SELECT 	list_name 
@@ -537,7 +537,7 @@ for ($i=0;$i<mysql_num_rows($query);$i++)
 #######################################################################################################################
 if (isset($_POST['totais_camp'])) {
 if (isset($_POST['data_inicial'])) {$data_inicial = $_POST['data_inicial'];} 
-if (isset($_POST['data_final'])) {$data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final']));} 
+if (isset($_POST['data_final'])) {$data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final']));} 
 if (isset($_POST['camp_options'])) {$camp_options = $_POST['camp_options'];}
 #####################################################
 $query = "	SELECT 	list_id
@@ -656,7 +656,7 @@ for ($i=0;$i<mysql_num_rows($query);$i++)
 #######################################################################################################################
 if (isset($_POST['totais_camp2'])) {
 if (isset($_POST['data_inicial'])) {$data_inicial = $_POST['data_inicial'];} 
-if (isset($_POST['data_final'])) {$data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final']));} 
+if (isset($_POST['data_final'])) {$data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final']));} 
 if (isset($_POST['camp_options'])) {$camp_options = $_POST['camp_options'];}
 #####################################################
 $query = "	SELECT 	list_id
@@ -752,7 +752,7 @@ for ($i=0;$i<mysql_num_rows($query);$i++)
 #######################################################################################################################
 if (isset($_POST['totais_db2'])) {
 if (isset($_POST['data_inicial'])) {$data_inicial = $_POST['data_inicial'];} 
-if (isset($_POST['data_final'])) {$data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final']));} 
+if (isset($_POST['data_final'])) {$data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final']));} 
 if (isset($_POST['db_options'])) {$db_options = $_POST['db_options'];}
 ##################################################### Nome da Base de Dados
 $query = "	SELECT 	list_name 

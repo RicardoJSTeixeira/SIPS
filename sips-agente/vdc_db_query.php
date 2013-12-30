@@ -10469,7 +10469,7 @@ if ($ACTION == 'CalLBacKCounT') {
     } else {
         $campaignCBsql = '';
     }
-    $stmt = "select count(*) from vicidial_callbacks where recipient='USERONLY' and user='$user' AND `callback_time` < '" . date("o-m-d") . "%' $campaignCBsql and status IN('LIVE','ACTIVE');";
+    $stmt = "select count(*) from vicidial_callbacks where recipient='USERONLY' and user='$user' AND `callback_time` < '" . date("Y-m-d") . "%' $campaignCBsql and status IN('LIVE','ACTIVE');";
     if ($DB) {
         echo "$stmt\n";
     }
@@ -10480,7 +10480,7 @@ if ($ACTION == 'CalLBacKCounT') {
     $row = mysql_fetch_row($rslt);
     $cbcount = $row[0];
 
-    $stmt = "select count(*) from vicidial_callbacks where recipient='USERONLY' and user='$user'AND `callback_time` LIKE '" . date("o-m-d") . "%' $campaignCBsql and status IN('LIVE');";
+    $stmt = "select count(*) from vicidial_callbacks where recipient='USERONLY' and user='$user'AND `callback_time` LIKE '" . date("Y-m-d") . "%' $campaignCBsql and status IN('LIVE');";
     if ($DB) {
         echo "$stmt\n";
     }

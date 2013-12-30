@@ -57,7 +57,7 @@
         $grupos_a = $grupos['user_group'];
 
 
-        $data = date('o-m-d');
+        $data = date('Y-m-d');
 
 
 

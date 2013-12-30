@@ -134,11 +134,11 @@ for ($i=0;$i<$CountSelectedFeedbacks;$i++)
 	} 
 
 //if (isset($_POST['data_inicial'])) {$data_inicial = $_POST['data_inicial'];} 
-//if (isset($_POST['data_final'])) {$data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final']));} 
+//if (isset($_POST['data_final'])) {$data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final']));} 
 
 
 $data_inicial = $_POST['data_inicial'];
-if($_POST['data_final']==$data_inicial) { $data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final'])); } else { $data_final = $_POST['data_final']; }
+if($_POST['data_final']==$data_inicial) { $data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final'])); } else { $data_final = $_POST['data_final']; }
 
 
 
@@ -425,7 +425,7 @@ for ($i=0;$i<$CountSelectedDBs;$i++)
 
 
 $data_inicial = $_POST['data_inicial'];
-if($_POST['data_final']==$data_inicial) { $data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final'])); } else { $data_final = $_POST['data_final']; }
+if($_POST['data_final']==$data_inicial) { $data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final'])); } else { $data_final = $_POST['data_final']; }
 
 
 
@@ -665,7 +665,7 @@ fputcsv($output, array('Title',
 #######################################################################################################################
 if (isset($_POST['totais_camp3'])) {
 if (isset($_POST['data_inicial'])) {$data_inicial = $_POST['data_inicial'];} 
-if (isset($_POST['data_final'])) {$data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final']));} 
+if (isset($_POST['data_final'])) {$data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final']));} 
 #####################################################
 ##################################################### Nome da Base de Dados
 ##################################################### Contagem dos Registos da DB
@@ -749,7 +749,7 @@ if (isset($_POST['totais_camp2'])) {
 
     // POSTS
 $data_inicial = $_POST['data_inicial']; 
-$data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final'])); 
+$data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final'])); 
 $camp_options = $_POST['camp_options'];
 
     // LISTS IN
@@ -896,7 +896,7 @@ fputcsv($output, array(" ", $feedback_full, $tempvar ),";");} else { fputcsv($ou
 if (isset($_POST['totais_db2'])) {
 
 if (isset($_POST['data_inicial'])) {$data_inicial = $_POST['data_inicial'];} 
-if (isset($_POST['data_final'])) {$data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final']));} 
+if (isset($_POST['data_final'])) {$data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final']));} 
 if (isset($_POST['db_options'])) {$db_options = $_POST['db_options'];}
 
 $listas_count = count($db_options);
@@ -1019,7 +1019,7 @@ for ($i=0;$i<mysql_num_rows($query);$i++)
 if (isset($_POST['totais_camp'])) {
     
 $data_inicial = $_POST['data_inicial']; 
-$data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final']));
+$data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final']));
 $camp_options = $_POST['camp_options'];
 
 $campanhas_count = count($camp_options);
@@ -1219,7 +1219,7 @@ fputcsv($output, array(" ", " "),";");
 #######################################################################################################################
 if (isset($_POST['totais_db'])) {
 if (isset($_POST['data_inicial'])) {$data_inicial = $_POST['data_inicial'];} 
-if (isset($_POST['data_final'])) {$data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final']));} 
+if (isset($_POST['data_final'])) {$data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final']));} 
 if (isset($_POST['db_options'])) {$db_options = $_POST['db_options'];}
 $db_count = count($db_options);
 
@@ -1365,7 +1365,7 @@ $output = fopen('php://output', 'w');
 $data_inicial = $_POST['data_inicial'];
 $data_final = $_POST['data_final'];
 	
-if ($data_inicial==$data_final){$data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final']));}
+if ($data_inicial==$data_final){$data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final']));}
 fputcsv($output, array(" "),";");
 fputcsv($output, array(" ", "Report:","Resumo Geral"),";");
 fputcsv($output, array(" ","De:", $data_inicial), ";");
@@ -1647,7 +1647,7 @@ $output = fopen('php://output', 'w');
 $data_inicial = $_POST['data_inicial'];
 $data_final = $_POST['data_final'];
 	
-if ($data_inicial==$data_final){$data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final']));}
+if ($data_inicial==$data_final){$data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final']));}
 fputcsv($output, array(" "),";");
 fputcsv($output, array(" ", "Report:","Resumo Geral"),";");
 fputcsv($output, array(" ","De:", $data_inicial), ";");
@@ -1961,7 +1961,7 @@ if (isset($_POST['resumo_geral_db'])) {
 $output = fopen('php://output', 'w');
 $data_inicial = $_POST['data_inicial'];
 $data_final = $_POST['data_final'];
-if ($data_inicial==$data_final){$data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final']));}
+if ($data_inicial==$data_final){$data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final']));}
 
 fputcsv($output, array(" "),";");
 fputcsv($output, array(" ", "Report:","Resumo Geral"),";");
@@ -2270,11 +2270,11 @@ for ($i=0;$i<$CountSelectedFeedbacks;$i++)
     } 
 
 //if (isset($_POST['data_inicial'])) {$data_inicial = $_POST['data_inicial'];} 
-//if (isset($_POST['data_final'])) {$data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final']));} 
+//if (isset($_POST['data_final'])) {$data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final']));} 
 
 
 $data_inicial = $_POST['data_inicial'];
-if($_POST['data_final']==$data_inicial) { $data_final = date("o-m-d", strtotime("+1 day".$_POST['data_final'])); } else { $data_final = $_POST['data_final']; }
+if($_POST['data_final']==$data_inicial) { $data_final = date("Y-m-d", strtotime("+1 day".$_POST['data_final'])); } else { $data_final = $_POST['data_final']; }
 
 
 

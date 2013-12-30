@@ -532,8 +532,8 @@ switch ($action) {
 
     case 'get_calls_queue':// Inbound agentes,campaign,status
         $js = array();
-        $today = date("o-m-d");
-        $tomorrow = date("o-m-d", strtotime("+1 day"));
+        $today = date("Y-m-d");
+        $tomorrow = date("Y-m-d", strtotime("+1 day"));
         $linha = explode(",", $linha_inbound);
 
         for ($i = 0; $i < count($linha); $i++) {
@@ -579,7 +579,7 @@ switch ($action) {
         $round_numerator = 60 * 5;
         $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
         $rounded_time = date("Y-m-d H:i:s", $rounded_time);
-        $today = date("o-m-d");
+        $today = date("Y-m-d");
 
         if ($opcao === "1")
             $query = "select user,sum(length_in_sec) as talk_sec,count(status) as total_feedback from vicidial_log where campaign_id='$campaign_id' and call_date between date_sub(now(), INTERVAL time_span hour) and now() and user not in('VDCL') and ($status) and lead_id is not null group by user order by total_feedback desc ,talk_sec asc limit $limit";

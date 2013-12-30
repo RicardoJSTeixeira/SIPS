@@ -123,10 +123,10 @@ if (isset($_POST['geral_camp'])) {
         $data_inicial = $_POST['data_inicial'];
     }
     if (isset($_POST['data_final'])) {
-        $data_final = date("o-m-d", strtotime("+1 day" . $_POST['data_final']));
+        $data_final = date("Y-m-d", strtotime("+1 day" . $_POST['data_final']));
     }
-#if ($data_inicial == $data_final) {$data_final = date("o-m-d", strtotime("+1 day".$data_inicial));}
-#$datafim = date("o-m-d", strtotime("+1 day".$data));
+#if ($data_inicial == $data_final) {$data_final = date("Y-m-d", strtotime("+1 day".$data_inicial));}
+#$datafim = date("Y-m-d", strtotime("+1 day".$data));
 
     fputcsv($output, array('Title',
         'Campaign No.',
@@ -180,7 +180,7 @@ if (isset($_POST['geral_camp'])) {
         die('Não me consegui ligar' . mysql_error());
     }
 
-    $datafim = date("o-m-d", strtotime("+1 day" . $data));
+    $datafim = date("Y-m-d", strtotime("+1 day" . $data));
     $datainicio = $data;
     mysql_select_db("asterisk", $con);
 
@@ -336,7 +336,7 @@ if (isset($_POST['geral_db'])) {
         $data_inicial = $_POST['data_inicial'];
     }
     if (isset($_POST['data_final'])) {
-        $data_final = date("o-m-d", strtotime("+1 day" . $_POST['data_final']));
+        $data_final = date("Y-m-d", strtotime("+1 day" . $_POST['data_final']));
         $data_final_text = $_POST['data_final'];
     }
 
@@ -384,7 +384,7 @@ if (isset($_POST['geral_db'])) {
         die('Não me consegui ligar' . mysql_error());
     }
 
-    $datafim = date("o-m-d", strtotime("+1 day" . $data));
+    $datafim = date("Y-m-d", strtotime("+1 day" . $data));
     $datainicio = $data;
     mysql_select_db("asterisk", $con);
 
@@ -502,7 +502,7 @@ if (isset($_POST['totais_camp3'])) {
         $data_inicial = $_POST['data_inicial'];
     }
     if (isset($_POST['data_final'])) {
-        $data_final = date("o-m-d", strtotime("+1 day" . $_POST['data_final']));
+        $data_final = date("Y-m-d", strtotime("+1 day" . $_POST['data_final']));
         $data_final_text=$_POST['data_final'];
     }
 #####################################################
@@ -575,7 +575,7 @@ if (isset($_POST['totais_camp2'])) {
         $data_inicial = $_POST['data_inicial'];
     }
     if (isset($_POST['data_final'])) {
-        $data_final = date("o-m-d", strtotime("+1 day" . $_POST['data_final']));
+        $data_final = date("Y-m-d", strtotime("+1 day" . $_POST['data_final']));
         $data_final_text = $_POST['data_final'];
     }
     if (isset($_POST['camp_options'])) {
@@ -704,7 +704,7 @@ if (isset($_POST['totais_db2'])) {
         $data_inicial = $_POST['data_inicial'];
     }
     if (isset($_POST['data_final'])) {
-        $data_final = date("o-m-d", strtotime("+1 day" . $_POST['data_final']));
+        $data_final = date("Y-m-d", strtotime("+1 day" . $_POST['data_final']));
         $data_final_text = $_POST['data_final'];
     }
     if (isset($_POST['db_options'])) {
@@ -806,7 +806,7 @@ if (isset($_POST['totais_camp'])) {
         $data_inicial = $_POST['data_inicial'];
     }
     if (isset($_POST['data_final'])) {
-        $data_final = date("o-m-d", strtotime("+1 day" . $_POST['data_final']));
+        $data_final = date("Y-m-d", strtotime("+1 day" . $_POST['data_final']));
         $data_final_text = $_POST['data_final'];
     }
     if (isset($_POST['camp_options'])) {
@@ -974,7 +974,7 @@ if (isset($_POST['totais_db'])) {
         $data_inicial = $_POST['data_inicial'];
     }
     if (isset($_POST['data_final'])) {
-        $data_final = date("o-m-d", strtotime("+1 day" . $_POST['data_final']));
+        $data_final = date("Y-m-d", strtotime("+1 day" . $_POST['data_final']));
         $data_final_text=$_POST['data_final'];
     }
     if (isset($_POST['db_options'])) {
@@ -1108,7 +1108,7 @@ if (isset($_POST['resumo_geral'])) {
     $data_final = $_POST['data_final'];
 
     if ($data_inicial == $data_final) {
-        $data_final = date("o-m-d", strtotime("+1 day" . $_POST['data_final']));
+        $data_final = date("Y-m-d", strtotime("+1 day" . $_POST['data_final']));
         $data_final_text=$_POST['data_final'];
     }
     fputcsv($output, array(" "), ";");
@@ -1393,7 +1393,7 @@ if (isset($_POST['resumo_geral_db'])) {
     $data_inicial = $_POST['data_inicial'];
     $data_final = $_POST['data_final'];
     if ($data_inicial == $data_final) {
-        $data_final = date("o-m-d", strtotime("+1 day" . $_POST['data_final']));
+        $data_final = date("Y-m-d", strtotime("+1 day" . $_POST['data_final']));
         $data_final_text=$_POST['data_final'];
     }
 
@@ -1693,7 +1693,7 @@ if (isset($_POST['geral_camp_teste'])) {
         $data_inicial = $_POST['data_inicial'];
     }
     if (isset($_POST['data_final'])) {
-        $data_final = date("o-m-d", strtotime("+1 day" . $_POST['data_final']));
+        $data_final = date("Y-m-d", strtotime("+1 day" . $_POST['data_final']));
     }
 
     fputcsv($output, array('Title',
@@ -1745,7 +1745,7 @@ if (isset($_POST['geral_camp_teste'])) {
         die('Não me consegui ligar' . mysql_error());
     }
 
-    $datafim = date("o-m-d", strtotime("+1 day" . $data));
+    $datafim = date("Y-m-d", strtotime("+1 day" . $data));
     $datainicio = $data;
     mysql_select_db("asterisk", $con);
 

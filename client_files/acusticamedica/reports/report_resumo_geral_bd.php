@@ -13,7 +13,7 @@
 
 <?
 require('../../../ini/dbconnect.php');
-$today = date("o-m-d");
+$today = date("Y-m-d");
 $query = "	SELECT	list_name, 
 					list_id 
 			FROM 	vicidial_lists

@@ -8,7 +8,7 @@ require(ROOT . "ini/header.php");
 ?>
 
 <?
-$data = date('o-m-d');
+$data = date('Y-m-d');
 
 //$query1 = mysql_fetch_assoc(mysql_query("SELECT user_group FROM vicidial_users WHERE user='$_SERVER[PHP_AUTH_USER]';", $link)) or die(mysql_error());
 $query2 = mysql_fetch_assoc(mysql_query("SELECT allowed_campaigns FROM vicidial_user_groups WHERE user_group='ExpandTelecom';", $link)) or die(mysql_error());

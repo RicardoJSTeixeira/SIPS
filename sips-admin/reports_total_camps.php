@@ -3,7 +3,7 @@ for ($i = 0; $i < count(explode('/', $_SERVER['PHP_SELF'])) - 2; $i++) {$far.=".
 define("ROOT", $far);
 require(ROOT . "ini/header.php");
 
-$today = date("o-m-d"); ?>
+$today = date("Y-m-d"); ?>
 <form name="report" action="exportcsv_fc.php" target="_self" method="post">
 <input type="hidden" value='go' name="totais_camp3">
 <div class="cc-mstyle">	

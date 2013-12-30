@@ -11,7 +11,7 @@ if($user->user_group!="ADMIN")
 $where=" WHERE campaign_id in('".  implode("','", $user->allowed_campaigns)."')";    
 }
 
-$today = date("o-m-d");
+$today = date("Y-m-d");
 ##################################################
 $query = "SELECT campaign_id, campaign_name FROM vicidial_campaigns $where";
 $query = mysql_query($query, $link) or die(mysql_error());

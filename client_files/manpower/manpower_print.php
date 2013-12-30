@@ -156,7 +156,7 @@
 
 
 
-	$datafim = date("o-m-d", strtotime("+1 day".$_POST['data']));
+	$datafim = date("Y-m-d", strtotime("+1 day".$_POST['data']));
 	
 	$query = "SELECT * FROM vicidial_list a INNER JOIN custom_05 b ON a.lead_id=b.lead_id WHERE a.lead_id='$lead_id' AND last_local_call_time >= '$data' AND last_local_call_time < '$datafim'";
 	$query = mysql_query($query, $link);

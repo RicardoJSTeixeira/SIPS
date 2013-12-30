@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="../../../../calendar/calendar.css" />
 <?php
 require('../../../../ini/dbconnect.php');
-$today = date("o-m-d");
+$today = date("Y-m-d");
 ##################################################
 $query = "	SELECT 	campaign_id, campaign_name 
 			FROM 	vicidial_campaigns";

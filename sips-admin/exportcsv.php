@@ -11,8 +11,8 @@ $output = fopen('php://output', 'w');
 
 // output the column headings
 
-if (isset($_POST['data'])) {$data = $_POST['data'];} else {$data = date('o-m-d');}
-$datafim = date("o-m-d", strtotime("+1 day".$data));
+if (isset($_POST['data'])) {$data = $_POST['data'];} else {$data = date('Y-m-d');}
+$datafim = date("Y-m-d", strtotime("+1 day".$data));
 
 fputcsv($output, array('Title',
         'Campaign Number',
@@ -63,7 +63,7 @@ $con = mysql_connect("localhost","sipsadmin","sipsps2012");
 	
 	//mysql_query("SET NAMES 'UTF8'");
 		
-	$datafim = date("o-m-d", strtotime("+1 day".$data)); 
+	$datafim = date("Y-m-d", strtotime("+1 day".$data)); 
 	$datainicio = $data;
 	mysql_select_db("asterisk", $con);
 	

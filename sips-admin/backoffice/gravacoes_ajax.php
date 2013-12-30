@@ -81,14 +81,14 @@ $users_regex = "AND a.user REGEXP '^$users_regex$'";
 //Intervalo INICIO
 if ($_GET['datainicio']!="" and $_GET['datafim']!="") {
     $datainicio = $_GET['datainicio'];
-    $datafim=($_GET['datainicio'] == $_GET['datafim'])?date("o-m-d", strtotime("+1 day" . $_GET['datafim'])):$_GET['datafim'];
+    $datafim=($_GET['datainicio'] == $_GET['datafim'])?date("Y-m-d", strtotime("+1 day" . $_GET['datafim'])):$_GET['datafim'];
 } 
 elseif($_GET['datainicio']!="" and $_GET['datafim']=="") {
     $datainicio = $_GET['datainicio'];
-    $datafim=($_GET['datainicio'] == date('o-m-d'))?date("o-m-d", strtotime("+1 day" . $_GET['datafim'])):date('o-m-d');
+    $datafim=($_GET['datainicio'] == date('Y-m-d'))?date("Y-m-d", strtotime("+1 day" . $_GET['datafim'])):date('Y-m-d');
 } 
 elseif($_GET['datainicio']=="" and $_GET['datafim']!=""){
-    $datainicio = ($_GET['datafim'] == date('o-m-d'))?date("o-m-d", strtotime("-1 day" . $_GET['datafim'])):date('o-m-d');
+    $datainicio = ($_GET['datafim'] == date('Y-m-d'))?date("Y-m-d", strtotime("-1 day" . $_GET['datafim'])):date('Y-m-d');
     $datafim=$_GET['datafim'];
 }
 if($datainicio!="" AND $datafim!=""){

@@ -10,7 +10,7 @@ foreach ($_GET as $key => $value) {
 
 if($action == "lostcalls"){
 
-$today = date("o-m-d");
+$today = date("Y-m-d");
 
 $aColumns = array( 'first_name', 'phone_number', 'call_date_pt', 'term_reason', 'marcar', 'contactado' ); 
 	$sQuery = "
@@ -75,7 +75,7 @@ $aColumns = array( 'first_name', 'phone_number', 'call_date_pt', 'term_reason', 
 
 if($action == "manual"){
 
-$today = date("o-m-d");
+$today = date("Y-m-d");
 
 $aColumns = array( 'first_name', 'phone_number', 'call_date_pt', 'term_reason', 'marcar', 'contactado' ); 
 	$sQuery = "
@@ -116,7 +116,7 @@ $aColumns = array( 'first_name', 'phone_number', 'call_date_pt', 'term_reason', 
 
 if($action == "outbound"){
 
-$today = date("o-m-d");
+$today = date("Y-m-d");
 
 $aColumns = array( 'first_name', 'phone_number', 'call_date_pt', 'term_reason', 'marcar', 'contactado' ); 
 	$sQuery = "
@@ -153,7 +153,7 @@ $aColumns = array( 'first_name', 'phone_number', 'call_date_pt', 'term_reason', 
 
 if($action == "inbound"){
 
-$today = date("o-m-d");
+$today = date("Y-m-d");
 
 $aColumns = array( 'first_name', 'phone_number', 'call_date_pt', 'term_reason', 'marcar', 'contactado' ); 
 	$sQuery = "

@@ -9,8 +9,8 @@ define("ROOT", $path);
 
 require(ROOT . "ini/dbconnect.php");
 
-$data = (isset($_POST['data'])) ? $_POST['data'] : date('o-m-d');
-$datafim = date("o-m-d", strtotime("+1 day" . $data));
+$data = (isset($_POST['data'])) ? $_POST['data'] : date('Y-m-d');
+$datafim = date("Y-m-d", strtotime("+1 day" . $data));
 $datainicio = $data;
 $current_admin = $_SERVER['PHP_AUTH_USER'];
 

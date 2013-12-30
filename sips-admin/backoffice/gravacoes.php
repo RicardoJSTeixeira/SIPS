@@ -152,9 +152,9 @@ $users_regex = "AND user REGEXP '^$users_regex$'";
                                         </optgroup> 
                                     </select>
                                     <label>Data Inicio</label>
-                                    <input type="text" id='datainicio' value='<?= date("o-m-d", strtotime("-1 day")) ?>' >
+                                    <input type="text" id='datainicio' value='<?= date("Y-m-d", strtotime("-1 day")) ?>' >
                                     <label>Data Fim</label>
-                                    <input type="text" id='datafim' value='<?= date('o-m-d') ?>' >
+                                    <input type="text" id='datafim' value='<?= date('Y-m-d') ?>' >
                                     <label>Nº de Telefone</label>
                                     <div class="input-append">
                                         <input type="text" id='ntlf' /><button class="btn btn-primary" >Go!</button>

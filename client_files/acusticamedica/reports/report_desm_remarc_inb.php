@@ -19,7 +19,7 @@ aSelect.options[0].selected = false;
 </script>
 <?php
 require('../../../ini/dbconnect.php');
-$today = date("o-m-d");
+$today = date("Y-m-d");
 ##################################################
 
  

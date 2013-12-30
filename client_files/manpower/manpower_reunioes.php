@@ -20,8 +20,8 @@ window.open(url, '_blank');
 <?
 	
 	
-	if (isset($_POST['data'])) { $data = $_POST['data']; } else { $data = date('o-m-d'); }
-	$datafim = date("o-m-d", strtotime("+1 day".$_POST['data']));
+	if (isset($_POST['data'])) { $data = $_POST['data']; } else { $data = date('Y-m-d'); }
+	$datafim = date("Y-m-d", strtotime("+1 day".$_POST['data']));
 	
 	$query = "show tables like 'custom_%'";
 	$query = mysql_query($query) or die(mysql_error());

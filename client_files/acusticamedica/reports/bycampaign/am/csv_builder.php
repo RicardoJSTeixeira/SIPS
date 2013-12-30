@@ -10,7 +10,7 @@ header('Content-Disposition: attachment; filename=report_AM_campanha.csv');
 
 $data_inicial = DatePT2DateSQL($_POST['data_inicial']);
 $data_final = DatePT2DateSQL($_POST['data_final']);
-if($data_final==$data_inicial) { $data_final = date("o-m-d", strtotime("+1 day".$data_final)); }
+if($data_final==$data_inicial) { $data_final = date("Y-m-d", strtotime("+1 day".$data_final)); }
 
 
 

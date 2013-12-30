@@ -14,14 +14,14 @@ define("ROOT", $header);
 
 require(ROOT . "ini/dbconnect.php");
 
-$data = date('o-m-d');
+$data = date('Y-m-d');
 
 if (isset($_POST['data'])) {
     $data = $_POST['data'];
 } else {
-    $data = date('o-m-d');
+    $data = date('Y-m-d');
 }
-$datafim = date("o-m-d", strtotime("+1 day" . $_POST['data']));
+$datafim = date("Y-m-d", strtotime("+1 day" . $_POST['data']));
 ?>
 <!DOCTYPE html>
 <html>

@@ -134,7 +134,7 @@
         $lead_id = $_GET['id'];
 
     
-        $datafim = date("o-m-d", strtotime("+1 day" . $_POST['data']));
+        $datafim = date("Y-m-d", strtotime("+1 day" . $_POST['data']));
 
         require '../../ini/user.php';
         $user=new user;

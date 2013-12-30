@@ -23,8 +23,8 @@ window.open(url, '_blank');
 <?
 	require('../../sips-admin/dbconnect.php');
 	
-    if (isset($_POST['data'])) { $data = $_POST['data']; } else { $data = date('o-m-d'); }
-    $datafim = date("o-m-d", strtotime("+1 day".$_POST['data']));
+    if (isset($_POST['data'])) { $data = $_POST['data']; } else { $data = date('Y-m-d'); }
+    $datafim = date("Y-m-d", strtotime("+1 day".$_POST['data']));
     
     $current_admin = $_SERVER['PHP_AUTH_USER'];
     $query = mysql_query("select user_group from vicidial_users where user='$current_admin'") or die(mysql_error());

@@ -5,7 +5,7 @@ for ($i = 0; $i < $self - 2; $i++) {
 }
 define("ROOT", $header);
 require(ROOT . 'ini/dbconnect.php');
-$today = date("o-m-d");
+$today = date("Y-m-d");
 
 
 foreach ($_POST as $key => $value) {
