@@ -1,98 +1,83 @@
 <?php
 
-error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
-ini_set('display_errors', '1');
-require("../lib/db.php");
+class crm_main_class {
 
-require("../lib/user.php");
-foreach ($_POST as $key => $value) {
-    ${$key} = $value;
-}
-foreach ($_GET as $key => $value) {
-    ${$key} = $value;
-}
+    protected $db;
 
-$user = new UserLogin($db);
+    public function __construct($db) {
+        $this->db = $db;
+    }
 
-$user->confirm_login();
-
-
-$variables=array();
-switch ($action) {
-    case 'campanha':
+    public function get_campanha() {
         $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y'";
-        $stmt = $db->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->execute();
         $js = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode($js);
-        break;
+        return $js;
+    }
 
-
-    case 'bd':
-
-
+    public function get_bd($campaign_id) {
         $query = "SELECT  list_id id,list_name name from vicidial_lists where active='Y' and campaign_id=? ";
-        $stmt = $db->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->execute(array($campaign_id));
         $js = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode($js);
-        break;
+        return $js;
+    }
 
+    public function get_agent() {
 
-    case 'agent':
         $query = "SELECT user id, full_name name FROM vicidial_users where active='y'";
-        $stmt = $db->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->execute();
         $js = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode($js);
-        break;
+        return $js;
+    }
 
-
-    case "feedbacks":
+    public function get_feedbacks($campaign_id) {
         $query = "select status id, status_name name from ((SELECT status ,status_name FROM vicidial_campaign_statuses where campaign_id=?) union all (SELECT status, status_name FROM vicidial_statuses)) a group by status order by status_name asc";
-        $stmt = $db->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->execute(array($campaign_id));
 
         $js = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode($js);
-        break;
+        return $js;
+    }
 
-
-    case "campos_dinamicos":
+    public function get_campos_dinamicos($campaign_id) {
         $query = "SELECT Name id,Display_name name  FROM vicidial_list_ref where campaign_id =? and active='1' ";
 
-        $stmt = $db->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->execute(array($campaign_id));
 
         $js = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode($js);
-        break;
+        return $js;
+    }
 
-
-
-    case "script":
+    public function get_script($campaign_id) {
         $query = "SELECT a.id id,a.id_script,a.texto name,a.values_text,a.type,a.tag   FROM script_dinamico a  left join script_assoc b on a.id_script=b.id_script where b.id_camp_linha =? and a.type not in ('legend','textfield','datepicker','scheduler','ipl','pagination','tableinput')";
 
-        $stmt = $db->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->execute(array($campaign_id));
 
         $js = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode($js);
-        break;
+       return $js;
+    }
 
-    case "get_script_individual":
+    public function get_script_individual($id) {
         $query = "SELECT id,tag,id_script,type,texto,placeholder,values_text FROM `script_dinamico` WHERE id=?";
-        $stmt = $db->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->execute(array($id));
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
         $js = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "type" => $row["type"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "values_text" => json_decode($row["values_text"]));
-        echo json_encode($js);
-        break;
-
-    case "get_info":
+        return $js;
+    }
+    
+    
+    
+   public function get_info($data_inicio,$data_fim,$campanha,$bd,$agente,$feedback,$cd,$script)
+   {
         $js['aaData'] = array();
 
         $variables = array();
@@ -104,7 +89,7 @@ switch ($action) {
             $variables[] = $bd;
         } else {
             $query = "SELECT list_id FROM vicidial_lists WHERE campaign_id=:campanha";
-            $stmt = $db->prepare($query);
+            $stmt = $this->db->prepare($query);
             $stmt->execute(array(":campanha" => $campanha));
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -190,14 +175,16 @@ switch ($action) {
 
         $query = "select a.lead_id,a.first_name,a.phone_number, a.address1 ,a.last_local_call_time  from vicidial_list a $join where $where group by a.lead_id ";
 
-        $stmt = $db->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->execute($variables);
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
             $row[4] = $row[4] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span></div>";
             $js['aaData'][] = $row;
         }
-        echo json_encode($js);
-        break;
+        return $js;
+   }
+    
+    
+
 }
-?>

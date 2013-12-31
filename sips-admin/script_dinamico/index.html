@@ -7,7 +7,7 @@
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
         <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
-        <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen-1.min.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-fileupload.min.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
@@ -20,7 +20,7 @@
         <script type="text/javascript" src="/jquery/jqueryUI/jquery-ui-1.10.2.custom.min.js"></script>
         <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/chosen-1.jquery.min.js"></script>
         <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
         <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
         <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
@@ -97,6 +97,7 @@
                 margin: -0px -10px -24px;
                 border-radius: 0 0 2px 2px;
             }
+            .chosen-container { width: 79% !important; }
         </style>
     </head>
     <body> 
@@ -161,7 +162,7 @@
                 <div class="formRow">
                     <strong  >Campanha</strong>
                     <div class="formRight">
-                        <select id="script_campanha_selector" class="chosen-select"  multiple="multiple" data-placeholder="Selecione uma/várias campanhas"   ></select>
+                        <select id="script_campanha_selector" class="chosen-select"   data-placeholder="Selecione uma/várias campanhas"   ></select>
                     </div> 
                 </div>
                 <div class="formRow linha_inbound_div">

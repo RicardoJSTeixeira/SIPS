@@ -284,3 +284,36 @@ class users extends user {
     }
 
 }
+
+class mysiblings extends user {
+
+    private $db;
+
+    function __construct($db) {
+        $this->db = $db;
+        parent::__construct();
+    }
+
+    function get_user_group() {
+
+        $allowed_camps_regex = implode("|", parent::allowed_campaigns);
+        if (!parent::is_all_campaigns) {
+            $ret = "WHERE allowed_campaigns REGEXP '$allowed_camps_regex'";
+        }
+        $stmt = $this->db->prepare("SELECT `user_group` FROM `vicidial_user_groups` $ret ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    function get_agentes() {
+        $user_groups = $this->get_user_group();
+        $user_group = array();
+        foreach ($user_groups as $value) {
+            $user_group[] = $value;
+        }
+        $stmt = $this->db->prepare("SELECT `user`,full_name,user_group FROM `vicidial_users` WHERE user_group in ('" . implode("','", $user_group) . "') AND user_level <  :user_level");
+        $stmt->execute(array(":user_level" => parent::user_level));
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+}

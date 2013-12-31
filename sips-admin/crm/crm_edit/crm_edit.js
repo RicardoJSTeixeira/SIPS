@@ -12,7 +12,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
 
     this.init = function()
     {
-        $.get(file_path + "crm_edit.html", function(data) {
+        $.get(file_path + "crm_edit/crm_edit.html", function(data) {
             crm_edit_zone.append(data);
             get_user_level(function() {
                 get_lead_info(function() {
@@ -24,10 +24,12 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                         get_validation(function() {
                                             if (me.user_level > 5 && me.has_dynamic_fields)
                                             {
+                                                crm_edit_zone.find("#modify_feedback_status").show();
                                                 crm_edit_zone.find("#dynamic_field_edit_div").show();
                                             }
                                             else
                                             {
+                                                crm_edit_zone.find("#modify_feedback_status").hide();
                                                 crm_edit_zone.find("#dynamic_field_edit_div").hide();
                                             }
 
@@ -50,7 +52,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                             {
                                                 if (me.edit_dynamic_field)//CANCELA
                                                 {
-                                                    $("#inputcontainer")[0].reset();
+                                                    crm_edit_zone.find("#inputcontainer")[0].reset();
                                                     crm_edit_zone.find("#lead_edit_save_button").hide();
                                                     crm_edit_zone.find("#lead_edit_button").text("Editar Dados do Cliente");
                                                     crm_edit_zone.find(".dynamic_field_divs input,textarea").prop("readonly", true);
@@ -92,8 +94,8 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                             //insere nova entrada
                                             $(crm_edit_zone).on("click", "#confirm_feedback_button", function()
                                             {
-                                                if ($("#textarea_comment").val().length)
-                                                    $.post(file_path + "crm_edit_request.php", {action: "add_info_crm", lead_id: me.lead_id, option: crm_edit_zone.find('input[name="radio_confirm_group"]:checked').val(), campaign_id: me.campaign_id, agent: crm_edit_zone.find("#agente_selector option:selected").val(), comment: crm_edit_zone.find("#textarea_comment").val()},
+                                                if (crm_edit_zone.find("#textarea_comment").val().length)
+                                                    $.post(file_path + "crm_edit/crm_edit_request.php", {action: "add_info_crm", lead_id: me.lead_id, option: crm_edit_zone.find('input[name="radio_confirm_group"]:checked').val(), campaign_id: me.campaign_id, agent: crm_edit_zone.find("#agente_selector option:selected").val(), comment: crm_edit_zone.find("#textarea_comment").val()},
                                                     function(data)
                                                     {
                                                         get_validation();
@@ -111,13 +113,12 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     };
     this.destroy = function()
     {
-        crm_edit_zone.empty();
-        crm_edit_zone.off();
-    };
+        crm_edit_zone.empty().off();
+     };
 
     function get_user_level(callback)
     {
-        $.post(file_path + "crm_edit_request.php", {action: "get_user_level"},
+        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_user_level"},
         function(data)
         {
             me.user_level = data;
@@ -130,7 +131,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
 
     function get_agentes(callback)
     {
-        $.post(file_path + "crm_edit_request.php", {action: "get_agentes"},
+        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_agentes"},
         function(data)
         {
             crm_edit_zone.find("#agente_selector").empty();
@@ -149,7 +150,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
 
     function get_lead_info(callback)
     {
-        $.post(file_path + "crm_edit_request.php", {action: "get_lead_info", lead_id: me.lead_id},
+        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_lead_info", lead_id: me.lead_id},
         function(data)
         {
             var data_load = moment(data.data_load);
@@ -179,7 +180,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
 
     function get_dynamic_fields(callback)
     {
-        $.post(file_path + "crm_edit_request.php", {action: "get_dynamic_fields", lead_id: me.lead_id, campaign_id: me.campaign_id},
+        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_dynamic_fields", lead_id: me.lead_id, campaign_id: me.campaign_id},
         function(data)
         {
             
@@ -230,7 +231,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
 
     function get_feedbacks(callback)
     {
-        $.post(file_path + "crm_edit_request.php", {action: "get_feedbacks", campaign_id: me.campaign_id, feedback: me.feedback},
+        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_feedbacks", campaign_id: me.campaign_id, feedback: me.feedback},
         function(data)
         {
             crm_edit_zone.find("#feedback_list").append(data);
@@ -250,7 +251,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
             "bProcessing": true,
             "bDestroy": true,
             "sPaginationType": "full_numbers",
-            "sAjaxSource": file_path + 'crm_edit_request.php',
+            "sAjaxSource": file_path + 'crm_edit/crm_edit_request.php',
             "fnServerParams": function(aoData) {
                 aoData.push({"name": "action", "value": "get_calls"},
                 {"name": "lead_id", "value": me.lead_id},
@@ -274,7 +275,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
             "bProcessing": true,
             "bDestroy": true,
             "sPaginationType": "full_numbers",
-            "sAjaxSource": file_path + 'crm_edit_request.php',
+            "sAjaxSource": file_path + 'crm_edit/crm_edit_request.php',
             "fnServerParams": function(aoData) {
                 aoData.push({"name": "action", "value": "get_recordings"},
                 {"name": "lead_id", "value": me.lead_id});
@@ -296,7 +297,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
             fields.push({"name": this.name, "value": $(this).val()});
         });
 
-        $.post(file_path + "crm_edit_request.php", {action: "save_dynamic_fields", lead_id: me.lead_id, fields: fields},
+        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "save_dynamic_fields", lead_id: me.lead_id, fields: fields},
         function(data)
         {
             crm_edit_zone.find("#lead_edit_save_button").hide();
@@ -309,13 +310,13 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
 
     function save_feedback()
     {
-        $.post(file_path + "crm_edit_request.php", {action: "save_feedback", lead_id: me.lead_id, feedback: crm_edit_zone.find("#feedback_list option:selected").val()}, "json");
+        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "save_feedback", lead_id: me.lead_id, feedback: crm_edit_zone.find("#feedback_list option:selected").val()}, "json");
     }
 
     function get_validation(callback)
     {
 
-        $.post(file_path + "crm_edit_request.php", {action: "get_info_crm_confirm_feedback", lead_id: me.lead_id},
+        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_info_crm_confirm_feedback", lead_id: me.lead_id},
         function(data)
         {
             crm_edit_zone.find("#comment_log_tbody").empty();
@@ -326,7 +327,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                     crm_edit_zone.find("#comment_log_tbody").append($("<tr>")
                             .append($("<td>").text(this.comment))
                             .append($("<td>").text(this.feedback))
-                            .append($("<td>").text($("#agente_selector option[value=" + this.agent + "]").text()))
+                            .append($("<td>").text(crm_edit_zone.find("#agente_selector option[value=" + this.agent + "]").text()))
                             .append($("<td>").text(this.admin))
                             .append($("<td>").text(this.date))
                             );

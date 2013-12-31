@@ -17,8 +17,8 @@ foreach ($_GET as $key => $value) {
 header('Content-Type: text/html; charset=utf-8');
 header('Content-type: application/json');
 
-$user = new users;
-
+$user = new mysiblings($db);
+    
 $crmEdit = new crm_edit_class($db, $user->user_level);
 
 
@@ -52,7 +52,7 @@ switch ($action) {
         echo json_encode($crmEdit->save_feedback($lead_id, $feedback));
         break;
     case "get_agentes":
-        echo json_encode($crmEdit->get_agentes($user->allowed_campaigns, $user->is_all_campaigns, $user->user_level));
+        echo json_encode($user->get_agentes());
         break;
     
      case "add_info_crm":

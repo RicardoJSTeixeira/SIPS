@@ -172,6 +172,21 @@ class script {
         return $js;
     }
 
+    
+       public function get_script_by_campaign($campaign_id) {
+        $query = "SELECT a.id id,a.id_script,a.texto name,a.values_text,a.type,a.tag   FROM script_dinamico a  left join script_assoc b on a.id_script=b.id_script where b.id_camp_linha =? ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array($campaign_id));
+        $js = $stmt->fetchAll(PDO::FETCH_ASSOC);
+       return $js;
+    }
+
+
+    
+    
+    
+    
+    
     public function get_data_render($id_script, $lead_id, $user_group) {
         $js = array();
         $client_info = array();
