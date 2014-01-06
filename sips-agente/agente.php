@@ -2794,7 +2794,7 @@ unset($curLogo);
 <script type="text/javascript" src="js/mensagens.js"></script>
 <script type="text/javascript" src="js/novo_cliente.js"></script>
 <script type="text/javascript" src="js/historico.js"></script>
-<script type="text/javascript" src="js/agente.js?v=1"></script>
+<script type="text/javascript" src="js/agente.js?v=1.0"></script>
 <script type="text/javascript" src="/ini/SeamlessLoop.js"></script>
 <script language="Javascript">
     function soundsLoaded() {
@@ -3416,7 +3416,7 @@ $h++;
                             <div class="pull-left">Pausas</div>
                             <div class="pull-right">
                                 <div class="dropdown">
-                                    <span class="btn icon-alone dropdown-toggle hide" data-toggle="dropdown">
+                                    <span class="btn icon-alone dropdown-toggle hide" id="PauseCodeLinkSpanBtn" data-toggle="dropdown">
                                         <i class="icon-glass"></i>
                                     </span>
                                     <div class="dropdown-menu">

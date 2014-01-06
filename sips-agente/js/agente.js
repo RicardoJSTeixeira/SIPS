@@ -9654,6 +9654,11 @@ $(function() {
             $("#MDPhonENumbeR")[0].blur();
         }
     });
+    
+    if(dial_method === 'MANUAL'){
+        $("#PauseCodeLinkSpanBtn").removeClass('hide');
+    }
+    
 });
 
 

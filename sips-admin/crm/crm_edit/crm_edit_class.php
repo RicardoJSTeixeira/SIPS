@@ -317,10 +317,40 @@ class crm_edit_class {
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            if ($user_level > 5)
-                $preview_button = "<div class='view-button edit_item'><a href='$row[location]' target='_self' class='btn btn-mini btn-primary'><i class='icon-play'></i>Ouvir</a></div>";
-            else
-                $preview_button = "";
+            if ($user_level > 5){
+                 $mp3File = "#";
+                        if (strlen($row[location]) > 0) {
+                        //if lan
+                        if ($this->reserved_ip($this->get_client_ip())) {
+                        $mp3File = $row[location];
+                        } else {
+                        $tmp = explode("/", $row[location]);
+                        $ip = $tmp[2];
+                        $tmp = explode(".", $ip);
+                        $ip = $tmp[3];
+
+                        switch ($ip) {
+                        case "248":
+                        $port = ":20248";
+                        break;
+                        case "247":
+                        $port = ":20247";
+                        break;
+                        default:
+                        $port = "";
+                        break;
+                        }
+                        $mp3File = $curpage . $port . "/RECORDINGS/MP3/$row[filename]-all.mp3";
+                        }
+                        $audioPlayer = "Há gravação";
+                        } else {
+                        $audioPlayer = "Não há gravação!";
+                        }
+
+                $preview_button = "<div class='view-button edit_item'><a href='$mp3File' target='_self' class='btn btn-mini btn-primary'><i class='icon-play'></i>Ouvir</a></div>";
+            }else{
+            $preview_button = "";
+            }
             $output['aaData'][] = array("0" => $row["data"], "1" => $row["hora_inicio"], "2" => $row["hora_fim"], "3" => gmdate("H:i:s", $row["length_in_sec"]), "4" => $row["full_name"] . $preview_button);
         }
         return $output;
@@ -421,5 +451,60 @@ class crm_edit_class {
 
         return $js;
     }
+    
+    
+    private function curPageURL() {
+    $pageURL = 'http';
+    if ($_SERVER["HTTPS"] == "on") {
+        $pageURL .= "s";
+    }
+    $pageURL .= "://";
+    if ($_SERVER["SERVER_PORT"] != "80") {
+        $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"]; //. $_SERVER["REQUEST_URI"];
+    } else {
+        $pageURL .= $_SERVER["SERVER_NAME"]; //.$_SERVER["REQUEST_URI"];
+    }
+    return $pageURL;
+}
+
+private function get_client_ip() {
+    $ipaddress = '';
+    if ($_SERVER['HTTP_CLIENT_IP'])
+        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+    else if ($_SERVER['HTTP_X_FORWARDED_FOR'])
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    else if ($_SERVER['HTTP_X_FORWARDED'])
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+    else if ($_SERVER['HTTP_FORWARDED_FOR'])
+        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+    else if ($_SERVER['HTTP_FORWARDED'])
+        $ipaddress = $_SERVER['HTTP_FORWARDED'];
+    else if ($_SERVER['REMOTE_ADDR'])
+        $ipaddress = $_SERVER['REMOTE_ADDR'];
+    else
+        $ipaddress = 'UNKNOWN';
+
+    return $ipaddress;
+}
+
+private function reserved_ip($ip) {
+    $reserved_ips = array(// not an exhaustive list
+        '167772160' => 184549375, /*    10.0.0.0 -  10.255.255.255 */
+        '3232235520' => 3232301055, /* 192.168.0.0 - 192.168.255.255 */
+        '2130706432' => 2147483647, /*   127.0.0.0 - 127.255.255.255 */
+        '2851995648' => 2852061183, /* 169.254.0.0 - 169.254.255.255 */
+        '2886729728' => 2887778303, /*  172.16.0.0 -  172.31.255.255 */
+        '3758096384' => 4026531839, /*   224.0.0.0 - 239.255.255.255 */
+    );
+
+    $ip_long = sprintf('%u', ip2long($ip));
+
+    foreach ($reserved_ips as $ip_start => $ip_end) {
+        if (($ip_long >= $ip_start) && ($ip_long <= $ip_end)) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
 
 }
