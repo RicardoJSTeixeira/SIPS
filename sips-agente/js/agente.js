@@ -9676,6 +9676,15 @@ function ultimoscontactos(user)
 }
 
 $(function() {
+    
+    loop = new SeamlessLoop();
+    loop_warning = new SeamlessLoop();
+
+    loop.addUri("/ini/telephone-ring-4.ogg", 4000, "ring");
+    loop_warning.addUri("/ini/disconnected.ogg", 10000, "disconnected");
+    loop.callback(soundsLoaded);
+    
+    
     $("#cb_date_1").datepicker({
         changeMonth: true,
         changeYear: true,
@@ -9695,7 +9704,7 @@ $(function() {
 
     //setTimeout(function(){AgentsViewOpen('AgentViewSpan', 'open');}, 2000);
 
-    $("#CallbacksButtons").tooltip();
+    $("[data-toggle=tooltip]").tooltip();
 
     $("#SendDTMF").popover({html: true});
     get_tempo_pausa();
@@ -9703,8 +9712,20 @@ $(function() {
     $("#DispoSelectBox .close").on("click", function() {
         $(this).text((this.innerText === "+") ? "-" : "+").closest(".grid-agent").find(".notification-mes").toggle();
     });
+
+    var clip = new ZeroClipboard($("#record2clipboard"));
+    
+clip.on( 'dataRequested', function (client, args) {
+     url = window.location.origin + '/RECORDINGS/MP3/' + recording_filename+"-all.mp3";
+  client.setText( url );
 });
 
+  
+    clip.on( 'complete', function ( client, args ) {
+  $(this).effect("highlight",
+                {color: "#FFFF66"}, 1000);
+} );
+});
 
 $(document).on("click", ".ligar_comment_log", function()
 {

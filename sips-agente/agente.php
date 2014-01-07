@@ -2796,18 +2796,15 @@ unset($curLogo);
 <script type="text/javascript" src="js/historico.js"></script>
 <script type="text/javascript" src="js/agente.js?v=1.0"></script>
 <script type="text/javascript" src="/ini/SeamlessLoop.js"></script>
+<script type="text/javascript" src="/ini/zeroclipboard/ZeroClipboard.min.js"></script>
 <script language="Javascript">
     function soundsLoaded() {
         loop.start("ring");
         loop.stop("ring");
-    }
-    ;
-    var loop = new SeamlessLoop();
-    var loop_warning = new SeamlessLoop();
+    };
+    var loop;
+    var loop_warning;
     var script_dinamico =<?= ($agent_fullscreen == "Y") ? "true" : "false" ?>;
-    loop.addUri("/ini/telephone-ring-4.ogg", 4000, "ring");
-    loop_warning.addUri("/ini/disconnected.ogg", 10000, "disconnected");
-    loop.callback(soundsLoaded);
     moment.lang('pt');
     var clientName = '<? echo $curClient[0]; ?>';
     window.name = 'GCC_window';
@@ -3316,7 +3313,27 @@ $h++;
 
 </script>
 
+<style>
+     #record2clipboard.zeroclipboard-is-hover {   color: #333333;
+  text-decoration: none;
+  background-color: #f3f3f3;
+  *background-color: #d9d9d9;
+  /* Buttons in IE7 don't get borders, so darken on hover */
 
+  background-position: 0 -15px;
+  -webkit-transition: background-position 0.1s linear;
+     -moz-transition: background-position 0.1s linear;
+       -o-transition: background-position 0.1s linear;
+          transition: background-position 0.1s linear; }
+  #record2clipboard.zeroclipboard-is-active { 
+  background-color: #ececec;
+  background-color: #d9d9d9 \9;
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 1px rgba(0, 0, 0, 0.05);
+     -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 1px rgba(0, 0, 0, 0.05);
+          box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 1px rgba(0, 0, 0, 0.05); }
+</style>
 </head>
 <?php $zi = 2; ?>
 <body onLoad="all_refresh();"  onunload="BrowserCloseLogout();" id="ib">
@@ -3337,10 +3354,13 @@ $h++;
                         <div class="grid-title" style="overflow:visible;">
                             <div class="pull-left">Info Box</div>
                             <div class="pull-right">
-                                <div class="dropdown">
-                                    <span class="btn icon-alone dropdown-toggle" data-toggle="dropdown">
+                                <button class="btn icon-alone dropdown-toggle <?= ($curClient[0] == 'necomplus') ? '' : 'hide' ?>" id="record2clipboard">
+                                    <i class="icon-headphones"></i>
+                                </button>
+                                <div class="dropdown" style="display:inline-block;">
+                                    <button class="btn icon-alone dropdown-toggle" data-toggle="dropdown">
                                         <i class="icon-cog"></i>
-                                    </span>
+                                    </button>
                                     <div class="dropdown-menu">
                                         <ul>
                                             <li style="display:none"><a tabindex="-1" href="#" onclick="AgentsViewOpen('AgentViewSpan', 'open');
@@ -3348,11 +3368,11 @@ $h++;
                                             <li id="callsinqueuelink">
                                                 <?php
                                                 if ($view_calls_in_queue > 0) {
-                                                if ($view_calls_in_queue_launch > 0) {
-                                                echo "<a tabindex=\"-1\" href=\"#\" onclick=\"show_calls_in_queue('HIDE');\"><i class=\"icon-road\"></i>Chamadas em espera</a>\n";
-                                                } else {
-                                                echo "<a tabindex=\"-1\" href=\"#\" onclick=\"show_calls_in_queue('SHOW');\"><i class=\"icon-road\"></i>Chamadas em espera</a>\n";
-                                                }
+                                                    if ($view_calls_in_queue_launch > 0) {
+                                                        echo "<a tabindex=\"-1\" href=\"#\" onclick=\"show_calls_in_queue('HIDE');\"><i class=\"icon-road\"></i>Chamadas em espera</a>\n";
+                                                    } else {
+                                                        echo "<a tabindex=\"-1\" href=\"#\" onclick=\"show_calls_in_queue('SHOW');\"><i class=\"icon-road\"></i>Chamadas em espera</a>\n";
+                                                    }
                                                 }
                                                 ?>
                                             </li>
@@ -3416,9 +3436,9 @@ $h++;
                             <div class="pull-left">Pausas</div>
                             <div class="pull-right">
                                 <div class="dropdown">
-                                    <span class="btn icon-alone dropdown-toggle hide" id="PauseCodeLinkSpanBtn" data-toggle="dropdown">
+                                    <button class="btn icon-alone dropdown-toggle hide" id="PauseCodeLinkSpanBtn" data-toggle="dropdown">
                                         <i class="icon-glass"></i>
-                                    </span>
+                                    </button>
                                     <div class="dropdown-menu">
                                         <ul>
                                             <li id="PauseCodeLinkSpan"></li>
@@ -5064,7 +5084,6 @@ $h++;
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
     <script>
         setTimeout(function() {
             window.onbeforeunload = function() {
