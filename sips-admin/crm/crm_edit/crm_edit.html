@@ -1,5 +1,9 @@
-<link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css">    
-<script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
+ 
+<style>
+    .chosen-container { width: 79% !important; }
+    table
+    {margin-bottom: 5px;}
+</style>
 <div class="row-fluid">
     <div class="span12">
         <h2>Informação do Cliente</h2>   
@@ -46,9 +50,10 @@
             <div id="dynamic_field_div2"  class="span6 dynamic_field_divs">
             </div>
         </form>
-        <div id="dynamic_field_edit_div">
+        <div id="dynamic_field_edit_div"  >
             <button class="btn right btn-primary" id="lead_edit_button">Editar Dados do Cliente</button>
-            <button class="btn right" id="lead_edit_save_button" style="display:none"><i class="icon-save"></i>Gravar</button>
+            
+            <button class="btn right btn-success" id="lead_edit_save_button" style="margin-right: 5px; display:none"><i class="icon-save"></i>Gravar</button>
         </div>
     </div>
 </div>
@@ -83,14 +88,14 @@
                 <div class="clear"></div>
                 <div class="formRow" id="div_comentarios">
                     <label class="control-label">Log de Comentários</label>
-                    <table class="table table-mod table-bordered" id="comment_log_table">
+                    <table class="table table-mod" id="comment_log_table">
                         <thead>
                         <th>
                             Comentario
                         </th>
                         <th>
                             Estado
-                        </th>
+                        </th> 
                         <th>
                             Agente
                         </th>
@@ -115,13 +120,15 @@
                 <div class="formRow">
                     <label class="control-label">Agente</label>
                     <div class="formRight">
-                        <select id='agente_selector'>
+                        <select id='agente_selector' class="chosen-select">
                         </select>
                     </div>
                 </div>
-                <div class="pull-right">
-                    <button class='btn btn-action' id='confirm_feedback_button'>Guardar</button>
+                <div class="formRow">
+                      <button class='btn btn-action right btn-primary ' id='confirm_feedback_button'>Guardar</button>
                 </div>
+                  
+             
             </div>
         </div>
     </div>
@@ -167,10 +174,6 @@
             </tbody>
         </table> 
     </div>
-
-
-
-
 </div>
 
 

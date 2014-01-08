@@ -532,8 +532,8 @@ switch ($action) {
 
     case 'get_calls_queue':// Inbound agentes,campaign,status
         $js = array();
-        $today = date("Y-m-d");
-        $tomorrow = date("Y-m-d", strtotime("+1 day"));
+        $today = date("Y-m-d") . " 00:00:00";
+    
         $linha = explode(",", $linha_inbound);
 
         for ($i = 0; $i < count($linha); $i++) {

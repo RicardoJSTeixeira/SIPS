@@ -54,8 +54,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         }
     }
 
-
-
     function starter(callback)
     {
         if (admin_review !== 1)
@@ -102,12 +100,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             callback();
         }
     }
-
-
-
-
-
-
 
     $.get(file_path + "items/items.html", function(data) {
         script_zone.append($("<div>").attr("id", "script_dummie").css("display", "none"));
@@ -158,11 +150,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     });
 
 
-
-
-
-
-
 //UPDATES DE INFO
     function update_script(callback)
     {
@@ -171,16 +158,15 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             $.post(file_path + "requests.php", {action: "get_scripts_by_id_script", id_script: me.script_id},
             function(data)
             {
-
-                if (data !== null)
-                {
-                    me.script_id = data.id;
-                    if (typeof callback === "function")
+                if (Object.size(data))
+                    if (data !== null)
                     {
-
-                        callback();
+                        me.script_id = data.id;
+                        if (typeof callback === "function")
+                        {
+                            callback();
+                        }
                     }
-                }
             }, "json");
         }
         else
@@ -193,7 +179,8 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             $.post(file_path + "requests.php", {action: "get_scripts_by_campaign", id_campaign: camp_linha},
             function(data)
             {
-                if (data !== null)
+                
+                if (Object.size(data))
                 {
                     me.script_id = data.id;
 
@@ -201,6 +188,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     {
                         callback();
                     }
+                }
+                else
+                {
+                    $.jGrowl('Sem script', {life: 3000});
                 }
             }, "json");
         }
@@ -228,7 +219,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             }
         }, "json");
     }
-
 
 
     function insert_element(callback)

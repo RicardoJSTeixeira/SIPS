@@ -155,13 +155,16 @@ $(function() {
         $.post("requests.php", {action: "get_campaign_linha_inbound"},
         function(data1)
         {
-            -
-                    $.each(data1.campaign, function() {
-                        $("#script_campanha_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
-                    });
+
+            $.each(data1.campaign, function() {
+                $("#script_campanha_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
+            });
             $.each(data1.linha_inbound, function() {
                 $("#script_linha_inbound_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
             });
+            $("#script_campanha_selector").trigger("chosen:updated");
+            $("#script_linha_inbound_selector").trigger("chosen:updated");
+
         }, "json");
         $.post("requests.php", {action: "iscloud"},
         function(data2)
@@ -177,7 +180,7 @@ $(function() {
             $.each(data3, function() {
                 $("#scheduler_edit_select").append("<option value=" + this.id + ">" + this.text + "</option>");
             });
-            $("#scheduler_edit_select").val("").trigger("liszt:updated");
+            $("#scheduler_edit_select").val("").trigger("chosen:updated");
             $("#ipl_file_select").empty();
         }, "json");
         $.post("requests.php", {action: "get_feedbacks"},
@@ -189,7 +192,7 @@ $(function() {
                 temp += "<option value=" + this.status + ">" + this.status_name + "</option>";
             });
             $("#select_feedback").append(temp);
-            $("#select_feedback").trigger("liszt:updated");
+            $("#select_feedback").trigger("chosen:updated");
         }, "json");
         //--------------------------------------//
         editor_toggle("off");
@@ -332,7 +335,7 @@ $("#checkbox_scheduler_all").click(function()
         $("#scheduler_edit_select option").prop("selected", true);
     else
         $("#scheduler_edit_select option").prop("selected", false);
-    $("#scheduler_edit_select").trigger("liszt:updated");
+    $("#scheduler_edit_select").trigger("chosen:updated");
 });
 $("#scheduler_edit_marcação").on("change", function()
 {
@@ -412,7 +415,7 @@ function update_script(callback)
                 $("#select_default_value").append("<option value='0'>Selecione um campo dinamico</option>");
                 $("#select_default_value").append(temp);
             });
-            $("#tags_select").trigger("liszt:updated");
+            $("#tags_select").trigger("chosen:updated");
             $("#tag_label").text("§" + $("#tags_select option:selected").val() + "§");
         }, "json");
 
@@ -803,7 +806,7 @@ function populate_element(tipo, element)
             var values = select.map(function() {
                 return $(this).val();
             });
-            $("#scheduler_edit_select").val(values).trigger("liszt:updated");
+            $("#scheduler_edit_select").val(values).trigger("chosen:updated");
             $("#scheduler_edit_marcação").val(element.data("max_marc"));
             $("#scheduler_edit_obrigatorio").val(element.data("obrig_marc"));
             break;
@@ -1551,18 +1554,18 @@ $("#copy_script_button").on("click", function()
 });
 $('#script_selector').change(function()
 {
-    $("#script_campanha_selector").val("").trigger("liszt:updated");
-    $("#script_linha_inbound_selector").val("").trigger("liszt:updated");
+   
     editor_toggle("off");
     update_script();
 });
 $("#opcao_script_button").click(function()//chama o edit do nome do script
 {
-    $("#script_campanha_selector").val("").trigger("liszt:updated");
-    $("#script_linha_inbound_selector").val("").trigger("liszt:updated");
+    $("#script_campanha_selector").val("").trigger("chosen:updated");
+    $("#script_linha_inbound_selector").val("").trigger("chosen:updated");
     $.post("requests.php", {action: "get_camp_linha_by_id_script", id_script: $("#script_selector option:selected").val()},
     function(data)
     {
+
         var campaign = [];
         var linha_inbound = [];
         $("#script_campanha_selector option").prop("disabled", false);
@@ -1585,8 +1588,8 @@ $("#opcao_script_button").click(function()//chama o edit do nome do script
                     $("#script_linha_inbound_selector option[value='" + this.id_camp_linha + "']").prop("disabled", true);
             }
         });
-        $("#script_campanha_selector").val(campaign).trigger("liszt:updated");
-        $("#script_linha_inbound_selector").val(linha_inbound).trigger("liszt:updated");
+        $("#script_campanha_selector").val(campaign).trigger("chosen:updated");
+        $("#script_linha_inbound_selector").val(linha_inbound).trigger("chosen:updated");
     }, "json");
     $("#script_name_edit").val($("#script_selector option:selected").text());
 });
@@ -1635,7 +1638,7 @@ function rules_manager(tipo, element)
             break;
     }
 
-    $("#rule_target_select option[value='" + element.data("tag") + "']").prop('disabled', true).trigger("liszt:updated");
+    $("#rule_target_select option[value='" + element.data("tag") + "']").prop('disabled', true).trigger("chosen:updated");
     rts.trigger("change");
 }
 
@@ -1941,12 +1944,12 @@ $("#add_rule_button").click(function()
 
     if ($("#rule_creator .form_edit_element").validationEngine('validate'))
     {
-  
-        if ($("#rule_target_select option:selected").length || $("#regra_select option:selected").val()=="goto")
+
+        if ($("#rule_target_select option:selected").length || $("#regra_select option:selected").val() == "goto")
         {
 
             $('#rule_target_formright').tooltip("hide");
-       
+
             switch (selected_type)
             {
                 case "texto":
@@ -2046,7 +2049,7 @@ $("#add_rule_button").click(function()
                     }
                     break;
                 case "button":
-                 
+
                     if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
                         rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#rule_target_select").val(), $("#regra_select").val(), "click", 0);
                     else
@@ -2054,8 +2057,8 @@ $("#add_rule_button").click(function()
 
 
             }
-            $("#rule_target_select").val("").trigger("liszt:updated");
-            $("#rules_valor_select").val("").trigger("liszt:updated");
+            $("#rule_target_select").val("").trigger("chosen:updated");
+            $("#rules_valor_select").val("").trigger("chosen:updated");
 
         }
         else
