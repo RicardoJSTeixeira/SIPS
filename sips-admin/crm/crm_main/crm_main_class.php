@@ -60,7 +60,7 @@ class crm_main_class {
         return $js;
     }
 
-    public function get_info_client($data_inicio, $data_fim, $campanha, $bd, $agente, $feedback, $cd, $script_info, $lead_id, $phone_number) {
+    public function get_info_client($data_inicio, $data_fim, $campanha, $bd, $agente, $feedback, $cd, $script_info, $lead_id, $phone_number,$type_search) {
         $js['aaData'] = array();
         $variables = array();
         $join = "";
@@ -104,7 +104,13 @@ class crm_main_class {
             $where = $cbd;
 //--------------------------------------------------------------------------------DATAS
             if (!empty($data_inicio) && !empty($data_fim)) {
-                $where = $where . " and a.last_local_call_time between ? and ?";
+           
+                if ($type_search == "last_call") {
+                       $where = $where . " and a.last_local_call_time between ? and ?";
+                } else {
+                       $where = $where . " and a.entry_date between ? and ?";
+                }
+            
                 $variables[] = $data_inicio;
                 $variables[] = $data_fim;
             }
@@ -154,8 +160,7 @@ class crm_main_class {
                 }
             }
             $query = "select a.lead_id,a.first_name,a.phone_number, a.address1 ,a.last_local_call_time  from vicidial_list a $join where $where group by a.lead_id ";
-    
-            }
+        }
         $stmt = $this->db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {

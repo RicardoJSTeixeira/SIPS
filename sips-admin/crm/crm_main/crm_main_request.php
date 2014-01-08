@@ -50,7 +50,7 @@ switch ($action) {
     
     case "get_info_client":
     
-        echo json_encode($crmMain->get_info_client($data_inicio, $data_fim, $campanha, $bd, $agente, $feedback, $cd, $script_info, $lead_id, $phone_number));
+        echo json_encode($crmMain->get_info_client($data_inicio, $data_fim, $campanha, $bd, $agente, $feedback, $cd, $script_info, $lead_id, $phone_number,$type_search));
        break;
    
     case "get_info_calls":

@@ -110,10 +110,24 @@
                             <h4>Data de Inicio e Fim</h4>     
                             <input type="checkbox" id="checkbox_alldate" name="cad" >
                             <label for="checkbox_alldate"><span></span>Sem limite de Data</label>
+                            <div  id="date_div">
+                                
                             <div class="formRow">
 
                                 <input size="16" type="text" class="form_datetime validate[required]" id="data_inicio" placeholder="Data de Inicio">
                                 <input size="16" type="text" class="form_datetime validate[required]" id="data_fim" placeholder="Data de Fim">
+                            </div>
+
+
+
+
+                            <div id="client_search_sub_option">
+
+                                <input  type="radio" id="type_search_radio_call" name="tsr" checked="checked">
+                                <label class="  radio inline"  for="type_search_radio_call"><span></span>data da última chamada</label> 
+                                <input  type="radio" id="type_search_radio_load" name="tsr">
+                                <label class="  radio inline"  for="type_search_radio_load"><span></span>data de carregamento</label> 
+                            </div>
                             </div>
 
                         </div>
@@ -138,13 +152,14 @@
                             <div class="FormRow">
                                 <span class="label label-inverse"  >Tipo de pesquisa</span>
                                 <div class="FormRight">
-                                    <input  type="radio" id="radio_client" name="sccf" checked="checked">
+                                    <input  type="radio" id="radio_client" value="1" name="sccf" checked="checked">
                                     <label class="  radio inline"  for="radio_client"><span></span>Cliente</label> 
-                                    <input  type="radio" id="radio_chamada" name="sccf">
+                                    <input  type="radio" id="radio_chamada" value="2" name="sccf">
                                     <label class="  radio inline"  for="radio_chamada"><span></span>Chamadas</label> 
                                 </div>
 
                             </div>
+
                         </div>
                     </div>
                     <div class="row-fluid">

@@ -84,6 +84,7 @@ switch ($action) {
     case "get_recordings":
         //  $preview_button = 
         $recordings = $crmEdit->get_recordings($lead_id);
+                    $curpage = curPageURL();
         foreach ($recordings as $key => &$value1) {
             foreach ($value1 as &$value) {
                 $value[0] = date("Y-m:d", strtotime($value[0]));

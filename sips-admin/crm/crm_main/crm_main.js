@@ -293,7 +293,30 @@ var crm_main = function(crm_main_zone, file_path)
 //-------------------------------------------------------TOGGLE DAS DATAS pelo CHECKBOX
     crm_main_zone.on("click", "#checkbox_alldate", function()
     {
-        crm_main_zone.find(".form_datetime").val("").toggle("fade");
+        crm_main_zone.find(".form_datetime").val("");
+        if ($(this).is(":checked"))
+        {
+            crm_main_zone.find("#date_div").hide("fade");
+        }
+        else
+        {
+            crm_main_zone.find("#date_div").show("fade");
+        }
+
+
+    });
+    //SUB OPÇÃO DO CLIENTE PARA ESPECIFICAR SE É PRA FAZER LOAD POR DATA DA ULTIMA CHAMADA OU DATA DA 
+    $(crm_main_zone).on("click", "input[name='sccf']", function()
+    {
+
+        if ($(this).val() == 1 && !crm_main_zone.find("#checkbox_alldate").is(":checked"))
+        {
+            crm_main_zone.find("#client_search_sub_option").show("blind");
+        }
+        else
+        {
+            crm_main_zone.find("#client_search_sub_option").hide("blind");
+        }
     });
 //-----------------------------------------------------------------TOGGLE FILTROS
     crm_main_zone.on("click", "#button_filtro", function()
@@ -365,14 +388,15 @@ var crm_main = function(crm_main_zone, file_path)
                     {"name": "cd", "value": JSON.stringify(tags_cd)},
                     {"name": "script_info", "value": JSON.stringify(tags_script)},
                     {"name": "phone_number", "value": crm_main_zone.find("#input_phone").val()},
-                    {"name": "lead_id", "value": crm_main_zone.find("#input_lead").val()}
+                    {"name": "lead_id", "value": crm_main_zone.find("#input_lead").val()},
+                    {"name": "type_search", "value": crm_main_zone.find("#type_search_radio_call").is(":checked") ? "last_call" : "load"}
 
                     );
-                },  
-                        "fnDrawCallback": function()
-                        {
-                            toggle_resultado("show");
-                        },
+                },
+                "fnDrawCallback": function()
+                {
+                    toggle_resultado("show");
+                },
                 "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Morada"}, {"sTitle": "Ultima Chamada"}],
                 "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
             });
