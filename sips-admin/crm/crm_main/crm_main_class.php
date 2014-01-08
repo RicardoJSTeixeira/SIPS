@@ -154,7 +154,8 @@ class crm_main_class {
                 }
             }
             $query = "select a.lead_id,a.first_name,a.phone_number, a.address1 ,a.last_local_call_time  from vicidial_list a $join where $where group by a.lead_id ";
-        }
+    
+            }
         $stmt = $this->db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
