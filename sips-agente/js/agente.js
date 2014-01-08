@@ -9716,7 +9716,7 @@ $(function() {
     var clip = new ZeroClipboard($("#record2clipboard"));
     
 clip.on( 'dataRequested', function (client, args) {
-     url = window.location.origin + '/RECORDINGS/MP3/' + recording_filename+"-all.mp3";
+     url = window.location.origin + '/RECORDINGS/FTP/' + recording_filename+"-all.mp3";
   client.setText( url );
 });
 
