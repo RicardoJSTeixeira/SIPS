@@ -172,21 +172,14 @@ class script {
         return $js;
     }
 
-    
-       public function get_script_by_campaign($campaign_id) {
+    public function get_script_by_campaign($campaign_id) {
         $query = "SELECT a.id id,a.id_script,a.texto name,a.values_text,a.type,a.tag   FROM script_dinamico a  left join script_assoc b on a.id_script=b.id_script where b.id_camp_linha =? ";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($campaign_id));
         $js = $stmt->fetchAll(PDO::FETCH_ASSOC);
-       return $js;
+        return $js;
     }
 
-
-    
-    
-    
-    
-    
     public function get_data_render($id_script, $lead_id, $user_group) {
         $js = array();
         $client_info = array();
@@ -208,7 +201,7 @@ class script {
 // CAMPOS DINAMICOS -> §
             if (isset($lead_id)) {
                 $temp = "";
-                if (preg_match_all("/\§[A-Z0-9\_]+\§/", $row["texto"], $temp)) {
+                if (preg_match_all("/\§[A-Za-z0-9\_]+\§/", $row["texto"], $temp)) {
                     $temp = $temp[0];
                     foreach ($temp as $value) {
                         $value1 = str_replace("§", "", $value);
@@ -217,7 +210,7 @@ class script {
                 }
                 if ($row["type"] == "texto") {
                     $placeholder = json_decode($row["placeholder"]);
-                    if (preg_match_all("/\§[A-Z0-9\_]+\§/", $placeholder, $temp)) {
+                    if (preg_match_all("/\§[A-Za-z0-9\_]+\§/", $placeholder, $temp)) {
                         $temp = $temp[0];
                         foreach ($temp as $value) {
                             $value1 = str_replace("§", "", $value);
@@ -229,7 +222,7 @@ class script {
                 if ($row["type"] == "legend" || $row["type"] == "textfield") {
                     $values_text = json_decode($row["values_text"]);
 
-                    if (preg_match_all("/\§[A-Z0-9\_]+\§/", $values_text, $temp)) {
+                    if (preg_match_all("/\§[A-Za-z0-9\_]+\§/", $values_text, $temp)) {
                         $temp = $temp[0];
                         foreach ($temp as $value) {
                             $value1 = str_replace("§", "", $value);
@@ -577,7 +570,7 @@ class script {
         $stmt->execute(array(":id" => $id));
         $query = "delete from script_result where id_script=:id_script and tag_elemento=:tag";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":id_script" => $id_script, ":tag"=>$param1));
+        $stmt->execute(array(":id_script" => $id_script, ":tag" => $param1));
         return 1;
     }
 
@@ -613,14 +606,6 @@ class script {
         $sql = array();
 
         if ($admin_review == "1") {
-            $unique_id = time() . "." . rand(1, 1000);
-
-
-            $query = "INSERT INTO vicidial_log (`uniqueid`, `lead_id`, `list_id`, `campaign_id`, `call_date`, `start_epoch`, `end_epoch`, `length_in_sec`, `status`, `phone_code`, `phone_number`, `user`, `comments`, `processed`, `user_group`, `term_reason`, `alt_dial`)
-                select :unique_id, `lead_id`, `list_id`, `campaign_id`, :date, NULL, NULL, `length_in_sec`, 'ESA', `phone_code`, `phone_number`, `user`, 'edit', `processed`, `user_group`, `term_reason`, `alt_dial` from vicidial_log where lead_id=:lead_id order by uniqueid desc limit 1";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute(array(":unique_id" => $unique_id, ":date" => date("Y-m-d H:i:s"), ":lead_id" => $lead_id));
-
             $query = "Update vicidial_list set status='ESA' where lead_id=:lead_id ";
             $stmt = $this->db->prepare($query);
             $stmt->execute(array(":lead_id" => $lead_id));
@@ -638,6 +623,11 @@ class script {
         }
 
         if (count($sql)) {
+            $query = "Delete from script_result where unique_id=:unique_id";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute(array(":unique_id" => $unique_id));
+
+
             $query = "INSERT INTO `script_result`(`date`,`id_script`,`user_id`,`unique_id`,`campaign_id`,`lead_id`, `tag_elemento`, `valor`,`param_1`) VALUES  " . implode(',', $sql);
             $stmt = $this->db->prepare($query);
             return $stmt->execute();

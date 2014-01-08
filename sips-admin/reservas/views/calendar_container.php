@@ -6,12 +6,13 @@
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.css">
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
-        <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen-1.min.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
         <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/demo_table.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/animate.min.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
+        
 
         <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
         <script type="text/javascript" src="/bootstrap/js/moment.min.js"></script>
@@ -21,7 +22,7 @@
         <script type="text/javascript" src="/jquery/jsdatatable/plugins/plugin.fnAjaxReload.js"></script>
         <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
         <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt.js"></script>
-
+        <script type="text/javascript" src="/bootstrap/js/chosen-1.jquery.min.js"></script>
 
         <?php
         require ('../func/reserve_utils.php');
@@ -518,7 +519,7 @@
                         }
                         $("#loader").show();
                         $("#crm").show();
-                        crm_edit_object = new crm_edit($("#crm .grid-content"), "/sips-admin/crm/crm_edit/", $('.lead', bloco_res).val());
+                        crm_edit_object = new crm_edit($("#crm .grid-content"), "/sips-admin/crm/", $('.lead', bloco_res).val());
                         crm_edit_object.init();
 
                     }

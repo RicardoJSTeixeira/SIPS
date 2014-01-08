@@ -1566,7 +1566,7 @@ $("#opcao_script_button").click(function()//chama o edit do nome do script
     function(data)
     {
 
-     /*   var campaign = [];
+        var campaign = [];
         var linha_inbound = [];
         $("#script_campanha_selector option").prop("disabled", false);
         $("#script_linha_inbound_selector option").prop("disabled", false);
@@ -1589,7 +1589,7 @@ $("#opcao_script_button").click(function()//chama o edit do nome do script
             }
         });
         $("#script_campanha_selector").val(campaign).trigger("chosen:updated");
-        $("#script_linha_inbound_selector").val(linha_inbound).trigger("chosen:updated");*/
+        $("#script_linha_inbound_selector").val(linha_inbound).trigger("chosen:updated");
     }, "json");
     $("#script_name_edit").val($("#script_selector option:selected").text());
 });

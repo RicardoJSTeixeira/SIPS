@@ -1,164 +1,221 @@
 
 <style>
-      select,input[type="text"]
-      {
-            margin-bottom:0px;
-      }
-      .dataTables_paginate
-      {
-            float:none;
-      }
-      .modal{
-          left:28%;
-          width: auto;
-      }
+    select,input[type="text"]
+    {
+        margin-bottom:0px;
+    }
+    .dataTables_paginate
+    {
+        float:none;
+    }
+    .modal{
+        left:28%;
+        width: 85%;
+    }
 </style>
 
 
 
-<!-- Modal -->
-<div class="modal fade" id="crm_edit_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-            <div class="modal-content">
-                  <div class="modal-header">
-              
-                        <h4 class="modal-title">Edição de info de Cliente</h4>
-                  </div>
-                  
-                  <div class="modal-body">
-
-                  </div>
-                  <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal">Fechar</button>
-                  </div>
-            </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 
 
+<div class="row-fluid">
+    <div class="grid">
 
 
-
-<div class="grid">
-
-      <div class="grid-content">
-            <div  id="div_filtros">
-                  <div class="grid-title">
-                        <div class="pull-left">
-                              Filtros de Pesquisa
-                        </div>
-                        <div class="pull-right">
-                              <button class="btn icon-chevron-up" id="button_filtro"></button>  
-                        </div>
-                  </div>
-                  <div class="grid-content" id="div_filtro_content">
-                        <div class="formRow">
-                              <table>
-                                    <thead>
-                                    <th>
-                                          Campanha
-                                    </th>
-                                    <th>
-                                          Base de Dados
-                                    </th>
-                                    <th>
-                                          Agente
-                                    </th>
-                                    <th>
-                                          Feedback
-                                    </th>
-                                    </thead>
-                                    <tbody>
-                                          <tr>
-                                                <td>
-                                                      <select class="chosen-select filtro_select" id="select_campanha"  data-placeholder="Selecione uma campanha"></select>
-                                                </td>
-                                                <td>
-                                                      <select class="chosen-select filtro_select" id="select_bd"  data-placeholder="Selecione uma Base de Dados"></select>
-                                                </td>
-                                                <td>
-                                                      <select class="chosen-select filtro_select" id="select_agente"  data-placeholder="Selecione um Agente"></select>
-                                                </td>
-                                                <td>
-                                                      <select class="chosen-select filtro_select" id="select_feedback"   data-placeholder="Selecione um Feedback"></select>
-                                                </td>
-                                          </tr>
-                                    </tbody>
-                              </table>
-                        </div>
+        <div  id="div_filtros">
+            <div class="grid-title">
+                <div class="pull-left">
+                    Filtros de Pesquisa
+                </div>
+                <div class="pull-right">
+                    <button class="btn icon-chevron-up" id="button_filtro"></button>  
+                </div>
+            </div>
+            <div class="grid-content" id="div_filtro_content">
+                <form id="filter_form" action="" method="get">
+                    <div class="row-fluid">
+                        <div class="span6">
+                            <div class="FormRow">
+                                <span class="label label-inverse">Campanha</span>
+                                <div class="FormRight">
+                                    <select class="chosen-select filtro_select" id="select_campanha"  data-placeholder="Selecione uma campanha"></select>
+                                </div>    
+                            </div>
+                            <div class="FormRow">
+                                <span class="label label-inverse ">Base de Dados</span>
+                                <div class="FormRight">
+                                    <select class="chosen-select filtro_select" id="select_bd"  data-placeholder="Selecione uma Base de Dados"></select>
+                                </div>    
+                            </div>            
 
 
-                        <table>
-                              <thead>
-                              <th>
-                                    Campos Dinâmicos 
-                              </th>
-                              <th>
-                                    Campos do Script
-                              </th>
-                              </thead>
-                              <tbody>
-                                    <tr>
-                                          <td>
-                                                <select class="chosen-select input-xlarge " id="select_cd"  data-placeholder="Selecione um Campo Dinamico"></select>
-                                          </td>
-                                          <td>
-                                                <select class="chosen-select input-xxlarge" id="select_script"  data-placeholder="Selecione um Script"></select>
-                                          </td>
-                                    </tr>
-                                    <tr>
-                                          <td>
-                                                <input size="16" type="text"  id="cd_input" class="cd_input_field" placeholder="Valor do campo dinâmico" >
-                                                <button class="btn cd_input_field" id="button_tag_cd">Ok</button> 
-                                          </td>
-                                          <td>
-                                                <input size="16" type="text" class="script_input_field"   id="script_input_text"  >
-                                                <span class="script_input_field" id="span_script_input_select">
-                                                      <select class="chosen-select input-xlarge script_input_field"   id="script_input_select">
-                                                      </select></span>
-                                                <button class="btn script_input_field" id="button_tag_script">Ok</button>
-                                          </td>
-                                    </tr>
-                              </tbody>
-                        </table>
-                        <div  id="cd_tag_div"> </div>
-                        <div id="script_tag_div"></div> 
-                         <button class="btn btn-inverse right" id="search_button"> <i class=" icon-search"></i>Pesquisar</button>    
-                        <div class="formRow">
-                              <h4>Data de Inicio e Fim</h4>     
-                              <input type="checkbox" id="checkbox_alldate" name="cad" >
-                              <label for="checkbox_alldate"><span></span>Sem limite de Data</label>
-                               <div class="pull-right">
-                                  
+                            <div class="FormRow">
+                                <span class="label label-inverse">Campos Dinamicos</span>
+                                <div class="FormRight">
+                                    <select class="chosen-select input-xlarge " id="select_cd"  data-placeholder="Selecione um Campo Dinamico"></select>
+
+
+                                    <div class="FormRow">
+                                        <div  id="cd_tag_div"> </div>
+                                        <input size="16" type="text"  id="cd_input" class="cd_input_field" placeholder="Valor do campo dinâmico" >
+                                        <button class="btn cd_input_field" id="button_tag_cd">Ok</button> 
                                     </div>
-                              <div class="formRow">
-                                  <form id="date_form">
-                                      <input size="16" type="text" class="form_datetime validate[required]" id="data_inicio" placeholder="Data de Inicio">
-                                    <input size="16" type="text" class="form_datetime validate[required]" id="data_fim" placeholder="Data de Fim">
-                                  </form>
-                                    
-                                   
-                              </div>
+
+                                </div>    
+                            </div> 
                         </div>
-                        
 
-                  </div> 
+                        <div class="span6">
+                            <div class="FormRow">
+                                <span class="label label-inverse">Agente</span>
+                                <div class="FormRight">
+                                    <select class="chosen-select filtro_select" id="select_agente"  data-placeholder="Selecione um Agente"></select>
+                                </div>    
+                            </div> 
+
+                            <div class="FormRow">
+                                <span class="label label-inverse">Feedback</span>
+                                <div class="FormRight">
+                                    <select class="chosen-select filtro_select" id="select_feedback"   data-placeholder="Selecione um Feedback"></select>
+                                </div>    
+                            </div> 
+
+
+                            <div class="FormRow">
+
+                                <span class="label label-inverse">Campos do Script</span>
+
+                                <div class="FormRight">
+                                    <select class="chosen-select input-xlarge" id="select_script"  data-placeholder="Selecione um Script"></select>
+
+
+                                    <div class="FormRow">
+                                        <div id="script_tag_div"></div> 
+                                        <span class="script_input_field" id="span_script_input_select">
+                                            <select class="chosen-select input-xlarge script_input_field"   id="script_input_select">
+                                            </select></span>
+                                        <input size="16" type="text" class="script_input_field"   id="script_input_text"  >
+                                        <button class="btn script_input_field" id="button_tag_script">Ok</button>
+                                    </div>
+
+                                </div>    
+                            </div> 
+                        </div>
+                    </div>
+
+                    <div class="row-fluid">
+                        <div class="span6">
+
+
+                            <h4>Data de Inicio e Fim</h4>     
+                            <input type="checkbox" id="checkbox_alldate" name="cad" >
+                            <label for="checkbox_alldate"><span></span>Sem limite de Data</label>
+                            <div class="formRow">
+
+                                <input size="16" type="text" class="form_datetime validate[required]" id="data_inicio" placeholder="Data de Inicio">
+                                <input size="16" type="text" class="form_datetime validate[required]" id="data_fim" placeholder="Data de Fim">
+                            </div>
+
+                        </div>
+
+
+
+
+                        <div class="span6 ">
+                            <div class="FormRow">
+                                <span class="label label-success"  >Lead do Cliente</span>
+
+                                <div class="FormRight">
+                                    <input size="16" type="text"  name="lead_client" placeholder="Desativa os outros filtros"  id="input_lead"  >
+                                </div>
+                            </div>
+                            <div class="FormRow">
+                                <span class="label label-success"  >Número de Telefone</span>
+                                <div class="FormRight">
+                                    <input size="16" type="text"  name="phone_number" placeholder="Desativa os outros filtros"  id="input_phone"  >
+                                </div>
+                            </div>
+                            <div class="FormRow">
+                                <span class="label label-inverse"  >Tipo de pesquisa</span>
+                                <div class="FormRight">
+                                    <input  type="radio" id="radio_client" name="sccf" checked="checked">
+                                    <label class="  radio inline"  for="radio_client"><span></span>Cliente</label> 
+                                    <input  type="radio" id="radio_chamada" name="sccf">
+                                    <label class="  radio inline"  for="radio_chamada"><span></span>Chamadas</label> 
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12 ">
+                            <div class="FormRow right">
+                                <button class="btn btn-inverse   search_button"   id="search_button"> <i class=" icon-search"></i> Pesquisar</button> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </form>
             </div>
-      </div>
+        </div>
+
+
+        <div class="clear"></div>
+    </div>
 </div>
 
-<div class="grid">
-      <div class="grid-title">
+
+
+
+
+
+
+<!--RESULTADOS-->
+<div class="row-fluid">
+    <div class="grid">
+        <div class="grid-title">
             <div class="pull-left">
-                  Resultados
+                Resultados
             </div>
-      </div>
-      <div class="grid-content">
-            <table id="info_table" class="table table-mod-2 dataTable">
+            <div class="pull-right">
+                <button class="btn icon-chevron-up" id="button_resultado"></button>  
+            </div>
+        </div>
+        <div class="grid-content" id="resultado_div">
+            <div id="table_client">
+                <table id="info_table_client" class="table table-mod-2 dataTable">        </table>  
+            </div>
 
-            </table>     
-      </div>
+
+
+            <div id="table_calls">
+                <table id="info_table_calls" class="table table-mod-2 dataTable" >        </table>  
+            </div>
+
+
+
+        </div>
+    </div>
 </div>
 
 
- 
+<!--EDIÇÂO-->
+<div class="row-fluid">
+    <div id="client_div" class="grid" style="display:none">
+
+
+        <div class="grid-title">
+            <div class="pull-left">
+                Edição de info de Cliente
+            </div>
+            <div class="pull-right">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="close_client_div"><i class="icon-remove"></i>Fechar</button>
+            </div>
+        </div>
+        <div class="grid-content " id="client_area">
+
+
+        </div>
+    </div>
+</div>
+

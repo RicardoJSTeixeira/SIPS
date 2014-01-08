@@ -35,11 +35,31 @@ class user {
                 $this->is_all_campaigns = preg_match("/-ALL-CAMPAIGNS-/", $this->allowed_campaigns_raw);
                 $this->allowed_campaigns = explode(" ", trim(rtrim($this->allowed_campaigns_raw, " -")));
                 $this->is_script_dinamico = $row["agent_fullscreen"] == "Y";
-                $this->ip = filter_var($_SERVER['REMOTE_ADDR']);
+                $this->ip = get_client_ip();
             }
         }
     }
 
+}
+
+function get_client_ip() {
+    $ipaddress = '';
+    if ($_SERVER['HTTP_CLIENT_IP'])
+        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+    else if ($_SERVER['HTTP_X_FORWARDED_FOR'])
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    else if ($_SERVER['HTTP_X_FORWARDED'])
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+    else if ($_SERVER['HTTP_FORWARDED_FOR'])
+        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+    else if ($_SERVER['HTTP_FORWARDED'])
+        $ipaddress = $_SERVER['HTTP_FORWARDED'];
+    else if ($_SERVER['REMOTE_ADDR'])
+        $ipaddress = $_SERVER['REMOTE_ADDR'];
+    else
+        $ipaddress = 'UNKNOWN';
+
+    return $ipaddress;
 }
 
 class users extends user {
@@ -296,8 +316,8 @@ class mysiblings extends user {
 
     function get_user_group() {
 
-        $allowed_camps_regex = implode("|", parent::allowed_campaigns);
-        if (!parent::is_all_campaigns) {
+        $allowed_camps_regex = implode("|", $this->allowed_campaigns);
+        if (!$this->is_all_campaigns) {
             $ret = "WHERE allowed_campaigns REGEXP '$allowed_camps_regex'";
         }
         $stmt = $this->db->prepare("SELECT `user_group` FROM `vicidial_user_groups` $ret ");
@@ -309,10 +329,11 @@ class mysiblings extends user {
         $user_groups = $this->get_user_group();
         $user_group = array();
         foreach ($user_groups as $value) {
-            $user_group[] = $value;
+            $user_group[] = $value["user_group"];
         }
+
         $stmt = $this->db->prepare("SELECT `user`,full_name,user_group FROM `vicidial_users` WHERE user_group in ('" . implode("','", $user_group) . "') AND user_level <  :user_level");
-        $stmt->execute(array(":user_level" => parent::user_level));
+        $stmt->execute(array(":user_level" => $this->user_level));
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

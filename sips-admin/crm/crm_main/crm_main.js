@@ -47,7 +47,6 @@ var crm_main = function(crm_main_zone, file_path)
             {
                 temp += "<option value=" + this.id + ">" + this.name + "</option>";
             });
-
             select["campanha"].append(temp).trigger("chosen:updated");
             if (typeof callback === "function")
             {
@@ -149,10 +148,10 @@ var crm_main = function(crm_main_zone, file_path)
         crm_main_zone.find("#cd_tag_div")
                 .append($("<span>")
                         .data("info", {name: crm_main_zone.find("#select_cd option:selected").val(), value: crm_main_zone.find("#cd_input").val()})
-                        .addClass("label-info label close_tag")
+                        .addClass("label-warning label close_tag")
                         .text(crm_main_zone.find("#select_cd option:selected")
                                 .text() + "->" + crm_main_zone.find("#cd_input").val())
-                        .append(crm_main_zone.find("<button>", {class: 'btn-link'}).text("x")));
+                        .append($("<button>", {class: 'btn-link'}).text("x")));
         crm_main_zone.find('#select_cd').val("").trigger('chosen:updated').trigger('change');
     });
     function get_script(callback)
@@ -202,7 +201,7 @@ var crm_main = function(crm_main_zone, file_path)
                         crm_main_zone.find("#script_input_select").empty();
                         var dados = data.values_text;
                         var options = "";
-                        
+
                         $.each(dados, function() {
                             options += "<option value='" + this + "'>" + this + "</option>";
                         });
@@ -238,14 +237,14 @@ var crm_main = function(crm_main_zone, file_path)
             crm_main_zone.find("#script_tag_div")
                     .append($("<span>")
                             .data("info", {name: crm_main_zone.find("#select_script option:selected").data("tag"), value: crm_main_zone.find("#script_input_text").val()})
-                            .addClass("label-info label close_tag")
+                            .addClass("label-warning label close_tag")
                             .text(get_script_translated_names(crm_main_zone.find("#select_script option:selected").data("type")) + "->" + crm_main_zone.find("#script_input_text").val())
                             .append($("<button>", {class: 'btn-link'}).text("x")));
         else
             crm_main_zone.find("#script_tag_div")
                     .append($("<span>")
                             .data("info", {name: crm_main_zone.find("#select_script option:selected").data("tag"), value: crm_main_zone.find("#script_input_select option:selected").val()})
-                            .addClass("label-info label close_tag")
+                            .addClass("label-warning label close_tag")
                             .text(get_script_translated_names(crm_main_zone.find("#select_script option:selected").data("type")) + "->" + crm_main_zone.find("#script_input_select option:selected").val())
                             .append($("<button>", {class: 'btn-link'}).text("x")));
         crm_main_zone.find('#select_script').val("").trigger('chosen:updated').trigger('change');
@@ -253,28 +252,58 @@ var crm_main = function(crm_main_zone, file_path)
 //-----------------------------------------------------------------------SEARCH
     crm_main_zone.on("click", "#search_button", function()
     {
-        if (crm_main_zone.find("#date_form").validationEngine("validate"))
+
+        if (crm_main_zone.find("#input_lead").val() != "" || crm_main_zone.find("#input_phone").val() != "")
         {
+
             crm_main_zone.find("#button_filtro").toggleClass("icon-chevron-up").toggleClass("icon-chevron-down");
-            crm_main_zone.find("#div_filtro_content").hide(500);
-            crm_main_zone.find("#date_form").validationEngine("hideAll");
-            search();
+            crm_main_zone.find("#div_filtro_content").hide("blind");
+            crm_main_zone.find("#filter_form").validationEngine("hideAll");
+
+            if (crm_main_zone.find("#radio_client").is(":checked") )
+                search("client");
+            else
+                search("calls");
+        }
+        else
+        {
+            if (crm_main_zone.find("#filter_form").validationEngine("validate"))
+            {
+                crm_main_zone.find("#button_filtro").toggleClass("icon-chevron-up").toggleClass("icon-chevron-down");
+                crm_main_zone.find("#div_filtro_content").hide("blind");
+                crm_main_zone.find("#filter_form").validationEngine("hideAll");
+                  if (crm_main_zone.find("#radio_client").is(":checked") )
+                    search("client");
+                else
+                    search("calls");
+            }
         }
     });
+
+crm_main_zone.on("submit","#filter_form",function(e)
+{
+    e.preventDefault();
+     crm_main_zone.find("#search_button").trigger("click");
+});
+
 //-------------------------------------------------------TOGGLE DAS DATAS pelo CHECKBOX
     crm_main_zone.on("click", "#checkbox_alldate", function()
     {
-        crm_main_zone.find(".form_datetime").toggle(200);
-        crm_main_zone.find(".form_datetime").val("");
+        crm_main_zone.find(".form_datetime").val("").toggle("fade");
     });
 //-----------------------------------------------------------------TOGGLE FILTROS
     crm_main_zone.on("click", "#button_filtro", function()
     {
-        crm_main_zone.find("#div_filtro_content").toggle(500);
-        $(this).toggleClass("icon-chevron-up");
-        $(this).toggleClass("icon-chevron-down");
+        crm_main_zone.find("#div_filtro_content").toggle("blind");
+        $(this).toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
     });
-    function search()
+
+    crm_main_zone.on("click", "#button_resultado", function()
+    {
+        crm_main_zone.find("#resultado_div").toggle("blind");
+        $(this).toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
+    });
+    function search(type)
     {
 
         var tags_cd = [];
@@ -287,27 +316,65 @@ var crm_main = function(crm_main_zone, file_path)
         {
             tags_script.push($(this).data("info"));
         });
-        var oTable = crm_main_zone.find('#info_table').dataTable({
-            "bSortClasses": false,
-            "bProcessing": true,
-            "bDestroy": true,
-            "sPaginationType": "full_numbers",
-            "sAjaxSource": file_path + 'crm_main/crm_main_request.php',
-            "fnServerParams": function(aoData) {
-                aoData.push({"name": "action", "value": "get_info"},
-                {"name": "data_inicio", "value": crm_main_zone.find("#data_inicio").val()},
-                {"name": "data_fim", "value": crm_main_zone.find("#data_fim").val()},
-                {"name": "campanha", "value": select["campanha"].find("option:selected").val()},
-                {"name": "bd", "value": select["bd"].find("option:selected").val()},
-                {"name": "agente", "value": select["agente"].find("option:selected").val()},
-                {"name": "feedback", "value": select["feedback"].find("option:selected").val()},
-                {"name": "cd", "value": JSON.stringify(tags_cd)},
-                {"name": "script", "value": JSON.stringify(tags_script)}
-                );
-            },
-            "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Morada"}, {"sTitle": "Ultima Chamada"}],
-            "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
-        });
+
+        if (type == "client")
+        {
+            crm_main_zone.find("#table_client").show();
+            crm_main_zone.find("#table_calls").hide();
+            var oTable = crm_main_zone.find('#info_table_client').dataTable({
+                "bSortClasses": false,
+                "bProcessing": true,
+                "bDestroy": true,
+                "sPaginationType": "full_numbers",
+                "sAjaxSource": file_path + 'crm_main/crm_main_request.php',
+                "fnServerParams": function(aoData) {
+                    aoData.push({"name": "action", "value": "get_info_client"},
+                    {"name": "data_inicio", "value": crm_main_zone.find("#data_inicio").val()},
+                    {"name": "data_fim", "value": crm_main_zone.find("#data_fim").val()},
+                    {"name": "campanha", "value": select["campanha"].find("option:selected").val()},
+                    {"name": "bd", "value": select["bd"].find("option:selected").val()},
+                    {"name": "agente", "value": select["agente"].find("option:selected").val()},
+                    {"name": "feedback", "value": select["feedback"].find("option:selected").val()},
+                    {"name": "cd", "value": JSON.stringify(tags_cd)},
+                    {"name": "script_info", "value": JSON.stringify(tags_script)},
+                    {"name": "phone_number", "value": crm_main_zone.find("#input_phone").val()},
+                    {"name": "lead_id", "value": crm_main_zone.find("#input_lead").val()}
+
+                    );
+                },
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Morada"}, {"sTitle": "Ultima Chamada"}],
+                "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
+            });
+        }
+        else
+        {
+            crm_main_zone.find("#table_client").hide();
+            crm_main_zone.find("#table_calls").show();
+            var aTable = crm_main_zone.find('#info_table_calls').dataTable({
+                "bSortClasses": false,
+                "bProcessing": true,
+                "bDestroy": true,
+                "sPaginationType": "full_numbers",
+                "sAjaxSource": file_path + 'crm_main/crm_main_request.php',
+                "fnServerParams": function(aoData) {
+                    aoData.push({"name": "action", "value": "get_info_calls"},
+                    {"name": "data_inicio", "value": crm_main_zone.find("#data_inicio").val()},
+                    {"name": "data_fim", "value": crm_main_zone.find("#data_fim").val()},
+                    {"name": "campanha", "value": select["campanha"].find("option:selected").val()},
+                    {"name": "bd", "value": select["bd"].find("option:selected").val()},
+                    {"name": "agente", "value": select["agente"].find("option:selected").val()},
+                    {"name": "feedback", "value": select["feedback"].find("option:selected").val()},
+                    {"name": "cd", "value": JSON.stringify(tags_cd)},
+                    {"name": "script_info", "value": JSON.stringify(tags_script)},
+                    {"name": "phone_number", "value": crm_main_zone.find("#input_phone").val()},
+                    {"name": "lead_id", "value": crm_main_zone.find("#input_lead").val()});
+                },
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Data Chamada"}],
+                "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
+            });
+        }
+
+
     }
 
 
@@ -366,13 +433,17 @@ var crm_main = function(crm_main_zone, file_path)
 
     $(crm_main_zone).on("click", ".ver_cliente", function()
     {
-        crm_edit_object = new crm_edit(crm_main_zone.find("#crm_edit_modal .modal-body"), "/sips-admin/crm/", $(this).data("lead_id"));
+        crm_edit_object = new crm_edit(crm_main_zone.find("#client_area"), "/sips-admin/crm/", $(this).data("lead_id"));
         crm_edit_object.init();
-
-        crm_main_zone.find('#crm_edit_modal').modal('show');
+        crm_main_zone.find('#client_div').show("blind");
+        crm_main_zone.find("#resultado_div").hide("blind");
+        crm_main_zone.find("#button_resultado").toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
     });
-    crm_main_zone.on("click", "#close_modal", function()
+    crm_main_zone.on("click", "#close_client_div", function()
     {
         crm_edit_object.destroy();
+        crm_main_zone.find('#client_div').hide("blind");
+crm_main_zone.find("#button_resultado").trigger("click");
+
     });
 };

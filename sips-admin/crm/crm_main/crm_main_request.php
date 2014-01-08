@@ -32,7 +32,7 @@ switch ($action) {
     case "get_bd":
         echo json_encode($crmMain->get_bd($campaign_id));
         break;
-    case "get_agent":
+    case "get_agent": 
         echo json_encode($crmMain->get_agent());
         break;
     case "get_feedbacks":
@@ -47,7 +47,13 @@ switch ($action) {
     case "get_script_individual":
         echo json_encode($script->get_data_individual($id));
         break;
-    case "get_info":
-         echo json_encode($crmMain->get_info($data_inicio,$data_fim,$campanha,$bd,$agente,$feedback,$cd,$script));
+    
+    case "get_info_client":
+    
+        echo json_encode($crmMain->get_info_client($data_inicio, $data_fim, $campanha, $bd, $agente, $feedback, $cd, $script_info, $lead_id, $phone_number));
+       break;
+   
+    case "get_info_calls":
+        echo json_encode($crmMain->get_info_calls($data_inicio, $data_fim, $campanha, $bd, $agente, $feedback, $cd, $script_info, $lead_id, $phone_number));
         break;
 }
