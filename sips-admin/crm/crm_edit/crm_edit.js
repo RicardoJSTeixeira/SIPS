@@ -13,10 +13,11 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     this.init = function()
     {
 
-
+  
         $.get(file_path + "crm_edit/crm_edit.html", function(data) {
             crm_edit_zone.append(data);
             crm_edit_zone.find(".chosen-select").chosen({no_results_text: "Sem resultados"});
+
             get_user_level(function() {
                 get_lead_info(function() {
                     get_dynamic_fields(function() {
@@ -35,7 +36,6 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                                 crm_edit_zone.find("#modify_feedback_status").hide();
                                                 crm_edit_zone.find("#dynamic_field_edit_div").hide();
                                             }
-
                                             $(crm_edit_zone).on("click", "#confirm_feedback", function()
                                             {
                                                 if (!crm_edit_zone.find("#confirm_feedback_div").is(":visible"))
@@ -45,7 +45,6 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                                 else
                                                     crm_edit_zone.find("#confirm_feedback_div").hide(400);
                                             });
-
                                             $(crm_edit_zone).on("click", "#lead_edit_button", function()
                                             {
                                                 if (me.edit_dynamic_field)//CANCELA
@@ -152,8 +151,30 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_lead_info", lead_id: me.lead_id},
         function(data)
         {
-            var data_load = moment(data.data_load).lang("pt");
-            var data_last = moment(data.data_last).lang("pt");
+            var data_load_fromNow = "";
+            var data_load_format = "";
+
+
+            var data_last_fromNow = "";
+            var data_last_format = "";
+            var data_is_archive = false;
+            if (data.data_load)
+            {
+                data_load_fromNow = moment(data.data_load).fromNow();
+                data_load_format = moment(data.data_load).format("D-MMMM-YYYY HH:mm:ss");
+            }
+
+            if (data.data_last)
+            {
+                data_last_fromNow = moment(data.data_last).fromNow();
+                data_last_format = moment(data.data_last).format("D-MMMM-YYYY HH:mm:ss");
+                data_is_archive = moment(data.data_last).isBefore(moment().subtract('month', 2));
+            }
+
+
+
+
+
             me.campaign_id = data.campaign_id;
             me.feedback = data.status;
             crm_edit_zone.find("#lead_info_tbody").append("<tr><td>" + me.lead_id + "</td>" +
@@ -163,12 +184,12 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                     "<td>" + data.full_name + "</td>" +
                     "<td>" + data.status_name + "</td>" +
                     "<td>" + data.called_count + "</td></tr>");
-            crm_edit_zone.find("#lead_info_time_tbody").append("<tr><td>" + data_load.format("D-MMMM-YYYY HH:mm:ss") + "</td>" +
-                    "<td>" + data_load.fromNow() + "</td>" +
-                    "<td>" + data_last.format("D-MMMM-YYYY HH:mm:ss") + "</td>" +
-                    "<td>" + data_last.fromNow() + "</td></tr>");
+            crm_edit_zone.find("#lead_info_time_tbody").append("<tr><td>" + data_load_format + "</td>" +
+                    "<td>" + data_load_fromNow + "</td>" +
+                    "<td>" + data_last_format + "</td>" +
+                    "<td>" + data_last_fromNow + "</td></tr>");
 
-            if (data_last.isBefore(moment().subtract('month', 2)))
+            if (data_is_archive)
                 $.jGrowl('As chamadas carregadas pertencem à tabela de arquivo(+ de 2 Meses)', {life: 5000});
             if (typeof callback === "function")
             {
@@ -189,7 +210,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
 
             me.has_dynamic_fields = true;
             var controler = 1;
-        
+
             $.each(data, function()
             {
                 dynamic_field =
@@ -200,14 +221,14 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                 {
                     dynamic_field += "<textarea readonly name='" + this.name + "' id='" + this.name + "'  >" + this.value + "</textarea>";
                 }
-                else 
+                else
                 {
                     dynamic_field += "     <input readonly type=text name='" + this.name + "' id='" + this.name + "'  value='" + this.value + "'>";
                     dynamic_field += "   <span id=" + this.name + "></span>" +
                             "   </div>" +
                             "   </div>";
                 }
-                
+
 
                 if (controler) {
                     controler = 0;

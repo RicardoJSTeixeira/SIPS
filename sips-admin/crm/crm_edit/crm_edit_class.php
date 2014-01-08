@@ -387,4 +387,12 @@ class crm_edit_class {
         return $js;
     }
 
+    public function check_has_script($campaign_id) {
+        $js = array();
+        $query = "SELECT count(*) from script_assoc where id_camp_linha=:campaign";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array(":campaign" => $campaign_id));
+        return  $stmt->fetch(PDO::FETCH_NUM);
+    }
+
 }
