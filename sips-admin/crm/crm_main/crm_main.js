@@ -257,7 +257,7 @@ var crm_main = function(crm_main_zone, file_path)
 
         if (crm_main_zone.find("#input_lead").val() != "" || crm_main_zone.find("#input_phone").val() != "")
         {
-            toggle_resultado("show");
+
             crm_main_zone.find("#button_filtro").toggleClass("icon-chevron-up").toggleClass("icon-chevron-down");
             crm_main_zone.find("#div_filtro_content").hide("blind");
             crm_main_zone.find("#filter_form").validationEngine("hideAll");
@@ -271,7 +271,7 @@ var crm_main = function(crm_main_zone, file_path)
         {
             if (crm_main_zone.find("#filter_form").validationEngine("validate"))
             {
-                toggle_resultado("show");
+
                 crm_main_zone.find("#button_filtro").toggleClass("icon-chevron-up").toggleClass("icon-chevron-down");
                 crm_main_zone.find("#div_filtro_content").hide("blind");
                 crm_main_zone.find("#filter_form").validationEngine("hideAll");
@@ -368,7 +368,11 @@ var crm_main = function(crm_main_zone, file_path)
                     {"name": "lead_id", "value": crm_main_zone.find("#input_lead").val()}
 
                     );
-                },
+                },  
+                        "fnDrawCallback": function()
+                        {
+                            toggle_resultado("show");
+                        },
                 "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Morada"}, {"sTitle": "Ultima Chamada"}],
                 "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
             });
@@ -396,10 +400,15 @@ var crm_main = function(crm_main_zone, file_path)
                     {"name": "phone_number", "value": crm_main_zone.find("#input_phone").val()},
                     {"name": "lead_id", "value": crm_main_zone.find("#input_lead").val()});
                 },
+                "fnDrawCallback": function()
+                {
+                    toggle_resultado("show");
+                },
                 "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Data Chamada"}],
                 "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
             });
         }
+
 
 
     }
@@ -461,8 +470,10 @@ var crm_main = function(crm_main_zone, file_path)
     $(crm_main_zone).on("click", ".ver_cliente", function()
     {
         crm_edit_object = new crm_edit(crm_main_zone.find("#client_area"), "/sips-admin/crm/", $(this).data("lead_id"));
-        crm_edit_object.init();
-        crm_main_zone.find('#client_div').show("blind");
+        crm_edit_object.init(function() {
+            crm_main_zone.find('#client_div').show("blind");
+        });
+
         crm_main_zone.find("#button_resultado").trigger("click");
         crm_main_zone.find("#button_resultado").toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
     });

@@ -10,7 +10,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     this.has_dynamic_fields;
 
 
-    this.init = function()
+    this.init = function(callback)
     {
 
   
@@ -106,6 +106,10 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                     });
                 });
             });
+            if (typeof callback === "function")
+            {
+                callback();
+            }
         });
     };
     this.destroy = function()
