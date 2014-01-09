@@ -9,7 +9,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     this.edit_dynamic_field = 0;
     this.has_dynamic_fields;
 
-
+//----------------------------------- BASIC FUNCTIONS
     this.init = function(callback)
     {
 
@@ -116,7 +116,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     {
         crm_edit_zone.empty().off();
     };
-
+//-----------------------------------BASIC INFO
     function get_user_level(callback)
     {
         $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_user_level"},
@@ -280,6 +280,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     function get_calls(callback)
     {
         var Table_chamadas = crm_edit_zone.find('#chamadas_realizadas').dataTable({
+                "aaSorting": [[ 0, "desc" ]],
             "bSortClasses": true,
             "bProcessing": true,
             "bDestroy": true,
@@ -300,10 +301,10 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         }
     }
 
-
     function get_recordings(callback)
     {
         var Table_recording = crm_edit_zone.find('#chamadas_gravadas').dataTable({
+                "aaSorting": [[ 0, "desc" ]],
             "bSortClasses": false,
             "bProcessing": true,
             "bDestroy": true,
@@ -322,6 +323,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         }
     }
 
+//-------------------------------------Save changes
     function save_dynamic_fields()
     {
         var fields = new Array();
@@ -386,7 +388,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         }, "json");
     }
 
-
+//----------------------------------------Extra functions
     Object.size = function(a)
     {
         var count = 0;

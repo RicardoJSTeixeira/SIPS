@@ -13,6 +13,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     this.client_info = new Array();
     this.validado_function = false;
     this.nao_validado_function = false;
+    this.has_script=true;
 
 
     this.init = function()
@@ -149,7 +150,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         });
     });
 
-
 //UPDATES DE INFO
     function update_script(callback)
     {
@@ -159,6 +159,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             function(data)
             {
                 if (Object.size(data))
+                {
                     if (data !== null)
                     {
                         me.script_id = data.id;
@@ -167,6 +168,13 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             callback();
                         }
                     }
+                }
+                else
+                {
+                    me.has_script=false;
+                    $.jGrowl('Sem script', {life: 3000});
+                }
+
             }, "json");
         }
         else
@@ -179,7 +187,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             $.post(file_path + "requests.php", {action: "get_scripts_by_campaign", id_campaign: camp_linha},
             function(data)
             {
-                
+
                 if (Object.size(data))
                 {
                     me.script_id = data.id;
@@ -191,6 +199,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 }
                 else
                 {
+                     me.has_script=false;
                     $.jGrowl('Sem script', {life: 3000});
                 }
             }, "json");
@@ -219,7 +228,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             }
         }, "json");
     }
-
 
     function insert_element(callback)
     {
@@ -918,7 +926,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     {
         e.preventDefault();
     });
-
 
     $('html').bind('keypress', function(e)
     {
