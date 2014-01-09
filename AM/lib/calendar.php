@@ -42,7 +42,7 @@ Class Calendars {
             if ($row->cal_type != "SCHEDULER") {
                 $refs[] = (object) array("is_scheduler" => false, "id" => $row->id_calendar);
             } else {
-                $rsc = $this->_db->prepare("SELECT id_resource FROM sips_sd_resources WHERE id_scheduler=:id");
+                $rsc = $this->_db->prepare("SELECT id_resource FROM sips_sd_resources WHERE id_scheduler=:id AND active=1");
                 $rsc->execute(array(":id" => $row->id_calendar));
                 while ($row_rsc = $rsc->fetch(PDO::FETCH_OBJ)) {
                     $refs[] = (object) array("is_scheduler" => false, "id" => $row_rsc->id_resource);

@@ -10,4 +10,3 @@ $user = new UserLogin($db);
 
 $user->logout();
 header('Location: index.php');
-?>
