@@ -24,7 +24,7 @@ class crm_main_class {
 
     public function get_agent() {
 
-        $query = "SELECT user id, full_name name FROM vicidial_users where active='y'";
+        $query = "SELECT user id, full_name name FROM vicidial_users where active='y' order by full_name asc";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -151,20 +151,21 @@ class crm_main_class {
                             $variables[] = $cp->name;
                             $variables[] = $aaa[1];
                             $variables[] = $aaa[0];
-                            $ao = " or ";
+                            $ao = " and ";
                         } else {
                             $script_fields = $script_fields . $ao . " (b.tag_elemento=? and b.valor=?)";
                             $variables[] = $cp->name;
                             $variables[] = $cp->value;
-                            $ao = " or ";
+                            $ao = " and ";
                         }
                     }
                     $script_fields = "(" . $script_fields . ")";
+                    $group=" group by a.lead_id ";
                 }
             }
             $query = "select a.lead_id,a.first_name,a.phone_number, a.address1 ,a.last_local_call_time  from vicidial_list a $join where $where $script_fields  $group limit 20000 ";
         }
-
+        
 
         $stmt = $this->db->prepare($query);
         $stmt->execute($variables);
@@ -264,15 +265,16 @@ class crm_main_class {
                             $variables[] = $cp->name;
                             $variables[] = $aaa[1];
                             $variables[] = $aaa[0];
-                            $ao = " or ";
+                            $ao = " and ";
                         } else {
                             $script_fields = $script_fields . $ao . " (b.tag_elemento=? and b.valor=?)";
                             $variables[] = $cp->name;
                             $variables[] = $cp->value;
-                            $ao = " or ";
+                            $ao = " and ";
                         }
                     }
                     $script_fields = "(" . $script_fields . ")";
+                      $group=" group by a.lead_id ";
                 }
             }
 
