@@ -153,9 +153,7 @@ class crm_edit_class {
                         left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vl.status
                 WHERE 
                         vl.lead_id=:lead_id 
-                ORDER BY
-                        end_epoch 
-                DESC;";
+                ;";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         $output['aaData'] = $stmt->fetchAll(PDO::FETCH_BOTH);
@@ -187,9 +185,7 @@ class crm_edit_class {
                         left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vl.status
                 WHERE 
                        vl.lead_id=:lead_id 
-                ORDER BY
-                        end_epoch 
-                DESC;";
+                ;";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         $output['aaData'] = $stmt->fetchAll(PDO::FETCH_BOTH);
@@ -221,9 +217,7 @@ class crm_edit_class {
                         left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vl.status
                 WHERE 
                         vl.lead_id=:lead_id 
-                ORDER BY
-                        end_epoch 
-                DESC;";
+               ;";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         $output['aaData'] = $stmt->fetchAll(PDO::FETCH_BOTH);
@@ -255,10 +249,7 @@ class crm_edit_class {
                 left JOIN vicidial_lists vls ON vl.list_id=vls.list_id
                         left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vl.status
                 WHERE 
-                        vl.lead_id=:lead_id 
-                ORDER BY
-                        end_epoch 
-                DESC;";
+                        vl.lead_id=:lead_id               ;";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         $output['aaData'] = $stmt->fetchAll(PDO::FETCH_BOTH);
@@ -285,9 +276,7 @@ class crm_edit_class {
                         INNER JOIN vicidial_users vu ON rl.user=vu.user
                         WHERE 
                                 lead_id=:lead_id 
-                        ORDER BY 
-                                recording_id 
-                        DESC;";
+                       ;";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         $output['aaData'] = $stmt->fetchAll(PDO::FETCH_BOTH);

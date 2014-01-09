@@ -2,7 +2,7 @@ var crm_main = function(crm_main_zone, file_path)
 {
     var select = [];
     var crm_edit_object;
-
+//----------------------------------- BASIC FUNCTIONS
     this.init = function()
     {
         $.get(file_path + "crm_main/crm_main.html", function(data) {
@@ -31,11 +31,12 @@ var crm_main = function(crm_main_zone, file_path)
             });
         });
     };
-
     this.destroy = function()
     {
         crm_main_zone.empty().off();
     };
+    
+//-----------------------------------FILTERS    
     function get_campanha(callback)
     {
         select["campanha"].empty();
@@ -114,7 +115,6 @@ var crm_main = function(crm_main_zone, file_path)
             }
         }, "json");
     }
-
     function get_campos_dinamicos(callback)
     {
         select["cd"].empty();
@@ -134,8 +134,6 @@ var crm_main = function(crm_main_zone, file_path)
             }
         }, "json");
     }
-
-
     function get_script(callback)
     {
 
@@ -158,6 +156,7 @@ var crm_main = function(crm_main_zone, file_path)
         }, "json");
     }
 
+//------------------------------------------------------CREATE TAGS
     crm_main_zone.on("change", "#select_cd", function()
     {
         if (select["cd"].find("option:selected").val() == "1")
@@ -172,16 +171,17 @@ var crm_main = function(crm_main_zone, file_path)
 
     crm_main_zone.on("click", "#button_tag_cd", function(e) {
         e.preventDefault();
+     
         crm_main_zone.find("#cd_tag_div")
                 .append($("<span>").addClass("tooltip_filtro")
                         .data("info", {name: crm_main_zone.find("#select_cd option:selected").val(), value: crm_main_zone.find("#cd_input").val()})
-                        .addClass("label-warning label ")
+
                         .html(crm_main_zone.find("#select_cd option:selected")
                                 .text() + " &#10142; " + crm_main_zone.find("#cd_input").val())
-                        .append($("<button>", {class: 'btn-link close_tag tooltip_filtro_button'}).text("x")));
+                        .append($("<a>", {class: 'btn-link close_tag tooltip_filtro_button_area '}).append($("<i>", {class: "tooltip_filtro_button icon-remove-circle"}))));
         crm_main_zone.find('#select_cd').val("").trigger('chosen:updated').trigger('change');
+           crm_main_zone.find("#cd_input").val("");
     });
-
 
     crm_main_zone.on("change", "#select_script", function()
     {
@@ -242,21 +242,23 @@ var crm_main = function(crm_main_zone, file_path)
 
     crm_main_zone.on("click", "#button_tag_script", function(e) {
         e.preventDefault();
+       
         if (crm_main_zone.find("#script_input_text").is(":visible"))
             crm_main_zone.find("#script_tag_div")
                     .append($("<span>").addClass("tooltip_filtro")
                             .data("info", {name: crm_main_zone.find("#select_script option:selected").data("tag"), value: crm_main_zone.find("#script_input_text").val()})
-                            .addClass("label-warning label ")
+
                             .html(get_script_translated_names(crm_main_zone.find("#select_script option:selected").data("type")) + " &#10142; " + crm_main_zone.find("#script_input_text").val())
-                            .append($("<button>", {class: 'btn-link close_tag tooltip_filtro_button'}).text("x")));
+                      .append($("<a>", {class: 'btn-link close_tag tooltip_filtro_button_area '}).append($("<i>", {class: "tooltip_filtro_button icon-remove-circle"}))));
         else
             crm_main_zone.find("#script_tag_div")
                     .append($("<span>").addClass("tooltip_filtro")
                             .data("info", {name: crm_main_zone.find("#select_script option:selected").data("tag"), value: crm_main_zone.find("#script_input_select option:selected").val()})
-                            .addClass("label-warning label ")
+
                             .html(get_script_translated_names(crm_main_zone.find("#select_script option:selected").data("type")) + " &#10142; " + crm_main_zone.find("#script_input_select option:selected").val())
-                            .append($("<button>", {class: 'btn-link close_tag tooltip_filtro_button'}).text("x")));
+                            .append($("<a>", {class: 'btn-link close_tag tooltip_filtro_button_area '}).append($("<i>", {class: "tooltip_filtro_button icon-remove-circle"}))));
         crm_main_zone.find('#select_script').val("").trigger('chosen:updated').trigger('change');
+            crm_main_zone.find("#script_input_text").val("");
     });
 //-----------------------------------------------------------------------SEARCH
     crm_main_zone.on("click", "#search_button", function()
@@ -293,69 +295,8 @@ var crm_main = function(crm_main_zone, file_path)
         e.preventDefault();
         crm_main_zone.find("#search_button").trigger("click");
     });
-
-//-------------------------------------------------------TOGGLE DAS DATAS pelo CHECKBOX
-    crm_main_zone.on("click", "#checkbox_alldate", function()
-    {
-        crm_main_zone.find(".form_datetime").val("");
-        if ($(this).is(":checked"))
-        {
-            crm_main_zone.find("#date_div").hide("fade");
-        }
-        else
-        {
-            crm_main_zone.find("#date_div").show("fade");
-        }
-    });
-    //SUB OPÇÃO DO CLIENTE PARA ESPECIFICAR SE É PRA FAZER LOAD POR DATA DA ULTIMA CHAMADA OU DATA DA 
-    $(crm_main_zone).on("click", "input[name='sccf']", function()
-    {
-        if ($(this).val() == 1)
-        {
-            crm_main_zone.find("#client_search_sub_option").css("display", "block");
-        }
-        else
-        {
-            crm_main_zone.find("#client_search_sub_option").css("display", "none");
-            ;
-        }
-    });
-//-----------------------------------------------------------------TOGGLE FILTROS
-    crm_main_zone.on("click", "#button_filtro", function()
-    {
-        crm_main_zone.find("#div_filtro_content").toggle("blind");
-        $(this).toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
-    });
-
-    crm_main_zone.on("click", "#button_resultado", function()
-    {
-        if (crm_main_zone.find("#resultado_div").is(":visible"))
-        {
-            toggle_resultado("hide");
-        }
-        else
-        {
-            toggle_resultado("show");
-        }
-    });
-
-
-    function toggle_resultado(type)
-    {
-        if (type == "show")
-        {
-            crm_main_zone.find("#resultado_div").show("blind");
-            if (crm_main_zone.find("#button_resultado").hasClass('icon-chevron-down'))
-                crm_main_zone.find("#button_resultado").removeClass('icon-chevron-down').addClass("icon-chevron-up");
-        }
-        else {
-            crm_main_zone.find("#resultado_div").hide("blind");
-            if (crm_main_zone.find("#button_resultado").hasClass('icon-chevron-up'))
-                crm_main_zone.find("#button_resultado").removeClass('icon-chevron-up').addClass("icon-chevron-down");
-        }
-    }
-
-    function search(type)
+    
+        function search(type)
     {
 
         var tags_cd = [];
@@ -374,6 +315,7 @@ var crm_main = function(crm_main_zone, file_path)
             crm_main_zone.find("#table_client").show();
             crm_main_zone.find("#table_calls").hide();
             var oTable = crm_main_zone.find('#info_table_client').dataTable({
+                "aaSorting": [[ 0, "asc" ]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -440,7 +382,70 @@ var crm_main = function(crm_main_zone, file_path)
     }
 
 
-    function get_script_translated_names(type)
+//-------------------------------------------------------TOGGLE DAS DATAS pelo CHECKBOX
+    crm_main_zone.on("click", "#checkbox_alldate", function()
+    {
+        crm_main_zone.find(".form_datetime").val("");
+        if ($(this).is(":checked"))
+        {
+            crm_main_zone.find("#date_div").hide("fade");
+        }
+        else
+        {
+            crm_main_zone.find("#date_div").show("fade");
+        }
+    });
+    //SUB OPÇÃO DO CLIENTE PARA ESPECIFICAR SE É PRA FAZER LOAD POR DATA DA ULTIMA CHAMADA OU DATA DA 
+    $(crm_main_zone).on("click", "input[name='sccf']", function()
+    {
+        if ($(this).val() == 1)
+        {
+            crm_main_zone.find("#client_search_sub_option").css("display", "block");
+        }
+        else
+        {
+            crm_main_zone.find("#client_search_sub_option").css("display", "none");
+            ;
+        }
+    });
+//-----------------------------------------------------------------TOGGLE FILTROS
+    crm_main_zone.on("click", "#button_filtro", function()
+    {
+        crm_main_zone.find("#div_filtro_content").toggle("blind");
+        $(this).toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
+    });
+
+    crm_main_zone.on("click", "#button_resultado", function()
+    {
+        if (crm_main_zone.find("#resultado_div").is(":visible"))
+        {
+            toggle_resultado("hide");
+        }
+        else
+        {
+            toggle_resultado("show");
+        }
+    });
+
+
+
+//------------------------------------------------------------EXTRA FUNCTIONS
+    function toggle_resultado(type)
+    {
+        if (type == "show")
+        {
+            crm_main_zone.find("#resultado_div").show("blind");
+            if (crm_main_zone.find("#button_resultado").hasClass('icon-chevron-down'))
+                crm_main_zone.find("#button_resultado").removeClass('icon-chevron-down').addClass("icon-chevron-up");
+        }
+        else {
+            crm_main_zone.find("#resultado_div").hide("blind");
+            if (crm_main_zone.find("#button_resultado").hasClass('icon-chevron-up'))
+                crm_main_zone.find("#button_resultado").removeClass('icon-chevron-up').addClass("icon-chevron-down");
+        }
+    }
+
+     function get_script_translated_names(type)
     {
         var temp_type = "";
         switch (type)
@@ -495,9 +500,9 @@ var crm_main = function(crm_main_zone, file_path)
 
     $(crm_main_zone).on("click", ".ver_cliente", function()
     {
-    
+
         crm_edit_object = new crm_edit(crm_main_zone.find("#client_area"), "/sips-admin/crm/", $(this).data("lead_id"));
-         crm_edit_object.destroy();
+        crm_edit_object.destroy();
         crm_edit_object.init(function() {
             crm_main_zone.find('#client_div').show("blind");
         });

@@ -78,7 +78,6 @@ $(function() {
                     list_item = $(this).data().uiSortable.currentItem;
                     list_ui = ui;
                     $('#dialog_elements').modal('show');
-
                 }
             },
             update: function(event, ui) {
@@ -90,7 +89,6 @@ $(function() {
                 editor_toggle("off");
             },
             receive: function(event, ui) {
-
                 if ($(this).data().uiSortable.currentItem.hasClass("texto_class"))
                 {
                     item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .texto_class .label_texto")[0].innerHTML, $(".rightDiv .texto_class .input_texto")[0].placeholder, $(".rightDiv .texto_class .input_texto")[0].maxLength, 0, 0, 0, 0, "normal");
@@ -147,7 +145,6 @@ $(function() {
                 {
                     item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "button", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .botao")[0].innerHTML, 0, 0, [], 0, 0, 0, 0);
                 }
-
                 editor_toggle("off");
             }
         });
@@ -228,11 +225,9 @@ $(document).on("click", ".element", function(e) {
     selected_type = $(this).data("type");
     $(this).addClass("helperPick"); //class HelperPick
     $("#tabs").tabs("option", "active", 0); //tabs
-
     switch ($(this).data("type"))
     {
         case "texto":
-
             $("#text_layout_editor").show();
             populate_element("texto", $(this));
             break;
@@ -268,7 +263,6 @@ $(document).on("click", ".element", function(e) {
             populate_element("pagination", $(this));
             break;
         case "datepicker":
-
             var date_limit_element = new date_limit($("#date_limit_placeholder"), $(this).data("limit"));
             date_limit_element.init();
             $("#datepicker_layout_editor").data("data_limit_element", date_limit_element);
@@ -282,7 +276,6 @@ $(document).on("click", ".element", function(e) {
                 $("#limite_datas_toggle").prop("checked", false);
                 $("#date_limit_placeholder").hide();
             }
-
             $("#datepicker_layout_editor").show();
             populate_element("datepicker", $(this));
             break;
@@ -305,9 +298,6 @@ $(document).on("click", ".element", function(e) {
             populate_element("button", $(this));
             break;
     }
-
-
-
 });
 //FOOTER EDIT BUTTONS
 $(".cancel_edit").click(function()
@@ -316,7 +306,6 @@ $(".cancel_edit").click(function()
 });
 $("#save_edit").click(function()
 {
-
     edit_element(selected_type, $("#" + selected_id), 0);
 });
 
@@ -1649,7 +1638,6 @@ function rules_manager(tipo, element)
     rts.trigger("change");
 }
 
-
 function rules_update_targets()
 {
     //Get o tipo e tag de todos os elementos para o select dos alvos (regras)
@@ -1777,89 +1765,6 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
         }
     }, "json");
 }
-
-function datepicker_date_decoder(info)
-{
-    var temp_text = "";
-    if (info.param2.type == "fixed")
-    {
-        if (info.param2.data_inicial && info.param2.data_final)
-            temp_text = "data fixa de " + info.param2.data_inicial + " a " + info.param2.data_final;
-        else if (info.param2.data_inicial)
-            temp_text = "data fixa a partir de " + info.param2.data_inicial;
-        else
-            temp_text = "data fixa até " + info.param2.data_final;
-
-    }
-    else
-    {
-
-        var data_inicial;
-        var data_inicial_text = "";
-        var data_final;
-        var data_final_text = "";
-        if (info.param2.data_inicial)
-        {
-            data_inicial = info.param2.data_inicial.split("|");
-            if (data_inicial[0] != "#")
-                if (data_inicial[0] != 1 && data_inicial[0] != -1)
-                    data_inicial_text = data_inicial[0] + " Anos ";
-                else
-                    data_inicial_text = data_inicial[0] + " Ano ";
-            if (data_inicial[1] != "#")
-                if (data_inicial[1] != 1 && data_inicial[1] != -1)
-                    data_inicial_text = data_inicial_text + data_inicial[1] + " Meses ";
-                else
-                    data_inicial_text = data_inicial_text + data_inicial[1] + " Mês ";
-            if (data_inicial[2] != "#")
-                if (data_inicial[2] != 1 && data_inicial[2] != -1)
-                    data_inicial_text = data_inicial_text + data_inicial[2] + " Dias ";
-                else
-                    data_inicial_text = data_inicial_text + data_inicial[2] + " Dia ";
-            if (data_inicial[3] != "#")
-                if (data_inicial[3] != 1 && data_inicial[3] != -1)
-                    data_inicial_text = data_inicial_text + data_inicial[3] + " Horas ";
-                else
-                    data_inicial_text = data_inicial_text + data_inicial[3] + " Hora ";
-
-
-        }
-        if (info.param2.data_final)
-        {
-            data_final = info.param2.data_final.split("|");
-            if (data_final[0] != "#")
-                if (data_final[0] != 1 && data_final[0] != -1)
-                    data_final_text = data_final[0] + " Anos ";
-                else
-                    data_final_text = data_final[0] + " Ano ";
-            if (data_final[1] != "#")
-                if (data_final[1] != 1 && data_final[1] != -1)
-                    data_final_text = data_final_text + data_final[1] + " Meses ";
-                else
-                    data_final_text = data_final_text + data_final[1] + " Mês ";
-            if (data_final[2] != "#")
-                if (data_final[2] != 1 && data_final[2] != -1)
-                    data_final_text = data_final_text + data_final[2] + " Dias ";
-                else
-                    data_final_text = data_final_text + data_final[2] + " Dia ";
-            if (data_final[3] != "#")
-                if (data_final[3] != 1 && data_final[3] != -1)
-                    data_final_text = data_final_text + data_final[3] + " Horas ";
-                else
-                    data_final_text = data_final_text + data_final[3] + " Hora ";
-        }
-        if (data_inicial_text && data_final_text)
-            temp_text = "data dinamica de " + data_inicial_text + " até " + data_final_text;
-        else if (data_inicial_text)
-            temp_text = "data dinamica a partir de " + data_inicial_text;
-        else
-            temp_text = "data dinamica até " + data_final_text;
-
-
-    }
-    return temp_text;
-}
-
 
 $(".date_option_radio").on("click", function()
 {
@@ -2142,8 +2047,7 @@ function update_select_ajax()
             $("#select_ajax_script").append("<option value=" + this + ">" + this + "</option>");
         });
     }, "json");
-}
-;
+};
 $("#select_ajax_script").on("change", function()
 {
     $("#validado_text").val("");
@@ -2241,8 +2145,7 @@ function update_select()
         if ($("#radio_ipl_pdf").is(":checked"))
             $("#ipl_file_select option[data-type='image']").prop("disabled", true);
     }, "json");
-}
-;
+};
 $("#remove_uploaded_file").on("click", function()
 {
     $.post("upload.php", {action: "delete", name: $("#ipl_file_select option:selected").val()}, function(data) {
@@ -2252,3 +2155,86 @@ $("#remove_uploaded_file").on("click", function()
     });
 });
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+//--------------------------------------------------------------------------Extra Functions
+function datepicker_date_decoder(info)
+{
+    var temp_text = "";
+    if (info.param2.type == "fixed")
+    {
+        if (info.param2.data_inicial && info.param2.data_final)
+            temp_text = "data fixa de " + info.param2.data_inicial + " a " + info.param2.data_final;
+        else if (info.param2.data_inicial)
+            temp_text = "data fixa a partir de " + info.param2.data_inicial;
+        else
+            temp_text = "data fixa até " + info.param2.data_final;
+
+    }
+    else
+    {
+
+        var data_inicial;
+        var data_inicial_text = "";
+        var data_final;
+        var data_final_text = "";
+        if (info.param2.data_inicial)
+        {
+            data_inicial = info.param2.data_inicial.split("|");
+            if (data_inicial[0] != "#")
+                if (data_inicial[0] != 1 && data_inicial[0] != -1)
+                    data_inicial_text = data_inicial[0] + " Anos ";
+                else
+                    data_inicial_text = data_inicial[0] + " Ano ";
+            if (data_inicial[1] != "#")
+                if (data_inicial[1] != 1 && data_inicial[1] != -1)
+                    data_inicial_text = data_inicial_text + data_inicial[1] + " Meses ";
+                else
+                    data_inicial_text = data_inicial_text + data_inicial[1] + " Mês ";
+            if (data_inicial[2] != "#")
+                if (data_inicial[2] != 1 && data_inicial[2] != -1)
+                    data_inicial_text = data_inicial_text + data_inicial[2] + " Dias ";
+                else
+                    data_inicial_text = data_inicial_text + data_inicial[2] + " Dia ";
+            if (data_inicial[3] != "#")
+                if (data_inicial[3] != 1 && data_inicial[3] != -1)
+                    data_inicial_text = data_inicial_text + data_inicial[3] + " Horas ";
+                else
+                    data_inicial_text = data_inicial_text + data_inicial[3] + " Hora ";
+
+
+        }
+        if (info.param2.data_final)
+        {
+            data_final = info.param2.data_final.split("|");
+            if (data_final[0] != "#")
+                if (data_final[0] != 1 && data_final[0] != -1)
+                    data_final_text = data_final[0] + " Anos ";
+                else
+                    data_final_text = data_final[0] + " Ano ";
+            if (data_final[1] != "#")
+                if (data_final[1] != 1 && data_final[1] != -1)
+                    data_final_text = data_final_text + data_final[1] + " Meses ";
+                else
+                    data_final_text = data_final_text + data_final[1] + " Mês ";
+            if (data_final[2] != "#")
+                if (data_final[2] != 1 && data_final[2] != -1)
+                    data_final_text = data_final_text + data_final[2] + " Dias ";
+                else
+                    data_final_text = data_final_text + data_final[2] + " Dia ";
+            if (data_final[3] != "#")
+                if (data_final[3] != 1 && data_final[3] != -1)
+                    data_final_text = data_final_text + data_final[3] + " Horas ";
+                else
+                    data_final_text = data_final_text + data_final[3] + " Hora ";
+        }
+        if (data_inicial_text && data_final_text)
+            temp_text = "data dinamica de " + data_inicial_text + " até " + data_final_text;
+        else if (data_inicial_text)
+            temp_text = "data dinamica a partir de " + data_inicial_text;
+        else
+            temp_text = "data dinamica até " + data_final_text;
+
+
+    }
+    return temp_text;
+}
