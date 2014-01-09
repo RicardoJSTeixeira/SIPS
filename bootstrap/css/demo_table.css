@@ -31,6 +31,7 @@
  */
 .dataTable {
 	clear:both;
+        margin-bottom: 5px;
 }
 .dataTables_wrapper {
 	position: relative;
@@ -66,7 +67,7 @@
 }
 
 .dataTables_info {
-	width: 60%;
+	width: 30%;
 	float: left;
 }
 
