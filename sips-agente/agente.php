@@ -3316,8 +3316,9 @@ $h++;
 <style>
      #record2clipboard.zeroclipboard-is-hover {   color: #333333;
   text-decoration: none;
-  background-color: #f3f3f3;
-  *background-color: #d9d9d9;
+  color: #ffffff;
+  background-color: #f52f00;
+  *background-color: #f52f00;
   /* Buttons in IE7 don't get borders, so darken on hover */
 
   background-position: 0 -15px;
@@ -3326,8 +3327,7 @@ $h++;
        -o-transition: background-position 0.1s linear;
           transition: background-position 0.1s linear; }
   #record2clipboard.zeroclipboard-is-active { 
-  background-color: #ececec;
-  background-color: #d9d9d9 \9;
+  background-color: #f52f00 \9;
   background-image: none;
   outline: 0;
   -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 1px rgba(0, 0, 0, 0.05);
@@ -3354,7 +3354,7 @@ $h++;
                         <div class="grid-title" style="overflow:visible;">
                             <div class="pull-left">Info Box</div>
                             <div class="pull-right">
-                                <button class="btn icon-alone dropdown-toggle <?= ($curClient[0] == 'necomplus') ? '' : 'hide' ?>" id="record2clipboard">
+                                <button class="btn btn-danger icon-alone dropdown-toggle <?= ($curClient[0] == 'necomplus') ? '' : 'hide' ?>" data-copied="false" id="record2clipboard">
                                     <i class="icon-headphones"></i>
                                 </button>
                                 <div class="dropdown" style="display:inline-block;">

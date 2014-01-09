@@ -4379,6 +4379,14 @@ function DispoSelect_submit()
 
 function  DispoSelect_submit_allowed()
 {
+    
+    if (clientName === 'necomplus') {
+                    if(!$("#record2clipboard").data().copied){
+                    alert_box("Não copiou o link da gravação.");            
+                    return false;
+                    }   
+                    $("#record2clipboard").data().copied=false;
+                }
     var
             DispoChoice = document.vicidial_form.DispoSelection.value,
             isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback,
@@ -4388,6 +4396,11 @@ function  DispoSelect_submit_allowed()
     if (custom_fields_enabled && !isCB) {
 
         if (script_dinamico) {
+            if(!vcFormIFrame.script.has_script){
+                DispoSubmitFinalStep();
+                return true;
+            }
+            
             vcFormIFrame.script.unique_id = unique_id_hack;
             if (isSALE) {
                 vcFormIFrame.validate_manual(
@@ -9723,7 +9736,8 @@ clip.on( 'dataRequested', function (client, args) {
   
     clip.on( 'complete', function ( client, args ) {
   $(this).effect("highlight",
-                {color: "#FFFF66"}, 1000);
+                {color: "#FFFF66"}, 1000)
+                        .data().copied=true;
 } );
 });
 
