@@ -27,13 +27,13 @@ switch ($action) {
     //---------------------GET------------------------//  
     //------------------------------------------------//
     case "get_campanha":
-        echo json_encode($crmMain->get_campanha());
+        echo json_encode($user->get_campaigns());
         break;
     case "get_bd":
         echo json_encode($crmMain->get_bd($campaign_id));
         break;
     case "get_agent": 
-        echo json_encode($crmMain->get_agent());
+        echo json_encode($user->get_agentes());
         break;
     case "get_feedbacks":
         echo json_encode($crmMain->get_feedbacks($campaign_id));

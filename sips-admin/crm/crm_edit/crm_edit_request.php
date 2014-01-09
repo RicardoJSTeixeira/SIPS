@@ -115,7 +115,7 @@ switch ($action) {
                                     $port = "";
                                     break;
                             }
-                            if (strpos($value["location"], '/FTP') !== false) 
+                            if (strpos($value["location"], '/FTP/')) 
                                 $folder = "FTP";
                             else 
                                 $folder = "MP3";

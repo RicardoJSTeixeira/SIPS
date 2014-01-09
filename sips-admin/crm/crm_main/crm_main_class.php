@@ -8,12 +8,7 @@ class crm_main_class {
         $this->db = $db;
     }
 
-    public function get_campanha() {
-        $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y'";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+   
 
     public function get_bd($campaign_id) {
         $query = "SELECT  list_id id,list_name name from vicidial_lists where active='Y' and campaign_id=? ";
@@ -22,13 +17,7 @@ class crm_main_class {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function get_agent() {
-
-        $query = "SELECT user id, full_name name FROM vicidial_users where active='y'";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+ 
 
     public function get_feedbacks($campaign_id) {
         $query = "select status id, status_name name from ((SELECT status ,status_name FROM vicidial_campaign_statuses where campaign_id=?) union all (SELECT status, status_name FROM vicidial_statuses)) a group by status order by status_name asc";
@@ -151,15 +140,16 @@ class crm_main_class {
                             $variables[] = $cp->name;
                             $variables[] = $aaa[1];
                             $variables[] = $aaa[0];
-                            $ao = " or ";
+                            $ao = " and ";
                         } else {
                             $script_fields = $script_fields . $ao . " (b.tag_elemento=? and b.valor=?)";
                             $variables[] = $cp->name;
                             $variables[] = $cp->value;
-                            $ao = " or ";
+                            $ao = " and ";
                         }
                     }
                     $script_fields = "(" . $script_fields . ")";
+                    $group = " group by a.lead_id ";
                 }
             }
             $query = "select a.lead_id,a.first_name,a.phone_number, a.address1 ,a.last_local_call_time  from vicidial_list a $join where $where $script_fields  $group limit 20000 ";
@@ -264,15 +254,16 @@ class crm_main_class {
                             $variables[] = $cp->name;
                             $variables[] = $aaa[1];
                             $variables[] = $aaa[0];
-                            $ao = " or ";
+                            $ao = " and ";
                         } else {
                             $script_fields = $script_fields . $ao . " (b.tag_elemento=? and b.valor=?)";
                             $variables[] = $cp->name;
                             $variables[] = $cp->value;
-                            $ao = " or ";
+                            $ao = " and ";
                         }
                     }
                     $script_fields = "(" . $script_fields . ")";
+                    $group = " group by a.lead_id ";
                 }
             }
 

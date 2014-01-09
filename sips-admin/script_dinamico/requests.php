@@ -17,6 +17,7 @@ header('Content-Type: text/html; charset=utf-8');
 header('Content-type: application/json');
 
 $user = new users;
+$user_sibling = new mysiblings($db);
 
 $purifier = new HTMLPurifier();
 
@@ -67,7 +68,7 @@ switch ($action) {
         break;
 
     case "get_results_to_populate":
-        echo json_encode($script->get_results_to_populate($lead_id, $id_script,$unique_id));
+        echo json_encode($script->get_results_to_populate($lead_id, $id_script, $unique_id));
         break;
 
     case "get_pages":
@@ -75,7 +76,7 @@ switch ($action) {
         break;
 
     case "get_data_render":
-        echo json_encode($script->get_data_render($id_script,$lead_id,$user->getUser($user_logged)));
+        echo json_encode($script->get_data_render($id_script, $lead_id, $user->getUser($user_logged)));
         break;
 
     case "get_data":
@@ -94,8 +95,11 @@ switch ($action) {
         echo json_encode($script->get_rules($id_script));
         break;
 
-    case 'get_campaign_linha_inbound':
-        echo json_encode($script->get_campaign_linha_inbound(implode("','", $user->allowed_campaigns), $user->allowed_campaigns));
+    case 'get_campaign':
+        echo json_encode($user_sibling->get_campaigns());
+        break;
+    case 'get_linha_inbound':
+        echo json_encode($user_sibling->get_linha_inbound());
         break;
 
     case 'check_duplicates_campaign_linha_inbound':

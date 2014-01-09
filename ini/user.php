@@ -314,7 +314,7 @@ class mysiblings extends user {
         parent::__construct();
     }
 
-    function get_user_group() {
+    public function get_user_group() {
 
         $allowed_camps_regex = implode("|", $this->allowed_campaigns);
         if (!$this->is_all_campaigns) {
@@ -325,15 +325,32 @@ class mysiblings extends user {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    function get_agentes() {
+    public function get_agentes() {
         $user_groups = $this->get_user_group();
         $user_group = array();
         foreach ($user_groups as $value) {
             $user_group[] = $value["user_group"];
         }
 
-        $stmt = $this->db->prepare("SELECT `user`,full_name,user_group FROM `vicidial_users` WHERE user_group in ('" . implode("','", $user_group) . "') AND user_level <  :user_level");
+        $stmt = $this->db->prepare("SELECT `user`,full_name,user_group FROM `vicidial_users` WHERE user_group in ('" . implode("','", $user_group) . "') AND user_level <  :user_level order by full_name asc");
         $stmt->execute(array(":user_level" => $this->user_level));
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function get_campaigns() {
+        if ($this->is_all_campaigns == 1)
+            $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y'";
+        else
+            $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y' and campaign_id in ('" . join("','", $this->allowed_campaigns) . "')";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function get_linha_inbound() {
+        $query = "SELECT group_id  id,group_name  name FROM vicidial_inbound_groups";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

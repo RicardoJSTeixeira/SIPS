@@ -87,7 +87,7 @@ var crm_main = function(crm_main_zone, file_path)
             var temp = "<option value=''>Todos os Agentes</option>";
             $.each(data, function()
             {
-                temp += "<option value=" + this.id + ">" + this.name + "</option>";
+                temp += "<option value=" + this.user + ">" + this.full_name + "</option>";
             });
             select["agente"].append(temp).trigger("chosen:updated");
             if (typeof callback === "function")
@@ -173,12 +173,12 @@ var crm_main = function(crm_main_zone, file_path)
     crm_main_zone.on("click", "#button_tag_cd", function(e) {
         e.preventDefault();
         crm_main_zone.find("#cd_tag_div")
-                .append($("<span>")
+                .append($("<span>").addClass("tooltip_filtro")
                         .data("info", {name: crm_main_zone.find("#select_cd option:selected").val(), value: crm_main_zone.find("#cd_input").val()})
-                        .addClass("label-warning label close_tag")
-                        .text(crm_main_zone.find("#select_cd option:selected")
-                                .text() + " => " + crm_main_zone.find("#cd_input").val())
-                        .append($("<button>", {class: 'btn-link'}).text("x")));
+                        .addClass("label-warning label ")
+                        .html(crm_main_zone.find("#select_cd option:selected")
+                                .text() + " &#10142; " + crm_main_zone.find("#cd_input").val())
+                        .append($("<button>", {class: 'btn-link close_tag tooltip_filtro_button'}).text("x")));
         crm_main_zone.find('#select_cd').val("").trigger('chosen:updated').trigger('change');
     });
 
@@ -244,18 +244,18 @@ var crm_main = function(crm_main_zone, file_path)
         e.preventDefault();
         if (crm_main_zone.find("#script_input_text").is(":visible"))
             crm_main_zone.find("#script_tag_div")
-                    .append($("<span>")
+                    .append($("<span>").addClass("tooltip_filtro")
                             .data("info", {name: crm_main_zone.find("#select_script option:selected").data("tag"), value: crm_main_zone.find("#script_input_text").val()})
-                            .addClass("label-warning label close_tag")
-                            .text(get_script_translated_names(crm_main_zone.find("#select_script option:selected").data("type")) + " => " + crm_main_zone.find("#script_input_text").val())
-                            .append($("<button>", {class: 'btn-link'}).text("x")));
+                            .addClass("label-warning label ")
+                            .html(get_script_translated_names(crm_main_zone.find("#select_script option:selected").data("type")) + " &#10142; " + crm_main_zone.find("#script_input_text").val())
+                            .append($("<button>", {class: 'btn-link close_tag tooltip_filtro_button'}).text("x")));
         else
             crm_main_zone.find("#script_tag_div")
-                    .append($("<span>")
+                    .append($("<span>").addClass("tooltip_filtro")
                             .data("info", {name: crm_main_zone.find("#select_script option:selected").data("tag"), value: crm_main_zone.find("#script_input_select option:selected").val()})
-                            .addClass("label-warning label close_tag")
-                            .text(get_script_translated_names(crm_main_zone.find("#select_script option:selected").data("type")) + " => " + crm_main_zone.find("#script_input_select option:selected").val())
-                            .append($("<button>", {class: 'btn-link'}).text("x")));
+                            .addClass("label-warning label ")
+                            .html(get_script_translated_names(crm_main_zone.find("#select_script option:selected").data("type")) + " &#10142; " + crm_main_zone.find("#script_input_select option:selected").val())
+                            .append($("<button>", {class: 'btn-link close_tag tooltip_filtro_button'}).text("x")));
         crm_main_zone.find('#select_script').val("").trigger('chosen:updated').trigger('change');
     });
 //-----------------------------------------------------------------------SEARCH
@@ -489,7 +489,7 @@ var crm_main = function(crm_main_zone, file_path)
 //-----------------------------------------------------------------Fechar TAGS
     $(crm_main_zone).on("click", ".close_tag", function()
     {
-        $(this).remove();
+        $(this).parent().remove();
     });
 //----------------------------------------------------------------ABRIR CRM EDIT
 
