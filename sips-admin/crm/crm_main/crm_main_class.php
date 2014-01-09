@@ -159,12 +159,12 @@ class crm_main_class {
                             $ao = " or ";
                         }
                     }
-            
+                    $script_fields = "(" . $script_fields . ")";
                 }
             }
-            $query = "select a.lead_id,a.first_name,a.phone_number, a.address1 ,a.last_local_call_time  from vicidial_list a $join where $where ($script_fields)  $group limit 20000 ";
-         }
-      
+            $query = "select a.lead_id,a.first_name,a.phone_number, a.address1 ,a.last_local_call_time  from vicidial_list a $join where $where $script_fields  $group limit 20000 ";
+        }
+
 
         $stmt = $this->db->prepare($query);
         $stmt->execute($variables);
@@ -260,20 +260,19 @@ class crm_main_class {
                         $aaa = split(";", $cp->value);
                         if (isset($aaa[1])) {
 
-                            $where = $where . $ao . " (b.tag_elemento=? and b.valor=? and b.param_1=?)";
+                            $script_fields = $script_fields . $ao . " (b.tag_elemento=? and b.valor=? and b.param_1=?)";
                             $variables[] = $cp->name;
                             $variables[] = $aaa[1];
                             $variables[] = $aaa[0];
                             $ao = " or ";
                         } else {
-
-                            $where = $where . $ao . " (b.tag_elemento=? and b.valor=?)";
+                            $script_fields = $script_fields . $ao . " (b.tag_elemento=? and b.valor=?)";
                             $variables[] = $cp->name;
                             $variables[] = $cp->value;
                             $ao = " or ";
                         }
                     }
-                    $group = " group by a.lead_id";
+                    $script_fields = "(" . $script_fields . ")";
                 }
             }
 
