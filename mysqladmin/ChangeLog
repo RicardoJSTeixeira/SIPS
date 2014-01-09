@@ -1,6 +1,50 @@
 phpMyAdmin - ChangeLog
 ======================
 
+4.1.4.0 (2014-01-07)
+- bug #3840 (additional fix) When exporting to gzip format, the data is compressed 2 times
+- bug #4209 Missing compression in one case
+- bug #4208 Can't browse tables after sorting on columns with fieldnames that have a '-'
+- bug #4184 Switch to wrong page after adding an index
+- bug #3885 Additional fix for this bug
+- bug #4212 Table "disappears" if it has the same name as its tablegroup
+- bug #4213 Datetime Quick Edit decrements by one day
+- bug #4217 Current value not highlighted when browsing foreign values
+- bug #4220 Incorrect key values in foreign key browser
+- bug #4215 MariaDB 5.5: error in Drizzle detection
+
+4.1.3.0 (2013-12-31)
+- bug #3938 PDFDefaultPageSize doc and easy configurability
+- bug #4198 Hovering over pie chart gives fatal JS error
+- bug #4200 Missing syntax highlighting
+- bug #4201 Exports are not compressed
+- bug #4131 Import: "number of rows to skip" is ambiguous
+- bug #4205 Add a user shows additional "edit user group" link
+- bug #4202 Cannot read property 'token' of undefined
+- bug #4203 On refreshing designer, $.FullScreen is undefined
+- bug #3920 Lost space in navigation area
+
+4.1.2.0 (2013-12-23)
+- bug #4178 Quick edit for BIT type does not work
+- bug #2760 Warn about incomplete exports
+- bug #4190 Fractional seconds cause row update even if the value is not changed
+- bug #4170 Overflow scroll for table grid is not a good solution
+- bug #2961 Relations settings not updated on config change
+- bug #4187 SQL query inline edit doesn't post changes on the first run
++ rfe #1465 Docs for connections to IPv6 only MySQL instances
++ rfe #1468 [interface] No floating for server breadcrumb menu
+
+4.1.1.0 (2013-12-17)
+- bug #4154 Error using UNION query
+- bug #4173 Transformations overview not reachable
+- bug #4149 Js freezes in the management of replication
+- bug #3903 Query fails when using aliases after ordering result
+- bug #4181 Adding columns in table creation clears existing columns
+- bug #4023 Requires wildcard EXECUTE/ALTER ROUTINE on DB to allow
+Procedures to be executed by user
+- bug #4186 Adding a column when creating a table does not propagate index info
+- bug #4185 Unable to execute create procedure statement from query window
+
 4.1.0.0 (2013-12-11)
 + rfe #499 On user creation, warn if the user already exists
 + Use indeterminate check all checkbox in server privileges
