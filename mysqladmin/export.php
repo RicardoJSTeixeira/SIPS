@@ -14,13 +14,24 @@ if (!defined('TESTSUITE')) {
      * If we are sending the export file (as opposed to just displaying it
      * as text), we have to bypass the usual PMA_Response mechanism
      */
-    if ($_POST['output_format'] == 'sendit') {
+    if (isset($_POST['output_format']) && $_POST['output_format'] == 'sendit') {
         define('PMA_BYPASS_GET_INSTANCE', 1);
     }
     include_once 'libraries/common.inc.php';
     include_once 'libraries/zip.lib.php';
     include_once 'libraries/plugin_interface.lib.php';
-
+    
+    //check if it's the GET request to check export time out
+    if (isset($_GET['check_time_out'])) {
+        if (isset($_SESSION['pma_export_error'])) {
+            $err = $_SESSION['pma_export_error'];
+            unset($_SESSION['pma_export_error']);
+            echo $err;
+        } else {
+            echo "success";
+        }
+        exit;
+    }
     /**
      * Sets globals from $_POST
      *
@@ -247,7 +258,7 @@ if (!defined('TESTSUITE')) {
     if (! empty($cfg['MemoryLimit'])) {
         @ini_set('memory_limit', $cfg['MemoryLimit']);
     }
-
+    register_shutdown_function('PMA_shutdown');
     // Start with empty buffer
     $dump_buffer = '';
     $dump_buffer_len = 0;
@@ -256,6 +267,21 @@ if (!defined('TESTSUITE')) {
     $time_start = time();
 }
 
+/**
+ * Sets a session variable upon a possible fatal error during export 
+ *
+ * @return void 
+ */
+function PMA_shutdown()
+{
+    $a = error_get_last();
+    if ($a != null && strpos($a['message'], "execution time")) {
+        //write in partially downloaded file for future reference of user
+        print_r($a);
+        //set session variable to check if there was error while exporting
+        $_SESSION['pma_export_error'] = $a['message'];
+    }
+}
 /**
  * Detect ob_gzhandler
  *
@@ -274,9 +300,17 @@ function PMA_isGzHandlerEnabled()
  */
 function PMA_gzencodeNeeded()
 {
+    /*
+     * We should gzencode only if the function exists
+     * but we don't want to compress twice, therefore
+     * gzencode only if transparent compression is not enabled
+     * and gz compression was not asked via $cfg['OBGzip']
+     * but transparent compression does not apply when saving to server
+     */
     if (@function_exists('gzencode')
-        && ! @ini_get('zlib.output_compression')
-        && ! PMA_isGzHandlerEnabled()
+        && ((! @ini_get('zlib.output_compression')
+        && ! PMA_isGzHandlerEnabled())
+        || $GLOBALS['save_on_server'])
     ) {
         return true;
     } else {
@@ -414,7 +448,7 @@ if (!defined('TESTSUITE')) {
         $memory_limit = trim(@ini_get('memory_limit'));
         $memory_limit_num = (int)substr($memory_limit, 0, -1);
         // 2 MB as default
-        if (empty($memory_limit)) {
+        if (empty($memory_limit) || '-1' == $memory_limit) {
             $memory_limit = 2 * 1024 * 1024;
         } elseif (strtolower(substr($memory_limit, -1)) == 'm') {
             $memory_limit = $memory_limit_num * 1024 * 1024;
