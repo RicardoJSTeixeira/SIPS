@@ -64,6 +64,8 @@ class crm_main_class {
         $js['aaData'] = array();
         $variables = array();
         $join = "";
+        $group = "";
+        $script_fields = "";
         if ($lead_id != "" && $lead_id != null) {
             $query = "
             SELECT lead_id,first_name, phone_number, address1 ,last_local_call_time 
@@ -139,36 +141,36 @@ class crm_main_class {
                 $script_info = json_decode($script_info);
                 if (sizeof($script_info) > 0) {
                     $join = "left join script_result b on b.lead_id=a.lead_id";
-                    $where = $where . " and  b.campaign_id=?";
+                    $where = $where . " and  b.campaign_id=? and ";
                     $variables[] = $campanha;
-                    $ao = " and ";
+                    $ao = "";
                     foreach ($script_info as $cp) {
                         $aaa = split(";", $cp->value);
                         if (isset($aaa[1])) {
-                            $where = $where . $ao . " b.tag_elemento=? and b.valor=? and b.param_1=?";
+                            $script_fields = $script_fields . $ao . " (b.tag_elemento=? and b.valor=? and b.param_1=?)";
                             $variables[] = $cp->name;
                             $variables[] = $aaa[1];
                             $variables[] = $aaa[0];
                             $ao = " or ";
                         } else {
-                            $where = $where . $ao . " b.tag_elemento=? and b.valor=?";
+                            $script_fields = $script_fields . $ao . " (b.tag_elemento=? and b.valor=?)";
                             $variables[] = $cp->name;
                             $variables[] = $cp->value;
                             $ao = " or ";
                         }
                     }
+            
                 }
             }
-            $query = "select a.lead_id,a.first_name,a.phone_number, a.address1 ,a.last_local_call_time  from vicidial_list a $join where $where   limit 20000 ";
-        } 
-        
-          
-        
+            $query = "select a.lead_id,a.first_name,a.phone_number, a.address1 ,a.last_local_call_time  from vicidial_list a $join where $where ($script_fields)  $group limit 20000 ";
+         }
+      
+
         $stmt = $this->db->prepare($query);
         $stmt->execute($variables);
-  
+
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-           $row[4] = $row[4] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span></div>";
+            $row[4] = $row[4] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span></div>";
             $js['aaData'][] = $row;
         }
         return $js;
@@ -178,6 +180,8 @@ class crm_main_class {
         $js['aaData'] = array();
         $variables = array();
         $join = "";
+        $group = "";
+        $script_fields = "";
         if ($lead_id != "" && $lead_id != null) {
             $query = "
             SELECT a.lead_id,c.first_name,  a.phone_number,a.call_date 
@@ -221,7 +225,7 @@ class crm_main_class {
 //--------------------------------------------------------------------------------DATAS
             if (!empty($data_inicio) && !empty($data_fim)) {
                 $where = $where . " and a.call_date between ? and ?";
-               $variables[] = $data_inicio . " 00:00:00";
+                $variables[] = $data_inicio . " 00:00:00";
                 $variables[] = $data_fim . " 23:59:59";
             }
 //----------------------------------------------------------------------AGENTES
@@ -256,24 +260,26 @@ class crm_main_class {
                         $aaa = split(";", $cp->value);
                         if (isset($aaa[1])) {
 
-                            $where = $where . $ao . " b.tag_elemento=? and b.valor=? and b.param_1=?";
+                            $where = $where . $ao . " (b.tag_elemento=? and b.valor=? and b.param_1=?)";
                             $variables[] = $cp->name;
                             $variables[] = $aaa[1];
                             $variables[] = $aaa[0];
                             $ao = " or ";
                         } else {
 
-                            $where = $where . $ao . " b.tag_elemento=? and b.valor=?";
+                            $where = $where . $ao . " (b.tag_elemento=? and b.valor=?)";
                             $variables[] = $cp->name;
                             $variables[] = $cp->value;
                             $ao = " or ";
                         }
                     }
+                    $group = " group by a.lead_id";
                 }
             }
 
-            $query = "select a.lead_id,c.first_name,  a.phone_number,a.call_date  from vicidial_log a left join vicidial_list c on c.lead_id=a.lead_id  $join where $where  limit 20000 ";
+            $query = "select a.lead_id,c.first_name,  a.phone_number,a.call_date  from vicidial_log a left join vicidial_list c on c.lead_id=a.lead_id  $join where $where $script_fields $group limit 20000 ";
         }
+
 
         $stmt = $this->db->prepare($query);
         $stmt->execute($variables);

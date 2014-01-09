@@ -58,7 +58,7 @@ var crm_main = function(crm_main_zone, file_path)
     {
         get_bd(get_feedback(get_campos_dinamicos(get_script())));
         crm_main_zone.find("#script_tag_div").empty();
-        crm_main_zone.find("#cd_tag_div").empty();  
+        crm_main_zone.find("#cd_tag_div").empty();
     });
     function get_bd(callback)
     {
@@ -169,7 +169,7 @@ var crm_main = function(crm_main_zone, file_path)
             crm_main_zone.find(".cd_input_field").show();
         }
     });
-    
+
     crm_main_zone.on("click", "#button_tag_cd", function(e) {
         e.preventDefault();
         crm_main_zone.find("#cd_tag_div")
@@ -495,7 +495,9 @@ var crm_main = function(crm_main_zone, file_path)
 
     $(crm_main_zone).on("click", ".ver_cliente", function()
     {
+    
         crm_edit_object = new crm_edit(crm_main_zone.find("#client_area"), "/sips-admin/crm/", $(this).data("lead_id"));
+         crm_edit_object.destroy();
         crm_edit_object.init(function() {
             crm_main_zone.find('#client_div').show("blind");
         });
