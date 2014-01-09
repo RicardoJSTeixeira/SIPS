@@ -87,7 +87,7 @@ var crm_main = function(crm_main_zone, file_path)
             var temp = "<option value=''>Todos os Agentes</option>";
             $.each(data, function()
             {
-                temp += "<option value=" + this.id + ">" + this.name + "</option>";
+                temp += "<option value=" + this.user + ">" + this.full_name + "</option>";
             });
             select["agente"].append(temp).trigger("chosen:updated");
             if (typeof callback === "function")

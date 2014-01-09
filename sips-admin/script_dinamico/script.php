@@ -301,27 +301,7 @@ class script {
         return $js;
     }
 
-    public function get_campaign_linha_inbound($campaigns, $user_is_all_campaigns) {
-        $js = array();
-        if ($user_is_all_campaigns) {
-            $campaigns_query = "";
-        } else {
-            $campaigns_query = "and campaign_id in('$campaigns')";
-        }
-        $query = "SELECT  campaign_id,campaign_name  FROM  vicidial_campaigns where active='y' $campaigns_query  order by campaign_name ";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $js["campaign"][] = array("id" => $row["campaign_id"], "name" => $row["campaign_name"]);
-        }
-        $query = "SELECT group_id,group_name FROM vicidial_inbound_groups";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $js["linha_inbound"][] = array("id" => $row["group_id"], "name" => $row["group_name"]);
-        }
-        return $js;
-    }
+ 
 
     public function iscloud() {
         $query = "SELECT cloud FROM servers";

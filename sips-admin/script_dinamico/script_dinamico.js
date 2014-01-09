@@ -152,20 +152,24 @@ $(function() {
             }
         });
         //Get de todas as campanhas allowed
-        $.post("requests.php", {action: "get_campaign_linha_inbound"},
+        $.post("requests.php", {action: "get_campaign"},
         function(data1)
         {
-
-            $.each(data1.campaign, function() {
+            $.each(data1, function() {
                 $("#script_campanha_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
             });
-            $.each(data1.linha_inbound, function() {
+            $("#script_campanha_selector").trigger("chosen:updated");
+        }, "json");
+        $.post("requests.php", {action: "get_linha_inbound"},
+        function(data11)
+        {
+            $.each(data11, function() {
                 $("#script_linha_inbound_selector").append("<option value=" + this.id + ">" + this.name + "</option>");
             });
-            $("#script_campanha_selector").trigger("chosen:updated");
             $("#script_linha_inbound_selector").trigger("chosen:updated");
-
         }, "json");
+
+
         $.post("requests.php", {action: "iscloud"},
         function(data2)
         {
@@ -217,6 +221,7 @@ $(document).on("click", ".element", function(e) {
     $("#edit_div").css("top", $(this).position().top)
             .css("left", $(this).position().left)
             .css("position", "absolute");
+    $("#rule_target_select option ").prop('disabled', false).trigger("chosen:updated");
     editor_toggle("on");
     selected_id = $(this).data("id");
     selected_tag = $(this).data("tag");
@@ -300,6 +305,8 @@ $(document).on("click", ".element", function(e) {
             populate_element("button", $(this));
             break;
     }
+
+
 
 });
 //FOOTER EDIT BUTTONS
@@ -1554,7 +1561,7 @@ $("#copy_script_button").on("click", function()
 });
 $('#script_selector').change(function()
 {
-   
+
     editor_toggle("off");
     update_script();
 });
