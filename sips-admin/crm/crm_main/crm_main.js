@@ -2,9 +2,27 @@ var crm_main = function(crm_main_zone, file_path)
 {
     var select = [];
     var crm_edit_object;
+    var config = [];
 //----------------------------------- BASIC FUNCTIONS
-    this.init = function()
+    this.init = function(ext_config)
     {
+        config = new Object();
+        config.campaign = true;
+        config.bd = true;
+        config.dynamic_fields = true;
+        config.agent = true;
+        config.feedback = true;
+        config.script = true;
+        config.lead = true;
+        config.phone_number = true;
+        config.date = true;
+
+
+
+
+        $.extend(true, config, ext_config);
+
+
         $.get(file_path + "crm_main/crm_main.html", function(data) {
             crm_main_zone.append(data);
             select["campanha"] = crm_main_zone.find("#select_campanha");
@@ -15,6 +33,8 @@ var crm_main = function(crm_main_zone, file_path)
             select["script"] = crm_main_zone.find("#select_script");
             crm_main_zone.find(".chosen-select").chosen({no_results_text: "Sem resultados"});
             crm_main_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
+            if (!config.date)
+                crm_main_zone.find(".form_datetime").parent("div").parent("div").parent("div").hide();
             get_campanha(function()
             {
                 get_bd(function() {
@@ -22,7 +42,6 @@ var crm_main = function(crm_main_zone, file_path)
                         get_feedback(function() {
                             get_campos_dinamicos(function() {
                                 get_script(function() {
-
                                 });
                             });
                         });
@@ -30,30 +49,39 @@ var crm_main = function(crm_main_zone, file_path)
                 });
             });
         });
+
     };
     this.destroy = function()
     {
         crm_main_zone.empty().off();
     };
-    
+
 //-----------------------------------FILTERS    
     function get_campanha(callback)
     {
-        select["campanha"].empty();
-        $.post(file_path + "crm_main/crm_main_request.php", {action: "get_campanha"},
-        function(data)
+
+        if (config.campaign)
         {
-            var temp = "";
-            $.each(data, function()
+            select["campanha"].empty();
+            $.post(file_path + "crm_main/crm_main_request.php", {action: "get_campanha"},
+            function(data)
             {
-                temp += "<option value=" + this.id + ">" + this.name + "</option>";
-            });
-            select["campanha"].append(temp).trigger("chosen:updated");
-            if (typeof callback === "function")
-            {
-                callback();
-            }
-        }, "json");
+                var temp = "";
+                $.each(data, function()
+                {
+                    temp += "<option value=" + this.id + ">" + this.name + "</option>";
+                });
+                select["campanha"].append(temp).trigger("chosen:updated");
+                if (typeof callback === "function")
+                {
+                    callback();
+                }
+            }, "json");
+        }
+        else
+        {
+            select["campanha"].parent("div").parent("div").hide();
+        }
     }
     crm_main_zone.on("change", "#select_campanha", function()
     {
@@ -63,97 +91,131 @@ var crm_main = function(crm_main_zone, file_path)
     });
     function get_bd(callback)
     {
-        select["bd"].empty();
-        $.post(file_path + "crm_main/crm_main_request.php", {action: "get_bd", campaign_id: crm_main_zone.find("#select_campanha option:selected").val()},
-        function(data)
+        if (config.bd)
         {
-            var temp = "<option value=''>Todas as Base Dados</option>";
-            $.each(data, function()
+            select["bd"].empty();
+            $.post(file_path + "crm_main/crm_main_request.php", {action: "get_bd", campaign_id: crm_main_zone.find("#select_campanha option:selected").val()},
+            function(data)
             {
-                temp += "<option value=" + this.id + ">" + this.name + "</option>";
-            });
-            select["bd"].append(temp).trigger("chosen:updated");
-            if (typeof callback === "function")
-            {
-                callback();
-            }
-        }, "json");
+                var temp = "<option value=''>Todas as Base Dados</option>";
+                $.each(data, function()
+                {
+                    temp += "<option value=" + this.id + ">" + this.name + "</option>";
+                });
+                select["bd"].append(temp).trigger("chosen:updated");
+                if (typeof callback === "function")
+                {
+                    callback();
+                }
+            }, "json");
+        }
+        else
+        {
+            select["bd"].parent("div").parent("div").hide();
+        }
     }
     function get_agente(callback)
     {
-        select["agente"].empty();
-        $.post(file_path + "crm_main/crm_main_request.php", {action: "get_agent"},
-        function(data)
+        if (config.agent)
         {
-            var temp = "<option value=''>Todos os Agentes</option>";
-            $.each(data, function()
+            select["agente"].empty();
+            $.post(file_path + "crm_main/crm_main_request.php", {action: "get_agent"},
+            function(data)
             {
-                temp += "<option value=" + this.user + ">" + this.full_name + "</option>";
-            });
-            select["agente"].append(temp).trigger("chosen:updated");
-            if (typeof callback === "function")
-            {
-                callback();
-            }
-        }, "json");
+                var temp = "<option value=''>Todos os Agentes</option>";
+                $.each(data, function()
+                {
+                    temp += "<option value=" + this.user + ">" + this.full_name + "</option>";
+                });
+                select["agente"].append(temp).trigger("chosen:updated");
+                if (typeof callback === "function")
+                {
+                    callback();
+                }
+            }, "json");
+        }
+        else
+        {
+            select["agente"].parent("div").parent("div").hide();
+        }
     }
     function get_feedback(callback)
     {
-        select["feedback"].empty();
-        $.post(file_path + "crm_main/crm_main_request.php", {action: "get_feedbacks", campaign_id: crm_main_zone.find("#select_campanha option:selected").val()},
-        function(data)
+        if (config.feedback)
         {
-            var temp = "<option value=''>Todos os feedbacks</option>";
-            $.each(data, function()
+            select["feedback"].empty();
+            $.post(file_path + "crm_main/crm_main_request.php", {action: "get_feedbacks", campaign_id: crm_main_zone.find("#select_campanha option:selected").val()},
+            function(data)
             {
-                temp += "<option value=" + this.id + ">" + this.name + "</option>";
-            });
-            select["feedback"].append(temp).trigger("chosen:updated");
-            if (typeof callback === "function")
-            {
-                callback();
-            }
-        }, "json");
+                var temp = "<option value=''>Todos os feedbacks</option>";
+                $.each(data, function()
+                {
+                    temp += "<option value=" + this.id + ">" + this.name + "</option>";
+                });
+                select["feedback"].append(temp).trigger("chosen:updated");
+                if (typeof callback === "function")
+                {
+                    callback();
+                }
+            }, "json");
+        }
+        else
+        {
+            select["feedback"].parent("div").parent("div").hide();
+        }
     }
     function get_campos_dinamicos(callback)
     {
-        select["cd"].empty();
-        crm_main_zone.find(".cd_input_field").hide();
-        $.post(file_path + "crm_main/crm_main_request.php", {action: "get_campos_dinamicos", campaign_id: crm_main_zone.find("#select_campanha option:selected").val()},
-        function(data)
+        if (config.dynamic_fields)
         {
-            var temp = "<option value='1'>Todos os Campos Dinâmicos</option>";
-            $.each(data, function()
+            select["cd"].empty();
+            crm_main_zone.find(".cd_input_field").hide();
+            $.post(file_path + "crm_main/crm_main_request.php", {action: "get_campos_dinamicos", campaign_id: crm_main_zone.find("#select_campanha option:selected").val()},
+            function(data)
             {
-                temp += "<option value=" + this.id + ">" + this.name + "</option>";
-            });
-            select["cd"].append(temp).trigger("chosen:updated");
-            if (typeof callback === "function")
-            {
-                callback();
-            }
-        }, "json");
+                var temp = "<option value='1'>Todos os Campos Dinâmicos</option>";
+                $.each(data, function()
+                {
+                    temp += "<option value=" + this.id + ">" + this.name + "</option>";
+                });
+                select["cd"].append(temp).trigger("chosen:updated");
+                if (typeof callback === "function")
+                {
+                    callback();
+                }
+            }, "json");
+        }
+        else
+        {
+            select["cd"].parent("div").parent("div").hide();
+        }
     }
     function get_script(callback)
     {
-
-        crm_main_zone.find(".script_input_field").hide();
-        select["script"].empty();
-        $.post(file_path + "crm_main/crm_main_request.php", {action: "get_script", campaign_id: crm_main_zone.find("#select_campanha option:selected").val()},
-        function(data)
+        if (config.script)
         {
-            var temp = "<option value='1'>Todos os Campos do Script</option>";
-            $.each(data, function()
+            crm_main_zone.find(".script_input_field").hide();
+            select["script"].empty();
+            $.post(file_path + "crm_main/crm_main_request.php", {action: "get_script", campaign_id: crm_main_zone.find("#select_campanha option:selected").val()},
+            function(data)
             {
-                if (this.type != "legend" && this.type != "textfield" && this.type != "datepicker" && this.type != "scheduler" && this.type != "ipl" && this.type != "pagination" && this.type != "tableinput")
-                    temp += "<option data-type=" + this.type + " data-tag=" + this.tag + " value=" + this.id + ">" + get_script_translated_names(this.type) + "&#10142;" + this.name + "</option>";
-            });
-            select["script"].append(temp).trigger("chosen:updated");
-            if (typeof callback === "function")
-            {
-                callback();
-            }
-        }, "json");
+                var temp = "<option value='1'>Todos os Campos do Script</option>";
+                $.each(data, function()
+                {
+                    if (this.type != "legend" && this.type != "textfield" && this.type != "datepicker" && this.type != "scheduler" && this.type != "ipl" && this.type != "pagination" && this.type != "tableinput")
+                        temp += "<option data-type=" + this.type + " data-tag=" + this.tag + " value=" + this.id + ">" + get_script_translated_names(this.type) + "&#10142;" + this.name + "</option>";
+                });
+                select["script"].append(temp).trigger("chosen:updated");
+                if (typeof callback === "function")
+                {
+                    callback();
+                }
+            }, "json");
+        }
+        else
+        {
+            select["script"].parent("div").parent("div").hide();
+        }
     }
 
 //------------------------------------------------------CREATE TAGS
@@ -171,7 +233,7 @@ var crm_main = function(crm_main_zone, file_path)
 
     crm_main_zone.on("click", "#button_tag_cd", function(e) {
         e.preventDefault();
-     
+
         crm_main_zone.find("#cd_tag_div")
                 .append($("<span>").addClass("tooltip_filtro")
                         .data("info", {name: crm_main_zone.find("#select_cd option:selected").val(), value: crm_main_zone.find("#cd_input").val()})
@@ -180,7 +242,7 @@ var crm_main = function(crm_main_zone, file_path)
                                 .text() + " &#10142; " + crm_main_zone.find("#cd_input").val())
                         .append($("<a>", {class: 'btn-link close_tag tooltip_filtro_button_area '}).append($("<i>", {class: "tooltip_filtro_button icon-remove-circle"}))));
         crm_main_zone.find('#select_cd').val("").trigger('chosen:updated').trigger('change');
-           crm_main_zone.find("#cd_input").val("");
+        crm_main_zone.find("#cd_input").val("");
     });
 
     crm_main_zone.on("change", "#select_script", function()
@@ -242,14 +304,14 @@ var crm_main = function(crm_main_zone, file_path)
 
     crm_main_zone.on("click", "#button_tag_script", function(e) {
         e.preventDefault();
-       
+
         if (crm_main_zone.find("#script_input_text").is(":visible"))
             crm_main_zone.find("#script_tag_div")
                     .append($("<span>").addClass("tooltip_filtro")
                             .data("info", {name: crm_main_zone.find("#select_script option:selected").data("tag"), value: crm_main_zone.find("#script_input_text").val()})
 
                             .html(get_script_translated_names(crm_main_zone.find("#select_script option:selected").data("type")) + " &#10142; " + crm_main_zone.find("#script_input_text").val())
-                      .append($("<a>", {class: 'btn-link close_tag tooltip_filtro_button_area '}).append($("<i>", {class: "tooltip_filtro_button icon-remove-circle"}))));
+                            .append($("<a>", {class: 'btn-link close_tag tooltip_filtro_button_area '}).append($("<i>", {class: "tooltip_filtro_button icon-remove-circle"}))));
         else
             crm_main_zone.find("#script_tag_div")
                     .append($("<span>").addClass("tooltip_filtro")
@@ -258,7 +320,7 @@ var crm_main = function(crm_main_zone, file_path)
                             .html(get_script_translated_names(crm_main_zone.find("#select_script option:selected").data("type")) + " &#10142; " + crm_main_zone.find("#script_input_select option:selected").val())
                             .append($("<a>", {class: 'btn-link close_tag tooltip_filtro_button_area '}).append($("<i>", {class: "tooltip_filtro_button icon-remove-circle"}))));
         crm_main_zone.find('#select_script').val("").trigger('chosen:updated').trigger('change');
-            crm_main_zone.find("#script_input_text").val("");
+        crm_main_zone.find("#script_input_text").val("");
     });
 //-----------------------------------------------------------------------SEARCH
     crm_main_zone.on("click", "#search_button", function()
@@ -295,8 +357,8 @@ var crm_main = function(crm_main_zone, file_path)
         e.preventDefault();
         crm_main_zone.find("#search_button").trigger("click");
     });
-    
-        function search(type)
+
+    function search(type)
     {
 
         var tags_cd = [];
@@ -315,7 +377,7 @@ var crm_main = function(crm_main_zone, file_path)
             crm_main_zone.find("#table_client").show();
             crm_main_zone.find("#table_calls").hide();
             var oTable = crm_main_zone.find('#info_table_client').dataTable({
-                "aaSorting": [[ 0, "asc" ]],
+                "aaSorting": [[0, "asc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -445,7 +507,7 @@ var crm_main = function(crm_main_zone, file_path)
         }
     }
 
-     function get_script_translated_names(type)
+    function get_script_translated_names(type)
     {
         var temp_type = "";
         switch (type)

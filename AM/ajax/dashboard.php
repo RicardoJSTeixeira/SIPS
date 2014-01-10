@@ -21,8 +21,6 @@ $variables = array();
 $output = array("aaData" => array());
 switch ($action) {
 
-
-
     case "populate_allm"://ALL MARCAÇOES
         $query = "SELECT a.lead_id,b.first_name,b.address1,a.start_date from sips_sd_reservations a 
             left join vicidial_list b on a.lead_id=b.lead_id 
@@ -35,22 +33,20 @@ switch ($action) {
         break;
 
 
-
     case "populate_ncsm"://NOVOS CLIENTES SEM MARCAÇÂO
         $query = "SELECT lead_id,first_name,address1,entry_date from  vicidial_list 
- where user=? and status='NEW' and list_id=99800002";
+ where user=? and status='NEW' and list_id=99800002 and entry_date between ? and ? and lead_id not in (select lead_id from sips_sd_reservations)";
 
         $variables[] = $user->getUser()->username;
+        $variables[] = date("Y-m-d") . " 00:00:00";
+        $variables[] = date("Y-m-d") . " 23:59:59";
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
-
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[3] = $row[3]."<div class='view-button'><span class='btn btn-mini criar_marcacao'><i class='icon-edit'></i>Criar Marcação</span></div>";
+            $row[3] = $row[3] . "<div class='view-button'><span class='btn btn-mini criar_marcacao'><i class='icon-edit'></i>Criar Marcação</span></div>";
             $output['aaData'][] = $row;
         }
-
-
-        echo json_encode($output);
+       echo json_encode($output);
         break;
 
 

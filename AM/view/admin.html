@@ -1,0 +1,71 @@
+ 
+<div class="row-fluid">
+    <div class="span6">
+        <div class="grid-title">
+            <div class="pull-left">
+                <h4>Gestão de Clientes</h4>
+            </div>
+        </div>
+        <div class="grid-content">
+
+
+            <div class="formRow">
+                <button class="btn" id="download_csm_button">Download de dados de clientes sem marcação</button>
+            </div>
+            <div id="download_csm_div" style="display:none">
+                <form id="date_form">
+                    <input size="16" type="text" class="form_datetime validate[required]" id="data_inicio" placeholder="Data de Inicio">
+                    <input size="16" type="text" class="form_datetime validate[required]" id="data_fim" placeholder="Data de Fim">
+                </form>
+                <button class="btn btn-primary" id="download_excel_csm_button">Download</button>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="span6">
+        <div class="grid-title">
+            <div class="pull-left">
+                <h4>Gestão de Produtos</h4>
+            </div>
+        </div>
+        <div class="grid-content">
+            <div class="formRow">
+                <button id="view_product_button" class="btn">Ver produtos</button>
+            </div>
+            <div id="view_product_div" style="display:none">
+                Ver productalia
+                <table class="table table-bordered table-mod" id="view_product_datatable"></table>
+            </div>
+
+
+            <div class="formRow">
+                <button id="add_product_button" class="btn">Criar produto</button>
+            </div>
+            <div id="add_product_div" style="display:none">
+                Criar productalia
+            </div>
+
+
+            <div class="formRow">
+                <button id="remove_product_button" class="btn">Eliminar produto</button>
+            </div>
+            <div id="remove_product_div" style="display:none">
+                fazer desaparecer productalia
+            </div>
+
+
+            <div class="formRow">
+                <button id="edit_product_button" class="btn">Editar produto</button>
+            </div>
+            <div id="edit_product_div" style="display:none">
+                Editar productalia
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="js/admin.js"></script>
