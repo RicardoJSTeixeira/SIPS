@@ -6,6 +6,8 @@ $(function()
     $.post("ajax/create_client.php", {action: "get_fields", campaign_id: "W00002"},
     function(data)
     {
+        var controler = 0;
+        var input
         var custom_class = "";
         $.each(data, function()
         {
@@ -22,11 +24,34 @@ $(function()
 
             }
 
-            $("#inputs_div").append($("<div>").addClass("control-group formRow")
-                    .append($("<label>").addClass("control-label").attr("for", this.name).text(this.display_name))
-                    .append($("<div>").addClass("controls formRight")
+
+
+
+            if (controler) {
+                controler = 0;
+                input = $("#inputs_div1");
+
+
+                ;
+            }
+            else
+            {
+                controler = 1;
+                input = $("#inputs_div2");
+
+
+            }
+
+            input.append($("<div>").addClass("formRow")
+                    .append($("<label>").text(this.display_name))
+                    .append($("<div>").addClass(" formRight")
                             .append($("<input>").addClass("span " + custom_class).attr("type", "text").attr("id", this.name).attr("name", this.name))));
-                    custom_class="";
+            custom_class = "";
+
+
+
+
+
         });
     }
     , "json");

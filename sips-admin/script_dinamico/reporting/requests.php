@@ -26,7 +26,6 @@ $js = array();
 switch ($action) {
 
     case "check_has_script":
-
         $query = "SELECT id_script from script_assoc where id_camp_linha=:campaign_id";
 
         $stmt = $db->prepare($query);

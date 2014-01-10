@@ -2,8 +2,9 @@ $(function() {
 
     var init = function(data) {
         var sch;
-        sch = new calendar($("#calendar_day"),data,"",$('#ext-events'));
+        sch = new calendar($("#calendar_day"), data, "", $('#ext-events'));
         sch.reserveConstruct(data.tipo);
+      
     };
     $.post("ajax/calendar.php",
             {init: true, dash: true},
@@ -54,11 +55,11 @@ $(function() {
                 temp += "<tr><td>" + this.first_name + "</td><td>" + moment().from(this.start_date, true) + "</td></tr>";
         });
         $("#table_tbody_mp").append(temp);
-
     }, "json");
 
+ 
+  
 });
-
 
 $(document).off("click", ".criar_marcacao")
         .on("click", ".criar_marcacao", function()
@@ -67,16 +68,16 @@ $(document).off("click", ".criar_marcacao")
             $("#div_calendar")
                     .load("view/calendar.html")
                     .show()
-                    .data().lead_id=$(this).data().lead_id;
-
-
+                    .data().lead_id = $(this).data().lead_id;
         });
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
+
+
+
  
