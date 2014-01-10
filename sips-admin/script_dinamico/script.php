@@ -301,8 +301,6 @@ class script {
         return $js;
     }
 
- 
-
     public function iscloud() {
         $query = "SELECT cloud FROM servers";
         $stmt = $this->db->prepare($query);
@@ -585,11 +583,7 @@ class script {
     public function save_form_result($id_script, $results, $user_id, $unique_id, $campaign_id, $lead_id, $admin_review) {
         $sql = array();
 
-        if ($admin_review == "1") {
-            $query = "Update vicidial_list set status='ESA' where lead_id=:lead_id ";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute(array(":lead_id" => $lead_id));
-        }
+
 
         foreach ($results as $row) {
             if ($row['value'] != "") {
@@ -603,9 +597,11 @@ class script {
         }
 
         if (count($sql)) {
-            $query = "Delete from script_result where unique_id=:unique_id";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute(array(":unique_id" => $unique_id));
+            if ($admin_review == "1") {
+                $query = "Delete from script_result where unique_id=:unique_id and lead_id=:lead_id";
+                $stmt = $this->db->prepare($query);
+                $stmt->execute(array(":unique_id" => $unique_id, ":lead_id" => $lead_id));
+            }
 
 
             $query = "INSERT INTO `script_result`(`date`,`id_script`,`user_id`,`unique_id`,`campaign_id`,`lead_id`, `tag_elemento`, `valor`,`param_1`) VALUES  " . implode(',', $sql);
