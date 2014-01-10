@@ -12,7 +12,7 @@ $data = date('Y-m-d');
 
 
 if ($user_class->user_group == 'ADMIN') {
-    $grupos = mysql_query("SELECT user_group, group_name FROM vicidial_user_groups", $link) or die(mysql_error());
+    $grupos = mysql_query("SELECT user_group, group_name FROM vicidial_user_groups ORDER BY group_name ASC", $link) or die(mysql_error());
 } else {
 
     //Users INICIO 

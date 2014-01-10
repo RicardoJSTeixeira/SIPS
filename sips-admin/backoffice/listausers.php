@@ -73,24 +73,30 @@ require(ROOT . "ini/user.php");
         //Users INICIO 
         $tmp = "";
         $allowed_camps_regex = implode("|", $user_class->allowed_campaigns);
-        if (!$user_class->is_all_campaigns) {
-            $ret = "WHERE allowed_campaigns REGEXP '$allowed_camps_regex'";
-            $user_groups = "";
-            $result = mysql_query("SELECT `user_group`, `allowed_campaigns` FROM `vicidial_user_groups` $ret ") or die(mysql_error());
-            while ($row1 = mysql_fetch_assoc($result)) {
-                $user_groups .= "'$row1[user_group]',";
-            }
-            $user_groups = rtrim($user_groups, ",");
-            $result = mysql_query("SELECT `user` FROM `vicidial_users` WHERE user_group in ($user_groups) AND user_level < $user_class->user_level") or die(mysql_error());
-            while ($rugroups = mysql_fetch_assoc($result)) {
-                $tmp .= "^$rugroups[user]$|";
-            }
-            $tmp = rtrim($tmp, "|");
-            if(strlen($tmp)){
-            $users_regex = "AND user REGEXP '$tmp'";
-            }else{
-            $users_regex = "AND 0";
-            }
+        
+        if ((bool)strlen(trim(rtrim($user_class->allowed_campaigns_raw, " -")))){
+
+            if (!$user_class->is_all_campaigns) {
+                $ret = "WHERE allowed_campaigns REGEXP '$allowed_camps_regex'";
+                $user_groups = "";
+                $result = mysql_query("SELECT `user_group`, `allowed_campaigns` FROM `vicidial_user_groups` $ret ") or die(mysql_error());
+                while ($row1 = mysql_fetch_assoc($result)) {
+                    $user_groups .= "'$row1[user_group]',";
+                }
+                $user_groups = rtrim($user_groups, ",");
+                $result = mysql_query("SELECT `user` FROM `vicidial_users` WHERE user_group in ($user_groups) AND user_level < $user_class->user_level") or die(mysql_error());
+                while ($rugroups = mysql_fetch_assoc($result)) {
+                    $tmp .= "^$rugroups[user]$|";
+                }
+                $tmp = rtrim($tmp, "|");
+                if(strlen($tmp)){
+                $users_regex = "AND user REGEXP '$tmp'";
+                }else{
+                $users_regex = "AND 0";
+                }
+            } 
+        }else{
+                $users_regex = "AND 0";
         }
         //Users FIM
 
