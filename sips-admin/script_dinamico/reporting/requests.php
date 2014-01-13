@@ -16,7 +16,7 @@ ini_set('display_errors', '1');
 
 header('Content-Disposition: attachment; filename=Report_Script_' . date("Y-m-d_H:i:s") . '.csv');
 
-$user = new users;
+$user = new mysiblings($db);
 
 $temp = "";
 if (!$user->is_all_campaigns) {
@@ -94,12 +94,8 @@ switch ($action) {
 
     case "get_select_options":
         $js = array("campanha" => array(), "bd" => array(), "linha_inbound" => array());
-        $query = "SELECT campaign_id,campaign_name FROM `vicidial_campaigns` where active='Y'";
-        $stmt = $db->prepare($query);
-        $stmt->execute();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $js["campanha"][] = array("id" => $row["campaign_id"], "name" => $row["campaign_name"]);
-        }
+                
+            $js["campanha"] =$user->get_campaigns();
         $query = "SELECT list_id,list_name,campaign_id FROM vicidial_lists where active='Y'";
         $stmt = $db->prepare($query);
         $stmt->execute();
