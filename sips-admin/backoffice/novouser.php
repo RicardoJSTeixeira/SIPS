@@ -14,6 +14,7 @@ $data = date('Y-m-d');
 if ($user_class->user_group == 'ADMIN') {
     $grupos = mysql_query("SELECT user_group, group_name FROM vicidial_user_groups ORDER BY group_name ASC", $link) or die(mysql_error());
 } else {
+ if ((bool)strlen(trim(rtrim($user_class->allowed_campaigns_raw, " -")))){
 
     //Users INICIO 
     $tmp = "";
@@ -29,6 +30,7 @@ if ($user_class->user_group == 'ADMIN') {
 
         $grupos = mysql_query("SELECT user_group, group_name FROM vicidial_user_groups WHERE user_group in ($user_groups)", $link) or die(mysql_error());
     }
+ }
 }
 ?>
 
