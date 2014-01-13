@@ -3,7 +3,7 @@ var date_limit = function(selector, limit)
     var me = this;
     this.limit = limit;
     this.geral_name = selector.attr("id");
-    this.init = function()
+    this.init = function(callback)
     {
         selector.empty();
 
@@ -111,6 +111,10 @@ var date_limit = function(selector, limit)
         selector.find("#date_dynamic input" + me.geral_name).on("blur", function() {
             $(this).val($(this).val().replace(/[^0-9]*$/g, ""));
         });
+              if (typeof callback === "function")
+        {
+            callback();
+        }
     };
     this.get_time = function()
     {
