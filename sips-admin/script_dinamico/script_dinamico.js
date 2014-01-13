@@ -1690,7 +1690,7 @@ function rules_update_targets()
             }
             $("#rule_target_select").append("<option value=" + this.tag + ">" + this.tag + " --- " + temp_type + "</option>"); //povoar os alvos com as tags e tipos dos elementos
         });
-        $('#rule_target_select').trigger('liszt:updated');
+        $('#rule_target_select').trigger('chosen:updated');
     }, "json");
 }
 
@@ -1821,7 +1821,7 @@ $("#rule_trigger_select").change(function()
                     });
                     $("#rules_valor_select").append(options);
                 }
-                $('#rules_valor_select').val("").trigger('liszt:updated');
+                $('#rules_valor_select').val("").trigger('chosen:updated');
             }
             , "json");
             break;

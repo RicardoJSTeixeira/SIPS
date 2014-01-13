@@ -553,7 +553,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         $.each(info3, function(index, value) {
                             select.append("<option value=" + this.id + ">" + this.text + "</option>");
                         });
-                        select.val("").trigger("liszt:updated");
+                        select.val("").trigger("chosen:updated");
                     }, "json");
                     element.find(".scheduler_select").data("element_tag", info.tag)
                             .data("max_marc", info.max_length)
