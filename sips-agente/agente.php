@@ -3358,9 +3358,9 @@ $h++;
                                     <i class="icon-headphones"></i>
                                 </button>
                                 <div class="dropdown" style="display:inline-block;">
-                                    <button class="btn icon-alone dropdown-toggle" data-toggle="dropdown">
+                                    <span class="btn icon-alone dropdown-toggle" data-toggle="dropdown" style="padding-left: 10px">
                                         <i class="icon-cog"></i>
-                                    </button>
+                                    </span>
                                     <div class="dropdown-menu">
                                         <ul>
                                             <li style="display:none"><a tabindex="-1" href="#" onclick="AgentsViewOpen('AgentViewSpan', 'open');
