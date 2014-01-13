@@ -2670,6 +2670,11 @@
 	button.icon-alone i, span.icon-alone{
 		padding-right:0;
 	}
+        span.btn.icon-alone {
+            width: 22px;
+            padding-left: 9px;
+        }
+        
 	/* image sliders */
 	.carousel-nav {
 		 position:absolute; z-index:999999; margin-left:-120px;

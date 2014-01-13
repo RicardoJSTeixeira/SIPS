@@ -3354,11 +3354,8 @@ $h++;
                         <div class="grid-title" style="overflow:visible;">
                             <div class="pull-left">Info Box</div>
                             <div class="pull-right">
-                                <button class="btn btn-danger icon-alone dropdown-toggle <?= ($curClient[0] == 'necomplus') ? '' : 'hide' ?>" data-copied="false" id="record2clipboard">
-                                    <i class="icon-headphones"></i>
-                                </button>
                                 <div class="dropdown" style="display:inline-block;">
-                                    <span class="btn icon-alone dropdown-toggle" data-toggle="dropdown" style="padding-left: 10px">
+                                    <span class="btn icon-alone dropdown-toggle" data-toggle="dropdown" >
                                         <i class="icon-cog"></i>
                                     </span>
                                     <div class="dropdown-menu">
@@ -3405,6 +3402,10 @@ $h++;
                             <tr <?= ($agent_display_dialable_leads == "N") ? "style='display:none'" : "" ?>>
                                 <th>Contactos Disponiveis</th>
                                 <td> <i class="icon-tasks"></i> <span id="dialableleadsspan"></span></td>
+                            </tr>
+                            <tr  <?= ($curClient[0] === 'necomplus') ? "" : "style='display:none'" ?>>
+                                <th>Url Gravação</th>
+                                <td><div class='input-append'><input type='text' readonly id='record2clipboard-text'/><span class='btn btn-danger icon-alone' id='record2clipboard' data-copied='false'><i class='icon-headphones'></i></span></div></td>
                             </tr>
                         </table>
                     </div>
