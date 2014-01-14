@@ -2794,7 +2794,7 @@ unset($curLogo);
 <script type="text/javascript" src="js/mensagens.js"></script>
 <script type="text/javascript" src="js/novo_cliente.js"></script>
 <script type="text/javascript" src="js/historico.js"></script>
-<script type="text/javascript" src="js/agente.js?v=1.0"></script>
+<script type="text/javascript" src="js/agente.js?v=1.001"></script>
 <script type="text/javascript" src="/ini/SeamlessLoop.js"></script>
 <script type="text/javascript" src="/ini/zeroclipboard/ZeroClipboard.min.js"></script>
 <script language="Javascript">

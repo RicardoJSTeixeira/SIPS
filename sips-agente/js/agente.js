@@ -4382,8 +4382,8 @@ function DispoSelect_submit()
 
 function  DispoSelect_submit_allowed()
 {
-    
-    /*if (clientName === 'necomplus') {
+    /*
+    if (clientName === 'necomplus') {
                     if(!$("#record2clipboard").data().copied){
                     alert_box("Não copiou o link da gravação.");            
                     return false;
