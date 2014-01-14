@@ -16,13 +16,14 @@ var crm_main = function(crm_main_zone, file_path)
         config.lead = true;
         config.phone_number = true;
         config.date = true;
+        config.marcacao_cliente = true;
 
 
 
 
         $.extend(true, config, ext_config);
 
-
+console.log(config);
         $.get(file_path + "crm_main/crm_main.html", function(data) {
             crm_main_zone.append(data);
             select["campanha"] = crm_main_zone.find("#select_campanha");
@@ -42,6 +43,7 @@ var crm_main = function(crm_main_zone, file_path)
                         get_feedback(function() {
                             get_campos_dinamicos(function() {
                                 get_script(function() {
+
                                 });
                             });
                         });
@@ -402,6 +404,9 @@ var crm_main = function(crm_main_zone, file_path)
                 "fnDrawCallback": function()
                 {
                     toggle_resultado("show");
+                    if (config.marcacao_cliente == false)
+                        crm_main_zone.find(".criar_marcacao").hide();
+
                 },
                 "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Morada"}, {"sTitle": "Ultima Chamada"}],
                 "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
@@ -433,6 +438,9 @@ var crm_main = function(crm_main_zone, file_path)
                 "fnDrawCallback": function()
                 {
                     toggle_resultado("show");
+                    if (config.marcacao_cliente == false)
+                        crm_main_zone.find(".criar_marcacao").hide();
+
                 },
                 "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Data Chamada"}],
                 "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
@@ -489,6 +497,11 @@ var crm_main = function(crm_main_zone, file_path)
         }
     });
 
+    crm_main_zone.on("click", "#close_calendario_div_button", function()
+    {
+        crm_main_zone.find("#calendar_master_div").hide("blind");
+
+    });
 
 
 //------------------------------------------------------------EXTRA FUNCTIONS
@@ -552,6 +565,14 @@ var crm_main = function(crm_main_zone, file_path)
         return temp_type;
     }
 
+
+    $(crm_main_zone).on("click", ".criar_marcacao", function()
+    {
+        crm_main_zone.find("#calendar_master_div").show();
+        crm_main_zone.find("#calendar_div")
+                .load("/AM/view/calendar.html")
+                .data().lead_id = $(this).data().lead_id;
+    });
 
 //-----------------------------------------------------------------Fechar TAGS
     $(crm_main_zone).on("click", ".close_tag", function()

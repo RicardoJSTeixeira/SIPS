@@ -160,11 +160,13 @@ class crm_main_class {
         $stmt->execute($variables);
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $row[4] = $row[4] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span></div>";
+            $row[4] = $row[4] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
+                    . "<span class='btn btn-mini criar_marcacao' data-lead_id='$row[0]'><i class='icon-edit'></i>Criar Marcação</span></div>";
             $js['aaData'][] = $row;
         }
         return $js;
     }
+     
 
     public function get_info_calls($data_inicio, $data_fim, $campanha, $bd, $agente, $feedback, $cd, $script_info, $lead_id, $phone_number) {
         $js['aaData'] = array();
@@ -274,7 +276,8 @@ class crm_main_class {
         $stmt = $this->db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $row[3] = $row[3] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span></div>";
+            $row[3] = $row[3] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
+                    . "<span class='btn btn-mini criar_marcacao' data-lead_id='$row[0]'><i class='icon-edit'></i>Criar Marcação</span></div>";
             $js['aaData'][] = $row;
         }
         return $js;
