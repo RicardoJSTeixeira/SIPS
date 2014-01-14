@@ -43,7 +43,7 @@ switch ($action) {
         foreach ($temp as &$value) {
             foreach ($value as &$value2) {
                 $value2[3] = $value2[3] == "1" ? "sim" : "nao";
-                $value2[7] = $value2[7] . "<div class='view-button'><button   data-product_id='" . $value2["id"] . "' class='btn item_edit_button btn-primary'>Editar</button><button   data-product_id='" . $value2["id"] . "' class='btn item_delete_button btn-warning'>Remover</button></div>";
+                $value2[7] = $value2[7] . "<div class='view-button input-append'><span   data-product_id='" . $value2["id"] . "' class='btn item_edit_button btn-primary'>Ver/Editar</span><span   data-product_id='" . $value2["id"] . "' class='btn item_delete_button btn-danger '>Remover</span></div>";
             };
         };
         echo(json_encode($temp));
@@ -68,6 +68,9 @@ switch ($action) {
 
     case "apagar_produto":
         echo(json_encode($products->remove_product($id)));
+        break;
+    case "apagar_produtos":
+        echo(json_encode($products->remove_products( )));
         break;
     case "criar_produto":
         echo(json_encode($products->add_product($name, $parent, $alone, $max_req_m, $max_req_w, $category)));

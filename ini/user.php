@@ -338,6 +338,7 @@ class mysiblings extends user {
     }
 
     public function get_campaigns() {
+ 
         if ($this->is_all_campaigns == 1)
             $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y'";
         else

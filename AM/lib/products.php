@@ -15,7 +15,7 @@ Class products {
 
     public function get_products_to_datatable_by_id($parent) {
         $stmt = $this->_db->prepare("SELECT id,name,alone,max_req_m,max_req_w,category from spice_product where parent=:parent");
-        $stmt->execute(array(":parent"=>$parent));
+        $stmt->execute(array(":parent" => $parent));
         $output['aaData'] = $stmt->fetchAll(PDO::FETCH_BOTH);
         return $output;
     }
@@ -29,6 +29,11 @@ Class products {
     public function remove_product($id) {
         $stmt = $this->_db->prepare("delete from spice_product where id=:id");
         return $stmt->execute(array(":id" => $id));
+    }
+
+    public function remove_products() {
+        $stmt = $this->_db->prepare("delete from spice_product");
+        return $stmt->execute();
     }
 
     public function add_product($name, $parent, $alone, $max_req_m, $max_req_w, $category) {

@@ -28,7 +28,11 @@ switch ($action) {
         $variables[] = $user->getUser()->username;
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
-        $output['aaData'] = $stmt->fetchAll(PDO::FETCH_BOTH);
+        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
+            $row[3] = $row[3] . "<div class='view-button'><span class='btn btn-mini ver_cliente' data-lead_id='".$row[0]."'><i class='icon-edit'></i>Ver Cliente</span></div>";
+            $output['aaData'][] = $row;
+        }
+
         echo json_encode($output);
         break;
 
@@ -46,7 +50,7 @@ switch ($action) {
             $row[3] = $row[3] . "<div class='view-button'><span class='btn btn-mini criar_marcacao'><i class='icon-edit'></i>Criar Marcação</span></div>";
             $output['aaData'][] = $row;
         }
-       echo json_encode($output);
+        echo json_encode($output);
         break;
 
 

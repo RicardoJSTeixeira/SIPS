@@ -4,7 +4,7 @@ $(function() {
         var sch;
         sch = new calendar($("#calendar_day"), data, "", $('#ext-events'));
         sch.reserveConstruct(data.tipo);
-      
+
     };
     $.post("ajax/calendar.php",
             {init: true, dash: true},
@@ -57,8 +57,8 @@ $(function() {
         $("#table_tbody_mp").append(temp);
     }, "json");
 
- 
-  
+
+
 });
 
 $(document).off("click", ".criar_marcacao")
@@ -73,7 +73,15 @@ $(document).off("click", ".criar_marcacao")
 
 
 
-
+$(document).off("click", ".ver_cliente")
+        .on("click", ".ver_cliente", function()
+        {
+            
+           var cliente =new crm_edit($("#cliente_modal .modal-body"),"/sips-admin/crm/",$(this).data("lead_id"));
+             cliente.destroy();
+            cliente.init();
+           $("#cliente_modal").modal("show");
+        });
 
 
 

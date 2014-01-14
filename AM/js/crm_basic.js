@@ -9,7 +9,7 @@ $(function()
     function(data)
     {
         var config = new Object();
-        if (data < 10)
+        if (data < 8)
         {
             config.date = false;
         }

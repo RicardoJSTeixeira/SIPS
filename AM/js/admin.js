@@ -26,6 +26,12 @@ $("#admin_zone #button_filtro_cliente").click(function()
     $("#admin_zone #client_master_div").toggle("blind");
     $(this).toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
 });
+
+$("#admin_zone #button_filtro_children_cliente").click(function()
+{
+    $("#admin_zone #child_product_datatable_div").toggle("blind");
+    $(this).toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
+});
 //------------
 
 
@@ -44,7 +50,7 @@ function get_info()
         "fnServerParams": function(aoData) {
             aoData.push({"name": "action", "value": "listar_produtos_to_datatable"});
         },
-        "aoColumns": [{"sTitle": "id"}, {"sTitle": "Nome"}, {"sTitle": "Parente"}, {"sTitle": "Alone"}, {"sTitle": "Max requisições mês"}, {"sTitle": "Max requisições semana"}, {"sTitle": "Categoria"}, {"sTitle": "Opções"}],
+        "aoColumns": [{"sTitle": "id"}, {"sTitle": "Nome"}, {"sTitle": "Parente"}, {"sTitle": "Venda individual"}, {"sTitle": "Max requisições mês"}, {"sTitle": "Max requisições semana"}, {"sTitle": "Categoria"}, {"sTitle": "Opções"}],
         "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
     });
 
@@ -106,7 +112,7 @@ $("#admin_zone").on("click", ".item_edit_button", function()
             aoData.push({"name": "action", "value": "listar_produtos_to_datatable_by_parent"},
             {"name": "parent", "value": item_id});
         },
-        "aoColumns": [{"sTitle": "id"}, {"sTitle": "Nome"}, {"sTitle": "Alone"}, {"sTitle": "Max requisições mês"}, {"sTitle": "Max requisições semana"}, {"sTitle": "Categoria"}],
+        "aoColumns": [{"sTitle": "id"}, {"sTitle": "Nome"}, {"sTitle": "Venda individual"}, {"sTitle": "Max requisições mês"}, {"sTitle": "Max requisições semana"}, {"sTitle": "Categoria"}],
         "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
     });
 
@@ -141,7 +147,7 @@ $("#admin_zone #edit_product_button").click(function()
             parent: $("#admin_zone #ep_parent option:selected").val(),
             alone: $("#admin_zone #ep_alone").is(":checked") ? 1 : 0,
             max_req_m: $("#admin_zone #ep_mrm").val(),
-            max_req_w:( $("#admin_zone #ep_mrm").val()>$("#admin_zone #ep_mrw").val())?$("#admin_zone #ep_mrw").val():$("#admin_zone #ep_mrm").val(),
+            max_req_w: ($("#admin_zone #ep_mrm").val() > $("#admin_zone #ep_mrw").val()) ? $("#admin_zone #ep_mrw").val() : $("#admin_zone #ep_mrm").val(),
             category: $("#admin_zone #ep_category").val()
         }, function() {
             get_info();
@@ -168,6 +174,21 @@ $("#admin_zone #remove_product_button").click(function()
         $("#admin_zone #remove_product_modal").modal("hide");
     }, "json");
 });
+
+//remover todos
+$("#admin_zone #removeAll_product_modal_button").click(function()
+{
+    $("#admin_zone #removeAll_product_modal").modal("show");
+});
+
+$("#admin_zone #removeAll_product_button").click(function()
+{
+    $.post('ajax/admin.php', {action: "apagar_produtos"}, function() {
+        get_info();
+        $("#admin_zone #removeAll_product_modal").modal("hide");
+    }, "json");
+});
+
 //-------------------------------------------------------------------------------------
 // CRIAR PRODUTO
 
