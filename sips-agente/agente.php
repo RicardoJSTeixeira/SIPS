@@ -3405,7 +3405,7 @@ $h++;
                             </tr>
                             <tr  <?= ($curClient[0] === 'necomplus') ? "" : "style='display:none'" ?>>
                                 <th>Url Gravação</th>
-                                <td><div class='input-append'><input type='text' readonly id='record2clipboard-text'/><span class='btn btn-danger icon-alone' id='record2clipboard' data-copied='false'><i class='icon-headphones'></i></span></div></td>
+                                <td><div class='input-append'><input type='text' readonly style="width: 60%" id='record2clipboard-text'/><span class='btn btn-danger icon-alone' id='record2clipboard' data-copied='false'><i class='icon-headphones'></i></span></div></td>
                             </tr>
                         </table>
                     </div>
