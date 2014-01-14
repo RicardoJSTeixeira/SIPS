@@ -4,7 +4,7 @@ $(function() {
         var sch;
         sch = new calendar($("#calendar_day"), data, "", $('#ext-events'));
         sch.reserveConstruct(data.tipo);
-      
+
     };
     $.post("ajax/calendar.php",
             {init: true, dash: true},
@@ -57,12 +57,11 @@ $(function() {
         $("#table_tbody_mp").append(temp);
     }, "json");
 
- 
-  
+
+
 });
 
-$(document).off("click", ".criar_marcacao")
-        .on("click", ".criar_marcacao", function()
+$("#div_master").on("click", ".criar_marcacao", function()
         {
             $("#div_master").hide();
             $("#div_calendar")
@@ -73,7 +72,14 @@ $(document).off("click", ".criar_marcacao")
 
 
 
+$("#div_master").on("click", ".ver_cliente", function()
+{
 
+    var cliente = new crm_edit($("#cliente_modal .modal-body"), "/sips-admin/crm/", $(this).data("lead_id"));
+    cliente.destroy();
+    cliente.init();
+    $("#cliente_modal").modal("show");
+});
 
 
 

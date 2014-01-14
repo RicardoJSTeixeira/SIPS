@@ -1,71 +1,221 @@
  
-<div class="row-fluid">
-    <div class="span6">
-        <div class="grid-title">
-            <div class="pull-left">
-                <h4>Gestão de Clientes</h4>
-            </div>
+<div id="admin_zone">
+
+    <!--EDIçÃO DE PRODUTOS-->
+    <div id="edit_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Edição de produto</h3>
         </div>
-        <div class="grid-content">
+        <div class="modal-body">
+            <form id="edit_product_form" class="check_form">
+                <div class="formRow">
+                    <span>Nome</span>
+                    <div class="formRight">
+                        <input type="text" id="ep_name">
+                    </div>
+                </div>
+                <div class="formRow">
+                    <span>Parente</span>
+                    <div class="formRight">
+                        <select class="chosen-select  " id="ep_parent"  data-placeholder="Selecione um parent" ></select>
+                    </div>    
+                </div>
+                <div class="formRow">
+                    <span>Venda Individual</span>
+                    <div class="formRight">
+                        <input   type="checkbox" id="ep_alone" name="ep_a" value="1">
+                        <label class="  checkbox inline" for="ep_alone"><span></span></label>
+                    </div>    
+                </div>
+                <div class="formRow">
+                    <span>Categoria</span>
+                    <div class="formRight">
+                        <select  id="ep_category">
+                            <option value="pilha" >Pilha</option>
+                            <option value="aparelho">Aparelho</option>
+                            <option value="peça" >Peça</option>
+                        </select>
+                    </div>    
+                </div>
+                <div class="formRow">
+                    <table >
+                        <thead>
+                            <tr>
+                                <th>Max Requisições por Mês</th>
+                                <th>Max Requisições por Semana</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="number" id="ep_mrm"></td>
+                                <td> <input type="number" id="ep_mrw"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="formRow">
 
-
-            <div class="formRow">
-                <button class="btn" id="download_csm_button">Download de dados de clientes sem marcação</button>
-            </div>
-            <div id="download_csm_div" style="display:none">
-                <form id="date_form">
-                    <input size="16" type="text" class="form_datetime validate[required]" id="data_inicio" placeholder="Data de Inicio">
-                    <input size="16" type="text" class="form_datetime validate[required]" id="data_fim" placeholder="Data de Fim">
-                </form>
-                <button class="btn btn-primary" id="download_excel_csm_button">Download</button>
-            </div>
-
-
+                    <div class="grid-title">
+                        <div class="pull-left">
+                            <span>Sub-peças deste produto</span>
+                        </div>
+                        <div class="pull-right">
+                            <button class="btn icon-chevron-down" id="button_filtro_children_cliente"></button>  
+                        </div>
+                    </div>
+                    <div id="child_product_datatable_div" style="display:none">
+                        <table class="table table-bordered table-mod" id="child_product_datatable" ></table>
+                    </div>
+                </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+            <button class="btn btn-primary" id="edit_product_button">Editar</button>
+        </div>
+    </div>
+    
+    <!--CRIAR DE PRODUTOS-->
+    <div id="create_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Criação de produto</h3>
+        </div>
+        <div class="modal-body">
+            <form id="create_product_form" class="check_form">
+                <div class="formRow">
+                    <span>Nome</span>
+                    <input type="text" id="cp_name" class="validate[required]">
+                </div>
+                <div class="formRow">
+                    <span>Parente</span>
+                    <div class="formRight">
+                        <select class="chosen-select  " id="cp_parent"  data-placeholder="Selecione um parent"></select>
+                    </div>    
+                </div>
+                <div class="formRow">
+                    <span>Venda individual</span>
+                    <div class="formRight">
+                        <input   type="checkbox" id="cp_alone" name="ep_a" value="1">
+                        <label class="  checkbox inline" for="cp_alone"><span></span></label>
+                    </div>    
+                </div>
+                <div class="formRow">
+                    <span>Categoria</span>
+                    <div class="formRight">
+                        <select  id="cp_category">
+                            <option value="pilha" >Pilha</option>
+                            <option value="aparelho">Aparelho</option>
+                            <option value="peça" >Peça</option>
+                        </select>
+                    </div>    
+                </div>
+                <div class="formRow">
+                    <table >
+                        <thead>
+                            <tr>
+                                <th>Max Requisições por Mês</th>
+                                <th>Max Requisições por Semana</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="number" id="cp_mrm"></td>
+                                <td> <input type="number" id="cp_mrw"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+            <button class="btn btn-primary" id="create_product_button">Criar</button>
         </div>
     </div>
 
-    <div class="span6">
-        <div class="grid-title">
-            <div class="pull-left">
-                <h4>Gestão de Produtos</h4>
+    
+    
+    <!--REMOVER PRODUTO-->
+    <div id="remove_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Eliminar produto</h3>
+        </div>
+        <div class="modal-body">
+            <p>Tem a certeza que deseja eliminar o produto?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+            <button class="btn btn-primary" id="remove_product_button">Sim, eliminar</button>
+        </div>
+    </div>
+
+
+
+    <!--REMOVER ALL PRODUTOS-->
+    <div id="removeAll_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Eliminar produto</h3>
+        </div>
+        <div class="modal-body">
+            <p>Tem a certeza que deseja eliminar todos os produto?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+            <button class="btn btn-primary" id="removeAll_product_button">Sim, eliminar todos os produtos</button>
+        </div>
+    </div>
+
+
+
+
+
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="grid-title">
+                <div class="pull-left">
+                    <h4>Gestão de Clientes</h4>
+                </div>
+                <div class="pull-right">
+                    <button class="btn icon-chevron-down" id="button_filtro_cliente"></button>  
+                </div>
+            </div>
+            <div class="grid-content"  id="client_master_div" style="display:none">
+                <div class="formRow">
+                    <button class="btn" id="download_csm_button">Download de dados de clientes sem marcação</button>
+                </div>
+                <div id="download_csm_div" style="display:none">
+                    <form id="date_form">
+                        <input size="16" type="text" class="form_datetime validate[required]" id="data_inicio" placeholder="Data de Inicio">
+                        <input size="16" type="text" class="form_datetime validate[required]" id="data_fim" placeholder="Data de Fim">
+                    </form>
+                    <button class="btn btn-primary" id="download_excel_csm_button">Download</button>
+                </div>
             </div>
         </div>
-        <div class="grid-content">
-            <div class="formRow">
-                <button id="view_product_button" class="btn">Ver produtos</button>
+    </div>
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="grid-title">
+                <div class="pull-left">
+                    <h4>Gestão de Produtos</h4>
+                </div>
+                <div class="pull-right">
+                    <button class="btn icon-chevron-down" id="button_filtro_produto"></button>  
+                </div>
             </div>
-            <div id="view_product_div" style="display:none">
-                Ver productalia
-                <table class="table table-bordered table-mod" id="view_product_datatable"></table>
+            <div class="grid-content" id="product_master_div" style="display:none">
+                <div class="span4"> 
+                    <button class="btn" id="create_product_modal_button">Criar novo Produto</button>
+                    <button class="btn" id="removeAll_product_modal_button">Apagar todos os Produto</button>
+                </div>
+                <div class="span8">
+                    <table class="table table-bordered table-mod" id="view_product_datatable"></table>
+                </div>
             </div>
-
-
-            <div class="formRow">
-                <button id="add_product_button" class="btn">Criar produto</button>
-            </div>
-            <div id="add_product_div" style="display:none">
-                Criar productalia
-            </div>
-
-
-            <div class="formRow">
-                <button id="remove_product_button" class="btn">Eliminar produto</button>
-            </div>
-            <div id="remove_product_div" style="display:none">
-                fazer desaparecer productalia
-            </div>
-
-
-            <div class="formRow">
-                <button id="edit_product_button" class="btn">Editar produto</button>
-            </div>
-            <div id="edit_product_div" style="display:none">
-                Editar productalia
-            </div>
-
         </div>
     </div>
 </div>
-
-
-<script type="text/javascript" src="js/admin.js"></script>
+<script type="text/javascript" src="js/admin.js?v=1"></script>

@@ -1,33 +1,27 @@
 <link type="text/css" rel="stylesheet" href="css/calendar.css" />
-<style  id="reserve_types"></style>
+<style>
+    .modal
+    {
+        width: auto;
+        left:34%
+    }
+</style>
 
 
 
-
-
-
-
-
-<div id="div_master" class="content">
-    <div class="row-fluid">
-        <div class="span12">
-            <ul id="tabs" class="nav nav-tabs tabs-main">
-                <li class="active"><a href="#Todas" data-toggle="tab">Todas as Marcações</a></li>
-                <li><a href="#NovoCli" data-toggle="tab">Novos Clientes Sem Marcação</a></li>
-            </ul>
-            <div class="tab-content tabs-main-content">
-                <div class="tab-pane tab-overflow-main" id="NovoCli">
-                
-                    <table class="table table-mod table-bordered table-striped" id='table_ncsm'></table>
-                </div>
-                <div class="tab-pane active tab-overflow-main" id="Todas">
-                    <table class="table table-mod table-bordered table-striped" id='table_allm'></table>      
-                </div>
-            </div>   
-        </div>   
+<div id="cliente_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Dados de Cliente</h3>
     </div>
+    <div class="modal-body">
 
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button>
 
+    </div>
+</div>
 
 
     <div class="row-fluid">
@@ -42,8 +36,15 @@
                 <div class="grid-content">
                 </div>
             </div>
-            <div class="grid"  style="overflow: auto;max-height:35em">
-                <div class="grid-title"><div class="pull-left">Marcações Pendentes</div></div>
+
+            <div class="grid">
+                
+
+            <div class="grid-title">
+                <div class="pull-left">Marcações Pendentes</div>
+
+            </div>
+            <div style="overflow: auto;max-height:36em"  >
                 <table class="table table-mod archives" id='table_mp'>
                     <thead>
                     <th>
@@ -54,18 +55,41 @@
                     </th>
                     </thead>
                     <tbody id='table_tbody_mp'>
-
                     </tbody>
-
-
-                </table>
+                </table>  
+            </div>         
             </div>
+
         </div>
     </div>
+
+
+<div id="div_master" class="content">
+    <div class="row-fluid">
+        <div class="span12">
+            <ul id="tabs" class="nav nav-tabs tabs-main">
+                <li class="active"><a href="#Todas" data-toggle="tab">Todas as Marcações</a></li>
+                <li><a href="#NovoCli" data-toggle="tab">Novos Clientes Sem Marcação</a></li>
+            </ul>
+            <div class="tab-content tabs-main-content">
+                <div class="tab-pane tab-overflow-main" id="NovoCli">
+
+                    <table class="table table-mod table-bordered table-striped" id='table_ncsm'></table>
+                </div>
+                <div class="tab-pane active tab-overflow-main" id="Todas">
+                    <table class="table table-mod table-bordered table-striped" id='table_allm'></table>      
+                </div>
+            </div>   
+        </div>   
+    </div>
+
+
+
+
 </div>
 <div id="div_calendar" style="display: none" >
 
 </div>
-
+<script src="/sips-admin/crm/crm_edit/crm_edit.js" ></script>
 <script src="js/calendar.js" ></script>
 <script src="js/dashboard.js" ></script>
