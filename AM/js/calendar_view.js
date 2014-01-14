@@ -25,7 +25,7 @@ $(function() {
                 {
   
                     var calendar_client = sch.modal_ext.data();
-                    $.post("ajax/consulta.php",
+                    $.post("/AM/ajax/consulta.php",
                             {
                                 action: "insert_consulta",
                                 reserva_id: calendar_client.id,
@@ -51,7 +51,7 @@ $(function() {
 
 
 
-    $.post("ajax/calendar.php",
+    $.post("/AM/ajax/calendar.php",
             {init: true},
     init, "json");
 });

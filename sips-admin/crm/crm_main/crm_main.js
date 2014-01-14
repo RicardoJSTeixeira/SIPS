@@ -16,15 +16,12 @@ var crm_main = function(crm_main_zone, file_path)
         config.lead = true;
         config.phone_number = true;
         config.date = true;
-        config.marcacao_cliente = true;
+        config.marcacao_cliente = false;
 
 
+       $.extend(true, config, ext_config);
 
-
-        $.extend(true, config, ext_config);
-
-console.log(config);
-        $.get(file_path + "crm_main/crm_main.html", function(data) {
+         $.get(file_path + "crm_main/crm_main.html", function(data) {
             crm_main_zone.append(data);
             select["campanha"] = crm_main_zone.find("#select_campanha");
             select["bd"] = crm_main_zone.find("#select_bd");
@@ -568,7 +565,8 @@ console.log(config);
 
     $(crm_main_zone).on("click", ".criar_marcacao", function()
     {
-        crm_main_zone.find("#calendar_master_div").show();
+       
+        crm_main_zone.find("#calendar_master_div").show("blind");
         crm_main_zone.find("#calendar_div")
                 .load("/AM/view/calendar.html")
                 .data().lead_id = $(this).data().lead_id;

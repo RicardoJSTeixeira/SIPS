@@ -4,7 +4,7 @@ $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require("$root/ini/dbconnect.php");
 require("$root/ini/user.php");
 require("$root/ini/db.php");
-require("crm_edit_class.php");
+require("$root/sips-admin/crm/crm_edit/crm_edit_class.php");
 
 
 foreach ($_POST as $key => $value) {

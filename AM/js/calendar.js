@@ -11,7 +11,7 @@ var calendar = (typeof calendar !== "undefined") ? calendar :
                     this.config = {
                         header: {center: 'agendaDay agendaWeek month'},
                         events: {
-                            url: "ajax/calendar.php",
+                            url: "/AM/ajax/calendar.php",
                             type: "POST",
                             data: {
                                 resource: "all",
@@ -68,7 +68,7 @@ var calendar = (typeof calendar !== "undefined") ? calendar :
                             cEO.start = moment(date).unix();
                             cEO.end = moment(date).add("minutes", config.defaultEventMinutes).unix();
                             cEO.allDay = allDay;
-                            $.post("ajax/calendar.php",
+                            $.post("/AM/ajax/calendar.php",
                                     {
                                         resource: me.resource,
                                         rtype: cEO.rtype,
@@ -133,7 +133,7 @@ var calendar = (typeof calendar !== "undefined") ? calendar :
                 if (!confirm("is this okay?")) {
                     revertFunc();
                 } else {
-                    $.post("ajax/calendar.php",
+                    $.post("/AM/ajax/calendar.php",
                             {
                                 id: event.id,
                                 change: true,
@@ -183,7 +183,7 @@ var calendar = (typeof calendar !== "undefined") ? calendar :
 
                                 })
                                 .end();
-                        console.log(typeof me.lead_id + "  " + me.lead_id)
+                    
                         if (typeof me.lead_id !== "undefined" && me.resource !== "all") {
                             ext.show();
                         } else {
@@ -198,7 +198,7 @@ var calendar = (typeof calendar !== "undefined") ? calendar :
                         $("#refs tbody").html(temp);
                         $("#refs tbody input").change(function() {
                             var selected = $(this);
-                            $.post("ajax/calendar.php",
+                            $.post("/AM/jax/calendar.php",
                                     {
                                         resource: selected[0].id,
                                         is_scheduler: selected.data().is_scheduler,
@@ -233,7 +233,7 @@ var calendar = (typeof calendar !== "undefined") ? calendar :
                                 .click(function() {
                                     me.modal_ext.modal("hide");
                                     var data = me.modal_ext.data();
-                                    $.post("ajax/calendar.php",
+                                    $.post("/AM/ajax/calendar.php",
                                             {
                                                 id: data.id,
                                                 remove: true
@@ -246,7 +246,7 @@ var calendar = (typeof calendar !== "undefined") ? calendar :
                                 });
                     },
                     this.openClient = function(id, lead_id) {
-                        $.post("ajax/client.php", {id: lead_id}, function(data) {
+                        $.post("/AM/ajax/client.php", {id: lead_id}, function(data) {
                             var tmp = "";
                             $.each(data, function() {
                                 tmp = tmp + "<dt>" + this.name + "</dt><dd>" + this.value + "</dd>";

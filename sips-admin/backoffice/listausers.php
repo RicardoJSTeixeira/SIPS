@@ -54,9 +54,7 @@ require(ROOT . "ini/user.php");
                 margin-left: -33px;
                 margin-top: -33px;
             }
-            .view-button{
-                margin-left: 0.5em;
-            }
+      
         </style>
 
     </head>

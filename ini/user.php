@@ -338,7 +338,7 @@ class mysiblings extends user {
     }
 
     public function get_campaigns() {
- 
+
         if ($this->is_all_campaigns == 1)
             $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y'";
         else
@@ -352,6 +352,13 @@ class mysiblings extends user {
         $query = "SELECT group_id  id,group_name  name FROM vicidial_inbound_groups";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function get_feedbacks($campaign_id) {
+        $query = "select * from ((SELECT status id ,status_name name,human_answered,sale,dnc,customer_contact workable,not_interested, unworkable ,scheduled_callback callback,completed FROM vicidial_campaign_statuses where campaign_id=?) union all (SELECT status id, status_name name,human_answered,sale,dnc,customer_contact,not_interested, unworkable ,scheduled_callback,completed FROM vicidial_statuses)) a group by id order by name asc";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array($campaign_id));
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
