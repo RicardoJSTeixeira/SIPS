@@ -13,7 +13,7 @@ $(function()
         {
             config.date = false;
         }
- 
+   config.marcacao_cliente=true;
         crm_main1.init(config);
     }, "json");
 

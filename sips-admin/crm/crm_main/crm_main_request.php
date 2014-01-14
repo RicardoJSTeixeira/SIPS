@@ -1,10 +1,12 @@
 <?php
 
-require("../../../ini/dbconnect.php");
-require("../../../ini/user.php");
-require("../../../ini/db.php");
-require("../../../sips-admin/script_dinamico/script.php");
-require("crm_main_class.php");
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+
+require("$root/ini/dbconnect.php");
+require("$root/ini/user.php");
+require("$root/ini/db.php");
+require("$root/sips-admin/script_dinamico/script.php");
+require("$root/sips-admin/crm/crm_main/crm_main_class.php");
 
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
@@ -32,11 +34,11 @@ switch ($action) {
     case "get_bd":
         echo json_encode($crmMain->get_bd($campaign_id));
         break;
-    case "get_agent": 
+    case "get_agent":
         echo json_encode($user->get_agentes());
         break;
     case "get_feedbacks":
-        echo json_encode($crmMain->get_feedbacks($campaign_id));
+        echo json_encode($user->get_feedbacks($campaign_id));
         break;
     case "get_campos_dinamicos":
         echo json_encode($crmMain->get_campos_dinamicos($campaign_id));
@@ -47,12 +49,12 @@ switch ($action) {
     case "get_script_individual":
         echo json_encode($script->get_data_individual($id));
         break;
-    
+
     case "get_info_client":
-    
-        echo json_encode($crmMain->get_info_client($data_inicio, $data_fim, $campanha, $bd, $agente, $feedback, $cd, $script_info, $lead_id, $phone_number,$type_search));
-       break;
-   
+
+        echo json_encode($crmMain->get_info_client($data_inicio, $data_fim, $campanha, $bd, $agente, $feedback, $cd, $script_info, $lead_id, $phone_number, $type_search));
+        break;
+
     case "get_info_calls":
         echo json_encode($crmMain->get_info_calls($data_inicio, $data_fim, $campanha, $bd, $agente, $feedback, $cd, $script_info, $lead_id, $phone_number));
         break;

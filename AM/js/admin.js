@@ -71,15 +71,15 @@ function get_info()
         {
             switch (this.category)
             {
-                case "aparelho":
+                case "Aparelho":
                     $("#admin_zone #ep_parent optgroup[value='1']").append("<option value='" + this.id + "'>" + this.name + "</option>");
                     $("#admin_zone #cp_parent optgroup[value='1']").append("<option value='" + this.id + "'>" + this.name + "</option>");
                     break;
-                case "pilha":
+                case "Pilha":
                     $("#admin_zone #ep_parent optgroup[value='2']").append("<option value='" + this.id + "'>" + this.name + "</option>");
                     $("#admin_zone #cp_parent  optgroup[value='2']").append("<option value='" + this.id + "'>" + this.name + "</option>");
                     break;
-                case "peça":
+                case "Peça":
                     $("#admin_zone #ep_parent optgroup[value='3']").append("<option value='" + this.id + "'>" + this.name + "</option>");
                     $("#admin_zone #cp_parent optgroup[value='3']").append("<option value='" + this.id + "'>" + this.name + "</option>");
                     break;
@@ -95,7 +95,7 @@ function get_info()
 
 $("#admin_zone").on("click", ".item_edit_button", function()
 {
-    var item_id = $(this).data("product_id")
+    var item_id = $(this).data("product_id");
     $("#admin_zone #edit_product_modal").data("product_id", item_id);
     $("#admin_zone #ep_name").val();
 

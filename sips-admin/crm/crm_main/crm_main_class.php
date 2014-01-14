@@ -18,13 +18,7 @@ class crm_main_class {
     }
 
  
-
-    public function get_feedbacks($campaign_id) {
-        $query = "select status id, status_name name from ((SELECT status ,status_name FROM vicidial_campaign_statuses where campaign_id=?) union all (SELECT status, status_name FROM vicidial_statuses)) a group by status order by status_name asc";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute(array($campaign_id));
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+ 
 
     public function get_campos_dinamicos($campaign_id) {
         $query = "SELECT Name id,Display_name name  FROM vicidial_list_ref where campaign_id =? and active='1' ";
