@@ -607,6 +607,9 @@ function conf_send_recording(taskconfrectype, taskconfrec, taskconffile)
                 if (RClookID_array.length > 0)
                 {
                     recording_filename = RClookFILE_array[1];
+                    
+     url = window.location.origin + '/RECORDINGS/FTP/' + recording_filename+"-all.mp3";
+     $("#record2clipboard-text").val(url);
                     recording_id = RClookID_array[1];
 
                     if (delayed_script_load == 'YES')
@@ -9727,18 +9730,18 @@ $(function() {
     });
 
     var clip = new ZeroClipboard($("#record2clipboard"));
-    
-clip.on( 'dataRequested', function (client, args) {
-     url = window.location.origin + '/RECORDINGS/FTP/' + recording_filename+"-all.mp3";
-  client.setText( url );
-});
 
-  
-    clip.on( 'complete', function ( client, args ) {
-  $(this).effect("highlight",
-                {color: "#FFFF66"}, 1000)
-                        .data().copied=true;
-} );
+    clip.on('dataRequested', function(client, args) {
+        url=$('input#record2clipboard-text').val();
+        client.setText(url);
+    });
+
+
+    clip.on('complete', function(client, args) {
+        $(this).effect("highlight",
+                {color: "#51a351"}, 1000)
+                .data().copied = true;
+    });
 });
 
 $(document).on("click", ".ligar_comment_log", function()
