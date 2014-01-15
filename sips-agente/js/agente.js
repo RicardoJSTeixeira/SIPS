@@ -4382,14 +4382,14 @@ function DispoSelect_submit()
 
 function  DispoSelect_submit_allowed()
 {
-    /*
+    
     if (clientName === 'necomplus') {
                     if(!$("#record2clipboard").data().copied){
                     alert_box("Não copiou o link da gravação.");            
                     return false;
                     }   
                     $("#record2clipboard").data().copied=false;
-                }*/
+                }
     var
             DispoChoice = document.vicidial_form.DispoSelection.value,
             isCB = (campaign_status[DispoChoice] === undefined) ? false : campaign_status[DispoChoice].callback,
@@ -9112,7 +9112,13 @@ function manNextCall(mdnCBid, mdnBDleadid, mdnDiaLCodE, mdnPhonENumbeR, mdnStagE
 
 function getPi() {
     var apiPhone = $("#phone_number").val();
-    var nomePi = $("#nomePi").html();
+
+    $("#nomePi").empty();
+    $("#codigoPi").empty();
+    $("#moradaPi").empty();
+    $("#contactoPi").empty();
+    $('#tpaPi tbody').empty();
+    $('#ordensPi tbody').empty();
 
     $.post("../client_files/necomplus/soap_api.php", {phone: apiPhone}, function(data) {
         console.log(data.codresultado);
@@ -9123,14 +9129,13 @@ function getPi() {
             $("#contactoPi").html(data.contacto_comercio);
             for (i = 0; i < data.datos_ns.contador_ns; i++) {
                 var a = i + 1;
-                $('#tpaPi > tbody:last').append('<tr><td>' + ((typeof data.datos_ns['id_tpa_' + a] == 'object') ? 'Sem dados' : data.datos_ns['id_tpa_' + a]) + '</td><td>' + ((typeof data.datos_ns['num_serie_' + a] == 'object') ? 'Sem dados' : data.datos_ns['num_serie_' + a]) + '</td></tr>');
+                $('#tpaPi tbody').append('<tr><td>' + ((typeof data.datos_ns['id_tpa_' + a] === 'object') ? 'Sem dados' : data.datos_ns['id_tpa_' + a]) + '</td><td>' + ((typeof data.datos_ns['num_serie_' + a] === 'object') ? 'Sem dados' : data.datos_ns['num_serie_' + a]) + '</td></tr>');
             }
-            var flag = true;
             var b = 1;
             for (i = 1; i < 6; i++) {
                 console.log('in' + data.datos_num_orden['num_orden_' + i]);
                 if (data.datos_num_orden['num_orden_' + i] !== undefined) {
-                    $('#ordensPi > tbody:last').append('<tr><td>' + data.datos_num_orden['fechor_' + i] + '</td><td>' + data.datos_num_orden['estado_' + i] + '</td><td>' + data.datos_num_orden['num_orden_' + i] + '</td><td>' + data.datos_num_orden['tipo_orden_' + i] + '</td></tr>');
+                    $('#ordensPi tbody').append('<tr><td>' + data.datos_num_orden['fechor_' + i] + '</td><td>' + data.datos_num_orden['estado_' + i] + '</td><td>' + data.datos_num_orden['num_orden_' + i] + '</td><td>' + data.datos_num_orden['tipo_orden_' + i] + '</td></tr>');
                 }
             }
         } else {
