@@ -73,6 +73,20 @@ class crm_edit_class {
         }
         if (!isset($js["full_name"]))
             $js["full_name"] = "Sem agente";
+
+        if (!isset($js["campaign_name"])) {
+            $query = "SELECT vc.group_name       FROM 
+                        vicidial_closer_log vl
+                 left JOIN vicidial_inbound_groups vc ON vl.campaign_id=vc.group_id 
+                WHERE vl.lead_id=:lead_id order by end_epoch desc  limit 1";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute(array(":lead_id" => $lead_id));
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $js["campaign_name"] = $row["group_name"];
+            if (!isset($js["campaign_name"])) {
+                 $js["campaign_name"]="Sem campanha";
+            }
+        }
         return $js;
     }
 
