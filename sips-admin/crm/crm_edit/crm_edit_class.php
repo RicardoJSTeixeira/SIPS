@@ -73,6 +73,20 @@ class crm_edit_class {
         }
         if (!isset($js["full_name"]))
             $js["full_name"] = "Sem agente";
+
+        if (!isset($js["campaign_name"])) {
+            $query = "SELECT vc.group_name       FROM 
+                        vicidial_closer_log vl
+                 left JOIN vicidial_inbound_groups vc ON vl.campaign_id=vc.group_id 
+                WHERE vl.lead_id=:lead_id order by end_epoch desc  limit 1";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute(array(":lead_id" => $lead_id));
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $js["campaign_name"] = $row["group_name"];
+            if (!isset($js["campaign_name"])) {
+                 $js["campaign_name"]="Sem campanha";
+            }
+        }
         return $js;
     }
 
@@ -96,7 +110,7 @@ class crm_edit_class {
                 $dfields[$key]["value"] = $value;
             }
         } else {
-            $dfields["FIRST_NAME"] = array("display_name" => "nome", "name" => "FIRST_NAME", "value" => "");
+            $dfields["FIRST_NAME"] = array("display_name" => "Nome", "name" => "FIRST_NAME", "value" => "");
             $dfields["PHONE_NUMBER"] = array("display_name" => "Telefone", "name" => "PHONE_NUMBER", "value" => "");
             $dfields["ADDRESS3"] = array("display_name" => "Telemóvel", "name" => "ADDRESS3", "value" => "");
             $dfields["ALT_PHONE"] = array("display_name" => "Telefone Alternativo", "name" => "ALT_PHONE", "value" => "");
@@ -128,7 +142,7 @@ class crm_edit_class {
         return $feedback_options;
     }
 
-    public function get_calls_outbound($lead_id, $campaign_id, $file_path, $user_name, $user_pass) {
+    public function get_calls_outbound($lead_id) {
         $output = array("aaData" => array());
         $js1 = array();
         $js2 = array();
@@ -144,8 +158,7 @@ class crm_edit_class {
                         vl.lead_id, 
                         vl.list_id,
                         vl.campaign_id
-                       
-                FROM 
+                                       FROM 
                         vicidial_log vl
                 left JOIN vicidial_users vu ON vl.user=vu.user
                 left JOIN vicidial_campaigns vc ON vl.campaign_id=vc.campaign_id 
@@ -160,7 +173,7 @@ class crm_edit_class {
         return $output;
     }
 
-    public function get_calls_inbound($lead_id, $campaign_id, $file_path, $user_name, $user_pass) {
+    public function get_calls_inbound($lead_id) {
         $output = array("aaData" => array());
         $js1 = array();
         $js2 = array();
@@ -170,17 +183,16 @@ class crm_edit_class {
                         vl.phone_number,
                         vu.full_name,
                         vstatus.status_name,
-                        vc.campaign_name,
+                        vc.group_name campaign_name,
                         vls.list_name,
                         vl.uniqueid, 
                         vl.lead_id, 
                         vl.list_id,
                         vl.campaign_id
-                       
-                                       FROM 
+                                                              FROM 
                         vicidial_closer_log vl
                 left JOIN vicidial_users vu ON vl.user=vu.user
-                left JOIN vicidial_campaigns vc ON vl.campaign_id=vc.campaign_id 
+                left JOIN vicidial_inbound_groups vc ON vl.campaign_id=vc.group_id 
                 left JOIN vicidial_lists vls ON vl.list_id=vls.list_id
                         left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vl.status
                 WHERE 
@@ -192,7 +204,7 @@ class crm_edit_class {
         return $output;
     }
 
-    public function get_calls_archive_outbound($lead_id, $campaign_id, $file_path, $user_name, $user_pass) {
+    public function get_calls_archive_outbound($lead_id) {
         $output = array("aaData" => array());
         $js1 = array();
         $js2 = array();
@@ -225,7 +237,7 @@ class crm_edit_class {
         return $output;
     }
 
-    public function get_calls_archive_inbound($lead_id, $campaign_id, $file_path, $user_name, $user_pass) {
+    public function get_calls_archive_inbound($lead_id) {
         $output = array("aaData" => array());
         $js1 = array();
         $js2 = array();
@@ -235,7 +247,7 @@ class crm_edit_class {
                         vl.phone_number,
                         vu.full_name,
                         vstatus.status_name,
-                        vc.campaign_name,
+          vc.group_name campaign_name,
                         vls.list_name,
                         vl.uniqueid, 
                         vl.lead_id, 
@@ -245,7 +257,7 @@ class crm_edit_class {
                 FROM 
                         vicidial_closer_log_archive vl
                 left JOIN vicidial_users vu ON vl.user=vu.user
-                left JOIN vicidial_campaigns vc ON vl.campaign_id=vc.campaign_id 
+               left JOIN vicidial_inbound_groups vc ON vl.campaign_id=vc.group_id 
                 left JOIN vicidial_lists vls ON vl.list_id=vls.list_id
                         left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vl.status
                 WHERE 
@@ -381,7 +393,7 @@ class crm_edit_class {
         $query = "SELECT count(*) from script_assoc where id_camp_linha=:campaign";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":campaign" => $campaign_id));
-        return  $stmt->fetch(PDO::FETCH_NUM);
+        return $stmt->fetch(PDO::FETCH_NUM);
     }
 
 }

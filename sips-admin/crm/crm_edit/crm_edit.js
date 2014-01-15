@@ -288,9 +288,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
             "sAjaxSource": file_path + 'crm_edit/crm_edit_request.php',
             "fnServerParams": function(aoData) {
                 aoData.push({"name": "action", "value": "get_calls_all"},
-                {"name": "lead_id", "value": me.lead_id},
-                {"name": "campaign_id", "value": me.campaign_id},
-                {"name": "file_path", "value": me.file_path});
+                {"name": "lead_id", "value": me.lead_id}               );
             },
             "aoColumns": [{"sTitle": "Data"}, {"sTitle": "Duração"}, {"sTitle": "Número"}, {"sTitle": "Operador"}, {"sTitle": "Feedback"}, {"sTitle": "Campanha"}, {"sTitle": "Base de Dados"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
