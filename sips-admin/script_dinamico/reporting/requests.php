@@ -42,7 +42,7 @@ switch ($action) {
     case "get_template":
 
 //Se 0 vai buscar defaults
-        $query = "SELECT id,campaign,template from report_order where campaign=:campaign_id";
+        $query = "SELECT id,template from report_order where campaign=:campaign_id";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":campaign_id" => $campaign_id));
         $js = array();
@@ -124,7 +124,12 @@ switch ($action) {
         echo "\xEF\xBB\xBF";
         $output = fopen('php://output', 'w');
 
-        $field_data = json_decode($field_data);
+        $query = "SELECT elements from report_order where id=:id";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":id" => $field_data));
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $field_data = json_decode($row["elements"]);
+        
 //GET ID SCRIPT
         $query = "SELECT id_script from script_assoc where id_camp_linha=:campaign_id";
         $stmt = $db->prepare($query);
