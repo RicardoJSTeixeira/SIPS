@@ -98,7 +98,7 @@ $("#download_report_button").on("click", function()
 
     if ($("#radio1").is(":checked"))
     {
-        document.location.href = "requests.php?action=report&tipo=1&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_campanha option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + JSON.stringify(ordered_tags) + "&only_with_result=" + $("#crs_contacts").is(":checked")+"&only_active_db="+$("#so_bd_activas").is(":checked")+"&by_calls="+$("#by_calls").is(":checked");
+        document.location.href = "requests.php?action=report&tipo=1&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_campanha option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + $("#oc_template").val() + "&only_with_result=" + $("#crs_contacts").is(":checked")+"&only_active_db="+$("#so_bd_activas").is(":checked")+"&by_calls="+$("#by_calls").is(":checked");
     }
     else if ($("#radio2").is(":checked"))
     {
@@ -106,7 +106,7 @@ $("#download_report_button").on("click", function()
     }
     else
     {
-        document.location.href = "requests.php?action=report&tipo=3&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&list_id=" + $("#select_base_dados option:selected").val() + "&campaign_id=" + $("#select_base_dados option:selected").data("campaign_id") + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + JSON.stringify(ordered_tags) + "&only_with_result=" + $("#crs_contacts").is(":checked")+"&by_calls="+$("#by_calls").is(":checked");
+        document.location.href = "requests.php?action=report&tipo=3&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&list_id=" + $("#select_base_dados option:selected").val() + "&campaign_id=" + $("#select_base_dados option:selected").data("campaign_id") + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + $("#oc_template").val() + "&only_with_result=" + $("#crs_contacts").is(":checked")+"&by_calls="+$("#by_calls").is(":checked");
     }
 
 });
