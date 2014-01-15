@@ -3437,9 +3437,9 @@ $h++;
                             <div class="pull-left">Pausas</div>
                             <div class="pull-right">
                                 <div class="dropdown">
-                                    <button class="btn icon-alone dropdown-toggle hide" id="PauseCodeLinkSpanBtn" data-toggle="dropdown">
+                                    <span class="btn icon-alone dropdown-toggle hide" id="PauseCodeLinkSpanBtn" data-toggle="dropdown">
                                         <i class="icon-glass"></i>
-                                    </button>
+                                    </span>
                                     <div class="dropdown-menu">
                                         <ul>
                                             <li id="PauseCodeLinkSpan"></li>
