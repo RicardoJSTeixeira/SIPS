@@ -1,11 +1,13 @@
 <?php
 
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
 error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
-require '../../ini/db.php';
-require '../../ini/dbconnect.php';
-require '../../ini/user.php';
-require '../lib/products.php';
+
+require "$root/ini/db.php";
+require "$root/ini/dbconnect.php";
+require "$root/ini/user.php";
+require "$root/AM/lib/products.php";
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -43,7 +45,21 @@ switch ($action) {
         foreach ($temp as &$value) {
             foreach ($value as &$value2) {
                 $value2[3] = $value2[3] == "1" ? "sim" : "nao";
-                $value2[7] = $value2[7] . "<div class='view-button input-append'><span   data-product_id='" . $value2["id"] . "' class='btn item_edit_button btn-primary'>Ver/Editar</span><span   data-product_id='" . $value2["id"] . "' class='btn item_delete_button btn-danger '>Remover</span></div>";
+                switch ($value2[7]) {
+                    case "1":
+                        $value2[7]="Branch";
+                        break;
+                    case "3":
+                          $value2[7]="Dispenser";
+                        break;
+                    case "5":
+                          $value2[7]="ASM";
+                        break;
+                    case "8":
+                          $value2[7]="Admin";
+                        break;
+                }
+                $value2[8] = $value2[8] . "<div class='view-button input-append'><span   data-product_id='" . $value2["id"] . "' class='btn item_edit_button btn-primary'>Ver/Editar</span><span   data-product_id='" . $value2["id"] . "' class='btn item_delete_button btn-danger '>Remover</span></div>";
             };
         };
         echo(json_encode($temp));
@@ -70,16 +86,16 @@ switch ($action) {
         echo(json_encode($products->remove_product($id)));
         break;
     case "apagar_produtos":
-        echo(json_encode($products->remove_products( )));
+        echo(json_encode($products->remove_products()));
         break;
     case "criar_produto":
-        echo(json_encode($products->add_product($name, $parent, $alone, $max_req_m, $max_req_w, $category)));
+        echo(json_encode($products->add_product($name, $parent, $alone, $max_req_m, $max_req_w, $category,$type)));
         break;
 
 
     case "editar_produto":
         $product = new product($db, $id);
-        echo($product->edit_product($name, $parent, $alone, $max_req_m, $max_req_w, $category));
+        echo($product->edit_product($name, $parent, $alone, $max_req_m, $max_req_w, $category,$type));
         break;
     case "listar_produto":
         $product = new product($db, $id, 0);

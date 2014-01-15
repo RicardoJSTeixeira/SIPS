@@ -32,9 +32,21 @@
                     <span>Categoria</span>
                     <div class="formRight">
                         <select  id="ep_category">
-                            <option value="pilha" >Pilha</option>
-                            <option value="aparelho">Aparelho</option>
-                            <option value="peça" >Peça</option>
+                            <option value="Pilha" >Pilha</option>
+                            <option value="Aparelho">Aparelho</option>
+                            <option value="Peça" >Peça</option>
+                        </select>
+                    </div>    
+                </div>
+
+                <div class="formRow">
+                    <span>Tipo</span>
+                    <div class="formRight">
+                        <select  id="ep_type">
+                            <option value="1" >Branch</option>
+                            <option value="3">Dispenser</option>
+                            <option value="5" >ASM</option>
+                            <option value="8" >Admin</option>
                         </select>
                     </div>    
                 </div>
@@ -48,8 +60,8 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><input type="number" id="ep_mrm"></td>
-                                <td> <input type="number" id="ep_mrw"></td>
+                                <td><input type="number" id="ep_mrm" value="1" class="validate[required]"></td>
+                                <td> <input type="number" id="ep_mrw" value="1" class="validate[required]"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -68,13 +80,14 @@
                         <table class="table table-bordered table-mod" id="child_product_datatable" ></table>
                     </div>
                 </div>
+            </form>
         </div>
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
             <button class="btn btn-primary" id="edit_product_button">Editar</button>
         </div>
     </div>
-    
+
     <!--CRIAR DE PRODUTOS-->
     <div id="create_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
         <div class="modal-header">
@@ -110,6 +123,18 @@
                         </select>
                     </div>    
                 </div>
+
+                <div class="formRow">
+                    <span>Tipo</span>
+                    <div class="formRight">
+                        <select  id="cp_type">
+                            <option value="1" >Branch</option>
+                            <option value="3">Dispenser</option>
+                            <option value="5" >ASM</option>
+                            <option value="8" >Admin</option>
+                        </select>
+                    </div>    
+                </div>
                 <div class="formRow">
                     <table >
                         <thead>
@@ -120,8 +145,8 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><input type="number" id="cp_mrm"></td>
-                                <td> <input type="number" id="cp_mrw"></td>
+                                <td><input type="number" id="cp_mrm" value="1" class="validate[required]"></td>
+                                <td> <input type="number" id="cp_mrw" value="1" class="validate[required]"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -134,8 +159,8 @@
         </div>
     </div>
 
-    
-    
+
+
     <!--REMOVER PRODUTO-->
     <div id="remove_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
         <div class="modal-header">

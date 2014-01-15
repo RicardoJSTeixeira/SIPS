@@ -1,0 +1,105 @@
+
+<div id="main_requisition">
+
+    <div class="row-fluid" id="requisition_master_div">
+        <div class="span6">
+            <div class="grid-transparent">
+                <div class="grid-title">
+                    <div class="pull-left">
+                        Encomendas atuais
+                    </div>
+                </div>
+                <div class="grid-content" id="requisition_div">
+                    <table id="view_requisition_datatable" class="table table-bordered table-mod-2"></table>
+                </div> 
+            </div>
+            <div class="grid-transparent">       
+                <div class="grid-title">
+                    <div class="pull-left">
+                        Nova encomenda
+                    </div>
+                </div>
+                <div class="grid-content" id="new_requisition_div">
+                    <form id="requisition_form">
+                        <div class="row-fluid">
+                            <div class="span6">
+                                <div class="FormRow">
+                                    <h4>Tipo</h4>
+                                    <div class="FormRight">
+                                        <input  type="radio" id="req_m_radio" name="req_radio" value="1" checked="checked">
+                                        <label class="radio_name radio inline"  for="req_m_radio"><span></span>Mensal</label> 
+                                        <input  type="radio" id="req_s_radio" name="req_radio"  value="2" >
+                                        <label class="radio_name radio inline"  for="req_s_radio"><span></span>Especial</label>  
+                                        <div   id="special_req_div" style="display:none">
+                                            <h4>Numero de Cliente</h4>
+                                            <div class="FormRight">
+                                                <input type="text" id="new_requisition_lead_id" class="validate[required]">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="FormRow">
+                                    <h4>Anexo</h4>
+                                    <div class="FormRight">
+                                        <input type="text">
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="span6">
+                                <div class="FormRow">
+                                    <h4>Produtos</h4>
+                                    <div class="FormRight">
+                                        <table class="table table-bordered table-mod-2">
+                                            <thead>
+                                            <th>Nome do Produto</th>
+                                            <th>Quantidade</th>
+                                            </thead>
+                                            <tbody id="new_requisition_product_tbody">
+
+                                            </tbody>
+                                        </table>
+                                        <button id="new_requisition_product_add_line"><i class="icon-plus"></i>Adicionar produto</button>
+                                    </div>
+                                </div>
+                                <div class="FormRow">
+                                    <h4>Número de contrato</h4>
+                                    <div class="FormRight">
+                                        <input id="new_requisition_contract" type="text" class="validate[required]" >
+
+                                    </div>
+                                </div>
+
+
+
+                            </div> 
+                        </div>
+
+
+
+
+
+
+
+
+
+                    </form>
+
+                    <div class="FormRow">
+                        <button class="btn btn-primary" id="new_requisition_submit_button"><i class="icon-check"></i>Encomendar</button>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <div class="span6 grid-transparent" id="product_master_div">
+            <div class="grid-title">
+                <div class="pull-left">
+                    Produtos
+                </div>
+            </div>
+            <div class="grid-content" id="requisition_div">
+                <table id="view_product_datatable" class="table table-bordered table-mod-2"></table>
+            </div> 
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/AM/js/requisition.js" ></script>

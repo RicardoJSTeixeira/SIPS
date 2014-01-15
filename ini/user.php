@@ -39,7 +39,6 @@ class user {
             }
         }
     }
-
 }
 
 function get_client_ip() {
