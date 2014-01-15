@@ -148,8 +148,8 @@ switch ($action) {
             $list_id = array();
             $list_id[] = $tmp;
         } else {
-
-            if ($only_active_db) {
+$only_active_db=json_decode($only_active_db);
+            if (!$only_active_db) {
                 $onlyActive = " and active='Y'";
             }
 
