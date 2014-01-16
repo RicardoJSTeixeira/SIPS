@@ -22,13 +22,6 @@
                     </div>    
                 </div>
                 <div class="formRow">
-                    <span>Venda Individual</span>
-                    <div class="formRight">
-                        <input   type="checkbox" id="ep_alone" name="ep_a" value="1">
-                        <label class="  checkbox inline" for="ep_alone"><span></span></label>
-                    </div>    
-                </div>
-                <div class="formRow">
                     <span>Categoria</span>
                     <div class="formRight">
                         <select  id="ep_category">
@@ -103,14 +96,7 @@
                 <div class="formRow">
                     <span>Parente</span>
                     <div class="formRight">
-                        <select class="chosen-select  " id="cp_parent"  data-placeholder="Selecione um parent"></select>
-                    </div>    
-                </div>
-                <div class="formRow">
-                    <span>Venda individual</span>
-                    <div class="formRight">
-                        <input   type="checkbox" id="cp_alone" name="ep_a" value="1">
-                        <label class="  checkbox inline" for="cp_alone"><span></span></label>
+                        <select class="chosen-select" id="cp_parent"  data-placeholder="Selecione um parent"></select>
                     </div>    
                 </div>
                 <div class="formRow">
@@ -196,6 +182,37 @@
 
 
 
+    
+    
+   <!--Ver PRODUTOS DE ENCOMENDA-->
+     <div id="ver_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Ver Encomenda</h3>
+        </div>
+        <div class="modal-body">
+            <table class="table table-bordered">
+                <thead>
+                <th>Produto</th>
+                    <th>Tipo</th>
+                <th>Quantidade</th>
+                
+                </thead>
+                <tbody id="show_requisition_products_tbody">
+                    
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Sair</button>
+        </div>
+    </div>
+    
+    
+    
+    
+    
+    
 
     <div class="row-fluid">
         <div class="span12">
@@ -232,13 +249,28 @@
                 </div>
             </div>
             <div class="grid-content" id="product_master_div" style="display:none">
-                <div class="span4"> 
+                <div class="span2"> 
                     <button class="btn" id="create_product_modal_button">Criar novo Produto</button>
-                    <button class="btn" id="removeAll_product_modal_button">Apagar todos os Produto</button>
+                    <button class="btn" id="removeAll_product_modal_button">Apagar todos os Produtos</button>
                 </div>
-                <div class="span8">
+                <div class="span10">
                     <table class="table table-bordered table-mod" id="view_product_datatable"></table>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="grid-title">
+                <div class="pull-left">
+                    <h4>Gestão de Encomendas</h4>
+                </div>
+                <div class="pull-right">
+                    <button class="btn icon-chevron-down" id="button_filtro_requisition"></button>  
+                </div>
+            </div>
+            <div class="grid-content" id="requisition_master_div" style="display:none">
+                <table class="table table-bordered table-mod" id="view_requisition_datatable"></table>
             </div>
         </div>
     </div>

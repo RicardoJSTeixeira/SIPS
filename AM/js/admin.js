@@ -33,6 +33,13 @@ $("#admin_zone #button_filtro_children_cliente").click(function()
     $("#admin_zone #child_product_datatable_div").toggle("blind");
     $(this).toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
 });
+
+$("#admin_zone #button_filtro_requisition").click(function()
+{
+    $("#admin_zone #requisition_master_div").toggle("blind");
+    $(this).toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
+});
+
 //------------
 
 
@@ -40,6 +47,8 @@ $("#admin_zone #button_filtro_children_cliente").click(function()
 
 function get_info()
 {
+
+    //PRODUTOS-----------------------------------------------------------------------------------------------------------
     var Table_view_product = $('#admin_zone #view_product_datatable').dataTable({
         "aaSorting": [[6, "asc"]],
         "bSortClasses": false,
@@ -51,18 +60,14 @@ function get_info()
         "fnServerParams": function(aoData) {
             aoData.push({"name": "action", "value": "listar_produtos_to_datatable"});
         },
-        "aoColumns": [{"sTitle": "id"}, {"sTitle": "Nome"}, {"sTitle": "Parente"}, {"sTitle": "Venda individual"}, {"sTitle": "Max requisições mês"}, {"sTitle": "Max requisições semana"}, {"sTitle": "Categoria"}, {"sTitle": "Tipo"}, {"sTitle": "Opções"}],
+        "aoColumns": [{"sTitle": "id"}, {"sTitle": "Nome"}, {"sTitle": "Parente"}, {"sTitle": "Max requisições mensais"}, {"sTitle": "Max requisições especiais"}, {"sTitle": "Categoria"}, {"sTitle": "Tipo"}, {"sTitle": "Opções"}],
         "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
     });
-
-
     $.post('ajax/admin.php', {action: "listar_produtos"},
     function(data)
     {
         $("#admin_zone #ep_parent").empty().append("<option value='0'>Escolha um parente</option>");
-
         $("#admin_zone #cp_parent").empty().append("<option value='0'>Sem Parente</option>");
-
         var
                 temp = "<optgroup value='1' label='Aparelhos'></optgroup>\n\
 <optgroup value='2' label='Pilhas'></optgroup>\n\
@@ -87,16 +92,29 @@ function get_info()
                     break;
             }
         });
-     $("#admin_zone #ep_parent").find("optgroup[value='1']").append(aparelho).end()
+        $("#admin_zone #ep_parent").find("optgroup[value='1']").append(aparelho).end()
                 .find("optgroup[value='2']").append(pilha).end()
                 .find("optgroup[value='3']").append(peça).end().trigger("chosen:updated");
         $("#admin_zone #cp_parent").find("optgroup[value='1']").append(aparelho).end()
                 .find("optgroup[value='2']").append(pilha).end()
                 .find("optgroup[value='3']").append(peça).end().trigger("chosen:updated");
-
     }, "json");
-}
+    //ENCOMENDAS--------------------------------------------------------------------------------------
+    var Table_view_requisition = $('#admin_zone #view_requisition_datatable').dataTable({
+        "bSortClasses": false,
+        "bProcessing": true,
+        "bDestroy": true,
+        "bAutoWidth": false,
+        "sPaginationType": "full_numbers",
+        "sAjaxSource": 'ajax/requisition.php',
+        "fnServerParams": function(aoData) {
+            aoData.push({"name": "action", "value": "listar_requisition_to_datatable"});
+        },
+        "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Anexo"}, {"sTitle": "Status"}, {"sTitle": "Produtos"}, {"sTitle": "Opções"},],
+        "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}});
 
+}
+//PRODUTOS---------------------------------------------------------------------------------------------------------------------
 //EDITAR PRODUTO
 
 $("#admin_zone").on("click", ".item_edit_button", function()
@@ -104,8 +122,6 @@ $("#admin_zone").on("click", ".item_edit_button", function()
     var item_id = $(this).data("product_id");
     $("#admin_zone #edit_product_modal").data("product_id", item_id);
     $("#admin_zone #ep_name").val();
-
-
     var Table_child_product = $('#admin_zone #child_product_datatable').dataTable({
         "aaSorting": [[0, "desc"]],
         "bSortClasses": false,
@@ -118,23 +134,14 @@ $("#admin_zone").on("click", ".item_edit_button", function()
             aoData.push({"name": "action", "value": "listar_produtos_to_datatable_by_parent"},
             {"name": "parent", "value": item_id});
         },
-        "aoColumns": [{"sTitle": "id"}, {"sTitle": "Nome"}, {"sTitle": "Venda individual"}, {"sTitle": "Max requisições mês"}, {"sTitle": "Max requisições semana"}, {"sTitle": "Categoria"}],
+        "aoColumns": [{"sTitle": "id"}, {"sTitle": "Nome"}, {"sTitle": "Max requisições mensais"}, {"sTitle": "Max requisições especiais"}, {"sTitle": "Categoria"}],
         "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
     });
-
-
-
     $.post('ajax/admin.php', {action: "listar_produto", id: $(this).data("product_id")},
     function(data)
     {
         $("#admin_zone #ep_name").val(data.name);
-
         $("#admin_zone #ep_parent optgroup option[value='" + data.parent + "']").prop("selected", true).trigger("chosen:updated");
-
-        if (data.alone == "1")
-            $("#ep_alone").prop("checked", true);
-        else
-            $("#ep_alone").prop("checked", false);
         $("#admin_zone #ep_mrm").val(data.max_req_m);
         $("#admin_zone #ep_mrw").val(data.max_req_w);
         $("#admin_zone #ep_category option[value='" + data.category + "']").prop("selected", true);
@@ -142,7 +149,6 @@ $("#admin_zone").on("click", ".item_edit_button", function()
         $("#admin_zone .chosen-container").css("width", "250px");
         $("#admin_zone #edit_product_modal").modal("show");
     }, "json");
-
 });
 $("#admin_zone #edit_product_button").click(function()
 {
@@ -152,7 +158,6 @@ $("#admin_zone #edit_product_button").click(function()
             id: $("#admin_zone #edit_product_modal").data("product_id"),
             name: $("#admin_zone #ep_name").val(),
             parent: $("#admin_zone #ep_parent option:selected").val(),
-            alone: $("#admin_zone #ep_alone").is(":checked") ? 1 : 0,
             max_req_m: $("#admin_zone #ep_mrm").val(),
             max_req_w: ($("#admin_zone #ep_mrw").val() > $("#admin_zone #ep_mrm").val()) ? $("#admin_zone #ep_mrm").val() : $("#admin_zone #ep_mrw").val(),
             category: $("#admin_zone #ep_category").val(),
@@ -171,7 +176,6 @@ $("#admin_zone").on("click", ".item_delete_button", function()
 {
     $("#admin_zone  #remove_product_modal").data("product_id", $(this).data("product_id")).modal("show");
 });
-
 $("#admin_zone #remove_product_button").click(function()
 {
     $.post('ajax/admin.php', {action: "apagar_produto",
@@ -182,13 +186,11 @@ $("#admin_zone #remove_product_button").click(function()
         $("#admin_zone #remove_product_modal").modal("hide");
     }, "json");
 });
-
 //remover todos
 $("#admin_zone #removeAll_product_modal_button").click(function()
 {
     $("#admin_zone #removeAll_product_modal").modal("show");
 });
-
 $("#admin_zone #removeAll_product_button").click(function()
 {
     $.post('ajax/admin.php', {action: "apagar_produtos"}, function() {
@@ -196,7 +198,6 @@ $("#admin_zone #removeAll_product_button").click(function()
         $("#admin_zone #removeAll_product_modal").modal("hide");
     }, "json");
 });
-
 //-------------------------------------------------------------------------------------
 // CRIAR PRODUTO
 
@@ -205,8 +206,6 @@ $("#admin_zone #create_product_modal_button").click(function()
     $("#admin_zone #create_product_modal").modal("show");
     $("#admin_zone .chosen-container").css("width", "250px");
 });
-
-
 $("#admin_zone #create_product_button").click(function()
 {
 
@@ -215,7 +214,6 @@ $("#admin_zone #create_product_button").click(function()
         $.post('ajax/admin.php', {action: "criar_produto",
             name: $("#admin_zone #cp_name").val(),
             parent: $("#admin_zone #cp_parent option:selected").val(),
-            alone: $("#admin_zone #cp_alone").is(":checked"),
             max_req_m: $("#admin_zone #cp_mrm").val(),
             max_req_w: $("#admin_zone #cp_mrw").val(),
             category: $("#admin_zone #cp_category").val(),
@@ -227,12 +225,11 @@ $("#admin_zone #create_product_button").click(function()
         }, "json");
     }
 });
-
 ///------------------------------------------
 
 
 
-// CLIENTES
+// CLIENTES-----------------------------------------------------------------------------------------------------------------------
 // relatorio de clientes sem marcação
 $("#admin_zone #download_csm_button").click(function()
 {
@@ -245,4 +242,37 @@ $("#admin_zone #download_excel_csm_button").click(function()
         document.location.href = "ajax/admin.php?action=download_excel_csm";
     }
 });
-  
+
+//ENCOMENDAS -----------------------------------------------------------------------------------------------------------------------
+//VER PRODUTOS DE ENCOMENDAS FEITAS
+$("#admin_zone").on("click", ".ver_requisition_products", function()
+{
+    $.post('ajax/requisition.php', {action: "listar_produtos_por_encomenda",
+        id: $(this).val()}, function(data)
+    {
+        $("#admin_zone #ver_product_modal #show_requisition_products_tbody").empty();
+        $.each(data, function()
+        {
+            $("#admin_zone #ver_product_modal #show_requisition_products_tbody").append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.quantity + "</td></tr>")
+        })
+        $("#admin_zone #ver_product_modal").modal("show");
+    },
+            "json");
+
+
+
+});
+
+$("#admin_zone").on("click", ".accept_requisition", function()
+{
+    $.post('ajax/requisition.php', {action: "accept_requisition", id: $(this).val()}, function() {
+  //   $("#admin_zone #view_requisition_datatable").
+    }, "json");
+});
+
+$("#admin_zone").on("click", ".decline_requisition", function()
+{
+    $.post('ajax/requisition.php', {action: "decline_requisition", id: $(this).val()}, function() {
+        
+    }, "json");
+});
