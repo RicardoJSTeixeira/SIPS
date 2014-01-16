@@ -1,5 +1,4 @@
 <?php
-
 require 'lib/db.php';
 require 'lib/user.php';
 

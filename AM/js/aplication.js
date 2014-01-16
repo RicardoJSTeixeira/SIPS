@@ -1,25 +1,49 @@
-$(function(){
-    
-      $("#sidebar a").click(function(e)
-      {
-            e.preventDefault();
-            if($(this).hasClass("active"))
-                return false;
-            
-            $("#sidebar .active").removeClass("active");
-            var href=$(this).addClass("active").attr("href");
-            
-            if(href==="#")
-                return false;
-            
-            $("#principal").load(href);
-      });
-    $("#principal").load("view/dashboard.html");
-    
-    $.post("ajax/user_info.php",function(user){
-        $.jGrowl('Bem vindo '+user.name, {life: 4000});
+$(function() {
+
+    $.history.on('load change push pushed', function(event, url, type) {
+
+        $("#sidebar .active").removeClass("active");
+        $("#sidebar").find("[href='" + url + "']").addClass("active");
+
+        if (url.length) {
+            $("#principal").load(url);
+        } else {
+            $.history.push("view/dashboard.html");
+            $("#principal").load("view/dashboard.html");
+        }
+    }).listen('hash');
+
+      if(!window.location.hash.length){
+            $.history.push("view/dashboard.html");
+            $("#principal").load("view/dashboard.html");
+        $("#sidebar").find("[href='view/dashboard.html']").addClass("active");
+      }
+
+
+    $('#sidebar a').click(function(e) {
+        e.preventDefault();
+
+        if ($(this).hasClass("active"))
+            return false;
+
+        $("#sidebar .active").removeClass("active");
+        var href = $(this).addClass("active").attr("href");
+
+        if (href === "#")
+            return false;
+
+        $.history.push(href);
+
+
+    });
+
+
+    $.post("ajax/user_info.php", function(user) {
+        $.jGrowl('Bem vindo ' + user.name, {life: 4000});
         $("#user-name").text(user.name);
-    },"json")
-    .fail(function(){window.location="logout.php";});
+    }, "json")
+            .fail(function() {
+                window.location = "logout.php";
+            });
 });
 

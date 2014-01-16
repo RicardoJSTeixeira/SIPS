@@ -8,11 +8,11 @@ if (!empty($_POST) && isset($_POST["username"]) && isset($_POST["password"])) {
     $password = filter_var($_POST["password"]);
 
     $user = new UserLogin($db);
-    if ($username == $user->login($username, $password))
+    if ($username == $user->login($username, $password)) {
         header('Location: index.php');
-    else
+    } else {
         echo file_get_contents("view/login.html");
-}
-else
+    }
+} else {
     echo file_get_contents("view/login.html");
-?>
+}
