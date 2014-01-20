@@ -44,37 +44,28 @@ switch ($action) {
         $temp = $products->get_products_to_datatable();
         foreach ($temp as &$value) {
             foreach ($value as &$value2) {
-                $value2[3] = $value2[3] == "1" ? "sim" : "nao";
-                switch ($value2[7]) {
+                          switch ($value2[6]) {
                     case "1":
-                        $value2[7]="Branch";
+                        $value2[6]="Branch";
                         break;
                     case "3":
-                          $value2[7]="Dispenser";
+                          $value2[6]="Dispenser";
                         break;
                     case "5":
-                          $value2[7]="ASM";
+                          $value2[6]="ASM";
                         break;
                     case "8":
-                          $value2[7]="Admin";
+                          $value2[6]="Admin";
                         break;
                 }
-                $value2[8] = $value2[8] . "<div class='view-button input-append'><span   data-product_id='" . $value2["id"] . "' class='btn item_edit_button btn-primary'>Ver/Editar</span><span   data-product_id='" . $value2["id"] . "' class='btn item_delete_button btn-danger '>Remover</span></div>";
+                $value2[7] = $value2[7] . "<div class='view-button input-append'><span   data-product_id='" . $value2["id"] . "' class='btn item_edit_button btn-primary'>Ver/Editar</span><span   data-product_id='" . $value2["id"] . "' class='btn item_delete_button btn-danger '>Remover</span></div>";
             };
         };
         echo(json_encode($temp));
         break;
 
     case "listar_produtos_to_datatable_by_parent":
-
-        $temp = ($products->get_products_to_datatable_by_id($parent));
-        foreach ($temp as &$value) {
-            foreach ($value as &$value2) {
-                $value2[2] = $value2[2] == "1" ? "sim" : "nao";
-            };
-        };
-        echo(json_encode($temp));
-
+        echo(json_encode($products->get_products_to_datatable_by_id($parent)));
         break;
 
     case "listar_produtos":
@@ -89,13 +80,13 @@ switch ($action) {
         echo(json_encode($products->remove_products()));
         break;
     case "criar_produto":
-        echo(json_encode($products->add_product($name, $parent, $alone, $max_req_m, $max_req_w, $category,$type)));
+        echo(json_encode($products->add_product($name, $parent, $max_req_m, $max_req_s, $category,$type)));
         break;
 
 
     case "editar_produto":
         $product = new product($db, $id);
-        echo($product->edit_product($name, $parent, $alone, $max_req_m, $max_req_w, $category,$type));
+        echo($product->edit_product($name, $parent,$max_req_m, $max_req_s, $category,$type));
         break;
     case "listar_produto":
         $product = new product($db, $id, 0);
