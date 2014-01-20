@@ -78,7 +78,7 @@ function ConstructNewCampaign()
     $.ajax({
         type: "GET",
         url: "views/campaign-editor.html",
-        success: function(html) 
+        success: function(html)
         {
             $("body").html(html);
             CampaignEdit = false; 
@@ -89,6 +89,13 @@ function ConstructNewCampaign()
             function(data){
                 if(data.iscloud){
                     $(".iscloud").hide();
+                }
+            },"json");
+            $.post("requests.php",
+            {action:"client"},
+            function(data){
+                if(data.client==="necomplus"){
+                    $(".necomplus").show();
                 }
             },"json");
         }
@@ -113,6 +120,13 @@ function ConstructEditCampaign(event)
             function(data){
                 if(data.iscloud){
                     $(".iscloud").hide();
+                }
+            },"json");
+            $.post("requests.php",
+            {action:"client"},
+            function(data){
+                if(data.client==="necomplus"){
+                    $(".necomplus").show();
                 }
             },"json");
         }

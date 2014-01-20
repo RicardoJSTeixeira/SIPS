@@ -12,6 +12,12 @@ if ($user->user_level < 6) {
     header("location: ../index.php?logout=yes");
 }
 
+    $connection = mysql_connect("$VARDB_server:$VARDB_port", "sipsadmin", "sipsps2012");
+    mysql_select_db("asterisk", $connection);
+    
+    mysql_query("ALTER TABLE `vicidial_campaigns` ADD `agent_allow_copy_record` TINYINT(1) NOT NULL DEFAULT '0' ;") ;
+    
+    mysql_close($connection);
 
 $curlogo=$_POST['curlogo'];
 ?>

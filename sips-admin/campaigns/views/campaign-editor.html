@@ -10,1092 +10,1098 @@
             <li id="li-scripts"><a href="#tab5">Scripts</a></li> 
             <li id="li-dfields"><a href="#tab6">Campos Dinâmicos</a></li>
             <li id="li-dbs"><a href="#tab7">Bases de Dados</a></li>
-             
+
         </ul>           
-        
-		<!-- OPÇÕES GERAIS -->
+
+        <!-- OPÇÕES GERAIS -->
         <div id="tab1">
-        
-        	<table class="table-100"> 
-        	<tr>
-            	<td class="td-half-left">
-            	<div class="div-title">Definições<span class="css-orange-caret">></span>Identificação</div>
-                
-                    <table>
-                    <tr>
-                        <td style="width:100px">
-                        <label class="input-text-label" for="campaign-name">Nome</label><input maxlength="31" style="width:295px !important;" class="input-text" type="text" id="campaign-name">
-                        </td>
-                        <td valign="bottom">
-                        <span style="font-size:10px; margin:0px 0px 0px 3px">(max. 30 caracteres, obrigatório)</span>
-                        </td>
-                    </tr>
-                    </table>
-                
-                    <table style='margin:8px 0 0 0'>
-                    <tr>
-                        <td valign="bottom" style="width:100px">
-                        <label class="input-text-label" for="campaign-description">Descrição</label><textarea style="margin-bottom:-3px; height:73px" maxlength="201" class="input-textarea" id="campaign-description"></textarea>
-                        </td>
-                        <td valign="bottom">
-                        <span style="font-size:10px; margin:0px 0px 5px 3px">(max. 200 caracteres, opcional)</span>
-                        </td>
-                    </tr>
-                    </table>
-                    <div class="iscloud">     
-                <br />
-                    <div class="div-title">Definições<span class="css-orange-caret">></span>Grupos com Acesso à Campanha</div>
-                    <div style="overflow-y:auto; height:193px">
-                    
-                    <table id="table-groups">
-                    <tr>
-                        <td width="50%" valign="top"><table id="table-groups-1"></table></td>
-                        <td width="50%" valign="top"><table id="table-groups-2"></table></td>             
-                    </tr>
-                    </table>
-                    
-                    </div>
-					<div class='div-title'>Definições<span class='css-orange-caret'>></span>Grupos com Acesso à Campanha<span class='css-orange-caret'>></span>Acções</div>
-                    <table >
-                        <tr>
-                        <td class="td-action"><button class="btn-action" id="btn-check-all-groups"><img class="img-action" src='icons/mono_checkbox_checked_16.png'></button></td>
-                        <td>Marcar todos os Grupos</td>
-                        </tr>
 
-                        <tr>
-						<td class="td-action td-action-next"><button class="btn-action" id="btn-uncheck-all-groups"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
-                        <td class="td-action-next">Desmarcar todos os Grupos</td>
+            <table class="table-100"> 
+                <tr>
+                    <td class="td-half-left">
+                        <div class="div-title">Definições<span class="css-orange-caret">></span>Identificação</div>
 
-                        </tr>
-                    </table>
-                    	
-                    
-                    </div> 
-				</td>
+                        <table>
+                            <tr>
+                                <td style="width:100px">
+                                    <label class="input-text-label" for="campaign-name">Nome</label><input maxlength="31" style="width:295px !important;" class="input-text" type="text" id="campaign-name">
+                                </td>
+                                <td valign="bottom">
+                                    <span style="font-size:10px; margin:0px 0px 0px 3px">(max. 30 caracteres, obrigatório)</span>
+                                </td>
+                            </tr>
+                        </table>
 
-            	<td class="td-half-right">
-                
-                
-                <div id="options-scroll-wrapper">
-                
-                    <div id="options-scroll-container" style="padding-right: 6px">
-                
-                    <div class="div-title">Definições<span class='css-orange-caret'>></span>Opções Gerais</div>
-                    
-                    <table>
-                    <tr class="tr-options">
-                    	<td>Activa</td>
-                        <td class="tright">
+                        <table style='margin:8px 0 0 0'>
+                            <tr>
+                                <td valign="bottom" style="width:100px">
+                                    <label class="input-text-label" for="campaign-description">Descrição</label><textarea style="margin-bottom:-3px; height:73px" maxlength="201" class="input-textarea" id="campaign-description"></textarea>
+                                </td>
+                                <td valign="bottom">
+                                    <span style="font-size:10px; margin:0px 0px 5px 3px">(max. 200 caracteres, opcional)</span>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="iscloud">     
+                            <br />
+                            <div class="div-title">Definições<span class="css-orange-caret">></span>Grupos com Acesso à Campanha</div>
+                            <div style="overflow-y:auto; height:193px">
 
-                        <input type="radio" class='campaign-active-switch' id="campaign_active_yes" name="campaign_active" /><label for="campaign_active_yes">Sim</label>
-                        <input type="radio" class='campaign-active-switch' id="campaign_active_no" name="campaign_active" /><label for="campaign_active_no">Não</label>
+                                <table id="table-groups">
+                                    <tr>
+                                        <td width="50%" valign="top"><table id="table-groups-1"></table></td>
+                                        <td width="50%" valign="top"><table id="table-groups-2"></table></td>             
+                                    </tr>
+                                </table>
 
-                        </td>
-					</tr>
-                    <tr class="tr-options">
-                        <td>Tipo de Campanha</td>
-                        <td class="tright">
-                        <input type="radio" class='campaign-type-switch' id="campaign_type_auto" name="campaign_type" /><label for="campaign_type_auto">Automática</label>
-                        <input type="radio" class='campaign-type-switch' id="campaign_type_manual" name="campaign_type" /><label for="campaign_type_manual">Manual</label>
-                        <input type="radio" class='campaign-type-switch' id="campaign_type_predictive" name="campaign_type" /><label for="campaign_type_predictive"><i>Predictive</i></label>
-                        </td>
-					</tr>
-					
-					<tr class="tr-options">
-                        <td>Permitir Inbound</td>
-                        <td class="tright">
-                        <input type="radio" class="campaign-allow-inbound" id="campaign-allow-inbound-yes" name="campaign-show-leads-inqueue" /><label for="campaign-show-leads-yes">Sim</label>
-                        <input type="radio" class="campaign-allow-inbound" id="campaign-allow-inbound-no" name="campaign-show-leads-inqueue" /><label for="campaign-show-leads-no">Não</label>
-                        </td>
-                    </tr>
-					
-					
-                    <tr class="tr-options">
-                        <td>Rácio</td>
-                        <td class="tright">
-                        <input class="text-spinner" style="width:16px" id="ratio-spinner" name="ratio-spinner" value="2">
-                        </td>
-                    </tr>
-                    </table>
-                    <br />
-                    
-                    <div class="div-title">Definições<span class='css-orange-caret'>></span>Chamadas</div>
-                    
-                    <table>
-                    <tr class="tr-options">
-                        <td>Gravação de Chamadas</td>
-                        <td class="tright">
-                        <input type="radio" class="campaign-recording-switch" id="campaign_recording_yes" name="campaign_recording" /><label for="campaign_recording_yes">Sim</label>
-                        <input type="radio" class="campaign-recording-switch" id="campaign_recording_no" name="campaign_recording" /><label for="campaign_recording_no">Não</label>
-                        </td>
-                    </tr>
-                    <tr class="tr-options">
-                        <td>Ordem de Marcação de Chamadas</td>
-                        <td class="tright">
-                        <input type="radio" class="campaign-lead-order-switch" id="campaign_lead_order_random" name="campaign_lead_order"  /><label for="campaign_lead_order_random">Aleatória</label>
-                        <input type="radio" class="campaign-lead-order-switch" id="campaign_lead_order_ordered" name="campaign_lead_order" /><label for="campaign_lead_order_ordered">Ordenada</label>
-                        </td>
-                    </tr>
-                    <tr class="tr-options">
-                        <td>Atribuição de Chamadas aos Operadores</td>
-                        <td class="tright">
-                        <input class="text-spinner" style="width:160px;" id="campaign_atrib_calls" name="campaign_atrib_calls" value="Aleatória">
-                        </td>
-                    </tr>
-                    </table>
-                    <br />
-                    <div class="div-title">Definições<span class='css-orange-caret'>></span>Callbacks</div>
-                     <table>
-                    <tr class="tr-options">
-                        <td>Tipo de Callback (valor defeito)</td>
-                        <td class="tright">
-                        <input type="radio" class="campaign-callback-type" id="campaign_callback_type_user" name="campaign-callback-type" /><label for="campaign_callback_type_user">Pessoal</label>
-                        <input type="radio" class="campaign-callback-type" id="campaign_callback_type_global" name="campaign-callback-type" /><label for="campaign_recording_type_global">Geral</label>
-                        </td>
-                    </tr>
-                      <tr class="tr-options">
-                        <td>Limite de Callbacks Pessoais por agente</td>
-                        <td class="tright">
-                        (0->ilimitado)
-                              <input type="text"  class="text-spinner" id="campaign_callback_individual_limit" name="campaign_callback_individual_limit"  style="width: 30px" />
-                        </td>
-                    </tr>
-                     <tr class="tr-options">
-                        <td>Limite de Callbacks Gerais por agente</td>
-                        <td class="tright">
-                        (0->ilimitado)
-                              <input type="text"  class="text-spinner" id="campaign_callback_geral_limit" name="campaign_callback_geral_limit"  style="width: 30px" />
-                        </td>
-                    </tr>
-                    
-                     </table>
-                    
-                    <div class="div-title">Definições<span class='css-orange-caret'>></span>Operadores</div>
-                    <table>
-                    <tr class="tr-options">
-                        <td>Permitir Enviar DTMF</td>
-                        <td class="tright">
-                        <input type="radio" class="campaign-dtmf" id="campaign-dtmf-yes" name="campaign-dtmf" /><label for="campaign-dtmf-yes">Sim</label>
-                        <input type="radio" class="campaign-dtmf" id="campaign-dtmf-no" name="campaign-dtmf" /><label for="campaign-dtmf-no">Não</label>
-                        </td>
-                    </tr>
-                    
-                    
-                    <tr class="tr-options">
-                        <td>Permitir Pesquisas</td>
-                        <td class="tright">
-                        <input type="radio" class="campaign-search" id="campaign-search-yes" name="campaign-search" /><label for="campaign-search-yes">Sim</label>
-                        <input type="radio" class="campaign-search" id="campaign-search-no" name="campaign-search" /><label for="campaign-search-no">Não</label>
-                        </td>
-                    </tr>
-                    
-                    <tr class="tr-options">
-                        <td>Permitir Trânsferencia de Chamadas</td>
-                        <td class="tright">
-                        <input type="radio" class="campaign-transfer" id="campaign-transfer-yes" name="campaign-transfer" /><label for="campaign-transfer-yes">Sim</label>
-                        <input type="radio" class="campaign-transfer" id="campaign-transfer-no" name="campaign-transfer" /><label for="campaign-transfer-no">Não</label>
-                        </td>
-                    </tr>
-                    
-                    <tr class="tr-options">
-                        <td>Mostrar Número de Contactos Disponiveis</td>
-                        <td class="tright">
-                        <input type="radio" class="campaign-show-leads" id="campaign-show-leads-yes" name="campaign-show-leads" /><label for="campaign-show-leads-yes">Sim</label>
-                        <input type="radio" class="campaign-show-leads" id="campaign-show-leads-no" name="campaign-show-leads" /><label for="campaign-show-leads-no">Não</label>
-                        </td>
-                    </tr>
-                    
-                    <tr class="tr-options">
-                        <td>Mostrar Contactos em Fila de Espera</td>
-                        <td class="tright">
-                        <input type="radio" class="campaign-show-leads-inqueue" id="campaign-show-leads-inqueue-yes" name="campaign-show-leads-inqueue" /><label for="campaign-show-leads-inqueue-yes">Sim</label>
-                        <input type="radio" class="campaign-show-leads-inqueue" id="campaign-show-leads-inqueue-no" name="campaign-show-leads-inqueue" /><label for="campaign-show-leads-inqueue-no">Não</label>
-                        </td>
-                    </tr>
-                    
-                    <tr class="tr-options">
-                        <td>Mostrar Número de Contactos em Fila de Espera</td>
-                        <td class="tright">
-                        <input type="radio" class="campaign-show-leads-inqueue-count" id="campaign-show-leads-inqueue-count-yes" name="campaign-show-leads-inqueue-count" /><label for="campaign-show-leads-inqueue-count-yes">Sim</label>
-                        <input type="radio" class="campaign-show-leads-inqueue-count" id="campaign-show-leads-inqueue-count-no" name="campaign-show-leads-inqueue-count" /><label for="campaign-show-leads-inqueue-count-no">Não</label>
-                        </td>
-                    </tr>
-                    
-                    
-                    </table>
-                    
-                    </div>
-                    
-                </div>
-                    
-                    <div style="padding-top:32px;" class="div-title">Definições<span class='css-orange-caret'>></span>Acções</div>           
-                    <table>
-                        <tr>
-                        <td class="td-action"><button class="btn-action" id="btn-config-dial-status"><img class="img-action" src='icons/mono_wrench_plus_16.png'></button></td>
-                        <td>Configurar os Feedbacks que a Campanha está autorizada a chamar.</td>
-                        </tr>
-                        
-                          <tr class="iscloud">
-                        <td class="td-action td-action-next"><button class="btn-action" id="btn-config-inbound"><img class="img-action" src='icons/mono_phone_16.png'></button></td>
-                        <td class="td-action-next">Configurar definições de Inbound da Campanha.</td>
-                        </tr>
-						
+                            </div>
+                            <div class='div-title'>Definições<span class='css-orange-caret'>></span>Grupos com Acesso à Campanha<span class='css-orange-caret'>></span>Acções</div>
+                            <table >
+                                <tr>
+                                    <td class="td-action"><button class="btn-action" id="btn-check-all-groups"><img class="img-action" src='icons/mono_checkbox_checked_16.png'></button></td>
+                                    <td>Marcar todos os Grupos</td>
+                                </tr>
 
-                        
-                    </table>
-                    <br />
-                    <div class="div-title">Definições<span class='css-orange-caret'>></span>Navegação</div>   
-                    <table>
-						<tr class="tr-nav-prev">
-						<td class="td-action"><button class="btn-action btn-nav-prev"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
-                        <td>Voltar ao menu Gestão de Campanhas.</td>
-                        </tr>
-                        
-						<tr class="tr-nav-next">
-						<td class="td-action td-action-next"><button class="btn-action btn-nav-next"><img class="img-action" src='icons/mono_redo_16.png'></button></td>
-                        <td class="td-action-next">Mudar para o separador seguinte.</td>
-                        </tr>
-                    </table>
-                    
-                    
-      
-                    
-                    
-              <!--      <div class='back-button'>
-                    <table>
-                    <tr>
-                    <td><img class="img-action" src='icons/mono_undo_16.png'></td>
-                    <td style='color:rgb(68, 68, 68); padding: 0 0 0 6px'>Voltar</td>
-                    </tr>
-                    </table>
-                    </div> -->
-                    
-                    
-                    
-                  <!--  <button class="back-button btn-action">Voltar</button> <!-- <img class="img-action" src='icons/mono_undo_24.png'> -->
-				</td>
-                             
-                
-            </tr>
+                                <tr>
+                                    <td class="td-action td-action-next"><button class="btn-action" id="btn-uncheck-all-groups"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
+                                    <td class="td-action-next">Desmarcar todos os Grupos</td>
+
+                                </tr>
+                            </table>
+
+
+                        </div> 
+                    </td>
+
+                    <td class="td-half-right">
+
+
+                        <div id="options-scroll-wrapper">
+
+                            <div id="options-scroll-container" style="padding-right: 6px">
+
+                                <div class="div-title">Definições<span class='css-orange-caret'>></span>Opções Gerais</div>
+
+                                <table>
+                                    <tr class="tr-options">
+                                        <td>Activa</td>
+                                        <td class="tright">
+
+                                            <input type="radio" class='campaign-active-switch' id="campaign_active_yes" name="campaign_active" /><label for="campaign_active_yes">Sim</label>
+                                            <input type="radio" class='campaign-active-switch' id="campaign_active_no" name="campaign_active" /><label for="campaign_active_no">Não</label>
+
+                                        </td>
+                                    </tr>
+                                    <tr class="tr-options">
+                                        <td>Tipo de Campanha</td>
+                                        <td class="tright">
+                                            <input type="radio" class='campaign-type-switch' id="campaign_type_auto" name="campaign_type" /><label for="campaign_type_auto">Automática</label>
+                                            <input type="radio" class='campaign-type-switch' id="campaign_type_manual" name="campaign_type" /><label for="campaign_type_manual">Manual</label>
+                                            <input type="radio" class='campaign-type-switch' id="campaign_type_predictive" name="campaign_type" /><label for="campaign_type_predictive"><i>Predictive</i></label>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="tr-options">
+                                        <td>Permitir Inbound</td>
+                                        <td class="tright">
+                                            <input type="radio" class="campaign-allow-inbound" id="campaign-allow-inbound-yes" name="campaign-show-leads-inqueue" /><label for="campaign-show-leads-yes">Sim</label>
+                                            <input type="radio" class="campaign-allow-inbound" id="campaign-allow-inbound-no" name="campaign-show-leads-inqueue" /><label for="campaign-show-leads-no">Não</label>
+                                        </td>
+                                    </tr>
+
+
+                                    <tr class="tr-options">
+                                        <td>Rácio</td>
+                                        <td class="tright">
+                                            <input class="text-spinner" style="width:16px" id="ratio-spinner" name="ratio-spinner" value="2">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+
+                                <div class="div-title">Definições<span class='css-orange-caret'>></span>Chamadas</div>
+
+                                <table>
+                                    <tr class="tr-options">
+                                        <td>Gravação de Chamadas</td>
+                                        <td class="tright">
+                                            <input type="radio" class="campaign-recording-switch" id="campaign_recording_yes" name="campaign_recording" /><label for="campaign_recording_yes">Sim</label>
+                                            <input type="radio" class="campaign-recording-switch" id="campaign_recording_no" name="campaign_recording" /><label for="campaign_recording_no">Não</label>
+                                        </td>
+                                    </tr>
+                                    <tr class="tr-options">
+                                        <td>Ordem de Marcação de Chamadas</td>
+                                        <td class="tright">
+                                            <input type="radio" class="campaign-lead-order-switch" id="campaign_lead_order_random" name="campaign_lead_order"  /><label for="campaign_lead_order_random">Aleatória</label>
+                                            <input type="radio" class="campaign-lead-order-switch" id="campaign_lead_order_ordered" name="campaign_lead_order" /><label for="campaign_lead_order_ordered">Ordenada</label>
+                                        </td>
+                                    </tr>
+                                    <tr class="tr-options">
+                                        <td>Atribuição de Chamadas aos Operadores</td>
+                                        <td class="tright">
+                                            <input class="text-spinner" style="width:160px;" id="campaign_atrib_calls" name="campaign_atrib_calls" value="Aleatória">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <div class="div-title">Definições<span class='css-orange-caret'>></span>Callbacks</div>
+                                <table>
+                                    <tr class="tr-options">
+                                        <td>Tipo de Callback (valor defeito)</td>
+                                        <td class="tright">
+                                            <input type="radio" class="campaign-callback-type" id="campaign_callback_type_user" name="campaign-callback-type" /><label for="campaign_callback_type_user">Pessoal</label>
+                                            <input type="radio" class="campaign-callback-type" id="campaign_callback_type_global" name="campaign-callback-type" /><label for="campaign_recording_type_global">Geral</label>
+                                        </td>
+                                    </tr>
+                                    <tr class="tr-options">
+                                        <td>Limite de Callbacks Pessoais por agente</td>
+                                        <td class="tright">
+                                            (0->ilimitado)
+                                            <input type="text"  class="text-spinner" id="campaign_callback_individual_limit" name="campaign_callback_individual_limit"  style="width: 30px" />
+                                        </td>
+                                    </tr>
+                                    <tr class="tr-options">
+                                        <td>Limite de Callbacks Gerais por agente</td>
+                                        <td class="tright">
+                                            (0->ilimitado)
+                                            <input type="text"  class="text-spinner" id="campaign_callback_geral_limit" name="campaign_callback_geral_limit"  style="width: 30px" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+
+                                <div class="div-title">Definições<span class='css-orange-caret'>></span>Operadores</div>
+                                <table>
+                                    <tr class="tr-options">
+                                        <td>Permitir Enviar DTMF</td>
+                                        <td class="tright">
+                                            <input type="radio" class="campaign-dtmf" id="campaign-dtmf-yes" name="campaign-dtmf" /><label for="campaign-dtmf-yes">Sim</label>
+                                            <input type="radio" class="campaign-dtmf" id="campaign-dtmf-no" name="campaign-dtmf" /><label for="campaign-dtmf-no">Não</label>
+                                        </td>
+                                    </tr>
+
+
+                                    <tr class="tr-options">
+                                        <td>Permitir Pesquisas</td>
+                                        <td class="tright">
+                                            <input type="radio" class="campaign-search" id="campaign-search-yes" name="campaign-search" /><label for="campaign-search-yes">Sim</label>
+                                            <input type="radio" class="campaign-search" id="campaign-search-no" name="campaign-search" /><label for="campaign-search-no">Não</label>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="tr-options">
+                                        <td>Permitir Trânsferencia de Chamadas</td>
+                                        <td class="tright">
+                                            <input type="radio" class="campaign-transfer" id="campaign-transfer-yes" name="campaign-transfer" /><label for="campaign-transfer-yes">Sim</label>
+                                            <input type="radio" class="campaign-transfer" id="campaign-transfer-no" name="campaign-transfer" /><label for="campaign-transfer-no">Não</label>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="tr-options">
+                                        <td>Mostrar Número de Contactos Disponiveis</td>
+                                        <td class="tright">
+                                            <input type="radio" class="campaign-show-leads" id="campaign-show-leads-yes" name="campaign-show-leads" /><label for="campaign-show-leads-yes">Sim</label>
+                                            <input type="radio" class="campaign-show-leads" id="campaign-show-leads-no" name="campaign-show-leads" /><label for="campaign-show-leads-no">Não</label>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="tr-options">
+                                        <td>Mostrar Contactos em Fila de Espera</td>
+                                        <td class="tright">
+                                            <input type="radio" class="campaign-show-leads-inqueue" id="campaign-show-leads-inqueue-yes" name="campaign-show-leads-inqueue" /><label for="campaign-show-leads-inqueue-yes">Sim</label>
+                                            <input type="radio" class="campaign-show-leads-inqueue" id="campaign-show-leads-inqueue-no" name="campaign-show-leads-inqueue" /><label for="campaign-show-leads-inqueue-no">Não</label>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="tr-options">
+                                        <td>Mostrar Número de Contactos em Fila de Espera</td>
+                                        <td class="tright">
+                                            <input type="radio" class="campaign-show-leads-inqueue-count" id="campaign-show-leads-inqueue-count-yes" name="campaign-show-leads-inqueue-count" /><label for="campaign-show-leads-inqueue-count-yes">Sim</label>
+                                            <input type="radio" class="campaign-show-leads-inqueue-count" id="campaign-show-leads-inqueue-count-no" name="campaign-show-leads-inqueue-count" /><label for="campaign-show-leads-inqueue-count-no">Não</label>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="tr-options necomplus" style="display:none">
+                                        <td>Cópia de Gravação</td>
+                                        <td class="tright">
+                                            <input type="radio" class="campaign-copy-records" id="campaign-copy-records-yes" name="-copy-records-count" /><label for="-copy-records-yes">Sim</label>
+                                            <input type="radio" class="campaign-copy-records" id="campaign-copy-records-no" name="-copy-records-count" /><label for="-copy-records-no">Não</label>
+                                        </td>
+                                    </tr>
+
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                        <div style="padding-top:32px;" class="div-title">Definições<span class='css-orange-caret'>></span>Acções</div>           
+                        <table>
+                            <tr>
+                                <td class="td-action"><button class="btn-action" id="btn-config-dial-status"><img class="img-action" src='icons/mono_wrench_plus_16.png'></button></td>
+                                <td>Configurar os Feedbacks que a Campanha está autorizada a chamar.</td>
+                            </tr>
+
+                            <tr class="iscloud">
+                                <td class="td-action td-action-next"><button class="btn-action" id="btn-config-inbound"><img class="img-action" src='icons/mono_phone_16.png'></button></td>
+                                <td class="td-action-next">Configurar definições de Inbound da Campanha.</td>
+                            </tr>
+
+
+
+                        </table>
+                        <br />
+                        <div class="div-title">Definições<span class='css-orange-caret'>></span>Navegação</div>   
+                        <table>
+                            <tr class="tr-nav-prev">
+                                <td class="td-action"><button class="btn-action btn-nav-prev"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
+                                <td>Voltar ao menu Gestão de Campanhas.</td>
+                            </tr>
+
+                            <tr class="tr-nav-next">
+                                <td class="td-action td-action-next"><button class="btn-action btn-nav-next"><img class="img-action" src='icons/mono_redo_16.png'></button></td>
+                                <td class="td-action-next">Mudar para o separador seguinte.</td>
+                            </tr>
+                        </table>
+
+
+
+
+
+                        <!--      <div class='back-button'>
+                              <table>
+                              <tr>
+                              <td><img class="img-action" src='icons/mono_undo_16.png'></td>
+                              <td style='color:rgb(68, 68, 68); padding: 0 0 0 6px'>Voltar</td>
+                              </tr>
+                              </table>
+                              </div> -->
+
+
+
+                        <!--  <button class="back-button btn-action">Voltar</button> <!-- <img class="img-action" src='icons/mono_undo_24.png'> -->
+                    </td>
+
+
+                </tr>
             </table>
-            
 
-        
-		</div>       
-                 
+
+
+        </div>       
+
         <!-- PAUSAS -->
-    	<div id="tab2">
-        	<table  class="table-100">
-       		<tr>
-                <td class="td-half-left">
-	        	<div class="div-title">Pausas<span class='css-orange-caret'>></span>Lista de Pausas<span class='span-pauses-active-inactive'> Disponíveis</span><div style='float:right'><span>Campanha:</span>&nbsp;<span class="span-active-campaign-name" style='color:#e17009'></span></div></div>
-                    
-                    <div style='overflow-y:auto; height:329px; padding-right:6px'>
-                    	<span id='span-no-pauses'></span>
-                    	<table id="tbl-pauses">
-                    	</table> 
-                    </div> 
-				
-                <div style='margin-top: 41px !important' class="div-title">Pausas<span class='css-orange-caret'>></span>Lista de Pausas<span class='css-orange-caret'>></span>Acções</div>           
-                    <table>
-                        <tr>
-                        <td class="td-action"><button class="btn-action" id="btn-select-all-pauses"><img class="img-action" src='icons/mono_checkbox_checked_16.png'></button></td>
-                        <td>Marcar todas as Pausas.</td>
-                        </tr>
-                  		<tr>
-						<td class="td-action td-action-next"><button class="btn-action" id="btn-select-no-pauses"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
-                        <td class="td-action-next">Desmarcar todas as Pausas.</td>
-                        </tr>
-						<tr>
-						<td class="td-action td-action-next"><button class="btn-action pause-hidden-switch" id="btn-pauses-active-inactive-switch"><img class="img-action" src='icons/mono_notconnected_16.png'></button></td>
-                        <td class="td-action-next">Ver Pausas <span id="span-pauses-active-inactive">inactivas</span>.</td>
-                        </tr>
-  
-                   
-                    </table>
-                    
-                
-                
-                </td>
-    	        <td class="td-half-right">
-        	        
-                    <div class="div-title">Pausas<span class='css-orange-caret'>></span>Criar nova Pausa</div>
-                	
-                    <table>
-                    <tr>
-                        <td width="284px"><input class="input-text" style='width:272px' maxlength="30" type="text" id="input-new-pause-name"></td>
-                        <td width="150px" valign="bottom"><span style="font-size:10px; margin:0px 0px 0px 0px">(max. 30 caracteres)</span></td>
-                        <td width="25px" style="text-align:right; padding-right:3px;"><input id='spinner-new-pause-time' style="width:22px;" value="0" /></td>
-                        <td>minutos</td>
-                        <td class="td-action"><button class="btn-action" id="btn-new-pause"><img class="img-action" src='icons/mono_plus_16.png'></button></td>
-                        <td style='width:28px'>Criar</td>
-                    </tr>
-                    </table>
-
-                    <table style='margin-top:3px' >
-                    <tr style='height:20px'>
-                    	<td colspan="3" id='td-new-pause-error'></td>
-                    	
-                    </tr>       
-                </table>
-                <div class="div-title">Pausas<span class='css-orange-caret'>></span>Informação</div>
-                <table>
+        <div id="tab2">
+            <table  class="table-100">
                 <tr>
-                    <td style="text-justify: distribute">Se editar pausas já existentes vai actualizar todas as Pausas com o mesmo nome em todas as campanhas. Se precisa de Pausas com nomes ou tempos diferentes sugerimos que crie Pausas novas. </i></td>                
-                </tr>
-	            </table>
-				<br />
-	            <div class="div-title">Pausas<span class='css-orange-caret'>></span>Legenda</div>
-                <table>
-                <tr>
-                    <td width="20px"><img style='margin-top:-3px' class='mono-icon' src='icons/mono_cup_16.png'></td><td width=25%>Tempo de Pausa</td> 
-                    <td width="20px"><img class='mono-icon' src='icons/mono_wrench_16.png'></td><td width=25%>Configurar Pausa</td>  
-                    <td width="20px"><img class='mono-icon' src='icons/mono_plus_16.png'></td><td width=25%>Activar Pausa</td>
-                    <td width="20px"><img class='mono-icon' src='icons/mono_trash_16.png'></td><td width=25%>Desactivar Pausa</td>                
-                </tr>
-                </table>
-<div class="iscloud">
-              	<br />   
-                <div class="div-title">Pausas<span class='css-orange-caret'>></span>Acções</div>
-                <table>
-                        <tr>
-                        <td class="td-action"><button class="btn-action" id="btn-pause-apply-to-all-campaigns"><img class="img-action" src='icons/mono_share_16.png'></button></td>
-                        <td>Aplicar as definições de Pausa desta Campanha a todas as outras Campanhas em sistema.</td>
-                        </tr>
-                </table>     
-</div>
-                
-                <br />
-                <div class="div-title">Pausas<span class='css-orange-caret'>></span>Navegação</div>   
-                    <table>
-						<tr class="tr-nav-prev">
-						<td class="td-action"><button class="btn-action btn-nav-prev"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
-                        <td>Voltar ao menu Gestão de Campanhas.</td>
-                        </tr>
-                        
-						<tr class="tr-nav-next">
-						<td class="td-action td-action-next"><button class="btn-action btn-nav-next"><img class="img-action" src='icons/mono_redo_16.png'></button></td>
-                        <td class="td-action-next">Mudar para o separador seguinte.</td>
-                        </tr>
-                    </table>
-			</td>
-        </tr>
-    <!--    <tr style='height:30px'>
-        	<td><div style='border-top: 1px solid #DDDDDD; margin:10px 16px 6px 16px'></div>
-                    <div style='margin:0px 13px 0px 13px'>                         
-                    <table>
-                    <tr>
-                    <td width="33%" style='text-align:left'><button id='btn-select-all-pauses'>Todas</button></td>
-                    <td width="33%" style='text-align:center'><button id='btn-pauses-active-or-inactive'>Inactivas</button></td>
-                    <td width="33%" style='text-align:right'><button id='btn-select-no-pauses'>Nenhuma</button></td></tr>
-                    </table>                    
-                    </div> 
-            </td>
-            <td valign="bottom"><button class="next-button">Seguinte</button><button class="back-button">Voltar</button></td>
-        </tr> -->
+                    <td class="td-half-left">
+                        <div class="div-title">Pausas<span class='css-orange-caret'>></span>Lista de Pausas<span class='span-pauses-active-inactive'> Disponíveis</span><div style='float:right'><span>Campanha:</span>&nbsp;<span class="span-active-campaign-name" style='color:#e17009'></span></div></div>
 
-        </table>    
+                        <div style='overflow-y:auto; height:329px; padding-right:6px'>
+                            <span id='span-no-pauses'></span>
+                            <table id="tbl-pauses">
+                            </table> 
+                        </div> 
+
+                        <div style='margin-top: 41px !important' class="div-title">Pausas<span class='css-orange-caret'>></span>Lista de Pausas<span class='css-orange-caret'>></span>Acções</div>           
+                        <table>
+                            <tr>
+                                <td class="td-action"><button class="btn-action" id="btn-select-all-pauses"><img class="img-action" src='icons/mono_checkbox_checked_16.png'></button></td>
+                                <td>Marcar todas as Pausas.</td>
+                            </tr>
+                            <tr>
+                                <td class="td-action td-action-next"><button class="btn-action" id="btn-select-no-pauses"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
+                                <td class="td-action-next">Desmarcar todas as Pausas.</td>
+                            </tr>
+                            <tr>
+                                <td class="td-action td-action-next"><button class="btn-action pause-hidden-switch" id="btn-pauses-active-inactive-switch"><img class="img-action" src='icons/mono_notconnected_16.png'></button></td>
+                                <td class="td-action-next">Ver Pausas <span id="span-pauses-active-inactive">inactivas</span>.</td>
+                            </tr>
+
+
+                        </table>
+
+
+
+                    </td>
+                    <td class="td-half-right">
+
+                        <div class="div-title">Pausas<span class='css-orange-caret'>></span>Criar nova Pausa</div>
+
+                        <table>
+                            <tr>
+                                <td width="284px"><input class="input-text" style='width:272px' maxlength="30" type="text" id="input-new-pause-name"></td>
+                                <td width="150px" valign="bottom"><span style="font-size:10px; margin:0px 0px 0px 0px">(max. 30 caracteres)</span></td>
+                                <td width="25px" style="text-align:right; padding-right:3px;"><input id='spinner-new-pause-time' style="width:22px;" value="0" /></td>
+                                <td>minutos</td>
+                                <td class="td-action"><button class="btn-action" id="btn-new-pause"><img class="img-action" src='icons/mono_plus_16.png'></button></td>
+                                <td style='width:28px'>Criar</td>
+                            </tr>
+                        </table>
+
+                        <table style='margin-top:3px' >
+                            <tr style='height:20px'>
+                                <td colspan="3" id='td-new-pause-error'></td>
+
+                            </tr>       
+                        </table>
+                        <div class="div-title">Pausas<span class='css-orange-caret'>></span>Informação</div>
+                        <table>
+                            <tr>
+                                <td style="text-justify: distribute"><i>Se editar pausas já existentes vai actualizar todas as Pausas com o mesmo nome em todas as campanhas. Se precisa de Pausas com nomes ou tempos diferentes sugerimos que crie Pausas novas. </i></td>                
+                            </tr>
+                        </table>
+                        <br />
+                        <div class="div-title">Pausas<span class='css-orange-caret'>></span>Legenda</div>
+                        <table>
+                            <tr>
+                                <td width="20px"><img style='margin-top:-3px' class='mono-icon' src='icons/mono_cup_16.png'></td><td width=25%>Tempo de Pausa</td> 
+                                <td width="20px"><img class='mono-icon' src='icons/mono_wrench_16.png'></td><td width=25%>Configurar Pausa</td>  
+                                <td width="20px"><img class='mono-icon' src='icons/mono_plus_16.png'></td><td width=25%>Activar Pausa</td>
+                                <td width="20px"><img class='mono-icon' src='icons/mono_trash_16.png'></td><td width=25%>Desactivar Pausa</td>                
+                            </tr>
+                        </table>
+                        <div class="iscloud">
+                            <br />   
+                            <div class="div-title">Pausas<span class='css-orange-caret'>></span>Acções</div>
+                            <table>
+                                <tr>
+                                    <td class="td-action"><button class="btn-action" id="btn-pause-apply-to-all-campaigns"><img class="img-action" src='icons/mono_share_16.png'></button></td>
+                                    <td>Aplicar as definições de Pausa desta Campanha a todas as outras Campanhas em sistema.</td>
+                                </tr>
+                            </table>     
+                        </div>
+
+                        <br />
+                        <div class="div-title">Pausas<span class='css-orange-caret'>></span>Navegação</div>   
+                        <table>
+                            <tr class="tr-nav-prev">
+                                <td class="td-action"><button class="btn-action btn-nav-prev"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
+                                <td>Voltar ao menu Gestão de Campanhas.</td>
+                            </tr>
+
+                            <tr class="tr-nav-next">
+                                <td class="td-action td-action-next"><button class="btn-action btn-nav-next"><img class="img-action" src='icons/mono_redo_16.png'></button></td>
+                                <td class="td-action-next">Mudar para o separador seguinte.</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <!--    <tr style='height:30px'>
+                            <td><div style='border-top: 1px solid #DDDDDD; margin:10px 16px 6px 16px'></div>
+                                <div style='margin:0px 13px 0px 13px'>                         
+                                <table>
+                                <tr>
+                                <td width="33%" style='text-align:left'><button id='btn-select-all-pauses'>Todas</button></td>
+                                <td width="33%" style='text-align:center'><button id='btn-pauses-active-or-inactive'>Inactivas</button></td>
+                                <td width="33%" style='text-align:right'><button id='btn-select-no-pauses'>Nenhuma</button></td></tr>
+                                </table>                    
+                                </div> 
+                        </td>
+                        <td valign="bottom"><button class="next-button">Seguinte</button><button class="back-button">Voltar</button></td>
+                    </tr> -->
+
+            </table>    
         </div>  
-        
+
         <!-- FEEDBACKS -->
-   		<div id="tab3">
-        <table class="table-100">
-        <tr>
-			<td class="td-half-left">
-	        	<div class="div-title">Feedbacks<span class='css-orange-caret'>></span>Lista de Feedbacks<span class='span-feeds-active-inactive'> Disponíveis</span><div style='float:right'><span>Campanha:</span>&nbsp;<span class="span-active-campaign-name" style='color:#e17009'></span></div></div>
-                <div style='overflow-y:auto; height:329px; padding-right:6px'>
-                <span id='span-no-feeds'></span>
-                <table  id="tbl-feeds">
-                </table> 
-                </div>                            
+        <div id="tab3">
+            <table class="table-100">
+                <tr>
+                    <td class="td-half-left">
+                        <div class="div-title">Feedbacks<span class='css-orange-caret'>></span>Lista de Feedbacks<span class='span-feeds-active-inactive'> Disponíveis</span><div style='float:right'><span>Campanha:</span>&nbsp;<span class="span-active-campaign-name" style='color:#e17009'></span></div></div>
+                        <div style='overflow-y:auto; height:329px; padding-right:6px'>
+                            <span id='span-no-feeds'></span>
+                            <table  id="tbl-feeds">
+                            </table> 
+                        </div>                            
 
-            
-            
-            <div style='margin-top: 41px !important' class="div-title">Feedbacks<span class='css-orange-caret'>></span>Lista de Feedbacks<span class='css-orange-caret'>></span>Acções</div>           
-                    <table>
-                        <tr>
-                        <td class="td-action"><button class="btn-action" id="btn-select-all-feeds"><img class="img-action" src='icons/mono_checkbox_checked_16.png'></button></td>
-                        <td>Marcar todos as Feedbacks.</td>
-                        </tr>
-                  		<tr>
-						<td class="td-action td-action-next"><button class="btn-action" id="btn-select-no-feeds"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
-                        <td class="td-action-next">Desmarcar todos os Feedbacks.</td>
-                        </tr>
-						<tr>
-						<td class="td-action td-action-next"><button class="btn-action feed-hidden-switch" id="btn-feeds-active-inactive-switch"><img class="img-action" src='icons/mono_notconnected_16.png'></button></td>
-                        <td class="td-action-next">Ver Feedbacks <span id="span-feeds-active-inactive">inactivos</span>.</td>
-                        </tr>
-                    </table> 
-   	        </td>
-            
-            <td class="td-half-right">
-                    <div class="div-title">Feedbacks<span class='css-orange-caret'>></span>Criar novo Feedback</div>
-                	<table>
-                    <tr>
-                        <td width=284px><input class="input-text" style='width:272px' maxlength="100" type="text" id="input-new-feed-name"></td>
-                        <td width="150px" valign="bottom"><span style="font-size:10px; margin:0px 0px 0px 0px">(max. 20 caracteres)</span></td>
-                      
-                        <td width="20px"><input type='checkbox' checked="checked" id='input-new-feed-human' /></td>
-                        <td width="22px"><img class='mono-icon' src='icons/mono_speech_dual_16.png' /></td>
-                        <td width="24px"></td>
-						<td width='20px'><input type='checkbox' id='input-new-feed-callback' /></td>
-                        <td width="22px"><img class='mono-icon' src='icons/mono_phone_inverse_16.png' /></td>
-						<td>&nbsp;</td>
-                        
-                        <td class="td-action"><button class="btn-action" id="btn-new-feed"><img class="img-action" src='icons/mono_plus_16.png'></button></td>
-                        <td style='width:28px'>Criar</td>
- 
-                    </tr>
-                    </table>
-                    <table style='margin-top:3px' >
-                    <tr style="height:20px">
-                    <td colspan="3" id='td-new-feed-error'>
+
+
+                        <div style='margin-top: 41px !important' class="div-title">Feedbacks<span class='css-orange-caret'>></span>Lista de Feedbacks<span class='css-orange-caret'>></span>Acções</div>           
+                        <table>
+                            <tr>
+                                <td class="td-action"><button class="btn-action" id="btn-select-all-feeds"><img class="img-action" src='icons/mono_checkbox_checked_16.png'></button></td>
+                                <td>Marcar todos as Feedbacks.</td>
+                            </tr>
+                            <tr>
+                                <td class="td-action td-action-next"><button class="btn-action" id="btn-select-no-feeds"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
+                                <td class="td-action-next">Desmarcar todos os Feedbacks.</td>
+                            </tr>
+                            <tr>
+                                <td class="td-action td-action-next"><button class="btn-action feed-hidden-switch" id="btn-feeds-active-inactive-switch"><img class="img-action" src='icons/mono_notconnected_16.png'></button></td>
+                                <td class="td-action-next">Ver Feedbacks <span id="span-feeds-active-inactive">inactivos</span>.</td>
+                            </tr>
+                        </table> 
                     </td>
-                    </tr>       
-               		</table>
 
- 				<div class="div-title">Feedbacks<span class='css-orange-caret'>></span>Informação</div>
-                <table>
-                    <tr>
-                        <td style="text-justify: distribute">
-                        	Se editar Feedbacks já existentes vão ser actualizados todos os Feedbacks com o mesmo nome em todas as campanhas. Se precisa de Feedbacks com nomes ou definições diferentes sugerimos que crie Feedbacks novos. </i>
-  						</td>                
-                    </tr>
-	            </table>
-				<br />
+                    <td class="td-half-right">
+                        <div class="div-title">Feedbacks<span class='css-orange-caret'>></span>Criar novo Feedback</div>
+                        <table>
+                            <tr>
+                                <td width=284px><input class="input-text" style='width:272px' maxlength="100" type="text" id="input-new-feed-name"></td>
+                                <td width="150px" valign="bottom"><span style="font-size:10px; margin:0px 0px 0px 0px">(max. 20 caracteres)</span></td>
+
+                                <td width="20px"><input type='checkbox' checked="checked" id='input-new-feed-human' /></td>
+                                <td width="22px"><img class='mono-icon' src='icons/mono_speech_dual_16.png' /></td>
+                                <td width="24px"></td>
+                                <td width='20px'><input type='checkbox' id='input-new-feed-callback' /></td>
+                                <td width="22px"><img class='mono-icon' src='icons/mono_phone_inverse_16.png' /></td>
+                                <td>&nbsp;</td>
+
+                                <td class="td-action"><button class="btn-action" id="btn-new-feed"><img class="img-action" src='icons/mono_plus_16.png'></button></td>
+                                <td style='width:28px'>Criar</td>
+
+                            </tr>
+                        </table>
+                        <table style='margin-top:3px' >
+                            <tr style="height:20px">
+                                <td colspan="3" id='td-new-feed-error'>
+                                </td>
+                            </tr>       
+                        </table>
+
+                        <div class="div-title">Feedbacks<span class='css-orange-caret'>></span>Informação</div>
+                        <table>
+                            <tr>
+                                <td style="text-justify: distribute">
+                                    <i>Se editar Feedbacks já existentes vão ser actualizados todos os Feedbacks com o mesmo nome em todas as campanhas. Se precisa de Feedbacks com nomes ou definições diferentes sugerimos que crie Feedbacks novos. </i>
+                                </td>                
+                            </tr>
+                        </table>
+                        <br />
 
 
-				
-
-                <div class="div-title">Feedbacks<span class='css-orange-caret'>></span>Legenda</div>
-                <table>
-                    <tr>
-                        <td width="20px"><img class='mono-icon' src='icons/mono_speech_dual_16.png'></td><td width=20%>Resposta Humana</td>   
-                        <td width="20px"><img class='mono-icon' src='icons/mono_phone_inverse_16.png'></td><td width=10%>Callback</td>
-                        <td width="20px"><img class='mono-icon' src='icons/mono_wrench_16.png'></td><td width=20%>Configurar Feedback</td>
-                        <td width="20px"><img class='mono-icon' src='icons/mono_plus_16.png'></td><td width=20%>Activar Feedback</td>  
-                        <td width="20px"><img class='mono-icon' src='icons/mono_trash_16.png'></td><td width=20%>Desactivar Feedback</td>                                       
-                    </tr>
 
 
-                </table>
-                <div class="iscloud">
-              	<br />
-               <div class="div-title">Feedbacks<span class='css-orange-caret'>></span>Acções</div>
-                <table>
-                        <tr>
-                        <td class="td-action"><button class="btn-action" id="btn-feed-apply-to-all-campaigns"><img class="img-action" src='icons/mono_share_16.png'></button></td>
-                        <td>Aplicar as definições de Feedback desta Campanha a todas as outras Campanhas em sistema.</td>
-                        </tr>
-                </table> 
-               </div>
-               
-				<br />               
-				<div class="div-title">Feedbacks<span class='css-orange-caret'>></span>Navegação</div>   
-                    <table>
-						<tr class="tr-nav-prev">
-						<td class="td-action"><button class="btn-action btn-nav-prev"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
-                        <td>Voltar ao menu Gestão de Campanhas.</td>
-                        </tr>
-                        
-						<tr class="tr-nav-next">
-						<td class="td-action td-action-next"><button class="btn-action btn-nav-next"><img class="img-action" src='icons/mono_redo_16.png'></button></td>
-                        <td class="td-action-next">Mudar para o separador seguinte.</td>
-                        </tr>
-                    </table>
-                
-               
-     
-    
-            </td>
-        </tr>       
- 
-        </table>        
+                        <div class="div-title">Feedbacks<span class='css-orange-caret'>></span>Legenda</div>
+                        <table>
+                            <tr>
+                                <td width="20px"><img class='mono-icon' src='icons/mono_speech_dual_16.png'></td><td width=20%>Resposta Humana</td>   
+                                <td width="20px"><img class='mono-icon' src='icons/mono_phone_inverse_16.png'></td><td width=10%>Callback</td>
+                                <td width="20px"><img class='mono-icon' src='icons/mono_wrench_16.png'></td><td width=20%>Configurar Feedback</td>
+                                <td width="20px"><img class='mono-icon' src='icons/mono_plus_16.png'></td><td width=20%>Activar Feedback</td>  
+                                <td width="20px"><img class='mono-icon' src='icons/mono_trash_16.png'></td><td width=20%>Desactivar Feedback</td>                                       
+                            </tr>
+
+
+                        </table>
+                        <div class="iscloud">
+                            <br />
+                            <div class="div-title">Feedbacks<span class='css-orange-caret'>></span>Acções</div>
+                            <table>
+                                <tr>
+                                    <td class="td-action"><button class="btn-action" id="btn-feed-apply-to-all-campaigns"><img class="img-action" src='icons/mono_share_16.png'></button></td>
+                                    <td>Aplicar as definições de Feedback desta Campanha a todas as outras Campanhas em sistema.</td>
+                                </tr>
+                            </table> 
+                        </div>
+
+                        <br />               
+                        <div class="div-title">Feedbacks<span class='css-orange-caret'>></span>Navegação</div>   
+                        <table>
+                            <tr class="tr-nav-prev">
+                                <td class="td-action"><button class="btn-action btn-nav-prev"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
+                                <td>Voltar ao menu Gestão de Campanhas.</td>
+                            </tr>
+
+                            <tr class="tr-nav-next">
+                                <td class="td-action td-action-next"><button class="btn-action btn-nav-next"><img class="img-action" src='icons/mono_redo_16.png'></button></td>
+                                <td class="td-action-next">Mudar para o separador seguinte.</td>
+                            </tr>
+                        </table>
+
+
+
+
+                    </td>
+                </tr>       
+
+            </table>        
         </div>  
-        
+
        	<!-- RECICLAGEM -->
- 		<div id="tab4">
+        <div id="tab4">
 
-        <table class="table-100">
-        <tr>
-            <td class="td-half-left">
-                
-	        	<div class="div-title">Reciclagem<span class='css-orange-caret'>></span>Feedbacks em Reciclagem<div style='float:right'><span>Campanha:</span>&nbsp;<span class="span-active-campaign-name" style='color:#e17009'></span></div></div>
-                <div style='overflow-y:auto; height:484px; padding-right:6px'>
-                <span id='span-no-recycle'></span>
-               	 
-                <table id="tbl-recycle">
-                </table> 
-                </div> 
-                
-                
-            </td>
-            <td class="td-half-right">
-             <div class="div-title">Reciclagem<span class='css-orange-caret'>></span>Criar nova Reciclagem</div>
-             
-             <table>
-                    <tr>
-                        <td width=284px><select id="select-new-recycle" style="width:284px;"></select></td>
-                        <td width="150px" valign="bottom"><span style="font-size:10px; margin:0px 0px 0px 0px"></span></td>
-                      
-                        <td width="20px"><img class='mono-icon' src='icons/mono_stopwatch_16.png'></td>
-                    <td width="22px"><input id='spinner-recycle-time' style="width:22px;" value="15" /></td>
-                    <td width="24px"></td>
-                    <td width='20px'><img  class='mono-icon' src='icons/mono_reload_16.png'></td>
-                    <td width="22px"><input id='spinner-recycle-tries' style="width:16px;" value="5" /></td>
-                    <td>&nbsp;</td>
-                    
-                        
-                        <td class="td-action"><button class="btn-action" id="btn-new-recycle"><img class="img-action" src='icons/mono_plus_16.png'></button></td>
-                        <td style='width:28px'>Criar</td>
- 
-                    </tr>
-                    </table>
-                    <table style='margin-top:3px' >
-                    <tr style="height:20px">
-                    <td colspan="3" id='td-new-recycle-error'>
+            <table class="table-100">
+                <tr>
+                    <td class="td-half-left">
+
+                        <div class="div-title">Reciclagem<span class='css-orange-caret'>></span>Feedbacks em Reciclagem<div style='float:right'><span>Campanha:</span>&nbsp;<span class="span-active-campaign-name" style='color:#e17009'></span></div></div>
+                        <div style='overflow-y:auto; height:484px; padding-right:6px'>
+                            <span id='span-no-recycle'></span>
+
+                            <table id="tbl-recycle">
+                            </table> 
+                        </div> 
+
+
                     </td>
-                    </tr>       
-               		</table>
-             
-             
-  
-             <div class="div-title">Reciclagem<span class='css-orange-caret'>></span>Informação</div>
-                <table>
-                    <tr>
-                        <td style="text-justify: distribute">
-                        	A edição dos Feedbacks em Reciclagem apenas diz respeito à Campanha que está a ser editada, sendo diferente do funcionamento das Pausas e Feedbacks onde a edição aplica-se a todas as Campanhas.   
-  						</td>                
-                    </tr>
-	            </table>
-             
-             <br />
-				<div class="div-title">Reciclagem<span class='css-orange-caret'>></span>Legenda</div>
-                <table>
-                    <tr>
-                    	<td width="20px"><img class='mono-icon' src='icons/mono_refresh_16.png'></td><td width=25%>Contactos para Reciclar</td>
-                        <td width="20px"><img class='mono-icon' src='icons/mono_stopwatch_16.png'></td><td width=25%>Intervalo de Reciclagem</td>   
-                        <td width="20px"><img class='mono-icon' src='icons/mono_reload_16.png'></td><td width=25%>Nº máximo de Tentativas</td>
-                        <td width="20px"><img class='mono-icon' src='icons/mono_wrench_16.png'></td><td width=25%>Configurar Reciclagem</td>           
-                    </tr>
+                    <td class="td-half-right">
+                        <div class="div-title">Reciclagem<span class='css-orange-caret'>></span>Criar nova Reciclagem</div>
+
+                        <table>
+                            <tr>
+                                <td width=284px><select id="select-new-recycle" style="width:284px;"></select></td>
+                                <td width="150px" valign="bottom"><span style="font-size:10px; margin:0px 0px 0px 0px"></span></td>
+
+                                <td width="20px"><img class='mono-icon' src='icons/mono_stopwatch_16.png'></td>
+                                <td width="22px"><input id='spinner-recycle-time' style="width:22px;" value="15" /></td>
+                                <td width="24px"></td>
+                                <td width='20px'><img  class='mono-icon' src='icons/mono_reload_16.png'></td>
+                                <td width="22px"><input id='spinner-recycle-tries' style="width:16px;" value="5" /></td>
+                                <td>&nbsp;</td>
 
 
-                </table>
-             
-             
-             
-             <br />
-             <div class="div-title">Reciclagem<span class='css-orange-caret'>></span>Acções</div>
-                <table>
-                        <tr class="iscloud">
-                        <td class="td-action"><button class="btn-action" id="btn-recycle-apply-to-all-campaigns"><img class="img-action" src='icons/mono_indent_decrease_16.png'></button></td>
-                        <td>Aplicar as definições de Reciclagem desta Campanha a todas as outras Campanhas em sistema.</td>
-                        </tr>
-                         <tr>
-                        <td class="td-action td-action-next"><button class="btn-action" id="btn-recycle-view-disabled"><img class="img-action" src='icons/mono_cut_16.png'></button></td>
-                        <td class="td-action-next">Ver e editar Contactos que tenham sido retirados da Reciclagem pelo utilizador. <b>(inactivo)</b></td>
-                        </tr>
-                        <tr>
-                        <td class="td-action td-action-next"><button class="btn-action" id="btn-recycle-reset-callbacks"><img class="img-action" src='icons/mono_delete_16.png'></button></td>
-                        <td class="td-action-next">Reset aos Callbacks da Campanha.</td>
-                        </tr>
-                </table> 
-             
-             <br />               
-				<div class="div-title">Reciclagem<span class='css-orange-caret'>></span>Navegação</div>   
-                    <table>
-						<tr class="tr-nav-prev">
-						<td class="td-action"><button class="btn-action btn-nav-prev"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
-                        <td>Voltar ao menu Gestão de Campanhas.</td>
-                        </tr>
-                        
-						<tr class="tr-nav-next">
-						<td class="td-action td-action-next"><button class="btn-action btn-nav-next"><img class="img-action" src='icons/mono_redo_16.png'></button></td>
-                        <td class="td-action-next">Mudar para o separador seguinte.</td>
-                        </tr>
-                    </table>
-                
-		
-				
-               
-            </td>
-        </tr>
-        
-        </table>    
- 
+                                <td class="td-action"><button class="btn-action" id="btn-new-recycle"><img class="img-action" src='icons/mono_plus_16.png'></button></td>
+                                <td style='width:28px'>Criar</td>
+
+                            </tr>
+                        </table>
+                        <table style='margin-top:3px' >
+                            <tr style="height:20px">
+                                <td colspan="3" id='td-new-recycle-error'>
+                                </td>
+                            </tr>       
+                        </table>
+
+
+
+                        <div class="div-title">Reciclagem<span class='css-orange-caret'>></span>Informação</div>
+                        <table>
+                            <tr>
+                                <td style="text-justify: distribute">
+                                    A edição dos Feedbacks em Reciclagem apenas diz respeito à Campanha que está a ser editada, sendo diferente do funcionamento das Pausas e Feedbacks onde a edição aplica-se a todas as Campanhas.   
+                                </td>                
+                            </tr>
+                        </table>
+
+                        <br />
+                        <div class="div-title">Reciclagem<span class='css-orange-caret'>></span>Legenda</div>
+                        <table>
+                            <tr>
+                                <td width="20px"><img class='mono-icon' src='icons/mono_refresh_16.png'></td><td width=25%>Contactos para Reciclar</td>
+                                <td width="20px"><img class='mono-icon' src='icons/mono_stopwatch_16.png'></td><td width=25%>Intervalo de Reciclagem</td>   
+                                <td width="20px"><img class='mono-icon' src='icons/mono_reload_16.png'></td><td width=25%>Nº máximo de Tentativas</td>
+                                <td width="20px"><img class='mono-icon' src='icons/mono_wrench_16.png'></td><td width=25%>Configurar Reciclagem</td>           
+                            </tr>
+
+
+                        </table>
+
+
+
+                        <br />
+                        <div class="div-title">Reciclagem<span class='css-orange-caret'>></span>Acções</div>
+                        <table>
+                            <tr class="iscloud">
+                                <td class="td-action"><button class="btn-action" id="btn-recycle-apply-to-all-campaigns"><img class="img-action" src='icons/mono_indent_decrease_16.png'></button></td>
+                                <td>Aplicar as definições de Reciclagem desta Campanha a todas as outras Campanhas em sistema.</td>
+                            </tr>
+                            <tr>
+                                <td class="td-action td-action-next"><button class="btn-action" id="btn-recycle-view-disabled"><img class="img-action" src='icons/mono_cut_16.png'></button></td>
+                                <td class="td-action-next">Ver e editar Contactos que tenham sido retirados da Reciclagem pelo utilizador. <b>(inactivo)</b></td>
+                            </tr>
+                            <tr>
+                                <td class="td-action td-action-next"><button class="btn-action" id="btn-recycle-reset-callbacks"><img class="img-action" src='icons/mono_delete_16.png'></button></td>
+                                <td class="td-action-next">Reset aos Callbacks da Campanha.</td>
+                            </tr>
+                        </table> 
+
+                        <br />               
+                        <div class="div-title">Reciclagem<span class='css-orange-caret'>></span>Navegação</div>   
+                        <table>
+                            <tr class="tr-nav-prev">
+                                <td class="td-action"><button class="btn-action btn-nav-prev"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
+                                <td>Voltar ao menu Gestão de Campanhas.</td>
+                            </tr>
+
+                            <tr class="tr-nav-next">
+                                <td class="td-action td-action-next"><button class="btn-action btn-nav-next"><img class="img-action" src='icons/mono_redo_16.png'></button></td>
+                                <td class="td-action-next">Mudar para o separador seguinte.</td>
+                            </tr>
+                        </table>
+
+
+
+
+                    </td>
+                </tr>
+
+            </table>    
+
         </div> 
 
         <!-- SCRIPTS -->
         <div id="tab5">
-        <table class="table-100">
-        <tr>
+            <table class="table-100">
+                <tr>
 
 
 
-            <td class="td-half-left">
-                
-	        	<div class="div-title">Scripts<span class='css-orange-caret'>></span>Campanhas com Scripts associados<div style='float:right'><span>Campanha:</span>&nbsp;<span class="span-active-campaign-name" style='color:#e17009'></span></div></div>
-                <div style="height:484px; overflow-y:auto; padding-right:6px;">
-                <table id="tbl-scripts">        
-                </table>
-                </div>
-               
-            </td>
+                    <td class="td-half-left">
 
+                        <div class="div-title">Scripts<span class='css-orange-caret'>></span>Campanhas com Scripts associados<div style='float:right'><span>Campanha:</span>&nbsp;<span class="span-active-campaign-name" style='color:#e17009'></span></div></div>
+                        <div style="height:484px; overflow-y:auto; padding-right:6px;">
+                            <table id="tbl-scripts">        
+                            </table>
+                        </div>
 
-
-
-
-            <td class="td-half-right">
-            <div class="div-title">Scripts<span class='css-orange-caret'>></span>Scripts Associados</div>
-            <table>
-                    <tr style="height:27px">
-                        <td width=284px><span id="span-current-script"></span></td>
-
-                      
-
-
-                    <td>&nbsp;</td>
-                    
-
-                        
-                        
-                        <td id="td-new-script-img" style='display:none;' class="td-action"><button class="btn-action" id="btn-new-script"><img class="img-action img-script-add" src='icons/mono_plus_16.png'></button></td>
-                        <td id="td-new-script-text" style='width:28px; display:none;' class="td-script-add">Associar</td>
-                        
-                        
-                        
-                        
- 
-                    </tr>
-                    </table>
-                    <table style='margin-top:3px' >
-                    <tr style="height:20px">
-                    <td colspan="3" id='td-new-script-error'>
                     </td>
-                    </tr>       
-               		</table>
-
-  
-            
-            
-			<div class="div-title">Scripts<span class='css-orange-caret'>></span>Informação</div>
-                <table>
-                    <tr>
-                        <td style="text-justify: distribute">
-						<i>Sem informação disponivel.</i>
- 						</td>                
-                    </tr>
-	            </table>
-             
-             <br />
-				<div class="div-title">Scripts<span class='css-orange-caret'>></span>Legenda</div>
-                <table>
-                    <tr>
-                    	<td width="20px"><img class='mono-icon' src='icons/mono_notepad_16.png'></td><td width=50%>Nº de Campos</td>
-                    <!--    <td width="20px"><img class='mono-icon' src='icons/mono_stopwatch_16.png'></td><td width=25%>Intervalo de Reciclagem</td>   
-                        <td width="20px"><img class='mono-icon' src='icons/mono_reload_16.png'></td><td width=25%>Nº máximo de Tentativas</td> -->
-                        <td width="20px"><img class='mono-icon' src='icons/mono_wrench_16.png'></td><td width=50%>Configurar Script <b>(inactivo)</b></td>            
-                    </tr>
 
 
-                </table>
-             
-             
-             
-           <br />
-            <div class="div-title">Scripts<span class='css-orange-caret'>></span>Acções</div>
-            <table>
-                    <tr>
-                    <td class="td-action"><button class="btn-action" id="btn-script-remove"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
-                    <td>Remove o Script que está actualmente associado à Campanha.</td>
-                    </tr>
-          <!--           <tr>
-                    <td class="td-action td-action-next"><button class="btn-action" id=""><img class="img-action" src='icons/mono_cut_16.png'></button></td>
-                    <td class="td-action-next">Texto.</td>
-                    </tr> -->
-            </table> 
-             
-            <br />               
-            <div class="div-title">Scripts<span class='css-orange-caret'>></span>Navegação</div>   
-                <table>
-                    <tr class="tr-nav-prev">
-                    <td class="td-action"><button class="btn-action btn-nav-prev"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
-                    <td>Voltar ao menu Gestão de Campanhas.</td>
-                    </tr>
-                    
-                    <tr class="tr-nav-next">
-                    <td class="td-action td-action-next"><button class="btn-action btn-nav-next"><img class="img-action" src='icons/mono_redo_16.png'></button></td>
-                    <td class="td-action-next">Mudar para o separador seguinte.</td>
-                    </tr>
-                </table>
-            
-            
-            
-            
-            
-            </td>
-        </tr>       
 
-        </table>    
+
+
+                    <td class="td-half-right">
+                        <div class="div-title">Scripts<span class='css-orange-caret'>></span>Scripts Associados</div>
+                        <table>
+                            <tr style="height:27px">
+                                <td width=284px><span id="span-current-script"></span></td>
+
+
+
+
+                                <td>&nbsp;</td>
+
+
+
+
+                                <td id="td-new-script-img" style='display:none;' class="td-action"><button class="btn-action" id="btn-new-script"><img class="img-action img-script-add" src='icons/mono_plus_16.png'></button></td>
+                                <td id="td-new-script-text" style='width:28px; display:none;' class="td-script-add">Associar</td>
+
+
+
+
+
+                            </tr>
+                        </table>
+                        <table style='margin-top:3px' >
+                            <tr style="height:20px">
+                                <td colspan="3" id='td-new-script-error'>
+                                </td>
+                            </tr>       
+                        </table>
+
+
+
+
+                        <div class="div-title">Scripts<span class='css-orange-caret'>></span>Informação</div>
+                        <table>
+                            <tr>
+                                <td style="text-justify: distribute">
+                                    <i>Sem informação disponivel.</i>
+                                </td>                
+                            </tr>
+                        </table>
+
+                        <br />
+                        <div class="div-title">Scripts<span class='css-orange-caret'>></span>Legenda</div>
+                        <table>
+                            <tr>
+                                <td width="20px"><img class='mono-icon' src='icons/mono_notepad_16.png'></td><td width=50%>Nº de Campos</td>
+                                <!--    <td width="20px"><img class='mono-icon' src='icons/mono_stopwatch_16.png'></td><td width=25%>Intervalo de Reciclagem</td>   
+                                    <td width="20px"><img class='mono-icon' src='icons/mono_reload_16.png'></td><td width=25%>Nº máximo de Tentativas</td> -->
+                                <td width="20px"><img class='mono-icon' src='icons/mono_wrench_16.png'></td><td width=50%>Configurar Script <b>(inactivo)</b></td>            
+                            </tr>
+
+
+                        </table>
+
+
+
+                        <br />
+                        <div class="div-title">Scripts<span class='css-orange-caret'>></span>Acções</div>
+                        <table>
+                            <tr>
+                                <td class="td-action"><button class="btn-action" id="btn-script-remove"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
+                                <td>Remove o Script que está actualmente associado à Campanha.</td>
+                            </tr>
+                            <!--           <tr>
+                                      <td class="td-action td-action-next"><button class="btn-action" id=""><img class="img-action" src='icons/mono_cut_16.png'></button></td>
+                                      <td class="td-action-next">Texto.</td>
+                                      </tr> -->
+                        </table> 
+
+                        <br />               
+                        <div class="div-title">Scripts<span class='css-orange-caret'>></span>Navegação</div>   
+                        <table>
+                            <tr class="tr-nav-prev">
+                                <td class="td-action"><button class="btn-action btn-nav-prev"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
+                                <td>Voltar ao menu Gestão de Campanhas.</td>
+                            </tr>
+
+                            <tr class="tr-nav-next">
+                                <td class="td-action td-action-next"><button class="btn-action btn-nav-next"><img class="img-action" src='icons/mono_redo_16.png'></button></td>
+                                <td class="td-action-next">Mudar para o separador seguinte.</td>
+                            </tr>
+                        </table>
+
+
+
+
+
+                    </td>
+                </tr>       
+
+            </table>    
         </div> 
-        
+
         <!-- CAMPOS DINAMICOS -->
-   		<div id="tab6">
-        <table class="table-100">
-        <tr>
-            <td class="td-half-left">
-                
-	        	<div class="div-title">Campos Dinâmicos<span class='css-orange-caret'>></span>Lista de Campos<div style='float:right'><span>Campanha:</span>&nbsp;<span class="span-active-campaign-name" style='color:#e17009'></span></div></div>
-                
-                <div style='overflow-y:auto; height:484px; padding-right:6px'>
+        <div id="tab6">
+            <table class="table-100">
+                <tr>
+                    <td class="td-half-left">
+
+                        <div class="div-title">Campos Dinâmicos<span class='css-orange-caret'>></span>Lista de Campos<div style='float:right'><span>Campanha:</span>&nbsp;<span class="span-active-campaign-name" style='color:#e17009'></span></div></div>
+
+                        <div style='overflow-y:auto; height:484px; padding-right:6px'>
 
 
-                <table  id="tbl-fields">
-                </table>
+                            <table  id="tbl-fields">
+                            </table>
 
 
-                </div>
-               
-   	        </td>
-             
-	         </td>
-            <td class="td-half-right">
-                <div class="div-title">Campos Dinâmicos<span class='css-orange-caret'>></span>Criar novo Campo</div>
-                
-                
-                <table>
-                    <tr>
-						<td width=284px><input class="input-text" style='width:272px' maxlength="30" type="text" id="input-new-field"></td>
-                        <td width="150px" valign="bottom"><span style="font-size:10px; margin:0px 0px 0px 0px">(max. 30 caracteres)</span></td>                      
-                        
-                    <td width="20px"><img class='mono-icon' src='icons/mono_doc_empty_16.png'></td>
-                    <td width="22px"><input type="checkbox" checked="checked" id='input-new-field-readonly' /></td>
-                    <td>&nbsp;</td>          
-                        
-                        <td class="td-action"><button class="btn-action" id="btn-new-field"><img class="img-action" src='icons/mono_plus_16.png'></button></td>
-                        <td style='width:28px'>Criar</td>
- 
-                    </tr>
-                    </table>
-                    <table style='margin-top:3px' >
-                    <tr style="height:20px">
-                    <td colspan="3" id='td-new-field-error'>
+                        </div>
+
                     </td>
-                    </tr>       
-               		</table>
-                
-                
-                
-                <div class="div-title">Campos Dinâmicos<span class='css-orange-caret'>></span>Informação</div>
-                As definições de Campos Dinâmicos são independentes de Campanha para Campanha, podendo assim haver configurações diferentes para cada Campanha em sistema.
+                    <td class="td-half-right">
+                        <div class="div-title">Campos Dinâmicos<span class='css-orange-caret'>></span>Criar novo Campo</div>
 
-                <br />
-                <div class="div-title">Campos Dinâmicos<span class='css-orange-caret'>></span>Legenda</div>
-				<table>
-                    <tr>
-                    	<td width="20px"><img class='mono-icon' src='icons/mono_move_16.png'></td><td width=25%>Ordenar Campos</td>
-                        <td width="20px"><img class='mono-icon' src='icons/mono_doc_empty_16.png'></td><td width=25%>Campo Editável</td>   
-                        <td width="20px"><img class='mono-icon' src='icons/mono_trash_16.png'></td><td width=25%>Apagar Campo</td>
-                        <td width="20px"><img class='mono-icon' src='icons/mono_wrench_16.png'></td><td width=25%>Configurar Campo</td>           
-                    </tr>
-                </table>
-				<br />
-                
-                <div class="div-title">Campos Dinâmicos<span class='css-orange-caret'>></span>Acções</div>
-                <table>
-                        <tr class="iscloud">
-                        <td class="td-action"><button class="btn-action" id="btn-fields-apply-to-all-campaigns"><img class="img-action" src='icons/mono_indent_decrease_16.png'></button></td>
-                        <td>Aplicar as definições de Campos Dinâmicos desta Campanha a todas as outras Campanhas em sistema.</td>
-                        </tr>
-                         <tr>
-                        <td class="td-action td-action-next"><button class="btn-action" id="btn-fields-copy-from-campaign"><img class="img-action" src='icons/mono_indent_increase_16.png'></button></td>
-                        <td class="td-action-next">Copiar definições de Campos Dinamicos de outra Campanha para a Campanha actual.</td>
-                        </tr>
-                </table> 
-				<br />
-				<div class="div-title">Campos Dinâmicos<span class='css-orange-caret'>></span>Navegação</div>  
-                    <table>
-						<tr class="tr-nav-prev">
-						<td class="td-action"><button class="btn-action btn-nav-prev"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
-                        <td>Voltar ao menu Gestão de Campanhas.</td>
-                        </tr>
-                        
-						<tr class="tr-nav-next">
-						<td class="td-action td-action-next"><button class="btn-action btn-nav-next"><img class="img-action" src='icons/mono_redo_16.png'></button></td>
-                        <td class="td-action-next">Mudar para o separador seguinte.</td>
-                        </tr>
-                   </table>
-		
-            </td>
-        </tr>       
-        
-        </table>
+
+                        <table>
+                            <tr>
+                                <td width=284px><input class="input-text" style='width:272px' maxlength="30" type="text" id="input-new-field"></td>
+                                <td width="150px" valign="bottom"><span style="font-size:10px; margin:0px 0px 0px 0px">(max. 30 caracteres)</span></td>                      
+
+                                <td width="20px"><img class='mono-icon' src='icons/mono_doc_empty_16.png'></td>
+                                <td width="22px"><input type="checkbox" checked="checked" id='input-new-field-readonly' /></td>
+                                <td>&nbsp;</td>          
+
+                                <td class="td-action"><button class="btn-action" id="btn-new-field"><img class="img-action" src='icons/mono_plus_16.png'></button></td>
+                                <td style='width:28px'>Criar</td>
+
+                            </tr>
+                        </table>
+                        <table style='margin-top:3px' >
+                            <tr style="height:20px">
+                                <td colspan="3" id='td-new-field-error'>
+                                </td>
+                            </tr>       
+                        </table>
+
+
+
+                        <div class="div-title">Campos Dinâmicos<span class='css-orange-caret'>></span>Informação</div>
+                        As definições de Campos Dinâmicos são independentes de Campanha para Campanha, podendo assim haver configurações diferentes para cada Campanha em sistema.
+
+                        <br />
+                        <div class="div-title">Campos Dinâmicos<span class='css-orange-caret'>></span>Legenda</div>
+                        <table>
+                            <tr>
+                                <td width="20px"><img class='mono-icon' src='icons/mono_move_16.png'></td><td width=25%>Ordenar Campos</td>
+                                <td width="20px"><img class='mono-icon' src='icons/mono_doc_empty_16.png'></td><td width=25%>Campo Editável</td>   
+                                <td width="20px"><img class='mono-icon' src='icons/mono_trash_16.png'></td><td width=25%>Apagar Campo</td>
+                                <td width="20px"><img class='mono-icon' src='icons/mono_wrench_16.png'></td><td width=25%>Configurar Campo</td>           
+                            </tr>
+                        </table>
+                        <br />
+
+                        <div class="div-title">Campos Dinâmicos<span class='css-orange-caret'>></span>Acções</div>
+                        <table>
+                            <tr class="iscloud">
+                                <td class="td-action"><button class="btn-action" id="btn-fields-apply-to-all-campaigns"><img class="img-action" src='icons/mono_indent_decrease_16.png'></button></td>
+                                <td>Aplicar as definições de Campos Dinâmicos desta Campanha a todas as outras Campanhas em sistema.</td>
+                            </tr>
+                            <tr>
+                                <td class="td-action td-action-next"><button class="btn-action" id="btn-fields-copy-from-campaign"><img class="img-action" src='icons/mono_indent_increase_16.png'></button></td>
+                                <td class="td-action-next">Copiar definições de Campos Dinamicos de outra Campanha para a Campanha actual.</td>
+                            </tr>
+                        </table> 
+                        <br />
+                        <div class="div-title">Campos Dinâmicos<span class='css-orange-caret'>></span>Navegação</div>  
+                        <table>
+                            <tr class="tr-nav-prev">
+                                <td class="td-action"><button class="btn-action btn-nav-prev"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
+                                <td>Voltar ao menu Gestão de Campanhas.</td>
+                            </tr>
+
+                            <tr class="tr-nav-next">
+                                <td class="td-action td-action-next"><button class="btn-action btn-nav-next"><img class="img-action" src='icons/mono_redo_16.png'></button></td>
+                                <td class="td-action-next">Mudar para o separador seguinte.</td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>       
+
+            </table>
         </div> 
-        
+
         <!-- BASES DE DADOS -->
         <div id="tab7">
-        <table class="table-100">
-        <tr>
-            <td class="td-half-left">
-            
-            <div class="div-title">Bases de Dados<span class='css-orange-caret'>></span>Lista de Bases de Dados<div style='float:right'><span>Campanha:</span>&nbsp;<span class="span-active-campaign-name" style='color:#e17009'></span></div></div>
-            
-            <div style='overflow-y:auto; height:329px; padding-right:6px'>
-            <table id="tbl-dbs">
-            </table>
-            </div>    
+            <table class="table-100">
+                <tr>
+                    <td class="td-half-left">
 
-			 <div style='margin-top: 41px !important' class="div-title">Bases de Dados<span class='css-orange-caret'>></span>Lista de Bases de Dados<span class='css-orange-caret'>></span>Acções</div>           
-                    <table>
-                        <tr>
-                        <td class="td-action"><button class="btn-action" id="btn-select-all-dbs"><img class="img-action" src='icons/mono_checkbox_checked_16.png'></button></td>
-                        <td>Marcar todas as Bases de Dados.</td>
-                        </tr>
-                  		<tr>
-						<td class="td-action td-action-next"><button class="btn-action" id="btn-select-no-dbs"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
-                        <td class="td-action-next">Desmarcar todos as Bases de Dados.</td>
-                        </tr>
-						<tr>
-						<td class="td-action td-action-next"><button class="btn-action dbs-hidden-switch" id="btn-dbs-active-inactive-switch"><img class="img-action" src='icons/mono_notconnected_16.png'></button></td>
-                        <td class="td-action-next">Ver Bases de Dados <span id="span-dbs-active-inactive">inactivas</span>.</td>
-                        </tr>
-                    </table>
+                        <div class="div-title">Bases de Dados<span class='css-orange-caret'>></span>Lista de Bases de Dados<div style='float:right'><span>Campanha:</span>&nbsp;<span class="span-active-campaign-name" style='color:#e17009'></span></div></div>
 
+                        <div style='overflow-y:auto; height:329px; padding-right:6px'>
+                            <table id="tbl-dbs">
+                            </table>
+                        </div>    
 
+                        <div style='margin-top: 41px !important' class="div-title">Bases de Dados<span class='css-orange-caret'>></span>Lista de Bases de Dados<span class='css-orange-caret'>></span>Acções</div>           
+                        <table>
+                            <tr>
+                                <td class="td-action"><button class="btn-action" id="btn-select-all-dbs"><img class="img-action" src='icons/mono_checkbox_checked_16.png'></button></td>
+                                <td>Marcar todas as Bases de Dados.</td>
+                            </tr>
+                            <tr>
+                                <td class="td-action td-action-next"><button class="btn-action" id="btn-select-no-dbs"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
+                                <td class="td-action-next">Desmarcar todos as Bases de Dados.</td>
+                            </tr>
+                            <tr>
+                                <td class="td-action td-action-next"><button class="btn-action dbs-hidden-switch" id="btn-dbs-active-inactive-switch"><img class="img-action" src='icons/mono_notconnected_16.png'></button></td>
+                                <td class="td-action-next">Ver Bases de Dados <span id="span-dbs-active-inactive">inactivas</span>.</td>
+                            </tr>
+                        </table>
 
 
-            </td>
-            <td class="td-half-right">
-            <div class="div-title">Bases de Dados<span class='css-orange-caret'>></span>Criar nova Base de Dados</div>
-                
-                
-                <table>
-                    <tr>
-						<td width=284px><input class="input-text" style='width:272px' maxlength="30" type="text" id="input-new-db"></td>
-                        <td width="150px" valign="bottom"><span style="font-size:10px; margin:0px 0px 0px 0px">(max. 30 caracteres)</span></td>                      
-                        
-                    <td>&nbsp;</td>          
-                        
-                        <td class="td-action"><button class="btn-action" id="btn-new-db"><img class="img-action" src='icons/mono_plus_16.png'></button></td>
-                        <td style='width:28px'>Criar</td>
- 
-                    </tr>
-                    </table>
-                    <table style='margin-top:3px' >
-                    <tr style="height:20px">
-                    <td colspan="3" id='td-new-db-error'>
+
+
                     </td>
-                    </tr>       
-               		</table>
-                
-                
-                <div class="div-title">Base de Dados<span class='css-orange-caret'>></span>Informação</div>
-                <i>Sem informação disponivel.</i>
+                    <td class="td-half-right">
+                        <div class="div-title">Bases de Dados<span class='css-orange-caret'>></span>Criar nova Base de Dados</div>
 
-                <br />
-                <div class="div-title">Base de Dados<span class='css-orange-caret'>></span>Legenda</div>
-				<table>
-                    <tr>
-                    	<td width="20px"><img class='mono-icon' src='icons/mono_icon_database_16.png'></td><td width=50%>Nº de Contactos / Carregar Contactos</td>
-                        <td width="20px"><img class='mono-icon' src='icons/mono_wrench_16.png'></td><td width=50%>Ver Detalhes / Configurações</td>   
-         
-                    </tr>
-                </table>
-				<br />
-                
-                <div class="div-title">Bases de Dados<span class='css-orange-caret'>></span>Acções</div>
-                
-                <table>          
-               
-                        <tr>
-                        <td class="td-action"><button class="btn-action" id="btn-dbs-reset"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
-                        <td>Realizar um <i>reset</i> a uma ou mais bases de dados da Campanha.</td>
-                        </tr>
-                       
-                         
-                </table> 
-                
-				<br />
-				<div class="div-title">Bases de Dados<span class='css-orange-caret'>></span>Navegação</div>  
-                    <table>
-						<tr class="tr-nav-prev">
-						<td class="td-action"><button class="btn-action btn-nav-prev"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
-                        <td>Voltar ao menu Gestão de Campanhas.</td>
-                        </tr>
-                        
-						<tr class="tr-nav-next">
-						<td class="td-action td-action-next"><button class="btn-action btn-nav-next"><img class="img-action" src='icons/mono_redo_16.png'></button></td>
-                        <td class="td-action-next">Mudar para o separador seguinte.</td>
-                        </tr>
-                   </table>
-                
-                
-                
-            </td>
-        </tr>       
-        <tr class="tr-next-button"><td colspan="2"><button class="next-button">Gravar</button></td></tr>
-        </table>
-        
-</div>
-        
-      <div id="tab8">
-        
-            <table  class="table-100"> 
-            <tr>
-                <td class="td-half-left">
-                <div class="div-title">Dialer<span class="css-orange-caret">></span>Opções Avançadas</div>
-                <table>
-                    
-                    <tr class="tr-options dialer-options">
-                        <td>Chamadas <i>Inbound</i> em Espera</td>
-                        <td class="tright">
-                        <input type="radio" class='predictive-inbound-queue' id="inbound-queue-yes" name="inbound-queue" /><label for="inbound-queue-yes">Permitir <i>Outbound</i></label>
-                        <input type="radio" class='predictive-inbound-queue' id="inbound-queue-no" name="inbound-queue" /><label for="inbound-queue-no">Não Permitir <i>Outbound</i></label>
-                        </td>
-                    </tr>
-                    
-                    <tr class="tr-options dialer-options">
-                        <td>Apenas Operadores Disponiveis</td>
-                        <td class="tright">
-                        <input type="radio" class='predictive-avail-agents' id="avail-agents-yes" name="avail-agents" /><label for="avail-agents-yes">Sim</label>
-                        <input type="radio" class='predictive-avail-agents' id="avail-agents-no" name="avail-agents" /><label for="avail-agents-no">Não</label>
-                        </td>
-                    </tr>
-                    
-                    <tr class="tr-options dialer-options">
-                        <td>Chamadas / Operadores em Espera</td>
-                        <td class="tright">
-                            
-                            
-                        <div id="predictive-adaptive-diff-target-info" style="text-align:left; font-size: 10px; margin-bottom:2px;"></div>
-                        <div id="predictive-adaptive-diff-target" style=""></div>    
-                            
-                
-                        </td>
-                    </tr>
-                    
-                    
-                    <tr class="tr-options dialer-options">
-                        <td><i>Timeout</i> das Chamadas</td>
-                        <td class="tright">
-                            
-                            
-                       <input maxlength="3" style="width:20px !important; height: 18px; text-align:center" class="input-text" type="text" id="call-timeout-advanced">
-                         segundos   
-                
-                        </td>
-                    </tr>
-                            
-                    <tr class="tr-options dialer-options">
-                        <td><i>Caller ID</i> da Campanha</td>
-                        <td class="tright">
-                            
-                            
-                       <input maxlength="20" style="width:190px !important; height: 18px; text-align:center" class="input-text" type="text" id="campaign-callerid">
-                           
-                
-                        </td>
-                    </tr>
-                    
-                    
-                    
-                </table>
-                
-                 <div class="div-title">Dialer<span class="css-orange-caret">></span>Predictive<span class="css-orange-caret">></span>Opções</div>
-                
-                
-                  <table>
-                    <tr class="tr-options dialer-options">
-                        <td>Tipo de <i>Predictive</i></td>
-                        <td class="tright">
 
-                        <input type="radio" class='predictive-method-switch' id="method-average" name="predictive-method" /><label for="method-average">Média</label>
-                        <input type="radio" class='predictive-method-switch' id="method-limit" name="predictive-method" /><label for="method-limit">Limitado</label>
+                        <table>
+                            <tr>
+                                <td width=284px><input class="input-text" style='width:272px' maxlength="30" type="text" id="input-new-db"></td>
+                                <td width="150px" valign="bottom"><span style="font-size:10px; margin:0px 0px 0px 0px">(max. 30 caracteres)</span></td>                      
 
-                        </td>
-                    </tr>
-                    <tr class="tr-options dialer-options">
-                        <td>Percentagem de <i>DROP</i></td>
-                        <td class="tright">
-                        <input maxlength="3" style="width:20px !important; height: 18px; text-align:center" class="input-text" type="text" id="predictive-drop-percentage">
-                        %
-                        </td>
-                    </tr>
-                    <tr class="tr-options dialer-options">
-                        <td>Rácio Máximo em <i>Predictive</i></td>
-                        <td class="tright">
-                        <input maxlength="2" style="width:15px !important; height: 18px; text-align:center" class="input-text" type="text" id="predictive-max-ratio">
-                        
-                        </td>
-                    </tr>
-                    
-                    
-                
-                <tr class="tr-options dialer-options">
-                        <td>Nível de Intensidade em <i>Predictive</i> </td>
-                        <td class="tright">
-                        <div id="predictive-intensity-slider-info" style="text-align:left; font-size: 10px; margin-bottom:2px;"></div>
-                        <div id="predictive-intensity-slider"></div>
-                        </td>
-                    </tr>
-                
-                
-                
-                
-                
-                    
-                    
-                    </table>
-                   
-                 
-                </td>
+                                <td>&nbsp;</td>          
 
-                <td class="td-half-right">
-                
-                    <div class="div-title">Dialer<span class='css-orange-caret'>></span>Informação</div>
-                    
-                    <div><b>Chamadas <i>Inbound</i> em Espera: </b>Esta opção define se o <i>dialer</i> coloca chamadas em Outbound quando existem chamadas de Inbound em fila de espera.</div> 
-<br>
-                    <div><b>Apenas Operadores Disponiveis: </b>Esta opção controla se todos os operadores logados são considerados para efeitos de rácio ou se apenas são considerados os operadores que estão disponiveis. São considerados operadores disponiveis os operadores que não estejam em Chamada. </div> 
-<br>
-<div><b>Chamadas / Operadores em Espera: </b> Nesta opção é possivel configurar se a Campanha vai forçar que estejam sempre Chamadas ou Operadores em espera independentemente do numero de chamadas em fila de espera. Esta opção pode ser usada, por exemplo, para se garantir que estão sempre alguns operadores disponiveis para receber chamadas de inbound. </div> 
-<br>
-<div><b><i>Timeout</i> das Chamadas</b> Esta opção define quanto tempo cada chamada da Campanha toca antes de ser desligada e marcada como 'Sem Resposta'.</div> 
-<br>
-<div><b><i>Caller ID</i> da Campanha</b> Esta opção configura a identificação do número das chamadas feitas por esta Campanha.</div> 
-<br>
-<div><b>Tipo de <i>Predictive</i></b> 'Média' : O <i>dialer</i> vai tentar com que ao longo do dia o número de chamadas perdidas como 'DROP' sejam uma média do que foi configurado na opção 'Percentagem de DROP'. 'Limitado': Neste tipo o <i>dialer</i> vai quebrar o ritmo de chamadas mal se atinja o limite imposto na opção 'Percentagem de DROP' até que este valor suba acima do limite.  </div> 
-<br>
-<div><b>Percentagem de <i>DROP</i></b> Esta opção configura o limite percentual de chamadas 'DROP' que vai ser utilizado pelo <i>predictive dialer.</i></div> 
-<br>
-<div><b>Rácio Máximo em <i>Predictive</i></b> Esta opção limita de rácio que o predictive dialer pode utilizar.</div> 
-<br>
-<div><b>Nível de Intensidade em <i>Predictive</i></b> Esta opção controla a intensidade com que o <i>predictive dialer</i> aumenta ou diminui o rácio. </div>                 
-                
-                
-                
-                
-                </td>
-                             
-                                    
-            </tr>
+                                <td class="td-action"><button class="btn-action" id="btn-new-db"><img class="img-action" src='icons/mono_plus_16.png'></button></td>
+                                <td style='width:28px'>Criar</td>
+
+                            </tr>
+                        </table>
+                        <table style='margin-top:3px' >
+                            <tr style="height:20px">
+                                <td colspan="3" id='td-new-db-error'>
+                                </td>
+                            </tr>       
+                        </table>
+
+
+                        <div class="div-title">Base de Dados<span class='css-orange-caret'>></span>Informação</div>
+                        <i>Sem informação disponivel.</i>
+
+                        <br />
+                        <div class="div-title">Base de Dados<span class='css-orange-caret'>></span>Legenda</div>
+                        <table>
+                            <tr>
+                                <td width="20px"><img class='mono-icon' src='icons/mono_icon_database_16.png'></td><td width=50%>Nº de Contactos / Carregar Contactos</td>
+                                <td width="20px"><img class='mono-icon' src='icons/mono_wrench_16.png'></td><td width=50%>Ver Detalhes / Configurações</td>   
+
+                            </tr>
+                        </table>
+                        <br />
+
+                        <div class="div-title">Bases de Dados<span class='css-orange-caret'>></span>Acções</div>
+
+                        <table>          
+
+                            <tr>
+                                <td class="td-action"><button class="btn-action" id="btn-dbs-reset"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
+                                <td>Realizar um <i>reset</i> a uma ou mais bases de dados da Campanha.</td>
+                            </tr>
+
+
+                        </table> 
+
+                        <br />
+                        <div class="div-title">Bases de Dados<span class='css-orange-caret'>></span>Navegação</div>  
+                        <table>
+                            <tr class="tr-nav-prev">
+                                <td class="td-action"><button class="btn-action btn-nav-prev"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
+                                <td>Voltar ao menu Gestão de Campanhas.</td>
+                            </tr>
+
+                            <tr class="tr-nav-next">
+                                <td class="td-action td-action-next"><button class="btn-action btn-nav-next"><img class="img-action" src='icons/mono_redo_16.png'></button></td>
+                                <td class="td-action-next">Mudar para o separador seguinte.</td>
+                            </tr>
+                        </table>
+
+
+
+                    </td>
+                </tr>       
+                <tr class="tr-next-button"><td colspan="2"><button class="next-button">Gravar</button></td></tr>
             </table>
-            
 
-        
+        </div>
+
+        <div id="tab8">
+
+            <table  class="table-100"> 
+                <tr>
+                    <td class="td-half-left">
+                        <div class="div-title">Dialer<span class="css-orange-caret">></span>Opções Avançadas</div>
+                        <table>
+
+                            <tr class="tr-options dialer-options">
+                                <td>Chamadas <i>Inbound</i> em Espera</td>
+                                <td class="tright">
+                                    <input type="radio" class='predictive-inbound-queue' id="inbound-queue-yes" name="inbound-queue" /><label for="inbound-queue-yes">Permitir <i>Outbound</i></label>
+                                    <input type="radio" class='predictive-inbound-queue' id="inbound-queue-no" name="inbound-queue" /><label for="inbound-queue-no">Não Permitir <i>Outbound</i></label>
+                                </td>
+                            </tr>
+
+                            <tr class="tr-options dialer-options">
+                                <td>Apenas Operadores Disponiveis</td>
+                                <td class="tright">
+                                    <input type="radio" class='predictive-avail-agents' id="avail-agents-yes" name="avail-agents" /><label for="avail-agents-yes">Sim</label>
+                                    <input type="radio" class='predictive-avail-agents' id="avail-agents-no" name="avail-agents" /><label for="avail-agents-no">Não</label>
+                                </td>
+                            </tr>
+
+                            <tr class="tr-options dialer-options">
+                                <td>Chamadas / Operadores em Espera</td>
+                                <td class="tright">
+
+
+                                    <div id="predictive-adaptive-diff-target-info" style="text-align:left; font-size: 10px; margin-bottom:2px;"></div>
+                                    <div id="predictive-adaptive-diff-target" style=""></div>    
+
+
+                                </td>
+                            </tr>
+
+
+                            <tr class="tr-options dialer-options">
+                                <td><i>Timeout</i> das Chamadas</td>
+                                <td class="tright">
+
+
+                                    <input maxlength="3" style="width:20px !important; height: 18px; text-align:center" class="input-text" type="text" id="call-timeout-advanced">
+                                    segundos   
+
+                                </td>
+                            </tr>
+
+                            <tr class="tr-options dialer-options">
+                                <td><i>Caller ID</i> da Campanha</td>
+                                <td class="tright">
+
+
+                                    <input maxlength="20" style="width:190px !important; height: 18px; text-align:center" class="input-text" type="text" id="campaign-callerid">
+
+
+                                </td>
+                            </tr>
+
+
+
+                        </table>
+
+                        <div class="div-title">Dialer<span class="css-orange-caret">></span>Predictive<span class="css-orange-caret">></span>Opções</div>
+
+
+                        <table>
+                            <tr class="tr-options dialer-options">
+                                <td>Tipo de <i>Predictive</i></td>
+                                <td class="tright">
+
+                                    <input type="radio" class='predictive-method-switch' id="method-average" name="predictive-method" /><label for="method-average">Média</label>
+                                    <input type="radio" class='predictive-method-switch' id="method-limit" name="predictive-method" /><label for="method-limit">Limitado</label>
+
+                                </td>
+                            </tr>
+                            <tr class="tr-options dialer-options">
+                                <td>Percentagem de <i>DROP</i></td>
+                                <td class="tright">
+                                    <input maxlength="3" style="width:20px !important; height: 18px; text-align:center" class="input-text" type="text" id="predictive-drop-percentage">
+                                    %
+                                </td>
+                            </tr>
+                            <tr class="tr-options dialer-options">
+                                <td>Rácio Máximo em <i>Predictive</i></td>
+                                <td class="tright">
+                                    <input maxlength="2" style="width:15px !important; height: 18px; text-align:center" class="input-text" type="text" id="predictive-max-ratio">
+
+                                </td>
+                            </tr>
+
+
+
+                            <tr class="tr-options dialer-options">
+                                <td>Nível de Intensidade em <i>Predictive</i> </td>
+                                <td class="tright">
+                                    <div id="predictive-intensity-slider-info" style="text-align:left; font-size: 10px; margin-bottom:2px;"></div>
+                                    <div id="predictive-intensity-slider"></div>
+                                </td>
+                            </tr>
+
+
+
+
+
+
+
+                        </table>
+
+
+                    </td>
+
+                    <td class="td-half-right">
+
+                        <div class="div-title">Dialer<span class='css-orange-caret'>></span>Informação</div>
+
+                        <div><b>Chamadas <i>Inbound</i> em Espera: </b>Esta opção define se o <i>dialer</i> coloca chamadas em Outbound quando existem chamadas de Inbound em fila de espera.</div> 
+                        <br>
+                        <div><b>Apenas Operadores Disponiveis: </b>Esta opção controla se todos os operadores logados são considerados para efeitos de rácio ou se apenas são considerados os operadores que estão disponiveis. São considerados operadores disponiveis os operadores que não estejam em Chamada. </div> 
+                        <br>
+                        <div><b>Chamadas / Operadores em Espera: </b> Nesta opção é possivel configurar se a Campanha vai forçar que estejam sempre Chamadas ou Operadores em espera independentemente do numero de chamadas em fila de espera. Esta opção pode ser usada, por exemplo, para se garantir que estão sempre alguns operadores disponiveis para receber chamadas de inbound. </div> 
+                        <br>
+                        <div><b><i>Timeout</i> das Chamadas</b> Esta opção define quanto tempo cada chamada da Campanha toca antes de ser desligada e marcada como 'Sem Resposta'.</div> 
+                        <br>
+                        <div><b><i>Caller ID</i> da Campanha</b> Esta opção configura a identificação do número das chamadas feitas por esta Campanha.</div> 
+                        <br>
+                        <div><b>Tipo de <i>Predictive</i></b> 'Média' : O <i>dialer</i> vai tentar com que ao longo do dia o número de chamadas perdidas como 'DROP' sejam uma média do que foi configurado na opção 'Percentagem de DROP'. 'Limitado': Neste tipo o <i>dialer</i> vai quebrar o ritmo de chamadas mal se atinja o limite imposto na opção 'Percentagem de DROP' até que este valor suba acima do limite.  </div> 
+                        <br>
+                        <div><b>Percentagem de <i>DROP</i></b> Esta opção configura o limite percentual de chamadas 'DROP' que vai ser utilizado pelo <i>predictive dialer.</i></div> 
+                        <br>
+                        <div><b>Rácio Máximo em <i>Predictive</i></b> Esta opção limita de rácio que o predictive dialer pode utilizar.</div> 
+                        <br>
+                        <div><b>Nível de Intensidade em <i>Predictive</i></b> Esta opção controla a intensidade com que o <i>predictive dialer</i> aumenta ou diminui o rácio. </div>                 
+
+
+
+
+                    </td>
+
+
+                </tr>
+            </table>
+
+
+
         </div>     
 
-    	<!-- DIALOGS -->
-		        
-       
-        <div id="dialog-edit-feed-name" style="display:none">
-        <label class="input-text-label" for="edit-feed-name">Nome do Feedback</label><input style='width:194px' class="input-text" type="text" id="edit-feed-name">
+        <!-- DIALOGS -->
 
-        <div class="div-title">Informação</div>
-        As alterações aos Feedbacks feitas aqui apenas ficaram gravadas quando o utilizador clicar no botão "Gravar" no menu geral de edição dos Feedbacks. 
+
+        <div id="dialog-edit-feed-name" style="display:none">
+            <label class="input-text-label" for="edit-feed-name">Nome do Feedback</label><input style='width:194px' class="input-text" type="text" id="edit-feed-name">
+
+            <div class="div-title">Informação</div>
+            As alterações aos Feedbacks feitas aqui apenas ficaram gravadas quando o utilizador clicar no botão "Gravar" no menu geral de edição dos Feedbacks. 
         </div> 
-        
+
         <!--
         <div id="dialog-rollback" style="display:none">
             <div class="div-title">Informação</div>
@@ -1120,192 +1126,179 @@
             </tr>
             </table>
         </div> -->
-        
-        
-        
+
+
+
         <!-- opcões gerais -->
-        
+
         <!-- pausas -->
         <!-- DIALOG CONFIRM APPLY TO ALL CAMPS --> 
-        
+
         <!-- DIALOG EDIT PAUSE -->        
-        
-        
+
+
         <!-- feedbacks -->
         <!-- DIALOG EDIT FEED -->        
-        
+
         <!-- DIALOG CONFIRM APPLY TO ALL CAMPS --> 
         <div id="dialog-confirm-feed-apply-to-all-campaigns" style="display:none">
             <div class="div-title">Confirmação</div>
             Esta opção vai aplicar as definições da Campanha actual a <b>todas as Campanhas</b> existentes em sistema. <br /><br /> Clique <b><i>OK</i></b> para confirmar ou <b><i>Cancelar</i></b> para cancelar as alterações. 
         </div> 
-		<!-- reciclagem -->
+        <!-- reciclagem -->
         <!-- DIALOG CONFIRM APPLY TO ALL CAMPS --> 
-        
-        
-        
+
+
+
         <div id="dialog-edit-field-name" style="display:none">
-        <label class="input-text-label" for="new-field-name">Nome do Campo Dinâmico</label><input style='width:194px' class="input-text" type="text" id="new-field-name">
-        <div class="div-title">Informação</div>
-        As alterações aos nomes dos campos feitas aqui apenas ficaram gravadas quando o utilizador clicar no botão "Gravar" no menu geral de edição de Campos Dinâmicos. 
+            <label class="input-text-label" for="new-field-name">Nome do Campo Dinâmico</label><input style='width:194px' class="input-text" type="text" id="new-field-name">
+            <div class="div-title">Informação</div>
+            As alterações aos nomes dos campos feitas aqui apenas ficaram gravadas quando o utilizador clicar no botão "Gravar" no menu geral de edição de Campos Dinâmicos. 
         </div>
-        
-    
-  <!--      <div id="dialog-edit-recycle-time" style="display:none">
-        <div class="div-title">Novo Tempo de Reciclagem</div>
-        <table>
-            <tr>
-                <td>
-                    Em Minutos
-                </td>
-                <td style='text-align:right'>
-                   <input id="spinner-edit-recycle-time" style="width:24px;" type="text"  value =""/>
-                </td>
-            </tr>
-        </table>
-        
-        </div> 
-        
-        <div id="dialog-edit-recycle-tries" style="display:none">
-        <div class="div-title">Nº de Tentativas de Reciclagem</div>
-        <table>
-            <tr>
-                <td>
-                    Em Minutos
-                </td>
-                <td style='text-align:right'>
-                       <input id="spinner-edit-recycle-tries" style="width:24px;" type="text"  value =""/>
-                </td>
-            </tr>
-        </table>
-    
-        </div> -->
-     
-     
-     
-        
-      
-        
+
+
+        <!--      <div id="dialog-edit-recycle-time" style="display:none">
+              <div class="div-title">Novo Tempo de Reciclagem</div>
+              <table>
+                  <tr>
+                      <td>
+                          Em Minutos
+                      </td>
+                      <td style='text-align:right'>
+                         <input id="spinner-edit-recycle-time" style="width:24px;" type="text"  value =""/>
+                      </td>
+                  </tr>
+              </table>
+              
+              </div> 
+              
+              <div id="dialog-edit-recycle-tries" style="display:none">
+              <div class="div-title">Nº de Tentativas de Reciclagem</div>
+              <table>
+                  <tr>
+                      <td>
+                          Em Minutos
+                      </td>
+                      <td style='text-align:right'>
+                             <input id="spinner-edit-recycle-tries" style="width:24px;" type="text"  value =""/>
+                      </td>
+                  </tr>
+              </table>
+          
+              </div> -->
+
         <div id="dialog-load-leads" style="display:none">
-    
+
             <div id='div-file-upload'>
                 <div class="div-title">Escolha do Ficheiro</div>
                 <form enctype="multipart/form-data" method="POST" action="upload.php">
-                <table border=0>
-                <tr>
-                    <td><input type="file" size="80"  name="fileToUpload" id="fileToUpload" /></td>
-                    
-                </tr>
-                <tr style='height:16px'>
-                </tr>
-                <tr>
-                    <td style='text-align:center'><input id='btn-load-leads' type="button" onclick="UploadFile()" value="Carregar Contactos" /></td>
-                </tr>
-                </table>
+                    <table border=0>
+                        <tr>
+                            <td><input type="file" name="fileToUpload" id="fileToUpload" /></td>
+
+                        </tr>
+                        <tr style='height:16px'>
+                        </tr>
+                        <tr>
+                            <td style='text-align:center'><input id='btn-load-leads' type="button" onclick="UploadFile()" value="Carregar Contactos" /></td>
+                        </tr>
+                    </table>
                 </form>
-                
+
                 <div id='div-upload-progress' style='display:none'>
                     <div class="div-title">Progresso</div>
-                     
+
                     <table id="table-file-loader-progress">
-                    <tr style="height:28px">
-                    <td id="file-loader-progress-msg">A carregar o ficheiro com os contactos:</td> <td style="width:50px" id="file-loader-progress-loader"><img class="reset-loader" style='margin-top:3px; float:right;' src=''></td>
-                    </tr>
+                        <tr style="height:28px">
+                            <td id="file-loader-progress-msg">A carregar o ficheiro com os contactos:</td> <td style="width:50px" id="file-loader-progress-loader"><img class="reset-loader" style='margin-top:3px; float:right;' src=''></td>
+                        </tr>
                     </table>
                     <br />
                     <center><input id="btn-continue" type="button" value="Continuar" /></center>
                 </div>
             </div> 
-            
-        
-        
+
             <div id="div-field-match" style='display:none'>
                 <div class="div-title">Associação de Campos</div>
                 <div style='height:503px; overflow-y:auto;'>
-                <table id="table-field-match">
-                </table>
-                <br />
-                
+                    <table id="table-field-match">
+                    </table>
+                    <br />
+
                 </div>
                 <br />
                 <center><input type="button" id="btn-conclude" value="Continuar"  /></center>
             </div>
-            
+
             <div id="div-field-match-result" style='display:none'>
                 <div class="div-title">Progresso</div>
                 <table id="table-field-match-progress">
-                <tr style="height:28px">
-                <td id="field-match-progress-msg">A inserir os contactos na base de dados:</td> <td style="width:50px" id="field-match-progress-loader"><img class="reset-loader" style='margin-top:3px; float:right;' src=''></td>
-                </tr>
+                    <tr style="height:28px">
+                        <td id="field-match-progress-msg">A inserir os contactos na base de dados:</td> <td style="width:50px" id="field-match-progress-loader"><img class="reset-loader" style='margin-top:3px; float:right;' src=''></td>
+                    </tr>
                 </table>
                 <div class="div-title">Relatório</div>
                 <table>
-                <tr>
-                <td>
-                Total de Contactos:
-                </td>
-                <td style='text-align:right' id='td-error-log-total'></td>
-                </tr>
-                <tr>
-                <td>
-                Contactos Inseridos com Sucesso:
-                </td>
-                <td style='text-align:right' id='td-error-log-success'></td>
-                </tr>
-                <tr>
-                <td>
-                Contactos com Erro:
-                </td>
-                <td style='text-align:right' id='td-error-log-error'></td>
-                </tr>
+                    <tr>
+                        <td>
+                            Total de Contactos:
+                        </td>
+                        <td style='text-align:right' id='td-error-log-total'></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Contactos Inseridos com Sucesso:
+                        </td>
+                        <td style='text-align:right' id='td-error-log-success'></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Contactos com Erro:
+                        </td>
+                        <td style='text-align:right' id='td-error-log-error'></td>
+                    </tr>
                 </table>
-                
-                
-                
+
                 <center><input id="btn-final" type="button" value="Concluir e Fechar" /></center>
-                
-            </div>        
-            
-            
-            
-            
+
+            </div>      
         </div>
-        
-       <div id="dialog-edit-dbs" style="display:none">
-         <label class="input-text-label" for="edit-db-name">Nome da Base de Dados</label><input style='width:194px' class="input-text" type="text" id="edit-db-name">
-    	<div class="div-title">Associar a outra Campanha</div>
-        <select id='select-db-assoc-copy'></select>
-        <div class="div-title">Reset à Base de Dados</div>
-        <div><button id='btn-db-reset'>Reset à Base de Dados</button><button id='btn-view-dial-statuses'>Ver Estados em Marcação</button></div>
-        <div class="div-title">Estado da Base de Dados</div>
-        
-        <table style='margin: 6px'><tr>
-        			<td class='db-status-total1' style='text-align:center'></td>
+
+        <div id="dialog-edit-dbs" style="display:none">
+            <label class="input-text-label" for="edit-db-name">Nome da Base de Dados</label><input style='width:194px' class="input-text" type="text" id="edit-db-name">
+            <div class="div-title">Associar a outra Campanha</div>
+            <select id='select-db-assoc-copy'></select>
+            <div class="div-title">Reset à Base de Dados</div>
+            <div><button id='btn-db-reset'>Reset à Base de Dados</button><button id='btn-view-dial-statuses'>Ver Estados em Marcação</button></div>
+            <div class="div-title">Estado da Base de Dados</div>
+
+            <table style='margin: 6px'>
+                <tr>
+                    <td class='db-status-total1' style='text-align:center'></td>
                     <td class='db-status-total2' style='text-align:center'></td>
                     <td class='db-status-total3' style='text-align:center'></td>
-		</tr></table>
-        
-        
-        <div class='dt-div-wrapper-10lines'>
-        <table id='table-db-status'>
-        <thead></thead>
-        <tbody></tbody>
-        <tfoot></tfoot>
-        </table>
-    	</div>
-        <br />
-		<div style='width:100%; margin:4px;'><b>Informação: </b> A coluna "Chamados" e "Não Chamados" representam, respectivamente, os contactos que foram ou não chamados desde o último <i>reset</i> à Base de Dados.  </div>
+                </tr>
+            </table>
+
+
+            <div class='dt-div-wrapper-10lines'>
+                <table id='table-db-status'>
+                    <thead></thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+            <br />
+            <div style='width:100%; margin:4px;'><b>Informação: </b> A coluna "Chamados" e "Não Chamados" representam, respectivamente, os contactos que foram ou não chamados desde o último <i>reset</i> à Base de Dados.  </div>
         </div>   
-    
-    
-		<!-- END -->
-        
-        
+
+        <!-- END -->
+
         <!-- NEW DIALOGS -->            
         <!-- tab1 -->
         <div id="dialog-config-dial-status" style='display:none'>
             <div class="div-title">Feedbacks Autorizados<span class='css-orange-caret'>></span>Informação</div>
-            
+
             A lista que se segue representa todos os Feedbacks que a Campanha está autorizada a chamar.
             Dentro das bases de dados da Campanha todos os contactos que estiverem com um dos Feedbacks abaixo configurados são contactos que o SIPS usará para realizar chamadas. 
             <br /><br />
@@ -1314,108 +1307,106 @@
             A Reciclagem trabalha em conjunto com estas definições, sendo que, um Feedback que esteja configurado para ser reciclado tem de obrigatóriamente estar autorizado nesta lista. 
             <br /><br /> 
             As Chamadas Manuais não são limitadas por estas regras.  
-            
+
             <div class="div-title">Feedbacks Autorizados<span class='css-orange-caret'>></span>Configuração</div>
             <div style='height:232px; overflow:auto;'>
-            <table id="table-config-dial-status">
-                <tr>
-                    <td width="50%" valign="top"><table id="table-config-dial-status-1"></table></td>
-                    <td width="50%" valign="top"><table id="table-config-dial-status-2"></table></td>             
-                </tr>
-            </table>
+                <table id="table-config-dial-status">
+                    <tr>
+                        <td width="50%" valign="top"><table id="table-config-dial-status-1"></table></td>
+                        <td width="50%" valign="top"><table id="table-config-dial-status-2"></table></td>             
+                    </tr>
+                </table>
             </div>
         </div>
-        
+
         <div id="dialog-config-inbound" style='display:none'>
             <div class="div-title">Inbound<span class='css-orange-caret'>></span>Editar</div>
             <table>
-                    <tr class="tr-options">
-                        <td>Campanha com Inbound:</td>
-                        <td class="tright">
+                <tr class="tr-options">
+                    <td>Campanha com Inbound:</td>
+                    <td class="tright">
                         <input type="radio" class="campaign-inbound-switch" id="campaign_inbound_yes" name="campaign-inbound-switch-name" /><label for="campaign_inbound_yes">Sim</label>
                         <input type="radio" class="campaign-inbound-switch" id="campaign_inbound_no" name="campaign-inbound-switch-name" /><label for="campaign_inbound_no">Não</label>
-                        </td>
-                    </tr>
-           </table>             
-            
-            
+                    </td>
+                </tr>
+            </table>             
+
+
             <div class="div-title">Inbound<span class='css-orange-caret'>></span>Grupos de Inbound</div>
             <div class='div-no-groups-inbound' style='display:none'><i>A Campanha não tem acesso a Grupos de Inbound.</i></div>
             <div class="div-grupos-inbound" style='height:232px; overflow:auto;'>
-            <table id="table-config-inbound-campaigns">
-                <tr>
-                    <td width="50%" valign="top"><table id="table-config-inbound-campaigns-1"></table></td>
-                    <td width="50%" valign="top"><table id="table-config-inbound-campaigns-2"></table></td>             
-                </tr>
-            </table>
+                <table id="table-config-inbound-campaigns">
+                    <tr>
+                        <td width="50%" valign="top"><table id="table-config-inbound-campaigns-1"></table></td>
+                        <td width="50%" valign="top"><table id="table-config-inbound-campaigns-2"></table></td>             
+                    </tr>
+                </table>
             </div>
         </div>
-        
-        
-        
- 		<!-- tab2 -->
+
+        <!-- tab2 -->
         <div id="dialog-edit-pause"  style='display:none'>
             <div class="div-title">Editar Pausa<span class='css-orange-caret'>></span>Nome e Tempo</div>
             <table>
-            <tr>
-            <td width="284px">
-            <input style='width:272px' class="input-text" maxlength="30" type="text" id="input-edit-pause-name">
-            </td>
-            <td valign="bottom">
-                            <span style="font-size:10px; margin:0px 0px 0px 0px">(max. 30 caracteres)</span>
-                            </td>
-            <td style='text-align:right'>
-            <input id="spinner-pause-time-edit" style="width:24px;" type="text"  value =""/>
-            </td>
-            <td style='text-align:left; padding-left:3px; width:30px'>
-            minutos
-            </td>
-            
-            </tr>
-            </table>
-            
-            <div class="div-title">Editar Pausa<span class='css-orange-caret'>></span>Lista de Campanhas</div>
-            <div style='height:192px; overflow:auto;'>
-            <table id="table-edit-pause-campaigns">
                 <tr>
-                    <td width="50%" valign="top"><table id="table-edit-pause-campaigns-1"></table></td>
-                    <td width="50%" valign="top"><table id="table-edit-pause-campaigns-2"></table></td>             
+                    <td width="284px">
+                        <input style='width:272px' class="input-text" maxlength="30" type="text" id="input-edit-pause-name">
+                    </td>
+                    <td valign="bottom">
+                        <span style="font-size:10px; margin:0px 0px 0px 0px">(max. 30 caracteres)</span>
+                    </td>
+                    <td style='text-align:right'>
+                        <input id="spinner-pause-time-edit" style="width:24px;" type="text"  value =""/>
+                    </td>
+                    <td style='text-align:left; padding-left:3px; width:30px'>
+                        minutos
+                    </td>
+
                 </tr>
             </table>
-                
+
+            <div class="div-title">Editar Pausa<span class='css-orange-caret'>></span>Lista de Campanhas</div>
+            <div style='height:192px; overflow:auto;'>
+                <table id="table-edit-pause-campaigns">
+                    <tr>
+                        <td width="50%" valign="top"><table id="table-edit-pause-campaigns-1"></table></td>
+                        <td width="50%" valign="top"><table id="table-edit-pause-campaigns-2"></table></td>             
+                    </tr>
+                </table>
+
             </div>
-            
+
             <div class="div-title">Editar Pausas<span class='css-orange-caret'>></span>Lista de Campanhas<span class='css-orange-caret'>></span>Acções</div>           
             <table >
                 <tr>
-                <td class="td-action"><button class="btn-action" id="btn-edit-pause-all-campaigns"><img class="img-action" src='icons/mono_checkbox_checked_16.png'></button></td>
-                <td>Marcar todas as Campanhas.</td>
+                    <td class="td-action"><button class="btn-action" id="btn-edit-pause-all-campaigns"><img class="img-action" src='icons/mono_checkbox_checked_16.png'></button></td>
+                    <td>Marcar todas as Campanhas.</td>
                 </tr>
                 <tr>
-                <td class="td-action td-action-next"><button class="btn-action" id="btn-edit-pause-no-campaigns"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
-                <td class="td-action-next">Desmarcar todas as Campanhas.</td>
+                    <td class="td-action td-action-next"><button class="btn-action" id="btn-edit-pause-no-campaigns"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
+                    <td class="td-action-next">Desmarcar todas as Campanhas.</td>
                 </tr>
             </table>
 
         </div> 
-        
-            <div id="dialog-confirm-pause-apply-to-all-campaigns" style="display:none">
+
+        <div id="dialog-confirm-pause-apply-to-all-campaigns" style="display:none">
             <div class="div-title">Confirmação</div>
             Esta opção vai aplicar as definições da Campanha actual a <b>todas as Campanhas</b> existentes em sistema. <br /><br /> Clique <b><i>OK</i></b> para confirmar ou <b><i>Cancelar</i></b> para cancelar as alterações. 
-            </div> 
- 		<!-- tab3 -->
-	    <div id="dialog-edit-feed" style="display:none">
+        </div> 
+        <!-- tab3 -->
+        <div id="dialog-edit-feed" style="display:none">
             <div class="div-title">Editar Feedback<span class='css-orange-caret'>></span>Nome</div>
             <table>
-            <tr>
-            <td width="284px">
-            <input style='width:272px' class="input-text" maxlength="20" type="text" id="input-edit-feed-name">
-            </td>
-            <td valign="bottom">
-                            <span style="font-size:10px; margin:0px 0px 0px 0px">(max. 20 caracteres)</span>
-                            </td>
-           
-            </tr>
+                <tr>
+                    <td width="284px">
+                        <input style='width:272px' class="input-text" maxlength="20" type="text" id="input-edit-feed-name">
+                    </td>
+                    <td valign="bottom">
+                        <span style="font-size:10px; margin:0px 0px 0px 0px">(max. 20 caracteres)</span>
+                    </td>
+
+                </tr>
             </table>
             <div class="div-title">Editar Feedbacks<span class='css-orange-caret'>></span>Atributos de Feedbacks</div>           
             <table >
@@ -1423,481 +1414,451 @@
                     <td width="50%" valign="top"><table id="table-edit-feed-att-1"></table></td>
                     <td width="50%" valign="top"><table id="table-edit-feed-att-2"></table></td>  
                 </tr>
-                
+
             </table>    
             <div class="div-title">Editar Feedback<span class='css-orange-caret'>></span>Lista de Campanhas</div>
-            
+
             <div style='height:192px; overflow:auto;'>
-            
-            <table id="table-edit-feed-campaigns">
-                <tr>
-                    <td width="50%" valign="top"><table id="table-edit-feed-campaigns-1"></table></td>
-                    <td width="50%" valign="top"><table id="table-edit-feed-campaigns-2"></table></td>             
-                </tr>
-            </table>
-                
+
+                <table id="table-edit-feed-campaigns">
+                    <tr>
+                        <td width="50%" valign="top"><table id="table-edit-feed-campaigns-1"></table></td>
+                        <td width="50%" valign="top"><table id="table-edit-feed-campaigns-2"></table></td>             
+                    </tr>
+                </table>
+
             </div>
-            
-            
+
             <div class="div-title">Editar Feedbacks<span class='css-orange-caret'>></span>Lista de Campanhas<span class='css-orange-caret'>></span>Acções</div>           
             <table >
                 <tr>
-                <td class="td-action"><button class="btn-action" id="btn-edit-feed-all-campaigns"><img class="img-action" src='icons/mono_checkbox_checked_16.png'></button></td>
-                <td>Marcar todas as Campanhas.</td>
+                    <td class="td-action"><button class="btn-action" id="btn-edit-feed-all-campaigns"><img class="img-action" src='icons/mono_checkbox_checked_16.png'></button></td>
+                    <td>Marcar todas as Campanhas.</td>
                 </tr>
                 <tr>
-                <td class="td-action td-action-next"><button class="btn-action" id="btn-edit-feed-no-campaigns"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
-                <td class="td-action-next">Desmarcar todas as Campanhas.</td>
+                    <td class="td-action td-action-next"><button class="btn-action" id="btn-edit-feed-no-campaigns"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
+                    <td class="td-action-next">Desmarcar todas as Campanhas.</td>
                 </tr>
             </table>
-            
-         
+
         </div> 
-		<!-- tab4 -->
-		<!-- DIALOG EDIT RECYCLE -->        
+        <!-- tab4 -->
+        <!-- DIALOG EDIT RECYCLE -->        
         <div id="dialog-edit-recycle" style="display:none">
-	    <div class="div-title">Feedback em Reciclagem<span class='css-orange-caret'>></span>Intervalo e Tentativas</div>
+            <div class="div-title">Feedback em Reciclagem<span class='css-orange-caret'>></span>Intervalo e Tentativas</div>
 
             <table>
-            <tr>
-            	<td>Intervalo entre Tentativas:</td>
-                <td width="20px"><img class='mono-icon' src='icons/mono_stopwatch_16.png'></td>
-                <td width="22px"><input id='spinner-edit-recycle-time' style="width:22px;" value="" /></td>
-                <td width="24px"></td>
-                <td>Nº máximo de Tentativas:</td>
-                <td width='20px'><img  class='mono-icon' src='icons/mono_reload_16.png'></td>
-                <td width="22px"><input id='spinner-edit-recycle-tries' style="width:16px;" value="" /></td>
-            </tr>
+                <tr>
+                    <td>Intervalo entre Tentativas:</td>
+                    <td width="20px"><img class='mono-icon' src='icons/mono_stopwatch_16.png'></td>
+                    <td width="22px"><input id='spinner-edit-recycle-time' style="width:22px;" value="" /></td>
+                    <td width="24px"></td>
+                    <td>Nº máximo de Tentativas:</td>
+                    <td width='20px'><img  class='mono-icon' src='icons/mono_reload_16.png'></td>
+                    <td width="22px"><input id='spinner-edit-recycle-tries' style="width:16px;" value="" /></td>
+                </tr>
             </table>
             <br>
             <div class="div-title">Feedback em Reciclagem<span class='css-orange-caret'>></span>Nº de Tentativas</div>
-    		<div id='div-recycle-details-container' style='display:none;' class='dt-div-wrapper-10lines'>
-            <table id='recycle-details'>
-            <thead></thead>
-            <tbody></tbody>
-            <tfoot></tfoot>
+            <div id='div-recycle-details-container' style='display:none;' class='dt-div-wrapper-10lines'>
+                <table id='recycle-details'>
+                    <thead></thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+
+            <div class="div-title">Feedback em Reciclagem<span class='css-orange-caret'>></span>Nº de Tentativas<span class='css-orange-caret'>></span>Acções</div>           
+            <table>
+                <tr>
+                    <td class="td-action"><button class="btn-action" id="btn-recycle-reset-feedback"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
+                    <td>Reset ao Feedback</td>
+                </tr>
+                <!--    		<tr>
+                                                  <td class="td-action td-action-next"><button class="btn-action" id="btn-select-no-feeds"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
+                          <td class="td-action-next">Desmarcar todos os Feedbacks.</td>
+                          </tr>
+                                                  <tr>
+                                                  <td class="td-action td-action-next"><button class="btn-action feed-hidden-switch" id="btn-feeds-active-inactive-switch"><img class="img-action" src='icons/mono_notconnected_16.png'></button></td>
+                          <td class="td-action-next">Ver Feedbacks <span id="span-feeds-active-inactive">inactivos</span>.</td>
+                          </tr> -->
             </table>
-        </div>
-        
-        <div class="div-title">Feedback em Reciclagem<span class='css-orange-caret'>></span>Nº de Tentativas<span class='css-orange-caret'>></span>Acções</div>           
-                    <table>
-                        <tr>
-                        <td class="td-action"><button class="btn-action" id="btn-recycle-reset-feedback"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
-                        <td>Reset ao Feedback</td>
-                        </tr>
-              <!--    		<tr>
-						<td class="td-action td-action-next"><button class="btn-action" id="btn-select-no-feeds"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
-                        <td class="td-action-next">Desmarcar todos os Feedbacks.</td>
-                        </tr>
-						<tr>
-						<td class="td-action td-action-next"><button class="btn-action feed-hidden-switch" id="btn-feeds-active-inactive-switch"><img class="img-action" src='icons/mono_notconnected_16.png'></button></td>
-                        <td class="td-action-next">Ver Feedbacks <span id="span-feeds-active-inactive">inactivos</span>.</td>
-                        </tr> -->
-                    </table>
-        
-        
-        
-               
         </div> 
 
-
-
-        
-         <!-- DIALOG EDIT RECYCLE CONTACT DETAILS -->        
+        <!-- DIALOG EDIT RECYCLE CONTACT DETAILS -->        
         <div id="dialog-edit-recycle-contact-details" style="display:none">
-        <div id='div-recycle-contact-details-container' style='display:none;' class='dt-div-wrapper-10lines-with-icon'>
-        <table id='recycle-contact-details'>
-        <thead></thead>
-        <tbody></tbody>
-        <tfoot></tfoot>
-        </table>
-    	</div>
-		<br>
-        
-        <div class="div-title">Lista de Contactos<span class='css-orange-caret'>></span>Acções</div>   
-        <table>
-            <tr>
-            <td class="td-action"><button class="btn-action" id="btn-edit-recycle-contact-details-reset-all"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
-            <td>Realiza um <i>reset</i> a <b>todos</b> os contactos na Lista.</td>
-            </tr>
-            
-            <tr>
-            <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id="btn-edit-recycle-contact-details-disable-all"><img class="img-action" src='icons/mono_minus_16.png'></button></td>
-            <td class="td-action-next">Retira da Reciclagem <b>todos</b> os contactos na Lista.</td>
-            </tr>
-        </table>
-     
+            <div id='div-recycle-contact-details-container' style='display:none;' class='dt-div-wrapper-10lines-with-icon'>
+                <table id='recycle-contact-details'>
+                    <thead></thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+            <br>
 
+            <div class="div-title">Lista de Contactos<span class='css-orange-caret'>></span>Acções</div>   
+            <table>
+                <tr>
+                    <td class="td-action"><button class="btn-action" id="btn-edit-recycle-contact-details-reset-all"><img class="img-action" src='icons/mono_undo_16.png'></button></td>
+                    <td>Realiza um <i>reset</i> a <b>todos</b> os contactos na Lista.</td>
+                </tr>
 
+                <tr>
+                    <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id="btn-edit-recycle-contact-details-disable-all"><img class="img-action" src='icons/mono_minus_16.png'></button></td>
+                    <td class="td-action-next">Retira da Reciclagem <b>todos</b> os contactos na Lista.</td>
+                </tr>
+            </table>
         </div>
 
 
-        
+
         <div id="dialog-confirm-recycle-reset-callbacks" style="display:none">
             <div class="div-title">Confirmação</div>
             Esta opção vai eliminar <b>todos os Callbacks</b> de todos os Operadores relativos a esta Campanha <br /><br /> Clique <b><i>OK</i></b> para confirmar ou <b><i>Cancelar</i></b> para cancelar as alterações. 
         </div> 
-        
-        
-        
-		<div id="dialog-confirm-recycle-apply-to-all-campaigns" style="display:none">
+
+
+
+        <div id="dialog-confirm-recycle-apply-to-all-campaigns" style="display:none">
             <div class="div-title">Confirmação</div>
             Esta opção vai aplicar as definições da Campanha actual a <b>todas as Campanhas</b> existentes em sistema. <br /><br /> Clique <b><i>OK</i></b> para confirmar ou <b><i>Cancelar</i></b> para cancelar as alterações. 
         </div> 
         <!-- tab5 -->
         <div id="dialog-confirm-copy-script" style="display:none">
             <div class="div-title">Scripts<span class='css-orange-caret'>></span>Substituição de Script</div>
-			Realizar a cópia de um novo Script elimina todos os dados referentes ao Script previamente associado a esta Campanha. <br /><br /> Tem a certeza que quer continuar?   
+            Realizar a cópia de um novo Script elimina todos os dados referentes ao Script previamente associado a esta Campanha. <br /><br /> Tem a certeza que quer continuar?   
         </div> 
-        
+
         <div id="dialog-confirm-remove-script" style="display:none">
             <div class="div-title">Scripts<span class='css-orange-caret'>></span>Eliminação de Script</div>
-			Eliminar o Script que está actualmente associado à Campanha apaga todos os dados referentes ao mesmo. <br /><br /> Tem a certeza que quer continuar?   
+            Eliminar o Script que está actualmente associado à Campanha apaga todos os dados referentes ao mesmo. <br /><br /> Tem a certeza que quer continuar?   
         </div> 
         <!-- tab6 -->
         <div id="dialog-field-edit"  style='display:none'>
             <div class="div-title">Detalhes do Campo<span class='css-orange-caret'>></span>Nome</div>
             <table>
-            <tr>
-            <td width="284px">
-            <input style='width:272px' class="input-text" maxlength="30" type="text" id="input-field-edit-name">
-            </td>
-            <td valign="bottom">
-            <span style="font-size:10px; margin:0px 0px 0px 0px">(max. 30 caracteres)</span>
-            </td>
-           
-            </tr>
+                <tr>
+                    <td width="284px">
+                        <input style='width:272px' class="input-text" maxlength="30" type="text" id="input-field-edit-name">
+                    </td>
+                    <td valign="bottom">
+                        <span style="font-size:10px; margin:0px 0px 0px 0px">(max. 30 caracteres)</span>
+                    </td>
+                </tr>
             </table>
         </div> 
-        
-        
+
+
         <div id="dialog-confirm-fields-apply-to-all-campaigns" style="display:none">
             <div class="div-title">Confirmação</div>
             Esta opção vai aplicar as definições da Campanha actual a <b>todas as Campanhas</b> existentes em sistema. <br /><br /> Clique <b><i>OK</i></b> para confirmar ou <b><i>Cancelar</i></b> para cancelar as alterações. 
         </div> 
-        
-        
+
+
         <div id="dialog-fields-copy-from-campaign"  style='display:none'>
             <div class="div-title">Copiar Campos<span class='css-orange-caret'>></span>Campanha</div>
             <table>
-            <tr>
-            <td>
-            Campanha:
-            </td>
-            
-            <td>
-            <select style='float:right;' id="sel-fields-copy-campaign"><option value='---'>---</option></select>
-            </td>
+                <tr>
+                    <td>
+                        Campanha:
+                    </td>
 
-           
-            </tr>
+                    <td>
+                        <select style='float:right;' id="sel-fields-copy-campaign"><option value='---'>---</option></select>
+                    </td>
+                </tr>
             </table>
             <br />
             <div class="div-title">Copiar Campos<span class='css-orange-caret'>></span>Pré-visualização</div>
-        
-        
-        	<div style="height:287px; overflow:auto;">
-			<table id="tbl-fields-copy">
-            </table>        
-        	</div>
-        	
-       		<br />
+
+
+            <div style="height:287px; overflow:auto;">
+                <table id="tbl-fields-copy">
+                </table>        
+            </div>
+
+            <br />
             <div class="div-title">Copiar Campos<span class='css-orange-caret'>></span>Acções</div>
-        	<table>
-                    <tr>
+            <table>
+                <tr>
                     <td class="td-action"><button class="btn-action" id="btn-dialog-fields-copy-from-campaign"><img class="img-action" src='icons/mono_indent_increase_16.png'></button></td>
                     <td>Copiar Campos para a Campanha actual.</td>
-                    </tr>
-               <!--      <tr>
-                    <td class="td-action td-action-next"><button class="btn-action" id="btn-fields-copy-from-campaign"><img class="img-action" src='icons/mono_indent_increase_16.png'></button></td>
-                    <td class="td-action-next">Copiar definições de Campos Dinamicos de outra Campanha para a Campanha actual.</td>
-                    </tr> -->
+                </tr>
+                <!--      <tr>
+                     <td class="td-action td-action-next"><button class="btn-action" id="btn-fields-copy-from-campaign"><img class="img-action" src='icons/mono_indent_increase_16.png'></button></td>
+                     <td class="td-action-next">Copiar definições de Campos Dinamicos de outra Campanha para a Campanha actual.</td>
+                     </tr> -->
             </table> 
         </div> 
         <!-- tab7 -->
         <div id="dialog-dbs-edit"  style='display:none'>
             <div class="div-title">Configurar<span class='css-orange-caret'>></span>Nome</div>
-            
-            
-            
+
+
+
             <table>
-            <tr>
-            <td width="284px">
-            <input style='width:272px' class="input-text" maxlength="20" type="text" id="input-edit-db-name">
-            </td>
-            <td valign="bottom">
-                            <span style="font-size:10px; margin:0px 0px 0px 0px">(max. 30 caracteres)</span>
-                            </td>
-           
-            </tr>
+                <tr>
+                    <td width="284px">
+                        <input style='width:272px' class="input-text" maxlength="20" type="text" id="input-edit-db-name">
+                    </td>
+                    <td valign="bottom">
+                        <span style="font-size:10px; margin:0px 0px 0px 0px">(max. 30 caracteres)</span>
+                    </td>
+
+                </tr>
             </table>
             <br />
             <div class="div-title">Configurar<span class='css-orange-caret'>></span>Associada à Campanha</div>
-            
-            <table>
-            <tr>
-            <td>
-            Campanha:
-            </td>
-            
-            <td>
-            <select style='float:right;' id="sel-dbs-change-campaign"></select>
-            </td>
 
-           
-            </tr>
+            <table>
+                <tr>
+                    <td>
+                        Campanha:
+                    </td>
+
+                    <td>
+                        <select style='float:right;' id="sel-dbs-change-campaign"></select>
+                    </td>
+                </tr>
             </table>
-            
+
             <br />
             <div class="div-title">Ver Detalhes<span class='css-orange-caret'>></span>Contactos por Feedback</div>
             <div id='div-dbs-state-container' style='display:none;' class='dt-div-wrapper-8lines-with-icon'>
-            <table id='dbs-state'>
-            <thead></thead>
-            <tbody></tbody>
-            <tfoot></tfoot>
-            </table>
+                <table id='dbs-state'>
+                    <thead></thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
             </div>
 
-<br><br>
+            <br><br>
             <form id="form-download-db" onsubmit=DownloadDB(); action="extras/csv/dbdownload.php" target="_self" method="post">
                 <input type="hidden" id="download-db-id" name="download_db_id" value="">
-            <div class="div-title">Configurar<span class='css-orange-caret'>></span>Acções</div>
-            <table>
+                <div class="div-title">Configurar<span class='css-orange-caret'>></span>Acções</div>
+                <table>
                     <tr>
-                    <td class="td-action"><button class="btn-action" id="btn-dialog-dbs-download-db"><img class="img-action" src='icons/mono_download_16.png'></button></td>
-                    <td>Fazer download da Base de Dados</td>
+                        <td class="td-action"><button class="btn-action" id="btn-dialog-dbs-download-db"><img class="img-action" src='icons/mono_download_16.png'></button></td>
+                        <td>Fazer download da Base de Dados</td>
                     </tr>
-            </table>
+                </table>
             </form>
 
 
-     <!--  		<br />
-            <div class="div-title">Ver Detalhes<span class='css-orange-caret'>></span>Acções</div>
-        	<table>
-                    <tr>
-                    <td class="td-action"><button class="btn-action" id="btn-dialog-fields-copy-from-campaign"><img class="img-action" src='icons/mono_indent_increase_16.png'></button></td>
-                    <td>Texto.</td>
-                    </tr>
-					<tr>
-                    <td class="td-action td-action-next"><button class="btn-action" id="btn-fields-copy-from-campaign"><img class="img-action" src='icons/mono_indent_increase_16.png'></button></td>
-                    <td class="td-action-next">Texto.</td>
-                    </tr>
-            </table> -->
+            <!--  		<br />
+                   <div class="div-title">Ver Detalhes<span class='css-orange-caret'>></span>Acções</div>
+                       <table>
+                           <tr>
+                           <td class="td-action"><button class="btn-action" id="btn-dialog-fields-copy-from-campaign"><img class="img-action" src='icons/mono_indent_increase_16.png'></button></td>
+                           <td>Texto.</td>
+                           </tr>
+                                               <tr>
+                           <td class="td-action td-action-next"><button class="btn-action" id="btn-fields-copy-from-campaign"><img class="img-action" src='icons/mono_indent_increase_16.png'></button></td>
+                           <td class="td-action-next">Texto.</td>
+                           </tr>
+                   </table> -->
         </div>
-        
-        
-        
+
+
+
         <div id="dialog-edit-dbs-contact-details" style="display:none">
-        <div id='div-dbs-contact-details-container' style='display:none;' class='dt-div-wrapper-10lines-with-icon'>
-        <table id='dbs-contact-details'>
-        <thead></thead>
-        <tbody></tbody>
-        <tfoot></tfoot>
-        </table>
-    	</div>
-		<br>
-        
-     <!--   <div class="div-title">Lista de Contactos<span class='css-orange-caret'>></span>Acções</div>   
-        <table>
-            <tr>
-            <td class="td-action"><button class="btn-action" id=""><img class="img-action" src='icons/mono_undo_16.png'></button></td>
-            <td>Realiza um <i>reset</i> a <b>todos</b> os contactos na Lista.</td>
-            </tr>
-            
-            <tr>
-            <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id=""><img class="img-action" src='icons/mono_minus_16.png'></button></td>
-            <td class="td-action-next">Retira da Reciclagem <b>todos</b> os contactos na Lista.</td>
-            </tr>
-        </table> -->
-     
+            <div id='div-dbs-contact-details-container' style='display:none;' class='dt-div-wrapper-10lines-with-icon'>
+                <table id='dbs-contact-details'>
+                    <thead></thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+            <br>
+
+            <!--   <div class="div-title">Lista de Contactos<span class='css-orange-caret'>></span>Acções</div>   
+               <table>
+                   <tr>
+                   <td class="td-action"><button class="btn-action" id=""><img class="img-action" src='icons/mono_undo_16.png'></button></td>
+                   <td>Realiza um <i>reset</i> a <b>todos</b> os contactos na Lista.</td>
+                   </tr>
+                   
+                   <tr>
+                   <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id=""><img class="img-action" src='icons/mono_minus_16.png'></button></td>
+                   <td class="td-action-next">Retira da Reciclagem <b>todos</b> os contactos na Lista.</td>
+                   </tr>
+               </table> -->
+
 
 
         </div> 
-        
+
         <div id="dialog-db-wizard-view-details" style="display:none">
-        
-        
-        <div class="div-title">Ver Detalhes<span class='css-orange-caret'>></span>Contactos com Erros</div>
-        
-        <div>
-        <table id='tbl-db-wizard-view-details'>
-            <thead><th>Linha</th><th>Descrição do Erro</th></thead>
-            <tbody>
-                
-            </tbody>
-        </table>
-        </div>
-        <div style="margin-top:12px !important" class="div-title">Ver Detalhes<span class='css-orange-caret'>></span>Contactos com Erros<span class='css-orange-caret'>></span>Acções</div>
-         <table>
-            <tr>
-            <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id="btn-db-force-duplicate"><img class="img-action" src='icons/mono_doc_import.png'></button></td>
-            <td class="td-action-next">Forçar a inserção de contactos com o tupo de erro "Contacto Duplicado".</td>
-            </tr>
-            
-    <!--        <tr>
-            <td class="td-action td-action-next"><button class="btn-action btn-nav-nexts" id="btn-db-wizard-view-details"><img class="img-action" src='icons/mono_zoom_16.png'></button></td>
-            <td class="td-action-next">Ver detalhes dos Contactos com erros.</td>
-    </tr> -->
-            
-            
-        </table>
-        
-        
-        </div>
-        
-        
-		 <div id="dialog-db-wizard" style="display:none">
-         <table class="table-100">
-         <tr>
-         <td style="width:30% !important" class="td-half-left">
-         <div class="div-title">Novos Contactos<span class='css-orange-caret'>></span>Ficheiro</div>
-         <form enctype="multipart/form-data" method="POST" action="extras/upload/upload.php">  
-         	<input type="file" id="input-db-wizard-upload" name="input-db-wizard-upload" />
-         </form>
-         <br />
-         <div style="height:180px">
-         <table id='tbl-db-wizard-errors'>
-         <tr>
-         <td id="td-db-wizard-file-error"></td>
-         <td style="width:16px; height:16px" id="td-db-wizard-file-icon"></td>
-         </tr>
-         </table>
-         </div>
-         
-         
-         
-         
-         </td>
-         <td style="width:70% !important" rowspan="3" class="td-half-right">
-         <div class="div-title">Novos Contactos<span class='css-orange-caret'>></span>Campos Dinâmicos</div>
-         
-         <div style='height:385px; overflow:auto'>
-         <table  id="table-db-wizard-match-fields">
-         </table>
-         </div>
-         
-          
-         
-         <div style="margin-top:17px !important" class="div-title">Novos Contactos<span class='css-orange-caret'>></span>Campos Dinâmicos<span class='css-orange-caret'>></span>Resultado</div>
- 		 <table id='tbl-db-wizard-match-fields-errors'>
-         <tr>
-         <td style="vertical-align:top; width:200px" id="td-db-wizard-match-fields-error"></td>
-         <td style="vertical-align:top; text-align: right" id="td-db-wizard-match-fields-error-icon"></td>
-         
-         </tr>
-         <tr>
-         <td id="td-db-wizard-match-fields-duplicates">
-             
-         </td>
-         <td class="td-action" id="td-db-wizard-match-fields-duplicates-button">
-             
-         </td>
-         </tr>
-         </table>
-         
-         
-        
-         
-         
-         
-         
-         
-         </td>
-         </tr>
-         <tr>
-         <td style="width:30% !important"  class="td-half-left">
-         <div class="div-title">Novos Contactos<span class='css-orange-caret'>></span>Acções</div>   
-        <table>
-            <tr>
-            <td class="td-action"><button class="btn-action" id="btn-db-wizard-load-file"><img class="img-action" src='icons/mono_arrow_up_16.png'></button></td>
-            <td>Carregar ficheiro de contactos.</td>
-            </tr>
-            
-            <tr>
-            <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id="btn-db-wizard-match-fields"><img class="img-action" src='icons/mono_indent_decrease_16.png'></button></td>
-            <td class="td-action-next">Confirmar associação de campos.</td>
-            </tr>
-            
-			<tr>
-            <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id="btn-db-wizard-match-fields-restart"><img class="img-action" src='icons/mono_brush_16.png'></button></td>
-            <td class="td-action-next">Recomeçar a associação de campos.</td>
-            </tr>
-            
-			<tr>
-            <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id="btn-db-wizard-restart"><img class="img-action" src='icons/mono_reload_16.png'></button></td>
-            <td class="td-action-next">Recomeçar.</td>
-            </tr>
-            
-        </table>
-         </td>
-         </tr>
-         <tr>
-         <td style="width:30% !important" class="td-half-left">
-          <div style="margin-top:13px !important" class="div-title">Novos Contactos<span class='css-orange-caret'>></span>Campos Dinâmicos<span class='css-orange-caret'>></span>Acções</div>
-         <table>
-      <!--      <tr>
-            <td class="td-action"><button class="btn-action" id="btn-db-wizard-accept-leads"><img class="img-action" src='icons/mono_check_16.png'></button></td>
-            <td>Aceitar os Contactos carregados e fechar a janela.</td>
-            </tr> -->
-            
-            <tr>
-            <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id="btn-db-wizard-deny-leads"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
-            <td class="td-action-next">Cancelar a inserção dos Contactos carregados e recomeçar.</td>
-            </tr>
-            
-			<tr>
-            <td class="td-action td-action-next">
-                
-                <form id="form-errors" onsubmit=onsubmittest(this); action="extras/csv/dbload_error.php" target="_self" method="post">
-                <button type="submit" class="btn-action btn-nav-nexts" id="btn-db-wizard-view-details"><img class="img-action" src='icons/mono_zoom_16.png'></button>
-                <input type="hidden" name="hidden_error_line" id="hidden_error_line" value=""><input type="hidden" name="hidden_error_text" id="hidden_error_text" value=""><input type="hidden" name="hidden_error_phone" id="hidden_error_phone" value="">
-                </form>
-                
-                </td>
-            <td class="td-action-next">Ver detalhes dos Contactos com erros.</td>
-            </tr>
-            
-            
-        </table>
-         </td>
-         </tr>
-         </table>
-         </div>
-        
 
-         <div id="dialog-dbs-reset" style='display:none'>
-            <div class="div-title">Reset a Bases de Dados<span class='css-orange-caret'>></span>Bases de Dados da Campanha</div>
-            
 
-            <div style='height:360px; overflow:auto; margin-top: 12px'>
-            <table id="table-dbs-reset">
+            <div class="div-title">Ver Detalhes<span class='css-orange-caret'>></span>Contactos com Erros</div>
+
+            <div>
+                <table id='tbl-db-wizard-view-details'>
+                    <thead>
+                        <tr>
+                            <th>Linha</th>
+                            <th>Descrição do Erro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin-top:12px !important" class="div-title">Ver Detalhes<span class='css-orange-caret'>></span>Contactos com Erros<span class='css-orange-caret'>></span>Acções</div>
+            <table>
                 <tr>
-                    <td width="50%" valign="top"><table id="table-dbs-reset-1"></table></td>
-                    <td width="50%" valign="top"><table id="table-dbs-reset-2"></table></td>             
+                    <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id="btn-db-force-duplicate"><img class="img-action" src='icons/mono_doc_import.png'></button></td>
+                    <td class="td-action-next">Forçar a inserção de contactos com o tupo de erro "Contacto Duplicado".</td>
+                </tr>
+
+                <!--        <tr>
+                        <td class="td-action td-action-next"><button class="btn-action btn-nav-nexts" id="btn-db-wizard-view-details"><img class="img-action" src='icons/mono_zoom_16.png'></button></td>
+                        <td class="td-action-next">Ver detalhes dos Contactos com erros.</td>
+                </tr> -->
+
+
+            </table>
+
+
+        </div>
+
+
+        <div id="dialog-db-wizard" style="display:none">
+            <table class="table-100">
+                <tr>
+                    <td style="width:30% !important" class="td-half-left">
+                        <div class="div-title">Novos Contactos<span class='css-orange-caret'>></span>Ficheiro</div>
+                        <form enctype="multipart/form-data" method="POST" action="extras/upload/upload.php">  
+                            <input type="file" id="input-db-wizard-upload" name="input-db-wizard-upload" />
+                        </form>
+                        <br />
+                        <div style="height:180px">
+                            <table id='tbl-db-wizard-errors'>
+                                <tr>
+                                    <td id="td-db-wizard-file-error"></td>
+                                    <td style="width:16px; height:16px" id="td-db-wizard-file-icon"></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                    </td>
+                    <td style="width:70% !important" rowspan="3" class="td-half-right">
+                        <div class="div-title">Novos Contactos<span class='css-orange-caret'>></span>Campos Dinâmicos</div>
+
+                        <div style='height:385px; overflow:auto'>
+                            <table  id="table-db-wizard-match-fields">
+                            </table>
+                        </div>
+
+                        <div style="margin-top:17px !important" class="div-title">Novos Contactos<span class='css-orange-caret'>></span>Campos Dinâmicos<span class='css-orange-caret'>></span>Resultado</div>
+                        <table id='tbl-db-wizard-match-fields-errors'>
+                            <tr>
+                                <td style="vertical-align:top; width:200px" id="td-db-wizard-match-fields-error"></td>
+                                <td style="vertical-align:top; text-align: right" id="td-db-wizard-match-fields-error-icon"></td>
+
+                            </tr>
+                            <tr>
+                                <td id="td-db-wizard-match-fields-duplicates">
+
+                                </td>
+                                <td class="td-action" id="td-db-wizard-match-fields-duplicates-button">
+
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:30% !important"  class="td-half-left">
+                        <div class="div-title">Novos Contactos<span class='css-orange-caret'>></span>Acções</div>   
+                        <table>
+                            <tr>
+                                <td class="td-action"><button class="btn-action" id="btn-db-wizard-load-file"><img class="img-action" src='icons/mono_arrow_up_16.png'></button></td>
+                                <td>Carregar ficheiro de contactos.</td>
+                            </tr>
+
+                            <tr>
+                                <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id="btn-db-wizard-match-fields"><img class="img-action" src='icons/mono_indent_decrease_16.png'></button></td>
+                                <td class="td-action-next">Confirmar associação de campos.</td>
+                            </tr>
+
+                            <tr>
+                                <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id="btn-db-wizard-match-fields-restart"><img class="img-action" src='icons/mono_brush_16.png'></button></td>
+                                <td class="td-action-next">Recomeçar a associação de campos.</td>
+                            </tr>
+
+                            <tr>
+                                <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id="btn-db-wizard-restart"><img class="img-action" src='icons/mono_reload_16.png'></button></td>
+                                <td class="td-action-next">Recomeçar.</td>
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:30% !important" class="td-half-left">
+                        <div style="margin-top:13px !important" class="div-title">Novos Contactos<span class='css-orange-caret'>></span>Campos Dinâmicos<span class='css-orange-caret'>></span>Acções</div>
+                        <table>
+                            <!--      <tr>
+                                  <td class="td-action"><button class="btn-action" id="btn-db-wizard-accept-leads"><img class="img-action" src='icons/mono_check_16.png'></button></td>
+                                  <td>Aceitar os Contactos carregados e fechar a janela.</td>
+                                  </tr> -->
+
+                            <tr>
+                                <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id="btn-db-wizard-deny-leads"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
+                                <td class="td-action-next">Cancelar a inserção dos Contactos carregados e recomeçar.</td>
+                            </tr>
+
+                            <tr>
+                                <td class="td-action td-action-next">
+
+                                    <form id="form-errors" onsubmit=onsubmittest(this); action="extras/csv/dbload_error.php" target="_self" method="post">
+                                        <button type="submit" class="btn-action btn-nav-nexts" id="btn-db-wizard-view-details"><img class="img-action" src='icons/mono_zoom_16.png'></button>
+                                        <input type="hidden" name="hidden_error_line" id="hidden_error_line" value=""><input type="hidden" name="hidden_error_text" id="hidden_error_text" value=""><input type="hidden" name="hidden_error_phone" id="hidden_error_phone" value="">
+                                    </form>
+
+                                </td>
+                                <td class="td-action-next">Ver detalhes dos Contactos com erros.</td>
+                            </tr>
+
+
+                        </table>
+                    </td>
                 </tr>
             </table>
-            </div>
-            
-            <table>
-
-            <tr>
-            <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id="btn-reset-dbs-select-all"><img class="img-action" src='icons/mono_checkbox_checked_16.png'></button></td>
-            <td class="td-action-next">Marcar todas as Bases de Dados.</td>
-            </tr>
-            
-            <tr>
-            <td class="td-action td-action-next"><button class="btn-action btn-nav-nexts" id="btn-reset-dbs-select-none"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
-            <td class="td-action-next">Desmarcar todas as Bases de Dados.</td>
-            </tr>
-            
-            
-        </table>
-            
-            
-            
         </div>
 
 
-</div>
+        <div id="dialog-dbs-reset" style='display:none'>
+            <div class="div-title">Reset a Bases de Dados<span class='css-orange-caret'>></span>Bases de Dados da Campanha</div>
+
+
+            <div style='height:360px; overflow:auto; margin-top: 12px'>
+                <table id="table-dbs-reset">
+                    <tr>
+                        <td width="50%" valign="top"><table id="table-dbs-reset-1"></table></td>
+                        <td width="50%" valign="top"><table id="table-dbs-reset-2"></table></td>             
+                    </tr>
+                </table>
+            </div>
+
+            <table>
+                <tr>
+                    <td class="td-action td-action-next"><button class="btn-action btn-nav-next" id="btn-reset-dbs-select-all"><img class="img-action" src='icons/mono_checkbox_checked_16.png'></button></td>
+                    <td class="td-action-next">Marcar todas as Bases de Dados.</td>
+                </tr>
+
+                <tr>
+                    <td class="td-action td-action-next"><button class="btn-action btn-nav-nexts" id="btn-reset-dbs-select-none"><img class="img-action" src='icons/mono_cancel_16.png'></button></td>
+                    <td class="td-action-next">Desmarcar todas as Bases de Dados.</td>
+                </tr>
+            </table>
+
+        </div>
+
+    </div>
 </div>
 

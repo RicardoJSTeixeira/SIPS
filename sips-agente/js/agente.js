@@ -4383,7 +4383,7 @@ function DispoSelect_submit()
 function  DispoSelect_submit_allowed()
 {
     
-    if (clientName === 'necomplus') {
+    if (agent_allow_copy_record) {
                     if(!$("#record2clipboard").data().copied){
                     alert_box("Não copiou o link da gravação.");            
                     return false;
@@ -9746,6 +9746,11 @@ $(function() {
         $(this).effect("highlight",
                 {color: "#51a351"}, 1000)
                 .data().copied = true;
+    });
+    
+    
+    $("#getPausas").click(function(){
+        get_tempo_pausa();
     });
 });
 

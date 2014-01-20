@@ -145,3 +145,9 @@ if($action=="iscloud"){
     $row = mysql_fetch_row($result);
     echo json_encode(array("iscloud"=>$row[0]=="1"));
 }
+if($action=="client"){
+    $query = "SELECT server_description FROM servers limit 1";
+    $result = mysql_query($query) or die(mysql_error);
+    $row = mysql_fetch_row($result);
+    echo json_encode(array("client"=>/*"necomplus"*/$row[0]));
+}
