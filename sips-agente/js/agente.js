@@ -476,16 +476,16 @@ String.prototype.toHHMMSS = function() {
 function stats_update() {
     var statsDiv = document.getElementById("statsTimer");
 
-    if ((VD_live_call_secondS + dead_time + AgentDispoing) < 1) {
+    if ((VD_live_call_secondS + dead_time + AgentDispoing) < 0) {
         statsDiv.style.backgroundColor = "#FFFFFF";
     } else {
-        if (VD_live_call_secondS > 1 && dead_time < 1) {
+        if (VD_live_call_secondS > 0 && dead_time < 0) {
             statsDiv.style.backgroundColor = "#66FF66";
         }
-        if (dead_time > 1) {
+        if (dead_time > 0) {
             statsDiv.style.backgroundColor = "#FF3366";
         }
-        if (AgentDispoing > 1) {
+        if (AgentDispoing > 0) {
             statsDiv.style.backgroundColor = "#66CCFF";
 
             $("#stats_feedback").html(AgentDispoing.toString().toHHMMSS());
@@ -1394,7 +1394,7 @@ function LeaDSearcHVieWClose()
 // Open up a callback customer record as manual dial preview mode
 function new_callback_call(taskCBid, taskLEADid, taskCBalt)
 {
-    if ((VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1) || (AgentDispoing > 1))
+    if ((VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1) || (AgentDispoing > 0))
     {
         if ((auto_pause_precall == 'Y') && ((agent_pause_codes_active == 'Y') || (agent_pause_codes_active == 'FORCE')) && (AutoDialWaiting == 1) && (VD_live_customer_call != 1) && (alt_dial_active != 1) && (MD_channel_look != 1) && (in_lead_preview_state != 1))
         {
@@ -4059,7 +4059,7 @@ function DispoSelectContent_create(taskDSgrp, taskDSstage)
     }
     FecharCallbacks();
     HidEGenDerPulldown();
-    AgentDispoing = 1;
+    AgentDispoing = (AgentDispoing>0)?AgentDispoing:1;
     var CBflag = '';
     var dispo_HTML = "";
     $.each(campaign_status, function() {
