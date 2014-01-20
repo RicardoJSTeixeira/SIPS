@@ -13,11 +13,11 @@ $(function() {
         }
     }).listen('hash');
 
-      if(!window.location.hash.length){
-            $.history.push("view/dashboard.html");
-            $("#principal").load("view/dashboard.html");
+    if (!window.location.hash.length) {
+        $.history.push("view/dashboard.html");
+        $("#principal").load("view/dashboard.html");
         $("#sidebar").find("[href='view/dashboard.html']").addClass("active");
-      }
+    }
 
 
     $('#sidebar a').click(function(e) {
