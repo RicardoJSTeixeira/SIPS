@@ -360,6 +360,7 @@ if ($_POST['nc_flag'] == "nc_post") {
                                         <option value="B/COI"> Consultório Coimbra </option>
                                         <option value="B/COP"> Consultório Porto - Bolhão </option>
                                         <option value="B/COV"> Consultório Covilhã </option>
+                                        <option value="B/BREL"> Consultório Elvas </option>
                                         <option value="B/EVO"> Consultório Évora </option>
                                         <option value="B/FAR"> Consultório Faro </option>
                                         <option value="B/FDF"> Consultório Figueira da Foz </option>
@@ -384,7 +385,8 @@ if ($_POST['nc_flag'] == "nc_post") {
                                         <option value="B/SAN"> Consultório Santarém </option>
                                         <option value="B/SMF"> Consultório Santa Maria da Feira </option>
                                         <option value="B/STB"> Consultório Setúbal </option>
-                                        <option value="B/TMR"> Consultório Tomar </option>
+                                        <option value="B/TMR"> Consultório Tomar </option> 
+                                        <option value="B/BRTO"> Consultório Torres Novas </option>
                                         <option value="B/TVD"> Consultório Torres Vedras </option>
                                         <option value="B/VCA"> Consultório Viana do Castelo </option>
                                         <option value="B/VFX"> Consultório Vila Franca de Xira </option>
