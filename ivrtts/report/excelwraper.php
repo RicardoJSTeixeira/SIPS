@@ -38,10 +38,10 @@ class excelwraper {
         )
     );
 
-    public function __construct($excel, $zeroSheet,$zeroSpace,$inicialSpace) {
-
+    public function __construct($excel, $title,$zeroSpace,$inicialSpace) {
+$title=preg_replace("/[^a-zA-Z0-9]+/", "", $title);
         $this->phpexcel = $excel;
-        $this->phpexcel->getActiveSheet()->setTitle($zeroSheet);
+        $this->phpexcel->getActiveSheet()->setTitle($title);
         $this->lettNum[] = (object)$this->cord_template;
         $this->lettNum[$this->selectedSheet]->space=$zeroSpace;
          $this->lettNum[$this->selectedSheet]->number=$inicialSpace;
@@ -158,7 +158,7 @@ class excelwraper {
 
             $dataseriesLabels[] = new PHPExcel_Chart_DataSeriesValues('String', $this->phpexcel->getActiveSheet()->getTitle() . '!$' . chr($col) . '$' .$this->lettNum[$this->selectedSheet]->number, NULL);
         }
-
+       // echo $col;exit;
         return $dataseriesLabels;
     }
 
