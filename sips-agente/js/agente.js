@@ -476,10 +476,10 @@ String.prototype.toHHMMSS = function() {
 function stats_update() {
     var statsDiv = document.getElementById("statsTimer");
 
-    if ((VD_live_call_secondS + dead_time + AgentDispoing) < 0) {
+    if ((VD_live_call_secondS + dead_time + AgentDispoing) < 1) {
         statsDiv.style.backgroundColor = "#FFFFFF";
     } else {
-        if (VD_live_call_secondS > 0 && dead_time < 0) {
+        if (VD_live_call_secondS > 0 && dead_time < 1) {
             statsDiv.style.backgroundColor = "#66FF66";
         }
         if (dead_time > 0) {
