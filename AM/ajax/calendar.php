@@ -3,9 +3,9 @@ $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 $start = filter_var($_POST["start"]);
 $end = filter_var($_POST["end"]);
 
-require "$root/AM/lib/db.php";
-require "$root/AM/lib/calendar.php";
-require "$root/AM/lib/user.php";
+require "$root/AM/lib_php/db.php";
+require "$root/AM/lib_php/calendar.php";
+require "$root/AM/lib_php/user.php";
 
 $user = new UserLogin($db);
 $user->confirm_login();

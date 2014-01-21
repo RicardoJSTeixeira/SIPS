@@ -2,9 +2,9 @@
 
 set_time_limit(1);
 
-require '../lib/db.php';
-require '../lib/calendar.php';
-require '../lib/user.php';
+require '../lib_php/db.php';
+require '../lib_php/calendar.php';
+require '../lib_php/user.php';
 
 $user = new UserLogin($db);
 $user->confirm_login();

@@ -6,6 +6,8 @@ $(function()
     $.post("ajax/create_client.php", {action: "get_fields", campaign_id: "W00002"},
     function(data)
     {
+        $("#inputs_div1").empty();
+        $("#inputs_div2").empty();
         var controler = 0;
         var input
         var custom_class = "";

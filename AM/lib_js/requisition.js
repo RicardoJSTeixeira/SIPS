@@ -1,0 +1,197 @@
+
+var requisition = function(base_requisition)
+{
+    var me = this;
+    this.base_requisitions = base_requisition;
+    var aparelho = [], pilha = [], peça = [], optgroups = [], product = 1;
+    this.init = function()
+    {
+        $.get("/AM/view/requisitions/requisition_modal.html", function(data) {
+            me.base_requisitions.append(data);
+        });
+    };
+    this.get_current_requisitions = function(table_path, show_admin)
+    {
+        get_encomendas_atuais(table_path, show_admin);
+    };
+    
+    //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
+    this.new_requisition = function(new_requisition_zone, current_requisition_zone) {
+ 
+        $.get("/AM/view/requisitions/new_requisition.html", function(data) {
+            new_requisition_zone.append(data);
+            $(" #requisition_form").validationEngine();
+            $("#requisition_form").show();
+            $.post('ajax/admin.php', {action: "listar_produtos"},
+            function(data)
+            {
+                $(" #new_requisition_products").empty();
+                aparelho = [];
+                pilha = [];
+                peça = [];
+                optgroups = [];
+                optgroups.push("<optgroup value='1' label='Aparelhos'></optgroup>");
+                optgroups.push("<optgroup value = '2' label = 'Pilhas' > </optgroup>");
+                optgroups.push("<optgroup value = '3' label = 'Peças' > </optgroup>");
+                $.each(data, function()
+                {
+                    switch (this.category)
+                    {
+                        case "Aparelho":
+                            aparelho.push("<option data-max_month=" + this.max_req_m + " data-max_special=" + this.max_req_s + "  id=" + this.id + ">" + this.name + "</option>");
+                            break;
+                        case "Pilha":
+                            pilha.push("<option data-max_month=" + this.max_req_m + " data-max_special=" + this.max_req_s + " id=" + this.id + ">" + this.name + "</option>");
+                            break;
+                        case "Peça":
+                            peça.push("<option data-max_month=" + this.max_req_m + " data-max_special=" + this.max_req_s + " id=" + this.id + ">" + this.name + "</option>");
+                            break;
+                    }
+                });
+            }, "json");
+        });
+        // ADICIONAR E REMOVER ITEMS DA LISTA DE PRODUTOS NA NOVA ENCOMENDA
+        $(new_requisition_zone).on("click", "#new_requisition_product_add_line", function(e)
+        {
+            e.preventDefault();
+            $(" #new_requisition_product_tbody")
+                    .append("<tr id='tr" + product + "'>\n\
+                                <td ><select data-linha_id=" + product + " id='product_select" + product + "' class='chosen-select new_requisition_select_product'></select></td>\n\
+                                <td ><span id='product_span_max" + product + "'></span></td>\n\
+                                <td> <input class='input-mini' id='product_input" + product + "' type='number' min='1' value='1'></td>\n\
+                                <td><button class='btn  remove_item_requisition_table' value='" + product + "'><i  class='icon-remove'></i> </button></td></tr>");
+            $(" #product_select" + product).chosen({no_results_text: "Sem resultados"}).append(optgroups);
+            $(" #product_select" + product)
+                    .find("optgroup[value='1']").append(aparelho).end()
+                    .find("optgroup[value='2']").append(pilha).end()
+                    .find("optgroup[value='3']").append(peça).end().trigger("chosen:updated").trigger("change");
+            product += 1;
+        });
+        $(new_requisition_zone).on("change", ".new_requisition_select_product", function()
+        {
+            if ($(" #req_m_radio").is(":checked"))
+            {
+                $(" #product_span_max" + $(this).data().linha_id).text($(this).find("option:selected").data().max_month);
+                $(" #product_input" + $(this).data().linha_id).attr("max", ($(this).find("option:selected").data().max_month));
+                if ($(" #product_input" + $(this).data().linha_id).val() > $(this).find("option:selected").data().max_month)
+                    $(" #product_input" + $(this).data().linha_id).val($(this).find("option:selected").data().max_month);
+            }
+            else
+            {
+                $(" #product_span_max" + $(this).data().linha_id).text($(this).find("option:selected").data().max_special);
+                $(" #product_input" + $(this).data().linha_id).attr("max", ($(this).find("option:selected").data().max_special));
+                if ($(" #product_input" + $(this).data().linha_id).val() > $(this).find("option:selected").data().max_special)
+                    $(" #product_input" + $(this).data().linha_id).val($(this).find("option:selected").data().max_special);
+            }
+            
+            
+        });
+// SUBMITAR A ENCOMENDA
+        $(new_requisition_zone).on("click", "#new_requisition_submit_button", function()
+        {
+            var produtos = [];
+            var count = 0;
+            $.each($(" #new_requisition_product_tbody tr"), function()
+            {
+                count++;
+                produtos.push({"id": $(this).find("select").find("option:selected").attr("id"), "quantity": $(this).find("input[type='number']").val()});
+            });
+            if (!count)
+                $.jGrowl('Escolha produtos para encomendar', {life: 4000});
+            else
+            {
+                if ($(" #requisition_form").validationEngine("validate"))
+                {
+                    $.post('ajax/requisition.php', {action: "criar_encomenda",
+                        type: $(" #req_m_radio").is(":checked") == true ? "month" : "special",
+                        lead_id: $(" #new_requisition_lead_id").val(),
+                        contract_number: $(" #new_requisition_contract").val(),
+                        attachment: "aaaaaa",
+                        products_list: produtos},
+                    function() {
+                        if (current_requisition_zone !== undefined)
+                            get_encomendas_atuais(current_requisition_zone);
+                        $.jGrowl('Encomenda realizada com sucesso', {life: 4000});
+                        $(" #new_requisition_lead_id").val("");
+                        $(" #new_requisition_contract").val("");
+                        $(" #new_requisition_product_tbody").empty();
+                    }, "json");
+                }
+            }
+        });
+        $(new_requisition_zone).on("click", ".remove_item_requisition_table", function()
+        {
+            $(" #new_requisition_product_tbody tr[id='tr" + $(this).val() + "']").empty();
+        });
+        $(new_requisition_zone).on("change", "input[name='req_radio']", function()
+        {
+            $(" .new_requisition_select_product").trigger("change");
+            if ($(this).val() == 2)
+                $(" #special_req_div").show("blind");
+            else
+            {
+                $.post('ajax/requisition.php', {action: "check_month_requisitions",
+                    id: $(this).val()}, function(data)
+                {
+                    if (data > 0)
+                    {
+                        $.jGrowl('Já efectuou pelo menos 1 encomenda mensal este mês', {life: 4000});
+                        $("#req_s_radio").prop("checked", true);
+                    }
+                    else
+                        $("#special_req_div").hide("blind");
+                }, "json");
+            }
+        });
+        $(new_requisition_zone).on("submit", " #requisition_form", function(e)
+        {
+            e.preventDefault();
+        });
+    };//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    this.new_requisition_destroy = function(new_requisition_zone)
+    {
+        new_requisition_zone.empty().off();
+    };
+//-------------------------------------------------------------------------------------
+
+
+
+
+    //EXTRA FUNCTIONS---------------------------------------------------------
+
+    function get_encomendas_atuais(table_path, show_admin)
+    {
+
+        var Table_view_requisition = table_path.dataTable({
+            "aaSorting": [[4, "desc"]],
+            "bSortClasses": false,
+            "bProcessing": true,
+            "bDestroy": true,
+            "bAutoWidth": false,
+            "sPaginationType": "full_numbers",
+            "sAjaxSource": '/AM/ajax/requisition.php',
+            "fnServerParams": function(aoData) {
+                aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
+            },
+            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Anexo"}, {"sTitle": "Status"}, {"sTitle": "Produtos"}],
+            "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
+        });
+
+        //VER PRODUTOS DE ENCOMENDAS FEITAS
+        table_path.on("click", ".ver_requisition_products", function()
+        {
+            $.post('ajax/requisition.php', {action: "listar_produtos_por_encomenda",
+                id: $(this).val()}, function(data)
+            {
+                $(" #ver_product_modal #show_requisition_products_tbody").empty();
+                $.each(data, function()
+                {
+                    $(" #ver_product_modal #show_requisition_products_tbody").append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.quantity + "</td></tr>");
+                });
+        
+                $("#ver_product_modal").modal("show");
+            },
+                    "json");
+        });
+    }
+};

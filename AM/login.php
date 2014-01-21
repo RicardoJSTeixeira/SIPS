@@ -1,7 +1,7 @@
 <?php
 
-require 'lib/db.php';
-require 'lib/user.php';
+require 'lib_php/db.php';
+require 'lib_php/user.php';
 
 if (!empty($_POST) && isset($_POST["username"]) && isset($_POST["password"])) {
     $username = filter_var($_POST["username"]);

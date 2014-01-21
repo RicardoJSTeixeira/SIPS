@@ -2,9 +2,9 @@
 
 error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
-require("../lib/db.php");
+require("../lib_php/db.php");
 
-require("../lib/user.php");
+require("../lib_php/user.php");
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }

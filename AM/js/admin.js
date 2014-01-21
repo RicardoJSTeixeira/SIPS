@@ -100,21 +100,13 @@ function get_info()
                 .find("optgroup[value='3']").append(peça).end().trigger("chosen:updated");
     }, "json");
     //ENCOMENDAS--------------------------------------------------------------------------------------
-    var Table_view_requisition = $('#admin_zone #view_requisition_datatable').dataTable({
-        "bSortClasses": false,
-        "bProcessing": true,
-        "bDestroy": true,
-        "bAutoWidth": false,
-        "sPaginationType": "full_numbers",
-        "sAjaxSource": 'ajax/requisition.php',
-        "fnServerParams": function(aoData) {
-            aoData.push({"name": "action", "value": "listar_requisition_to_datatable"});
-        },
-        "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Anexo"}, {"sTitle": "Status"}, {"sTitle": "Produtos"}, {"sTitle": "Opções"},],
-        "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}});
+     
+    requisition1 = new requisition($("#admin_extra_zone"));
 
+    requisition1.init();
+    requisition1.get_current_requisitions($("#view_requisition_datatable"),1 );
 }
-//PRODUTOS---------------------------------------------------------------------------------------------------------------------
+//PRODUTOS--------------------------------------------------------------------------------------------------------------------------------------------------
 //EDITAR PRODUTO
 
 $("#admin_zone").on("click", ".item_edit_button", function()
@@ -143,7 +135,7 @@ $("#admin_zone").on("click", ".item_edit_button", function()
         $("#admin_zone #ep_name").val(data.name);
         $("#admin_zone #ep_parent optgroup option[value='" + data.parent + "']").prop("selected", true).trigger("chosen:updated");
         $("#admin_zone #ep_mrm").val(data.max_req_m);
-        $("#admin_zone #ep_mrw").val(data.max_req_w);
+        $("#admin_zone #ep_mrw").val(data.max_req_s);
         $("#admin_zone #ep_category option[value='" + data.category + "']").prop("selected", true);
         $("#admin_zone #ep_type option[value='" + data.type + "']").prop("selected", true);
         $("#admin_zone .chosen-container").css("width", "250px");
@@ -159,7 +151,7 @@ $("#admin_zone #edit_product_button").click(function()
             name: $("#admin_zone #ep_name").val(),
             parent: $("#admin_zone #ep_parent option:selected").val(),
             max_req_m: $("#admin_zone #ep_mrm").val(),
-            max_req_w: ($("#admin_zone #ep_mrw").val() > $("#admin_zone #ep_mrm").val()) ? $("#admin_zone #ep_mrm").val() : $("#admin_zone #ep_mrw").val(),
+            max_req_s: ($("#admin_zone #ep_mrw").val() > $("#admin_zone #ep_mrm").val()) ? $("#admin_zone #ep_mrm").val() : $("#admin_zone #ep_mrw").val(),
             category: $("#admin_zone #ep_category").val(),
             type: $("#admin_zone #ep_type option:selected").val()
         }, function() {
@@ -215,7 +207,7 @@ $("#admin_zone #create_product_button").click(function()
             name: $("#admin_zone #cp_name").val(),
             parent: $("#admin_zone #cp_parent option:selected").val(),
             max_req_m: $("#admin_zone #cp_mrm").val(),
-            max_req_w: $("#admin_zone #cp_mrw").val(),
+            max_req_s: $("#admin_zone #cp_mrw").val(),
             category: $("#admin_zone #cp_category").val(),
             type: $("#admin_zone #cp_type option:selected").val()
 
@@ -229,7 +221,7 @@ $("#admin_zone #create_product_button").click(function()
 
 
 
-// CLIENTES-----------------------------------------------------------------------------------------------------------------------
+// CLIENTES-------------------------------------------------------------------------------------------------------------------------------------------------
 // relatorio de clientes sem marcação
 $("#admin_zone #download_csm_button").click(function()
 {
@@ -243,7 +235,7 @@ $("#admin_zone #download_excel_csm_button").click(function()
     }
 });
 
-//ENCOMENDAS -----------------------------------------------------------------------------------------------------------------------
+//ENCOMENDAS -----------------------------------------------------------------------------------------------------------------------------------------------
 //VER PRODUTOS DE ENCOMENDAS FEITAS
 $("#admin_zone").on("click", ".ver_requisition_products", function()
 {
@@ -253,7 +245,7 @@ $("#admin_zone").on("click", ".ver_requisition_products", function()
         $("#admin_zone #ver_product_modal #show_requisition_products_tbody").empty();
         $.each(data, function()
         {
-            $("#admin_zone #ver_product_modal #show_requisition_products_tbody").append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.quantity + "</td></tr>")
+            $("#admin_zone #ver_product_modal #show_requisition_products_tbody").append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.quantity + "</td></tr>");
         })
         $("#admin_zone #ver_product_modal").modal("show");
     },
@@ -265,14 +257,16 @@ $("#admin_zone").on("click", ".ver_requisition_products", function()
 
 $("#admin_zone").on("click", ".accept_requisition", function()
 {
+    var this_button = $(this);
     $.post('ajax/requisition.php', {action: "accept_requisition", id: $(this).val()}, function() {
-  //   $("#admin_zone #view_requisition_datatable").
+        this_button.parent("div").parent("td").prev().text("Aprovado");
     }, "json");
 });
 
 $("#admin_zone").on("click", ".decline_requisition", function()
 {
+    var this_button = $(this);
     $.post('ajax/requisition.php', {action: "decline_requisition", id: $(this).val()}, function() {
-        
+        this_button.parent("div").parent("td").prev().text("Rejeitado");
     }, "json");
 });

@@ -1,117 +1,35 @@
 
-<div id="main_requisition">
 
 
-
-    <div id="ver_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalLabel">Ver Encomenda</h3>
-        </div>
-        <div class="modal-body">
-            <table class="table table-bordered">
-                <thead>
-                <th>Produto</th>
-                    <th>Tipo</th>
-                <th>Quantidade</th>
-                
-                </thead>
-                <tbody id="show_requisition_products_tbody">
-                    
-                </tbody>
-            </table>
-        </div>
-        <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Sair</button>
-        </div>
-    </div>
-
-    <div class="row-fluid">
-        <div class="span12">
-            <div class="grid-transparent">
-                <div class="grid-title">
-                    <div class="pull-left">
-                        Encomendas atuais
-                    </div>
+<div class="row-fluid">
+    <div class="span12">
+        <div class="grid-transparent">
+            <div class="grid-title">
+                <div class="pull-left">
+                    Encomendas atuais
                 </div>
-                <div class="grid-content" id="requisition_div">
-                    <table id="view_requisition_datatable" class="table table-bordered table-mod-2"></table>
-                </div> 
             </div>
+            <div class="grid-content" id="requisition_div">
+                <table id="view_requisition_datatable" class="table table-bordered table-mod-2"></table>
+            </div> 
         </div>
     </div>
-    <div class="row-fluid">
-        <div class="span12">
-            <div class="grid-transparent">       
-                <div class="grid-title">
-                    <div class="pull-left">
-                        Nova encomenda
-                    </div>
-                    <div class="pull-right">
-                        <button class="btn icon-chevron-down" id="button_filtro_new_requisition"></button>  
-                    </div>
+</div>
+<div class="row-fluid">
+    <div class="span12">
+        <div class="grid-transparent">       
+            <div class="grid-title">
+                <div class="pull-left">
+                    Nova encomenda
                 </div>
-
-
-                <div class="grid-content" id="new_requisition_div" style="display: none">
-                    <form id="requisition_form">
-                        <div class="row-fluid">
-                            <div class="span6">
-                                <div class="FormRow">
-                                    <h4>Tipo</h4>
-                                    <div class="FormRight">
-                                        <input  type="radio" id="req_m_radio" name="req_radio" value="1" >
-                                        <label class="radio_name radio inline"  for="req_m_radio"><span></span>Mensal</label> 
-                                        <input  type="radio" id="req_s_radio" name="req_radio"  value="2" checked="checked" >
-                                        <label class="radio_name radio inline"  for="req_s_radio"><span></span>Especial</label>  
-                                        <div   id="special_req_div" style="display:none">
-                                            <h4>Numero de Cliente</h4>
-                                            <div class="FormRight">
-                                                <input type="text" id="new_requisition_lead_id" class="validate[required]">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="FormRow">
-                                    <h4>Anexo</h4>
-                                    <div class="FormRight">
-                                        <input type="text" class="input-medium">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="span6">
-                                <div class="FormRow">
-                                    <h4>Número de contrato</h4>
-                                    <div class="FormRight">
-                                        <input id="new_requisition_contract" type="text" class="validate[required]" >
-                                        <button class="btn btn-primary right" id="new_requisition_submit_button"><i class="icon-check"></i>Encomendar</button>
-                                    </div>
-                                </div>
-                                <div class="FormRow">
-                                    <h4>Produtos</h4>
-                                    <div class="FormRight">
-                                        <table class="table table-bordered table-mod-2">
-                                            <thead>
-
-                                            <th>Nome do Produto</th>
-                                             <th>Max</th>
-                                            <th>Quantidade</th>
-                                            <th>Opção</th>
-                                            </thead>
-                                            <tbody id="new_requisition_product_tbody">
-                                            </tbody>
-                                        </table>
-                                        <button id="new_requisition_product_add_line" class="btn btn-primary right"><i class="icon-plus"></i>Adicionar produto</button>
-
-
-                                    </div> 
-                                </div>
-                            </div>
-                    </form>
+                <div class="pull-right">
+                    <button class="btn icon-chevron-down" id="button_filtro_new_requisition"></button>  
                 </div>
-                <div class="FormRow">
+            </div>
 
-                </div>
+
+            <div class="grid-content" id="new_requisition_div" style="display: none">
+
             </div> 
         </div>
 
@@ -130,5 +48,11 @@
     </div>
 </div>
 
+<div id="main_requisition">
 
+
+</div>
+
+<script type="text/javascript" src="/AM/lib_js/requisition.js" ></script>
 <script type="text/javascript" src="/AM/js/requisition.js" ></script>
+

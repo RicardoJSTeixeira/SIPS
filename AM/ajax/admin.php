@@ -7,7 +7,7 @@ ini_set('display_errors', '1');
 require "$root/ini/db.php";
 require "$root/ini/dbconnect.php";
 require "$root/ini/user.php";
-require "$root/AM/lib/products.php";
+require "$root/AM/lib_php/products.php";
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }

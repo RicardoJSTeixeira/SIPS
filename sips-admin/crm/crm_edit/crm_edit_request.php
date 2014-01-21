@@ -46,12 +46,15 @@ switch ($action) {
 
 
     case "get_calls_all":
+         
         $has_script = false;
-        $calls = $crmEdit->get_calls_outbound($lead_id)+ $crmEdit->get_calls_inbound($lead_id);
-            $count = $crmEdit->check_has_script($campaign_id);
+        $calls = $crmEdit->get_calls_outbound($lead_id) + $crmEdit->get_calls_inbound($lead_id);
+        $count = $crmEdit->check_has_script($campaign_id);
+   
         if ($count[0] > 0) {
             $has_script = true;
         }
+
         if (count($calls, 1) > 0) {
             foreach ($calls as $key => &$value1) {
                 foreach ($value1 as &$value) {
@@ -66,7 +69,7 @@ switch ($action) {
         }
 
     case "get_calls_archive":
-        $calls = $crmEdit->get_calls_archive_outbound($lead_id)+ $crmEdit->get_calls_archive_inbound($lead_id);
+        $calls = $crmEdit->get_calls_archive_outbound($lead_id) + $crmEdit->get_calls_archive_inbound($lead_id);
         foreach ($calls as $key => &$value1) {
             foreach ($value1 as &$value) {
                 $value[1] = gmdate("H:i:s", $value[1]);

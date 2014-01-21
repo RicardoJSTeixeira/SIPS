@@ -84,7 +84,7 @@ class crm_edit_class {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $js["campaign_name"] = $row["group_name"];
             if (!isset($js["campaign_name"])) {
-                 $js["campaign_name"]="Sem campanha";
+                $js["campaign_name"] = "Sem campanha";
             }
         }
         return $js;

@@ -19,9 +19,9 @@ var crm_main = function(crm_main_zone, file_path)
         config.marcacao_cliente = false;
 
 
-       $.extend(true, config, ext_config);
+        $.extend(true, config, ext_config);
 
-         $.get(file_path + "crm_main/crm_main.html", function(data) {
+        $.get(file_path + "crm_main/crm_main.html", function(data) {
             crm_main_zone.append(data);
             select["campanha"] = crm_main_zone.find("#select_campanha");
             select["bd"] = crm_main_zone.find("#select_bd");
@@ -40,6 +40,8 @@ var crm_main = function(crm_main_zone, file_path)
                         get_feedback(function() {
                             get_campos_dinamicos(function() {
                                 get_script(function() {
+                                    crm_main_zone.find('#info_table_client').hide();
+                                    crm_main_zone.find('#info_table_calls').hide();
 
                                 });
                             });
@@ -349,6 +351,7 @@ var crm_main = function(crm_main_zone, file_path)
                     search("calls");
             }
         }
+      
     });
 
     crm_main_zone.on("submit", "#filter_form", function(e)
@@ -400,6 +403,8 @@ var crm_main = function(crm_main_zone, file_path)
                 },
                 "fnDrawCallback": function()
                 {
+                      crm_main_zone.find('#info_table_client').show();
+
                     toggle_resultado("show");
                     if (config.marcacao_cliente == false)
                         crm_main_zone.find(".criar_marcacao").hide();
@@ -434,6 +439,7 @@ var crm_main = function(crm_main_zone, file_path)
                 },
                 "fnDrawCallback": function()
                 {
+                            crm_main_zone.find('#info_table_calls').show();
                     toggle_resultado("show");
                     if (config.marcacao_cliente == false)
                         crm_main_zone.find(".criar_marcacao").hide();
@@ -565,7 +571,7 @@ var crm_main = function(crm_main_zone, file_path)
 
     $(crm_main_zone).on("click", ".criar_marcacao", function()
     {
-       
+
         crm_main_zone.find("#calendar_master_div").show("blind");
         crm_main_zone.find("#calendar_div")
                 .load("/AM/view/calendar.html")
