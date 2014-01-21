@@ -268,7 +268,6 @@ if ($_POST['nc_flag'] == "nc_post") {
                                         <option value="C/CHV"> Chaves </option>
                                         <option value="C/CDX"> Condeixa </option>
                                         <option value="C/COR"> Coruche </option>
-                                        <option value="C/ELV"> Elvas </option>
                                         <option value="C/ENT"> Entroncamento </option>
                                         <option value="C/ESP"> Espinho </option>
                                         <option value="C/ETJ"> Estarreja </option>
@@ -323,7 +322,6 @@ if ($_POST['nc_flag'] == "nc_post") {
                                         <option value="C/STM"> Salvaterra de Magos </option>
                                         <option value="C/TVR"> Tavira </option>
                                         <option value="C/TDL"> Tondela </option>
-                                        <option value="C/TRN"> Torres Novas </option>
                                         <option value="C/VCB"> Vale de Cambra </option>
                                         <option value="C/VSA"> Vila Real de Santo António </option>
                                         <option value="C/PDV"> Povoa do Varzim </option>
