@@ -1,4 +1,5 @@
 <?php
+
 ini_set('memory_limit', '256M');
 require("../../ini/db.php");
 //ob_start();
@@ -34,15 +35,14 @@ $dataLinha2 = json_decode($dataLinha2_Core, true);
 
 $dataTotal_Core = file_get_contents("http://localhost:10000/ccstats/v0/count/calls?by=database.campaign,status&database.campaign.oid=$campaign_id");
 $dataTotal = json_decode($dataTotal_Core, true);
-
+//status
 $dataTotalPie_Core = file_get_contents("http://localhost:10000/ccstats/v0/count/calls?by=database.campaign,status&database.campaign.oid=$campaign_id");
 $dataTotalPie = json_decode($dataTotalPie_Core, true);
 
 $dataTotalHora_Core = file_get_contents("http://localhost:10000/ccstats/v0/sum/calls/length_in_sec?by=database.campaign,status&database.campaign.oid=$campaign_id");
 $dataTotalHora = json_decode($dataTotalHora_Core, true);
 
-
-$toExcel = new excelwraper(New PHPExcel(), "report",18,10);
+$toExcel = new excelwraper(New PHPExcel(), "report", 18, 10);
 
 //TRANSFORM LINHA1
 $p = array();
@@ -80,7 +80,6 @@ foreach ($dataLinha1 as $value) {
 }
 $dataExcel = array();
 $dataExcel[] = $header;
-
 
 foreach ($p as $value) {
     $dataExcel[] = $value;
@@ -170,11 +169,9 @@ foreach ($p as $value) {
     $dataExcel[] = $value;
 }
 
-
 if (count($pOutros) > 1) {
     $dataExcel[] = $pOutros;
 }
-
 
 $toExcel->maketable(transpose($dataExcel), TRUE, 'Total Chamadas por Feedback', NULL, NULL, 'chart2', 'r', 'bars', 'bars', TRUE, TRUE);
 
@@ -209,7 +206,6 @@ $dataExcel[] = $header;
 foreach ($p as $value) {
     $dataExcel[] = $value;
 }
-
 
 if (count($pOutros) > 1) {
     $dataExcel[] = $pOutros;
@@ -256,21 +252,19 @@ $toExcel->maketable(($dataExcel), TRUE, 'Feedbacks', NULL, NULL, 'chart4', null,
 
 $toExcel->backGroundStyle('FFFFFF');
 
-$toExcel->addsheet('Leads',3,0);
+$toExcel->addsheet('Leads', 3, 0);
 
-$header = array( 'Campanha:');
+$header = array('Campanha:');
 
-$title[]=$header;
+$title[] = $header;
 
-$queryData="SELECT `campaign_name` FROM `vicidial_campaigns` WHERE `campaign_id`=?";
+$queryData = "SELECT `campaign_name` FROM `vicidial_campaigns` WHERE `campaign_id`=?";
 
 $stmt = $db->prepare($queryData);
 
 $stmt->execute(array($campaign_id));
 
-$title[] =$stmt->fetch(PDO::FETCH_NUM);
-
-
+$title[] = $stmt->fetch(PDO::FETCH_NUM);
 
 $toExcel->maketable($title, FALSE);
 
@@ -286,34 +280,34 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $recycle[$row["status"]] = $row["attempt_maximum"];
 }
 
-$header = array( 'Data Chamada', 'Duração Chamada (Sec.)', 'Estado Final', 'Nº Tentativas Total', 'Nº Telefone', 'Lead ID', 'Mensagem 1', 'Mensagem 2', 'Max Tries');
+$header = array('Data Chamada', 'Duração Chamada (Sec.)', 'Estado Final', 'Nº Tentativas Total', 'Nº Telefone', 'Lead ID', 'Mensagem 1', 'Mensagem 2', 'Max Tries');
 
-$data[]=$header;
+$data[] = $header;
 
-$queryData ="SELECT  vlg.call_date,vlg.length_in_sec,vstatus.status,vstatus.status_name,vl.called_count,vl.phone_number,vl.lead_id,vl.comments,vl.email,vl.called_since_last_reset FROM `vicidial_list` vl FORCE INDEX(list_id)
+$queryData = "SELECT  vlg.call_date,vlg.length_in_sec,vstatus.status,vstatus.status_name,vl.called_count,vl.phone_number,vl.lead_id,vl.comments,vl.email,vl.called_since_last_reset FROM `vicidial_list` vl FORCE INDEX(list_id)
 LEFT JOIN `vicidial_lists`vls ON vl.list_id = vls.list_id
 LEFT JOIN vicidial_log vlg On vlg.lead_id = vl.lead_id
-LEFT JOIN (SELECT vstat.status,vstat.status_name FROM vicidial_statuses vstat UNION ALL SELECT vcstat.status,vcstat.status_name FROM vicidial_campaign_statuses vcstat WHERE vcstat.campaign_id =?) vstatus ON vstatus.status =vlg.status WHERE vls.campaign_id=?" ;
+LEFT JOIN (SELECT vstat.status,vstat.status_name FROM vicidial_statuses vstat UNION ALL SELECT vcstat.status,vcstat.status_name FROM vicidial_campaign_statuses vcstat WHERE vcstat.campaign_id =?) vstatus ON vstatus.status =vlg.status WHERE vls.campaign_id=?";
 
 
 $stmt = $db->prepare($queryData);
-$stmt->execute(array($campaign_id,$campaign_id,));
+$stmt->execute(array($campaign_id, $campaign_id,));
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    
+
     $temp = (int) str_replace("Y", "", $row["called_since_last_reset"]);
 
-if (isset($recycle[$row["status"]])) {
-    if ($temp >= $recycle[$row["status"]]) {
-        $row["called_since_last_reset"] = "Sim";
+    if (isset($recycle[$row["status"]])) {
+        if ($temp >= $recycle[$row["status"]]) {
+            $row["called_since_last_reset"] = "Sim";
+        } else {
+            $row["called_since_last_reset"] = "Não";
+        }
     } else {
-        $row["called_since_last_reset"] = "Não";
+        $row["called_since_last_reset"] = "Sem limite";
     }
-} else {
-    $row["called_since_last_reset"] = "Sem limite";
-}
     unset($row["status"]);
-  $data[]=$row;  
+    $data[] = $row;
 }
 
 $toExcel->maketable($data, FALSE);
