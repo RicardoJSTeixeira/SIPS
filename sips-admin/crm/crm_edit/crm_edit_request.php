@@ -50,7 +50,7 @@ switch ($action) {
         $has_script = false;
         $calls = $crmEdit->get_calls_outbound($lead_id) + $crmEdit->get_calls_inbound($lead_id);
         $count = $crmEdit->check_has_script($campaign_id);
-   
+    
         if ($count[0] > 0) {
             $has_script = true;
         }
@@ -60,10 +60,11 @@ switch ($action) {
                 foreach ($value1 as &$value) {
                     $value[1] = gmdate("H:i:s", $value[1]);
                     if ($user->user_level > 5 && $has_script) {
-                        $value[6] = $value[6] . " <div class='view-button edit_item'><a class='btn btn-mini btn-primary' target='_new' href='" . $file_path . "crm_edit/script_placeholder.html?lead_id=" . $value["lead_id"] . "&campaign_id=" . $value["campaign_id"] . "&user=$user->full_name&pass=$user->password&isadmin=1&unique_id=" . $value["uniqueid"] . "'><i class='icon-bookmark'></i>Script</a></div>";
+                        $value[8] = $value[8] . " <div class='view-button edit_item'><a class='btn btn-mini btn-primary' target='_new' href='" . $file_path . "crm_edit/script_placeholder.html?lead_id=" . $value["lead_id"] . "&campaign_id=" . $value["campaign_id"] . "&user=$user->full_name&pass=$user->password&isadmin=1&unique_id=" . $value["uniqueid"] . "'><i class='icon-bookmark'></i>Script</a></div>";
                     }
                 }
             }
+    
             echo json_encode($calls);
             break;
         }
@@ -74,7 +75,7 @@ switch ($action) {
             foreach ($value1 as &$value) {
                 $value[1] = gmdate("H:i:s", $value[1]);
                 if ($user->user_level > 5 && $has_script) {
-                    $value[6] = $value[6] . " <div class='view-button edit_item'><a class='btn btn-mini btn-primary' target='_new' href='" . $file_path . "crm_edit/script_placeholder.html?lead_id=" . $value["lead_id"] . "&campaign_id=" . $value["campaign_id"] . "&user=$user->full_name&pass=$user->password&isadmin=1&unique_id=" . $value["uniqueid"] . "'><i class='icon-bookmark'></i>Script</a></div>";
+                    $value[8] = $value[8] . " <div class='view-button edit_item'><a class='btn btn-mini btn-primary' target='_new' href='" . $file_path . "crm_edit/script_placeholder.html?lead_id=" . $value["lead_id"] . "&campaign_id=" . $value["campaign_id"] . "&user=$user->full_name&pass=$user->password&isadmin=1&unique_id=" . $value["uniqueid"] . "'><i class='icon-bookmark'></i>Script</a></div>";
                 }
             }
         }

@@ -16,7 +16,8 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
   
         $.get(file_path + "crm_edit/crm_edit.html", function(data) {
             crm_edit_zone.append(data);
-            crm_edit_zone.find(".chosen-select").chosen({no_results_text: "Sem resultados"});
+            crm_edit_zone.find("#agente_selector").chosen({no_results_text: "Sem resultados"});
+            
 
             get_user_level(function() {
                 get_lead_info(function() {
@@ -279,6 +280,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
 
     function get_calls(callback)
     {
+         
         var Table_chamadas = crm_edit_zone.find('#chamadas_realizadas').dataTable({
                 "aaSorting": [[ 0, "desc" ]],
             "bSortClasses": true,
@@ -289,9 +291,9 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
             "fnServerParams": function(aoData) {
                 aoData.push({"name": "action", "value": "get_calls_all"},
                 {"name": "lead_id", "value": me.lead_id} , 
-                {"name": "campaign_id", "value": me.campaign_id}               );
+                {"name": "campaign_id", "value": me.campaign_id});
             },
-            "aoColumns": [{"sTitle": "Data"}, {"sTitle": "Duração"}, {"sTitle": "Número"}, {"sTitle": "Operador"}, {"sTitle": "Feedback"}, {"sTitle": "Campanha"}, {"sTitle": "Base de Dados"}],
+            "aoColumns": [{"sTitle": "Data"}, {"sTitle": "Duração"}, {"sTitle": "Número"}, {"sTitle": "Operador"}, {"sTitle": "Feedback"}, {"sTitle": "Campanha"}, {"sTitle": "Base de Dados"}, {"sTitle": "Tipo"},{"sTitle": "In/Out"}  ],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
         if (typeof callback === "function")

@@ -383,6 +383,7 @@ var crm_main = function(crm_main_zone, file_path)
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
+                "bAutoWidth":false,
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": file_path + 'crm_main/crm_main_request.php',
                 "fnServerParams": function(aoData) {

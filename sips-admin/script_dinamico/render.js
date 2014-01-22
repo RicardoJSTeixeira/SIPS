@@ -535,7 +535,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         options.startDate = info.values_text.data_inicial;
                         options.endDate = info.values_text.data_final;
                     }
-                    console.log(options);
+ 
                     script_zone.find("input[name='" + info.tag + "']").datetimepicker(options).keypress(function(e) {
                         e.preventDefault();
                     }).bind("cut copy paste", function(e) {

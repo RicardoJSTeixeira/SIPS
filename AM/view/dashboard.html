@@ -2,7 +2,7 @@
 <style>
     .modal
     {
-        width: auto;
+        width: 75em;
         left:34%
     }
 </style>
@@ -24,21 +24,38 @@
 </div>
 
 
-    <div class="row-fluid">
-        <div class="span6">
-            <div  class="grid">
-                <div id="calendar_day" class="grid-content"> </div>
+
+<div id="new_requisiton_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Criar encomenda</h3>
+    </div>
+    <div class="modal-body">
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Fechar</button>
+
+    </div>
+</div>
+
+
+
+<div class="row-fluid">
+    <div class="span6">
+        <div  class="grid">
+            <div id="calendar_day" class="grid-content"> </div>
+        </div>
+    </div>
+    <div class="span6">
+        <div class="grid hide" id='ext-events'>
+            <div class="grid-title"><div class="pull-left">Tipo de Reservas</div></div>
+            <div class="grid-content">
             </div>
         </div>
-        <div class="span6">
-            <div class="grid hide" id='ext-events'>
-                <div class="grid-title"><div class="pull-left">Tipo de Reservas</div></div>
-                <div class="grid-content">
-                </div>
-            </div>
 
-            <div class="grid">
-                
+        <div class="grid">
+
 
             <div class="grid-title">
                 <div class="pull-left">Marcações Pendentes</div>
@@ -58,10 +75,10 @@
                     </tbody>
                 </table>  
             </div>         
-            </div>
-
         </div>
+
     </div>
+</div>
 
 
 <div id="div_master" class="content">
@@ -90,6 +107,11 @@
 <div id="div_calendar" style="display: none" >
 
 </div>
+
+<div id="div_requisition" style="display: none" >
+
+</div>
+<script type="text/javascript" src="/AM/lib_js/requisition.js" ></script>
 <script src="/sips-admin/crm/crm_edit/crm_edit.js" ></script>
 <script src="js/calendar.js" ></script>
 <script src="js/dashboard.js" ></script>

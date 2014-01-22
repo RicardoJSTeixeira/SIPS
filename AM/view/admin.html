@@ -1,5 +1,5 @@
 <div id="admin_extra_zone">
-    
+
 </div>
 <div id="admin_zone">
 
@@ -128,7 +128,7 @@
                         <thead>
                             <tr>
                                 <th>Max Requisições por Mês</th>
-                                <th>Max Requisições por Semana</th>
+                                <th>Max Requisições Especiais</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -184,13 +184,13 @@
 
 
 
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
 
     <div class="row-fluid">
         <div class="span12">
@@ -227,12 +227,30 @@
                 </div>
             </div>
             <div class="grid-content" id="product_master_div" style="display:none">
-                <div class="span2"> 
-                    <button class="btn" id="create_product_modal_button">Criar novo Produto</button>
-                    <button class="btn" id="removeAll_product_modal_button">Apagar todos os Produtos</button>
+                <div class="span3"> 
+                    <div class="grid-title">
+                        <div class="pull-left">
+                            <h4>Opções gerais</h4>
+                        </div>
+
+                    </div>
+                    <div class="grid-content"  >
+                        <button class="btn" id="create_product_modal_button">Criar novo Produto</button>
+                        <button class="btn" id="removeAll_product_modal_button">Apagar todos os Produtos</button>
+                    </div>
+
                 </div>
-                <div class="span10">
-                    <table class="table table-bordered table-mod" id="view_product_datatable"></table>
+                <div class="span9">
+                    <div class="grid-title">
+                        <div class="pull-left">
+                            <h4>Produtos</h4>
+                        </div>
+
+                    </div>
+                    <div class="grid-content"  >
+                        <table class="table table-bordered table-mod" id="view_product_datatable"></table>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -253,5 +271,5 @@
         </div>
     </div>
 </div>
- <script type="text/javascript" src="/AM/lib_js/requisition.js" ></script>
+<script type="text/javascript" src="/AM/lib_js/requisition.js" ></script>
 <script type="text/javascript" src="js/admin.js?v=1"></script>

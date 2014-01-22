@@ -62,13 +62,13 @@ $(function() {
 });
 
 $("#div_master").on("click", ".criar_marcacao", function()
-        {
-            $("#div_master").hide();
-            $("#div_calendar")
-                    .load("view/calendar.html")
-                    .show()
-                    .data().lead_id = $(this).data().lead_id;
-        });
+{
+    $("#div_master").hide();
+    $("#div_calendar")
+            .load("view/calendar.html")
+            .show()
+            .data().lead_id = $(this).data().lead_id;
+});
 
 
 
@@ -82,7 +82,19 @@ $("#div_master").on("click", ".ver_cliente", function()
 });
 
 
+$("#div_master").on("click", ".criar_encomenda", function()
+{
+    var config = new Object();
+    config.mensal = false;
+    requisition1 = new requisition($("#div_requisition"), config);
 
+    requisition1.init();
+
+    requisition1.new_requisition_destroy($("#new_requisiton_modal .modal-body"));
+    requisition1.new_requisition($("#new_requisiton_modal .modal-body"), 0, $(this).data().lead_id);
+
+    $("#new_requisiton_modal").modal("show");
+});
 
 
 

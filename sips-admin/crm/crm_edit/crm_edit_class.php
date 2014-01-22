@@ -154,10 +154,12 @@ class crm_edit_class {
                         vstatus.status_name,
                         vc.campaign_name,
                         vls.list_name,
+                        vl.comments,
                         vl.uniqueid, 
                         vl.lead_id, 
                         vl.list_id,
                         vl.campaign_id
+                         
                                        FROM 
                         vicidial_log vl
                 left JOIN vicidial_users vu ON vl.user=vu.user
@@ -169,7 +171,11 @@ class crm_edit_class {
                 ;";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
-        $output['aaData'] = $stmt->fetchAll(PDO::FETCH_BOTH);
+
+        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
+            $row[8] = "Outbound";
+            $output['aaData'][] = $row;
+        }
         return $output;
     }
 
@@ -185,6 +191,7 @@ class crm_edit_class {
                         vstatus.status_name,
                         vc.group_name campaign_name,
                         vls.list_name,
+                         vl.comments,
                         vl.uniqueid, 
                         vl.lead_id, 
                         vl.list_id,
@@ -200,7 +207,10 @@ class crm_edit_class {
                 ;";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
-        $output['aaData'] = $stmt->fetchAll(PDO::FETCH_BOTH);
+        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
+            $row[8] = "Inbound";
+            $output['aaData'][] = $row;
+        }
         return $output;
     }
 
@@ -215,12 +225,13 @@ class crm_edit_class {
                         vu.full_name,
                         vstatus.status_name,
                         vc.campaign_name,
-                        vls.list_name,
+                        vls.list_name 
+                    vl.comments ,
                         vl.uniqueid, 
                         vl.lead_id, 
                         vl.list_id,
                         vl.campaign_id
-                   
+                    
                 FROM 
                         vicidial_log_archive vl
                 left JOIN vicidial_users vu ON vl.user=vu.user
@@ -232,7 +243,10 @@ class crm_edit_class {
                ;";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
-        $output['aaData'] = $stmt->fetchAll(PDO::FETCH_BOTH);
+        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
+            $row[8] = "Arquivo Outbound";
+            $output['aaData'][] = $row;
+        }
 
         return $output;
     }
@@ -248,12 +262,12 @@ class crm_edit_class {
                         vu.full_name,
                         vstatus.status_name,
           vc.group_name campaign_name,
-                        vls.list_name,
+                        vls.list_name 
+                    vl.comments ,
                         vl.uniqueid, 
                         vl.lead_id, 
                         vl.list_id,
                         vl.campaign_id
-                   
                 FROM 
                         vicidial_closer_log_archive vl
                 left JOIN vicidial_users vu ON vl.user=vu.user
@@ -264,7 +278,10 @@ class crm_edit_class {
                         vl.lead_id=:lead_id               ;";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
-        $output['aaData'] = $stmt->fetchAll(PDO::FETCH_BOTH);
+        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
+            $row[8] = "Arquivo Inbound";
+            $output['aaData'][] = $row;
+        }
 
         return $output;
     }
@@ -291,7 +308,10 @@ class crm_edit_class {
                        ;";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
-        $output['aaData'] = $stmt->fetchAll(PDO::FETCH_BOTH);
+        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
+            $row[8] = "Outbound";
+            $output['aaData'][] = $row;
+        }
         return $output;
     }
 

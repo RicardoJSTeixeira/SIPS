@@ -1,7 +1,7 @@
  
 <style>
     .chosen-container { width: 79% !important; }
-   
+
 </style>
 <div class="row-fluid">
     <div class="span12">
@@ -51,7 +51,7 @@
         </form>
         <div id="dynamic_field_edit_div"  >
             <button class="btn right btn-primary" id="lead_edit_button">Editar Dados do Cliente</button>
-            
+
             <button class="btn right btn-success" id="lead_edit_save_button" style="margin-right: 5px; display:none"><i class="icon-save"></i>Gravar</button>
         </div>
     </div>
@@ -119,12 +119,12 @@
                 <div class="formRow">
                     <label class="control-label">Agente</label>
                     <div class="formRight">
-                        <select id='agente_selector' class="chosen-select">
+                        <select id='agente_selector' class="chosen-select" data-placeholder="Escolha um agente para atribuir o callback">
                         </select>
                     </div>
                 </div>
                 <div class="formRow">
-                      <button class='btn btn-action right btn-primary ' id='confirm_feedback_button'>Guardar</button>
+                    <button class='btn btn-action right btn-primary ' id='confirm_feedback_button'>Guardar</button>
                 </div>
             </div>
         </div>
@@ -145,6 +145,8 @@
                     <th>Feedback</th>
                     <th>Campanha</th>
                     <th>Base de Dados</th>
+                    <th>Tipo</th>
+                    <th>In/Out</th>
                 </tr>
             </thead>
             <tbody id="calls_tbody">
