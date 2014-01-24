@@ -69,7 +69,7 @@ switch ($action) {
                     $has_script = true;
                 }
                 if ($user->user_level > 5 && $has_script) {
-                    $value[9] = $value[9] . " <div class='view-button edit_item'><a class='btn btn-mini btn-primary' target='_new' href='" . $file_path . "crm_edit/script_placeholder.html?lead_id=" . $value["lead_id"] . "&campaign_id=" . $value["campaign_id"] . "&user=$user->full_name&pass=$user->password&isadmin=1&unique_id=" . $value["uniqueid"] . "'><i class='icon-bookmark'></i>Script</a></div>";
+                    $value[9] = $value[9] . " <div class='view-button edit_item'><a class='btn btn-mini btn-primary' target='_new' href='" . $file_path . "crm_edit/script_placeholder.html?lead_id=" .$lead_id . "&campaign_id=" . $value["campaign_id"] . "&user=$user->full_name&pass=$user->password&isadmin=1&unique_id=" . $value["uniqueid"] . "'><i class='icon-bookmark'></i>Script</a></div>";
                 }
             }
             $output['aaData'] = $calls;
