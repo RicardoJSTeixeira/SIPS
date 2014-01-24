@@ -150,7 +150,7 @@ switch ($action) {
         } else {
             $only_active_db=json_decode($only_active_db);
             if (!$only_active_db) {
-                $onlyActive = " and active='Y'";
+                $onlyActive = " and active='Y' and visible='0'";
             }
 
             $query = "SELECT list_id from vicidial_lists where campaign_id=:campaign_id $onlyActive";
