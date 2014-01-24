@@ -11,82 +11,89 @@ class crm_edit_class {
 
     public function get_lead_info($lead_id) {
         $js = array();
-        $query = "SELECT 
-                        vdlf.campaign_id,
-                        vdc.campaign_name,
-                        vdlf.list_id,
-                        vdlf.list_name,
-                        vu.full_name,
-                        vdl.called_count,
-                        vdl.modify_date data_last,
-                        vstatus.status_name,
-                        vstatus.status,
-                         vdl.last_local_call_time data_last,
-                       vstatus.status_name,
-                        vstatus.status,
-                        
-                     vdl.entry_date AS data_load,
-                        vdl.phone_number
-                        
-                        FROM vicidial_lists vdlf
-                                    left JOIN vicidial_list vdl ON  vdl.list_id=vdlf.list_id                                                 
-                left JOIN vicidial_campaigns vdc ON vdc.campaign_id=vdlf.campaign_id
-                LEFT JOIN vicidial_users vu ON vu.user=vdl.user
-                 LEFT JOIN   (select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b) vstatus on vstatus.status=vdl.status
-                WHERE lead_id=:lead_id";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":lead_id" => $lead_id));
-        $js = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $query = "SELECT vl.call_date data_last,vstatus.status_name,vstatus.status FROM vicidial_log vl
-                 LEFT JOIN   (select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b) vstatus on vstatus.status=vl.status
-                WHERE lead_id=:lead_id order by call_date desc limit 1 ";
+        $query = "SELECT vdlist.lead_id,vdlist.phone_number,vdlist.entry_date AS data_load ,vdc.campaign_id, vdc.campaign_name,vdlists.list_name
+                  FROM vicidial_list vdlist 
+                  left join vicidial_lists vdlists on vdlists.list_id=vdlist.list_id
+                    left join vicidial_campaigns vdc on vdc.campaign_id=vdlists.campaign_id
+                  WHERE vdlist.lead_id=?";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":lead_id" => $lead_id));
-        $count = $stmt->rowCount();
+        $stmt->execute(array($lead_id));
 
-        if ($count == 1) {
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            if (isset($row["data_last"]))
-                $js["data_last"] = $row["data_last"];
-            if (isset($row["status_name"]))
-                $js["status_name"] = $row["status_name"];
-            if (isset($row["status"]))
-                $js["status"] = $row["status"];
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $js = $row;
+
+        $query = "SELECT vdlog.uniqueid,vdlog.call_date,vdc.campaign_name,vdc.campaign_id,vdlists.list_name,vstatus.status,vstatus.status_name,vduser.full_name as user_name from vicidial_log vdlog 
+left join vicidial_log_archive vdloga on vdlog.lead_id=vdloga.lead_id 
+left join vicidial_users vduser on vduser.user=vdlog.user
+lEFT JOIN   (select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b) vstatus on vstatus.status=vdlog.status
+  left join vicidial_lists vdlists on vdlists.list_id=vdlog.list_id
+  left JOIN vicidial_campaigns vdc ON vdc.campaign_id=vdlists.campaign_id
+where vdlog.lead_id=?
+group by vdlog.uniqueid 
+order by vdlog.call_date desc
+limit 1";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array($lead_id));
+        $calls_outbound = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+        $query = "SELECT vdclog.uniqueid,vdclog.call_date,vdlists.campaign_id, vdig.group_name,vstatus.status,vstatus.status_name,vduser.full_name as user_name from vicidial_closer_log vdclog 
+left join vicidial_closer_log_archive vdcloga on vdclog.lead_id=vdcloga.lead_id 
+left join vicidial_users vduser on vduser.user=vdclog.user
+lEFT JOIN   (select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b) vstatus on vstatus.status=vdclog.status
+     left JOIN vicidial_inbound_groups vdig ON vdig.group_id=vdclog.campaign_id
+       left join vicidial_list vdlist on vdlist.lead_id=vdclog.lead_id
+left join vicidial_lists vdlists on vdlists.list_id=vdlist.list_id
+  
+where vdclog.lead_id=?
+group by vdclog.uniqueid 
+order by vdclog.call_date desc
+limit 1";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array($lead_id));
+        $calls_inbound = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+        //get count calls
+
+        $query = "SELECT count(*) as count from (select  a.lead_id from vicidial_log a 
+                      left join vicidial_log_archive b on a.lead_id=b.lead_id 
+                       where a.lead_id=? group by a.uniqueid) calls";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array($lead_id));
+        $row1 = $stmt->fetch(PDO::FETCH_ASSOC);
+        $query = "SELECT count(*) as count from (select  a.lead_id from  vicidial_closer_log a 
+                left join vicidial_closer_log_archive b on a.lead_id=b.lead_id 
+                where a.lead_id=? group by a.closecallid) calls";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array($lead_id));
+        $row2 = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $js["called_count"] = $row1["count"] + $row2["count"];
+
+
+
+        if (strtotime($calls_outbound["call_date"]) >= strtotime($calls_inbound["call_date"])) {
+            $js["data_last"] = $calls_outbound["call_date"];
+            $js["campaign_id"] = $calls_outbound["campaign_id"];
+            $js["user_name"] = $calls_outbound["user_name"];
+            $js["status_name"] = $calls_outbound["status_name"];
+            $js["status"] = $calls_outbound["status"];
         } else {
-            $query = "SELECT vl.call_date data_last,vstatus.status_name,vstatus.status FROM vicidial_log_archive vl
-                 LEFT JOIN   (select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b) vstatus on vstatus.status=vl.status
-                WHERE lead_id=:lead_id order by call_date desc limit 1 ";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute(array(":lead_id" => $lead_id));
-            $count = $stmt->rowCount();
-
-            if ($count == 1) {
-                $row = $stmt->fetch(PDO::FETCH_ASSOC);
-                if (isset($row["data_last"]))
-                    $js["data_last"] = $row["data_last"];
-                if (isset($row["status_name"]))
-                    $js["status_name"] = $row["status_name"];
-                if (isset($row["status"]))
-                    $js["status"] = $row["status"];
-            }
+            $js["data_last"] = $calls_inbound["call_date"];
+            $js["campaign_id"] = $calls_inbound["campaign_id"];
+            $js["user_name"] = $calls_inbound["user_name"];
+            $js["status_name"] = $calls_inbound["status_name"];
+            $js["status"] = $calls_inbound["status"];
         }
-        if (!isset($js["full_name"]))
-            $js["full_name"] = "Sem agente";
 
-        if (!isset($js["campaign_name"])) {
-            $query = "SELECT vc.group_name       FROM 
-                        vicidial_closer_log vl
-                 left JOIN vicidial_inbound_groups vc ON vl.campaign_id=vc.group_id 
-                WHERE vl.lead_id=:lead_id order by end_epoch desc  limit 1";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute(array(":lead_id" => $lead_id));
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            $js["campaign_name"] = $row["group_name"];
-            if (!isset($js["campaign_name"])) {
-                $js["campaign_name"] = "Sem campanha";
-            }
-        }
+
+        if (!isset($js["campaign_name"]))
+            $js["campaign_name"] = "Sem Campanha";
+        if (!isset($js["user_name"]))
+            $js["user_name"] = "Sem Agente";
+
         return $js;
     }
 
@@ -142,145 +149,77 @@ class crm_edit_class {
         return $feedback_options;
     }
 
+    // VER A CENA DOS USERS QUANDO SAO VDCL E VDAD---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     public function get_calls_outbound($lead_id) {
-        $output = array("aaData" => array());
+        $output = array();
         $js1 = array();
         $js2 = array();
         $query = "SELECT
-                        vl.call_date AS data,
+                     vl.call_date AS data,
                         vl.length_in_sec,
                         vl.phone_number,
                         vu.full_name,
                         vstatus.status_name,
                         vc.campaign_name,
                         vls.list_name,
+                        'Sem Linha de Inbound' as group_name,
                         vl.comments,
-                        vl.uniqueid, 
-                        vl.lead_id, 
-                        vl.list_id,
-                        vl.campaign_id
-                         
-                                       FROM 
+                         '-------------' as type,
+                        vl.uniqueid as uniqueid,
+                           vl.campaign_id as campaign_id
+                FROM 
                         vicidial_log vl
+                          left JOIN vicidial_log_archive vla ON vla.lead_id=vl.lead_id
                 left JOIN vicidial_users vu ON vl.user=vu.user
                 left JOIN vicidial_campaigns vc ON vl.campaign_id=vc.campaign_id 
                 left JOIN vicidial_lists vls ON vl.list_id=vls.list_id
                         left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vl.status
                 WHERE 
-                        vl.lead_id=:lead_id 
-                ;";
+                        vl.lead_id=:lead_id
+                        group by vl.uniqueid;";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[8] = "Outbound";
-            $output['aaData'][] = $row;
+            $row[9] = "Outbound";
+            $output[] = $row;
         }
+
         return $output;
     }
 
     public function get_calls_inbound($lead_id) {
-        $output = array("aaData" => array());
+        $output = array();
         $js1 = array();
         $js2 = array();
-        $query = "SELECT     
-                        vl.call_date AS data,
-                        vl.length_in_sec,
-                        vl.phone_number,
+        $query = "SELECT
+                        vcl.call_date AS data,
+                        vcl.length_in_sec,
+                        vcl.phone_number,
                         vu.full_name,
                         vstatus.status_name,
-                        vc.group_name campaign_name,
-                        vls.list_name,
-                         vl.comments,
-                        vl.uniqueid, 
-                        vl.lead_id, 
-                        vl.list_id,
-                        vl.campaign_id
-                                                              FROM 
-                        vicidial_closer_log vl
-                left JOIN vicidial_users vu ON vl.user=vu.user
-                left JOIN vicidial_inbound_groups vc ON vl.campaign_id=vc.group_id 
-                left JOIN vicidial_lists vls ON vl.list_id=vls.list_id
-                        left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vl.status
-                WHERE 
-                       vl.lead_id=:lead_id 
-                ;";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":lead_id" => $lead_id));
-        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[8] = "Inbound";
-            $output['aaData'][] = $row;
-        }
-        return $output;
-    }
-
-    public function get_calls_archive_outbound($lead_id) {
-        $output = array("aaData" => array());
-        $js1 = array();
-        $js2 = array();
-        $query = "SELECT      
-                        vl.call_date AS data,
-                        vl.length_in_sec,
-                        vl.phone_number,
-                        vu.full_name,
-                        vstatus.status_name,
-                        vc.campaign_name,
-                        vls.list_name 
-                    vl.comments ,
-                        vl.uniqueid, 
-                        vl.lead_id, 
-                        vl.list_id,
-                        vl.campaign_id
-                    
+                        'Sem campanha' as campaign_name,
+                        'Sem Base de Dados' as list_name,
+                        vc.group_name,
+                        vcl.comments,
+                        '-------------' as type,
+                        vcl.closecallid as uniqueid,
+                           vcl.campaign_id as campaign_id
                 FROM 
-                        vicidial_log_archive vl
-                left JOIN vicidial_users vu ON vl.user=vu.user
-                left JOIN vicidial_campaigns vc ON vl.campaign_id=vc.campaign_id 
-                left JOIN vicidial_lists vls ON vl.list_id=vls.list_id
-                        left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vl.status
+                        vicidial_closer_log vcl
+                          left JOIN vicidial_closer_log_archive vcla ON vcla.lead_id=vcl.lead_id
+                left JOIN vicidial_users vu ON vcl.user=vu.user
+                left JOIN vicidial_inbound_groups vc ON vcl.campaign_id=vc.group_id 
+                left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vcl.status
                 WHERE 
-                        vl.lead_id=:lead_id 
-               ;";
+                                   vcl.lead_id=:lead_id
+                                    group by vcl.uniqueid";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[8] = "Arquivo Outbound";
-            $output['aaData'][] = $row;
-        }
-
-        return $output;
-    }
-
-    public function get_calls_archive_inbound($lead_id) {
-        $output = array("aaData" => array());
-        $js1 = array();
-        $js2 = array();
-        $query = "SELECT      
-                        vl.call_date AS data,
-                        vl.length_in_sec,
-                        vl.phone_number,
-                        vu.full_name,
-                        vstatus.status_name,
-          vc.group_name campaign_name,
-                        vls.list_name 
-                    vl.comments ,
-                        vl.uniqueid, 
-                        vl.lead_id, 
-                        vl.list_id,
-                        vl.campaign_id
-                FROM 
-                        vicidial_closer_log_archive vl
-                left JOIN vicidial_users vu ON vl.user=vu.user
-               left JOIN vicidial_inbound_groups vc ON vl.campaign_id=vc.group_id 
-                left JOIN vicidial_lists vls ON vl.list_id=vls.list_id
-                        left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vl.status
-                WHERE 
-                        vl.lead_id=:lead_id               ;";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":lead_id" => $lead_id));
-        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[8] = "Arquivo Inbound";
-            $output['aaData'][] = $row;
+            $row[9] = "Inbound";
+            $output[] = $row;
         }
 
         return $output;
@@ -290,18 +229,15 @@ class crm_edit_class {
         $output = array("aaData" => array());
         $query = "SELECT 
                                 start_time as data,
-                                 start_time as data_inicio,
-                                
-                               end_time as data_fim,
+                                start_time as data_inicio,
+                                end_time as data_fim,
                                 length_in_sec,
                                 full_name,
                                 filename, 
-                                location,
-                                lead_id,
-                                rl.user
-                     
+                                location
                         FROM 
                                 recording_log rl
+                                                                
                         INNER JOIN vicidial_users vu ON rl.user=vu.user
                         WHERE 
                                 lead_id=:lead_id 
@@ -309,7 +245,7 @@ class crm_edit_class {
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[8] = "Outbound";
+
             $output['aaData'][] = $row;
         }
         return $output;

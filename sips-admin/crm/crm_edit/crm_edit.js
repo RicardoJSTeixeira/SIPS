@@ -8,16 +8,18 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     this.feedback = "";
     this.edit_dynamic_field = 0;
     this.has_dynamic_fields;
+    this.in_outbound = "in";
+
 
 //----------------------------------- BASIC FUNCTIONS
     this.init = function(callback)
     {
 
-  
+
         $.get(file_path + "crm_edit/crm_edit.html", function(data) {
             crm_edit_zone.append(data);
             crm_edit_zone.find("#agente_selector").chosen({no_results_text: "Sem resultados"});
-            
+
 
             get_user_level(function() {
                 get_lead_info(function() {
@@ -86,9 +88,6 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                                     save_feedback();
                                                 }
                                             });
-
-
-
                                             //insere nova entrada
                                             $(crm_edit_zone).on("click", "#confirm_feedback_button", function()
                                             {
@@ -118,6 +117,19 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         crm_edit_zone.empty().off();
     };
 //-----------------------------------BASIC INFO
+    function get_in_out(callback)
+    {
+        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_in_out"},
+        function(data)
+        {
+            me.in_outbound = data;
+            if (typeof callback === "function")
+            {
+                callback();
+            }
+        }, "json");
+    }
+
     function get_user_level(callback)
     {
         $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_user_level"},
@@ -158,8 +170,6 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         {
             var data_load_fromNow = "";
             var data_load_format = "";
-
-
             var data_last_fromNow = "";
             var data_last_format = "";
             var data_is_archive = false;
@@ -168,34 +178,25 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                 data_load_fromNow = moment(data.data_load).fromNow();
                 data_load_format = moment(data.data_load).format("D-MMMM-YYYY HH:mm:ss");
             }
-
             if (data.data_last)
             {
                 data_last_fromNow = moment(data.data_last).fromNow();
                 data_last_format = moment(data.data_last).format("D-MMMM-YYYY HH:mm:ss");
                 data_is_archive = moment(data.data_last).isBefore(moment().subtract('month', 2));
             }
-
-
-
-
-
-            me.campaign_id = data.campaign_id;
-            me.feedback = data.status;
             crm_edit_zone.find("#lead_info_tbody").append("<tr><td>" + me.lead_id + "</td>" +
                     "<td>" + data.phone_number + "</td>" +
                     "<td>" + data.list_name + "</td>" +
                     "<td>" + data.campaign_name + "</td>" +
-                    "<td>" + data.full_name + "</td>" +
+                                       "<td>" + data.user_name + "</td>" +
                     "<td>" + data.status_name + "</td>" +
                     "<td>" + data.called_count + "</td></tr>");
+            me.campaign_id = data.campaign_id;
+            me.feedback = data.status;
             crm_edit_zone.find("#lead_info_time_tbody").append("<tr><td>" + data_load_format + "</td>" +
                     "<td>" + data_load_fromNow + "</td>" +
                     "<td>" + data_last_format + "</td>" +
                     "<td>" + data_last_fromNow + "</td></tr>");
-
-            if (data_is_archive)
-                $.jGrowl('As chamadas carregadas pertencem à tabela de arquivo(+ de 2 Meses)', {life: 5000});
             if (typeof callback === "function")
             {
                 callback();
@@ -208,14 +209,11 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_dynamic_fields", lead_id: me.lead_id, campaign_id: me.campaign_id},
         function(data)
         {
-
             var dynamic_field = "";
             crm_edit_zone.find("#dynamic_field_div1").empty();
             crm_edit_zone.find("#dynamic_field_div2").empty();
-
             me.has_dynamic_fields = true;
             var controler = 1;
-
             $.each(data, function()
             {
                 dynamic_field =
@@ -233,8 +231,6 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                             "   </div>" +
                             "   </div>";
                 }
-
-
                 if (controler) {
                     controler = 0;
                     crm_edit_zone.find("#dynamic_field_div1").append(dynamic_field);
@@ -280,9 +276,9 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
 
     function get_calls(callback)
     {
-         
-        var Table_chamadas = crm_edit_zone.find('#chamadas_realizadas').dataTable({
-                "aaSorting": [[ 0, "desc" ]],
+
+        var Table_chamadas = crm_edit_zone.find('#table_chamadas').dataTable({
+            "aaSorting": [[0, "desc"]],
             "bSortClasses": true,
             "bProcessing": true,
             "bDestroy": true,
@@ -290,10 +286,19 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
             "sAjaxSource": file_path + 'crm_edit/crm_edit_request.php',
             "fnServerParams": function(aoData) {
                 aoData.push({"name": "action", "value": "get_calls_all"},
-                {"name": "lead_id", "value": me.lead_id} , 
+                {"name": "lead_id", "value": me.lead_id},
                 {"name": "campaign_id", "value": me.campaign_id});
             },
-            "aoColumns": [{"sTitle": "Data"}, {"sTitle": "Duração"}, {"sTitle": "Número"}, {"sTitle": "Operador"}, {"sTitle": "Feedback"}, {"sTitle": "Campanha"}, {"sTitle": "Base de Dados"}, {"sTitle": "Tipo"},{"sTitle": "In/Out"}  ],
+            "aoColumns": [{"sTitle": "Data"},
+                {"sTitle": "Duração"},
+                {"sTitle": "Número"},
+                {"sTitle": "Operador"},
+                {"sTitle": "Feedback"},
+                {"sTitle": "Campanha"},
+                {"sTitle": "Base de Dados"},
+                {"sTitle": "Linha de Inbound"},
+                {"sTitle": "Tipo"},
+                {"sTitle": "In/Out"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
         if (typeof callback === "function")
@@ -304,8 +309,8 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
 
     function get_recordings(callback)
     {
-        var Table_recording = crm_edit_zone.find('#chamadas_gravadas').dataTable({
-                "aaSorting": [[ 0, "desc" ]],
+        var Table_recording = crm_edit_zone.find('#table_recording').dataTable({
+            "aaSorting": [[0, "desc"]],
             "bSortClasses": false,
             "bProcessing": true,
             "bDestroy": true,
