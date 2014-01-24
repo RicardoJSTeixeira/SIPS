@@ -148,12 +148,12 @@ switch ($action) {
             $list_id = array();
             $list_id[] = $tmp;
         } else {
-$only_active_db=json_decode($only_active_db);
+            $only_active_db=json_decode($only_active_db);
             if (!$only_active_db) {
                 $onlyActive = " and active='Y'";
             }
 
-            $query = "SELECT list_id from vicidial_lists where campaign_id=:campaign_id $onlyActive";
+            $query = "SELECT list_id from vicidial_lists where campaign_id=:campaign_id $onlyActive and visible='1'";
             $stmt = $db->prepare($query);
             $stmt->execute(array(":campaign_id" => $campaign_id));
 
