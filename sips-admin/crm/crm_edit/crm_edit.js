@@ -98,6 +98,10 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                                         get_validation();
                                                     }, "json");
                                             });
+                                            if (typeof callback === "function")
+                                            {
+                                                callback();
+                                            }
                                         });
                                     });
                                 });
@@ -106,10 +110,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                     });
                 });
             });
-            if (typeof callback === "function")
-            {
-                callback();
-            }
+
         });
     };
     this.destroy = function()
@@ -188,7 +189,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                     "<td>" + data.phone_number + "</td>" +
                     "<td>" + data.list_name + "</td>" +
                     "<td>" + data.campaign_name + "</td>" +
-                                       "<td>" + data.user_name + "</td>" +
+                    "<td>" + data.user_name + "</td>" +
                     "<td>" + data.status_name + "</td>" +
                     "<td>" + data.called_count + "</td></tr>");
             me.campaign_id = data.campaign_id;

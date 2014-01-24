@@ -1,39 +1,65 @@
 <!DOCTYPE html>
 
 <html>
-      <head>
-            <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+    <head>
+        <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+        <title>Edição de Script - Go Contact Center</title>
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css">
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/validationEngine.jquery.css" />
+        <link type="text/css" rel="stylesheet" href="/sips-admin/script_dinamico/render.css" />
 
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css">
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
-            <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/validationEngine.jquery.css" />
-            <link type="text/css" rel="stylesheet" href="/sips-admin/script_dinamico/render.css" />
 
-            
-                    <script type="text/javascript" src="/bootstrap/js/moment.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/moment.min.js"></script>
         <script type="text/javascript" src="/bootstrap/js/moment.langs.min.js"></script>
-            <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/validation/jquery.validationEngine.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/validation/languages/jquery.validationEngine-pt.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/validation/contrib/other-validations.js"></script>
+        <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/validation/jquery.validationEngine.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/validation/languages/jquery.validationEngine-pt.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/validation/contrib/other-validations.js"></script>
 
+        <style>
+            .modal-footer
+            { margin: -0px -10px -10px;
+              border-radius: 0 0 2px 2px; }
+            .content
+            {
+                margin-bottom: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="content">
+            <div class="grid">
+                <div class="grid-title">
+                    <div class="pull-left">
+                        Edição do Script
+                    </div> 
+                </div> 
+                <div class="grid-content ">
+                    <div id="script_placeholder_div">
 
-      </head>
-      <body>
-            <div id="script_placeholder_div">
-
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="gravar_alteracoes"  >Gravar Alterações</button>
+                        <button class="btn btn-danger" onclick="window.close();">Sair</button>
+                    </div>
+                    <div class="clear"></div>
+                </div>
             </div>
-            <button class="btn btn-primary" id="gravar_alteracoes" style="margin:10px">Gravar Alterações</button>
-            <script type="text/javascript" src="/sips-admin/script_dinamico/render.js?v=3"></script>
-            <script type="text/javascript" src="script_placeholder.js?v=3"></script>
-      </body>
+        </div>
+
+
+
+        <script type="text/javascript" src="/sips-admin/script_dinamico/render.js?v=3"></script>
+        <script type="text/javascript" src="script_placeholder.js?v=3"></script>
+    </body>
 </html>

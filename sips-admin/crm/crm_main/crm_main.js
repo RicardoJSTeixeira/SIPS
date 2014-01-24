@@ -32,12 +32,15 @@ var crm_main = function(crm_main_zone, file_path)
             select["cd"] = crm_main_zone.find("#select_cd");
             select["script"] = crm_main_zone.find("#select_script");
             crm_main_zone.find(".chosen-select").chosen({no_results_text: "Sem resultados"});
-            crm_main_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
+            crm_main_zone.find("#data_inicio").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function(ev) {
+                crm_main_zone.find("#data_fim").datetimepicker('setStartDate', $(this).val());
+            });
+            crm_main_zone.find("#data_fim").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function(ev) {
+                crm_main_zone.find("#data_inicio").datetimepicker('setEndDate', $(this).val());
+            });
+
             if (!config.date)
                 crm_main_zone.find(".form_datetime").parent("div").parent("div").parent("div").hide();
-
-
-
             if (!config.campaign)
             {
                 show_hide_filters(2);
@@ -60,7 +63,6 @@ var crm_main = function(crm_main_zone, file_path)
                                         crm_main_zone.find('#info_table_client').hide();
                                         crm_main_zone.find('#info_table_calls').hide();
                                         show_hide_filters(1);
-
                                     });
                                 });
                             });
@@ -681,12 +683,14 @@ var crm_main = function(crm_main_zone, file_path)
 
         crm_edit_object = new crm_edit(crm_main_zone.find("#client_area"), "/sips-admin/crm/", $(this).data("lead_id"));
         crm_edit_object.destroy();
-        crm_edit_object.init(function() {
-            crm_main_zone.find('#client_div').show("blind");
-        });
 
-        crm_main_zone.find("#button_resultado").trigger("click");
-        crm_main_zone.find("#button_resultado").toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
+        crm_edit_object.init(function() {
+          crm_main_zone.find('#loading').hide();
+        });
+        crm_main_zone.find('#client_div').show("blind");
+        
+       toggle_resultado("hide");
+         
     });
     crm_main_zone.on("click", "#close_client_div", function()
     {
