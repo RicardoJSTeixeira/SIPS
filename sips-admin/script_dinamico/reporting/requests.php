@@ -148,7 +148,7 @@ switch ($action) {
             $list_id = array();
             $list_id[] = $tmp;
         } else {
-$only_active_db=json_decode($only_active_db);
+            $only_active_db=json_decode($only_active_db);
             if (!$only_active_db) {
                 $onlyActive = " and active='Y'";
             }
@@ -251,7 +251,7 @@ $only_active_db=json_decode($only_active_db);
             if ($only_with_result == "true") {
                 $query = "SELECT a.lead_id id,status_name,vcs.status,vl.list_name, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries, " . implode(",", $temp_lead_data) . " from vicidial_list a left join vicidial_lists vl on vl.list_id=a.list_id left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join vicidial_users vu on vu.user=a.user left join script_result sr on a.lead_id=sr.lead_id where a.list_id =:value $date_filter";
             } else {
-                $query = "SELECT a.lead_id id,status_name,vcs.status,vl.list_name, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries, " . implode(",", $temp_lead_data) . " from vicidial_list a left join vicidial_lists vl on vl.list_id=a.list_id left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join vicidial_users vu on vu.user=a.user where a.list_id =:value";
+                $query = "SELECT a.lead_id id,status_name,vcs.status,vl.list_name, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries, " . implode(",", $temp_lead_data) . " from vicidial_list a left join vicidial_lists vl on vl.list_id=a.list_id left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join vicidial_users vu on vu.user=a.user where a.list_id =:value and a.active='Y'";
             }
             $stmt = $db->prepare($query);
             $stmt->execute(array(":value" => $value));
