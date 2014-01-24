@@ -1,4 +1,3 @@
-
 <?php
 
 require("../../../ini/dbconnect.php");
