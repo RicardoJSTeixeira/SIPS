@@ -60,18 +60,33 @@
                     <div class="row-fluid">
                         <div class="span6">
                             <div class="FormRow">
+                                <h5>Tipo de pesquisa</h5>
+                                <div class="FormRight">
+                                    <input  type="radio" id="radio_campanha" name="rft" value="1" checked="checked">
+                                    <label class=" radio inline"  for="radio_campanha"><span></span>Campanha</label> 
+                                    <input  type="radio" id="radio_linha_inbound" value="2" name="rft">
+                                    <label class=" radio inline"  for="radio_linha_inbound"><span></span>Linha Inbound</label> 
+                                </div>    
+                            </div>
+                            <div class="FormRow" id="div_filtro_campanha">
                                 <h5>Campanha</h5>
                                 <div class="FormRight">
                                     <select class="chosen-select filtro_select" id="select_campanha"  data-placeholder="Selecione uma campanha"></select>
                                 </div>    
                             </div>
-                            <div class="FormRow">
+                            <div class="FormRow" id="div_filtro_linha_inbound" >
+                                <h5>Linha inbound</h5>
+                                <div class="FormRight">
+                                    <select class="chosen-select filtro_select" id="select_linha_inbound"  data-placeholder="Selecione uma linha de inbound"></select>
+                                </div>    
+                            </div>
+                            <div class="FormRow"  id="div_filtro_bd">
                                 <h5>Base de Dados</h5>
                                 <div class="FormRight">
                                     <select class="chosen-select filtro_select" id="select_bd"  data-placeholder="Todas as Base de Dados"></select>
                                 </div>    
                             </div>            
-                            <div class="FormRow">
+                            <div class="FormRow" >
                                 <h5>Campos Dinamicos</h5>
                                 <div class="FormRight">
                                     <select class="chosen-select input-xlarge " id="select_cd"  data-placeholder="Todos os Campo Dinamico"></select>
@@ -96,7 +111,7 @@
                                     <select class="chosen-select filtro_select" id="select_feedback"   data-placeholder="Todos os Feedback"></select>
                                 </div>    
                             </div> 
-                            <div class="FormRow">
+                            <div class="FormRow" id="div_filtro_cs">
                                 <h5>Campos do Script</h5>
                                 <div class="FormRight">
                                     <select class="chosen-select input-xlarge" id="select_script"  data-placeholder="Selecione um Script"></select>
@@ -228,6 +243,6 @@
     <div class="grid-content " id="calendar_div">
     </div>
 </div>
- 
+
 
 <script src="/AM/js/calendar.js?v=1" ></script>

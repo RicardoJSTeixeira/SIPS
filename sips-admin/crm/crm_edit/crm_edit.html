@@ -6,7 +6,7 @@
 <div class="row-fluid">
     <div class="span12">
         <h2>Informação do Cliente</h2>   
-        <table class='table table-mod table-bordered'>
+        <table class='table table-mod table-bordered'  >
             <thead> 
                 <tr>
                     <th>ID do Contacto</th>
@@ -21,6 +21,7 @@
             <tbody id="lead_info_tbody">
             </tbody>
         </table>     
+
     </div>
 </div>
 <div class="row-fluid">
@@ -132,10 +133,11 @@
 </div>
 
 
+
 <div class="row-fluid">
     <div class="span12">
         <h3>Chamadas</h3>
-        <table class='table table-mod table-bordered' id="chamadas_realizadas">
+        <table class='table table-mod table-bordered' id="table_chamadas">
             <thead>
                 <tr>
                     <th>Data</th>
@@ -145,6 +147,7 @@
                     <th>Feedback</th>
                     <th>Campanha</th>
                     <th>Base de Dados</th>
+                    <th>Linha de Inbound</th>
                     <th>Tipo</th>
                     <th>In/Out</th>
                 </tr>
@@ -155,11 +158,10 @@
     </div>
 </div>
 
-
 <div class="row-fluid">
     <div class="span12">
         <h3>Gravações</h3>
-        <table class='table table-mod table-bordered' id="chamadas_gravadas">
+        <table class='table table-mod table-bordered' id="table_recording">
             <thead>
                 <tr>
                     <th>Data</th>
@@ -167,12 +169,19 @@
                     <th>Fim da Gravação</th>
                     <th>Duração</th>
                     <th>Operador</th>
+                    <th>In/Out</th>
             </thead>
             <tbody id="recordings_tbody">
             </tbody>
         </table> 
     </div>
 </div>
+
+
+
+
+
+
 
 
 

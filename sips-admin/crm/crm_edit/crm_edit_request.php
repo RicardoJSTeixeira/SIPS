@@ -27,6 +27,7 @@ switch ($action) {
     //------------------------------------------------//    
     //---------------------GET------------------------//  
     //------------------------------------------------//
+
     case "get_user_level":
         echo $user->user_level;
         break;
@@ -46,41 +47,36 @@ switch ($action) {
 
 
     case "get_calls_all":
-         
+
         $has_script = false;
-        $calls = $crmEdit->get_calls_outbound($lead_id) + $crmEdit->get_calls_inbound($lead_id);
-        $count = $crmEdit->check_has_script($campaign_id);
-    
-        if ($count[0] > 0) {
-            $has_script = true;
+
+        $calls_out = $crmEdit->get_calls_outbound($lead_id);
+        $calls_in = $crmEdit->get_calls_inbound($lead_id);
+        foreach ($calls_out as $value) {
+            $calls[] = $value;
+        }
+        foreach ($calls_in as $value) {
+            $calls[] = $value;
         }
 
         if (count($calls, 1) > 0) {
-            foreach ($calls as $key => &$value1) {
-                foreach ($value1 as &$value) {
-                    $value[1] = gmdate("H:i:s", $value[1]);
-                    if ($user->user_level > 5 && $has_script) {
-                        $value[8] = $value[8] . " <div class='view-button edit_item'><a class='btn btn-mini btn-primary' target='_new' href='" . $file_path . "crm_edit/script_placeholder.html?lead_id=" . $value["lead_id"] . "&campaign_id=" . $value["campaign_id"] . "&user=$user->full_name&pass=$user->password&isadmin=1&unique_id=" . $value["uniqueid"] . "'><i class='icon-bookmark'></i>Script</a></div>";
-                    }
+            foreach ($calls as $key => &$value) {
+                $value[1] = gmdate("H:i:s", $value[1]);
+                $has_script = false;
+                $count = $crmEdit->check_has_script($value["campaign_id"]);
+    
+                if ($count[0] > 0) {
+                    $has_script = true;
+                }
+                if ($user->user_level > 5 && $has_script) {
+                    $value[9] = $value[9] . " <div class='view-button edit_item'><a class='btn btn-mini btn-primary' target='_new' href='" . $file_path . "crm_edit/script_placeholder.html?lead_id=" . $value["lead_id"] . "&campaign_id=" . $value["campaign_id"] . "&user=$user->full_name&pass=$user->password&isadmin=1&unique_id=" . $value["uniqueid"] . "'><i class='icon-bookmark'></i>Script</a></div>";
                 }
             }
-    
-            echo json_encode($calls);
+            $output['aaData'] = $calls;
+            echo json_encode($output);
             break;
         }
 
-    case "get_calls_archive":
-        $calls = $crmEdit->get_calls_archive_outbound($lead_id) + $crmEdit->get_calls_archive_inbound($lead_id);
-        foreach ($calls as $key => &$value1) {
-            foreach ($value1 as &$value) {
-                $value[1] = gmdate("H:i:s", $value[1]);
-                if ($user->user_level > 5 && $has_script) {
-                    $value[8] = $value[8] . " <div class='view-button edit_item'><a class='btn btn-mini btn-primary' target='_new' href='" . $file_path . "crm_edit/script_placeholder.html?lead_id=" . $value["lead_id"] . "&campaign_id=" . $value["campaign_id"] . "&user=$user->full_name&pass=$user->password&isadmin=1&unique_id=" . $value["uniqueid"] . "'><i class='icon-bookmark'></i>Script</a></div>";
-                }
-            }
-        }
-        echo json_encode($calls);
-        break;
     //-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     case "get_recordings":
@@ -123,7 +119,7 @@ switch ($action) {
                                 $folder = "MP3";
                             $mp3File = $curpage . $port . "/RECORDINGS/$folder/" . $value["filename"] . "-all.mp3";
                         }
-                        $value[4] = $value[4] . "<div class='view-button edit_item'><a href='$mp3File' target='_self' class='btn btn-mini btn-primary'><i class='icon-play'></i>Ouvir</a></div>";
+                        $value[5] = $value[5] . "<div class='view-button edit_item'><a href='$mp3File' target='_self' class='btn btn-mini btn-primary'><i class='icon-play'></i>Ouvir</a></div>";
                     }
                 }
             }
