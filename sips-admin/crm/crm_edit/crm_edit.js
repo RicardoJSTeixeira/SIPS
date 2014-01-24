@@ -320,7 +320,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                 aoData.push({"name": "action", "value": "get_recordings"},
                 {"name": "lead_id", "value": me.lead_id});
             },
-            "aoColumns": [{"sTitle": "Data"}, {"sTitle": "Inicio da Gravação"}, {"sTitle": "Fim da Gravação"}, {"sTitle": "Duração"}, {"sTitle": "Operador"}, {"sTitle": "In/Out"}],
+            "aoColumns": [{"sTitle": "Data"}, {"sTitle": "Inicio da Gravação"}, {"sTitle": "Fim da Gravação"}, {"sTitle": "Duração"}, {"sTitle": "Operador"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
         if (typeof callback === "function")

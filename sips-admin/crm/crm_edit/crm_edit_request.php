@@ -119,7 +119,7 @@ switch ($action) {
                                 $folder = "MP3";
                             $mp3File = $curpage . $port . "/RECORDINGS/$folder/" . $value["filename"] . "-all.mp3";
                         }
-                        $value[5] = $value[5] . "<div class='view-button edit_item'><a href='$mp3File' target='_self' class='btn btn-mini btn-primary'><i class='icon-play'></i>Ouvir</a></div>";
+                        $value[4] = $value[4] . "<div class='view-button edit_item'><a href='$mp3File' target='_self' class='btn btn-mini btn-primary'><i class='icon-play'></i>Ouvir</a></div>";
                     }
                 }
             }
