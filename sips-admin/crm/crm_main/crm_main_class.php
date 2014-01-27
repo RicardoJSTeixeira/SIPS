@@ -172,7 +172,7 @@ class crm_main_class {
             $status_search = array($campanha);
         } else {
             $query1 = "select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b";
-            $status_search = [];
+            $status_search = array();
         }
         $stmt = $this->db->prepare($query1);
         $stmt->execute($status_search);
@@ -322,7 +322,7 @@ class crm_main_class {
             $status_search = array($campanha);
         } else {
             $query1 = "select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b";
-            $status_search = [];
+            $status_search = array();
         }
         $stmt = $this->db->prepare($query1);
         $stmt->execute($status_search);
