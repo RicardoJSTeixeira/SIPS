@@ -1,7 +1,6 @@
 $(function() {
 
-    $.history.on('load change push pushed', function(event, url, type) {
-
+    $.history.on('load change pushed', function(event, url, type) {
         $("#sidebar .active").removeClass("active");
         $("#sidebar").find("[href='" + url + "']").addClass("active");
 
@@ -25,15 +24,13 @@ $(function() {
 
         if ($(this).hasClass("active"))
             return false;
-
-        $("#sidebar .active").removeClass("active");
-        var href = $(this).addClass("active").attr("href");
+        
+        var href = $(this).attr("href");
 
         if (href === "#")
             return false;
 
         $.history.push(href);
-
 
     });
 
