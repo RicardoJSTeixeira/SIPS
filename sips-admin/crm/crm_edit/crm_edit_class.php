@@ -158,6 +158,9 @@ class crm_edit_class {
         $query = "SELECT
                         vl.call_date AS data,
                         vl.length_in_sec,
+                        'Sem tempo de espera' as queue_seconds,
+                         'Sem fila de espera' as queue_position,
+                         vl.term_reason,
                         vl.phone_number,
                         vu.full_name,
                         vstatus.status_name,
@@ -166,6 +169,7 @@ class crm_edit_class {
                         'Sem Linha de Inbound' as group_name,
                         vl.comments,
                         '-------------' as type,
+                        
                         vl.uniqueid as uniqueid,
                         vl.campaign_id as campaign_id
                 FROM 
@@ -196,6 +200,9 @@ class crm_edit_class {
         $query = "SELECT
                         vcl.call_date AS data,
                         vcl.length_in_sec,
+                          vcl.queue_seconds as queue_seconds,
+                         vcl.queue_position,
+                         vcl.term_reason,
                         vcl.phone_number,
                         vu.full_name,
                         vstatus.status_name,

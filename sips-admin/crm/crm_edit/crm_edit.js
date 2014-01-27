@@ -292,6 +292,9 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
             },
             "aoColumns": [{"sTitle": "Data"},
                 {"sTitle": "Duração"},
+                {"sTitle": "Tempo em Espera"},
+                {"sTitle": "Posição fila espera"},
+                {"sTitle": "Motivo de fim de chamada"},
                 {"sTitle": "Número"},
                 {"sTitle": "Operador"},
                 {"sTitle": "Feedback"},
@@ -302,6 +305,9 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                 {"sTitle": "In/Out"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
+
+
+
         if (typeof callback === "function")
         {
             callback();

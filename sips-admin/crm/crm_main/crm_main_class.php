@@ -192,7 +192,7 @@ class crm_main_class {
 
         if ($lead_id != "" && $lead_id != null) {
             $query = "
-            SELECT a.lead_id,c.first_name,  a.phone_number,a.call_date 
+            SELECT a.lead_id,c.first_name,  a.phone_number,a.length_in_sec,a.call_date 
             FROM   $table 
             left join vicidial_list c on c.lead_id=a.lead_id
             WHERE  a.lead_id= ?";
@@ -200,7 +200,7 @@ class crm_main_class {
             $variables[] = $lead_id;
         } elseif ($phone_number != "" && $phone_number != null) {
             $query = "
-            SELECT a.lead_id,c.first_name,  a.phone_number,a.call_date 
+            SELECT a.lead_id,c.first_name,  a.phone_number,a.length_in_sec,a.call_date 
             FROM    $table 
               left join vicidial_list c on c.lead_id=a.lead_id
             WHERE   c.phone_number= ? or c.address3=? or c.alt_phone=? ";
@@ -295,13 +295,14 @@ class crm_main_class {
             } else {
                 $log_join = " left join vicidial_closer_log vl on vl.lead_id=a.lead_id ";
             }
-            $query = "select a.lead_id,c.first_name,  a.phone_number,a.call_date  from $table  left join vicidial_list c on c.lead_id=a.lead_id  $join where $where $script_fields $group limit 20000 ";
+            $query = "select a.lead_id,c.first_name,  a.phone_number,a.length_in_sec,a.call_date  from $table  left join vicidial_list c on c.lead_id=a.lead_id  $join where $where $script_fields $group limit 20000 ";
         }
 
         $stmt = $this->db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $row[3] = $row[3] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
+              $row[3] = gmdate("H:i:s", $row[3]);
+            $row[4] = $row[4] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
                     . "<span class='btn btn-mini criar_marcacao' data-lead_id='$row[0]'><i class='icon-edit'></i>Criar Marcação</span></div>";
             $js['aaData'][] = $row;
         }

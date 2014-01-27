@@ -6,10 +6,15 @@ $(function()
 
 
 
-    script = new render($("#script_placeholder_div"), "/sips-admin/script_dinamico/", info.script_id, info.lead_id, info.unique_id, info.user, info.campaign_id, 1);
+    script = new render($("#script_placeholder_div"), "/sips-admin/script_dinamico/", info.script_id, info.lead_id, info.unique_id, info.user, info.campaign_id, 1,
+    {onEverethingCompleted:function(data){
+            $("#client_name").text(data.client_info.first_name);
+              $("#client_phone_number").text(data.client_info.phone_number);
+        }});
+    
 
     script.init();
-
+ 
 
 
 

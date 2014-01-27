@@ -538,7 +538,7 @@ var crm_main = function(crm_main_zone, file_path)
                         crm_main_zone.find(".criar_marcacao").hide();
 
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Data Chamada"}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"},{"sTitle": "Duração da Chamada"}, {"sTitle": "Data Chamada"}],
                 "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
             });
         }
