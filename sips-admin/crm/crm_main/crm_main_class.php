@@ -166,10 +166,16 @@ class crm_main_class {
         }
 
 
-        //get  status name
-        $query1 = "select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b where b.campaign_id=?";
+          //get  status name
+        if ($campaign_linha_inbound == 1) {
+            $query1 = "select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b where b.campaign_id=?";
+            $status_search = array($campanha);
+        } else {
+            $query1 = "select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b";
+            $status_search = [];
+        }
         $stmt = $this->db->prepare($query1);
-        $stmt->execute(array($campanha));
+        $stmt->execute($status_search);
         $row_status = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
@@ -309,23 +315,30 @@ class crm_main_class {
             $query = "select a.lead_id,c.first_name,  a.phone_number,a.status,a.length_in_sec,a.call_date  from $table  left join vicidial_list c on c.lead_id=a.lead_id"
                     . "  $join where $where $script_fields $group limit 20000 ";
         }
-         //get  status name
-        $query1 = "select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b where b.campaign_id=?";
+
+        //get  status name
+        if ($campaign_linha_inbound == 1) {
+            $query1 = "select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b where b.campaign_id=?";
+            $status_search = array($campanha);
+        } else {
+            $query1 = "select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b";
+            $status_search = [];
+        }
         $stmt = $this->db->prepare($query1);
-        $stmt->execute(array($campanha));
+        $stmt->execute($status_search);
         $row_status = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $stmt = $this->db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            
-             foreach ($row_status as $value) {
+
+            foreach ($row_status as $value) {
                 if ($value["status"] == $row[3]) {
                     $row[3] = $value["status_name"];
                     break;
                 }
             }
-            
+
             $row[4] = gmdate("H:i:s", $row[4]);
             $row[5] = $row[5] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
                     . "<span class='btn btn-mini criar_marcacao' data-lead_id='$row[0]'><i class='icon-edit'></i>Criar Marcação</span></div>";
