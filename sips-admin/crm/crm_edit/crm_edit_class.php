@@ -66,9 +66,6 @@ class crm_edit_class {
         $js["called_count"] = $row1["count"] + $row2["count"];
 
 
-
-
-
         if (strtotime($calls_outbound["call_date"]) >= strtotime($calls_inbound["call_date"])) {
             $query = "select status_name from (select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b) statuses where status=?";
             $stmt = $this->db->prepare($query);
@@ -188,7 +185,7 @@ class crm_edit_class {
         $stmt->execute(array(":lead_id" => $lead_id));
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-                        $row[9] = "Outbound";
+                        $row[12] = "Outbound";
             $output[] = $row;
         }
 
@@ -224,10 +221,10 @@ class crm_edit_class {
                 WHERE 
                                    vcl.lead_id=:lead_id
                                     group by vcl.uniqueid";
-        $stmt = $this->db->prepare($query);
+        $stmt = $this->db->prepare($query); 
         $stmt->execute(array(":lead_id" => $lead_id));
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[9] = "Inbound";
+            $row[12] = "Inbound";
             $output[] = $row;
         }
 

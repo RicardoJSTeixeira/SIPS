@@ -10,17 +10,12 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     this.has_dynamic_fields;
     this.in_outbound = "in";
 
-
 //----------------------------------- BASIC FUNCTIONS
     this.init = function(callback)
     {
-
-
         $.get(file_path + "crm_edit/crm_edit.html", function(data) {
             crm_edit_zone.append(data);
             crm_edit_zone.find("#agente_selector").chosen({no_results_text: "Sem resultados"});
-
-
             get_user_level(function() {
                 get_lead_info(function() {
                     get_dynamic_fields(function() {
@@ -110,7 +105,6 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                     });
                 });
             });
-
         });
     };
     this.destroy = function()
@@ -149,7 +143,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_agentes"},
         function(data)
         {
-            crm_edit_zone.find("#agente_selector").empty();
+            crm_edit_zone.find("#agente_selector").empty(); 
             var temp = "";
             $.each(data, function(index, value)
             {
