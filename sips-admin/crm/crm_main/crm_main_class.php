@@ -294,8 +294,7 @@ class crm_main_class {
           
             $query = "select a.lead_id,c.first_name,  a.phone_number,vstatus.status_name,a.length_in_sec,a.call_date  from $table  left join vicidial_list c on c.lead_id=a.lead_id"
                     . " LEFT JOIN   (select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b) vstatus on vstatus.status=a.status  $join where $where $script_fields $group limit 20000 ";
-            var_dump($query);
-            var_dump($variables);exit;
+           
             }
 
         $stmt = $this->db->prepare($query);
