@@ -18,6 +18,7 @@ $(function()
     {
         $("#inputs_div1").empty();
         $("#inputs_div2").empty();
+          $("#inputs_div3").empty();
         var controler = 0;
         var input;
         var custom_class = "";
@@ -49,10 +50,7 @@ $(function()
                     custom_class = "validate[custom[email]]";
                 case "MIDDLE_INITIAL":
                     input = $("#inputs_div1");
-
                     break;
-
-
                 case "ADDRESS1":
                 case "ADDRESS2":
                 case "POSTAL_CODE":
@@ -65,26 +63,14 @@ $(function()
                 case "extra10":
                     input = $("#inputs_div2");
                     break;
-
-
                 default:
                     input = $("#inputs_div3");
-                    break;
-
-            }
-
-
-
+                    break; }
             input.append($("<div>").addClass("formRow")
                     .append($("<label>").text(this.display_name))
                     .append($("<div>").addClass(" formRight")
                             .append($("<input>").addClass(custom_class).attr("type", "text").attr("id", this.name).attr("name", this.name))));
             custom_class = "";
-
-
-
-
-
         });
         $("#inputs_div1").append($("<div>").addClass("clear"));
         $("#inputs_div2").append($("<div>").addClass("clear"));

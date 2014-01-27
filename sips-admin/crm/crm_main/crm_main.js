@@ -538,7 +538,7 @@ var crm_main = function(crm_main_zone, file_path)
                         crm_main_zone.find(".criar_marcacao").hide();
 
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"},{"sTitle": "Duração da Chamada"}, {"sTitle": "Data Chamada"}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Feedback"}, {"sTitle": "Duração da Chamada"}, {"sTitle": "Data Chamada"}],
                 "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
             });
         }
@@ -685,12 +685,12 @@ var crm_main = function(crm_main_zone, file_path)
         crm_edit_object.destroy();
 
         crm_edit_object.init(function() {
-          crm_main_zone.find('#loading').hide();
+            crm_main_zone.find('#loading').hide();
         });
         crm_main_zone.find('#client_div').show("blind");
-        
-       toggle_resultado("hide");
-         
+
+        toggle_resultado("hide");
+
     });
     crm_main_zone.on("click", "#close_client_div", function()
     {

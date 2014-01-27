@@ -4,7 +4,9 @@
 }
 #script_div legend
 {
-      border-bottom: 10px  solid   #a1a1a9;margin-bottom: 0px;
+      border-bottom: 5px  solid   #000000;
+      margin-bottom: 0px;
+      font-size:1.75em;
 }
 #script_div .modal-footer
 {

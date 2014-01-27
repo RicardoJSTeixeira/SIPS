@@ -219,7 +219,17 @@ var calendar = (calendar !== undefined) ? calendar :
                             placement: "top",
                             html: true,
                             title: "Não há consulta",
-                            content: '<select id="select_no_consult" name=""><option value="">Desistiu</option><option value="">Faleceu</option><option value="">Ninguém em casa</option><option value="">No Show</option></select><button class="btn btn-primary no_consult_button">Fechar</button>',
+                            content: '<select id="select_no_consult" name="">\n\
+        <option value="DEST">Desistiu</option>\n\
+  <option value="">Remarcou</option>\n\
+<option value="FAL">Faleceu</option>\n\
+        <option value="TINV">Telefone Invalido</option>\n\
+<option value="NOSHOW">No Show</option>\n\
+<option value="NATEN">Ninguém em casa</option>\n\\n\
+<option value="MOR">Morada Errada</option>\n\
+<option value="NTEC">Técnico não foi</option>\n\
+</select>\n\
+<button class="btn btn-primary no_consult_button">Fechar</button>',
                             trigger: 'click'
                         })
                         .end()
