@@ -92,6 +92,8 @@ class crm_edit_class {
         }
         if (!isset($js["campaign_name"]))
             $js["campaign_name"] = "Sem Campanha";
+         if (!isset($js["list_name"]))
+            $js["list_name"] = "Sem Base de dados";
         if (!isset($js["user_name"]))
             $js["user_name"] = "Sem Agente";
         return $js;
@@ -186,7 +188,7 @@ class crm_edit_class {
         $stmt->execute(array(":lead_id" => $lead_id));
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[9] = "Outbound";
+                        $row[9] = "Outbound";
             $output[] = $row;
         }
 
