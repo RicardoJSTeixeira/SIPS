@@ -93,6 +93,8 @@ class crm_edit_class {
             $js["list_name"] = "Sem Base de dados";
         if (!isset($js["user_name"]))
             $js["user_name"] = "Sem Agente";
+         if (!isset($js["status"]))
+            $js["status"] = "Sem Feedback";
         return $js;
     }
 

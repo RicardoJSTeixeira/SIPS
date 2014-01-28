@@ -10,6 +10,7 @@ $(function()
     {onEverethingCompleted:function(data){
             $("#client_name").text(data.client_info.first_name);
               $("#client_phone_number").text(data.client_info.phone_number);
+               $("#client_lead_id").text(data.lead_id);
         }});
     
 

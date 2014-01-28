@@ -37,8 +37,13 @@
             #client_info_placeholder 
             {
                 position: fixed;
-                top:10%;
-                left:2%;
+                top: 10%;
+                left: 2%;
+                -moz-border-radius: 15px;
+                border-radius: 15px;
+                background-color: rgba(132, 145, 144, .2);
+
+                padding: 5px;
             }
         </style>
     </head>
@@ -68,22 +73,12 @@
 
 
         <div id="client_info_placeholder" >
-            <div class="formRow">
-                <span><b>Nome do Cliente:</b></span>
-                <div class="formRight">
-                    <span id="client_name"></span>
-                </div>    
-            </div>
-
-            <div class="formRow">
-                <span><b>Telefone:</b></span>
-                <div class="formRight">
+                <h5>Nome do Cliente</h5>
+                <span id="client_name"></span>
+                <h5>Telefone</h5>
                     <span id="client_phone_number"></span>
-                </div>    
-            </div>
-
-
-
+                <h5>ID</h5>
+                <span id="client_lead_id"></span>
         </div>
         <script type="text/javascript" src="/sips-admin/script_dinamico/render.js?v=3"></script>
         <script type="text/javascript" src="script_placeholder.js?v=3"></script>
