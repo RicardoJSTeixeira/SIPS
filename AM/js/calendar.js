@@ -1,4 +1,4 @@
-var calendar = (calendar !== undefined) ? calendar :
+var calendar = (typeof calendar !== "undefined") ? calendar :
         function(selector, data, modal_ext, ext, lead_id) {
             var me = this;
             this.selector = selector;

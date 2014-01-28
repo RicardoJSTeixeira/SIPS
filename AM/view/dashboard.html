@@ -7,8 +7,6 @@
     }
 </style>
 
-
-
 <div id="cliente_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -22,8 +20,6 @@
 
     </div>
 </div>
-
-
 
 <div id="new_requisiton_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
     <div class="modal-header">
@@ -39,49 +35,39 @@
     </div>
 </div>
 
-
-
-<div class="row-fluid">
-    <div class="span6">
-        <div  class="grid">
-            <div id="calendar_day" class="grid-content"> </div>
-        </div>
-    </div>
-    <div class="span6">
-        <div class="grid hide" id='ext-events'>
-            <div class="grid-title"><div class="pull-left">Tipo de Reservas</div></div>
-            <div class="grid-content">
-            </div>
-        </div>
-
-        <div class="grid">
-
-
-            <div class="grid-title">
-                <div class="pull-left">Marcações Pendentes</div>
-
-            </div>
-            <div style="overflow: auto;max-height:36em"  >
-                <table class="table table-mod archives" id='table_mp'>
-                    <thead>
-                    <th>
-                        Nome
-                    </th>
-                    <th>
-                        Data
-                    </th>
-                    </thead>
-                    <tbody id='table_tbody_mp'>
-                    </tbody>
-                </table>  
-            </div>         
-        </div>
-
-    </div>
-</div>
-
-
 <div id="div_master" class="content">
+    <div class="row-fluid">
+        <div class="span6">
+            <div  class="grid">
+                <div id="calendar_day" class="grid-content"> </div>
+            </div>
+        </div>
+        <div class="span6">
+            <div class="grid hide" id='ext-events'>
+                <div class="grid-title"><div class="pull-left">Tipo de Reservas</div></div>
+                <div class="grid-content">
+                </div>
+            </div>
+            <div class="grid">
+                <div class="grid-title">
+                    <div class="pull-left">Marcações Pendentes</div>
+                </div>
+                <div style="overflow: auto;max-height:36em"  >
+                    <table class="table table-mod archives" id='table_mp'>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody id='table_tbody_mp'>
+                        </tbody>
+                    </table>  
+                </div>         
+            </div>
+        </div>
+    </div>
+
     <div class="row-fluid">
         <div class="span12">
             <ul id="tabs" class="nav nav-tabs tabs-main">
@@ -100,17 +86,11 @@
         </div>   
     </div>
 
-
-
-
 </div>
-<div id="div_calendar" style="display: none" >
+<div id="div_calendar" style="display: none" ></div>
 
-</div>
+<div id="div_requisition" style="display: none" ></div>
 
-<div id="div_requisition" style="display: none" >
-
-</div>
 <script type="text/javascript" src="/AM/lib_js/requisition.js" ></script>
 <script src="/sips-admin/crm/crm_edit/crm_edit.js" ></script>
 <script src="js/calendar.js" ></script>
