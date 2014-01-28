@@ -52,12 +52,9 @@ switch ($action) {
     case "get_script_individual":
         echo json_encode($script->get_data_individual($id));
         break;
-
     case "get_info_client":
-
         echo json_encode($crmMain->get_info_client($data_inicio, $data_fim, $campanha,$linha_inbound,$campaign_linha_inbound, $bd, $agente, $feedback, $cd, $script_info, $lead_id, $phone_number, $type_search));
         break;
-
     case "get_info_calls":
         echo json_encode($crmMain->get_info_calls($data_inicio, $data_fim, $campanha,$linha_inbound,$campaign_linha_inbound, $bd, $agente, $feedback, $cd, $script_info, $lead_id, $phone_number));
         break;

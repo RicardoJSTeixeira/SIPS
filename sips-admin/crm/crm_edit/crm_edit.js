@@ -10,17 +10,12 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     this.has_dynamic_fields;
     this.in_outbound = "in";
 
-
 //----------------------------------- BASIC FUNCTIONS
     this.init = function(callback)
     {
-
-
         $.get(file_path + "crm_edit/crm_edit.html", function(data) {
             crm_edit_zone.append(data);
             crm_edit_zone.find("#agente_selector").chosen({no_results_text: "Sem resultados"});
-
-
             get_user_level(function() {
                 get_lead_info(function() {
                     get_dynamic_fields(function() {
@@ -98,6 +93,10 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                                         get_validation();
                                                     }, "json");
                                             });
+                                            if (typeof callback === "function")
+                                            {
+                                                callback();
+                                            }
                                         });
                                     });
                                 });
@@ -106,10 +105,6 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                     });
                 });
             });
-            if (typeof callback === "function")
-            {
-                callback();
-            }
         });
     };
     this.destroy = function()
@@ -148,7 +143,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_agentes"},
         function(data)
         {
-            crm_edit_zone.find("#agente_selector").empty();
+            crm_edit_zone.find("#agente_selector").empty(); 
             var temp = "";
             $.each(data, function(index, value)
             {
@@ -188,7 +183,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                     "<td>" + data.phone_number + "</td>" +
                     "<td>" + data.list_name + "</td>" +
                     "<td>" + data.campaign_name + "</td>" +
-                                       "<td>" + data.user_name + "</td>" +
+                    "<td>" + data.user_name + "</td>" +
                     "<td>" + data.status_name + "</td>" +
                     "<td>" + data.called_count + "</td></tr>");
             me.campaign_id = data.campaign_id;
@@ -291,6 +286,9 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
             },
             "aoColumns": [{"sTitle": "Data"},
                 {"sTitle": "Duração"},
+                {"sTitle": "Tempo em Espera"},
+                {"sTitle": "Posição fila espera"},
+                {"sTitle": "Motivo de fim de chamada"},
                 {"sTitle": "Número"},
                 {"sTitle": "Operador"},
                 {"sTitle": "Feedback"},
@@ -301,6 +299,9 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                 {"sTitle": "In/Out"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
+
+
+
         if (typeof callback === "function")
         {
             callback();

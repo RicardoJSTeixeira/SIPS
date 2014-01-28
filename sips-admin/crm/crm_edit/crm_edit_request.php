@@ -62,14 +62,16 @@ switch ($action) {
         if (count($calls, 1) > 0) {
             foreach ($calls as $key => &$value) {
                 $value[1] = gmdate("H:i:s", $value[1]);
+                if ($value[2] != "Sem tempo de espera")
+                    $value[2] = gmdate("H:i:s", $value[2]);
                 $has_script = false;
                 $count = $crmEdit->check_has_script($value["campaign_id"]);
-    
+
                 if ($count[0] > 0) {
                     $has_script = true;
                 }
                 if ($user->user_level > 5 && $has_script) {
-                    $value[9] = $value[9] . " <div class='view-button edit_item'><a class='btn btn-mini btn-primary' target='_new' href='" . $file_path . "crm_edit/script_placeholder.html?lead_id=" .$lead_id . "&campaign_id=" . $value["campaign_id"] . "&user=$user->full_name&pass=$user->password&isadmin=1&unique_id=" . $value["uniqueid"] . "'><i class='icon-bookmark'></i>Script</a></div>";
+                    $value[12] = $value[12] . " <div class='view-button edit_item'><a class='btn btn-mini btn-primary' target='_new' href='" . $file_path . "crm_edit/script_placeholder.html?lead_id=" . $lead_id . "&campaign_id=" . $value["campaign_id"] . "&user=$user->full_name&pass=$user->password&isadmin=1&unique_id=" . $value["uniqueid"] . "'><i class='icon-bookmark'></i>Script</a></div>";
                 }
             }
             $output['aaData'] = $calls;
