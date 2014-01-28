@@ -24,12 +24,12 @@ switch ($action) {
     case "populate_allm"://ALL MARCAÇOES
         $query = "SELECT a.lead_id,b.first_name,b.address1,a.start_date from sips_sd_reservations a 
             left join vicidial_list b on a.lead_id=b.lead_id 
-                           where a.id_user=?";
+                           where a.id_user=? group by a.lead_id";
         $variables[] = $user->getUser()->username;
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[3] = $row[3] . "<div class='view-button'><span class='btn btn-mini ver_cliente' data-lead_id='".$row[0]."'><i class='icon-edit'></i>Ver Cliente</span></div>";
+            $row[3] = $row[3] . "<div class='view-button'><span class='btn btn-mini ver_cliente' data-lead_id='" . $row[0] . "'><i class='icon-edit'></i>Ver Cliente</span><span class='btn btn-mini criar_encomenda' data-lead_id='" . $row[0] . "'><i class='icon-edit'></i>Criar encomenda</span></div>";
             $output['aaData'][] = $row;
         }
 

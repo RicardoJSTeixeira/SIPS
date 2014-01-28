@@ -1,29 +1,38 @@
-var render = function(script_zone, file_path, script_id, lead_id, unique_id, user_id, campaign_id, admin_review)
+var render = function(script_zone, file_path, script_id, lead_id, unique_id, user_id, campaign_id, admin_review,ext_events)
 {
 
-    var me = this;
-    var array_id = [];
-
+    var
+    me = this,
+    array_id = [],
+    events={
+        onEverethingCompleted:function(){}
+    };
+     $.extend(true, events, ext_events);
+                             
     this.script_id = script_id;
     this.lead_id = lead_id;
     this.unique_id = unique_id;
     this.user_id = user_id;
     this.campaign_id = campaign_id;
     this.admin_review = admin_review;
-    this.client_info = new Array();
+    this.client_info = {};
     this.validado_function = false;
     this.nao_validado_function = false;
     this.has_script = true;
 
-
+  
     this.init = function()
     {
+        
+           
         $.ajaxSetup({cache: false});
         before_all(function() {
             update_script(function() {
                 update_info(function() {
                     insert_element(function() {
-                        starter();
+                        starter(function() {
+                                                         events.onEverethingCompleted(me);
+                        });
                     });
                 });
             });
@@ -39,7 +48,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             {
                 if (Object.size(info1))
                     me.client_info = info1;
-
+ 
                 if (typeof callback === "function")
                 {
                     callback();
@@ -78,8 +87,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                                 me.nao_validado_function();
                                             }
                                         }
-                                  }
-                         });
+                                    }
+                                });
+                                  
+                                
                     });
                 });
             });
@@ -535,7 +546,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         options.startDate = info.values_text.data_inicial;
                         options.endDate = info.values_text.data_final;
                     }
-                    console.log(options);
+
                     script_zone.find("input[name='" + info.tag + "']").datetimepicker(options).keypress(function(e) {
                         e.preventDefault();
                     }).bind("cut copy paste", function(e) {

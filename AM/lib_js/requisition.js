@@ -1,27 +1,58 @@
 
-var requisition = function(base_requisition)
+var requisition = function(base_requisition, options_ext)
 {
+
+
     var me = this;
+
+    this.config = new Object();
+    this.config.mensal = true;
+    this.config.especial = true;
+
+
+    $.extend(true, this.config, options_ext);
     this.base_requisitions = base_requisition;
     var aparelho = [], pilha = [], peça = [], optgroups = [], product = 1;
     this.init = function()
     {
         $.get("/AM/view/requisitions/requisition_modal.html", function(data) {
             me.base_requisitions.append(data);
+
+
+
+
         });
     };
     this.get_current_requisitions = function(table_path, show_admin)
     {
         get_encomendas_atuais(table_path, show_admin);
     };
-    
+
     //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
-    this.new_requisition = function(new_requisition_zone, current_requisition_zone) {
- 
+    this.new_requisition = function(new_requisition_zone, current_requisition_zone, lead_id) {
+
+
+
         $.get("/AM/view/requisitions/new_requisition.html", function(data) {
             new_requisition_zone.append(data);
-            $(" #requisition_form").validationEngine();
+            if (!me.config.mensal)
+            {
+                new_requisition_zone.find("#req_m_radio").prop("disabled", true);
+       
+            }
+            if (!me.config.especial)
+            { //Nao se força o selected nem hides no mensal pk por default começa o especial
+                new_requisition_zone.find("#req_m_radio").prop("checked", true);
+                new_requisition_zone.find("#req_s_radio").prop("disabled", true);
+                new_requisition_zone.find("#special_req_div").remove();
+            }
+            $("#requisition_form").validationEngine();
             $("#requisition_form").show();
+
+            //preencher com lead_id enviado
+            if (lead_id)
+                new_requisition_zone.find("#new_requisition_lead_id").val(lead_id);
+
             $.post('ajax/admin.php', {action: "listar_produtos"},
             function(data)
             {
@@ -30,7 +61,7 @@ var requisition = function(base_requisition)
                 pilha = [];
                 peça = [];
                 optgroups = [];
-                optgroups.push("<optgroup value='1' label='Aparelhos'></optgroup>");
+                optgroups.push("<option value='0'>Escolha um produto</option><optgroup value='1' label='Aparelhos'></optgroup>");
                 optgroups.push("<optgroup value = '2' label = 'Pilhas' > </optgroup>");
                 optgroups.push("<optgroup value = '3' label = 'Peças' > </optgroup>");
                 $.each(data, function()
@@ -66,6 +97,8 @@ var requisition = function(base_requisition)
                     .find("optgroup[value='2']").append(pilha).end()
                     .find("optgroup[value='3']").append(peça).end().trigger("chosen:updated").trigger("change");
             product += 1;
+
+
         });
         $(new_requisition_zone).on("change", ".new_requisition_select_product", function()
         {
@@ -83,21 +116,32 @@ var requisition = function(base_requisition)
                 if ($(" #product_input" + $(this).data().linha_id).val() > $(this).find("option:selected").data().max_special)
                     $(" #product_input" + $(this).data().linha_id).val($(this).find("option:selected").data().max_special);
             }
-            
-            
+            update_product_selects();
+
         });
 // SUBMITAR A ENCOMENDA
         $(new_requisition_zone).on("click", "#new_requisition_submit_button", function()
         {
             var produtos = [];
             var count = 0;
+
             $.each($(" #new_requisition_product_tbody tr"), function()
             {
-                count++;
-                produtos.push({"id": $(this).find("select").find("option:selected").attr("id"), "quantity": $(this).find("input[type='number']").val()});
+                var this_option_selected = $(this).find("select").find("option:selected");
+                if (this_option_selected.val() !== "0")
+                {
+                    count++;
+                    produtos.push({"id": this_option_selected.attr("id"), "quantity": $(this).find("input[type='number']").val()});
+                }
+                else
+                {
+                    $.jGrowl('Existe um ou mais produtos para selecionar', {life: 4000});
+                    count = 0;
+                    return false;
+                }
             });
             if (!count)
-                $.jGrowl('Escolha produtos para encomendar', {life: 4000});
+                $.jGrowl('Certifique-se que os produtos estão correctamente escolhidos', {life: 4000});
             else
             {
                 if ($(" #requisition_form").validationEngine("validate"))
@@ -109,7 +153,7 @@ var requisition = function(base_requisition)
                         attachment: "aaaaaa",
                         products_list: produtos},
                     function() {
-                        if (current_requisition_zone !== undefined)
+                        if (current_requisition_zone !== undefined && current_requisition_zone !== 0)
                             get_encomendas_atuais(current_requisition_zone);
                         $.jGrowl('Encomenda realizada com sucesso', {life: 4000});
                         $(" #new_requisition_lead_id").val("");
@@ -159,6 +203,31 @@ var requisition = function(base_requisition)
 
     //EXTRA FUNCTIONS---------------------------------------------------------
 
+
+    function  update_product_selects()
+    {
+
+        var selected_options = [];
+        $("#new_requisition_product_tbody select option").prop("disabled", false);
+        $.each($("#new_requisition_product_tbody select"), function()
+        {
+            selected_options.push($(this).find("option:selected").attr("id"));
+        });
+
+        $.each(selected_options, function()
+        {
+            $("#new_requisition_product_tbody select option[id='" + this + "']").prop("disabled", true);
+
+        });
+
+
+        $("#new_requisition_product_tbody select").trigger("chosen:updated");
+    }
+
+
+
+
+
     function get_encomendas_atuais(table_path, show_admin)
     {
 
@@ -188,7 +257,7 @@ var requisition = function(base_requisition)
                 {
                     $(" #ver_product_modal #show_requisition_products_tbody").append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.quantity + "</td></tr>");
                 });
-        
+
                 $("#ver_product_modal").modal("show");
             },
                     "json");

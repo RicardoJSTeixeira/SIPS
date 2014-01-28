@@ -1,12 +1,12 @@
  
 <style>
     .chosen-container { width: 79% !important; }
-   
+
 </style>
 <div class="row-fluid">
     <div class="span12">
         <h2>Informação do Cliente</h2>   
-        <table class='table table-mod table-bordered'>
+        <table class='table table-mod table-bordered'  >
             <thead> 
                 <tr>
                     <th>ID do Contacto</th>
@@ -21,6 +21,7 @@
             <tbody id="lead_info_tbody">
             </tbody>
         </table>     
+
     </div>
 </div>
 <div class="row-fluid">
@@ -51,7 +52,7 @@
         </form>
         <div id="dynamic_field_edit_div"  >
             <button class="btn right btn-primary" id="lead_edit_button">Editar Dados do Cliente</button>
-            
+
             <button class="btn right btn-success" id="lead_edit_save_button" style="margin-right: 5px; display:none"><i class="icon-save"></i>Gravar</button>
         </div>
     </div>
@@ -119,12 +120,12 @@
                 <div class="formRow">
                     <label class="control-label">Agente</label>
                     <div class="formRight">
-                        <select id='agente_selector' class="chosen-select">
+                        <select id='agente_selector' class="chosen-select" data-placeholder="Escolha um agente para atribuir o callback">
                         </select>
                     </div>
                 </div>
                 <div class="formRow">
-                      <button class='btn btn-action right btn-primary ' id='confirm_feedback_button'>Guardar</button>
+                    <button class='btn btn-action right btn-primary ' id='confirm_feedback_button'>Guardar</button>
                 </div>
             </div>
         </div>
@@ -132,19 +133,26 @@
 </div>
 
 
+
 <div class="row-fluid">
     <div class="span12">
         <h3>Chamadas</h3>
-        <table class='table table-mod table-bordered' id="chamadas_realizadas">
+        <table class='table table-mod table-bordered' id="table_chamadas">
             <thead>
                 <tr>
                     <th>Data</th>
                     <th>Duração</th>
+                    <th>Tempo em Espera</th>
+                    <th>Posição fila espera</th>
+                    <th>Motivo de fim de chamada</th>
                     <th>Número</th>
                     <th>Operador</th>
                     <th>Feedback</th>
                     <th>Campanha</th>
                     <th>Base de Dados</th>
+                    <th>Linha de Inbound</th>
+                    <th>Tipo</th>
+                    <th>In/Out</th>
                 </tr>
             </thead>
             <tbody id="calls_tbody">
@@ -153,11 +161,10 @@
     </div>
 </div>
 
-
 <div class="row-fluid">
     <div class="span12">
         <h3>Gravações</h3>
-        <table class='table table-mod table-bordered' id="chamadas_gravadas">
+        <table class='table table-mod table-bordered' id="table_recording">
             <thead>
                 <tr>
                     <th>Data</th>
@@ -165,12 +172,19 @@
                     <th>Fim da Gravação</th>
                     <th>Duração</th>
                     <th>Operador</th>
+                </tr>
             </thead>
             <tbody id="recordings_tbody">
             </tbody>
         </table> 
     </div>
 </div>
+
+
+
+
+
+
 
 
 

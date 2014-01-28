@@ -34,8 +34,29 @@
         position: relative;
         top: 3px;
         left: 13px;
-
     }
+
+
+   #loading {
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  position: fixed;
+  display: block;
+  opacity: 0.7;
+  background-color: #fff;
+  z-index: 99;
+  text-align: center;
+}
+
+#loading-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 100;
+}
+
 </style>
 
 
@@ -60,18 +81,33 @@
                     <div class="row-fluid">
                         <div class="span6">
                             <div class="FormRow">
+                                <h5>Tipo de pesquisa</h5>
+                                <div class="FormRight">
+                                    <input  type="radio" id="radio_campanha" name="rft" value="1" checked="checked">
+                                    <label class=" radio inline"  for="radio_campanha"><span></span>Campanha</label> 
+                                    <input  type="radio" id="radio_linha_inbound" value="2" name="rft">
+                                    <label class=" radio inline"  for="radio_linha_inbound"><span></span>Linha Inbound</label> 
+                                </div>    
+                            </div>
+                            <div class="FormRow" id="div_filtro_campanha">
                                 <h5>Campanha</h5>
                                 <div class="FormRight">
                                     <select class="chosen-select filtro_select" id="select_campanha"  data-placeholder="Selecione uma campanha"></select>
                                 </div>    
                             </div>
-                            <div class="FormRow">
+                            <div class="FormRow" id="div_filtro_linha_inbound" >
+                                <h5>Linha inbound</h5>
+                                <div class="FormRight">
+                                    <select class="chosen-select filtro_select" id="select_linha_inbound"  data-placeholder="Selecione uma linha de inbound"></select>
+                                </div>    
+                            </div>
+                            <div class="FormRow"  id="div_filtro_bd">
                                 <h5>Base de Dados</h5>
                                 <div class="FormRight">
                                     <select class="chosen-select filtro_select" id="select_bd"  data-placeholder="Todas as Base de Dados"></select>
                                 </div>    
                             </div>            
-                            <div class="FormRow">
+                            <div class="FormRow" >
                                 <h5>Campos Dinamicos</h5>
                                 <div class="FormRight">
                                     <select class="chosen-select input-xlarge " id="select_cd"  data-placeholder="Todos os Campo Dinamico"></select>
@@ -96,7 +132,7 @@
                                     <select class="chosen-select filtro_select" id="select_feedback"   data-placeholder="Todos os Feedback"></select>
                                 </div>    
                             </div> 
-                            <div class="FormRow">
+                            <div class="FormRow" id="div_filtro_cs">
                                 <h5>Campos do Script</h5>
                                 <div class="FormRight">
                                     <select class="chosen-select input-xlarge" id="select_script"  data-placeholder="Selecione um Script"></select>
@@ -120,8 +156,8 @@
                             <label for="checkbox_alldate"><span></span>Sem limite de Data</label>
                             <div  id="date_div">
                                 <div class="formRow">
-                                    <input size="16" type="text" class="form_datetime validate[required]" id="data_inicio" placeholder="Data de Inicio">
-                                    <input size="16" type="text" class="form_datetime validate[required]" id="data_fim" placeholder="Data de Fim">
+                                    <input size="16" type="text" class="form_datetime validate[required]" readonly id="data_inicio" placeholder="Data de Inicio">
+                                    <input size="16" type="text" class="form_datetime validate[required]" readonly id="data_fim" placeholder="Data de Fim">
                                 </div>
                                 <div id="client_search_sub_option">
                                     <input  type="radio" id="type_search_radio_call" name="tsr" checked="checked">
@@ -185,10 +221,10 @@
                 Resultados
             </div>
             <div class="pull-right">
-                <button class="btn icon-chevron-up" id="button_resultado"></button>  
+                <button class="btn icon-chevron-down" id="button_resultado"></button>  
             </div>
         </div>
-        <div class="grid-content" id="resultado_div">
+        <div class="grid-content" id="resultado_div" style="display:none">
             <div id="table_client">
                 <table id="info_table_client" class="table table-mod-2 dataTable table-bordered">        </table>  
             </div>
@@ -213,6 +249,11 @@
         </div>
         <div class="grid-content " id="client_area">
         </div>
+        
+        <div id="loading">
+            <img id="loading-image" src="/images/icons/big-loader.gif" alt="Loading..." />
+        </div>
+
     </div>
 </div>
 
@@ -228,6 +269,6 @@
     <div class="grid-content " id="calendar_div">
     </div>
 </div>
- 
+
 
 <script src="/AM/js/calendar.js?v=1" ></script>

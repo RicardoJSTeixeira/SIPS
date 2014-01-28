@@ -100,11 +100,11 @@ function get_info()
                 .find("optgroup[value='3']").append(peça).end().trigger("chosen:updated");
     }, "json");
     //ENCOMENDAS--------------------------------------------------------------------------------------
-     
-    requisition1 = new requisition($("#admin_extra_zone"));
+    var config = new Object();
+    requisition1 = new requisition($("#admin_extra_zone"), config);
 
     requisition1.init();
-    requisition1.get_current_requisitions($("#view_requisition_datatable"),1 );
+    requisition1.get_current_requisitions($("#view_requisition_datatable"), 1);
 }
 //PRODUTOS--------------------------------------------------------------------------------------------------------------------------------------------------
 //EDITAR PRODUTO
@@ -132,8 +132,9 @@ $("#admin_zone").on("click", ".item_edit_button", function()
     $.post('ajax/admin.php', {action: "listar_produto", id: $(this).data("product_id")},
     function(data)
     {
+
         $("#admin_zone #ep_name").val(data.name);
-        $("#admin_zone #ep_parent optgroup option[value='" + data.parent + "']").prop("selected", true).trigger("chosen:updated");
+        $("#admin_zone #ep_parent optgroup option[id='" + data.parent + "']").prop("selected", true).trigger("chosen:updated");
         $("#admin_zone #ep_mrm").val(data.max_req_m);
         $("#admin_zone #ep_mrw").val(data.max_req_s);
         $("#admin_zone #ep_category option[value='" + data.category + "']").prop("selected", true);

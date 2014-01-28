@@ -21,12 +21,12 @@ $variables = array();
 $js = array();
 switch ($action) {
     case "get_fields":
-        $query = "SELECT NAME,DISPLAY_NAME FROM `vicidial_list_ref` WHERE campaign_id=? and active='1' ORDER BY field_order asc";
+        $query = "SELECT NAME,DISPLAY_NAME,field_order FROM `vicidial_list_ref` WHERE campaign_id=? and active='1' ORDER BY field_order asc";
         $variables[] = $campaign_id;
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $js[] = array("name" => $row["NAME"], "display_name" => $row["DISPLAY_NAME"]);
+            $js[] = array("name" => $row["NAME"], "display_name" => $row["DISPLAY_NAME"], "field_order" => $row["field_order"]);
         }
         echo json_encode($js);
         break;
