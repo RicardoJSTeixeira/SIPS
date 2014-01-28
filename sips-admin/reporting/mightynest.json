@@ -1,0 +1,352 @@
+[
+    {
+        "id": "Contactos úteis",
+        "children": [
+            {
+                "id": "Contacto-IV"
+                
+            },
+            {
+                "id": "Nº telefone não corresponde"
+          
+            },
+            {
+                "id": "Não quer responder"
+              
+            },
+            {
+                "id": "Fora horário expediente"
+             
+            }
+        ]
+    },
+    {
+        "id": "Resultado da acção",
+     
+        "children": [
+            {
+                "id": "Clientes c/interessados \"test drive\""
+         
+            },
+            {
+                "id": "Clientes interessados em receber informação por mail"
+               
+            },
+            {
+                "id": "Cliente pretendem avaliação retoma"
+            },
+            {
+                "id": "Venda de veículos"
+              
+            }
+        ]
+    },
+    {
+        "id": "Comentários à proposta de financiamento do 2008",
+     
+        "children": [
+            {
+                "id": "Não pretendem trocar viatura(motivos vários)"
+    
+            },
+            {
+                "id": "Dificuldade financeira dos clientes"
+         
+            },
+            {
+                "id": "Vai analisar"
+          
+            },
+            {
+                "id": "Sim tem interesse na viatura"
+         
+            },
+            {
+                "id": "Já não possui a viatura"
+               
+            },
+            {
+                "id": "Tem mais viatura / anda pouco"
+          
+            },
+            {
+                "id": "Descontente com a marca"
+          
+            },
+            {
+                "id": "Passa concessionário"
+             
+            },
+            {
+                "id": "Reside fora do pais"
+   
+            },
+            {
+                "id": "Interesse noutro modelo"
+            
+            },
+            {
+                "id": "Não pretendem trocar viatura(motivos vários)"
+             
+            },
+            {
+                "id": "Dificuldade financeira dos clientes"
+           
+            },
+            {
+                "id": "Vai analisar"
+         
+            },
+            {
+                "id": "Sim tem interesse na viatura"
+              
+            },
+            {
+                "id": "Já não possui a viatura"
+               
+            },
+            {
+                "id": "Tem mais viatura / anda pouco"
+         
+            },
+            {
+                "id": "Descontente com a marca"
+          
+            },
+            {
+                "id": "Passa concessionário"
+              
+            },
+            {
+                "id": "Reside fora do pais"
+       
+            },
+            {
+                "id": "Interesse noutro modelo"
+     
+            },
+            {
+                "id": "Não pretendem trocar viatura(motivos vários)"
+         
+            },
+            {
+                "id": "Dificuldade financeira dos clientes"
+             
+            },
+            {
+                "id": "Vai analisar"
+              
+            },
+            {
+                "id": "Sim tem interesse na viatura"
+             
+            },
+            {
+                "id": "Já não possui a viatura"
+               
+            },
+            {
+                "id": "Tem mais viatura / anda pouco"
+            
+            },
+            {
+                "id": "Descontente com a marca"
+           
+            },
+            {
+                "id": "Passa concessionário"
+           
+            },
+            {
+                "id": "Reside fora do pais"
+             
+            },
+            {
+                "id": "Interesse noutro modelo"
+ 
+            },
+            {
+                "id": "Não pretendem trocar viatura(motivos vários)"
+      
+            },
+            {
+                "id": "Dificuldade financeira dos clientes"
+
+            },
+            {
+                "id": "Vai analisar"
+  
+            },
+            {
+                "id": "Sim tem interesse na viatura"
+           
+            },
+            {
+                "id": "Já não possui a viatura"
+              
+            },
+            {
+                "id": "Tem mais viatura / anda pouco"
+             
+            },
+            {
+                "id": "Descontente com a marca"
+          
+            },
+            {
+                "id": "Passa concessionário"
+              
+            },
+            {
+                "id": "Reside fora do pais"
+            
+            },
+            {
+                "id": "Interesse noutro modelo"
+           
+            }
+            
+        ]
+    },
+    {
+        "id": "Sem sucesso / Anomalias",
+
+        "children": [
+            {
+                "id": "Varias tentativas sem sucesso"
+       
+            },
+            {
+                "id": "Nº telefone não atribuido"
+             
+            },
+            {
+                "id": "Impossivel estabelecer ligação"
+             
+            },
+            {
+                "id": "Atendedor de chamadas"
+              
+            },
+            {
+                "id": "Sem contacto"
+              
+            }
+        ]
+    },
+    {
+        "id": "Contactos úteis",
+       
+        "children": [
+            {
+                "id": "Contacto-IV"
+         
+            },
+            {
+                "id": "Nº telefone não corresponde"
+            },
+            {
+                "id": "Não quer responder"
+         
+            },
+            {
+                "id": "Fora horário expediente"
+         
+            }
+        ]
+    },
+    {
+        "id": "Resultado da acção",
+   
+        "children": [
+            {
+                "id": "Clientes c/interessados \"test drive\""
+         
+            },
+            {
+                "id": "Clientes interessados em receber informação por mail"
+           
+            },
+            {
+                "id": "Cliente pretendem avaliação retoma"
+            
+            },
+            {
+                "id": "Venda de veículos"
+               
+            }
+        ]
+    },
+    {
+        "id": "Comentários à proposta de financiamento do 2008",
+       
+        "children": [
+            {
+                "id": "Não pretendem trocar viatura(motivos vários)"
+       
+            },
+            {
+                "id": "Dificuldade financeira dos clientes"
+          
+            },
+            {
+                "id": "Vai analisar"
+    
+            },
+            {
+                "id": "Sim tem interesse na viatura"
+              
+            },
+            {
+                "id": "Já não possui a viatura"
+             
+            },
+            {
+                "id": "Tem mais viatura / anda pouco"
+               
+            },
+            {
+                "id": "Descontente com a marca"
+           
+            },
+            {
+                "id": "Passa concessionário"
+             
+            },
+            {
+                "id": "Reside fora do pais"
+             
+            },
+            {
+                "id": "Interesse noutro modelo"
+            
+            }
+        ]
+    },
+    {
+        "id": "Sem sucesso / Anomalias",
+  
+        "children": [
+            {
+                "id": "Varias tentativas sem sucesso"
+       
+            },
+            {
+                "id": "Nº telefone não atribuido"
+            
+            },
+            {
+                "id": "Impossivel estabelecer ligação"
+               
+            },
+            {
+                "id": "Atendedor de chamadas"
+              
+            },
+            {
+                "id": "Sem contacto"
+              
+            }
+        ]
+    }
+]
