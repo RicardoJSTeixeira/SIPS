@@ -37,7 +37,7 @@ switch ($action) {
         $variables[] = $feedback;
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
-        echo("done");
+      echo json_encode("1");
         break;
 
     case "get_client_info":

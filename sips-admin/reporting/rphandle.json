@@ -1,0 +1,340 @@
+[
+    {
+        "name": "Contactos úteis",
+        "total": 323,
+        "perc": "77%",
+        "values": [
+            {
+                "name": "Contacto-IV",
+                "value": 301,
+                "perc": "93%"
+            },
+            {
+                "name": "Nº telefone não corresponde",
+                "value": 16,
+                "perc": "5%"
+            },
+            {
+                "name": "Não quer responder",
+                "value": 4,
+                "perc": "1%"
+            },
+            {
+                "name": "Fora horário expediente",
+                "value": 2,
+                "perc": "1%"
+            }
+        ]
+    },
+    {
+        "name": "Resultado da acção",
+        "total": 138,
+        "perc": "100%",
+        "values": [
+            {
+                "name": "Clientes c/interessados \"test drive\"",
+                "value": 53,
+                "perc": "18%"
+            },
+            {
+                "name": "Clientes interessados em receber informação por mail",
+                "value": 44,
+                "perc": "15%"
+            },
+            {
+                "name": "Cliente pretendem avaliação retoma",
+                "value": 39,
+                "perc": "13%"
+            },
+            {
+                "name": "Venda de veículos",
+                "value": 2,
+                "perc": "1%"
+            }
+        ]
+    },
+    {
+        "name": " Proposta de financiamento do 2008",
+        "total": 301,
+        "perc": "100%",
+        "values": [
+            {
+                "name": "Não pretendem trocar viatura(motivos vários)",
+                "value": 116,
+                "perc": "39%"
+            },
+            {
+                "name": "Dificuldade financeira dos clientes",
+                "value": 70,
+                "perc": "23%"
+            },
+            {
+                "name": "Vai analisar",
+                "value": 33,
+                "perc": "11%"
+            },
+            {
+                "name": "Sim tem interesse na viatura",
+                "value": 29,
+                "perc": "10%"
+            },
+            {
+                "name": "Já não possui a viatura",
+                "value": 24,
+                "perc": "8%"
+            },
+            {
+                "name": "Tem mais viatura / anda pouco",
+                "value": 13,
+                "perc": "4%"
+            },
+            {
+                "name": "Descontente com a marca",
+                "value": 8,
+                "perc": "3%"
+            },
+            {
+                "name": "Passa concessionário",
+                "value": 4,
+                "perc": "1%"
+            },
+            {
+                "name": "Reside fora do pais",
+                "value": 2,
+                "perc": "1%"
+            },
+            {
+                "name": "Interesse noutro modelo",
+                "value": 2,
+                "perc": "1%"
+            },
+            {
+                "name": "Não pretendem trocar viatura(motivos vários)",
+                "value": 116,
+                "perc": "39%"
+            },
+            {
+                "name": "Dificuldade financeira dos clientes",
+                "value": 70,
+                "perc": "23%"
+            },
+            {
+                "name": "Vai analisar",
+                "value": 33,
+                "perc": "11%"
+            },
+            {
+                "name": "Sim tem interesse na viatura",
+                "value": 29,
+                "perc": "10%"
+            },
+            {
+                "name": "Já não possui a viatura",
+                "value": 24,
+                "perc": "8%"
+            },
+            {
+                "name": "Tem mais viatura / anda pouco",
+                "value": 13,
+                "perc": "4%"
+            },
+            {
+                "name": "Descontente com a marca",
+                "value": 8,
+                "perc": "3%"
+            },
+            {
+                "name": "Passa concessionário",
+                "value": 4,
+                "perc": "1%"
+            },
+            {
+                "name": "Reside fora do pais",
+                "value": 2,
+                "perc": "1%"
+            },
+            {
+                "name": "Interesse noutro modelo",
+                "value": 2,
+                "perc": "1%"
+            }
+            
+               
+        ]
+    },
+    {
+        "name": "Sem sucesso / Anomalias",
+        "total": 97,
+        "perc": "23%",
+        "values": [
+            {
+                "name": "Varias tentativas sem sucesso",
+                "value": 37,
+                "perc": "38%"
+            },
+            {
+                "name": "Nº telefone não atribuido",
+                "value": 31,
+                "perc": "32%"
+            },
+            {
+                "name": "Impossivel estabelecer ligação",
+                "value": 14,
+                "perc": "14%"
+            },
+            {
+                "name": "Atendedor de chamadas",
+                "value": 11,
+                "perc": "11%"
+            },
+            {
+                "name": "Sem contacto",
+                "value": 4,
+                "perc": "4%"
+            }
+        ]
+    },
+    {
+        "name": "Contactos úteis",
+        "total": 323,
+        "perc": "77%",
+        "values": [
+            {
+                "name": "Contacto-IV",
+                "value": 301,
+                "perc": "93%"
+            },
+            {
+                "name": "Nº telefone não corresponde",
+                "value": 16,
+                "perc": "5%"
+            },
+            {
+                "name": "Não quer responder",
+                "value": 4,
+                "perc": "1%"
+            },
+            {
+                "name": "Fora horário expediente",
+                "value": 2,
+                "perc": "1%"
+            }
+        ]
+    },
+    {
+        "name": "Resultado da acção",
+        "total": 138,
+        "perc": "100%",
+        "values": [
+            {
+                "name": "Clientes c/interessados \"test drive\"",
+                "value": 53,
+                "perc": "18%"
+            },
+            {
+                "name": "Clientes interessados em receber informação por mail",
+                "value": 44,
+                "perc": "15%"
+            },
+            {
+                "name": "Cliente pretendem avaliação retoma",
+                "value": 39,
+                "perc": "13%"
+            },
+            {
+                "name": "Venda de veículos",
+                "value": 2,
+                "perc": "1%"
+            }
+        ]
+    },
+    {
+        "name": "Proposta de financiamento do 2008",
+        "total": 301,
+        "perc": "100%",
+        "values": [
+            {
+                "name": "Não pretendem trocar viatura(motivos vários)",
+                "value": 116,
+                "perc": "39%"
+            },
+            {
+                "name": "Dificuldade financeira dos clientes",
+                "value": 70,
+                "perc": "23%"
+            },
+            {
+                "name": "Vai analisar",
+                "value": 33,
+                "perc": "11%"
+            },
+            {
+                "name": "Sim tem interesse na viatura",
+                "value": 29,
+                "perc": "10%"
+            },
+            {
+                "name": "Já não possui a viatura",
+                "value": 24,
+                "perc": "8%"
+            },
+            {
+                "name": "Tem mais viatura / anda pouco",
+                "value": 13,
+                "perc": "4%"
+            },
+            {
+                "name": "Descontente com a marca",
+                "value": 8,
+                "perc": "3%"
+            },
+            {
+                "name": "Passa concessionário",
+                "value": 4,
+                "perc": "1%"
+            },
+            {
+                "name": "Reside fora do pais",
+                "value": 2,
+                "perc": "1%"
+            },
+            {
+                "name": "Interesse noutro modelo",
+                "value": 2,
+                "perc": "1%"
+            }
+        ]
+    },
+    {
+        "name": "Sem sucesso / Anomalias",
+        "total": 97,
+        "perc": "23%",
+        "values": [
+            {
+                "name": "Varias tentativas sem sucesso",
+                "value": 37,
+                "perc": "38%"
+            },
+            {
+                "name": "Nº telefone não atribuido",
+                "value": 31,
+                "perc": "32%"
+            },
+            {
+                "name": "Impossivel estabelecer ligação",
+                "value": 14,
+                "perc": "14%"
+            },
+            {
+                "name": "Atendedor de chamadas",
+                "value": 11,
+                "perc": "11%"
+            },
+            {
+                "name": "Sem contacto",
+                "value": 4,
+                "perc": "4%"
+            }
+        ]
+    }
+]

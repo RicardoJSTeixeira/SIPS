@@ -35,6 +35,32 @@
     </div>
 </div>
 
+
+<div id="calendar_client_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Client" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Cliente</h3>
+    </div>
+    <div class="modal-body">
+        <dl class="dl-horizontal" id="client_info">
+        </dl>
+    </div>
+    <div class="modal-footer" style="text-align: inherit !important;">
+        <span class="left">
+            <button class="btn btn-danger icon-alone" id="btn_trash" ><i class="icon-trash"></i></button>
+            <button class="btn btn-info" disabled>Mudar hora</button>
+        </span>
+        <span class="right">
+            <button class="btn btn-link" data-dismiss="modal" aria-hidden="true">Fechar</button>
+            <button class="btn btn-warning" id="btn_no_consult">Não há Consulta</button>
+            <button class="btn btn-success" id="btn_init_consult">Iniciar Consulta</button>
+        </span>
+    </div>
+</div>
+
+
+
+
 <div id="div_master" class="content">
     <div class="row-fluid">
         <div class="span6">
@@ -91,7 +117,8 @@
 
 <div id="div_requisition" style="display: none" ></div>
 
+<div id="div_consult" style="display: none" ></div>
 <script type="text/javascript" src="/AM/lib_js/requisition.js" ></script>
 <script src="/sips-admin/crm/crm_edit/crm_edit.js" ></script>
-<script src="js/calendar.js" ></script>
+<script src="lib_js/calendar.js" ></script>
 <script src="js/dashboard.js" ></script>
