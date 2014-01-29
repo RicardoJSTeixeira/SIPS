@@ -33,14 +33,14 @@ if ($_POST['nc_flag'] == "nc_post") {
     }
 
     $query = "INSERT INTO vicidial_list (entry_date, status, user, vendor_lead_code, list_id, phone_number, title, first_name, middle_initial, last_name, address1, address2, address3, city, state, province, postal_code, country_code, date_of_birth, alt_phone, security_phrase, comments, source_id, owner, last_local_call_time, extra1) VALUES 
-			('$today','NOVOCL','$operador','$vendor_lead_code','$list_id','$phone_number','$title','$first_name','$middle_initial','$last_name','".mysql_real_escape_string($address1)."','".mysql_real_escape_string($address2)."','".mysql_real_escape_string($address3)."','$city','$state','$province','$postal_code','$country_code','$date_of_birth','$alt_phone','$security_phrase','$comments', '$comments', '$owner', NOW(), '$extra1')";
+			('$today','NOVOCL','$operador','$vendor_lead_code','$list_id','$phone_number','" . mysql_real_escape_string($title) . "','" . mysql_real_escape_string($first_name) . "','" . mysql_real_escape_string($middle_initial) . "','" . mysql_real_escape_string($last_name) . "','" . mysql_real_escape_string($address1) . "','" . mysql_real_escape_string($address2) . "','" . mysql_real_escape_string($address3) . "','" . mysql_real_escape_string($city) . "','" . mysql_real_escape_string($state) . "','" . mysql_real_escape_string($province) . "','" . mysql_real_escape_string($postal_code) . "','" . mysql_real_escape_string($country_code) . "','" . mysql_real_escape_string($date_of_birth) . "','" . mysql_real_escape_string($alt_phone) . "','" . mysql_real_escape_string($security_phrase) . "','" . mysql_real_escape_string($comments) . "', '" . mysql_real_escape_string($comments) . "', '" . mysql_real_escape_string($owner) . "', NOW(), '" . mysql_real_escape_string($extra1) . "')";
     mysql_query($query, $link) or die(mysql_error() . header('HTTP/1.1 500 Internal Server Error'));
 ####################################################
     $last_insert_id = mysql_insert_id($link);
 ####################################################
 
 
-    $query = "INSERT INTO custom_" . (($inout=="out")?strtoupper($campanha):$campanha) . "(lead_id, tipoconsulta, consultorio, consultoriodois, marchora, obs, marcdata)
+    $query = "INSERT INTO custom_" . (($inout == "out") ? strtoupper($campanha) : $campanha) . "(lead_id, tipoconsulta, consultorio, consultoriodois, marchora, obs, marcdata)
 			VALUES ('$last_insert_id','$tipoconsulta','$consultorio','$consultoriodois','$marchora','$obs','$marcdata')";
     mysql_query($query, $link) or die(mysql_error() . header('HTTP/1.1 500 Internal Server Error'));
 
@@ -467,110 +467,110 @@ if ($_POST['nc_flag'] == "nc_post") {
         </div>    
         <script>
 
-                                            $(function() {
-                                                $("#marcdata").datepicker();
-                                            });
-                                            var user = '<?= $_GET["operador"] ?>';
-                                            var marcado = false;
-                                            function getRadioValue() {
-                                                var colRadio = document.getElementsByName('tipoconsulta');
-                                                for (var i = 0; i < colRadio.length; i++) {
-                                                    if (colRadio[i].checked == true) {
-                                                        return colRadio[i].value;
-                                                    }
-                                                }
-                                                return null;
-                                            }
-                                            function calendarOpener() {
-                                                var mtd = getRadioValue();
-                                                if (mtd != 'semconsulta') {
-                                                    if (mtd != 'Home') {
-                                                        if (mtd == 'Branch') {
-                                                            var e = document.getElementById('consultoriodois');
-                                                            var ref = e.options[e.selectedIndex].value;
-                                                        }
-                                                        else {
-                                                            if (mtd == 'CATOS') {
-                                                                var e = document.getElementById('consultorio');
-                                                                var ref = e.options[e.selectedIndex].value;
-                                                            }
-                                                        }
-                                                        var url = '../../../sips-admin/reservas/views/calendar_container.php?ref=' + encodeURIComponent(ref) + '&user=' + encodeURIComponent(user);
-                                                    }
-                                                    else {
-                                                        var cp = parent.document.getElementById('postal_code').value;
-                                                        var url = '../../../sips-admin/reservas/views/calendar_container.php?cp=' + encodeURIComponent(cp) + '&user=' + encodeURIComponent(user);
-                                                    }
-                                                    window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
-                                                }
-                                            }
+            $(function() {
+                $("#marcdata").datepicker();
+            });
+            var user = '<?= $_GET["operador"] ?>';
+            var marcado = false;
+            function getRadioValue() {
+                var colRadio = document.getElementsByName('tipoconsulta');
+                for (var i = 0; i < colRadio.length; i++) {
+                    if (colRadio[i].checked == true) {
+                        return colRadio[i].value;
+                    }
+                }
+                return null;
+            }
+            function calendarOpener() {
+                var mtd = getRadioValue();
+                if (mtd != 'semconsulta') {
+                    if (mtd != 'Home') {
+                        if (mtd == 'Branch') {
+                            var e = document.getElementById('consultoriodois');
+                            var ref = e.options[e.selectedIndex].value;
+                        }
+                        else {
+                            if (mtd == 'CATOS') {
+                                var e = document.getElementById('consultorio');
+                                var ref = e.options[e.selectedIndex].value;
+                            }
+                        }
+                        var url = '../../../sips-admin/reservas/views/calendar_container.php?ref=' + encodeURIComponent(ref) + '&user=' + encodeURIComponent(user);
+                    }
+                    else {
+                        var cp = parent.document.getElementById('postal_code').value;
+                        var url = '../../../sips-admin/reservas/views/calendar_container.php?cp=' + encodeURIComponent(cp) + '&user=' + encodeURIComponent(user);
+                    }
+                    window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
+                }
+            }
 
 
-                                            $(function() {
-                                                $("#form_custom_fields").submit(function() {
+            $(function() {
+                $("#form_custom_fields").submit(function() {
 
 
-                                                    if ($(".radiocheck-required:checked").length) {
+                    if ($(".radiocheck-required:checked").length) {
 
-                                                        if ($(".radiocheck-required:checked").val() === "CATOS") {
-                                                            if ($(".multiple-requiredconsultorio option:selected").val() === "nenhum" || typeof $(".multiple-requiredconsultorio option:selected").html() === "undefined") {
-                                                                alert("Campo do CATO com erros de preenchimento ou vazio.");
-                                                                return false;
-                                                            }
-                                                        }
-                                                        if ($(".radiocheck-required:checked").val() === "Branch") {
-                                                            if ($(".multiple-requiredconsultoriodois option:selected").val() === "nenhum" || typeof $(".multiple-requiredconsultoriodois option:selected").html() === "undefined") {
-                                                                alert("Campo do Consultório com erros de preenchimento ou vazio.");
-                                                                return false;
-                                                            }
-                                                        }
+                        if ($(".radiocheck-required:checked").val() === "CATOS") {
+                            if ($(".multiple-requiredconsultorio option:selected").val() === "nenhum" || typeof $(".multiple-requiredconsultorio option:selected").html() === "undefined") {
+                                alert("Campo do CATO com erros de preenchimento ou vazio.");
+                                return false;
+                            }
+                        }
+                        if ($(".radiocheck-required:checked").val() === "Branch") {
+                            if ($(".multiple-requiredconsultoriodois option:selected").val() === "nenhum" || typeof $(".multiple-requiredconsultoriodois option:selected").html() === "undefined") {
+                                alert("Campo do Consultório com erros de preenchimento ou vazio.");
+                                return false;
+                            }
+                        }
 
-                                                    } else {
-                                                        alert("Campo do tipo de consulta com erros de preenchimento.");
-                                                        return false;
-                                                    }
-
-
-
-
-                                                    if ($(".hour-required").val().length === "---") {
-                                                        alert("Campo da Hora da Marcação com erros de preenchimento ou vazio.");
-                                                        $("#DispoMinimizeButton").click();
-                                                        return false;
-                                                    }
-                                                    if ($(".minute-required").val().length === "---") {
-                                                        alert("Campo dos Minutos da Marcação com erros de preenchimento ou vazio.");
-                                                        $("#DispoMinimizeButton").click();
-                                                        return false;
-                                                    }
-                                                    if ($(".date-required").val().length <= 0) {
-                                                        alert("Campo da Data da Marcação com erros de preenchimento ou vazio.");
-                                                        $("#DispoMinimizeButton").click();
-                                                        return false;
-                                                    }
+                    } else {
+                        alert("Campo do tipo de consulta com erros de preenchimento.");
+                        return false;
+                    }
 
 
 
 
-                                                    $.post(
-                                                            '<?= $_SERVER['PHP_SELF'] ?>',
-                                                            $(this).serialize(),
-                                                            function(data) {
-                                                                opener.nc_live = true;
-                                                                if (opener.nc_live_id == undefined) {
-                                                                    opener.nc_live_id = [];
-                                                                }
-                                                                opener.nc_live_id.push(data.id);
-                                                                self.close();
-                                                            }, "json"
-                                                            ).fail(function() {
-                                                        alert("Ocorreu um erro na gravação. Pergunte ao coordenador se esta campanha tem o script criado.");
-                                                    });
-                                                    return false;
-                                                });
+                    if ($(".hour-required").val().length === "---") {
+                        alert("Campo da Hora da Marcação com erros de preenchimento ou vazio.");
+                        $("#DispoMinimizeButton").click();
+                        return false;
+                    }
+                    if ($(".minute-required").val().length === "---") {
+                        alert("Campo dos Minutos da Marcação com erros de preenchimento ou vazio.");
+                        $("#DispoMinimizeButton").click();
+                        return false;
+                    }
+                    if ($(".date-required").val().length <= 0) {
+                        alert("Campo da Data da Marcação com erros de preenchimento ou vazio.");
+                        $("#DispoMinimizeButton").click();
+                        return false;
+                    }
 
-                                                $(".chzn-select").chosen({no_results_text: "Não foi encontrado."});
-                                            });
+
+
+
+                    $.post(
+                            '<?= $_SERVER['PHP_SELF'] ?>',
+                            $(this).serialize(),
+                            function(data) {
+                                opener.nc_live = true;
+                                if (opener.nc_live_id == undefined) {
+                                    opener.nc_live_id = [];
+                                }
+                                opener.nc_live_id.push(data.id);
+                                self.close();
+                            }, "json"
+                            ).fail(function() {
+                        alert("Ocorreu um erro na gravação. Pergunte ao coordenador se esta campanha tem o script criado.");
+                    });
+                    return false;
+                });
+
+                $(".chzn-select").chosen({no_results_text: "Não foi encontrado."});
+            });
         </script>
     </body>
 </html>
