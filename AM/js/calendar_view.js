@@ -3,7 +3,7 @@ $(function() {
     var init = function(data) {
         var
                 sch,
-                modal_ext = $("#calendar_client"),
+                modal_ext = $("#calendar_client_modal"),
                 lead_id;
 
         if($("#div_calendar").length){

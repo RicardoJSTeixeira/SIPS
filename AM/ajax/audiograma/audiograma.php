@@ -33,11 +33,12 @@ switch ($action) {
       
         foreach ($result as $key => $value) {
             $variables = array();
-            $query = "insert into spice_audiograma (lead_id,uniqueid,name,value) values(?,?,?,?)";
+            $query = "insert into spice_audiograma (lead_id,uniqueid,name,value,date) values(?,?,?,?,?)";
             $variables[] = $lead_id;
             $variables[] = $unique_id;
             $variables[] = $key;
             $variables[] = json_encode($value);
+             $variables[] = date('Y-m-d H:i:s');
             $stmt = $db->prepare($query);
             $stmt->execute($variables);
         }
