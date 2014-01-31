@@ -24,7 +24,7 @@ $(function() {
 
         if ($(this).hasClass("active"))
             return false;
-        
+
         var href = $(this).attr("href");
 
         if (href === "#")
@@ -42,5 +42,53 @@ $(function() {
             .fail(function() {
                 window.location = "logout.php";
             });
+
+
+
+    get_messages();
+
+
 });
 
+$(".ichat").on("click", ".dismiss_msg", function()
+{
+    var id_msg = $(this).data().msg_id;
+    $.post("ajax/general_functions.php", {action: "edit_message_status", id_msg: id_msg}, function()
+    {
+        get_messages();
+    },
+            "json");
+});
+
+
+$("#mark_all_read").click(function()
+{
+    $.post("ajax/general_functions.php", {action: "edit_message_status_by_user"}, function()
+    {
+        get_messages();
+    },
+            "json");
+});
+
+
+function get_messages()
+{
+    //GET NEW MESSAGES
+
+    $.post("ajax/general_functions.php", {action: "get_unread_messages"}, function(data) {
+        $("#imessage_placeholder").empty();
+        var msg = "";
+        var msg_count = 0;
+        $.each(data, function()
+        {
+            msg_count++;
+            msg += " <div class='imessage'> <div class='imes'>\n\
+<div class='iauthor'>" + this.from + "</div>\n\
+<div class='itext'>" + this.msg + "</div></div>\n\
+<div class='idelete'><a><span data-msg_id='" + this.id_msg + "' class='dismiss_msg'><i class='icon-remove'></i></span></a></div>\n\
+<div class='clear'></div></div>";
+        });
+        $("#msg_count").text(msg_count);
+        $("#imessage_placeholder").append(msg);
+    }, "json");
+}

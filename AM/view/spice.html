@@ -26,7 +26,7 @@
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/validationEngine.jquery.css" />      
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css">
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/fullcalendar.css" />
-                <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.stepy.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.stepy.css" />
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
@@ -51,9 +51,9 @@
                 <div class="notifications-head">
 
                     <!--Messages Start-->
-                    <div class="btn-group m_left hide-mobile" >
+                    <div class=" m_left hide-mobile" >
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <span class="notification">10</span><span class="triangle-1"></span><i class="icon-comments"></i><span class="caret"></span>
+                            <span class="notification" id="msg_count">0</span><span class="triangle-1"></span><i class="icon-comments"></i><span class="caret"></span>
                         </a>
                         <div class="dropdown-menu">
 
@@ -61,27 +61,12 @@
                             <div class="ichat">
                                 <div class="ichat-messages">
                                     <div class="ichat-title">
-                                        <div class="pull-left">New Messages</div>
-                                        <div class="pull-right"><span>Update 4*</span></div>
+                                        <div class="pull-left">Mensagens Novas</div>
                                         <div class="clear"></div>
                                     </div>
-
-                                    <div class="imessage">
-                                        <div class="iavatar"></div>
-                                        <div class="imes">
-                                            <div class="iauthor">Alan Cook</div>
-                                            <div class="itext">All right. Thank you.</div>
-                                        </div>
-                                        <div class="idelete"><a href="#"><span><i class="icon-remove"></i></span></a></div>
-                                        <div class="clear"></div>
-                                    </div>
-
-                                    <div class="ichat-link"><a href="#">InBox</a> <a href="#">OutBox</a> <a href="#">Spam</a> <a href="#">Trash</a>
-                                        <div class="clear"></div>
-                                    </div>
-
+                                    <div id="imessage_placeholder">                                                                         </div>
                                 </div>
-                                <a href="#" class="iview">View all</a><a href="#" class="imark">Mark all read</a>
+                                <a href="#" class="imark"><span id="mark_all_read">Mark all read</span></a>
 
                             </div>
 
@@ -89,41 +74,7 @@
                     </div>
                     <!--Messages END--> 
 
-                    <!--Recent Activity Start-->
-                    <div class="btn-group pull-left hide-mobile" >
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <span class="notification">11</span><span class="triangle-1"></span><i class="icon-bell"></i><span class="caret"></span>
-                        </a>
-                        <div class="dropdown-menu">
-
-                            <span class="triangle-2"></span>
-                            <div class="ichat">
-                                <div class="ichat-messages">
-                                    <div class="ichat-title">
-                                        <div class="pull-left">Recent Activity</div>
-                                        <div class="pull-right"><span>Update 14*</span></div>
-                                        <div class="clear"></div>
-                                    </div>
-
-                                    <div class="r_activity">
-                                        <div class="imessage">
-                                            <div class="r_icon"><a href="#"><i class="icon-camera"></i></a></div>
-                                            <div class="r_info">
-                                                <div class="r_name"><strong>Alan Cook</strong> a new photo</div>
-                                                <div class="r_text"><i class="icon-time"></i> 3 hours ago</div>
-                                                <div class="r_link"><a href="#">View...</a></div>
-                                            </div>
-                                            <div class="clear"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <a href="#" class="iview">View all</a><a href="#" class="imark">Mark all read</a>
-
-                            </div>
-
-                        </div>
-                    </div>
-                    <!--Recent Activity END--> 
+          
 
                 </div><!--Notifications END-->
 
@@ -137,9 +88,7 @@
                     <div class="dropdown-menu" id="prof_dropdown">
                         <div class="item_m"><span class="caret"></span></div>
                         <ul class="clear_ul" >
-                            <li><a href="#"><i class="icon-globe"></i> Geral</a></li>
-                            <li><a href="#"><i class="icon-comments"></i> Mensagens</a></li>
-                            <li><a href="logout.php"><i class="icon-off"></i> Sign Out</a></li>
+                                        <li><a href="logout.php"><i class="icon-off"></i> Sign Out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -158,8 +107,9 @@
                 <li><a href="view/create_client.html"><i class="icon-plus-sign"></i> <span>Novo Cliente</span></a></li>
                 <li><a href="view/crm_basic.html"><i class="icon-edit"></i> <span>CRM</span></a></li>
                 <li><a href="view/webdocs.html"><i class="icon-briefcase"></i> <span>WebDocs</span></a></li>
-                <li><a href="view/admin.html"><i class="icon-globe"></i> <span>Admin</span></a></li>
+                <li id="admin_menu_link"><a href="view/admin.html"><i class="icon-globe"></i> <span>Admin</span></a></li>
                 <li><a href="view/requisition.html"><i class="icon-briefcase"></i> <span>Encomendas</span></a></li>
+                <li><a href="view/requests.html"><i class="icon-briefcase"></i> <span>Pedidos</span></a></li>
             </ul>
 
 
@@ -209,7 +159,7 @@
         <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
         <script type="text/javascript" src="/bootstrap/js/fullcalendar.min.js"></script>
         <script type="text/javascript" src="/bootstrap/js/jquery.history.min.js"></script>
-                <script type="text/javascript" src="/bootstrap/js/jquery.stepy.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/jquery.stepy.min.js"></script>
 
         <script type="text/javascript" src="js/aplication.js"></script>
     </body>
