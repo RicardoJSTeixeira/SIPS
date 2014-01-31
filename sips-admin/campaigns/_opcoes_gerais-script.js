@@ -158,7 +158,7 @@ function MiscOptionsBuilder(Flag)
                     $("#campaign-copy-records-no").parent().addClass("checked");
                 }
 
-                $("#campaign_callback_individual_limit").val(data.call_count_limit);
+                $("#campaign_callback_individual_limit").val(data.call_count_target);
                 $("#campaign_callback_geral_limit").val(data.callback_hours_block);/////////////////////////////////////////////////
 
                 $.each(data.user_groups_id, function(index, value)
