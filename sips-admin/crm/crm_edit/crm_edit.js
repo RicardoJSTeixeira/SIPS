@@ -311,7 +311,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     function get_recordings(callback)
     {
         var Table_recording = crm_edit_zone.find('#table_recording').dataTable({
-            "aaSorting": [[0, "desc"]],
+            "aaSorting": [[0, "desc"],[2, "desc"]],
             "bSortClasses": false,
             "bProcessing": true,
             "bDestroy": true,
