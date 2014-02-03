@@ -94,7 +94,9 @@ class crm_edit_class {
         if (!isset($js["user_name"]))
             $js["user_name"] = "Sem Agente";
          if (!isset($js["status"]))
-            $js["status"] = "Sem Feedback";
+            $js["status"] = "No_Status";
+           if (!isset($js["status_name"]))
+            $js["status_name"] = "Sem Feedback";
         return $js;
     }
 

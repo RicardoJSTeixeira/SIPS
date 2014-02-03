@@ -49,7 +49,7 @@ switch ($action) {
     case "get_calls_all":
 
         $has_script = false;
-
+        $output['aaData'] = [];
         $calls_out = $crmEdit->get_calls_outbound($lead_id);
         $calls_in = $crmEdit->get_calls_inbound($lead_id);
         foreach ($calls_out as $value) {
@@ -75,10 +75,9 @@ switch ($action) {
                 }
             }
             $output['aaData'] = $calls;
-            echo json_encode($output);
-            break;
         }
-
+        echo json_encode($output);
+        break;
     //-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     case "get_recordings":
