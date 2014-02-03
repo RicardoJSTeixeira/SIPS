@@ -1,3 +1,10 @@
+<link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-fileupload.min.css" />
+<style>
+    .chosen-container
+    {
+        width:225px!important;
+    }
+</style>
 <div id="admin_extra_zone">
 
 </div>
@@ -181,13 +188,52 @@
         </div>
     </div>
 
+    <!--Transferir marcações de um agente para outro-->
+    <div id="agent_marc_transfer_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true" style="overflow:visible" >
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Eliminar produto</h3>
+        </div>
+        <div class="modal-body" style="overflow:visible">
+            <div class="formRow">
+                <span>Transferir marcações do agente:</span>
+                <div class="formRight">
+                    <select class="chosen-select" id="select_agent_transfer1" data-placeholder="Selecione um agente"></select>
+                </div>  
+            </div> 
+            <div class="formRow">
+                <span>Para o agente:</span>
+                <div class="formRight">
+                    <select class="chosen-select" id="select_agent_transfer2" data-placeholder="Selecione um agente"></select>
+                </div>  
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+            <button class="btn btn-primary" id="confirm_marc_transfer_button">Transferir</button>
+        </div>
+    </div>
 
 
 
 
 
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="grid-title">
+                <div class="pull-left">
+                    <h4>Gestão de Agentes</h4>
+                </div>
+                <div class="pull-right">
+                    <button class="btn icon-chevron-down button_toggle_divs" id="button_filtro_agent"></button>  
+                </div>
+            </div>
+            <div class="grid-content div_admin_edit"  id="agent_master_div" style="display:none">
+                <button class="btn" id="agent_marc_transfer_button">Transfencias de marcações de um calendario para outro (sem verificação)</button>
 
-
+            </div>
+        </div>
+    </div>
 
 
 
@@ -199,10 +245,10 @@
                     <h4>Gestão de Clientes</h4>
                 </div>
                 <div class="pull-right">
-                    <button class="btn icon-chevron-down" id="button_filtro_cliente"></button>  
+                    <button class="btn icon-chevron-down button_toggle_divs" id="button_filtro_cliente"></button>  
                 </div>
             </div>
-            <div class="grid-content"  id="client_master_div" style="display:none">
+            <div class="grid-content div_admin_edit"  id="client_master_div" style="display:none">
                 <div class="formRow">
                     <button class="btn" id="download_csm_button">Download de dados de clientes sem marcação</button>
                 </div>
@@ -223,10 +269,10 @@
                     <h4>Gestão de Produtos</h4>
                 </div>
                 <div class="pull-right">
-                    <button class="btn icon-chevron-down" id="button_filtro_produto"></button>  
+                    <button class="btn icon-chevron-down button_toggle_divs" id="button_filtro_produto"></button>  
                 </div>
             </div>
-            <div class="grid-content" id="product_master_div" style="display:none">
+            <div class="grid-content div_admin_edit" id="product_master_div" style="display:none">
                 <div class="span3"> 
                     <div class="grid-title">
                         <div class="pull-left">
@@ -262,14 +308,50 @@
                     <h4>Gestão de Encomendas</h4>
                 </div>
                 <div class="pull-right">
-                    <button class="btn icon-chevron-down" id="button_filtro_requisition"></button>  
+                    <button class="btn icon-chevron-down button_toggle_divs" id="button_filtro_requisition"></button>  
                 </div>
             </div>
-            <div class="grid-content" id="requisition_master_div" style="display:none">
+            <div class="grid-content div_admin_edit" id="requisition_master_div" style="display:none">
                 <table class="table table-bordered table-mod" id="view_requisition_datatable"></table>
             </div>
         </div>
     </div>
+
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="grid-title">
+                <div class="pull-left">
+                    <h4>Gestão de Anexos</h4>
+                </div>
+                <div class="pull-right">
+                    <button class="btn icon-chevron-down button_toggle_divs" id="button_filtro_anexo"></button>  
+                </div>
+            </div>
+            <div class="grid-content div_admin_edit" id="anexo_master_div" style="display:none">
+
+                <div class="formRow">
+                    <div class="input-append">
+                        <select id="select_uploaded_files" ></select>
+                        <button class="btn-danger btn icon-alone" id="remove_uploaded_file"><i class="icon-remove"></i></button>
+                    </div>
+                </div>
+                <div class="formRow">
+                    <form enctype="multipart/form-data" action="" method="POST" id="anexo_input_form">
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                            <div class="input-append">
+                                <div class="uneditable-input"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Escolha um ficheiro</span><span class="fileupload-exists">Alterar</span><input type="file" name="file_upload_all" id="file_upload" /></span><a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remover</a>
+                            </div>
+                        </div>
+                    </form>
+                    <button class="btn" id="anexo_upload_button"  >upload</button>
+                    <div class="formRight">
+                        <strong class="inline" id="label_anexo_info" >   </strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<script type="text/javascript" src="/bootstrap/js/bootstrap-fileupload.min.js"></script>
 <script type="text/javascript" src="/AM/lib_js/requisition.js" ></script>
 <script type="text/javascript" src="js/admin.js?v=1"></script>

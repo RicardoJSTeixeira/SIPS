@@ -1,8 +1,4 @@
-
-
-
-
-
+<link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-fileupload.min.css" />
 <form id="requisition_form">
     <div class="row-fluid">
         <div class="span6">
@@ -17,25 +13,20 @@
                         <div class="FormRow">
                             <h4>Numero de Cliente</h4>
                             <div class="FormRight">
-                                <input type="text" id="new_requisition_lead_id" class="validate[required]">
+                                <input type="text" id="new_requisition_lead_id" class="validate[required,custom[onlyNumberSp]]">
                             </div>
                         </div>
                         <div class="FormRow">
                             <h4>Número de contrato</h4>
                             <div class="FormRight">
-                                <input id="new_requisition_contract" type="text" class="validate[required]" >
+                                <input id="new_requisition_contract" type="text" class="validate[required,custom[onlyNumberSp]]" >
 
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="FormRow">
-                <h4>Anexo</h4>
-                <div class="FormRight">
-                    <input type="text" class="input-medium">
-                </div>
-            </div>
+
         </div>
         <div class="span6">
 
@@ -64,3 +55,22 @@
         </div> 
     </div>  
 </form>
+<div >
+    <h4>Anexo</h4>
+     <div class="formRow">
+        <form enctype="multipart/form-data" action="" method="POST" id="anexo_input_form">
+            <div class="fileupload fileupload-new" data-provides="fileupload">
+                <div class="input-append">
+                    <div class="uneditable-input"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Escolha um ficheiro</span><span class="fileupload-exists">Alterar</span><input type="file" name="file_upload_all" id="file_upload" /></span><a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remover</a>
+                </div>
+            </div>
+        </form>
+        <button class="btn" id="anexo_upload_button"  >upload</button>
+        <div class="formRight">
+            <strong class="inline" id="label_anexo_info" >   </strong>
+        </div>
+    </div>
+
+</div> 
+
+<script type="text/javascript" src="/bootstrap/js/bootstrap-fileupload.min.js"></script>

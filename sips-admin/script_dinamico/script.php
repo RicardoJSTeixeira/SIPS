@@ -142,7 +142,7 @@ class script {
         return $js;
     }
 
-    public function get_results_to_populate($lead_id, $id_script, $unique_id) {
+    public function get_results_to_populate($search_spice, $lead_id, $id_script, $unique_id) {
         $js = array();
 
         if (isset($unique_id)) {
@@ -150,9 +150,15 @@ class script {
             $stmt = $this->db->prepare($query);
             $stmt->execute(array($lead_id, $id_script, $unique_id));
         } else {
-            $query = "SELECT b.id_script,a.lead_id,a.tag_elemento,a.valor,b.type,a.param_1 FROM script_result a inner join script_dinamico b on a.tag_elemento=b.tag  where a.lead_id=? and b.id_script=? and a.unique_id= (select max(unique_id) from script_result where lead_id=?) ";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute(array($lead_id, $id_script, $lead_id));
+            if ($search_spice == true) {
+                $query = "SELECT b.id_script,a.lead_id,a.tag_elemento,a.valor,b.type,a.param_1 FROM script_result a inner join script_dinamico b on a.tag_elemento=b.tag  where a.lead_id=? and b.id_script=? and a.unique_id= 0 ";
+                $stmt = $this->db->prepare($query);
+                $stmt->execute(array($lead_id, $id_script));
+            } else {
+                $query = "SELECT b.id_script,a.lead_id,a.tag_elemento,a.valor,b.type,a.param_1 FROM script_result a inner join script_dinamico b on a.tag_elemento=b.tag  where a.lead_id=? and b.id_script=? and a.unique_id= (select max(unique_id) from script_result where lead_id=?) ";
+                $stmt = $this->db->prepare($query);
+                $stmt->execute(array($lead_id, $id_script, $lead_id));
+            }
         }
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -334,7 +340,8 @@ class script {
                 } else {
                     $temp_ext = "image";
                 }
-                $js[] = array("type" => $temp_ext, "value" => $file);
+                if ($file != "dummy.gitignore")
+                    $js[] = array("type" => $temp_ext, "value" => $file);
             }
         }
 
@@ -580,7 +587,7 @@ class script {
 
     // FORM
 
-    public function save_form_result($id_script, $results, $user_id, $unique_id, $campaign_id, $lead_id, $admin_review) {
+    public function save_form_result($save_overwrite, $id_script, $results, $user_id, $unique_id, $campaign_id, $lead_id, $admin_review) {
         $sql = array();
 
 
@@ -602,7 +609,11 @@ class script {
                 $stmt = $this->db->prepare($query);
                 $stmt->execute(array(":unique_id" => $unique_id, ":lead_id" => $lead_id));
             }
-
+            if ($save_overwrite == true) {
+                $query = "Delete from script_result where unique_id=:unique_id and lead_id=:lead_id";
+                $stmt = $this->db->prepare($query);
+                $stmt->execute(array(":unique_id" => 0, ":lead_id" => $lead_id));
+            }
 
             $query = "INSERT INTO `script_result`(`date`,`id_script`,`user_id`,`unique_id`,`campaign_id`,`lead_id`, `tag_elemento`, `valor`,`param_1`) VALUES  " . implode(',', $sql);
             $stmt = $this->db->prepare($query);

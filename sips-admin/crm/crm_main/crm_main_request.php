@@ -1,6 +1,8 @@
 <?php
 
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
+error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
+ini_set('display_errors', '1');
 
 require("$root/ini/dbconnect.php");
 require("$root/ini/user.php");
@@ -20,7 +22,7 @@ header('Content-Type: text/html; charset=utf-8');
 header('Content-type: application/json');
 
 $user = new mysiblings($db);
-
+    
 $crmMain = new crm_main_class($db);
 $script = new script($db);
 

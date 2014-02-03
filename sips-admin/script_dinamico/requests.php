@@ -68,7 +68,7 @@ switch ($action) {
         break;
 
     case "get_results_to_populate":
-        echo json_encode($script->get_results_to_populate($lead_id, $id_script, $unique_id));
+        echo json_encode($script->get_results_to_populate($search_spice,$lead_id, $id_script, $unique_id));
         break;
 
     case "get_pages":
@@ -188,7 +188,7 @@ switch ($action) {
     //-----------------FORM---------------------------//
     //------------------------------------------------//
     case "save_form_result":
-        $temp = json_encode($script->save_form_result($id_script, $results, $user_id, $unique_id, $campaign_id, $lead_id, $admin_review));
+        $temp = json_encode($script->save_form_result($save_overwrite, $id_script, $results, $user_id, $unique_id, $campaign_id, $lead_id, $admin_review));
         echo $temp;
         break;
 }

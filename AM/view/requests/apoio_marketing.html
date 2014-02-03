@@ -1,0 +1,84 @@
+
+
+
+
+
+<form id="apoio_mkt_form">
+
+    <fieldset title="Info Básica">
+        <legend>Informação hoŕarios e local</legend>
+
+
+        <div class="row-fluid">
+            <div class="span6"> <div class="formRow">
+                    <span>Data do Rastreio</span>
+                    <div class="formRight">
+                        <input size="16" type="text" class="form_datetime validate[required]" readonly id="data_rastreio" placeholder="Data de Rastreio">
+                    </div>
+                </div>
+                <div class="formRow">
+                    <span>Horário da Manhã</span>
+                    <div class="formRight">
+                        <input size="16" type="text" class="form_datetime validate[required]" readonly id="data_inicio1" placeholder="Hora inicio do rastreio">
+                    </div>    
+                    <div class="formRight">
+                        <input size="16" type="text" class="form_datetime validate[required]" readonly id="data_inicio2" placeholder="">
+                    </div>
+                </div>
+
+                <div class="formRow">
+                    <span>Horário da Tarde</span>
+                    <div class="formRight">
+                        <input size="16" type="text" class="form_datetime validate[required]" readonly id="data_fim1" placeholder="">
+                    </div>    
+                    <div class="formRight">
+                        <input size="16" type="text" class="form_datetime validate[required]" readonly id="data_fim2" placeholder="Hora fim do rastreio">
+                    </div>
+                </div>
+            </div>
+            <div class="span6">
+                <div class="formRow">
+                    <span>Localidade</span>
+                    <div class="formRight">
+                        <input type="text"  id="localidade"  >
+                    </div>    
+                </div>
+
+                <div class="formRow">
+                    <span>Local de rastreio</span>
+                    <div class="formRight">
+                        <input type="text"  id="local_rastreio"  >
+                    </div>    
+                </div>
+
+                <div class="formRow">
+                    <span>Morada de rastreio</span>
+                    <div class="formRight">
+                        <input type="text"  id="morada_rastreio"  >
+                    </div>    
+                </div>
+
+                <div class="formRow">
+                    <span>Observações</span>
+                    <div class="formRight">
+                        <textarea   id="observaçoes"  ></textarea>
+                    </div>    
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="clear"></div>
+    </fieldset>
+
+    <fieldset title="Códigos Postais e Freguesias">
+        <legend>Locais para Distribuição de Publicidade</legend>
+
+        <button class="btn right btn-primary" id="form_create_request" >Criar Pedido</button>
+    </fieldset>
+
+
+
+</form>

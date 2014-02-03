@@ -1,14 +1,15 @@
-var render = function(script_zone, file_path, script_id, lead_id, unique_id, user_id, campaign_id, admin_review,ext_events)
+var render = function(script_zone, file_path, script_id, lead_id, unique_id, user_id, campaign_id, admin_review, ext_events)
 {
 
     var
-    me = this,
-    array_id = [],
-    events={
-        onEverethingCompleted:function(){}
-    };
-     $.extend(true, events, ext_events);
-                             
+            me = this,
+            array_id = [],
+            events = {
+                onEverethingCompleted: function() {
+                }
+            };
+    $.extend(true, events, ext_events);
+
     this.script_id = script_id;
     this.lead_id = lead_id;
     this.unique_id = unique_id;
@@ -19,19 +20,23 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     this.validado_function = false;
     this.nao_validado_function = false;
     this.has_script = true;
+    this.config = new Object();
 
-  
-    this.init = function()
+    this.init = function(ext_config)
     {
-        
-           
+
+
+        me.config.save_overwrite = false;
+        $.extend(true, me.config, ext_config);
+
+ 
         $.ajaxSetup({cache: false});
         before_all(function() {
             update_script(function() {
                 update_info(function() {
                     insert_element(function() {
                         starter(function() {
-                                                         events.onEverethingCompleted(me);
+                            events.onEverethingCompleted(me);
                         });
                     });
                 });
@@ -48,7 +53,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             {
                 if (Object.size(info1))
                     me.client_info = info1;
- 
+
                 if (typeof callback === "function")
                 {
                     callback();
@@ -89,21 +94,17 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                         }
                                     }
                                 });
-                                  
-                                
                     });
                 });
             });
         }
         else
         {
-
             script_zone.find("#script_form .pagination_class").remove();
             script_zone.find("#script_form .botao").remove();
             script_zone.find("#script_form #admin_submit").show();
             me.populate_script();
             script_zone.find(".item").show();
-
         }
         if (typeof callback === "function")
         {
@@ -162,13 +163,16 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 //UPDATES DE INFO
     function update_script(callback)
     {
+         
         if (me.script_id !== undefined)
         {
             $.post(file_path + "requests.php", {action: "get_scripts_by_id_script", id_script: me.script_id},
             function(data)
             {
+              
                 if (Object.size(data))
                 {
+                    
                     if (data !== null)
                     {
                         me.script_id = data.id;
@@ -180,6 +184,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 }
                 else
                 {
+                     
                     me.has_script = false;
                     $.jGrowl('Sem script', {life: 3000});
                 }
@@ -611,7 +616,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
     this.populate_script = function(callback)
     {
-        $.post(file_path + "requests.php", {action: "get_results_to_populate", lead_id: me.lead_id, id_script: me.script_id, unique_id: me.unique_id},
+        $.post(file_path + "requests.php", {action: "get_results_to_populate", search_spice: me.config.save_overwrite, lead_id: me.lead_id, id_script: me.script_id, unique_id: me.unique_id},
         function(data)
         {
             if (Object.size(data))
@@ -945,7 +950,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
     this.submit_manual = function(callback)
     {
-        $.post(file_path + "requests.php", {action: "save_form_result", id_script: me.script_id, results: $("#script_form").serializeArray(), user_id: me.user_id, unique_id: me.unique_id, campaign_id: me.campaign_id, lead_id: me.lead_id, admin_review: me.admin_review},
+        $.post(file_path + "requests.php", {action: "save_form_result", "save_overwrite": me.config.save_overwrite, id_script: me.script_id, results: $("#script_form").serializeArray(), user_id: me.user_id, unique_id: me.unique_id, campaign_id: me.campaign_id, lead_id: me.lead_id, admin_review: me.admin_review},
         function() {
             admin_review = 0;
             if (typeof callback === "function")
