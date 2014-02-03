@@ -20,7 +20,8 @@ class crm_edit_class {
         $stmt->execute(array($lead_id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $js = $row;
-        $query = "SELECT vdlog.uniqueid,vdlog.call_date,vdc.campaign_name,vdc.campaign_id,vdlists.list_name,vdlog.status,vduser.full_name as user_name from vicidial_log vdlog 
+        $query = "SELECT vdlog.uniqueid,vdlog.call_date,vdc.campaign_name,vdc.campaign_id,vdlists.list_name,vdlog.status,vduser.full_name as user_name from
+(Select a.lead_id,a.list_id,a.user,a.uniqueid,a.call_date,a.status from vicidial_log a where a.lead_id=? union all   Select b.lead_id,b.list_id,b.user,b.uniqueid,b.call_date,b.status from vicidial_log_archive b  where b.lead_id=? ) vdlog
                     left join vicidial_log_archive vdloga on vdlog.lead_id=vdloga.lead_id 
                     left join vicidial_users vduser on vduser.user=vdlog.user
                     left join vicidial_lists vdlists on vdlists.list_id=vdlog.list_id
@@ -30,10 +31,10 @@ class crm_edit_class {
                     order by vdlog.call_date desc
                     limit 1";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array($lead_id));
+        $stmt->execute(array($lead_id, $lead_id, $lead_id));
         $calls_outbound = $stmt->fetch(PDO::FETCH_ASSOC);
-        $query = "SELECT vdclog.uniqueid,vdclog.call_date,vdlists.campaign_id, vdig.group_name,vdclog.status,vduser.full_name as user_name from vicidial_closer_log vdclog 
-                    left join vicidial_closer_log_archive vdcloga on vdclog.lead_id=vdcloga.lead_id 
+        $query = "SELECT vdclog.uniqueid,vdclog.call_date,vdlists.campaign_id, vdig.group_name,vdclog.status,vduser.full_name as user_name from 
+            (Select a.lead_id,a.list_id,a.user,a.uniqueid,a.call_date,a.status from vicidial_closer_log a where a.lead_id=? union all   Select b.lead_id,b.list_id,b.user,b.uniqueid,b.call_date,b.status from vicidial_closer_log_archive b  where b.lead_id=? ) vdlog
                     left join vicidial_users vduser on vduser.user=vdclog.user
                     left JOIN vicidial_inbound_groups vdig ON vdig.group_id=vdclog.campaign_id
                     left join vicidial_list vdlist on vdlist.lead_id=vdclog.lead_id
@@ -43,7 +44,7 @@ class crm_edit_class {
                     order by vdclog.call_date desc
                     limit 1";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array($lead_id));
+        $stmt->execute(array($lead_id, $lead_id, $lead_id));
         $calls_inbound = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
@@ -264,7 +265,7 @@ class crm_edit_class {
             $row[12] = "Inbound";
             $output[] = $row;
         }
-$query = "SELECT
+        $query = "SELECT
                         vcl.call_date AS data,
                         vcl.length_in_sec,
                           vcl.queue_seconds as queue_seconds,
