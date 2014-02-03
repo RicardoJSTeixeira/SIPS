@@ -89,13 +89,13 @@ class crm_edit_class {
         }
         if (!isset($js["campaign_name"]))
             $js["campaign_name"] = "Sem Campanha";
-         if (!isset($js["list_name"]))
+        if (!isset($js["list_name"]))
             $js["list_name"] = "Sem Base de dados";
         if (!isset($js["user_name"]))
             $js["user_name"] = "Sem Agente";
-         if (!isset($js["status"]))
+        if (!isset($js["status"]))
             $js["status"] = "No_Status";
-           if (!isset($js["status_name"]))
+        if (!isset($js["status_name"]))
             $js["status_name"] = "Sem Feedback";
         return $js;
     }
@@ -177,7 +177,7 @@ class crm_edit_class {
                         vl.campaign_id as campaign_id
                 FROM 
                         vicidial_log vl
-                        left JOIN vicidial_log_archive vla ON vla.lead_id=vl.lead_id
+                      
                 left JOIN vicidial_users vu ON vl.user=vu.user
                 left JOIN vicidial_campaigns vc ON vl.campaign_id=vc.campaign_id 
                 left JOIN vicidial_lists vls ON vl.list_id=vls.list_id
@@ -189,10 +189,43 @@ class crm_edit_class {
         $stmt->execute(array(":lead_id" => $lead_id));
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-                        $row[12] = "Outbound";
+            $row[12] = "Outbound";
             $output[] = $row;
         }
+        $query = "SELECT
+                        vl.call_date AS data,
+                        vl.length_in_sec,
+                        'Sem tempo de espera' as queue_seconds,
+                         'Sem fila de espera' as queue_position,
+                         vl.term_reason,
+                        vl.phone_number,
+                        vu.full_name,
+                        vstatus.status_name,
+                        vc.campaign_name,
+                        vls.list_name,
+                        'Sem Linha de Inbound' as group_name,
+                        vl.comments,
+                        '-------------' as type,
+                        
+                        vl.uniqueid as uniqueid,
+                        vl.campaign_id as campaign_id
+                FROM 
+                        vicidial_log_archive vl
+                        
+                left JOIN vicidial_users vu ON vl.user=vu.user
+                left JOIN vicidial_campaigns vc ON vl.campaign_id=vc.campaign_id 
+                left JOIN vicidial_lists vls ON vl.list_id=vls.list_id
+                        left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vl.status
+                WHERE 
+                        vl.lead_id=:lead_id
+                        group by vl.uniqueid;";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array(":lead_id" => $lead_id));
 
+        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
+            $row[12] = "Outbound";
+            $output[] = $row;
+        }
         return $output;
     }
 
@@ -218,20 +251,50 @@ class crm_edit_class {
                         vcl.campaign_id as campaign_id
                 FROM 
                         vicidial_closer_log vcl
-                        left JOIN vicidial_closer_log_archive vcla ON vcla.lead_id=vcl.lead_id
+                        
                 left JOIN vicidial_users vu ON vcl.user=vu.user
                 left JOIN vicidial_inbound_groups vc ON vcl.campaign_id=vc.group_id 
                 left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vcl.status
                 WHERE 
                                    vcl.lead_id=:lead_id
                                     group by vcl.uniqueid";
-        $stmt = $this->db->prepare($query); 
+        $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
             $row[12] = "Inbound";
             $output[] = $row;
         }
-
+$query = "SELECT
+                        vcl.call_date AS data,
+                        vcl.length_in_sec,
+                          vcl.queue_seconds as queue_seconds,
+                         vcl.queue_position,
+                         vcl.term_reason,
+                        vcl.phone_number,
+                        vu.full_name,
+                        vstatus.status_name,
+                        'Sem campanha' as campaign_name,
+                        'Sem Base de Dados' as list_name,
+                        vc.group_name,
+                        vcl.comments,
+                        '-------------' as type,
+                        vcl.closecallid as uniqueid,
+                        vcl.campaign_id as campaign_id
+                FROM 
+                        vicidial_closer_log_archive vcl
+                        
+                left JOIN vicidial_users vu ON vcl.user=vu.user
+                left JOIN vicidial_inbound_groups vc ON vcl.campaign_id=vc.group_id 
+                left join (select status,status_name from vicidial_statuses union all  select status,status_name from vicidial_campaign_statuses group by status) vstatus on vstatus.status= vcl.status
+                WHERE 
+                                   vcl.lead_id=:lead_id
+                                    group by vcl.uniqueid";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array(":lead_id" => $lead_id));
+        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
+            $row[12] = "Inbound";
+            $output[] = $row;
+        }
         return $output;
     }
 
