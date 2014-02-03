@@ -22,7 +22,6 @@ class crm_edit_class {
         $js = $row;
         $query = "SELECT vdlog.uniqueid,vdlog.call_date,vdc.campaign_name,vdc.campaign_id,vdlists.list_name,vdlog.status,vduser.full_name as user_name from
 (Select a.lead_id,a.list_id,a.user,a.uniqueid,a.call_date,a.status from vicidial_log a where a.lead_id=? union all   Select b.lead_id,b.list_id,b.user,b.uniqueid,b.call_date,b.status from vicidial_log_archive b  where b.lead_id=? ) vdlog
-                    left join vicidial_log_archive vdloga on vdlog.lead_id=vdloga.lead_id 
                     left join vicidial_users vduser on vduser.user=vdlog.user
                     left join vicidial_lists vdlists on vdlists.list_id=vdlog.list_id
                     left JOIN vicidial_campaigns vdc ON vdc.campaign_id=vdlists.campaign_id
@@ -36,11 +35,8 @@ class crm_edit_class {
         $query = "SELECT vdclog.closecallid,vdclog.call_date,vdclog.campaign_id, vdig.group_name,vdclog.status,vduser.full_name as user_name from 
             (Select a.lead_id,a.campaign_id,a.list_id,a.user,a.closecallid,a.call_date,a.status from vicidial_closer_log a where a.lead_id=? union all   Select b.lead_id,b.campaign_id,b.list_id,b.user,b.closecallid,b.call_date,b.status from vicidial_closer_log_archive b  where b.lead_id=? ) vdclog
                     left join vicidial_users vduser on vduser.user=vdclog.user
-                     left join vicidial_list vdlist on vdlist.lead_id=vdclog.lead_id
-                            
-                   
+                    left join vicidial_list vdlist on vdlist.lead_id=vdclog.lead_id
                     left JOIN vicidial_inbound_groups vdig ON vdig.group_id=vdclog.campaign_id
-            
                     where vdclog.lead_id=?
                     group by vdclog.closecallid 
                     order by vdclog.call_date desc
@@ -61,13 +57,13 @@ class crm_edit_class {
                      union all select  b.lead_id from vicidial_log_archive b where b.lead_id=?) 
                      calls";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array($lead_id,$lead_id));
+        $stmt->execute(array($lead_id, $lead_id));
         $row1 = $stmt->fetch(PDO::FETCH_ASSOC);
         $query = "SELECT count(*) as count from (select  a.lead_id from vicidial_closer_log a where a.lead_id=?  
                      union all select  b.lead_id from vicidial_closer_log_archive b where b.lead_id=?) 
                      calls";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array($lead_id,$lead_id));
+        $stmt->execute(array($lead_id, $lead_id));
         $row2 = $stmt->fetch(PDO::FETCH_ASSOC);
         $js["called_count"] = $row1["count"] + $row2["count"];
 
@@ -318,8 +314,7 @@ class crm_edit_class {
                                 recording_log rl
                         INNER JOIN vicidial_users vu ON rl.user=vu.user
                         WHERE 
-                                lead_id=:lead_id 
-                       ;";
+                                lead_id=:lead_id;";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
@@ -389,9 +384,9 @@ class crm_edit_class {
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id, ":feedback" => $feedback, ":sale" => $sale, ":campaign_id" => $campaign_id, ":agent" => $agent, ":comment" => $comment, ":date" => date('Y-m-d H:i:s'), ":user_id" => $user_id));
 
-        $query = "Update vicidial_list set validation='S' where lead_id=:lead_id";
+        $query = "Update vicidial_list set validation=:validation where lead_id=:lead_id";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":lead_id" => $lead_id));
+        $stmt->execute(array(":validation" => $vl_validation, ":lead_id" => $lead_id));
 
         $query = "SELECT EXISTS(SELECT * FROM crm_confirm_feedback_last WHERE lead_id=:lead_id) as count";
         $stmt = $this->db->prepare($query);
