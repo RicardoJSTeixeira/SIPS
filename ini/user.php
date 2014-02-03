@@ -26,7 +26,7 @@ class user {
         global $link;
         if ($this->id) {
             $query = mysql_query("Select a.user_group,full_name,user_level,allowed_campaigns,active,agent_fullscreen from vicidial_users a left join vicidial_user_groups b on a.user_group=b.user_group Where user='$this->id' AND pass='$this->password'") or die(mysql_error());
-            while ($row = mysql_fetch_assoc($query)) {
+            if ($row = mysql_fetch_assoc($query)) {
                 $this->full_name = $row["full_name"];
                 $this->active = $row["active"] == "Y";
                 $this->user_group = $row["user_group"];
@@ -36,7 +36,10 @@ class user {
                 $this->allowed_campaigns = explode(" ", trim(rtrim($this->allowed_campaigns_raw, " -")));
                 $this->is_script_dinamico = $row["agent_fullscreen"] == "Y";
                 $this->ip = get_client_ip();
+            }else{
+            $this->id = false;
             }
+            
         }
     }
 }
