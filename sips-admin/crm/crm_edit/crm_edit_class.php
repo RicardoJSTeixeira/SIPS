@@ -33,14 +33,16 @@ class crm_edit_class {
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($lead_id, $lead_id, $lead_id));
         $calls_outbound = $stmt->fetch(PDO::FETCH_ASSOC);
-        $query = "SELECT vdclog.uniqueid,vdclog.call_date,vdlists.campaign_id, vdig.group_name,vdclog.status,vduser.full_name as user_name from 
-            (Select a.lead_id,a.list_id,a.user,a.uniqueid,a.call_date,a.status from vicidial_closer_log a where a.lead_id=? union all   Select b.lead_id,b.list_id,b.user,b.uniqueid,b.call_date,b.status from vicidial_closer_log_archive b  where b.lead_id=? ) vdlog
+        $query = "SELECT vdclog.closecallid,vdclog.call_date,vdclog.campaign_id, vdig.group_name,vdclog.status,vduser.full_name as user_name from 
+            (Select a.lead_id,a.campaign_id,a.list_id,a.user,a.closecallid,a.call_date,a.status from vicidial_closer_log a where a.lead_id=? union all   Select b.lead_id,b.campaign_id,b.list_id,b.user,b.closecallid,b.call_date,b.status from vicidial_closer_log_archive b  where b.lead_id=? ) vdclog
                     left join vicidial_users vduser on vduser.user=vdclog.user
+                     left join vicidial_list vdlist on vdlist.lead_id=vdclog.lead_id
+                            
+                   
                     left JOIN vicidial_inbound_groups vdig ON vdig.group_id=vdclog.campaign_id
-                    left join vicidial_list vdlist on vdlist.lead_id=vdclog.lead_id
-                    left join vicidial_lists vdlists on vdlists.list_id=vdlist.list_id
+            
                     where vdclog.lead_id=?
-                    group by vdclog.uniqueid 
+                    group by vdclog.closecallid 
                     order by vdclog.call_date desc
                     limit 1";
         $stmt = $this->db->prepare($query);
@@ -49,20 +51,23 @@ class crm_edit_class {
 
 
 
-
+        $js["data_last"] = $calls_inbound["call_date"];
+        $js["campaign_id"] = $calls_inbound["campaign_id"];
+        $js["user_name"] = $calls_inbound["user_name"];
+        $js["status"] = $calls_inbound["status"];
 
         //get count calls
-        $query = "SELECT count(*) as count from (select  a.lead_id from vicidial_log a 
-                     left join vicidial_log_archive b on a.lead_id=b.lead_id 
-                     where a.lead_id=? group by a.uniqueid) calls";
+        $query = "SELECT count(*) as count from (select  a.lead_id from vicidial_log a where a.lead_id=?  
+                     union all select  b.lead_id from vicidial_log_archive b where b.lead_id=?) 
+                     calls";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array($lead_id));
+        $stmt->execute(array($lead_id,$lead_id));
         $row1 = $stmt->fetch(PDO::FETCH_ASSOC);
-        $query = "SELECT count(*) as count from (select  a.lead_id from  vicidial_closer_log a 
-                    left join vicidial_closer_log_archive b on a.lead_id=b.lead_id 
-                    where a.lead_id=? group by a.closecallid) calls";
+        $query = "SELECT count(*) as count from (select  a.lead_id from vicidial_closer_log a where a.lead_id=?  
+                     union all select  b.lead_id from vicidial_closer_log_archive b where b.lead_id=?) 
+                     calls";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array($lead_id));
+        $stmt->execute(array($lead_id,$lead_id));
         $row2 = $stmt->fetch(PDO::FETCH_ASSOC);
         $js["called_count"] = $row1["count"] + $row2["count"];
 
