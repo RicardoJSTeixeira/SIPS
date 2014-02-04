@@ -40,6 +40,7 @@ switch ($action) {
     case 'insert_layout':
         $query = "INSERT INTO wallboard_layout (name) VALUES ('layout Nova')";
         $query = mysql_query($query, $link) or die(mysql_error());
+    
         echo json_encode(array(1));
         break;
 

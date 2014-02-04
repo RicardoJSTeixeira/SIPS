@@ -127,15 +127,16 @@
                               <input  type="radio" id="radio1" class="radio_opcao" name="ra" value="1" checked="checked">
                               <label class=" radio inline"  for="radio1"><span></span>Campanha</label> 
                         </div> 
-                        <div class="formRight">
-
-                              <input  type="radio" id="radio2" class="radio_opcao" name="ra" value="2" disabled="disabled" >
-                              <label class=" radio inline"  for="radio2"><span></span>Linha de inbound</label> 
-                        </div> 
-                        <div class="formRight">
+                           <div class="formRight">
                               <input  type="radio" id="radio3" class="radio_opcao"  name="ra" value="3" >
                               <label class="radio inline"  for="radio3"><span></span>Base de Dados</label> 
                         </div>
+                        <div class="formRight">
+
+                              <input  type="radio" id="radio2" class="radio_opcao" name="ra" value="2" >
+                              <label class=" radio inline"  for="radio2"><span></span>Linha de inbound</label> 
+                        </div> 
+                   
                         <div class="formRight time_div">
                               <label>Data de Inicio:</label>
                               <input  type="text" id="datetime_from" class="datetime_range validate[required]">
@@ -167,18 +168,19 @@
                               <select id="select_campanha" class=" chzn-select select_opcao" data-placeholder="Selecione uma campanha"></select>
 
                         </div>
-                        <div id="report_linha_inbound" class="select_opcao">
-
-                              <label>Linha de inbound</label>
-                              <select id="select_linha_inbound" class=" chzn-select  select_opcao " data-placeholder="Selecione uma linha de inbound"></select>
-
-                        </div>
-                        <div id="report_bd" class="select_opcao">
+                           <div id="report_bd" class="select_opcao">
 
                               <label>Base de dados</label>
                               <select id="select_base_dados" class=" chzn-select  select_opcao" data-placeholder="Selecione uma base de dados"></select>
 
                         </div>
+                      <div id="report_linha_inbound" class="select_opcao">
+
+                              <label>Linha de inbound</label>
+                              <select id="select_linha_inbound" class=" chzn-select  select_opcao " data-placeholder="Selecione uma linha de inbound"></select>
+
+                        </div>
+                
 
 
                   </div>

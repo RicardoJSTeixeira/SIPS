@@ -32,13 +32,13 @@ class crm_edit_class {
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($lead_id, $lead_id, $lead_id));
         $calls_outbound = $stmt->fetch(PDO::FETCH_ASSOC);
-        $query = "SELECT vdclog.closecallid,vdclog.call_date,vdclog.campaign_id, vdig.group_name,vdclog.status,vduser.full_name as user_name from 
-            (Select a.lead_id,a.campaign_id,a.list_id,a.user,a.closecallid,a.call_date,a.status from vicidial_closer_log a where a.lead_id=? union all   Select b.lead_id,b.campaign_id,b.list_id,b.user,b.closecallid,b.call_date,b.status from vicidial_closer_log_archive b  where b.lead_id=? ) vdclog
+        $query = "SELECT vdclog.uniqueid,vdclog.call_date,vdclog.campaign_id, vdig.group_name,vdclog.status,vduser.full_name as user_name from 
+            (Select a.lead_id,a.campaign_id,a.list_id,a.user,a.uniqueid,a.call_date,a.status from vicidial_closer_log a where a.lead_id=? union all   Select b.lead_id,b.campaign_id,b.list_id,b.user,b.uniqueid,b.call_date,b.status from vicidial_closer_log_archive b  where b.lead_id=? ) vdclog
                     left join vicidial_users vduser on vduser.user=vdclog.user
                     left join vicidial_list vdlist on vdlist.lead_id=vdclog.lead_id
                     left JOIN vicidial_inbound_groups vdig ON vdig.group_id=vdclog.campaign_id
                     where vdclog.lead_id=?
-                    group by vdclog.closecallid 
+                    group by vdclog.uniqueid 
                     order by vdclog.call_date desc
                     limit 1";
         $stmt = $this->db->prepare($query);
@@ -249,7 +249,7 @@ class crm_edit_class {
                         vc.group_name,
                         vcl.comments,
                         '-------------' as type,
-                        vcl.closecallid as uniqueid,
+                        vcl.uniqueid as uniqueid,
                         vcl.campaign_id as campaign_id
                 FROM 
                         vicidial_closer_log vcl
@@ -280,7 +280,7 @@ class crm_edit_class {
                         vc.group_name,
                         vcl.comments,
                         '-------------' as type,
-                        vcl.closecallid as uniqueid,
+                        vcl.uniqueid as uniqueid,
                         vcl.campaign_id as campaign_id
                 FROM 
                         vicidial_closer_log_archive vcl
