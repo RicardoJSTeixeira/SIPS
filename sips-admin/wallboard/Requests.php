@@ -401,16 +401,20 @@ switch ($action) {
 //  if ($opcao === "4")
 //   $query = "select status ,count(status) as total_feedback from vicidial_agent_log inner join vicidial_users on vicidial_agent_log.user=vicidial_users.user  where vicidial_agent_log.user='$user' and event_time between date_sub(now(), INTERVAL time_span hour) and now() and ($status) and lead_id is not null group by status order by total_feedback desc";
 //muda as horas para ver os resultados desde "agora" ate a altura especificada aquando da criação do dataset
-        $round_numerator = 60 * 5;
-        $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
-        $rounded_time = date("Y-m-d H:i:s", $rounded_time);
-        $query = str_replace("now()", "'" . $rounded_time . "'", $query);
-
         $today = date("Y-m-d") . " 00:00:00";
         if ($tempo == "24")
             $query = str_replace("date_sub(now(), INTERVAL time_span hour)", "'" . $today . "'", $query);
         else
             $query = str_replace("time_span", $tempo, $query);
+      
+        $round_numerator = 60 * 5;
+        $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
+        $rounded_time = date("Y-m-d H:i:s", $rounded_time);
+        $query = str_replace("now()", "'" . $rounded_time . "'", $query);
+
+       
+
+
 
 
 
