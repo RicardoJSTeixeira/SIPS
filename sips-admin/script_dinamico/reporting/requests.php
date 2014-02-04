@@ -71,12 +71,14 @@ switch ($action) {
             $js[] = array("id" => $row["Name"], "type" => "campo_dinamico", "texto" => $row["Display_name"]);
         }
         if (!count($js)) {
-            $query = "SELECT Name,Display_name  FROM vicidial_list_ref where campaign_id ='' and active='0' order by field_order asc";
-            $stmt = $db->prepare($query);
-            $stmt->execute();
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $js[] = array("id" => $row["Name"], "type" => "campo_dinamico", "texto" => $row["Display_name"]);
-            }
+            $js[] = array("id" => "FIRST_NAME", "type" => "campo_dinamico", "texto" => "Nome");
+            $js[] = array("id" => "PHONE_NUMBER", "type" => "campo_dinamico", "texto" => "Telefone");
+            $js[] = array("id" => "ADDRESS3", "type" => "campo_dinamico", "texto" => "Telemóvel");
+            $js[] = array("id" => "ALT_PHONE", "type" => "campo_dinamico", "texto" => "Telefone Alternativo");
+            $js[] = array("id" => "ADDRESS1", "type" => "campo_dinamico", "texto" => "Morada");
+            $js[] = array("id" => "POSTAL_CODE", "type" => "campo_dinamico", "texto" => "Código Postal");
+            $js[] = array("id" => "EMAIL", "type" => "campo_dinamico", "texto" => "EMAIL");
+            $js[] = array("id" => "COMMENTS", "type" => "campo_dinamico", "texto" => "Comentários");
         }
 
         $query = "SELECT a.tag,a.type,a.texto  FROM `script_dinamico` a left join script_dinamico_pages b on b.id=a.id_page  where type not in ('pagination','textfield','scheduler','legend','button','ipl')  and a.id_script=:script_id order by b.pos,a.ordem asc ";
@@ -270,8 +272,10 @@ switch ($action) {
 
         foreach ($list_id as $value) {
             // CAMPANHAS E BASES DE DADOS
-            $temp_lead_data = " , " . implode(",", $temp_lead_data);
-
+            if (!count($temp_lead_data))
+                $temp_lead_data = " , " . implode(",", $temp_lead_data);
+            else
+                $temp_lead_data = "";
 
             if ($only_with_result == "true") {
                 $query = "SELECT a.lead_id id,status_name,vcs.status,vl.list_name, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries $temp_lead_data from vicidial_list a left join vicidial_lists vl on vl.list_id=a.list_id left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join vicidial_users vu on vu.user=a.user left join script_result sr on a.lead_id=sr.lead_id where a.list_id =:value $date_filter";
@@ -479,13 +483,17 @@ switch ($action) {
         foreach ($data_row as $key => $value) {
             $data_row[$key] = "";
         }
- $temp_lead_data = " , " . implode(",", $temp_lead_data);
+        if (!count($temp_lead_data))
+            $temp_lead_data = " , " . implode(",", $temp_lead_data);
+        else
+            $temp_lead_data = "";
         // Linha De INBOUND
         if ($only_with_result == "true") {
             $query = "SELECT a.lead_id id,status_name,vcs.status, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries $temp_lead_data from vicidial_list a  left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join vicidial_users vu on vu.user=a.user left join script_result sr on a.lead_id=sr.lead_id where a.lead_id in (select vcl.lead_id from vicidial_closer_log vcl where vcl.campaign_id=?   union all select vcla.lead_id from vicidial_closer_log_archive vcla where vcla.campaign_id=?)  $date_filter";
         } else {
             $query = "SELECT a.lead_id id,status_name,vcs.status, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries $temp_lead_data from vicidial_list a  left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join vicidial_users vu on vu.user=a.user where a.lead_id in (select vcl.lead_id from vicidial_closer_log vcl where vcl.campaign_id=?   union all select vcla.lead_id from vicidial_closer_log_archive vcla where vcla.campaign_id=?) $date_filter";
         }
+
         $stmt = $db->prepare($query);
         $stmt->execute(array($linha_inbound, $linha_inbound));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
