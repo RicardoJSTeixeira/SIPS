@@ -12,8 +12,7 @@ foreach ($_GET as $key => $value) {
 }
 
 $user_class = new user;
-if(!$user_class->id)
-{
+if (!$user_class->id) {
     exit;
 }
 switch ($action) {
@@ -40,7 +39,7 @@ switch ($action) {
     case 'insert_layout':
         $query = "INSERT INTO wallboard_layout (name) VALUES ('layout Nova')";
         $query = mysql_query($query, $link) or die(mysql_error());
-    
+
         echo json_encode(array(1));
         break;
 
@@ -406,7 +405,20 @@ switch ($action) {
         $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
         $rounded_time = date("Y-m-d H:i:s", $rounded_time);
         $query = str_replace("now()", "'" . $rounded_time . "'", $query);
-        $query = str_replace("time_span", $tempo, $query);
+
+        $today = date("Y-m-d") . " 00:00:00";
+        if ($tempo == "24")
+            $query = str_replace("date_sub(now(), INTERVAL time_span hour)", "'" . $today . "'", $query);
+        else
+            $query = str_replace("time_span", $tempo, $query);
+
+
+
+
+
+
+
+
         $query = mysql_query($query) or die(mysql_error());
 
         while ($row = mysql_fetch_assoc($query)) {
@@ -432,7 +444,7 @@ switch ($action) {
 
 
         $stmtB = "select sum(calls_today),sum(drops_today),sum(answers_today),sum(hold_sec_stat_one),sum(hold_sec_stat_two),sum(hold_sec_answer_calls),sum(hold_sec_drop_calls),sum(hold_sec_queue_calls),AVG(drops_today_pct) from vicidial_campaign_stats where campaign_id in($linha_inbound)";
-        
+
         $rslt = mysql_query($stmtB, $link) or die(mysql_error());
         while ($row = mysql_fetch_row($rslt)) {
             $hold_sec_stat_one = $row[3];
@@ -479,7 +491,7 @@ switch ($action) {
                 $AVGhold_sec_answer_calls = 0;
             }
             $today = date("Y-m-d") . " 00:00:00";
-            $tomorrow = date("Y-m-d")." 23:59:59";
+            $tomorrow = date("Y-m-d") . " 23:59:59";
 
 
 
@@ -489,7 +501,7 @@ switch ($action) {
             $answersTODAY = 0;
 
             $query = "select status,count(status) as status1 from vicidial_closer_log where  call_date between '$today' and '$tomorrow'  and campaign_id in($linha_inbound) and status not like ('AFTHRS') group by status";
-                $query = mysql_query($query, $link) or die(mysql_error());
+            $query = mysql_query($query, $link) or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
                 $callsTODAY+=$row["status1"];
                 if ($row["status"] === "DROP")
@@ -534,7 +546,7 @@ switch ($action) {
     case 'get_calls_queue':// Inbound agentes,campaign,status
         $js = array();
         $today = date("Y-m-d") . " 00:00:00";
-    
+
         $linha = explode(",", $linha_inbound);
 
         for ($i = 0; $i < count($linha); $i++) {
@@ -614,7 +626,7 @@ union all
 
 
 
-        if ($tempo == "25")
+        if ($tempo == "24")
             $query = str_replace("date_sub(now(), INTERVAL time_span hour)", "'" . $today . "'", $query);
         else
             $query = str_replace("time_span", $tempo, $query);
