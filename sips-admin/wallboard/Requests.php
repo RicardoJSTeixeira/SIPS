@@ -630,7 +630,7 @@ union all
 
 
 
-        if ($tempo == "24")
+        if ($tempo == "25")
             $query = str_replace("date_sub(now(), INTERVAL time_span hour)", "'" . $today . "'", $query);
         else
             $query = str_replace("time_span", $tempo, $query);
