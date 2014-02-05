@@ -1,0 +1,58 @@
+<form id="relatorio_correio_form">
+    <div class="grid-title">
+        <div class="pull-left">Relatório de Correio </div>
+    </div>
+    <div class="grid-content">
+    <div class="row-fluid">
+        <div class="span6"> 
+            <div class="formRow">
+                <span>Carta de Porte Nº</span>
+                <div class="formRight">
+                    <input type="text" name="carta_porte" class="validate[required]">
+                </div>
+            </div>  
+
+            <div class="formRow">
+                <span>Data de Envio</span>
+                <div class="formRight">
+                    <input size="16" type="text" name="data_envio" class="form_datetime validate[required]" readonly id="data_envio_datetime" placeholder="Data de Envio">
+                </div>
+            </div>
+
+            <div class="formRow">
+                <span>Doc. nº</span>
+                <div class="formRight">
+                    <input type="text" name="doc" class="validate[required]">
+                </div>
+            </div>   
+            <div class="formRow">
+                <span>Ref.ª do Cliente</span>
+                <div class="formRight">
+                    <input type="text" name="lead_id" class="validate[required]">
+                </div>
+            </div>   
+            <div class="formRow">
+                <span>Nome do Cliente</span>
+                <div class="formRight">
+                    <input type="text" name="client_name" class="validate[required]">
+                </div>
+            </div>  </div>
+        <div class="span6">
+            <div class="formRow">
+                <span>Docs e Objectos Associados</span>
+                <div class="formRight">
+                    <textarea name="doc_obj_assoc"></textarea>
+                </div>
+            </div>
+            <div class="formRow">
+                <span>Observações</span>
+                <div class="formRight">
+                    <textarea name="obs"></textarea>
+                </div>
+            </div>
+        </div>
+             <div class="clear"></div>
+        <button class="btn btn-primary right" id="submit_rc"> Enviar</button>
+    </div>
+    </div>
+</form>

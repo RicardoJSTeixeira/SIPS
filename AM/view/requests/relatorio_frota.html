@@ -1,0 +1,85 @@
+<form id="relatorio_frota_form">
+    <div class="grid-title">
+        <div class="pull-left">Relatório de Frota </div>
+    </div>
+    <div class="grid-content">
+        <div class="row-fluid">
+            <div class="span4"> 
+                <div class="formRow">
+                    <span>Data</span>
+                    <div class="formRight">
+                        <input size="16" type="text" name="data" class="form_datetime validate[required]" readonly id="data_datetime" placeholder="Data">
+                    </div>
+                </div>
+                <div class="formRow">
+                    <span>Matricula</span>
+                    <div class="formRight">
+                        <input   type="text" name="matricula" class="validate[required]" >
+                    </div>
+                </div>
+                <div class="formRow">
+                    <span>Kms</span>
+                    <div class="formRight">
+                        <input   type="text" name="Kms" class="validate[required]" >
+                    </div>
+                </div>
+
+                <div class="formRow">
+                    <span>Viatura</span>
+                    <div class="formRight">
+                        <input  type="radio" id="radio_def" name="rrf" checked="checked">
+                        <label class="radio inline"  for="radio_def"><span></span>Definitiva</label> 
+                        <input  type="radio" id="radio_rac" name="rrf">
+                        <label class="radio inline"  for="radio_rac"><span></span>Rent-A-Car</label> 
+                    </div>
+                </div>
+
+            </div>
+            <div class="span8"> 
+                <table class="table table-bordered table-mod">
+                    <thead>
+                        <tr>
+                            <th>
+                                Data
+                            </th>
+                            <th>
+                                Ocorrência
+                            </th>
+                            <th>
+                                Kms
+
+                            </th>
+                            <th>
+                                <button class="btn btn-primary" id="button_rf_table_add_line"><span class="icon-plus"></span></button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="table_tbody_rf">
+                        <tr>
+                            <td>
+                                <input size="16" type="text" name="rf_data1" class="rf_datetime validate[required]" readonly id="rf_datetime1" placeholder="Data">
+                            </td>
+                            <td>
+                                <input class="validate[required]" type="text" name="rf_ocorr1">
+                            </td>
+                            <td>
+                                <input class="validate[required]" type="number" value="1" name="rf_km1" min="1">
+                            </td>
+                            <td>
+                                <button class="btn btn-danger button_rf_table_remove_line"><span class="icon-minus"></span></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="formRow">
+                    <span>Observações</span>
+                    <div class="formRight">
+                        <textarea name="obs"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <button class="btn btn-primary right" id="submit_rf">Enviar</button>
+        </div>
+    </div>
+</form>
