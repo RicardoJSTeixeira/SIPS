@@ -333,7 +333,7 @@ switch ($action) {
                             . "left join script_dinamico_master sdm on sdm.id=sr.id_script "
                             . "left join vicidial_users vu on sr.user_id=vu.user "
                             . "left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id "
-                            . "left join vicidial_list vl on vl.lead_id=sr.lead_id"
+                            . "left join vicidial_list vl on vl.lead_id=sr.lead_id "
                             . "left join (select a.status,a.status_name from vicidial_statuses a union all select b.status,b.status_name from vicidial_campaign_statuses b) statuses on statuses.status=vl.status "
                             . "where sr.lead_id=? $date_filter order by date DESC limit 1";
                     //echo $query1;
@@ -535,7 +535,7 @@ switch ($action) {
                             . "left join script_dinamico_master sdm on sdm.id=sr.id_script "
                             . "left join vicidial_users vu on sr.user_id=vu.user "
                             . "left join vicidial_inbound_groups vig on vig.group_id=sr.campaign_id "
-                            . "left join (select a.status,a.uniqueid from vicidial_closer_log a where a.lead_id=? union all select b.status,b.uniqueid from vicidial_closer_log_archive b where b.lead_id=?) vlg on vlg.uniqueid=sr.unique_id "
+                            . "left join vicidial_list vl on vl.lead_id=sr.lead_id "
                             . "left join (select a.status,a.status_name from vicidial_statuses a union all select b.status,b.status_name from vicidial_campaign_statuses b) statuses on statuses.status=vlg.status "
                             . "where sr.lead_id=? $date_filter order by date DESC limit 1";
                     //echo $query1;
