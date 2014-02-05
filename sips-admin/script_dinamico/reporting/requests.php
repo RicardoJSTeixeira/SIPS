@@ -320,6 +320,7 @@ switch ($action) {
             $stmt->execute(array(":id_script" => $id_script, ":campaign_id" => $campaign_id));
             $count_results = 0;
             $lead_id = false;
+            $temp_d = array();
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $count_results++;
 
@@ -338,7 +339,7 @@ switch ($action) {
                             . "where sr.lead_id=? $date_filter order by date DESC limit 1";
                     //echo $query1;
                     $stmt1 = $db->prepare($query1);
-                    $stmt1->execute(array($row["lead_id"] ));
+                    $stmt1->execute(array($row["lead_id"]));
                     $row1 = $stmt1->fetch(PDO::FETCH_ASSOC);
 
                     $temp_d = $final_row[$row["lead_id"]];
@@ -362,13 +363,15 @@ switch ($action) {
                 }
             }
 
-            if (!$count_results) {
+            if (!$count_results && $only_with_result == "true") {
                 echo("sem resultados");
                 exit;
             }
 
-            fputcsv($output, $temp_d, ";", '"');
-            unset($final_row[$lead_id]);
+            if (count($temp_d)) {
+                fputcsv($output, $temp_d, ";", '"');
+                unset($final_row[$lead_id]);
+            }
         }
         if ($only_with_result != "true" or !count($tags)) {
             foreach ($final_row as $value) {
