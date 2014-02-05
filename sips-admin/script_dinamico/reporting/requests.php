@@ -267,22 +267,20 @@ switch ($action) {
 
 
 
-
+        if (count($temp_lead_data))
+                $temp_lead_data =" , " .  implode(" , ", $temp_lead_data);
+            else
+                $temp_lead_data = "";
 
 
         foreach ($list_id as $value) {
             // CAMPANHAS E BASES DE DADOS
-            if (!count($temp_lead_data))
-                $temp_lead_data = " , " . implode(",", $temp_lead_data);
-            else
-                $temp_lead_data = "";
-
             if ($only_with_result == "true") {
                 $query = "SELECT a.lead_id id,status_name,vcs.status,vl.list_name, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries $temp_lead_data from vicidial_list a left join vicidial_lists vl on vl.list_id=a.list_id left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join vicidial_users vu on vu.user=a.user left join script_result sr on a.lead_id=sr.lead_id where a.list_id =:value $date_filter";
             } else {
                 $query = "SELECT a.lead_id id,status_name,vcs.status,vl.list_name, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries $temp_lead_data from vicidial_list a left join vicidial_lists vl on vl.list_id=a.list_id left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join vicidial_users vu on vu.user=a.user where a.list_id =:value $date_filter";
             }
-            $stmt = $db->prepare($query);
+                 $stmt = $db->prepare($query);
             $stmt->execute(array(":value" => $value));
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $temp_d = $data_row;
@@ -493,7 +491,7 @@ switch ($action) {
         } else {
             $query = "SELECT a.lead_id id,status_name,vcs.status, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries $temp_lead_data from vicidial_list a  left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join vicidial_users vu on vu.user=a.user where a.lead_id in (select vcl.lead_id from vicidial_closer_log vcl where vcl.campaign_id=?   union all select vcla.lead_id from vicidial_closer_log_archive vcla where vcla.campaign_id=?) $date_filter";
         }
-
+ 
         $stmt = $db->prepare($query);
         $stmt->execute(array($linha_inbound, $linha_inbound));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
