@@ -71,7 +71,7 @@ switch ($action) {
                     $has_script = true;
                 }
                 if ($user->user_level > 5 && $has_script) {
-                    $value[12] = $value[12] . " <div class='view-button edit_item'><a class='btn btn-mini btn-primary' target='_new' href='/sips-admin/crm/crm_edit/script_placeholder.html?lead_id=" . $lead_id . "&campaign_id=" . $value["campaign_id"] . "&user=$user->full_name&pass=$user->password&isadmin=1&unique_id=" . $value["uniqueid"] . "'><i class='icon-bookmark'></i>Script</a></div>";
+                    $value[11] = $value[11] . " <div class='view-button edit_item'><a class='btn btn-mini btn-primary' target='_new' href='/sips-admin/crm/crm_edit/script_placeholder.html?lead_id=" . $lead_id . "&campaign_id=" . $value["campaign_id"] . "&user=$user->full_name&pass=$user->password&isadmin=1&unique_id=" . $value["uniqueid"] . "'><i class='icon-bookmark'></i>Script</a></div>";
                 }
             }
             $output['aaData'] = $calls;
@@ -87,7 +87,7 @@ switch ($action) {
         $folder = "MP3";
         foreach ($recordings as $key => &$value1) {
             foreach ($value1 as &$value) {
-                $value[0] = date("Y-m:d", strtotime($value[0]));
+                $value[0] = date("Y-m-d", strtotime($value[0]));
                 $value[1] = date("H:i:s", strtotime($value[1]));
                 $value[2] = date("H:i:s", strtotime($value[2]));
                 $value[3] = gmdate("H:i:s", $value[3]);

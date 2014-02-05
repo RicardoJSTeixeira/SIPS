@@ -53,19 +53,28 @@ class crm_edit_class {
         $js["status"] = $calls_inbound["status"];
 
         //get count calls
-        $query = "SELECT count(*) as count from (select  a.lead_id from vicidial_log a where a.lead_id=?  
-                     union all select  b.lead_id from vicidial_log_archive b where b.lead_id=?) 
+        $query = "SELECT uniqueid from (select a.uniqueid from vicidial_log a where a.lead_id=?  
+                     union all select b.uniqueid from vicidial_log_archive b where b.lead_id=?) 
                      calls";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($lead_id, $lead_id));
-        $row1 = $stmt->fetch(PDO::FETCH_ASSOC);
-        $query = "SELECT count(*) as count from (select  a.lead_id from vicidial_closer_log a where a.lead_id=?  
-                     union all select  b.lead_id from vicidial_closer_log_archive b where b.lead_id=?) 
+        $row1 = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $temp = array();
+        foreach ($row1 as $value) {
+            $temp[$value["uniqueid"]] = $value;
+        }
+        $query = "SELECT uniqueid from (select  a.uniqueid from vicidial_closer_log a where a.lead_id=?  
+                     union all select b.uniqueid from vicidial_closer_log_archive b where b.lead_id=?) 
                      calls";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($lead_id, $lead_id));
-        $row2 = $stmt->fetch(PDO::FETCH_ASSOC);
-        $js["called_count"] = $row1["count"] + $row2["count"];
+        $row2 = $stmt->fetchAll(PDO::FETCH_ASSOC);
+         foreach ($row2 as $value) {
+            $temp[$value["uniqueid"]] = $value;
+        }
+        // to avoid duplicates
+        $js["called_count"] = count($temp);
+
 
 
         if (strtotime($calls_outbound["call_date"]) >= strtotime($calls_inbound["call_date"])) {
@@ -164,14 +173,13 @@ class crm_edit_class {
                         vl.call_date AS data,
                         vl.length_in_sec,
                         'Sem tempo de espera' as queue_seconds,
-                         'Sem fila de espera' as queue_position,
-                         vl.term_reason,
+                        'Sem fila de espera' as queue_position,
+                        vl.term_reason,
                         vl.phone_number,
                         vu.full_name,
                         vstatus.status_name,
                         vc.campaign_name,
                         vls.list_name,
-                        'Sem Linha de Inbound' as group_name,
                         vl.comments,
                         '-------------' as type,
                         
@@ -191,21 +199,20 @@ class crm_edit_class {
         $stmt->execute(array(":lead_id" => $lead_id));
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[12] = "Outbound";
+            $row[11] = "Outbound";
             $output[] = $row;
         }
         $query = "SELECT
                         vl.call_date AS data,
                         vl.length_in_sec,
                         'Sem tempo de espera' as queue_seconds,
-                         'Sem fila de espera' as queue_position,
-                         vl.term_reason,
+                        'Sem fila de espera' as queue_position,
+                        vl.term_reason,
                         vl.phone_number,
                         vu.full_name,
                         vstatus.status_name,
                         vc.campaign_name,
                         vls.list_name,
-                        'Sem Linha de Inbound' as group_name,
                         vl.comments,
                         '-------------' as type,
                         
@@ -225,10 +232,15 @@ class crm_edit_class {
         $stmt->execute(array(":lead_id" => $lead_id));
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[12] = "Outbound";
+            $row[11] = "Outbound";
             $output[] = $row;
         }
-        return $output;
+        //REMOVE DUPLICATES
+        $temp = array();
+        foreach ($output as $value) {
+            $temp[$value["uniqueid"]] = $value;
+        }
+        return $temp;
     }
 
     public function get_calls_inbound($lead_id) {
@@ -238,15 +250,14 @@ class crm_edit_class {
         $query = "SELECT
                         vcl.call_date AS data,
                         vcl.length_in_sec,
-                          vcl.queue_seconds as queue_seconds,
-                         vcl.queue_position,
-                         vcl.term_reason,
+                        vcl.queue_seconds as queue_seconds,
+                        vcl.queue_position,
+                        vcl.term_reason,
                         vcl.phone_number,
                         vu.full_name,
                         vstatus.status_name,
-                        'Sem campanha' as campaign_name,
-                        'Sem Base de Dados' as list_name,
                         vc.group_name,
+                        'Sem Base de Dados' as list_name,
                         vcl.comments,
                         '-------------' as type,
                         vcl.uniqueid as uniqueid,
@@ -263,21 +274,20 @@ class crm_edit_class {
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[12] = "Inbound";
+            $row[11] = "Inbound";
             $output[] = $row;
         }
         $query = "SELECT
                         vcl.call_date AS data,
                         vcl.length_in_sec,
-                          vcl.queue_seconds as queue_seconds,
-                         vcl.queue_position,
-                         vcl.term_reason,
+                        vcl.queue_seconds as queue_seconds,
+                        vcl.queue_position,
+                        vcl.term_reason,
                         vcl.phone_number,
                         vu.full_name,
                         vstatus.status_name,
-                        'Sem campanha' as campaign_name,
-                        'Sem Base de Dados' as list_name,
                         vc.group_name,
+                        'Sem Base de Dados' as list_name,
                         vcl.comments,
                         '-------------' as type,
                         vcl.uniqueid as uniqueid,
@@ -294,10 +304,16 @@ class crm_edit_class {
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[12] = "Inbound";
+            $row[11] = "Inbound";
             $output[] = $row;
         }
-        return $output;
+
+        //REMOVE DUPLICATES
+        $temp = array();
+        foreach ($output as $value) {
+            $temp[$value["uniqueid"]] = $value;
+        }
+        return $temp;
     }
 
     public function get_recordings($lead_id) {

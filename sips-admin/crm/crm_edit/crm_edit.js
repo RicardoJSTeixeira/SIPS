@@ -292,9 +292,8 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                 {"sTitle": "Número"},
                 {"sTitle": "Operador"},
                 {"sTitle": "Feedback"},
-                {"sTitle": "Campanha"},
+                {"sTitle": "Campanha/Linha de Inbound"},
                 {"sTitle": "Base de Dados"},
-                {"sTitle": "Linha de Inbound"},
                 {"sTitle": "Tipo"},
                 {"sTitle": "In/Out"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
