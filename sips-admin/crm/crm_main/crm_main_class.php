@@ -104,7 +104,7 @@ SELECT vcla.call_date,vcla.uniqueid FROM `vicidial_closer_log_archive` vcla wher
                     $cbd = " a.list_id in(" . rtrim($temp1, ",") . ")";
                 }
             } else {
-                $cbd = " vl.campaign_id=?";
+                $cbd = " calls.campaign_id=?";
                 $variables[] = $linha_inbound;
             }
             $where = $cbd;
@@ -112,7 +112,8 @@ SELECT vcla.call_date,vcla.uniqueid FROM `vicidial_closer_log_archive` vcla wher
             if (!empty($data_inicio) && !empty($data_fim)) {
 
                 if ($type_search == "last_call") {
-                    $where = $where . " and a.last_local_call_time between ? and ?";
+
+                    $where = $where . " and calls.call_date between ? and ?";
                 } else {
                     $where = $where . " and a.entry_date between ? and ?";
                 }
@@ -166,19 +167,17 @@ SELECT vcla.call_date,vcla.uniqueid FROM `vicidial_closer_log_archive` vcla wher
                     $script_fields = "(" . $script_fields . ")";
                 }
             }
-            $log_join = "";
-            if ($campaign_linha_inbound == 1) {
-                $log_join = " left join vicidial_log vl on vl.lead_id=a.lead_id ";
-            } else {
-                $log_join = " left join vicidial_closer_log vl on vl.lead_id=a.lead_id ";
-            }
 
+            if ($campaign_linha_inbound == 1)
+                $join = " left join (select a.lead_id,a.call_date from vicidial_log a union all select b.lead_id,b.call_date from vicidial_log_archive b) calls on calls.lead_id=a.lead_id ";
+            else
+                $join = " left join (select a.campaign_id,a.lead_id,a.call_date from vicidial_closer_log a union all select b.campaign_id, b.lead_id,b.call_date from vicidial_closer_log_archive b) calls on calls.lead_id=a.lead_id ";
 
             $query = "select a.lead_id,a.first_name,a.phone_number, a.status  ,'last_call_date'  from vicidial_list a $join"
-                    . " $log_join  where $where $script_fields  group by a.lead_id limit 20000 ";
+                    . " where $where $script_fields  group by a.lead_id limit 20000 ";
         }
 
-        
+
         //get  status name
         if ($campaign_linha_inbound == 1) {
             $query1 = "select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b where b.campaign_id=?";
@@ -207,7 +206,7 @@ SELECT vcla.call_date,vcla.uniqueid FROM `vicidial_closer_log_archive` vcla wher
 
             $temp = $this->get_last_call($row[0]);
             $row[4] = $temp["call_date"];
-            
+
             $row[4] = $row[4] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
                     . "<span class='btn btn-mini criar_marcacao' data-lead_id='$row[0]'><i class='icon-edit'></i>Criar Marcação</span></div>";
 
@@ -230,7 +229,7 @@ SELECT vcla.call_date,vcla.uniqueid FROM `vicidial_closer_log_archive` vcla wher
         $js['aaData'] = array();
         $variables = array();
         $join = "";
-         
+
         $script_fields = "";
         $table = "";
         if ($campaign_linha_inbound == 1)
