@@ -9,7 +9,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     this.edit_dynamic_field = 0;
     this.has_dynamic_fields;
     this.in_outbound = "in";
-
+    this.table_chamadas_font_size = 11;
 //----------------------------------- BASIC FUNCTIONS
     this.init = function(callback)
     {
@@ -97,6 +97,23 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                             {
                                                 callback();
                                             }
+
+
+
+                                            $(".button_table_chamada_lettersize").click(function()
+                                            {
+
+                                                if ($(this).val() == "plus")
+                                                {
+                                                    me.table_chamadas_font_size++;
+                                                    $("#table_chamadas").css("font-size", me.table_chamadas_font_size + "px");
+                                                }
+                                                else
+                                                {
+                                                    me.table_chamadas_font_size--;
+                                                    $("#table_chamadas").css("font-size", me.table_chamadas_font_size + "px");
+                                                }
+                                            });
                                         });
                                     });
                                 });
@@ -143,7 +160,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_agentes"},
         function(data)
         {
-            crm_edit_zone.find("#agente_selector").empty(); 
+            crm_edit_zone.find("#agente_selector").empty();
             var temp = "";
             $.each(data, function(index, value)
             {
@@ -288,17 +305,20 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                 {"sTitle": "Duração"},
                 {"sTitle": "Tempo em Espera"},
                 {"sTitle": "Posição fila espera"},
-                {"sTitle": "Motivo de fim de chamada"},
+                {"sTitle": "M.F.C<i class='icon-question-sign tooltip_chamadas'   data-toggle='tooltip' data-placement='top' title='' data-original-title='Motivo de Fim de Chamada' ></i> "},
                 {"sTitle": "Número"},
                 {"sTitle": "Operador"},
                 {"sTitle": "Feedback"},
-                {"sTitle": "Campanha/Linha de Inbound"},
+                {"sTitle": "Camp/L.Inb<i class='icon-question-sign tooltip_chamadas'   data-toggle='tooltip' data-placement='top' title='' data-original-title='Campanha/ Linha de inbound' ></i>"},
                 {"sTitle": "Base de Dados"},
                 {"sTitle": "Tipo"},
                 {"sTitle": "In/Out"}],
+            "fnDrawCallback": function(oSettings, json) {
+                $('.tooltip_chamadas').tooltip();
+            },
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
-
+ 
 
 
         if (typeof callback === "function")
@@ -310,7 +330,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     function get_recordings(callback)
     {
         var Table_recording = crm_edit_zone.find('#table_recording').dataTable({
-            "aaSorting": [[0, "desc"],[2, "desc"]],
+            "aaSorting": [[0, "desc"], [2, "desc"]],
             "bSortClasses": false,
             "bProcessing": true,
             "bDestroy": true,
@@ -406,4 +426,6 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         }
         return count;
     };
+
+
 }
