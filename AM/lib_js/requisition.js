@@ -29,7 +29,7 @@ var requisition = function(base_requisition, options_ext)
 
     //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
     this.new_requisition = function(new_requisition_zone, current_requisition_zone, lead_id) {
-
+        new_requisition_zone.empty().off();
         $.get("/AM/view/requisitions/new_requisition.html", function(data) {
             new_requisition_zone.append(data);
             new_requisition_zone.find('.fileupload').fileupload();
@@ -235,10 +235,7 @@ var requisition = function(base_requisition, options_ext)
             });
         });
     };//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    this.new_requisition_destroy = function(new_requisition_zone)
-    {
-        new_requisition_zone.empty().off();
-    };
+  
 //-------------------------------------------------------------------------------------
 
 
