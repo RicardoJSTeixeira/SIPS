@@ -47,12 +47,12 @@ class crm_main_class {
 
     function get_last_call($lead_id) {
         $query = "select * from (SELECT vl.call_date,vl.uniqueid FROM `vicidial_log` vl where vl.lead_id=?
-union all
-SELECT vla.call_date,vla.uniqueid FROM `vicidial_log_archive` vla where vla.lead_id=?
-union all
-SELECT vcl.call_date,vcl.uniqueid FROM `vicidial_closer_log` vcl where vcl.lead_id=?
-union all
-SELECT vcla.call_date,vcla.uniqueid FROM `vicidial_closer_log_archive` vcla where vcla.lead_id=?) calls order by calls.call_date desc limit 1";
+                union all
+                SELECT vla.call_date,vla.uniqueid FROM `vicidial_log_archive` vla where vla.lead_id=?
+                union all
+                SELECT vcl.call_date,vcl.uniqueid FROM `vicidial_closer_log` vcl where vcl.lead_id=?
+                union all
+                SELECT vcla.call_date,vcla.uniqueid FROM `vicidial_closer_log_archive` vcla where vcla.lead_id=?) calls order by calls.call_date desc limit 1";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($lead_id, $lead_id, $lead_id, $lead_id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -112,7 +112,6 @@ SELECT vcla.call_date,vcla.uniqueid FROM `vicidial_closer_log_archive` vcla wher
             if (!empty($data_inicio) && !empty($data_fim)) {
 
                 if ($type_search == "last_call") {
-
                     $where = $where . " and calls.call_date between ? and ?";
                 } else {
                     $where = $where . " and a.entry_date between ? and ?";
@@ -177,7 +176,6 @@ SELECT vcla.call_date,vcla.uniqueid FROM `vicidial_closer_log_archive` vcla wher
                     . " where $where $script_fields  group by a.lead_id limit 20000 ";
         }
 
-
         //get  status name
         if ($campaign_linha_inbound == 1) {
             $query1 = "select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b where b.campaign_id=?";
@@ -213,15 +211,6 @@ SELECT vcla.call_date,vcla.uniqueid FROM `vicidial_closer_log_archive` vcla wher
 
             $js['aaData'][] = $row;
         }
-
-
-
-
-
-
-
-
-
         return $js;
     }
 

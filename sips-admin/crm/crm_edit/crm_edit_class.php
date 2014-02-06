@@ -11,7 +11,7 @@ class crm_edit_class {
 
     public function get_lead_info($lead_id) {
         $js = array();
-        $query = "SELECT vdlist.lead_id,vdlist.phone_number,vdlist.entry_date AS data_load ,vdc.campaign_id, vdc.campaign_name,vdlists.list_name
+        $query = "SELECT vdlist.lead_id,vdlist.phone_number,vdlist.entry_date AS data_load ,vdc.campaign_id, vdc.campaign_name,vdlists.list_name,vdlists.list_id
              FROM vicidial_list vdlist 
                   left join vicidial_lists vdlists on vdlists.list_id=vdlist.list_id
                   left join vicidial_campaigns vdc on vdc.campaign_id=vdlists.campaign_id
@@ -69,7 +69,7 @@ class crm_edit_class {
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($lead_id, $lead_id));
         $row2 = $stmt->fetchAll(PDO::FETCH_ASSOC);
-         foreach ($row2 as $value) {
+        foreach ($row2 as $value) {
             $temp[$value["uniqueid"]] = $value;
         }
         // to avoid duplicates
@@ -111,7 +111,7 @@ class crm_edit_class {
         return $js;
     }
 
-    public function get_dynamic_fields($lead_id, $campaign_id) {
+    public function get_dynamic_fields($lead_id, $campaign_id, $list_id) {
 
         $dfields = array();
         $query = "SELECT Name,Display_name   FROM vicidial_list_ref WHERE campaign_id=:campaign_id AND active=1 Order by field_order ASC";
@@ -119,6 +119,24 @@ class crm_edit_class {
         $stmt->execute(array(":campaign_id" => $campaign_id));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $dfields[$row["Name"]] = array("display_name" => $row["Display_name"], "name" => $row["Name"], "value" => "");
+        }
+        if (!count($dfields)) {
+            $query = "SELECT vlr.Name,vlr.Display_name   FROM vicidial_list_ref vlr left join vicidial_lists vl on vl.campaign_id=vlr.campaign_id where vl.list_id=? and vlr.active=1 Order by vlr.field_order ASC";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute(array($list_id));
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $dfields[$row["Name"]] = array("display_name" => $row["Display_name"], "name" => $row["Name"], "value" => "");
+            }
+            if (!count($dfields)) {
+                $dfields["FIRST_NAME"] = array("display_name" => "Nome", "name" => "FIRST_NAME", "value" => "");
+                $dfields["PHONE_NUMBER"] = array("display_name" => "Telefone", "name" => "PHONE_NUMBER", "value" => "");
+                $dfields["ADDRESS3"] = array("display_name" => "Telemóvel", "name" => "ADDRESS3", "value" => "");
+                $dfields["ALT_PHONE"] = array("display_name" => "Telefone Alternativo", "name" => "ALT_PHONE", "value" => "");
+                $dfields["ADDRESS1"] = array("display_name" => "Morada", "name" => "ADDRESS1", "value" => "");
+                $dfields["POSTAL_CODE"] = array("display_name" => "Código Postal", "name" => "POSTAL_CODE", "value" => "");
+                $dfields["EMAIL"] = array("display_name" => "E-mail", "name" => "EMAIL", "value" => "");
+                $dfields["COMMENTS"] = array("display_name" => "Comentários", "name" => "COMMENTS", "value" => "");
+            }
         }
 
         if (count($dfields)) {
@@ -130,36 +148,39 @@ class crm_edit_class {
                 $value = str_replace('!N', "\r\n", $value);
                 $dfields[$key]["value"] = $value;
             }
-        } else {
-            $dfields["FIRST_NAME"] = array("display_name" => "Nome", "name" => "FIRST_NAME", "value" => "");
-            $dfields["PHONE_NUMBER"] = array("display_name" => "Telefone", "name" => "PHONE_NUMBER", "value" => "");
-            $dfields["ADDRESS3"] = array("display_name" => "Telemóvel", "name" => "ADDRESS3", "value" => "");
-            $dfields["ALT_PHONE"] = array("display_name" => "Telefone Alternativo", "name" => "ALT_PHONE", "value" => "");
-            $dfields["ADDRESS1"] = array("display_name" => "Morada", "name" => "ADDRESS1", "value" => "");
-            $dfields["POSTAL_CODE"] = array("display_name" => "Código Postal", "name" => "POSTAL_CODE", "value" => "");
-            $dfields["EMAIL"] = array("display_name" => "E-mail", "name" => "EMAIL", "value" => "");
-            $dfields["COMMENTS"] = array("display_name" => "Comentários", "name" => "COMMENTS", "value" => "");
-            $query = "SELECT FIRST_NAME,PHONE_NUMBER,ADDRESS3,ALT_PHONE,ADDRESS1,POSTAL_CODE,EMAIL,COMMENTS  FROM  vicidial_list WHERE  lead_id=:lead_id";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute(array(":lead_id" => $lead_id));
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            foreach ($row as $key => $value) {
-                $value = str_replace('!N', "\r\n", $value);
-                $dfields[$key]["value"] = $value;
-            }
         }
         return $dfields;
     }
 
-    public function get_feedbacks($campaign_id) {
-        $feedback_options = array();
-        $query = "SELECT status,status_name,sale FROM  (select status,status_name,sale from vicidial_campaign_statuses WHERE campaign_id=:campaign_id AND scheduled_callback!=1) a union all (select status,status_name,sale from vicidial_statuses)";
+    public function get_feedbacks($campaign_id, $list_id) {
+
+         $feedback_options = array();
+       //FEEDBACKS DE SISTEMA
+        $query = "SELECT status,status_name,sale FROM vicidial_statuses";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":campaign_id" => $campaign_id));
+        $stmt->execute(); 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
             $feedback_options [] = array("status" => $row["status"], "status_name" => $row["status_name"], "sale" => $row["sale"]);
         }
+        //FEEDBACKS DE CAMPANHA
+        $query = "SELECT status,status_name,sale from vicidial_campaign_statuses WHERE campaign_id=:campaign_id AND scheduled_callback!=1";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array(":campaign_id" => $campaign_id));
+        $count = 0;
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $count = 1;
+            $feedback_options [] = array("status" => $row["status"], "status_name" => $row["status_name"], "sale" => $row["sale"]);
+        }
+        if ($count == 0) {
+            $query = "SELECT vcs.status,vcs.status_name,vcs.sale from vicidial_campaign_statuses vcs left join vicidial_lists vl on vl.campaign_id=vcs.campaign_id WHERE vl.list_id=? AND vcs.scheduled_callback!=1";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute(array($list_id));
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $feedback_options [] = array("status" => $row["status"], "status_name" => $row["status_name"], "sale" => $row["sale"]);
+            }
+        }
+
         return $feedback_options;
     }
 

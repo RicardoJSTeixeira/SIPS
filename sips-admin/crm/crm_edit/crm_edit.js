@@ -5,6 +5,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     this.user_level = 0;
     this.lead_id = lead_id;
     this.campaign_id = "";
+    this.list_id = "";
     this.feedback = "";
     this.edit_dynamic_field = 0;
     this.has_dynamic_fields;
@@ -204,6 +205,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                     "<td>" + data.status_name + "</td>" +
                     "<td>" + data.called_count + "</td></tr>");
             me.campaign_id = data.campaign_id;
+            me.list_id = data.list_id;
             me.feedback = data.status;
             crm_edit_zone.find("#lead_info_time_tbody").append("<tr><td>" + data_load_format + "</td>" +
                     "<td>" + data_load_fromNow + "</td>" +
@@ -218,7 +220,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
 
     function get_dynamic_fields(callback)
     {
-        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_dynamic_fields", lead_id: me.lead_id, campaign_id: me.campaign_id},
+        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_dynamic_fields", lead_id: me.lead_id, campaign_id: me.campaign_id, list_id: me.list_id},
         function(data)
         {
             var dynamic_field = "";
@@ -264,17 +266,26 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
 
     function get_feedbacks(callback)
     {
-        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_feedbacks", campaign_id: me.campaign_id},
+        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_feedbacks", campaign_id: me.campaign_id, list_id:me.list_id},
         function(data)
         {
             var options = "";
+            var exists = false;
+
             $.each(data, function()
             {
                 if (this.status == me.feedback)
+                {
                     options += "<option data-sale=" + this.sale + " selected value=" + this.status + ">" + this.status_name + "</option>";
+                    exists = true;
+                }
                 else
                     options += "<option data-sale=" + this.sale + " value=" + this.status + ">" + this.status_name + "</option>";
             });
+
+            if (!exists)
+                options += "<option data-sale=" + me.feedback + " selected value=" + me.feedback + ">" + me.feedback + "</option>";
+
 
             crm_edit_zone.find("#feedback_list").append(options);
             if (crm_edit_zone.find("#feedback_list option:selected").data("sale") == "Y" && me.user_level > 5)
@@ -305,11 +316,11 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                 {"sTitle": "Duração"},
                 {"sTitle": "Tempo em Espera"},
                 {"sTitle": "Posição fila espera"},
-                {"sTitle": "M.F.C<i class='icon-question-sign tooltip_chamadas'   data-toggle='tooltip' data-placement='top' title='' data-original-title='Motivo de Fim de Chamada' ></i> "},
+                {"sTitle": "M.F.C <i class='icon-question-sign tooltip_chamadas'   data-toggle='tooltip' data-placement='top' title='' data-original-title='Motivo de Fim de Chamada' ></i> "},
                 {"sTitle": "Número"},
                 {"sTitle": "Operador"},
                 {"sTitle": "Feedback"},
-                {"sTitle": "Camp/L.Inb<i class='icon-question-sign tooltip_chamadas'   data-toggle='tooltip' data-placement='top' title='' data-original-title='Campanha/ Linha de inbound' ></i>"},
+                {"sTitle": "Camp/L.Inb <i class='icon-question-sign tooltip_chamadas'   data-toggle='tooltip' data-placement='top' title='' data-original-title='Campanha/ Linha de inbound' ></i>"},
                 {"sTitle": "Base de Dados"},
                 {"sTitle": "Tipo"},
                 {"sTitle": "In/Out"}],
@@ -318,7 +329,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
             },
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
- 
+
 
 
         if (typeof callback === "function")

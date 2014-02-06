@@ -35,10 +35,10 @@ switch ($action) {
         echo json_encode($crmEdit->get_lead_info($lead_id));
         break;
     case "get_dynamic_fields":
-        echo json_encode($crmEdit->get_dynamic_fields($lead_id, $campaign_id));
+        echo json_encode($crmEdit->get_dynamic_fields($lead_id, $campaign_id,$list_id));
         break;
     case "get_feedbacks":
-        echo json_encode($crmEdit->get_feedbacks($campaign_id));
+        echo json_encode($crmEdit->get_feedbacks($campaign_id,$list_id));
         break;
     case "get_agentes":
         echo json_encode($user->get_agentes($user->allowed_campaigns, $user->is_all_campaigns));
