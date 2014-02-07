@@ -297,6 +297,7 @@ switch ($action) {
                 $query_call_info = "select length_in_sec,calls.status,vcs.status_name from (select a.length_in_sec,a.uniqueid,a.status from vicidial_log a where a.lead_id=?  union all select b.length_in_sec,b.uniqueid,b.status from vicidial_log_archive b where b.lead_id=? ) calls"
                         . " left join (SELECT status,status_name FROM vicidial_campaign_statuses where campaign_id=? UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=calls.status order by calls.uniqueid desc limit 1";
                 $stmt_call_info = $db->prepare($query_call_info);
+    
                 $stmt_call_info->execute(array($row["id"], $row["id"], $campaign_id));
                 $row_call_info = $stmt_call_info->fetch(PDO::FETCH_ASSOC);
                 if (isset($row_call_info["length_in_sec"]))
@@ -304,7 +305,7 @@ switch ($action) {
                 else
                     $temp_d["length_in_sec"] = "00:00:00";
                 $temp_d["status"] = $row_call_info["status"];
-                $temp_d["status_name"] = $row_call_info["status"];
+                $temp_d["status_name"] = $row_call_info["status_name"];
 
                 foreach ($row as $key => $value) {
                     $temp_d[$key] = $value;
