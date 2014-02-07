@@ -8,35 +8,35 @@
                 <div class="formRow">
                     <span>Data</span>
                     <div class="formRight">
-                        <input size="16" type="text" name="data" class="form_datetime validate[required]" readonly id="data_datetime" placeholder="Data">
+                        <input size="16" type="text" name="data" class="form_datetime validate[required]" readonly id="input_data"  placeholder="Data">
                     </div>
                 </div>
                 <div class="formRow">
                     <span>Matricula</span>
                     <div class="formRight">
-                        <input   type="text" name="matricula" class="validate[required]" >
+                        <input   type="text" id="input_matricula" name="matricula" class="validate[required]" >
                     </div>
                 </div>
                 <div class="formRow">
                     <span>Kms</span>
                     <div class="formRight">
-                        <input   type="text" name="Kms" class="validate[required]" >
+                        <input   type="text" id="input_km" name="Kms" class="validate[required]" >
                     </div>
                 </div>
 
                 <div class="formRow">
                     <span>Viatura</span>
                     <div class="formRight">
-                        <input  type="radio" id="radio_def" name="rrf" checked="checked">
+                        <input  type="radio" value="definitiva" id="radio_def" name="rrf" checked="checked">
                         <label class="radio inline"  for="radio_def"><span></span>Definitiva</label> 
-                        <input  type="radio" id="radio_rac" name="rrf">
+                        <input  type="radio" value="rent_a_car" id="radio_rac" name="rrf">
                         <label class="radio inline"  for="radio_rac"><span></span>Rent-A-Car</label> 
                     </div>
                 </div>
 
             </div>
             <div class="span8"> 
-                <table class="table table-bordered table-mod">
+                <table class="table table-bordered table-mod" id="table_ocorrencias">
                     <thead>
                         <tr>
                             <th>
@@ -57,13 +57,13 @@
                     <tbody id="table_tbody_rf">
                         <tr>
                             <td>
-                                <input size="16" type="text" name="rf_data1" class="rf_datetime validate[required]" readonly id="rf_datetime1" placeholder="Data">
+                                <input size="16" type="text" name="rf_data1" class="rf_datetime validate[required] linha_data" readonly id="rf_datetime1" placeholder="Data">
                             </td>
                             <td>
-                                <input class="validate[required]" type="text" name="rf_ocorr1">
+                                <input class="validate[required] linha_ocorrencia" type="text" name="rf_ocorr1">
                             </td>
                             <td>
-                                <input class="validate[required]" type="number" value="1" name="rf_km1" min="1">
+                                <input class="validate[required] linha_km" type="number" value="1" name="rf_km1" min="1">
                             </td>
                             <td>
                                 <button class="btn btn-danger button_rf_table_remove_line"><span class="icon-minus"></span></button>
@@ -74,7 +74,7 @@
                 <div class="formRow">
                     <span>Observações</span>
                     <div class="formRight">
-                        <textarea name="obs"></textarea>
+                        <textarea id="input_comments" name="obs"></textarea>
                     </div>
                 </div>
             </div>

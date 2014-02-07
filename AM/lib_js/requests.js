@@ -51,7 +51,7 @@ var request = function(options_ext)
         rc_zone.empty().off();
         $.get("/AM/view/requests/relatorio_correio.html", function(data) {
             rc_zone.append(data);
-             rc_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
+            rc_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
             //SUBMIT
             rc_zone.on("click", "#submit_rc", function(e)
             {
@@ -67,12 +67,13 @@ var request = function(options_ext)
         rf_zone.empty().off();
         $.get("/AM/view/requests/relatorio_frota.html", function(data) {
             rf_zone.append(data);
+            rf_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
             rf_zone.find(".rf_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
             //Adiciona Linhas
             rf_zone.on("click", "#button_rf_table_add_line", function(e)
             {
                 e.preventDefault();
-                rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required]' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'></td><td><input class='validate[required]' type='text' name='rf_ocorr" + rfinput_count + "'></td><td>  <input class='validate[required]' type='number' value='1' name='rf_km" + rfinput_count + "' min='1'></td><td>     <button class='btn btn-danger button_rf_table_remove_line'><span class='icon-minus'></span></button></td></tr>");
+                rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required] linha_data' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'></td><td><input class='validate[required] linha_ocorrencia' type='text' name='rf_ocorr" + rfinput_count + "'></td><td>  <input class='validate[required] linha_km' type='number' value='1' name='rf_km" + rfinput_count + "' min='1'></td><td>     <button class='btn btn-danger button_rf_table_remove_line'><span class='icon-minus'></span></button></td></tr>");
                 rf_zone.find("#rf_datetime" + rfinput_count).datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
                 rfinput_count++;
             });
@@ -87,7 +88,31 @@ var request = function(options_ext)
             {
                 e.preventDefault();
                 if (rf_zone.find("#relatorio_frota_form").validationEngine("validate"))
-                    alert("validado e enviado");
+                {
+                    var ocorrencias_array = [];
+                    $.each(rf_zone.find("#table_tbody_rf").find("tr"), function(data)
+                    {
+                        ocorrencias_array.push(
+                                {data: $(this).find(".linha_data").val(),
+                                    ocorrencia: $(this).find(".linha_ocorrencia").val(),
+                                    km: $(this).find(".linha_km").val()});
+                    });
+                    $.post("ajax/requests.php", {action: "criar_relatorio_frota",
+                        data: rf_zone.find("#input_data").val(),
+                        matricula: rf_zone.find("#input_matricula").val(),
+                        km: rf_zone.find("#input_km").val(),
+                        viatura: rf_zone.find(":radio[name='rrf']:checked").val(),
+                        ocorrencias: ocorrencias_array,
+                        comments: rf_zone.find("#input_comments").val()},
+                    function(data1)
+                    {
+
+                    }, "json");
+
+
+
+
+                }
             });
         });
     };

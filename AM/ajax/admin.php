@@ -72,8 +72,7 @@ switch ($action) {
         echo(json_encode($products->get_products()));
         break;
 
-
-    case "apagar_produto":
+     case "apagar_produto":
         echo(json_encode($products->remove_product($id)));
         break;
     case "apagar_produtos":
