@@ -257,7 +257,7 @@ switch ($action) {
             unset($script_values);
         }
 
-        $data_row = array_merge(array("id" => "ID", "entry_date" => "Data Entrada", "date" => "Data", "name" => "Nome do Script", "full_name" => "Agente", "campaign_name" => "Nome da campanha", "list_name" => "Nome da Base Dados", "status_name" => "Feedback", "max_tries" => "Máximo Tentativas"), $data_row);
+        $data_row = array_merge(array("id" => "ID", "entry_date" => "Data Entrada", "date" => "Data", "name" => "Nome do Script", "full_name" => "Agente", "campaign_name" => "Nome da campanha", "list_name" => "Nome da Base Dados", "status_name" => "Feedback", "length_in_sec" => "Duração Chamada", "max_tries" => "Máximo Tentativas"), $data_row);
 
         $titulos = array();
         $titulos = $data_row;
@@ -329,7 +329,7 @@ switch ($action) {
                         fputcsv($output, $temp_d, ";", '"');
                         unset($final_row[$lead_id]);
                     }
-                    $query1 = "SELECT sr.date, sdm.name, vu.full_name, vc.campaign_name,statuses.status_name,statuses.status "
+                    $query1 = "SELECT sr.date, sdm.name, vu.full_name, vc.campaign_name,statuses.status_name,statuses.status,sr.unique_id "
                             . "FROM `script_result` sr "
                             . "left join script_dinamico_master sdm on sdm.id=sr.id_script "
                             . "left join vicidial_users vu on sr.user_id=vu.user "
@@ -341,7 +341,6 @@ switch ($action) {
                     $stmt1 = $db->prepare($query1);
                     $stmt1->execute(array($row["lead_id"]));
                     $row1 = $stmt1->fetch(PDO::FETCH_ASSOC);
-
                     $temp_d = $final_row[$row["lead_id"]];
 
                     $lead_id = $row["lead_id"];
@@ -351,6 +350,13 @@ switch ($action) {
                     $temp_d["full_name"] = $row1["full_name"];
                     $temp_d["campaign_name"] = $row1["campaign_name"];
                     $temp_d["status_name"] = $row1["status_name"];
+                    
+                    //Get Call info
+                    $query_call_info = "select a.length_in_sec from vicidial_log a where a.uniqueid=? union all select b.length_in_sec from vicidial_log_archive b where b.uniqueid=?";
+                    $stmt_call_info = $db->prepare($query_call_info);
+                    $stmt_call_info->execute(array($row1["unique_id"], $row1["unique_id"]));
+                    $row_call_info = $stmt_call_info->fetch(PDO::FETCH_ASSOC);
+                    $temp_d["length_in_sec"] = date("H:i:s", $row_call_info["length_in_sec"]);
                 }
 
                 if ($row["type"] == "tableradio") {
