@@ -297,6 +297,19 @@ switch ($action) {
                 }
                 unset($temp_d["status"]);
                 $temp_d["campaign_name"] = $campaign_name;
+
+          
+
+                //Get Call info
+                $query_call_info = "select length_in_sec from (select a.length_in_sec,a.uniqueid from vicidial_log a where a.lead_id=?  union all select b.length_in_sec,b.uniqueid from vicidial_log_archive b where b.lead_id=? ) calls order by calls.uniqueid desc limit 1";
+                $stmt_call_info = $db->prepare($query_call_info);
+                $stmt_call_info->execute(array($row["id"], $row["id"]));
+                $row_call_info = $stmt_call_info->fetch(PDO::FETCH_ASSOC);
+                
+                $temp_d["length_in_sec"] = date("H:i:s", $row_call_info["length_in_sec"]);
+
+
+
                 $final_row[$row['id']] = $temp_d;
             }
         }
@@ -350,13 +363,6 @@ switch ($action) {
                     $temp_d["full_name"] = $row1["full_name"];
                     $temp_d["campaign_name"] = $row1["campaign_name"];
                     $temp_d["status_name"] = $row1["status_name"];
-                    
-                    //Get Call info
-                    $query_call_info = "select a.length_in_sec from vicidial_log a where a.uniqueid=? union all select b.length_in_sec from vicidial_log_archive b where b.uniqueid=?";
-                    $stmt_call_info = $db->prepare($query_call_info);
-                    $stmt_call_info->execute(array($row1["unique_id"], $row1["unique_id"]));
-                    $row_call_info = $stmt_call_info->fetch(PDO::FETCH_ASSOC);
-                    $temp_d["length_in_sec"] = date("H:i:s", $row_call_info["length_in_sec"]);
                 }
 
                 if ($row["type"] == "tableradio") {
