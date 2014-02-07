@@ -298,23 +298,24 @@ switch ($action) {
                 unset($temp_d["status"]);
                 $temp_d["campaign_name"] = $campaign_name;
 
-          
+
 
                 //Get Call info
                 $query_call_info = "select length_in_sec from (select a.length_in_sec,a.uniqueid from vicidial_log a where a.lead_id=?  union all select b.length_in_sec,b.uniqueid from vicidial_log_archive b where b.lead_id=? ) calls order by calls.uniqueid desc limit 1";
                 $stmt_call_info = $db->prepare($query_call_info);
                 $stmt_call_info->execute(array($row["id"], $row["id"]));
                 $row_call_info = $stmt_call_info->fetch(PDO::FETCH_ASSOC);
-                
-                $temp_d["length_in_sec"] = date("H:i:s", $row_call_info["length_in_sec"]);
-
+                if (isset($row_call_info["length_in_sec"]))
+                    $temp_d["length_in_sec"] = gmdate("H:i:s", $row_call_info["length_in_sec"]);
+                else
+                    $temp_d["length_in_sec"] = "00:00:00";
 
 
                 $final_row[$row['id']] = $temp_d;
             }
         }
 
-        unset($lead_tmp);
+        unset($lead_tmp); 
         unset($temp_d);
         fputcsv($output, $titulos, ";", '"');
         if (count($tags)) {
@@ -385,7 +386,8 @@ switch ($action) {
                 unset($final_row[$lead_id]);
             }
         }
-        if ($only_with_result != "true" or !count($tags)) {
+
+        if (($only_with_result != "true" or !count($tags)) && isset($final_row)) {
             foreach ($final_row as $value) {
                 fputcsv($output, $value, ";", '"');
             }
