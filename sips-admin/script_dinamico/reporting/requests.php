@@ -274,9 +274,9 @@ switch ($action) {
         foreach ($list_id as $value) {
             // CAMPANHAS E BASES DE DADOS
             if ($only_with_result == "true") {
-                $query = "SELECT a.lead_id id,status_name,vcs.status,vl.list_name, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries $temp_lead_data from vicidial_list a left join vicidial_lists vl on vl.list_id=a.list_id left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join vicidial_users vu on vu.user=a.user left join script_result sr on a.lead_id=sr.lead_id where a.list_id =:value $date_filter";
+                $query = "SELECT a.lead_id id,vl.list_name, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries $temp_lead_data from vicidial_list a left join vicidial_lists vl on vl.list_id=a.list_id  left join vicidial_users vu on vu.user=a.user left join script_result sr on a.lead_id=sr.lead_id where a.list_id =:value $date_filter";
             } else {
-                $query = "SELECT a.lead_id id,status_name,vcs.status,vl.list_name, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries $temp_lead_data from vicidial_list a left join vicidial_lists vl on vl.list_id=a.list_id left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join vicidial_users vu on vu.user=a.user where a.list_id =:value";
+                $query = "SELECT a.lead_id id,vl.list_name, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries $temp_lead_data from vicidial_list a left join vicidial_lists vl on vl.list_id=a.list_id  left join vicidial_users vu on vu.user=a.user where a.list_id =:value";
             }
             $stmt = $db->prepare($query);
             $stmt->execute(array(":value" => $value));
@@ -292,6 +292,20 @@ switch ($action) {
                 } else {
                     $row["max_tries"] = "";
                 }
+
+                //Get Call info
+                $query_call_info = "select length_in_sec,calls.status,vcs.status_name from (select a.length_in_sec,a.uniqueid,a.status from vicidial_log a where a.lead_id=?  union all select b.length_in_sec,b.uniqueid,b.status from vicidial_log_archive b where b.lead_id=? ) calls"
+                        . " left join (SELECT status,status_name FROM vicidial_campaign_statuses where campaign_id=? UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=calls.status order by calls.uniqueid desc limit 1";
+                $stmt_call_info = $db->prepare($query_call_info);
+                $stmt_call_info->execute(array($row["id"], $row["id"], $campaign_id));
+                $row_call_info = $stmt_call_info->fetch(PDO::FETCH_ASSOC);
+                if (isset($row_call_info["length_in_sec"]))
+                    $temp_d["length_in_sec"] = gmdate("H:i:s", $row_call_info["length_in_sec"]);
+                else
+                    $temp_d["length_in_sec"] = "00:00:00";
+                $temp_d["status"] = $row_call_info["status"];
+                $temp_d["status_name"] = $row_call_info["status"];
+
                 foreach ($row as $key => $value) {
                     $temp_d[$key] = $value;
                 }
@@ -300,22 +314,14 @@ switch ($action) {
 
 
 
-                //Get Call info
-                $query_call_info = "select length_in_sec from (select a.length_in_sec,a.uniqueid from vicidial_log a where a.lead_id=?  union all select b.length_in_sec,b.uniqueid from vicidial_log_archive b where b.lead_id=? ) calls order by calls.uniqueid desc limit 1";
-                $stmt_call_info = $db->prepare($query_call_info);
-                $stmt_call_info->execute(array($row["id"], $row["id"]));
-                $row_call_info = $stmt_call_info->fetch(PDO::FETCH_ASSOC);
-                if (isset($row_call_info["length_in_sec"]))
-                    $temp_d["length_in_sec"] = gmdate("H:i:s", $row_call_info["length_in_sec"]);
-                else
-                    $temp_d["length_in_sec"] = "00:00:00";
+
 
 
                 $final_row[$row['id']] = $temp_d;
             }
         }
 
-        unset($lead_tmp); 
+        unset($lead_tmp);
         unset($temp_d);
         fputcsv($output, $titulos, ";", '"');
         if (count($tags)) {
