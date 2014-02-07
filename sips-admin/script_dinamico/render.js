@@ -258,11 +258,11 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     input.maxLength = info.max_length;
                     input.name = info.tag;
 
-         
-                    if (info.default_value.name != 0 && Object.size(me.client_info) && !me.admin_review)
-                    {
-                        input.value = me.client_info[info.default_value.name.toLowerCase()];
-                    }
+                    if (info.default_value != 0)
+                        if (info.default_value.name != 0 && Object.size(me.client_info) && !me.admin_review)
+                        {
+                            input.value = me.client_info[info.default_value.name.toLowerCase()];
+                        }
                     var pattern = [];
                     if (info.required)
                         pattern.push("required");

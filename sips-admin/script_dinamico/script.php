@@ -57,7 +57,6 @@ class script {
     }
 
     public function get_tag_fields($id_script) {
-        $js = array();
         $campaigns = array();
         //CAMPOS DEFAULT
         $dfields[] = array("campaign_name" => "Campos Gerais", "display_name" => "Nome do Operador", "name" => "NOME_OPERADOR");
@@ -69,8 +68,6 @@ class script {
         $dfields[] = array("campaign_name" => "Campos Gerais", "display_name" => "Código Postal", "name" => "POSTAL_CODE");
         $dfields[] = array("campaign_name" => "Campos Gerais", "display_name" => "E-mail", "name" => "EMAIL");
         $dfields[] = array("campaign_name" => "Campos Gerais", "display_name" => "Comentários", "name" => "COMMENTS");
-
-
         $query = "SELECT id_camp_linha FROM script_assoc where id_script=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
@@ -401,23 +398,23 @@ class script {
         $stmt->execute(array(":id_script" => $id_script, ":old_pos" => $old_pos, ":new_pos" => $new_pos));
         $query = "update script_dinamico_pages set name=:name,pos=:new_pos where id=:id_pagina";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":id_pagina" => $id_pagina, ":name" => $name, ":new_pos" => $new_pos));
-        return 1;
+
+        return $stmt->execute(array(":id_pagina" => $id_pagina, ":name" => $name, ":new_pos" => $new_pos));
     }
 
     public function edit_item($id_script, $id_page, $type, $ordem, $dispo, $texto, $placeholder, $max_length, $values_text, $default_value, $required, $hidden, $param1, $id) {
         $values_text = (!isset($values_text)) ? array() : $values_text;
         $query = "UPDATE script_dinamico SET id_script=?,id_page=?,type=?,ordem=?,dispo=?,texto=?,placeholder=?,max_length=?,values_text=?,default_value=?,required=?,hidden=?,param1=? WHERE id=?";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array($id_script, $id_page, $type, $ordem, $dispo, $texto, json_encode($placeholder), $max_length, json_encode($values_text), json_encode($default_value), $required, $hidden, $param1, $id));
-        return 1;
+
+        return $stmt->execute(array($id_script, $id_page, $type, $ordem, $dispo, $texto, json_encode($placeholder), $max_length, json_encode($values_text), json_encode($default_value), $required, $hidden, $param1, $id));
     }
 
     public function edit_item_order($ordem, $id) {
         $query = "UPDATE script_dinamico SET ordem=:ordem WHERE id=:id";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":ordem" => $ordem, ":id" => $id));
-        return 1;
+
+        return $stmt->execute(array(":ordem" => $ordem, ":id" => $id));
     }
 
 //  ADD
@@ -425,8 +422,8 @@ class script {
     public function add_page($id_script, $pos) {
         $query = "INSERT INTO `asterisk`.`script_dinamico_pages` (id,id_script,name,pos) VALUES (NULL,:id_script,'Página nova',:pos)";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":id_script" => $id_script, ":pos" => $pos));
-        return 1;
+
+        return $stmt->execute(array(":id_script" => $id_script, ":pos" => $pos));
     }
 
     public function add_script($user_group) {
@@ -436,8 +433,8 @@ class script {
 
         $query = "INSERT INTO `asterisk`.`script_dinamico_pages` (id,id_script,name,pos) VALUES (NULL,?,'Página nova','1')";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array($this->db->lastInsertId()));
-        return 1;
+
+        return $stmt->execute(array($this->db->lastInsertId()));
     }
 
     public function add_item($id_page, $id_script, $type, $ordem, $dispo, $texto, $placeholder, $max_length, $values_text, $default_value, $required, $hidden, $param1) {
@@ -456,12 +453,11 @@ class script {
         $query = "INSERT INTO script_dinamico (`id`, `tag`, `id_script`, `id_page`, `type`, `ordem`, `dispo`, `texto`, `placeholder`, `max_length`, `values_text`, `default_value`, `required`, `hidden`, `param1`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $stmt = $this->db->prepare($query);
 
-        $stmt->execute(array("NULL", $tag, $id_script, $id_page, $type, $ordem, $dispo, $texto, json_encode($placeholder), $max_length, json_encode($values_text), json_encode($default_value), $required, $hidden, $param1));
-        return 1;
+
+        return $stmt->execute(array("NULL", $tag, $id_script, $id_page, $type, $ordem, $dispo, $texto, json_encode($placeholder), $max_length, json_encode($values_text), json_encode($default_value), $required, $hidden, $param1));
     }
 
     public function add_rules($tag_trigger2, $tag_trigger, $tag_target, $id_script, $tipo_elemento, $tipo, $param1, $param2) {
-        $js = array();
         if (!empty($tag_trigger2) && !empty($tag_target)) {
             $query = "INSERT INTO `asterisk`.`script_rules` (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) VALUES (?,?,?,?,?,?,?,?,?)";
             $stmt = $this->db->prepare($query);
@@ -485,9 +481,6 @@ class script {
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 //pages
-
-
-
             $query1 = "INSERT INTO script_dinamico_pages (`id_script`,`name`,`pos`) values(?,?,?)";
             $stmt1 = $this->db->prepare($query1);
             $stmt1->execute(array($temp_script_id, $row['name'], $row['pos']));
@@ -582,17 +575,13 @@ class script {
     public function delete_rule($id) {
         $query = "delete from script_rules  where id=:id";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":id" => $id));
-        return 1;
+
+        return $stmt->execute(array(":id" => $id));
     }
 
     // FORM
-
     public function save_form_result($save_overwrite, $id_script, $results, $user_id, $unique_id, $campaign_id, $lead_id, $admin_review) {
         $sql = array();
-
-
-
         foreach ($results as $row) {
             if ($row['value'] != "") {
                 $temp = explode(",", $row['name']);
@@ -603,7 +592,6 @@ class script {
                 }
             }
         }
-
         if (count($sql)) {
             if ($admin_review == "1") {
                 $query = "Delete from script_result where unique_id=:unique_id and lead_id=:lead_id";

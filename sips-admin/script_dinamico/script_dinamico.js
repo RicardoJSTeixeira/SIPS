@@ -391,7 +391,7 @@ function update_script(callback)
             $("#select_default_value").empty();
             $("#tags_select .tag_group").remove();
             var option = "";
-             $("#select_default_value").append("<option value='0' data-campaign_id='0'>Sem Valor por Defeito</option>");
+            $("#select_default_value").append("<option value='0' data-campaign_id='0'>Sem Valor por Defeito</option>");
             $.each(data4, function() {
 
                 if ($("#tags_select optgroup[label='" + this.campaign_name + "']").length)
@@ -640,7 +640,7 @@ function update_info()
             }
         });
         rules_update_targets();
-       $('.tooltip_info').tooltip();
+        $('.tooltip_info').tooltip();
     }, "json");
 }
 
