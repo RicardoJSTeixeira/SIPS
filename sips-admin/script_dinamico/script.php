@@ -420,18 +420,18 @@ class script {
 //  ADD
 
     public function add_page($id_script, $pos) {
-        $query = "INSERT INTO `asterisk`.`script_dinamico_pages` (id,id_script,name,pos) VALUES (NULL,:id_script,'Página nova',:pos)";
+        $query = "INSERT INTO `script_dinamico_pages` (id,id_script,name,pos) VALUES (NULL,:id_script,'Página nova',:pos)";
         $stmt = $this->db->prepare($query);
 
         return $stmt->execute(array(":id_script" => $id_script, ":pos" => $pos));
     }
 
     public function add_script($user_group) {
-        $query = "INSERT INTO `asterisk`.`script_dinamico_master` (id,name,user_group) VALUES (NULL,'Script novo',?)";
+        $query = "INSERT INTO `script_dinamico_master` (id,name,user_group) VALUES (NULL,'Script novo',?)";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($user_group));
 
-        $query = "INSERT INTO `asterisk`.`script_dinamico_pages` (id,id_script,name,pos) VALUES (NULL,?,'Página nova','1')";
+        $query = "INSERT INTO`script_dinamico_pages` (id,id_script,name,pos) VALUES (NULL,?,'Página nova','1')";
         $stmt = $this->db->prepare($query);
 
         return $stmt->execute(array($this->db->lastInsertId()));
@@ -459,7 +459,7 @@ class script {
 
     public function add_rules($tag_trigger2, $tag_trigger, $tag_target, $id_script, $tipo_elemento, $tipo, $param1, $param2) {
         if (!empty($tag_trigger2) && !empty($tag_target)) {
-            $query = "INSERT INTO `asterisk`.`script_rules` (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) VALUES (?,?,?,?,?,?,?,?,?)";
+            $query = "INSERT INTO `script_rules` (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) VALUES (?,?,?,?,?,?,?,?,?)";
             $stmt = $this->db->prepare($query);
             $stmt->execute(array("NULL", $id_script, $tipo_elemento, $tag_trigger, json_encode($tag_trigger2), json_encode($tag_target), $tipo, $param1, json_encode($param2)));
         }
