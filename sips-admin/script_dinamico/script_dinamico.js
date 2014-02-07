@@ -184,17 +184,7 @@ $(function() {
             $("#scheduler_edit_select").val("").trigger("chosen:updated");
             $("#ipl_file_select").empty();
         }, "json");
-        $.post("requests.php", {action: "get_feedbacks"},
-        function(data6)
-        {
-            $("#select_feedback").empty();
-            var temp = "";
-            $.each(data6, function() {
-                temp += "<option value=" + this.status + ">" + this.status_name + "</option>";
-            });
-            $("#select_feedback").append(temp);
-            $("#select_feedback").trigger("chosen:updated");
-        }, "json");
+
         //--------------------------------------//
         editor_toggle("off");
         update_script();
@@ -398,18 +388,30 @@ function update_script(callback)
         $.post("requests.php", {action: "get_tag_fields", id_script: $("#script_selector option:selected").val()},
         function(data4)
         {
+            $("#select_default_value").empty();
             $("#tags_select .tag_group").remove();
-            var temp = "";
+            var option = "";
+             $("#select_default_value").append("<option value='0' data-campaign_id='0'>Sem Valor por Defeito</option>");
             $.each(data4, function() {
-                $("#tags_select").append("<optgroup class='tag_group' label='" + this.text + "'></optgroup>");
-                temp = "";
-                $.each(this.lista, function() {
-                    temp = temp + "<option value='" + this.value + "'>" + this.name + "</option>";
-                });
-                $("#tags_select optgroup:last").append(temp);
-                $("#select_default_value").empty();
-                $("#select_default_value").append("<option value='0'>Selecione um campo dinamico</option>");
-                $("#select_default_value").append(temp);
+
+                if ($("#tags_select optgroup[label='" + this.campaign_name + "']").length)
+                {
+                    option = "<option data-campaign_id='" + this.campaign_id + "' value='" + this.name + "'>" + this.display_name + "</option>";
+                    $("#tags_select optgroup[label='" + this.campaign_name + "']").append(option);
+                    $("#select_default_value optgroup[label='" + this.campaign_name + "']").append(option);
+                }
+                else
+                {
+
+                    $("#tags_select").append("<optgroup class='tag_group' data-campaign_id='" + this.campaign_id + "' label='" + this.campaign_name + "'></optgroup>");
+                    $("#select_default_value").append("<optgroup class='tag_group' data-campaign_id='" + this.campaign_id + "' label='" + this.campaign_name + "'></optgroup>");
+
+                    option = "<option data-campaign_id='" + this.campaign_id + "'  value='" + this.name + "'>" + this.display_name + "</option>";
+                    $("#tags_select optgroup[label='" + this.campaign_name + "']").append(option);
+                    if (this.name != "NOME_OPERADOR")
+                        $("#select_default_value optgroup[label='" + this.campaign_name + "']").append(option);
+                }
+
             });
             $("#tags_select").trigger("chosen:updated");
             $("#tag_label").text("§" + $("#tags_select option:selected").val() + "§");
@@ -638,6 +640,7 @@ function update_info()
             }
         });
         rules_update_targets();
+       $('.tooltip_info').tooltip();
     }, "json");
 }
 
@@ -667,7 +670,11 @@ function populate_element(tipo, element)
             $("#placeholder_edit").val($("#" + id + " .input_texto").attr("placeholder"));
             $("#max_length_edit").val($("#" + id + " .input_texto").attr("maxLength"));
             $(".validation input:radio[name='regex_texto'][value=" + element.data("regex") + "]").prop("checked", true);
-            $("#select_default_value option[value=" + element.data("default_value") + "]").prop("selected", true);
+
+            if ($("#select_default_value optgroup[data-campaign_id='" + element.data("default_value").campaign_id + "']").length)
+                $("#select_default_value optgroup[data-campaign_id='" + element.data("default_value").campaign_id + "'] option[value='" + element.data("default_value").name + "']").prop("selected", true);
+            else
+                $("#select_default_value  option[value='0']").prop("selected", true);
             if (element.data("php_script") != "0")
             {
 
@@ -789,7 +796,6 @@ function populate_element(tipo, element)
             $("#tableinput_td_textarea").val(string_elements.slice(0, -1));
             break;
         case "datepicker":
-            console.log(element.data());
             $("#datepicker_edit").val($("#" + id + " .label_geral").html());
             $("#datepicker_layout_editor input:radio[name='time_format'][value=" + element.data("data_format") + "]").prop("checked", true);
             break;
@@ -821,7 +827,6 @@ function populate_element(tipo, element)
                 $("#ipl_ip_div").show();
                 $("#ipl_link_div").hide();
                 $("#ipl_file_select option[value='" + $("#" + id + " .ipl_link").text() + "']").prop("selected", true);
-                console.log($("#ipl_file_select option[value='" + $("#" + id + " .ipl_link").text() + "']"));
                 $("#ipl_file_select option[data-type='pdf']").prop("disabled", true);
             }
             else if (element.data("option") == "2")
@@ -867,19 +872,19 @@ function edit_element(opcao, element, data)
                 if ($(".validation input:radio[name='regex_texto']:checked").val() == "ajax")
                 {
                     var ajax_rule = {"file": $("#select_ajax_script option:selected").val(), "validado": $("#validado_text").val(), "not_validado": $("#not_validado_text").val()};
-                    item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), ajax_rule, $("#select_default_value option:selected").val(), $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
+                    item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), ajax_rule, {"name": $("#select_default_value option:selected").val(), "campaign_id": $("#select_default_value option:selected").data().campaign_id}, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
                     element.data("php_script", $("#select_ajax_script option:selected").val());
                     element.data("php_script_validado", $("#validado_text").val());
                     element.data("php_script_not_validado", $("#not_validado_text").val());
                 }
                 else
                 {
-                    item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, $("#select_default_value option:selected").val(), $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
+                    item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", element.index(), "h", $("#texto_edit").val(), $("#placeholder_edit").val(), $("#max_length_edit").val(), 0, {"name": $("#select_default_value option:selected").val(), "campaign_id": $("#select_default_value option:selected").data().campaign_id}, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'), $(".validation input:radio[name='regex_texto']:checked").val());
                     element.data("php_script", " ");
                     element.data("php_script_validado", "");
                     element.data("php_script_not_validado", "");
                 }
-                element.data("default_value", $("#select_default_value option:selected").val());
+                element.data("default_value", {"name": $("#select_default_value option:selected").val(), "campaign_id": $("#select_default_value option:selected").data().campaign_id});
             }
             break;
         case "radio":
@@ -1853,15 +1858,11 @@ $(".values_edit_textarea").on("blur", function()
 
 $("#add_rule_button").click(function()
 {
-
     if ($("#rule_creator .form_edit_element").validationEngine('validate'))
     {
-
         if ($("#rule_target_select option:selected").length || $("#regra_select option:selected").val() == "goto")
         {
-
             $('#rule_target_formright').tooltip("hide");
-
             switch (selected_type)
             {
                 case "texto":
@@ -2047,7 +2048,8 @@ function update_select_ajax()
             $("#select_ajax_script").append("<option value=" + this + ">" + this + "</option>");
         });
     }, "json");
-};
+}
+;
 $("#select_ajax_script").on("change", function()
 {
     $("#validado_text").val("");
@@ -2145,7 +2147,8 @@ function update_select()
         if ($("#radio_ipl_pdf").is(":checked"))
             $("#ipl_file_select option[data-type='image']").prop("disabled", true);
     }, "json");
-};
+}
+;
 $("#remove_uploaded_file").on("click", function()
 {
     $.post("upload.php", {action: "delete", name: $("#ipl_file_select option:selected").val()}, function(data) {

@@ -29,7 +29,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         me.config.save_overwrite = false;
         $.extend(true, me.config, ext_config);
 
- 
+
         $.ajaxSetup({cache: false});
         before_all(function() {
             update_script(function() {
@@ -163,16 +163,13 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 //UPDATES DE INFO
     function update_script(callback)
     {
-         
         if (me.script_id !== undefined)
         {
             $.post(file_path + "requests.php", {action: "get_scripts_by_id_script", id_script: me.script_id},
             function(data)
             {
-              
                 if (Object.size(data))
                 {
-                    
                     if (data !== null)
                     {
                         me.script_id = data.id;
@@ -184,7 +181,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 }
                 else
                 {
-                     
                     me.has_script = false;
                     $.jGrowl('Sem script', {life: 3000});
                 }
@@ -262,9 +258,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     input.maxLength = info.max_length;
                     input.name = info.tag;
 
-                    if (info.default_value.toString().length > 2 && Object.size(me.client_info) && !me.admin_review)
+         
+                    if (info.default_value.name != 0 && Object.size(me.client_info) && !me.admin_review)
                     {
-                        input.value = me.client_info[info.default_value.toString().toLowerCase()];
+                        input.value = me.client_info[info.default_value.name.toLowerCase()];
                     }
                     var pattern = [];
                     if (info.required)

@@ -171,9 +171,7 @@
                         <select id="script_linha_inbound_selector" class="chosen-select"  multiple="multiple" data-placeholder="Selecione uma/várias linhas_inbound"   ></select>
                     </div> 
                 </div>
-                <div class="formRow">
-                    <button class="btn btn-inverse" id="open_limit_feedback" title="Cria um limite de feedbacks para este script">Criar limite de feedback</button>
-                </div>
+
 
             </div>
             <div class="clear"></div>
@@ -238,7 +236,7 @@
 
         <!--barra de paginas e scripts-->
         <h2>Scripts Dinâmicos </h2>
-         <div class="grid-title">
+        <div class="grid-title">
             <div class=" left" id="page_selector_div">
                 <div  class=" input-prepend input-append " >
                     <span class="add-on">Páginas</span>     
@@ -305,30 +303,30 @@
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="O texto padrao do elemento."></i>   
-                                        <strong>Placeholder:</strong>
+
+                                        <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="O texto padrao do elemento."> <i class="icon-question-sign" ></i>    Placeholder:</strong>
                                         <div class="formRight">
                                             <input  maxlength="65" class="span texto_input" id="placeholder_edit" type="text" placeholder="Placeholder exemplo" />
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="Campo dinâmico da base de dados."></i>   
-                                        <strong>Valor por defeito:</strong>
+
+                                        <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Campo dinâmico da base de dados."> <i class="icon-question-sign" ></i>    Valor por defeito:</strong>
                                         <div class="formRight">
                                             <select id="select_default_value"></select>
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="Número máximo de caracteres."></i>   
-                                        <strong>Tamanho maximo:</strong>
+
+                                        <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Número máximo de caracteres."> <i class="icon-question-sign" ></i> Tamanho maximo:</strong>
                                         <div class="formRight">
                                             <input  maxlength="3" class="texto_input validate[required] input-mini" id="max_length_edit" name="max_length_edit" type="text" placeholder="Numero Máximo de caracteres" />
                                         </div>
                                     </div>
                                 </form>
                                 <div class="formRow validation" >
-                                    <i class="icon-question-sign" title="Tipo de validação aplicada ao valor introduzido no elemento."></i>   
-                                    <strong>Validação:</strong>
+
+                                    <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Tipo de validação aplicada ao valor introduzido no elemento."> <i class="icon-question-sign" ></i>    Validação:</strong>
 
                                     <div class="formRight">
                                         <input type="radio" id="validacao_texto_none" name="regex_texto" value="none" /> <label class="radio inline"  for="validacao_texto_none"><span></span>Sem validação</label>
@@ -370,8 +368,8 @@
                                     </div>
                                     <div id="div_ajax_upload" class="formRow" style="display:none">
                                         <div class="formRow">
-                                            <i class="icon-question-sign" title="Escolha do ficheiro a ser aplicado como validação."></i>   
-                                            <span >Selector de ficheiros</span>
+
+                                            <span  class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Escolha do ficheiro a ser aplicado como validação.">  <i class="icon-question-sign"></i>    Selector de ficheiros</span>
                                             <div class="formRight">
                                                 <div class="input-append">
                                                     <select id="select_ajax_script" ></select>
@@ -390,15 +388,15 @@
                                             </form>
                                         </div>
                                         <div class="formRow">
-                                            <i class="icon-question-sign" title="Caso o ficheiro não envie mensagem, este é o texto a ser mostrado caso seja validado."></i>   
-                                            <strong>Texto validado:</strong>
+
+                                            <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Caso o ficheiro não envie mensagem, este é o texto a ser mostrado caso seja validado."> <i class="icon-question-sign" ></i>   Texto validado:</strong>
                                             <div class="formRight">
                                                 <input id="validado_text" type="text" >
                                             </div>
                                         </div>
                                         <div class="formRow">
-                                            <i class="icon-question-sign" title="Caso o ficheiro não envie mensagem, este é o texto a ser mostrado caso não seja validado."></i>  
-                                            <strong>Texto não validado:</strong>
+
+                                            <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Caso o ficheiro não envie mensagem, este é o texto a ser mostrado caso não seja validado."> <i class="icon-question-sign" ></i>  Texto não validado:</strong>
                                             <div class="formRight">
                                                 <input id="not_validado_text" type="text" >
                                             </div>
@@ -425,17 +423,15 @@
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" 
-                                           title="Valores do elemento, separado por parágrafos.
-                                           Não suporta Tags."></i>   
-                                        <strong>Valores:</strong>
+
+                                        <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Valores do elemento, separado por parágrafos.Não suporta Tags."><i class="icon-question-sign"></i>    Valores:</strong>
                                         <div class="formRight">
                                             <textarea  class="values_edit_textarea validate[required]" id="radio_textarea" name="radio_textarea" rows="4" cols="50"></textarea>
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="Disposição vertical ou horizontal do elemento."></i>   
-                                        <strong>Disposição:</strong>
+
+                                        <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Disposição vertical ou horizontal do elemento."><i class="icon-question-sign" ></i>    Disposição:</strong>
                                         <div class="formRight">
                                             <input type="radio"  id="horiz_radio" name="rdispo" checked="checked">   <label class="radio_dispo radio inline"  for="horiz_radio"><span></span>Horizontal </label>
                                         </div> <div class="formRight">
@@ -455,17 +451,16 @@
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" 
-                                           title="Valores do elemento, separado por parágrafos.
-                                           Não suporta Tags."></i>   
-                                        <strong>Valores:</strong>
+
+                                        <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Valores do elemento, separado por parágrafos.
+                                                Não suporta Tags."><i class="icon-question-sign"></i> Valores:</strong>
                                         <div class="formRight">
                                             <textarea class="values_edit_textarea validate[required]" id="checkbox_textarea" name="checkbox_textarea" rows="4" cols="50"></textarea>
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="Disposição vertical ou horizontal do elemento."></i>   
-                                        <strong>Disposição:</strong>
+
+                                        <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Disposição vertical ou horizontal do elemento."><i class="icon-question-sign" ></i> Disposição:</strong>
                                         <div class="formRight">
                                             <input type="radio"  id="horiz_checkbox" name="cdispo" checked="checked">     <label class="checkbox_dispo radio inline"  for="horiz_checkbox"><span></span>Horizontal </label>
 
@@ -486,10 +481,9 @@
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" 
-                                           title="Valores do elemento, separado por parágrafos.
-                                           Não suporta Tags."></i>   
-                                        <strong>Valores:</strong>
+
+                                        <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Valores do elemento, separado por parágrafos.
+                                                Não suporta Tags."> <i class="icon-question-sign"></i>  Valores:</strong>
                                         <div class="formRight">
                                             <textarea class="values_edit_textarea validate[required]" id="multichoice_textarea" name="multichoice_textarea" rows="4" cols="50"></textarea>
                                         </div>
@@ -590,20 +584,18 @@
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" 
-                                           title="Valores do elemento, separado por parágrafos.
-                                           Não suporta Tags."></i>   
-                                        <strong>Titulos:</strong>
+
+                                        <strong  class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Valores do elemento, separado por parágrafos.
+                                                 Não suporta Tags."><i class="icon-question-sign"></i> Titulos:</strong>
 
                                         <div class="formRight">
                                             <textarea class="values_edit_textarea validate[required]" id="tableradio_th_textarea" name="tableradio_th_textarea" maxlength="250" rows="4" cols="50"></textarea>
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" 
-                                           title="Cada linha de pergunta do elemento, separado por parágrafos.
-                                           Não suporta Tags."></i>   
-                                        <strong>Perguntas:</strong>
+
+                                        <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Cada linha de pergunta do elemento, separado por parágrafos.
+                                                Não suporta Tags."><i class="icon-question-sign"></i>    Perguntas:</strong>
 
                                         <div class="formRight">
                                             <textarea class="values_edit_textarea validate[required]" id="tableradio_td_textarea" name="tableradio_td_textarea" rows="4" cols="50"></textarea>
@@ -621,20 +613,18 @@
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" 
-                                           title="Valores do elemento, separado por parágrafos.
-                                           Não suporta Tags."></i>   
-                                        <strong>Titulos:</strong>
+
+                                        <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Valores do elemento, separado por parágrafos.
+                                                Não suporta Tags."><i class="icon-question-sign"></i> Titulos:</strong>
 
                                         <div class="formRight">
                                             <textarea class="values_edit_textarea validate[required]" id="tableinput_th_textarea" name="tableinput_th_textarea" maxlength="250" rows="4" cols="50"></textarea>
                                         </div>
                                     </div>
                                     <div class="formRow" >
-                                        <i class="icon-question-sign"
-                                           title="Cada linha de pergunta do elemento, separado por parágrafos.
-                                           Não suporta Tags."></i>   
-                                        <strong>Perguntas:</strong>
+
+                                        <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Cada linha de pergunta do elemento, separado por parágrafos.
+                                                Não suporta Tags."><i class="icon-question-sign"></i> Perguntas:</strong>
 
                                         <div class="formRight">
                                             <textarea class="values_edit_textarea validate[required]" id="tableinput_td_textarea" name="tableinput_td_textarea" rows="4" cols="50"></textarea>
@@ -660,8 +650,8 @@
                                 <div class="clear"></div>
                                 <div class="formRow" >
 
-                                    <i class="icon-question-sign" title="Limitar as possiveis datas de selecção."></i>   
-                                    <input type="checkbox" id="limite_datas_toggle"/>     <label class="checkbox inline"  for="limite_datas_toggle"><span></span>Limite de Escolha de Datas</label>
+
+                                    <input class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Limitar as possiveis datas de selecção." type="checkbox" id="limite_datas_toggle"/>     <label class="checkbox inline"  for="limite_datas_toggle"><span></span> <i class="icon-question-sign" ></i>  Limite de Escolha de Datas</label>
                                     <div id="date_limit_placeholder" style="display: none"></div>
 
                                 </div>
@@ -702,8 +692,8 @@
 
 
                                     <div class="formRow">
-                                        <i class="icon-question-sign" title="Selecione os calendários que serão apresentados para escolha."></i>   
-                                        <strong>Calendários:</strong>
+
+                                        <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Selecione os calendários que serão apresentados para escolha."><i class="icon-question-sign" ></i> Calendários:</strong>
                                         <div class="formRight">
                                             <select id="scheduler_edit_select" class="chosen-select"  multiple data-placeholder="Selecione um/vários calendários"   ></select>
                                         </div>
@@ -713,8 +703,8 @@
                                         </div>
                                     </div>  
                                     <div class="formRow">
-                                        <i class="icon-question-sign" title="Número máximo de marcações por calendário."></i>   
-                                        <strong>Marcações max.</strong>
+
+                                        <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Número máximo de marcações por calendário."><i class="icon-question-sign" ></i> Marcações max.</strong>
                                         <div class="formRight">
                                             <select id="scheduler_edit_marcação" >
                                                 <option value="1">1</option>
@@ -728,8 +718,8 @@
 
 
                                     <div class="formRow">
-                                        <i class="icon-question-sign" title="Número me marcações obrigatórias por calendário."></i>   
-                                        <strong>Marcações obrigatórias</strong>
+
+                                        <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Número me marcações obrigatórias por calendário."><i class="icon-question-sign" ></i> Marcações obrigatórias</strong>
                                         <div class="formRight">
                                             <select id="scheduler_edit_obrigatorio" >   
                                                 <option value="0">0</option>
@@ -790,8 +780,8 @@
                                     </div>
                                 </div>
                                 <div class="formRow">
-                                    <i class="icon-question-sign" title="Escolha o tipo que este elemento representará."></i>   
-                                    <strong>Opções:</strong>
+
+                                    <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Escolha o tipo que este elemento representará."><i class="icon-question-sign" ></i> Opções:</strong>
 
                                     <div class="formRight">
                                         <input  type="radio" class="radio_ipl ipl_radio_options" id="radio_ipl_image" name="ripl" value="1"><label class="radio inline"  for="radio_ipl_image"><span></span> Imagem  </label>
@@ -841,8 +831,8 @@
 
                                 <!----------------------------------------------REQUIRED------------------------------------------->
                                 <div class="formRow required_class" >
-                                    <i class="icon-question-sign" title="Este elemento tem que ser preenchido obrigatóriamente."></i>   
-                                    <strong>Obrigatório:</strong>
+
+                                    <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Este elemento tem que ser preenchido obrigatóriamente."><i class="icon-question-sign" ></i> Obrigatório:</strong>
                                     <div class="formRight">
                                         <input  type="checkbox" id="item_required" name="required" value="1">
                                         <label for="item_required"><span></span></label>
@@ -854,10 +844,9 @@
                                 </div>
                                 <!-----------------------------HIDDEN-------------------------------------------------------->
                                 <div class="formRow hidden_class" >
-                                    <i class="icon-question-sign"
-                                       title="O elemento não será visivel.
-                                       O seu estado pode ser alterado através de regras que o tornem visivel."></i>   
-                                    <strong>Escondido:</strong>
+
+                                    <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="O elemento não será visivel.
+                                            O seu estado pode ser alterado através de regras que o tornem visivel."><i class="icon-question-sign"></i> Escondido:</strong>
                                     <div class="formRight">
                                         <input  type="checkbox" id="item_hidden" name="hidden" value="1">
                                         <label for="item_hidden"><span></span></label>
@@ -866,11 +855,10 @@
                                 </div>
                                 <!------------------------------------TAGS---------------------------------------------->
                                 <div class="formRow" id="tag_edit" >
-                                    <i class="icon-question-sign"
-                                       title="Esta tag representa o valor deste elemento.
-                                       Por exemplo,se for copiada para o titulo de outro elemento , ao alterar o valor deste elemento, essa alteração será visivel no local onde esta tag se encontrar.
-                                       Copie exactamente como mostrado (número da tag e delimitador @)"></i>   
-                                    <strong>Tag associativo:</strong>
+
+                                    <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Esta tag representa o valor deste elemento.
+                                            Por exemplo,se for copiada para o titulo de outro elemento , ao alterar o valor deste elemento, essa alteração será visivel no local onde esta tag se encontrar.
+                                            Copie exactamente como mostrado (número da tag e delimitador @)"><i class="icon-question-sign"></i>  Tag associativo:</strong>
                                     <div class="formRight">
                                         <label  id="label_tag"></label>
                                     </div>
@@ -880,19 +868,16 @@
                                     <strong>Tags campos dinâmicos:</strong>
                                     <div class="formRight">
                                         <select id="tags_select" class="chosen-select" data-placeholder="Selecione uma tag" >
-                                            <optgroup label="Campos Gerais">
-                                                <option value="NOME_OPERADOR" selected>Nome do operador</option>
-                                            </optgroup>
+
 
                                         </select>
                                         <i class="icon-tag" ></i>
                                     </div> 
                                 </div>
                                 <div class="formRow" >
-                                    <i class="icon-question-sign"
-                                       title="Escolha o campo dinamico no selector em cima e depois copie  esta tag para ser substituida pelo respectivo campo durante o preenchimento do script.
-                                       Copie exactamente como mostrado (Letras maiúsculas e delimitador §)"></i>   
-                                    <strong>Tag a copiar:</strong>
+
+                                    <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Escolha o campo dinamico no selector em cima e depois copie  esta tag para ser substituida pelo respectivo campo durante o preenchimento do script.
+                                            Copie exactamente como mostrado (delimitador §)"><i class="icon-question-sign"></i> Tag a copiar:</strong>
                                     <div class="formRight">
                                         <label id="tag_label"></strong>
                                     </div>
@@ -932,8 +917,8 @@
                                 <form class="form_edit_element">
                                     <!--TRIGGER-->
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="O evento que despoleta a regra."></i>   
-                                        <strong>Evento:</strong>
+
+                                        <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="O evento que despoleta a regra."><i class="icon-question-sign" ></i> Evento:</strong>
                                         <div class="formRight">
                                             <select id="rule_trigger_select" ></select>
                                         </div> 
@@ -954,8 +939,8 @@
                                     </div>
 
                                     <div class="formRow" >
-                                        <i class="icon-question-sign" title="Ao ser despoletada a regra, escolha o tipo de acção que será executada."></i>   
-                                        <strong>Tipo:</strong>
+
+                                        <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Ao ser despoletada a regra, escolha o tipo de acção que será executada."><i class="icon-question-sign" ></i> Tipo:</strong>
                                         <div class="formRight">
                                             <select id="regra_select">
                                                 <option value="show">Mostrar Elemento</option>   
