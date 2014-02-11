@@ -19,7 +19,7 @@ $(function()
         "fnServerParams": function(aoData) {
             aoData.push({"name": "action", "value": "listar_produtos_to_datatable"});
         },
-        "aoColumns": [{"sTitle": "id"}, {"sTitle": "Nome"}, {"sTitle": "Parente"}, {"sTitle": "Max requisições mensais"}, {"sTitle": "Max requisições especiais"}, {"sTitle": "Categoria"}, {"sTitle": "Tipo"}          ],
+        "aoColumns": [{"sTitle": "id"}, {"sTitle": "Nome"}, {"sTitle": "Parente"}, {"sTitle": "Max requisições mensais"}, {"sTitle": "Max requisições especiais"}, {"sTitle": "Categoria"}, {"sTitle": "Tipo"}],
         "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
     });
 
@@ -30,7 +30,6 @@ $("#button_filtro_new_requisition").click(function()
 {
     if (!$("#new_requisition_div").is(":visible"))
     {
-        requisition1.new_requisition_destroy($("#new_requisition_div"));
         requisition1.new_requisition($("#new_requisition_div"), $("#view_requisition_datatable"));
     }
     $("#new_requisition_div").toggle("blind");

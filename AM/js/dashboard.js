@@ -2,8 +2,10 @@ $(function() {
 
     var init = function(data) {
         var sch;
-        sch = new calendar($("#calendar_day"), data, "", $('#ext-events'));
+       
+        sch = new calendar($("#calendar_day"), data,$("#calendar_client_modal"), $('#ext-events'));
         sch.reserveConstruct(data.tipo);
+        sch.initModal();
 
     };
     $.post("ajax/calendar.php",

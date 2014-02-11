@@ -52,9 +52,9 @@ if (mysql_num_rows($rslt)>0){
 
 $script_query = (($tem_Script == 1) ? "LEFT JOIN custom_$campanha_id B ON A.lead_id = B.lead_id" : "");
 $stmt="	SELECT 
-			C.call_date AS 'Data da Chamada', 
+			C.call_date AS 'Data da Chamada', C.user,
 			$campos, 
-			vcs.status_name as 'Feedback',C.campaign_id AS 'Linha Entrada' C.length_in_sec as 'Tempo de Chamada', C.queue_position as 'Posicao na Fila', C.queue_seconds as 'Tempo de Queue', C.term_reason as 'Motivo de Hangup'
+			vcs.status_name as 'Feedback',C.campaign_id AS 'Linha Entrada', SEC_TO_TIME(C.length_in_sec) as 'Tempo de Chamada', C.queue_position as 'Posicao na Fila', C.queue_seconds as 'Tempo de Queue', C.term_reason as 'Motivo de Hangup'
 		FROM vicidial_list A
 		INNER JOIN vicidial_closer_log AS C ON C.lead_id=A.lead_id
 		$script_query  
@@ -78,19 +78,11 @@ if($row) {
 	mysql_data_seek($rslt, 0);
 }
 
-#date("Y-m-d H:i", strtotime(date('Y-m-d', strtotime($date))." +$time1[0] hours $time1[1] minutes "));
-
 
 while($row = mysql_fetch_assoc($rslt)) {
-	#if($row['Tipo da Chamada']=='VDCL'){$row['Tipo da Chamada']='INBOUND';} else {$row['Tipo da Chamada']='OUTBOUND';}
-	
-	#$gmt_offset = $row['gmt_offset_now'];
-	
-	#if($row["Data da Chamada"]!=null){ $row["Data da Chamada"] = $row["Data da Chamada"]." ".date("Y-m-d H:i", strtotime(date('Y-m-d H:i', strtotime($row["Data da Chamada"]))." +5 hours "));}
-	
+
 	
     fputcsv($output, $row,";",'"');
 }
 print_r($row);
 fclose($output);
-?>

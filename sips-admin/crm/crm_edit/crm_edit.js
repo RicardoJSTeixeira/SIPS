@@ -5,11 +5,12 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     this.user_level = 0;
     this.lead_id = lead_id;
     this.campaign_id = "";
+    this.list_id = "";
     this.feedback = "";
     this.edit_dynamic_field = 0;
     this.has_dynamic_fields;
     this.in_outbound = "in";
-
+    this.table_chamadas_font_size = 11;
 //----------------------------------- BASIC FUNCTIONS
     this.init = function(callback)
     {
@@ -97,6 +98,23 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                             {
                                                 callback();
                                             }
+
+
+
+                                            $(".button_table_chamada_lettersize").click(function()
+                                            {
+
+                                                if ($(this).val() == "plus")
+                                                {
+                                                    me.table_chamadas_font_size++;
+                                                    $("#table_chamadas").css("font-size", me.table_chamadas_font_size + "px");
+                                                }
+                                                else
+                                                {
+                                                    me.table_chamadas_font_size--;
+                                                    $("#table_chamadas").css("font-size", me.table_chamadas_font_size + "px");
+                                                }
+                                            });
                                         });
                                     });
                                 });
@@ -143,7 +161,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_agentes"},
         function(data)
         {
-            crm_edit_zone.find("#agente_selector").empty(); 
+            crm_edit_zone.find("#agente_selector").empty();
             var temp = "";
             $.each(data, function(index, value)
             {
@@ -187,6 +205,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                     "<td>" + data.status_name + "</td>" +
                     "<td>" + data.called_count + "</td></tr>");
             me.campaign_id = data.campaign_id;
+            me.list_id = data.list_id;
             me.feedback = data.status;
             crm_edit_zone.find("#lead_info_time_tbody").append("<tr><td>" + data_load_format + "</td>" +
                     "<td>" + data_load_fromNow + "</td>" +
@@ -201,7 +220,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
 
     function get_dynamic_fields(callback)
     {
-        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_dynamic_fields", lead_id: me.lead_id, campaign_id: me.campaign_id},
+        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_dynamic_fields", lead_id: me.lead_id, campaign_id: me.campaign_id, list_id: me.list_id},
         function(data)
         {
             var dynamic_field = "";
@@ -221,10 +240,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                 }
                 else
                 {
-                    dynamic_field += "     <input readonly type=text name='" + this.name + "' id='" + this.name + "'  value='" + this.value + "'>";
-                    dynamic_field += "   <span id=" + this.name + "></span>" +
-                            "   </div>" +
-                            "   </div>";
+                    dynamic_field += "     <input readonly type=text name='" + this.name + "' id='" + this.name + "'  value='" + this.value + "'></div></div>";
                 }
                 if (controler) {
                     controler = 0;
@@ -247,17 +263,26 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
 
     function get_feedbacks(callback)
     {
-        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_feedbacks", campaign_id: me.campaign_id},
+        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_feedbacks", campaign_id: me.campaign_id, list_id: me.list_id},
         function(data)
         {
             var options = "";
+            var exists = false;
+
             $.each(data, function()
             {
                 if (this.status == me.feedback)
+                {
                     options += "<option data-sale=" + this.sale + " selected value=" + this.status + ">" + this.status_name + "</option>";
+                    exists = true;
+                }
                 else
                     options += "<option data-sale=" + this.sale + " value=" + this.status + ">" + this.status_name + "</option>";
             });
+
+            if (!exists)
+                options += "<option data-sale=" + me.feedback + " selected value=" + me.feedback + ">" + me.feedback + "</option>";
+
 
             crm_edit_zone.find("#feedback_list").append(options);
             if (crm_edit_zone.find("#feedback_list option:selected").data("sale") == "Y" && me.user_level > 5)
@@ -286,17 +311,18 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
             },
             "aoColumns": [{"sTitle": "Data"},
                 {"sTitle": "Duração"},
-                {"sTitle": "Tempo em Espera"},
-                {"sTitle": "Posição fila espera"},
-                {"sTitle": "Motivo de fim de chamada"},
+                {"sTitle": "Fila de espera <i class='icon-question-sign tooltip_chamadas'   data-toggle='tooltip' data-placement='top' title='' data-original-title='Tempo e posição em fila de espera' ></i> "},
+                {"sTitle": "M.F.C <i class='icon-question-sign tooltip_chamadas'   data-toggle='tooltip' data-placement='top' title='' data-original-title='Motivo de Fim de Chamada' ></i> "},
                 {"sTitle": "Número"},
                 {"sTitle": "Operador"},
                 {"sTitle": "Feedback"},
-                {"sTitle": "Campanha"},
+                {"sTitle": "Camp/L.Inb <i class='icon-question-sign tooltip_chamadas'   data-toggle='tooltip' data-placement='top' title='' data-original-title='Campanha/ Linha de inbound' ></i>"},
                 {"sTitle": "Base de Dados"},
-                {"sTitle": "Linha de Inbound"},
                 {"sTitle": "Tipo"},
                 {"sTitle": "In/Out"}],
+            "fnDrawCallback": function(oSettings, json) {
+                $('.tooltip_chamadas').tooltip();
+            },
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 
@@ -311,7 +337,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     function get_recordings(callback)
     {
         var Table_recording = crm_edit_zone.find('#table_recording').dataTable({
-            "aaSorting": [[0, "desc"]],
+            "aaSorting": [[0, "desc"], [2, "desc"]],
             "bSortClasses": false,
             "bProcessing": true,
             "bDestroy": true,
@@ -407,4 +433,6 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         }
         return count;
     };
+
+
 }

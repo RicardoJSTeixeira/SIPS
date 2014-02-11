@@ -80,13 +80,19 @@ function FieldsListBuilder($CampaignID, $AllFields, $FieldID, $FieldDisplayName,
 
         $query = mysql_query("SELECT Display_name FROM vicidial_list_ref WHERE Display_name COLLATE utf8_bin = '$FieldDisplayName' AND campaign_id = '$CampaignID'", $link) or die(mysql_error());
         if (mysql_num_rows($query) == 0) {
-            mysql_query("UPDATE vicidial_list_ref SET field_order = field_order+1 WHERE campaign_id='$CampaignID' AND field_order > 0") or die(mysql_error());
-            mysql_query("UPDATE vicidial_list_ref SET Display_name='$FieldDisplayName', readonly='$FieldReadOnly', active=1, campaign_id='$CampaignID', field_order=1 WHERE campaign_ID='$CampaignID' AND Name='$FieldID'") or die(mysql_error());
-            mysql_query("UPDATE sips_campaign_stats SET dynamic_fields = dynamic_fields + 1 WHERE campaign_id='$CampaignID'") or die(mysql_query());
-            $js['name'][] = $FieldID;
-            $js['displayname'][] = $FieldDisplayName;
-            $js['readonly'][] = $FieldReadOnly;
-            $js['order'][] = 1;
+            $query = mysql_query("SELECT count(*) livres FROM vicidial_list_ref WHERE campaign_id = '$CampaignID' and active=0", $link) or die(mysql_error());
+            $row = mysql_fetch_assoc($query);
+            if (($row["livres"]-8)>0) {
+                mysql_query("UPDATE vicidial_list_ref SET field_order = field_order+1 WHERE campaign_id='$CampaignID' AND field_order > 0") or die(mysql_error());
+                mysql_query("UPDATE vicidial_list_ref SET Display_name='$FieldDisplayName', readonly='$FieldReadOnly', active=1, campaign_id='$CampaignID', field_order=1 WHERE campaign_ID='$CampaignID' AND Name='$FieldID'") or die(mysql_error());
+                mysql_query("UPDATE sips_campaign_stats SET dynamic_fields = dynamic_fields + 1 WHERE campaign_id='$CampaignID'") or die(mysql_query());
+                $js['name'][] = $FieldID;
+                $js['displayname'][] = $FieldDisplayName;
+                $js['readonly'][] = $FieldReadOnly;
+                $js['order'][] = 1;
+            } else {
+                $js['full'] = "error";
+            }
         } else {
             $js['duplicate'] = "error";
         }

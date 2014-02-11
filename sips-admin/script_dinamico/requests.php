@@ -27,9 +27,7 @@ switch ($action) {
     //------------------------------------------------//    
     //---------------------GET------------------------//  
     //------------------------------------------------//
-    case "get_feedbacks":
-        echo json_encode($script->get_feedbacks());
-        break;
+
 
     case "get_schedule":
         echo json_encode($script->get_schedule($user->user_group));
@@ -44,7 +42,7 @@ switch ($action) {
         break;
 
     case "get_client_info_by_lead_id":
-        echo json_encode($script->get_client_info_by_lead_id($lead_id, $user->getUser($user_logged)));
+        echo json_encode($script->get_client_info_by_lead_id($lead_id, $user->full_name));
         break;
 
     case "get_tag_fields":
@@ -68,7 +66,7 @@ switch ($action) {
         break;
 
     case "get_results_to_populate":
-        echo json_encode($script->get_results_to_populate($lead_id, $id_script, $unique_id));
+        echo json_encode($script->get_results_to_populate($search_spice,$lead_id, $id_script, $unique_id));
         break;
 
     case "get_pages":
@@ -76,7 +74,7 @@ switch ($action) {
         break;
 
     case "get_data_render":
-        echo json_encode($script->get_data_render($id_script, $lead_id, $user->getUser($user_logged)));
+        echo json_encode($script->get_data_render($id_script, $lead_id, $user->full_name));
         break;
 
     case "get_data":
@@ -102,11 +100,7 @@ switch ($action) {
         echo json_encode($user_sibling->get_linha_inbound());
         break;
 
-    case 'check_duplicates_campaign_linha_inbound':
-        echo json_encode($script->check_duplicates_campaign_linha_inbound($campaign, $linha_inbound));
-        break;
-
-    case 'iscloud':
+     case 'iscloud':
         echo json_encode($script->iscloud());
         break;
 
@@ -188,7 +182,7 @@ switch ($action) {
     //-----------------FORM---------------------------//
     //------------------------------------------------//
     case "save_form_result":
-        $temp = json_encode($script->save_form_result($id_script, $results, $user_id, $unique_id, $campaign_id, $lead_id, $admin_review));
+        $temp = json_encode($script->save_form_result($save_overwrite, $id_script, $results, $user_id, $unique_id, $campaign_id, $lead_id, $admin_review));
         echo $temp;
         break;
 }

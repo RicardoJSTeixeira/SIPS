@@ -22,11 +22,11 @@ class user {
             $this->id = $username;
             $this->password = $password;
         }
-
         global $link;
         if ($this->id) {
+
             $query = mysql_query("Select a.user_group,full_name,user_level,allowed_campaigns,active,agent_fullscreen from vicidial_users a left join vicidial_user_groups b on a.user_group=b.user_group Where user='$this->id' AND pass='$this->password'") or die(mysql_error());
-            while ($row = mysql_fetch_assoc($query)) {
+            if ($row = mysql_fetch_assoc($query)) {
                 $this->full_name = $row["full_name"];
                 $this->active = $row["active"] == "Y";
                 $this->user_group = $row["user_group"];
@@ -36,9 +36,12 @@ class user {
                 $this->allowed_campaigns = explode(" ", trim(rtrim($this->allowed_campaigns_raw, " -")));
                 $this->is_script_dinamico = $row["agent_fullscreen"] == "Y";
                 $this->ip = get_client_ip();
+            } else {
+                $this->id = false;
             }
         }
     }
+
 }
 
 function get_client_ip() {
@@ -244,9 +247,7 @@ class users extends user {
     }
 
     public function newUser($username, $password, $user_group, $name = "") {
-
         global $link;
-
         $query = "INSERT INTO vicidial_users (
 	user,
 	pass,
@@ -272,18 +273,14 @@ class users extends user {
     }
 
     public function newUserGroup($user_group, $group_name) {
-
         global $link;
-
         $query = "INSERT INTO vicidial_user_groups(user_group,group_name,allowed_campaigns) values('$user_group','$group_name',' -');";
         mysql_query($query) or die(mysql_error());
         return true;
     }
 
     public function getUser($username) {
-
         global $link;
-
         $query = "Select a.user_group,full_name,user_level,allowed_campaigns,active from vicidial_users a left join vicidial_user_groups b on a.user_group=b.user_group Where user='$username'";
         $result = mysql_query($query) or die(mysql_error());
         while ($row = mysql_fetch_assoc($result)) {
@@ -293,9 +290,7 @@ class users extends user {
     }
 
     public function isAdminPass($pass) {
-
         global $link;
-
         $query = "Select count(*) from vicidial_users where pass='" . mysql_real_escape_string($pass) . "'";
         $result = mysql_query($query) or die(mysql_error());
         $row = mysql_fetch_row($result);
@@ -337,7 +332,6 @@ class mysiblings extends user {
     }
 
     public function get_campaigns() {
-
         if ($this->is_all_campaigns == 1)
             $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y'";
         else

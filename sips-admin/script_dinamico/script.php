@@ -10,16 +10,6 @@ class script {
 
 //GET
 
-    public function get_feedbacks() {
-        $js = array();
-        $query = ("select status,status_name from((SELECT status,status_name FROM vicidial_campaign_statuses ) union all (SELECT status, status_name FROM vicidial_statuses)) a  group by status order by status_name asc");
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $js[] = array("status" => $row["status"], "status_name" => $row["status_name"]);
-        }
-        return $js;
-    }
 
     public function get_schedule($user_group) {
         $js = array();
@@ -54,21 +44,30 @@ class script {
         return $js;
     }
 
-    public function get_client_info_by_lead_id($lead_id, $user_logged) {
+    public function get_client_info_by_lead_id($lead_id, $operador) {
         $js = array();
-        $query = "SELECT * from vicidial_list where lead_id=:lead_id";
+        $query = "SELECT `phone_number`, `title`, `first_name`, `middle_initial`, `last_name`, `address1`, `address2`, `address3`, `city`, `state`, `province`, `postal_code`, `country_code`, `date_of_birth`, `alt_phone`, `email`, `security_phrase`, `comments`,`rank`, `owner`,`extra1`, `extra2`, `extra3`, `extra4`, `extra5`, `extra6`, `extra7`, `extra8`, `extra9`, `extra10`, `extra11`, `extra12`, `extra13`, `extra14`, `extra15` from vicidial_list where lead_id=:lead_id";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $row["nome_operador"] = $user_logged["full_name"];
+            $row["nome_operador"] = $operador;
             $js = $row;
         }
         return $js;
     }
 
     public function get_tag_fields($id_script) {
-        $js = array();
         $campaigns = array();
+        //CAMPOS DEFAULT
+        $dfields[] = array("campaign_name" => "Campos Gerais", "display_name" => "Nome do Operador", "name" => "NOME_OPERADOR");
+        $dfields[] = array("campaign_name" => "Campos Gerais", "display_name" => "Nome", "name" => "FIRST_NAME");
+        $dfields[] = array("campaign_name" => "Campos Gerais", "display_name" => "Telefone", "name" => "PHONE_NUMBER");
+        $dfields[] = array("campaign_name" => "Campos Gerais", "display_name" => "Telemóvel", "name" => "ADDRESS3");
+        $dfields[] = array("campaign_name" => "Campos Gerais", "display_name" => "Telefone Alternativo", "name" => "ALT_PHONE");
+        $dfields[] = array("campaign_name" => "Campos Gerais", "display_name" => "Morada", "name" => "ADDRESS1");
+        $dfields[] = array("campaign_name" => "Campos Gerais", "display_name" => "Código Postal", "name" => "POSTAL_CODE");
+        $dfields[] = array("campaign_name" => "Campos Gerais", "display_name" => "E-mail", "name" => "EMAIL");
+        $dfields[] = array("campaign_name" => "Campos Gerais", "display_name" => "Comentários", "name" => "COMMENTS");
         $query = "SELECT id_camp_linha FROM script_assoc where id_script=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
@@ -76,25 +75,24 @@ class script {
             $campaigns[] = $row["id_camp_linha"];
         }
         foreach ($campaigns as $value) {
-            $query = "Select campaign_name from vicidial_campaigns where campaign_id = :campaign_id";
+            $query = "Select campaign_name,campaign_id from vicidial_campaigns where campaign_id = :campaign_id";
             $stmt = $this->db->prepare($query);
             $stmt->execute(array(":campaign_id" => $value));
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            $js[$value]["text"] = $row['campaign_name'];
-            $query1 = "SELECT indice,Name,Display_name FROM `vicidial_list_ref`  where campaign_id =:campaign_id and active='1'  GROUP BY name";
-            $stmt1 = $this->db->prepare($query1);
-            $stmt1->execute(array(":campaign_id" => $value));
-            $js[$value]["lista"] = array();
-            while ($row = $stmt1->fetch(PDO::FETCH_ASSOC)) {
-                $js[$value]["lista"][] = array("id" => $row["indice"], "value" => $row["Name"], "name" => $row["Display_name"]);
+
+            $query = "SELECT Name,Display_name   FROM vicidial_list_ref WHERE campaign_id=:campaign_id AND active=1 Order by field_order ASC";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute(array(":campaign_id" => $value));
+            while ($row1 = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $dfields[] = array("campaign_name" => $row["campaign_name"], "campaign_id" => $row["campaign_id"], "display_name" => $row1["Display_name"], "name" => $row1["Name"]);
             }
         }
-        return $js;
+        return $dfields;
     }
 
     public function get_camp_linha_by_id_script() {
         $js = array();
-        $query = "SELECT * FROM script_assoc ";
+        $query = "SELECT id_script,id_camp_linha,tipo  FROM script_assoc ";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -133,7 +131,7 @@ class script {
 
     public function get_scripts_by_id_script($id_script) {
         $js = array();
-        $query = "SELECT * FROM script_dinamico_master where id=:id_script";
+        $query = "SELECT id,name FROM script_dinamico_master where id=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -142,7 +140,7 @@ class script {
         return $js;
     }
 
-    public function get_results_to_populate($lead_id, $id_script, $unique_id) {
+    public function get_results_to_populate($search_spice, $lead_id, $id_script, $unique_id) {
         $js = array();
 
         if (isset($unique_id)) {
@@ -150,9 +148,15 @@ class script {
             $stmt = $this->db->prepare($query);
             $stmt->execute(array($lead_id, $id_script, $unique_id));
         } else {
-            $query = "SELECT b.id_script,a.lead_id,a.tag_elemento,a.valor,b.type,a.param_1 FROM script_result a inner join script_dinamico b on a.tag_elemento=b.tag  where a.lead_id=? and b.id_script=? and a.unique_id= (select max(unique_id) from script_result where lead_id=?) ";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute(array($lead_id, $id_script, $lead_id));
+            if ($search_spice == true) {
+                $query = "SELECT b.id_script,a.lead_id,a.tag_elemento,a.valor,b.type,a.param_1 FROM script_result a inner join script_dinamico b on a.tag_elemento=b.tag  where a.lead_id=? and b.id_script=? and a.unique_id= 0 ";
+                $stmt = $this->db->prepare($query);
+                $stmt->execute(array($lead_id, $id_script));
+            } else {
+                $query = "SELECT b.id_script,a.lead_id,a.tag_elemento,a.valor,b.type,a.param_1 FROM script_result a inner join script_dinamico b on a.tag_elemento=b.tag  where a.lead_id=? and b.id_script=? and a.unique_id= (select max(unique_id) from script_result where lead_id=?) ";
+                $stmt = $this->db->prepare($query);
+                $stmt->execute(array($lead_id, $id_script, $lead_id));
+            }
         }
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -180,15 +184,15 @@ class script {
         return $js;
     }
 
-    public function get_data_render($id_script, $lead_id, $user_group) {
+    public function get_data_render($id_script, $lead_id, $operador) {
         $js = array();
         $client_info = array();
         if (isset($lead_id)) {
-            $query = "SELECT * from vicidial_list where lead_id=:lead_id";
+            $query = "SELECT `phone_number`, `title`, `first_name`, `middle_initial`, `last_name`, `address1`, `address2`, `address3`, `city`, `state`, `province`, `postal_code`, `country_code`, `date_of_birth`, `alt_phone`, `email`, `security_phrase`, `comments`,`rank`, `owner`,`extra1`, `extra2`, `extra3`, `extra4`, `extra5`, `extra6`, `extra7`, `extra8`, `extra9`, `extra10`, `extra11`, `extra12`, `extra13`, `extra14`, `extra15` from vicidial_list where lead_id=:lead_id";
             $stmt = $this->db->prepare($query);
             $stmt->execute(array(":lead_id" => $lead_id));
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $row["nome_operador"] = $user_logged["full_name"];
+                $row["nome_operador"] = $operador;
                 $client_info = $row;
             }
         }
@@ -253,7 +257,7 @@ class script {
                     $row["values_text"] = json_encode($values_text);
                 }
             }
-            $js[] = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "default_value" => $row["default_value"], "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
+            $js[] = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "default_value" => json_decode($row["default_value"]), "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
         }
         return $js;
     }
@@ -264,7 +268,7 @@ class script {
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script, ":id_page" => $id_page));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $js[] = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "default_value" => $row["default_value"], "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
+            $js[] = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "default_value" => json_decode($row["default_value"]), "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
         }
         return $js;
     }
@@ -275,7 +279,7 @@ class script {
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $js = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "default_value" => $row["default_value"], "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
+        $js = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "default_value" => json_decode($row["default_value"]), "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
         return $js;
     }
 
@@ -334,7 +338,8 @@ class script {
                 } else {
                     $temp_ext = "image";
                 }
-                $js[] = array("type" => $temp_ext, "value" => $file);
+                if ($file != "dummy.gitignore")
+                    $js[] = array("type" => $temp_ext, "value" => $file);
             }
         }
 
@@ -393,43 +398,43 @@ class script {
         $stmt->execute(array(":id_script" => $id_script, ":old_pos" => $old_pos, ":new_pos" => $new_pos));
         $query = "update script_dinamico_pages set name=:name,pos=:new_pos where id=:id_pagina";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":id_pagina" => $id_pagina, ":name" => $name, ":new_pos" => $new_pos));
-        return 1;
+
+        return $stmt->execute(array(":id_pagina" => $id_pagina, ":name" => $name, ":new_pos" => $new_pos));
     }
 
     public function edit_item($id_script, $id_page, $type, $ordem, $dispo, $texto, $placeholder, $max_length, $values_text, $default_value, $required, $hidden, $param1, $id) {
         $values_text = (!isset($values_text)) ? array() : $values_text;
         $query = "UPDATE script_dinamico SET id_script=?,id_page=?,type=?,ordem=?,dispo=?,texto=?,placeholder=?,max_length=?,values_text=?,default_value=?,required=?,hidden=?,param1=? WHERE id=?";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array($id_script, $id_page, $type, $ordem, $dispo, $texto, json_encode($placeholder), $max_length, json_encode($values_text), $default_value, $required, $hidden, $param1, $id));
-        return 1;
+
+        return $stmt->execute(array($id_script, $id_page, $type, $ordem, $dispo, $texto, json_encode($placeholder), $max_length, json_encode($values_text), json_encode($default_value), $required, $hidden, $param1, $id));
     }
 
     public function edit_item_order($ordem, $id) {
         $query = "UPDATE script_dinamico SET ordem=:ordem WHERE id=:id";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":ordem" => $ordem, ":id" => $id));
-        return 1;
+
+        return $stmt->execute(array(":ordem" => $ordem, ":id" => $id));
     }
 
 //  ADD
 
     public function add_page($id_script, $pos) {
-        $query = "INSERT INTO `asterisk`.`script_dinamico_pages` (id,id_script,name,pos) VALUES (NULL,:id_script,'Página nova',:pos)";
+        $query = "INSERT INTO `script_dinamico_pages` (id,id_script,name,pos) VALUES (NULL,:id_script,'Página nova',:pos)";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":id_script" => $id_script, ":pos" => $pos));
-        return 1;
+
+        return $stmt->execute(array(":id_script" => $id_script, ":pos" => $pos));
     }
 
     public function add_script($user_group) {
-        $query = "INSERT INTO `asterisk`.`script_dinamico_master` (id,name,user_group) VALUES (NULL,'Script novo',?)";
+        $query = "INSERT INTO `script_dinamico_master` (id,name,user_group) VALUES (NULL,'Script novo',?)";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($user_group));
 
-        $query = "INSERT INTO `asterisk`.`script_dinamico_pages` (id,id_script,name,pos) VALUES (NULL,?,'Página nova','1')";
+        $query = "INSERT INTO`script_dinamico_pages` (id,id_script,name,pos) VALUES (NULL,?,'Página nova','1')";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array($this->db->lastInsertId()));
-        return 1;
+
+        return $stmt->execute(array($this->db->lastInsertId()));
     }
 
     public function add_item($id_page, $id_script, $type, $ordem, $dispo, $texto, $placeholder, $max_length, $values_text, $default_value, $required, $hidden, $param1) {
@@ -448,14 +453,13 @@ class script {
         $query = "INSERT INTO script_dinamico (`id`, `tag`, `id_script`, `id_page`, `type`, `ordem`, `dispo`, `texto`, `placeholder`, `max_length`, `values_text`, `default_value`, `required`, `hidden`, `param1`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $stmt = $this->db->prepare($query);
 
-        $stmt->execute(array("NULL", $tag, $id_script, $id_page, $type, $ordem, $dispo, $texto, json_encode($placeholder), $max_length, json_encode($values_text), $default_value, $required, $hidden, $param1));
-        return 1;
+
+        return $stmt->execute(array("NULL", $tag, $id_script, $id_page, $type, $ordem, $dispo, $texto, json_encode($placeholder), $max_length, json_encode($values_text), json_encode($default_value), $required, $hidden, $param1));
     }
 
     public function add_rules($tag_trigger2, $tag_trigger, $tag_target, $id_script, $tipo_elemento, $tipo, $param1, $param2) {
-        $js = array();
         if (!empty($tag_trigger2) && !empty($tag_target)) {
-            $query = "INSERT INTO `asterisk`.`script_rules` (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) VALUES (?,?,?,?,?,?,?,?,?)";
+            $query = "INSERT INTO `script_rules` (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) VALUES (?,?,?,?,?,?,?,?,?)";
             $stmt = $this->db->prepare($query);
             $stmt->execute(array("NULL", $id_script, $tipo_elemento, $tag_trigger, json_encode($tag_trigger2), json_encode($tag_target), $tipo, $param1, json_encode($param2)));
         }
@@ -477,9 +481,6 @@ class script {
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 //pages
-
-
-
             $query1 = "INSERT INTO script_dinamico_pages (`id_script`,`name`,`pos`) values(?,?,?)";
             $stmt1 = $this->db->prepare($query1);
             $stmt1->execute(array($temp_script_id, $row['name'], $row['pos']));
@@ -574,17 +575,13 @@ class script {
     public function delete_rule($id) {
         $query = "delete from script_rules  where id=:id";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":id" => $id));
-        return 1;
+
+        return $stmt->execute(array(":id" => $id));
     }
 
     // FORM
-
-    public function save_form_result($id_script, $results, $user_id, $unique_id, $campaign_id, $lead_id, $admin_review) {
+    public function save_form_result($save_overwrite, $id_script, $results, $user_id, $unique_id, $campaign_id, $lead_id, $admin_review) {
         $sql = array();
-
-
-
         foreach ($results as $row) {
             if ($row['value'] != "") {
                 $temp = explode(",", $row['name']);
@@ -595,14 +592,17 @@ class script {
                 }
             }
         }
-
         if (count($sql)) {
             if ($admin_review == "1") {
                 $query = "Delete from script_result where unique_id=:unique_id and lead_id=:lead_id";
                 $stmt = $this->db->prepare($query);
                 $stmt->execute(array(":unique_id" => $unique_id, ":lead_id" => $lead_id));
             }
-
+            if ($save_overwrite == true) {
+                $query = "Delete from script_result where unique_id=:unique_id and lead_id=:lead_id";
+                $stmt = $this->db->prepare($query);
+                $stmt->execute(array(":unique_id" => 0, ":lead_id" => $lead_id));
+            }
 
             $query = "INSERT INTO `script_result`(`date`,`id_script`,`user_id`,`unique_id`,`campaign_id`,`lead_id`, `tag_elemento`, `valor`,`param_1`) VALUES  " . implode(',', $sql);
             $stmt = $this->db->prepare($query);
