@@ -1,15 +1,6 @@
 
 $(function() {
 
-    function getUrlVars() {
-        var vars = {};
-        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
-            vars[key] = value;
-        });
-        return vars;
-    }
-
-
 
     $('#downloadTemplate').click(function() {
 
@@ -20,7 +11,8 @@ $(function() {
     });
 
 
-    $.post("../constructor.php", {action: 'getTemplateList'}, function(data) {
+
+    $.post("../constructor.php", {action: 'getTemplateListUser'}, function(data) {
 
         var options = [];
         $.each(data, function() {
@@ -30,12 +22,8 @@ $(function() {
         });
 
         $("#selectTemplateList").append(options).trigger("chosen:updated");
-        $('#selectTemplateList').val(getUrlVars().templateId);
-        $('#selectTemplateList').change();
 
     }, 'json');
-
-    //console.log(getUrlVars().templateId);
 
     function graphConstruct(data, selector, name) {
 
@@ -48,7 +36,7 @@ $(function() {
                     "data": data}
             ]
         };
-     
+
         return new xChart("bar", obj, selector);
 
     }
@@ -64,11 +52,7 @@ $(function() {
         }, 'json');
 
     });
-    
-    //.append($("<div>"),{class:"btn btn-large btn-inverse"})
-    /* $.getJSON('../rphandle.json', function(data) {
-     console.log(data);
-     });*/
+
 
     function browserPreview(data) {
 
@@ -129,7 +113,7 @@ $(function() {
             $.each(this.values, function() {
                 //array que esta a ser feito o push(inserção de informação) com nome e o valor de cada objecto do array
                 if (this.value == 'n/a') {
-                    this.value=0;
+                    this.value = 0;
                 }
                 graph.push({"x": this.name.substring(0, 12) + "...", "y": this.value});
 
@@ -139,7 +123,7 @@ $(function() {
                         // nome do objecto
                         .append(
                                 $("<span>", {class: "number"}).append(this.value))// valor desse objecto
-                        .append(":" + this.name)
+                        .append($('<b>').append(":" + this.name))
                         );
             });
 

@@ -49,7 +49,7 @@ switch ($action) {
         echo json_encode(saveTemplate($db, $users, $name, (object) $dateRange, $type, json_decode($typeId), json_decode($template)));
         break;
     case 'editTemplate':
-        echo json_encode(editTemplate($db, $users, $name, (object) $dateRange, $type, json_decode($typeId), json_decode($template), $templateId));
+        echo json_encode(editTemplate($db, $users, (object) $dateRange, $type, json_decode($typeId), json_decode($template), $templateId));
         break;
     case 'constructPreview':
         echo json_encode(constructPreview($db, $templateId, $cabiType));
@@ -66,8 +66,11 @@ switch ($action) {
     case'getTemplatecampaignName':
         echo json_encode(getTemplatecampaignName($db, $idSeries));
         break;
-     case'getTemplatelistName':
+    case'getTemplatelistName':
         echo json_encode(getTemplatelistName($db, $idSeries));
+        break;
+    case'getTemplateListUser':
+        echo json_encode(getTemplateListUser($db, $user));
         break;
     default:
         break;
@@ -92,12 +95,12 @@ function saveTemplate($db, $users, $name, $dateRange, $type, $typeId, $template)
     return $templateId;
 }
 
-function editTemplate($db, $users, $name, $dateRange, $type, $typeId, $template, $templateId) {
+function editTemplate($db, $users, $dateRange, $type, $typeId, $template, $templateId) {
 
-    $querySaveTemplate = "UPDATE `report_template` SET `name`=:name,`start`=:start,`end`=:end,`tipo`=:tipo,`tipo_id`=:tipo_id,`template`=:template WHERE `id_template`=:id";
+    $querySaveTemplate = "UPDATE `report_template` SET `start`=:start,`end`=:end,`tipo`=:tipo,`tipo_id`=:tipo_id,`template`=:template WHERE `id_template`=:id";
 
     $stmt = $db->prepare($querySaveTemplate);
-    $stmt->execute(array(":name" => $name, ":start" => $dateRange->start, ":end" => $dateRange->end, ":tipo" => $type, ":tipo_id" => json_encode($typeId), ":template" => json_encode($template), ":id" => $templateId));
+    $stmt->execute(array(":start" => $dateRange->start, ":end" => $dateRange->end, ":tipo" => $type, ":tipo_id" => json_encode($typeId), ":template" => json_encode($template), ":id" => $templateId));
 
 
     $queryDeletUsers = "DELETE FROM `report_template_users` WHERE `id_template`=:id";
@@ -121,6 +124,15 @@ function editTemplate($db, $users, $name, $dateRange, $type, $typeId, $template,
 function getTemplateList($db) {
 
     $query = "SELECT id_template,name FROM report_template";
+
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getTemplateListUser($db, $user) {
+
+    $query = "SELECT b.* FROM `report_template_users` a right join `report_template` b on a.id_template=b.id_template WHERE `user`='$user->id'";
 
     $stmt = $db->prepare($query);
     $stmt->execute();
@@ -165,7 +177,68 @@ function deleteTemplate($db, $templateId) {
     return true;
 }
 
-function constructPreview($db, $templateId, $cabiType) {
+function templateDownload($db, $templateId) {
+
+    $template = getTemplate($db, $templateId);
+
+    $dataExcel = array();
+    $toExcel = new excelwraper(New PHPExcel(), 'Report', 18, 10);
+    ob_start();
+
+    $translate = array(
+        "list" => "database",
+        "campaign" => "campaign"
+    );
+
+    $templateTypo = $translate[$template['tipo']];
+
+
+
+    $campaignValues = array();
+
+
+    foreach ($template['tipo_id'] as $campaignId) {
+
+        $myMongoData = mongoDBData($campaignId, $templateTypo, $template['start'], $template['end']);
+
+        foreach ($myMongoData as $status) {
+
+            $campaignValues[$campaignId][$status->status] = array('length' => $status->length, 'calls' => $status->calls);
+        }
+    }
+
+
+
+
+    foreach ($template['template'] as $data) {
+
+        $dataExcel [] = array('Name', 'Total');
+
+
+        foreach ($data->children as $children) {
+            if (isset($campaignValues[$children->propertyOf][$children->status]["calls"])) {
+                $value = $campaignValues[$children->propertyOf][$children->status]["calls"];
+            } else {
+                $value = "n/a";
+            }
+
+            $dataExcel[] = array($children->text, $value);
+        }
+
+
+        $toExcel->maketable($dataExcel, TRUE, $data->text, NULL, NULL, 'chart2', 'r', 'bars', 'bars', TRUE, TRUE);
+        $dataExcel = array();
+    }
+
+    $toExcel->backGroundStyle('FFFFFF');
+
+    $toExcel->save('Report', TRUE);
+    ob_end_clean();
+
+    $toExcel->send();
+}
+
+function constructPreview($db, $templateId) {
 
     $template = getTemplate($db, $templateId);
 
@@ -173,6 +246,29 @@ function constructPreview($db, $templateId, $cabiType) {
 
     $myPreview = array();
     $temp = [];
+
+    $translate = array(
+        "list" => "database",
+        "campaign" => "campaign"
+    );
+
+    $templateTypo = $translate[$template['tipo']];
+
+
+
+    $campaignValues = array();
+
+
+    foreach ($template['tipo_id'] as $campaignId) {
+
+        $myMongoData = mongoDBData($campaignId, $templateTypo, $template['start'], $template['end']);
+
+        foreach ($myMongoData as $status) {
+
+            $campaignValues[$campaignId][$status->status] = array('length' => $status->length, 'calls' => $status->calls);
+        }
+    }
+
 
     foreach ($template['template']as $data) {
 
@@ -185,10 +281,16 @@ function constructPreview($db, $templateId, $cabiType) {
 
         foreach ($data->children as $children) {
 
+            if (isset($campaignValues[$children->propertyOf][$children->status]["calls"])) {
+                $value = $campaignValues[$children->propertyOf][$children->status]["calls"];
+            } else {
+                $value = "n/a";
+            }
+
 
             $temp['values'][] = array(
                 'name' => $children->text,
-                'value' => searchStatus($children->status, 'calls', $children->propertyOf, $template['tipo'], $template['start'], $template['end']),
+                'value' => $value,
                 'perc' => '',
             );
         }
@@ -198,59 +300,33 @@ function constructPreview($db, $templateId, $cabiType) {
     return $myPreview;
 }
 
-function templateDownload($db, $templateId) {
-
-    $template = getTemplate($db, $templateId);
-
-    $dataExcel = array();
-    $toExcel = new excelwraper(New PHPExcel(), 'Report', 18, 10);
-    ob_start();
-
-    foreach ($template['template'] as $data) {
-
-        $dataExcel [] = array('Name', 'Total', 'Perc');
-
-        foreach ($data->children as $children) {
-
-            $dataExcel[] = array($children->text, searchStatus($children->status, 'calls', $children->propertyOf, $template['tipo'], $template['start'], $template['end']), 'n/a');
-        }
-
-        $toExcel->maketable($dataExcel, TRUE, $data->text, NULL, NULL, 'chart2', 'r', 'bars', 'bars', TRUE, TRUE);
-        $dataExcel = array();
-    }
-    $toExcel->backGroundStyle('FFFFFF');
-
-    $toExcel->save('Report', TRUE);
-    ob_end_clean();
-
-    $toExcel->send();
-}
-
 //*cabi:campanha,Agentes,bds e inbounds
-function mongoDBData($cabiId, $cabiType, $dateStart, $dateEnd) {
+function mongoDBData($ownerId, $ownerType, $dateStart, $dateEnd) {
 ////////////!!!!!!!!!!!!!!!!!!!!!!!!!!!! ALTERAR !!!!!!!!!!!!!!!!!!!!
-    return file_get_contents("http://goviragem.dyndns.org:10000/ccstats/v0/total/calls/" . $dateStart . "T00:00/" . $dateEnd . "T00:00?$cabiType=$cabiId&by=status");
+    $result = file_get_contents("http://goviragem.dyndns.org:10000/ccstats/v0/total/calls/" . $dateStart . "T00:00/" . $dateEnd . "T00:00?$ownerType=$ownerId&by=status");
+    return json_decode($result);
 }
 
-function searchStatus($templateStatus, $dataType, $propertyOf, $templateTipo, $dateStart, $dateEnd) {
+/*
+  function searchStatus($templateStatus, $dataType, $propertyOf, $templateTipo, $dateStart, $dateEnd) {
 
-    if ($templateTipo =='list' ){
-        
-        $templateTipo= 'database';
-        
-    }
-    
-    $mongoData = json_decode(mongoDBData($propertyOf, $templateTipo, $dateStart, $dateEnd));
+  if ($templateTipo == 'list') {
 
-    foreach ($mongoData as $value) {
+  $templateTipo = 'database';
+  }
 
-        if ($templateStatus == $value->status) {
+  $mongoData = json_decode(mongoDBData($propertyOf, $templateTipo, $dateStart, $dateEnd));
 
-            return $value->$dataType;
-        }
-    }
-    return 'n/a';
-}
+  foreach ($mongoData as $value) {
+
+  if ($templateStatus == $value->status) {
+
+  return $value->$dataType;
+  }
+  }
+
+  return 'n/a';
+  } */
 
 ///////////////////////////////////////////////---------------------------------------------
 
@@ -295,11 +371,11 @@ function getTemplatecampaignName($db, $idSeries) {
     for ($index = 0; $index < count($idSeries); $index++) {
         $prepare_hack.="?,";
     }
-    
+
     $stmt = $db->prepare("SELECT campaign_id id,campaign_name name FROM `vicidial_campaigns` WHERE `campaign_id` IN (" . rtrim($prepare_hack, ",") . ");");
-    
+
     $stmt->execute($idSeries);
-    
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -308,10 +384,10 @@ function getTemplatelistName($db, $idSeries) {
     for ($index = 0; $index < count($idSeries); $index++) {
         $prepare_hack.="?,";
     }
-    
+
     $stmt = $db->prepare("SELECT `list_id` id,`list_name` name FROM `vicidial_lists` WHERE `list_id` IN (" . rtrim($prepare_hack, ",") . ");");
-    
+
     $stmt->execute($idSeries);
-    
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
