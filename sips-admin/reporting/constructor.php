@@ -276,7 +276,7 @@ function constructPreview($db, $templateId) {
             'name' => $data->text,
             'total' => '',
             'perc' => '',
-            'values' => []
+            'values' => array()
         );
 
         foreach ($data->children as $children) {
@@ -307,26 +307,7 @@ function mongoDBData($ownerId, $ownerType, $dateStart, $dateEnd) {
     return json_decode($result);
 }
 
-/*
-  function searchStatus($templateStatus, $dataType, $propertyOf, $templateTipo, $dateStart, $dateEnd) {
 
-  if ($templateTipo == 'list') {
-
-  $templateTipo = 'database';
-  }
-
-  $mongoData = json_decode(mongoDBData($propertyOf, $templateTipo, $dateStart, $dateEnd));
-
-  foreach ($mongoData as $value) {
-
-  if ($templateStatus == $value->status) {
-
-  return $value->$dataType;
-  }
-  }
-
-  return 'n/a';
-  } */
 
 ///////////////////////////////////////////////---------------------------------------------
 
