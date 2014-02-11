@@ -240,10 +240,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                 }
                 else
                 {
-                    dynamic_field += "     <input readonly type=text name='" + this.name + "' id='" + this.name + "'  value='" + this.value + "'>";
-                    dynamic_field += "   <span id=" + this.name + "></span>" +
-                            "   </div>" +
-                            "   </div>";
+                    dynamic_field += "     <input readonly type=text name='" + this.name + "' id='" + this.name + "'  value='" + this.value + "'></div></div>";
                 }
                 if (controler) {
                     controler = 0;
