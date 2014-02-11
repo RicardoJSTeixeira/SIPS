@@ -245,7 +245,7 @@ function constructPreview($db, $templateId) {
     $campaignId = $template['tipo_id'];
 
     $myPreview = array();
-    $temp = [];
+    $temp = array();
 
     $translate = array(
         "list" => "database",
