@@ -263,7 +263,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
 
     function get_feedbacks(callback)
     {
-        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_feedbacks", campaign_id: me.campaign_id, list_id:me.list_id},
+        $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_feedbacks", campaign_id: me.campaign_id, list_id: me.list_id},
         function(data)
         {
             var options = "";
@@ -311,8 +311,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
             },
             "aoColumns": [{"sTitle": "Data"},
                 {"sTitle": "Duração"},
-                {"sTitle": "Tempo em Espera"},
-                {"sTitle": "Posição fila espera"},
+                {"sTitle": "Fila de espera <i class='icon-question-sign tooltip_chamadas'   data-toggle='tooltip' data-placement='top' title='' data-original-title='Tempo e posição em fila de espera' ></i> "},
                 {"sTitle": "M.F.C <i class='icon-question-sign tooltip_chamadas'   data-toggle='tooltip' data-placement='top' title='' data-original-title='Motivo de Fim de Chamada' ></i> "},
                 {"sTitle": "Número"},
                 {"sTitle": "Operador"},
