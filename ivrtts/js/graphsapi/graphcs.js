@@ -160,7 +160,7 @@ var graph = function() {
             "mouseover": function(d, i) {
                 var pos = $(this).offset();
                 ($(this));
-                $(tt).text('[ Time : '+d.x + d.type + '] [' +d.label +' : ' + d.y+' ]')
+                $(tt).text(' Tempo : '+d.x + d.type + ' ' +d.label +' : ' + d.y+'  ')
                         .css({top: topOffset + pos.top, left: pos.left + leftOffset, zIndex: 1111})
                         .show();
             },

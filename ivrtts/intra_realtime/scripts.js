@@ -35,8 +35,8 @@ var dashboard = function() {
                     by = 'by_hour';
                     momentos = 'DD-hh';
                     mostring = ' Dia-Hora';
-                    $('#intervaloTotais').html('Dia Minutos [ DD-MM ]');
-                    $('#intervaloAVG').html('Dia Minutos [ DD-MM ]');
+                    $('#intervaloTotais').html('Dia Hora [ DD-HH ]');
+                    $('#intervaloAVG').html('Dia Hora [ DD-HH ]');
                 } else if (dias < 31) {
                     by = 'by_day';
                     end = end.substr(0, 11) + '00:00';
@@ -78,7 +78,7 @@ var dashboard = function() {
                             totalCalls.push({
                                 x: moment(this.stamp).format(momentos),
                                 y: this.calls,
-                                label: ' Calls',
+                                label: ' Chamadas',
                                 type: mostring
                             });
                             calls.push({
@@ -95,7 +95,7 @@ var dashboard = function() {
                                 totalMsg.push({
                                     x: moment(this.stamp).format(momentos),
                                     y: this.calls,
-                                    label: ' Calls',
+                                    label: ' Chamadas',
                                     type: mostring
                                 });
                                 msg.push({
@@ -111,7 +111,7 @@ var dashboard = function() {
                                     totalSys.push({
                                         x: moment(this.stamp).format(momentos),
                                         y: this.calls,
-                                        label: ' Calls',
+                                        label: ' Chamadas',
                                         type: mostring
                                     });
                                     timeSYS.push({
