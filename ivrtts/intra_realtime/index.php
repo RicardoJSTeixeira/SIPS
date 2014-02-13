@@ -27,7 +27,7 @@
 <div class="row-fluid">
     <div class="grid">
         <div class="grid-title">
-            <div class="pull-left">Media da Duração da Chamada em Minutos</div>
+            <div class="pull-left">Duração das Chamadas em Segundos</div>
             <div class="pull-right"></div>
             <div class="clear"></div>
         </div>
@@ -37,9 +37,9 @@
             </div>
              <div class="span2">
             <div class="grid">
-                <label class="label label-info" >Média Duração Chamada</label>
-                <label class="label label-success">Média Duração Mensagem</label>
-                <label class="label label-warning">Média Dur. Feedback de Sistema</label>
+                <label class="label label-info" >Duração Chamada</label>
+                <label class="label label-success">Duração Mensagem</label>
+                <label class="label label-warning">Dur. Feedback de Sistema</label>
             </div>
             <div class="grid">
                 <div class="grid-title"><div class="pull-left">Intervalo</div></div>

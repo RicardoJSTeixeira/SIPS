@@ -1,21 +1,24 @@
 var GetMongoInfo = function() {
 
-    var me = this,
+   var me = this,
             //domain = window.location.protocol + '//' + window.location.host,
+            //gonecomplus.dyndns.org
             domain = 'http://goviragem.dyndns.org',
             port = ':10000',
             prefix = '/ccstats/v0/',
             count = 'count/',
             sum = 'sum',
+            calls = '/calls/',
             callsSecond = '/calls/length_in_sec',
             startDate = '/calls/start_date',
             avg = 'avg',
             by = '?by=',
-            and = '&',
-            data = {'datatype': '', 'type': '', 'id': '', 'timeline': {'start': '', 'end': ''}, 'by': {'calls': [], 'filter': []}};
+            and = '&';
+
     this.creat = function(obj) {
-        options = obj;
-        $.extend(true,data, options);
+        var options = obj,
+                data = {'datatype': '', 'type': '', 'id': '', 'timeline': {'start': '', 'end': '', 'by': ''}, 'by': {'calls': [], 'filter': []}};
+        $.extend(true, data, options);
         switch (data.type) {
             case 'id':
                 {
@@ -25,7 +28,7 @@ var GetMongoInfo = function() {
             case 'datatype':
                 {
                     if (data.by.calls.length && !data.by.filter.length) {
-                        return domain + port + prefix + data.datatype + by + data.by.calls.join(',');
+                        return domain + port + prefix + data.datatype + '?' + data.by.calls.join(',');
                     } else if (data.by.calls.length && data.by.filter.length) {
                         return domain + port + prefix + data.datatype + by + data.by.calls.join(',') + and + data.by.filter.join('&');
                     } else {
@@ -36,7 +39,7 @@ var GetMongoInfo = function() {
             case 'sum':
                 {
                     if (data.by.calls.length && !data.by.filter.length) {
-                        return domain + port + prefix + sum + callsSecond + by + data.by.calls.join(',');
+                        return domain + port + prefix + sum+ '/' + data.datatype + by + data.by.calls.join(',');
                     } else if (data.by.calls.length && !data.by.filter.length) {
                         return domain + port + prefix + sum + callsSecond + by + data.by.calls.join(',') + and + data.by.filter.join('&');
                     } else {
@@ -48,7 +51,7 @@ var GetMongoInfo = function() {
                 {
                     if (data.by.calls.length && !data.by.filter.length) {
                         return domain + port + prefix + avg + callsSecond + by + data.by.calls.join(',');
-                    } else if (data.by.calls.length  && data.by.filter.length) {
+                    } else if (data.by.calls.length && data.by.filter.length) {
                         return domain + port + prefix + avg + callsSecond + by + data.by.calls.join(',') + and + data.by.filter.join('&');
                     } else {
                         return domain + port + prefix + avg + callsSecond;
@@ -59,7 +62,7 @@ var GetMongoInfo = function() {
                 {
                     if (data.by.calls.length && !data.by.filter.length) {
                         return domain + port + prefix + count + data.datatype + by + data.by.calls.join(',');
-                    } else if (data.by.calls.length  && data.by.filter.length ) {
+                    } else if (data.by.calls.length && data.by.filter.length) {
                         return domain + port + prefix + count + data.datatype + by + data.by.calls.join(',') + and + data.by.filter.join('&');
                     } else {
                         return domain + port + prefix + count + data.datatype;
@@ -71,7 +74,7 @@ var GetMongoInfo = function() {
             case 'min,max':
                 {
 
-                    if (data.by.calls.length  && !data.by.filter.length ) {
+                    if (data.by.calls.length && !data.by.filter.length) {
                         return domain + port + prefix + data.type + startDate + by + data.by.calls.join(',');
                         break;
                     } else if (data.by.calls.length && data.by.filter.length) {
@@ -83,15 +86,46 @@ var GetMongoInfo = function() {
                     }
                     break;
                 }
+            case 'timeline':
+                {
+                    if (data.by.calls.length && !data.by.filter.length) {
+                        return domain + port + prefix + data.type + '/' + data.datatype + '/' + data.timeline.by + '/' + data.timeline.start + '/' + data.timeline.end + '?' + data.by.calls.join(',');
+                        break;
+                    } else if (data.by.calls.length && data.by.filter.length) {
+                        return domain + port + prefix + data.type + '/' + data.datatype + '/' + data.timeline.by + '/' + data.timeline.start + '/' + data.timeline.end + '?' + data.by.calls.join(',') + and + data.by.filter.join('&');
+                        break;
+                    }else{
+                        return domain+ port + prefix+ data.type +'/'+ data.datatype+'/'+data.timeline.by+ '/'+ data.timeline.start+'/'+data.timeline.end;
+                        break;
+                    }
+                    break;
+                }
+            case 'total':
+                {
+                    if (data.by.calls.length && !data.by.filter.length) {
+                        return domain + port + prefix + data.type + '/' + data.datatype + '/' + data.timeline.start + '/' + data.timeline.end + '?' + data.by.calls.join(',');
+                        break;
+                    } else if (data.by.calls.length && data.by.filter.length) {
+                        return domain + port + prefix + data.type + '/' + data.datatype + '/' + data.timeline.start + '/' + data.timeline.end + '?' + data.by.calls.join(',') + and + data.by.filter.join('&');
+                        break;
+                    } else {
+                        return domain + port + prefix + data.type + '/' + data.datatype + '/' + data.timeline.start + '/' + data.timeline.end;
+                        break;
+                    }
+                    break;
+                }
         }
     };
     this.get = function(obj, callback) {
         if (me.creat(obj) === false) {
-            console.log('Api Error: Call error!!');
+            console.log('Mongo Method: Call error!!');
         } else {
+            $.ajaxSetup({cache: true});
+            console.log(me.creat(obj));
             $.getJSON(me.creat(obj), function(data) {
                 callback(data);
             });
+            $.ajaxSetup({cache: false});
         }
     };
 };
