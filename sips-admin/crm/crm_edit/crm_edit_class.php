@@ -154,11 +154,11 @@ class crm_edit_class {
 
     public function get_feedbacks($campaign_id, $list_id) {
 
-         $feedback_options = array();
-       //FEEDBACKS DE SISTEMA
+        $feedback_options = array();
+        //FEEDBACKS DE SISTEMA
         $query = "SELECT status,status_name,sale FROM vicidial_statuses";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(); 
+        $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
             $feedback_options [] = array("status" => $row["status"], "status_name" => $row["status_name"], "sale" => $row["sale"]);
@@ -193,8 +193,7 @@ class crm_edit_class {
         $query = "SELECT
                         vl.call_date AS data,
                         vl.length_in_sec,
-                        'Sem tempo de espera' as queue_seconds,
-                        'Sem fila de espera' as queue_position,
+                        'N/A' as queue,
                         vl.term_reason,
                         vl.phone_number,
                         vu.full_name,
@@ -203,7 +202,6 @@ class crm_edit_class {
                         vls.list_name,
                         vl.comments,
                         '-------------' as type,
-                        
                         vl.uniqueid as uniqueid,
                         vl.campaign_id as campaign_id
                 FROM 
@@ -220,14 +218,13 @@ class crm_edit_class {
         $stmt->execute(array(":lead_id" => $lead_id));
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[11] = "Outbound";
+            $row[10] = "Outbound";
             $output[] = $row;
         }
         $query = "SELECT
                         vl.call_date AS data,
                         vl.length_in_sec,
-                        'Sem tempo de espera' as queue_seconds,
-                        'Sem fila de espera' as queue_position,
+                        'N/A' as queue,
                         vl.term_reason,
                         vl.phone_number,
                         vu.full_name,
@@ -236,7 +233,6 @@ class crm_edit_class {
                         vls.list_name,
                         vl.comments,
                         '-------------' as type,
-                        
                         vl.uniqueid as uniqueid,
                         vl.campaign_id as campaign_id
                 FROM 
@@ -253,7 +249,7 @@ class crm_edit_class {
         $stmt->execute(array(":lead_id" => $lead_id));
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[11] = "Outbound";
+            $row[10] = "Outbound";
             $output[] = $row;
         }
         //REMOVE DUPLICATES
@@ -271,8 +267,7 @@ class crm_edit_class {
         $query = "SELECT
                         vcl.call_date AS data,
                         vcl.length_in_sec,
-                        vcl.queue_seconds as queue_seconds,
-                        vcl.queue_position,
+                        vcl.queue_seconds as queue,
                         vcl.term_reason,
                         vcl.phone_number,
                         vu.full_name,
@@ -282,7 +277,8 @@ class crm_edit_class {
                         vcl.comments,
                         '-------------' as type,
                         vcl.uniqueid as uniqueid,
-                        vcl.campaign_id as campaign_id
+                        vcl.campaign_id as campaign_id,
+                         vcl.queue_position
                 FROM 
                         vicidial_closer_log vcl
                         
@@ -295,14 +291,13 @@ class crm_edit_class {
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[11] = "Inbound";
+            $row[10] = "Inbound";
             $output[] = $row;
         }
         $query = "SELECT
                         vcl.call_date AS data,
                         vcl.length_in_sec,
-                        vcl.queue_seconds as queue_seconds,
-                        vcl.queue_position,
+                        vcl.queue_seconds as queue,
                         vcl.term_reason,
                         vcl.phone_number,
                         vu.full_name,
@@ -312,7 +307,8 @@ class crm_edit_class {
                         vcl.comments,
                         '-------------' as type,
                         vcl.uniqueid as uniqueid,
-                        vcl.campaign_id as campaign_id
+                        vcl.campaign_id as campaign_id,
+                        vcl.queue_position
                 FROM 
                         vicidial_closer_log_archive vcl
                         
@@ -325,7 +321,7 @@ class crm_edit_class {
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[11] = "Inbound";
+            $row[10] = "Inbound";
             $output[] = $row;
         }
 

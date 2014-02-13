@@ -46,17 +46,27 @@ class crm_main_class {
     }
 
     function get_last_call($lead_id) {
-        $query = "select * from (SELECT vl.call_date,vl.uniqueid FROM `vicidial_log` vl where vl.lead_id=?
+        $query = "select * from (SELECT vl.call_date,vl.uniqueid,vl.status FROM `vicidial_log` vl where vl.lead_id=?
                 union all
-                SELECT vla.call_date,vla.uniqueid FROM `vicidial_log_archive` vla where vla.lead_id=?
+                SELECT vla.call_date,vla.uniqueid,vla.status FROM `vicidial_log_archive` vla where vla.lead_id=?
                 union all
-                SELECT vcl.call_date,vcl.uniqueid FROM `vicidial_closer_log` vcl where vcl.lead_id=?
+                SELECT vcl.call_date,vcl.uniqueid,vcl.status FROM `vicidial_closer_log` vcl where vcl.lead_id=?
                 union all
-                SELECT vcla.call_date,vcla.uniqueid FROM `vicidial_closer_log_archive` vcla where vcla.lead_id=?) calls order by calls.call_date desc limit 1";
+                SELECT vcla.call_date,vcla.uniqueid,vcla.status FROM `vicidial_closer_log_archive` vcla where vcla.lead_id=?) calls order by calls.call_date desc limit 1";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($lead_id, $lead_id, $lead_id, $lead_id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $js = array("call_date" => $row["call_date"], "uniqueid" => $row["uniqueid"]);
+        $query1 = "select * from (select a.status,a.status_name from vicidial_statuses a union all select b.status,b.status_name from vicidial_campaign_statuses b right join vicidial_list c on c.lead_id=? right join vicidial_lists d on d.list_id=c.list_id where d.campaign_id=b.campaign_id) status ";
+        $status_search = array($lead_id);
+        $stmt = $this->db->prepare($query1);
+        $stmt->execute($status_search);
+        $row_status = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($row_status as $value) {
+            if ($row["status"] == $value["status"]) {
+                $row["status_name"] = $value["status_name"];
+            }
+        }
+        $js = array("call_date" => $row["call_date"], "uniqueid" => $row["uniqueid"], "status_name" => $row["status_name"]);
         return $js;
     }
 
@@ -76,7 +86,7 @@ class crm_main_class {
             $query = "
             SELECT lead_id,first_name, phone_number, status,'last_call_date' 
             FROM   vicidial_list
-            WHERE   phone_number= ? or address3=? or alt_phone=? group by lead_id";
+            WHERE   phone_number= ? or address3=? or alt_phone=?  ";
             $variables[] = $phone_number;
             $variables[] = $phone_number;
             $variables[] = $phone_number;
@@ -177,38 +187,17 @@ class crm_main_class {
         }
 
         //get  status name
-        if ($campaign_linha_inbound == 1) {
-            $query1 = "select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b where b.campaign_id=?";
-            $status_search = array($campanha);
-        } else {
-            $query1 = "select status,status_name from vicidial_statuses a union all select status,status_name from vicidial_campaign_statuses b";
-            $status_search = array();
-        }
-        $stmt = $this->db->prepare($query1);
-        $stmt->execute($status_search);
-        $row_status = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 
         $stmt = $this->db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-
-
-            foreach ($row_status as $value) {
-                if ($value["status"] == $row[3]) {
-                    $row[3] = $value["status_name"];
-                    break;
-                }
-            }
-
-
             $temp = $this->get_last_call($row[0]);
+            $row[3] = $temp["status_name"];
             $row[4] = $temp["call_date"];
-
             $row[4] = $row[4] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
                     . "<span class='btn btn-mini criar_marcacao' data-lead_id='$row[0]'><i class='icon-edit'></i>Criar Marcação</span></div>";
-
-
             $js['aaData'][] = $row;
         }
         return $js;

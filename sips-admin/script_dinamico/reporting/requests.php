@@ -257,7 +257,7 @@ switch ($action) {
             unset($script_values);
         }
 
-        $data_row = array_merge(array("id" => "ID", "entry_date" => "Data Entrada", "date" => "Data", "name" => "Nome do Script", "full_name" => "Agente", "campaign_name" => "Nome da campanha", "list_name" => "Nome da Base Dados", "status_name" => "Feedback", "length_in_sec" => "Duração Chamada", "max_tries" => "Máximo Tentativas"), $data_row);
+        $data_row = array_merge(array("id" => "ID", "entry_date" => "Data Entrada", "date" => "Data chamada", "name" => "Nome do Script", "full_name" => "Agente", "campaign_name" => "Nome da campanha", "list_name" => "Nome da Base Dados", "status_name" => "Feedback", "length_in_sec" => "Duração Chamada", "max_tries" => "Máximo Tentativas"), $data_row);
 
         $titulos = array();
         $titulos = $data_row;
@@ -496,7 +496,7 @@ switch ($action) {
             unset($script_values);
         }
 
-        $data_row = array_merge(array("id" => "ID", "entry_date" => "Data Entrada", "date" => "Data", "name" => "Nome do Script", "full_name" => "Agente", "group_name" => "Nome da Linha Inbound", "status_name" => "Feedback"), $data_row);
+        $data_row = array_merge(array("id" => "ID", "entry_date" => "Data Entrada", "date" => "Data chamada", "name" => "Nome do Script", "full_name" => "Agente", "group_name" => "Nome da Linha Inbound", "status_name" => "Feedback"), $data_row);
 
         $titulos = array();
         $titulos = $data_row;
