@@ -186,7 +186,7 @@ $(function() {
             }
       });
       $(document).on("click", "#delete_button_layout", function(e) {//APAGAR A LAYOUT E SEUS WALLBOARDS
-            sql_basic("remove_Layout", idLayout);
+            sql_basic("remove_layout", idLayout);
       });
       $(document).on("click", "#create_button_dialog", function(e) {//CRIAR OS WALLBOARDS PARA LINHAS E BARRAS
             manipulate_graph("insert_wbe", 0, $("#graph_name").val(), Math.round((Math.random() * 500) + 1), Math.round((Math.random() * 250) + 1), 250, 250, idLayout, $("#update_time").val(), selected_type_graph, 0, 0);
@@ -464,7 +464,7 @@ $(function() {
 
 $("#add_layout_button").click(function()
 {
-      sql_basic("insert_Layout", 0, 0);
+      sql_basic("insert_layout", 0, 0);
 });
 $("#fullscreen_button").click(function()
 {
@@ -664,7 +664,7 @@ function save_layout()
 {
       var a = get_indice_layout(idLayout);
       layouts[a][1] = $("#Layout_Input_name").val();
-      manipulate_dados("edit_Layout", idLayout, layouts[a][1], 0, 0, 0, 0, 0, 0);
+      manipulate_dados("edit_layout", idLayout, layouts[a][1], 0, 0, 0, 0, 0, 0);
       $('#label_id_layout').text(layouts[a][0]);
       $("#Layout_Input_name").val(layouts[a][1]);
 }
@@ -900,7 +900,7 @@ function load_dados(opcao, id_layouT)
       $.post("Requests.php", {action: opcao, id_layout: id_layouT},
       function(data)
       {
-            console.log(data+"a");
+  
             if (data === null)
             {
                   $("#MainLayout .PanelWB").remove();
@@ -946,14 +946,14 @@ function sql_basic(opcao, id_layout, id_wbe)
       $.post("Requests.php", {action: opcao, id_layout: id_layout, id: id_wbe},
       function(data)
       {
-            if (opcao === "insert_Layout")
+            if (opcao === "insert_layout")
             {
                   load_dados("layout", 0);
                   idLayout = $("#LayoutSelector").val();
 
             }
 
-            if (opcao === "remove_Layout")
+            if (opcao === "remove_layout")
             {
                   load_dados("layout", 0);
                   var i = 0;
@@ -983,7 +983,7 @@ function manipulate_dados(opcao, Id, Name, Pos_x, Pos_y, Width, Height, id_layou
       $.post("Requests.php", {action: opcao, id: Id, name: Name, pos_x: Pos_x, pos_y: Pos_y, width: Width, height: Height, id_layout: id_layout},
       function(data)
       {
-            if (opcao === "edit_Layout")
+            if (opcao === "edit_layout")
                   update_dropbox_layout();
       }, "json");
 }

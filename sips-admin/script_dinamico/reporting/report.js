@@ -67,6 +67,8 @@ $("#download_report").on("click", function(e)
 
         if ($("#radio1").is(":checked"))
             campaign = $("#select_campanha option:selected").val();
+        if ($("#radio2").is(":checked"))
+            campaign = $("#select_linha_inbound option:selected").val();
         if ($("#radio3").is(":checked"))
             campaign = $("#select_base_dados option:selected").data("campaign_id");
 
@@ -98,15 +100,15 @@ $("#download_report_button").on("click", function()
 
     if ($("#radio1").is(":checked"))
     {
-        document.location.href = "requests.php?action=report&tipo=1&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_campanha option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + $("#oc_template").val() + "&only_with_result=" + $("#crs_contacts").is(":checked")+"&only_active_db="+$("#so_bd_activas").is(":checked")+"&by_calls="+$("#by_calls").is(":checked");
+        document.location.href = "requests.php?action=report_outbound&tipo=1&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_campanha option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + $("#oc_template").val() + "&only_with_result=" + $("#crs_contacts").is(":checked") + "&only_active_db=" + $("#so_bd_activas").is(":checked") + "&by_calls=" + $("#by_calls").is(":checked");
     }
     else if ($("#radio2").is(":checked"))
     {
-        document.location.href = "requests.php?action=report&tipo=2&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_linha_inbound option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked") + "&only_with_result=" + $("#crs_contacts").is(":checked")+"&by_calls="+$("#by_calls").is(":checked");
+        document.location.href = "requests.php?action=report_inbound&tipo=2&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&linha_inbound=" + $("#select_linha_inbound option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + $("#oc_template").val() + "&only_with_result=" + $("#crs_contacts").is(":checked") + "&by_calls=" + $("#by_calls").is(":checked");
     }
     else
     {
-        document.location.href = "requests.php?action=report&tipo=3&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&list_id=" + $("#select_base_dados option:selected").val() + "&campaign_id=" + $("#select_base_dados option:selected").data("campaign_id") + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + $("#oc_template").val() + "&only_with_result=" + $("#crs_contacts").is(":checked")+"&by_calls="+$("#by_calls").is(":checked");
+        document.location.href = "requests.php?action=report_outbound&tipo=3&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&list_id=" + $("#select_base_dados option:selected").val() + "&campaign_id=" + $("#select_base_dados option:selected").data("campaign_id") + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + $("#oc_template").val() + "&only_with_result=" + $("#crs_contacts").is(":checked") + "&by_calls=" + $("#by_calls").is(":checked");
     }
 
 });
@@ -125,12 +127,16 @@ $(".radio_opcao").on("click", function()
     if ($(this).val() == "1")
     {
         $("#report_campanha").show();
+        $("#div_idb").show();
     }
-    else if ($(this).val() == "2")
+    else if ($(this).val() == "2") {
         $("#report_linha_inbound").show();
-    else
+        $("#div_idb").hide();
+    } else
     {
+
         $("#report_bd").show();
+        $("#div_idb").show();
     }
 });
 
@@ -176,7 +182,7 @@ function get_templates(campaign)
             $("#delete_template_button").prop("disabled", false);
             $("#template_div").show();
             $("#oc_template").empty();
-  
+
             $.post("requests.php", {action: "get_template", campaign_id: campaign, script_id: data},
             function(data1)
             {
@@ -193,9 +199,9 @@ function get_templates(campaign)
                     $("#oc_template").trigger("change");
                     $("#column_order_title").show().text("Ordernação de colunas");
                     $("#div_crs").show();
-                      
-                    if($("#radio1").is(":checked"))
-                    $("#div_idb").show();
+
+                    if ($("#radio1").is(":checked"))
+                        $("#div_idb").show();
                 }
                 else
                 {
@@ -206,7 +212,7 @@ function get_templates(campaign)
                     $("#oc_template").append("<option>Crie um template</option>");
                     $("#column_order_title").hide();
                     $("#div_crs").hide();
-                          $("#div_idb").hide();
+                    $("#div_idb").hide();
                 }
             }, "json");
         }
@@ -216,7 +222,7 @@ function get_templates(campaign)
             $("#column_order").append("<li>Sem Script</li>");
             $("#template_div").hide();
             $("#div_crs").hide();
-                  $("#div_idb").hide();
+            $("#div_idb").hide();
 
             $("#download_report_button").prop("disabled", true);
 

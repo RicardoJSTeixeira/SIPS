@@ -158,7 +158,7 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
             mysql_query("INSERT INTO vicidial_campaign_statuses (status, status_name, selectable, human_answered, scheduled_callback, campaign_id, visible) VALUES ('$row[0]', '$row[1]', 'N', '$row[2]', '$row[3]', '$js[new_campaign_id]', '$row[4]')") or die(mysql_error());
         }
     } else {
-        $query = mysql_query("SELECT campaign_name, campaign_description, active, dial_method, auto_dial_level, campaign_recording, lead_order, next_agent_call, my_callback_option, campaign_allow_inbound, agent_display_dialable_leads, display_queue_count, view_calls_in_queue, agent_lead_search, agent_allow_transfers, agent_allow_dtmf,callback_hours_block,call_count_limit,agent_allow_copy_record FROM vicidial_campaigns WHERE campaign_id='$CampaignID' LIMIT 1", $link) or die(mysql_error());
+        $query = mysql_query("SELECT campaign_name, campaign_description, active, dial_method, auto_dial_level, campaign_recording, lead_order, next_agent_call, my_callback_option, campaign_allow_inbound, agent_display_dialable_leads, display_queue_count, view_calls_in_queue, agent_lead_search, agent_allow_transfers, agent_allow_dtmf,callback_hours_block,call_count_target,agent_allow_copy_record FROM vicidial_campaigns WHERE campaign_id='$CampaignID' LIMIT 1", $link) or die(mysql_error());
         $result = mysql_fetch_assoc($query) or die(mysql_error());
 
         $js['c_name'] = $result['campaign_name'];
@@ -188,7 +188,7 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
 
         //callbacks limit
         $js['callback_hours_block'] = $result['callback_hours_block'];
-        $js['call_count_limit'] = $result['call_count_limit'];
+        $js['call_count_target'] = $result['call_count_target'];
 
 
         $js['selected_user_groups'] = array();
@@ -492,7 +492,7 @@ function CampaignCopyRecord($CampaignID, $Checked, $link) {
 }
 
 function CampaignCBLimit_individual($CampaignID, $max, $link) {
-    mysql_query("UPDATE vicidial_campaigns SET call_count_limit = '$max' WHERE campaign_id='$CampaignID'", $link) or die(mysql_error());
+    mysql_query("UPDATE vicidial_campaigns SET call_count_target = '$max' WHERE campaign_id='$CampaignID'", $link) or die(mysql_error());
 }
 
 function CampaignCBLimit_geral($CampaignID, $max, $link) {

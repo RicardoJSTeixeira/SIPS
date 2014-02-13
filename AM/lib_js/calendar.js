@@ -256,13 +256,13 @@ var calendar = function(selector, data, modal_ext, ext, lead_id) {
                 });
     };
     this.openClient = function(id, lead_id) {
-        $.post("/AM/ajax/client.php", {id: lead_id}, function(data) {
+              $.post("/AM/ajax/client.php", {id: lead_id}, function(data) {
             var tmp = "";
             $.each(data, function() {
                 tmp = tmp + "<dt>" + this.name + "</dt><dd>" + this.value + "</dd>";
             });
 
-            me.modal_ext.find("#client_info_modal")  
+            me.modal_ext.find("#client_info") 
                     .html(tmp);
             me.modal_ext.modal().data().id = id;
             me.modal_ext.modal().data().lead_id = lead_id;

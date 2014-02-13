@@ -1,14 +1,14 @@
 <style>
-      .formError {
-            margin-left: 0px;
-      }
+    .formError {
+        margin-left: 0px;
+    }
 </style>
+<div id="main_audiograma_div">
+    <span id='lead_id_placeholder' data-lead_id='0'></span>
 
-<span id='lead_id_placeholder' data-lead_id='0'></span>
+    <form class="formular" id="audiograma_form">
 
-<form class="formular" id="audiograma_form">
-
-      <table style="width:100%;" id="audiograma_table" >
+        <table style="width:100%;" id="audiograma_table" >
             <thead>
             <th></th> 
             <th>250</th> 
@@ -23,101 +23,102 @@
             <th>Mask</th> 
             </thead>
             <tbody>
-                  <tr id="ar_tr"><!--AIR RIGHT-->
-                        <td>CA Direito</td>
-                        <td><input type="text" data-min="-10" data-max="120" class='input-mini validate[required]' name="AR250" id="AR250" ></td>
-                        <td><input type="text" data-min="-10" data-max="120" class='input-mini validate[required]' name="AR500" id="AR500" ></td>
-                        <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AR1000" id="AR1000" ></td>
-                        <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AR1500" id="AR1500" ></td>
-                        <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AR2000" id="AR2000" ></td>
-                        <td><input type="text"   data-min="-10" data-max="120" class='input-mini validate[required]' name="AR3000" id="AR3000" ></td>
-                        <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AR4000" id="AR4000" ></td>
-                        <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AR6000" id="AR6000" ></td>
-                        <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AR8000" id="AR8000" ></td>
-                        <td><select name="ARMask" class="input-medium" id="ARMask"><option value="1">Yes</option><option value="0" selected>No</option></select></td>
-                  </tr>
-                  <tr  id="al_tr"><!--AIR Left-->
-                        <td>CA Esquerdo</td>
-                        <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AL250" id="AL250" ></td>
-                        <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AL500" id="AL500" ></td>
-                        <td><input type="text" data-min="-10" data-max="120" class='input-mini validate[required]' name="AL1000" id="AL1000" ></td>
-                        <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AL1500" id="AL1500" ></td>
-                        <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AL2000" id="AL2000" ></td>
-                        <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AL3000" id="AL3000" ></td>
-                        <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AL4000" id="AL4000" ></td>
-                        <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AL6000" id="AL6000" ></td>
-                        <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AL8000" id="AL8000" ></td>
-                        <td><select name="ALMask" class="input-medium" id="ALMask"><option value="1">Yes</option><option value="0" selected>No</option></select></td>
-                  </tr>
-                  <tr id="bcr_tr"><!--BONE COND RIGHT-->
-                        <td>CO Direito</td>
-                        <td></td>
-                        <td><input type="text"  data-min="0" data-max="80" class='input-mini ' name="BCR500" id="BCR500" ></td>
-                        <td><input type="text" data-min="0" data-max="80"  class='input-mini ' name="BCR1000" id="BCR1000" ></td>
-                        <td><input type="text" data-min="0" data-max="80"  class='input-mini ' name="BCR1500" id="BCR1500" ></td>
-                        <td><input type="text" data-min="0" data-max="80"  class='input-mini ' name="BCR2000" id="BCR2000" ></td>
-                        <td><input type="text"  data-min="0" data-max="80" class='input-mini ' name="BCR3000" id="BCR3000" ></td>
-                        <td><input type="text" data-min="0" data-max="80"  class='input-mini ' name="BCR4000" id="BCR4000" ></td>
-                        <td></td>
-                        <td></td>
-                        <td><select name="BCRMask" class="input-medium" id="BCRMask"><option value="1">Yes</option><option value="0" selected>No</option></select></td>
-                  </tr>
-                  <tr id="bcl_tr"><!--BONE COND LEFT-->
-                        <td>CO Esquerdo</td>
-                        <td> </td>
-                        <td><input type="text" data-min="0" data-max="80"  class='input-mini ' name="BCL500" id="BCL500" ></td>
-                        <td><input type="text"  data-min="0" data-max="80" class='input-mini ' name="BCL1000" id="BCL1000" ></td>
-                        <td><a  data-toggle="tooltip" title="Preencha completamente Bone Cond Right ou Bone Cond Left" id="bc_tooltip"></a><input type="text"  data-min="0" data-max="80" class='input-mini ' name="BCL1500" id="BCL1500" ></td>
-                        <td><input type="text" data-min="0" data-max="80"  class='input-mini ' name="BCL2000" id="BCL2000" ></td>
-                        <td><input type="text"  data-min="0" data-max="80" class='input-mini ' name="BCL3000" id="BCL3000" ></td>
-                        <td><input type="text" data-min="0" data-max="80"  class='input-mini ' name="BCL4000" id="BCL4000" ></td>
-                        <td></td>
-                        <td></td>
-                        <td><select name="BCLMask" class="input-medium" id="BCLMask"><option value="1">Yes</option><option value="0" selected>No</option></select></td>
-                  </tr>
-                  <tr id="ullr_tr"><!--ULLR RIGHT-->
-                        <td>ULL Direito</td>
-                        <td></td>
-                        <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLR500" id="ULLR500" ></td>
-                        <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLR1000" id="ULLR1000" ></td>
-                        <td><input type="text" data-min="0" data-max="120" class='input-mini validate[required]' name="ULLR1500" id="ULLR1500" ></td>
-                        <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLR2000" id="ULLR2000" ></td>
-                        <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLR3000" id="ULLR3000" ></td>
-                        <td><input type="text"  data-min="0" data-max="120" class='input-mini validate[required]' name="ULLR4000" id="ULLR4000" ></td>
-                        <td></td>
-                        <td></td>
-                        <td><select name="ULLRMask" class="input-medium" id="ULLRMask"><option value="1">Yes</option><option value="0" selected>No</option></select></td>
-                  </tr>
-                  <tr id="ulll_tr"><!--Ull RIGHT-->
-                        <td>ULL Esquerdo</td>
-                        <td></td>
-                        <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLL500" id="ULLL500" ></td>
-                        <td><input type="text"  data-min="0" data-max="120" class='input-mini validate[required]' name="ULLL1000" id="ULLL1000" ></td>
-                        <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLL1500" id="ULLL1500" ></td>
-                        <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLL2000" id="ULLL2000" ></td>
-                        <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLL3000" id="ULLL3000" ></td>
-                        <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLL4000" id="ULLL4000" ></td>
-                        <td></td>
-                        <td></td>
-                        <td><select name="ULLLMask" class="input-medium" id="ULLLMask"><option value="1">Yes</option><option value="0" selected>No</option></select></td>
+                <tr id="ar_tr"><!--AIR RIGHT-->
+                    <td>CA Direito</td>
+                    <td><input type="text" data-min="-10" data-max="120" class='input-mini validate[required]' name="AR250" id="AR250" ></td>
+                    <td><input type="text" data-min="-10" data-max="120" class='input-mini validate[required]' name="AR500" id="AR500" ></td>
+                    <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AR1000" id="AR1000" ></td>
+                    <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AR1500" id="AR1500" ></td>
+                    <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AR2000" id="AR2000" ></td>
+                    <td><input type="text"   data-min="-10" data-max="120" class='input-mini validate[required]' name="AR3000" id="AR3000" ></td>
+                    <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AR4000" id="AR4000" ></td>
+                    <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AR6000" id="AR6000" ></td>
+                    <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AR8000" id="AR8000" ></td>
+                    <td><select name="ARMask" class="input-medium" id="ARMask"><option value="1">Yes</option><option value="0" selected>No</option></select></td>
+                </tr>
+                <tr  id="al_tr"><!--AIR Left-->
+                    <td>CA Esquerdo</td>
+                    <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AL250" id="AL250" ></td>
+                    <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AL500" id="AL500" ></td>
+                    <td><input type="text" data-min="-10" data-max="120" class='input-mini validate[required]' name="AL1000" id="AL1000" ></td>
+                    <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AL1500" id="AL1500" ></td>
+                    <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AL2000" id="AL2000" ></td>
+                    <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AL3000" id="AL3000" ></td>
+                    <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AL4000" id="AL4000" ></td>
+                    <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AL6000" id="AL6000" ></td>
+                    <td><input type="text"  data-min="-10" data-max="120" class='input-mini validate[required]' name="AL8000" id="AL8000" ></td>
+                    <td><select name="ALMask" class="input-medium" id="ALMask"><option value="1">Yes</option><option value="0" selected>No</option></select></td>
+                </tr>
+                <tr id="bcr_tr"><!--BONE COND RIGHT-->
+                    <td>CO Direito</td>
+                    <td></td>
+                    <td><input type="text"  data-min="0" data-max="80" class='input-mini ' name="BCR500" id="BCR500" ></td>
+                    <td><input type="text" data-min="0" data-max="80"  class='input-mini ' name="BCR1000" id="BCR1000" ></td>
+                    <td><input type="text" data-min="0" data-max="80"  class='input-mini ' name="BCR1500" id="BCR1500" ></td>
+                    <td><input type="text" data-min="0" data-max="80"  class='input-mini ' name="BCR2000" id="BCR2000" ></td>
+                    <td><input type="text"  data-min="0" data-max="80" class='input-mini ' name="BCR3000" id="BCR3000" ></td>
+                    <td><input type="text" data-min="0" data-max="80"  class='input-mini ' name="BCR4000" id="BCR4000" ></td>
+                    <td></td>
+                    <td></td>
+                    <td><select name="BCRMask" class="input-medium" id="BCRMask"><option value="1">Yes</option><option value="0" selected>No</option></select></td>
+                </tr>
+                <tr id="bcl_tr"><!--BONE COND LEFT-->
+                    <td>CO Esquerdo</td>
+                    <td> </td>
+                    <td><input type="text" data-min="0" data-max="80"  class='input-mini ' name="BCL500" id="BCL500" ></td>
+                    <td><input type="text"  data-min="0" data-max="80" class='input-mini ' name="BCL1000" id="BCL1000" ></td>
+                    <td><a  data-toggle="tooltip" title="Preencha completamente Bone Cond Right ou Bone Cond Left" id="bc_tooltip"></a><input type="text"  data-min="0" data-max="80" class='input-mini ' name="BCL1500" id="BCL1500" ></td>
+                    <td><input type="text" data-min="0" data-max="80"  class='input-mini ' name="BCL2000" id="BCL2000" ></td>
+                    <td><input type="text"  data-min="0" data-max="80" class='input-mini ' name="BCL3000" id="BCL3000" ></td>
+                    <td><input type="text" data-min="0" data-max="80"  class='input-mini ' name="BCL4000" id="BCL4000" ></td>
+                    <td></td>
+                    <td></td>
+                    <td><select name="BCLMask" class="input-medium" id="BCLMask"><option value="1">Yes</option><option value="0" selected>No</option></select></td>
+                </tr>
+                <tr id="ullr_tr"><!--ULLR RIGHT-->
+                    <td>ULL Direito</td>
+                    <td></td>
+                    <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLR500" id="ULLR500" ></td>
+                    <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLR1000" id="ULLR1000" ></td>
+                    <td><input type="text" data-min="0" data-max="120" class='input-mini validate[required]' name="ULLR1500" id="ULLR1500" ></td>
+                    <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLR2000" id="ULLR2000" ></td>
+                    <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLR3000" id="ULLR3000" ></td>
+                    <td><input type="text"  data-min="0" data-max="120" class='input-mini validate[required]' name="ULLR4000" id="ULLR4000" ></td>
+                    <td></td>
+                    <td></td>
+                    <td><select name="ULLRMask" class="input-medium" id="ULLRMask"><option value="1">Yes</option><option value="0" selected>No</option></select></td>
+                </tr>
+                <tr id="ulll_tr"><!--Ull RIGHT-->
+                    <td>ULL Esquerdo</td>
+                    <td></td>
+                    <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLL500" id="ULLL500" ></td>
+                    <td><input type="text"  data-min="0" data-max="120" class='input-mini validate[required]' name="ULLL1000" id="ULLL1000" ></td>
+                    <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLL1500" id="ULLL1500" ></td>
+                    <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLL2000" id="ULLL2000" ></td>
+                    <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLL3000" id="ULLL3000" ></td>
+                    <td><input type="text" data-min="0" data-max="120"  class='input-mini validate[required]' name="ULLL4000" id="ULLL4000" ></td>
+                    <td></td>
+                    <td></td>
+                    <td><select name="ULLLMask" class="input-medium" id="ULLLMask"><option value="1">Yes</option><option value="0" selected>No</option></select></td>
 
-                  </tr>
-           
+                </tr>
+
             </tbody>
-      </table>
+        </table>
 
-</form>
+    </form>
 
 
-<div class="formRow">
-      <h5>Ouvido Direito:</h5><span id="right_ear"></span>
-      <input type="number" id="right_ear_value" class="hidden">
-      <h5>Ouvido Esquerdo:</h5><span id="left_ear"></span>
-      <input type="number" id="left_ear_value" class="hidden">
-</div>
-<div class="formRow">
-      <span id="all_ear"></span>
-      <input type="number" id="all_ear_value" class="hidden">
+    <div class="formRow">
+        <h5>Ouvido Direito:</h5><span id="right_ear"></span>
+        <input type="number" id="right_ear_value" class="hidden">
+        <h5>Ouvido Esquerdo:</h5><span id="left_ear"></span>
+        <input type="number" id="left_ear_value" class="hidden">
+    </div>
+    <div class="formRow">
+        <span id="all_ear"></span>
+        <input type="number" id="all_ear_value" class="hidden">
+    </div>
 </div>
 <script type="text/javascript" src="/bootstrap/js/bootstrap-tooltip.js"></script>
 <script type="text/javascript" src="js/audiograma/audiograma.js"></script>

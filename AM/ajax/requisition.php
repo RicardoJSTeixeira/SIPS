@@ -27,7 +27,6 @@ switch ($action) {
         break;
 
     case "listar_requisition_to_datatable":
-    
         echo json_encode($requisitions->get_requisitions_to_database($show_admin));
         break;
 
@@ -38,7 +37,6 @@ switch ($action) {
     case "criar_encomenda":
         echo json_encode($requisitions->create_requisition($type, $lead_id, $contract_number, $attachment, $products_list));
         break;
-
 
     case "listar_produtos_por_encomenda":
         echo json_encode($requisitions->get_products_by_requisiton($id));
@@ -51,7 +49,6 @@ switch ($action) {
     case "decline_requisition":
         echo json_encode($requisitions->decline_requisition($id));
         break;
-
 
     case "check_month_requisitions":
         echo json_encode($requisitions->check_month_requisitions());

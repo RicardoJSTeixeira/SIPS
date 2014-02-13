@@ -5,8 +5,26 @@ $(function()
     $("#admin_zone .form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
     $("#admin_zone .check_form").validationEngine();
 
-    get_info();
+    get_info_product();
+    get_files_to_anexo();
+    //ENCOMENDAS--------------------------------------------------------------------------------------
+    var config = new Object();
+    requisition1 = new requisition($("#admin_extra_zone"), config);
+
+    requisition1.init();
+    requisition1.get_current_requisitions($("#view_requisition_datatable"), 1);
     $("#admin_zone .chosen-select").chosen({no_results_text: "Sem resultados"});
+    $.post('ajax/admin.php', {action: "get_agentes"},
+    function(data)
+    {
+        var options = "";
+        $.each(data, function()
+        {
+            options += "<option value='" + this.user + "'>" + this.full_name + "</option>";
+        });
+        $("#admin_zone #select_agent_transfer1,#select_agent_transfer2").append(options).trigger("chosen:updated").css("width", "225px");
+
+    }, "json");
 });
 
 
@@ -16,27 +34,10 @@ $("#admin_zone .check_form").submit(function(e)
 });
 
 //OpçÔES TOGGLE
-$("#admin_zone #button_filtro_produto").click(function()
+$("#admin_zone .button_toggle_divs").click(function()
 {
-    $("#admin_zone #product_master_div").toggle("blind");
-    $(this).toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
-});
 
-$("#admin_zone #button_filtro_cliente").click(function()
-{
-    $("#admin_zone #client_master_div").toggle("blind");
-    $(this).toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
-});
-
-$("#admin_zone #button_filtro_children_cliente").click(function()
-{
-    $("#admin_zone #child_product_datatable_div").toggle("blind");
-    $(this).toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
-});
-
-$("#admin_zone #button_filtro_requisition").click(function()
-{
-    $("#admin_zone #requisition_master_div").toggle("blind");
+    $(this).parent().parent().parent().find(".div_admin_edit").toggle("blind");
     $(this).toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
 });
 
@@ -45,9 +46,8 @@ $("#admin_zone #button_filtro_requisition").click(function()
 
 
 
-function get_info()
+function get_info_product()
 {
-
     //PRODUTOS-----------------------------------------------------------------------------------------------------------
     var Table_view_product = $('#admin_zone #view_product_datatable').dataTable({
         "aaSorting": [[6, "asc"]],
@@ -99,13 +99,23 @@ function get_info()
                 .find("optgroup[value='2']").append(pilha).end()
                 .find("optgroup[value='3']").append(peça).end().trigger("chosen:updated");
     }, "json");
-    //ENCOMENDAS--------------------------------------------------------------------------------------
-    var config = new Object();
-    requisition1 = new requisition($("#admin_extra_zone"), config);
 
-    requisition1.init();
-    requisition1.get_current_requisitions($("#view_requisition_datatable"), 1);
 }
+//AGENTES------------------------------------------------------------------------------------------------------------------------------
+$("#admin_zone #agent_marc_transfer_button").click(function()
+{
+    $("#admin_zone #agent_marc_transfer_modal").modal("show");
+});
+
+//botao de confirmação de transferencia de marcaçoes
+$("#admin_zone #confirm_marc_transfer_button").click(function()
+{
+    $.post('ajax/admin.php', {action: "transferir_marcaçao_caledario", new_user: $("#admin_zone #select_agent_transfer1 option:selected").val(), old_user: $("#admin_zone #select_agent_transfer2 option:selected").val()},
+    function(data)
+    {
+        $.jGrowl("Transferencia de " + data + " marcações de " + $("#admin_zone #select_agent_transfer1 option:selected").text() + " para " + $("#admin_zone #select_agent_transfer2 option:selected").text() + " realizada com sucesso", {life: 8000});
+    }, "json");
+});
 //PRODUTOS--------------------------------------------------------------------------------------------------------------------------------------------------
 //EDITAR PRODUTO
 
@@ -156,7 +166,7 @@ $("#admin_zone #edit_product_button").click(function()
             category: $("#admin_zone #ep_category").val(),
             type: $("#admin_zone #ep_type option:selected").val()
         }, function() {
-            get_info();
+            get_info_product();
             $("#admin_zone #edit_product_modal").modal("hide");
         }, "json");
     }
@@ -175,7 +185,7 @@ $("#admin_zone #remove_product_button").click(function()
         id: $("#admin_zone #remove_product_modal").data("product_id")
 
     }, function() {
-        get_info();
+        get_info_product();
         $("#admin_zone #remove_product_modal").modal("hide");
     }, "json");
 });
@@ -187,7 +197,7 @@ $("#admin_zone #removeAll_product_modal_button").click(function()
 $("#admin_zone #removeAll_product_button").click(function()
 {
     $.post('ajax/admin.php', {action: "apagar_produtos"}, function() {
-        get_info();
+        get_info_product();
         $("#admin_zone #removeAll_product_modal").modal("hide");
     }, "json");
 });
@@ -213,7 +223,7 @@ $("#admin_zone #create_product_button").click(function()
             type: $("#admin_zone #cp_type option:selected").val()
 
         }, function() {
-            get_info();
+            get_info_product();
             $("#admin_zone #create_product_modal").modal("hide");
         }, "json");
     }
@@ -270,4 +280,72 @@ $("#admin_zone").on("click", ".decline_requisition", function()
     $.post('ajax/requisition.php', {action: "decline_requisition", id: $(this).val()}, function() {
         this_button.parent("div").parent("td").prev().text("Rejeitado");
     }, "json");
+});
+
+//Anexos-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+//FILE UPLOAD
+$("#admin_zone #file_upload").change(function()
+{
+    // var re_ext = new RegExp("(gif|jpeg|jpg|png|pdf)", "i");
+    var file = this.files[0];
+    var name = file.name;
+    var size = (Math.round((file.size / 1024 / 1024) * 100) / 100);
+    var type = file.type;
+    if (size > 10) {
+        $("#label_anexo_info").text("O tamanho do ficheiro ultrapassa os 10mb permitidos.");
+        $(this).fileupload('clear');
+    }
+    /*  if (!re_ext.test(type)) {
+     $("#label_ipl_info").text("A extensão do ficheiro seleccionado não é valida.");
+     $(this).fileupload('clear');
+     }*/
+    $("#label_ipl_info").text("");
+});
+$("#admin_zone #anexo_upload_button").click(function(e)
+{
+    e.preventDefault();
+    var form = $("#anexo_input_form");
+
+    if (form.find('input[type="file"]').val() === '')
+        return false;
+    var formData = new FormData(form[0]);
+    formData.append("action", "upload");
+    $.ajax({
+        url: 'ajax/upload_file.php',
+        type: 'POST',
+        data: formData,
+        dataType: "json",
+        cache: false,
+        complete: function(data) {
+            $("#label_anexo_info").text(data.responseText);
+            $("#anexo_file_select").empty();
+            get_files_to_anexo();
+        },
+        contentType: false,
+        processData: false
+    });
+});
+
+
+
+function get_files_to_anexo()
+{
+    $.post('ajax/upload_file.php', {action: "get_anexos"}, function(data)
+    {
+        $("#select_uploaded_files").empty();
+
+        $.each(data, function()
+        {
+            $("#select_uploaded_files").append("<option value='" + this.toString() + "'>" + this.toString() + "</option>");
+        });
+    }, "json");
+}
+$("#admin_zone #remove_uploaded_file").on("click", function()
+{
+    $.post("ajax/upload_file.php", {action: "delete", name: $("#select_uploaded_files option:selected").val()}, function(data) {
+        $("#label_anexo_info").text(data);
+        get_files_to_anexo();
+    });
 });

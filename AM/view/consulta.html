@@ -29,70 +29,57 @@
     <div class="grid-content">
 
 
-
-
-
-
         <div class="formRow" id="inicial_option_div">
-            <label>Preencher audiograma?</label>
+            <h4>Preencher audiograma?</h4>
             <div class="formRight">
-                <input  type="radio" id="pa_yes" value="yes" name="ra" >
-                <label class="radio inline"  for="pa_yes"><span></span>Sim</label> 
-                <input  type="radio" id="pa_no" value="no" name="ra" >
-                <label class="radio inline"  for="pa_no"><span></span>Não</label> 
+                <button class="btn btn-success" id="pa_yes">Sim</button>
+                <button class="btn btn-primary" id="pa_no">Não</button>
             </div>      
         </div>
 
 
-
-
-
-
-
-        <div id="no_exam_div" style="display:none">
+       <div id="no_exam_div" style="display:none">
             <div class="formRow">
-                <label>Não há exame</label>
-                <div class="formRight">
+                <h4>Não há exame</h4>
+                <div class="formRow">
                     <input   type="checkbox" id="ne_cera" name="ne" value="LIMP">
                     <label class="checkbox inline" for="ne_cera"><span></span>Cera</label>
+                </div>
+                <div class="formRow"> 
                     <input   type="checkbox" id="ne_otorr" name="ne" value="OTOR">
                     <label class="checkbox inline" for="ne_otorr"><span></span>Otorrino</label>
+                </div> 
+                <div class="formRow">
                     <input   type="checkbox" id="ne_remarc" name="ne" value="">
                     <label class="checkbox inline" for="ne_remarc"><span></span>Remarcou</label>
+                </div> 
+                <div class="formRow">
                     <input   type="checkbox" id="ne_assist" name="ne" value="SERV">
                     <label class="checkbox inline" for="ne_assist"><span></span>Assistência</label>
+                </div>
+                <div class="formRow">
                     <input   type="checkbox" id="ne_inc" name="ne" value="INC">
                     <label class="checkbox inline" for="ne_inc"><span></span>Incapacitado</label>
-
+                </div>
+                <div class="formRow">
                     <input   type="checkbox" id="ne_info" name="ne" value="PINF">
                     <label class="checkbox inline" for="ne_info"><span></span>Informação</label>
+                </div>
+                <div class="formRow">
                     <input   type="checkbox" id="ne_other" name="ne" value="OUT">
                     <label class="checkbox inline" for="ne_other"><span></span>Outros</label>
-                </div>      
+                </div>
             </div>
         </div>
-
-
-
-
-
-
-
-
-
-
+        
         <div class="clear"></div>
-
-
-
-
+        
+        
         <div id="yes_exam_div" style="display:none" >
             <h3>Audiograma</h3>
-            <div id="audiograma_placeholder" class="grid">            </div>
-            <button class="btn btn-primary" id="calcul_audiograma">Calcular audiograma</button>
+            <div id="audiograma_placeholder" class="grid grid-content"></div>
             <h3>Script</h3>
-            <div class="grid" id="script_placeholder">            </div>
-            <button class="btn right" id="validate_script"><i class="icon-save"></i>Validar Script</button>
+            <div  id="script_placeholder" class="grid grid-content"></div>
             <div class='formRow' id='venda_confirm_div' style="display:none">
                 <label>Venda:</label>
                 <div class='formRight'>
@@ -102,8 +89,7 @@
                     <label class="radio inline"  for="venda_no"><span></span>Não</label>
                 </div>       
             </div>
-            <div id="venda_div"  style="display:none">
-      
+                        <div id="venda_div" class="grid grid-content" style="display:none">
             </div>
             <div id="no_venda_div"  style="display:none">
                 <div class='formRow'>
@@ -120,16 +106,22 @@
                     </div>       
                 </div>
             </div>
-
         </div>
-
-        <div class="formRow">
-            <button class='btn btn-success right' id='terminar_consulta' disabled>Terminar Consulta</button>
+        <div id="footer_div">
+            <div class="formRow">
+                <button class='btn btn-success right hidden' id='terminar_consulta'>Terminar Consulta</button>
+            </div>
+            <div class="formRow">
+                <button class="btn right hidden" id="validate_audio_script"><i class="icon-save"></i>Validar Script e Audiograma</button>
+            </div>
+            <div class="formRow">
+                <button class='btn btn-danger right hidden' id='terminar_consulta_no_exame' >Terminar Consulta sem Exame</button>
+            </div>
         </div>
-
-
+        <div id="main_requisition_div"></div>
     </div>
 </div>
 <script type="text/javascript" src="/sips-admin/script_dinamico/render.js?v=1"></script>
 <script type="text/javascript" src="js/consulta.js"></script>
+<script type="text/javascript" src="lib_js/requisition.js"></script>
 

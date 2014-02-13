@@ -2,7 +2,7 @@ $(function() {
 
     var init = function(data) {
         var sch;
-        console.log($("#calendar_client_modal"));
+       
         sch = new calendar($("#calendar_day"), data,$("#calendar_client_modal"), $('#ext-events'));
         sch.reserveConstruct(data.tipo);
         sch.initModal();
