@@ -162,7 +162,7 @@ var dashboard = function() {
                 });
                 if (outro > 0) {
                     arr.push({
-                        "x": "Others",
+                        "x": "No Answer -> Recycle",
                         "y": outro
                     });
                 }
@@ -196,7 +196,7 @@ var dashboard = function() {
                 });
                 if (outro > 0) {
                     arr.push({
-                        "x": "Others",
+                        "x": "No Answer -> Recycle",
                         "y": outro//Math.floor(outr / (60 * 60))
                     });
                 }
@@ -269,7 +269,7 @@ var dashboard = function() {
                 });
 
                 arr.push({
-                    "label": "Others",
+                    "label": "No Answer -> Recycle",
                     "data": outros
                 });
 
