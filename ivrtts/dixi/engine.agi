@@ -5,7 +5,8 @@ use warnings;
 use Asterisk::AGI;
 
 
-my $file_name;
+my $file_one;
+my $file_two;
 my $agifile = new Asterisk::AGI;
 my $campaign_id;
 my $cachedir = "/srv/www/htdocs/ivrtts/dixi/files/";
@@ -15,19 +16,60 @@ my $system_string;
 
 # Store AGI input #
 $| = 1;
-while (<STDIN>) {
+while(<STDIN>) 
+	{
+
 	chomp;
-	last if (!length);
-	$AGI{$1} = $2 if (/^agi_(\w+)\:\s+(.*)$/);
-}
-($AGI{arg_1}, $AGI{arg_2}, $AGI{arg_3}, $AGI{arg_4}, $AGI{arg_5}) = @ARGV;
+	last unless length($_);
+	if ($AGILOG)
+		{
+		if (/^agi_(\w+)\:\s+(.*)$/) 
+			{
+			$AGI{$1} = $2;
+			}
+		}
 
+	if (/^agi_uniqueid\:\s+(.*)$/)		{$unique_id = $1; $uniqueid = $unique_id;}
+	if (/^agi_priority\:\s+(.*)$/)		{$priority = $1;}
+	if (/^agi_channel\:\s+(.*)$/)		{$channel = $1;}
+	if (/^agi_extension\:\s+(.*)$/)		{$extension = $1;}
+	if (/^agi_type\:\s+(.*)$/)		{$type = $1;}
+	if (/^agi_callerid\:\s+(.*)$/)		{$callerid = $1;   $calleridnum = $callerid;}
+	if (/^agi_calleridname\:\s+(.*)$/)	{$calleridname = $1;}
+	}
 
-$AGI{arg_1} =~ s/\+/ /g;
-$AGI{arg_1} =~ s/_/ /g;
-$file_name = "/srv/www/htdocs/ivrtts/dixi/files/$AGI{arg_2}_$AGI{arg_3}_$AGI{arg_4}.mp3"; 
-$agifile->exec("EXEC Set(nome_ficheiro=$file_name)");
-exec("python /usr/share/Dixi/tts.py $AGI{arg_5} $AGI{arg_1} > $file_name") or print STDERR "couldn't exec tts translation";
+$dbhA = DBI->connect("DBI:mysql:$VARDB_database:$VARDB_server:$VARDB_port", "$VARDB_user", "$VARDB_pass")
+    or die "Couldn't connect to database: " . DBI->errstr;
+$stmtA = "SELECT campaign_id,phone_number,lead_id FROM vicidial_auto_calls where uniqueid='$uniqueid' order by auto_call_id desc limit 1;";
+$sthA = $dbhA->prepare($stmtA) or die "preparing: ",$dbhA->errstr;
+$sthA->execute or die "executing: $stmtA ", $dbhA->errstr;
+$sthArows=$sthA->rows;
+if ($AGILOG) {$agi_string = "$sthArows|$stmtA|";   &agi_output;}
+if ($sthArows > 0)
+	{
+	@aryA = $sthA->fetchrow_array;
+	$campaign_id =		$aryA[0];
+	$dialed_number = 	$aryA[1];
+	$lead_id = $aryA[2];
+	$sthA->finish();
+	}
+
+$stmtA = "SELECT extra2,extra3 FROM vicidial_list where lead_id='$lead_id'";
+$sthA = $dbhA->prepare($stmtA) or die "preparing: ",$dbhA->errstr;
+$sthA->execute or die "executing: $stmtA ", $dbhA->errstr;
+$sthArows=$sthA->rows;
+if ($AGILOG) {$agi_string = "$sthArows|$stmtA|";   &agi_output;}
+if ($sthArows > 0)
+	{
+	@aryA = $sthA->fetchrow_array;
+	$file_one = $aryA[0];
+	$file_two = $aryA[1];
+	$sthA->finish();
+	}
+
+$agifile->exec("EXEC Set(texto_um=$file_one)");
+$agifile->exec("EXEC Set(texto_dois=$file_two)");
+
 exit 1;
 
 
