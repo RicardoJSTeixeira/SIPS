@@ -68,14 +68,17 @@ if ($sthArows > 0)
         $file_one = "/srv/www/htdocs/ivrtts/dixi/files/$uuid.mp3";          
         $file_two = "/srv/www/htdocs/ivrtts/dixi/files/$uuid.mp3";         
         untie $uuid;
+        print "Got new lead, working on it \n";
+        print "Converting message one: python /usr/share/Dixi/tts.py Vicente '$messageOne' > $file_one \n";
+        print "Converting message two: python /usr/share/Dixi/tts.py Vicente '$messageTwo' > $file_one \n";
 
-       # exec("python /usr/share/Dixi/tts.py Vicente '$messageOne' > $file_one; python /usr/share/Dixi/tts.py Vicente '$messageTwo' > $file_two");
+        system("python /usr/share/Dixi/tts.py Vicente '$messageOne' > $file_one; python /usr/share/Dixi/tts.py Vicente '$messageTwo' > $file_two; chmod +x $file_one; chmod +x $file_two");
         
         $stmtA = "UPDATE vicidial_list set extra2 = '$file_one', extra3 = '$file_two', status='NEW' where lead_id = $lead_id";
         $sthA = $dbhA->prepare($stmtA) or die "preparing: ",$dbhA->errstr;
         $sthA->execute or die "executing: $stmtA ", $dbhA->errstr;
-        print "Lead found. Im working on it \n";
-        usleep (100000);
+        print "My work is done, sleeping a bit \n";
+        usleep (100000*20);
 
 	} else {
             # não encontrou nada, dorme 10 segs
