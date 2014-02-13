@@ -11,12 +11,12 @@
             </div>
             <div class="span2">
             <div class="grid">
-                <label class="label label-info" >Total Chamadas</label>
-                <label class="label label-success">Total Mensagens</label>
-                <label class="label label-warning">Total Feedbacks de Sistema</label>
+                <label class="label label-info" >Total Calls</label>
+                <label class="label label-success">Total Message</label>
+                <label class="label label-warning">Total System Feedbacks</label>
             </div>
             <div class="grid">
-                <div class="grid-title"><div class="pull-left">Intervalo</div></div>
+                <div class="grid-title"><div class="pull-left">Range</div></div>
                 <label class="label" id="intervaloTotais">  </label>
             </div>
             </div>
@@ -27,7 +27,7 @@
 <div class="row-fluid">
     <div class="grid">
         <div class="grid-title">
-            <div class="pull-left">Duração das Chamadas em Segundos</div>
+            <div class="pull-left">Duration of Calls in Seconds</div>
             <div class="pull-right"></div>
             <div class="clear"></div>
         </div>
@@ -37,12 +37,12 @@
             </div>
              <div class="span2">
             <div class="grid">
-                <label class="label label-info" >Duração Chamada</label>
-                <label class="label label-success">Duração Mensagem</label>
-                <label class="label label-warning">Dur. Feedback de Sistema</label>
+                <label class="label label-info" >Total Duration Calls</label>
+                <label class="label label-success">Total Duration Message</label>
+                <label class="label label-warning">Total. Dur. System Feedbacks</label>
             </div>
             <div class="grid">
-                <div class="grid-title"><div class="pull-left">Intervalo</div></div>
+                <div class="grid-title"><div class="pull-left">Range</div></div>
                 <label class="label" id="intervaloAVG">  </label>
             </div>
             </div>
@@ -53,7 +53,7 @@
 <div class="row-fluid">
     <div class="grid span6">
         <div class="grid-title">
-            <div class="pull-left">Total Chamadas por Feedback</div>
+            <div class="pull-left">Total Calls By Feedback</div>
             <div class="pull-right"></div>
             <div class="clear"></div>
         </div>
@@ -63,7 +63,7 @@
     </div>
     <div class="grid span6">
         <div class="grid-title">
-            <div class="pull-left">Duração total por Feedback</div>
+            <div class="pull-left">Total Duration By Feedbacks</div>
             <div class="pull-right"></div>
             <div class="clear"></div>
         </div>

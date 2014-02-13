@@ -28,36 +28,36 @@ var dashboard = function() {
                 if (minuto < 60) {
                     by = 'by_minute';
                     momentos = 'mm';
-                    mostring = ' minutos';
-                    $('#intervaloTotais').html('Minutos [ MM ]');
-                    $('#intervaloAVG').html('Minutos [ MM ]');
+                    mostring = ' minutes';
+                    $('#intervaloTotais').html('Minutes [ MM ]');
+                    $('#intervaloAVG').html('Minutes [ MM ]');
                 } else if (hora < 24) {
                     by = 'by_hour';
                     momentos = 'DD-hh';
-                    mostring = ' Dia-Hora';
-                    $('#intervaloTotais').html('Dia Hora [ DD-HH ]');
-                    $('#intervaloAVG').html('Dia Hora [ DD-HH ]');
+                    mostring = ' Day-Hour';
+                    $('#intervaloTotais').html('Day Hour [ DD-HH ]');
+                    $('#intervaloAVG').html('Day Hour [ DD-HH ]');
                 } else if (dias < 31) {
                     by = 'by_day';
                     end = end.substr(0, 11) + '00:00';
                     start = start.substr(0, 11) + '00:00';
                     momentos = 'YYYY-MM-DD';
                     mostring = ' ';
-                    $('#intervaloTotais').html('Ano-Mes-Dia [ YYYY-MM-DD ]');
-                    $('#intervaloAVG').html('Ano-Mes-Dia [ YYYY-MM-DD ]');
+                    $('#intervaloTotais').html('Year-Month-Day [ YYYY-MM-DD ]');
+                    $('#intervaloAVG').html('Year-Month-Day [ YYYY-MM-DD ]');
                 } else if (mes < 13) {
                     momentos = 'YYYY-MM';
-                    $('#intervaloTotais').html('Ano-Mes [ YYYY-MM ]');
+                    $('#intervaloTotais').html('Year-Month [ YYYY-MM ]');
                     $('#intervaloAVG').html('Ano-Mes [ YYYY-MM ]');
-                    mostring = ' Ano-Mes';
+                    mostring = ' Year-Month';
                     by = 'by_month';
                     end = end.substr(0, 11) + '00:00';
                     start = start.substr(0, 11) + '00:00';
                 } else if (ano < 4) {
                     by = 'by_year';
-                    $('#intervaloTotais').html('Ano [ YYYY ]');
-                    $('#intervaloAVG').html('Ano [ YYYY ]');
-                    mostring = ' Ano';
+                    $('#intervaloTotais').html('Year [ YYYY ]');
+                    $('#intervaloAVG').html('Year [ YYYY ]');
+                    mostring = ' Year';
                     momentos = 'YYYY';
                     end = end.substr(0, 11) + '00:00';
                     start = start.substr(0, 11) + '00:00';
@@ -78,13 +78,13 @@ var dashboard = function() {
                             totalCalls.push({
                                 x: moment(this.stamp).format(momentos),
                                 y: this.calls,
-                                label: ' Chamadas',
+                                label: ' Calls',
                                 type: mostring
                             });
                             calls.push({
                                 x: moment(this.stamp).format(momentos),
                                 y: this.length,
-                                label: ' Segundos',
+                                label: ' Seconds',
                                 type: mostring
                             });
                             //console.log(calls);
@@ -95,13 +95,13 @@ var dashboard = function() {
                                 totalMsg.push({
                                     x: moment(this.stamp).format(momentos),
                                     y: this.calls,
-                                    label: ' Chamadas',
+                                    label: ' Calls',
                                     type: mostring
                                 });
                                 msg.push({
                                     x: moment(this.stamp).format(momentos),
                                     y: this.length,
-                                    label: ' Segundos',
+                                    label: ' Seconds',
                                     type: mostring
                                 });
                             });
@@ -111,13 +111,13 @@ var dashboard = function() {
                                     totalSys.push({
                                         x: moment(this.stamp).format(momentos),
                                         y: this.calls,
-                                        label: ' Chamadas',
+                                        label: ' Calls',
                                         type: mostring
                                     });
                                     timeSYS.push({
                                         x: moment(this.stamp).format(momentos),
                                         y: this.length,
-                                        label: ' Segundos',
+                                        label: ' Seconds',
                                         type: mostring
                                     });
                                 });
@@ -162,7 +162,7 @@ var dashboard = function() {
                 });
                 if (outro > 0) {
                     arr.push({
-                        "x": "Outros",
+                        "x": "Others",
                         "y": outro
                     });
                 }
@@ -196,7 +196,7 @@ var dashboard = function() {
                 });
                 if (outro > 0) {
                     arr.push({
-                        "x": "Outros",
+                        "x": "Others",
                         "y": outro//Math.floor(outr / (60 * 60))
                     });
                 }
@@ -269,7 +269,7 @@ var dashboard = function() {
                 });
 
                 arr.push({
-                    "label": "Outros",
+                    "label": "Others",
                     "data": outros
                 });
 
