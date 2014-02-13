@@ -416,7 +416,7 @@ var crm_main = function(crm_main_zone, file_path)
 
         if (crm_main_zone.find("#input_lead").val() != "" || crm_main_zone.find("#input_phone").val() != "")
         {
-            crm_main_zone.find("#button_filtro").toggleClass("icon-chevron-up").toggleClass("icon-chevron-down");
+            crm_main_zone.find("#button_filtro").removeClass("icon-chevron-up").removeClass("icon-chevron-down").addClass("icon-chevron-down");
             crm_main_zone.find("#div_filtro_content").hide("blind");
             crm_main_zone.find("#filter_form").validationEngine("hideAll");
 
@@ -429,7 +429,7 @@ var crm_main = function(crm_main_zone, file_path)
         {
             if (crm_main_zone.find("#filter_form").validationEngine("validate"))
             {
-                crm_main_zone.find("#button_filtro").toggleClass("icon-chevron-up").toggleClass("icon-chevron-down");
+                crm_main_zone.find("#button_filtro").removeClass("icon-chevron-up").removeClass("icon-chevron-down").addClass("icon-chevron-down");
                 crm_main_zone.find("#div_filtro_content").hide("blind");
                 crm_main_zone.find("#filter_form").validationEngine("hideAll");
                 if (crm_main_zone.find("#radio_client").is(":checked"))
@@ -578,7 +578,7 @@ var crm_main = function(crm_main_zone, file_path)
     crm_main_zone.on("click", "#button_filtro", function()
     {
         crm_main_zone.find("#div_filtro_content").toggle("blind");
-        $(this).toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
+        $(this).toggleClass("icon-chevron-up").toggleClass("icon-chevron-down");
     });
 
     crm_main_zone.on("click", "#button_resultado", function()
