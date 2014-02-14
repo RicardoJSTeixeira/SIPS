@@ -87,8 +87,7 @@ class crm_main_class {
         $js['aaData'] = array();
         $variables = array();
         $join = "";
-        $group = "";
-        $script_fields = "";
+               $script_fields = "";
 
         if ($lead_id != "" && $lead_id != null) {
             $query = "
@@ -220,13 +219,14 @@ class crm_main_class {
                 $join1 = " left join   vicidial_closer_log  calls  on calls.lead_id=a.lead_id ";
                 $join2 = " left join   vicidial_closer_log_archive  calls  on calls.lead_id=a.lead_id ";
             }
+            $statuses = $this->get_statuses($campanha);
 
             $query1 = "select a.lead_id,a.first_name,a.phone_number, calls.status  ,calls.call_date  from vicidial_list a $join1"
                     . " where $where $script_fields group by a.lead_id  limit 20000";
             $query2 = "select a.lead_id,a.first_name,a.phone_number,calls.status  ,calls.call_date  from vicidial_list a $join2"
                     . " where $where $script_fields group by a.lead_id limit 20000";
 
-            $statuses = $this->get_statuses($campanha);
+
 
             $stmt1 = $this->db->prepare($query1);
             $stmt1->execute($variables);
@@ -234,26 +234,30 @@ class crm_main_class {
                 $clients[$row[0]] = $row;
             }
 
-            if (isset($query2)) {
-                $stmt2 = $this->db->prepare($query2);
-                $stmt2->execute($variables);
-                while ($row = $stmt2->fetch(PDO::FETCH_NUM)) {
-                    $clients[$row[0]] = $row;
-                }
+
+            $stmt2 = $this->db->prepare($query2);
+            $stmt2->execute($variables);
+            while ($row = $stmt2->fetch(PDO::FETCH_NUM)) {
+                $clients[$row[0]] = $row;
             }
 
 
-            foreach ($clients as $value) {
-
-                foreach ($statuses as $value1) {
-                    if ($value1["status"] == $value[3])
-                        $value[3] = $value1["status_name"];
+            if (isset($clients)) {
+                foreach ($clients as $value) {
+                    foreach ($statuses as $value1) {
+                        if ($value1["status"] == $value[3])
+                            $value[3] = $value1["status_name"];
+                    }
+                    $value[4] = $value[4] . "<div class='view-button' ><span data-lead_id='$value[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
+                            . "<span class='btn btn-mini criar_marcacao' data-lead_id='$value[0]'><i class='icon-edit'></i>Criar Marcação</span></div>";
+                    $js['aaData'][] = $value;
                 }
-                $value[4] = $value[4] . "<div class='view-button' ><span data-lead_id='$value[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
-                        . "<span class='btn btn-mini criar_marcacao' data-lead_id='$value[0]'><i class='icon-edit'></i>Criar Marcação</span></div>";
-                $js['aaData'][] = $value;
+                return $js;
             }
-            return $js;
+            else {
+                $js['aaData'] = array();
+                return $js;
+            }
         }
         return false;
     }
@@ -272,7 +276,7 @@ class crm_main_class {
         else
             $table = "(select a.uniqueid,a.campaign_id,a.lead_id,a.phone_number,a.length_in_sec,a.call_date,a.user,a.status from vicidial_closer_log a union all select b.uniqueid,b.campaign_id,b.lead_id,b.phone_number,b.length_in_sec,b.call_date,b.user,b.status from vicidial_closer_log_archive b) calls";
 
- $statuses = $this->get_statuses($campanha);
+        $statuses = $this->get_statuses($campanha);
 
         if ($lead_id != "" && $lead_id != null) {
             $query = "
@@ -286,7 +290,7 @@ class crm_main_class {
             $stmt = $this->db->prepare($query);
             $stmt->execute($variables);
             while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-                  foreach ($statuses as $value) {
+                foreach ($statuses as $value) {
                     if ($value["status"] == $row[3]) {
                         $row[3] = $value["status_name"];
                         break;
@@ -311,7 +315,7 @@ class crm_main_class {
             $stmt = $this->db->prepare($query);
             $stmt->execute($variables);
             while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-                  foreach ($statuses as $value) {
+                foreach ($statuses as $value) {
                     if ($value["status"] == $row[3]) {
                         $row[3] = $value["status_name"];
                         break;
@@ -325,7 +329,7 @@ class crm_main_class {
             return $js;
         } else {
 
-           
+
 
             if ($campaign_linha_inbound == 1) {
                 if (!empty($bd)) {
