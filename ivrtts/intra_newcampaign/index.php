@@ -39,7 +39,7 @@
                     <label for="new-voice-selector">Choose the Voice</label>
                     <select id="lang" class="form-control">
                         <option value='pt-male' selected>Português - Masculino</option>
-                        <option value='pt-female' selected>Português - Feminino</option>
+                        <!--<option value='pt-female' selected>Português - Feminino</option>-->
                     </select>
                 </div>  
                 <div id="div-error-msg" style="border:1px solid white; margin: 16px 0px 16px 0px; max-height:40px; min-height:40px;" class="span"></div>
@@ -84,11 +84,13 @@
                 <th>Phone Number</th>
                 <th>First Message</th>
                 <th>Second Message</th>
+                <th>ID</th>
             </tr>
         </thead>
         <tbody>
             <tr id="tr1">
                 <td>1</td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -98,9 +100,11 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
             </tr>
             <tr id="tr3">
                 <td>3</td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>

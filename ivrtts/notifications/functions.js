@@ -141,6 +141,9 @@ function ReadMessagesArray(Msg) {
 								<tr>\n\
 								<td><img  class='pointer' style='margin-top:-4px' src='../images/users/icon_download_16.png'></td><td  class='pointer' style='padding-left:6px'><span class='pointer unselectable' onclick=getDB('" + Message.campaign_id + "'); >Download DB</span></td>\n\
 								</tr>\n\
+								<tr>\n\
+								<td><i class='icon-trash' ></i></td><td class='pointer' style='padding-left:6px'><span class='pointer unselectable' onclick=deleteCamp('" + Message.campaign_id + "',this); >Delete</span></td>\n\
+								</tr>\n\
 								</table>\n\
 								</div>\n\
                                 <div class='clear'></div>\n\
@@ -285,4 +288,12 @@ function DateToTimeAgo(time) {
             day_diff === 1 && "Yesterday" ||
             day_diff < 7 && day_diff + " days ago" ||
             day_diff < 31 && Math.ceil(day_diff / 7) + " weeks ago";
+}
+
+function deleteCamp(id,that){
+    $.post("../notifications/requests.php",
+    {ZERO:"deleteCamp",id:id},
+    function(data){
+        $(that).closest(".imessage").remove();
+    },"json");
 }
