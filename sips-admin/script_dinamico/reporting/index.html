@@ -1,191 +1,190 @@
 <!DOCTYPE html>
 <html>
-      <head>
-            <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
-            <title>Script dinamico</title> 
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css">
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
-            <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
-            <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-fileupload.min.css" />
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/validationEngine.jquery.css" />
+    <head>
+        <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+        <title>Script dinamico</title> 
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css">
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
+        <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-fileupload.min.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/validationEngine.jquery.css" />
 
 
 
-            <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
-            <script type="text/javascript" src="/jquery/jqueryUI/jquery-ui-1.10.2.custom.min.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt.js"></script>
+        <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
+        <script type="text/javascript" src="/jquery/jqueryUI/jquery-ui-1.10.2.custom.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt.js"></script>
 
-            <script type="text/javascript" src="/bootstrap/js/bootstrap-fileupload.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/bootstrap-fileupload.min.js"></script>
 
-            <script type="text/javascript" src="/bootstrap/js/validation/jquery.validationEngine.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/validation/languages/jquery.validationEngine-pt.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/validation/contrib/other-validations.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/validation/jquery.validationEngine.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/validation/languages/jquery.validationEngine-pt.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/validation/contrib/other-validations.js"></script>
 
-            <style>
-
-
-                  #column_order li { margin: 0 5px 5px 5px; padding: 3px; font-size: 1.1em;  }
-
-                  #column_order li input { margin-bottom: 0px;}
-                  .remove_list_item_button
-                  {
-                        float: right;
-                        height:1.1em;
-
-                  }
-
-            </style>
-      </head>
-      <body> 
+        <style>
 
 
+            #column_order li { margin: 0 5px 5px 5px; padding: 3px; font-size: 1.1em;  }
 
-            <div id="co_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
-                  <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 id="myModalLabel">Ordenação de colunas</h3>
-                  </div>
-                  <div class="modal-body">
+            #column_order li input { margin-bottom: 0px;}
+            .remove_list_item_button
+            {
+                float: right;
+                height:1.1em;
 
-                        <div id="template_div">
+            }
 
-                              <h5>Template</h5>
-                              <span  class="input-append">
-                                    <select id="oc_template"></select>
-                                    <button class="btn btn-primary icon-plus" id="new_template_div_opener_button"> Novo</button>
-                                    <button class="btn btn-warning  icon-pencil" id="edit_template_div_opener_button"> Editar</button>
-                                    <button class="btn btn-danger icon-remove " id="delete_template_button"> Apagar</button>
-                              </span>
-
-                              <div  class="input-append" id="new_template_div" style="display:none">
-
-                                    <input id="new_template_input" maxlength="45" type="text" placeholder="Nome do template novo">
-                                    <button class="btn" id="new_template_button">Criar</button>
-                              </div> 
-                              <div  class="input-append" id="edit_template_div" style="display:none">
-                                    <input id="edit_template_input" maxlength="45" type="text">
-                                    <button class="btn" id="edit_template_button">Gravar</button>
-                              </div> 
-                        </div>   
-
-                        <div class="FormRow" id="div_crs">
-                              <input   type="checkbox" id="crs_contacts" name="crs" value="1">
-                              <label class="checkbox inline" for="crs_contacts"><span></span>Apenas chamadas com resultados de script</label>
-                        </div>
-                      
-                       <div class="FormRow" id="div_idb">
-                           <input   type="checkbox" id="so_bd_activas" name="only_active" checked value="1">
-                              <label class="checkbox inline" for="so_bd_activas"><span></span>Bases de Dados Inactivas</label>
-                        </div>
-                       <div class="FormRow hide" id="div_idc">
-                           <input   type="checkbox" id="by_calls" name="by_calls" value="1">
-                              <label class="checkbox inline" for="by_calls"><span></span>Uma linha por chamada</label>
-                        </div>
+        </style>
+    </head>
+    <body> 
 
 
 
-                        <h5 id='column_order_title'>Ordenação de colunas</h5>
-                        <ul  class="connectedSortable ui-helper-reset" id="column_order">
-
-                        </ul>
-                  </div>
-                  <div class="modal-footer">
-                      <button class="btn btn-primary" id="download_report_button"><i class='icon-download-alt'></i>Download Relatório</button>
-                      <button class="btn" data-dismiss="modal" aria-hidden="true"><i class='icon-share-alt'></i>Sair</button>
-
-                  </div>
+        <div id="co_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">Ordenação de colunas</h3>
             </div>
+            <div class="modal-body">
+
+                <div id="template_div">
+
+                    <h5>Template</h5>
+                    <span  class="input-append">
+                        <select id="oc_template"></select>
+                        <button class="btn btn-primary icon-plus" id="new_template_div_opener_button"> Novo</button>
+                        <button class="btn btn-warning  icon-pencil" id="edit_template_div_opener_button"> Editar</button>
+                        <button class="btn btn-danger icon-remove " id="delete_template_button"> Apagar</button>
+                    </span>
+
+                    <div  class="input-append" id="new_template_div" style="display:none">
+
+                        <input id="new_template_input" maxlength="45" type="text" placeholder="Nome do template novo">
+                        <button class="btn" id="new_template_button">Criar</button>
+                    </div> 
+                    <div  class="input-append" id="edit_template_div" style="display:none">
+                        <input id="edit_template_input" maxlength="45" type="text">
+                        <button class="btn" id="edit_template_button">Gravar</button>
+                    </div> 
+                </div>   
+
+                <div class="FormRow" id="div_crs">
+                    <input   type="checkbox" id="crs_contacts" name="crs" value="1">
+                    <label class="checkbox inline" for="crs_contacts"><span></span>Apenas chamadas com resultados de script</label>
+                </div>
+
+                <div class="FormRow" id="div_idb">
+                    <input   type="checkbox" id="so_bd_activas" name="only_active" checked value="1">
+                    <label class="checkbox inline" for="so_bd_activas"><span></span>Bases de Dados Inactivas</label>
+                </div>
+                <div class="FormRow hide" id="div_idc">
+                    <input   type="checkbox" id="by_calls" name="by_calls" value="1">
+                    <label class="checkbox inline" for="by_calls"><span></span>Uma linha por chamada</label>
+                </div>
 
 
 
+                <h5 id='column_order_title'>Ordenação de colunas</h5>
+                <ul  class="connectedSortable ui-helper-reset" id="column_order">
 
-            <div class="grid-title">
-                  <div class="pull-left" ><i class="fam-script-error"></i> Report </div>
-                  <div class="pull-right"><a class="btn btn-inverse hide"  href="/sips-admin/script_dinamico/" target="_self">Voltar aos Scripts</a>
-
-                  </div>
+                </ul>
             </div>
-            <div class="grid-content">
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="download_report_button"><i class='icon-download-alt'></i>Download Relatório</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true"><i class='icon-share-alt'></i>Sair</button>
 
-
-
-                  <form id="form_filter" class="formular span4" >
-                        <label>Report por:</label>
-                        <div class="formRight">
-
-                              <input  type="radio" id="radio1" class="radio_opcao" name="ra" value="1" checked="checked">
-                              <label class=" radio inline"  for="radio1"><span></span>Campanha</label> 
-                        </div> 
-                        <div class="formRight">
-
-                              <input  type="radio" id="radio2" class="radio_opcao" name="ra" value="2" disabled="disabled" >
-                              <label class=" radio inline"  for="radio2"><span></span>Linha de inbound</label> 
-                        </div> 
-                        <div class="formRight">
-                              <input  type="radio" id="radio3" class="radio_opcao"  name="ra" value="3" >
-                              <label class="radio inline"  for="radio3"><span></span>Base de Dados</label> 
-                        </div>
-                        <div class="formRight time_div">
-                              <label>Data de Inicio:</label>
-                              <input  type="text" id="datetime_from" class="datetime_range validate[required]">
-                        </div>
-                        <div class="formRight time_div">
-                              <label>Data de Fim:</label>
-                              <input  type="text" id="datetime_to" class="datetime_range validate[required]" >  
-                        </div>
-                        <div class="formRight">
-                              <input  type="checkbox" id="allcontacts" name="ac" value="1">
-                              <label class="checkbox inline"  for="allcontacts"><span></span>Todos os contactos (sem datas limite)</label> 
-                        </div>
-
-                        <div class="formRow">
-                              <div class="formRight">
-                                    <button class="btn " id="download_report"><i class="icon-edit"></i>Download do Report</button>
-                              </div>
-                        </div>
-                  </form>
+            </div>
+        </div>
 
 
 
 
+        <div class="grid-title">
+            <div class="pull-left" ><i class="fam-script-error"></i> Report </div>
+            <div class="pull-right"><a class="btn btn-inverse hide"  href="/sips-admin/script_dinamico/" target="_self">Voltar aos Scripts</a>
 
-                  <div class="span6">
-                        <div id="report_campanha" class="select_opcao">
+            </div>
+        </div>
+        <div class="grid-content">
 
-                              <label>Campanha</label>
-                              <select id="select_campanha" class=" chzn-select select_opcao" data-placeholder="Selecione uma campanha"></select>
+  
 
-                        </div>
-                        <div id="report_linha_inbound" class="select_opcao">
+            <form id="form_filter" class="formular span4" >
+                <label>Report por:</label>
+                <div class="formRight">
 
-                              <label>Linha de inbound</label>
-                              <select id="select_linha_inbound" class=" chzn-select  select_opcao " data-placeholder="Selecione uma linha de inbound"></select>
+                    <input  type="radio" id="radio1" class="radio_opcao" name="ra" value="1" checked="checked">
+                    <label class=" radio inline"  for="radio1"><span></span>Campanha</label> 
+                </div> 
+                <div class="formRight">
 
-                        </div>
-                        <div id="report_bd" class="select_opcao">
+                    <input  type="radio" id="radio2" class="radio_opcao" name="ra" value="2" disabled="disabled" >
+                    <label class=" radio inline"  for="radio2"><span></span>Linha de inbound</label> 
+                </div> 
+                <div class="formRight">
+                    <input  type="radio" id="radio3" class="radio_opcao"  name="ra" value="3" >
+                    <label class="radio inline"  for="radio3"><span></span>Base de Dados</label> 
+                </div>
+                <div class="formRight time_div">
+                    <label>Data de Inicio:</label>
+                    <input  type="text" id="datetime_from" class="datetime_range validate[required]">
+                </div>
+                <div class="formRight time_div">
+                    <label>Data de Fim:</label>
+                    <input  type="text" id="datetime_to" class="datetime_range validate[required]" >  
+                </div>
+                <div class="formRight">
+                    <input  type="checkbox" id="allcontacts" name="ac" value="1">
+                    <label class="checkbox inline"  for="allcontacts"><span></span>Todos os contactos (sem datas limite)</label> 
+                </div>
 
-                              <label>Base de dados</label>
-                              <select id="select_base_dados" class=" chzn-select  select_opcao" data-placeholder="Selecione uma base de dados"></select>
+                <div class="formRow">
+                    <div class="formRight">
+                        <button class="btn " id="download_report"><i class="icon-edit"></i>Download do Report</button>
+                    </div>
+                </div>
+            </form>
 
-                        </div>
 
 
-                  </div>
+
+
+            <div class="span6">
+                <div id="report_campanha" class="select_opcao">
+
+                    <label>Campanha</label>
+                    <select id="select_campanha" class=" chzn-select select_opcao" data-placeholder="Selecione uma campanha"></select>
+
+                </div>
+                <div id="report_linha_inbound" class="select_opcao">
+
+                    <label>Linha de inbound</label>
+                    <select id="select_linha_inbound" class=" chzn-select  select_opcao " data-placeholder="Selecione uma linha de inbound"></select>
+
+                </div>
+                <div id="report_bd" class="select_opcao">
+                    <label>Base de dados</label>
+                    <select id="select_base_dados" multiple="multiple"  class=" chzn-select  select_opcao" data-placeholder="Selecione uma base de dados"></select>
+
+                </div>
 
 
             </div>
 
-            <script type="text/javascript" src="report.js"></script>
-      </body>
+
+        </div>
+
+        <script type="text/javascript" src="report.js"></script>
+    </body>
 </html>
