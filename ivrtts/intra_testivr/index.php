@@ -33,7 +33,7 @@
                  <option value='no'>Norueguês</option>
                  <option value='pl'>Polaco</option> -->
                 <option value='pt-male' selected>Português - Masculino</option>
-                <option value='pt-female' selected>Português - Feminino</option>
+                <!--<option value='pt-female' selected>Português - Feminino</option>-->
                 <!-- <option value='ro'>Romeno</option>
                 <option value='ru'>Russo</option>
                 <option value='sv'>Sueco</option>
@@ -64,9 +64,9 @@
                     <a href="#" class="btn btn-primary" onclick="ajaxgetsound('phone')" data-dismiss="modal">Make Call</a>
                     <a href="#" class="btn btn-primary" data-dismiss="modal">Cancel</a>
                 </div>
+                <div class="clear"></div>
             </div> 
 
-            <div class="clear"></div>
         </div>
     </div>
 
@@ -91,12 +91,65 @@
 
 
                     </div>
+                </div>
             </center>
+            <div class="clear"></div>
         </div>
-        <div class="clear"></div>
     </div>
 </div>
+<div class="row-fluid">
 
+    <div class="grid span6">
+        <div class="grid-title">
+            <div class="pull-left">Add tranlation</div>
+            <div class="pull-right"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="grid-content">
+            <form class="form-horizontal" id="dictionary">
+                <div  id="alert-text"></div>
+                <div class="control-group">
+                    <label class="control-label" for="origin-text">Original</label>
+                    <div class="controls">
+                        <input type="text" id="origin-text" name="origin-text" placeholder="Original" required>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="replace-text">Changed</label>
+                    <div class="controls">
+                        <input type="text" id="translate-text" name="translate-text" placeholder="Alterado" required>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <button class="btn btn-success"><i class="icon-plus"></i>Add</button>
+                    </div>
+                </div>
+            </form>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="grid span6">
+        <div class="grid-title">
+            <div class="pull-left">List</div>
+            <div class="pull-right"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="grid-content">
+            <table id="list-trad" class="table table-mod-2">
+                <thead>
+                    <tr>
+                        <th>Origin</th>
+                        <th>Translation</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
 </div>
 
 
@@ -107,16 +160,14 @@
 
 
 <script>
-     
+
 
     function ajaxgetsound(action) {
 
-        
-
-        if (action == 'phone') {
+        if (action === 'phone') {
             //    phone = prompt("Insira o nº de telefone"); 
             var phone = $("#ivrtest-phonetocall").val();
-            var velocidade = $("#velocidade").val()
+            var velocidade = $("#velocidade").val();
             var texto = $("#texto").val();
             var lingua = $("#lang").val();
 
@@ -125,8 +176,8 @@
 
             });
 
-        } else if (action == 'web') {
-            var velocidade = $("#velocidade").val()
+        } else if (action === 'web') {
+            var velocidade = $("#velocidade").val();
             var texto = $("#texto").val();
             var lingua = $("#lang").val();
 
@@ -134,9 +185,7 @@
                 $('.result').html(data);
 
                 texto_ivr = data;
-                //alert(texto_ivr);
-                var audioplayer = $('#wavplayer').prop("autoplay",true);
-                audioplayer.empty();
+                var audioplayer = $('#wavplayer').prop("autoplay", true).empty();
 
                 $("<source>").attr("src", "../dixi/files/" + data + ".mp3").appendTo(audioplayer);
 
@@ -146,7 +195,53 @@
             });
         }
     }
+    var oTable;
+    $("#dictionary").submit(function(e) {
+        e.preventDefault();
+        var that = $(this);
+        $.post("../intra_testivr/dictionary.php",
+                {
+                    action: "insert",
+                    origin: that.find("#origin-text").val(),
+                    trans: that.find("#translate-text").val()
+                },
+        function(data) {
+            if (data.error) {
+                    makeAlert("#alert-text", "Warning!", data.msg, 2, 1, 0);
+                return false;
+            }
 
+            oTable.fnAddData([
+                that.find("#origin-text").val(),
+                that.find("#translate-text").val(),
+                "<button class='btn btn-danger icon-alone ' data-id='" + data.id + "' ><i class='icon-trash'></i></button>"]);
+            that[0].reset();
+        }, "json");
+    });
+
+    oTable = $('#list-trad').dataTable({"aaSorting": [[0, "asc"]],
+        "bSortClasses": false,
+        "bProcessing": true,
+        "bDestroy": true,
+        "bAutoWidth": false,
+        "sPaginationType": "full_numbers",
+        "fnServerParams": function(aoData) {
+            aoData.push({"name": "action", "value": "get_info_client"},
+            {"name": "action", "value": "getAll"}
+            );
+        },
+        "sAjaxSource": '../intra_testivr/dictionary.php'
+    });
+
+    $('#list-trad tbody').on("click", "button", function() {
+        var that = this;
+        $.post('../intra_testivr/dictionary.php', {action: "delete", id: $(that).data().id}, function() {
+
+            var aPos = oTable.fnGetPosition($(that).closest("td")[0]);
+
+            oTable.fnDeleteRow(aPos[0]);
+        }, "json");
+    });
 
 
 </script>    
