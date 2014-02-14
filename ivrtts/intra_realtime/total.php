@@ -12,6 +12,7 @@ $file = file_get_contents("http://goviragem.dyndns.org:10000/ccstats/v0/count/ca
 $content = json_decode($file, true);
 
 $p = array('msg' => array(), 'sys' => array(), 'total' => array());
+
 foreach ($content as $value) {
     $ref="";
     foreach ($tempo as $tempinho) {

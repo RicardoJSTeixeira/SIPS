@@ -11,26 +11,40 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- end: Mobile Specific -->
         <!-- start: CSS -->      
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.gritter.css" />
         <link href="/assets/css/style.css" rel="stylesheet">
         <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+
         <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen-1.min.css" />
-        <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css" />
+
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/validationEngine.jquery.css" />
-
-
         <!-- end: CSS -->
         <style >
+
+            body{
+                // zoom:0.75;
+                font-size: 12px;
+            }
+            /*.row {
+                zoom: 0.80;
+            }*/
+
+            .panel {
+                cursor: pointer;
+            }
+            .box-header{
+                font-size:small;
+
+            }
+            .panel-title{
+                font-size: small;
+            }
             .popoverStyle{
 
                 margin: 5px;
             }
-            .inputNinja {
-                border: 0;
-                background-color: transparent;
-                margin-top: -3px;
-                width: calc(100% - 55px);
-            }
+
             .color{
                 color: whitesmoke;
             }
@@ -40,7 +54,6 @@
                 width: 100%;
                 height:100%; 
             }
-
             //sortable          
             /* line 10, jquery-sortable.css.sass */
             ol.vertical {
@@ -59,7 +72,8 @@
                 margin: 0;
                 padding: 0;
                 border: none; }
-            /* line 24, jquery-sortable.css.sass */
+
+            /* line 24, jquery-sortable.css.sass 
             ol.vertical li.placeholder:before {
                 position: absolute;
                 content: "";
@@ -70,7 +84,7 @@
                 top: -4px;
                 border: 5px solid transparent;
                 border-left-color: red;
-                border-right: none; }
+                border-right: none; }*/
             /* line 1, jquery-sortable.css.sass */
             body.dragging, body.dragging * {
                 cursor: move !important; }
@@ -81,7 +95,6 @@
                 top: 0;
                 opacity: 0.5;
                 z-index: 2000; }
-
             /* line 32, application.css.sass */
             ol {
                 list-style-type: none; }
@@ -100,7 +113,7 @@
                 margin: -1px;
                 cursor: move;
                 width: 30px;
-                text-indent: -1%;
+                text-indent: -2%;
                 white-space: nowrap;
                 border: 1px solid #aaa;
                 background: #ddd;
@@ -127,18 +140,17 @@
 
             .item_content{
                 display: inline-block;
-                width: calc(90% - 10px);
+                width: calc(84% - 10px);
                 margin: 5px;
             }
 
-            .item_content a{
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
-                float: right;
-                font-size: 16px;
-                margin-left: 10px;
-            }
-
+            /*  .item_content a{
+                  -webkit-font-smoothing: antialiased;
+                  -moz-osx-font-smoothing: grayscale;
+                  float: right;
+                  font-size: 20px;
+                  margin-left: 10px;
+              }*/
             .chosen-container * {
                 box-sizing:initial;
             }
@@ -147,10 +159,50 @@
                 z-index:inherit;
 
             }
+            .chosen-choices, ol{
+                padding:0px;
+            }
             .chosen-container { width: 100% !important; }
 
             .chosen-select{width: 225%;}
 
+            /* .inputNinja {
+                 border: 0;
+                 background-color: transparent;
+                 margin-top: -3px;
+                 width: calc(100% - 55px);
+             }*/
+
+            .slave .inputNinja{
+                width: 100%;
+            }
+            #mightyNest .item_content{
+                width: calc(84% - 10px);
+            }
+            #list .item_content{
+                width: calc(100% - 10px);
+            }
+            #list .panel-body{
+                padding:0;
+            }
+            #accordion {
+                margin-top: 6px;
+            }
+
+            .icon-wrench{
+                float: right;
+                margin-right: 4px;
+                margin-top: 4px;
+                font-size: 18px;
+                cursor: pointer;
+            }
+            .icon-trash{
+                float: right;
+                margin-right: 5px;
+                margin-top: 4px;
+                font-size: 18px;
+                cursor: pointer;
+            }
         </style>
 
     </head>
@@ -167,397 +219,362 @@
                     </div>
                 </div>
                 <div class="box-content ">
+                    <!-- <div class='row'>
+ 
+                         <div class="col-sm-12 form-group">
+                             <div class="controls">
+                                 <div class="input-group"  id='divSelectTemplate'>
+ 
+                                     <select  id="selectTemplateList" class="form-control" data-placement="top" data-original-title="* Campo obrigatório" >
+                                         <option value='default'>Seleccionar Template</option>
+                                     </select>
+                                     <span class="input-group-btn">
+                                         <button class="btn btn-primary" id="editTemp"  style="display:none;"><i class="icon-edit"></i> Editar   </button>
+ 
+                                         <button class="btn btn-success" id="newTemplate"  ><i class="icon-plus-sign"></i> Novo </button>
+                                     </span>
+                                 </div>
+
+                             </div>
+                         </div>
+ 
+                     </div>-->
                     <div class='row'>
-
                         <div class="col-sm-12 form-group">
-                            <div class="controls">
-                                <div class="input-group"  id='divSelectTemplate'>
+                            <form class="form-inline" role="form" id="form-template">
 
-                                    <select  id="selectTemplateList" class="form-control" data-placement="top" data-original-title="* Campo obrigatório" >
-                                        <option value='default'>Selecionar Template</option>
+                                <div class="form-group col-sm-2">
+                                    <select  id="selectTemplateList" title="Seleccione um template"   >
+
                                     </select>
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-primary" id="editTemp"  ><i class="icon-edit"></i> Editar   </button>
+                                </div>
 
-                                        <button class="btn btn-success" id="newTemplate"  ><i class="icon-plus-sign"></i> Novo </button>
-                                    </span>
+                                <div class="form-group col-sm-2" id="chosenMultiDivUser" title="Utilizadores que vão ter acesso ao template">
+                                    <select id="selectUser" name="selectUser" multiple class="form-control chosen-select "> 
+
+                                    </select> 
+                                </div>
+
+                                <div class="form-group col-sm-2 ">
+
+                                    <div class="radio" >
+                                        <input type="radio" name="cabi" id="radioselectcampaign" checked value="1"  > 
+                                        <label class="control-label " for="radioselectcampaign">Campanha</label>       
+                                    </div>
+                                    <div class="radio" >
+                                        <input type="radio" name="cabi" id="radioselectlist" value="2" > 
+                                        <label class="control-label" for="radioselectlist">Listas</label>
+                                    </div>
+                                    <div class="radio" >
+                                        <input type="radio" name="cabi" id="radioselectinbound"  value="3" style="display:none;"> 
+                                        <label class="control-label" for="radioselectinbound" style="display:none;">Inbound</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2" >
+
+                                    <div class="form-group col-sm-12 filtroModalDiv" id="campaignModalDiv">
+                                        <div data-placement="top" title="Seleccione uma ou mais Campanhas para ter acesso aos feedBacks da mesma." id='chosenSelectDivselectcampaign'>
+                                            <select id="selectcampaign" name="selectcampaign" multiple class="form-control chosen-select"></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-12 filtroModalDiv" id="listModalDiv" style="display:none;">
+                                        <div data-placement="top" title="Seleccione uma ou mais listas para ter acesso aos feedBacks da mesma." id='chosenSelectDivselectlist'>
+                                            <select id="selectlist" name="selectlist" multiple class="form-control chosen-select"></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-12 filtroModalDiv " id="inboundModalDiv" style="display:none;" >
+                                        <div data-placement="top" title="Seleccione uma ou mais inbound para ter acesso aos feedBacks da mesma." id='chosenSelectDivselectinbound'>
+                                            <select id="selectinbound" name="selectinbound" multiple class="form-control chosen-select"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-2"  >
+
+                                    <input class="form-control validate[required] text-input datepicker" data-placement="top" title="Data inicial"  type="text" placeholder="Data Inicio" readonly="" id="dateStart" name="dateStart" style="margin-bottom: 5px;" >
+
+                                    <input class="form-control validate[required] text-input datepicker " data-placement="top" title="Data Final" type="text" placeholder="Data Fim" readonly="" id="dateEnd" name="dateEnd">
 
                                 </div>
 
-                            </div>
-                        </div>
+                                <div class="form-group col-sm-1">
+                                    <button type="button" class="btn btn-danger btn-sm"data-dismiss="modal" id="deleteTempModal" data-placement="top" title="Apagar template" style="display:none;"><i class="icon-remove-sign"></i>  Apagar</button>
 
+                                </div>
+
+                                <div class="form-group col-sm-1" >
+
+                                    <button class="btn btn-primary btn-sm" id="editTemplate" data-toggle="modal" data-placement="top" title="Gravar alterações da template"><i class="icon-save"></i> Gravar</button>
+
+                                </div>
+
+                            </form>
+                        </div>
                     </div>
+
                     <hr>
-                    <div class="col-sm-6">
-                        <div class="box" id='agrupador'>
-                            <div class="box-header">
-                                <b><i class="icon-paper-clip"></i><span class="break"></span>Agrupador</b>
+                    <div id="bottom" style="display:none;">
+                        <div class="col-sm-2" id="list"  >
 
-                                <div class="box-icon">
+                            <div class="box">
 
-                                    <a  class="btn-setting"><i class="icon-search" id="preViewIco" title="Pre-visualização da template."></i></a>
-                                    <a  class="btn-setting"><i class="icon-save" id="saveTemplateListIco"title="Salvar lista de items da template"></i></a>
-                                    <a  class="btn-setting"><i class="icon-plus" id="addStapleIco" title="Adicionar agrupador"></i></a>
+                                <div class="box-header">
+                                    <b>FeedBacks</b>
+
+                                </div>
+                                <div class="box-content " >
+                                    <select  id="selectAgrupador" class=" form-control chosen-select" >
+
+                                    </select>
+                                    <div class="panel-group" id="accordion">
+
+                                        <div class="panel panel-default" id="0" style="display:none;">
+                                            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseZero">
+                                                <h6 class="panel-title">
+                                                    <b > Resposta Humana</b>
+                                                    <b id="totalFeed0"></b>
+                                                </h6>
+                                            </div>
+                                            <div id="collapseZero" class="panel-collapse collapse ">
+                                                <div class="panel-body">
+                                                    <ol class="simple_with_no_drop vertical" id="respHumana"> </ol>  
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel panel-default" id="1" style="display:none;">
+                                            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseteOne">
+                                                <h6 class="panel-title" >
+                                                    <b > Sucesso</b>
+                                                    <b id="totalFeed1"></b>
+                                                </h6>
+                                            </div>
+                                            <div id="collapseteOne" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <ol class="simple_with_no_drop vertical" id="sucesso"> </ol>  
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel panel-default" id="2" style="display:none;">
+                                            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseteTwo">
+                                                <h6 class="panel-title">
+
+                                                    <b > Lista Negra</b>
+                                                    <b id="totalFeed2"></b>
+
+                                                </h6>
+                                            </div>
+                                            <div id="collapseteTwo" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <ol class="simple_with_no_drop vertical" id="listNegra"> </ol>  
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel panel-default" id="3" style="display:none;">
+                                            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseteTree">
+                                                <h6 class="panel-title">
+
+                                                    <b > Contacto Útil</b>
+                                                    <b id="totalFeed3"></b>
+
+                                                </h6>
+                                            </div>
+                                            <div id="collapseteTree" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <ol class="simple_with_no_drop vertical" id="contUtil"> </ol>  
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default" id="4" style="display:none;">
+                                            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseteFour">
+                                                <h6 class="panel-title">
+
+                                                    <b > Negativo</b>
+                                                    <b id="totalFeed4"></b>
+
+                                                </h6>
+                                            </div>
+                                            <div id="collapseteFour" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <ol class="simple_with_no_drop vertical" id="negativo"> </ol>  
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel panel-default" id="5" style="display:none;">
+                                            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseteFive">
+                                                <h6 class="panel-title">
+
+                                                    <b > Não Útil</b>
+                                                    <b id="totalFeed5"></b>
+
+                                                </h6>
+                                            </div>
+                                            <div id="collapseteFive" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <ol class="simple_with_no_drop vertical" id="naoUtil"> </ol>  
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel panel-default" id="6" style="display:none;">
+                                            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseteSix">
+                                                <h6 class="panel-title">
+
+                                                    <b > Call Back</b>
+                                                    <b id="totalFeed6"></b>
+
+                                                </h6>
+                                            </div>
+                                            <div id="collapseteSix" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <ol class="simple_with_no_drop vertical" id="callBack"> </ol>  
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel panel-default" id="7" style="display:none;">
+                                            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseteSeven">
+                                                <h6 class="panel-title" >
+
+                                                    <b >Contacto Fechado</b>
+                                                    <b id="totalFeed7"></b>
+
+                                                </h6>
+                                            </div>
+                                            <div id="collapseteSeven" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <ol class="simple_with_no_drop vertical" id="contFechado"> </ol>  
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel panel-default" id="8" style="display:none;">
+                                            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseteEight">
+                                                <h6 class="panel-title" >
+
+                                                    <b >Feeds de Sistema</b>
+                                                    <b id="totalFeed8"></b>
+
+                                                </h6>
+                                            </div>
+                                            <div id="collapseteEight" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <ol class="simple_with_no_drop vertical" id="feedSistema"> </ol>  
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>    
+
+                                    <div class="clearfix"> </div>
+                                </div>
+
+                            </div> 
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="box" id='agrupador'>
+                                <div class="box-header">
+                                    <b><i class="icon-paper-clip"></i><span class="break"></span>Agrupador</b>
+
+                                    <div class="box-icon">
+                                        <a  class="btn-setting"><i class="icon-plus" id="addStapleIco" title="Adicionar agrupador"> Adicionar</i></a>
+
+                                    </div>
 
                                 </div>
 
-                            </div>
+                                <div class="box-content " >
 
-                            <div class="box-content " >
-                                <select  id="selectAgrupador" class=" form-control chosen-select" >
-                                    <option >Selecionar  </option>
-                                </select>
-                                <div class="" >
+                                    <div class="" >
 
-                                    <ol class="simple_with_drop vertical" id="mightyNest">
+                                        <ol class="simple_with_drop vertical" id="mightyNest">
 
-                                    </ol>         
+                                        </ol>         
 
+                                    </div>
+
+                                    <div class="clearfix"> </div>
                                 </div>
 
-                                <div class="clearfix"> </div>
                             </div>
 
                         </div>
 
-                    </div>
+                        <div class="col-sm-6"  >
+                            <div class="box">
+                                <div class="box-header">
+                                    <i class="icon-align-justify"></i>
+                                    <span class="break"></span>
+                                    <b >
 
+                                        Pré-visualização
 
+                                    </b>
 
-                    <div class="col-sm-6" id="list">
-                        <div class="box">
-                            <div class="box-header">
-                                <i class="icon-align-justify"></i>
-                                <span class="break"></span>
-                                <b >
+                                    <div class="box-icon">
+                                        <a  class="btn-setting"><i class=" icon-download" id="downloadTemplate" title="Donwload de ficheiro Excel em formato .XLSX"> Download</i></a>
 
-                                    Feeds
-                                </b>
-
-                                <div class="box-icon">
-
-                                    <a  class="btn-minimize"><i class="icon-chevron-down"></i></a>
-
-                                </div>
-                            </div>
-
-                            <div class="box-content clearfix"style="display: none;" >
-
-                                <div class="box">
-                                    <div class="box-header">
-                                        <i class="icon-align-justify"></i>
-                                        <span class="break"></span>
-                                        <b >
-
-                                            Resposta Humana
-                                        </b>
-                                        <b id="totalFeed0">
-
-
-                                        </b>
-                                        <div class="box-icon">
-
-                                            <a  class="btn-minimize"><i class="icon-chevron-down"></i></a>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="box-content clearfix" style="display: none;">
-
-                                        <div class="" >
-
-                                            <ol class="simple_with_no_drop vertical" id="respHumana">
-
-                                            </ol>         
-
-                                        </div>
-
-                                        <div class="clearfix"></div>
                                     </div>
                                 </div>
 
-                                <div class="box">
-                                    <div class="box-header">
-                                        <i class="icon-align-justify"></i><span class="break"></span>
-                                        <b >Sucesso</b>
-                                        <b id="totalFeed1">
-
-
-                                        </b>
-                                        <div class="box-icon">
-
-                                            <a  class="btn-minimize"><i class="icon-chevron-down"></i></a>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="box-content clearfix" style="display: none;">
-
-                                        <div class="" >
-
-                                            <ol class="simple_with_no_drop vertical" id="sucesso">
-
-                                            </ol>         
-
-                                        </div>
-
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </div>
-
-                                <div class="box">
-                                    <div class="box-header">
-                                        <i class="icon-align-justify"></i><span class="break"></span>
-                                        <b >Lista Negra</b>
-                                        <b id="totalFeed2">
-
-
-                                        </b>
-                                        <div class="box-icon">
-
-                                            <a  class="btn-minimize"><i class="icon-chevron-down"></i></a>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="box-content clearfix" style="display: none;">
-
-                                        <div class="" >
-
-                                            <ol class="simple_with_no_drop vertical" id="listNegra">
-
-                                            </ol>         
-
-                                        </div>
-
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </div>
-
-                                <div class="box">
-                                    <div class="box-header">
-                                        <i class="icon-align-justify"></i><span class="break"></span>
-                                        <b >Contacto Útil</b>
-                                        <b id="totalFeed3">
-
-
-                                        </b>
-                                        <div class="box-icon">
-
-                                            <a  class="btn-minimize"><i class="icon-chevron-down"></i></a>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="box-content clearfix" style="display: none;">
-
-                                        <div class="" >
-
-                                            <ol class="simple_with_no_drop vertical" id="contUtil">
-
-                                            </ol>         
-
-                                        </div>
-
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </div>
-
-                                <div class="box">
-                                    <div class="box-header">
-                                        <i class="icon-align-justify"></i><span class="break"></span>
-                                        <b >Negativo</b>
-                                        <b id="totalFeed4">
-
-
-                                        </b>
-                                        <div class="box-icon">
-
-                                            <a  class="btn-minimize"><i class="icon-chevron-down"></i></a>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="box-content clearfix" style="display: none;">
-
-                                        <div class="" >
-
-                                            <ol class="simple_with_no_drop vertical" id="negativo">
-
-                                            </ol>         
-
-                                        </div>
-
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </div>
-                                <div class="box">
-                                    <div class="box-header">
-                                        <i class="icon-align-justify"></i><span class="break"></span>
-                                        <b >Não Útil</b>
-                                        <b id="totalFeed5">
-
-
-                                        </b>
-                                        <div class="box-icon">
-
-                                            <a  class="btn-minimize"><i class="icon-chevron-down"></i></a>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="box-content clearfix" style="display: none;">
-
-                                        <div class="" >
-
-                                            <ol class="simple_with_no_drop vertical" id="naoUtil">
-
-                                            </ol>         
-
-                                        </div>
-
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </div>
-                                <div class="box">
-                                    <div class="box-header">
-                                        <i class="icon-align-justify"></i><span class="break"></span>
-                                        <b >Call Back</b>
-                                        <b id="totalFeed6">
-
-
-                                        </b>
-                                        <div class="box-icon">
-
-                                            <a  class="btn-minimize"><i class="icon-chevron-down"></i></a>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="box-content clearfix" style="display: none;">
-
-                                        <div class="" >
-
-                                            <ol class="simple_with_no_drop vertical" id="callback">
-
-                                            </ol>         
-
-                                        </div>
-
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </div>
-                                <div class="box">
-                                    <div class="box-header">
-                                        <i class="icon-align-justify"></i><span class="break"></span>
-                                        <b >Contacto Fechado</b>
-                                        <b id="totalFeed7">
-
-
-                                        </b>
-                                        <div class="box-icon">
-
-                                            <a  class="btn-minimize"><i class="icon-chevron-down"></i></a>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="box-content clearfix" style="display: none;">
-
-                                        <div class="" >
-
-                                            <ol class="simple_with_no_drop vertical" id="contFechado">
-
-                                            </ol>         
-
-                                        </div>
-
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </div>
-                                <div class="box">
-                                    <div class="box-header">
-                                        <i class="icon-align-justify"></i><span class="break"></span>
-                                        <b >Feeds de Sistema</b>
-                                        <b id="totalFeed8">
-
-
-                                        </b>
-                                        <div class="box-icon">
-
-                                            <a  class="btn-minimize"><i class="icon-chevron-down"></i></a>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="box-content clearfix" style="display: none;">
-
-                                        <div class="" >
-
-                                            <ol class="simple_with_no_drop vertical" id="feedSistema">
-
-                                            </ol>         
-
-                                        </div>
-
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6" id="list1" style="display: none;">
-                        <div class="box">
-                            <div class="box-header">
-                                <i class="icon-align-justify"></i>
-                                <span class="break"></span>
-                                <b >
-
-                                    Scripts
-                                </b>
-
-                                <div class="box-icon">
-
-                                    <a  class="btn-minimize"><i class="icon-chevron-down"></i></a>
+                                <div class="box-content " id="content" > 
 
                                 </div>
-                            </div>
-
-                            <div class="box-content clearfix"style="display: none;" >
-
                             </div>
                         </div>
-                    </div>
+                        <div class="col-sm-6" id="list1" style="display: none;">
+                            <div class="box">
+                                <div class="box-header">
+                                    <i class="icon-align-justify"></i>
+                                    <span class="break"></span>
+                                    <b >
 
-                    <div class="col-sm-6" id="list2"  style="display: none;">
-                        <div class="box">
-                            <div class="box-header">
-                                <i class="icon-align-justify"></i>
-                                <span class="break"></span>
-                                <b >
+                                        Scripts
+                                    </b>
 
-                                    Tempos
-                                </b>
+                                    <div class="box-icon">
 
-                                <div class="box-icon">
+                                        <a  class="btn-minimize"><i class="icon-chevron-down"></i></a>
 
-                                    <a  class="btn-minimize"><i class="icon-chevron-down"></i></a>
+                                    </div>
+                                </div>
+
+                                <div class="box-content "style="display: none;" >
 
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="box-content clearfix"style="display: none;" >
+                        <div class="col-sm-6" id="list2"  style="display: none;">
+                            <div class="box">
+                                <div class="box-header">
+                                    <i class="icon-align-justify"></i>
+                                    <span class="break"></span>
+                                    <b >
 
+                                        Tempos
+                                    </b>
+
+                                    <div class="box-icon">
+
+                                        <a  class="btn-minimize"><i class="icon-chevron-down"></i></a>
+
+                                    </div>
+                                </div>
+
+                                <div class="box-content "style="display: none;" >
+
+                                </div>
                             </div>
                         </div>
+                        <div class="clearfix"></div>
                     </div>
-
-
-                    <div class="clearfix"></div>
                 </div>
             </div>
         </div>
@@ -573,96 +590,29 @@
 
                     <div class="modal-body">
 
-                        <form class="form-horizontal" id="modalNewTemplate">
-                            <fieldset class="col-sm-12">
+                        <form class="form-horizontal" id="modalNewTemplate" style="display: none" >
+                            <div class="">
+                                <label class="control-label " >Nome de template</label> 
+                                <input class="form-control" id="inputName"  type="text" >
+                            </div>
+                        </form>
+                        <form class="form-horizontal" id="modalDeletTemplate" style="display: none" >
+                            <div class="">
+                                <label class="control-label " >Tem a certeza que quer apagar o template?</label> 
 
-                                <div class="form-group">
-                                    <div class="controls  row " >
-
-                                        <div class="input-group date col-sm-12" data-placement="top" data-original-title="* Campo obrigatório" id='chosenMultiDivUser'>
-                                            <label class="control-label">Seleccionar Utilizadores</label>
-                                            <select id="selectUser"  multiple class="form-control chosen-select ">
-
-                                            </select> 
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label">Nome</label>
-                                    <div class="controls  row " >
-                                        <div class=" date col-sm-12" >
-
-                                            <input class="form-control focused validate[required]" id="inputName"  type="text" >
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-
-                                    <input type="radio" name="cabi" id="radiocampaign" value="1" checked disabled> 
-                                    <label class="control-label" for="radiocampaign">Campanha</label>                                 
-
-                                    <input type="radio" name="cabi" id="radiolist" value="2" disabled> 
-                                    <label class="control-label" for="radiolist">Listas</label>
-
-                                    <input type="radio" name="cabi" id="radioinbound"  value="3" style="display:none;"> 
-                                    <label class="control-label" for="radioinbound" style="display:none;">Inbound</label>
-
-                                    <div class="controls  row filtroModalDiv" id="campaignModalDiv" >
-                                        <div class="input-group date col-sm-12" data-placement="top" data-original-title="* Campo obrigatório" id='chosenSelectDivcampaign'>
-                                            <select  id="selectcampaign" multiple class="form-control chosen-select "></select>
-                                        </div>
-                                    </div>
-                                    <div class="controls  row filtroModalDiv" id="listModalDiv" style="display:none;" >
-                                        <div class="input-group date col-sm-12" data-placement="top" data-original-title="* Campo obrigatório" id='chosenSelectDivlist'>
-                                            <select  id="selectlist" multiple class=" form-control chosen-select"></select>
-                                        </div>
-                                    </div>     <div class="controls  row filtroModalDiv " id="inboundModalDiv" style="display:none;">
-                                        <div class="input-group date col-sm-12" data-placement="top" data-original-title="* Campo obrigatório" id='chosenSelectDivinbound'>
-                                            <select  id="selectinbound" multiple class=" form-control chosen-select"></select>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-
-                                <div class="form-group">
-                                    <div class="controls  row " >
-                                       
-                                        <div class="input-group date col-sm-6">
-
-
-                                            <span class="input-group-addon"><i class="icon-time"></i>  <label class="control-label">Data Inicial</label></span>                                             
-                                            <input class="form-control validate[required] text-input datepicker" type="text" placeholder="Data Inicio" readonly="" id="dateStart" >
-
-                                        </div>
-                                        
-                                        <div class="input-group date col-sm-6">
-
-                                            <span class="input-group-addon"><i class="icon-time"></i>  <label class="control-label">Data Final</label></span>
-                                            <input class="form-control validate[required] text-input datepicker" type="text" placeholder="Data Fim" readonly="" id="dateEnd">
-
-                                        </div>
-                                    </div>
-                                </div> 
-                            </fieldset>
+                            </div>
                         </form>
 
                     </div>
                     <div class="modal-footer">                       
-                        <button type="button" class="btn btn-success"  id="saveTempModal"><i class="icon-save"></i>  Salvar</button>
-                        <button type="button" class="btn btn-danger"data-dismiss="modal" id="deleteTempModal"style="display:none;"><i class="icon-remove-sign"></i>  Apagar</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal"id="modalClose2"><i class="icon-eye-close"></i>  Cancelar</button>
+                        <button type="button" class="btn btn-success"  id="saveTempModal" style="display:none;"><i class="icon-save"></i>  Salvar</button>
+                        <button type="button" class="btn btn-danger"data-dismiss="modal" id="delete" style="display:none;"><i class="icon-remove-sign"></i>  Apagar</button>
 
+                        <button type="button" class="btn btn-default" data-dismiss="modal" style="display:inline;">Close</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
-
-
         <div   id="graphType" style="display: none" class="popover-content" >        
 
             <select id="selectGraphType" class="form-control" >
@@ -713,9 +663,6 @@
     <script src="/assets/js/jquery.chosen.min.js"></script> 
 
     <script src="/assets/js/moment.min.js"></script>
-
-    <script src="../../../bootstrap/js/jquery.jgrowl.js"></script>
-    
     <script src="/assets/js/raphael.min.js"></script>
     <script src="/assets/js/jquery-sortable.js"></script>  
     <!-- theme scripts -->
@@ -726,6 +673,11 @@
     <script type="text/javascript" src="/bootstrap/js/validation/jquery.validationEngine.js"></script>
     <script type="text/javascript" src="/bootstrap/js/validation/languages/jquery.validationEngine-pt.js"></script>
     <!-- end: JavaScript-->
+    <script src="../../../bootstrap/js/jquery.gritter.min.js"></script>
+
+    <script src="/assets/js/d3.min.js"></script>
+    <script src="/assets/js/xcharts.min.js"></script>
+
     <script src="/sips-admin/reporting/js/mightycons.js"></script>
     <!-- end: JavaScript-->
 

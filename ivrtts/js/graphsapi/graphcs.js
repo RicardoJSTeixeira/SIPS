@@ -133,23 +133,11 @@ var graph = function() {
 
     this.line = function(selector, data) {
 
-//        var arr = new Array();
-//        var numero = getRandomInt(1, 20);
-//        for (var i = 0; i < 5; i++) // i<data.length
-//        {
-//
-//            var obj = {
-//                "x": '2013-12-' + numero,
-//                "y": getRandomInt(1, 222)
-//            };
-//            arr.push(obj);
-//            numero++;
-//        }
         var data1 = {
             "xScale": 'ordinal',
             "yScale": 'linear',
             "main": data
-         };
+        };
 
 
         var tt = document.createElement('div'),
@@ -158,31 +146,33 @@ var graph = function() {
         tt.className = 'ex-tooltip';
         document.body.appendChild(tt);
         var opts = {
-            "axisPaddingRight": 15,
-            "axisPaddingLeft": 15,
-           "tickHintX": 31, /*
-            "dataFormatX": function(x) {
-                console.log (d3.time.format('%Y-%m-%d').parse(x));
-                return d3.time.format('%Y-%m').parse(x);
-            },
-            "tickFormatX": function(x) {
-                return d3.time.format('%m')(x);
-            },*/
+            'yMin':0,
+            "axisPaddingRight": 5,
+            "axisPaddingLeft": 5,
+            "tickHintX": 5,/*
+             "dataFormatX": function(x) {
+             console.log (d3.time.format('%Y-%m-%d').parse(x));
+             return d3.time.format('%Y-%m').parse(x);
+             },/*
+             "tickFormatX": function(x) {
+             return d3.time.format('%m')(x);
+             },*/
             "mouseover": function(d, i) {
                 var pos = $(this).offset();
                 ($(this));
-                $(tt).text(d.x+' : ' + d.y)
+                $(tt).text(' Tempo : '+d.x + d.type + ' ' +d.label +' : ' + d.y+'  ')
                         .css({top: topOffset + pos.top, left: pos.left + leftOffset, zIndex: 1111})
                         .show();
             },
-            "sortX":function(a, b) {return a.x-b.x; },
+            /*"sortX": function(a, b) { //sort order menos -> maior
+             return a.x - b.x;
+             },*/
             "mouseout": function(x) {
                 $(tt).hide();
             }
         };
 
         var myChart = new xChart('line-dotted', data1, selector, opts);
-
 
     };
 

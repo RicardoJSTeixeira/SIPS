@@ -1,6 +1,8 @@
 <?php
 
 require("../../ini/db.php");
+require("../lib/translater.php");
+
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -46,6 +48,7 @@ if ($action == "GetPreview") {
         $js[$counter][] = $rows[0];
         $js[$counter][] = utf8_decode($rows[1]);
         $js[$counter][] = utf8_decode($rows[2]);
+        $js[$counter][] = utf8_decode($rows[3]);
 
         $counter++;
     }
@@ -77,7 +80,7 @@ if ($action == "CreateCampaign") {
 
 
     // CREATE CAMPAIGNS
-    $params1 = array($CampaignID, $sent_campaign_name, 'N', 'DOWN', 'Y', '50', '1', 'longest_wait_time', '24hours', '35', '0134', '0', 'ALLFORCE', 'FULLDATE_CUSTPHONE', '0', 'HANGUP', 'RATIO', '3', 'Y', 'DC PU PDROP ERI NA DROP B NEW -', 'Y', 'ALT_AND_ADDR3', $voice);
+    $params1 = array($CampaignID, $sent_campaign_name, 'N', 'DOWN', 'Y', '50', '1', 'longest_wait_time', 'weekwork', '50', '0134', '0', 'ALLFORCE', 'FULLDATE_CUSTPHONE', '0', 'HANGUP', 'RATIO', '3', 'Y', 'DC PU PDROP ERI NA DROP B NEW -', 'Y', 'ALT_AND_ADDR3', $voice);
     $stmt = $db->prepare("INSERT INTO vicidial_campaigns
 	(
 	campaign_id,
@@ -184,6 +187,8 @@ if ($action == "CreateCampaign") {
 }
 
 if ($action == "LoadLeads") {
+    $dt=new dictionary($db);
+    $translation=$dt->getFormated();
     // REGEX
     $regex_filter = "/['\"`\\;]/";
 
@@ -199,6 +204,7 @@ if ($action == "LoadLeads") {
     // COUNTERS
     $LineCounter = 0;
     $Errors = 0;
+    $stmt = $db->prepare("INSERT INTO vicidial_list (phone_number, comments, email, extra1, entry_date, called_since_last_reset, gmt_offset_now, last_local_call_time, list_id, status ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     while (!feof($file)) {
         $buffer = rtrim(fgets($file, 4096));
         if (strlen($buffer) > 0) {
@@ -212,6 +218,13 @@ if ($action == "LoadLeads") {
 
             $Msg1 = preg_replace("/['\"`\\;]/", "", $buffer[1]);
             $Msg2 = preg_replace("/['\"`\\;]/", "", $buffer[2]);
+            $id = preg_replace("/['\"`\\;]/", "", $buffer[3]);
+            
+            $Msg1 = utf8_decode($Msg1);
+            $Msg2 = utf8_decode($Msg2);
+            
+            $Msg1 = strtr($Msg1,$translation);
+            $Msg2 = strtr($Msg2,$translation);
 
 
             if (strlen($PhoneNumber) != 9) {
@@ -222,8 +235,7 @@ if ($action == "LoadLeads") {
             }
 
             if ($ErrorCode == 0) {
-                $params0 = array($PhoneNumber, utf8_decode($Msg1), utf8_decode($Msg2), $entry_date, 'N', 0, "2008-01-01 00:00:00", $sent_list_id, 'NEW');
-                $stmt = $db->prepare("INSERT INTO vicidial_list (phone_number, comments, email, entry_date, called_since_last_reset, gmt_offset_now, last_local_call_time, list_id, status ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $params0 = array($PhoneNumber, $Msg1, $Msg2,$id, $entry_date, 'N', 0, "2008-01-01 00:00:00", $sent_list_id, 'tts');
                 $stmt->execute($params0);
             } else {
                 switch ($ErrorCode) {

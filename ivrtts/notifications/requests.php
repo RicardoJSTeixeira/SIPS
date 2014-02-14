@@ -21,8 +21,21 @@ switch ($ZERO) {
         break;
     case 'GetNotifications' : GetNotifications($id_user, $notification);
         break;
+    case 'deleteCamp' : echo json_encode(deleteCamp($id, $db));
+        break;
     default : header("HTTP/1.1 500 Internal Server Error");
         exit;
+}
+
+function deleteCamp($id, $db) {
+    $stmt = $db->prepare("UPDATE vicidial_campaigns SET active = 'INACTIVE' WHERE campaign_id = ?");
+    $stmt->execute(array($id));
+
+    $stmt = $db->prepare("UPDATE vicidial_remote_agents SET status = 'N' WHERE campaign_id = ?");
+    $stmt->execute(array($id));
+
+    $stmt = $db->prepare("Delete FROM zero.allowed_campaigns WHERE campaigns = ?");
+    return $stmt->execute(array($id));
 }
 
 function BuildNotifications($User) {
@@ -66,7 +79,7 @@ function GetMessages($User, $Get) {
                 $params = array($User);
                 $stmt = $db->prepare("SELECT id_notification, viewed, user_auth_log FROM zero.notifications WHERE id_user = ? AND event_time >= $Today ORDER BY id_notification DESC");
                 $stmt->execute($params);
-                $results = $stmt->fetchAll(PDO::FETCH_BOTH);
+                $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 $js = array('messages' => array());
                 for ($i = 0; $i < count($results); $i++) {
                     foreach ($results[$i] as $key => $value) {
