@@ -46,9 +46,9 @@ if ($action == "GetPreview") {
         $rows = explode("\t", $buffer);
 
         $js[$counter][] = $rows[0];
-        $js[$counter][] = utf8_decode($rows[1]);
-        $js[$counter][] = utf8_decode($rows[2]);
-        $js[$counter][] = utf8_decode($rows[3]);
+        $js[$counter][] = $rows[1];
+        $js[$counter][] = $rows[2];
+        $js[$counter][] = $rows[3];
 
         $counter++;
     }
@@ -75,7 +75,7 @@ if ($action == "CreateCampaign") {
     }
     // ALLOWED CAMPAIGNS
     $params = array($CampaignID);
-    $stmt = $db->prepare("INSERT INTO	zero.allowed_campaigns (campaigns) VALUES (?)");
+    $stmt = $db->prepare("INSERT INTO zero.allowed_campaigns (campaigns) VALUES (?)");
     $stmt->execute($params);
 
 
@@ -220,8 +220,8 @@ if ($action == "LoadLeads") {
             $Msg2 = preg_replace("/['\"`\\;]/", "", $buffer[2]);
             $id = preg_replace("/['\"`\\;]/", "", $buffer[3]);
             
-            $Msg1 = utf8_decode($Msg1);
-            $Msg2 = utf8_decode($Msg2);
+            $Msg1 = $Msg1;
+            $Msg2 = $Msg2;
             
             $Msg1 = strtr($Msg1,$translation);
             $Msg2 = strtr($Msg2,$translation);
