@@ -33,7 +33,7 @@ var dashboard = function() {
                     $('#intervaloAVG').html('Minutes [ MM ]');
                 } else if (hora < 24) {
                     by = 'by_hour';
-                    momentos = 'DD-hh';
+                    momentos = 'DD-HH';
                     mostring = ' Day-Hour';
                     $('#intervaloTotais').html('Day Hour [ DD-HH ]');
                     $('#intervaloAVG').html('Day Hour [ DD-HH ]');
@@ -107,6 +107,7 @@ var dashboard = function() {
                             });
                             //http://goviragem.dyndns.org:10000/ccstats/v0/timeline/calls/by_year/2012-01-01T00:01/2014-01-01T23:59?campaign=CT0020&by=status
                             info.get({datatype: 'calls', type: 'timeline', timeline: {start: start, end: end, by: by}, by: {calls: ['campaign=' + CurrentCampaignID + '&status=' + sys.join(',')]}}, function(data) {
+                                console.log(data);
                                 $.each(data, function() {
                                     totalSys.push({
                                         x: moment(this.stamp).format(momentos),
@@ -162,7 +163,7 @@ var dashboard = function() {
                 });
                 if (outro > 0) {
                     arr.push({
-                        "x": "Others",
+                        "x": "No Answer -> Recycle",
                         "y": outro
                     });
                 }
@@ -196,7 +197,7 @@ var dashboard = function() {
                 });
                 if (outro > 0) {
                     arr.push({
-                        "x": "Others",
+                        "x": "No Answer -> Recycle",
                         "y": outro//Math.floor(outr / (60 * 60))
                     });
                 }
@@ -269,7 +270,7 @@ var dashboard = function() {
                 });
 
                 arr.push({
-                    "label": "Others",
+                    "label": "No Answer -> Recycle",
                     "data": outros
                 });
 

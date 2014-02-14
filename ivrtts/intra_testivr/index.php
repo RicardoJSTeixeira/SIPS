@@ -101,12 +101,13 @@
 
     <div class="grid span6">
         <div class="grid-title">
-            <div class="pull-left">Adicionar tradução</div>
+            <div class="pull-left">Add tranlation</div>
             <div class="pull-right"></div>
             <div class="clear"></div>
         </div>
         <div class="grid-content">
             <form class="form-horizontal" id="dictionary">
+                <div  id="alert-text"></div>
                 <div class="control-group">
                     <label class="control-label" for="origin-text">Original</label>
                     <div class="controls">
@@ -114,14 +115,14 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="replace-text">Alterado</label>
+                    <label class="control-label" for="replace-text">Changed</label>
                     <div class="controls">
                         <input type="text" id="translate-text" name="translate-text" placeholder="Alterado" required>
                     </div>
                 </div>
                 <div class="control-group">
                     <div class="controls">
-                        <button class="btn btn-success"><i class="icon-plus"></i>Adicionar</button>
+                        <button class="btn btn-success"><i class="icon-plus"></i>Add</button>
                     </div>
                 </div>
             </form>
@@ -130,7 +131,7 @@
     </div>
     <div class="grid span6">
         <div class="grid-title">
-            <div class="pull-left">Tabela</div>
+            <div class="pull-left">List</div>
             <div class="pull-right"></div>
             <div class="clear"></div>
         </div>
@@ -138,9 +139,9 @@
             <table id="list-trad" class="table table-mod-2">
                 <thead>
                     <tr>
-                        <th>Origem</th>
-                        <th>Tradução</th>
-                        <th>Remover</th>
+                        <th>Origin</th>
+                        <th>Translation</th>
+                        <th>Remove</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -206,7 +207,7 @@
                 },
         function(data) {
             if (data.error) {
-                alert(data.msg);
+                    makeAlert("#alert-text", "Warning!", data.msg, 2, 1, 0);
                 return false;
             }
 
