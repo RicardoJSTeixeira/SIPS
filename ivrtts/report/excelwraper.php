@@ -38,72 +38,56 @@ class excelwraper {
         )
     );
 
-    public function __construct($excel, $title,$zeroSpace,$inicialSpace) {
-$title=preg_replace("/[^a-zA-Z0-9]+/", "", $title);
+    public function __construct($excel, $title, $zeroSpace, $inicialSpace) {
+        $title = preg_replace("/[^a-zA-Z0-9]+/", "", $title);
         $this->phpexcel = $excel;
         $this->phpexcel->getActiveSheet()->setTitle($title);
-        $this->lettNum[] = (object)$this->cord_template;
-        $this->lettNum[$this->selectedSheet]->space=$zeroSpace;
-         $this->lettNum[$this->selectedSheet]->number=$inicialSpace;
+        $this->lettNum[] = (object) $this->cord_template;
+        $this->lettNum[$this->selectedSheet]->space = $zeroSpace;
+        $this->lettNum[$this->selectedSheet]->number = $inicialSpace;
     }
 
     public function maketable($data, $graph, $title = NULL, $yLabel = NULL, $xLabel = NULL, $charName = NULL, $legendPosition = NULL, $graphType = NULL, $graphGrouping = NULL, $ShowVal = NULL, $ShowPerc = NULL) {
-      
-        $this->phpexcel->getActiveSheet()->fromArray($data, NULL, 'A' . $this->lettNum[$this->selectedSheet]->number,TRUE);
-  
+
+        $this->phpexcel->getActiveSheet()->fromArray($data, NULL, 'A' . $this->lettNum[$this->selectedSheet]->number, TRUE);
+
         $this->autoSizeCol();
         $this->tableBoardBolt();
 
         if ($graph) {
 
-
             $this->makegraph($title, $yLabel, $xLabel, $charName, $legendPosition, $graphType, $graphGrouping, $ShowVal, $ShowPerc);
             return;
         }
-
         $this->battlesheetrow();
         $this->lettNum[$this->selectedSheet]->number +=$this->lettNum[$this->selectedSheet]->space;
     }
 
     protected function tableBoardBolt() {
-        
+
         $activeSheet = $this->phpexcel->getActiveSheet();
 
-        for ($col = 65; $activeSheet->getCell(chr($col) . '' . $this->lettNum[$this->selectedSheet]->number )->getValue() != NULL; $col++) {
+        for ($col = 65; $activeSheet->getCell(chr($col) . '' . $this->lettNum[$this->selectedSheet]->number)->getValue() != NULL; $col++) {
             
-            for ($row = $this->lettNum[$this->selectedSheet]->number; $activeSheet->getCell(chr($col) . $row)->getValue() != NULL; $row++) {
-
-
-                $activeSheet->getStyle('A' . $this->lettNum[$this->selectedSheet]->number . ':' . chr($col) . ($row))->applyFromArray($this->board);
-               
-            }
-
-
-            $activeSheet->getStyle('A' . $this->lettNum[$this->selectedSheet]->number . ':A' . ($row - 1))->getFont()->setBold(true);
         }
-
-
-
+        $activeSheet->getStyle('A' . $this->lettNum[$this->selectedSheet]->number . ':' . chr($col - 1) . ($this->checkTableSizeRow() - 1))->applyFromArray($this->board);
+        $activeSheet->getStyle('A' . $this->lettNum[$this->selectedSheet]->number . ':A' . ($this->checkTableSizeRow() - 1))->getFont()->setBold(true);
         $activeSheet->getStyle(chr($this->lettNum[$this->selectedSheet]->letter) . $this->lettNum[$this->selectedSheet]->number . ':' . chr($col) . $this->lettNum[$this->selectedSheet]->number)->getFont()->setBold(true);
-       
     }
 
     protected function autoSizeCol() {
 
         $activeSheet = $this->phpexcel->getActiveSheet();
 
-       
-        for ($col = 65; $activeSheet->getCell(chr($col) . '' . $this->lettNum[$this->selectedSheet]->number )->getValue() != NULL; $col++) {
-            
+
+        for ($col = 65; $activeSheet->getCell(chr($col) . '' . $this->lettNum[$this->selectedSheet]->number)->getValue() != NULL; $col++) {
+
             $activeSheet->getColumnDimension(chr($col))->setAutoSize(true);
         }
-        
-        
     }
 
     protected function makegraph($title, $yLabel, $xLabel, $charName, $legendPosition, $graphType, $graphGrouping, $ShowVal, $ShowPerc) {
 
-        
         $activeSheet = $this->phpexcel->getActiveSheet();
 
         //	Build the dataseries
@@ -136,9 +120,7 @@ $title=preg_replace("/[^a-zA-Z0-9]+/", "", $title);
                 new PHPExcel_Chart_Title($yLabel)  // yAxisLabel
         );
 
-
         //	Set the position where the chart should appear in the worksheet
-
         $chart->setTopLeftPosition($this->battlesheetcol() . ($this->lettNum[$this->selectedSheet]->number - 8));
         $this->battlesheetrow();
         $chart->setBottomRightPosition('X' . ($this->lettNum[$this->selectedSheet]->number + 8));
@@ -153,30 +135,32 @@ $title=preg_replace("/[^a-zA-Z0-9]+/", "", $title);
 
         $activeSheet = $this->phpexcel->getActiveSheet();
 
-
         for ($col = $this->lettNum[$this->selectedSheet]->letter; $activeSheet->getCell(chr($col) . '' . $this->lettNum[$this->selectedSheet]->number)->getValue() != NULL; $col++) {
 
-            $dataseriesLabels[] = new PHPExcel_Chart_DataSeriesValues('String', $this->phpexcel->getActiveSheet()->getTitle() . '!$' . chr($col) . '$' .$this->lettNum[$this->selectedSheet]->number, NULL);
+            $dataseriesLabels[] = new PHPExcel_Chart_DataSeriesValues('String', $this->phpexcel->getActiveSheet()->getTitle() . '!$' . chr($col) . '$' . $this->lettNum[$this->selectedSheet]->number, NULL);
         }
-       // echo $col;exit;
+        // echo $col;exit;
         return $dataseriesLabels;
     }
 
     protected function dataSeriesValues() {
         $activeSheet = $this->phpexcel->getActiveSheet();
+        for ($col = $this->lettNum[$this->selectedSheet]->letter; $activeSheet->getCell(chr($col) . '' . ($this->lettNum[$this->selectedSheet]->number ))->getValue() != NULL; $col++) {
 
-
-
-        for ($col = $this->lettNum[$this->selectedSheet]->letter; $activeSheet->getCell(chr($col) . '' . ($this->lettNum[$this->selectedSheet]->number+ 1))->getValue() != NULL; $col++) {
-            for ($row = $this->lettNum[$this->selectedSheet]->number; $activeSheet->getCell(chr($col) . $row)->getValue() != NULL; $row++) {
-                
-            }
-
-
-            $dataSeriesValues[] = new PHPExcel_Chart_DataSeriesValues('Number', $this->phpexcel->getActiveSheet()->getTitle() . '!$' . chr($col) . '$' . ($this->lettNum[$this->selectedSheet]->number + 1) . ':$' . chr($col) . '$' . ($row - 1), NULL);
+            $dataSeriesValues[] = new PHPExcel_Chart_DataSeriesValues('Number', $this->phpexcel->getActiveSheet()->getTitle() . '!$' . chr($col) . '$' . ($this->lettNum[$this->selectedSheet]->number + 1) . ':$' . chr($col) . '$' . ($this->checkTableSizeRow() - 1), NULL);
         }
 
         return $dataSeriesValues;
+    }
+
+    protected function checkTableSizeRow() {
+
+        $activeSheet = $this->phpexcel->getActiveSheet();
+        for ($row = $this->lettNum[$this->selectedSheet]->number; $activeSheet->getCell('A' . $row)->getValue() != NULL; $row++) {
+            
+        }
+
+        return($row);
     }
 
     protected function xAxisTickValues() {
@@ -192,7 +176,7 @@ $title=preg_replace("/[^a-zA-Z0-9]+/", "", $title);
     protected function battlesheetrow() {
         $activeSheet = $this->phpexcel->getActiveSheet();
 
-        for ($row =$this->lettNum[$this->selectedSheet]->number; $activeSheet->getCell('A' . $row)->getValue() != NULL; $row++) {
+        for ($row = $this->lettNum[$this->selectedSheet]->number; $activeSheet->getCell('A' . $row)->getValue() != NULL; $row++) {
             
         }
 
@@ -202,29 +186,24 @@ $title=preg_replace("/[^a-zA-Z0-9]+/", "", $title);
     protected function battlesheetcol() {
         $activeSheet = $this->phpexcel->getActiveSheet();
 
-
-        for ($col =$this->lettNum[$this->selectedSheet]->letter; $activeSheet->getCell(chr($col) . '' . $this->lettNum[$this->selectedSheet]->number)->getValue() != NULL; $col++) {
+        for ($col = $this->lettNum[$this->selectedSheet]->letter; $activeSheet->getCell(chr($col) . '' . $this->lettNum[$this->selectedSheet]->number)->getValue() != NULL; $col++) {
             
         }
         return chr($col);
     }
 
-    public function addsheet($title,$space,$inicialSpace) {
+    public function addsheet($title, $space, $inicialSpace) {
 
         $this->phpexcel->addSheet(new PHPExcel_Worksheet($this->phpexcel, $title));
 
         $this->phpexcel->setActiveSheetIndexByName($title);
-    
-        $this->selectedSheet=count($this->phpexcel->getAllSheets())-1;
-        
-       
-        
-        $this->lettNum[] = (object)$this->cord_template;
-        
-        
-        
-         $this->lettNum[$this->selectedSheet]->space=$space;
-         $this->lettNum[$this->selectedSheet]->number=$inicialSpace;
+
+        $this->selectedSheet = count($this->phpexcel->getAllSheets()) - 1;
+
+        $this->lettNum[] = (object) $this->cord_template;
+
+        $this->lettNum[$this->selectedSheet]->space = $space;
+        $this->lettNum[$this->selectedSheet]->number = $inicialSpace;
     }
 
     public function selectsheet($nr) {
@@ -272,6 +251,5 @@ $title=preg_replace("/[^a-zA-Z0-9]+/", "", $title);
     public function send() {
         $this->writeExcel->save('php://output');
     }
-    
 
 }
