@@ -1,14 +1,5 @@
-#!/usr/bin/perl -
-
-#use strict;
-use warnings;
-use Asterisk::AGI;
-use DBI;
-
-
-my $file_one;
-my $file_two;
-my $agifile = new Asterisk::AGI;
+#!/usr/bin/perl
+#
 
 $PATHconf =		'/etc/astguiclient.conf';
 
@@ -47,33 +38,18 @@ foreach(@conf)
 	$i++;
 	}
 
+use DBI;
+use Time::HiRes qw( usleep );
+use OSSP::uuid; 
 
-# Store AGI input #
-$| = 1;
-while(<STDIN>) 
-	{
+$dbhA = DBI->connect("DBI:mysql:$VARDB_database:$VARDB_server:$VARDB_port", "$VARDB_user", "$VARDB_pass")
+    or die "Couldn't connect to database: " . DBI->errstr;
 
-	chomp;
-	last unless length($_);
-	if ($AGILOG)
-		{
-		if (/^agi_(\w+)\:\s+(.*)$/) 
-			{
-			$AGI{$1} = $2;
-			}
-		}
+my $i = 1;
 
-	if (/^agi_uniqueid\:\s+(.*)$/)		{$unique_id = $1; $uniqueid = $unique_id;}
-	if (/^agi_priority\:\s+(.*)$/)		{$priority = $1;}
-	if (/^agi_channel\:\s+(.*)$/)		{$channel = $1;}
-	if (/^agi_extension\:\s+(.*)$/)		{$extension = $1;}
-	if (/^agi_type\:\s+(.*)$/)		{$type = $1;}
-	if (/^agi_callerid\:\s+(.*)$/)		{$callerid = $1;   $calleridnum = $callerid;}
-	if (/^agi_calleridname\:\s+(.*)$/)	{$calleridname = $1;}
-	}
-$dbhA = DBI->connect("DBI:mysql:$VARDB_database:$VARDB_server:$VARDB_port", "$VARDB_user", "$VARDB_pass") or die "Couldn't connect to database: " . DBI->errstr;
-$stmtA = "SELECT campaign_id,phone_number,lead_id FROM vicidial_auto_calls where uniqueid='$uniqueid' order by auto_call_id desc limit 1;";
+while ($i) {
 
+$stmtA = "SELECT phone_number, lead_id, comments, email FROM vicidial_list where status='tts' limit 1;";
 $sthA = $dbhA->prepare($stmtA) or die "preparing: ",$dbhA->errstr;
 $sthA->execute or die "executing: $stmtA ", $dbhA->errstr;
 $sthArows=$sthA->rows;
@@ -81,32 +57,40 @@ if ($AGILOG) {$agi_string = "$sthArows|$stmtA|";   &agi_output;}
 if ($sthArows > 0)
 	{
 	@aryA = $sthA->fetchrow_array;
-	$campaign_id =		$aryA[0];
-	$dialed_number = 	$aryA[1];
-	$lead_id = $aryA[2];
+	$phone_number = $aryA[0];
+	$lead_id = $aryA[1];
+        $messageOne = $aryA[2];
+        $messageTwo = $aryA[3];
 	$sthA->finish();
-	}
+        
+        tie my $uuid, 'OSSP::uuid::tie';
+        $uuid = [ "v1" ];
+        $file_one = "/srv/www/htdocs/ivrtts/dixi/files/$uuid.mp3";          
+        $file_two = "/srv/www/htdocs/ivrtts/dixi/files/$uuid.mp3";         
+        untie $uuid;
+        print "Got new lead, working on it \n";
+        print "Converting message one: python /usr/share/Dixi/tts.py Vicente '$messageOne' > $file_one \n";
+        print "Converting message two: python /usr/share/Dixi/tts.py Vicente '$messageTwo' > $file_one \n";
+
+        system("python /usr/share/Dixi/tts.py Vicente '$messageOne' > $file_one; python /usr/share/Dixi/tts.py Vicente '$messageTwo' > $file_two; chmod +x $file_one; chmod +x $file_two");
+        
+        $stmtA = "UPDATE vicidial_list set extra2 = '$file_one', extra3 = '$file_two', status='NEW' where lead_id = $lead_id";
+        $sthA = $dbhA->prepare($stmtA) or die "preparing: ",$dbhA->errstr;
+        $sthA->execute or die "executing: $stmtA ", $dbhA->errstr;
+        print "My work is done, sleeping a bit \n";
+        usleep (100000*20);
+
+	} else {
+            # não encontrou nada, dorme 10 segs
+            print "No leads found for TTS processing... sleeping for now \n";
+            usleep (100000*100);
+        }
+
+}
 
 
-$stmtA = "SELECT extra1,extra2,extra3 FROM vicidial_list where lead_id='$lead_id'";
-$sthA = $dbhA->prepare($stmtA) or die "preparing: ",$dbhA->errstr;
-$sthA->execute or die "executing: $stmtA ", $dbhA->errstr;
-$sthArows=$sthA->rows;
-if ($AGILOG) {$agi_string = "$sthArows|$stmtA|";   &agi_output;}
-if ($sthArows > 0)
-	{
-	@aryA = $sthA->fetchrow_array;
-        $id_processo = $aryA[0];
-	$file_one = $aryA[1];
-	$file_two = $aryA[2];
-	$sthA->finish();
-	}
 
-$agifile->exec("EXEC Set(id_processo=$id_processo)");
-$agifile->exec("EXEC Set(frase_um=$file_one)");
-$agifile->exec("EXEC Set(frase_dois=$file_two)");
 
-exit 1;
 
 
 

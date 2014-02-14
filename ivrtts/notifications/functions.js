@@ -168,42 +168,48 @@ function ReadMessagesArray(Msg) {
 }
 
 function getDB(campaign) {
-      info.get({'type': 'min,max', 'by': {'calls': ['database.campaign'], 'filter': ['database.campaign.oid='+campaign]}}, function(data) {
-//    api.get({'datatype': 'min.max', 'by': {'calls': ['database.campaign'], 'filter': ['database.campaign.oid='+campaign]}}, function(data) {
-         if (data.length) {
-                  var tempo;  
-                    data1 = data[0];
-                    max = moment(data1.max);
-                    min = moment(data1.min);
-                    //console.log(max);
-                    //console.log(min);
-                   // minuto = max.diff(min, 'minute');
-                    hora= max.diff(min, 'hour');
-                    dia = max.diff(min, 'day');
-                    semana = max.diff(min, 'week');
-                    mes = max.diff(min, 'month');
-                    ano = max.diff(min, 'year');
-                    //console.log(horas);
-                   //console.log('horas:'+hora+'dia:' + dia + ' semana:' + semana + ' mes:' + mes + ' ano:' + ano);
-                   
-                   if (hora < 1) {
-                        tempo = ['hour','minute'];
-                    } else if (  dia < 1) {
-                        tempo = ['day','hour'];
-                    } else if (mes < 1) {
-                        tempo = ['day'];
-                    } else if (ano < 2) {
-                        tempo = ['year', 'month'];
-                    } else if (ano < 6) {
-                        tempo = ['year', 'trimester'];
-                    } else {
-                        tempo = ['year'];
-                    }
-                    
-        var url = "../report/reportexcel.php?tempo=" + JSON.stringify(tempo) + "&campaign_id=" + encodeURIComponent(campaign);
+    var statuses;
+    info.get({datatype: 'statuses', type: 'datatype'}, function(datas) {
+        var status = ['MSG001', 'MSG002', 'MSG003', 'MSG004', 'MSG005', 'MSG006', 'MSG007', 'NEW'], sys = [];
+        $.each(datas, function() {
+            if (status.indexOf(this.oid) < 0) {
+                sys.push(this.oid);
+            }
+        });
+        statuses = sys;
+    });
+    info.get({'type': 'min,max', 'by': {'calls': ['database.campaign'], 'filter': ['database.campaign.oid=' + campaign]}}, function(data) {
 
-        document.location.href=url;
-    }
+        if (data.length) {
+            var tempo;
+
+            data1 = data[0];
+            max = moment(data1.max);
+            min = moment(data1.min);
+            hora = max.diff(min, 'hour');
+            dia = max.diff(min, 'day');
+            semana = max.diff(min, 'week');
+            mes = max.diff(min, 'month');
+            ano = max.diff(min, 'year');
+
+            if (hora < 1) {
+                tempo = 'by_minute';
+            } else if (dia < 1) {
+                tempo = 'by_hour';
+            } else if (mes < 1) {
+                tempo = 'by_day';
+            } else if (ano < 2) {
+                tempo = 'by_month';
+            } else if (ano < 6) {
+                tempo = ['year', 'trimester'];
+            } else {
+                tempo = 'by_year';
+            }
+
+            var url = "../report/reportexcel.php?tempo=" + tempo + "&campaign_id=" + encodeURIComponent(campaign) + "&min=" + moment(min).format('YYYY-MM-DD' + 'T' + 'HH:mm') + "&max=" + moment(max).format('YYYY-MM-DD' + 'T' + 'HH:mm') + '&statuses=' + statuses;
+
+            document.location.href = url;
+        }
     });
 }
 
@@ -290,10 +296,10 @@ function DateToTimeAgo(time) {
             day_diff < 31 && Math.ceil(day_diff / 7) + " weeks ago";
 }
 
-function deleteCamp(id,that){
+function deleteCamp(id, that) {
     $.post("../notifications/requests.php",
-    {ZERO:"deleteCamp",id:id},
-    function(data){
+            {ZERO: "deleteCamp", id: id},
+    function(data) {
         $(that).closest(".imessage").remove();
-    },"json");
+    }, "json");
 }
