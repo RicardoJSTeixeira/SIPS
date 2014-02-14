@@ -8,7 +8,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     this.list_id = "";
     this.feedback = "";
     this.edit_dynamic_field = 0;
-    this.has_dynamic_fields;
+
     this.in_outbound = "in";
     this.table_chamadas_font_size = 11;
 //----------------------------------- BASIC FUNCTIONS
@@ -25,16 +25,30 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                 get_recordings(function() {
                                     get_agentes(function() {
                                         get_validation(function() {
-                                            if (me.user_level > 5 && me.has_dynamic_fields)
+                                            if (me.user_level > 5)
                                             {
                                                 crm_edit_zone.find("#modify_feedback_status").show();
                                                 crm_edit_zone.find("#dynamic_field_edit_div").show();
                                             }
                                             else
                                             {
+
+
                                                 crm_edit_zone.find("#modify_feedback_status").hide();
                                                 crm_edit_zone.find("#dynamic_field_edit_div").hide();
                                             }
+                                            $(crm_edit_zone).on("click", "#modify_feedback_status", function()
+                                            {
+                                                save_feedback();
+                                            });
+                                            $(crm_edit_zone).on("click", "#lead_edit__extra_button", function()
+                                            {
+                                                crm_edit_zone.find("#dynamic_field_div3").show();
+                                                $(this).hide();
+                                            });
+
+
+
                                             $(crm_edit_zone).on("click", "#confirm_feedback", function()
                                             {
                                                 if (!crm_edit_zone.find("#confirm_feedback_div").is(":visible"))
@@ -81,7 +95,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                                         crm_edit_zone.find("#confirm_feedback").hide();
                                                         crm_edit_zone.find("#confirm_feedback_div").hide();
                                                     }
-                                                    save_feedback();
+
                                                 }
                                             });
                                             //insere nova entrada
@@ -226,30 +240,45 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
             var dynamic_field = "";
             crm_edit_zone.find("#dynamic_field_div1").empty();
             crm_edit_zone.find("#dynamic_field_div2").empty();
-            me.has_dynamic_fields = true;
+
             var controler = 1;
             $.each(data, function()
             {
-                dynamic_field =
-                        " <div class='control-group'>" +
-                        "     <label class='control-label'>" + this.display_name + "</label>" +
-                        "          <div class='controls' >";
-                if (this.name == "COMMENTS")
+
+                if (this.type == "normal")
                 {
-                    dynamic_field += "<textarea readonly name='" + this.name + "' id='" + this.name + "'  >" + this.value + "</textarea>";
+                    dynamic_field =
+                            " <div class='control-group'>" +
+                            "     <label class='control-label'>" + this.display_name + "</label>" +
+                            "          <div class='controls' >";
+                    if (this.name == "COMMENTS")
+                    {
+                        dynamic_field += "<textarea readonly name='" + this.name + "' id='" + this.name + "'  >" + this.value + "</textarea>";
+                    }
+                    else
+                    {
+                        dynamic_field += "     <input readonly type=text name='" + this.name + "' id='" + this.name + "'  value='" + this.value + "'></div></div>";
+                    }
+                    if (controler) {
+                        controler = 0;
+                        crm_edit_zone.find("#dynamic_field_div1").append(dynamic_field);
+                    }
+                    else
+                    {
+                        controler = 1;
+                        crm_edit_zone.find("#dynamic_field_div2").append(dynamic_field);
+                    }
                 }
                 else
+
                 {
-                    dynamic_field += "     <input readonly type=text name='" + this.name + "' id='" + this.name + "'  value='" + this.value + "'></div></div>";
-                }
-                if (controler) {
-                    controler = 0;
-                    crm_edit_zone.find("#dynamic_field_div1").append(dynamic_field);
-                }
-                else
-                {
-                    controler = 1;
-                    crm_edit_zone.find("#dynamic_field_div2").append(dynamic_field);
+                       dynamic_field =
+                            " <div class='control-group'>" +
+                            "     <label class='control-label'>" + this.display_name + "</label>" +
+                            "          <div class='controls' >";
+                       dynamic_field += "     <input readonly type=text name='" + this.name + "' id='" + this.name + "'  value='" + this.value + "'></div></div>";
+                    crm_edit_zone.find("#dynamic_field_div3").append(dynamic_field);
+                    crm_edit_zone.find("#lead_edit__extra_button").show();
                 }
             });
 

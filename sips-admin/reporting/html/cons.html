@@ -244,13 +244,13 @@
                             <form class="form-inline" role="form" id="form-template">
 
                                 <div class="form-group col-sm-2">
-                                    <select  id="selectTemplateList" title="Seleccione um template"   >
+                                    <select  id="selectTemplateList" title="Seleccione um template" class="form-control chosen-select "  >
 
                                     </select>
                                 </div>
 
                                 <div class="form-group col-sm-2" id="chosenMultiDivUser" title="Utilizadores que vão ter acesso ao template">
-                                    <select id="selectUser" name="selectUser" multiple class="form-control chosen-select "> 
+                                    <select id="selectUser" name="selectUser" multiple data-placeholder="Seleccione Utilizadores" class="form-control chosen-select "> 
 
                                     </select> 
                                 </div>
@@ -275,19 +275,19 @@
 
                                     <div class="form-group col-sm-12 filtroModalDiv" id="campaignModalDiv">
                                         <div data-placement="top" title="Seleccione uma ou mais Campanhas para ter acesso aos feedBacks da mesma." id='chosenSelectDivselectcampaign'>
-                                            <select id="selectcampaign" name="selectcampaign" multiple class="form-control chosen-select"></select>
+                                            <select id="selectcampaign" name="selectcampaign" data-placeholder="Seleccione Campanhas" multiple class="form-control chosen-select"></select>
                                         </div>
                                     </div>
 
                                     <div class="form-group col-sm-12 filtroModalDiv" id="listModalDiv" style="display:none;">
                                         <div data-placement="top" title="Seleccione uma ou mais listas para ter acesso aos feedBacks da mesma." id='chosenSelectDivselectlist'>
-                                            <select id="selectlist" name="selectlist" multiple class="form-control chosen-select"></select>
+                                            <select id="selectlist" name="selectlist" data-placeholder="Seleccione Listas" multiple class="form-control chosen-select"></select>
                                         </div>
                                     </div>
 
                                     <div class="form-group col-sm-12 filtroModalDiv " id="inboundModalDiv" style="display:none;" >
                                         <div data-placement="top" title="Seleccione uma ou mais inbound para ter acesso aos feedBacks da mesma." id='chosenSelectDivselectinbound'>
-                                            <select id="selectinbound" name="selectinbound" multiple class="form-control chosen-select"></select>
+                                            <select id="selectinbound" name="selectinbound" data-placeholder="Seleccione Inbounds" multiple class="form-control chosen-select"></select>
                                         </div>
                                     </div>
                                 </div>
@@ -325,7 +325,7 @@
 
                                 </div>
                                 <div class="box-content " >
-                                    <select  id="selectAgrupador" class=" form-control chosen-select" >
+                                    <select  id="selectAgrupador" title='Seleccione a fonte dos feeds' data-placeholder="Seleccione " class=" form-control chosen-select" >
 
                                     </select>
                                     <div class="panel-group" id="accordion">

@@ -67,6 +67,10 @@ switch ($action) {
         $query = "SELECT Name,Display_name  FROM vicidial_list_ref where campaign_id = :campaign_id and active='1' order by field_order asc";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":campaign_id" => $campaign_id));
+
+        $js[] = array("id" => "lead_id", "type" => "campo_dinamico", "texto" => "Lead_id do Cliente");
+
+
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $js[] = array("id" => $row["Name"], "type" => "campo_dinamico", "texto" => $row["Display_name"]);
         }
@@ -80,6 +84,7 @@ switch ($action) {
             $js[] = array("id" => "EMAIL", "type" => "campo_dinamico", "texto" => "EMAIL");
             $js[] = array("id" => "COMMENTS", "type" => "campo_dinamico", "texto" => "Comentários");
         }
+
 
         $query = "SELECT a.tag,a.type,a.texto  FROM `script_dinamico` a left join script_dinamico_pages b on b.id=a.id_page  where type not in ('pagination','textfield','scheduler','legend','button','ipl')  and a.id_script=:script_id order by b.pos,a.ordem asc ";
         $stmt = $db->prepare($query);
@@ -107,11 +112,11 @@ switch ($action) {
         $js = array("campanha" => array(), "bd" => array(), "linha_inbound" => array());
 
         $js["campanha"] = $user->get_campaigns();
-        $query = "SELECT list_id,list_name,campaign_id FROM vicidial_lists where active='Y'";
+        $query = "SELECT vl.list_id,vl.list_name,vl.campaign_id,vc.campaign_name FROM vicidial_lists vl left join vicidial_campaigns vc on vc.campaign_id=vl.campaign_id  where vl.active='Y' order by vc.campaign_name asc";
         $stmt = $db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $js["bd"][] = array("id" => $row["list_id"], "name" => $row["list_name"], "campaign_id" => $row["campaign_id"]);
+            $js["bd"][] = array("id" => $row["list_id"], "name" => $row["list_name"], "campaign_id" => $row["campaign_id"], "campaign_name" => $row["campaign_name"]);
         }
         $query = "SELECT group_id,group_name FROM vicidial_inbound_groups where active='Y'";
         $stmt = $db->prepare($query);
@@ -171,17 +176,14 @@ switch ($action) {
         }
 
 //LIST/BASES DE DADOS
-        if (isset($list_id)) {
-            $tmp = $list_id;
-            $list_id = array();
-            $list_id[] = $tmp;
-        } else {
-            $only_active_db = json_decode($only_active_db);
+        if (!isset($list_id)) {
+
+
             if (!$only_active_db) {
                 $onlyActive = " and active='Y'";
             }
 
-            $query = "SELECT list_id from vicidial_lists where campaign_id=:campaign_id $onlyActive and visible='1'";
+            $query = "SELECT list_id from vicidial_lists where campaign_id=:campaign_id  and visible='1' $onlyActive";
             $stmt = $db->prepare($query);
             $stmt->execute(array(":campaign_id" => $campaign_id));
 
@@ -256,7 +258,6 @@ switch ($action) {
             unset($temp2);
             unset($script_values);
         }
-
         $data_row = array_merge(array("id" => "ID", "entry_date" => "Data Entrada", "date" => "Data chamada", "name" => "Nome do Script", "full_name" => "Agente", "campaign_name" => "Nome da campanha", "list_name" => "Nome da Base Dados", "status_name" => "Feedback", "length_in_sec" => "Duração Chamada", "max_tries" => "Máximo Tentativas"), $data_row);
 
         $titulos = array();
@@ -264,8 +265,7 @@ switch ($action) {
         foreach ($data_row as $key => $value) {
             $data_row[$key] = "";
         }
-
-
+        $statuses = get_statuses($db, $campaign_id);
 
         if (count($temp_lead_data))
             $temp_lead_data = " , " . implode(" , ", $temp_lead_data);
@@ -278,11 +278,38 @@ switch ($action) {
             } else {
                 $query = "SELECT a.lead_id id,vl.list_name, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries $temp_lead_data from vicidial_list a left join vicidial_lists vl on vl.list_id=a.list_id  left join vicidial_users vu on vu.user=a.user where a.list_id =:value";
             }
+
+            //DATE LIMIT
+            if ($allctc == "false") {
+                $date_filter2 = "where calls.call_date between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
+            } else {
+                $date_filter2 = "";
+            }
+
             $stmt = $db->prepare($query);
             $stmt->execute(array(":value" => $value));
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                //Get Call info
+                $query_call_info = "select length_in_sec,calls.status from (select a.length_in_sec,a.uniqueid,a.status,a.call_date from vicidial_log a where a.lead_id=?  union all select b.length_in_sec,b.uniqueid,b.status,b.call_date from vicidial_log_archive b where b.lead_id=? ) calls"
+                        . " $date_filter2  order by calls.call_date desc ";
+                $stmt_call_info = $db->prepare($query_call_info);
+                $stmt_call_info->execute(array($row["id"], $row["id"]));
+                $row_call_info = $stmt_call_info->fetch(PDO::FETCH_ASSOC);
+
+                if (isset($row_call_info["length_in_sec"]))
+                    $row["length_in_sec"] = gmdate("H:i:s", $row_call_info["length_in_sec"]);
+                else
+                    $row["length_in_sec"] = "00:00:00";
+                $row["status"] = $row_call_info["status"];
+                foreach ($statuses as $value1) { {
+                        if ($value1["status"] == $row["status"])
+                            $row["status_name"] = $value1["status_name"];
+                    }
+                }
+
                 $temp_d = $data_row;
                 $temp = (int) str_replace("Y", "", $row["max_tries"]);
+                $temp_d["campaign_name"] = $campaign_name;
                 if (isset($recycle[$row["status"]])) {
                     if ($temp >= $recycle[$row["status"]]) {
                         $row["max_tries"] = "Sim";
@@ -293,31 +320,11 @@ switch ($action) {
                     $row["max_tries"] = "";
                 }
 
-                //Get Call info
-                $query_call_info = "select length_in_sec,calls.status,vcs.status_name from (select a.length_in_sec,a.uniqueid,a.status from vicidial_log a where a.lead_id=?  union all select b.length_in_sec,b.uniqueid,b.status from vicidial_log_archive b where b.lead_id=? ) calls"
-                        . " left join (SELECT status,status_name FROM vicidial_campaign_statuses where campaign_id=? UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=calls.status order by calls.uniqueid desc limit 1";
-                $stmt_call_info = $db->prepare($query_call_info);
-    
-                $stmt_call_info->execute(array($row["id"], $row["id"], $campaign_id));
-                $row_call_info = $stmt_call_info->fetch(PDO::FETCH_ASSOC);
-                if (isset($row_call_info["length_in_sec"]))
-                    $temp_d["length_in_sec"] = gmdate("H:i:s", $row_call_info["length_in_sec"]);
-                else
-                    $temp_d["length_in_sec"] = "00:00:00";
-                $temp_d["status"] = $row_call_info["status"];
-                $temp_d["status_name"] = $row_call_info["status_name"];
 
                 foreach ($row as $key => $value) {
                     $temp_d[$key] = $value;
                 }
                 unset($temp_d["status"]);
-                $temp_d["campaign_name"] = $campaign_name;
-
-
-
-
-
-
                 $final_row[$row['id']] = $temp_d;
             }
         }
@@ -370,7 +377,6 @@ switch ($action) {
                     $temp_d["name"] = $row1["name"];
                     $temp_d["full_name"] = $row1["full_name"];
                     $temp_d["campaign_name"] = $row1["campaign_name"];
-                    $temp_d["status_name"] = $row1["status_name"];
                 }
 
                 if ($row["type"] == "tableradio") {
@@ -603,4 +609,17 @@ switch ($action) {
         }
         fclose($output);
         break;
+}
+
+function get_statuses($db, $campaign_id) {
+
+    $query1 = "select a.status,a.status_name from vicidial_statuses a union all select b.status,b.status_name from vicidial_campaign_statuses b where b.campaign_id=? ";
+    $stmt = $db->prepare($query1);
+    $stmt->execute(array($campaign_id));
+
+    while ($row_status = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $js[] = array("status" => $row_status["status"], "status_name" => $row_status["status_name"]);
+    }
+
+    return $js;
 }

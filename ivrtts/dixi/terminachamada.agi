@@ -255,6 +255,22 @@ $stmtA = "UPDATE vicidial_log SET status = '$status_final', end_epoch='$end_epoc
 $sthA = $dbhA->prepare($stmtA) or die "preparing: ",$dbhA->errstr;
 $sthA->execute or die "executing: $stmtA ", $dbhA->errstr;
 
+######### VAI BUSCAR OS FILENAMES PARA DELETE #########
+
+
+    $stmtA = "select extra2, extra3 from vicidial_list where lead_id='$lead_id'";
+    $sthA = $dbhA->prepare($stmtA) or die "preparing: ",$dbhA->errstr;
+    $sthA->execute or die "executing: $stmtA ", $dbhA->errstr;
+    $sthArows=$sthA->rows;
+    if ($sthArows > 0)
+		{
+		@aryA = $sthA->fetchrow_array;
+		$file_one =			$aryA[0];
+                $file_two =			$aryA[1];
+		}
+    system("rm $file_one");
+    system("rm $file_two");
+
 $dbhA->disconnect();
 
 $agi_string = "++++++ STEP 7 +++++++++";   &agi_output;

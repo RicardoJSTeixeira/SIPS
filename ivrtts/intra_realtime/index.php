@@ -2,7 +2,7 @@
 <div class="row-fluid">
     <div clasS="grid">
         <div class="grid-title">
-            <div class="pull-left">Totais</div>
+            <div class="pull-left">Totals</div>
             <div class="pull-right"></div>
         </div>
         <div class="grid-content">

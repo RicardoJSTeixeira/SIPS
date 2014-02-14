@@ -118,24 +118,28 @@ class crm_edit_class {
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":campaign_id" => $campaign_id));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $dfields[$row["Name"]] = array("display_name" => $row["Display_name"], "name" => $row["Name"], "value" => "");
+            $dfields[$row["Name"]] = array("type" => "normal","display_name" => $row["Display_name"], "name" => $row["Name"], "value" => "");
         }
         if (!count($dfields)) {
             $query = "SELECT vlr.Name,vlr.Display_name   FROM vicidial_list_ref vlr left join vicidial_lists vl on vl.campaign_id=vlr.campaign_id where vl.list_id=? and vlr.active=1 Order by vlr.field_order ASC";
             $stmt = $this->db->prepare($query);
             $stmt->execute(array($list_id));
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $dfields[$row["Name"]] = array("display_name" => $row["Display_name"], "name" => $row["Name"], "value" => "");
+                $dfields[$row["Name"]] = array("type" => "normal","display_name" => $row["Display_name"], "name" => $row["Name"], "value" => "");
             }
             if (!count($dfields)) {
-                $dfields["FIRST_NAME"] = array("display_name" => "Nome", "name" => "FIRST_NAME", "value" => "");
-                $dfields["PHONE_NUMBER"] = array("display_name" => "Telefone", "name" => "PHONE_NUMBER", "value" => "");
-                $dfields["ADDRESS3"] = array("display_name" => "Telemóvel", "name" => "ADDRESS3", "value" => "");
-                $dfields["ALT_PHONE"] = array("display_name" => "Telefone Alternativo", "name" => "ALT_PHONE", "value" => "");
-                $dfields["ADDRESS1"] = array("display_name" => "Morada", "name" => "ADDRESS1", "value" => "");
-                $dfields["POSTAL_CODE"] = array("display_name" => "Código Postal", "name" => "POSTAL_CODE", "value" => "");
-                $dfields["EMAIL"] = array("display_name" => "E-mail", "name" => "EMAIL", "value" => "");
-                $dfields["COMMENTS"] = array("display_name" => "Comentários", "name" => "COMMENTS", "value" => "");
+                $dfields["FIRST_NAME"] = array("type" => "normal", "display_name" => "Nome", "name" => "FIRST_NAME", "value" => "");
+                $dfields["PHONE_NUMBER"] = array("type" => "normal", "display_name" => "Telefone", "name" => "PHONE_NUMBER", "value" => "");
+                $dfields["ADDRESS3"] = array("type" => "normal", "display_name" => "Telemóvel", "name" => "ADDRESS3", "value" => "");
+                $dfields["ALT_PHONE"] = array("type" => "normal", "display_name" => "Telefone Alternativo", "name" => "ALT_PHONE", "value" => "");
+                $dfields["ADDRESS1"] = array("type" => "normal", "display_name" => "Morada", "name" => "ADDRESS1", "value" => "");
+                $dfields["POSTAL_CODE"] = array("type" => "normal", "display_name" => "Código Postal", "name" => "POSTAL_CODE", "value" => "");
+                $dfields["EMAIL"] = array("type" => "normal", "display_name" => "E-mail", "name" => "EMAIL", "value" => "");
+                $dfields["COMMENTS"] = array("type" => "normal", "display_name" => "Comentários", "name" => "COMMENTS", "value" => "");
+                $dfields["MIDDLE_INITIAL"] = array("type" => "extra", "display_name" => "", "name" => "middle_initial", "value" => "");
+                $dfields["LAST_NAME"] = array("type" => "extra", "display_name" => "", "name" => "last_name", "value" => "");
+                $dfields["ADDRESS2"] = array("type" => "extra", "display_name" => "", "name" => "address2", "value" => "");
+                $dfields["ADDRESS3"] = array("type" => "extra", "display_name" => "", "name" => "address3", "value" => "");
             }
         }
 
