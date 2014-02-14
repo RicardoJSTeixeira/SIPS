@@ -88,7 +88,7 @@ if ($sthArows > 0)
 	}
 
 
-$stmtA = "SELECT extra2,extra3 FROM vicidial_list where lead_id='$lead_id'";
+$stmtA = "SELECT extra1,extra2,extra3 FROM vicidial_list where lead_id='$lead_id'";
 $sthA = $dbhA->prepare($stmtA) or die "preparing: ",$dbhA->errstr;
 $sthA->execute or die "executing: $stmtA ", $dbhA->errstr;
 $sthArows=$sthA->rows;
@@ -96,12 +96,13 @@ if ($AGILOG) {$agi_string = "$sthArows|$stmtA|";   &agi_output;}
 if ($sthArows > 0)
 	{
 	@aryA = $sthA->fetchrow_array;
-	$file_one = $aryA[0];
-	$file_two = $aryA[1];
+        $id_processo = $aryA[0];
+	$file_one = $aryA[1];
+	$file_two = $aryA[2];
 	$sthA->finish();
 	}
 
-
+$agifile->exec("EXEC Set(id_processo=$id_processo)");
 $agifile->exec("EXEC Set(frase_um=$file_one)");
 $agifile->exec("EXEC Set(frase_dois=$file_two)");
 
