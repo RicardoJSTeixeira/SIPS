@@ -101,7 +101,7 @@
 
     <div class="grid span6">
         <div class="grid-title">
-            <div class="pull-left">Add tranlation</div>
+            <div class="pull-left">Add translation</div>
             <div class="pull-right"></div>
             <div class="clear"></div>
         </div>
@@ -109,15 +109,15 @@
             <form class="form-horizontal" id="dictionary">
                 <div  id="alert-text"></div>
                 <div class="control-group">
-                    <label class="control-label" for="origin-text">Original</label>
+                    <label class="control-label" for="origin-text">Uploaded Text</label>
                     <div class="controls">
                         <input type="text" id="origin-text" name="origin-text" placeholder="Original" required>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="replace-text">Changed</label>
+                    <label class="control-label" for="replace-text">Text to be read by tts</label>
                     <div class="controls">
-                        <input type="text" id="translate-text" name="translate-text" placeholder="Alterado" required>
+                        <input type="text" id="translate-text" name="translate-text" placeholder="Changed" required>
                     </div>
                 </div>
                 <div class="control-group">
