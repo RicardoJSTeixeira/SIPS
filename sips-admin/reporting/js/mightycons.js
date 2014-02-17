@@ -5,8 +5,7 @@ $(function() {
             itemLabel,
             flagEdit = 'edit',
             selectedCabi = '#selectcampaign',
-            selectedCabichange = false
-            ,
+            selectedCabichange = false,
             popObj = {
                 trigger: "click",
                 placement: "top",
@@ -33,36 +32,84 @@ $(function() {
                                         $('<button>', {class: 'btn btn-default btn-xs pull-right', id: 'popCancel', style: 'padding: 2px 2px;'}).text('Cancelar'))
                                 )
                                 )
-            };
-    $('#popoverForm').validationEngine();
+            },
+    sortableConfigs = {
+        group: 'no-drop',
+        handle: '.item_content',
+        onDragStart: function(item, container, _super) {
+            var myId = 'feed' + guid();
+            // Duplicate items of the no drop area
+            if (!container.options.drop) {
+                item.clone(true).insertAfter(item);
+                _super(item);
+                $(item)
+                        .append($("<a>", {class: "icon-trash color"}))
+                        .append($("<a>", {class: "icon-wrench color"}).popover(popObj))
 
-    $('#mightyNest').on('click', '#popSave', function(e) {
-        e.preventDefault();
-        if ($('#popoverForm').validationEngine("validate")) {
-            $('#mightyNest').find('#' + itemData.id).data().text = $(this).parent().parent().parent().find('#popInputName').val();
+                        .removeClass('slave').addClass('master')
+                        .attr('id', myId)
+                        .data('id', myId)
 
-            $('#mightyNest').find('#' + itemLabel).text($(this).parent().parent().parent().find('#popInputName').val());
+                        .tooltip({placement: 'rigth'});
+            }
 
-            $('#mightyNest').find('.icon-wrench').popover('hide');
-            $('.popover').remove();
+            $(item).data().stapleId = 'tempNoAgrupador';
+            item.css({
+                height: item.height(),
+                width: item.width()
+            });
+            item.addClass("dragged");
+            $("body").addClass("dragging");
+        },
+        isValidTarget: function(item, container) {
 
-            saveTemplate('editTemplate');
+            if (item.data('itemType') === 'master' && container.options.group !== 'no-drop') {
+
+                return item.parent("ol")[0] === container.el[0];
+            } else {
+                return true;
+            }
+        },
+        onDrop: function(item, container, _super) {
+
+            item.removeClass("dragged").removeAttr("style");
+            $("body").removeClass("dragging");
+            container.el.removeClass("active");
+            _super(item);
+            item.data({stapleId: item.parent().parent().data().id});
+            if (item.data('itemType') === 'slave' && container.options.group === 'no-drop') {
+                item.remove();
+            } else {
+
+                var ok = true;
+                $.each(container.items, function() {
+                    thata = $(this).data();
+                    itemdata = item.data();
+                    if (thata.propertyOf == itemdata.propertyOf && thata.status == itemdata.status && thata.stapleId == itemdata.stapleId) {
+                        item.remove();
+                        ok = false;
+                    }
+
+                });
+                if (ok) {
+                    saveTemplate('editTemplate');
+                }
+            }
+
         }
-    });
+    }
 
-    $('#mightyNest').on('click', '.icon-wrench', function() {
+    function makeOptions(isDefault, data) {
 
-        itemData = $(this).parent().data();
-        itemLabel = $(this).parent().find('.handler').attr('id');
-
-    });
-
-    $('#mightyNest').on('click', '#popCancel', function(e) {
-        e.preventDefault();
-
-        $('#mightyNest').find('.icon-wrench').popover('hide');
-        $('.popover').remove();
-    });
+        var options = [];
+        if (isDefault) {
+            options.push(new Option('Criar nova Template...', 'default'));
+        }
+        $.each(data, function() {
+            options.push(new Option(this.name, this.id));
+        });
+        return options;
+    }
 
     function guid() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -70,284 +117,361 @@ $(function() {
             return v.toString(16);
         });
     }
-    ;
 
-    $('#form-template').validationEngine({promptPosition: "topRight:100"});
-    $("#dateStart").datepicker({
-        changeMonth: true,
-        onClose: function(selectedDate) {
-            $("#dateEnd").datepicker("option", "minDate", selectedDate);
-        }
-    });
-    $("#dateEnd").datepicker({
-        defaultDate: "+1d",
-        changeMonth: true,
-        onClose: function(selectedDate) {
-            $("#dateStart").datepicker("option", "maxDate", selectedDate);
-        }
-    });
-    $("#selectAgrupador").chosen({no_results_text: "Sem resultados"});
-    $('#selectAgrupador').on('change', function() {
-        $('.slave').remove();
-        if ($('#selectAgrupador').find(':selected').val() !== 'default') {
-            makeSideLists();
-        } else {
-            $('#accordion').css('display', 'none');
-        }
-    });
-    $("#selectTemplateList").chosen({no_results_text: "Sem resultados"});
-    $.post("../constructor.php", {action: 'getTemplateList'}, function(data) {
+    function init() {
+        //validation
+        $('#popoverForm').validationEngine();
+        $('#form-template').validationEngine({promptPosition: "topRight:100"});
 
-        var options = [];
-        options.push(new Option('Criar nova Template...', 'default'));
-        $.each(data, function() {
-            options.push(new Option(this.name, this.id_template));
+        //datepickers
+        $("#dateStart").datepicker({
+            changeMonth: true,
+            onClose: function(selectedDate) {
+                $("#dateEnd").datepicker("option", "minDate", selectedDate);
+            }
+        });
+        $("#dateEnd").datepicker({
+            defaultDate: "+1d",
+            changeMonth: true,
+            onClose: function(selectedDate) {
+                $("#dateStart").datepicker("option", "maxDate", selectedDate);
+            }
         });
 
-        $("#selectTemplateList").append(options).trigger("chosen:updated");
-    }, 'json');
+        //selects
+        $(".chosen-select").chosen({no_results_text: "Sem resultados"});
 
-    $('#selectTemplateList').on('change', function() {
+        $.post("../constructor.php", {action: 'getTemplateList'}, function(data) {
+            $("#selectTemplateList").append(makeOptions(true, data)).trigger("chosen:updated");
+        }, 'json');
 
-        if ($("#selectTemplateList").val() !== 'default') {
-            $('#accordion').css('display', 'none');
+        $.post("../constructor.php", {action: 'getCampaign'}, function(data) {
+            $("#selectcampaign").append(makeOptions(false, data)).trigger("chosen:updated");
+        }, 'json');
+
+        $.post("../constructor.php", {action: 'getList'}, function(data) {
+            $("#selectlist").append(makeOptions(false, data)).trigger("chosen:updated");
+        }, 'json');
+
+        $.post("../constructor.php", {action: 'getInbound'}, function(data) {
+            $("#selectinbound").append(makeOptions(false, data)).trigger("chosen:updated");
+        }, 'json');
+
+        $.post("../constructor.php", {action: 'getUser'}, function(data) {
+            $("#selectUser").append(makeOptions(false, data)).trigger("chosen:updated");
+        }, 'json');
+
+        //Events
+        $('#mightyNest').on('click', '#popSave', function(e) {
+            e.preventDefault();
+            if ($('#popoverForm').validationEngine("validate")) {
+                $('#mightyNest').find('#' + itemData.id).data().text = $(this).parent().parent().parent().find('#popInputName').val();
+                $('#mightyNest').find('#' + itemLabel).text($(this).parent().parent().parent().find('#popInputName').val());
+                $('#mightyNest').find('.icon-wrench').popover('hide');
+                $('.popover').remove();
+                saveTemplate('editTemplate');
+            }
+        }).on('click', '.icon-wrench', function() {
+
+            itemData = $(this).parent().data();
+            itemLabel = $(this).parent().find('.handler').attr('id');
+        }).on('click', '#popCancel', function(e) {
+            e.preventDefault();
+            $('#mightyNest').find('.icon-wrench').popover('hide');
+            $('.popover').remove();
+        }).on("click", ".icon-trash", function() {
+
+            $(this).parent().tooltip('destroy').remove();
+            saveTemplate('editTemplate');
+        }).on('click', '#graphTypeButton', function(e) {
+
+            $(this).parent().parent().data().graphType = $('#selectGraphType').find(':selected').data('graph');
+        });
+
+        $('#selectAgrupador').on('change', function() {
+            $('.slave').remove();
+            if ($('#selectAgrupador').find(':selected').val() !== 'default') {
+                makeSideLists();
+            } else {
+                $('#accordion').css('display', 'none');
+            }
+        });
+        $('#selectTemplateList').on('change', function() {
+
+            var myTemplateId = $('#selectTemplateList').val();
             $('.master').remove();
             $('.slave').remove();
-            $('#deleteTempModal').css('display', 'inline');
-            flagEdit = 'edit';
-            $('#bottom').css('display', 'block');
-            $.post("../constructor.php", {action: 'constructPreview', templateId: $('#selectTemplateList').val()}, function(data) {
-
-                browserPreview(data);
-            }, 'json');
-            $.post("../constructor.php", {action: 'getTemplate', templateId: $('#selectTemplateList').val()}, function(data) {
-
-                var myTemplate;
-                var options = [];
-                var myArr = data.tipo_id;
-                if (data.tipo === 'campaign') {
-
-                    selectedCabi = '#selectcampaign';
-                } else if (data.tipo === 'list') {
-
-                    selectedCabi = '#selectlist';
-                } else {
-                    selectedCabi = '#selectinbound';
-                }
-                $.post("../constructor.php", {action: 'getTemplate' + data.tipo + 'Name', idSeries: data.tipo_id}, function(data) {
-                    var options = [];
-                    options.push(new Option('Seleccione', 'default'));
-                    $.each(data, function() {
-
-                        options.push(new Option(this.name, this.id));
-                    });
-                    $('#selectAgrupador').find('option').remove();
-                    $("#selectAgrupador").append(options).trigger("chosen:updated");
+            if (myTemplateId !== 'default') {
+                $('#accordion').hide();
+                $('#deleteTempModal').show();
+                $('#bottom').show();
+                $('#radioselectcampaign').prop("disabled", true);
+                $('#radioselectlist').prop("disabled", true);
+                flagEdit = 'edit';
+                $.post("../constructor.php", {action: 'constructPreview', templateId: myTemplateId}, function(data) {
+                    browserPreview(data);
                 }, 'json');
-                $('#selectUser').val(data.users).trigger("chosen:updated");
-                $('#dateStart').val(data.start);
-                $('#dateEnd').val(data.end);
-                $("#radioselect" + data.tipo).prop("checked", true);
-                $('#select' + data.tipo).val(data.tipo_id).trigger('chosen:updated');
+                $.post("../constructor.php", {action: 'getTemplate', templateId: myTemplateId}, function(data) {
 
-                if ($('#selectTemplateList').val() == 'default') {
+                    if (data.tipo === 'campaign') {
 
-                    $('#radioselectcampaign').prop("disabled", false);
-                    $('#radioselectlist').prop("disabled", false);
-                } else {
-                    $('#radioselectcampaign').prop("disabled", true);
-                    $('#radioselectlist').prop("disabled", true);
+                        selectedCabi = '#selectcampaign';
+                    } else if (data.tipo === 'list') {
+
+                        selectedCabi = '#selectlist';
+                    } else {
+                        selectedCabi = '#selectinbound';
+                    }
+
+                    $.post("../constructor.php", {action: 'getTemplate' + data.tipo + 'Name', idSeries: data.tipo_id}, function(data) {
+                        $('#selectAgrupador')
+                                .find('option')
+                                .remove()
+                                .end()
+                                .append(new Option('Seleccione', 'default'))
+                                .append(makeOptions(false, data))
+                                .trigger("chosen:updated");
+                    }, 'json');
+
+                    $('#selectUser').val(data.users).trigger("chosen:updated");
+                    $('#dateStart').val(data.start);
+                    $('#dateEnd').val(data.end);
+                    $("#radioselect" + data.tipo).prop("checked", true);
+                    $('#select' + data.tipo).val(data.tipo_id).trigger('chosen:updated');
+                    $('.filtroModalDiv').hide();
+                    $('#' + data.tipo + 'ModalDiv').show();
+                    $('#daterange').val(moment(data.start).format('YYYY/MM/DD') + ' - ' + moment(data.end).format('YYYY/MM/DD')).change();
+                    initiateConstructor(data.template)
+                }, 'json');
+            } else {
+                $('#radioselectcampaign').prop("disabled", false);
+                $('#radioselectlist').prop("disabled", false);
+                $('#form-template')[0].reset();
+                $('#form-template').find('select').trigger('chosen:updated');
+                $('#bottom').hide();
+                $('#deleteTempModal').hide();
+            }
+        });
+
+
+        $('.box-icon').on('click', '#addStapleIco', function() {
+            addStaple(function() {
+                saveTemplate('editTemplate');
+            });
+        });
+
+        $("#editTemplate").click(function(e) {
+            e.preventDefault();
+            if ($('#selectTemplateList').val() == 'default') {
+
+                if ($('#form-template').validationEngine("validate")) {
+
+                    if ($(selectedCabi + ' option:selected').length && $('#selectUser option:selected').length) {
+
+                        $('.master').remove();
+                        $('.slave').remove();
+                        flagEdit = 'save';
+                        $('#modalEditTemplate').modal('show');
+                        $('#modalNewTemplate').show();
+                        $('#saveTempModal').css('display', 'inline');
+                    } else if ($('#selectUser option:selected').length == 0) {
+
+                        $('#chosenMultiDivUser').tooltip('show');
+                    } else if ($(selectedCabi + ' option:selected').length == 0) {
+                        $('#chosenSelectDiv' + selectedCabi.substring(1)).tooltip('show');
+                    }
                 }
+            } else {
+                if ($('#form-template').validationEngine("validate")) {
+                    if ($(selectedCabi + ' option:selected').length && $('#selectUser option:selected').length) {
+                        flagEdit = 'edit';
+                        saveTemplate('editTemplate');
+                        $.gritter.add({
+                            time: 4000,
+                            text: 'Template gravada com sucesso.'
 
-                $('.filtroModalDiv').hide();
-                $('#' + data.tipo + 'ModalDiv').show();
+                        });
+                        if (selectedCabichange) {
+                            $('#accordion').css('display', 'none');
+                        }
+                    } else if ($('#selectUser option:selected').length == 0) {
 
-                $('#daterange').val(moment(data.start).format('YYYY/MM/DD') + ' - ' + moment(data.end).format('YYYY/MM/DD')).change();
-                myTemplate = data.template;
-                $.each(myTemplate, function() {
+                        $('#chosenMultiDivUser').tooltip('show');
+                    } else if ($(selectedCabi + ' option:selected').length == 0) {
+                        $('#chosenSelectDiv' + selectedCabi.substring(1)).tooltip('show');
+                    }
+                }
+            }
+        });
+        $("#saveTempModal").click(function(e) {
 
-                    $("#mightyNest").append($("<li>", {class: "master"}).append($("<a>", {class: "icon-trash"})).append($("<a>", {class: "icon-wrench"}).popover(popObj))
-                            /* .append(
-                             $("<div>", {class: "item_handle"})
-                             .append($("<i>", {class: "icon-paper-clip"})))*/
-                            .append($("<div>", {class: "item_content"})
-                                    .append($("<label>", {Class: 'handler', id: 'handler' + guid()}).text(this.text))
+            e.preventDefault();
+            if ($('#inputName').val()) {
 
-                                    /* .append(
-                                     $("<a>", {class: "icon icon-pencil"})
-                                     
-                                     .popover({
-                                     html: true,
-                                     title: 'Select graph',
-                                     placement: 'left',
-                                     content: function() {
-                                     
-                                     return $('#graphType').html();
-                                     
-                                     }
-                                     })
-                                     )*/)
-                            .append($("<ul>", {style: " padding-right: -6px; padding-left: 8px; "}))
-                            .data({id: this.id, graphType: this.graphType, itemType: 'master', text: this.text}).attr('id', this.id)
-
-                            );
-                    var liId = this.id;
-                    $.each(this.children, function() {
-
-                        $("#mightyNest").find("#" + liId).find('ul').append($("<li>", {id: this.id, class: "highlight master"}).append($("<a>", {class: "icon-trash color"})).append($("<a>", {class: "icon-wrench color"}).popover(popObj))
-                                /*.append(
-                                 $("<div>", {class: "item_handle"})
-                                 .append($("<i>", {class: "icon-circle"})))*/
-                                .append($("<div>", {class: "item_content"})
-                                        .append($("<label>", {Class: 'handler', id: 'handler' + guid()}).text(this.text)))
-                                .data({id: this.id, status: this.status, originalText: this.originalText, text: this.text, itemType: 'slave', raw: this.raw, title: this.title, propertyOf: this.propertyOf, stapleId: this.stapleId}).tooltip({placement: 'rigth'})
-                                );
-                    });
+                $('#modalEditTemplate').modal('hide');
+                saveTemplate('saveTemplate');
+                $.gritter.add({
+                    time: 4000,
+                    text: 'Template criada com sucesso.'
                 });
-            }, 'json');
-        } else {
+                $('#modalNewTemplate').css('display', 'none');
+                $('#saveTempModal').css('display', 'none');
+            }
+        });
+        $("#form-template,#modalNewTemplate").submit(function(e) {
+            e.preventDefault();
+        });
+
+        $('#deleteTempModal').click(function() {
+
+            if ($('#selectTemplateList option:selected').val() != 'default') {
+                $('#modalEditTemplate').modal('show');
+                $('#modalDeletTemplate').css('display', 'block');
+                $('#delete').css('display', 'inline');
+            } else {
+                $('#selectTemplateList').tooltip('show');
+            }
+        });
+
+        $('input[name="cabi"]').change(function() {
+
+            $('.filtroModalDiv').hide();
+            switch ($(this).val())
+            {
+                case "1":
+                    $('#campaignModalDiv').show();
+                    selectedCabi = '#selectcampaign';
+                    break;
+                case "2":
+                    $('#listModalDiv').show();
+                    selectedCabi = '#selectlist';
+                    break;
+                case "3":
+                    $('#inboundModalDiv').show();
+                    selectedCabi = '#selectinbound';
+                    break;
+            }
+
+        });
+        $('#downloadTemplate').click(function() {
+
+            if ($('#selectTemplateList option:selected').val() != 'default') {
+
+                var url = "../constructor.php?templateId=" + $('#selectTemplateList').val() + "&action=templateDownload";
+                document.location.href = url;
+            } else {
+                $('#selectTemplateList').tooltip('show');
+            }
+
+        });
+        $('#delete').on('click', function() {
+
+            $('#bottom').css('display', 'none');
             $('.master').remove();
             $('.slave').remove();
+            $.post("../constructor.php", {action: 'deleteTemplate', templateId: $('#selectTemplateList').val()}, function(data) {
+
+                if (data) {
+                    $('#selectTemplateList')
+                            .find('option:selected')
+                            .remove();
+                    $('#form-template')[0].reset();
+                    $('#form-template').find('select').trigger('chosen:updated');
+                    $.gritter.add({
+                        time: 4000,
+                        text: 'Template apagada com sucesso.'
+                    });
+                }
+
+            }, 'json');
+            $('#delete').css('display', 'none');
+            $('#modalDeletTemplate').css('display', 'none');
+            $('#deleteTempModal').css('display', 'none');
+            $('#editTemplate').css('display', 'inline');
             $('#radioselectcampaign').prop("disabled", false);
             $('#radioselectlist').prop("disabled", false);
-            $('#form-template')[0].reset();
-            $('#form-template').find('select').trigger('chosen:updated');
-            $('#bottom').css('display', 'none');
-
-            $('#deleteTempModal').css('display', 'none');
-            $('#inputName').val('');
-
-        }
-    });
-    $("#selectcampaign").chosen({no_results_text: "Sem resultados", placeholder_text: 'Seleccione Campanhas'});
-    $.post("../constructor.php", {action: 'getCampaign'}, function(data) {
-
-        var options = [];
-        $.each(data, function() {
-
-            options.push(new Option(this.name, this.id));
         });
-        $("#selectcampaign").append(options).trigger("chosen:updated");
-    }, 'json');
-    $("#selectlist").chosen({no_results_text: "Sem resultados", placeholder_text: 'Seleccione Listas'});
-    $.post("../constructor.php", {action: 'getList'}, function(data) {
 
-        var options = [];
-        $.each(data, function() {
+        $(selectedCabi).on('change', function() {
+            console.log('entrou');
+            if ($("#selectTemplateList").val() !== 'default') {
+                var feedCheck = false;
+                var feed;
+                if ($('#mightyNest').sortable('serialize').length !== 0) {
 
-            options.push(new Option(this.list_name, this.list_id));
+                    $.each($('#mightyNest').sortable('serialize'), function() {
+
+                        if (this.hasOwnProperty('children')) {
+                            $.each(this.children, function() {
+                                feed = this;
+                                if ($('#selectcampaign').serializeArray().length !== 0) {
+                                    $.each($('#selectcampaign').serializeArray(), function() {
+
+                                        if (feed.propertyOf !== this.value) {
+                                            feedCheck = true;
+                                        } else {
+                                            feedCheck = false;
+                                            return;
+                                        }
+                                    });
+                                } else {
+
+                                    $('#mightyNest').find('.highlight.master').remove();
+                                    saveTemplate('editTemplate');
+                                    $('#accordion').css('display', 'none');
+                                }
+
+                                if (feedCheck) {
+
+                                    $('#mightyNest').find('#' + this.id).remove();
+                                    saveTemplate('editTemplate');
+                                    feedCheck = false;
+                                    $('#accordion').css('display', 'none');
+                                }
+                            });
+                        }
+                    }
+                    );
+                }
+            }
+            selectedCabichange = true;
+            if ($('#selectcampaign').serializeArray().length == 0) {
+
+                $('#radioselectcampaign').prop("disabled", false);
+                $('#radioselectlist').prop("disabled", false);
+            } else {
+                $('#radioselectcampaign').prop("disabled", true);
+                $('#radioselectlist').prop("disabled", true);
+            }
+
         });
-        $("#selectlist").append(options).trigger("chosen:updated");
-    }, 'json');
-    $("#selectinbound").chosen({no_results_text: "Sem resultados", placeholder_text: 'Seleccione Inbounds'});
-    $.post("../constructor.php", {action: 'getInbound'}, function(data) {
+        //sortable lists For the fucking win
+        $('#mightyNest').sortable(sortableConfigs);
+    }
+    function initiateConstructor(myTemplate) {
 
-        var options = [];
-        $.each(data, function() {
+        $.each(myTemplate, function() {
 
-            options.push(new Option(this.name, this.id));
+            $("#mightyNest").append($("<li>", {class: "master"}).append($("<a>", {class: "icon-trash"})).append($("<a>", {class: "icon-wrench"}).popover(popObj))
+
+                    .append($("<div>", {class: "item_content"})
+                            .append($("<label>", {Class: 'handler', id: 'handler' + guid()}).text(this.text)))
+                    .append($("<ul>", {style: " padding-right: -6px; padding-left: 8px; "}))
+                    .data({id: this.id, graphType: this.graphType, itemType: 'master', text: this.text}).attr('id', this.id)
+
+                    );
+            var liId = this.id;
+            $.each(this.children, function() {
+
+                $("#mightyNest").find("#" + liId).find('ul').append($("<li>", {id: this.id, class: "highlight master"}).append($("<a>", {class: "icon-trash color"})).append($("<a>", {class: "icon-wrench color"}).popover(popObj))
+
+                        .append($("<div>", {class: "item_content"})
+                                .append($("<label>", {Class: 'handler', id: 'handler' + guid()}).text(this.text)))
+                        .data({id: this.id, status: this.status, originalText: this.originalText, text: this.text, itemType: 'slave', raw: this.raw, title: this.title, propertyOf: this.propertyOf, stapleId: this.stapleId}).tooltip({placement: 'rigth'})
+                        );
+            });
         });
-        $("#selectinbound").append(options).trigger("chosen:updated");
-    }, 'json');
-    $("#selectUser").chosen({no_results_text: "Sem resultados", placeholder_text_multiple: 'Seleccione utilizadores '});
-    $.post("../constructor.php", {action: 'getUser'}, function(data) {
-        var options = [];
-        $.each(data, function() {
-
-            options.push(new Option(this.user));
-        });
-        $("#selectUser").append(options).trigger("chosen:updated");
-    }, 'json');
-    /*
-     $.getJSON('../rphandle.json', function(data) {
-     
-     var nest,
-     feedList,
-     rawFeed = [];
-     
-     $.each(data, function(index) {
-     
-     nest = $("<li>", {class: "itemli"})
-     .append(
-     $("<div>", {class: "item_handle"})
-     .append($("<i>", {class: "icon-paper-clip"})))
-     .append($("<div>", {class: "item_content"})
-     .append($("<input>", {class: "inputNinja", type: "text", value: this.name}))
-     .append($("<a>", {class: "icon icon-trash"}))
-     .append($("<a>", {class: "icon icon-pencil", id: "graphTypeButton"})
-     .popover({
-     html: true,
-     title: 'Select graph',
-     placement: 'left',
-     content: function() {
-     
-     return $('#graphType').html();
-     
-     }
-     })
-     
-     ))
-     .append($("<ul>"))
-     .data({id: this.name, graphType: 'bars', itemType: 'master'});
-     
-     $("#mightyNest").append(nest);
-     
-     $.each(this.values, function() {
-     
-     rawFeed.push(
-     $("<li>", {class: "highlight itemli", title: "Original Data:" + this.name}).tooltip()
-     
-     .append(
-     $("<div>", {class: "item_handle"})
-     .append($("<i>", {class: "icon-circle"})))
-     .append($("<div>", {class: "item_content"})
-     .append($("<input>", {class: "inputNinja color", type: "text", value: this.name})))
-     .data({id: this.name, originalText: this.name, itemType: 'slave'})
-     
-     );
-     
-     });
-     feedList = $("<div>", {class: "box"})
-     .append($("<div>", {class: "box-header"})
-     .append($("<b>")
-     .append($("<i>", {class: "icon-align-justify"}))
-     .append($("<span>", {class: "break"}))
-     .append(this.name))
-     .append($("<div>", {class: "box-icon"})
-     .append($("<a>", {class: "btn-minimize"})
-     .append($("<i>", {class: "icon-chevron-down"})))))
-     .append($("<div>", {class: "box-content clearfix", style: "display: none;"})
-     .append($("<div>", {class: "", id: "list" + index})
-     .append($("<ol>", {class: "simple_with_no_drop vertical", id: "nest" + index})
-     .append(rawFeed))).append($("<div>", {class: "clearfix"})));
-     
-     $("#list").append(feedList);
-     
-     $('#nest' + index).sortable({group: 'no-drop', drop: false, handle: '.item_handle'});
-     rawFeed = [];
-     });
-     
-     });
-     */
-    $('#mightyNest').on("click", ".icon-trash", function() {
-
-
-        $(this).parent().tooltip('destroy').remove();
-
-        saveTemplate('editTemplate');
-
-    });
-
-    /*usava o input ninja para alterar e gravar 
-     $('#mightyNest').on('change', '.inputNinja', function(e) {
-     
-     $(this).parent().parent().data().text = $(this).val();
-     saveTemplate('editTemplate');
-     });*/
-    $('#mightyNest').on('click', '#graphTypeButton', function(e) {
-
-        $(this).parent().parent().data().graphType = $('#selectGraphType').find(':selected').data('graph');
-    });
+    }
     function makeSideLists() {
 
         if (selectedCabi == '#selectcampaign') {
@@ -374,6 +498,7 @@ $(function() {
 
         $('#list').sortable({group: 'no-drop', drop: false, handle: '.item_content'});
     }
+
     function selectFeeds(data) {
 
         var count = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -383,62 +508,53 @@ $(function() {
                 count[0] += 1;
                 makeFeeds('respHumana', this, guid());
                 flag = true;
-
             }
 
             if (this.sale === 'Y') {
                 count[1] += 1;
                 makeFeeds('sucesso', this, guid());
                 flag = true;
-
             }
 
             if (this.dnc === 'Y') {
                 count[2] += 1;
                 makeFeeds('listaNegra', this, guid());
                 flag = true;
-
             }
 
             if (this.customer_contact === 'Y') {
                 count[3] += 1;
                 makeFeeds('contUtil', this, guid());
                 flag = true;
-
             }
 
             if (this.not_interested === 'Y') {
                 count[4] += 1;
                 makeFeeds('negativo', this, guid());
                 flag = true;
-
             }
 
             if (this.unworkable === 'Y') {
                 count[5] += 1;
                 makeFeeds('naoUtil', this, guid());
                 flag = true;
-
             }
 
             if (this.scheduled_callback === 'Y') {
                 count[6] += 1;
                 makeFeeds('callBack', this, guid());
                 flag = true;
-
             }
 
             if (this.completted === 'Y') {
                 count[7] += 1;
                 makeFeeds('contFechado', this, guid());
                 flag = true;
-
             }
 
             if (!flag) {
                 count[8] += 1;
                 makeFeeds('feedSistema', this, guid());
-
             }
 
         });
@@ -458,50 +574,23 @@ $(function() {
     function makeFeeds(sitio, isto, id) {
 
         $("#" + sitio).append($("<li>", {id: 'feed' + id, class: "highlight slave"})
-                /*        $("<div>", {class: "item_handle"})
-                 .append($("<i>", {class: "icon-circle"})))*/
                 .append($("<div>", {class: "item_content"})
                         .append($("<label>", {Class: 'handler', id: 'handler' + (guid())}).text(isto.name)))
                 .data({id: isto.id, status: isto.id, originalText: isto.name, text: isto.name, itemType: 'slave', raw: isto, title: "Original:" + isto.name, propertyOf: $('#selectAgrupador').find(':selected').val(), dataType: 'calls'})
 
                 );
     }
-    ;
-    $('.box-icon').on('click', '#addStapleIco', function() {
-        addStaple(function() {
-            saveTemplate('editTemplate');
-        });
-    });
+
     function addStaple(callback) {
 
         var myId = 'Staple' + guid();
-
         if ($('#selectTemplateList option:selected').val() != 'default') {
             $("#mightyNest").append($("<li>", {class: "master", id: myId}).append($("<a>", {class: "icon-trash"})).append($("<a>", {class: "icon-wrench"}).popover(popObj))
-                    /* .append(
-                     $("<div>", {class: "item_handle"})
-                     .append($("<i>", {class: "icon-paper-clip"})))*/
                     .append($("<div>", {class: "item_content"})
-                            .append($("<label>", {Class: 'handler', id: 'handler' + (guid())}).text('Agrupador'))
-
-                            /*.append(
-                             $("<a>", {class: "icon icon-pencil"})
-                             
-                             .popover({
-                             html: true,
-                             title: 'Select graph',
-                             placement: 'left',
-                             content: function() {
-                             
-                             return $('#graphType').html();
-                             
-                             }
-                             })
-                             )*/)
+                            .append($("<label>", {Class: 'handler', id: 'handler' + (guid())}).text('Agrupador')))
                     .append($("<ul>", {style: " padding-right: -6px; padding-left: 8px; "}))
                     .data({id: myId, graphType: 'bars', itemType: 'master', text: 'Agrupador'})
                     );
-
             if (typeof callback === "function") {
                 callback();
             }
@@ -511,152 +600,12 @@ $(function() {
         }
 
     }
-//sortable lists For the fucking win
-    $('#mightyNest').sortable({
-        group: 'no-drop',
-        handle: '.item_content',
-        onDragStart: function(item, container, _super) {
-            var myId = 'feed' + guid();
-            // Duplicate items of the no drop area
-            if (!container.options.drop) {
-                item.clone(true).insertAfter(item);
-                _super(item);
-                $(item)
-                        .append($("<a>", {class: "icon-trash color"}))
-                        .append($("<a>", {class: "icon-wrench color"}).popover(popObj))
 
-                        .removeClass('slave').addClass('master')
-                        .attr('id', myId)
-                        .data('id', myId)
-
-                        .tooltip({placement: 'rigth'});
-
-            }
-
-            $(item).data().stapleId = 'tempNoAgrupador';
-
-            item.css({
-                height: item.height(),
-                width: item.width()
-            });
-            item.addClass("dragged");
-            $("body").addClass("dragging");
-        },
-        isValidTarget: function(item, container) {
-
-            if (item.data('itemType') === 'master' && container.options.group !== 'no-drop') {
-
-                return item.parent("ol")[0] === container.el[0];
-            } else {
-                return true;
-            }
-        },
-        onDrop: function(item, container, _super) {
-
-            item.removeClass("dragged").removeAttr("style");
-            $("body").removeClass("dragging");
-            container.el.removeClass("active");
-            _super(item);
-
-            item.data({stapleId: item.parent().parent().data().id});
-
-            if (item.data('itemType') === 'slave' && container.options.group === 'no-drop') {
-                item.remove();
-            } else {
-
-                var ok = true;
-                $.each(container.items, function() {
-                    thata = $(this).data();
-                    itemdata = item.data();
-                    if (thata.propertyOf == itemdata.propertyOf && thata.status == itemdata.status && thata.stapleId == itemdata.stapleId) {
-                        item.remove();
-                        ok = false;
-                    }
-
-                });
-                if (ok) {
-                    saveTemplate('editTemplate');
-                }
-            }
-
-
-        }
-    });
-    $("#editTemplate").click(function(e) {
-        e.preventDefault();
-        if ($('#selectTemplateList').val() == 'default') {
-
-            if ($('#form-template').validationEngine("validate")) {
-
-                if ($(selectedCabi + ' option:selected').length && $('#selectUser option:selected').length) {
-
-                    $('.master').remove();
-                    $('.slave').remove();
-                    flagEdit = 'save';
-
-                    $('#modalEditTemplate').modal('show');
-                    $('#modalNewTemplate').css('display', 'block');
-                    $('#saveTempModal').css('display', 'inline');
-
-                } else if ($('#selectUser option:selected').length == 0) {
-
-                    $('#chosenMultiDivUser').tooltip('show');
-                } else if ($(selectedCabi + ' option:selected').length == 0) {
-                    $('#chosenSelectDiv' + selectedCabi.substring(1)).tooltip('show');
-                }
-            }
-        } else {
-            if ($('#form-template').validationEngine("validate")) {
-                if ($(selectedCabi + ' option:selected').length && $('#selectUser option:selected').length) {
-                    flagEdit = 'edit';
-                    saveTemplate('editTemplate');
-                    $.gritter.add({
-                        time: 4000,
-                        text: 'Template gravada com sucesso.'
-
-                    });
-
-                    if (selectedCabichange) {
-                        $('#accordion').css('display', 'none');
-
-                    }
-                } else if ($('#selectUser option:selected').length == 0) {
-
-                    $('#chosenMultiDivUser').tooltip('show');
-                } else if ($(selectedCabi + ' option:selected').length == 0) {
-                    $('#chosenSelectDiv' + selectedCabi.substring(1)).tooltip('show');
-                }
-            }
-        }
-    });
-    $("#saveTempModal").click(function(e) {
-
-        e.preventDefault();
-        if ($('#inputName').val()) {
-
-            $('#modalEditTemplate').modal('hide');
-            saveTemplate('saveTemplate');
-            $.gritter.add({
-                time: 4000,
-                text: 'Template criada com sucesso.'
-            });
-            $('#modalNewTemplate').css('display', 'none');
-            $('#saveTempModal').css('display', 'none');
-        }
-    });
-
-    $("#form-template,#modalNewTemplate").submit(function(e) {
-        e.preventDefault();
-    });
-
-    function saveTemplate(action) {
-
-        var dateRange = {},
+    function manualSerialize() {
+        var
                 temp = {},
                 serie = $('#mightyNest').sortable('serialize').get(),
                 finalSerie = [];
-        dateRange.start = moment($('#dateStart').val()).format('YYYY-MM-DD');
-        dateRange.end = moment($('#dateEnd').val()).format('YYYY-MM-DD');
         $.each(serie, function() {
             temp = {
                 graphType: this.graphType,
@@ -682,7 +631,22 @@ $(function() {
             }
             finalSerie.push(temp);
         });
+        return finalSerie;
+    }
 
+    function saveTemplate(action) {
+
+        var
+                dateRange = {},
+                finalSerie = manualSerialize();
+        dateRange.start = moment($('#dateStart').val()).format('YYYY-MM-DD');
+        dateRange.end = moment($('#dateEnd').val()).format('YYYY-MM-DD');
+
+
+        var typeId = [];
+        if ($(selectedCabi).val() !== null) {
+            typeId = $(selectedCabi).val();
+        }
         $.post("../constructor.php",
                 {
                     action: action,
@@ -690,7 +654,7 @@ $(function() {
                     name: $('#inputName').val(),
                     dateRange: dateRange,
                     type: $('input[name=cabi]:checked', '#form-template').val(),
-                    typeId: JSON.stringify($(selectedCabi).val()),
+                    typeId: JSON.stringify(typeId),
                     template: JSON.stringify(finalSerie),
                     templateId: $('#selectTemplateList').val()
                 }, function(data) {
@@ -701,16 +665,12 @@ $(function() {
                 $("#selectTemplateList").val(data);
                 $('#selectTemplateList').trigger('chosen:updated');
                 $('#bottom').css('display', 'block');
-
                 $('#selectTemplateList').change();
                 addStaple();
-
             } else {
                 var teste = $('#selectTemplateList option:selected').val();
                 $("#selectTemplateList").append($('<option>', {value: $('#selectTemplateList option:selected').val(), text: $('#inputName').val()}));
                 $('#selectTemplateList option:selected').remove();
-                // $('#selectTemplateList option:contains("'+$('#selectTemplateList option:selected').val() +'")').prop('selected', true);
-
                 $('#selectTemplateList').val(teste);
                 if (selectedCabichange) {
                     $.post("../constructor.php", {action: 'getTemplate', templateId: $('#selectTemplateList').val()}, function(data) {
@@ -723,8 +683,11 @@ $(function() {
 
                                 options.push(new Option(this.name, this.id));
                             });
-                            $('#selectAgrupador').find('option').remove();
-                            $("#selectAgrupador").append(options).trigger("chosen:updated");
+                            $('#selectAgrupador')
+                                    .find('option')
+                                    .remove()
+                                    .end()
+                                    .append(options).trigger("chosen:updated");
                         }, 'json');
                     }, 'json');
                     selectedCabichange = false;
@@ -738,134 +701,6 @@ $(function() {
 
         }, 'json');
     }
-    $('#deleteTempModal').click(function() {
-
-        if ($('#selectTemplateList option:selected').val() != 'default') {
-            $('#modalEditTemplate').modal('show');
-            $('#modalDeletTemplate').css('display', 'block');
-            $('#delete').css('display', 'inline');
-
-        } else {
-            $('#selectTemplateList').tooltip('show');
-        }
-    });
-    $('input[name="cabi"]').change(function() {
-
-        $('.filtroModalDiv').hide();
-        switch ($(this).val())
-        {
-            case "1":
-                $('#campaignModalDiv').show();
-                selectedCabi = '#selectcampaign';
-                break;
-            case "2":
-                $('#listModalDiv').show();
-                selectedCabi = '#selectlist';
-                break;
-            case "3":
-                $('#inboundModalDiv').show();
-                selectedCabi = '#selectinbound';
-                break;
-        }
-
-    });
-
-    $('#downloadTemplate').click(function() {
-
-        if ($('#selectTemplateList option:selected').val() != 'default') {
-
-            var url = "../constructor.php?templateId=" + $('#selectTemplateList').val() + "&action=templateDownload";
-            document.location.href = url;
-        } else {
-            $('#selectTemplateList').tooltip('show');
-        }
-
-    });
-    $('#delete').on('click', function() {
-
-        $('#bottom').css('display', 'none');
-        $('.master').remove();
-        $('.slave').remove();
-        $.post("../constructor.php", {action: 'deleteTemplate', templateId: $('#selectTemplateList').val()}, function(data) {
-
-            if (data) {
-                $('#selectTemplateList')
-                        .find('option:selected')
-                        .remove();
-                $('#form-template')[0].reset();
-                $('#form-template').find('select').trigger('chosen:updated');
-                $.gritter.add({
-                    time: 4000,
-                    text: 'Template apagada com sucesso.'
-                });
-            }
-
-        }, 'json');
-        $('#delete').css('display', 'none');
-        $('#modalDeletTemplate').css('display', 'none');
-        $('#deleteTempModal').css('display', 'none');
-        $('#editTemplate').css('display', 'inline');
-        $('#radioselectcampaign').prop("disabled", false);
-        $('#radioselectlist').prop("disabled", false);
-
-    });
-    $(selectedCabi).on('change', function() {
-
-        if ($("#selectTemplateList").val() !== 'default') {
-            var feedCheck = false;
-            var feed;
-
-            if ($('#mightyNest').sortable('serialize').length !== 0) {
-
-                $.each($('#mightyNest').sortable('serialize'), function() {
-
-                    if (this.hasOwnProperty('children')) {
-                        $.each(this.children, function() {
-                            feed = this;
-                            if ($('#selectcampaign').serializeArray().length !== 0) {
-                                $.each($('#selectcampaign').serializeArray(), function() {
-
-                                    if (feed.propertyOf !== this.value) {
-                                        feedCheck = true;
-                                    } else {
-                                        feedCheck = false;
-                                        return;
-                                    }
-                                });
-                            } else {
-
-                                $('#mightyNest').find('.highlight.master').remove();
-
-                                saveTemplate('editTemplate');
-                                $('#accordion').css('display', 'none');
-                            }
-
-                            if (feedCheck) {
-
-                                $('#mightyNest').find('#' + this.id).remove();
-                                saveTemplate('editTemplate');
-                                feedCheck = false;
-                                $('#accordion').css('display', 'none');
-                            }
-                        });
-                    }
-                }
-                );
-            }
-        }
-
-        selectedCabichange = true;
-
-        if ($('#selectcampaign').serializeArray().length == 0) {
-
-            $('#radioselectcampaign').prop("disabled", false);
-            $('#radioselectlist').prop("disabled", false);
-        } else {
-            $('#radioselectcampaign').prop("disabled", true);
-            $('#radioselectlist').prop("disabled", true);
-        }
-
-    });
 
     function browserPreview(data) {
 
@@ -953,6 +788,6 @@ $(function() {
         };
         return new xChart("bar", obj, selector);
     }
-    ;
+    init();
 }
 );

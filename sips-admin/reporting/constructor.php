@@ -21,9 +21,6 @@ switch ($action) {
     case 'getCampaign':
         echo json_encode($user->get_campaigns());
         break;
-    case 'getAgent':
-        echo json_encode($user->get_agentes());
-        break;
     case 'getList':
         echo json_encode(get_list($db));
         break;
@@ -43,7 +40,11 @@ switch ($action) {
         echo json_encode($user->get_feedbacks($campId));
         break;
     case 'getUser':
-        echo json_encode($user->get_agentes());
+        $users=array();
+        foreach ($user->get_agentes() as $value) {
+            $users[]=array("id"=>$value["user"],"name"=>$value["full_name"]);
+        }
+        echo json_encode($users);
         break;
     case 'saveTemplate':
         echo json_encode(saveTemplate($db, $users, $name, (object) $dateRange, $type, json_decode($typeId), json_decode($template)));
@@ -123,7 +124,7 @@ function editTemplate($db, $users, $dateRange, $type, $typeId, $template, $templ
 
 function getTemplateList($db) {
 
-    $query = "SELECT id_template,name FROM report_template";
+    $query = "SELECT id_template id,name name FROM report_template";
 
     $stmt = $db->prepare($query);
     $stmt->execute();
@@ -252,9 +253,8 @@ function constructPreview($db, $templateId) {
         "campaign" => "campaign"
     );
 
+    
     $templateTypo = $translate[$template['tipo']];
-
-
 
     $campaignValues = array();
 
@@ -307,13 +307,11 @@ function mongoDBData($ownerId, $ownerType, $dateStart, $dateEnd) {
     return json_decode($result);
 }
 
-
-
 ///////////////////////////////////////////////---------------------------------------------
 
 function get_list($db) {
 
-    $query = "SELECT `list_id`,`list_name` FROM `vicidial_lists`";
+    $query = "SELECT `list_id` id,`list_name` name FROM `vicidial_lists`";
 
     $stmt = $db->prepare($query);
     $stmt->execute();

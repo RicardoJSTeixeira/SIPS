@@ -25,9 +25,6 @@ $ConvertCommand = "/srv/www/htdocs/ivrtts/intra_newcampaign/sheet2tab.pl /tmp/$U
 echo passthru("$ConvertCommand");
 
 
-
-
-
 // ACTIONS
 
 if($action=="get_campaign_fields")
@@ -52,12 +49,7 @@ if($action=="get_campaign_fields")
        $js['msgi'][] = $rows[1];
        $js['msg'][] = $rows[2];
        
-       
-       
-     /*  foreach($rows as $key=>$value)
-            {
-                $js['rows'][$counter] = $value; 
-            } */
+
     $counter++;
     }
     
@@ -107,7 +99,6 @@ if($action=="submit_campaign_fields")
                 }    
         }
 	
-	//echo $field_ids_sql;
 	while (!feof($file)) 
 	{
 		$buffer = rtrim(fgets($file, 4096));
@@ -140,58 +131,10 @@ if($action=="submit_campaign_fields")
 						}    
 				}
 				
-				//echo $headers_ids_sql."<br><br>";
 				mysql_query("INSERT INTO vicidial_list (".$field_ids_sql.", entry_date, called_since_last_reset, gmt_offset_now, last_local_call_time, list_id, status ) VALUES (".$headers_ids_sql.", '$entry_date', '$called_since_last_reset', '$gmt_offset', '$last_local_call_time', '$sent_list_id', 'NEW')", $link) or die(mysql_error);
 		}
 		
 	} 
 	
-	
-	
-	//$buffer = rtrim(fgets($file, 4096));
-	//$buffer = explode("\t", $buffer);
 	fclose($file);
-	//echo json_encode( $final );
-exit();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//print_r($_FILES);
-
-
-
-
-
-
-
-/*
-
-
-$timestamp = date("dmY-His");
-$uploaded_file = preg_replace("/[^-\.\_0-9a-zA-Z]/","_",$_FILES['fileToUpload']['name']);;
-$filename = $timestamp."-original-".$uploaded_file;
-$copyfilename = $timestamp."-copy-".$uploaded_file;
-$convertedfilename = $timestamp."-converted-".preg_replace("/\.csv$|\.xls$|\.xlsx$|\.ods$|\.sxc$/i", '.txt', $uploaded_file);
-
-move_uploaded_file($_FILES['fileToUpload']['tmp_name'], "upload/$filename");
-copy("upload/$filename", "upload/$copyfilename");
-$convert = "/srv/www/htdocs/sips-admin/campaign_manager/wizard_intra_justicia/sheet2tab.pl /srv/www/htdocs/sips-admin/campaign_manager/wizard_intra_justicia/upload/$copyfilename /srv/www/htdocs/sips-admin/campaign_manager/wizard_intra_justicia/upload/$convertedfilename";
-passthru("$convert");
-
-echo $convertedfilename;
-
-*/
-
-?>

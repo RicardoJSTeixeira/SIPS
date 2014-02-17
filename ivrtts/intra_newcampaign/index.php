@@ -13,37 +13,39 @@
             <div class="clear"></div>
         </div>
         <div class="grid-content">
-            <div class="span div-wrapper">
-                <div class="span">
+            <div class=" div-wrapper">
+                <div class="row-fluid">
                     <label for="new-campaign-name">Campaign Name</label>
                     <input id="new-campaign-name" type="text" class="span" />
-                </div>     	
-                <form enctype="multipart/form-data" method="POST" action="../intra_newcampaign/upload.php">    
-                    <div class="fileupload fileupload-new span" data-provides="fileupload">
-                        <label for="new-file-to-upload">Database</label>
-                        <div class="input-append input-campaign">
-                            <div style="height:30px; width:50%" class="uneditable-input">
-                                <i class="icon-file fileupload-exists"></i> 
-                                <span class="fileupload-preview"></span>
+                </div>     
+                <div class="row-fluid">	
+                    <form enctype="multipart/form-data" method="POST" action="../intra_newcampaign/upload.php">    
+                        <div class="fileupload fileupload-new span" data-provides="fileupload">
+                            <label for="new-file-to-upload">Database</label>
+                            <div class="input-append input-campaign">
+                                <div style="height:30px; width:50%" class="uneditable-input">
+                                    <i class="icon-file fileupload-exists"></i> 
+                                    <span class="fileupload-preview"></span>
+                                </div>
+                                <span class="btn btn-file input-campaign">
+                                    <span class="fileupload-new">Select File</span>
+                                    <span class="fileupload-exists">Change</span>
+                                    <input id="file-to-upload" name="file-to-upload" type="file" />
+                                </span>
+                                <button id="button-file-upload-remove" class="btn fileupload-exists input-campaign" data-dismiss="fileupload">Remove</button>
                             </div>
-                            <span class="btn btn-file input-campaign">
-                                <span class="fileupload-new">Select File</span>
-                                <span class="fileupload-exists">Change</span>
-                                <input id="file-to-upload" name="file-to-upload" type="file" />
-                            </span>
-                            <button id="button-file-upload-remove" class="btn fileupload-exists input-campaign" data-dismiss="fileupload">Remove</button>
                         </div>
-                    </div>
-                </form>
-                <div>
+                    </form>
+                </div>  
+                <div class="row-fluid">
                     <label for="new-voice-selector">Choose the Voice</label>
                     <select id="lang" class="form-control">
                         <option value='pt-male' selected>Português - Masculino</option>
                         <!--<option value='pt-female' selected>Português - Feminino</option>-->
                     </select>
                 </div>  
-                <div id="div-error-msg" style="border:1px solid white; margin: 16px 0px 16px 0px; max-height:40px; min-height:40px;" class="span"></div>
             </div>
+            <div id="div-error-msg" ></div>
             <button id="button-clear" class="left btn input-campaign">Clear</button>
             <button id="button-preview" class="right btn input-campaign">Preview</button>
             <div class="clear"></div>
