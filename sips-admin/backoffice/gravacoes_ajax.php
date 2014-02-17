@@ -137,12 +137,12 @@ $curpage = curPageURL();
 While ($curRecord = mysql_fetch_assoc($recordList)) {
 
     $mp3File = "#";
-    if (strlen($value["location"]) > 0) {
+    if (strlen($curRecord["location"]) > 0) {
         //if lan
         if (reserved_ip($user->ip)) {
-            $mp3File = $value["location"];
+            $mp3File = $curRecord["location"];
         } else {
-            $tmp = explode("/", $value["location"]);
+            $tmp = explode("/", $curRecord["location"]);
             $ip = $tmp[2];
             $tmp = explode(".", $ip);
             $ip = $tmp[3];
@@ -158,12 +158,16 @@ While ($curRecord = mysql_fetch_assoc($recordList)) {
                     $port = "";
                     break;
             }
-            if (strpos($value["location"], '/FTP/'))
+            if (strpos($curRecord["location"], '/FTP/')) {
                 $folder = "FTP";
-            else
+            } else {
                 $folder = "MP3";
-            $mp3File = $curpage . $port . "/RECORDINGS/$folder/" . $value["filename"] . "-all.mp3";
+            }
+            $mp3File = $curpage . $port . "/RECORDINGS/$folder/" . $curRecord["filename"] . "-all.mp3";
         }
+        $audioPlayer = "Há gravação";
+    } else {
+        $audioPlayer = "Não há gravação!";
     }
     //$lenghtInMin = secondsToTime($curRecord['length_in_sec']);
     $lenghtInMin = date("i:s", $curRecord[length_in_sec]);
