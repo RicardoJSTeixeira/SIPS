@@ -15,6 +15,14 @@ $(function() {
     });
 
 
+    $("#datetime_from").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function(ev) {
+        $("#datetime_to").datetimepicker('setStartDate', $(this).val());
+    });
+    $("#datetime_to").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function(ev) {
+        $("#datetime_from").datetimepicker('setEndDate', $(this).val());
+    });
+
+
     $.post("requests.php", {action: "get_select_options"},
     function(data)
     {
@@ -70,20 +78,16 @@ $("#select_base_dados").change(function()
 {
     if ($("#select_base_dados :selected").length == 0)
     {
-        $("#select_base_dados option").prop("disabled", false).trigger("liszt:updated");
-
+        $("#select_base_dados option").prop("disabled", false);
+ 
+        $("#select_base_dados").trigger("liszt:updated");
+ 
     }
     else
     {
         $("#select_base_dados option").prop("disabled", true);
         $("#select_base_dados optgroup[label='" + $("#select_base_dados :selected").parent().attr("label") + "'] option").prop("disabled", false).trigger("liszt:updated");
-
     }
-
-
-
-
-
 });
 
 $("#download_report").on("click", function(e)
@@ -215,7 +219,7 @@ function get_templates(campaign)
     $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
     function(data)
     {
-
+ 
         if (data > 0)
         {
             script_id = data;

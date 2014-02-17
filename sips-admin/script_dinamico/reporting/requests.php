@@ -27,11 +27,11 @@ switch ($action) {
 
     case "check_has_script":
         $query = "SELECT id_script from script_assoc where id_camp_linha=:campaign_id";
-
         $stmt = $db->prepare($query);
         $stmt->execute(array(":campaign_id" => $campaign_id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $script_id = $row["id_script"];
+
         if (isset($script_id)) {
             echo json_encode($script_id);
         } else {
@@ -139,13 +139,15 @@ switch ($action) {
 
 
 
-    // por filtros pra feedbacks e fazer inbound
+// por filtros pra feedbacks e fazer inbound
     case "report_outbound":
         ini_set('memory_limit', '-1');
         header('Content-Encoding: UTF-8');
         header('Content-type: text/csv; charset=UTF-8');
         echo "\xEF\xBB\xBF";
         $output = fopen('php://output', 'w');
+
+//GET ELEMENTS
         $query = "SELECT elements from report_order where id=:id";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id" => $field_data));
@@ -159,14 +161,8 @@ switch ($action) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $id_script = $row["id_script"];
 
-        //DATE LIMIT
-        if ($allctc == "false") {
-            $date_filter = "and sr.date between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
-        } else {
-            $date_filter = "";
-        }
 
-        // MAX TRIES RECYCLE
+// MAX TRIES RECYCLE
         $recycle = array();
         $query = "select status,attempt_maximum from vicidial_lead_recycle where campaign_id=:campaign_id and active='Y'";
         $stmt = $db->prepare($query);
@@ -177,12 +173,9 @@ switch ($action) {
 
 //LIST/BASES DE DADOS
         if (!isset($list_id)) {
-
-
-            if (!$only_active_db) {
+            if ($only_active_db == false) {
                 $onlyActive = " and active='Y'";
             }
-
             $query = "SELECT list_id from vicidial_lists where campaign_id=:campaign_id  and visible='1' $onlyActive";
             $stmt = $db->prepare($query);
             $stmt->execute(array(":campaign_id" => $campaign_id));
@@ -202,7 +195,7 @@ switch ($action) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $campaign_name = $row["campaign_name"];
 
-//GET COLUMN SORT
+//GET TITLES-----------------GET TITLES---------------GET TITLES---------------GET TITLES---------------GET TITLES-------------------GET TITLES-------------GET TITLES---------GET TITLES---------GET TITLES---------GET TITLES---------------------------------GET TITLES
         $data_row = array();
         $temp_lead_data = array();
         foreach ($field_data as $key => $value) {
@@ -215,7 +208,7 @@ switch ($action) {
             }
         }
         if (count($tags)) {
-            //GET COLUMNS FROM DB
+//GET COLUMNS FROM DB
             $query = "SELECT a.tag,a.type,a.texto,a.values_text,a.placeholder "
                     . "FROM `script_dinamico` a "
                     . "left join script_dinamico_pages b "
@@ -228,7 +221,7 @@ switch ($action) {
             $stmt = $db->prepare($query);
             $stmt->execute(array(":id_script" => $id_script));
 
-            //MAKE COLUMNS STRUCTURE WITH DATA PROVIDED EM DATA FROM DB
+//MAKE COLUMNS STRUCTURE WITH DATA PROVIDED EM DATA FROM DB
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $script_values = array();
                 if ($row['type'] == "tableradio") {
@@ -258,7 +251,11 @@ switch ($action) {
             unset($temp2);
             unset($script_values);
         }
-        $data_row = array_merge(array("id" => "ID", "entry_date" => "Data Entrada", "date" => "Data chamada", "name" => "Nome do Script", "full_name" => "Agente", "campaign_name" => "Nome da campanha", "list_name" => "Nome da Base Dados", "status_name" => "Feedback", "length_in_sec" => "Duração Chamada", "max_tries" => "Máximo Tentativas"), $data_row);
+        $data_row = array_merge(array("lead_id" => "ID", "entry_date" => "Data Entrada", "date" => "Data chamada", "name" => "Nome do Script", "full_name" => "Agente", "campaign_name" => "Nome da campanha", "list_name" => "Nome da Base Dados", "status_name" => "Feedback", "length_in_sec" => "Duração Chamada", "max_tries" => "Máximo Tentativas"), $data_row);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
         $titulos = array();
         $titulos = $data_row;
@@ -266,346 +263,113 @@ switch ($action) {
             $data_row[$key] = "";
         }
         $statuses = get_statuses($db, $campaign_id);
-
         if (count($temp_lead_data))
             $temp_lead_data = " , " . implode(" , ", $temp_lead_data);
         else
             $temp_lead_data = "";
-        foreach ($list_id as $value) {
-            // CAMPANHAS E BASES DE DADOS
-            if ($only_with_result == "true") {
-                $query = "SELECT a.lead_id id,vl.list_name, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries $temp_lead_data from vicidial_list a left join vicidial_lists vl on vl.list_id=a.list_id  left join vicidial_users vu on vu.user=a.user left join script_result sr on a.lead_id=sr.lead_id where a.list_id =:value $date_filter";
-            } else {
-                $query = "SELECT a.lead_id id,vl.list_name, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries $temp_lead_data from vicidial_list a left join vicidial_lists vl on vl.list_id=a.list_id  left join vicidial_users vu on vu.user=a.user where a.list_id =:value";
-            }
-
-            //DATE LIMIT
-            if ($allctc == "false") {
-                $date_filter2 = "where calls.call_date between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
-            } else {
-                $date_filter2 = "";
-            }
-
-            $stmt = $db->prepare($query);
-            $stmt->execute(array(":value" => $value));
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                //Get Call info
-                $query_call_info = "select length_in_sec,calls.status from (select a.length_in_sec,a.uniqueid,a.status,a.call_date from vicidial_log a where a.lead_id=?  union all select b.length_in_sec,b.uniqueid,b.status,b.call_date from vicidial_log_archive b where b.lead_id=? ) calls"
-                        . " $date_filter2  order by calls.call_date desc ";
-                $stmt_call_info = $db->prepare($query_call_info);
-                $stmt_call_info->execute(array($row["id"], $row["id"]));
-                $row_call_info = $stmt_call_info->fetch(PDO::FETCH_ASSOC);
-
-                if (isset($row_call_info["length_in_sec"]))
-                    $row["length_in_sec"] = gmdate("H:i:s", $row_call_info["length_in_sec"]);
-                else
-                    $row["length_in_sec"] = "00:00:00";
-                $row["status"] = $row_call_info["status"];
-                foreach ($statuses as $value1) { {
-                        if ($value1["status"] == $row["status"])
-                            $row["status_name"] = $value1["status_name"];
-                    }
-                }
-
-                $temp_d = $data_row;
-                $temp = (int) str_replace("Y", "", $row["max_tries"]);
-                $temp_d["campaign_name"] = $campaign_name;
-                if (isset($recycle[$row["status"]])) {
-                    if ($temp >= $recycle[$row["status"]]) {
-                        $row["max_tries"] = "Sim";
-                    } else {
-                        $row["max_tries"] = "Não";
-                    }
-                } else {
-                    $row["max_tries"] = "";
-                }
 
 
-                foreach ($row as $key => $value) {
-                    $temp_d[$key] = $value;
-                }
-                unset($temp_d["status"]);
-                $final_row[$row['id']] = $temp_d;
-            }
-        }
-
-        unset($lead_tmp);
-        unset($temp_d);
-        fputcsv($output, $titulos, ";", '"');
-        if (count($tags)) {
-            //DADOS DO SCRIPT
-            $query = "SELECT sr.lead_id,sr.tag_elemento,sr.valor,sr.param_1,sd.param1,sd.type "
-                    . "FROM `script_result` sr FORCE INDEX (lead_id)"
-                    . "left join  vicidial_list vl on vl.lead_id=sr.lead_id "
-                    . "left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script "
-                    . "where sr.id_script=:id_script and sr.campaign_id = :campaign_id "
-                    . "$date_filter "
-                    . "and vl.list_id in ('" . implode("','", $list_id) . "') "
-                    . "and sr.tag_elemento in ('" . implode("','", $tags) . "') "
-                    . "order by sr.lead_id ";
-
-            $stmt = $db->prepare($query);
-            $stmt->execute(array(":id_script" => $id_script, ":campaign_id" => $campaign_id));
-            $count_results = 0;
-            $lead_id = false;
-            $temp_d = array();
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $count_results++;
-
-                if ($lead_id != $row["lead_id"]) {
-                    if ($lead_id) {
-                        fputcsv($output, $temp_d, ";", '"');
-                        unset($final_row[$lead_id]);
-                    }
-                    $query1 = "SELECT sr.date, sdm.name, vu.full_name, vc.campaign_name,statuses.status_name,statuses.status,sr.unique_id "
-                            . "FROM `script_result` sr "
-                            . "left join script_dinamico_master sdm on sdm.id=sr.id_script "
-                            . "left join vicidial_users vu on sr.user_id=vu.user "
-                            . "left join vicidial_campaigns vc on vc.campaign_id=sr.campaign_id "
-                            . "left join vicidial_list vl on vl.lead_id=sr.lead_id "
-                            . "left join (select a.status,a.status_name from vicidial_statuses a union all select b.status,b.status_name from vicidial_campaign_statuses b) statuses on statuses.status=vl.status "
-                            . "where sr.lead_id=? $date_filter order by date DESC limit 1";
-                    //echo $query1;
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute(array($row["lead_id"]));
-                    $row1 = $stmt1->fetch(PDO::FETCH_ASSOC);
-                    $temp_d = $final_row[$row["lead_id"]];
-
-                    $lead_id = $row["lead_id"];
-                    $temp_d["id"] = $row["lead_id"];
-                    $temp_d["date"] = $row1["date"];
-                    $temp_d["name"] = $row1["name"];
-                    $temp_d["full_name"] = $row1["full_name"];
-                    $temp_d["campaign_name"] = $row1["campaign_name"];
-                }
-
-                if ($row["type"] == "tableradio") {
-                    $temp_d["m" . $row["tag_elemento"] . $row["param_1"]] = $row["valor"];
-                } elseif ($row["type"] == "tableinput") {
-                    $temp = explode(";", $row["param_1"]);
-                    $temp_d["m" . $row["tag_elemento"] . $temp[1] . $temp[0]] = $row["valor"];
-                } else {
-                    $temp_d["m" . $row["tag_elemento"]] = ($row["param1"] == "nib") ? "" . $row["valor"] . "" : $row["valor"];
-                }
-            }
-
-            if (!$count_results && $only_with_result == "true") {
-                echo("sem resultados");
-                exit;
-            }
-
-            if (count($temp_d)) {
-                fputcsv($output, $temp_d, ";", '"');
-                unset($final_row[$lead_id]);
-            }
-        }
-
-        if (($only_with_result != "true" or !count($tags)) && isset($final_row)) {
-            foreach ($final_row as $value) {
-                fputcsv($output, $value, ";", '"');
-            }
-        }
-        fclose($output);
-        break;
-
-
-
-    case "report_inbound":
-        ini_set('memory_limit', '-1');
-        header('Content-Encoding: UTF-8');
-        header('Content-type: text/csv; charset=UTF-8');
-        echo "\xEF\xBB\xBF";
-        $output = fopen('php://output', 'w');
-        $query = "SELECT elements from report_order where id=:id";
-        $stmt = $db->prepare($query);
-        $stmt->execute(array(":id" => $field_data));
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $field_data = json_decode($row["elements"]);
-
-//GET ID SCRIPT
-        $query = "SELECT id_script from script_assoc where id_camp_linha=:linha_inbound";
-        $stmt = $db->prepare($query);
-        $stmt->execute(array(":linha_inbound" => $linha_inbound));
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $id_script = $row["id_script"];
-
-        //DATE LIMIT
+//DATE LIMIT
         if ($allctc == "false") {
-            $date_filter = "and sr.date between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
+            $date_filter_client = " and a.call_date between '$data_inicio 00:00:00' and '$data_fim 23:59:59' ";
+            $date_filter_client2 = " and b.call_date between '$data_inicio 00:00:00' and '$data_fim 23:59:59' ";
+            $date_filter_script = " and sr.date between '$data_inicio 00:00:00' and '$data_fim 23:59:59' ";
         } else {
-            $date_filter = "";
+            $date_filter_client = "";
+            $date_filter_client2 = "";
+            $date_filter_script = "";
         }
 
-
-
-//NOME DA CAMPANHA
-        $query = "SELECT group_name from vicidial_inbound_groups where group_id=:linha_inbound";
-        $stmt = $db->prepare($query);
-        $stmt->execute(array(":linha_inbound" => $linha_inbound));
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $bd_name = $row["group_name"];
-
-//GET COLUMN SORT
-        $data_row = array();
-        $temp_lead_data = array();
-        foreach ($field_data as $key => $value) {
-            if ($value->type == "campo_dinamico") {
-                $temp_lead_data[] = "a." . $value->id;
-                $data_row[$value->id] = $value->texto;
-            } else {
-                $tags[] = $value->id;
-                $data_row["m" . $value->id] = $value->texto;
-            }
-        }
-        if (count($tags)) {
-            //GET COLUMNS FROM DB
-            $query = "SELECT a.tag,a.type,a.texto,a.values_text,a.placeholder "
-                    . "FROM `script_dinamico` a "
-                    . "left join script_dinamico_pages b "
-                    . "on b.id=a.id_page "
-                    . "where "
-                    . "type not in ('pagination','textfield','scheduler','legend','button','ipl') "
-                    . "and a.id_script=:id_script "
-                    . "and a.tag in ('" . implode("','", $tags) . "')   ";
-
-            $stmt = $db->prepare($query);
-            $stmt->execute(array(":id_script" => $id_script));
-
-            //MAKE COLUMNS STRUCTURE WITH DATA PROVIDED EM DATA FROM DB
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $script_values = array();
-                if ($row['type'] == "tableradio") {
-                    $temp = json_decode($row['values_text']);
-                    foreach ($temp as $value) {
-                        $script_values["m" . $row['tag'] . $value] = $data_row["m" . $row["tag"]] . "-" . $value;
-                    }
-                    $data_row = array_slice($data_row, 0, array_search("m" . $row["tag"], array_keys($data_row)), true) + $script_values + array_slice($data_row, array_search("m" . $row["tag"], array_keys($data_row)), count($data_row) - 1, true);
-                    unset($data_row["m" . $row["tag"]]);
-                } elseif ($row['type'] == "tableinput") {
-                    $temp = json_decode($row['values_text']);
-                    $temp2 = json_decode($row['placeholder']);
-                    foreach ($temp as $value) {
-                        foreach ($temp2 as $value2) {
-                            $script_values["m" . $row['tag'] . $value . $value2] = $data_row["m" . $row["tag"]] . "-" . $value . "-" . $value2;
-                        }
-                    }
-                    $data_row = array_slice($data_row, 0, array_search("m" . $row["tag"], array_keys($data_row)), true) + $script_values + array_slice($data_row, array_search("m" . $row["tag"], array_keys($data_row)), count($data_row) - 1, true);
-                    unset($data_row["m" . $row["tag"]]);
-                } else {
-                    $data_row["m" . $row["tag"]] = ($row['texto'] == "") ? "Sem titulo" : $data_row["m" . $row["tag"]];
-                }
-            }
-
-            unset($row);
-            unset($temp);
-            unset($temp2);
-            unset($script_values);
-        }
-
-        $data_row = array_merge(array("id" => "ID", "entry_date" => "Data Entrada", "date" => "Data chamada", "name" => "Nome do Script", "full_name" => "Agente", "group_name" => "Nome da Linha Inbound", "status_name" => "Feedback"), $data_row);
-
-        $titulos = array();
-        $titulos = $data_row;
-        foreach ($data_row as $key => $value) {
-            $data_row[$key] = "";
-        }
-        if (!count($temp_lead_data))
-            $temp_lead_data = " , " . implode(",", $temp_lead_data);
-        else
-            $temp_lead_data = "";
-        // Linha De INBOUND
-        if ($only_with_result == "true") {
-            $query = "SELECT a.lead_id id,status_name,vcs.status, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries $temp_lead_data from vicidial_list a  left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join vicidial_users vu on vu.user=a.user left join script_result sr on a.lead_id=sr.lead_id where a.lead_id in (select vcl.lead_id from vicidial_closer_log vcl where vcl.campaign_id=?   union all select vcla.lead_id from vicidial_closer_log_archive vcla where vcla.campaign_id=?)  $date_filter";
-        } else {
-            $query = "SELECT a.lead_id id,status_name,vcs.status, a.entry_date,vu.full_name , modify_date date ,called_since_last_reset  max_tries $temp_lead_data from vicidial_list a  left join (SELECT status,status_name FROM vicidial_campaign_statuses group by status UNION ALL SELECT status,status_name FROM vicidial_statuses) vcs on vcs.status=a.status left join vicidial_users vu on vu.user=a.user where a.lead_id in (select vcl.lead_id from vicidial_closer_log vcl where vcl.campaign_id=?   union all select vcla.lead_id from vicidial_closer_log_archive vcla where vcla.campaign_id=?) $date_filter";
-        }
-
-        $stmt = $db->prepare($query);
-        $stmt->execute(array($linha_inbound, $linha_inbound));
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $temp_d = $data_row;
-
-            foreach ($row as $key => $value) {
-                $temp_d[$key] = $value;
-            }
-            unset($temp_d["status"]);
-            $temp_d["group_name"] = $bd_name;
-            $final_row[$row['id']] = $temp_d;
-        }
-
-
-        unset($lead_tmp);
-        unset($temp_d);
+//ESCREVE TITULOS
         fputcsv($output, $titulos, ";", '"');
-        if (count($tags)) {
-            //DADOS DO SCRIPT
-            $query = "SELECT sr.lead_id,sr.tag_elemento,sr.valor,sr.param_1,sd.param1,sd.type "
-                    . "FROM `script_result` sr FORCE INDEX (lead_id)"
-                    . "left join  vicidial_list vl on vl.lead_id=sr.lead_id "
-                    . "left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script "
-                    . "where sr.id_script=:id_script and sr.campaign_id = :linha_inbound $date_filter "
-                    . "and sr.lead_id in (select vcl.lead_id from vicidial_closer_log vcl where vcl.campaign_id=:linha_inbound1   union all select vcla.lead_id from vicidial_closer_log_archive vcla where vcla.campaign_id=:linha_inbound2)"
-                    . "and sr.tag_elemento in ('" . implode("','", $tags) . "') "
-                    . "order by sr.lead_id ";
 
-            $stmt = $db->prepare($query);
-            $stmt->execute(array(":id_script" => $id_script, ":linha_inbound" => $linha_inbound, ":linha_inbound1" => $linha_inbound, ":linha_inbound2" => $linha_inbound));
-            $count_results = 0;
-            $lead_id = false;
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $count_results++;
-
-                if ($lead_id != $row["lead_id"]) {
-                    if ($lead_id) {
-                        fputcsv($output, $temp_d, ";", '"');
-                        unset($final_row[$lead_id]);
-                    }
-                    $query1 = "SELECT sr.date, sdm.name, vu.full_name, vig.group_name,statuses.status_name,statuses.status "
-                            . "FROM `script_result` sr "
-                            . "left join script_dinamico_master sdm on sdm.id=sr.id_script "
-                            . "left join vicidial_users vu on sr.user_id=vu.user "
-                            . "left join vicidial_inbound_groups vig on vig.group_id=sr.campaign_id "
-                            . "left join vicidial_list vl on vl.lead_id=sr.lead_id "
-                            . "left join (select a.status,a.status_name from vicidial_statuses a union all select b.status,b.status_name from vicidial_campaign_statuses b) statuses on statuses.status=vlg.status "
-                            . "where sr.lead_id=? $date_filter order by date DESC limit 1";
-                    //echo $query1;
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute(array($row["lead_id"], $row["lead_id"], $row["lead_id"]));
-                    $row1 = $stmt1->fetch(PDO::FETCH_ASSOC);
-
-                    $temp_d = $final_row[$row["lead_id"]];
-
-                    $lead_id = $row["lead_id"];
-                    $temp_d["id"] = $row["lead_id"];
-                    $temp_d["date"] = $row1["date"];
-                    $temp_d["name"] = $row1["name"];
-                    $temp_d["full_name"] = $row1["full_name"];
-                    $temp_d["group_name"] = $row1["group_name"];
-                    $temp_d["status_name"] = $row1["status_name"];
-                }
-
-                if ($row["type"] == "tableradio") {
-                    $temp_d["m" . $row["tag_elemento"] . $row["param_1"]] = $row["valor"];
-                } elseif ($row["type"] == "tableinput") {
-                    $temp = explode(";", $row["param_1"]);
-                    $temp_d["m" . $row["tag_elemento"] . $temp[1] . $temp[0]] = $row["valor"];
-                } else {
-                    $temp_d["m" . $row["tag_elemento"]] = ($row["param1"] == "nib") ? "" . $row["valor"] . "" : $row["valor"];
-                }
-            }
-
-            if (!$count_results) {
-                echo("sem resultados");
-                exit;
-            }
-
-            fputcsv($output, $temp_d, ";", '"');
-            unset($final_row[$lead_id]);
+        foreach ($list_id as $value) {
+            
         }
-        if ($only_with_result != "true" or !count($tags)) {
-            foreach ($final_row as $value) {
-                fputcsv($output, $value, ";", '"');
+// CAMPANHAS E BASES DE DADOS
+
+
+        if ($only_with_result == "true") {
+            $query = "select calls.lead_id,calls.call_date,calls.length_in_sec,calls.user,calls.status,calls.uniqueid from (SELECT a.lead_id,a.call_date,a.length_in_sec,a.user,a.status,a.uniqueid from vicidial_log a where a.campaign_id=? $date_filter_client union all SELECT b.lead_id,b.call_date,b.length_in_sec,b.user,b.status,b.uniqueid from vicidial_log b where b.campaign_id=? $date_filter_client2) calls inner join script_result sr on sr.lead_id=calls.lead_id group by calls.lead_id  order by calls.call_date desc";
+        } else {
+            $query = "select calls.lead_id,calls.call_date,calls.length_in_sec,calls.user,calls.status,calls.uniqueid from (SELECT a.lead_id,a.call_date,a.length_in_sec,a.user,a.status,a.uniqueid from vicidial_log a where a.campaign_id=? $date_filter_client union all SELECT b.lead_id,b.call_date,b.length_in_sec,b.user,b.status,b.uniqueid from vicidial_log b where b.campaign_id=? $date_filter_client2) calls group by calls.lead_id order by calls.call_date desc";
+        }
+        $stmt = $db->prepare($query);
+        $stmt->execute(array($campaign_id, $campaign_id));
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $temp_info = $data_row;
+            $query1 = "select vl.list_name,a.status, a.entry_date,modify_date date ,called_since_last_reset  max_tries $temp_lead_data from vicidial_list  a left join vicidial_lists vl on vl.list_id=a.list_id where a.lead_id=?";
+            $stmt1 = $db->prepare($query1);
+            $stmt1->execute(array($row ["lead_id"]));
+            $client = $stmt1->fetch(PDO::FETCH_ASSOC);
+            $client["lead_id"] = $row["lead_id"];
+            $client["date"] = $row["call_date"];
+            $client["length_in_sec"] = gmdate("H:i:s", $row["length_in_sec"]);
+            $client["full_name"] = get_user_name($row["user"], $db);
+            $client["campaign_name"] = $campaign_name;
+
+            foreach ($statuses as $value1) {
+                if ($value1["status"] == $row["status"]) {
+                    $client["status_name"] = $value1["status_name"];
+                }
             }
+            if (!isset($client["status_name"]))
+                $client["status_name"] = $client["status"];
+
+            //RECYCLES
+            $temp = (int) str_replace("Y", "", $client["max_tries"]);
+            if (isset($recycle[$row["status"]])) {
+                if ($temp >= $recycle[$row["status"]]) {
+                    $client["max_tries"] = "Sim";
+                } else {
+                    $client["max_tries"] = "Não";
+                }
+            } else {
+                $client["max_tries"] = "";
+            }
+            foreach ($client as $key => $value) {
+                $temp_info[$key] = $value;
+            }
+
+            unset($temp_info["status"]);
+
+            //SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----
+            $query1 = "SELECT sdm.name FROM `script_dinamico_master` sdm "
+                    . "left join script_result sr on sdm.id=sr.id_script "
+                    . "where sr.lead_id=? $date_filter_script ";
+            $stmt1 = $db->prepare($query1);
+            $stmt1->execute(array($row["lead_id"]));
+            $row1 = $stmt1->fetch(PDO::FETCH_ASSOC);
+            if (count($tags) && $stmt1->rowCount() > 0) {
+//DADOS DO SCRIPT
+//DATE LIMIT
+                $temp_info["name"] = $row1["name"];
+
+                $query = "SELECT sr.lead_id,sr.tag_elemento,sr.valor,sr.param_1,sd.param1,sd.type "
+                        . "FROM `script_result` sr FORCE INDEX (lead_id)"
+                        . "left join script_dinamico sd on sd.tag=sr.tag_elemento and sd.id_script=sr.id_script "
+                        . "where sr.id_script=:id_script and sr.campaign_id = :campaign_id "
+                        . " $date_filter_script "
+                        . "and sr.tag_elemento in ('" . implode("','", $tags) . "') and sr.unique_id=:uniqueid ";
+                $stmt2 = $db->prepare($query);
+                $stmt2->execute(array(":id_script" => $id_script, ":campaign_id" => $campaign_id, ":uniqueid" => $row["uniqueid"]));
+
+                while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+                    if ($row2["type"] == "tableradio") {
+                        $temp_info["m" . $row2["tag_elemento"] . $row2["param_1"]] = $row2["valor"];
+                    } elseif ($row2["type"] == "tableinput") {
+                        $temp = explode(";", $row2["param_1"]);
+                        $temp_info["m" . $row2["tag_elemento"] . $temp[1] . $temp[0]] = $row2["valor"];
+                    } else {
+                        $temp_info["m" . $row2["tag_elemento"]] = ($row2["param1"] == "nib") ? "" . $row2["valor"] . "" : $row2["valor"];
+                    }
+                }
+                //SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----SCRIPT----
+            }
+            $final_row[$row["lead_id"]] = $temp_info;
+        }
+        foreach ($final_row as $value) {
+            fputcsv($output, $value, ";", '"');
         }
         fclose($output);
         break;
@@ -622,4 +386,12 @@ function get_statuses($db, $campaign_id) {
     }
 
     return $js;
+}
+
+function get_user_name($user, $db) {
+    $query = "select full_name from vicidial_users where user=?";
+    $stmt = $db->prepare($query);
+    $stmt->execute(array($user));
+    $user_name = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $user_name["full_name"];
 }
