@@ -1,7 +1,9 @@
 <?php
 require ("../../dbconnect_noutf8.php");
 require ("../../functions.php");
-header('Content-Type: text/csv; charset=utf-8');
+header('Content-Encoding: UTF-8');
+header('Content-type: text/csv; charset=UTF-8');
+echo "\xEF\xBB\xBF";
 header('Content-Disposition: attachment; filename=Report_Script_'.date("Y-m-d_H:i:s").'.csv');
 
 
