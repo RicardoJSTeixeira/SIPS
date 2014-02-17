@@ -333,9 +333,9 @@ class mysiblings extends user {
 
     public function get_campaigns() {
         if ($this->is_all_campaigns == 1)
-            $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y'";
+            $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y' order by campaign_name asc";
         else
-            $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y' and campaign_id in ('" . join("','", $this->allowed_campaigns) . "')";
+            $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y' and campaign_id in ('" . join("','", $this->allowed_campaigns) . "') order by campaign_name asc";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
