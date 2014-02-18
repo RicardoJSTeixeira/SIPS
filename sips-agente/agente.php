@@ -3777,7 +3777,7 @@ $h++;
                                 </td>
                             </tr>   
 
-                            <tr onClick="redial();" style='cursor:pointer' class="<?= ($curClient[0]=="connecta")?"display:none":"" ?>">
+                            <tr onClick="redial();" style='cursor:pointer;<?= ($curClient[0]=="connecta")?"display:none;":"" ?>'>
                                 <td><i class="fam-arrow-undo"></i></td>
                                 <td class='btn-link'>Re-Marcar</td>
                             </tr>  
@@ -3786,7 +3786,7 @@ $h++;
                                 <td><i class="fam-zoom-in"></i></td>
                                 <td class='btn-link'>Procurar</td>
                             </tr>
-                            <tr id='mdial' onClick="NeWManuaLDiaLCalL('NO');" style='cursor:pointer;<?= ($curClient[0]=="connecta")?"display:none":"" ?>'>
+                            <tr id='mdial' onClick="NeWManuaLDiaLCalL('NO');" style='cursor:pointer;<?= ($curClient[0]=="connecta")?"display:none;":"" ?>'>
                                 <td><i class="fam-telephone-delete"></i></td>
                                 <td>
                                     <span id="MDstatusSpan">
@@ -3820,7 +3820,7 @@ $h++;
                             </tr>
                             <?php } ?>
 
-                            <tr id="CallHistoryStart" style="cursor:pointer">
+                            <tr id="CallHistoryStart" style="cursor:pointer;<?= ($curClient[0]=="connecta")?"display:none;":"" ?>">
                                 <td> <i class="fam-book-delete"></i></td>
                                 <td class='btn-link'>Histórico</td>
                             </tr>
