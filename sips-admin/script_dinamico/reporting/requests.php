@@ -212,15 +212,15 @@ switch ($action) {
         }
 
 
-        $scriptoffset = "scriptoffset" . rand();
+        $scriptoffset = "ascriptoffset" . rand();
 
-        $logscriptoffset = "logscriptoffset" . rand();
+        $logscriptoffset = "alogscriptoffset" . rand();
 
-        $logscriptstatus = "logscriptstatus" . rand();
+        $logscriptstatus = "alogscriptstatus" . rand();
 
-        $logscriptstatususer = "logscriptstatususer" . rand();
+        $logscriptstatususer = "alogscriptstatususer" . rand();
 
-        $final = "final" . rand();
+        $final = "afinal" . rand();
         if (count($script_elements) > 0)
             $script_elements_temp = "," . implode(",", $script_elements);
 
