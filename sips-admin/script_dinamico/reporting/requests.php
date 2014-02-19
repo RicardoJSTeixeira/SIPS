@@ -270,7 +270,7 @@ switch ($action) {
 
         system("mysql asterisk  -usipsadmin -psipsps2012 -h 172.16.7.25 < /tmp/query.sql > /srv/www/htdocs/report_files/teste.csv ");
 
-
+/*
         $query1 = "drop table $scriptoffset;";
         $stmt1 = $db->prepare($query1);
         $stmt1->execute();
@@ -290,7 +290,7 @@ switch ($action) {
         $query1 = "drop table $final;";
         $stmt1 = $db->prepare($query1);
         $stmt1->execute();
-
+*/
         echo(json_encode($file));
         break;
 
