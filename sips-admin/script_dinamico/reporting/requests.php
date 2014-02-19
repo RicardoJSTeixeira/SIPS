@@ -264,7 +264,7 @@ switch ($action) {
         system("cp /tmp/$final /srv/www/htdocs/report_files/$final");
 
 
-        $query1 = "drop table $scriptoffset;";
+        $query1 = "drop table $scriptoffset;"; 
         $stmt1 = $db->prepare($query1);
         $stmt1->execute();
 
