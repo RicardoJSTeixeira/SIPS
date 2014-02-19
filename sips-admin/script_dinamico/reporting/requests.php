@@ -257,7 +257,7 @@ switch ($action) {
 
 
         $file = "report" . date("Y-m-d_H-i-s") . ".csv";
-        $query = "select '" . implode("','", $titles) . "' union all      select  user_group,call_date,full_name,status_name, " . implode(",", $fields) . " from $final    INTO OUTFILE '/srv/www/htdocs/report_files/$file' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n' ";
+        $query = "select '" . implode("','", $titles) . "' union all      select  user_group,call_date,full_name,status_name, " . implode(",", $fields) . " from $final    INTO OUTFILE '/tmp/$file' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n' ";
         $stmt = $db->prepare($query);
         $stmt->execute();
 
@@ -289,7 +289,7 @@ switch ($action) {
 
 
     case "get_report_file":
-        $file_path = "/srv/www/htdocs/report_files/$file";
+        $file_path = "/tmp/$file";
         if (!$file) { // file does not exist
             die('file not found');
         } else {
