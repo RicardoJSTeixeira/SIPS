@@ -297,7 +297,7 @@ switch ($action) {
 
 
     case "get_report_file":
-        $file_path = "/srv/www/htdocs/report_files/$file";
+        $file_path = "/srv/www/htdocs/report_files/teste.csv";
         if (!$file) { // file does not exist
             die('file not found');
         } else {
