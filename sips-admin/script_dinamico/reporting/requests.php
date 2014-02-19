@@ -171,7 +171,7 @@ switch ($action) {
         $titles = array();
 
 
-
+  $titles[] = "Lead do Cliente";
         $titles[] = "Grupo";
         $titles[] = "Data chamada";
         $titles[] = "Agente";
@@ -257,7 +257,7 @@ switch ($action) {
 
 
         $file = "report" . date("Y-m-d_H-i-s") . ".csv";
-        $query = "select '" . implode("','", $titles) . "' union all      select  user_group,call_date,full_name,status_name, " . implode(",", $fields) . " from $final";
+        $query = "select '" . implode("','", $titles) . "' union all      select  lead_id,user_group,call_date,full_name,status_name, " . implode(",", $fields) . " from $final";
         $stmt = $db->prepare($query);
         $stmt->execute();
 
