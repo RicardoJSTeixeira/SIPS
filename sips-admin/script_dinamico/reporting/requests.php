@@ -259,14 +259,14 @@ switch ($action) {
         $file = "report" . date("Y-m-d_H-i-s") . ".csv";
         $query = "select '" . implode("','", $titles) . "' union all      select  user_group,call_date,full_name,status_name, " . implode(",", $fields) . " from $final    INTO OUTFILE '/tmp/$file' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n' ";
         $stmt = $db->prepare($query);
-        $stmt->execute();
+        $stmt->execute(); 
 
-        system("cp /tmp/$final /srv/www/htdocs/report_files/$final");
+        system("cp /tmp/$file /srv/www/htdocs/report_files/$file");
 
 
         $query1 = "drop table $scriptoffset;"; 
         $stmt1 = $db->prepare($query1);
-        $stmt1->execute();
+        $stmt1->execute(); 
 
         $query1 = "drop table $logscriptoffset;";
         $stmt1 = $db->prepare($query1);
