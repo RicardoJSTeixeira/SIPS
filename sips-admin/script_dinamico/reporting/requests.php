@@ -257,20 +257,23 @@ switch ($action) {
 
 
         $file = "report" . date("Y-m-d_H-i-s") . ".csv";
-        $query = "select '" . implode("','", $titles) . "' union all      select  user_group,call_date,full_name,status_name, " . implode(",", $fields) . " from $final    INTO OUTFILE '/tmp/$file' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n' ";
+        $query = "select '" . implode("','", $titles) . "' union all      select  user_group,call_date,full_name,status_name, " . implode(",", $fields) . " from $final";
         $stmt = $db->prepare($query);
-        $stmt->execute(); 
-
-        
-        
-        
-        
-        system("mysql -h 172.16.7.25 -usipsadmin  -psipsps2012 -e 'select * from vicidial_log limit 10  into outfile /srv/www/htdocs/report_files/xpto.txt;' asterisk ");
+        $stmt->execute();
 
 
-        $query1 = "drop table $scriptoffset;"; 
+        $content = "some text here";
+        $fp = fopen("query.sql", "wb");
+        fwrite($fp, $query);
+        fclose($fp);
+
+
+        system("mysql asterisk  -usipsadmin -psipsps2012 -h 172.16.7.25 < query.sql > /srv/www/htdocs/report_files/teste.csv ");
+
+
+        $query1 = "drop table $scriptoffset;";
         $stmt1 = $db->prepare($query1);
-        $stmt1->execute(); 
+        $stmt1->execute();
 
         $query1 = "drop table $logscriptoffset;";
         $stmt1 = $db->prepare($query1);
