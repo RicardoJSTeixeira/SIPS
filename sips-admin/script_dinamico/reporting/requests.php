@@ -261,7 +261,11 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute(); 
 
-        system("cp /tmp/$file /srv/www/htdocs/report_files/$file");
+        
+        
+        
+        
+        system("mysql -h 172.16.7.25 -usipsadmin  -psipsps2012 -e 'select * from vicidial_log limit 10;' asterisk into outfile '/srv/www/htdocs/report_files/xpto.txt'");
 
 
         $query1 = "drop table $scriptoffset;"; 
