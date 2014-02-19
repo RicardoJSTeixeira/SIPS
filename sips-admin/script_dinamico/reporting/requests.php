@@ -263,12 +263,12 @@ switch ($action) {
 
 
         $content = "some text here";
-        $fp = fopen("query.sql", "wb");
+        $fp = fopen("/tmp/query.sql", "wb");
         fwrite($fp, $query);
         fclose($fp);
 
 
-        system("mysql asterisk  -usipsadmin -psipsps2012 -h 172.16.7.25 < query.sql > /srv/www/htdocs/report_files/teste.csv ");
+        system("mysql asterisk  -usipsadmin -psipsps2012 -h 172.16.7.25 < /tmp/query.sql > /srv/www/htdocs/report_files/teste.csv ");
 
 
         $query1 = "drop table $scriptoffset;";
