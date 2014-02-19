@@ -204,11 +204,11 @@ switch ($action) {
         } else {
             $date_filter_client = "";
         }
-        
+
         $lists = "";
         if (isset($list_id)) {
             $lists_log = "where a.list_id in('" . implode("','", $list_id) . "')";
-             $lists_archive = "and a.list_id in('" . implode("','", $list_id) . "')";
+            $lists_archive = "and a.list_id in('" . implode("','", $list_id) . "')";
         }
 
 
@@ -261,6 +261,7 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute();
 
+        system("cp /tmp/$final /srv/www/htdocs/report_files/$final");
 
 
         $query1 = "drop table $scriptoffset;";
