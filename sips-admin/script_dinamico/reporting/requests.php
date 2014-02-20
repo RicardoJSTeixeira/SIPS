@@ -157,7 +157,7 @@ switch ($action) {
         $field_data = json_decode($row["elements"]);
 
 //GET ID SCRIPT
-        $query = "SELECT id_script from script_assoc where id_camp_linha=:campaign_id";
+        $query = "SELECT a.id_script from script_assoc a inner join  where a.id_camp_linha=:campaign_id";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":campaign_id" => $campaign_id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -170,7 +170,7 @@ switch ($action) {
         $fields = array();
         $titles = array();
 
-        $tableradio = 0;
+
         foreach ($field_data as $key => $value) {
 
             if ($value->type == "campo_dinamico") {
@@ -179,10 +179,10 @@ switch ($action) {
             } else {
                 if ($result_filter == 1) {
                     if ($value->type == "tableradio") {
-
+        $tableradio = rand();
                         $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ' AND  `param_1`= '$value->param_1',valor,'') ) AS '$value->id$tableradio' ";
                         $fields[] = "`$value->id$tableradio` as '$value->texto'";
-                        $tableradio++;
+    
                     } else {
                         $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ',valor,'') ) AS ' $value->id' ";
                         $fields[] = "`$value->id`  as '$value->texto'";
