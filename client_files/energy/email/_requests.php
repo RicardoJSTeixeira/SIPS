@@ -102,8 +102,7 @@ if($action=="send_email")
     require_once 'lib/swift_required.php';
     $transport = Swift_SmtpTransport::newInstance('mail.exemplyrigor.com', 25)
       ->setUsername('info@exemplyrigor.com')      
-      ->setPassword('exemplyrigor')
-      ;
+      ->setPassword('eenergy1234');
 
     $mailer = Swift_Mailer::newInstance($transport);
 
@@ -115,13 +114,6 @@ if($action=="send_email")
         ->setTo(array($email_address => $email_name));
     
     $message->attach(Swift_Attachment::fromPath('attachments/EmpresaEenergy.pdf'));
-  /*  $message->attach(Swift_Attachment::fromPath('attachments/EcoEnergy_Empresa_02.jpg'));
-    $message->attach(Swift_Attachment::fromPath('attachments/EcoEnergy_Empresa_03.jpg'));
-    $message->attach(Swift_Attachment::fromPath('attachments/EcoEnergy_Empresa_05.jpg'));
-    
-    $message->attach(Swift_Attachment::fromPath('attachments/Apresentação Retificador Eenergy.pdf'));
-    $message->attach(Swift_Attachment::fromPath('attachments/Pasta Técnica Controladores.pdf'));   */
-    
     $cid1 = $message->embed(Swift_Image::fromPath('energy_logo_new.png'));
     $cid2 = $message->embed(Swift_Image::fromPath('energy_ambiente_new.png'));
 
@@ -222,5 +214,3 @@ if($action=="send_email")
         print_r($failures); 
     }
 }
-
-?>
