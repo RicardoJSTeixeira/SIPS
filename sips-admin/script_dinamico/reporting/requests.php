@@ -274,7 +274,7 @@ switch ($action) {
 
 
 
-        $file = "report" . $campaign_name . "_" . date("Y-m-d_H-i-s") . "_camp-" . $name_script . ".csv";
+        $file = "report" . date("Y-m-d_H-i-s").".csv";
 
 
         $query = "select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`, full_name `Agente`, status_name `Feedback`, " . implode(", ", $fields) . " from $final";
