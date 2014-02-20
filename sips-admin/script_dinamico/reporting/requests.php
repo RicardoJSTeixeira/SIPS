@@ -291,28 +291,24 @@ switch ($action) {
         system("mysql asterisk -u$varDbUser -p$varDbPass -h $VARDB_server < /tmp/$query_sql > /srv/www/htdocs/report_files/$file ");
 
         if ($result_filter == 1) {
-            $query1 = "drop table $scriptoffset;
-";
+            $query1 = "drop table $scriptoffset;";
+
             $stmt1 = $db->prepare($query1);
             $stmt1->execute();
         }
-        $query1 = "drop table $logscriptoffset;
-";
+        $query1 = "drop table $logscriptoffset;";
         $stmt1 = $db->prepare($query1);
         $stmt1->execute();
 
-        $query1 = "drop table $logscriptstatus;
-";
+        $query1 = "drop table $logscriptstatus;";
         $stmt1 = $db->prepare($query1);
         $stmt1->execute();
 
-        $query1 = "drop table $logscriptstatususer;
-";
+        $query1 = "drop table $logscriptstatususer;";
         $stmt1 = $db->prepare($query1);
         $stmt1->execute();
 
-        $query1 = "drop table $final;
-";
+        $query1 = "drop table $final;";
         $stmt1 = $db->prepare($query1);
         $stmt1->execute();
 
