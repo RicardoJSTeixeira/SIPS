@@ -14,7 +14,7 @@
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/validationEngine.jquery.css" />
 
-
+ 
 
         <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
         <script type="text/javascript" src="/jquery/jqueryUI/jquery-ui-1.10.2.custom.min.js"></script>
@@ -25,6 +25,8 @@
         <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
         <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
         <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/moment.min.js"></script>
+        
 
         <script type="text/javascript" src="/bootstrap/js/bootstrap-fileupload.min.js"></script>
 
@@ -51,14 +53,93 @@
 
 
 
-        <div id="co_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 id="myModalLabel">Ordenação de colunas</h3>
-            </div>
-            <div class="modal-body">
 
-                <div id="template_div">
+
+
+
+
+        <div class="grid-title">
+            <div class="pull-left" ><i class="fam-script-error"></i> Report </div>
+            <div class="pull-right"><a class="btn btn-inverse hide"  href="/sips-admin/script_dinamico/" target="_self">Voltar aos Scripts</a>
+
+            </div>
+        </div>
+        <div class="grid-content" id="main_div">
+
+
+
+            <form id="form_filter" class="formular span5" >
+                <h5>Download de dados:</h5>
+                <div class="formRight">
+                    <input  type="radio" id="download_script"  name="dd" value="1" checked="checked">
+                    <label class=" radio inline"  for="download_script"><span></span>Script</label> 
+                </div> 
+                <div class="formRight">
+                    <input  type="radio" id="download_chamadas" class="" name="dd" value="2" disabled="disabled" >
+                    <label class=" radio inline"  for="download_chamadas"><span></span>Chamadas</label> 
+                </div> 
+                <div class="formRight">
+                    <input  type="radio" id="download_bd"   name="dd" value="3" disabled="disabled" >
+                    <label class="radio inline"  for="download_bd"><span></span>Clientes</label> 
+                </div>
+
+                <h5>Relatório:</h5>
+                <div class="formRight">
+                    <input  type="radio" id="radio1" class="radio_opcao" name="ra" value="1" checked="checked">
+                    <label class=" radio inline"  for="radio1"><span></span>Campanha</label> 
+                </div> 
+                <div class="formRight">
+                    <input  type="radio" id="radio2" class="radio_opcao" name="ra" value="2" disabled="disabled" >
+                    <label class=" radio inline"  for="radio2"><span></span>Linha de inbound</label> 
+                </div> 
+                <div class="formRight">
+                    <input  type="radio" id="radio3" class="radio_opcao"  name="ra" value="3" >
+                    <label class="radio inline"  for="radio3"><span></span>Base de Dados</label> 
+                </div>
+                <div id="report_campanha" class="select_opcao">
+
+                    <h6>Campanha</h6>
+                    <select id="select_campanha" class=" chzn-select select_opcao" data-placeholder="Selecione uma campanha"></select>
+
+                </div>
+                <div id="report_linha_inbound" class="select_opcao">
+
+                    <h6>Linha de inbound</h6>
+                    <select id="select_linha_inbound" class=" chzn-select  select_opcao " data-placeholder="Selecione uma linha de inbound"></select>
+
+                </div>
+                <div id="report_bd" class="select_opcao">
+                    <h6>Base de dados</h6>
+                    <select id="select_base_dados" multiple="multiple"  class=" chzn-select  select_opcao" data-placeholder="Selecione uma base de dados" style="width:25em; "></select>
+
+                </div>
+                <div class="formRight time_div">
+                    <label>Data de Inicio:</label>
+                    <input  type="text" id="datetime_from" class="datetime_range validate[required]">
+                </div>
+                <div class="formRight time_div">
+                    <label>Data de Fim:</label>
+                    <input  type="text" id="datetime_to" class="datetime_range validate[required]" >  
+                </div>
+
+
+                <div class="formRow">
+                    <div class="formRight">
+                        <button class="btn " id="download_report"><i class="icon-edit"></i>Download do Report</button>
+                    </div>
+                </div>
+            </form>
+
+
+
+
+
+
+
+            <div class="span7">
+
+
+                <div id="template_div"  >
 
                     <h5>Template</h5>
                     <span  class="input-append">
@@ -77,94 +158,24 @@
                         <input id="edit_template_input" maxlength="45" type="text">
                         <button class="btn" id="edit_template_button">Gravar</button>
                     </div> 
-                </div>   
+                </div>    
 
-      
+
 
 
                 <h5 id='column_order_title'>Ordenação de colunas</h5>
-                <ul  class="connectedSortable ui-helper-reset" id="column_order">
+                <form id="column_items_form">
+                    <ul  class="connectedSortable ui-helper-reset" id="column_order">
 
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="download_report_button"><i class='icon-download-alt'></i>Download Relatório</button>
-                <button class="btn" data-dismiss="modal" aria-hidden="true"><i class='icon-share-alt'></i>Sair</button>
-
-            </div>
-        </div>
-
-
-
-
-        <div class="grid-title">
-            <div class="pull-left" ><i class="fam-script-error"></i> Report </div>
-            <div class="pull-right"><a class="btn btn-inverse hide"  href="/sips-admin/script_dinamico/" target="_self">Voltar aos Scripts</a>
-
-            </div>
-        </div>
-        <div class="grid-content">
-
-  
-
-            <form id="form_filter" class="formular span4" >
-                <label>Report por:</label>
-                <div class="formRight">
-
-                    <input  type="radio" id="radio1" class="radio_opcao" name="ra" value="1" checked="checked">
-                    <label class=" radio inline"  for="radio1"><span></span>Campanha</label> 
-                </div> 
-                <div class="formRight">
-
-                    <input  type="radio" id="radio2" class="radio_opcao" name="ra" value="2" disabled="disabled" >
-                    <label class=" radio inline"  for="radio2"><span></span>Linha de inbound</label> 
-                </div> 
-                <div class="formRight">
-                    <input  type="radio" id="radio3" class="radio_opcao"  name="ra" value="3" >
-                    <label class="radio inline"  for="radio3"><span></span>Base de Dados</label> 
-                </div>
-                <div class="formRight time_div">
-                    <label>Data de Inicio:</label>
-                    <input  type="text" id="datetime_from" class="datetime_range validate[required]">
-                </div>
-                <div class="formRight time_div">
-                    <label>Data de Fim:</label>
-                    <input  type="text" id="datetime_to" class="datetime_range validate[required]" >  
-                </div>
-                <div class="formRight">
-                    <input  type="checkbox" id="allcontacts" name="ac" value="1">
-                    <label class="checkbox inline"  for="allcontacts"><span></span>Todos os contactos (sem datas limite)</label> 
-                </div>
-
-                <div class="formRow">
-                    <div class="formRight">
-                        <button class="btn " id="download_report"><i class="icon-edit"></i>Download do Report</button>
-                    </div>
-                </div>
-            </form>
+                    </ul>
+                </form>
 
 
 
 
 
-            <div class="span6">
-                <div id="report_campanha" class="select_opcao">
 
-                    <label>Campanha</label>
-                    <select id="select_campanha" class=" chzn-select select_opcao" data-placeholder="Selecione uma campanha"></select>
 
-                </div>
-                <div id="report_linha_inbound" class="select_opcao">
-
-                    <label>Linha de inbound</label>
-                    <select id="select_linha_inbound" class=" chzn-select  select_opcao " data-placeholder="Selecione uma linha de inbound"></select>
-
-                </div>
-                <div id="report_bd" class="select_opcao">
-                    <label>Base de dados</label>
-                    <select id="select_base_dados" multiple="multiple"  class=" chzn-select  select_opcao" data-placeholder="Selecione uma base de dados" style="width:25em; "></select>
-
-                </div>
 
 
             </div>

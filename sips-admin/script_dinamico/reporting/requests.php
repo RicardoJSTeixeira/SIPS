@@ -171,39 +171,30 @@ switch ($action) {
         $titles = array();
 
 
-  $titles[] = "Lead do Cliente";
-        $titles[] = "Grupo";
-        $titles[] = "Data chamada";
-        $titles[] = "Agente";
-        $titles[] = "Feedback";
         foreach ($field_data as $key => $value) {
 
             if ($value->type == "campo_dinamico") {
                 $client_elements[] = "b." . $value->id;
-                $fields[] = $value->id;
-                $titles[] = $value->texto;
+                $fields[] = "`$value->id` as '$value->texto'";
             } else {
 
                 if ($value->type == "tableradio") {
 
-                    $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ' AND  `param_1`= '$value->param_1',valor,'') ) AS ' $value->texto' ";
+                    $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ' AND  `param_1`= '$value->param_1',valor,'') ) AS '$value->id$value->param_1' ";
+                    $fields[] = "`$value->id$value->param_1` as '$value->texto'";
                 } else {
-                    $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ',valor,'') ) AS ' $value->texto' ";
+                    $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ',valor,'') ) AS ' $value->id' ";
+                    $fields[] = "`$value->id`  as '$value->texto'";
                 }
-
-                $fields[] = "`" . $value->texto . "`";
-                $titles[] = $value->texto;
             }
         }
 
 
 
 
-        if ($allctc == "false") {
-            $date_filter_client = " and date between '$data_inicio 00:00:00' and '$data_fim 23:59:59' ";
-        } else {
-            $date_filter_client = "";
-        }
+
+        $date_filter_client = "  ";
+
 
         $lists = "";
         if (isset($list_id)) {
@@ -221,12 +212,15 @@ switch ($action) {
         $logscriptstatususer = "alogscriptstatususer" . rand();
 
         $final = "afinal" . rand();
+
+        $query_sql = "query_report" . rand() . ".sql";
         if (count($script_elements) > 0)
             $script_elements_temp = "," . implode(",", $script_elements);
 
-        $query = "CREATE TABLE  $scriptoffset   ENGINE=MYISAM  select  id_script, user_id, campaign_id, unique_id, lead_id, param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id =? $date_filter_client  group by unique_id; ";
+
+        $query = "CREATE TABLE  $scriptoffset   ENGINE=MYISAM  select  id_script, user_id, campaign_id, unique_id, lead_id, param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id =? and date between ? and ?   group by unique_id; ";
         $stmt = $db->prepare($query);
-        $stmt->execute(array($campaign_id));
+        $stmt->execute(array($campaign_id, $data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
 
         $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log a inner join $scriptoffset b on a.uniqueid = b.unique_id  $lists_log;";
         $stmt = $db->prepare($query);
@@ -256,21 +250,22 @@ switch ($action) {
 
 
 
-        $file = "report" . date("Y-m-d_H-i-s") . ".csv";
-        $query = "select '" . implode("','", $titles) . "' union all      select  lead_id,user_group,call_date,full_name,status_name, " . implode(",", $fields) . " from $final";
-        $stmt = $db->prepare($query);
-        $stmt->execute();
+        $file = "report" . date("Y-m-d_H-i-s") . "$campaign_id.csv";
+
+        $query = "select lead_id `Id do Cliente`,user_group `Grupo de user`,call_date `Data da chamada`,full_name `Agente`,status_name `Feedback`, " . implode(",", $fields) . " from $final";
 
 
-        $content = "some text here";
-        $fp = fopen("/tmp/query.sql", "wb");
+        $fp = fopen("/tmp/$query_sql", "wb");
         fwrite($fp, $query);
         fclose($fp);
 
 
-        system("mysql asterisk  -usipsadmin -psipsps2012 -h 172.16.7.25 < /tmp/query.sql > /srv/www/htdocs/report_files/teste.csv ");
 
-/*
+        system("chmod 777 /srv/www/htdocs/report_files");
+
+        system("mysql asterisk  -u$varDbUser -p$varDbPass -h $VARDB_server < /tmp/$query_sql > /srv/www/htdocs/report_files/$file ", $e);
+
+
         $query1 = "drop table $scriptoffset;";
         $stmt1 = $db->prepare($query1);
         $stmt1->execute();
@@ -290,14 +285,14 @@ switch ($action) {
         $query1 = "drop table $final;";
         $stmt1 = $db->prepare($query1);
         $stmt1->execute();
-*/
+
         echo(json_encode($file));
         break;
 
 
 
     case "get_report_file":
-        $file_path = "/srv/www/htdocs/report_files/teste.csv";
+        $file_path = "/srv/www/htdocs/report_files/$file";
         if (!$file) { // file does not exist
             die('file not found');
         } else {
