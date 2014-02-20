@@ -274,7 +274,7 @@ switch ($action) {
 
 
 
-        $file = "report" . date("Y-m-d_H-i-s") . "_script-" . $campaign_name . "_camp-" . $name_script . ".csv";
+        $file = "report" . $campaign_name . "_" . date("Y-m-d_H-i-s") . "_camp-" . $name_script . ".csv";
 
 
         $query = "select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`, full_name `Agente`, status_name `Feedback`, " . implode(", ", $fields) . " from $final";
@@ -328,8 +328,7 @@ switch ($action) {
         } else {
             header("Cache-Control: public");
             header("Content-Description: File Transfer");
-            header("Content-Disposition: attachment;
-filename = $file");
+            header("Content-Disposition: attachment;filename = $file");
             header("Content-Type: application/csv");
             header("Content-Transfer-Encoding: binary");
             // read the file from disk
