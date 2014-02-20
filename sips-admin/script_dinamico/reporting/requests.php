@@ -26,14 +26,14 @@ $js = array();
 switch ($action) {
 
     case "check_has_script":
-        $query = "SELECT id_script from script_assoc where id_camp_linha=:campaign_id";
+        $query = "SELECT a.id_script,b.name from script_assoc a inner join script_dinamico_master b on a.id_script=b.id where a.id_camp_linha=:campaign_id";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":campaign_id" => $campaign_id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $script_id = $row["id_script"];
 
         if (isset($script_id)) {
-            echo json_encode($script_id);
+            echo json_encode(array($row["id_script"],$row["name"]));
         } else {
             echo json_encode(array());
         }
@@ -158,13 +158,12 @@ switch ($action) {
         $field_data = json_decode($row["elements"]);
 
 //GET ID SCRIPT
-        $query = "SELECT a.id_script,b.name,c.campaign_name from script_assoc a inner join script_dinamico_master b on b.id=a.id_script left join vicidial_campaigns c on c.campaign_id=a.id_camp_linha where a.id_camp_linha=:campaign_id";
+        $query = "SELECT a.id_script from script_assoc a where a.id_camp_linha=:campaign_id";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":campaign_id" => $campaign_id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $id_script = $row["id_script"];
-        $name_script = $row["name"];
-        $campaign_name = $row["campaign_name"];
+        
 
 
         $script_elements = array();

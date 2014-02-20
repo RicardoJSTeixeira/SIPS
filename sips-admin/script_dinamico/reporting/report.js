@@ -160,9 +160,15 @@ function get_templates(campaign)
     $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
     function(data)
     {
-        if (data > 0)
+        if (Object.size(data))
         {
-            script_id = data;
+           
+            script_id = data[0];
+            
+                      
+            $("#span_script_name").text("Nome do Script ->  "+data[1]);
+            
+            
             $("#download_report").prop("disabled", false);
             $("#edit_template_div_opener_button").prop("disabled", false);
             $("#delete_template_button").prop("disabled", false);
@@ -195,6 +201,7 @@ function get_templates(campaign)
         }
         else
         {
+             $("#span_script_name").text("");
             $("#download_report").prop("disabled", true);
             $("#column_order").empty();
             $("#column_order").append("<li>Sem Script</li>");
@@ -252,6 +259,7 @@ $("#oc_template").on("change", function()
 
 $("#download_report").on("click", function(e)
 {
+      $('#loading').show();
     e.preventDefault();
     if ($("#form_filter").validationEngine('validate'))
     {
@@ -273,6 +281,7 @@ $("#download_report").on("click", function(e)
                 function(data)
                 {
                     $("#download_report").prop("disabled", false);
+                    $('#loading').hide();
                     document.location.href = "requests.php?action=get_report_file&file=" + data;
                 }, "json");
             }
@@ -286,6 +295,7 @@ $("#download_report").on("click", function(e)
                 function(data)
                 {
                     $("#download_report").prop("disabled", false);
+                    $('#loading').hide();
                     document.location.href = "requests.php?action=get_report_file&file=" + data;
                 }, "json");
             }
