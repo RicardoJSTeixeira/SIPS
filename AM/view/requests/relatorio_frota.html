@@ -20,7 +20,7 @@
                 <div class="formRow">
                     <span>Kms</span>
                     <div class="formRight">
-                        <input   type="text" id="input_km" name="Kms" class="validate[required]" >
+                        <input   type="text" id="input_km" name="Kms" class="validate[required,custom[onlyNumberSp]]" >
                     </div>
                 </div>
 
@@ -74,7 +74,7 @@
                 <div class="formRow">
                     <span>Observações</span>
                     <div class="formRight">
-                        <textarea id="input_comments" name="obs"></textarea>
+                        <textarea id="input_comments" class="validate[required]" name="obs" >Sem observações</textarea>
                     </div>
                 </div>
             </div>

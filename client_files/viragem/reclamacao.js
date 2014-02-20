@@ -31,7 +31,7 @@ $(function()
 
 
       $("#tabs").tabs();
-      $(".datetime_range").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt"}).keypress(function(e) {
+      $(".datetime_range").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt", minView:2}).keypress(function(e) {
             e.preventDefault();
       }).bind("cut copy paste", function(e) {
             e.preventDefault();

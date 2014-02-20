@@ -289,6 +289,8 @@ var crm_main = function(crm_main_zone, file_path)
                 crm_main_zone.find("#div_filtro_linha_inbound").hide();
                 crm_main_zone.find("#div_filtro_campanha").show();
                 crm_main_zone.find("#div_filtro_bd").show();
+                crm_main_zone.find("#client_search_sub_option").show();
+                      crm_main_zone.find("#radio_client").prop("disabled", false);
                 break;
                 //mostra a linha de inbound  e esconde a campaign 
             case 2:
@@ -296,6 +298,9 @@ var crm_main = function(crm_main_zone, file_path)
                 crm_main_zone.find("#div_filtro_linha_inbound").show();
                 crm_main_zone.find("#div_filtro_campanha").hide();
                 crm_main_zone.find("#div_filtro_bd").hide();
+                crm_main_zone.find("#client_search_sub_option").hide();
+                crm_main_zone.find("#radio_chamada").prop("checked", true);
+                      crm_main_zone.find("#radio_client").prop("disabled", true);
                 break;
             case 3:
                 break;
@@ -500,7 +505,7 @@ var crm_main = function(crm_main_zone, file_path)
                         crm_main_zone.find(".criar_marcacao").hide();
 
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Feedback"}, {"sTitle": "Ultima Chamada"}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Feedback"}, {"sTitle": "Data Chamada"}],
                 "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
             });
         }

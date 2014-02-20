@@ -170,7 +170,7 @@ switch ($action) {
         $fields = array();
         $titles = array();
 
-
+        $tableradio = 0;
         foreach ($field_data as $key => $value) {
 
             if ($value->type == "campo_dinamico") {
@@ -180,15 +180,15 @@ switch ($action) {
 
                 if ($value->type == "tableradio") {
 
-                    $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ' AND  `param_1`= '$value->param_1',valor,'') ) AS '$value->id$value->param_1' ";
-                    $fields[] = "`$value->id$value->param_1` as '$value->texto'";
+                    $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ' AND  `param_1`= '$value->param_1',valor,'') ) AS '$value->id$tableradio' ";
+                    $fields[] = "`$value->id$tableradio` as '$value->texto'";
+                    $tableradio++;
                 } else {
                     $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ',valor,'') ) AS ' $value->id' ";
                     $fields[] = "`$value->id`  as '$value->texto'";
                 }
             }
         }
-
 
 
 
@@ -203,15 +203,15 @@ switch ($action) {
         }
 
 
-        $scriptoffset = "ascriptoffset" . rand();
+        $scriptoffset = "report_scriptoffset" . rand();
 
-        $logscriptoffset = "alogscriptoffset" . rand();
+        $logscriptoffset = "report_logscriptoffset" . rand();
 
-        $logscriptstatus = "alogscriptstatus" . rand();
+        $logscriptstatus = "report_logscriptstatus" . rand();
 
-        $logscriptstatususer = "alogscriptstatususer" . rand();
+        $logscriptstatususer = "report_logscriptstatususer" . rand();
 
-        $final = "afinal" . rand();
+        $final = "report_final" . rand();
 
         $query_sql = "query_report" . rand() . ".sql";
         if (count($script_elements) > 0)
@@ -263,7 +263,7 @@ switch ($action) {
 
         system("chmod 777 /srv/www/htdocs/report_files");
 
-        system("mysql asterisk  -u$varDbUser -p$varDbPass -h $VARDB_server < /tmp/$query_sql > /srv/www/htdocs/report_files/$file ", $e);
+        system("mysql asterisk  -u$varDbUser -p$varDbPass -h $VARDB_server < /tmp/$query_sql > /srv/www/htdocs/report_files/$file ");
 
 
         $query1 = "drop table $scriptoffset;";

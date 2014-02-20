@@ -8,6 +8,7 @@ require "$root/ini/db.php";
 require "$root/ini/dbconnect.php";
 require "$root/ini/user.php";
 require "$root/AM/lib_php/products.php";
+require "$root/AM/lib_php/requests.php";
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -18,6 +19,9 @@ foreach ($_GET as $key => $value) {
 $user = new mysiblings($db);
 
 $products = new products($db);
+
+$apoio_marketing = new apoio_marketing($db, $user->user_level, $user->id);
+
 
 switch ($action) {
 
@@ -39,7 +43,6 @@ switch ($action) {
         }
         fclose($output);
         break;
-
     case "listar_produtos_to_datatable":
         $temp = $products->get_products_to_datatable();
         foreach ($temp as &$value) {
@@ -63,16 +66,13 @@ switch ($action) {
         };
         echo(json_encode($temp));
         break;
-
     case "listar_produtos_to_datatable_by_parent":
         echo(json_encode($products->get_products_to_datatable_by_id($parent)));
         break;
-
     case "listar_produtos":
         echo(json_encode($products->get_products()));
         break;
-
-     case "apagar_produto":
+    case "apagar_produto":
         echo(json_encode($products->remove_product($id)));
         break;
     case "apagar_produtos":
@@ -81,8 +81,6 @@ switch ($action) {
     case "criar_produto":
         echo(json_encode($products->add_product($name, $parent, $max_req_m, $max_req_s, $category, $type)));
         break;
-
-
     case "editar_produto":
         $product = new product($db, $id);
         echo($product->edit_product($name, $parent, $max_req_m, $max_req_s, $category, $type));
@@ -91,7 +89,6 @@ switch ($action) {
         $product = new product($db, $id, 0);
         echo(json_encode($product->get_info()));
         break;
-
     case"get_agentes":
         echo(json_encode($user->get_agentes()));
         break;
@@ -100,4 +97,12 @@ switch ($action) {
         $stmt->execute(array($new_user, $old_user));
         echo(json_encode($stmt->rowCount()));
         break;
+
+
+    //------------------------------REQUESTS - APOIO MARKETING---------------------------
+    //-------------------------------------------------------------------------------------
+                    
+    //-------------------------------------------------------------------------------------
+
+                    
 }

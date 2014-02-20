@@ -5,7 +5,8 @@ $(function()
     $("#admin_zone .form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
     $("#admin_zone .check_form").validationEngine();
 
-    get_info_product();
+    //get_info_product();
+
     get_files_to_anexo();
     //ENCOMENDAS--------------------------------------------------------------------------------------
     var config = new Object();
@@ -13,6 +14,18 @@ $(function()
 
     requisition1.init();
     requisition1.get_current_requisitions($("#view_requisition_datatable"), 1);
+
+    config = new Object();
+    requests = new requests_class($("#admin_extra_zone"), config);
+    requests.init_apoio_marketing();
+    requests.get_apoio_marketing_to_datatable($("#admin_zone #pedidos_apoio_marketing_datatable"));
+    requests.init_relatorio_correio();
+    requests.get_relatorio_correio_to_datatable($("#admin_zone #pedidos_correio_datatable"));
+    requests.init_relatorio_frota();
+    requests.get_relatorio_frota_to_datatable($("#admin_zone #pedidos_frota_datatable"));
+
+
+
     $("#admin_zone .chosen-select").chosen({no_results_text: "Sem resultados"});
     $.post('ajax/admin.php', {action: "get_agentes"},
     function(data)
@@ -42,7 +55,6 @@ $("#admin_zone .button_toggle_divs").click(function()
 });
 
 //------------
-
 
 
 
@@ -232,7 +244,7 @@ $("#admin_zone #create_product_button").click(function()
 
 
 
-// CLIENTES-------------------------------------------------------------------------------------------------------------------------------------------------
+// CLIENTES--------CLIENTES-----------------------CLIENTES-------------------CLIENTES--------------------------CLIENTES----------------------CLIENTES-----------------------CLIENTES------------------------
 // relatorio de clientes sem marcação
 $("#admin_zone #download_csm_button").click(function()
 {
@@ -246,7 +258,7 @@ $("#admin_zone #download_excel_csm_button").click(function()
     }
 });
 
-//ENCOMENDAS -----------------------------------------------------------------------------------------------------------------------------------------------
+//ENCOMENDAS ---------------ENCOMENDAS--------------ENCOMENDAS--------------------------ENCOMENDAS-------------ENCOMENDAS----------------ENCOMENDAS---------------------ENCOMENDAS--------------------------------------
 //VER PRODUTOS DE ENCOMENDAS FEITAS
 $("#admin_zone").on("click", ".ver_requisition_products", function()
 {
@@ -282,7 +294,7 @@ $("#admin_zone").on("click", ".decline_requisition", function()
     }, "json");
 });
 
-//Anexos-------------------------------------------------------------------------------------------------------------------------------------------------------
+//ANEXOS-----------------ANEXOS--------------------------------ANEXOS--------------------------------------ANEXOS-------------------------------ANEXOS------------------------ANEXOS---------
 
 
 //FILE UPLOAD
@@ -349,3 +361,5 @@ $("#admin_zone #remove_uploaded_file").on("click", function()
         get_files_to_anexo();
     });
 });
+
+//PEDIDOS---------------PEDIDOS------------------------PEDIDOS-------------------------------PEDIDOS----------------------PEDIDOS-----------------------------PEDIDOS-----------------------PEDIDOS------------------------
