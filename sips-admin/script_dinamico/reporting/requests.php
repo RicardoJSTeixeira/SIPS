@@ -68,7 +68,7 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute(array(":campaign_id" => $campaign_id));
 
-        //  $js[] = array("id" => "lead_id", "type" => "campo_dinamico", "texto" => "Lead_id do Cliente");
+//  $js[] = array("id" => "lead_id", "type" => "campo_dinamico", "texto" => "Lead_id do Cliente");
 
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -157,12 +157,13 @@ switch ($action) {
         $field_data = json_decode($row["elements"]);
 
 //GET ID SCRIPT
-        $query = "SELECT a.id_script from script_assoc a inner join  where a.id_camp_linha=:campaign_id";
+        $query = "SELECT a.id_script,b.name,c.campaign_name from script_assoc a inner join script_dinamico_master b on b.id=a.id_script left join vicidial_campaigns c on c.campaign_id=a.id_camp_linha where a.id_camp_linha=:campaign_id";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":campaign_id" => $campaign_id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $id_script = $row["id_script"];
-
+        $name_script = $row["name"];
+        $campaign_name = $row["campaign_name"];
 
 
         $script_elements = array();
@@ -175,17 +176,16 @@ switch ($action) {
 
             if ($value->type == "campo_dinamico") {
                 $client_elements[] = "b." . $value->id;
-                $fields[] = "`$value->id` as '$value->texto'";
+                $fields[] = "`$value->id` as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
             } else {
                 if ($result_filter == 1) {
                     if ($value->type == "tableradio") {
-        $tableradio = rand();
+                        $tableradio = rand();
                         $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ' AND  `param_1`= '$value->param_1',valor,'') ) AS '$value->id$tableradio' ";
-                        $fields[] = "`$value->id$tableradio` as '$value->texto'";
-    
+                        $fields[] = "`$value->id$tableradio` as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
                     } else {
                         $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ',valor,'') ) AS ' $value->id' ";
-                        $fields[] = "`$value->id`  as '$value->texto'";
+                        $fields[] = "`$value->id`  as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
                     }
                 }
             }
@@ -265,10 +265,10 @@ switch ($action) {
 
 
 
-        $file = "report" . date("Y-m-d_H-i-s") . "$campaign_id.csv";
+        $file = "report" . date("Y-m-d_H-i-s") . "_" . $campaign_name . "_" . $name_script . ".csv";
 
 
-        $query = "select lead_id `Id do Cliente`,user_group `Grupo de user`,call_date `Data da chamada`,full_name `Agente`,status_name `Feedback`, " . implode(",", $fields) . " from $final";
+        $query = "select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`, full_name `Agente`, status_name `Feedback`, " . implode(", ", $fields) . " from $final";
 
 
         $fp = fopen("/tmp/$query_sql", "wb");
@@ -279,26 +279,31 @@ switch ($action) {
 
         system("chmod 777 /srv/www/htdocs/report_files");
 
-        system("mysql asterisk  -u$varDbUser -p$varDbPass -h $VARDB_server < /tmp/$query_sql > /srv/www/htdocs/report_files/$file ");
+        system("mysql asterisk -u$varDbUser -p$varDbPass -h $VARDB_server < /tmp/$query_sql > /srv/www/htdocs/report_files/$file ");
 
         if ($result_filter == 1) {
-            $query1 = "drop table $scriptoffset;";
+            $query1 = "drop table $scriptoffset;
+";
             $stmt1 = $db->prepare($query1);
             $stmt1->execute();
         }
-        $query1 = "drop table $logscriptoffset;";
+        $query1 = "drop table $logscriptoffset;
+";
         $stmt1 = $db->prepare($query1);
         $stmt1->execute();
 
-        $query1 = "drop table $logscriptstatus;";
+        $query1 = "drop table $logscriptstatus;
+";
         $stmt1 = $db->prepare($query1);
         $stmt1->execute();
 
-        $query1 = "drop table $logscriptstatususer;";
+        $query1 = "drop table $logscriptstatususer;
+";
         $stmt1 = $db->prepare($query1);
         $stmt1->execute();
 
-        $query1 = "drop table $final;";
+        $query1 = "drop table $final;
+";
         $stmt1 = $db->prepare($query1);
         $stmt1->execute();
 
@@ -314,7 +319,8 @@ switch ($action) {
         } else {
             header("Cache-Control: public");
             header("Content-Description: File Transfer");
-            header("Content-Disposition: attachment; filename=$file");
+            header("Content-Disposition: attachment;
+filename = $file");
             header("Content-Type: application/csv");
             header("Content-Transfer-Encoding: binary");
             // read the file from disk
