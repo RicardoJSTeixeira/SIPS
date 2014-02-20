@@ -148,7 +148,8 @@ switch ($action) {
     case "report_outbound":
 
 
-
+        $name_script = "";
+        $campaign_name = "";
 //GET ELEMENTS
         $query = "SELECT elements from report_order where id=:id";
         $stmt = $db->prepare($query);
@@ -273,7 +274,7 @@ switch ($action) {
 
 
 
-        $file = "report" . date("Y-m-d_H-i-s") . "_" . $campaign_name . "_" . $name_script . ".csv";
+        $file = "report" . date("Y-m-d_H-i-s") . "_script-" . $campaign_name . "_camp-" . $name_script . ".csv";
 
 
         $query = "select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`, full_name `Agente`, status_name `Feedback`, " . implode(", ", $fields) . " from $final";
