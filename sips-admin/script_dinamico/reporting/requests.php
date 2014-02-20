@@ -243,6 +243,14 @@ switch ($action) {
             $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group,'$campaign_id' campaign_id,a.user user_id,a.lead_id from vicidial_log_archive a  where  a.call_date between ? and ? $lists_archive and a.length_in_sec > 0);";
             $stmt = $db->prepare($query);
             $stmt->execute(array($data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
+        } else if ($result_filter == 3) {
+
+            $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group,'$campaign_id' campaign_id,a.user user_id,a.lead_id from vicidial_log a where a.length_in_sec = 0 $lists_log  and a.call_date between ? and ?     ;";
+            $stmt = $db->prepare($query);
+            $stmt->execute(array($data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
+            $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group,'$campaign_id' campaign_id,a.user user_id,a.lead_id from vicidial_log_archive a  where  a.call_date between ? and ? $lists_archive and a.length_in_sec = 0);";
+            $stmt = $db->prepare($query);
+            $stmt->execute(array($data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
         } else {
             echo("Ocorreu um erro");
             exit;
