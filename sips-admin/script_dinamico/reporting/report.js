@@ -8,11 +8,7 @@ $(function() {
     $("#report_linha_inbound").hide();
     $(".chzn-select").chosen({no_results_text: "Sem resultados"});
     $("#form_filter").validationEngine();
-    $(".datetime_range").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).keypress(function(e) {
-        e.preventDefault();
-    }).bind("cut copy paste", function(e) {
-        e.preventDefault();
-    });
+
 
 
     $("#datetime_from").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function(ev) {
@@ -51,20 +47,16 @@ $(function() {
         {
             if ($("#select_base_dados optgroup[label='" + this.campaign_name + "']").length)
             {
-                $("#select_base_dados optgroup[label='" + this.campaign_name + "']").append("<option data-campaign_id=" + this.campaign_id + " value=" + this.id + " > " + this.name + "</option>");
+                $("#select_base_dados optgroup[label='" + this.campaign_name + "']").append("<option data-campaign_id=" + this.campaign_id + " value=" + this.id + " > " + (this.active == "Y" ? "Activa" : "Inactiva") + " - " + this.name + " </option>");
             }
             else
             {
                 $("#select_base_dados").append("<optgroup class='tag_group' data-campaign_id='" + this.campaign_id + "' label='" + this.campaign_name + "'></optgroup>");
-                $("#select_base_dados optgroup[label='" + this.campaign_name + "']").append("<option data-campaign_id=" + this.campaign_id + " value=" + this.id + " > " + this.name + "</option>");
+                $("#select_base_dados optgroup[label='" + this.campaign_name + "']").append("<option data-campaign_id=" + this.campaign_id + " value=" + this.id + " >  " + (this.active == "Y" ? "Activa" : "Inactiva") + " - " + this.name + "</option>");
             }
         });
         $("#select_base_dados").val("").trigger("liszt:updated");
     }, "json");
-
-
-
-
     $("#column_order").sortable({
         stop: function(event, ui) {
             update_elements();
@@ -79,9 +71,8 @@ $("#select_base_dados").change(function()
     if ($("#select_base_dados :selected").length == 0)
     {
         $("#select_base_dados option").prop("disabled", false);
- 
+
         $("#select_base_dados").trigger("liszt:updated");
- 
     }
     else
     {
@@ -93,11 +84,10 @@ $("#select_base_dados").change(function()
 $("#download_report").on("click", function(e)
 {
     campaign = "";
-    base_dados = [];
+    base_dados = "";
     e.preventDefault();
     if ($("#form_filter").validationEngine('validate'))
     {
-
         if ($("#radio1").is(":checked")) {
             campaign = $("#select_campanha option:selected").val();
             $("#co_modal").data("campaign", campaign);
@@ -110,18 +100,13 @@ $("#download_report").on("click", function(e)
         }
         if ($("#radio3").is(":checked"))
         {
-            $.each($("#select_base_dados option:selected"), function()
-            {
-                base_dados.push($(this).data("campaign_id"));
-            });
+            base_dados = ($("#select_base_dados option:selected").data("campaign_id"));
             $("#co_modal").data("campaign", base_dados);
             get_templates(base_dados);
         }
         $("#co_modal").modal("show");
         $("#crs_contacts").prop("checked", true);
-
     }
-
 });
 
 
@@ -129,29 +114,34 @@ $("#download_report").on("click", function(e)
 
 $("#download_report_button").on("click", function()
 {
-
-
     var ordered_tags = new Array();
     var items = $("#column_order  li input");
     $.each(items, function()
     {
-
-        ordered_tags.push({"id": this.id, "type": this.getAttribute("data-type"), "texto": this.value});
+        ordered_tags.push({"id": this.id, "type": this.getAttribute("data-type"), "texto": this.value, "param_1": this.getAttribute("data-param_1")});
 
     });
 
-
     if ($("#radio1").is(":checked"))
     {
-        document.location.href = "requests.php?action=report_outbound&tipo=1&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&campaign_id=" + $("#select_campanha option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + $("#oc_template").val() + "&only_with_result=" + $("#crs_contacts").is(":checked") + "&only_active_db=" + $("#so_bd_activas").is(":checked") + "&by_calls=" + $("#by_calls").is(":checked");
+        $.post("requests.php", {action: "report_outbound", tipo: 1, data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val(), campaign_id: $("#select_campanha option:selected").val(), allctc: $("#allcontacts").is(":checked"), field_data: $("#oc_template").val()},
+        function(data)
+        {
+
+            document.location.href = "requests.php?action=get_report_file&file=" + data;
+        }, "json");
     }
     else if ($("#radio2").is(":checked"))
     {
-        document.location.href = "requests.php?action=report_inbound&tipo=2&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&linha_inbound=" + $("#select_linha_inbound option:selected").val() + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + $("#oc_template").val() + "&only_with_result=" + $("#crs_contacts").is(":checked") + "&by_calls=" + $("#by_calls").is(":checked");
+
     }
     else
     {
-        document.location.href = "requests.php?action=report_outbound&tipo=3&data_inicio=" + $("#datetime_from").val() + "&data_fim=" + $("#datetime_to").val() + "&list_id=" + $("#select_base_dados option:selected").val() + "&campaign_id=" + $("#select_base_dados option:selected").data("campaign_id") + "&allctc=" + $("#allcontacts").is(":checked") + "&field_data=" + $("#oc_template").val() + "&only_with_result=" + $("#crs_contacts").is(":checked") + "&by_calls=" + $("#by_calls").is(":checked");
+        $.post("requests.php", {action: "report_outbound", tipo: 3, data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val(), list_id: $("#select_base_dados").val(), campaign_id: $("#select_base_dados option:selected").data("campaign_id"), allctc: $("#allcontacts").is(":checked"), field_data: $("#oc_template").val()},
+        function(data)
+        {
+            document.location.href = "requests.php?action=get_report_file&file=" + data;
+        }, "json");
     }
 
 
@@ -169,6 +159,9 @@ $("#allcontacts").on("click", function()
 
 $(".radio_opcao").on("click", function()
 {
+    $("#select_base_dados option").prop("disabled", false);
+    $("#select_base_dados").val("").trigger("liszt:updated");
+
     $(".select_opcao").hide();
     if ($(this).val() == "1")
     {
@@ -180,7 +173,6 @@ $(".radio_opcao").on("click", function()
         $("#div_idb").hide();
     } else
     {
-
         $("#report_bd").show();
         $("#div_idb").show();
     }
@@ -193,7 +185,7 @@ function update_elements(type)
     var items = $("#column_order  li input");
     $.each(items, function()
     {
-        elements.push({"id": this.id, "type": this.getAttribute("data-type"), "texto": this.value});
+        elements.push({"id": this.id, "type": this.getAttribute("data-type"), "texto": this.value, "param_1": this.getAttribute("data-param_1")});
     });
 
 
@@ -219,16 +211,17 @@ function get_templates(campaign)
     $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
     function(data)
     {
- 
+
         if (data > 0)
         {
             script_id = data;
 
             $("#edit_template_div_opener_button").prop("disabled", false);
+            $("#download_report_button").prop("disabled", false);
             $("#delete_template_button").prop("disabled", false);
             $("#template_div").show();
             $("#oc_template").empty();
-
+            $("#download_report_button").prop("disabled", false);
             $.post("requests.php", {action: "get_template", campaign_id: campaign, script_id: data},
             function(data1)
             {
@@ -254,8 +247,9 @@ function get_templates(campaign)
                     $("#column_order").empty();
 
                     $("#edit_template_div_opener_button").prop("disabled", true);
+                    $("#download_report_button").prop("disabled", true);
                     $("#delete_template_button").prop("disabled", true);
-                    $("#oc_template").append("<option>Crie um template</option>");
+                    $("#oc_template").append("<option value=0>Crie um template</option>");
                     $("#column_order_title").hide();
                     $("#div_crs").hide();
                     $("#div_idb").hide();
@@ -269,7 +263,7 @@ function get_templates(campaign)
             $("#template_div").hide();
             $("#div_crs").hide();
             $("#div_idb").hide();
-
+            $("#download_report_button").prop("disabled", true);
 
 
         }
@@ -300,7 +294,7 @@ function get_elements_by_template(template)
             $("#column_order_title").text("Ordernação de colunas");
             $.each(data, function()
             {
-                $("#column_order").append("<li class='ui-state-default'><input id=" + this.id + "    type='text'   data-type='" + this.type + "' value='" + this.texto + "'>" + ((this.type === "campo_dinamico") ? "" : "<span class='label'>" + this.id + "</span>" + get_name_by_type(this.type)) + "<span class='btn icon-alone remove_list_item_button icon-remove btn-link' data-id='" + this.id + "'></span></li>");
+                $("#column_order").append("<li class='ui-state-default'><input id=" + this.id + "    type='text'  data-param_1='" + this.param_1 + "'  data-type='" + this.type + "' value='" + this.texto + "'>" + ((this.type === "campo_dinamico") ? "" : "<span class='label'>" + this.id + "</span>" + get_name_by_type(this.type)) + "<span class='btn icon-alone remove_list_item_button icon-remove btn-link' data-id='" + this.id + "'></span></li>");
             });
         }
         else
@@ -329,6 +323,7 @@ $("#new_template_button").on("click", function()
     {
         $.post("requests.php", {action: "create_template", campaign_id: $("#co_modal").data("campaign"), template: $("#new_template_input").val(), script_id: script_id}, "json");
         $("#new_template_div").toggle(500);
+
         get_templates($("#co_modal").data("campaign"));
     }
     else
