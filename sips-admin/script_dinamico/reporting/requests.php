@@ -177,18 +177,21 @@ switch ($action) {
                 $client_elements[] = "b." . $value->id;
                 $fields[] = "`$value->id` as '$value->texto'";
             } else {
+                if ($result_filter == 1) {
+                    if ($value->type == "tableradio") {
 
-                if ($value->type == "tableradio") {
-
-                    $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ' AND  `param_1`= '$value->param_1',valor,'') ) AS '$value->id$tableradio' ";
-                    $fields[] = "`$value->id$tableradio` as '$value->texto'";
-                    $tableradio++;
-                } else {
-                    $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ',valor,'') ) AS ' $value->id' ";
-                    $fields[] = "`$value->id`  as '$value->texto'";
+                        $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ' AND  `param_1`= '$value->param_1',valor,'') ) AS '$value->id$tableradio' ";
+                        $fields[] = "`$value->id$tableradio` as '$value->texto'";
+                        $tableradio++;
+                    } else {
+                        $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ',valor,'') ) AS ' $value->id' ";
+                        $fields[] = "`$value->id`  as '$value->texto'";
+                    }
                 }
             }
         }
+
+
 
 
 
@@ -198,20 +201,21 @@ switch ($action) {
 
         $lists = "";
         if (isset($list_id)) {
-            $lists_log = "where a.list_id in('" . implode("','", $list_id) . "')";
+            $lists_log = "and a.list_id in('" . implode("','", $list_id) . "')";
+            $lists_log1 = "Where a.list_id in('" . implode("','", $list_id) . "')";
             $lists_archive = "and a.list_id in('" . implode("','", $list_id) . "')";
         }
 
 
-        $scriptoffset = "report_scriptoffset" . rand();
+        $scriptoffset = "rep_script_offset" . rand();
 
-        $logscriptoffset = "report_logscriptoffset" . rand();
+        $logscriptoffset = "rep_log_script_offset" . rand();
 
-        $logscriptstatus = "report_logscriptstatus" . rand();
+        $logscriptstatus = "rep_log_script_status" . rand();
 
-        $logscriptstatususer = "report_logscriptstatususer" . rand();
+        $logscriptstatususer = "rep_log_script_status_user" . rand();
 
-        $final = "report_final" . rand();
+        $final = "rep_final" . rand();
 
         $query_sql = "query_report" . rand() . ".sql";
         if (count($script_elements) > 0)
@@ -220,44 +224,31 @@ switch ($action) {
 
 
         if ($result_filter == 1) {
-
             $query = "CREATE TABLE  $scriptoffset   ENGINE=MYISAM  select  id_script, user_id, campaign_id, unique_id, lead_id, param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id =? and date between ? and ?   group by unique_id; ";
             $stmt = $db->prepare($query);
             $stmt->execute(array($campaign_id, $data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
-
-            $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log a inner join $scriptoffset b on a.uniqueid = b.unique_id  $lists_log;";
+            $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log a inner join $scriptoffset b on a.uniqueid = b.unique_id  $lists_log1;";
             $stmt = $db->prepare($query);
             $stmt->execute();
             $today = time();
             $twoMonthsBefore = strtotime("-2 months", $today);
-            $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log_archive a inner join $scriptoffset b on a.uniqueid = b.unique_id where a.call_date < ? $lists_archive):";
+            $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log_archive a inner join $scriptoffset b on a.uniqueid = b.unique_id where a.call_date < ? $lists_archive);";
             $stmt = $db->prepare($query);
             $stmt->execute(array($twoMonthsBefore));
         } else if ($result_filter == 2) {
-            $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group  from vicidial_log a   $lists_log and a.length_in_sec > 0 ;";
+
+            $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group,'$campaign_id' campaign_id,a.user user_id,a.lead_id from vicidial_log a where a.length_in_sec > 0 $lists_log  and a.call_date between ? and ?     ;";
             $stmt = $db->prepare($query);
-            $stmt->execute();
-            $today = time();
-            $twoMonthsBefore = strtotime("-2 months", $today);
-            $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log_archive a  where a.call_date < ? $lists_archive and a.length_in_sec > 0);";
+            $stmt->execute(array($data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
+            $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group,'$campaign_id' campaign_id,a.user user_id,a.lead_id from vicidial_log_archive a  where  a.call_date between ? and ? $lists_archive and a.length_in_sec > 0);";
             $stmt = $db->prepare($query);
-            $stmt->execute(array($twoMonthsBefore));
+            $stmt->execute(array($data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
         } else {
             echo("Ocorreu um erro");
             exit;
         }
 
-
-
-
-        $today = time();
-        $twoMonthsBefore = strtotime("-2 months", $today);
-        $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log_archive a inner join $scriptoffset b on a.uniqueid = b.unique_id where a.call_date < ? $lists_archive)";
-        $stmt = $db->prepare($query);
-        $stmt->execute(array($twoMonthsBefore));
-
-
-        $query = "create table $logscriptstatus ENGINE=MYISAM select a.*, b.status_name from $logscriptoffset a inner join (select status, status_name, campaign_id from vicidial_campaign_statuses x where campaign_id = ? union all select status, status_name, ? from vicidial_statuses z) b where a.status = b.status and a.campaign_id = b.campaign_id;";
+        $query = "create table $logscriptstatus ENGINE=MYISAM select a.*, b.status_name from $logscriptoffset a inner join (select status, status_name, campaign_id from vicidial_campaign_statuses x where campaign_id = ? union all select status, status_name, ? from vicidial_statuses z) b where a.status = b.status ";
         $stmt = $db->prepare($query);
         $stmt->execute(array($campaign_id, $campaign_id));
 
@@ -276,6 +267,7 @@ switch ($action) {
 
         $file = "report" . date("Y-m-d_H-i-s") . "$campaign_id.csv";
 
+
         $query = "select lead_id `Id do Cliente`,user_group `Grupo de user`,call_date `Data da chamada`,full_name `Agente`,status_name `Feedback`, " . implode(",", $fields) . " from $final";
 
 
@@ -289,11 +281,11 @@ switch ($action) {
 
         system("mysql asterisk  -u$varDbUser -p$varDbPass -h $VARDB_server < /tmp/$query_sql > /srv/www/htdocs/report_files/$file ");
 
-
-        $query1 = "drop table $scriptoffset;";
-        $stmt1 = $db->prepare($query1);
-        $stmt1->execute();
-
+        if ($result_filter == 1) {
+            $query1 = "drop table $scriptoffset;";
+            $stmt1 = $db->prepare($query1);
+            $stmt1->execute();
+        }
         $query1 = "drop table $logscriptoffset;";
         $stmt1 = $db->prepare($query1);
         $stmt1->execute();
