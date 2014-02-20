@@ -218,13 +218,37 @@ switch ($action) {
             $script_elements_temp = "," . implode(",", $script_elements);
 
 
-        $query = "CREATE TABLE  $scriptoffset   ENGINE=MYISAM  select  id_script, user_id, campaign_id, unique_id, lead_id, param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id =? and date between ? and ?   group by unique_id; ";
-        $stmt = $db->prepare($query);
-        $stmt->execute(array($campaign_id, $data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
 
-        $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log a inner join $scriptoffset b on a.uniqueid = b.unique_id  $lists_log;";
-        $stmt = $db->prepare($query);
-        $stmt->execute();
+        if ($result_filter == 1) {
+
+            $query = "CREATE TABLE  $scriptoffset   ENGINE=MYISAM  select  id_script, user_id, campaign_id, unique_id, lead_id, param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id =? and date between ? and ?   group by unique_id; ";
+            $stmt = $db->prepare($query);
+            $stmt->execute(array($campaign_id, $data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
+
+            $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log a inner join $scriptoffset b on a.uniqueid = b.unique_id  $lists_log;";
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+            $today = time();
+            $twoMonthsBefore = strtotime("-2 months", $today);
+            $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log_archive a inner join $scriptoffset b on a.uniqueid = b.unique_id where a.call_date < ? $lists_archive):";
+            $stmt = $db->prepare($query);
+            $stmt->execute(array($twoMonthsBefore));
+        } else if ($result_filter == 2) {
+            $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group  from vicidial_log a   $lists_log and a.length_in_sec > 0 ;";
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+            $today = time();
+            $twoMonthsBefore = strtotime("-2 months", $today);
+            $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log_archive a  where a.call_date < ? $lists_archive and a.length_in_sec > 0);";
+            $stmt = $db->prepare($query);
+            $stmt->execute(array($twoMonthsBefore));
+        } else {
+            echo("Ocorreu um erro");
+            exit;
+        }
+
+
+
 
         $today = time();
         $twoMonthsBefore = strtotime("-2 months", $today);

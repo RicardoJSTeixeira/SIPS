@@ -269,7 +269,7 @@ $("#download_report").on("click", function(e)
 
             if ($("#radio1").is(":checked"))
             {
-                $.post("requests.php", {action: "report_outbound", tipo: 1, data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val(), campaign_id: $("#select_campanha option:selected").val(), field_data: $("#oc_template").val()},
+                $.post("requests.php", {action: "report_outbound", tipo: 1, data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val(), campaign_id: $("#select_campanha option:selected").val(), field_data: $("#oc_template").val(),result_filter:$(".radio_dados:checked").val()},
                 function(data)
                 {
                     $("#download_report").prop("disabled", false);
@@ -282,7 +282,7 @@ $("#download_report").on("click", function(e)
             }
             else
             {
-                $.post("requests.php", {action: "report_outbound", tipo: 3, data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val(), list_id: $("#select_base_dados").val(), campaign_id: $("#select_base_dados option:selected").data("campaign_id"), field_data: $("#oc_template").val()},
+                $.post("requests.php", {action: "report_outbound", tipo: 3, data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val(), list_id: $("#select_base_dados").val(), campaign_id: $("#select_base_dados option:selected").data("campaign_id"), field_data: $("#oc_template").val(),result_filter:$(".radio_dados:checked").val()},
                 function(data)
                 {
                     $("#download_report").prop("disabled", false);
