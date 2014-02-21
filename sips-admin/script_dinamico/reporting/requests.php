@@ -292,7 +292,7 @@ switch ($action) {
 
     
 
-        system("mysql asterisk -u$varDbUser -p$varDbPass -h $VARDB_server < /tmp/$query_sql > /srv/www/htdocs/report_files/$file.txt ");
+        system("mysql asterisk -u$varDbUser -p$varDbPass -h $VARDB_server < /tmp/$query_sql > /srv/www/htdocs/report_files/$file.txt");
         
          system("perl -lpe 's/\"/\"\"/g; s/^|$/\"/g; s/\t/\";\"/g' <  /srv/www/htdocs/report_files/$file.txt > /srv/www/htdocs/report_files/$file.csv");
 
