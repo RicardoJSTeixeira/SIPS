@@ -162,13 +162,13 @@ function get_templates(campaign)
     {
         if (Object.size(data))
         {
-           
+
             script_id = data[0];
-            
-                      
-            $("#span_script_name").text("Nome do Script ->  "+data[1]);
-            
-            
+
+
+            $("#span_script_name").text("Nome do Script ->  " + data[1]);
+
+
             $("#download_report").prop("disabled", false);
             $("#edit_template_div_opener_button").prop("disabled", false);
             $("#delete_template_button").prop("disabled", false);
@@ -201,7 +201,7 @@ function get_templates(campaign)
         }
         else
         {
-             $("#span_script_name").text("");
+            $("#span_script_name").text("");
             $("#download_report").prop("disabled", true);
             $("#column_order").empty();
             $("#column_order").append("<li>Sem Script</li>");
@@ -259,13 +259,13 @@ $("#oc_template").on("change", function()
 
 $("#download_report").on("click", function(e)
 {
-      $('#loading').show();
+
     e.preventDefault();
     if ($("#form_filter").validationEngine('validate'))
     {
-        if ($("#column_items_form").validationEngine('validate'))
+        if ($("#column_items_form").validationEngine('validate')) 
         {
-
+            $('#loading').show();
             $("#download_report").prop("disabled", true);
             var ordered_tags = new Array();
             var items = $("#column_order  li input");
@@ -277,7 +277,7 @@ $("#download_report").on("click", function(e)
 
             if ($("#radio1").is(":checked"))
             {
-                $.post("requests.php", {action: "report_outbound", tipo: 1, data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val(), campaign_id: $("#select_campanha option:selected").val(), field_data: $("#oc_template").val(),result_filter:$(".radio_dados:checked").val()},
+                $.post("requests.php", {action: "report_outbound", tipo: 1, data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val(), campaign_id: $("#select_campanha option:selected").val(), field_data: $("#oc_template").val(), result_filter: $(".radio_dados:checked").val()},
                 function(data)
                 {
                     $("#download_report").prop("disabled", false);
@@ -291,7 +291,7 @@ $("#download_report").on("click", function(e)
             }
             else
             {
-                $.post("requests.php", {action: "report_outbound", tipo: 3, data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val(), list_id: $("#select_base_dados").val(), campaign_id: $("#select_base_dados option:selected").data("campaign_id"), field_data: $("#oc_template").val(),result_filter:$(".radio_dados:checked").val()},
+                $.post("requests.php", {action: "report_outbound", tipo: 3, data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val(), list_id: $("#select_base_dados").val(), campaign_id: $("#select_base_dados option:selected").data("campaign_id"), field_data: $("#oc_template").val(), result_filter: $(".radio_dados:checked").val()},
                 function(data)
                 {
                     $("#download_report").prop("disabled", false);

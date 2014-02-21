@@ -33,7 +33,7 @@ switch ($action) {
         $script_id = $row["id_script"];
 
         if (isset($script_id)) {
-            echo json_encode(array($row["id_script"],$row["name"]));
+            echo json_encode(array($row["id_script"], $row["name"]));
         } else {
             echo json_encode(array());
         }
@@ -163,7 +163,7 @@ switch ($action) {
         $stmt->execute(array(":campaign_id" => $campaign_id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $id_script = $row["id_script"];
-        
+
 
 
         $script_elements = array();
@@ -273,10 +273,10 @@ switch ($action) {
 
 
 
-        $file = "report" . date("Y-m-d_H-i-s").".csv";
+        $file = "report" . date("Y-m-d_H-i-s") . ".csv";
+    
 
-
-        $query = "select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`, full_name `Agente`, status_name `Feedback`, " . implode(", ", $fields) . " from $final";
+        $query = "select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`,SEC_TO_TIME( length_in_sec ) `Duração Chamada`, full_name `Agente`, status_name `Feedback`, " . implode(", ", $fields) . " from $final";
 
 
         $fp = fopen("/tmp/$query_sql", "wb");
