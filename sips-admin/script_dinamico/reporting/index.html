@@ -132,7 +132,7 @@
                 </div>
                 <div id="report_bd" class="select_opcao">
                     <h6>Base de dados</h6>
-                    <select id="select_base_dados" multiple="multiple"  class=" chzn-select  select_opcao" data-placeholder="Selecione uma base de dados" style="width:25em; "></select>
+                    <select id="select_base_dados" multiple="multiple"  class=" chzn-select  select_opcao  validate[required]" data-placeholder="Selecione uma base de dados" style="width:25em; "></select>
 
                 </div>
                 <div class="formRight time_div">
@@ -167,13 +167,17 @@
                 <div id="template_div"  >
 
                     <h5>Template</h5>
-                    <span  class="input-append">
-                        <select id="oc_template"></select>
-                        <button class="btn btn-primary icon-plus" id="new_template_div_opener_button"> Novo</button>
-                        <button class="btn btn-warning  icon-pencil" id="edit_template_div_opener_button"> Editar</button>
-                        <button class="btn btn-danger icon-remove " id="delete_template_button"> Apagar</button>
-                    </span>
-
+                    <div class="formRow">
+                        <form id="template_form">
+                            <select id="oc_template" class="validate[required]"></select>
+                             <span  class="input-append">
+                            <button class="btn btn-primary icon-plus" id="new_template_div_opener_button"> Novo</button>
+                            <button class="btn btn-warning  icon-pencil" id="edit_template_div_opener_button"> Editar</button>
+                            <button class="btn btn-danger icon-remove " id="delete_template_button"> Apagar</button>
+                        </span>
+                        </form>
+                       
+                    </div>
                     <div  class="input-append" id="new_template_div" style="display:none">
 
                         <input id="new_template_input" maxlength="45" type="text" placeholder="Nome do template novo">

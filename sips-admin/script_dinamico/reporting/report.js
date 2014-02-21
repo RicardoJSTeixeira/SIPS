@@ -9,7 +9,7 @@ $(function() {
     $(".chzn-select").chosen({no_results_text: "Sem resultados"});
     $("#form_filter").validationEngine();
     $("#column_items_form").validationEngine();
-
+    $("#template_form").validationEngine();
 
     $("#datetime_from").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function(ev) {
         $("#datetime_to").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
@@ -24,13 +24,11 @@ $(function() {
     {
         if (!$(this).val().length)
             $("#datetime_from").datetimepicker('setStartDate', null).datetimepicker('setEndDate', null);
-        ;
     });
     $("#datetime_from").change(function()
     {
         if (!$(this).val().length)
             $("#datetime_to").datetimepicker('setStartDate', null).datetimepicker('setEndDate', null);
-        ;
     });
 
 
@@ -117,6 +115,13 @@ $(function() {
             }
         });
 
+        $(".radio_dados").on("click", function()
+        {
+            update_template();
+        });
+
+
+
 
     }, "json");
     $("#column_order").sortable({
@@ -136,7 +141,7 @@ $(function() {
 function update_template()
 {
     campaign = "";
-    base_dados = "";
+
 
     if ($("#radio1").is(":checked")) {
         campaign = $("#select_campanha option:selected").val();
@@ -148,8 +153,8 @@ function update_template()
     }
     if ($("#radio3").is(":checked"))
     {
-        base_dados = ($("#select_base_dados option:selected").data("campaign_id"));
-        get_templates(base_dados);
+        campaign = ($("#select_base_dados option:selected").data("campaign_id"));
+        get_templates(campaign);
     }
 
 
@@ -157,57 +162,95 @@ function update_template()
 
 function get_templates(campaign)
 {
-    $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
-    function(data)
+
+    if ($("#download_script").is(":checked"))
     {
-        if (Object.size(data))
+        $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
+        function(data)
         {
-
-            script_id = data[0];
-
-
-            $("#span_script_name").text("Nome do Script ->  " + data[1]);
-
-
-            $("#download_report").prop("disabled", false);
-            $("#edit_template_div_opener_button").prop("disabled", false);
-            $("#delete_template_button").prop("disabled", false);
-            $("#template_div").show();
-            $("#oc_template").empty();
-            $.post("requests.php", {action: "get_template", campaign_id: campaign, script_id: data},
-            function(data1)
+            if (Object.size(data))
             {
-                if (data1.length)
+                script_id = data[0];
+                $("#span_script_name").text("Nome do Script ->  " + data[1]);
+                $("#download_report").prop("disabled", false);
+                $("#edit_template_div_opener_button").prop("disabled", false);
+                $("#delete_template_button").prop("disabled", false);
+                $("#template_div").show();
+                $("#oc_template").empty();
+                $.post("requests.php", {action: "get_template", campaign_id: campaign},
+                function(data1)
                 {
-                    $.each(data1, function()
+                    if (data1.length)
                     {
-                        if (this.id == current_template)
-                            $("#oc_template").append("<option value=" + this.id + " selected>" + this.template + "</option>");
-                        else
-                            $("#oc_template").append("<option value=" + this.id + ">" + this.template + "</option>");
-                    });
-                    $("#oc_template").trigger("change");
-                    $("#column_order_title").show().text("Ordernação de colunas");
-                }
-                else
-                {
-                    $("#column_order").empty();
-                    $("#edit_template_div_opener_button").prop("disabled", true);
-                    $("#delete_template_button").prop("disabled", true);
-                    $("#oc_template").append("<option value=0>Crie um template</option>");
-                    $("#column_order_title").hide();
-                }
-            }, "json");
-        }
-        else
+                        $.each(data1, function()
+                        {
+                            if (this.id == current_template)
+                                $("#oc_template").append("<option value=" + this.id + " selected>" + this.template + "</option>");
+                            else
+                                $("#oc_template").append("<option value=" + this.id + ">" + this.template + "</option>");
+                        });
+                        $("#oc_template").trigger("change");
+                        $("#column_order_title").show().text("Ordernação de colunas");
+                    }
+                    else
+                    {
+                        $("#column_order").empty();
+                        $("#edit_template_div_opener_button").prop("disabled", true);
+                        $("#delete_template_button").prop("disabled", true);
+                        $("#oc_template").append("<option value=0>Crie um template</option>");
+                        $("#column_order_title").hide();
+                    }
+                }, "json");
+            }
+            else
+            {
+
+                $("#span_script_name").text("");
+                $("#download_report").prop("disabled", true);
+                $("#column_order").empty();
+                $("#column_order").append("<li>Sem Script</li>");
+                $("#template_div").hide();
+            }
+        }, "json");
+    }
+    else
+    {
+        script_id = undefined;
+        $("#span_script_name").text("");
+        $("#download_report").prop("disabled", false);
+        $("#edit_template_div_opener_button").prop("disabled", false);
+        $("#delete_template_button").prop("disabled", false);
+        $("#template_div").show();
+        $("#oc_template").empty();
+        $.post("requests.php", {action: "get_template", campaign_id: campaign},
+        function(data1)
         {
-            $("#span_script_name").text("");
-            $("#download_report").prop("disabled", true);
-            $("#column_order").empty();
-            $("#column_order").append("<li>Sem Script</li>");
-            $("#template_div").hide();
-        }
-    }, "json");
+            if (data1.length)
+            {
+                $.each(data1, function()
+                {
+                    if (this.id == current_template)
+                        $("#oc_template").append("<option value=" + this.id + " selected>" + this.template + "</option>");
+                    else
+                        $("#oc_template").append("<option value=" + this.id + ">" + this.template + "</option>");
+                });
+                $("#oc_template").trigger("change");
+                $("#column_order_title").show().text("Ordernação de colunas");
+            }
+            else
+            {
+                $("#column_order").empty();
+                $("#edit_template_div_opener_button").prop("disabled", true);
+                $("#delete_template_button").prop("disabled", true);
+                $("#oc_template").append("<option value=''>Crie um template</option>");
+                $("#column_order_title").hide();
+            }
+        }, "json");
+
+    }
+
+
+
 }
 
 function get_elements_by_template(template)
@@ -261,46 +304,45 @@ $("#download_report").on("click", function(e)
 {
 
     e.preventDefault();
-    if ($("#form_filter").validationEngine('validate'))
+    if ($("#form_filter").validationEngine('validate') && $("#template_form").validationEngine('validate') && $("#column_items_form").validationEngine('validate'))
     {
-        if ($("#column_items_form").validationEngine('validate')) 
+
+        $('#loading').show();
+        $("#download_report").prop("disabled", true);
+        var ordered_tags = new Array();
+        var items = $("#column_order  li input");
+        $.each(items, function()
         {
-            $('#loading').show();
-            $("#download_report").prop("disabled", true);
-            var ordered_tags = new Array();
-            var items = $("#column_order  li input");
-            $.each(items, function()
-            {
-                ordered_tags.push({"id": this.id, "type": this.getAttribute("data-type"), "texto": this.value, "param_1": this.getAttribute("data-param_1")});
+            ordered_tags.push({"id": this.id, "type": this.getAttribute("data-type"), "texto": this.value, "param_1": this.getAttribute("data-param_1")});
 
-            });
+        });
 
-            if ($("#radio1").is(":checked"))
+        if ($("#radio1").is(":checked"))
+        {
+            $.post("requests.php", {action: "report_outbound", tipo: 1, data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val(), campaign_id: $("#select_campanha option:selected").val(), field_data: $("#oc_template").val(), result_filter: $(".radio_dados:checked").val()},
+            function(data)
             {
-                $.post("requests.php", {action: "report_outbound", tipo: 1, data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val(), campaign_id: $("#select_campanha option:selected").val(), field_data: $("#oc_template").val(), result_filter: $(".radio_dados:checked").val()},
-                function(data)
-                {
-                    $("#download_report").prop("disabled", false);
-                    $('#loading').hide();
-                    document.location.href = "requests.php?action=get_report_file&file=" + data;
-                }, "json");
-            }
-            else if ($("#radio2").is(":checked"))
-            {
-
-            }
-            else
-            {
-                $.post("requests.php", {action: "report_outbound", tipo: 3, data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val(), list_id: $("#select_base_dados").val(), campaign_id: $("#select_base_dados option:selected").data("campaign_id"), field_data: $("#oc_template").val(), result_filter: $(".radio_dados:checked").val()},
-                function(data)
-                {
-                    $("#download_report").prop("disabled", false);
-                    $('#loading').hide();
-                    document.location.href = "requests.php?action=get_report_file&file=" + data;
-                }, "json");
-            }
+                $("#download_report").prop("disabled", false);
+                $('#loading').hide();
+                document.location.href = "requests.php?action=get_report_file&file=" + data;
+            }, "json");
+        }
+        else if ($("#radio2").is(":checked"))
+        {
 
         }
+        else
+        {
+            $.post("requests.php", {action: "report_outbound", tipo: 3, data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val(), list_id: $("#select_base_dados").val(), campaign_id: $("#select_base_dados option:selected").data("campaign_id"), field_data: $("#oc_template").val(), result_filter: $(".radio_dados:checked").val()},
+            function(data)
+            {
+                $("#download_report").prop("disabled", false);
+                $('#loading').hide();
+                document.location.href = "requests.php?action=get_report_file&file=" + data;
+            }, "json");
+        }
+
+
     }
 });
 
@@ -321,11 +363,12 @@ Object.size = function(a)
 };
 
 
+ 
 
 
-
-$("#new_template_div_opener_button").on("click", function()
+$("#new_template_div_opener_button").on("click", function(e)
 {
+ e.preventDefault();   
     $("#new_template_div").toggle(500);
     $("#new_template_input").val("");
 });
@@ -344,8 +387,9 @@ $("#new_template_button").on("click", function()
 });
 
 
-$("#edit_template_div_opener_button").on("click", function()
+$("#edit_template_div_opener_button").on("click", function(e)
 {
+    e.preventDefault();   
     $("#edit_template_div").toggle(500);
     $("#edit_template_input").val($("#oc_template option:selected").text());
 });
@@ -362,8 +406,9 @@ $("#edit_template_button").on("click", function()
 });
 
 
-$("#delete_template_button").on("click", function()
+$("#delete_template_button").on("click", function(e)
 {
+     e.preventDefault(); 
     $.post("requests.php", {action: "delete_template", id: $("#oc_template option:selected").val()}, function()
     {
         $("#new_template_div").hide();

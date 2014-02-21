@@ -64,17 +64,19 @@ switch ($action) {
         $stmt->execute(array(":template" => $template, ":id" => $id));
         break;
     case "create_template":
+        $js=array();
         $query = "SELECT Name,Display_name  FROM vicidial_list_ref where campaign_id = :campaign_id and active='1' order by field_order asc";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":campaign_id" => $campaign_id));
 
-//  $js[] = array("id" => "lead_id", "type" => "campo_dinamico", "texto" => "Lead_id do Cliente");
 
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $js[] = array("id" => $row["Name"], "type" => "campo_dinamico", "texto" => $row["Display_name"]);
         }
+     
         if (!count($js)) {
+    
             $js[] = array("id" => "FIRST_NAME", "type" => "campo_dinamico", "texto" => "Nome");
             $js[] = array("id" => "PHONE_NUMBER", "type" => "campo_dinamico", "texto" => "Telefone");
             $js[] = array("id" => "ADDRESS3", "type" => "campo_dinamico", "texto" => "Telemóvel");
@@ -84,23 +86,26 @@ switch ($action) {
             $js[] = array("id" => "EMAIL", "type" => "campo_dinamico", "texto" => "EMAIL");
             $js[] = array("id" => "COMMENTS", "type" => "campo_dinamico", "texto" => "Comentários");
         }
-
-
-        $query = "SELECT a.tag,a.type,a.texto, a.values_text  FROM `script_dinamico` a left join script_dinamico_pages b on b.id=a.id_page  where type not in ('pagination','textfield','scheduler','legend','button','ipl')  and a.id_script=:script_id order by b.pos,a.ordem asc ";
-        $stmt = $db->prepare($query);
-        $stmt->execute(array(":script_id" => $script_id));
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            if ($row["type"] == "tableradio") {
-                foreach (json_decode($row["values_text"]) as $value) {
-                    $js[] = array("id" => $row["tag"], "type" => $row["type"], "texto" => $row["texto"] . ":" . $value, "param_1" => $value);
-                }
-            } else
-                $js[] = array("id" => $row["tag"], "type" => $row["type"], "texto" => $row["texto"], "param_1" => "");
+    
+        if (isset($script_id)) {
+    
+            $query = "SELECT a.tag,a.type,a.texto, a.values_text  FROM `script_dinamico` a left join script_dinamico_pages b on b.id=a.id_page  where type not in ('pagination','textfield','scheduler','legend','button','ipl')  and a.id_script=:script_id order by b.pos,a.ordem asc ";
+            $stmt = $db->prepare($query);
+            $stmt->execute(array(":script_id" => $script_id));
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                if ($row["type"] == "tableradio") {
+                    foreach (json_decode($row["values_text"]) as $value) {
+                        $js[] = array("id" => $row["tag"], "type" => $row["type"], "texto" => $row["texto"] . ":" . $value, "param_1" => $value);
+                    }
+                } else
+                    $js[] = array("id" => $row["tag"], "type" => $row["type"], "texto" => $row["texto"], "param_1" => "");
+            }
         }
-
+       
+        
         $query = "INSERT INTO `report_order`(`id`, `elements`, `campaign`, `template`) VALUES (NULL, :js,:campaign_id,:template)";
         $stmt = $db->prepare($query);
-        $stmt->execute(array(":js" => json_encode($js), ":campaign_id" => $campaign_id, ":template" => $template));
+        echo( $stmt->execute(array(":js" => json_encode($js), ":campaign_id" => $campaign_id, ":template" => $template)));
         break;
 
     case "get_elements_by_template":
@@ -273,8 +278,8 @@ switch ($action) {
 
 
 
-        $file = "report" . date("Y-m-d_H-i-s") . ".csv";
-    
+        $file = "report" . date("Y-m-d_H-i-s") ;
+
 
         $query = "select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`,SEC_TO_TIME( length_in_sec ) `Duração Chamada`, full_name `Agente`, status_name `Feedback`, " . implode(", ", $fields) . " from $final";
 
@@ -285,9 +290,11 @@ switch ($action) {
 
 
 
-        system("chmod 777 /srv/www/htdocs/report_files");
+    
 
-        system("mysql asterisk -u$varDbUser -p$varDbPass -h $VARDB_server < /tmp/$query_sql > /srv/www/htdocs/report_files/$file ");
+        system("mysql asterisk -u$varDbUser -p$varDbPass -h $VARDB_server < /tmp/$query_sql > /srv/www/htdocs/report_files/$file.txt ");
+        
+         system("perl -lpe 's/\"/\"\"/g; s/^|$/\"/g; s/\t/\";\"/g' <  /srv/www/htdocs/report_files/$file.txt > /srv/www/htdocs/report_files/$file.csv");
 
         if ($result_filter == 1) {
             $query1 = "drop table $scriptoffset;";
@@ -317,6 +324,7 @@ switch ($action) {
 
 
     case "get_report_file":
+        $file=$file.".csv";
         $file_path = "/srv/www/htdocs/report_files/$file";
         if (!$file) { // file does not exist
             die('file not found');
