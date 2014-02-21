@@ -584,10 +584,13 @@ class script {
         $sql = array();
         foreach ($results as $row) {
             if ($row['value'] != "") {
-                $temp = explode(",", $row['name']);
+                $temp = explode("###", $row['name']);
+       
                 if (isset($temp[2])) {
+                         //table inputs
                     $sql[] = "('" . date('Y-m-d H:i:s') . "','$id_script','$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]','" . mysql_real_escape_string($row['value']) . "','$temp[2];$temp[1]')";
                 } else {
+                    //table radios e todos os outros
                     $sql[] = "('" . date('Y-m-d H:i:s') . "','$id_script','$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]', '" . mysql_real_escape_string($row['value']) . "', '$temp[1]')";
                 }
             }

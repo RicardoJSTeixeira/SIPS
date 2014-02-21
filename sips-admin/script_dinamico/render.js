@@ -432,13 +432,13 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             if (info.required)
                             {
                                 trbody_last.append($("<td>")
-                                        .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").addClass("validate[required]").attr("value", titulos[count2]).attr("name", info.tag + "," + perguntas[count]))
+                                        .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").addClass("validate[required]").attr("value", titulos[count2]).attr("name", info.tag + "###" + perguntas[count]))
                                         .append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "tableradio").html("<span></span>")));
                             }
                             else
                             {
                                 trbody_last.append($("<td>")
-                                        .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").attr("value", titulos[count2]).attr("name", info.tag + "," + perguntas[count]))
+                                        .append($("<input>").attr("type", "radio").attr("id", array_id["radio"] + "tableradio").attr("value", titulos[count2]).attr("name", info.tag + "###" + perguntas[count]))
                                         .append($("<label>").addClass("radio_name").attr("for", array_id["radio"] + "tableradio").html("<span></span>")));
                             }
                             array_id["radio"] = array_id["radio"] + 1;
@@ -469,12 +469,12 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             if (info.required)
                             {
                                 trbody_last.append($("<td>")
-                                        .append($("<input>").attr("type", "text").attr("maxLength", 25).attr("titulo", titulos[count2]).attr("id", array_id["input"] + "tableinput").addClass("input-medium validate[required] ").attr("name", info.tag + "," + perguntas[count] + "," + titulos[count2])));
+                                        .append($("<input>").attr("type", "text").attr("maxLength", 25).attr("titulo", titulos[count2]).attr("id", array_id["input"] + "tableinput").addClass("input-medium validate[required] ").attr("name", info.tag + "###" + perguntas[count] + "###" + titulos[count2])));
                             }
                             else
                             {
                                 trbody_last.append($("<td>")
-                                        .append($("<input>").attr("type", "text").attr("maxLength", 25).attr("titulo", titulos[count2]).attr("id", array_id["input"] + "tableinput").addClass("input-medium").attr("name", info.tag + "," + perguntas[count] + "," + titulos[count2])));
+                                        .append($("<input>").attr("type", "text").attr("maxLength", 25).attr("titulo", titulos[count2]).attr("id", array_id["input"] + "tableinput").addClass("input-medium").attr("name", info.tag + "###" + perguntas[count] + "###" + titulos[count2])));
                             }
                             array_id["input"] = array_id["input"] + 1;
                         }
