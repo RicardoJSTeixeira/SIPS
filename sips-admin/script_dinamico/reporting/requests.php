@@ -95,7 +95,7 @@ switch ($action) {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 if ($row["type"] == "tableradio") {
                     foreach (json_decode($row["values_text"]) as $value) {
-                        $js[] = array("id" => $row["tag"], "type" => $row["type"], "texto" => $row["texto"] . ":" . $value, "param_1" => $value);
+                        $js[] = array("id" => $row["tag"], "type" => $row["type"], "texto" => $value, "param_1" => $value);
                     }
                 } else
                     $js[] = array("id" => $row["tag"], "type" => $row["type"], "texto" => $row["texto"], "param_1" => "");

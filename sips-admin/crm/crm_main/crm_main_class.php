@@ -58,12 +58,38 @@ class crm_main_class {
         return $js;
     }
 
+    function get_last_call($lead_id, $statuses) {
+
+        if (!empty($data_inicio) && !empty($data_fim)) {
+            
+        }
+
+
+
+        $query = "
+            SELECT * from (select a.call_date,a.status from vicidial_log a where a.lead_id=? union all select b.call_date,b.status from vicidial_log_archive b where b.lead_id=? union all
+            select c.call_date,c.status from vicidial_closer_log c where c.lead_id=? union all select d.call_date,d.status from vicidial_closer_log_archive d where d.lead_id=?) calls  order by call_date desc limit 1 ";
+
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array($lead_id, $lead_id, $lead_id, $lead_id));
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+
+            foreach ($statuses as $value) {
+                if ($row["status"] == $value["status"])
+                    $row["status"] = $value["status_name"];
+            }
+        }
+    }
+
     public function get_info_client($data_inicio, $data_fim, $campanha, $linha_inbound, $campaign_linha_inbound, $bd, $agente, $feedback, $cd, $script_info, $lead_id, $phone_number, $type_search) {
         $js['aaData'] = array();
         $variables = array();
         $join = "";
         $script_fields = "";
         $statuses = $this->get_statuses($campanha);
+
         if ($lead_id != "" && $lead_id != null) {
             $query = "
             SELECT lead_id,first_name,phone_number,status,'last_call_date'
@@ -73,7 +99,7 @@ class crm_main_class {
             $stmt = $this->db->prepare($query);
             $stmt->execute($variables);
             while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-                $temp = $this->get_last_call($row[0], $statuses);
+                $temp = $this->get_last_call($row[0], $data_inicio, $data_fim, $statuses);
                 $row[3] = $temp["status_name"];
                 $row[4] = $temp["call_date"];
                 $row[4] = $row[4] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"

@@ -413,7 +413,7 @@ $("#delete_template_button").on("click", function(e)
     {
         $("#new_template_div").hide();
         get_templates(campaign);
-    }, "json");
+    }, "json"); 
 });
 
 $("#main_div").off("change", ".remove_list_item_button");
