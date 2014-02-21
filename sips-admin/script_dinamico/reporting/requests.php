@@ -64,7 +64,7 @@ switch ($action) {
         $stmt->execute(array(":template" => $template, ":id" => $id));
         break;
     case "create_template":
-        $js=array();
+        $js = array();
         $query = "SELECT Name,Display_name  FROM vicidial_list_ref where campaign_id = :campaign_id and active='1' order by field_order asc";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":campaign_id" => $campaign_id));
@@ -74,9 +74,9 @@ switch ($action) {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $js[] = array("id" => $row["Name"], "type" => "campo_dinamico", "texto" => $row["Display_name"]);
         }
-     
+
         if (!count($js)) {
-    
+
             $js[] = array("id" => "FIRST_NAME", "type" => "campo_dinamico", "texto" => "Nome");
             $js[] = array("id" => "PHONE_NUMBER", "type" => "campo_dinamico", "texto" => "Telefone");
             $js[] = array("id" => "ADDRESS3", "type" => "campo_dinamico", "texto" => "Telemóvel");
@@ -86,9 +86,9 @@ switch ($action) {
             $js[] = array("id" => "EMAIL", "type" => "campo_dinamico", "texto" => "EMAIL");
             $js[] = array("id" => "COMMENTS", "type" => "campo_dinamico", "texto" => "Comentários");
         }
-    
+
         if (isset($script_id)) {
-    
+
             $query = "SELECT a.tag,a.type,a.texto, a.values_text  FROM `script_dinamico` a left join script_dinamico_pages b on b.id=a.id_page  where type not in ('pagination','textfield','scheduler','legend','button','ipl')  and a.id_script=:script_id order by b.pos,a.ordem asc ";
             $stmt = $db->prepare($query);
             $stmt->execute(array(":script_id" => $script_id));
@@ -101,8 +101,8 @@ switch ($action) {
                     $js[] = array("id" => $row["tag"], "type" => $row["type"], "texto" => $row["texto"], "param_1" => "");
             }
         }
-       
-        
+
+
         $query = "INSERT INTO `report_order`(`id`, `elements`, `campaign`, `template`) VALUES (NULL, :js,:campaign_id,:template)";
         $stmt = $db->prepare($query);
         echo( $stmt->execute(array(":js" => json_encode($js), ":campaign_id" => $campaign_id, ":template" => $template)));
@@ -224,7 +224,7 @@ switch ($action) {
 
         $query_sql = "query_report" . rand() . ".sql";
         if (count($script_elements) > 0)
-            $script_elements_temp = "," . implode(",", $script_elements);
+            $script_elements_temp = "," . implode(",", $script_elements); 
 
 
 
@@ -232,28 +232,32 @@ switch ($action) {
             $query = "CREATE TABLE  $scriptoffset   ENGINE=MYISAM  select  id_script, user_id, campaign_id, unique_id, lead_id, param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id =? and date between ? and ?   group by unique_id; ";
             $stmt = $db->prepare($query);
             $stmt->execute(array($campaign_id, $data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
-            $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log a inner join $scriptoffset b on a.uniqueid = b.unique_id  $lists_log1;";
+            $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log a inner join $scriptoffset b on a.uniqueid = b.unique_id where  a.call_date between ? and ?  $lists_log;";
             $stmt = $db->prepare($query);
-            $stmt->execute();
+            $stmt->execute(array($data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
             $today = time();
             $twoMonthsBefore = strtotime("-2 months", $today);
             $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log_archive a inner join $scriptoffset b on a.uniqueid = b.unique_id where a.call_date < ? $lists_archive);";
             $stmt = $db->prepare($query);
             $stmt->execute(array($twoMonthsBefore));
         } else if ($result_filter == 2) {
-
-            $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group,'$campaign_id' campaign_id,a.user user_id,a.lead_id from vicidial_log a where a.length_in_sec > 0 $lists_log  and a.call_date between ? and ?     ;";
+            $query = "CREATE TABLE  $scriptoffset   ENGINE=MYISAM  select  id_script, user_id, campaign_id, unique_id, lead_id, param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id =? and date between ? and ?   group by unique_id; ";
+            $stmt = $db->prepare($query);
+            $stmt->execute(array($campaign_id, $data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
+            $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log a left join $scriptoffset b on a.uniqueid = b.unique_id where a.length_in_sec > 0 and a.status <> 'DROP' and a.call_date between ? and ?   $lists_log ";
             $stmt = $db->prepare($query);
             $stmt->execute(array($data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
-            $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group,'$campaign_id' campaign_id,a.user user_id,a.lead_id from vicidial_log_archive a  where  a.call_date between ? and ? $lists_archive and a.length_in_sec > 0);";
+            $today = time();
+            $twoMonthsBefore = strtotime("-2 months", $today);
+            $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log_archive a left join $scriptoffset b on a.uniqueid = b.unique_id where a.length_in_sec > 0 and a.status <> 'DROP' and a.call_date < ? $lists_archive);";
             $stmt = $db->prepare($query);
-            $stmt->execute(array($data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
+            $stmt->execute(array($twoMonthsBefore));
         } else if ($result_filter == 3) {
 
-            $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group,'$campaign_id' campaign_id,a.user user_id,a.lead_id from vicidial_log a where a.length_in_sec = 0 $lists_log  and a.call_date between ? and ?     ;";
+            $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group,'$campaign_id' campaign_id,a.user user_id,a.lead_id from vicidial_log a where (a.length_in_sec = 0 or status='DROP') $lists_log  and a.call_date between ? and ?     ;";
             $stmt = $db->prepare($query);
             $stmt->execute(array($data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
-            $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group,'$campaign_id' campaign_id,a.user user_id,a.lead_id from vicidial_log_archive a  where  a.call_date between ? and ? $lists_archive and a.length_in_sec = 0);";
+            $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group,'$campaign_id' campaign_id,a.user user_id,a.lead_id from vicidial_log_archive a  where  a.call_date between ? and ? $lists_archive and (a.length_in_sec = 0 or status='DROP'));";
             $stmt = $db->prepare($query);
             $stmt->execute(array($data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
         } else {
@@ -278,7 +282,7 @@ switch ($action) {
 
 
 
-        $file = "report" . date("Y-m-d_H-i-s") ;
+        $file = "report" . date("Y-m-d_H-i-s");
 
 
         $query = "select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`,SEC_TO_TIME( length_in_sec ) `Duração Chamada`, full_name `Agente`, status_name `Feedback`, " . implode(", ", $fields) . " from $final";
@@ -290,11 +294,11 @@ switch ($action) {
 
 
 
-    
+
 
         system("mysql asterisk -u$varDbUser -p$varDbPass -h $VARDB_server < /tmp/$query_sql > /srv/www/htdocs/report_files/$file.txt");
-        
-         system("perl -lpe 's/\"/\"\"/g; s/^|$/\"/g; s/\t/\";\"/g' <  /srv/www/htdocs/report_files/$file.txt > /srv/www/htdocs/report_files/$file.csv");
+
+        system("perl -lpe 's/\"/\"\"/g; s/^|$/\"/g; s/\t/\";\"/g' <  /srv/www/htdocs/report_files/$file.txt > /srv/www/htdocs/report_files/$file.csv");
 
         if ($result_filter == 1) {
             $query1 = "drop table $scriptoffset;";
@@ -324,7 +328,7 @@ switch ($action) {
 
 
     case "get_report_file":
-        $file=$file.".csv";
+        $file = $file . ".csv";
         $file_path = "/srv/www/htdocs/report_files/$file";
         if (!$file) { // file does not exist
             die('file not found');
