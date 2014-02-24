@@ -462,7 +462,7 @@ select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da c
 
 
 
-                $query = " create index uniqueid on $logsscriptgrouplead (unique_id);";
+                $query = " create index script_lead on $logsscriptgrouplead (script_lead);";
                 $stmt = $db->prepare($query);
                 $stmt->execute();
 
