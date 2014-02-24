@@ -8,7 +8,7 @@ $(function() {
     $("#report_linha_inbound").hide();
     $(".chzn-select").chosen({no_results_text: "Sem resultados"});
     $("#form_filter").validationEngine();
-    $("#column_items_form").validationEngine();
+    $("#column_items_form").validationEngine(); 
     $("#template_form").validationEngine();
 
     $("#datetime_from").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function(ev) {
@@ -23,7 +23,7 @@ $(function() {
     $("#datetime_to").change(function()
     {
         if (!$(this).val().length)
-            $("#datetime_from").datetimepicker('setStartDate', null).datetimepicker('setEndDate', null);
+            $("#datetime_from").datetimepicker('setStartDate', null).datetimepicker('setEndDate', null); 
     });
     $("#datetime_from").change(function()
     {
@@ -156,6 +156,8 @@ function update_template()
         campaign = ($("#select_base_dados option:selected").data("campaign_id"));
         get_templates(campaign);
     }
+    
+    
 
 
 }
@@ -163,8 +165,7 @@ function update_template()
 function get_templates(campaign)
 {
 
-    if ($("#download_script").is(":checked"))
-    {
+  
         $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
         function(data)
         {
@@ -212,46 +213,13 @@ function get_templates(campaign)
                 $("#template_div").hide();
             }
         }, "json");
-    }
-    else
-    {
-        script_id = undefined;
-        $("#span_script_name").text("");
-        $("#download_report").prop("disabled", false);
-        $("#edit_template_div_opener_button").prop("disabled", false);
-        $("#delete_template_button").prop("disabled", false);
-        $("#template_div").show();
-        $("#oc_template").empty();
-        $.post("requests.php", {action: "get_template", campaign_id: campaign},
-        function(data1)
-        {
-            if (data1.length)
-            {
-                $.each(data1, function()
-                {
-                    if (this.id == current_template)
-                        $("#oc_template").append("<option value=" + this.id + " selected>" + this.template + "</option>");
-                    else
-                        $("#oc_template").append("<option value=" + this.id + ">" + this.template + "</option>");
-                });
-                $("#oc_template").trigger("change");
-                $("#column_order_title").show().text("Ordernação de colunas");
-            }
-            else
-            {
-                $("#column_order").empty();
-                $("#edit_template_div_opener_button").prop("disabled", true);
-                $("#delete_template_button").prop("disabled", true);
-                $("#oc_template").append("<option value=''>Crie um template</option>");
-                $("#column_order_title").hide();
-            }
-        }, "json");
-
+    
+       
     }
 
 
 
-}
+
 
 function get_elements_by_template(template)
 {
@@ -307,7 +275,7 @@ $("#download_report").on("click", function(e)
     if ($("#form_filter").validationEngine('validate') && $("#template_form").validationEngine('validate') && $("#column_items_form").validationEngine('validate'))
     {
 
-        $('#loading').show();
+        //$('#loading').show();
         $("#download_report").prop("disabled", true);
         var ordered_tags = new Array();
         var items = $("#column_order  li input");
