@@ -8,6 +8,7 @@ switch ($client) {
             switch ($campaign_id) {
                 case 'W00003' : connectaPostCalendar(); break;
                 case 'W00004' : connectaMensageiros(); break;
+                case 'W00009' : connectaMensageiros(); break;
             }
             break;
         }
