@@ -14,7 +14,7 @@
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/validationEngine.jquery.css" />
 
- 
+
 
         <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
         <script type="text/javascript" src="/jquery/jqueryUI/jquery-ui-1.10.2.custom.min.js"></script>
@@ -105,18 +105,21 @@
                     <label class="radio inline"  for="download_bd"><span></span>Estado actual de base de dados</label>  
                 </div>
 
-                <h5>Relatório:</h5>
-                <div class="formRight">
-                    <input  type="radio" id="radio1" class="radio_opcao" name="ra" value="1" checked="checked">
-                    <label class=" radio inline"  for="radio1"><span></span>Campanha</label> 
-                </div> 
-                <div class="formRight"> 
-                    <input  type="radio" id="radio2" class="radio_opcao" name="ra" value="2" disabled="disabled" >
-                    <label class=" radio inline"  for="radio2"><span></span>Linha de inbound(Em desenvolvimento)</label> 
-                </div> 
-                <div class="formRight">
-                    <input  type="radio" id="radio3" class="radio_opcao"  name="ra" value="3" >
-                    <label class="radio inline"  for="radio3"><span></span>Base de Dados</label> 
+                <div id="radio_opcao_div">
+
+                    <h5>Relatório:</h5>
+                    <div class="formRight">
+                        <input  type="radio" id="radio1" class="radio_opcao" name="ra" value="1" checked="checked">
+                        <label class=" radio inline"  for="radio1"><span></span>Campanha</label> 
+                    </div> 
+                    <div class="formRight"> 
+                        <input  type="radio" id="radio2" class="radio_opcao" name="ra" value="2" disabled="disabled" >
+                        <label class=" radio inline"  for="radio2"><span></span>Linha de inbound(Em desenvolvimento)</label> 
+                    </div> 
+                    <div class="formRight">
+                        <input  type="radio" id="radio3" class="radio_opcao"  name="ra" value="3" >
+                        <label class="radio inline"  for="radio3"><span></span>Base de Dados</label> 
+                    </div>
                 </div>
                 <div id="report_campanha" class="select_opcao">
 
@@ -170,13 +173,13 @@
                     <div class="formRow">
                         <form id="template_form">
                             <select id="oc_template" class="validate[required]"></select>
-                             <span  class="input-append">
-                            <button class="btn btn-primary icon-plus" id="new_template_div_opener_button"> Novo</button>
-                            <button class="btn btn-warning  icon-pencil" id="edit_template_div_opener_button"> Editar</button>
-                            <button class="btn btn-danger icon-remove " id="delete_template_button"> Apagar</button>
-                        </span>
+                            <span  class="input-append">
+                                <button class="btn btn-primary icon-plus" id="new_template_div_opener_button"> Novo</button>
+                                <button class="btn btn-warning  icon-pencil" id="edit_template_div_opener_button"> Editar</button>
+                                <button class="btn btn-danger icon-remove " id="delete_template_button"> Apagar</button>
+                            </span>
                         </form>
-                       
+
                     </div>
                     <div  class="input-append" id="new_template_div" style="display:none">
 
