@@ -1,4 +1,4 @@
-<?
+<?php
 
 //error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 //ini_set('display_errors', '1');
@@ -2189,4 +2189,3 @@ if (isset($report_inbound_tvi)) {
     fputcsv($output, array("", "Tempo médio chamada (minuto): ", "", number_format((float) $tempo_medio, 2, '.', '')), ";");
     fputcsv($output, array(" "), ";");
 }
-?>
