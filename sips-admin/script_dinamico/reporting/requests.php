@@ -216,7 +216,7 @@ switch ($action) {
             $stmt = $db->prepare($query);
             $stmt->execute(array(":campaign_id" => $campaign_id));
 
-            $temp_list = array();
+            $temp_list = array(); 
             while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
                 $temp_list[] = $row[0];
             }
@@ -274,7 +274,7 @@ switch ($action) {
                 $stmt = $db->prepare($query);
                 $stmt->execute();
                 $file = "report" . date("Y-m-d_H-i-s");
-                $query = "select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`,SEC_TO_TIME( length_in_sec ) `Duração Chamada`,  status_name `Feedback`, " . implode(", ", $fields) . " from $final";
+                $query = "set names 'UTF8'; select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`,SEC_TO_TIME( length_in_sec ) `Duração Chamada`,  status_name `Feedback`, " . implode(", ", $fields) . " from $final";
                 $fp = fopen("/tmp/$query_sql", "wb");
                 fwrite($fp, $query);
                 fclose($fp);
@@ -334,9 +334,9 @@ switch ($action) {
                 $stmt = $db->prepare($query);
                 $stmt->execute();
                 $file = "report" . date("Y-m-d_H-i-s");
-            
-                $query = "select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`,SEC_TO_TIME( length_in_sec ) `Duração Chamada`,  status_name `Feedback`,list_name  `Base de dados` ," . implode(", ", $fields) . " from $final";
-            
+
+                $query = "set names 'UTF8'; select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`,SEC_TO_TIME( length_in_sec ) `Duração Chamada`,  status_name `Feedback`,list_name  `Base de dados` ," . implode(", ", $fields) . " from $final";
+
                 $fp = fopen("/tmp/$query_sql", "wb");
                 fwrite($fp, $query);
                 fclose($fp);
@@ -359,9 +359,9 @@ switch ($action) {
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
 
-                /*    $query1 = "drop table $final;";
-                  $stmt1 = $db->prepare($query1);
-                  $stmt1->execute(); */
+                $query1 = "drop table $final;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
 
                 echo(json_encode($file));
                 break;
@@ -373,8 +373,8 @@ switch ($action) {
                 $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group,'$campaign_id' campaign_id,a.user user_id,a.lead_id,c.list_name from vicidial_log_archive a left join vicidial_lists c on c.list_id=a.list_id  where  a.call_date between ? and ? $lists_archive and (a.length_in_sec = 0 or status='DROP'));";
                 $stmt = $db->prepare($query);
                 $stmt->execute(array($data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
-                
-                
+
+
 
                 $query = "create table $logscriptstatus ENGINE=MYISAM select a.*, b.status_name from $logscriptoffset a inner join (select status, status_name, campaign_id from vicidial_campaign_statuses x where campaign_id = ? union all select status, status_name, ? from vicidial_statuses z) b where a.status = b.status ";
                 $stmt = $db->prepare($query);
@@ -391,7 +391,7 @@ switch ($action) {
                 $stmt = $db->prepare($query);
                 $stmt->execute();
                 $file = "report" . date("Y-m-d_H-i-s");
-                $query = "select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`,SEC_TO_TIME( length_in_sec ) `Duração Chamada`, status_name `Feedback`,list_name  `Base de dados` , " . implode(", ", $fields) . " from $final";
+                $query = "set names 'UTF8'; select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`,SEC_TO_TIME( length_in_sec ) `Duração Chamada`, status_name `Feedback`,list_name  `Base de dados` , " . implode(", ", $fields) . " from $final";
                 $fp = fopen("/tmp/$query_sql", "wb");
                 fwrite($fp, $query);
                 fclose($fp);
@@ -447,7 +447,7 @@ switch ($action) {
                 $stmt = $db->prepare($query);
                 $stmt->execute();
                 $file = "report" . date("Y-m-d_H-i-s");
-                $query = "select * from $final";
+                $query = "set names 'UTF8'; select * from $final";
                 $fp = fopen("/tmp/$query_sql", "wb");
                 fwrite($fp, $query);
                 fclose($fp);
