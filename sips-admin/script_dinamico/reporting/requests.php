@@ -310,7 +310,14 @@ switch ($action) {
                     $script_elements_temp = "," . implode(",", $script_elements);
                 $query = "CREATE TABLE  $scriptoffset   ENGINE=MYISAM  select  id_script, campaign_id, unique_id,  param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id =? and date between ? and ?   group by unique_id; ";
                 $stmt = $db->prepare($query);
+                
                 $stmt->execute(array($campaign_id, $data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
+                $query = "  create index uniqueid on $scriptoffset (unique_id); ";
+                $stmt = $db->prepare($query);
+                $stmt->execute();
+
+
+
                 $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status,a.lead_id, a.user_group,a.user user_id,c.list_name, b.* from vicidial_log a left join $scriptoffset b on a.uniqueid = b.unique_id left join vicidial_lists c on c.list_id=a.list_id where a.length_in_sec > 0 and a.status <> 'DROP' and a.call_date between ? and ?   $lists_log ";
                 $stmt = $db->prepare($query);
                 $stmt->execute(array($data_inicio . " 00:00:00", $data_fim . " 23:59:59"));
