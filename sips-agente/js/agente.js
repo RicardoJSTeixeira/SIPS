@@ -4416,7 +4416,8 @@ function  DispoSelect_submit_allowed()
                                     dispoAtt: campaign_status[DispoChoice],
                                     campaign_id: campaign_id.value,
                                     user: user,
-                                    client: clientName
+                                    client: clientName,
+                                    length_in_sec: AgainCalLSecondS
                                 }, function(data) {
                                     console.log(data);
                                 });
