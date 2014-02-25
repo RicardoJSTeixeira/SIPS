@@ -244,7 +244,7 @@ function get_elements_by_template(template)
             $("#column_order_title").text("Ordernação de colunas");
             $.each(data, function()
             {
-                $("#column_order").append("<li class='ui-state-default'><input id=" + this.id + "  class='validate[required]'   type='text'  data-param_1='" + this.param_1 + "'  data-type='" + this.type + "' value='" + this.texto + "'>" + ((this.type === "campo_dinamico") ? "" : "<span class='label'>" + this.id + "</span>" + get_name_by_type(this.type)) + "<span class='btn icon-alone remove_list_item_button icon-remove btn-link' data-id='" + this.id + "'></span></li>");
+                $("#column_order").append("<li class='ui-state-default'><input id=" + this.id + "  class='validate[required]'   type='text'  data-param_1='" + this.param_1 + "'  data-type='" + this.type + "' value='" + this.texto + "'>" + ((this.type === "campo_dinamico" ||this.type === "default" ) ? "" : "<span class='label'>" + this.id + "</span>" + get_name_by_type(this.type)) + "<span class='btn icon-alone remove_list_item_button icon-remove btn-link' data-id='" + this.id + "'></span></li>");
             });
         }
         else
@@ -287,7 +287,7 @@ $("#download_report").on("click", function(e)
     if ($("#form_filter").validationEngine('validate') && $("#template_form").validationEngine('validate') && $("#column_items_form").validationEngine('validate'))
     {
 
-        //$('#loading').show();
+        $('#loading').show();
         $("#download_report").prop("disabled", true);
         var ordered_tags = new Array();
         var items = $("#column_order  li input");
