@@ -13,7 +13,7 @@ switch ($client) {
                 case 'W00004' : connectaMensageiros(); break;
                 case 'W00009' : connectaMensageiros(); break;
             }
-            confirmacao($lead_id, $uniqueid, $user, $length_in_sec, $dispoAtt, $link);
+           # confirmacao($lead_id, $uniqueid, $user, $length_in_sec, $dispoAtt, $link);
             break;
         }
 }
@@ -38,7 +38,7 @@ function confirmacao($lead_id, $unique_id, $user, $length_in_sec, $dispoAtt, $li
     }
 
     function removeConfirm($lead_id, $link) {
-        $qdelete = "Delete From crm_confirm_feedback where lead_id='" . mysql_real_escape_string($lead_id) . "';";
+        $qdelete = "update crm_confirm_feedback_last set sale = '1' where lead_id='" . mysql_real_escape_string($lead_id) . "';";
         mysql_query($qdelete, $link) or die(mysql_error());
     }
 
