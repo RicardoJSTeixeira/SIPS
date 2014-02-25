@@ -305,7 +305,7 @@ switch ($action) {
                     $stmt->execute();
                     if (count($client_elements) > 0)
                         $client_elements_temp = "," . implode(",", $client_elements);
-                    $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp,'no info' list_name,b.entry_date,b.called_count,b.called_since_last_reset,  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id  order by b.lead_id,call_date asc; ";
+                    $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp,'no info' list_name,b.entry_date,b.called_count,b.called_since_last_reset  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id  order by b.lead_id,call_date asc; ";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");
@@ -372,7 +372,7 @@ switch ($action) {
                     $stmt->execute();
                     if (count($client_elements) > 0)
                         $client_elements_temp = "," . implode(",", $client_elements);
-                    $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp,b.entry_date,b.called_count,b.called_since_last_reset,  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id  order by b.lead_id,call_date asc; ";
+                    $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp,b.entry_date,b.called_count,b.called_since_last_reset  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id  order by b.lead_id,call_date asc; ";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");
@@ -431,7 +431,7 @@ switch ($action) {
                     $stmt->execute();
                     if (count($client_elements) > 0)
                         $client_elements_temp = ", " . implode(", ", $client_elements);
-                    $query = "create table $final ENGINE = MYISAM select a.* $client_elements_temp,b.entry_date,b.called_count,b.called_since_last_reset, from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id order by b.lead_id, call_date asc;";
+                    $query = "create table $final ENGINE = MYISAM select a.* $client_elements_temp,b.entry_date,b.called_count,b.called_since_last_reset from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id order by b.lead_id, call_date asc;";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");
