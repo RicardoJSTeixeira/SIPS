@@ -261,14 +261,12 @@ switch ($action) {
                     $twoMonthsBefore = strtotime("-2 months", time());
                     $temp_data_inicio = strtotime($data_inicio);
                     if ($twoMonthsBefore > $temp_data_inicio) {
-
                         $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log_archive a inner join $scriptoffset b on a.uniqueid = b.unique_id where a.call_date between ? and ? $lists_log);";
                         $stmt = $db->prepare($query);
                         $temp_data_fim = strtotime($data_fim);
                         if ($twoMonthsBefore > $temp_data_fim) {
                             $stmt->execute(array($data_inicio, $data_fim));
                         } else {
-
                             $stmt->execute(array($data_inicio, $twoMonthsBefore));
                         }
                     }
@@ -292,22 +290,23 @@ switch ($action) {
                     system("perl -lpe 's/\"/\"\"/g; s/^|$/\"/g; s/\t/\";\"/g' <  /srv/www/htdocs/report_files/$file.txt > /srv/www/htdocs/report_files/$file.csv");
                     system("perl /srv/www/htdocs/report_files/convert.pl  /srv/www/htdocs/report_files/$file.csv /srv/www/htdocs/report_files/$file-utf8.csv");
                 } catch (Exception $ex) {
-                    $query1 = "drop table $scriptoffset;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
-                    $query1 = "drop table $logscriptoffset;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
-                    $query1 = "drop table $logscriptstatus;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
-                    $query1 = "drop table $logscriptstatususer;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
-                    $query1 = "drop table $final;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
+                         echo($ex);exit;
                 }
+                $query1 = "drop table $scriptoffset;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptoffset;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptstatus;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptstatususer;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $final;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
                 echo(json_encode($file));
                 break;
             case 2:
@@ -356,22 +355,23 @@ switch ($action) {
                     system("perl -lpe 's/\"/\"\"/g; s/^|$/\"/g; s/\t/\";\"/g' <  /srv/www/htdocs/report_files/$file.txt > /srv/www/htdocs/report_files/$file.csv");
                     system("perl /srv/www/htdocs/report_files/convert.pl  /srv/www/htdocs/report_files/$file.csv /srv/www/htdocs/report_files/$file-utf8.csv");
                 } catch (Exception $ex) {
-                    $query1 = "drop table $scriptoffset;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
-                    $query1 = "drop table $logscriptoffset;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
-                    $query1 = "drop table $logscriptstatus;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
-                    $query1 = "drop table $logscriptstatususer;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
-                    $query1 = "drop table $final;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
+                         echo($ex);exit;
                 }
+                $query1 = "drop table $scriptoffset;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptoffset;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptstatus;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptstatususer;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $final;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
                 echo(json_encode($file));
                 break;
             case 3:
@@ -413,19 +413,20 @@ select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da c
                     system("perl -lpe 's/\"/\"\"/g; s/^|$/\"/g; s/\t/\";\"/g' < /srv/www/htdocs/report_files/$file.txt > /srv/www/htdocs/report_files/$file.csv");
                     system("perl /srv/www/htdocs/report_files/convert.pl  /srv/www/htdocs/report_files/$file.csv /srv/www/htdocs/report_files/$file-utf8.csv");
                 } catch (Exception $ex) {
-                    $query1 = "drop table $logscriptoffset;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
-                    $query1 = "drop table $logscriptstatus;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
-                    $query1 = "drop table $logscriptstatususer;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
-                    $query1 = "drop table $final;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
+                         echo($ex);exit;
                 }
+                $query1 = "drop table $logscriptoffset;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptstatus;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptstatususer;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $final;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
                 echo(json_encode($file));
                 break;
             case 4:
@@ -456,7 +457,7 @@ select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da c
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");
-                    $query = "set names 'UTF8'; select lead_id `Id do Cliente`, last_local_call_time `Data da chamada`,user_id,  status_name `Feedback`,list_name  `Base de dados` ," . implode(", ", $fields) . " from $final";
+                    $query = "set names 'UTF8'; select lead_id `Id do Cliente`, last_local_call_time `Data da chamada`,user_id,  status_name `Feedback`,list_name  `Base de dados`,entry_date `Data de Carregamento` ," . implode(", ", $fields) . " from $final";
                     $fp = fopen("/tmp/$query_sql", "wb");
                     fwrite($fp, $query);
                     fclose($fp);
@@ -464,25 +465,85 @@ select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da c
                     system("perl -lpe 's/\"/\"\"/g; s/^|$/\"/g; s/\t/\";\"/g' < /srv/www/htdocs/report_files/$file.txt > /srv/www/htdocs/report_files/$file.csv");
                     system("perl /srv/www/htdocs/report_files/convert.pl  /srv/www/htdocs/report_files/$file.csv /srv/www/htdocs/report_files/$file-utf8.csv");
                 } catch (Exception $ex) {
-                    $query1 = "drop table $scriptoffset;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
-                    $query1 = "drop table $logsscriptgrouplead;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
-                    $query1 = "drop table $logscriptoffset;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
-                    $query1 = "drop table $logscriptstatus;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
-                    $query1 = "drop table $logscriptstatususer;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
-                    $query1 = "drop table $final;";
-                    $stmt1 = $db->prepare($query1);
-                    $stmt1->execute();
+                         echo($ex);exit;
                 }
+                $query1 = "drop table $scriptoffset;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logsscriptgrouplead;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptoffset;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptstatus;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptstatususer;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $final;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                echo(json_encode($file));
+                break;
+            case 5:
+                try {
+                    if (count($script_elements) > 0)
+                        $script_elements_temp = ", " . implode(", ", $script_elements);
+                    $query = "CREATE TABLE $scriptoffset ENGINE = MYISAM select id_script,  campaign_id, unique_id, lead_id script_lead, date, param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id = ?  group by unique_id;";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute(array($campaign_id));
+                    $query = "create table $logsscriptgrouplead ENGINE = MYISAM select *, max(date) as MaxDate from $scriptoffset group by script_lead;";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute();
+                    $query = " create index script_lead on $logsscriptgrouplead (script_lead);";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute();
+                    if (count($client_elements) > 0)
+                        $client_elements_temp = ", " . implode(", ", $client_elements);
+                    $query = "create table $logscriptoffset ENGINE = MYISAM select b.entry_date, b.modify_date, b.status, b.user user_id,b.lead_id, b.list_id $client_elements_temp, b.called_since_last_reset, b.called_count, b.last_local_call_time, a.* from vicidial_list b left join $logsscriptgrouplead a on b.lead_id = a.script_lead where b.entry_date between ? and ?   $lists_log2 ";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute(array($data_inicio, $data_fim));
+                    $query = "create table $logscriptstatus ENGINE = MYISAM select a.*, b.status_name from $logscriptoffset a inner join (select status, status_name, campaign_id from vicidial_campaign_statuses x where campaign_id = ? union all select status, status_name, ? from vicidial_statuses z) b where a.status = b.status ";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute(array($campaign_id, $campaign_id));
+                    $query = "create table $logscriptstatususer ENGINE = MYISAM select a.*, b.full_name from $logscriptstatus a left join vicidial_users b on a.user_id = b.user;";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute();
+                    $query = "create table $final ENGINE = MYISAM select a.*,b.list_name from $logscriptstatususer a left join vicidial_lists b on a.list_id = b.list_id order by a.lead_id, date asc;";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute();
+                    $file = "report" . date("Y-m-d_H-i-s");
+                    $query = "set names 'UTF8'; select lead_id `Id do Cliente`, last_local_call_time `Data da chamada`,user_id,  status_name `Feedback`,list_name  `Base de dados`,entry_date `Data de Carregamento`,  " . implode(", ", $fields) . " from $final";
+               
+                    $fp = fopen("/tmp/$query_sql", "wb");
+                    fwrite($fp, $query);
+                    fclose($fp);
+                    system("mysql asterisk -u$varDbUser -p$varDbPass -h $VARDB_server < /tmp/$query_sql > /srv/www/htdocs/report_files/$file.txt");
+                    system("perl -lpe 's/\"/\"\"/g; s/^|$/\"/g; s/\t/\";\"/g' < /srv/www/htdocs/report_files/$file.txt > /srv/www/htdocs/report_files/$file.csv");
+                    system("perl /srv/www/htdocs/report_files/convert.pl  /srv/www/htdocs/report_files/$file.csv /srv/www/htdocs/report_files/$file-utf8.csv");
+                } catch (Exception $ex) {
+                    echo($ex);exit;
+                }
+                $query1 = "drop table $scriptoffset;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logsscriptgrouplead;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptoffset;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptstatus;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptstatususer;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $final;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
                 echo(json_encode($file));
                 break;
         }

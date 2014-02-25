@@ -118,7 +118,8 @@ $(function() {
         $(".radio_dados").on("click", function()
         {
             $(".time_div").show();
-            $(".radio_opcao").prop("disabled", false);
+            $("#radio1,#radio3").prop("disabled", false);
+                  
             if ($(this).val() == 4)
             {
                 $("#radio3").prop("checked", true);
@@ -127,7 +128,7 @@ $(function() {
                 $("#report_bd").show();
                 $(".time_div").hide();
             }
-
+            
             update_template();
         });
 
@@ -209,7 +210,7 @@ function get_templates(campaign)
                     $("#column_order").empty();
                     $("#edit_template_div_opener_button").prop("disabled", true);
                     $("#delete_template_button").prop("disabled", true);
-                    $("#oc_template").append("<option value=0>Crie um template</option>");
+                    $("#oc_template").append("<option value=''>Crie um template</option>");
                     $("#column_order_title").hide();
                 }
             }, "json");
