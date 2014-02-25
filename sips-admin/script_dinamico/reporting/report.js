@@ -118,7 +118,8 @@ $(function() {
         $(".radio_dados").on("click", function()
         {
             $(".time_div").show();
-            $(".radio_opcao").prop("disabled", false);
+            $("#radio1,#radio3").prop("disabled", false);
+                  
             if ($(this).val() == 4)
             {
                 $("#radio3").prop("checked", true);
@@ -127,7 +128,7 @@ $(function() {
                 $("#report_bd").show();
                 $(".time_div").hide();
             }
-
+            
             update_template();
         });
 
