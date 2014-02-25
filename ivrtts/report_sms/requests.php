@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL ^ E_DEPRECATED);
+ini_set('display_errors', 'On');
 require("../../ini/db.php");
 
 // post & get
@@ -9,7 +11,7 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 
-switch ($zero) {
+switch ($action) {
     case 'get_sms_report' : get_sms($db);
         break;
     
@@ -19,9 +21,9 @@ switch ($zero) {
 
 function get_sms($db) {
     
-    $stmt = $db->prepare("select status_date, destination, content, nr_sms, IF (status == 0, 'Delivered', IF (status == 1, 'Pending', IF (status == 2, 'Failed'))) as status, process from sms_status_report");
-    $stmt->execute($params);
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $db->prepare("select status_date, destination, content, nr_sms, IF (status = 0, 'Delivered', IF (status = 1, 'Pending', IF (status = 2, 'Failed', 'Unknown'))) as status, process from sms.sms_status_report");
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_NUM);
     $js = array("aaData" => $results);
     echo json_encode($js);
 }
