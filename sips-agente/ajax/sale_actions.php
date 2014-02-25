@@ -22,7 +22,7 @@ function confirmacao($lead_id, $unique_id, $user, $length_in_sec, $dispoAtt, $li
 
     function confirmPos($lead_id, $link) {
         for ($index = 1; $index < 4; $index++) {
-            $query = "Select time$index from vicidial_list where lead_id='" . mysql_real_escape_string($lead_id) . "'";
+            $query = "Select Time$index from vicidial_list where lead_id='" . mysql_real_escape_string($lead_id) . "'";
             $result = mysql_query($query, $link);
             $row = mysql_fetch_array($result);
             if (strlen($row[0]) == 0) {
@@ -33,13 +33,13 @@ function confirmacao($lead_id, $unique_id, $user, $length_in_sec, $dispoAtt, $li
     }
 
     function saveInfo($index, $lead_id, $unique_id, $length_in_sec, $link) {
-        $qupdate = "Update vicidial_list Set time$index='$length_in_sec',SertranRec='$unique_id' where lead_id='" . mysql_real_escape_string($lead_id) . "';";
-        mysql_query($qupdate, $link);
+        $qupdate = "Update vicidial_list set Time$index = '$length_in_sec', SertranRec = '$unique_id' where lead_id='" . mysql_real_escape_string($lead_id) . "';";
+        mysql_query($qupdate, $link) or die(mysql_error());
     }
 
     function removeConfirm($lead_id, $link) {
         $qdelete = "Delete From crm_confirm_feedback where lead_id='" . mysql_real_escape_string($lead_id) . "';";
-        mysql_query($qdelete, $link);
+        mysql_query($qdelete, $link) or die(mysql_error());
     }
 
     if (!$dispoAtt["completed"]) {
