@@ -71,6 +71,15 @@ switch ($action) {
 
 
 
+        $js[] = array("id" => "lead_id", "type" => "default", "texto" => "ID do Cliente");
+        $js[] = array("id" => "user_group", "type" => "default", "texto" => "Grupo de user");
+        $js[] = array("id" => "call_date", "type" => "default", "texto" => "Data da Chamada", "param_1" => "data_chamada");
+        $js[] = array("id" => "call_date", "type" => "default", "texto" => "Hora da chamada", "param_1" => "hora_chamada");
+        $js[] = array("id" => "length_in_sec", "type" => "default", "texto" => "Duração da Chamada", "param_1" => "length_in_sec");
+        $js[] = array("id" => "status_name", "type" => "default", "texto" => "Feedback");
+        $js[] = array("id" => "list_name", "type" => "default", "texto" => "Base de Dados");
+        $js[] = array("id" => "entry_date", "type" => "default", "texto" => "Data de Carregamento");
+
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $js[] = array("id" => $row["Name"], "type" => "campo_dinamico", "texto" => $row["Display_name"]);
         }
@@ -182,6 +191,23 @@ switch ($action) {
             if ($value->type == "campo_dinamico") {
                 $client_elements[] = "b." . $value->id;
                 $fields[] = "`$value->id` as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+            } else if ($value->type == "default") {
+
+
+                switch ($value->param_1) {
+                    case "data_chamada":
+                        $fields[] = "date_format(`$value->id`,'%Y-%m-%d') as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+                        break;
+                    case "hora_chamada":
+                        $fields[] = "date_format(`$value->id`,'%H:%i') as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+                        break;
+                    case "length_in_sec":
+                        $fields[] = "SEC_TO_TIME(`$value->id`) as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+                        break;
+                    default:
+                        $fields[] = "`$value->id` as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+                        break;
+                }
             } else {
                 if ($result_filter != 3) {
                     if ($value->type == "tableradio") {
@@ -197,14 +223,6 @@ switch ($action) {
         }
 
 
-
-
-
-
-        $date_filter_client = "  ";
-
-
-        $lists = "";
 
 
         if (isset($list_id)) {
@@ -278,11 +296,12 @@ switch ($action) {
                     $stmt->execute();
                     if (count($client_elements) > 0)
                         $client_elements_temp = "," . implode(",", $client_elements);
-                    $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id  order by b.lead_id,call_date asc; ";
+                    $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp,'no info' list_name,b.entry_date  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id  order by b.lead_id,call_date asc; ";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");
-                    $query = "set names 'UTF8'; select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`,user_id,SEC_TO_TIME( length_in_sec ) `Duração Chamada`,  status_name `Feedback`, " . implode(", ", $fields) . " from $final";
+                    $query = "set names 'UTF8'; select  " . implode(", ", $fields) . " from $final";
+            
                     $fp = fopen("/tmp/$query_sql", "wb");
                     fwrite($fp, $query);
                     fclose($fp);
@@ -290,7 +309,8 @@ switch ($action) {
                     system("perl -lpe 's/\"/\"\"/g; s/^|$/\"/g; s/\t/\";\"/g' <  /srv/www/htdocs/report_files/$file.txt > /srv/www/htdocs/report_files/$file.csv");
                     system("perl /srv/www/htdocs/report_files/convert.pl  /srv/www/htdocs/report_files/$file.csv /srv/www/htdocs/report_files/$file-utf8.csv");
                 } catch (Exception $ex) {
-                         echo($ex);exit;
+                    echo($ex);
+                    exit;
                 }
                 $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
@@ -343,11 +363,12 @@ switch ($action) {
                     $stmt->execute();
                     if (count($client_elements) > 0)
                         $client_elements_temp = "," . implode(",", $client_elements);
-                    $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id  order by b.lead_id,call_date asc; ";
+                    $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp,b.entry_date  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id  order by b.lead_id,call_date asc; ";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");
-                    $query = "set names 'UTF8'; select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`,user_id, SEC_TO_TIME( length_in_sec ) `Duração Chamada`,  status_name `Feedback`,list_name  `Base de dados` ," . implode(", ", $fields) . " from $final";
+                    $query = "set names 'UTF8'; select  " . implode(", ", $fields) . " from $final";
+            
                     $fp = fopen("/tmp/$query_sql", "wb");
                     fwrite($fp, $query);
                     fclose($fp);
@@ -355,7 +376,8 @@ switch ($action) {
                     system("perl -lpe 's/\"/\"\"/g; s/^|$/\"/g; s/\t/\";\"/g' <  /srv/www/htdocs/report_files/$file.txt > /srv/www/htdocs/report_files/$file.csv");
                     system("perl /srv/www/htdocs/report_files/convert.pl  /srv/www/htdocs/report_files/$file.csv /srv/www/htdocs/report_files/$file-utf8.csv");
                 } catch (Exception $ex) {
-                         echo($ex);exit;
+                    echo($ex);
+                    exit;
                 }
                 $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
@@ -369,7 +391,7 @@ switch ($action) {
                 $query1 = "drop table $logscriptstatususer;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
-                $query1 = "drop table $final;";
+               $query1 = "drop table $final;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
                 echo(json_encode($file));
@@ -400,12 +422,11 @@ switch ($action) {
                     $stmt->execute();
                     if (count($client_elements) > 0)
                         $client_elements_temp = ", " . implode(", ", $client_elements);
-                    $query = "create table $final ENGINE = MYISAM select a.* $client_elements_temp from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id order by b.lead_id, call_date asc;";
+                    $query = "create table $final ENGINE = MYISAM select a.* $client_elements_temp,b.entry_date from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id order by b.lead_id, call_date asc;";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");
-                    $query = "set names 'UTF8';
-select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da chamada`, SEC_TO_TIME( length_in_sec ) `Duração Chamada`,user_id, status_name `Feedback`, list_name `Base de dados`, " . implode(", ", $fields) . " from $final";
+                    $query = "set names 'UTF8'; select  " . implode(", ", $fields) . " from $final";
                     $fp = fopen("/tmp/$query_sql", "wb");
                     fwrite($fp, $query);
                     fclose($fp);
@@ -413,7 +434,8 @@ select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da c
                     system("perl -lpe 's/\"/\"\"/g; s/^|$/\"/g; s/\t/\";\"/g' < /srv/www/htdocs/report_files/$file.txt > /srv/www/htdocs/report_files/$file.csv");
                     system("perl /srv/www/htdocs/report_files/convert.pl  /srv/www/htdocs/report_files/$file.csv /srv/www/htdocs/report_files/$file-utf8.csv");
                 } catch (Exception $ex) {
-                         echo($ex);exit;
+                    echo($ex);
+                    exit;
                 }
                 $query1 = "drop table $logscriptoffset;";
                 $stmt1 = $db->prepare($query1);
@@ -444,7 +466,7 @@ select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da c
                     $stmt->execute();
                     if (count($client_elements) > 0)
                         $client_elements_temp = ", " . implode(", ", $client_elements);
-                    $query = "create table $logscriptoffset ENGINE = MYISAM select b.entry_date, b.modify_date, b.status, b.user user_id,b.lead_id, b.list_id $client_elements_temp, b.called_since_last_reset, b.called_count, b.last_local_call_time, a.* from vicidial_list b left join $logsscriptgrouplead a on b.lead_id = a.script_lead  $lists_log3 ";
+                    $query = "create table $logscriptoffset ENGINE = MYISAM select b.entry_date, b.modify_date, b.status, b.user user_id,b.lead_id, b.list_id $client_elements_temp, b.called_since_last_reset, b.called_count, b.last_local_call_time call_date,'Sem grupo User' user_group,'no info' length_in_sec, a.* from vicidial_list b left join $logsscriptgrouplead a on b.lead_id = a.script_lead  $lists_log3 ";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $query = "create table $logscriptstatus ENGINE = MYISAM select a.*, b.status_name from $logscriptoffset a inner join (select status, status_name, campaign_id from vicidial_campaign_statuses x where campaign_id = ? union all select status, status_name, ? from vicidial_statuses z) b where a.status = b.status ";
@@ -457,7 +479,8 @@ select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da c
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");
-                    $query = "set names 'UTF8'; select lead_id `Id do Cliente`, last_local_call_time `Data da chamada`,user_id,  status_name `Feedback`,list_name  `Base de dados`,entry_date `Data de Carregamento` ," . implode(", ", $fields) . " from $final";
+                    $query = "set names 'UTF8'; select  " . implode(", ", $fields) . " from $final";
+                   
                     $fp = fopen("/tmp/$query_sql", "wb");
                     fwrite($fp, $query);
                     fclose($fp);
@@ -465,7 +488,8 @@ select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da c
                     system("perl -lpe 's/\"/\"\"/g; s/^|$/\"/g; s/\t/\";\"/g' < /srv/www/htdocs/report_files/$file.txt > /srv/www/htdocs/report_files/$file.csv");
                     system("perl /srv/www/htdocs/report_files/convert.pl  /srv/www/htdocs/report_files/$file.csv /srv/www/htdocs/report_files/$file-utf8.csv");
                 } catch (Exception $ex) {
-                         echo($ex);exit;
+                    echo($ex);
+                    exit;
                 }
                 $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
@@ -482,7 +506,7 @@ select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da c
                 $query1 = "drop table $logscriptstatususer;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
-                $query1 = "drop table $final;";
+              $query1 = "drop table $final;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
                 echo(json_encode($file));
@@ -502,7 +526,7 @@ select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da c
                     $stmt->execute();
                     if (count($client_elements) > 0)
                         $client_elements_temp = ", " . implode(", ", $client_elements);
-                    $query = "create table $logscriptoffset ENGINE = MYISAM select b.entry_date, b.modify_date, b.status, b.user user_id,b.lead_id, b.list_id $client_elements_temp, b.called_since_last_reset, b.called_count, b.last_local_call_time, a.* from vicidial_list b left join $logsscriptgrouplead a on b.lead_id = a.script_lead where b.entry_date between ? and ?   $lists_log2 ";
+                    $query = "create table $logscriptoffset ENGINE = MYISAM select b.entry_date, b.modify_date, b.status, b.user user_id,b.lead_id, b.list_id $client_elements_temp, b.called_since_last_reset , b.called_count, b.last_local_call_time call_date,'Sem grupo User' user_group,'no info' length_in_sec, a.* from vicidial_list b left join $logsscriptgrouplead a on b.lead_id = a.script_lead where b.entry_date between ? and ?   $lists_log2 ";
                     $stmt = $db->prepare($query);
                     $stmt->execute(array($data_inicio, $data_fim));
                     $query = "create table $logscriptstatus ENGINE = MYISAM select a.*, b.status_name from $logscriptoffset a inner join (select status, status_name, campaign_id from vicidial_campaign_statuses x where campaign_id = ? union all select status, status_name, ? from vicidial_statuses z) b where a.status = b.status ";
@@ -515,8 +539,7 @@ select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da c
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");
-                    $query = "set names 'UTF8'; select lead_id `Id do Cliente`, last_local_call_time `Data da chamada`,user_id,  status_name `Feedback`,list_name  `Base de dados`,entry_date `Data de Carregamento`,  " . implode(", ", $fields) . " from $final";
-               
+                    $query = "set names 'UTF8'; select  " . implode(", ", $fields) . " from $final";
                     $fp = fopen("/tmp/$query_sql", "wb");
                     fwrite($fp, $query);
                     fclose($fp);
@@ -524,8 +547,14 @@ select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da c
                     system("perl -lpe 's/\"/\"\"/g; s/^|$/\"/g; s/\t/\";\"/g' < /srv/www/htdocs/report_files/$file.txt > /srv/www/htdocs/report_files/$file.csv");
                     system("perl /srv/www/htdocs/report_files/convert.pl  /srv/www/htdocs/report_files/$file.csv /srv/www/htdocs/report_files/$file-utf8.csv");
                 } catch (Exception $ex) {
-                    echo($ex);exit;
+                    echo($ex);
+                    exit;
                 }
+
+
+
+
+
                 $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
