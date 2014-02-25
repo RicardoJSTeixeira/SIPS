@@ -210,7 +210,7 @@ function get_templates(campaign)
                     $("#column_order").empty();
                     $("#edit_template_div_opener_button").prop("disabled", true);
                     $("#delete_template_button").prop("disabled", true);
-                    $("#oc_template").append("<option value=0>Crie um template</option>");
+                    $("#oc_template").append("<option value=''>Crie um template</option>");
                     $("#column_order_title").hide();
                 }
             }, "json");
