@@ -148,10 +148,10 @@ class script {
             $stmt = $this->db->prepare($query);
             $stmt->execute(array($lead_id, $id_script, $unique_id));
         } else {
-            if ($search_spice == true) {
+            if ($search_spice == "true") {
                 $query = "SELECT b.id_script,a.lead_id,a.tag_elemento,a.valor,b.type,a.param_1 FROM script_result a inner join script_dinamico b on a.tag_elemento=b.tag  where a.lead_id=? and b.id_script=? and a.unique_id= 0 ";
                 $stmt = $this->db->prepare($query);
-                $stmt->execute(array($lead_id, $id_script));
+                $stmt->execute(array($lead_id, $id_script)); 
             } else {
                 $query = "SELECT b.id_script,a.lead_id,a.tag_elemento,a.valor,b.type,a.param_1 FROM script_result a inner join script_dinamico b on a.tag_elemento=b.tag  where a.lead_id=? and b.id_script=? and a.unique_id= (select max(unique_id) from script_result where lead_id=?) ";
                 $stmt = $this->db->prepare($query);

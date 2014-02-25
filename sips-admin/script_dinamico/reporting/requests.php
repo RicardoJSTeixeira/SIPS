@@ -71,29 +71,31 @@ switch ($action) {
 
 
 
-        $js[] = array("id" => "lead_id", "type" => "default", "texto" => "ID do Cliente");
-        $js[] = array("id" => "user_group", "type" => "default", "texto" => "Grupo de user");
-        $js[] = array("id" => "call_date", "type" => "default", "texto" => "Data da Chamada", "param_1" => "data_chamada");
-        $js[] = array("id" => "call_date", "type" => "default", "texto" => "Hora da chamada", "param_1" => "hora_chamada");
-        $js[] = array("id" => "length_in_sec", "type" => "default", "texto" => "Duração da Chamada", "param_1" => "length_in_sec");
-        $js[] = array("id" => "status_name", "type" => "default", "texto" => "Feedback");
-        $js[] = array("id" => "list_name", "type" => "default", "texto" => "Base de Dados");
-        $js[] = array("id" => "entry_date", "type" => "default", "texto" => "Data de Carregamento");
+        $js[] = array("id" => "lead_id", "type" => "default", "original_texto" => "ID do Cliente", "texto" => "ID do Cliente");
+        $js[] = array("id" => "user_group", "type" => "default", "original_texto" => "Grupo de user", "texto" => "Grupo de user");
+        $js[] = array("id" => "call_date", "type" => "default", "original_texto" => "Data da Chamada", "texto" => "Data da Chamada", "param_1" => "data_chamada");
+        $js[] = array("id" => "call_date", "type" => "default", "original_texto" => "Hora da chamada", "texto" => "Hora da chamada", "param_1" => "hora_chamada");
+        $js[] = array("id" => "length_in_sec", "type" => "default", "original_texto" => "Duração da Chamada", "texto" => "Duração da Chamada", "param_1" => "length_in_sec");
+        $js[] = array("id" => "status_name", "type" => "default", "original_texto" => "Feedback", "texto" => "Feedback");
+        $js[] = array("id" => "list_name", "type" => "default", "original_texto" => "Base de Dados", "texto" => "Base de Dados");
+        $js[] = array("id" => "entry_date", "type" => "default", "original_texto" => "Data de Carregamento", "texto" => "Data de Carregamento");
+        $js[] = array("id" => "called_count", "type" => "default", "original_texto" => "Nº de Chamadas", "texto" => "Nº de Chamadas");
+        $js[] = array("id" => "called_since_last_reset", "type" => "default", "original_texto" => "Chamada desde o último reset à BD", "texto" => "Chamada desde o último reset à BD");
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $js[] = array("id" => $row["Name"], "type" => "campo_dinamico", "texto" => $row["Display_name"]);
+            $js[] = array("id" => $row["Name"], "type" => "campo_dinamico", "original_texto" => $row["Display_name"], "texto" => $row["Display_name"]);
         }
 
         if (!count($js)) {
 
-            $js[] = array("id" => "FIRST_NAME", "type" => "campo_dinamico", "texto" => "Nome");
-            $js[] = array("id" => "PHONE_NUMBER", "type" => "campo_dinamico", "texto" => "Telefone");
-            $js[] = array("id" => "ADDRESS3", "type" => "campo_dinamico", "texto" => "Telemóvel");
-            $js[] = array("id" => "ALT_PHONE", "type" => "campo_dinamico", "texto" => "Telefone Alternativo");
-            $js[] = array("id" => "ADDRESS1", "type" => "campo_dinamico", "texto" => "Morada");
-            $js[] = array("id" => "POSTAL_CODE", "type" => "campo_dinamico", "texto" => "Código Postal");
-            $js[] = array("id" => "EMAIL", "type" => "campo_dinamico", "texto" => "EMAIL");
-            $js[] = array("id" => "COMMENTS", "type" => "campo_dinamico", "texto" => "Comentários");
+            $js[] = array("id" => "FIRST_NAME", "type" => "campo_dinamico", "original_texto" => "Nome", "texto" => "Nome");
+            $js[] = array("id" => "PHONE_NUMBER", "type" => "campo_dinamico", "original_texto" => "Telefone", "texto" => "Telefone");
+            $js[] = array("id" => "ADDRESS3", "type" => "campo_dinamico", "original_texto" => "Telemóvel", "texto" => "Telemóvel");
+            $js[] = array("id" => "ALT_PHONE", "type" => "campo_dinamico", "original_texto" => "Telefone Alternativo", "texto" => "Telefone Alternativo");
+            $js[] = array("id" => "ADDRESS1", "type" => "campo_dinamico", "original_texto" => "Morada", "texto" => "Morada");
+            $js[] = array("id" => "POSTAL_CODE", "type" => "campo_dinamico", "original_texto" => "Código Postal", "texto" => "Código Postal");
+            $js[] = array("id" => "EMAIL", "type" => "campo_dinamico", "original_texto" => "E-Mail", "texto" => "E-Mail");
+            $js[] = array("id" => "COMMENTS", "type" => "campo_dinamico", "original_texto" => "Comentários", "texto" => "Comentários");
         }
 
         if (isset($script_id)) {
@@ -104,10 +106,10 @@ switch ($action) {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 if ($row["type"] == "tableradio") {
                     foreach (json_decode($row["values_text"]) as $value) {
-                        $js[] = array("id" => $row["tag"], "type" => $row["type"], "texto" => $value, "param_1" => $value);
+                        $js[] = array("id" => $row["tag"], "type" => $row["type"], "original_texto" => $value, "texto" => $value, "param_1" => $value);
                     }
                 } else
-                    $js[] = array("id" => $row["tag"], "type" => $row["type"], "texto" => $row["texto"], "param_1" => "");
+                    $js[] = array("id" => $row["tag"], "type" => $row["type"], "original_texto" => $value, "texto" => $row["texto"], "param_1" => "");
             }
         }
 
@@ -131,7 +133,14 @@ switch ($action) {
         $js = array("campanha" => array(), "bd" => array(), "linha_inbound" => array());
 
         $js["campanha"] = $user->get_campaigns();
-        $query = "SELECT vl.list_id,vl.list_name,vl.campaign_id,vc.campaign_name,vl.active FROM vicidial_lists vl left join vicidial_campaigns vc on vc.campaign_id=vl.campaign_id  order by vc.campaign_name asc";
+
+        $temp_allowed_campaigns = array();
+        foreach ($js["campanha"] as $value) {
+            $temp_allowed_campaigns[] = $value["id"];
+        }
+
+
+        $query = "SELECT vl.list_id,vl.list_name,vl.campaign_id,vc.campaign_name,vl.active FROM vicidial_lists vl left join vicidial_campaigns vc on vc.campaign_id=vl.campaign_id where vl.campaign_id in ('" . implode("','", $temp_allowed_campaigns) . "') order by vc.campaign_name asc";
         $stmt = $db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -296,12 +305,12 @@ switch ($action) {
                     $stmt->execute();
                     if (count($client_elements) > 0)
                         $client_elements_temp = "," . implode(",", $client_elements);
-                    $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp,'no info' list_name,b.entry_date  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id  order by b.lead_id,call_date asc; ";
+                    $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp,'no info' list_name,b.entry_date,b.called_count,b.called_since_last_reset,  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id  order by b.lead_id,call_date asc; ";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");
                     $query = "set names 'UTF8'; select  " . implode(", ", $fields) . " from $final";
-            
+
                     $fp = fopen("/tmp/$query_sql", "wb");
                     fwrite($fp, $query);
                     fclose($fp);
@@ -363,12 +372,12 @@ switch ($action) {
                     $stmt->execute();
                     if (count($client_elements) > 0)
                         $client_elements_temp = "," . implode(",", $client_elements);
-                    $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp,b.entry_date  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id  order by b.lead_id,call_date asc; ";
+                    $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp,b.entry_date,b.called_count,b.called_since_last_reset,  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id  order by b.lead_id,call_date asc; ";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");
                     $query = "set names 'UTF8'; select  " . implode(", ", $fields) . " from $final";
-            
+
                     $fp = fopen("/tmp/$query_sql", "wb");
                     fwrite($fp, $query);
                     fclose($fp);
@@ -391,7 +400,7 @@ switch ($action) {
                 $query1 = "drop table $logscriptstatususer;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
-               $query1 = "drop table $final;";
+                $query1 = "drop table $final;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
                 echo(json_encode($file));
@@ -422,7 +431,7 @@ switch ($action) {
                     $stmt->execute();
                     if (count($client_elements) > 0)
                         $client_elements_temp = ", " . implode(", ", $client_elements);
-                    $query = "create table $final ENGINE = MYISAM select a.* $client_elements_temp,b.entry_date from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id order by b.lead_id, call_date asc;";
+                    $query = "create table $final ENGINE = MYISAM select a.* $client_elements_temp,b.entry_date,b.called_count,b.called_since_last_reset, from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id order by b.lead_id, call_date asc;";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");
@@ -466,7 +475,7 @@ switch ($action) {
                     $stmt->execute();
                     if (count($client_elements) > 0)
                         $client_elements_temp = ", " . implode(", ", $client_elements);
-                    $query = "create table $logscriptoffset ENGINE = MYISAM select b.entry_date, b.modify_date, b.status, b.user user_id,b.lead_id, b.list_id $client_elements_temp, b.called_since_last_reset, b.called_count, b.last_local_call_time call_date,'Sem grupo User' user_group,'no info' length_in_sec, a.* from vicidial_list b left join $logsscriptgrouplead a on b.lead_id = a.script_lead  $lists_log3 ";
+                    $query = "create table $logscriptoffset ENGINE = MYISAM select b.entry_date, b.modify_date, b.status, b.user user_id,b.lead_id, b.list_id $client_elements_temp, b.called_count,b.called_since_last_reset, b.last_local_call_time call_date,'Sem grupo User' user_group,'no info' length_in_sec, a.* from vicidial_list b left join $logsscriptgrouplead a on b.lead_id = a.script_lead  $lists_log3 ";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $query = "create table $logscriptstatus ENGINE = MYISAM select a.*, b.status_name from $logscriptoffset a inner join (select status, status_name, campaign_id from vicidial_campaign_statuses x where campaign_id = ? union all select status, status_name, ? from vicidial_statuses z) b where a.status = b.status ";
@@ -480,7 +489,7 @@ switch ($action) {
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");
                     $query = "set names 'UTF8'; select  " . implode(", ", $fields) . " from $final";
-                   
+
                     $fp = fopen("/tmp/$query_sql", "wb");
                     fwrite($fp, $query);
                     fclose($fp);
@@ -506,7 +515,7 @@ switch ($action) {
                 $query1 = "drop table $logscriptstatususer;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
-              $query1 = "drop table $final;";
+                $query1 = "drop table $final;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
                 echo(json_encode($file));
@@ -526,7 +535,7 @@ switch ($action) {
                     $stmt->execute();
                     if (count($client_elements) > 0)
                         $client_elements_temp = ", " . implode(", ", $client_elements);
-                    $query = "create table $logscriptoffset ENGINE = MYISAM select b.entry_date, b.modify_date, b.status, b.user user_id,b.lead_id, b.list_id $client_elements_temp, b.called_since_last_reset , b.called_count, b.last_local_call_time call_date,'Sem grupo User' user_group,'no info' length_in_sec, a.* from vicidial_list b left join $logsscriptgrouplead a on b.lead_id = a.script_lead where b.entry_date between ? and ?   $lists_log2 ";
+                    $query = "create table $logscriptoffset ENGINE = MYISAM select b.entry_date, b.modify_date, b.status, b.user user_id,b.lead_id, b.list_id $client_elements_temp,b.called_count,b.called_since_last_reset, b.last_local_call_time call_date,'Sem grupo User' user_group,'no info' length_in_sec, a.* from vicidial_list b left join $logsscriptgrouplead a on b.lead_id = a.script_lead where b.entry_date between ? and ?   $lists_log2 ";
                     $stmt = $db->prepare($query);
                     $stmt->execute(array($data_inicio, $data_fim));
                     $query = "create table $logscriptstatus ENGINE = MYISAM select a.*, b.status_name from $logscriptoffset a inner join (select status, status_name, campaign_id from vicidial_campaign_statuses x where campaign_id = ? union all select status, status_name, ? from vicidial_statuses z) b where a.status = b.status ";
