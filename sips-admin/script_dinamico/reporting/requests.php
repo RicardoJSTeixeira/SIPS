@@ -515,7 +515,7 @@ select lead_id `Id do Cliente`, user_group `Grupo de user`, call_date `Data da c
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");
-                    $query = "set names 'UTF8'; select lead_id `Id do Cliente`, last_local_call_time `Data da chamada`,user_id,  status_name `Feedback`,list_name  `Base de dados` ," . implode(", ", $fields) . " from $final";
+                    $query = "set names 'UTF8'; select lead_id `Id do Cliente`, last_local_call_time `Data da chamada`,user_id,  status_name `Feedback`,list_name  `Base de dados` ,entry_date `Data de carregamento` " . implode(", ", $fields) . " from $final";
                     $fp = fopen("/tmp/$query_sql", "wb");
                     fwrite($fp, $query);
                     fclose($fp);
