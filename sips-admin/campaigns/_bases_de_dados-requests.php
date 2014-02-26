@@ -28,7 +28,7 @@ function DBListBuilder($CampaignID, $Flag, $link) {
                 $js['db_id'][] = $row['list_id'];
                 $js['db_name'][] = $row['list_name'];
                 $js['db_leads'][] = $row['list_description'];
-                $js['db_create'][] = date("t-m-o", strtotime($row['create_date']));
+                $js['db_create'][] = date("d-m-o", strtotime($row['create_date']));
                 $js['db_active'][] = $row['active'];
             }
         }
