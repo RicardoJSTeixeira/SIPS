@@ -37,15 +37,22 @@
         <style>
 
 
-            #column_order li { margin: 0 5px 5px 5px; padding: 3px; font-size: 1.1em;  }
+            #column_order li {
+                margin: 0 5px 5px 5px; 
+                padding: 8px; 
+                font-size: 1.0em;
+                -moz-border-radius: 5px;
+                border-radius: 6px;  }
 
-            #column_order li input { margin-bottom: 0px;}
+            #column_order li input { margin-bottom: 4px; width:90%}
             .remove_list_item_button
             {
-                float: right;
+
                 height:1.1em;
 
             }
+
+
             #loading {
                 width: 100%;
                 height: 100%;
@@ -77,14 +84,14 @@
 
 
         <div class="grid-title">
-            <div class="pull-left" ><i class="fam-script-error"></i> Report </div>
+            <div class="pull-left" ><i class="fam-script-error"></i> Report</div>
             <div class="pull-right"><a class="btn btn-inverse hide"  href="/sips-admin/script_dinamico/" target="_self">Voltar aos Scripts</a>
 
             </div>
         </div>
         <div class="grid-content" id="main_div">
 
-
+            <h6> Nova versão -> É necessário construir novas templates para que os reports recebam a nova info. O novo botão "Actualizar" irá corrigir esta situação</h6>
 
             <form id="form_filter" class="formular span5" >
                 <h5>Download de dados:</h5>
@@ -102,13 +109,13 @@
                 </div> 
                 <div class="formRight">
                     <input  type="radio" id="download_bd" class="radio_dados"  name="dd" value="4"   >
-                    <label class="radio inline"  for="download_bd"><span></span>Estado actual de base de dados</label>  
+                    <label class="radio inline"  for="download_bd"><span></span>Estado actual de base de dados sem Data</label>  
                 </div>
-                 <div class="formRight">
+                <div class="formRight">
                     <input  type="radio" id="download_bd_data_carreg" class="radio_dados"  name="dd" value="5"   >
                     <label class="radio inline"  for="download_bd_data_carreg"><span></span>Estado actual de base de dados por data de Carregamento</label>  
                 </div>
- 
+
                 <div id="radio_opcao_div">
 
                     <h5>Relatório:</h5>
@@ -121,6 +128,7 @@
                         <label class=" radio inline"  for="radio2"><span></span>Linha de inbound(Em desenvolvimento)</label> 
                     </div> 
                     <div class="formRight">
+
                         <input  type="radio" id="radio3" class="radio_opcao"  name="ra" value="3" >
                         <label class="radio inline"  for="radio3"><span></span>Base de Dados</label> 
                     </div>
@@ -139,6 +147,7 @@
                 </div>
                 <div id="report_bd" class="select_opcao">
                     <h6>Base de dados</h6>
+                    <label>&#10041 - Bases de Dados Activas</label> 
                     <select id="select_base_dados" multiple="multiple"  class=" chzn-select  select_opcao  validate[required]" data-placeholder="Selecione uma base de dados" style="width:25em; "></select>
 
                 </div>
@@ -179,8 +188,9 @@
                             <select id="oc_template" class="validate[required]"></select>
                             <span  class="input-append">
                                 <button class="btn btn-primary icon-plus" id="new_template_div_opener_button"> Novo</button>
-                                <button class="btn btn-warning  icon-pencil" id="edit_template_div_opener_button"> Editar</button>
-                                <button class="btn btn-danger icon-remove " id="delete_template_button"> Apagar</button>
+                                <button class="btn btn-warning  icon-pencil edit_template_button" id="edit_template_div_opener_button"> Editar</button>
+                                <button class="btn btn-danger icon-remove edit_template_button" id="delete_template_button"> Apagar</button>
+                                <button class="btn btn-success icon-refresh edit_template_button" id="update_template_button"> Actualizar(Em desenvolvimento)</button>
                             </span>
                         </form>
 
@@ -199,7 +209,9 @@
 
 
                 <h6 id="span_script_name"></h6>
+                <div class="pull-left"></div>
                 <h5 id='column_order_title'>Ordenação de colunas</h5>
+
 
                 <form id="column_items_form">
                     <ul  class="connectedSortable ui-helper-reset" id="column_order">
