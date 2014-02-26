@@ -290,7 +290,7 @@ var crm_main = function(crm_main_zone, file_path)
                 crm_main_zone.find("#div_filtro_campanha").show();
                 crm_main_zone.find("#div_filtro_bd").show();
                 crm_main_zone.find("#client_search_sub_option").show();
-                      crm_main_zone.find("#radio_client").prop("disabled", false);
+                crm_main_zone.find("#radio_client").prop("disabled", false);
                 break;
                 //mostra a linha de inbound  e esconde a campaign 
             case 2:
@@ -300,7 +300,7 @@ var crm_main = function(crm_main_zone, file_path)
                 crm_main_zone.find("#div_filtro_bd").hide();
                 crm_main_zone.find("#client_search_sub_option").hide();
                 crm_main_zone.find("#radio_chamada").prop("checked", true);
-                      crm_main_zone.find("#radio_client").prop("disabled", true);
+                crm_main_zone.find("#radio_client").prop("disabled", true);
                 break;
             case 3:
                 break;
@@ -521,7 +521,7 @@ var crm_main = function(crm_main_zone, file_path)
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": file_path + 'crm_main/crm_main_request.php',
                 "fnServerParams": function(aoData) {
-                    aoData.push({"name": "action", "value": "get_info_calls"},
+                    aoData.push({"name": "action", "value": "get_info_calls"}, 
                     {"name": "data_inicio", "value": crm_main_zone.find("#data_inicio").val()},
                     {"name": "data_fim", "value": crm_main_zone.find("#data_fim").val()},
                     {"name": "campanha", "value": select["campanha"].find("option:selected").val()},
@@ -553,19 +553,7 @@ var crm_main = function(crm_main_zone, file_path)
     }
 
 
-//-------------------------------------------------------TOGGLE DAS DATAS pelo CHECKBOX
-    crm_main_zone.on("click", "#checkbox_alldate", function()
-    {
-        crm_main_zone.find(".form_datetime").val("");
-        if ($(this).is(":checked"))
-        {
-            crm_main_zone.find("#date_div").hide("fade");
-        }
-        else
-        {
-            crm_main_zone.find("#date_div").show("fade");
-        }
-    });
+
     //SUB OPÇÃO DO CLIENTE PARA ESPECIFICAR SE É PRA FAZER LOAD POR DATA DA ULTIMA CHAMADA OU DATA DA 
     $(crm_main_zone).on("click", "input[name='sccf']", function()
     {

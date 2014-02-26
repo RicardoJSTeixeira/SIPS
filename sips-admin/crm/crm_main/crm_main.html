@@ -57,6 +57,13 @@
   z-index: 100;
 }
 
+.grid_master_title
+{
+   background-color: #3276BD;
+   opacity: 0.8;
+  color: #fff;
+}
+
 </style>
 
 
@@ -68,7 +75,7 @@
 
 
         <div  id="div_filtros">
-            <div class="grid-title">
+            <div class="grid-title grid_master_title">
                 <div class="pull-left">
                     Filtros de Pesquisa
                 </div>
@@ -153,7 +160,7 @@
                         <div class="span6">
                             <h4>Data de Inicio e Fim</h4>     
                             <input type="checkbox" id="checkbox_alldate" name="cad" >
-                            <label for="checkbox_alldate"><span></span>Sem limite de Data</label>
+                       
                             <div  id="date_div">
                                 <div class="formRow">
                                     <input size="16" type="text" class="form_datetime validate[required]" readonly id="data_inicio" placeholder="Data de Inicio">
@@ -216,7 +223,7 @@
 <!--RESULTADOS-->
 <div class="row-fluid" >
     <div class="grid">
-        <div class="grid-title">
+        <div class="grid-title grid_master_title">
             <div class="pull-left">
                 Resultados
             </div>
@@ -239,7 +246,7 @@
 <!--EDIÇÂO-->
 <div class="row-fluid">
     <div id="client_div" class="grid" style="display:none">
-        <div class="grid-title">
+        <div class="grid-title grid_master_title">
             <div class="pull-left">
                 Edição de info de Cliente
             </div>

@@ -50,8 +50,8 @@ switch ($action) {
 
         $has_script = false;
         $output['aaData'] = array();
-        $calls_out = $crmEdit->get_calls_outbound($lead_id);
-        $calls_in = $crmEdit->get_calls_inbound($lead_id);
+        $calls_out = $crmEdit->get_calls_outbound($lead_id,$campaign_id);
+        $calls_in = $crmEdit->get_calls_inbound($lead_id,$campaign_id);
         foreach ($calls_out as $value) {
             $calls[] = $value;
         }
