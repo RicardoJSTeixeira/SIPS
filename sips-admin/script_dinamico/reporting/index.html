@@ -75,8 +75,8 @@
 
             #columns_div 
             {
-                background-color: rgba(24,24,24,0.2);
-              
+                background-color: rgba(0,0,190,0.1);
+        
                 -moz-border-radius: 5px;
                 border-radius: 6px;
                 padding-top:8px;
@@ -155,7 +155,7 @@
                                             <button class="btn btn-primary icon-plus" id="new_template_div_opener_button"> Novo</button>
                                             <select id="oc_template" class="validate[required]"></select>
 
-                                            <button class="btn btn-warning  icon-edit " id="template_options_button"> Opções</button>
+                                            <button class="btn btn-warning  icon-edit" id="template_options_button"> Opções</button>
                                         </span>
                                         <div  class="input-append" id="new_template_div" style="display:none">
                                             <input id="new_template_input" maxlength="45" type="text" placeholder="Nome do template novo">
@@ -240,20 +240,13 @@
 
 
 
-
-
-
-
                     <div id="loading" style="display:none">
                         <img id="loading-image" src="/images/icons/big-loader.gif" alt="Loading..." />
                     </div>
                 </div><!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
                 <div class="span7" id="columns_div"  ><!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
-
-
-                    <h6 id="span_script_name"></h6>
-                    <div class="pull-left"></div>
-                    <h5 id='column_order_title'>Ordenação de colunas</h5>
+                    <h5 id="span_script_name"></h5>
+                    <h6 id='column_order_title'>Ordenação de colunas</h6>
                     <form id="column_items_form">
                         <ul  class="connectedSortable ui-helper-reset" id="column_order"></ul>
                     </form>

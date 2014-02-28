@@ -585,7 +585,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     {
                         if (info.values_text.length > 3)
                         {
-                            element.append($("<img>").attr("src", file_path + 'files\\' + info.values_text));
+                            element.append($("<img>").attr("src", file_path + 'files\/' + info.values_text));
                         }
                     }
                     else if (info.param1 == "2")
