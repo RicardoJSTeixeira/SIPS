@@ -40,6 +40,9 @@ $end_date = date("o-m-d");
             <div class="span3">
                 <button class="btn btn-large btn-success btn-block pull-left" id="reload" name="reload" value="Reload">Load Report</button>
             </div>
+            <div class="span2">
+                <button class="btn btn-large btn-success pull-left" id="export_all" disabled name="export_all" >Export Report</button>
+            </div>    
         </div>
     </div>
 
@@ -88,12 +91,13 @@ $end_date = date("o-m-d");
         }
         callback(filters);
     }
-
+    var asInitVals = new Array();
+    var oTable;
     $("#reload").on('click', function() {
         $("#reload").attr('disabled', true)
         $("#smsreport").dataTable().fnDestroy();
         getData(function(filters) {
-            $('#smsreport').dataTable({
+            oTable = $('#smsreport').dataTable({
                 "bProcessing": true,
                 "bDestroy": true,
                 "bAutoWidth": false,
@@ -103,11 +107,64 @@ $end_date = date("o-m-d");
                     aoData.push({"name": "action", "value": "get_sms_report"}, {"name": "start_date", "value": $("#dpd1").val()}, {"name": "end_date", "value": $("#dpd2").val()}, {"name": "filters", value: filters});
                 },
                 "fnDrawCallback": function(oSettings) {
-                    $("#reload").attr('disabled', false)
+                    $("#reload").attr('disabled', false);
+                    $("#export_all").attr('disabled', false);
                 }
             });
         });
     });
+
+
+
+
+    function table2csv(oTable, exportmode, tableElm, callback) {
+        var csv = '';
+        var headers = [];
+        var rows = [];
+
+        // Get header names
+        $(tableElm + ' thead').find('th').each(function() {
+            var $th = $(this);
+            var text = $th.text();
+            var header = '"' + text + '"';
+            // headers.push(header); // original code
+            if (text != "")
+                headers.push(header); // actually datatables seems to copy my original headers so there ist an amount of TH cells which are empty
+        });
+        csv += headers.join(';') + "\n";
+
+        // get table data
+        if (exportmode == "full") { // total data
+            var total = oTable.fnSettings().fnRecordsTotal()
+            for (i = 0; i < total; i++) {
+                var row = oTable.fnGetData(i);
+                row = row.join(";");
+                rows.push(row);
+            }
+        } else { // visible rows only
+            $(tableElm + ' tbody tr:visible').each(function(index) {
+                var row = oTable.fnGetData(this);
+                row = row.join(";");
+                rows.push(row);
+            })
+        }
+        csv += rows.join("\n");
+
+        // if a csv div is already open, delete it
+        if ($('.csv-data').length)
+            $('.csv-data').remove();
+        // open a div with a download link
+        $('body').append('<div class="csv-data hidden"><form id="download" enctype="multipart/form-data" method="post" action="../report_sms/csv.php"><textarea class="form" name="csv">' + csv + '</textarea><input type="submit" class="submit" value="Download as file" /></form></div>');
+        if (callback) callback();
+    }
+
+    function strip_tags(html) {
+        var tmp = document.createElement("div");
+        tmp.innerHTML = html;
+        return tmp.textContent || tmp.innerText;
+    }
+
+    // export only what is visible right now (filters & paginationapplied)
 
 
     $(function() {
@@ -138,6 +195,19 @@ $end_date = date("o-m-d");
         }).on('changeDate', function(ev) {
             checkout.hide();
         }).data('datepicker');
+
+        $('#export_visible').click(function(event) {
+            event.preventDefault();
+            table2csv(oTable, 'visible', '#smsreport');
+        })
+
+// export all table data
+        $('#export_all').click(function(event) {
+            event.preventDefault();
+            table2csv(oTable, 'full', '#smsreport', function(){
+               $("#download").submit();
+            });
+        })
 
     });
 
