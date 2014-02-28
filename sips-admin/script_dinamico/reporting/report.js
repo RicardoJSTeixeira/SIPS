@@ -3,13 +3,12 @@ var script_id = 0;
 var current_template = 0;
 var campaign = "";
 var base_dados = [];
+
 $(function() {
     $("#report_bd").hide();
     $("#report_linha_inbound").hide();
     $(".chzn-select").chosen({no_results_text: "Sem resultados"});
-    $("#form_filter").validationEngine();
-    $("#column_items_form").validationEngine();
-    $("#template_form").validationEngine();
+    $(".formular").validationEngine();
 
     $("#datetime_from").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function(ev) {
         $("#datetime_to").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
@@ -95,42 +94,6 @@ $(function() {
         });
 
 
-        $(".radio_opcao").on("click", function()
-        {
-
-            update_template();
-            $("#select_base_dados option").prop("disabled", false);
-            $("#select_base_dados").val("").trigger("liszt:updated");
-
-            $(".select_opcao").hide();
-            if ($(this).val() == "1")
-            {
-                $("#report_campanha").show();
-            }
-            else if ($(this).val() == "2") {
-                $("#report_linha_inbound").show();
-            } else
-            {
-                $("#report_bd").show();
-            }
-        });
-
-        $(".radio_dados").on("click", function()
-        {
-            $(".time_div").show();
-            $("#radio1,#radio3").prop("disabled", false);
-
-            if ($(this).val() == 4)
-            {
-                $("#radio3").prop("checked", true);
-                $(".radio_opcao").prop("disabled", true);
-                $(".select_opcao").hide();
-                $("#report_bd").show();
-                $(".time_div").hide();
-            }
-
-            update_template();
-        });
 
 
 
@@ -140,11 +103,54 @@ $(function() {
         stop: function(event, ui) {
             update_elements();
         }});
+    $('.tooltip_info').tooltip();
 });
 
 
 
 
+$(".radio_opcao").on("click", function()
+{
+
+    update_template();
+    $("#select_base_dados option").prop("disabled", false);
+    $("#select_base_dados").val("").trigger("liszt:updated");
+
+    $(".select_opcao").hide();
+    if ($(this).val() == "1")
+    {
+        $("#report_campanha").show();
+    }
+    else if ($(this).val() == "2") {
+        $("#report_linha_inbound").show();
+    } else
+    {
+        $("#report_bd").show();
+    }
+});
+
+$(".radio_dados").on("click", function()
+{
+    $(".time_div").show();
+    $("#radio1,#radio3").prop("disabled", false);
+
+    if ($(this).val() == 4)
+    {
+        $("#radio3").prop("checked", true);
+        $(".radio_opcao").prop("disabled", true);
+        $(".select_opcao").hide();
+        $("#report_bd").show();
+        $(".time_div").hide();
+    }
+    if ($(this).val() == 5)
+    {
+        $("#radio1").prop("checked", true);
+
+
+    }
+
+    update_template();
+});
 
 
 
@@ -153,7 +159,7 @@ $(function() {
 function update_template()
 {
     campaign = "";
-
+    current_template = $("#oc_template option:selected").val();
 
     if ($("#radio1").is(":checked")) {
         campaign = $("#select_campanha option:selected").val();
@@ -179,103 +185,115 @@ function get_templates(campaign)
 
     if (campaign)
     {
-        $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
-        function(data)
+
+        $.post("requests.php", {action: "get_template", campaign_id: campaign},
+        function(data1)
         {
-            if (Object.size(data))
+            if (data1.length)
             {
-                script_id = data[0];
-                $("#span_script_name").text("Nome do Script ->  " + data[1]);
-                $("#download_report").prop("disabled", false);
-                $("#edit_template_div_opener_button").prop("disabled", false);
-                $("#delete_template_button").prop("disabled", false);
-                $("#template_div").show();
+                $(".edit_template_button").prop("disabled", false);
                 $("#oc_template").empty();
-                $("#column_order").empty();
-                $.post("requests.php", {action: "get_template", campaign_id: campaign},
-                function(data1)
+                $.each(data1, function()
                 {
-                    if (data1.length)
-                    {
-                        $.each(data1, function()
-                        {
-                            if (this.id == current_template)
-                                $("#oc_template").append("<option value=" + this.id + " selected>" + this.template + "</option>");
-                            else
-                                $("#oc_template").append("<option value=" + this.id + ">" + this.template + "</option>");
-                        });
-                        $("#oc_template").trigger("change");
-                        $("#column_order_title").show().text("Ordernação de colunas");
-                    }
+                    if (this.id == current_template)
+                        $("#oc_template").append("<option value=" + this.id + " selected>" + this.template + "</option>");
                     else
-                    {
-                        $("#column_order").empty();
-                        $("#column_order").empty();
-                        $("#edit_template_div_opener_button").prop("disabled", true);
-                        $("#delete_template_button").prop("disabled", true);
-                        $("#oc_template").append("<option value=''>Crie um template</option>");
-                        $("#column_order_title").hide();
-                    }
-                }, "json");
+                        $("#oc_template").append("<option value=" + this.id + ">" + this.template + "</option>");
+                });
+                $("#oc_template").trigger("change");
+                //  $("#column_order_title").show().text("Ordernação de colunas");
             }
             else
             {
-                script_id = undefined;
-                if (!$("#download_script").is(":checked"))
-                {
-                    $("#span_script_name").text("Sem script");
-                    $("#download_report").prop("disabled", false);
-
-                    $(".edit_template_button").prop("disabled", false);
-                    $("#template_div").show();
-                    $("#oc_template").empty();
-                    $("#column_order").empty();
-                    $.post("requests.php", {action: "get_template", campaign_id: campaign},
-                    function(data1)
-                    {
-                        if (data1.length)
-                        {
-                            $.each(data1, function()
-                            {
-                                if (this.id == current_template)
-                                    $("#oc_template").append("<option value=" + this.id + " selected>" + this.template + "</option>");
-                                else
-                                    $("#oc_template").append("<option value=" + this.id + ">" + this.template + "</option>");
-                            });
-                            $("#oc_template").trigger("change");
-                            $("#column_order_title").show().text("Ordernação de colunas");
-                        }
-                        else
-                        {
-                            $("#column_order").empty();
-
-                            $(".edit_template_button").prop("disabled", true);
-                            $("#oc_template").append("<option value=''>Crie um template</option>");
-                            $("#column_order_title").hide();
-                        }
-                    }, "json");
-                }
-                else
-                {
-                    $("#column_order").empty();
-                    $("#span_script_name").text("");
-                    $("#download_report").prop("disabled", true);
-                    $("#column_order").empty();
-                         $("#span_script_name").text("Sem Script");
-                    $("#template_div").hide();
-                }
+                $("#column_order").empty();
+                $(".edit_template_button").prop("disabled", true);
+                $("#oc_template").append("<option value=''>Crie um template</option>");
+                $("#column_order_title").hide();
             }
         }, "json");
-    }
-    else
-    {
-        $("#column_order").empty();
-        $("#span_script_name").text("");
-        $("#download_report").prop("disabled", true);
-        $("#column_order").empty();
-         $("#span_script_name").text("Escolha uma BD/Campanha");
+
+
+
+
+
+
+
+        
+         $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
+         function(data)
+         {
+         if (Object.size(data))
+         {
+         script_id = data[0];
+         $("#span_script_name").text("Nome do Script ->  " + data[1]);
+         $("#column_order_title").show().text("Ordernação de colunas");
+         $("#download_report").prop("disabled", false);
+         $("#oc_template").empty();
+         $("#column_order").empty();
+         $.post("requests.php", {action: "get_template", campaign_id: campaign},
+         function(data1)
+         {
+         if (data1.length)
+         {
+         $.each(data1, function()
+         {
+         if (this.id == current_template)
+         $("#oc_template").append("<option value=" + this.id + " selected>" + this.template + "</option>");
+         else
+         $("#oc_template").append("<option value=" + this.id + ">" + this.template + "</option>");
+         });
+         $("#oc_template").trigger("change");
+         }
+         else
+         {
+         $("#column_order").empty();
+         $("#column_order").empty();
+         $("#oc_template").append("<option value=''>Crie um template</option>");
+         $("#column_order_title").hide();
+         }
+         }, "json");
+         }
+         else
+         {
          
-        $("#template_div").hide();
+         
+         script_id = undefined;
+         if (!$("#download_script").is(":checked"))
+         {
+         $("#span_script_name").text("Sem script");
+         $("#column_order_title").hide();
+         $("#download_report").prop("disabled", false);
+         
+         $(".edit_template_button").prop("disabled", false);
+         
+         $("#oc_template").empty();
+         $("#column_order").empty();
+         
+         }
+         else
+         {
+         $("#oc_template").empty().append("<option value=''>Crie um template</option>");
+         $("#column_order_title").hide();
+         $("#column_order").empty();
+         $("#span_script_name").text("");
+         $("#download_report").prop("disabled", true);
+         $("#column_order").empty();
+         $("#span_script_name").text("Sem Script");
+         
+         }
+         }
+         }, "json");
+         }
+         else
+         {
+         $("#column_order_title").hide();
+         $("#column_order").empty();
+         $("#span_script_name").text("");
+         $("#download_report").prop("disabled", true);
+         $("#column_order").empty();
+         $("#span_script_name").text("Escolha uma Base de Dados/Campanha");
+         
+
     }
 }
 
@@ -335,7 +353,7 @@ $("#download_report").on("click", function(e)
 {
 
     e.preventDefault();
-    if ($("#form_filter").validationEngine('validate') && $("#template_form").validationEngine('validate') && $("#column_items_form").validationEngine('validate'))
+    if ($("#form_filter").validationEngine('validate') && $("#template_form").validationEngine('validate') && $("#column_items_form").validationEngine('validate') && $("#date_form").validationEngine('validate'))
     {
 
         $('#loading').show();
@@ -395,7 +413,16 @@ Object.size = function(a)
 
 
 
+$("#template_options_button").click(function(e)
+{
+    e.preventDefault();
+    $("#template_options").toggle(300);
+    if ($("#new_template_div").is(":visible"))
+        $("#new_template_div").hide();
+    if ($("#edit_template_div").is(":visible"))
+        $("#edit_template_div").hide();
 
+});
 
 $("#new_template_div_opener_button").on("click", function(e)
 {
@@ -404,8 +431,9 @@ $("#new_template_div_opener_button").on("click", function(e)
     $("#new_template_input").val("");
 });
 
-$("#new_template_button").on("click", function()
+$("#new_template_button").on("click", function(e)
 {
+    e.preventDefault();
     if ($("#new_template_input").val() != "")
     {
         $.post("requests.php", {action: "create_template", campaign_id: campaign, template: $("#new_template_input").val(), script_id: script_id}, "json");
@@ -425,8 +453,9 @@ $("#edit_template_div_opener_button").on("click", function(e)
     $("#edit_template_input").val($("#oc_template option:selected").text());
 });
 
-$("#edit_template_button").on("click", function()
+$("#edit_template_button").on("click", function(e)
 {
+    e.preventDefault();
     $.post("requests.php", {action: "edit_template", id: $("#oc_template option:selected").val(), template: $("#edit_template_input").val()}, function()
     {
         current_template = $("#oc_template option:selected").val();
@@ -449,7 +478,9 @@ $("#delete_template_button").on("click", function(e)
 
 $("#update_template_button").on("click", function(e)
 {
+
     e.preventDefault();
+
 
 });
 
