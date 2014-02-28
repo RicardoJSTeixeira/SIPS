@@ -75,8 +75,8 @@
 
             #columns_div 
             {
-                background-color: rgba(0,0,190,0.1);
-        
+                background-color: rgba(36,34,117,0.15);
+
                 -moz-border-radius: 5px;
                 border-radius: 6px;
                 padding-top:8px;
@@ -149,36 +149,41 @@
 
                             <div id="template_div"  >
                                 <h5>Template</h5>
-                                <div class="formRow">
-                                    <form id="template_form">
-                                        <span  class="input-append">
-                                            <button class="btn btn-primary icon-plus" id="new_template_div_opener_button"> Novo</button>
-                                            <select id="oc_template" class="validate[required]"></select>
+                                <form id="template_form">
+                                    <span  class="input-append">
+                                        <button class="btn btn-primary icon-plus" id="new_template_div_opener_button"> Novo</button>
+                                        <select id="oc_template" class="validate[required]"></select>
 
-                                            <button class="btn btn-warning  icon-edit" id="template_options_button"> Opções</button>
-                                        </span>
-                                        <div  class="input-append" id="new_template_div" style="display:none">
+                                        <button class="btn btn-warning  icon-edit" id="template_options_button"> Opções</button>
+                                    </span>
+
+                                    <div  class="formRow" id="new_template_div" style="display:none">
+                                        <span>Nova Template</span>
+                                        <div  class="input-append formRight" >
                                             <input id="new_template_input" maxlength="45" type="text" placeholder="Nome do template novo">
-                                            <button class="btn" id="new_template_button">Criar</button>
+                                            <button class="btn btn-primary" id="new_template_button">Criar</button>
                                         </div> 
-                                        <div  class="input-append" id="edit_template_div" style="display:none">
+                                    </div> 
+
+
+
+
+                                    <div  class="formRow" id="edit_template_div" style="display:none">
+                                        <span>Alteração de nome</span>
+                                        <div  class="input-append formRight" >
                                             <input id="edit_template_input" maxlength="45" type="text">
-                                            <button class="btn" id="edit_template_button">Gravar</button>
+                                            <button class="btn btn-primary" id="edit_template_button">Gravar</button>
                                         </div> 
-                                        <div id="template_options" style="display:none">
-
-                                            <button class="btn btn-warning  icon-pencil edit_template_button" id="edit_template_div_opener_button"> Editar</button>
-                                            <button class="btn btn-danger icon-remove edit_template_button" id="delete_template_button"> Apagar</button>
-                                            <button class="btn btn-success icon-refresh edit_template_button" id="update_template_button"> Actualizar</button>
+                                    </div> 
 
 
-                                        </div>
-                                    </form>
-                                </div>
-
+                                    <div id="template_options" class="formRow" style="display:none">
+                                        <button class="btn  icon-pencil edit_template_button" id="edit_template_div_opener_button"> Editar</button>
+                                        <button class="btn btn-danger icon-remove edit_template_button" id="delete_template_button"> Apagar</button>
+                                        <button class="btn btn-success icon-refresh edit_template_button" id="update_template_button"> Actualizar <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Actualiza a template restaurando todos os campos eliminados ou inseridos pelo script depois da criação da template  (Não altera a estrutura do template, adiciona no inicio)"><i class="icon-question-sign"></i></strong></button>
+                                    </div>
+                                </form>
                             </div>
-
-
                         </div>
                         <div class="span6"> 
 
@@ -221,11 +226,11 @@
 
                     <form id="date_form" class="formular" >
                         <div class=" time_div">
-                            <label>Data de Inicio:</label>
+                            <h4>Data de Inicio:</h4>
                             <input  type="text" id="datetime_from" class="datetime_range validate[required]">
                         </div>
                         <div class=" time_div">
-                            <label>Data de Fim:</label>
+                            <h4>Data de Fim:</h4>
                             <input  type="text" id="datetime_to" class="datetime_range validate[required]" >  
                         </div>
                     </form>

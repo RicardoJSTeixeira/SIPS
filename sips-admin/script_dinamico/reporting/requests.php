@@ -113,10 +113,13 @@ switch ($action) {
             }
         }
 
+        if ($insert == "true") {
+            $query = "INSERT INTO `report_order`(`id`, `elements`, `campaign`, `template`) VALUES (NULL, :js,:campaign_id,:template)";
+            $stmt = $db->prepare($query);
+            echo( $stmt->execute(array(":js" => json_encode($js), ":campaign_id" => $campaign_id, ":template" => $template)));
+        } else
+            echo json_encode($js);
 
-        $query = "INSERT INTO `report_order`(`id`, `elements`, `campaign`, `template`) VALUES (NULL, :js,:campaign_id,:template)";
-        $stmt = $db->prepare($query);
-        echo( $stmt->execute(array(":js" => json_encode($js), ":campaign_id" => $campaign_id, ":template" => $template)));
         break;
 
     case "get_elements_by_template":
@@ -232,7 +235,7 @@ switch ($action) {
         }
 
 
-                    
+
         if (isset($list_id)) {
             $lists_log = "and a.list_id in('" . implode("','", $list_id) . "')";
             $lists_log1 = "Where a.list_id in('" . implode("','", $list_id) . "')";

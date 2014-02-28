@@ -134,16 +134,19 @@ $(".radio_opcao").on("click", function()
 {
 
     update_template();
-    $("#select_base_dados option").prop("disabled", false);
-    $("#select_base_dados").val("").trigger("liszt:updated");
+
 
     $(".select_opcao").hide();
 
-    if ($(this).val() == "1") 
+    if ($(this).val() == "1")
     {
+        $("#select_base_dados option").prop("disabled", false);
+        $("#select_base_dados").val("").trigger("liszt:updated");
         $("#report_campanha").show();
     }
     else if ($(this).val() == "2") {
+        $("#select_base_dados option").prop("disabled", false);
+        $("#select_base_dados").val("").trigger("liszt:updated");
         $("#report_linha_inbound").show();
     } else
     {
@@ -156,17 +159,14 @@ $(".radio_dados").on("click", function()
     switch ($(this).val())
     {
         case "4":
-            
+
             $("#radio3").prop("checked", true).trigger("click");
             $("#date_form").hide();
             break;
-        case "5":
-            $("#radio3").prop("checked", true).trigger("click");
-            break;
-
         default:
+            $("#radio1").prop("checked", true).trigger("click");
             $("#date_form").show();
-               update_template();
+            update_template();
             break;
     }
 });
@@ -176,16 +176,16 @@ function get_templates(campaign)
 
     if (campaign)
     {
-           
+
         $("#new_template_div_opener_button").prop("disabled", false);
-             $("#template_options_button").prop("disabled", false);
-              $("#span_script_name").text("");
+        $("#template_options_button").prop("disabled", false);
+        $("#span_script_name").text("");
         $.post("requests.php", {action: "get_template", campaign_id: campaign},
         function(data1)
         {
             if (data1.length)
             {
-
+                $("#update_template_button").prop("disabled", false);
                 $("#template_options_button").prop("disabled", false);
                 $(".edit_template_button").prop("disabled", false);
                 $("#oc_template").empty();
@@ -205,6 +205,7 @@ function get_templates(campaign)
                     //SCRIPT
                     if (Object.size(data))
                     {
+
                         $("#oc_template").trigger("change");
                         script_id = data[0];
                         $("#span_script_name").text("Nome do Script ->  " + data[1]);
@@ -215,11 +216,12 @@ function get_templates(campaign)
                     else
                     {
 // NAO HA SCRIPT     
- $("#span_script_name").text("Sem Script");
+
+                        $("#span_script_name").text("Sem Script");
                         script_id = undefined;
                         if ($("#download_script").is(":checked"))
                         {
-                           
+                            $("#update_template_button").prop("disabled", true);
                             $("#column_order_title").text("");
                             $("#column_order").empty();
                             $("#download_report").prop("disabled", true);
@@ -229,7 +231,7 @@ function get_templates(campaign)
                         {
                             $("#oc_template").trigger("change");
                             $("#download_report").prop("disabled", false);
-                            $(".edit_template_button").prop("disabled", false);
+
                         }
                     }
                 }, "json");
@@ -250,7 +252,7 @@ function get_templates(campaign)
     }
     else
     {
- 
+
         $("#span_script_name").text("Escolha uma Base de Dados/Campanha");
         $("#oc_template").empty().append("<option value=''>Crie um template</option>");
         $("#new_template_div_opener_button").prop("disabled", true);
@@ -392,16 +394,21 @@ $("#template_options_button").click(function(e)
 $("#new_template_div_opener_button").on("click", function(e)
 {
     e.preventDefault();
+    $("#edit_template_div").hide();
     $("#new_template_div").toggle(500);
     $("#new_template_input").val("");
 });
 
 $("#new_template_button").on("click", function(e)
 {
+
+
+
     e.preventDefault();
     if ($("#new_template_input").val() != "")
     {
-        $.post("requests.php", {action: "create_template", campaign_id: campaign, template: $("#new_template_input").val(), script_id: script_id}, function()
+
+        $.post("requests.php", {action: "create_template", insert: true, campaign_id: campaign, template: $("#new_template_input").val(), script_id: script_id}, function()
         {
             $("#new_template_div").hide(400);
             get_templates(campaign);
@@ -416,6 +423,7 @@ $("#new_template_button").on("click", function(e)
 $("#edit_template_div_opener_button").on("click", function(e)
 {
     e.preventDefault();
+    $("#new_template_div").hide();
     $("#edit_template_div").toggle(500);
     $("#edit_template_input").val($("#oc_template option:selected").text());
 });
@@ -423,6 +431,7 @@ $("#edit_template_div_opener_button").on("click", function(e)
 $("#edit_template_button").on("click", function(e)
 {
     e.preventDefault();
+
     $.post("requests.php", {action: "edit_template", id: $("#oc_template option:selected").val(), template: $("#edit_template_input").val()}, function()
     {
         current_template = $("#oc_template option:selected").val();
@@ -445,10 +454,32 @@ $("#delete_template_button").on("click", function(e)
 
 $("#update_template_button").on("click", function(e)
 {
+    $.post("requests.php", {action: "create_template", insert: false, campaign_id: campaign, script_id: script_id}, function(data)
+    {
+        var updt_element = "";
+        var found = false;
+        $.each(data, function()
+        {
+            updt_element = this;
+            found = false;
+            $.each($("#column_order li"), function()
 
+            {
+                if ($(this).find(":input").attr("id") == updt_element.id)
+                {
+
+                    found = true;
+                    return false;
+                }
+            });
+            if (!found)
+                $("#column_order").prepend("<li class='ui-state-default'><div><input id=" + updt_element.id + "  class='validate[required]'   type='text' data-original_texto='" + updt_element.original_texto + "'  data-param_1='" + updt_element.param_1 + "'  data-type='" + updt_element.type + "' value='" + updt_element.texto + "'><span class='btn icon-alone remove_list_item_button icon-remove btn-link' data-id='" + updt_element.id + "'></span></div>\n\
+<div>" + ((updt_element.type === "campo_dinamico" || updt_element.type === "default") ? updt_element.original_texto : "Tag->" + updt_element.id + " Nome->" + get_name_by_type(updt_element.type)) + "</div></li>");
+
+        });
+        update_elements();
+    }, "json");
     e.preventDefault();
-
-
 });
 
 $("#main_div").off("change", ".remove_list_item_button");
