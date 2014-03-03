@@ -13,13 +13,16 @@ $end_date = date("o-m-d");
         <div class="grid-content">
             <div class="span2">
                 <label for="dpd1">Start Date:</label>
-                <input type="text" value="<?= $start_date ?>" id="dpd1"> 
+                <input type="text" style="width: 150px" value="<?= $start_date ?>" id="dpd1"> 
             </div>
             <div class="span2">
                 <label for="dpd2">End Date:</label>
-                <input type="text" value="<?= $end_date ?>" id="dpd2">
+                <input type="text" style="width: 150px" value="<?= $end_date ?>" id="dpd2">
             </div>
-            <div class="span3">
+            <div class="span1">
+                &nbsp;
+            </div>
+            <div class="span4" style="text-align: center">
                 <div class="formRow">
                     <div class=" distance">
                         <p>
@@ -37,11 +40,9 @@ $end_date = date("o-m-d");
                     </div>
                 </div>
             </div>
-            <div class="span3">
-                <button class="btn btn-large btn-success btn-block pull-left" id="reload" name="reload" value="Reload">Load Report</button>
-            </div>
-            <div class="span2">
-                <button class="btn btn-large btn-success pull-left" id="export_all" disabled name="export_all" >Export Report</button>
+            <div class="span3" style="text-align: center">
+                <button class="btn  btn-success" id="reload" name="reload" value="Reload">Load Report</button>
+                <button class="btn  btn-success" id="export_all" disabled name="export_all" >Export Report</button>
             </div>    
         </div>
     </div>
