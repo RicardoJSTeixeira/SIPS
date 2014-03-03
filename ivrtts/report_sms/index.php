@@ -203,13 +203,13 @@ $end_date = date("o-m-d");
 
         $('#export_visible').click(function(event) {
             event.preventDefault();
-            table2csv(oTable, 'visible', '#smsreport');
+            table2csv($('#smsreport').dataTable(), 'visible', '#smsreport');
         })
 
 // export all table data
         $('#export_all').click(function(event) {
             event.preventDefault();
-            table2csv(oTable, 'full', '#smsreport', function() {
+            table2csv($('#smsreport').dataTable(), 'full', '#smsreport', function() {
                 $("#download").submit();
             });
         })
