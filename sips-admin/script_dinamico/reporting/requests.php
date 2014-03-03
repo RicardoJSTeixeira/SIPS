@@ -113,10 +113,13 @@ switch ($action) {
             }
         }
 
+        if ($insert == "true") {
+            $query = "INSERT INTO `report_order`(`id`, `elements`, `campaign`, `template`) VALUES (NULL, :js,:campaign_id,:template)";
+            $stmt = $db->prepare($query);
+            echo( $stmt->execute(array(":js" => json_encode($js), ":campaign_id" => $campaign_id, ":template" => $template)));
+        } else
+            echo json_encode($js);
 
-        $query = "INSERT INTO `report_order`(`id`, `elements`, `campaign`, `template`) VALUES (NULL, :js,:campaign_id,:template)";
-        $stmt = $db->prepare($query);
-        echo( $stmt->execute(array(":js" => json_encode($js), ":campaign_id" => $campaign_id, ":template" => $template)));
         break;
 
     case "get_elements_by_template":
@@ -233,7 +236,6 @@ switch ($action) {
 
 
 
-
         if (isset($list_id)) {
             $lists_log = "and a.list_id in('" . implode("','", $list_id) . "')";
             $lists_log1 = "Where a.list_id in('" . implode("','", $list_id) . "')";
@@ -248,8 +250,8 @@ switch ($action) {
             while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
                 $temp_list[] = $row[0];
             }
-            $lists_log = "and a.list_id in('" . implode("','", $temp_list) . "')";
-            $lists_log1 = "Where a.list_id in('" . implode("','", $temp_list) . "')";
+            $lists_log = "and a.campaign_id='$campaign_id'";
+            $lists_log1 = "Where a.campaign_id='$campaign_id'";
             $lists_log2 = "and b.list_id in('" . implode("','", $temp_list) . "')";
             $lists_log3 = "Where b.list_id in('" . implode("','", $temp_list) . "')";
         }
@@ -283,6 +285,7 @@ switch ($action) {
                     $stmt = $db->prepare($query);
                     $stmt->execute(array($campaign_id, $data_inicio, $data_fim));
                     $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log a inner join $scriptoffset b on a.uniqueid = b.unique_id where  a.call_date between ? and ?  $lists_log;";
+
                     $stmt = $db->prepare($query);
                     $stmt->execute(array($data_inicio, $data_fim));
                     $twoMonthsBefore = strtotime("-2 months", time());
@@ -373,6 +376,7 @@ switch ($action) {
                     if (count($client_elements) > 0)
                         $client_elements_temp = "," . implode(",", $client_elements);
                     $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp,b.entry_date,b.called_count,b.called_since_last_reset  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id  order by b.lead_id,call_date asc; ";
+
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");

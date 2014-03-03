@@ -2137,7 +2137,7 @@ function update_select()
     $.post("requests.php", {action: "get_image_pdf"},
     function(data)
     {
-        $("#ipl_file_select").empty();
+        $("#ipl_file_select").empty(); 
         $.each(data, function()
         {
             $("#ipl_file_select").append("<option data-type=" + this.type + " value=" + this.value + ">" + this.value + "</option>");

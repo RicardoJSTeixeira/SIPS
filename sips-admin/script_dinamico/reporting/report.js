@@ -3,13 +3,12 @@ var script_id = 0;
 var current_template = 0;
 var campaign = "";
 var base_dados = [];
+
 $(function() {
     $("#report_bd").hide();
     $("#report_linha_inbound").hide();
     $(".chzn-select").chosen({no_results_text: "Sem resultados"});
-    $("#form_filter").validationEngine();
-    $("#column_items_form").validationEngine();
-    $("#template_form").validationEngine();
+    $(".formular").validationEngine();
 
     $("#datetime_from").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function(ev) {
         $("#datetime_to").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
@@ -95,42 +94,6 @@ $(function() {
         });
 
 
-        $(".radio_opcao").on("click", function()
-        {
-
-            update_template();
-            $("#select_base_dados option").prop("disabled", false);
-            $("#select_base_dados").val("").trigger("liszt:updated");
-
-            $(".select_opcao").hide();
-            if ($(this).val() == "1")
-            {
-                $("#report_campanha").show();
-            }
-            else if ($(this).val() == "2") {
-                $("#report_linha_inbound").show();
-            } else
-            {
-                $("#report_bd").show();
-            }
-        });
-
-        $(".radio_dados").on("click", function()
-        {
-            $(".time_div").show();
-            $("#radio1,#radio3").prop("disabled", false);
-
-            if ($(this).val() == 4)
-            {
-                $("#radio3").prop("checked", true);
-                $(".radio_opcao").prop("disabled", true);
-                $(".select_opcao").hide();
-                $("#report_bd").show();
-                $(".time_div").hide();
-            }
-
-            update_template();
-        });
 
 
 
@@ -140,20 +103,14 @@ $(function() {
         stop: function(event, ui) {
             update_elements();
         }});
+    $('.tooltip_info').tooltip();
 });
-
-
-
-
-
-
-
 
 
 function update_template()
 {
     campaign = "";
-
+    current_template = $("#oc_template option:selected").val();
 
     if ($("#radio1").is(":checked")) {
         campaign = $("#select_campanha option:selected").val();
@@ -173,109 +130,137 @@ function update_template()
 
 
 }
+$(".radio_opcao").on("click", function()
+{
+
+    update_template();
+
+
+    $(".select_opcao").hide();
+
+    if ($(this).val() == "1")
+    {
+        $("#select_base_dados option").prop("disabled", false);
+        $("#select_base_dados").val("").trigger("liszt:updated");
+        $("#report_campanha").show();
+    }
+    else if ($(this).val() == "2") {
+        $("#select_base_dados option").prop("disabled", false);
+        $("#select_base_dados").val("").trigger("liszt:updated");
+        $("#report_linha_inbound").show();
+    } else
+    {
+        $("#report_bd").show();
+    }
+});
+
+$(".radio_dados").on("click", function()
+{
+    switch ($(this).val())
+    {
+        case "4":
+
+            $("#radio3").prop("checked", true).trigger("click");
+            $("#date_form").hide();
+            break;
+        default:
+            $("#radio1").prop("checked", true).trigger("click");
+            $("#date_form").show();
+            update_template();
+            break;
+    }
+});
 
 function get_templates(campaign)
 {
 
     if (campaign)
     {
-        $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
-        function(data)
+
+        $("#new_template_div_opener_button").prop("disabled", false);
+        $("#template_options_button").prop("disabled", false);
+        $("#span_script_name").text("");
+        $.post("requests.php", {action: "get_template", campaign_id: campaign},
+        function(data1)
         {
-            if (Object.size(data))
+            if (data1.length)
             {
-                script_id = data[0];
-                $("#span_script_name").text("Nome do Script ->  " + data[1]);
-                $("#download_report").prop("disabled", false);
-                $("#edit_template_div_opener_button").prop("disabled", false);
-                $("#delete_template_button").prop("disabled", false);
-                $("#template_div").show();
+                $("#update_template_button").prop("disabled", false);
+                $("#template_options_button").prop("disabled", false);
+                $(".edit_template_button").prop("disabled", false);
                 $("#oc_template").empty();
-                $("#column_order").empty();
-                $.post("requests.php", {action: "get_template", campaign_id: campaign},
-                function(data1)
+                $.each(data1, function()
                 {
-                    if (data1.length)
+                    if (this.id == current_template)
+                        $("#oc_template").append("<option value=" + this.id + " selected>" + this.template + "</option>");
+                    else
+                        $("#oc_template").append("<option value=" + this.id + ">" + this.template + "</option>");
+                });
+
+
+
+                $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
+                function(data)
+                {
+                    //SCRIPT
+                    if (Object.size(data))
                     {
-                        $.each(data1, function()
-                        {
-                            if (this.id == current_template)
-                                $("#oc_template").append("<option value=" + this.id + " selected>" + this.template + "</option>");
-                            else
-                                $("#oc_template").append("<option value=" + this.id + ">" + this.template + "</option>");
-                        });
+
                         $("#oc_template").trigger("change");
-                        $("#column_order_title").show().text("Ordernação de colunas");
+                        script_id = data[0];
+                        $("#span_script_name").text("Nome do Script ->  " + data[1]);
+                        $("#column_order_title").text("Ordernação de colunas");
+                        $("#column_order").empty();
+                        $("#download_report").prop("disabled", false);
                     }
                     else
                     {
-                        $("#column_order").empty();
-                        $("#column_order").empty();
-                        $("#edit_template_div_opener_button").prop("disabled", true);
-                        $("#delete_template_button").prop("disabled", true);
-                        $("#oc_template").append("<option value=''>Crie um template</option>");
-                        $("#column_order_title").hide();
+// NAO HA SCRIPT     
+
+                        $("#span_script_name").text("Sem Script");
+                        script_id = undefined;
+                        if ($("#download_script").is(":checked"))
+                        {
+                            $("#update_template_button").prop("disabled", true);
+                            $("#column_order_title").text("");
+                            $("#column_order").empty();
+                            $("#download_report").prop("disabled", true);
+
+                        }
+                        else
+                        {
+                            $("#oc_template").trigger("change");
+                            $("#download_report").prop("disabled", false);
+
+                        }
                     }
                 }, "json");
             }
             else
             {
-                script_id = undefined;
-                if (!$("#download_script").is(":checked"))
-                {
-                    $("#span_script_name").text("Sem script");
-                    $("#download_report").prop("disabled", false);
 
-                    $(".edit_template_button").prop("disabled", false);
-                    $("#template_div").show();
-                    $("#oc_template").empty();
-                    $("#column_order").empty();
-                    $.post("requests.php", {action: "get_template", campaign_id: campaign},
-                    function(data1)
-                    {
-                        if (data1.length)
-                        {
-                            $.each(data1, function()
-                            {
-                                if (this.id == current_template)
-                                    $("#oc_template").append("<option value=" + this.id + " selected>" + this.template + "</option>");
-                                else
-                                    $("#oc_template").append("<option value=" + this.id + ">" + this.template + "</option>");
-                            });
-                            $("#oc_template").trigger("change");
-                            $("#column_order_title").show().text("Ordernação de colunas");
-                        }
-                        else
-                        {
-                            $("#column_order").empty();
+                $("#oc_template").empty().append("<option value=''>Crie um template</option>");
+                $("#span_script_name").text("");
+                $("#column_order_title").text("");
+                $("#column_order").empty();
 
-                            $(".edit_template_button").prop("disabled", true);
-                            $("#oc_template").append("<option value=''>Crie um template</option>");
-                            $("#column_order_title").hide();
-                        }
-                    }, "json");
-                }
-                else
-                {
-                    $("#column_order").empty();
-                    $("#span_script_name").text("");
-                    $("#download_report").prop("disabled", true);
-                    $("#column_order").empty();
-                         $("#span_script_name").text("Sem Script");
-                    $("#template_div").hide();
-                }
+                $("#template_options_button").prop("disabled", true);
+                $(".edit_template_button").prop("disabled", true).hide();
+                $("#download_report").prop("disabled", true);
             }
         }, "json");
     }
     else
     {
+
+        $("#span_script_name").text("Escolha uma Base de Dados/Campanha");
+        $("#oc_template").empty().append("<option value=''>Crie um template</option>");
+        $("#new_template_div_opener_button").prop("disabled", true);
+        $("#template_options_button").prop("disabled", true);
+        $("#column_order_title").text("");
         $("#column_order").empty();
-        $("#span_script_name").text("");
+        $(".edit_template_button").prop("disabled", true);
         $("#download_report").prop("disabled", true);
-        $("#column_order").empty();
-         $("#span_script_name").text("Escolha uma BD/Campanha");
-         
-        $("#template_div").hide();
     }
 }
 
@@ -335,7 +320,7 @@ $("#download_report").on("click", function(e)
 {
 
     e.preventDefault();
-    if ($("#form_filter").validationEngine('validate') && $("#template_form").validationEngine('validate') && $("#column_items_form").validationEngine('validate'))
+    if ($("#form_filter").validationEngine('validate') && $("#template_form").validationEngine('validate') && $("#column_items_form").validationEngine('validate') && $("#date_form").validationEngine('validate'))
     {
 
         $('#loading').show();
@@ -395,23 +380,40 @@ Object.size = function(a)
 
 
 
+$("#template_options_button").click(function(e)
+{
+    e.preventDefault();
+    $("#template_options").toggle(300);
+    if ($("#new_template_div").is(":visible"))
+        $("#new_template_div").hide();
+    if ($("#edit_template_div").is(":visible"))
+        $("#edit_template_div").hide();
 
+});
 
 $("#new_template_div_opener_button").on("click", function(e)
 {
     e.preventDefault();
+    $("#edit_template_div").hide();
     $("#new_template_div").toggle(500);
     $("#new_template_input").val("");
 });
 
-$("#new_template_button").on("click", function()
+$("#new_template_button").on("click", function(e)
 {
+
+
+
+    e.preventDefault();
     if ($("#new_template_input").val() != "")
     {
-        $.post("requests.php", {action: "create_template", campaign_id: campaign, template: $("#new_template_input").val(), script_id: script_id}, "json");
-        $("#new_template_div").toggle(500);
 
-        get_templates(campaign);
+        $.post("requests.php", {action: "create_template", insert: true, campaign_id: campaign, template: $("#new_template_input").val(), script_id: script_id}, function()
+        {
+            $("#new_template_div").hide(400);
+            get_templates(campaign);
+        }, "json");
+
     }
     else
         $("#new_template_input").attr("placeholder", "Escreva o nome da template antes de criar");
@@ -421,12 +423,15 @@ $("#new_template_button").on("click", function()
 $("#edit_template_div_opener_button").on("click", function(e)
 {
     e.preventDefault();
+    $("#new_template_div").hide();
     $("#edit_template_div").toggle(500);
     $("#edit_template_input").val($("#oc_template option:selected").text());
 });
 
-$("#edit_template_button").on("click", function()
+$("#edit_template_button").on("click", function(e)
 {
+    e.preventDefault();
+
     $.post("requests.php", {action: "edit_template", id: $("#oc_template option:selected").val(), template: $("#edit_template_input").val()}, function()
     {
         current_template = $("#oc_template option:selected").val();
@@ -449,8 +454,32 @@ $("#delete_template_button").on("click", function(e)
 
 $("#update_template_button").on("click", function(e)
 {
-    e.preventDefault();
+    $.post("requests.php", {action: "create_template", insert: false, campaign_id: campaign, script_id: script_id}, function(data)
+    {
+        var updt_element = "";
+        var found = false;
+        $.each(data, function()
+        {
+            updt_element = this;
+            found = false;
+            $.each($("#column_order li"), function()
 
+            {
+                if ($(this).find(":input").attr("id") == updt_element.id)
+                {
+
+                    found = true;
+                    return false;
+                }
+            });
+            if (!found)
+                $("#column_order").prepend("<li class='ui-state-default'><div><input id=" + updt_element.id + "  class='validate[required]'   type='text' data-original_texto='" + updt_element.original_texto + "'  data-param_1='" + updt_element.param_1 + "'  data-type='" + updt_element.type + "' value='" + updt_element.texto + "'><span class='btn icon-alone remove_list_item_button icon-remove btn-link' data-id='" + updt_element.id + "'></span></div>\n\
+<div>" + ((updt_element.type === "campo_dinamico" || updt_element.type === "default") ? updt_element.original_texto : "Tag->" + updt_element.id + " Nome->" + get_name_by_type(updt_element.type)) + "</div></li>");
+
+        });
+        update_elements();
+    }, "json");
+    e.preventDefault();
 });
 
 $("#main_div").off("change", ".remove_list_item_button");

@@ -1,629 +1,228 @@
 <!DOCTYPE HTML>
 <html>
-      <head>
-            <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
-            <title>Wizard de Criação de Wallboards</title> 
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css">
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
-            <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
-            <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
-            <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
+    <head>
+        <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+        <title>Wizard de Criação de Wallboards</title> 
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.jgrowl.css">
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/style.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/css/chosen.css" />
+        <link type="text/css" rel="stylesheet" href="/bootstrap/icon/font-awesome.css" />
+        <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
 
 
-            <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
-            <script type="text/javascript" src="/jquery/jqueryUI/jquery-ui-1.10.2.custom.min.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
-            <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
+        <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
+        <script type="text/javascript" src="/jquery/jqueryUI/jquery-ui-1.10.2.custom.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/chosen.jquery.min.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/warnings-api.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
 
 
-            <style>
-
-
-
-                  .draggablePanel{ width: auto; height: auto; margin: 0 auto; overflow: hidden;}
-                  /* Default color for links inside the tabbed box */ 
-                  .ui-widget-content a, .ui-widget-content a:hover, .ui-widget-content a:visited, .ui-widget-content a:active {
-                        color: #2954d1 !important; 
-                        text-decoration: underline !important; 
-                  }
-                  /* Default styling for selected tab titles */ 
-                  .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
-                        color: #212121 !important;
-                        text-decoration: none !important;
-                        cursor: text !important;
-                  }
-                  /* Default styling for unselected tab titles */ 
-                  .ui-state-default a:hover, .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
-                        color: #555555 !important;
-                        text-decoration: none !important;
-                        cursor: text !important;
-                  }
-
-                  .row-fluid .toolBar_span{
-                        margin-top: 50px;
-                        width: 51px;
-                        margin-left: 0;
-                        border-bottom-left-radius: 0;
-                        border-top-left-radius: 0;
-                        border-left: 0;
-                  }
-                  .board
-                  {
-                        min-width: 926px;
-                  }
-
-                  .modal-body, .modal{
-                        overflow:visible;
-                  }
-
-                  #dialog_pie .modal-body{
-                        max-height: 425px;
-                        overflow:auto;
-                  }
-                  #dialog_dataTable .modal-body{
-                        max-height: 450px;
-                        overflow:auto;
-                  }
-                  #MainLayout
-                  {
-                        position:absolute;
-                        width:904px;
-                        height:512px;
-                        background-color: #F2F2F2;
-                        border: 1px solid #ccc;
-                        border: 1px solid rgba(0, 0, 0, 0.15);
-                        -webkit-border-radius: 4px;
-                        -moz-border-radius: 4px;
-                        border-radius: 6px;
-                        color: #333333;
-                        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-                        -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-                        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-                  }
-                  .PanelWB{position:absolute;
-                           -webkit-border-radius: 3px;
-                           -moz-border-radius: 3px;
-
-                           border-radius: 3px;
-                           box-shadow: 5px 5px 13px -6px rgba(0, 0, 0, 0.3) ;
-                  }
-
-                  .opções_layout{
-                        margin-left: -1px !important;
-                        border-top-right-radius: 3px !important;
-                        border-bottom-right-radius: 3px !important
-                  }
-
-                  .formRow .formRight {
-                        width:70%;
-                  }
-                  .chosen_select{
-                        width: 350px;
-                  }
-
-                  .inline{
-                        margin-right: 6px;
-                  }
-
-            </style>  
-      </head>
-
-      <body>
+        <style>
 
 
 
+            .draggablePanel{ width: auto; height: auto; margin: 0 auto; overflow: hidden;}
+            /* Default color for links inside the tabbed box */ 
+            .ui-widget-content a, .ui-widget-content a:hover, .ui-widget-content a:visited, .ui-widget-content a:active {
+                color: #2954d1 !important; 
+                text-decoration: underline !important; 
+            }
+            /* Default styling for selected tab titles */ 
+            .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
+                color: #212121 !important;
+                text-decoration: none !important;
+                cursor: text !important;
+            }
+            /* Default styling for unselected tab titles */ 
+            .ui-state-default a:hover, .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+                color: #555555 !important;
+                text-decoration: none !important;
+                cursor: text !important;
+            }
+
+            .row-fluid .toolBar_span{
+                margin-top: 50px;
+                width: 51px;
+                margin-left: 0;
+                border-bottom-left-radius: 0;
+                border-top-left-radius: 0;
+                border-left: 0;
+            }
+            .board
+            {
+                min-width: 926px;
+            }
+
+            .modal-body, .modal{
+                overflow:visible;
+            }
+
+            #dialog_pie .modal-body{
+                max-height: 425px;
+                overflow:auto;
+            }
+            #dialog_dataTable .modal-body{
+                max-height: 450px;
+                overflow:auto;
+            }
+            #MainLayout
+            {
+                position:absolute;
+                width:904px;
+                height:512px;
+                background-color: #F2F2F2;
+                border: 1px solid #ccc;
+                border: 1px solid rgba(0, 0, 0, 0.15);
+                -webkit-border-radius: 4px;
+                -moz-border-radius: 4px;
+                border-radius: 6px;
+                color: #333333;
+                -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+                -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+                box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+            }
+            .PanelWB{position:absolute;
+                     -webkit-border-radius: 3px;
+                     -moz-border-radius: 3px;
+
+                     border-radius: 3px;
+                     box-shadow: 5px 5px 13px -6px rgba(0, 0, 0, 0.3) ;
+            }
+
+            .opções_layout{
+                margin-left: -1px !important;
+                border-top-right-radius: 3px !important;
+                border-bottom-right-radius: 3px !important
+            }
+
+            .formRow .formRight {
+                width:70%;
+            }
+            .chosen_select{
+                width: 350px;
+            }
+
+            .inline{
+                margin-right: 6px;
+            }
+
+        </style>  
+    </head>
+
+    <body>
 
 
 
 
-            <div class="grid-content">
-                  <div class="row-fluid">
-                        <div class="grid span11 board" >
-                              <div class="grid-title">
-                                    <div class="pull-left">
-                                          <button id="add_layout_button" data-t="tooltip-right" title="Adiciona um novo ecrã" class="btn btn-info  btn-large" > <i class="icon-plus "></i>Novo</button>
-                                    </div>
-                                    <div class="pull-right">
-
-                                          <div class="input-prepend input-append"><span  class="add-on">Layout</span>
-                                                <select id="LayoutSelector" onchange="layout_change();"></select>
-                                                <button data-t="tooltip-right" title="Opções da Layout" data-toggle="modal" data-target="#dialog_layout"  class="btn btn-warning icon-alone" id="opcao_layout_button"><i class="icon-cogs"></i></button>
-                                          </div>
-
-                                    </div>
-                              </div>
 
 
 
-                              <div class="grid-content ">
-                                    <div  style="position:relative;width:904px;height:512px; margin: 0 auto;">
-                                          <div id="MainLayout" class="ui-widget-header " style="position:relative;" ></div>
-                                    </div>
-                                    <div class="clear"></div>
-                              </div>
-                        </div>  
-
-                        <div class="grid toolBar_span" id="toolBar">
-                              <div class="grid-title">
-                                    <div class="text-center"> 
-                                          <div class="grid-title-text-2"><a><i class="icon-cog "></i></a></div>
-                                    </div>
-                              </div>
-                              <div class="grid-content">
-                                    <p><button id="remove_layout_button" data-t="tooltip" data-toggle="modal" data-target="#dialog_delete_layout"  title="Remover  Layout" class="btn btn-danger icon-alone toolbar_button " ><i class="icon-remove "></i></button></p>
-                                    <p><button id="fullscreen_button" class="btn btn-inverse icon-alone toolbar_button "  data-t="tooltip" title="Fullscreen"  ><i class="icon-fullscreen"></i></button></p>
-                                    <p><button id="linhas_button"  class=" btn btn-info icon-alone toolbar_button" data-toggle="modal" data-target="#dialog" onclick="selected_type_graph = 1;"  data-t="tooltip" title="Gráfico de Linhas"  ><i class="icon-picture "></i> </button></p>
-                                    <p><button id="barras_button" class ="btn btn-info icon-alone toolbar_button" data-toggle="modal" data-target="#dialog" onclick="selected_type_graph = 2;" data-t="tooltip" title="Gráfico de Barras"  ><i class="icon-bar-chart "></i></button></p>
-                                    <p><button id="pie_button" class="btn btn-info icon-alone toolbar_button" data-toggle="modal" data-target="#dialog_pie" onclick="selected_type_graph = 3;" data-t="tooltip" title="Gráfico de Tarte"  > <i class="icon-adjust "></i></button></p>
-                                    <p><button id="topTable_button" class="btn btn-info icon-alone toolbar_button" data-toggle="modal" data-target="#dialog_dataTable" onclick="selected_type_graph = 5;" data-t="tooltip" title="Tabela de Top Agente"  > <i class="icon-th-list "></i></button></p>
-                                    <p><button id="graph_inbound" class="btn btn-info icon-alone toolbar_button" data-toggle="modal" data-target="#dialog_inbound" onclick="selected_type_graph = 4;" data-t="tooltip" title="Gráfico de Inbound"  > <i class="icon-list-alt "></i></button></p>
-                              </div>
+        <div class="grid-content">
+            <div class="row-fluid">
+                <div class="grid span11 board" >
+                    <div class="grid-title">
+                        <div class="pull-left">
+                            <button id="add_layout_button" data-t="tooltip-right" title="Adiciona um novo ecrã" class="btn btn-info  btn-large" > <i class="icon-plus "></i>Novo</button>
                         </div>
-                  </div>
+                        <div class="pull-right">
 
-
-                  <!-----------------------------------------------------------DIALOGS------------------------------------------------------------------------------>
-                  <!--DIALOG Da Layout, muda nome -->
-                  <div id="dialog_layout" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                              <h3>Opções da Layout</h3>
-                        </div>
-                        <div class="modal-body">
-
-                              <div class="formRow">
-                                    <label class="control-label label" for="Layout_Input_name">Nome:</label>
-
-                                    <div class="formRight">
-                                          <input maxlength="25" class="span" id="Layout_Input_name" type="text" placeholder="Novo nome da Layout" />
-                                    </div>
-                              </div>
-                              <div class="clear"></div>
-
-                              <div class="formRow">
-                                    <label class="control-label label" >Link para o Fullscreen</label>
-
-                                    <div class="formRight">
-                                          <label id="fullscreen_link" class="control-label" >Link</label>
-                                    </div>
-                              </div>
-                              <div class="clear"></div>
+                            <div class="input-prepend input-append"><span  class="add-on">Layout</span>
+                                <select id="LayoutSelector" onchange="layout_change();"></select>
+                                <button data-t="tooltip-right" title="Opções da Layout" data-toggle="modal" data-target="#dialog_layout"  class="btn btn-warning icon-alone" id="opcao_layout_button"><i class="icon-cogs"></i></button>
+                            </div>
 
                         </div>
+                    </div>
 
 
-                        <div class="modal-footer">
-                              <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-                              <button  id="save_button_layout" class="btn btn-primary">Gravar Alterações</button>
+
+                    <div class="grid-content ">
+                        <div  style="position:relative;width:904px;height:512px; margin: 0 auto;">
+                            <div id="MainLayout" class="ui-widget-header " style="position:relative;" ></div>
                         </div>
-                  </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>  
 
-
-
-
-
-                  <!--DIALOG para delete de layout-->
-                  <div id="dialog_delete_layout" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                              <h3>Confirmação</h3>
+                <div class="grid toolBar_span" id="toolBar">
+                    <div class="grid-title">
+                        <div class="text-center"> 
+                            <div class="grid-title-text-2"><a><i class="icon-cog "></i></a></div>
                         </div>
-                        <div class="modal-body">
-                              Tem a certeza que quer eliminar este Layout?
-                              <div class="clear"></div>
+                    </div>
+                    <div class="grid-content">
+                        <p><button id="remove_layout_button" data-t="tooltip" data-toggle="modal" data-target="#dialog_delete_layout"  title="Remover  Layout" class="btn btn-danger icon-alone toolbar_button " ><i class="icon-remove "></i></button></p>
+                        <p><button id="fullscreen_button" class="btn btn-inverse icon-alone toolbar_button "  data-t="tooltip" title="Fullscreen"  ><i class="icon-fullscreen"></i></button></p>
+                        <p><button id="linhas_button"  class=" btn btn-info icon-alone toolbar_button" data-toggle="modal" data-target="#dialog" onclick="selected_type_graph = 1;"  data-t="tooltip" title="Gráfico de Linhas"  ><i class="icon-picture "></i> </button></p>
+                        <p><button id="barras_button" class ="btn btn-info icon-alone toolbar_button" data-toggle="modal" data-target="#dialog" onclick="selected_type_graph = 2;" data-t="tooltip" title="Gráfico de Barras"  ><i class="icon-bar-chart "></i></button></p>
+                        <p><button id="pie_button" class="btn btn-info icon-alone toolbar_button" data-toggle="modal" data-target="#dialog_pie" onclick="selected_type_graph = 3;" data-t="tooltip" title="Gráfico de Tarte"  > <i class="icon-adjust "></i></button></p>
+                        <p><button id="topTable_button" class="btn btn-info icon-alone toolbar_button" data-toggle="modal" data-target="#dialog_dataTable" onclick="selected_type_graph = 5;" data-t="tooltip" title="Tabela de Top Agente"  > <i class="icon-th-list "></i></button></p>
+                        <p><button id="graph_inbound" class="btn btn-info icon-alone toolbar_button" data-toggle="modal" data-target="#dialog_inbound" onclick="selected_type_graph = 4;" data-t="tooltip" title="Gráfico de Inbound"  > <i class="icon-list-alt "></i></button></p>
+                          <p><button id="graph_outbound" class="btn btn-info icon-alone toolbar_button" data-toggle="modal" data-target="#dialog_outbound" onclick="selected_type_graph = 4;" data-t="tooltip" title="Gráfico de Outbound"  > <i class="icon-list-alt "></i></button></p>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-----------------------------------------------------------DIALOGS------------------------------------------------------------------------------>
+            <!--DIALOG Da Layout, muda nome -->
+            <div id="dialog_layout" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3>Opções da Layout</h3>
+                </div>
+                <div class="modal-body">
+
+                    <div class="formRow">
+                        <label class="control-label label" for="Layout_Input_name">Nome:</label>
+
+                        <div class="formRight">
+                            <input maxlength="25" class="span" id="Layout_Input_name" type="text" placeholder="Novo nome da Layout" />
                         </div>
+                    </div>
+                    <div class="clear"></div>
 
+                    <div class="formRow">
+                        <label class="control-label label" >Link para o Fullscreen</label>
 
-                        <div class="modal-footer">
-                              <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-                              <button  data-dismiss="modal" id="delete_button_layout" class="btn btn-primary">Eliminar</button>
+                        <div class="formRight">
+                            <label id="fullscreen_link" class="control-label" >Link</label>
                         </div>
-                  </div>
+                    </div>
+                    <div class="clear"></div>
 
+                </div>
 
 
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+                    <button  id="save_button_layout" class="btn btn-primary">Gravar Alterações</button>
+                </div>
+            </div>
 
 
 
 
-                  <!--DIALOG DOS WALLBOARDS-->
-                  <div id="dialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                              <h3 >Criação de Wallboard</h3>
-                        </div>
-                        <div class="modal-body">
-                              <div class="formRow">
-                                    <label class="control-label label " for="graph_name">Nome do Gráfico:</label>
-                                    <div class="formRight">
-                                          <input maxlength="25" id='graph_name' class="span" type='text' placeholder="Novo nome de Wallboard"  />
-                                    </div>
-                              </div>
-                              <div class="formRow">
-                                    <label class="control-label label " for="update_time">Tempo de actualização:</label>
-                                    <div class="formRight">
-                                          <select id="update_time">
-                                                <option value="5000" >5 sec</option>
-                                                <option value="10000" selected>10 sec</option>
-                                                <option value="20000">20 sec</option>
-                                                <option value="40000">40 sec</option>   
-                                                <option value="60000" >1 min</option>
-                                                <option value="120000" >2 min</option>
-                                                <option value="360000" >5 min</option>
-                                          </select> 
-                                    </div>
-                              </div>
 
+            <!--DIALOG para delete de layout-->
+            <div id="dialog_delete_layout" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3>Confirmação</h3>
+                </div>
+                <div class="modal-body">
+                    Tem a certeza que quer eliminar este Layout?
+                    <div class="clear"></div>
+                </div>
 
-                              <div class="clear"></div>
-                        </div>
 
-                        <div class="modal-footer">
-                              <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-                              <button  data-dismiss="modal" id="create_button_dialog" class="btn btn-primary">Criar</button>
-                        </div>
-                  </div>
-
-
-
-
-
-                  <!--DIALOG DE Pie-->
-                  <div id="dialog_pie" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                              <h3>Criação de Gráfico Circular</h3>
-                        </div>
-                        <div class="modal-body">
-
-                              <div class="formRow">
-                                    <label class="control-label label " for="pie_name">Nome da Tabela:</label>
-                                    <div class="formRight">
-                                          <input maxlength="25" class="span" id='pie_name' type='text' value="Gráfico de Tarte"  />
-                                    </div>
-                              </div>
-
-
-                              <div class="formRow">
-                                    <label class="control-label label " for="pie_opcao">Escolher por:</label>
-                                    <div class="formRight">
-                                          <select id="pie_opcao">
-                                                <option value="1" >Campanha</option>
-                                                <!--<option value="2">Grupo de User</option>-->
-                                                <option value="3" >Grupo de linha inbound</option>
-                                                <!--  <option value="4">Agente</option>-->
-                                          </select> 
-                                    </div>
-                              </div>
-
-
-                              <div class="formRow">
-
-                                    <div class="formRight">
-                                          <div class="pie_select" id="campaign_id_pie_div">
-                                                <select   id="campaign_id_pie" class="chzn-select  chosen_select"></select>
-                                          </div>
-                                          <!--  <div class="pie_select" id="grupo_user_pie_div">
-                                                  <select id="grupo_user_pie" class="chzn-select"></select>
-                                            </div> -->
-                                          <div class="pie_select" id="grupo_inbound_pie_div">
-                                                <select id="grupo_inbound_pie" class="chzn-select  chosen_select"></select>
-                                          </div>
-                                          <!--<div class="pie_select" id="user_pie_div">
-                                                <select id="user_pie" class="chzn-select  chosen_select"></select>
-                                          </div>-->
-                                    </div>
-                              </div>
-
-
-
-
-                              <div class="formRow">
-                                    <label class="control-label label " for="checkbox_feedback_pie">Filtro de Feedbacks:</label>
-
-                                    <div class="formRight">
-                                          <input  type="checkbox" id="checkbox_feedback_pie" name="cc" value="1">
-                                          <label for="checkbox_feedback_pie"><span></span>Todos os feedbacks</label>
-                                    </div>
-                              </div>
-                              <div class="formRow" id="pie_status_select_div">
-                                    <div class="formRight">
-                                          <select id="pie_status_select" multiple="multiple" class=" chosen_select"></select> 
-
-                                    </div>
-                              </div>
-
-
-                              <div class="formRow">
-                                    <label class="control-label label " for="pie_feedback_colum_name">Coluna de Feedbacks:</label>
-                                    <div class="formRight">
-                                          <input maxlength="25" class="span" id='pie_feedback_colum_name' type='text' value="FeedBack" />
-                                    </div>
-                              </div>
-
-
-
-                              <div class="formRow">
-                                    <label class="control-label label " for="pie_timespan">Mostrar dados até:</label>
-                                    <div class="formRight">
-                                          <select id="pie_timespan">
-                                                <option value="1" selected>1 hora</option>
-                                                <option value="2">2 horas</option>
-                                                <option value="4">4 horas</option>
-                                                <option value="8">8 horas</option>   
-                                                <option value="24" >1 dia</option>
-                                                <option value="168" >1 semana</option>
-                                          </select> 
-                                    </div>
-                              </div>
-                              <div class="clear"></div>
-                        </div>
-
-                        <div class="modal-footer">
-                              <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-                              <button  id="create_button_pie" class="btn btn-primary">Criar</button>
-                        </div>
-                  </div>
-
-
-
-                  <!--DIALOG DOS dataTables-->
-                  <div id="dialog_dataTable" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                              <h3>Criação de Tabela de Top</h3>
-                        </div>
-                        <div class="modal-body">
-
-
-
-
-                              <div class="formRow">
-                                    <label class="control-label label " for="dataTable_name">Nome da tabela:</label>
-                                    <div class="formRight">
-                                          <input maxlength="25" class="span" id='dataTable_name' type='text' value="Tabela Top"  />
-                                    </div>
-                              </div>
-
-
-                              <div class="formRow">
-                                    <label class="control-label label " for="dataTable_opcao">Escolher por:</label>
-                                    <div class="formRight">
-                                          <select id="dataTable_opcao">
-                                                <option value="1" >Campanha</option>
-                                                <option value="2" >Grupo de linha inbound</option>
-                                                <option value="3">Grupo de User</option>
-                                          </select> 
-                                    </div>
-                              </div>
-
-
-
-                              <div class="formRow">
-
-                                    <div class="formRight">
-                                          <div class="dataTable_options" id="campaign_id_dataTable_div">
-                                                <select  id="campaign_id_dataTable" class="chzn-select  chosen_select"></select>
-                                          </div>
-                                          <div class="dataTable_options" id="grupo_inbound_dataTable_div">
-                                                <select id="grupo_inbound_dataTable" class="chzn-select  chosen_select"></select>
-                                          </div>
-                                          <div class="dataTable_options" id="grupo_user_dataTable_div">
-                                                <select id="grupo_user_dataTable" class="chzn-select  chosen_select"></select>
-                                          </div> 
-                                    </div>
-                              </div>
-
-
-
-                              <div class="formRow dataTable_options" id="radio_datatable_div">
-                                    <label class="control-label label " for="checkbox_feedback">Tipo de dados:</label>
-                                    <div class="formRight">
-                                          <input type="radio" id="resultado_datatable_1_tipo" name="ra" checked="checked">
-                                          <label class="dataTable" for="resultado_datatable_1_tipo"><span></span>Inbound</label>
-                                          <input type="radio" id="resultado_datatable_2_tipo" name="ra">
-                                          <label class="dataTable" for="resultado_datatable_2_tipo"><span></span>Outbound</label>
-                                          <input type="radio" id="resultado_datatable_3_tipo" name="ra">
-                                          <label class="dataTable" for="resultado_datatable_3_tipo"><span></span>Blended</label>
-                                    </div>
-                              </div>
-
-
-
-                              <div class="formRow">
-                                    <label class="control-label label " for="checkbox_feedback">Filtro de Feedbacks:</label>
-                                    <div class="formRight">
-                                          <input class="span"  type="checkbox" id="checkbox_feedback" name="cc" value="1">
-                                          <label for="checkbox_feedback"><span></span>Todos os feedbacks</label>
-                                    </div>
-                              </div>
-                              <div class="formRow">
-                                    <div class="formRight">
-                                          <div id="dataTable_status_select_div">
-                                                <select id="dataTable_status_select" multiple="multiple" class="chosen_select" ></select> 
-                                          </div>
-                                    </div>
-                              </div>
-
-                              <div class="formRow">
-                                    <label class="control-label label " for="coluna_feedback">Coluna de Feedbacks:</label>
-                                    <div class="formRight">
-
-                                          <input maxlength="25" id='coluna_feedback' type='text' value="FeedBacks" />
-                                    </div>
-                              </div>
-
-
-                              <div class="formRow">
-                                    <label class="control-label label " >Resultados:</label>
-                                    <div class="formRight">
-                                          <input type="radio" id="resultado_datatable_1" name="rr" checked="checked">
-                                          <label class="inline" for="resultado_datatable_1"><span></span>15</label>
-                                          <input type="radio" id="resultado_datatable_2" name="rr" >
-                                          <label class="inline" for="resultado_datatable_2"><span></span>10</label>
-                                          <input type="radio" id="resultado_datatable_3" name="rr">
-                                          <label class="inline" for="resultado_datatable_3"><span></span>5</label>
-                                    </div>
-
-
-
-
-
-
-                              </div>
-
-
-                              <div class="formRow">
-                                    <label class="control-label label " for="dataTable_timespan">Mostrar dados até:</label>
-                                    <div class="formRight">
-                                          <select id="dataTable_timespan">
-                                                <option value="1" selected>1 hora</option>
-                                                <option value="2" >2 horas</option>
-                                                <option value="4">4 horas</option>
-                                                <option value="8">8 horas</option>   
-                                                <option value="24" >24 horas</option>
-                                                      <option value="25" >Diário</option>
-                                                <option value="168" >1 semana</option>
-                                          </select> 
-                                    </div>
-                              </div>
-
-
-
-                              <div class="clear"></div>
-                        </div>      
-
-                        <div class="modal-footer">
-                              <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-                              <button  id="create_button_dataTable" class="btn btn-primary">Criar</button>
-                        </div>
-                  </div>
-
-
-                  <!--DIALOG DE INBOUND-->
-                  <div id="dialog_inbound" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                              <h3>Criação de Estatistica Inbound</h3>
-                        </div>
-                        <div class="modal-body">
-
-
-                              <div class="formRow">
-                                    <label class="control-label label " for="dataTable_name">Nome de Inbound:</label>
-                                    <div class="formRight">
-                                          <input maxlength="25"  id='inbound_name' type='text' value="Inbound"  />
-                                    </div>
-                              </div>
-
-
-
-
-                              <div class="formRow">
-                                    <label class="control-label label " for="group_inbound_select">Grupo:</label>
-                                    <div class="formRight">
-                                          <select  id="group_inbound_select" multiple="multiple" class="chosen_select"></select>
-                                    </div>
-                              </div>
-                              <div class="clear"></div>
-                        </div>
-
-                        <div class="modal-footer">
-                              <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-                              <button   id="create_button_inbound" class="btn btn-primary">Criar</button>
-                        </div>
-                  </div>
-
-
-
-
-
-
-
-                  <!--DIALOG Dataset->LINHAS-->
-
-
-                  <div id="dialog_dataset_linhas" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                              <h3>Criação de Dataset</h3>
-                        </div>
-                        <div class="modal-body">
-
-
-
-
-
-                              <div class="formRow">
-                                    <label class="control-label label">Tipo de Dados</label>
-                                    <div class="formRight">
-                                          <input  type="radio" id="resultado_dataset_1" name="rd" checked="checked">
-                                          <label class="inline" for="resultado_dataset_1"><span></span>Inbound</label>
-                                          <input type="radio" id="resultado_dataset_2" name="rd">
-                                          <label class="inline" for="resultado_dataset_2"><span></span>Outbound</label>
-                                          <input type="radio" id="resultado_dataset_3" name="rd">
-                                          <label class="inline" for="resultado_dataset_3"><span></span>Blended</label>
-                                    </div>
-                              </div>
-
-
-
-                              <div class="formRow">
-                                    <label class="control-label label " for="linhas_serie">Série:</label>
-                                    <div class="formRight">
-                                          <select class="span" id="linhas_serie">
-                                                <option value="1" >Agente</option>
-                                                <option value="2" >Grupo de User</option>
-                                                <option value="3">Campanha</option>
-                                                <option value="4">Total CallCenter</option>   
-                                                <option value="5" >Linha de inbound</option>
-                                          </select> 
-                                    </div>
-                                    <div class="formRight">
-                                          <div id="gao_user" class="graph_advance_option"></div>
-                                          <div id="gao_userGroup"  class="graph_advance_option" style="display: none;"></div>
-                                          <div id="gao_campaign" class="graph_advance_option" style="display: none;" ></div>
-                                          <div id="gao_inbound"  class="graph_advance_option" style="display: none;"></div>
-                                    </div>
-                              </div>
-
-
-                              <div class="formRow">
-                                    <label class="control-label label " for="linhas_filtro">Filtro:</label>
-                                    <div class="formRight">
-                                          <select id="linhas_filtro">
-                                                <option value="1" >Chamadas</option>
-                                                <option value="2" >Feedback</option>
-                                          </select>
-                                    </div>
-                                    <div class="formRight">
-
-                                          <div id="gao_chamadas" class="option_filtro" ></div>
-                                          <div id="gao_status" class="option_filtro"  style="display: none;"></div>    
-                                    </div>
-                              </div>
-
-
-
-                              <div class="clear"></div>
-
-
-
-                        </div>
-                        <div class="modal-footer">
-                              <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-                              <button  data-dismiss="modal" id="create_button_dataset" class="btn btn-primary">Criar</button>
-                        </div>
-                  </div>
-
-
-
-
-
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+                    <button  data-dismiss="modal" id="delete_button_layout" class="btn btn-primary">Eliminar</button>
+                </div>
             </div>
 
 
@@ -632,8 +231,442 @@
 
 
 
+            <!--DIALOG DOS WALLBOARDS-->
+            <div id="dialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 >Criação de Wallboard</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="formRow">
+                        <label class="control-label label " for="graph_name">Nome do Gráfico:</label>
+                        <div class="formRight">
+                            <input maxlength="25" id='graph_name' class="span" type='text' placeholder="Novo nome de Wallboard"  />
+                        </div>
+                    </div>
+                    <div class="formRow">
+                        <label class="control-label label " for="update_time">Tempo de actualização:</label>
+                        <div class="formRight">
+                            <select id="update_time">
+                                <option value="5000" >5 sec</option>
+                                <option value="10000" selected>10 sec</option>
+                                <option value="20000">20 sec</option>
+                                <option value="40000">40 sec</option>   
+                                <option value="60000" >1 min</option>
+                                <option value="120000" >2 min</option>
+                                <option value="360000" >5 min</option>
+                            </select> 
+                        </div>
+                    </div>
 
-            <div id="jGrowl" class="bottom-right jGrowl" ><div class="jGrowl-notification" ></div></div>
-            <script type="text/javascript" src="wizard.js"></script>
-      </body>
+
+                    <div class="clear"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+                    <button  data-dismiss="modal" id="create_button_dialog" class="btn btn-primary">Criar</button>
+                </div>
+            </div>
+
+
+
+
+
+            <!--DIALOG DE Pie-->
+            <div id="dialog_pie" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3>Criação de Gráfico Circular</h3>
+                </div>
+                <div class="modal-body">
+
+                    <div class="formRow">
+                        <label class="control-label label " for="pie_name">Nome da Tabela:</label>
+                        <div class="formRight">
+                            <input maxlength="25" class="span" id='pie_name' type='text' value="Gráfico de Tarte"  />
+                        </div>
+                    </div>
+
+
+                    <div class="formRow">
+                        <label class="control-label label " for="pie_opcao">Escolher por:</label>
+                        <div class="formRight">
+                            <select id="pie_opcao">
+                                <option value="1" >Campanha</option>
+                                <!--<option value="2">Grupo de User</option>-->
+                                <option value="3" >Grupo de linha inbound</option>
+                                <!--  <option value="4">Agente</option>-->
+                            </select> 
+                        </div>
+                    </div>
+
+
+                    <div class="formRow">
+
+                        <div class="formRight">
+                            <div class="pie_select" id="campaign_id_pie_div">
+                                <select   id="campaign_id_pie" class="chzn-select  chosen_select"></select>
+                            </div>
+                            <!--  <div class="pie_select" id="grupo_user_pie_div">
+                                    <select id="grupo_user_pie" class="chzn-select"></select>
+                              </div> -->
+                            <div class="pie_select" id="grupo_inbound_pie_div">
+                                <select id="grupo_inbound_pie" class="chzn-select  chosen_select"></select>
+                            </div>
+                            <!--<div class="pie_select" id="user_pie_div">
+                                  <select id="user_pie" class="chzn-select  chosen_select"></select>
+                            </div>-->
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="formRow">
+                        <label class="control-label label " for="checkbox_feedback_pie">Filtro de Feedbacks:</label>
+
+                        <div class="formRight">
+                            <input  type="checkbox" id="checkbox_feedback_pie" name="cc" value="1">
+                            <label for="checkbox_feedback_pie"><span></span>Todos os feedbacks</label>
+                        </div>
+                    </div>
+                    <div class="formRow" id="pie_status_select_div">
+                        <div class="formRight">
+                            <select id="pie_status_select" multiple="multiple" class=" chosen_select"></select> 
+
+                        </div>
+                    </div>
+
+
+                    <div class="formRow">
+                        <label class="control-label label " for="pie_feedback_colum_name">Coluna de Feedbacks:</label>
+                        <div class="formRight">
+                            <input maxlength="25" class="span" id='pie_feedback_colum_name' type='text' value="FeedBack" />
+                        </div>
+                    </div>
+
+
+
+                    <div class="formRow">
+                        <label class="control-label label " for="pie_timespan">Mostrar dados até:</label>
+                        <div class="formRight">
+                            <select id="pie_timespan">
+                                <option value="1" selected>1 hora</option>
+                                <option value="2">2 horas</option>
+                                <option value="4">4 horas</option>
+                                <option value="8">8 horas</option>   
+                                <option value="24" >1 dia</option>
+                                <option value="168" >1 semana</option>
+                            </select> 
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+                    <button  id="create_button_pie" class="btn btn-primary">Criar</button>
+                </div>
+            </div>
+
+
+
+            <!--DIALOG DOS dataTables-->
+            <div id="dialog_dataTable" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3>Criação de Tabela de Top</h3>
+                </div>
+                <div class="modal-body">
+
+
+
+
+                    <div class="formRow">
+                        <label class="control-label label " for="dataTable_name">Nome da tabela:</label>
+                        <div class="formRight">
+                            <input maxlength="25" class="span" id='dataTable_name' type='text' value="Tabela Top"  />
+                        </div>
+                    </div>
+
+
+                    <div class="formRow">
+                        <label class="control-label label " for="dataTable_opcao">Escolher por:</label>
+                        <div class="formRight">
+                            <select id="dataTable_opcao">
+                                <option value="1" >Campanha</option>
+                                <option value="2" >Grupo de linha inbound</option>
+                                <option value="3">Grupo de User</option>
+                            </select> 
+                        </div>
+                    </div>
+
+
+
+                    <div class="formRow">
+
+                        <div class="formRight">
+                            <div class="dataTable_options" id="campaign_id_dataTable_div">
+                                <select  id="campaign_id_dataTable" class="chzn-select  chosen_select"></select>
+                            </div>
+                            <div class="dataTable_options" id="grupo_inbound_dataTable_div">
+                                <select id="grupo_inbound_dataTable" class="chzn-select  chosen_select"></select>
+                            </div>
+                            <div class="dataTable_options" id="grupo_user_dataTable_div">
+                                <select id="grupo_user_dataTable" class="chzn-select  chosen_select"></select>
+                            </div> 
+                        </div>
+                    </div>
+
+
+
+                    <div class="formRow dataTable_options" id="radio_datatable_div">
+                        <label class="control-label label " for="checkbox_feedback">Tipo de dados:</label>
+                        <div class="formRight">
+                            <input type="radio" id="resultado_datatable_1_tipo" name="ra" checked="checked">
+                            <label class="dataTable" for="resultado_datatable_1_tipo"><span></span>Inbound</label>
+                            <input type="radio" id="resultado_datatable_2_tipo" name="ra">
+                            <label class="dataTable" for="resultado_datatable_2_tipo"><span></span>Outbound</label>
+                            <input type="radio" id="resultado_datatable_3_tipo" name="ra">
+                            <label class="dataTable" for="resultado_datatable_3_tipo"><span></span>Blended</label>
+                        </div>
+                    </div>
+
+
+
+                    <div class="formRow">
+                        <label class="control-label label " for="checkbox_feedback">Filtro de Feedbacks:</label>
+                        <div class="formRight">
+                            <input class="span"  type="checkbox" id="checkbox_feedback" name="cc" value="1">
+                            <label for="checkbox_feedback"><span></span>Todos os feedbacks</label>
+                        </div>
+                    </div>
+                    <div class="formRow">
+                        <div class="formRight">
+                            <div id="dataTable_status_select_div">
+                                <select id="dataTable_status_select" multiple="multiple" class="chosen_select" ></select> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="formRow">
+                        <label class="control-label label " for="coluna_feedback">Coluna de Feedbacks:</label>
+                        <div class="formRight">
+
+                            <input maxlength="25" id='coluna_feedback' type='text' value="FeedBacks" />
+                        </div>
+                    </div>
+
+
+                    <div class="formRow">
+                        <label class="control-label label " >Resultados:</label>
+                        <div class="formRight">
+                            <input type="radio" id="resultado_datatable_1" name="rr" checked="checked">
+                            <label class="inline" for="resultado_datatable_1"><span></span>15</label>
+                            <input type="radio" id="resultado_datatable_2" name="rr" >
+                            <label class="inline" for="resultado_datatable_2"><span></span>10</label>
+                            <input type="radio" id="resultado_datatable_3" name="rr">
+                            <label class="inline" for="resultado_datatable_3"><span></span>5</label>
+                        </div>
+
+
+
+
+
+
+                    </div>
+
+
+                    <div class="formRow">
+                        <label class="control-label label " for="dataTable_timespan">Mostrar dados até:</label>
+                        <div class="formRight">
+                            <select id="dataTable_timespan">
+                                <option value="1" selected>1 hora</option>
+                                <option value="2" >2 horas</option>
+                                <option value="4">4 horas</option>
+                                <option value="8">8 horas</option>   
+                                <option value="24" >24 horas</option>
+                                <option value="25" >Diário</option>
+                                <option value="168" >1 semana</option>
+                            </select> 
+                        </div>
+                    </div>
+
+
+
+                    <div class="clear"></div>
+                </div>      
+
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+                    <button  id="create_button_dataTable" class="btn btn-primary">Criar</button>
+                </div>
+            </div>
+
+
+            <!--DIALOG DE INBOUND-->
+            <div id="dialog_inbound" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3>Criação de Estatistica Inbound</h3>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="formRow">
+                        <label class="control-label label " for="inbound_name">Nome de Inbound:</label>
+                        <div class="formRight">
+                            <input maxlength="25"  id='inbound_name' type='text' value="Inbound"  />
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="formRow">
+                        <label class="control-label label " for="group_inbound_select">Grupo:</label>
+                        <div class="formRight">
+                            <select  id="group_inbound_select" multiple="multiple" class="chosen_select"></select>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+                    <button   id="create_button_inbound" class="btn btn-primary">Criar</button>
+                </div>
+            </div>
+
+
+            <!--DIALOG DE Outbound-->
+            <div id="dialog_outbound" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3>Criação de Estatistica Outbound</h3>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="formRow">
+                        <label class="control-label label " for="outbound_name">Nome de Outbound:</label>
+                        <div class="formRight">
+                            <input maxlength="25"  id='outbound_name' type='text' value="Inbound"  />
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="formRow">
+                        <label class="control-label label " for="group_campanha_select">Campanha:</label>
+                        <div class="formRight">
+                            <select  id="group_campanha_select" multiple="multiple" class="chosen_select"></select>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+                    <button   id="create_button_outbound" class="btn btn-primary">Criar</button>
+                </div>
+            </div>
+            
+
+
+
+            <!--DIALOG Dataset->LINHAS-->
+
+
+            <div id="dialog_dataset_linhas" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3>Criação de Dataset</h3>
+                </div>
+                <div class="modal-body">
+
+
+
+
+
+                    <div class="formRow">
+                        <label class="control-label label">Tipo de Dados</label>
+                        <div class="formRight">
+                            <input  type="radio" id="resultado_dataset_1" name="rd" checked="checked">
+                            <label class="inline" for="resultado_dataset_1"><span></span>Inbound</label>
+                            <input type="radio" id="resultado_dataset_2" name="rd">
+                            <label class="inline" for="resultado_dataset_2"><span></span>Outbound</label>
+                            <input type="radio" id="resultado_dataset_3" name="rd">
+                            <label class="inline" for="resultado_dataset_3"><span></span>Blended</label>
+                        </div>
+                    </div>
+
+
+
+                    <div class="formRow">
+                        <label class="control-label label " for="linhas_serie">Série:</label>
+                        <div class="formRight">
+                            <select class="span" id="linhas_serie">
+                                <option value="1" >Agente</option>
+                                <option value="2" >Grupo de User</option>
+                                <option value="3">Campanha</option>
+                                <option value="4">Total CallCenter</option>   
+                                <option value="5" >Linha de inbound</option>
+                            </select> 
+                        </div>
+                        <div class="formRight">
+                            <div id="gao_user" class="graph_advance_option"></div>
+                            <div id="gao_userGroup"  class="graph_advance_option" style="display: none;"></div>
+                            <div id="gao_campaign" class="graph_advance_option" style="display: none;" ></div>
+                            <div id="gao_inbound"  class="graph_advance_option" style="display: none;"></div>
+                        </div>
+                    </div>
+
+
+                    <div class="formRow">
+                        <label class="control-label label " for="linhas_filtro">Filtro:</label>
+                        <div class="formRight">
+                            <select id="linhas_filtro">
+                                <option value="1" >Chamadas</option>
+                                <option value="2" >Feedback</option>
+                            </select>
+                        </div>
+                        <div class="formRight">
+
+                            <div id="gao_chamadas" class="option_filtro" ></div>
+                            <div id="gao_status" class="option_filtro"  style="display: none;"></div>    
+                        </div>
+                    </div>
+
+
+
+                    <div class="clear"></div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+                    <button  data-dismiss="modal" id="create_button_dataset" class="btn btn-primary">Criar</button>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+        <div id="jGrowl" class="bottom-right jGrowl" ><div class="jGrowl-notification" ></div></div>
+        <script type="text/javascript" src="wizard.js"></script>
+    </body>
 </html>
