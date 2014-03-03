@@ -55,7 +55,7 @@ $end_date = date("o-m-d");
     <div class="grid span12">
         <div class="grid-title">
             <div class="pull-left">SMS Report</div>
-            <div class="pull-right"></div>
+            <div class="pull-right"><h5>Total Records: <span id="smscount">0</span></h5></div>
             <div class="clear"></div>
         </div>
         <div class="grid-content">
@@ -110,8 +110,11 @@ $end_date = date("o-m-d");
                 "fnDrawCallback": function(oSettings) {
                     $("#reload").attr('disabled', false);
                     $("#export_all").attr('disabled', false);
+                    $("#smscount").html(oTable.fnSettings().fnRecordsTotal())
                 }
             });
+            
+            
         });
     });
 
