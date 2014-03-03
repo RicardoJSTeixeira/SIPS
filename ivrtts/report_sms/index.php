@@ -109,9 +109,13 @@ $end_date = date("o-m-d");
                         aoData.push({"name": "action", "value": "get_sms_report"}, {"name": "start_date", "value": $("#dpd1").val()}, {"name": "end_date", "value": $("#dpd2").val()}, {"name": "filters", value: filters});
                     },
                     "fnDrawCallback": function(oSettings) {
+                       
+                        
                         $("#reload").attr('disabled', false);
                         $("#export_all").attr('disabled', false);
                         $("#smscount").html($('#smsreport').dataTable().fnSettings().fnRecordsTotal())
+                        
+                        $("#smsreport_filter input").on('keyup', function(){ $("#smscount").html($("#smsreport").dataTable().fnSettings().fnRecordsDisplay()); }); 
                     }
                 });
             });
