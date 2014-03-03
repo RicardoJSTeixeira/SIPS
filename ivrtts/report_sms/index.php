@@ -99,7 +99,7 @@ $end_date = date("o-m-d");
         $("#smsreport").dataTable().fnDestroy();
         setTimeout(function() {
             getData(function(filters) {
-                oTable = $('#smsreport').dataTable({
+                $('#smsreport').dataTable({
                     "bProcessing": true,
                     "bDestroy": true,
                     "bAutoWidth": false,
@@ -111,7 +111,7 @@ $end_date = date("o-m-d");
                     "fnDrawCallback": function(oSettings) {
                         $("#reload").attr('disabled', false);
                         $("#export_all").attr('disabled', false);
-                        $("#smscount").html(oTable.fnSettings().fnRecordsTotal())
+                        $("#smscount").html($('#smsreport').dataTable().fnSettings().fnRecordsTotal())
                     }
                 });
             });
