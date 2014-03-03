@@ -4,7 +4,7 @@ require("../../../ini/dbconnect.php");
 require("../../../ini/user.php");
 require("../../../ini/db.php");
 
-foreach ($_POST as $key => $value) {
+foreach ($_POST as $key => $value) { 
     ${$key} = $value;
 }
 foreach ($_GET as $key => $value) {

@@ -5,7 +5,7 @@ var campaign = "";
 var base_dados = [];
 
 $(function() {
-    $("#report_bd").hide();
+    $("#report_bd").hide(); 
     $("#report_linha_inbound").hide();
     $(".chzn-select").chosen({no_results_text: "Sem resultados"});
     $(".formular").validationEngine();
