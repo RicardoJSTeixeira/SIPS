@@ -97,25 +97,25 @@ $end_date = date("o-m-d");
     $("#reload").on('click', function() {
         $("#reload").attr('disabled', true)
         $("#smsreport").dataTable().fnDestroy();
-        getData(function(filters) {
-            oTable = $('#smsreport').dataTable({
-                "bProcessing": true,
-                "bDestroy": true,
-                "bAutoWidth": false,
-                "sPaginationType": "full_numbers",
-                "sAjaxSource": '../report_sms/requests.php',
-                "fnServerParams": function(aoData) {
-                    aoData.push({"name": "action", "value": "get_sms_report"}, {"name": "start_date", "value": $("#dpd1").val()}, {"name": "end_date", "value": $("#dpd2").val()}, {"name": "filters", value: filters});
-                },
-                "fnDrawCallback": function(oSettings) {
-                    $("#reload").attr('disabled', false);
-                    $("#export_all").attr('disabled', false);
-                    $("#smscount").html(oTable.fnSettings().fnRecordsTotal())
-                }
+        setTimeout(function() {
+            getData(function(filters) {
+                oTable = $('#smsreport').dataTable({
+                    "bProcessing": true,
+                    "bDestroy": true,
+                    "bAutoWidth": false,
+                    "sPaginationType": "full_numbers",
+                    "sAjaxSource": '../report_sms/requests.php',
+                    "fnServerParams": function(aoData) {
+                        aoData.push({"name": "action", "value": "get_sms_report"}, {"name": "start_date", "value": $("#dpd1").val()}, {"name": "end_date", "value": $("#dpd2").val()}, {"name": "filters", value: filters});
+                    },
+                    "fnDrawCallback": function(oSettings) {
+                        $("#reload").attr('disabled', false);
+                        $("#export_all").attr('disabled', false);
+                        $("#smscount").html(oTable.fnSettings().fnRecordsTotal())
+                    }
+                });
             });
-            
-            
-        });
+        }, 2000);
     });
 
 
@@ -159,7 +159,8 @@ $end_date = date("o-m-d");
             $('.csv-data').remove();
         // open a div with a download link
         $('body').append('<div class="csv-data hidden"><form id="download" enctype="multipart/form-data" method="post" action="../report_sms/csv.php"><textarea class="form" name="csv">' + csv + '</textarea><input type="submit" class="submit" value="Download as file" /></form></div>');
-        if (callback) callback();
+        if (callback)
+            callback();
     }
 
     function strip_tags(html) {
@@ -208,8 +209,8 @@ $end_date = date("o-m-d");
 // export all table data
         $('#export_all').click(function(event) {
             event.preventDefault();
-            table2csv(oTable, 'full', '#smsreport', function(){
-               $("#download").submit();
+            table2csv(oTable, 'full', '#smsreport', function() {
+                $("#download").submit();
             });
         })
 
