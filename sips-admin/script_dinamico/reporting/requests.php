@@ -73,6 +73,7 @@ switch ($action) {
 
         $js[] = array("id" => "lead_id", "type" => "default", "original_texto" => "ID do Cliente", "texto" => "ID do Cliente");
         $js[] = array("id" => "user_group", "type" => "default", "original_texto" => "Grupo de user", "texto" => "Grupo de user");
+        $js[] = array("id" => "user_id", "type" => "default", "original_texto" => "Agente", "texto" => "Agente");
         $js[] = array("id" => "call_date", "type" => "default", "original_texto" => "Data da Chamada", "texto" => "Data da Chamada", "param_1" => "data_chamada");
         $js[] = array("id" => "call_date", "type" => "default", "original_texto" => "Hora da chamada", "texto" => "Hora da chamada", "param_1" => "hora_chamada");
         $js[] = array("id" => "length_in_sec", "type" => "default", "original_texto" => "Duração da Chamada", "texto" => "Duração da Chamada", "param_1" => "length_in_sec");
