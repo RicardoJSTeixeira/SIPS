@@ -245,7 +245,8 @@ function get_templates(campaign)
                 $("#column_order").empty();
 
                 $("#template_options_button").prop("disabled", true);
-                $(".edit_template_button").prop("disabled", true).hide();
+                $(".edit_template_button").prop("disabled", true);
+                $("#template_options").hide();
                 $("#download_report").prop("disabled", true);
             }
         }, "json");
@@ -260,6 +261,7 @@ function get_templates(campaign)
         $("#column_order_title").text("");
         $("#column_order").empty();
         $(".edit_template_button").prop("disabled", true);
+        $("#template_options").hide();
         $("#download_report").prop("disabled", true);
     }
 }
