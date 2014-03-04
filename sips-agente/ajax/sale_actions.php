@@ -19,17 +19,13 @@ switch ($client) {
 }
 
 function confirmacao($lead_id, $dispoAtt, $link) {
-
     function removeConfirm($lead_id, $link) {
         $qdelete = "update crm_confirm_feedback_last set sale = '1' where lead_id='" . mysql_real_escape_string($lead_id) . "';";
-        echo "update crm_confirm_feedback_last set sale = '1' where lead_id='" . mysql_real_escape_string($lead_id) . "';";
         mysql_query($qdelete, $link) or die(mysql_error());
     }
-    print_r($dispoAtt);
     if (!$dispoAtt["completed"]) {
         return false;
     } else {
-        echo "coisas2";
         removeConfirm($lead_id, $link);
     }
 }
