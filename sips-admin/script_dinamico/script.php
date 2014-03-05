@@ -120,7 +120,7 @@ class script {
 
     public function get_scripts_by_lead_id($lead_id) {
         $js = array();
-        $query = "SELECT * FROM script_dinamico_master sdm inner join script_assoc sa on sa.id_script=sdm.id inner join vicidial_list vl on vl.list_id=sa.id_camp_linha where vl.lead_id=?";
+        $query = "SELECT sdm.id,sdm.name FROM script_dinamico_master sdm inner join script_assoc sa on sa.id_script=sdm.id inner join vicidial_list vl on vl.list_id=sa.id_camp_linha where vl.lead_id=?";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($lead_id));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -131,7 +131,7 @@ class script {
 
     public function get_render_scripts_by_campaign($id_campaign) {
         $js = array();
-        $query = "SELECT * FROM script_dinamico_master sdm inner join script_assoc sa on sa.id_script=sdm.id where sa.id_camp_linha=:id_campaign";
+        $query = "SELECT sdm.id,sdm.name  FROM script_dinamico_master sdm inner join script_assoc sa on sa.id_script=sdm.id where sa.id_camp_linha=:id_campaign";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_campaign" => $id_campaign));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
