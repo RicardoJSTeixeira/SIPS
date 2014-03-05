@@ -32,6 +32,7 @@ if (!$user->id) {
         <script type="text/javascript" src="/bootstrap/js/jquery.flot.time.min.js"></script>
         <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
         <script  type="text/javascript" src="/bootstrap/js/jquery.cookie.js"></script>
+                <script type="text/javascript" src="/bootstrap/js/moment.min.js"></script>
         <style>
             .PanelWB{position:absolute;
                      -webkit-border-radius: 3px;
