@@ -1,3 +1,4 @@
+ 
 <!DOCTYPE html>
 <html>
     <head>
@@ -98,13 +99,13 @@
 
 
         <div class="grid-title">
-            <div class="pull-left" ><i class="fam-script-error"></i> Report</div>
+            <div class="pull-left" ><i class="fam-script-error"></i> Report - Nova versão implementada,inicie novas templates ou carregue em 'Actualizar' nas opções da template antes de pedir relatório</div>
             <div class="pull-right"><a class="btn btn-inverse hide"  href="/sips-admin/script_dinamico/" target="_self">Voltar aos Scripts</a>
             </div>
         </div>
         <div class="grid-content" id="main_div">
             <div class="row-fluid"><!------------------------------------------------------------------------------------------------------------------------------------->
-                <div class="span4">  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+                <div class="span3">  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
                     <div id="radio_opcao_div">
                         <h5>Relatório:</h5>
@@ -124,13 +125,13 @@
 
                     </div>
 
- 
+
 
 
 
 
                 </div><!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
-                <div class="span8"> <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+                <div class="span9"> <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
                     <div class="row-fluid">
                         <div class="span6">
                             <div id="report_campanha" class="select_opcao">
@@ -143,19 +144,19 @@
                             </div>
                             <div id="report_bd" class="select_opcao">
                                 <h6>Base de dados</h6>
-                             
+
                                 <select id="select_base_dados" multiple="multiple"  class=" chzn-select  select_opcao  validate[required]" data-placeholder="Selecione uma base de dados" style="width:23em; "></select>
-                          <label class="help-inline">&#10041 - Bases de Dados Activas</label>  
+                                <label class="help-inline">&#10041 - Bases de Dados Activas</label>  
                             </div>
 
                             <div id="template_div"  >
                                 <h5>Template</h5>
                                 <form id="template_form">
-                                    <span  class="input-append">
+                                    <span  class="input-append input-prepend">
                                         <button class="btn btn-primary icon-plus" id="new_template_div_opener_button"> Novo</button>
                                         <select id="oc_template" class="validate[required]"></select>
 
-                                        <button class="btn btn-warning  icon-edit" id="template_options_button"> Opções</button>
+                                        <button class="btn btn-warning  icon-cog" title="Opções de Template" id="template_options_button"></button>
                                     </span>
 
                                     <div  class="formRow" id="new_template_div" style="display:none">
@@ -176,7 +177,7 @@
                                             <button class="btn btn-primary" id="edit_template_button">Gravar</button>
                                         </div> 
                                     </div> 
- 
+
 
                                     <div id="template_options" class="formRow" style="display:none">
                                         <button class="btn  icon-pencil edit_template_button" id="edit_template_div_opener_button"> Editar</button>
@@ -191,7 +192,10 @@
                             <form id="form_filter" class="formular" >
                                 <h5>Download de dados:</h5>
                                 <div class="formRight">
-
+                                    <div class="formRight">
+                                        <input  type="radio" id="download_all_chamadas"  class="radio_dados" name="dd" value="6" >
+                                        <label class=" radio inline"  for="download_all_chamadas"><span></span>Todas as Chamadas <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Todas as chamadas incluindo resultados script"><i class="icon-question-sign"></i></strong></label> 
+                                    </div> 
                                     <input  type="radio" id="download_script" class="radio_dados"  name="dd" value="1" checked="checked">
                                     <label class=" radio inline"  for="download_script"><span></span>Script <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Apenas chamadas com respostas ao Script"><i class="icon-question-sign"></i></strong></label> 
                                 </div> 
@@ -212,40 +216,25 @@
                                     <label class="radio inline"  for="download_bd_data_carreg"><span></span>Estado Base Dados - data carreg <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Estado actual de base de dados (por data de Carregamento)"><i class="icon-question-sign"></i></strong></label> 
                                 </div>
                             </form>
-
-
-                        </div>    
+                        </div>     
                     </div>
-
                 </div><!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
             </div><!------------------------------------------------------------------------------------------------------------------------------------->
             <div class="row-fluid"><!------------------------------------------------------------------------------------------------------------------------------------->
                 <div class="span4"><!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
-
-
-
-
                     <form id="date_form" class="formular" >
-                        <div class=" time_div">
+                        <div class="time_div">
                             <h4>Data de Inicio:</h4>
                             <input  type="text" id="datetime_from" class="datetime_range validate[required]">
                         </div>
-                        <div class=" time_div">
+                        <div class="time_div">
                             <h4>Data de Fim:</h4>
                             <input  type="text" id="datetime_to" class="datetime_range validate[required]" >  
                         </div>
                     </form>
-
-
                     <div class="formRow">
                         <button class="btn btn-primary " id="download_report"><i class="icon-download"></i>Download do Report</button>
                     </div>
-
-
-
-
-
-
                     <div id="loading" style="display:none">
                         <img id="loading-image" src="/images/icons/big-loader.gif" alt="Loading..." />
                     </div>
