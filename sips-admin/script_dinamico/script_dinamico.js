@@ -5,10 +5,10 @@ var selected_tag = 0;
 var selected_type = "";
 var array_id = [];
 var regex_remove_blank = /^\s*$[\n\r]{1,}/gm;
-var regex_replace_textbox_tag = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\_\s:,?\/\-\.\,()@§]/g;
-var regex_replace_textbox = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\_\s:,?\/\-\.\,(),]/g;
-var regex_replace = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\_\s:,?\/\-\.\,()]/g;
-var regex_text = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª><=\"\'\_\s\:\-,?\/\-\.\,()@§&]/g;
+var regex_replace_textbox_tag = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\€\%\_\s:,?\/\-\.\,()@§]/g;
+var regex_replace_textbox = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\€\%\_\s:,?\/\-\.\,(),]/g;
+var regex_replace = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\€\%\_\s:,?\/\-\.\,()]/g;
+var regex_text = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\€\%><=\"\'\_\s\:\-,?\/\-\.\,()@§&]/g;
 var regex_split = /\n/g;
 var list_ui;
 var list_item;
@@ -91,7 +91,7 @@ $(function() {
             receive: function(event, ui) {
                 if ($(this).data().uiSortable.currentItem.hasClass("texto_class"))
                 {
-                    item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .texto_class .label_texto")[0].innerHTML, $(".rightDiv .texto_class .input_texto")[0].placeholder, $(".rightDiv .texto_class .input_texto")[0].maxLength, 0, 0, 0, 0, "normal");
+                    item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "texto", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .texto_class .label_texto")[0].innerHTML, $(".rightDiv .texto_class .input_texto")[0].placeholder, $(".rightDiv .texto_class .input_texto")[0].maxLength, 0, 0, 0, 0, "none");
                 }
                 if ($(this).data().uiSortable.currentItem.hasClass("pagination_class"))
                 {
@@ -157,6 +157,24 @@ $(function() {
             });
             $("#script_campanha_selector").trigger("chosen:updated");
         }, "json");
+
+        $.post("requests.php", {action: "get_bd"},
+        function(data12)
+        {
+            $.each(data12, function() {
+                   if ($("#script_bd_selector optgroup[label='" + this.campaign_name + "']").length)
+                {
+                    $("#script_bd_selector optgroup[label='" + this.campaign_name + "']").append("<option data-campaign_id=" + this.campaign_id + " value=" + this.id + " > " + (this.active == "Y" ? "&#10041;  " : "") + this.name + " </option>");
+                }
+                else
+                {
+                    $("#script_bd_selector").append("<optgroup class='tag_group' data-campaign_id='" + this.campaign_id + "' label='" + this.campaign_name + "'></optgroup>");
+                    $("#script_bd_selector optgroup[label='" + this.campaign_name + "']").append("<option data-campaign_id=" + this.campaign_id + " value=" + this.id + " >  " + (this.active == "Y" ? "&#10041;  " : "") + this.name + "</option>");
+                }
+            });
+            $("#script_bd_selector").trigger("chosen:updated");
+        }, "json");
+
         $.post("requests.php", {action: "get_linha_inbound"},
         function(data11)
         {
@@ -1562,6 +1580,7 @@ $('#script_selector').change(function()
 $("#opcao_script_button").click(function()//chama o edit do nome do script
 {
     $("#script_campanha_selector").val("").trigger("chosen:updated");
+    $("#script_bd_selector").val("").trigger("chosen:updated");
     $("#script_linha_inbound_selector").val("").trigger("chosen:updated");
     $.post("requests.php", {action: "get_camp_linha_by_id_script", id_script: $("#script_selector option:selected").val()},
     function(data)
@@ -1569,7 +1588,9 @@ $("#opcao_script_button").click(function()//chama o edit do nome do script
 
         var campaign = [];
         var linha_inbound = [];
+        var bd = [];
         $("#script_campanha_selector option").prop("disabled", false);
+        $("#script_bd_selector option").prop("disabled", false);
         $("#script_linha_inbound_selector option").prop("disabled", false);
         var this_script = $("#script_selector option:selected").val();
         $.each(data, function(index, value) {
@@ -1578,25 +1599,31 @@ $("#opcao_script_button").click(function()//chama o edit do nome do script
             {
                 if (this.tipo === "campaign")
                     campaign.push(this.id_camp_linha);
-                else
+                else if (this.tipo === "linha_inbound")
                     linha_inbound.push(this.id_camp_linha);
+                else
+                    bd.push(this.id_camp_linha);
             }
             else
             {
                 if (this.tipo === "campaign")
                     $("#script_campanha_selector option[value='" + this.id_camp_linha + "']").prop("disabled", true);
-                else
+                else if (this.tipo === "linha_inbound")
                     $("#script_linha_inbound_selector option[value='" + this.id_camp_linha + "']").prop("disabled", true);
+                else
+                    $("#script_bd_selector option[value='" + this.id_camp_linha + "']").prop("disabled", true);
             }
         });
         $("#script_campanha_selector").val(campaign).trigger("chosen:updated");
         $("#script_linha_inbound_selector").val(linha_inbound).trigger("chosen:updated");
+        $("#script_bd_selector").val(bd).trigger("chosen:updated");
     }, "json");
     $("#script_name_edit").val($("#script_selector option:selected").text());
 });
 $("#save_button_layout").click(function()//Fecha o dialog e grava as alterações
 {
-    $.post("requests.php", {action: "edit_script", name: $("#script_name_edit").val(), id_script: $("#script_selector option:selected").val(), campaign: $("#script_campanha_selector").val(), linha_inbound: $("#script_linha_inbound_selector").val()},
+
+    $.post("requests.php", {action: "edit_script", name: $("#script_name_edit").val(), id_script: $("#script_selector option:selected").val(), campaign: $("#script_campanha_selector").val(), linha_inbound: $("#script_linha_inbound_selector").val(), bd: $("#script_bd_selector").val()},
     function(data)
     {
         $('#dialog_layout').modal('hide');
@@ -1847,7 +1874,7 @@ $(".values_edit_textarea").on("blur", function()
 {
     if (temp_value_holder !== $(this).val())
     {
-        $.post("requests.php", {action: "has_rules", tag: selected_tag},
+        $.post("requests.php", {action: "has_rules", tag: selected_tag,id_script:$("#script_selector option:selected").val()},
         function(data)
         {
             if (data != "0")
@@ -2137,7 +2164,7 @@ function update_select()
     $.post("requests.php", {action: "get_image_pdf"},
     function(data)
     {
-        $("#ipl_file_select").empty(); 
+        $("#ipl_file_select").empty();
         $.each(data, function()
         {
             $("#ipl_file_select").append("<option data-type=" + this.type + " value=" + this.value + ">" + this.value + "</option>");

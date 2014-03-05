@@ -118,14 +118,33 @@ class script {
         return $js;
     }
 
-    public function get_scripts_by_campaign($id_campaign) {
+    public function get_scripts_by_lead_id($lead_id) {
         $js = array();
-        $query = "SELECT * FROM script_dinamico_master sdm inner join script_assoc sa on sa.id_script=sdm.id where sa.id_camp_linha=:id_campaign";
+        $query = "SELECT sdm.id,sdm.name FROM script_dinamico_master sdm inner join script_assoc sa on sa.id_script=sdm.id inner join vicidial_list vl on vl.list_id=sa.id_camp_linha where vl.lead_id=?";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array($lead_id));
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $js = array("id" => $row["id"], "name" => $row["name"]);
+        }
+        return $js;
+    }
+
+    public function get_render_scripts_by_campaign($id_campaign) {
+        $js = array();
+        $query = "SELECT sdm.id,sdm.name  FROM script_dinamico_master sdm inner join script_assoc sa on sa.id_script=sdm.id where sa.id_camp_linha=:id_campaign";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_campaign" => $id_campaign));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $js = array("id" => $row["id"], "name" => $row["name"]);
         }
+        return $js;
+    }
+
+    public function get_script_by_campaign($campaign_id) {
+        $query = "SELECT a.id id,a.id_script,a.texto name,a.values_text,a.type,a.tag   FROM script_dinamico a  left join script_assoc b on a.id_script=b.id_script where b.id_camp_linha =? ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array($campaign_id));
+        $js = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $js;
     }
 
@@ -151,7 +170,7 @@ class script {
             if ($search_spice == "true") {
                 $query = "SELECT b.id_script,a.lead_id,a.tag_elemento,a.valor,b.type,a.param_1 FROM script_result a inner join script_dinamico b on a.tag_elemento=b.tag  where a.lead_id=? and b.id_script=? and a.unique_id= 0 ";
                 $stmt = $this->db->prepare($query);
-                $stmt->execute(array($lead_id, $id_script)); 
+                $stmt->execute(array($lead_id, $id_script));
             } else {
                 $query = "SELECT b.id_script,a.lead_id,a.tag_elemento,a.valor,b.type,a.param_1 FROM script_result a inner join script_dinamico b on a.tag_elemento=b.tag  where a.lead_id=? and b.id_script=? and a.unique_id= (select max(unique_id) from script_result where lead_id=?) ";
                 $stmt = $this->db->prepare($query);
@@ -173,14 +192,6 @@ class script {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $js[] = array("id" => $row["id"], "name" => $row["name"], "pos" => $row["pos"]);
         }
-        return $js;
-    }
-
-    public function get_script_by_campaign($campaign_id) {
-        $query = "SELECT a.id id,a.id_script,a.texto name,a.values_text,a.type,a.tag   FROM script_dinamico a  left join script_assoc b on a.id_script=b.id_script where b.id_camp_linha =? ";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute(array($campaign_id));
-        $js = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $js;
     }
 
@@ -313,11 +324,11 @@ class script {
         return ($row[0] == "1");
     }
 
-    public function has_rules($tag) {
+    public function has_rules($tag, $id_script) {
         $temp = 0;
-        $query = "SELECT count(id) as count FROM script_rules where tag_trigger=:tag";
+        $query = "SELECT count(id) as count FROM script_rules where tag_trigger=:tag and id_script=:script";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":tag" => $tag));
+        $stmt->execute(array(":tag" => $tag, ":script" => $id_script));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $temp = $row["count"];
         }
@@ -367,7 +378,7 @@ class script {
 //EDIT
 
 
-    public function edit_script($name, $id_script, $campaign) {
+    public function edit_script($name, $id_script, $campaign, $linha_inbound, $bd) {
         $query = "update script_dinamico_master set name=:name where id=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script, ":name" => $name));
@@ -375,16 +386,23 @@ class script {
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
 
-        if ($campaign != "") {
+        if (isset($campaign)) {
             foreach ($campaign as $value) {
                 $query = "INSERT INTO `script_assoc` values(:id_script,:value,'campaign')";
                 $stmt = $this->db->prepare($query);
                 $stmt->execute(array(":id_script" => $id_script, ":value" => $value));
             }
         }
-        if ($linha_inbound != "") {
+        if (isset($linha_inbound)) {
             foreach ($linha_inbound as $value) {
                 $query = "INSERT INTO `script_assoc` values(:id_script,:value,'linha_inbound')";
+                $stmt = $this->db->prepare($query);
+                $stmt->execute(array(":id_script" => $id_script, ":value" => $value));
+            }
+        }
+        if (isset($bd)) {
+            foreach ($bd as $value) {
+                $query = "INSERT INTO `script_assoc` values(:id_script,:value,'bd')";
                 $stmt = $this->db->prepare($query);
                 $stmt->execute(array(":id_script" => $id_script, ":value" => $value));
             }
@@ -585,9 +603,9 @@ class script {
         foreach ($results as $row) {
             if ($row['value'] != "") {
                 $temp = explode("###", $row['name']);
-       
+
                 if (isset($temp[2])) {
-                         //table inputs
+                    //table inputs
                     $sql[] = "('" . date('Y-m-d H:i:s') . "','$id_script','$user_id','$unique_id','$campaign_id','$lead_id','$temp[0]','" . mysql_real_escape_string($row['value']) . "','$temp[2];$temp[1]')";
                 } else {
                     //table radios e todos os outros

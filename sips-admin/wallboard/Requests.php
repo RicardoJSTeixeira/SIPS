@@ -536,7 +536,7 @@ switch ($action) {
 
     case '4_outbound'://outbound
         $campaign = explode(",", $campanha);
-
+    
         for ($i = 0; $i < count($campaign); $i++) {
             $campaign[$i] = "'" . $campaign[$i] . "'";
         }
@@ -600,7 +600,26 @@ switch ($action) {
             $dropsTODAY = 0;
             $answersTODAY = 0;
 
-            $query = "select status,count(status) as status1 from vicidial_log where  call_date between '$today' and '$tomorrow'  and campaign_id in($campanha) and status not like ('AFTHRS') group by status";
+
+
+            $query = "SELECT list_id from vicidial_lists where campaign_id in(:campaign_id)";
+            $stmt = $db->prepare($query);
+            $stmt->execute(array(":campaign_id" => $campanha));
+
+            $temp_list = array();
+            while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+                $temp_list[] = $row[0];
+            }
+    
+            $list_log = "and list_id in('" . implode("','", $temp_list) . "')";
+    
+
+
+
+
+
+
+            $query = "select status,count(status) as status1 from vicidial_log where  call_date between '$today' and '$tomorrow' $list_log and status not like ('AFTHRS') group by status";
             $query = mysql_query($query, $link) or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
                 $callsTODAY+=$row["status1"];
@@ -611,7 +630,7 @@ switch ($action) {
             }
 
 
-            $query = "select ifnull(sum(length_in_sec),0) as total_sec, ifnull(sum(queue_seconds),0) as queue_seconds from vicidial_closer_log where  call_date between '$today' and '$tomorrow' and campaign_id in($campanha) and lead_id is not null";
+            $query = "select ifnull(sum(length_in_sec),0) as total_sec, ifnull(sum(queue_seconds),0) as queue_seconds from vicidial_log where  call_date between '$today' and '$tomorrow'$list_log and lead_id is not null";
             $query = mysql_query($query, $link) or die(mysql_error());
             $row2 = mysql_fetch_assoc($query);
             $js[] = array(

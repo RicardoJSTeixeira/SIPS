@@ -40,7 +40,6 @@ switch ($action) {
         break;
 
     case "get_template":
-
 //Se 0 vai buscar defaults
         $query = "SELECT id,template from report_order where campaign=:campaign_id";
         $stmt = $db->prepare($query);
@@ -71,32 +70,36 @@ switch ($action) {
 
 
 
-        $js[] = array("id" => "lead_id", "type" => "default", "original_texto" => "ID do Cliente", "texto" => "ID do Cliente");
-        $js[] = array("id" => "user_group", "type" => "default", "original_texto" => "Grupo de user", "texto" => "Grupo de user");
-        $js[] = array("id" => "user_id", "type" => "default", "original_texto" => "Agente", "texto" => "Agente");
-        $js[] = array("id" => "call_date", "type" => "default", "original_texto" => "Data da Chamada", "texto" => "Data da Chamada", "param_1" => "data_chamada");
-        $js[] = array("id" => "call_date", "type" => "default", "original_texto" => "Hora da chamada", "texto" => "Hora da chamada", "param_1" => "hora_chamada");
-        $js[] = array("id" => "length_in_sec", "type" => "default", "original_texto" => "Duração da Chamada", "texto" => "Duração da Chamada", "param_1" => "length_in_sec");
-        $js[] = array("id" => "status_name", "type" => "default", "original_texto" => "Feedback", "texto" => "Feedback");
-        $js[] = array("id" => "list_name", "type" => "default", "original_texto" => "Base de Dados", "texto" => "Base de Dados");
-        $js[] = array("id" => "entry_date", "type" => "default", "original_texto" => "Data de Carregamento", "texto" => "Data de Carregamento");
-        $js[] = array("id" => "called_count", "type" => "default", "original_texto" => "Nº de Chamadas", "texto" => "Nº de Chamadas");
-        $js[] = array("id" => "called_since_last_reset", "type" => "default", "original_texto" => "Chamada desde o último reset à BD", "texto" => "Chamada desde o último reset à BD");
+
+        $js[] = array("id" => "lead_id", "field" => "lead_id", "type" => "default", "original_texto" => "ID do Cliente", "texto" => "ID do Cliente");
+        $js[] = array("id" => "user_group", "field" => "user_group", "type" => "default", "original_texto" => "Grupo de user", "texto" => "Grupo de user");
+        $js[] = array("id" => "full_name", "field" => "full_name", "type" => "default", "original_texto" => "Agente", "texto" => "Agente");
+        $js[] = array("id" => "call_date3", "field" => "call_date", "type" => "default", "original_texto" => "Data/Hora da chamada", "texto" => "Data/Hora da chamada", "param_1" => "data_hora_chamada");
+        $js[] = array("id" => "call_date1", "field" => "call_date", "type" => "default", "original_texto" => "Data da Chamada", "texto" => "Data da Chamada", "param_1" => "data_chamada");
+        $js[] = array("id" => "call_date2", "field" => "call_date", "type" => "default", "original_texto" => "Hora da chamada", "texto" => "Hora da chamada", "param_1" => "hora_chamada");
+        $js[] = array("id" => "length_in_sec", "field" => "length_in_sec", "type" => "default", "original_texto" => "Duração da Chamada", "texto" => "Duração da Chamada", "param_1" => "length_in_sec");
+        $js[] = array("id" => "status_name", "field" => "status_name", "type" => "default", "original_texto" => "Feedback", "texto" => "Feedback");
+        $js[] = array("id" => "list_name", "field" => "list_name", "type" => "default", "original_texto" => "Base de Dados", "texto" => "Base de Dados");
+        $js[] = array("id" => "entry_date", "field" => "entry_date", "type" => "default", "original_texto" => "Data de Carregamento", "texto" => "Data de Carregamento");
+        $js[] = array("id" => "called_count", "field" => "called_count", "type" => "default", "original_texto" => "Nº de Chamadas", "texto" => "Nº de Chamadas");
+        $js[] = array("id" => "called_since_last_reset", "field" => "called_since_last_reset", "type" => "default", "original_texto" => "Chamada desde o último reset à BD", "texto" => "Chamada desde o último reset à BD");
+
+
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $js[] = array("id" => $row["Name"], "type" => "campo_dinamico", "original_texto" => $row["Display_name"], "texto" => $row["Display_name"]);
+            $js[] = array("id" => $row["Name"], "field" => $row["Name"], "type" => "campo_dinamico", "original_texto" => $row["Display_name"], "texto" => $row["Display_name"]);
         }
 
         if (!count($js)) {
 
-            $js[] = array("id" => "FIRST_NAME", "type" => "campo_dinamico", "original_texto" => "Nome", "texto" => "Nome");
-            $js[] = array("id" => "PHONE_NUMBER", "type" => "campo_dinamico", "original_texto" => "Telefone", "texto" => "Telefone");
-            $js[] = array("id" => "ADDRESS3", "type" => "campo_dinamico", "original_texto" => "Telemóvel", "texto" => "Telemóvel");
-            $js[] = array("id" => "ALT_PHONE", "type" => "campo_dinamico", "original_texto" => "Telefone Alternativo", "texto" => "Telefone Alternativo");
-            $js[] = array("id" => "ADDRESS1", "type" => "campo_dinamico", "original_texto" => "Morada", "texto" => "Morada");
-            $js[] = array("id" => "POSTAL_CODE", "type" => "campo_dinamico", "original_texto" => "Código Postal", "texto" => "Código Postal");
-            $js[] = array("id" => "EMAIL", "type" => "campo_dinamico", "original_texto" => "E-Mail", "texto" => "E-Mail");
-            $js[] = array("id" => "COMMENTS", "type" => "campo_dinamico", "original_texto" => "Comentários", "texto" => "Comentários");
+            $js[] = array("id" => "FIRST_NAME", "field" => "FIRST_NAME", "type" => "campo_dinamico", "original_texto" => "Nome", "texto" => "Nome");
+            $js[] = array("id" => "PHONE_NUMBER", "field" => "PHONE_NUMBER", "type" => "campo_dinamico", "original_texto" => "Telefone", "texto" => "Telefone");
+            $js[] = array("id" => "ADDRESS3", "field" => "ADDRESS3", "type" => "campo_dinamico", "original_texto" => "Telemóvel", "texto" => "Telemóvel");
+            $js[] = array("id" => "ALT_PHONE", "field" => "ALT_PHONE", "type" => "campo_dinamico", "original_texto" => "Telefone Alternativo", "texto" => "Telefone Alternativo");
+            $js[] = array("id" => "ADDRESS1", "field" => "ADDRESS1", "type" => "campo_dinamico", "original_texto" => "Morada", "texto" => "Morada");
+            $js[] = array("id" => "POSTAL_CODE", "field" => "POSTAL_CODE", "type" => "campo_dinamico", "original_texto" => "Código Postal", "texto" => "Código Postal");
+            $js[] = array("id" => "EMAIL", "field" => "EMAIL", "type" => "campo_dinamico", "original_texto" => "E-Mail", "texto" => "E-Mail");
+            $js[] = array("id" => "COMMENTS", "field" => "COMMENTS", "type" => "campo_dinamico", "original_texto" => "Comentários", "texto" => "Comentários");
         }
 
         if (isset($script_id)) {
@@ -107,10 +110,10 @@ switch ($action) {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 if ($row["type"] == "tableradio") {
                     foreach (json_decode($row["values_text"]) as $value) {
-                        $js[] = array("id" => $row["tag"], "type" => $row["type"], "original_texto" => $value, "texto" => $value, "param_1" => $value);
+                        $js[] = array("id" => $row["tag"], "field" => "lead_id", "type" => $row["type"], "original_texto" => $value, "texto" => $value, "param_1" => $value);
                     }
                 } else
-                    $js[] = array("id" => $row["tag"], "type" => $row["type"], "original_texto" => $value, "texto" => $row["texto"], "param_1" => "");
+                    $js[] = array("id" => $row["tag"], "field" => $row["tag"], "type" => $row["type"], "original_texto" => $value, "texto" => $row["texto"], "param_1" => "");
             }
         }
 
@@ -173,8 +176,6 @@ switch ($action) {
 
 // por filtros pra feedbacks e fazer inbound
     case "report_outbound":
-
-
         $name_script = "";
         $campaign_name = "";
 //GET ELEMENTS
@@ -209,13 +210,16 @@ switch ($action) {
 
                 switch ($value->param_1) {
                     case "data_chamada":
-                        $fields[] = "date_format(`$value->id`,'%Y-%m-%d') as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+                        $fields[] = "date_format(`$value->field`,'%Y-%m-%d') as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
                         break;
                     case "hora_chamada":
-                        $fields[] = "date_format(`$value->id`,'%H:%i') as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+                        $fields[] = "date_format(`$value->field`,'%H:%i') as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+                        break;
+                    case "data_hora_chamada":
+                        $fields[] = "date_format(`$value->field`,'%Y-%m-%d %H:%i') as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
                         break;
                     case "length_in_sec":
-                        $fields[] = "SEC_TO_TIME(`$value->id`) as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+                        $fields[] = "SEC_TO_TIME(`$value->field`) as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
                         break;
                     default:
                         $fields[] = "`$value->id` as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
@@ -273,11 +277,80 @@ switch ($action) {
 
         $query_sql = "query_report" . rand() . ".sql";
 
-
+        $script_elements_temp = "";
 
 
 
         switch ($result_filter) {
+            case 6:
+                try {
+                    if (count($script_elements) > 0)
+                        $script_elements_temp = "," . implode(",", $script_elements);
+                    $query = "CREATE TABLE  $scriptoffset   ENGINE=MYISAM  select  id_script, campaign_id, unique_id,  param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id =? and date between ? and ?   group by unique_id; ";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute(array($campaign_id, $data_inicio, $data_fim));
+                    $query = "  create index uniqueid on $scriptoffset (unique_id); ";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute();
+                    $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status,a.lead_id, a.user_group,a.user user_id,c.list_name, b.* from vicidial_log a left join $scriptoffset b on a.uniqueid = b.unique_id left join vicidial_lists c on c.list_id=a.list_id where  a.call_date between ? and ?   $lists_log ";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute(array($data_inicio, $data_fim));
+                    $twoMonthsBefore = strtotime("-2 months", time());
+                    $temp_data_inicio = strtotime($data_inicio);
+                    if ($twoMonthsBefore > $temp_data_inicio) {
+                        $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status,a.lead_id, a.user_group,a.user user_id,c.list_name, b.* from vicidial_log_archive a left join $scriptoffset b on a.uniqueid = b.unique_id  left join vicidial_lists c on c.list_id=a.list_id where a.call_date between ? and ? $lists_log);";
+                        $stmt = $db->prepare($query);
+                        $temp_data_fim = strtotime($data_fim);
+                        if ($twoMonthsBefore > $temp_data_fim) {
+                            $stmt->execute(array($data_inicio, $data_fim));
+                        } else {
+
+                            $stmt->execute(array($data_inicio, $twoMonthsBefore));
+                        }
+                    }
+                    $query = "create table $logscriptstatus ENGINE=MYISAM select a.*, b.status_name from $logscriptoffset a inner join (select status, status_name, campaign_id from vicidial_campaign_statuses x where campaign_id = ? union all select status, status_name, ? from vicidial_statuses z) b where a.status = b.status ";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute(array($campaign_id, $campaign_id));
+                    $query = "create table $logscriptstatususer ENGINE=MYISAM select a.*, b.full_name from $logscriptstatus a left join vicidial_users b on a.user_id = b.user;";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute();
+                    if (count($client_elements) > 0)
+                        $client_elements_temp = "," . implode(",", $client_elements);
+                    $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp,b.entry_date,b.called_count,b.called_since_last_reset  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id  order by b.lead_id,call_date asc; ";
+
+                    $stmt = $db->prepare($query);
+                    $stmt->execute();
+                    $file = "report" . date("Y-m-d_H-i-s");
+                    $query = "set names 'UTF8'; select  " . implode(", ", $fields) . " from $final";
+
+                    $fp = fopen("/tmp/$query_sql", "wb");
+                    fwrite($fp, $query);
+                    fclose($fp);
+                    system("mysql asterisk -u$varDbUser -p$varDbPass -h $VARDB_server < /tmp/$query_sql > /srv/www/htdocs/report_files/$file.txt");
+                    system("perl -lpe 's/\"/\"\"/g; s/^|$/\"/g; s/\t/\";\"/g' <  /srv/www/htdocs/report_files/$file.txt > /srv/www/htdocs/report_files/$file.csv");
+                    system("perl /srv/www/htdocs/report_files/convert.pl  /srv/www/htdocs/report_files/$file.csv /srv/www/htdocs/report_files/$file-utf8.csv");
+                } catch (Exception $ex) {
+                    echo($ex);
+                    exit;
+                }
+            
+                $query1 = "drop table $scriptoffset;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptoffset;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptstatus;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $logscriptstatususer;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                $query1 = "drop table $final;";
+                $stmt1 = $db->prepare($query1);
+                $stmt1->execute();
+                echo(json_encode($file));
+                break; 
             case 1:
                 try {
                     if (count($script_elements) > 0)
@@ -285,14 +358,14 @@ switch ($action) {
                     $query = "CREATE TABLE  $scriptoffset   ENGINE=MYISAM  select  id_script, user_id, campaign_id, unique_id, lead_id, param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id =? and date between ? and ?   group by unique_id; ";
                     $stmt = $db->prepare($query);
                     $stmt->execute(array($campaign_id, $data_inicio, $data_fim));
-                    $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log a inner join $scriptoffset b on a.uniqueid = b.unique_id where  a.call_date between ? and ?  $lists_log;";
+                    $query = "create table $logscriptoffset ENGINE=MYISAM select a.call_date,a.length_in_sec, a.status, a.user_group,c.list_name, b.* from vicidial_log a inner join $scriptoffset b on a.uniqueid = b.unique_id left join vicidial_lists c on c.list_id=a.list_id where  a.call_date between ? and ?  $lists_log;";
 
                     $stmt = $db->prepare($query);
                     $stmt->execute(array($data_inicio, $data_fim));
                     $twoMonthsBefore = strtotime("-2 months", time());
                     $temp_data_inicio = strtotime($data_inicio);
                     if ($twoMonthsBefore > $temp_data_inicio) {
-                        $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group, b.* from vicidial_log_archive a inner join $scriptoffset b on a.uniqueid = b.unique_id where a.call_date between ? and ? $lists_log);";
+                        $query = " insert into $logscriptoffset (select a.call_date,a.length_in_sec, a.status, a.user_group,c.list_name, b.* from vicidial_log_archive a inner join $scriptoffset b on a.uniqueid = b.unique_id left join vicidial_lists c on c.list_id=a.list_id where a.call_date between ? and ? $lists_log);";
                         $stmt = $db->prepare($query);
                         $temp_data_fim = strtotime($data_fim);
                         if ($twoMonthsBefore > $temp_data_fim) {
@@ -309,7 +382,7 @@ switch ($action) {
                     $stmt->execute();
                     if (count($client_elements) > 0)
                         $client_elements_temp = "," . implode(",", $client_elements);
-                    $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp,'no info' list_name,b.entry_date,b.called_count,b.called_since_last_reset  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id  order by b.lead_id,call_date asc; ";
+                    $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp,b.entry_date,b.called_count,b.called_since_last_reset  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id  order by b.lead_id,call_date asc; ";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");
@@ -469,9 +542,9 @@ switch ($action) {
                 try {
                     if (count($script_elements) > 0)
                         $script_elements_temp = ", " . implode(", ", $script_elements);
-                    $query = "CREATE TABLE $scriptoffset ENGINE = MYISAM select id_script,  campaign_id, unique_id, lead_id script_lead, date, param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id = ?  group by unique_id;";
+                    $query = "CREATE TABLE $scriptoffset ENGINE = MYISAM select id_script,  campaign_id, unique_id, lead_id script_lead, date, param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id = ? and date between ? and ?    group by unique_id;";
                     $stmt = $db->prepare($query);
-                    $stmt->execute(array($campaign_id));
+                                $stmt->execute(array($campaign_id, $data_inicio, $data_fim));
                     $query = "create table $logsscriptgrouplead ENGINE = MYISAM select *, max(date) as MaxDate from $scriptoffset group by script_lead;";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
@@ -480,9 +553,9 @@ switch ($action) {
                     $stmt->execute();
                     if (count($client_elements) > 0)
                         $client_elements_temp = ", " . implode(", ", $client_elements);
-                    $query = "create table $logscriptoffset ENGINE = MYISAM select b.entry_date, b.modify_date, b.status, b.user user_id,b.lead_id, b.list_id $client_elements_temp, b.called_count,b.called_since_last_reset, b.last_local_call_time call_date,'Sem grupo User' user_group,'no info' length_in_sec, a.* from vicidial_list b left join $logsscriptgrouplead a on b.lead_id = a.script_lead  $lists_log3 ";
+                    $query = "create table $logscriptoffset ENGINE = MYISAM select b.entry_date, b.modify_date, b.status, b.user user_id,b.lead_id, b.list_id $client_elements_temp, b.called_count,b.called_since_last_reset, b.last_local_call_time call_date,'Sem grupo User' user_group,'no info' length_in_sec, a.* from vicidial_list b left join $logsscriptgrouplead a on b.lead_id = a.script_lead  where b.last_local_call_time between ? and ? $lists_log2 ";
                     $stmt = $db->prepare($query);
-                    $stmt->execute();
+                  $stmt->execute(array( $data_inicio, $data_fim));
                     $query = "create table $logscriptstatus ENGINE = MYISAM select a.*, b.status_name from $logscriptoffset a inner join (select status, status_name, campaign_id from vicidial_campaign_statuses x where campaign_id = ? union all select status, status_name, ? from vicidial_statuses z) b where a.status = b.status ";
                     $stmt = $db->prepare($query);
                     $stmt->execute(array($campaign_id, $campaign_id));
@@ -564,11 +637,6 @@ switch ($action) {
                     echo($ex);
                     exit;
                 }
-
-
-
-
-
                 $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
