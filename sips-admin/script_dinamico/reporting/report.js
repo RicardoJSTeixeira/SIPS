@@ -156,26 +156,14 @@ $(".radio_opcao").on("click", function()
 
 $(".radio_dados").on("click", function()
 {
-    switch ($(this).val())
-    {
-        case "4":
-
-            $("#radio3").prop("checked", true).trigger("click");
-            $("#date_form").hide();
-            break;
-        default:
-            $("#radio1").prop("checked", true).trigger("click");
-            $("#date_form").show();
-            update_template();
-            break;
-    }
+    update_template();
 });
 
 function get_templates(campaign)
-{
+{ 
 
     if (campaign)
-    {
+    { 
 
         $("#new_template_div_opener_button").prop("disabled", false);
         $("#template_options_button").prop("disabled", false);
@@ -448,7 +436,7 @@ $("#update_template_button").on("click", function(e)
     {
         var updt_element = "";
         var found = false;
-        $.each(data, function() 
+        $.each(data, function()
         {
             updt_element = this;
             found = false;
@@ -457,7 +445,7 @@ $("#update_template_button").on("click", function(e)
             {
                 if ($(this).find(":input").attr("id") == updt_element.id)
                 {
-                    
+
                     $(this).empty().append("<div><input id=" + updt_element.id + " data-field='" + updt_element.field + "'  class='validate[required]'   type='text' data-original_texto='" + updt_element.original_texto + "'  data-param_1='" + updt_element.param_1 + "'  data-type='" + updt_element.type + "' value='" + updt_element.texto + "'><span class='btn icon-alone remove_list_item_button icon-remove btn-link' data-id='" + updt_element.id + "'></span></div>\n\
 <div>" + ((updt_element.type === "campo_dinamico" || updt_element.type === "default") ? updt_element.original_texto : "Tag->" + updt_element.id + " Nome->" + get_name_by_type(updt_element.type)) + "</div>");
                     found = true;
@@ -466,7 +454,7 @@ $("#update_template_button").on("click", function(e)
             });
             if (!found)
             {
-               $("#column_order").prepend("<li class='ui-state-default'><div><input id=" + updt_element.id + " data-field='" + updt_element.field + "'  class='validate[required]'   type='text' data-original_texto='" + updt_element.original_texto + "'  data-param_1='" + updt_element.param_1 + "'  data-type='" + updt_element.type + "' value='" + updt_element.texto + "'><span class='btn icon-alone remove_list_item_button icon-remove btn-link' data-id='" + updt_element.id + "'></span></div>\n\
+                $("#column_order").prepend("<li class='ui-state-default'><div><input id=" + updt_element.id + " data-field='" + updt_element.field + "'  class='validate[required]'   type='text' data-original_texto='" + updt_element.original_texto + "'  data-param_1='" + updt_element.param_1 + "'  data-type='" + updt_element.type + "' value='" + updt_element.texto + "'><span class='btn icon-alone remove_list_item_button icon-remove btn-link' data-id='" + updt_element.id + "'></span></div>\n\
 <div>" + ((updt_element.type === "campo_dinamico" || updt_element.type === "default") ? updt_element.original_texto : "Tag->" + updt_element.id + " Nome->" + get_name_by_type(updt_element.type)) + "</div></li>");
             }
 
