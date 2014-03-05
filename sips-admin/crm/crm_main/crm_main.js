@@ -335,7 +335,7 @@ var crm_main = function(crm_main_zone, file_path)
     });
 
     crm_main_zone.on("change", "#select_script", function()
-    {
+    { console.log('yo')
         if (select["script"].find("option:selected").val() == "1")
             crm_main_zone.find(".script_input_field").hide();
         else
@@ -505,7 +505,7 @@ var crm_main = function(crm_main_zone, file_path)
                         crm_main_zone.find(".criar_marcacao").hide();
 
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Feedback"}, {"sTitle": "Data Chamada"}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "User"},{"sTitle": "Feedback"}, {"sTitle": "Data Chamada"}],
                 "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
             });
         }
@@ -538,12 +538,12 @@ var crm_main = function(crm_main_zone, file_path)
                 "fnDrawCallback": function()
                 {
                     crm_main_zone.find('#info_table_calls').show();
-                    toggle_resultado("show");
+                    toggle_resultado("show"); 
                     if (config.marcacao_cliente == false)
                         crm_main_zone.find(".criar_marcacao").hide();
 
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "Feedback"}, {"sTitle": "Duração da Chamada"}, {"sTitle": "Data Chamada"}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Telefone"}, {"sTitle": "User"}, {"sTitle": "Feedback"}, {"sTitle": "Duração da Chamada"}, {"sTitle": "Data Chamada"}],
                 "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
             });
         }
