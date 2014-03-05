@@ -62,7 +62,8 @@ $end_date = date("o-m-d");
             <table id="smsreport" class="table table-hover table-striped">
                 <thead>
                     <tr>
-                        <th>Date</th>
+                        <th>Sent Date</th>
+                        <th>Status Date</th>
                         <th>Destination</th>
                         <th>Content</th>
                         <th># SMS</th>
