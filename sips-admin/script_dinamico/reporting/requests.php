@@ -277,7 +277,7 @@ switch ($action) {
 
         $query_sql = "query_report" . rand() . ".sql";
 
-
+        $script_elements_temp = "";
 
 
 
@@ -333,6 +333,7 @@ switch ($action) {
                     echo($ex);
                     exit;
                 }
+            
                 $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
@@ -349,7 +350,7 @@ switch ($action) {
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
                 echo(json_encode($file));
-                break;
+                break; 
             case 1:
                 try {
                     if (count($script_elements) > 0)
@@ -636,11 +637,6 @@ switch ($action) {
                     echo($ex);
                     exit;
                 }
-
-
-
-
-
                 $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();

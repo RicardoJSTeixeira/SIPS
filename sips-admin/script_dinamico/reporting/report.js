@@ -448,7 +448,7 @@ $("#update_template_button").on("click", function(e)
     {
         var updt_element = "";
         var found = false;
-        $.each(data, function()
+        $.each(data, function() 
         {
             updt_element = this;
             found = false;
