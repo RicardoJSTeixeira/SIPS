@@ -2,8 +2,8 @@
 require("../../ini/dbconnect.php");
 if (isset($_GET['client'])) { $client = $_GET['client']; } else { $client = $_POST['client']; }
 if (isset($_GET['campaign_id']))  { $campaign_id = $_GET['campaign_id']; } else { $campaign_id = $_POST['campaign_id']; }
-
-
+if (isset($_GET['lead_id']))  { $lead_id = $_GET['lead_id']; } else { $lead_id = $_POST['lead_id']; }
+if (isset($_GET['dispoAtt']))  { $dispoAtt = $_GET['dispoAtt']; } else { $dispoAtt = $_POST['dispoAtt']; }
 
 
 switch ($client) { 
@@ -13,46 +13,19 @@ switch ($client) {
                 case 'W00004' : connectaMensageiros(); break;
                 case 'W00009' : connectaMensageiros(); break;
             }
-           # confirmacao($lead_id, $uniqueid, $user, $length_in_sec, $dispoAtt, $link);
+            confirmacao($lead_id, $dispoAtt, $link);
             break;
         }
 }
 
-function confirmacao($lead_id, $unique_id, $user, $length_in_sec, $dispoAtt, $link) {
-
-    function confirmPos($lead_id, $link) {
-        for ($index = 1; $index < 4; $index++) {
-            $query = "Select Time$index from vicidial_list where lead_id='" . mysql_real_escape_string($lead_id) . "'";
-            $result = mysql_query($query, $link);
-            $row = mysql_fetch_array($result);
-            if (strlen($row[0]) == 0) {
-                break;
-            }
-        }
-        return (object) array("index" => $index, "user" => $row["login$index"]);
-    }
-
-    function saveInfo($index, $lead_id, $unique_id, $length_in_sec, $link) {
-        $qupdate = "Update vicidial_list set Time$index = '$length_in_sec', SertranRec = '$unique_id' where lead_id='" . mysql_real_escape_string($lead_id) . "';";
-        mysql_query($qupdate, $link) or die(mysql_error());
-    }
-
+function confirmacao($lead_id, $dispoAtt, $link) {
     function removeConfirm($lead_id, $link) {
         $qdelete = "update crm_confirm_feedback_last set sale = '1' where lead_id='" . mysql_real_escape_string($lead_id) . "';";
         mysql_query($qdelete, $link) or die(mysql_error());
     }
-
     if (!$dispoAtt["completed"]) {
         return false;
-    }
-
-    $UPos = confirmPos($lead_id, $unique_id, $user, $length_in_sec, $link);
-
-    if ($Upos->user == $user) {
-
-        if ($dispoAtt["sale"]) {
-            saveInfo($Upos->index, $lead_id, $unique_id, $user, $length_in_sec, $link);
-        }
+    } else {
         removeConfirm($lead_id, $link);
     }
 }
