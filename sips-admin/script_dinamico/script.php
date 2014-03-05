@@ -129,7 +129,7 @@ class script {
         return $js;
     }
 
-    public function get_scripts_by_campaign($id_campaign) {
+    public function get_render_scripts_by_campaign($id_campaign) {
         $js = array();
         $query = "SELECT * FROM script_dinamico_master sdm inner join script_assoc sa on sa.id_script=sdm.id where sa.id_camp_linha=:id_campaign";
         $stmt = $this->db->prepare($query);
@@ -137,6 +137,14 @@ class script {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $js = array("id" => $row["id"], "name" => $row["name"]);
         }
+        return $js;
+    }
+
+    public function get_script_by_campaign($campaign_id) {
+        $query = "SELECT a.id id,a.id_script,a.texto name,a.values_text,a.type,a.tag   FROM script_dinamico a  left join script_assoc b on a.id_script=b.id_script where b.id_camp_linha =? ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(array($campaign_id));
+        $js = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $js;
     }
 
@@ -316,11 +324,11 @@ class script {
         return ($row[0] == "1");
     }
 
-    public function has_rules($tag) {
+    public function has_rules($tag, $id_script) {
         $temp = 0;
-        $query = "SELECT count(id) as count FROM script_rules where tag_trigger=:tag";
+        $query = "SELECT count(id) as count FROM script_rules where tag_trigger=:tag and id_script=:script";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":tag" => $tag));
+        $stmt->execute(array(":tag" => $tag, ":script" => $id_script));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $temp = $row["count"];
         }
@@ -370,14 +378,14 @@ class script {
 //EDIT
 
 
-    public function edit_script($name, $id_script, $campaign,$linha_inbound,$bd) {
+    public function edit_script($name, $id_script, $campaign, $linha_inbound, $bd) {
         $query = "update script_dinamico_master set name=:name where id=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script, ":name" => $name));
         $query = "delete from script_assoc where id_script=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
-   
+
         if (isset($campaign)) {
             foreach ($campaign as $value) {
                 $query = "INSERT INTO `script_assoc` values(:id_script,:value,'campaign')";

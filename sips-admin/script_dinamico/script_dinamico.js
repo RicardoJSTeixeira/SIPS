@@ -5,10 +5,10 @@ var selected_tag = 0;
 var selected_type = "";
 var array_id = [];
 var regex_remove_blank = /^\s*$[\n\r]{1,}/gm;
-var regex_replace_textbox_tag = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª€%\_\s:,?\/\-\.\,()@§]/g;
-var regex_replace_textbox = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª€%\_\s:,?\/\-\.\,(),]/g;
-var regex_replace = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª€%\_\s:,?\/\-\.\,()]/g;
-var regex_text = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª€%><=\"\'\_\s\:\-,?\/\-\.\,()@§&]/g;
+var regex_replace_textbox_tag = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\€\%\_\s:,?\/\-\.\,()@§]/g;
+var regex_replace_textbox = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\€\%\_\s:,?\/\-\.\,(),]/g;
+var regex_replace = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\€\%\_\s:,?\/\-\.\,()]/g;
+var regex_text = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔºª\€\%><=\"\'\_\s\:\-,?\/\-\.\,()@§&]/g;
 var regex_split = /\n/g;
 var list_ui;
 var list_item;
@@ -1874,7 +1874,7 @@ $(".values_edit_textarea").on("blur", function()
 {
     if (temp_value_holder !== $(this).val())
     {
-        $.post("requests.php", {action: "has_rules", tag: selected_tag},
+        $.post("requests.php", {action: "has_rules", tag: selected_tag,id_script:$("#script_selector option:selected").val()},
         function(data)
         {
             if (data != "0")

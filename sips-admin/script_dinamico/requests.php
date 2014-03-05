@@ -57,14 +57,14 @@ switch ($action) {
         echo json_encode($script->get_scripts($user->user_group));
         break;
 
-    case "get_scripts_by_campaign":
+    case "get_render_scripts_by_campaign":
 
         $temp = $script->get_scripts_by_lead_id($lead_id);
        
             if (count($temp)>0)
             echo json_encode($temp);
         else
-            echo json_encode($script->get_scripts_by_campaign($id_campaign));
+            echo json_encode($script->get_render_scripts_by_campaign($id_campaign));
         break;
 
     case "get_scripts_by_id_script":
@@ -114,7 +114,7 @@ switch ($action) {
         break;
 
     case 'has_rules':
-        echo json_encode($script->has_rules($tag));
+        echo json_encode($script->has_rules($tag,$id_script));
         break;
 
     case "get_image_pdf":
