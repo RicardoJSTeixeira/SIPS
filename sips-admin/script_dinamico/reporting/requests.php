@@ -70,7 +70,7 @@ switch ($action) {
 
 
 
-<<<<<<< HEAD
+
         $js[] = array("id" => "lead_id", "field" => "lead_id", "type" => "default", "original_texto" => "ID do Cliente", "texto" => "ID do Cliente");
         $js[] = array("id" => "user_group", "field" => "user_group", "type" => "default", "original_texto" => "Grupo de user", "texto" => "Grupo de user");
         $js[] = array("id" => "full_name", "field" => "full_name", "type" => "default", "original_texto" => "Agente", "texto" => "Agente");
@@ -83,19 +83,8 @@ switch ($action) {
         $js[] = array("id" => "entry_date", "field" => "entry_date", "type" => "default", "original_texto" => "Data de Carregamento", "texto" => "Data de Carregamento");
         $js[] = array("id" => "called_count", "field" => "called_count", "type" => "default", "original_texto" => "Nº de Chamadas", "texto" => "Nº de Chamadas");
         $js[] = array("id" => "called_since_last_reset", "field" => "called_since_last_reset", "type" => "default", "original_texto" => "Chamada desde o último reset à BD", "texto" => "Chamada desde o último reset à BD");
-=======
-        $js[] = array("id" => "lead_id", "type" => "default", "original_texto" => "ID do Cliente", "texto" => "ID do Cliente");
-        $js[] = array("id" => "user_group", "type" => "default", "original_texto" => "Grupo de user", "texto" => "Grupo de user");
-        $js[] = array("id" => "user_id", "type" => "default", "original_texto" => "Agente", "texto" => "Agente");
-        $js[] = array("id" => "call_date", "type" => "default", "original_texto" => "Data da Chamada", "texto" => "Data da Chamada", "param_1" => "data_chamada");
-        $js[] = array("id" => "call_date", "type" => "default", "original_texto" => "Hora da chamada", "texto" => "Hora da chamada", "param_1" => "hora_chamada");
-        $js[] = array("id" => "length_in_sec", "type" => "default", "original_texto" => "Duração da Chamada", "texto" => "Duração da Chamada", "param_1" => "length_in_sec");
-        $js[] = array("id" => "status_name", "type" => "default", "original_texto" => "Feedback", "texto" => "Feedback");
-        $js[] = array("id" => "list_name", "type" => "default", "original_texto" => "Base de Dados", "texto" => "Base de Dados");
-        $js[] = array("id" => "entry_date", "type" => "default", "original_texto" => "Data de Carregamento", "texto" => "Data de Carregamento");
-        $js[] = array("id" => "called_count", "type" => "default", "original_texto" => "Nº de Chamadas", "texto" => "Nº de Chamadas");
-        $js[] = array("id" => "called_since_last_reset", "type" => "default", "original_texto" => "Chamada desde o último reset à BD", "texto" => "Chamada desde o último reset à BD");
->>>>>>> origin/master
+
+
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $js[] = array("id" => $row["Name"], "field" => $row["Name"], "type" => "campo_dinamico", "original_texto" => $row["Display_name"], "texto" => $row["Display_name"]);
