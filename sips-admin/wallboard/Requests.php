@@ -536,7 +536,7 @@ switch ($action) {
 
     case '4_outbound'://outbound
         $campaign = explode(",", $campanha);
-    
+
         for ($i = 0; $i < count($campaign); $i++) {
             $campaign[$i] = "'" . $campaign[$i] . "'";
         }
@@ -593,33 +593,11 @@ switch ($action) {
             $today = date("Y-m-d") . " 00:00:00";
             $tomorrow = date("Y-m-d") . " 23:59:59";
 
-
-
-
             $callsTODAY = 0;
             $dropsTODAY = 0;
             $answersTODAY = 0;
 
-
-
-            $query = "SELECT list_id from vicidial_lists where campaign_id in(:campaign_id)";
-            $stmt = $db->prepare($query);
-            $stmt->execute(array(":campaign_id" => $campanha));
-
-            $temp_list = array();
-            while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-                $temp_list[] = $row[0];
-            }
-    
-            $list_log = "and list_id in('" . implode("','", $temp_list) . "')";
-    
-
-
-
-
-
-
-            $query = "select status,count(status) as status1 from vicidial_log where  call_date between '$today' and '$tomorrow' $list_log and status not like ('AFTHRS') group by status";
+            $query = "select status,count(status) as status1 from vicidial_log where  call_date between '$today' and '$tomorrow' and  campaign_id in($campanha) and status not like ('AFTHRS') group by status";
             $query = mysql_query($query, $link) or die(mysql_error());
             while ($row = mysql_fetch_assoc($query)) {
                 $callsTODAY+=$row["status1"];
@@ -628,11 +606,11 @@ switch ($action) {
                 else if ($row["status"] != "QUEUE")
                     $answersTODAY += $row["status1"];
             }
-
-
-            $query = "select ifnull(sum(length_in_sec),0) as total_sec, ifnull(sum(queue_seconds),0) as queue_seconds from vicidial_log where  call_date between '$today' and '$tomorrow'$list_log and lead_id is not null";
+            $query = "select ifnull(sum(length_in_sec),0) as total_sec from vicidial_log where  call_date between '$today' and '$tomorrow' and  campaign_id in($campanha) and lead_id is not null";
+            
             $query = mysql_query($query, $link) or die(mysql_error());
             $row2 = mysql_fetch_assoc($query);
+    
             $js[] = array(
                 chamadas_efectuadas => $callsTODAY,
                 chamadas_n_atendidas => $callsTODAY - $answersTODAY,
@@ -641,7 +619,8 @@ switch ($action) {
                 tma1 => $PCThold_sec_stat_one,
                 tma2 => $PCThold_sec_stat_two,
                 tma => $row2["total_sec"],
-            );
+            ); 
+    
         }
         echo json_encode($js);
         break;

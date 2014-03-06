@@ -631,7 +631,7 @@ function   inbound_wallboard(data)
                         var totalSec = +data3[0].tma;
                         totalSec = Math.round(totalSec / chamadas_atendidas_val);
                         if (/^\d+$/.test(totalSec))
-                            tma_todas_chamadas = secondstotime(totalSec);
+                            tma_todas_chamadas = secondsToString(totalSec);
 
                     }
 
@@ -755,11 +755,13 @@ function   inbound_wallboard(data)
                 if (+data3[0].tma > 0)
                 {
                     var totalSec = +data3[0].tma;
-                    totalSec = Math.round(totalSec / chamadas_atendidas_val);
+                  
+                    totalSec = Math.round(totalSec / chamadas_atendidas);
+               
                     if (/^\d+$/.test(totalSec))
-                        tma_todas_chamadas = secondstotime(totalSec);
-
-                }
+                        tma_todas_chamadas = secondsToString(totalSec);
+ 
+                }  
 
 
 
@@ -947,13 +949,14 @@ function   dataTable_top(data)
 
 
 
-function secondstotime(seconds)
+function secondsToString(seconds)
 {
-    var numminutes = Math.round(((seconds) % 3600) / 60);
-    var numseconds = ((seconds) % 3600) % 60;
-    if (numminutes < 10)
-        numminutes = "0" + numminutes;
-    if (numseconds < 10)
-        numseconds = "0" + numseconds;
-    return numminutes + ":" + numseconds;
+
+var numdays = Math.floor(seconds / 86400);
+var numhours = Math.floor((seconds % 86400) / 3600);
+var numminutes = Math.floor(((seconds % 86400) % 3600) / 60);
+var numseconds = ((seconds % 86400) % 3600) % 60;
+
+return numminutes + " : " + numseconds ;
+
 }
