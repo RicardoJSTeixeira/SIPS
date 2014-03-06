@@ -230,7 +230,7 @@ class crm_edit_class {
                         vl.lead_id=:lead_id
                         group by vl.uniqueid;";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":lead_id" => $lead_id,":campaign_id" =>$campaign_id));
+        $stmt->execute(array(":lead_id" => $lead_id, ":campaign_id" => $campaign_id));
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
             $row[10] = "Outbound";
@@ -261,7 +261,7 @@ class crm_edit_class {
                         vl.lead_id=:lead_id
                         group by vl.uniqueid;";
         $stmt = $this->db->prepare($query);
-           $stmt->execute(array(":lead_id" => $lead_id,":campaign_id" =>$campaign_id));
+        $stmt->execute(array(":lead_id" => $lead_id, ":campaign_id" => $campaign_id));
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
             $row[10] = "Outbound";
@@ -303,7 +303,7 @@ class crm_edit_class {
                                    vcl.lead_id=:lead_id
                                     group by vcl.uniqueid";
         $stmt = $this->db->prepare($query);
-  $stmt->execute(array(":lead_id" => $lead_id,":campaign_id" =>$campaign_id));
+        $stmt->execute(array(":lead_id" => $lead_id, ":campaign_id" => $campaign_id));
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
             $row[10] = "Inbound";
             $output[] = $row;
@@ -332,7 +332,7 @@ class crm_edit_class {
                                    vcl.lead_id=:lead_id
                                     group by vcl.uniqueid";
         $stmt = $this->db->prepare($query);
-  $stmt->execute(array(":lead_id" => $lead_id,":campaign_id" =>$campaign_id));
+        $stmt->execute(array(":lead_id" => $lead_id, ":campaign_id" => $campaign_id));
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
             $row[10] = "Inbound";
             $output[] = $row;
@@ -463,12 +463,29 @@ class crm_edit_class {
         return $js;
     }
 
-    public function check_has_script($campaign_id) {
+    public function check_has_script($campaign_id, $lead_id) {
+
+
         $js = array();
-        $query = "SELECT count(*) from script_assoc where id_camp_linha=:campaign";
+        $query = "SELECT count(*)  FROM script_dinamico_master sdm inner join script_assoc sa on sa.id_script=sdm.id inner join vicidial_list vl on vl.list_id=sa.id_camp_linha where vl.lead_id=?";
         $stmt = $this->db->prepare($query);
-        $stmt->execute(array(":campaign" => $campaign_id));
-        return $stmt->fetch(PDO::FETCH_NUM);
+        $stmt->execute(array($lead_id));
+        $temp = $stmt->fetch(PDO::FETCH_NUM);
+        if ($temp[0] > 0) {
+            return 1;
+        } else {
+            $js = array();
+            $query = "SELECT count(*) from script_assoc where id_camp_linha=:campaign";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute(array(":campaign" => $campaign_id));
+            $temp = $stmt->fetch(PDO::FETCH_NUM);
+            if ($temp[0] > 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        return 0;
     }
 
 }
