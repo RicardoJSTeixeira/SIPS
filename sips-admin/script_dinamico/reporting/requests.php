@@ -400,7 +400,17 @@ switch ($action) {
                     echo($ex);
                     exit;
                 }
+
+
+
+
+
                 system("rm /tmp/$query_sql");
+                system("rm /srv/www/htdocs/report_files/$file.txt");
+                system("rm /srv/www/htdocs/report_files/$file.csv");
+                $yesterday_files = "report" . strtotime("-1 days", time());
+              
+                system("rm /srv/www/htdocs/report_files/$yesterday_files.csv");
                 $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
@@ -416,6 +426,7 @@ switch ($action) {
                 $query1 = "drop table $final;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
+                  var_dump($yesterday_files);exit;
                 echo(json_encode($file));
                 break;
             case 2:
@@ -470,6 +481,8 @@ switch ($action) {
                     exit;
                 }
                 system("rm /tmp/$query_sql");
+                system("rm /srv/www/htdocs/report_files/$file.txt");
+                system("rm /srv/www/htdocs/report_files/$file.csv");
                 $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
@@ -529,6 +542,8 @@ switch ($action) {
                     exit;
                 }
                 system("rm /tmp/$query_sql");
+                system("rm /srv/www/htdocs/report_files/$file.txt");
+                system("rm /srv/www/htdocs/report_files/$file.csv");
                 $query1 = "drop table $logscriptoffset;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
@@ -584,6 +599,8 @@ switch ($action) {
                     exit;
                 }
                 system("rm /tmp/$query_sql");
+                system("rm /srv/www/htdocs/report_files/$file.txt");
+                system("rm /srv/www/htdocs/report_files/$file.csv");
                 $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
@@ -644,6 +661,8 @@ switch ($action) {
                     exit;
                 }
                 system("rm /tmp/$query_sql");
+                system("rm /srv/www/htdocs/report_files/$file.txt");
+                system("rm /srv/www/htdocs/report_files/$file.csv");
                 $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
