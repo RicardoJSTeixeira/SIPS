@@ -1,0 +1,210 @@
+.timeline {
+    margin: 30px 0 0 0;
+    padding: 0;
+    list-style: none;
+    position: relative;
+} 
+
+/* The line */
+.timeline:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 10px;
+    background: #afdcf8;
+    //left: 20%;
+    margin-left: 50%;//-10px;
+}
+
+/* The date/time */
+.timeline > li .timeline_time {
+    display: block;
+    width: 100%;
+   // padding-right: 100px;
+    position: absolute;
+    //background: #afdcf8;
+}
+
+.timeline > li .timeline_time span {
+    display: block;
+    text-align: center;
+}
+
+.timeline > li .timeline_time span:first-child {
+    font-size: 0.9em;
+    color: #bdd0db;
+    padding-right: 15%;
+}
+
+.timeline > li .timeline_time span:last-child {
+    font-size: 2.9em;
+    color: #3594cb;
+    padding-right: 15%;
+    margin-top:-10px;
+}
+
+.timeline > li:nth-child(odd) .timeline_time span:first-child {
+    margin-left: 33%;
+}
+.timeline > li:nth-child(odd) .timeline_time span:last-child {
+    color: #6cbfee;
+     margin-left: 36%;
+}
+
+/* Right content */
+.timeline > li .timeline_txt {
+    margin: 0 0 15px 25%;
+    background: #3594cb;
+    color: #fff;
+    padding: 2em;
+    font-size: 1.2em;
+    font-weight: 300;
+    line-height: 1.4;
+    position: relative;
+    border-radius: 5px;
+    //width: 500px;
+    margin-left: 53%;
+}
+
+/* Left Content */
+.timeline > li:nth-child(odd) .timeline_txt{
+    margin:15px 25% 15px 0;
+    background:#6cbfee;
+    color:#fff;
+    padding: 2em;
+    font-size: 1.2em;
+    font-weight: 300;
+    line-height: 1.4;
+    position: relative;
+    border-radius: 5px;
+    width: 48%;
+    margin-left: 0%;
+}
+
+.timeline > li .timeline_txt h2 { 
+    margin-top: 0px;
+    padding: 0 0 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.4);
+}
+
+/* The triangle */
+.timeline > li .timeline_txt:after {
+    right: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-right-color: #3594cb;
+    border-width: 10px;
+    top: 10px;
+}
+
+.timeline > li:nth-child(odd) .timeline_txt:after {
+    left: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-left-color: #6cbfee;
+    border-width: 11px;
+    top: 10px;
+}
+
+/* The icons */
+.timeline > li .timeline_action {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    color: #fff;
+    background: #46a4da;
+    border-radius: 50%;
+    box-shadow: 0 0 0 8px #afdcf8;
+    text-align: center;
+    //left: 20%;
+    top: 0;
+    margin: 0 0 0 -25px;
+    margin-left: 49%; // Margin ADD
+}
+
+
+/* Example Media Queries */
+@media screen and (max-width: 65.375em) {
+
+    .timeline > li .timeline_time span:last-child {
+        font-size: 1.5em;
+    }
+    .timeline > li:nth-child(odd) .timeline_time span:last-child {
+        margin-left: 33%;
+    }
+}
+
+@media screen and (max-width: 47.2em) {
+    .timeline:before {
+        display: none;
+    }
+
+    .timeline > li .timeline_time {
+        width: 100%;
+        position: relative;
+        padding: 0 0 20px 0;
+    }
+
+    .timeline > li .timeline_time span {
+        text-align: left;
+    }
+    
+     .timeline > li:nth-child(odd) .timeline_time span:first-child {
+        text-align: left;
+        margin-left:0px;
+    }
+    
+    .timeline > li:nth-child(odd) .timeline_time span:last-child {
+        text-align: left;
+         margin-left:0px;
+    }
+    
+    .timeline > li .timeline_txt {
+        margin: 0 0 30px 0;
+        padding: 1em;
+        font-weight: 400;
+        font-size: 95%;
+    }
+    
+     .timeline > li:nth-child(odd) .timeline_txt {
+        margin: 0 0 30px 0;
+        padding: 1em;
+        font-weight: 400;
+        font-size: 95%;
+        width: 100%;
+    }    
+
+    .timeline > li .timeline_txt:after {
+        right: auto;
+        left: 20px;
+        border-right-color: transparent;
+        border-bottom-color: #3594cb;
+        top: -20px;
+    }
+
+    .timeline > li:nth-child(odd) .timeline_txt:after {
+        right: auto;
+        left:20px;
+        border-left-color: transparent;
+        border-bottom-color: #6cbfee;
+        top: -20px;
+    }
+
+    .timeline > li .timeline_action {
+        position: relative;
+        float: right;
+        left: auto;
+        margin: -55px 5px 0 0px;
+    }	
+}
