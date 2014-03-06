@@ -23,10 +23,8 @@ function editor_toggle(tipo)
         $("#tabs").tabs("enable");
         $("#item_edit_comum").show();
         $("#rule_manager").show();
-
         $(".editor_layout").hide(); // esconde os edits de todos
         $(".footer_save_cancel button").prop('disabled', false); //botoes de edit
-
         $("#ipl_file_select option").prop("disabled", false);
     }
     if (tipo === "off")
@@ -36,7 +34,6 @@ function editor_toggle(tipo)
         $("#tabs").tabs("disable", 1);
         $("#item_edit_comum").hide();
         $("#rule_manager").hide();
-
         $(".editor_layout").hide();
         $(".footer_save_cancel button").prop('disabled', true);
     }
@@ -403,7 +400,7 @@ function update_script(callback)
         }
 
 //Get das tags dos campos dinâmicos
-        $.post("requests.php", {action: "get_tag_fields", id_script: $("#script_selector option:selected").val()},
+        $.post("requests.php", {action: "get_tag_fields", id_script: $("#- option:selected").val()},
         function(data4)
         {
             $("#select_default_value").empty();
@@ -457,7 +454,6 @@ function update_pages(callback)
             $("#go_to_select").empty();
             $("#page_position").empty();
             $.each(data, function() {
-
                 if (pag == this.id)
                     $("#page_selector").append("<option data-pos=" + this.pos + " value=" + this.id + " selected>" + this.name + "</option>");
                 else
@@ -1584,7 +1580,7 @@ $('#script_selector').change(function()
 {
 
     editor_toggle("off");
-    update_script();
+    update_pages();
 });
 $("#opcao_script_button").click(function()//chama o edit do nome do script
 {

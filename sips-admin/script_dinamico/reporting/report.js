@@ -160,10 +160,10 @@ $(".radio_dados").on("click", function()
 });
 
 function get_templates(campaign)
-{ 
+{
 
     if (campaign)
-    { 
+    {
 
         $("#new_template_div_opener_button").prop("disabled", false);
         $("#template_options_button").prop("disabled", false);
@@ -221,8 +221,8 @@ function get_templates(campaign)
             }
             else
             {
+                $("#span_script_name").text("Crie uma Template");
                 $("#oc_template").empty().append("<option value=''>Crie um template</option>");
-                $("#span_script_name").text("");
                 $("#column_order_title").text("");
                 $("#column_order").empty();
 

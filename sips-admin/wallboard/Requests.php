@@ -621,7 +621,7 @@ switch ($action) {
                 tma => $row2["total_sec"],
             ); 
     
-        }
+        } 
         echo json_encode($js);
         break;
 

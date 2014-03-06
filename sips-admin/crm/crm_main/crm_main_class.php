@@ -202,8 +202,14 @@ class crm_main_class {
                     $script_fields = "(" . $script_fields . ")";
                 }
             }
-            $query = "select a.lead_id,a.first_name,a.phone_number,a.user, vcs.status_name,a.last_local_call_time,a.list_id  from vicidial_list a"
-                    . " left join (select status, status_name from vicidial_campaign_statuses where campaign_id = '$campanha' UNION ALL select status, status_name from vicidial_statuses) vcs on a.status = vcs.status $join where $where $script_fields limit 20000";
+            $query = "select a.lead_id,a.first_name,a.phone_number,users.full_name, vcs.status_name,a.last_local_call_time,a.list_id  from vicidial_list a"
+                    . " left join (select status, status_name from vicidial_campaign_statuses where campaign_id = '$campanha' UNION ALL select status, status_name from vicidial_statuses) vcs on a.status = vcs.status"
+                    . " left join vicidial_users users on users.user_id=a.user $join where $where $script_fields limit 20000";
+            var_dump($query);
+            var_dump($variables);
+            exit;
+            
+            
            #echo $query;
             $stmt2 = $this->db->prepare($query);
             $stmt2->execute($variables);

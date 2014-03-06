@@ -756,7 +756,7 @@ function   inbound_wallboard(data)
                 {
                     var totalSec = +data3[0].tma;
                   
-                    totalSec = Math.round(totalSec / chamadas_atendidas);
+                    totalSec = Math.round(totalSec / chamadas_atendidas); 
                
                     if (/^\d+$/.test(totalSec))
                         tma_todas_chamadas = secondsToString(totalSec);
