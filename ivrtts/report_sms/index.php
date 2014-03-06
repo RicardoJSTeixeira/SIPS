@@ -13,13 +13,16 @@ $end_date = date("o-m-d");
         <div class="grid-content">
             <div class="span2">
                 <label for="dpd1">Start Date:</label>
-                <input type="text" value="<?= $start_date ?>" id="dpd1"> 
+                <input type="text" style="width: 150px" value="<?= $start_date ?>" id="dpd1"> 
             </div>
             <div class="span2">
                 <label for="dpd2">End Date:</label>
-                <input type="text" value="<?= $end_date ?>" id="dpd2">
+                <input type="text" style="width: 150px" value="<?= $end_date ?>" id="dpd2">
             </div>
-            <div class="span3">
+            <div class="span1">
+                &nbsp;
+            </div>
+            <div class="span4" style="text-align: center">
                 <div class="formRow">
                     <div class=" distance">
                         <p>
@@ -37,11 +40,9 @@ $end_date = date("o-m-d");
                     </div>
                 </div>
             </div>
-            <div class="span3">
-                <button class="btn btn-large btn-success btn-block pull-left" id="reload" name="reload" value="Reload">Load Report</button>
-            </div>
-            <div class="span2">
-                <button class="btn btn-large btn-success pull-left" id="export_all" disabled name="export_all" >Export Report</button>
+            <div class="span3" style="text-align: center">
+                <button class="btn  btn-success" id="reload" name="reload" value="Reload">Load Report</button>
+                <button class="btn  btn-success" id="export_all" disabled name="export_all" >Export Report</button>
             </div>    
         </div>
     </div>
@@ -54,14 +55,15 @@ $end_date = date("o-m-d");
     <div class="grid span12">
         <div class="grid-title">
             <div class="pull-left">SMS Report</div>
-            <div class="pull-right"></div>
+            <div class="pull-right"><h5>Total Records: <span id="smscount">0</span></h5></div>
             <div class="clear"></div>
         </div>
         <div class="grid-content">
             <table id="smsreport" class="table table-hover table-striped">
                 <thead>
                     <tr>
-                        <th>Date</th>
+                        <th>Sent Date</th>
+                        <th>Status Date</th>
                         <th>Destination</th>
                         <th>Content</th>
                         <th># SMS</th>
@@ -96,22 +98,29 @@ $end_date = date("o-m-d");
     $("#reload").on('click', function() {
         $("#reload").attr('disabled', true)
         $("#smsreport").dataTable().fnDestroy();
-        getData(function(filters) {
-            oTable = $('#smsreport').dataTable({
-                "bProcessing": true,
-                "bDestroy": true,
-                "bAutoWidth": false,
-                "sPaginationType": "full_numbers",
-                "sAjaxSource": '../report_sms/requests.php',
-                "fnServerParams": function(aoData) {
-                    aoData.push({"name": "action", "value": "get_sms_report"}, {"name": "start_date", "value": $("#dpd1").val()}, {"name": "end_date", "value": $("#dpd2").val()}, {"name": "filters", value: filters});
-                },
-                "fnDrawCallback": function(oSettings) {
-                    $("#reload").attr('disabled', false);
-                    $("#export_all").attr('disabled', false);
-                }
+        setTimeout(function() {
+            getData(function(filters) {
+                $('#smsreport').dataTable({
+                    "bProcessing": true,
+                    "bDestroy": true,
+                    "bAutoWidth": false,
+                    "sPaginationType": "full_numbers",
+                    "sAjaxSource": '../report_sms/requests.php',
+                    "fnServerParams": function(aoData) {
+                        aoData.push({"name": "action", "value": "get_sms_report"}, {"name": "start_date", "value": $("#dpd1").val()}, {"name": "end_date", "value": $("#dpd2").val()}, {"name": "filters", value: filters});
+                    },
+                    "fnDrawCallback": function(oSettings) {
+                       
+                        
+                        $("#reload").attr('disabled', false);
+                        $("#export_all").attr('disabled', false);
+                        $("#smscount").html($('#smsreport').dataTable().fnSettings().fnRecordsTotal())
+                        
+                        $("#smsreport_filter input").on('keyup', function(){ $("#smscount").html($("#smsreport").dataTable().fnSettings().fnRecordsDisplay()); }); 
+                    }
+                });
             });
-        });
+        }, 2000);
     });
 
 
@@ -155,7 +164,8 @@ $end_date = date("o-m-d");
             $('.csv-data').remove();
         // open a div with a download link
         $('body').append('<div class="csv-data hidden"><form id="download" enctype="multipart/form-data" method="post" action="../report_sms/csv.php"><textarea class="form" name="csv">' + csv + '</textarea><input type="submit" class="submit" value="Download as file" /></form></div>');
-        if (callback) callback();
+        if (callback)
+            callback();
     }
 
     function strip_tags(html) {
@@ -198,14 +208,14 @@ $end_date = date("o-m-d");
 
         $('#export_visible').click(function(event) {
             event.preventDefault();
-            table2csv(oTable, 'visible', '#smsreport');
+            table2csv($('#smsreport').dataTable(), 'visible', '#smsreport');
         })
 
 // export all table data
         $('#export_all').click(function(event) {
             event.preventDefault();
-            table2csv(oTable, 'full', '#smsreport', function(){
-               $("#download").submit();
+            table2csv($('#smsreport').dataTable(), 'full', '#smsreport', function() {
+                $("#download").submit();
             });
         })
 
