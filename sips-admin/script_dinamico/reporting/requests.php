@@ -408,15 +408,7 @@ switch ($action) {
                 system("rm /tmp/$query_sql");
                 system("rm /srv/www/htdocs/report_files/$file.txt");
                 system("rm /srv/www/htdocs/report_files/$file.csv");
-      
-                $today_files = "report" . date("Y-m-d", time());
-
-                system("mv $today_files*.csv $today_files*.csv.keep");
-                system("rm /srv/www/htdocs/report_files/report*.csv");
-
-
-                system("mv $today_files*.csv.keep $today_files*.csv");
-                $query1 = "drop table $scriptoffset;";
+                      $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
                 $query1 = "drop table $logscriptoffset;";
