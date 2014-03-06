@@ -333,7 +333,9 @@ switch ($action) {
                     echo($ex);
                     exit;
                 }
-            
+                system("rm /tmp/$query_sql");
+                system("rm /srv/www/htdocs/report_files/$file.txt");
+                system("rm /srv/www/htdocs/report_files/$file.csv");
                 $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
@@ -350,7 +352,7 @@ switch ($action) {
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
                 echo(json_encode($file));
-                break; 
+                break;
             case 1:
                 try {
                     if (count($script_elements) > 0)
@@ -398,6 +400,7 @@ switch ($action) {
                     echo($ex);
                     exit;
                 }
+                system("rm /tmp/$query_sql");
                 $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
@@ -466,6 +469,7 @@ switch ($action) {
                     echo($ex);
                     exit;
                 }
+                system("rm /tmp/$query_sql");
                 $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
@@ -524,6 +528,7 @@ switch ($action) {
                     echo($ex);
                     exit;
                 }
+                system("rm /tmp/$query_sql");
                 $query1 = "drop table $logscriptoffset;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
@@ -544,7 +549,7 @@ switch ($action) {
                         $script_elements_temp = ", " . implode(", ", $script_elements);
                     $query = "CREATE TABLE $scriptoffset ENGINE = MYISAM select id_script,  campaign_id, unique_id, lead_id script_lead, date, param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id = ? and date between ? and ?    group by unique_id;";
                     $stmt = $db->prepare($query);
-                                $stmt->execute(array($campaign_id, $data_inicio, $data_fim));
+                    $stmt->execute(array($campaign_id, $data_inicio, $data_fim));
                     $query = "create table $logsscriptgrouplead ENGINE = MYISAM select *, max(date) as MaxDate from $scriptoffset group by script_lead;";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
@@ -555,7 +560,7 @@ switch ($action) {
                         $client_elements_temp = ", " . implode(", ", $client_elements);
                     $query = "create table $logscriptoffset ENGINE = MYISAM select b.entry_date, b.modify_date, b.status, b.user user_id,b.lead_id, b.list_id $client_elements_temp, b.called_count,b.called_since_last_reset, b.last_local_call_time call_date,'Sem grupo User' user_group,'no info' length_in_sec, a.* from vicidial_list b left join $logsscriptgrouplead a on b.lead_id = a.script_lead  where b.last_local_call_time between ? and ? $lists_log2 ";
                     $stmt = $db->prepare($query);
-                  $stmt->execute(array( $data_inicio, $data_fim));
+                    $stmt->execute(array($data_inicio, $data_fim));
                     $query = "create table $logscriptstatus ENGINE = MYISAM select a.*, b.status_name from $logscriptoffset a inner join (select status, status_name, campaign_id from vicidial_campaign_statuses x where campaign_id = ? union all select status, status_name, ? from vicidial_statuses z) b where a.status = b.status ";
                     $stmt = $db->prepare($query);
                     $stmt->execute(array($campaign_id, $campaign_id));
@@ -578,6 +583,7 @@ switch ($action) {
                     echo($ex);
                     exit;
                 }
+                system("rm /tmp/$query_sql");
                 $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
@@ -637,6 +643,7 @@ switch ($action) {
                     echo($ex);
                     exit;
                 }
+                system("rm /tmp/$query_sql");
                 $query1 = "drop table $scriptoffset;";
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();

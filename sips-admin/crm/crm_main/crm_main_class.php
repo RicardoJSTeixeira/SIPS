@@ -79,9 +79,9 @@ class crm_main_class {
         $script_fields = "";
         if ($lead_id != "" && $lead_id != null) {
             $query = "
-            SELECT lead_id,first_name,phone_number,user,status,last_local_call_time,list_id
-            FROM   vicidial_list  
-            WHERE  lead_id= ?";
+            SELECT a.lead_id,a.first_name,a.phone_number,users.full_name,a.status,a.last_local_call_time,a.list_id
+            FROM   vicidial_list a    left join vicidial_users users on users.user=a.user
+            WHERE  a.lead_id= ?";
             $variables[] = $lead_id;
             $stmt = $this->db->prepare($query);
             $stmt->execute($variables);
@@ -101,9 +101,10 @@ class crm_main_class {
             return $js;
         } elseif ($phone_number != "" && $phone_number != null) {
             $query = "
-            SELECT lead_id,first_name, phone_number, user, status, last_local_call_time 
-            FROM   vicidial_list
-            WHERE   phone_number= ? or address3=? or alt_phone=?  ";
+            SELECT a.lead_id,a.first_name, a.phone_number, users.full_name, a.status, a.last_local_call_time 
+            FROM   vicidial_list a 
+            left join vicidial_users users on users.user=a.user
+            WHERE   a.phone_number= ? or a.address3=? or a.alt_phone=?  ";
             $variables[] = $phone_number;
             $variables[] = $phone_number;
             $variables[] = $phone_number;
@@ -171,8 +172,8 @@ class crm_main_class {
                 $cd = json_decode($cd);
                 $ao = " and ";
                 foreach ($cd as $cp) {
-                    $where = $where . $ao ."a.". $cp->name . " LIKE ?";
-                    $variables[] = "%" .$cp->value . "%";
+                    $where = $where . $ao . "a." . $cp->name . " LIKE ?";
+                    $variables[] = "%" . $cp->value . "%";
                     $ao = " or ";
                 }
             }
@@ -204,13 +205,11 @@ class crm_main_class {
             }
             $query = "select a.lead_id,a.first_name,a.phone_number,users.full_name, vcs.status_name,a.last_local_call_time,a.list_id  from vicidial_list a"
                     . " left join (select status, status_name from vicidial_campaign_statuses where campaign_id = '$campanha' UNION ALL select status, status_name from vicidial_statuses) vcs on a.status = vcs.status"
-                    . " left join vicidial_users users on users.user_id=a.user $join where $where $script_fields limit 20000";
-            var_dump($query);
-            var_dump($variables);
-            exit;
-            
-            
-           #echo $query;
+                    . " left join vicidial_users users on users.user=a.user $join where $where $script_fields limit 20000";
+
+
+
+            #echo $query;
             $stmt2 = $this->db->prepare($query);
             $stmt2->execute($variables);
             while ($row = $stmt2->fetch(PDO::FETCH_NUM)) {
@@ -236,23 +235,41 @@ class crm_main_class {
         $variables = array();
         $join = "";
         $script_fields = "";
-        
+
         $table = "";
 
-        if ($campaign_linha_inbound == 1)
-            $table = "vicidial_log calls";
-        else
-            $table = "vicidial_closer_log calls";
+
+
+        $twoMonthsBefore = strtotime("-2 months", time());
+        $temp_data_inicio = strtotime($data_inicio);
+
+
+    
+        if ($campaign_linha_inbound == 1) {
+            if ($twoMonthsBefore > $temp_data_inicio) {
+                $table = "vicidial_log_archive calls";
+            } else {
+                $table = "vicidial_log calls";
+            }
+        } else {
+
+            if ($twoMonthsBefore > $temp_data_inicio) {
+                $table = "vicidial_closer_log_archive calls";
+            } else {
+                $table = "vicidial_closer_log calls";
+            }
+        }
 
 
 
         if ($lead_id != "" && $lead_id != null) {
             $query = "
-            SELECT c.lead_id,c.first_name,  calls.phone_number, calls.user, calls.status,calls.length_in_sec,calls.call_date ,calls.list_id
+            SELECT c.lead_id,c.first_name,  calls.phone_number, users.full_name, calls.status,calls.length_in_sec,calls.call_date ,calls.list_id
             FROM   $table
+                 left join vicidial_users users on users.user=calls.user
             left join vicidial_list c on c.lead_id=calls.lead_id
             WHERE  calls.lead_id= ? ";
-
+         
             $variables[] = $lead_id;
 
             $stmt = $this->db->prepare($query);
@@ -335,8 +352,8 @@ class crm_main_class {
                 $cd = json_decode($cd);
                 $ao = " and ";
                 foreach ($cd as $cp) {
-                    $where = $where . $ao . "c." .  $cp->name . "LIKE ?";
-                    $variables[] = "%". $cp->value ."%";
+                    $where = $where . $ao . "c." . $cp->name . "LIKE ?";
+                    $variables[] = "%" . $cp->value . "%";
                     $ao = " or ";
                 }
             }
@@ -366,8 +383,7 @@ class crm_main_class {
                             $ao = " and ";
                         }
                     }
-                   # $script_fields = $script_fields . ")";
-                    
+                    # $script_fields = $script_fields . ")";
                     #echo $script_fields;
                 }
             }
@@ -376,7 +392,7 @@ class crm_main_class {
                     . " left join (select status,status_name from vicidial_campaign_statuses where campaign_id = ? UNION ALL select status, status_name from vicidial_statuses) st on calls.status = st.status $join   where $where $script_fields   limit 20000 ";
 
             #select calls.lead_id,c.first_name,  calls.phone_number, calls.user, st.status_name,calls.length_in_sec,calls.call_date,calls.list_id  from vicidial_log calls  left join vicidial_list c on c.lead_id=calls.lead_id left join (select status, status_name from vicidial_campaign_statuses where campaign_id = 'W00003' UNION ALL select status, status_name from vicidial_statuses) st on calls.status = st.status where  calls.campaign_id= 'W00003'  and date(calls.call_date) = date(now());
-          #    echo $query;
+            #    echo $query;
             #     print_r($variables);
             $stmt = $this->db->prepare($query);
             $stmt->execute($variables);
