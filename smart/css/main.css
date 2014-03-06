@@ -1,7 +1,7 @@
 	html {
 		margin: 0;
 		padding: 0;
-		height: 100%;
+		//height: 100%;
 		overflow-x: hidden !important;
 		/*background:url('../img/pattern/lightpaperfibers.png') repeat #fff;*/
 		background:url('../img/mybg.png');
@@ -13,7 +13,7 @@
 		height: 100%;
 		overflow:hidden;
 		font: 13px "Open Sans", Arial, Helvetica, Sans-Serif;
-		background:url('../img/mybg.png');
+		//background:url('../img/mybg.png');
 	}
 	
 	a:hover, a:active, a:focus, button, button:active, button:focus, object, embed, input::-moz-focus-inner {

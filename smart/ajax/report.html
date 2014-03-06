@@ -52,7 +52,9 @@
         <!-- GOOGLE FONT -->
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
         <style>
-            body{overflow-y: auto;}
+           /* body{
+                background: none;
+            }*/
             .circleStats {text-align: center; position: relative; }
             .circleStatsItem {
                 position: relative;
@@ -105,8 +107,12 @@
                 background-color: rgba(252, 252, 252, 0.3);
                 margin-bottom:10px;
             }
+            .cursor-pointer{
+                cursor:pointer;
+            }
 
         </style>
+    <body>
         <!-- widget grid -->
     <section id="widget-grid" class="">
 
@@ -140,22 +146,22 @@
                                 <a data-toggle="tab" href="#s1"><i class="fa fa-rss"></i> <span class="hidden-mobile hidden-tablet">Outbound</span></a>
                             </li>
 
-                            <li>
+                            <!--<li>
                                 <a data-toggle="tab" href="#s2"><i class="fa fa-sort-amount-asc"></i> <span class="hidden-mobile hidden-tablet">Inbound</span></a>
                             </li>
 
-                            <!-- <li>
+                             <li>
                                  <a data-toggle="tab" href="#s3"><i class="fa fa-sitemap"></i> <span class="hidden-mobile hidden-tablet">IVR</span></a>
                              </li>
                             <li>
                                 <a data-toggle="tab" href="#s4"><i class="fa fa-code"></i> <span class="hidden-mobile hidden-tablet">Scripts</span></a>
-                            </li>-->
+                            </li>
                             <li>
                                 <a data-toggle="tab" href="#s5"><i class="fa fa-group"></i> <span class="hidden-mobile hidden-tablet">Agents</span></a>
                             </li>
                             <li>
                                 <a data-toggle="tab" href="#s6"><i class="fa fa-building"></i> <span class="hidden-mobile hidden-tablet">Databases</span></a>
-                            </li>
+                            </li>-->
                         </ul>				
 
                     </header>
@@ -554,9 +560,7 @@
                         <header>
                             <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
                             <h2>Report Options</h2>
-                            <div class="widget-toolbar" role="menu">
-                                <a href="javascript:void" class="btn btn-success">Export Excel</a>
-                            </div>
+                            
 
                         </header>
 
@@ -3643,3 +3647,5 @@
 
         });
     </script>
+    </body>
+</html>

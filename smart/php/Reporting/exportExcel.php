@@ -30,7 +30,7 @@ switch ($action) {
         break;
     case 'outHour': outHour($campaign, $start, $end, $pause, $db, $server);
         break;
-     case 'outTime': outTime($campaign, $start, $end, $pause, $db, $server);
+    case 'outTime': outTime($campaign, $start, $end, $pause, $db, $server);
         break;
 }
 
@@ -152,6 +152,15 @@ function outTotais($campaign, $start, $end, $db, $server) {
             $series[] = array('Complete', $total_content[0]->calls);
         } else {
             $series[] = array('Complete', 0);
+        }
+    }
+    if ($Drop) {
+        $get_total = file_get_contents($server . "total/calls/$start/$end?campaign=$campaign&status=" . implode(',', $Drop));
+        $total_content = json_decode($get_total);
+        if ($total_content) {
+            $series[] = array('Drop', $total_content[0]->calls);
+        } else {
+            $series[] = array('Drop', 0);
         }
     }
 
@@ -310,7 +319,7 @@ function outHour($campaign, $start, $end, $pause, $db, $server) {
 
     for ($i = 1; $i <= 24; $i++) {
         $ar[$i][0] = $i;
-        for ($y = 0; $y <= count($series)-1; $y++) {
+        for ($y = 0; $y <= count($series) - 1; $y++) {
             if ($series[$y] === 'total') {
                 $ar[$i][] = $total[$i - 1];
             }
@@ -330,7 +339,7 @@ function outHour($campaign, $start, $end, $pause, $db, $server) {
                 $ar[$i][] = $callback[$i - 1];
             }
             if ($series[$y] === 'complete') {
-                $ar[$i][] =$complete[$i - 1];
+                $ar[$i][] = $complete[$i - 1];
             }
             if ($series[$y] === 'nutil') {
                 $ar[$i][] = $nutil[$i - 1];
@@ -342,10 +351,10 @@ function outHour($campaign, $start, $end, $pause, $db, $server) {
     }
 
     //print_r($ar);
-    creat($ar,'Hours','bars');
+    creat($ar, 'Hours', 'bars');
 }
 
-function outTime($campaign, $start, $end, $pause, $db, $server){
+function outTime($campaign, $start, $end, $pause, $db, $server) {
     $series = explode(",", $pause);
 
     $sql = "select * FROM `vicidial_campaign_statuses` Where campaign_id ='" . $campaign . "' and selectable ='y'";
@@ -394,7 +403,7 @@ function outTime($campaign, $start, $end, $pause, $db, $server){
         $total_content = json_decode($get_total);
 
         foreach ($total_content as $value) {
-            $total[$value->hour] =$value->calls;
+            $total[$value->hour] = $value->calls;
         }
     }
     if (in_array("talk", $series)) {
@@ -450,7 +459,7 @@ function outTime($campaign, $start, $end, $pause, $db, $server){
         $total_content7 = json_decode($get_total7);
 
         foreach ($total_content7 as $value) {
-            $nutil[$value->hour] =$value->calls;
+            $nutil[$value->hour] = $value->calls;
         }
     }
     if (in_array("unwork", $series)) {
@@ -469,7 +478,7 @@ function outTime($campaign, $start, $end, $pause, $db, $server){
 
     for ($i = 1; $i <= 24; $i++) {
         $ar[$i][0] = $i;
-        for ($y = 0; $y <= count($series)-1; $y++) {
+        for ($y = 0; $y <= count($series) - 1; $y++) {
             if ($series[$y] === 'total') {
                 $ar[$i][] = $total[$i - 1];
             }
@@ -489,7 +498,7 @@ function outTime($campaign, $start, $end, $pause, $db, $server){
                 $ar[$i][] = $callback[$i - 1];
             }
             if ($series[$y] === 'complete') {
-                $ar[$i][] =$complete[$i - 1];
+                $ar[$i][] = $complete[$i - 1];
             }
             if ($series[$y] === 'nutil') {
                 $ar[$i][] = $nutil[$i - 1];
@@ -501,7 +510,7 @@ function outTime($campaign, $start, $end, $pause, $db, $server){
     }
 
     //print_r($ar);
-    creat($ar,'Timeline','lines');
+    creat($ar, 'Timeline', 'lines');
 }
 
 function creat($series, $titule, $type) {

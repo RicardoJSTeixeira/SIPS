@@ -908,7 +908,7 @@ function timeline_hours(CampaignID, start, end) {
                             }
                         });
                         function game(back) {
-                            graficos.floatBar('#example4', back, undefined, '%x - %y ');
+                            graficos.floatBar('#example4', back, undefined, '%x h - %y min');
                         }
                     }, 'json');
                 }
