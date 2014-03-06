@@ -185,7 +185,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     $.jGrowl('Sem script', {life: 3000});
                 }
 
-            }, "json"); 
+            }, "json");
         }
         else
         {
@@ -194,7 +194,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             {
                 camp_linha = campaign_id;
             }
-            $.post(file_path + "requests.php", {action: "get_render_scripts_by_campaign", id_campaign: camp_linha, lead_id:me.lead_id},
+            $.post(file_path + "requests.php", {action: "get_render_scripts_by_campaign", id_campaign: camp_linha, lead_id: me.lead_id},
             function(data)
             {
                 if (Object.size(data))
@@ -548,6 +548,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         options.startDate = info.values_text.data_inicial;
                         options.endDate = info.values_text.data_final;
                     }
+
+                    if (info.max_length == 1)
+                        options.daysOfWeekDisabled = [0, 6];
+
 
                     script_zone.find("input[name='" + info.tag + "']").datetimepicker(options).keypress(function(e) {
                         e.preventDefault();

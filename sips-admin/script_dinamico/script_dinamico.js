@@ -162,7 +162,7 @@ $(function() {
         function(data12)
         {
             $.each(data12, function() {
-                   if ($("#script_bd_selector optgroup[label='" + this.campaign_name + "']").length)
+                if ($("#script_bd_selector optgroup[label='" + this.campaign_name + "']").length)
                 {
                     $("#script_bd_selector optgroup[label='" + this.campaign_name + "']").append("<option data-campaign_id=" + this.campaign_id + " value=" + this.id + " > " + (this.active == "Y" ? "&#10041;  " : "") + this.name + " </option>");
                 }
@@ -603,6 +603,7 @@ function update_info()
                             .data("required", this.required)
                             .data("limit", this.values_text)
                             .data("hidden", this.hidden)
+                            .data("only_week_days", this.max_length)
                             .data("data_format", this.placeholder);
                     insert_element("datepicker", item, this);
                     break;
@@ -816,6 +817,10 @@ function populate_element(tipo, element)
         case "datepicker":
             $("#datepicker_edit").val($("#" + id + " .label_geral").html());
             $("#datepicker_layout_editor input:radio[name='time_format'][value=" + element.data("data_format") + "]").prop("checked", true);
+            if (element.data("only_week_days") == 1)
+                $("#only_week_days").prop("checked", true);
+            else
+                $("#only_week_days").prop("checked", false);
             break;
         case "scheduler":
             $("#tabs").tabs("disable", 1);
@@ -1133,13 +1138,17 @@ function edit_element(opcao, element, data)
                     element.data("data_format", 0);
                 }
 
-
+                if ($("#only_week_days").is(":checked"))
+                    element.data("only_week_days", 1);
+                else
+                    element.data("only_week_days", 0);
 
                 if ($("#limite_datas_toggle").is(":checked"))
                     element.data("limit", $("#datepicker_layout_editor").data("data_limit_element").get_time());
                 else
                     element.data("limit", "0");
-                item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", element.index(), "h", $("#datepicker_edit").val(), data_format, 0, element.data("limit"), 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+                item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", element.index(), "h", $("#datepicker_edit").val(), data_format, $("#only_week_days").is(":checked") ? 1 : 0, element.data("limit"), 0, $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
+
             }
             break;
         case "scheduler":
@@ -1874,7 +1883,7 @@ $(".values_edit_textarea").on("blur", function()
 {
     if (temp_value_holder !== $(this).val())
     {
-        $.post("requests.php", {action: "has_rules", tag: selected_tag,id_script:$("#script_selector option:selected").val()},
+        $.post("requests.php", {action: "has_rules", tag: selected_tag, id_script: $("#script_selector option:selected").val()},
         function(data)
         {
             if (data != "0")
