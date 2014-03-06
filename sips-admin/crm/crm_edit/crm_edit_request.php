@@ -57,16 +57,17 @@ switch ($action) {
         }
         foreach ($calls_in as $value) {
             $calls[] = $value;
-        }
+        } 
 
         if (count($calls, 1) > 0) {
             foreach ($calls as $key => &$value) {
                 $value[1] = gmdate("H:i:s", $value[1]);
                 $has_script = false;
-                $count = $crmEdit->check_has_script($value["campaign_id"]);
+                $count = $crmEdit->check_has_script($value["campaign_id"],$lead_id);
+    
                 if ($value[2] != "N/A")
                     $value[2] = gmdate("H:i:s", $value[2]) . " Posição: " . $value[13];
-                if ($count[0] > 0) {
+                if ($count  > 0) {
                     $has_script = true;
                 }
                 if ($user->user_level > 5 && $has_script) {

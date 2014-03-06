@@ -286,7 +286,8 @@ class crm_main_class {
             return $js;
         } elseif ($phone_number != "" && $phone_number != null) {
             $query = "
-            SELECT c.lead_id,c.first_name, calls.phone_number, calls.user, calls.status,calls.length_in_sec,calls.call_date,calls.list_id FROM $table left join vicidial_list c on calls.lead_id=c.lead_id  WHERE calls.phone_number LIKE ? ";
+            SELECT c.lead_id,c.first_name, calls.phone_number, users.full_name, calls.status,calls.length_in_sec,calls.call_date,calls.list_id FROM $table left join vicidial_list c on calls.lead_id=c.lead_id"
+                    . " left join vicidial_users users on users.user=calls.user  WHERE calls.phone_number LIKE ? ";
             $variables[] = $phone_number;
             $stmt = $this->db->prepare($query);
             $stmt->execute($variables);
@@ -388,8 +389,9 @@ class crm_main_class {
                 }
             }
 
-            $query = "select calls.lead_id,c.first_name,  calls.phone_number, calls.user, st.status_name, calls.length_in_sec,calls.call_date,calls.list_id  from $table left join vicidial_list c on c.lead_id=calls.lead_id"
-                    . " left join (select status,status_name from vicidial_campaign_statuses where campaign_id = ? UNION ALL select status, status_name from vicidial_statuses) st on calls.status = st.status $join   where $where $script_fields   limit 20000 ";
+            $query = "select calls.lead_id,c.first_name,  calls.phone_number, users.full_name, st.status_name, calls.length_in_sec,calls.call_date,calls.list_id  from $table left join vicidial_list c on c.lead_id=calls.lead_id"
+                    . " left join (select status,status_name from vicidial_campaign_statuses where campaign_id = ? UNION ALL select status, status_name from vicidial_statuses) st on calls.status = st.status "
+                    . " left join vicidial_users users on users.user=calls.user  $join   where $where $script_fields   limit 20000 ";
 
             #select calls.lead_id,c.first_name,  calls.phone_number, calls.user, st.status_name,calls.length_in_sec,calls.call_date,calls.list_id  from vicidial_log calls  left join vicidial_list c on c.lead_id=calls.lead_id left join (select status, status_name from vicidial_campaign_statuses where campaign_id = 'W00003' UNION ALL select status, status_name from vicidial_statuses) st on calls.status = st.status where  calls.campaign_id= 'W00003'  and date(calls.call_date) = date(now());
             #    echo $query;
