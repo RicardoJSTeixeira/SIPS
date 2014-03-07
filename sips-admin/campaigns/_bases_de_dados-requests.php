@@ -315,11 +315,11 @@ function DBWizardMatchFields($DBID, $MatchFields, $ListFields, $ConvertedFile, $
 
                 $js['insert_id'][] = mysql_insert_id();
 
-                $js['insert'][] = "	INSERT INTO vicidial_list 
+               /* $js['insert'][] = "	INSERT INTO vicidial_list 
 							(" . $mysqlListFields . "entry_date, called_since_last_reset, gmt_offset_now, last_local_call_time, list_id, status ) 
 							VALUES 
 							(" . $mysqlValues . "'$entry_date', '$called_since_last_reset', '$gmt_offset', '$last_local_call_time', '$DBID', 'NEW')
-						";
+						";*/
 
                 $TotalInserted++;
             }

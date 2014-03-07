@@ -1,0 +1,1283 @@
+
+<!DOCTYPE html>
+<html lang="en-us" style="overflow-y: scroll;">
+    <head>
+        <meta charset="utf-8">
+        <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+
+        <title> FS Contact </title>
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <!-- http://davidbcalhoun.com/2010/viewport-metatag -->
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <!-- Single CSS files -->
+        <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/jarvis-widgets.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/smart-forms.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/x-editable.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/fullcalendar.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/colorpicker.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/flags/flags.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap-timepicker.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/animated.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/summernote.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap-markdown.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/dropzone/basic.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/dropzone/dropzone.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/pricing-table.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/superbox.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap-tagsinput.css">
+
+        <link rel="stylesheet" type="text/css" media="screen" href="css/DT_bootstrap.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/TableTools.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/fd-slider.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap-slider.css">
+
+        <link rel="stylesheet" type="text/css" media="screen" href="css/jquery-ui-1.10.3.custom.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/smart-chat.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/notifications.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/colorpallet.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/main.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/timeline.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/xcharts.min.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/lockscreen.css">
+
+        <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap-datetimepicker.css">
+
+        <!-- Added CSS -->
+        <style>
+            .cursor-pointer {
+                cursor: pointer;
+            }
+            .text-vertical-align > tr > td {
+                vertical-align: middle !important;
+            }
+            .avatar-smaller > tr > td > img {
+                width: 35px;
+                height: 35px;
+            }
+            .font-agent-dashboard > tr > td {
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                line-height: normal;
+                font-size: 15px;
+            }
+            .table-hover-pointer > tr:hover {
+                cursor: pointer;
+                cursor: hand;
+            }
+            .flag-top-bar {
+                padding-top: 20px !important;
+                padding-right: 3px !important;
+            }
+            .btn-disabled-extra {
+                opacity: 0.35 !important
+            }
+            .popover-title {
+                padding: 8px 14px !important;
+            }
+            .popover-content {
+                padding: 8px 14px !important;
+            }
+            .outcome-selected {
+                background-color: #a9b9b9 !important;
+            }
+
+            .icon-pulse {
+                display: inline-block;
+                -moz-animation: pulse 2s infinite linear;
+                -o-animation: pulse 2s infinite linear;
+                -webkit-animation: pulse 2s infinite linear;
+                animation: pulse 2s infinite linear;
+            }
+
+            @-webkit-keyframes pulse {
+                0% { opacity: 1; transform: scale(1); }
+                50% { opacity: 0; }
+                100% { opacity: 1; transform: scale(1.2); }
+            }
+            @-moz-keyframes pulse {
+                0% { opacity: 1; transform: scale(1); }
+                50% { opacity: 0; }
+                100% { opacity: 1;  transform: scale(1.2);}
+            }
+            @-o-keyframes pulse {
+                0% { opacity: 1; transform: scale(1); }
+                50% { opacity: 0; }
+                100% { opacity: 1; transform: scale(1.2); }
+            }
+            @-ms-keyframes pulse {
+                0% { opacity: 1; transform: scale(1); }
+                50% { opacity: 0; }
+                100% { opacity: 1;  transform: scale(1.2); }
+            }
+            @keyframes pulse {
+                0% { opacity: 1; transform: scale(1); }
+                50% { opacity: 0; }
+                100% { opacity: 1; transform: scale(1.2); }
+            }
+            .online-bullet {
+                border-radius: 50%;
+                width: 7px;
+                height: 7px;
+                position: relative;
+                top: 14px;
+                left: 42px;
+                background-color: greenyellow
+            }
+            .offline-bullet {
+                border-radius: 50%;
+                width: 7px;
+                height: 7px;
+                position: relative;
+                top: 14px;
+                left: 42px;
+                background-color: red
+            }
+            .busy-bullet {
+                border-radius: 50%;
+                width: 7px;
+                height: 7px;
+                background-color: orange;
+                position: relative;
+                top: 14px;
+                left: 32px;
+            }
+            .chat-box-parent {
+                position: fixed;
+                right: 10px;
+                bottom: 0;
+                z-index: 9999;
+            }
+            .chat-box {
+                font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                color: #333;
+                width: 250px; /* Chatbox width */
+                border: 1px solid #344150;
+                border-bottom: none;
+                background-color: white;
+                display: inline-block;
+                position: relative;
+                -webkit-box-shadow: 1px 1px 5px rgba(0,0,0,.2);
+                -moz-box-shadow: 1px 1px 5px rgba(0,0,0,.2);
+                box-shadow: 1px 1px 5px rgba(0,0,0,.2);
+            }
+
+            .chat-box > input[type="checkbox"] {
+                display: block;
+                margin: 0 0;
+                padding: 0 0;
+                position: absolute;
+                top: 0;
+                right: 0;
+                left: 0;
+                width: 100%;
+                height: 26px;
+                z-index: 4;
+                cursor: pointer;
+                opacity: 0;
+                filter: alpha(opacity=0);
+            }
+
+            .chat-box > label {
+                display: block;
+                height: 24px;
+                line-height: 24px;
+                background-color: #344150;
+                color: white;
+                font-weight: bold;
+                padding: 0 1em 1px;
+            }
+
+            .chat-box > label:before {
+                content: attr(data-collapsed)
+            }
+
+            .chat-box .chat-box-content {
+                padding: 10px;
+                display: none;
+            }
+
+            /* hover state */
+            .chat-box > input[type="checkbox"]:hover + label {
+                background-color: #404D5A
+            }
+
+            /* checked state */
+            .chat-box > input[type="checkbox"]:checked + label {
+                background-color: #212A35
+            }
+            .chat-box > input[type="checkbox"]:checked + label:before {
+                content: attr(data-expanded)
+            }
+            // .chat-box > input[type="checkbox"]:checked ~
+            .chat-box-content {
+                display: block
+            }
+
+            .chat-message-img {
+                width: 25px;
+                height: auto;
+                display: inline-block;
+                vertical-align: middle;
+                margin-top: -3px;
+                margin-right: 7px;
+                margin-left: 0px;
+                border-left: 3px solid #FFF;
+            }
+
+            .flipped {
+                -moz-transform: scaleX(-1);
+                -o-transform: scaleX(-1);
+                -webkit-transform: scaleX(-1);
+                transform: scaleX(-1);
+                filter: FlipH;
+                -ms-filter: "FlipH";
+            }
+            /* debug */
+
+            /* kant css */
+            #debugButtons {
+                margin-left: 10px;
+                margin-right: auto;
+                position: absolute;
+                right: 550px;
+                top: 6px;
+                width: 120px;
+                z-index: 3000;
+            }
+
+            .dropdown-agent-channel .btn-xs {
+                padding-bottom: 2px !important;
+            }
+
+            .dropdown-agent-channel .dropdown-toggle {
+                padding-top: 1px !important;
+                padding-bottom: 1px !important;
+            }
+
+            .dropdown-agent-channel .dropdown-menu {
+                margin: 1px 0 0 -1px !important;
+            }
+
+            .menu-breaks-time, .menu-breaks-user-count {
+                text-align: center !important;
+                font-size: 40px;
+                font-weight: bold;
+                margin-top: 8px;
+            }
+
+            .menu-breaks-time-label, .menu-breaks-user-count-label {
+                padding-bottom: 0px;
+                text-align: center !important;
+                margin-top: -12px;
+            }
+
+            .menu-breaks-icon {
+                margin-top: 8px;
+                height: 16px;
+            }
+            .menu-breaks-icon-container {
+                text-align: left;
+            }
+            .menu-breaks-icon-container div {
+                margin-right: 4px;
+            }
+            .big-cubes:focus {
+                text-decoration: none !important;
+                color: #FFFFFF !important;
+            }
+            #lock-screen-logo {
+                width: 200px;
+            }
+
+        </style>
+        <!-- FAVICONS -->
+        <link rel="shortcut icon" href="img/fslogosmall.png" type="image/x-icon">
+        <link rel="icon" href="img/fslogosmall.png" type="image/x-icon">
+
+        <!-- GOOGLE FONT -->
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
+
+    </head>
+    <body class="no-right-panel fixed-ribbon fixed-header fixed-width fixed-navigation" >
+        <!-- possible classes: minified, no-right-panel, fixed-ribbon, fixed-header, fixed-width-->
+
+        <div id="debugButtons" class="btn-group dropdown">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> <span> Debug Menu </span> <span class="caret"></span> </a>
+            <ul class="dropdown-menu">
+
+                <li>
+                    <a href="javascript:void(0);" id="debug-info">My Info</a>
+                </li>
+
+                <li>
+                    <a href="javascript:void(0);" id="debug-sparks">My Sparks</a>
+                </li>
+
+                <li>
+                    <a href="javascript:void(0);" id="debug-sip-calls">My SIP Calls</a>
+                </li>
+
+                <li>
+                    <a href="javascript:void(0);" id="debug-voice-calls">My Voice Calls</a>
+                </li>
+
+                <li class="divider"></li>
+
+                <li>
+                    <a href="javascript:void(0);" id="debug-show-all-users">Show All Users</a>
+                </li>
+
+                <li>
+                    <a href="javascript:void(0);" id="debug-show-all-calls">Show All Calls</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" id="debug-show-all-sip-calls">Show All SIP Calls</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" id="debug-show-all-manual-calls">Show All Manual Calls</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="javascript:void(0);" id="debug-show-inbound-calls">Show Inbound Calls</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" id="debug-show-inbound-queue">Show Inbound Queue</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="javascript:void(0);" id="debug-show-inbound-extensions">Show Inbound Extensions</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" id="debug-show-inbound-groups">Show Inbound Groups</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" id="debug-show-inbound-vipblack">Show Vip/Black</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" id="debug-show-inbound-schedules">Show Schedules</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" id="debug-show-inbound-dtmf">Show DTMF</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="javascript:void(0);" id="debug-flush-database">Flush Database</a>
+                </li>
+
+            </ul>
+        </div>
+
+        <!-- LOCK SCREEN -->
+
+        <div id="lock-screen-content" class="hidden">
+            <form autocomplete="off" class="lockscreen lock-screen-form">
+                <div class="logo">
+                    <img id="lock-screen-logo" src="img/fslogo.png"/>
+                </div>
+                <div>
+                    <img id="lock-screen-avatar" src="" width="120" height="120" />
+                    <div>
+                        <h1><i class="fa fa-user fa-3x text-muted air air-top-right hidden-mobile"></i><span id="lock-screen-user"></span><small><i class="fa fa-lock text-muted"></i> &nbsp;Locked</small></h1>
+                        <p class="text-muted">
+                            <span id="lock-screen-time" href="javascript:void(0)"> <i class="fa fa-clock-o"></i>&nbsp;&nbsp;00:00:00&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-coffee"></i>&nbsp; </span>
+                        </p>
+
+                        <div class="input-group">
+                            <input style="height: 33px" id="lock-screen-password" class="form-control" type="password" placeholder="Password">
+                            <div class="input-group-btn">
+                                <button id="lock-screen-submit" class="btn btn-primary" type="submit">
+                                    <i class="fa fa-key"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="no-margin margin-top-5">
+                            <!--        Logged as someone else? <a href="login-old.html"> Click here</a> -->
+                        </p>
+                    </div>
+
+                </div>
+                <p class="font-xs margin-top-5">
+                    Finesource Contact Center 2012-2013
+                </p>
+            </form>
+
+        </div>
+
+        <header class="lock-screen-hidden" id="header">
+            <!--<span id="logo"></span>-->
+            <div id="logo-group">
+                <span id="logo"> <img src="img/fslogo.png" alt="Finesource" style='width: 140px'> </span>
+                <span id="activity" class="activity-dropdown"> <i class="fa fa-user"></i> <b class="badge"> 0 </b> </span>
+                <div class="ajax-dropdown">
+
+                    <div class="btn-group btn-group-justified" data-toggle="buttons">
+                        <label class="btn btn-default" >
+                            <input type="radio" name="activity" data-target="chat-history" id="msg">
+                            Msgs (0) </label>
+                        <label class="btn btn-default " >
+                            <input type="radio" name="activity" data-target="chat-notify" id="notifications">
+                            Notify (0) </label>
+                        <label class="btn btn-default active" >
+                            <input type="radio" name="activity" data-target="chat-friends" id="friends">
+                            Friends (0) </label>
+                    </div>
+
+                    <div class="ajax-notifications custom-scroll">
+                        <div id="chat-history" class="chat-div" style="display:none">
+                            <ul class="notification-body quick-chat">
+
+                            </ul>
+                        </div>
+                        <div id="chat-friends" class="chat-div" style="display:block">
+                            <ul class="notification-body friends-body">
+
+                            </ul>
+                        </div>
+                        <div id="chat-notify" class="chat-div" style="display:none">
+                            <ul class="notification-body">
+                                <li>
+                                    <span class="padding-10 unread"> <em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"> <i class="fa fa-user fa-fw fa-2x"></i> </em> <span> 2 new users just signed up! <span class="text-primary">martin.luther</span> and <span class="text-primary">kevin.reliey</span>
+                                            <br>
+                                            <span class="pull-right font-xs text-muted"><i>1 min ago...</i></span> </span> </span>
+                                </li>
+                                <li>
+                                    <span class="padding-10 unread"> <em class="badge padding-5 no-border-radius bg-color-purple txt-color-white pull-left margin-right-5"> <i class="fa fa-calendar fa-fw fa-2x"></i> </em> <span> <a href="javascript:void(0);" class="display-normal"><strong>Calendar</strong></a>: Sadi Orlaf invites you to lunch!
+                                            <br>
+                                            <strong>When: 1/3/2014 (1pm - 2pm)</strong>
+                                            <br>
+                                            <span class="pull-right font-xs text-muted"><i>3 hrs ago...</i></span> </span> </span>
+                                </li>
+                                <li>
+                                    <span class="padding-10"> <em class="badge padding-5 no-border-radius bg-color-blueLight txt-color-white pull-left margin-right-5"> <i class="fa fa-user fa-fw fa-2x"></i> </em> <span> <a href="javascript:void(0);" class="display-normal">Sofia</a> as contact? &nbsp;
+                                            <button class="btn btn-xs btn-primary margin-top-5">
+                                                accept
+                                            </button>
+                                            <button class="btn btn-xs btn-danger margin-top-5">
+                                                reject
+                                            </button> <span class="pull-right font-xs text-muted"><i>3 hrs ago...</i></span> </span> </span>
+                                </li>
+                                <li>
+                                    <span class="padding-10"> <em class="badge padding-5 no-border-radius bg-color-blue pull-left margin-right-5"> <i class="fa fa-facebook fa-fw fa-2x"></i> </em> <span> Facebook recived +33 unique likes
+                                            <br>
+                                            <span class="pull-right font-xs text-muted"><i>4 hrs ago...</i></span> </span> </span>
+                                </li>
+                                <li>
+                                    <span class="padding-10"> <em class="badge padding-5 no-border-radius bg-color-green pull-left margin-right-5"> <i class="fa fa-check fa-fw fa-2x"></i> </em> <span> 2 projects were completed on time! Submitted for your approval - <a href="javascript:void(0);" class="display-normal">Click here</a>
+                                            <br>
+                                            <span class="pull-right font-xs text-muted"><i>1 day ago...</i></span> </span> </span>
+                                </li>
+                                <li>
+                                    <span class="padding-10"> <em class="badge padding-5 no-border-radius bg-color-greenLight pull-left margin-right-5"> <i class="fa fa-lock fa-fw fa-2x"></i> </em> <span> Your password was recently updated. Please complete your security questions from your profile page.
+                                            <br>
+                                            <span class="pull-right font-xs text-muted"><i>2 weeks ago...</i></span> </span> </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <span> Last updated on: 12/12/2013 9:43AM
+                        <button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Loading..." class="btn btn-xs btn-default pull-right">
+                            <i class="fa fa-refresh"></i>
+                        </button> </span>
+                </div>
+                <!-- END AJAX-DROPDOWN -->
+            </div>
+
+            <!--     <div id="project-context">
+            <span class="label">Projects:</span>
+            <span id="project-selector" class="popover-trigger-element dropdown-toggle" data-toggle="dropdown">Recent projects <i class="fa fa-angle-down"></i></span>
+            <ul class="dropdown-menu">
+            <li>
+            <a href="javascript:void(0);">Online e-merchant management system - attaching integration with the iOS</a>
+            </li>
+            <li>
+            <a href="javascript:void(0);">Notes on pipeline upgradee</a>
+            </li>
+            <li>
+            <a href="javascript:void(0);">Assesment Report for merchant account</a>
+            </li>
+            <li class="divider"></li>
+            <li>
+            <a href="javascript:void(0);"><i class="fa fa-power-off"></i> Clear</a>
+            </li>
+            </ul>
+            </div> -->
+            <span class="ribbon-button-alignment"> <span id="refresh" class="btn btn-ribbon" data-title="refresh"  rel="tooltip" data-placement="bottom" data-original-title="<i class='text-warning fa fa-warning'></i> Warning! This will reset all your widget settings." data-html="true"><i class="fa fa-refresh"></i></span> </span>
+            <div class="pull-right">
+                <!-- <div id="hide-menu" class="btn-header pull-right">
+                <span>
+                <a href="javascript:void(0);"><i class="fa fa-reorder"></i></a>
+                </span>
+                </div> -->
+
+                <div id="logout" class="btn-header transparent pull-right">
+                    <span> <a href="logout.php"><i class="fa fa-sign-out"></i></a> </span>
+                </div>
+
+                <div id="lock-screen" class="btn-header  transparent pull-right">
+                    <span> <a href="javascript:void(0);"><i class="break-header-btn fa fa-lock"></i></a> </span>
+                </div>
+
+                <div id="breaks-show-btn" class="btn-header break-header-btn transparent pull-right">
+                    <span> <a href="javascript:void(0);"><i class="break-header-btn fa fa-coffee"></i></a> </span>
+                </div>
+
+                <div  class="pull-right btn-header">
+                    <span id="connectionStatus"> <a href="javascript:void(0);" id="server-connection-status" rel="tooltip" data-placement="left" data-original-title="Reconnecting to main server"><i class="fa fa-cog fa-spin"></i> </a> </span>
+                </div>
+
+                <!--       <div id="search-mobile" class="btn-header transparent pull-right">
+                <span> <a href="javascript:void(0)"><i class="fa fa-search"></i></a> </span>
+                </div>
+
+                <form action="#ajax/search.html" class="header-search pull-right">
+                <input type="text" placeholder="Find agents, reports, etc." id="search-fld">
+                <button type="submit">
+                <i class="fa fa-search"></i>
+                </button>
+                <a href="javascript:void(0);" id="cancel-search-js"><i class="fa fa-times"></i></a>
+                </form>
+
+                <!-- This right panel will be released in the future version of SmartAdmin
+                <div id="right-panel-overlap-btn" class="btn-header transparent pull-right">
+                <span>
+                <a href="javascript:void(0);" rel="tooltip" title="Show Right Panel" data-placement="bottom"><i class="fa fa-long-arrow-left"></i></a>
+                </span>
+                </div>
+                -->
+                <!--         <div class="pull-right flag-top-bar">
+                <span> <a href="javascript:void(0)"><div class="flag flag-gb"></div></a> </span>
+                </div>
+                <div class="pull-right flag-top-bar">
+                <span> <a href="javascript:void(0)"><div class="flag flag-pt"></div></a> </span>
+                </div>
+                <div class="pull-right flag-top-bar">
+                <span> <a href="javascript:void(0)"><div class="flag flag-es"></div></a> </span>
+                </div> -->
+
+            </div>
+        </header>
+        <aside id="left-panel" class="lock-screen-hidden">
+            <div class="login-info">
+                <span> <img src="img/avatars/male.png" alt="me" class="online" id="user-img"/> <a href="javascript:void(0);" id="show-shortcut"><i class="fa fa-angle-down"></i></a> </span>
+
+                <!-- <button><i class="fa fa-coffee"></i></button> -->
+
+            </div>
+            <nav>
+                <ul>
+                    <li>
+                        <a href="ajax/detailDashboard.html"><i class="fa fa-lg fa-fw fa-home"></i><span class="menu-item-parent"> Home</span></a>
+                    </li>
+                    <li>
+
+                        <a href="#"><i class="fa fa-lg fa-fw fa-dashboard"></i><span class="menu-item-parent"> Dashboards</span></a>
+                        <ul>
+                            <li>
+                                <a href="ajax/detailDashboard.html">Details</a>
+                            </li>
+                            <li>
+                                <a href="ajax/wpDashboard.html">Lists</a>
+                            </li>
+                            <li>
+                                <a href="ajax/wallboard.html">Wallboards</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-lg fa-fw fa-phone"></i> <span class="menu-item-parent">Voice </span></a>
+                        <ul>
+                            <li>
+                                <a href="ajax/voiceManager.html">Manager</a>
+                            </li>
+                            <li>
+                                <a href="ajax/campaignWizard.html">New Campaign</a>
+                            </li>
+                            <li>
+                                <a href="ajax/contact-dbs.html">Contact DB's</a>
+                            </li>
+                            <li>
+                                <a href="ajax/inbound-wizard.html">New Inbound Queue</a>
+                            </li>
+                            <li>
+                                <a href="ajax/script_dinamico/index.html">Script Builder</a>
+                            </li>
+                            <li>
+                                <a href="ajax/ivr-manager.html">IVR Manager</a>
+                            </li>
+                            <li>
+                                <a href="ajax/report_builder/cons.html">Report Builder</a>
+                            </li>
+                        </ul>
+
+                    <li>
+                        <a href="#"><i class="fa fa-lg fa-fw fa-user"></i><span class="menu-item-parent"> Users</span></a>
+                        <ul>
+                            <li>
+                                <a href="ajax/user-group-list.html">Groups</a>
+                            </li>
+                            <li>
+                                <a href="ajax/work-force-management.html">Work Force Management</a>
+                            </li>
+                            <li>
+                                <a href="ajax/profile.html">Profile</a>
+                            </li>
+                            <li>
+                                <a href="ajax/groups.html">Permissions</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-lg fa-fw fa-envelope"></i><span class="menu-item-parent"> SMS</span></a>
+                        <ul>
+                            <li>
+                                <a href="ajax/sms-bulk.html">Bulk</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-lg fa-fw fa-group"></i><span class="menu-item-parent"> CRM</span></a>
+                        <ul>
+                            <li>
+                                <a href="ajax/crm-search.html">Search</a>
+                            </li>
+                            <li>
+                                <a href="ajax/crm.html">Single Client</a>
+                            </li>
+                        </ul>
+
+                    </li>
+                    <li>
+                        <a href="php/lock.php"><i class="fa fa-lg fa-fw fa-lock"></i><span class="menu-item-parent"> Lock</span></a>
+                    </li>
+
+                    <li>
+                        <a href="ajax/report.html"><i class="fa fa-lg fa-fw fa-bar-chart-o"></i><span class="menu-item-parent"> Analytics</span></a>
+                    </li>
+
+                    <li>
+                        <a href="#"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Development </span></a>
+                        <ul>
+                            <li>
+                                <a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Tables</span></a>
+                                <ul>
+                                    <li>
+                                        <a href="ajax/table.html">Normal Tables</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/datatables.html">Data Tables</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="">
+                                <a href="ajax/dashboard.html" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
+                            </li>
+                            <li>
+                                <a href="ajax/inbox.html"><i class="fa fa-lg fa-fw fa-inbox"></i> <span class="menu-item-parent">Inbox</span><span class="badge pull-right inbox-badge">14</span></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span class="menu-item-parent">Graphs</span></a>
+                                <ul>
+                                    <li>
+                                        <a href="ajax/flot.html">Flot Chart</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/morris.html">Morris Charts</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/inline-charts.html">Inline Charts</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Tables</span></a>
+                                <ul>
+                                    <li>
+                                        <a href="ajax/table.html">Normal Tables</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/datatables.html">Data Tables</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Forms</span></a>
+                                <ul>
+                                    <li>
+                                        <a href="ajax/form-elements.html">Smart Form Elements</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/form-templates.html">Smart Form Layouts</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/validation.html">Smart Form Validation</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/bootstrap-forms.html">Bootstrap Form Elements</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/plugins.html">Form Plugins</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/wizard.html">Wizards</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/other-editors.html">Bootstrap Editors</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/dropzone.html">Dropzone <span class="badge pull-right inbox-badge bg-color-yellow">new</span></a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-lg fa-fw fa-desktop"></i> <span class="menu-item-parent">UI Elements</span></a>
+                                <ul>
+                                    <li>
+                                        <a href="ajax/general-elements.html">General Elements</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/buttons.html">Buttons</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Icons</a>
+                                        <ul>
+                                            <li>
+                                                <a href="ajax/fa.html"><i class="fa fa-plane"></i> Font Awesome</a>
+                                            <li>
+                                                <a href="ajax/glyph.html"><i class="glyphicon glyphicon-plane"></i> Glyph Icons </a>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/grid.html">Grid</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/treeview.html">Tree View</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/nestable-list.html">Nestable Lists</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/jqui.html">JQuery UI</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-lg fa-fw fa-folder-open"></i> <span class="menu-item-parent">6 Level Navigation</span></a>
+                                <ul>
+                                    <li>
+                                        <a href="#"><i class="fa fa-fw fa-folder-open"></i> 2nd Level</a>
+                                        <ul>
+                                            <li>
+                                                <a href="#"><i class="fa fa-fw fa-folder-open"></i> 3ed Level </a>
+                                                <ul>
+                                                    <li>
+                                                        <a href="#"><i class="fa fa-fw fa-file-text"></i> File</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#"><i class="fa fa-fw fa-folder-open"></i> 4th Level</a>
+                                                        <ul>
+                                                            <li>
+                                                                <a href="#"><i class="fa fa-fw fa-file-text"></i> File</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#"><i class="fa fa-fw fa-folder-open"></i> 5th Level</a>
+                                                                <ul>
+                                                                    <li>
+                                                                        <a href="#"><i class="fa fa-fw fa-file-text"></i> File</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="#"><i class="fa fa-fw fa-file-text"></i> File</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fa fa-fw fa-folder-open"></i> Folder</a>
+
+                                        <ul>
+                                            <li>
+                                                <a href="#"><i class="fa fa-fw fa-folder-open"></i> 3ed Level </a>
+                                                <ul>
+                                                    <li>
+                                                        <a href="#"><i class="fa fa-fw fa-file-text"></i> File</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#"><i class="fa fa-fw fa-file-text"></i> File</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="ajax/calendar.html"><i class="fa fa-lg fa-fw fa-calendar"><em>3</em></i> <span class="menu-item-parent">Calendar</span></a>
+                            </li>
+                            <li>
+                                <a href="ajax/widgets.html"><i class="fa fa-lg fa-fw fa-list-alt"></i> <span class="menu-item-parent">Widgets</span></a>
+                            </li>
+                            <li>
+                                <a href="ajax/gallery.html"><i class="fa fa-lg fa-fw fa-picture-o"></i> <span class="menu-item-parent">Gallery</span></a>
+                            </li>
+                            <li>
+                                <a href="ajax/gmap-xml.html"><i class="fa fa-lg fa-fw fa-map-marker"></i> <span class="menu-item-parent">Google Map Skins</span><span class="badge bg-color-greenLight pull-right inbox-badge">9</span></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-lg fa-fw fa-windows"></i> <span class="menu-item-parent">Miscellaneous</span></a>
+                                <ul>
+                                    <li>
+                                        <a href="ajax/typography.html">Typography</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/pricing-table.html">Pricing Tables</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/invoice.html">Invoice</a>
+                                    </li>
+                                    <li>
+                                        <a href="login.html" target="_top">Login</a>
+                                    </li>
+                                    <li>
+                                        <a href="register.html" target="_top">Register</a>
+                                    </li>
+                                    <li>
+                                        <a href="lock.html" target="_top">Locked Screen</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/error404.html">Error 404</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/error500.html">Error 500</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/blank_.html">Blank Page</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/email-template.html">Email Template</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/search.html">Search Page</a>
+                                    </li>
+                                    <li>
+                                        <a href="ajax/ckeditor.html">CK Editor</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </nav>
+            <span class="minifyme"> <i class="fa fa-arrow-circle-left hit"></i> </span>
+
+        </aside>
+        <aside id="right-panel" class="lock-screen-hidden">
+
+        </aside>
+
+        <div id="main" role="main" class="lock-screen-hidden">
+            <div id="ribbon">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 no-padding" id="channel-list">
+
+                            <div class="btn-group dropdown-agent-channel" style="margin-top: 10px">
+                                <button id="voiceLogin" class="btn btn-default btn-xs" href="javascript:void(0);">
+                                    <i class="fa fa-comments"></i> Voice
+                                </button>
+                                <button id="voiceLoginMenu" class="btn btn-default dropdown-toggle hidden" data-toggle="dropdown" href="javascript:void(0);">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="javascript:void(0);">Action</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);">Another action</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);">Something else here</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a id="logoutVoice" href="javascript:void(0);"><i class="fa fa-lock"></i> Logout</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 no-padding hidden" id="voice-channel-control"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAIN CONTENT -->
+            <div id="content">
+
+                <div id="default-workspace">
+
+                </div>
+
+                <div id="voice-workspace" class="hidden">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="shortcut">
+            <ul id="dropdown-breaks">
+
+            </ul>
+        </div>
+
+        <!-- AGENT MODAL -->
+        <!-- modal -->
+        <div class="modal fade" id="agentInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Agent Detail</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row" >
+                                    <div class="col-md-5 ">
+                                        <br />
+                                        <span class="avatar-big"> <img src="/img/avatars/5.png" class="center-block" /> </span>
+                                    </div>
+                                    <div class="col-md-7 no-padding hidden-sm hidden-xs ">
+                                        <h2>Jerry Maguire</h2>
+                                        <h5>Friendly Agents</h5>
+                                    </div>
+                                    <div class="col-md-7 no-padding col-sm-12 hidden-lg hidden-md text-align-center">
+                                        <h2>Jerry Maguire</h2>
+                                        <h5>Friendly Agents</h5>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-10 text-align-center">
+                                        <div class="row">
+                                            <h5>jerry.maguire@babel.co.uk </h5>
+                                            <h5>+445 962124 212</h5>
+                                        </div>
+                                        <div class="row no-padding text-align-center">
+                                            <h3>User Level: <i class="fa fa-star txt-color-blue"></i><i class="fa fa-star txt-color-blue"></i><i class="fa fa-star txt-color-blue"></i><i class="fa fa-star txt-color-blue"></i><i class="fa fa-star-o txt-color-blue"></i><i class="fa fa-star-o txt-color-blue"></i></h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" >
+                                <div id="agent-bar-chart" class="chart"></div>
+                            </div>
+                        </div>
+                        <div class="row padding-10">
+                            <div class="col-md-12">
+                                <ul id="myTab3" class="nav nav-tabs tabs-pull-right bordered">
+                                    <li class="active">
+                                        <a href="#agentCustomer" data-toggle="tab" rel='tooltip' data-placement='top' data-original-title='Current Interaction'><i class='fa fa-user'></i></a>
+                                    </li>
+                                    <li class="pull-right">
+                                        <a href="#agentStats" data-toggle="tab" rel='tooltip' data-placement='top' data-original-title='Statistics'><i class='fa fa-dashboard'></i></a>
+                                    </li>
+                                    <li class="pull-right">
+                                        <a href="#agentCampInb" data-toggle="tab" rel='tooltip' data-placement='top' data-original-title='Campaigns & Inbound Groups'><i class='fa fa-list'></i></a>
+                                    </li>
+                                    <li class="pull-right">
+                                        <a href="#agentLog" data-toggle="tab" rel='tooltip' data-placement='top' data-original-title='Activity Log'><i class='fa fa-laptop'></i></a>
+                                    </li>
+                                </ul>
+                                <div id="myTabContent3" class="tab-content padding-10">
+                                    <div class="tab-pane fade in active" id="agentCustomer">
+                                        <div class='row padding-10'>
+                                            <div class="col col-sm-6">
+                                                <span class="font-md"><i>Talking to...</i></span>
+                                                <br>
+                                                <strong>Mr(s) John Doe Senior</strong>
+                                                <br>
+                                                795 Folsom Ave, Suite 600
+                                                <br>
+                                                San Francisco, CA 94107
+                                                <br>
+                                                <abbr title="Phone">P:</abbr> (123) 456-7890
+                                            </div>
+                                            <div class="col col-sm-6">
+                                                aqui fica o log do cliente
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col col-sm-12">
+                                                <ul class='demo-btns pull-left'>
+                                                    <li>
+                                                        <span class="btn btn-primary"><i class="fa fa-comment-o"></i> Listen!</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="btn btn-primary"><i class="fa fa-user"></i> View in CRM</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="agentStats">
+                                        <ul>
+                                            <li>
+                                                Totais:
+                                            </li>
+                                            <li>
+                                                Chamadas
+                                            </li>
+                                            <li>
+                                                Talk
+                                            </li>
+                                            <li>
+                                                Wrapup
+                                            </li>
+                                            <li>
+                                                Pause - clickable + breakdown
+                                            </li>
+                                            <li>
+                                                Wait
+                                            </li>
+                                            <li>
+                                                Sucesso
+                                            </li>
+                                            <li>
+                                                Uteis
+                                            </li>
+                                            <li>
+                                                Fechados
+                                            </li>
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                Médias
+                                            </li>
+                                            <li>
+                                                Tempos
+                                            </li>
+                                            <li>
+                                                Sucesso / hora
+                                            </li>
+                                            <li>
+                                                Uteis / Hora
+                                            </li>
+                                            <li>
+                                                Sucesso / Uteis
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane fade" id="agentCampInb">
+                                        <p>
+                                            listagem de toda as campanhas e grupos inbound a que tem acesso com um simbolo para sinalizar se esta la logado ou nao
+                                        </p>
+                                    </div>
+                                    <div class="tab-pane fade" id="agentLog">
+                                        <p>
+                                            log de actividade de agentes, chamadas, login logout, etc
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="chat-footer">
+                                    <div class="textarea-div">
+                                        <div class="typearea">
+                                            <textarea placeholder="Send me a message..." id="textarea-expand" class="custom-scroll"></textarea>
+                                        </div>
+                                    </div>
+                                    <span class="textarea-controls">
+                                        <button class="btn btn-sm btn-primary pull-right">
+                                            Send Message
+                                        </button> </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <!-- AGENT MODAL END -->
+
+        <!-- CHAT DIVS -->
+        <div id="chat-box-holder" class="chat-box-parent">
+
+        </div>
+
+        <!-- CHAT DIVS END -->
+
+        <!--================================================== -->
+        <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)
+        <script data-pace-options='{ "restartOnRequestAfter": true }' src="js/plugin/pace/pace.min.js"></script>-->
+
+        <!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+        <script>
+            if (!window.jQuery) {
+                document.write('<script src="js/libs/jquery-2.0.2.min.js"><\/script>');
+            }
+        </script>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+        <script>
+            if (!window.jQuery.ui) {
+                document.write('<script src="js/libs/jquery-ui-1.10.3.min.js"><\/script>');
+            }
+        </script>
+
+        <!-- BOOTSTRAP JS -->
+        <script src="js/bootstrap/bootstrap.min.js"></script>
+
+        <!-- CUSTOM NOTIFICATION -->
+        <script src="js/notification/SmartNotification.js"></script>
+
+        <!-- JARVIS WIDGETS -->
+        <script src="js/smartwidgets/jarvis.widget.min.js"></script>
+
+        <!-- EASY PIE CHARTS -->
+        <script src="js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
+
+        <!-- SPARKLINES -->
+        <script src="js/plugin/sparkline/jquery.sparkline.min.js"></script>
+
+        <!-- JQUERY VALIDATE -->
+        <script src="js/plugin/jquery-validate/jquery.validate.min.js"></script>
+
+        <!-- JQUERY MASKED INPUT -->
+        <script src="js/plugin/masked-input/jquery.maskedinput.min.js"></script>
+
+        <!-- JQUERY SELECT2 INPUT -->
+        <script src="js/plugin/select2/select2.min.js"></script>
+
+        <!-- JQUERY UI + Bootstrap Slider -->
+        <script src="js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
+
+        <!-- browser msie issue fix -->
+        <script src="js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
+
+        <!-- Tags Inputs -->
+        <script src="js/plugin/bootstrap-tags/bootstrap-tagsinput.min.js"></script>
+
+        <!-- SlimScroll -->
+
+        <script src="js/plugin/slimscroll/jquery.slimscroll.js"></script>
+
+        <!-- Graphcs -->
+        <script src="js/plugin/moment/moment.min.js"></script>
+        <script src="js/plugin/d3/d3.min.js"></script>
+        <script src="js/plugin/xcharts/xcharts.min.js"></script>
+        <script src="js/graphcs.js"></script>
+        <script src="js/plugin/knob/jquery.knob.modified.min.js"></script>
+        <script src="js/plugin/justgage/justgage.1.0.1.min.js"></script>
+        <script src="js/plugin/raphael/raphael.min.js"></script>
+        <script src="js/mongo.js"></script>
+        <script src="js/reporting.js"></script>
+        <script src="js/headerGraph.js"></script>
+
+        <!--[if IE 7]>
+
+        <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
+
+        <![endif]-->
+
+        <!-- DEMO JS
+        <script src="js/demo.js"></script> -->
+
+        <!-- node related -->
+        <script src="node/primus/primus.js"></script>
+        <script src="node/main-socket.js"></script>
+        <script src="node/voice-socket.js"></script>
+        <script src="node/chat-socket.js"></script>
+        <!-- end node related -->
+
+        <script src="js/plugin/x-editable/x-editable.min.js"></script>
+        <script src="js/plugin/moment/moment.min.js"></script>
+        <script src="js/plugin/jshash/md5-min.js"></script>
+
+        <script src="js/plugin/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+
+        <!-- MAIN APP JS FILE -->
+        <script src="js/app.js"></script>
+
+        <!-- Your GOOGLE ANALYTICS CODE Below -->
+        <script type="text/javascript">
+
+            $(window).on("keydown", function(e){
+                 if ((e.which || e.keyCode) === 116){
+                    e.preventDefault();
+                }
+            });
+
+            var user, firstname, lastname, domain, ip, status, avatar, fullName, email, role;
+            var graficos = new graph();
+            $.post("/php/action_user.php", {
+                action: 'getUser'
+            }, function(data) {
+                $('#user-img').attr("src", data.result.avatar_path);
+                avatar = data.result.avatar_path;
+                user = data.result.username;
+                domain = data.result.domain;
+                firstname = data.result.first_name;
+                lastname = data.result.last_name;
+                fullName = firstname + " " + lastname;
+                email = data.email;
+                role = data.role;
+                ip = data.ip;
+                var userPermissions = new Array();
+                $('#show-shortcut').html(firstname + ' ' + lastname);
+                //Record login Activity Log
+                $.post('/php/action_user.php', {action: 'writeLog', user: user, domain: domain, actions: 'Login', target: 'Main', date: moment().format('YYYY-MM-DD HH:mm:ss')}, function(data) {
+                }, 'json');
+                //node
+                startUserSocket(ip, user, domain);
+                startChatSocket(ip, user, domain);
+
+            }, "json");
+
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-XXXXXXXX-X']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+                var ga = document.createElement('script');
+                ga.type = 'text/javascript';
+                ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(ga, s);
+            })();
+            /* This function calls a modal window with the agent info - accepts as argument the agent user name */
+            function agentInfo(agent) {
+                // TBD : Change de userinfo on the modal and then show it
+                $("#agentInfo").modal();
+                setTimeout(function() {
+                    generateAllFlotCharts();
+                }, 200);
+            }
+
+        </script>
+
+    </body>
+
+</html>

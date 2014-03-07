@@ -1,0 +1,669 @@
+
+<link rel="stylesheet" type="text/css" media="screen" href="/js/plugin/validation/validationEngine.jquery.css">
+
+<style >
+
+    .panel {
+        cursor: pointer;
+    }
+    .box-header{
+        font-size:small;
+
+    }
+    .panel-title{
+        font-size: small;
+    }
+    .popoverStyle{
+
+        margin: 5px;
+    }
+
+    .color{
+        color: whitesmoke;
+    }
+    .addStaple{
+        border: 0;
+        background-color: transparent;                
+        width: 100%;
+        height:100%; 
+    }
+    //sortable          
+    /* line 10, jquery-sortable.css.sass */
+    ol.vertical {
+        margin: 0 0 9px 0; }
+    /* line 12, jquery-sortable.css.sass */
+    ol.vertical li {
+        display: block;
+        margin: 5px;
+        padding: 0px;
+        border: 1px solid #cccccc;
+        color: black;
+        background: #eeeeee;}
+    /* line 19, jquery-sortable.css.sass */
+    ol.vertical li.placeholder {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        border: none; }
+
+    /* line 24, jquery-sortable.css.sass 
+    ol.vertical li.placeholder:before {
+        position: absolute;
+        content: "";
+        width: 0;
+        height: 0;
+        margin-top: -5px;
+        left: -5px;
+        top: -4px;
+        border: 5px solid transparent;
+        border-left-color: red;
+        border-right: none; }*/
+    /* line 1, jquery-sortable.css.sass */
+    body.dragging, body.dragging * {
+        cursor: move !important; }
+
+    /* line 4, jquery-sortable.css.sass */
+    .dragged {
+        position: absolute;
+        top: 0;
+        opacity: 0.5;
+        z-index: 2000; }
+    /* line 32, application.css.sass */
+    ol {
+        list-style-type: none; }
+    /* line 34, application.css.sass */
+    ol i.icon-move {
+        cursor: pointer; }
+    /* line 36, application.css.sass */
+    ol li.highlight {
+        background: #333333;
+        color: #999999; }
+    /* line 39, application.css.sass */
+    ol li.highlight i.icon-move {
+        background-image: url("../img/glyphicons-halflings-white.png"); }
+
+    .item_handle {
+        margin: -1px;
+        cursor: move;
+        width: 30px;
+        text-indent: -2%;
+        white-space: nowrap;
+        border: 1px solid #aaa;
+        background: #333;
+        background: -webkit-linear-gradient(top,#ddd 0,#bbb 100%);
+        background: -webkit-gradient(linear,top left,bottom left,from(#ddd),to(#bbb));
+        background: linear-gradient(top,#ddd 0,#bbb 100%);
+        display: inline-block;
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-size: 18px;
+        padding: 8px 15px;
+
+    }
+
+    .item_handle:hover, .item_handle:hover+.list .item_handle {
+        background: #FDDFB3!important;
+        border: 1px solid #FAA937;
+        color: #333!important;
+    }
+    /*
+        .item_content{
+            display: inline-block;
+            width: calc(84% - 10px);
+            margin: 5px;
+        }*/
+
+    /*  .item_content a{
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          float: right;
+          font-size: 20px;
+          margin-left: 10px;
+      }*/
+    .chosen-container * {
+        box-sizing:initial;
+    }
+    .box-content{
+        z-index:inherit;
+
+    }
+    .chosen-choices, ol{
+        padding:0px;
+    }
+    .chosen-container { width: 100% !important; }
+
+    .chosen-select{width: 225%;}
+
+    /* .inputNinja {
+         border: 0;
+         background-color: transparent;
+         margin-top: -3px;
+         width: calc(100% - 55px);
+     }*/
+
+    #mightyNest .item_content{
+        width: calc(86% - 10px);
+        margin: 1px;
+    }
+    #list .item_content{
+        width: calc(100% - 10px);
+        margin: 1px;
+    }
+    #list .panel-body{
+        padding:0;
+    }
+    #accordion {
+        margin-top: 6px;
+    }
+    .fa-wrench{
+        float: right;
+        margin-right: 4px;
+        margin-top: 4px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+    .fa-trash-o{
+        float: right;
+        margin-right: 5px;
+        margin-top: 4px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+    .iconSlaveMargin{
+        margin-top: -21px;
+    }
+    .ui-spinner {
+
+        height: 32px;
+    }
+
+
+</style>
+<div class="row">
+    <div class="col-xs-12 col-sm-3 col-md-4 col-lg-4">
+        <h1 class="page-title txt-color-blueDark">
+
+            <!-- PAGE HEADER -->
+            <i class="fa-fw fa fa-home"></i>
+            Report Builder
+            <span>>
+                Constructor
+            </span>
+        </h1>
+    </div>
+
+    <div class="col-xs-12 col-sm-9 col-md-8 col-lg-8" id="headerGraphics">
+
+    </div>
+</div>
+<!-- widget grid -->
+<section id="widget-grid" class="">
+
+    <!-- row -->
+    <div class="row">
+
+        <!-- NEW WIDGET START -->
+        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+            <!-- Widget ID (each widget will need unique ID)-->
+            <div class="jarviswidget" id="widHeader" data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-sortable="false">
+                <!-- widget options:
+                        usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                        data-widget-colorbutton="false"
+                        data-widget-editbutton="false"
+                        data-widget-togglebutton="false"
+                        data-widget-deletebutton="false"
+                        data-widget-fullscreenbutton="false"
+                        data-widget-custombutton="false"
+                        data-widget-collapsed="true"
+                        data-widget-sortable="false"
+                -->
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+                    <h2>Template</h2>
+
+                </header>
+
+                <!-- widget div-->
+                <div>
+                    <!-- widget edit box -->
+                    <div class="jarviswidget-editbox">
+                        <!-- This area used as dropdown edit box -->
+
+                    </div>
+                    <!-- end widget edit box -->
+
+                    <!-- widget content -->
+                    <div class="widget-body">
+
+                        <form class="smart-form" role="form" id="form-template">
+                            <fieldset>
+                                <div class="row">
+                                    <section class="col col-sm-3" title="Select Template">
+
+                                        <select  id="selectTemplateList"  title="Select Template" style="width:100%" class="select2" data-select-search="true"  >
+                                        </select>
+                                    </section>
+
+                                    <section class="col col-sm-3" title="Select Template Source">
+
+                                        <select  id="selectTemplateSource"  title="Select Template Source" style="width:100%" class="select2" data-select-search="true">
+                                            <option value="campaign">Campaign</option>
+                                            <option value="list">List</option>
+                                            <option value="inbound">Inbound</option>
+                                        </select>
+                                    </section>
+
+                                    <section class="col col-sm-3" title="Select Template date range" style="margin-left: 2%;">
+
+                                        <select  id="selectTemplateDate"  title="Select Template date range" style="width:100%" class="select2" data-select-search="true"  >
+                                            <option value="fixedDate">Fixed Date Range</option>
+                                            <option value="dynamicDate">Dynamic Date Range</option>
+                                        </select>
+
+                                    </section>
+                                    <section class="col col-sm-1" style="margin-left: 2%;">
+                                        <button type="button" class="btn btn-danger btn-sm"data-dismiss="modal" id="deleteTempModal" data-placement="top" title="Apagar template" style="display:none;"><i class="icon-remove-sign"></i>  Apagar</button>
+                                    </section>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <div class="row">
+                                    <section class="col col-sm-3" id="chosenMultiDivUser" title="users that have acess to the template" >
+                                        <select id="selectUser" name="selectUser" multiple data-placeholder="Select Users" style="width:100%" class="select2" data-select-search="true"> 
+
+                                        </select> 
+                                    </section>
+                                    <section class="col col-sm-3" >
+
+                                        <div class="form-group col-sm-12 filtroModalSourceDiv" id="campaignModalDiv">
+                                            <div data-placement="top" title="Select one or more campaign to get acess to its Outcome." id='chosenSelectDivselectcampaign'>
+                                                <select id="selectcampaign" name="selectcampaign" data-placeholder="Select Campaign" multiple style="width:100%" class="select2" data-select-search="true"></select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-sm-12 filtroModalSourceDiv" id="listModalDiv" style="display:none;">
+                                            <div data-placement="top" title="Select one or more lists to get acess to its Outcome." id='chosenSelectDivselectlist'>
+                                                <select id="selectlist" name="selectlist" data-placeholder="Select Lists" multiple style="width:100%" class="select2" data-select-search="true"></select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-sm-12 filtroModalSourceDiv" id="inboundModalDiv" style="display:none;" >
+                                            <div data-placement="top" title="Select one or more inbounds to get acess to its Outcome" id='chosenSelectDivselectinbound'>
+                                                <select id="selectinbound" name="selectinbound" data-placeholder="Select Inbounds" multiple style="width:100%" class="select2" data-select-search="true"></select>
+                                            </div>
+                                        </div>
+                                    </section>
+
+
+                                    <section class="col col-sm-2 filtroModalDateDiv" id="dateRangeDayDynamic2" style="display:none;margin-left: 6%" >
+                                        <div class="form-group" style=" margin-top: -18px; ">
+                                            <label for="h-input">Days</label>
+                                            <input class="spinner" data-placement="top" title="From n(time from now) to chosen number of days in the past" value="1" type="text">
+                                        </div>
+                                    </section>
+                                    <section class="col col-sm-2 filtroModalDateDiv"  id="dateRangeFixed1" style="margin-left: -5px;"  >
+
+                                        <label class="input" style="padding-left: 35px;">
+                                            <i class="icon-append fa fa-calendar"></i>
+                                            <input class="form-control validate[required] text-input " data-placement="top" title="Beginning of date range"  type="text" placeholder="Date Start" readonly="" id="dateStart" name="dateStart" style="margin-bottom: 5px;" data-dateformat="dd/mm/yy" >
+                                        </label>
+
+                                    </section>
+
+                                    <section class="col col-sm-2 filtroModalDateDiv" id="dateRangeFixed2" style="margin-left: -54px;" >
+
+                                        <label class="input" style="padding-left: 35px;">
+                                            <i class="icon-append fa fa-calendar"></i>
+                                            <input class="form-control validate[required] text-input  " data-placement="top" title="Ending of date range" type="text" placeholder="Date End" readonly="" id="dateEnd" name="dateEnd" data-dateformat="dd/mm/yy">
+                                        </label>
+                                    </section>
+
+                                    <section class="col col-sm-1" >
+
+                                        <button class="btn btn-primary btn-sm" id="editTemplate" data-toggle="modal" data-placement="top" title="Gravar alterações da template"><i class="icon-save"></i> Save</button>
+
+                                    </section>
+                                </div>
+                            </fieldset>
+
+                        </form>
+
+                    </div>
+                    <!-- end widget content -->
+
+                </div>
+                <!-- end widget div -->
+
+            </div>
+            <!-- end widget -->
+        </article>
+        <!-- WIDGET END -->
+        <!-- NEW WIDGET START -->
+        <article class="col-xs-5 col-sm-5 col-md-5 col-lg-5" id="artConstructor" >
+
+            <!-- Widget ID (each widget will need unique ID)-->
+            <div class="jarviswidget" id="widConstructor" data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-sortable="false" >
+                <!-- widget options:
+                        usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                        data-widget-colorbutton="false"
+                        data-widget-editbutton="false"
+                        data-widget-togglebutton="false"
+                        data-widget-deletebutton="false"
+                        data-widget-fullscreenbutton="false"
+                        data-widget-custombutton="false"
+                        data-widget-collapsed="true"
+                        data-widget-sortable="false"
+                -->
+                <header>
+                    <span class="widget-icon"> <i class="fa  fa-circle"></i> </span>
+                    <h2>Constructor</h2>
+                    <div class='widget-toolbar' role='menu'>
+                        <span  id="addStapleIco" class="button-icon txt-color-Black" rel="tooltip"  data-placement="bottom" data-original-title="Add new group item" ><i class="fa fa-plus"></i> Add Group</span>
+                    </div>
+                </header>
+
+                <!-- widget div-->
+                <div>
+
+                    <!-- widget edit box -->
+                    <div class="jarviswidget-editbox">
+                        <!-- This area used as dropdown edit box -->
+
+                    </div>
+                    <!-- end widget edit box -->
+
+                    <!-- widget content -->
+                    <div class="widget-body">
+                        <ul class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <select  id="selectAgrupador" title='Seleccione a fonte dos feeds' data-placeholder="Seleccione " style="width:100%" class="select2" data-select-search="true" >
+
+                            </select>
+                            <div id="list">
+                                <!--
+                                <div class="panel-group smart-accordion-default" id="accordion">
+
+                                </div>
+                                -->
+                                <div class="panel-group" id="accordion">
+
+                                    <div class="panel panel-default" id="0" style="display:none;">
+                                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseZero">
+                                            <h6 class="panel-title">
+                                                <b > Resposta Humana</b>
+                                                <b id="totalFeed0"></b>
+                                            </h6>
+                                        </div>
+                                        <div id="collapseZero" class="panel-collapse collapse ">
+                                            <div class="panel-body">
+                                                <ol class="simple_with_no_drop vertical" id="respHumana"> </ol>  
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel panel-default" id="1" style="display:none;">
+                                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseteOne">
+                                            <h6 class="panel-title" >
+                                                <b > Sucesso</b>
+                                                <b id="totalFeed1"></b>
+                                            </h6>
+                                        </div>
+                                        <div id="collapseteOne" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <ol class="simple_with_no_drop vertical" id="sucesso"> </ol>  
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel panel-default" id="2" style="display:none;">
+                                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseteTwo">
+                                            <h6 class="panel-title">
+
+                                                <b > Lista Negra</b>
+                                                <b id="totalFeed2"></b>
+
+                                            </h6>
+                                        </div>
+                                        <div id="collapseteTwo" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <ol class="simple_with_no_drop vertical" id="listNegra"> </ol>  
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel panel-default" id="3" style="display:none;">
+                                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseteTree">
+                                            <h6 class="panel-title">
+
+                                                <b > Contacto Útil</b>
+                                                <b id="totalFeed3"></b>
+
+                                            </h6>
+                                        </div>
+                                        <div id="collapseteTree" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <ol class="simple_with_no_drop vertical" id="contUtil"> </ol>  
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default" id="4" style="display:none;">
+                                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseteFour">
+                                            <h6 class="panel-title">
+
+                                                <b > Negativo</b>
+                                                <b id="totalFeed4"></b>
+
+                                            </h6>
+                                        </div>
+                                        <div id="collapseteFour" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <ol class="simple_with_no_drop vertical" id="negativo"> </ol>  
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel panel-default" id="5" style="display:none;">
+                                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseteFive">
+                                            <h6 class="panel-title">
+
+                                                <b > Não Útil</b>
+                                                <b id="totalFeed5"></b>
+
+                                            </h6>
+                                        </div>
+                                        <div id="collapseteFive" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <ol class="simple_with_no_drop vertical" id="naoUtil"> </ol>  
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel panel-default" id="6" style="display:none;">
+                                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseteSix">
+                                            <h6 class="panel-title">
+
+                                                <b > Call Back</b>
+                                                <b id="totalFeed6"></b>
+
+                                            </h6>
+                                        </div>
+                                        <div id="collapseteSix" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <ol class="simple_with_no_drop vertical" id="callBack"> </ol>  
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel panel-default" id="7" style="display:none;">
+                                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseteSeven">
+                                            <h6 class="panel-title" >
+
+                                                <b >Contacto Fechado</b>
+                                                <b id="totalFeed7"></b>
+
+                                            </h6>
+                                        </div>
+                                        <div id="collapseteSeven" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <ol class="simple_with_no_drop vertical" id="contFechado"> </ol>  
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel panel-default" id="8" style="display:none;">
+                                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseteEight">
+                                            <h6 class="panel-title" >
+
+                                                <b >Feeds de Sistema</b>
+                                                <b id="totalFeed8"></b>
+
+                                            </h6>
+                                        </div>
+                                        <div id="collapseteEight" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <ol class="simple_with_no_drop vertical" id="feedSistema"> </ol>  
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </ul>
+                        <ul class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            <ol class="simple_with_drop vertical" id="mightyNest">
+
+                            </ol>   
+
+                        </ul>
+
+                    </div>
+                    <!-- end widget content -->
+
+                </div>
+                <!-- end widget div -->
+
+            </div>
+            <!-- end widget -->
+
+        </article>
+        <!-- WIDGET END -->
+
+        <!-- NEW WIDGET START -->
+        <article class="col-xs-7 col-sm-7 col-md-7 col-lg-7"    id="artPreview">
+
+            <!-- Widget ID (each widget will need unique ID)-->
+            <div class="jarviswidget" id="widPreview" data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-sortable="false"  >
+                <!-- widget options:
+                        usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                        data-widget-colorbutton="false"
+                        data-widget-editbutton="false"
+                        data-widget-togglebutton="false"
+                        data-widget-deletebutton="false"
+                        data-widget-fullscreenbutton="false"
+                        data-widget-custombutton="false"
+                        data-widget-collapsed="true"
+                        data-widget-sortable="false"
+
+                -->
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
+                    <h2>Preview </h2>
+                    <div class='widget-toolbar' role='menu'>
+                        <span  id="downloadTemplate" class="button-icon txt-color-Black" rel="tooltip"  data-placement="bottom" data-original-title="Donwload ina .XLSX excel file" ><i class="fa fa-download"></i> Download</span>
+                    </div>
+                </header>
+                <!-- widget div-->
+                <div>
+                    <!-- widget edit box -->
+                    <div class="jarviswidget-editbox">
+                        <!-- This area used as dropdown edit box -->
+
+                    </div>
+                    <!-- end widget edit box -->
+
+                    <!-- widget content -->
+                    <div class="widget-body">
+
+                        <div id="contentGraph" > 
+
+                        </div>
+
+                    </div>
+                    <!-- end widget content -->
+
+                </div>
+                <!-- end widget div -->
+
+            </div>
+            <!-- end widget -->
+
+        </article>
+        <!-- WIDGET END -->
+
+    </div>
+
+    <!-- end row -->
+
+    <!-- row -->
+
+    <div class="row">
+
+
+    </div>
+
+    <!-- end row -->
+
+</section>
+<!-- end widget grid -->
+<div class="modal fade" id="modalEditTemplate">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="modalClose1">&times;</button>
+                <h4 class="modal-title">New Template</h4>
+            </div>
+
+            <div class="modal-body">
+
+                <form class="form-horizontal" id="modalNewTemplate" style="display: none" >
+                    <div class="">
+                        <label class="control-label " >Template Name</label> 
+                        <input class="form-control" id="inputName"  type="text" >
+                    </div>
+                </form>
+                <form class="form-horizontal" id="modalDeletTemplate" style="display: none" >
+                    <div class="">
+                        <label class="control-label " >Do you really want to delete this template?</label> 
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">                       
+                <button type="button" class="btn btn-success"  id="saveTempModal" style="display:none;"><i class="icon-save"></i>  Save</button>
+                <button type="button" class="btn btn-danger"data-dismiss="modal" id="delete" style="display:none;"><i class="icon-remove-sign"></i>  Delete</button>
+
+                <button type="button" class="btn btn-default" data-dismiss="modal" style="display:inline;">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script type="text/javascript">
+
+    // DO NOT REMOVE : GLOBAL FUNCTIONS!
+    pageSetUp();
+
+    // PAGE RELATED SCRIPTS
+
+</script>
+
+<script type="text/javascript" src="/js/plugin/validation/jquery.validationEngine.js"></script>
+<script type="text/javascript" src="/js/plugin/validation/languages/jquery.validationEngine-pt.js"></script>
+<script type="text/javascript" src="/js/plugin/validation/contrib/other-validations.js"></script>
+<script src="/js/plugin/johnny_jquery-sortable/jquery-sortable.js"></script>
+<script src="../../js/report_builder/mightycons.js"></script>

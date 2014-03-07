@@ -1,0 +1,20 @@
+<ul class="notification-body quick-chat">
+
+</ul>
+
+<script>
+    $(document).ready(function() {
+        $(".quick-chat").html('');
+        $.each(chatHistory, function() {
+            if ($("." + this.from)) {
+                $("." + this.from).remove();
+            }
+            var thisMessage = '<li class="' + this.from + '"><span class="unread"><a href="javascript:void(0);" class="msg"><img src="' + this.avatar + '" alt="" class="air air-top-left margin-top-5" width="40" height="40" /><span class="from">' + this.firstName + ' ' + this.lastName + ' </span><time>' + moment(this.time, 'YYYYMMDD HH:mm:ss').fromNow() + '</time><span class="subject">' + this.msg + '</span>';
+            $(".quick-chat").append(thisMessage);
+            $("." + this.from).off();
+            $("." + this.from).on('click', function() {
+                openChatBox($(this).context.className);
+            })
+        });
+    })
+</script>    
