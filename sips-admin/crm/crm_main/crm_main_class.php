@@ -393,6 +393,8 @@ class crm_main_class {
                     . " left join (select status,status_name from vicidial_campaign_statuses where campaign_id = ? UNION ALL select status, status_name from vicidial_statuses) st on calls.status = st.status "
                     . " left join vicidial_users users on users.user=calls.user  $join   where $where $script_fields   limit 20000 ";
 
+         
+            
             #select calls.lead_id,c.first_name,  calls.phone_number, calls.user, st.status_name,calls.length_in_sec,calls.call_date,calls.list_id  from vicidial_log calls  left join vicidial_list c on c.lead_id=calls.lead_id left join (select status, status_name from vicidial_campaign_statuses where campaign_id = 'W00003' UNION ALL select status, status_name from vicidial_statuses) st on calls.status = st.status where  calls.campaign_id= 'W00003'  and date(calls.call_date) = date(now());
             #    echo $query;
             #     print_r($variables);
