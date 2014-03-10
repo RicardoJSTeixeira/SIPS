@@ -536,10 +536,10 @@ class script {
             $js[] = $row["tag"];
         }
 
-        $js = implode("','", $js);
+        $rules = implode("','", $js);
 
         if (count($js)) {
-            $query = "delete from  script_rules where tag_trigger in('$js') and id_script=:id_script";
+            $query = "delete from  script_rules where tag_trigger in('$rules') and id_script=:id_script";
             $stmt = $this->db->prepare($query);
             $stmt->execute(array(":id_script" => $id_script));
         }
