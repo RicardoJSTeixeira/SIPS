@@ -400,7 +400,7 @@ function update_script(callback)
         }
 
 //Get das tags dos campos dinâmicos
-        $.post("requests.php", {action: "get_tag_fields", id_script: $("#- option:selected").val()},
+        $.post("requests.php", {action: "get_tag_fields", id_script: $("#script_selector option:selected").val()},
         function(data4)
         {
             $("#select_default_value").empty();
