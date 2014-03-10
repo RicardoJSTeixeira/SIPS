@@ -298,7 +298,7 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                         $('#out-time-active').hide();
                         $('#out-time-inactive').show();
                         var all = $('#out-time-active input[type="checkbox"]:checked');
-                        console.log(all);
+                        //console.log(all);
                         if (!all) {
                             $('#example3_select').fadeIn();
                         } else {
@@ -310,7 +310,7 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                             $.post('../php/reporting.php', {action: 'timeline', id: CampaignID, dados: ar, start: start, end: end}, function(data) {
                                 var win = ar.length;
                                 $.each(ar, function(key, val) {
-                                    //console.log(key + '-' + val);
+                                    ////console.log(key + '-' + val);
                                     if (val === 'total') {
                                         final.push({label: 'Total Calls', data: data.Total});
                                     }
@@ -365,7 +365,7 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                         $('#out-hour-active').hide();
                         $('#out-hour-inactive').show();
                         var all = $('#out-hour-active input[type="checkbox"]:checked');
-                        console.log(all);
+                        //console.log(all);
                         if (!all) {
                             $('#example4_select').fadeIn();
                         } else {
@@ -924,12 +924,12 @@ function hour(CampaignID, start, end) {
                             Math.round(this.length / 60)
                         ]);
                     });
-                    console.log('Total');
-                    console.log(totalTime);
-                    console.log('Total Talk');
-                    console.log(talkTime);
-                    console.log('Total Drop');
-                    console.log(dropTime);
+                    //console.log('Total');
+                    //console.log(totalTime);
+                    //console.log('Total Talk');
+                    //console.log(talkTime);
+                    //console.log('Total Drop');
+                    //console.log(dropTime);
                     finalT.push({data: totalTime, bars: {show: true, barWidth: 0.2, order: 1}}, {data: talkTime, bars: {show: true, barWidth: 0.2, order: 2}});  //, {data: dropTime, bars: {show: true, barWidth: 0.2, order: 3}});
                     graficos.floatBar('#example4', finalT, undefined, "%x h - %y min");
                 });
