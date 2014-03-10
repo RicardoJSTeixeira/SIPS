@@ -179,7 +179,7 @@ var mongo = function() {
             console.log('Mongo Method: Call error!!');
         } else {
             $.ajaxSetup({cache: true});
-            // console.log(me.creat(obj));
+            //console.log(creat(obj));
             $.getJSON(creat(obj), function(data) {
                 callback(data);
             });
