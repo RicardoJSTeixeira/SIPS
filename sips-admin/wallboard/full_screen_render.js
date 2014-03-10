@@ -956,7 +956,10 @@ function secondsToString(seconds)
     var numhours = Math.floor((seconds % 86400) / 3600);
     var numminutes = Math.floor(((seconds % 86400) % 3600) / 60);
     var numseconds = ((seconds % 86400) % 3600) % 60;
-
-    return numminutes < 10 ? "0" + numminutes : numminutes + " : " + numseconds < 10 ? "0" + numseconds : numseconds;
+    if (numminutes < 10)
+        numminutes = "0" + numminutes;
+        if (numseconds < 10)
+        numseconds = "0" + numseconds;
+    return  numminutes + " : " + numseconds  ;
 
 }
