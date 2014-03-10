@@ -54,7 +54,7 @@ function outboundList(today) {
                     "sButtonText": 'Save <span class="caret" />',
                     "aButtons": ["csv", "xls", "pdf"]
                 }],
-            "sSwfPath": "js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
+            "sSwfPath": "../js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
         },
         "fnInitComplete": function(oSettings, json) {
             $(this).closest('#dt_table_tools_wrapper').find('.DTTT.btn-group').addClass('table_tools_group').children('a.btn').each(function() {
@@ -361,7 +361,6 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                         ar = ['1'], color = ['#57889C', '#356e35', '#990329', '#FF6103', '#c79121', '#360068a0', '#d9ce00', '#519c00', '#FF00B3'], final = [], talk = [], totals = [], drop = [];
                         $('#btn-out-hour').show();
                         $(this).hide();
-                        final = [];
                         $('#out-hour-active').hide();
                         $('#out-hour-inactive').show();
                         var all = $('#out-hour-active input[type="checkbox"]:checked');
@@ -429,7 +428,7 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                                                 "sButtonText": 'Save <span class="caret" />',
                                                 "aButtons": ["csv", "xls", "pdf"]
                                             }],
-                                        "sSwfPath": "js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
+                                        "sSwfPath": "../js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
                                     },
                                     "fnInitComplete": function(oSettings, json) {
                                         $(this).closest('#dt_table_tools_wrapper').find('.DTTT.btn-group').addClass('table_tools_group').children('a.btn').each(function() {
@@ -452,7 +451,7 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                                                 "sButtonText": 'Save <span class="caret" />',
                                                 "aButtons": ["csv", "xls", "pdf"]
                                             }],
-                                        "sSwfPath": "js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
+                                        "sSwfPath": "../js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
                                     },
                                     "fnInitComplete": function(oSettings, json) {
                                         $(this).closest('#dt_table_tools_wrapper').find('.DTTT.btn-group').addClass('table_tools_group').children('a.btn').each(function() {
@@ -486,7 +485,7 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                                                     "sButtonText": 'Save <span class="caret" />',
                                                     "aButtons": ["csv", "xls", "pdf"]
                                                 }],
-                                            "sSwfPath": "js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
+                                            "sSwfPath": "../js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
                                         },
                                         "fnInitComplete": function(oSettings, json) {
                                             $(this).closest('#dt_table_tools_wrapper').find('.DTTT.btn-group').addClass('table_tools_group').children('a.btn').each(function() {
@@ -509,7 +508,7 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                                                     "sButtonText": 'Save <span class="caret" />',
                                                     "aButtons": ["csv", "xls", "pdf"]
                                                 }],
-                                            "sSwfPath": "js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
+                                            "sSwfPath": "../js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
                                         },
                                         "fnInitComplete": function(oSettings, json) {
                                             $(this).closest('#dt_table_tools_wrapper').find('.DTTT.btn-group').addClass('table_tools_group').children('a.btn').each(function() {
@@ -733,7 +732,7 @@ function agentsOut(CampaignID, start, end) {
                         "sButtonText": 'Save <span class="caret" />',
                         "aButtons": ["csv", "xls", "pdf"]
                     }],
-                "sSwfPath": "js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
+                "sSwfPath": "../js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
             },
             "fnInitComplete": function(oSettings, json) {
                 $(this).closest('#dt_table_tools_wrapper').find('.DTTT.btn-group').addClass('table_tools_group').children('a.btn').each(function() {
@@ -795,7 +794,7 @@ function feedbacks(CampaignID, start, end, statuses) {
                     "sButtonText": 'Save <span class="caret" />',
                     "aButtons": ["csv", "xls", "pdf"]
                 }],
-            "sSwfPath": "js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
+            "sSwfPath": "../js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
         },
         "fnInitComplete": function(oSettings, json) {
             $(this).closest('#dt_table_tools_wrapper').find('.DTTT.btn-group').addClass('table_tools_group').children('a.btn').each(function() {
@@ -971,7 +970,7 @@ function pause(CampaignID, start, end, agents) {
                                     "sButtonText": 'Save <span class="caret" />',
                                     "aButtons": ["csv", "xls", "pdf"]
                                 }],
-                            "sSwfPath": "js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
+                            "sSwfPath": "../js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
                         },
                         "fnInitComplete": function(oSettings, json) {
                             $(this).closest('#dt_table_tools_wrapper').find('.DTTT.btn-group').addClass('table_tools_group').children('a.btn').each(function() {
