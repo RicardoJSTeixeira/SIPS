@@ -1,6 +1,6 @@
 <?php
 
-ini_set(display_errors, 1);
+//ini_set(display_errors, 1);
 
 
 foreach ($_POST as $key => $value) {
@@ -16,6 +16,8 @@ require '../../../ini/db.php';
 
 
 $server = "http://.$VARDB_server:10000/ccstats/v0/";
+//var_dump($server);
+
 
 switch ($action) {
     case 'outTotais': outTotais($campaign, $start, $end, $db, $server);
@@ -72,7 +74,7 @@ function outTotais($campaign, $start, $end, $db, $server) {
         }
     }
 
-    $get_total = file_get_contents($server . "total/calls/$start/$end?campaign=$campaign");
+    $get_total = file_get_contents($server."total/calls/$start/$end?campaign=$campaign");
     $total_content = json_decode($get_total);
     $series[] = array('Total', $total_content[0]->calls);
 
