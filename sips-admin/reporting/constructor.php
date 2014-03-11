@@ -1,5 +1,6 @@
 <?php
 
+ini_set(display_errors, 1);
 //vai dissecar a váriaveis  que vêm do Post e Get
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
@@ -16,6 +17,7 @@ require '../../ini/phpexcel/PHPExcel.php';
 require '../../ivrtts/report/excelwraper.php';
 
 $user = new mysiblings($db);
+$server = 'http://goviragem.dyndns.org:10000/ccstats/v0/';
 
 switch ($action) {
     case 'getCampaign':
@@ -40,9 +42,9 @@ switch ($action) {
         echo json_encode($user->get_feedbacks($campId));
         break;
     case 'getUser':
-        $users=array();
+        $users = array();
         foreach ($user->get_agentes() as $value) {
-            $users[]=array("id"=>$value["user"],"name"=>$value["full_name"]);
+            $users[] = array("id" => $value["user"], "name" => $value["full_name"]);
         }
         echo json_encode($users);
         break;
@@ -73,8 +75,21 @@ switch ($action) {
     case'getTemplateListUser':
         echo json_encode(getTemplateListUser($db, $user));
         break;
+    case'getStatusInfo':
+        echo json_encode(getStatusInfo($db, $server, $timeStart, $timeEnd, $campaignId, $status));
+        break;
     default:
         break;
+}
+
+function getStatusInfo($db, $server, $start, $end, $campaignId, $status) {
+
+    $result = json_decode(file_get_contents($server . "total/calls/" . $start . "T00:00/" . $end . "T23:59?by=agent&campaign=$campaignId&status=$status"));
+
+    foreach ($result as $value) {
+        $output['aaData'][] = array($value->agent, $value->calls, $value->length);
+    }
+    return $output;
 }
 
 function saveTemplate($db, $users, $name, $dateRange, $type, $typeId, $template) {
@@ -208,24 +223,16 @@ function templateDownload($db, $templateId) {
         }
     }
 
-
-
-
     foreach ($template['template'] as $data) {
 
         $dataExcel [] = array('Name', 'Total');
 
 
         foreach ($data->children as $children) {
-            if (isset($campaignValues[$children->propertyOf][$children->status]["calls"])) {
-                $value = $campaignValues[$children->propertyOf][$children->status]["calls"];
-            } else {
-                $value = "n/a";
-            }
 
-            $dataExcel[] = array($children->text, $value);
+
+            $dataExcel[] = array($children->text, $campaignValues[$children->propertyOf][$children->status]["calls"]);
         }
-
 
         $toExcel->maketable($dataExcel, TRUE, $data->text, NULL, NULL, 'chart2', 'r', 'bars', 'bars', TRUE, TRUE);
         $dataExcel = array();
@@ -253,7 +260,7 @@ function constructPreview($db, $templateId) {
         "campaign" => "campaign"
     );
 
-    
+
     $templateTypo = $translate[$template['tipo']];
 
     $campaignValues = array();
@@ -276,21 +283,19 @@ function constructPreview($db, $templateId) {
             'name' => $data->text,
             'total' => '',
             'perc' => '',
+            'start' => $template['start'],
+            'end' => $template['end'],
             'values' => array()
         );
 
         foreach ($data->children as $children) {
 
-            if (isset($campaignValues[$children->propertyOf][$children->status]["calls"])) {
-                $value = $campaignValues[$children->propertyOf][$children->status]["calls"];
-            } else {
-                $value = "n/a";
-            }
-
 
             $temp['values'][] = array(
                 'name' => $children->text,
-                'value' => $value,
+                'status' => $children->status,
+                'propertyOf' => $children->propertyOf,
+                'value' => $campaignValues[$children->propertyOf][$children->status]["calls"],
                 'perc' => '',
             );
         }
@@ -300,9 +305,8 @@ function constructPreview($db, $templateId) {
     return $myPreview;
 }
 
-//*cabi:campanha,Agentes,bds e inbounds
 function mongoDBData($ownerId, $ownerType, $dateStart, $dateEnd) {
-////////////!!!!!!!!!!!!!!!!!!!!!!!!!!!! ALTERAR !!!!!!!!!!!!!!!!!!!!
+
     $result = file_get_contents("http://goviragem.dyndns.org:10000/ccstats/v0/total/calls/" . $dateStart . "T00:00/" . $dateEnd . "T00:00?$ownerType=$ownerId&by=status");
     return json_decode($result);
 }
