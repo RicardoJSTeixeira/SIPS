@@ -12,16 +12,10 @@ foreach ($_GET as $key => $value) {
 
 require '../report_builder/excelwraper.php';
 require '../phpexcel/Classes/PHPExcel.php';
+require '../../../ini/db.php';
 
-try {
-    $db = new PDO('mysql:host=gonecomplus.dyndns.org;dbname=asterisk;charset=utf8', 'sipsadmin', 'sipsps2012', array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-} catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
-}
 
-$server = 'http://gonecomplus.dyndns.org:10000/ccstats/v0/';
+$server = "http://.$VARDB_server:10000/ccstats/v0/";
 
 switch ($action) {
     case 'outTotais': outTotais($campaign, $start, $end, $db, $server);
@@ -350,7 +344,7 @@ function outHour($campaign, $start, $end, $pause, $db, $server) {
         }
     }
 
-    //print_r($ar);
+
     creat($ar, 'Hours', 'bars');
 }
 
@@ -509,7 +503,7 @@ function outTime($campaign, $start, $end, $pause, $db, $server) {
         }
     }
 
-    //print_r($ar);
+
     creat($ar, 'Timeline', 'lines');
 }
 
