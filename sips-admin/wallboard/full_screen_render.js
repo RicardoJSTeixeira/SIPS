@@ -474,7 +474,7 @@ function   inbound_wallboard(data)
     var panel = $("#" + wbe[0] + "Main");
     var font_size = ((panel.width() / 50) + (panel.height() / 110));
     panel.empty();
- 
+
     //Outbound
     if (data[9][0]["param1"] == 1)
     {
@@ -495,21 +495,21 @@ function   inbound_wallboard(data)
                                         .append($("<div>").addClass("inbound_grid_div_large")
                                                 .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("Chamadas não Atendidas")))
                                                 .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "chamadas_n_atendidas" + id))))))
-                         //left/right    
+                        //left/right    
                         .append($("<tr>")
                                 //graph
-                                 .append($("<tr>")
-                                .append($("<td>")
-                                        .append($("<div>").addClass("inbound_grid_div")
-                                                .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("TMA")))
-                                                .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "tma1" + id))))))
+                                .append($("<tr>")
+                                        .append($("<td>")
+                                                .append($("<div>").addClass("inbound_grid_div")
+                                                        .append($("<div>").addClass("inbound_grid_title").append($("<label>").text("TMA")))
+                                                        .append($("<div>").addClass("inbound_grid_content").append($("<label>").attr("id", "tma1" + id))))))
 
                                 .append($("<td>").css("vertical-align", "top")
                                         .append($("<div>").css("top", "80%").css("right", "3%").attr("id", "legend_div" + id).css("position", "absolute").css("z-index", "10").css("background-color", "#FFFFFF").css("opacity", "0.75"))
                                         .append($("<div>").attr("style", "width:66%;height:45%;position:absolute; ").attr("id", "plot_inbound" + id))))
 
- 
-                       
+
+
                         ));
         get_values_outbound();
     }
@@ -755,13 +755,13 @@ function   inbound_wallboard(data)
                 if (+data3[0].tma > 0)
                 {
                     var totalSec = +data3[0].tma;
-                  
-                    totalSec = Math.round(totalSec / chamadas_atendidas); 
-               
+
+                    totalSec = Math.round(totalSec / chamadas_atendidas);
+
                     if (/^\d+$/.test(totalSec))
                         tma_todas_chamadas = secondsToString(totalSec);
- 
-                }  
+
+                }
 
 
 
@@ -952,11 +952,14 @@ function   dataTable_top(data)
 function secondsToString(seconds)
 {
 
-var numdays = Math.floor(seconds / 86400);
-var numhours = Math.floor((seconds % 86400) / 3600);
-var numminutes = Math.floor(((seconds % 86400) % 3600) / 60);
-var numseconds = ((seconds % 86400) % 3600) % 60;
-
-return numminutes + " : " + numseconds ;
+    var numdays = Math.floor(seconds / 86400);
+    var numhours = Math.floor((seconds % 86400) / 3600);
+    var numminutes = Math.floor(((seconds % 86400) % 3600) / 60);
+    var numseconds = ((seconds % 86400) % 3600) % 60;
+    if (numminutes < 10)
+        numminutes = "0" + numminutes;
+        if (numseconds < 10)
+        numseconds = "0" + numseconds;
+    return  numminutes + " : " + numseconds  ;
 
 }

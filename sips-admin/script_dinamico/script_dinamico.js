@@ -399,38 +399,7 @@ function update_script(callback)
             update_pages();
         }
 
-//Get das tags dos campos dinâmicos
-        $.post("requests.php", {action: "get_tag_fields", id_script: $("#- option:selected").val()},
-        function(data4)
-        {
-            $("#select_default_value").empty();
-            $("#tags_select .tag_group").remove();
-            var option = "";
-            $("#select_default_value").append("<option value='0' data-campaign_id='0'>Sem Valor por Defeito</option>");
-            $.each(data4, function() {
 
-                if ($("#tags_select optgroup[label='" + this.campaign_name + "']").length)
-                {
-                    option = "<option data-campaign_id='" + this.campaign_id + "' value='" + this.name + "'>" + this.display_name + "</option>";
-                    $("#tags_select optgroup[label='" + this.campaign_name + "']").append(option);
-                    $("#select_default_value optgroup[label='" + this.campaign_name + "']").append(option);
-                }
-                else
-                {
-
-                    $("#tags_select").append("<optgroup class='tag_group' data-campaign_id='" + this.campaign_id + "' label='" + this.campaign_name + "'></optgroup>");
-                    $("#select_default_value").append("<optgroup class='tag_group' data-campaign_id='" + this.campaign_id + "' label='" + this.campaign_name + "'></optgroup>");
-
-                    option = "<option data-campaign_id='" + this.campaign_id + "'  value='" + this.name + "'>" + this.display_name + "</option>";
-                    $("#tags_select optgroup[label='" + this.campaign_name + "']").append(option);
-                    if (this.name != "NOME_OPERADOR")
-                        $("#select_default_value optgroup[label='" + this.campaign_name + "']").append(option);
-                }
-
-            });
-            $("#tags_select").trigger("chosen:updated");
-            $("#tag_label").text("§" + $("#tags_select option:selected").val() + "§");
-        }, "json");
 
     }, "json");
 }
@@ -465,6 +434,45 @@ function update_pages(callback)
                 callback();
             update_info();
         }
+
+
+
+        //Get das tags dos campos dinâmicos
+        $.post("requests.php", {action: "get_tag_fields", id_script: $("#script_selector option:selected").val()},
+        function(data4)
+        {
+            $("#select_default_value").empty();
+            $("#tags_select .tag_group").remove();
+            var option = "";
+            $("#select_default_value").append("<option value='0' data-campaign_id='0'>Sem Valor por Defeito</option>");
+            $.each(data4, function() {
+
+                if ($("#tags_select optgroup[label='" + this.campaign_name + "']").length)
+                {
+                    option = "<option data-campaign_id='" + this.campaign_id + "' value='" + this.name + "'>" + this.display_name + "</option>";
+                    $("#tags_select optgroup[label='" + this.campaign_name + "']").append(option);
+                    $("#select_default_value optgroup[label='" + this.campaign_name + "']").append(option);
+                }
+                else
+                {
+
+                    $("#tags_select").append("<optgroup class='tag_group' data-campaign_id='" + this.campaign_id + "' label='" + this.campaign_name + "'></optgroup>");
+                    $("#select_default_value").append("<optgroup class='tag_group' data-campaign_id='" + this.campaign_id + "' label='" + this.campaign_name + "'></optgroup>");
+
+                    option = "<option data-campaign_id='" + this.campaign_id + "'  value='" + this.name + "'>" + this.display_name + "</option>";
+                    $("#tags_select optgroup[label='" + this.campaign_name + "']").append(option);
+                    if (this.name != "NOME_OPERADOR")
+                        $("#select_default_value optgroup[label='" + this.campaign_name + "']").append(option);
+                }
+
+            });
+            $("#tags_select").trigger("chosen:updated");
+            $("#tag_label").text("§" + $("#tags_select option:selected").val() + "§");
+        }, "json");
+
+
+
+
     }, "json");
 }
 function update_info()
