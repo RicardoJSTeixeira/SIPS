@@ -8,36 +8,33 @@ Class requisitions {
         $this->_db = $db;
     }
 
-    public function get_requisitions_to_database($show_admin) {
-                
+    public function get_requisitions_to_datatable($show_admin) {
+
         $result['aaData'] = [];
-        $query = "SELECT id,user,type,lead_id,date,contract_number,attachment,status  from spice_requisition where user=:user";
+        $query = "SELECT id,user,type,lead_id,date,contract_number,attachment,'products',status  from spice_requisition where user=:user";
         $stmt = $this->_db->prepare($query);
-        $stmt->execute(array(":user" =>  $this->_user_id));
+        $stmt->execute(array(":user" => $this->_user_id));
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
             $row[2] = $row[2] == "month" ? "Mensal" : "Especial";
             $row[3] = $row[3] == "0" ? "Não utilizado" : $row[3];
 
-            switch ($row[7]) {
+            switch ($row[8]) {
                 case "0":
-                    $row[7] = "Pedido enviado";
+                    $row[8] = "Pedido enviado";
                     break;
                 case "1":
-                    $row[7] = "Aprovado";
+                    $row[8] = "Aprovado";
                     break;
                 case "2":
-                    $row[7] = "Rejeitado";
+                    $row[8] = "Rejeitado";
                     break;
             }
 
-                  
-            if ($this->_user_level > 5  && $show_admin==1) {
-                $row[8] = "<div class='input-append'> <button class='btn ver_requisition_products' value='" . $row["id"] . "'><i class='icon-eye-open'></i>Ver</button>"
-                        . " <button class='btn accept_requisition btn-success' value='" . $row["id"] . "'><i class= 'icon-ok'></i>Aceitar</button><button class='btn decline_requisition btn-warning' value='" . $row["id"] . "'><i class= 'icon-remove'></i>Rejeitar</button></div>";
-            } else
-                $row[8] = "<div> <button class='btn ver_requisition_products' value='" . $row["id"] . "'><i class='icon-eye-open'></i>Ver</button></div>";
-                
+            $row[7] = "<div> <button class='btn ver_requisition_products' value='" . $row["id"] . "'><i class='icon-eye-open'></i>Ver</button></div>";
+            if ($this->_user_level > 5 && $show_admin == 1) 
+                $row[8] = $row[8] . " <button class='btn accept_requisition btn-success' value='" . $row["id"] . "'><i class= 'icon-ok'></i>Aceitar</button><button class='btn decline_requisition btn-warning' value='" . $row["id"] . "'><i class= 'icon-remove'></i>Rejeitar</button></div>";
+        
             $result['aaData'][] = $row;
         }
         return $result;
@@ -46,7 +43,7 @@ Class requisitions {
     public function create_requisition($type, $lead_id, $contract_number, $attachment, $products_list) {
         $query = "INSERT INTO `spice_requisition`( `user`, `type`, `lead_id`, `date`, `contract_number`, `attachment`, `products`,`status`) VALUES ( :user,:type,:lead_id,:date,:contract_number,:attachment,:products,:status)";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":user" =>  $this->_user_id, ":type" => $type, ":lead_id" => $lead_id, ":date" => date('Y-m-d H:i:s'), ":contract_number" => $contract_number, ":attachment" => $attachment, ":products" => json_encode($products_list), ":status" => 0));
+        return $stmt->execute(array(":user" => $this->_user_id, ":type" => $type, ":lead_id" => $lead_id, ":date" => date('Y-m-d H:i:s'), ":contract_number" => $contract_number, ":attachment" => $attachment, ":products" => json_encode($products_list), ":status" => 0));
     }
 
     public function get_products_by_requisiton($id) {
@@ -82,7 +79,7 @@ Class requisitions {
     public function check_month_requisitions() {
         $query = "select count(id) count from  spice_requisition  where user=:user and date between :date_first and :date_last and type='month' and status != '2' ";
         $stmt = $this->_db->prepare($query);
-        $stmt->execute(array(":user" =>  $this->_user_id, ":date_first" => date("Y-m-01") . " 00:00:00", ":date_last" => date("Y-m-t") . " 23:59:59"));
+        $stmt->execute(array(":user" => $this->_user_id, ":date_first" => date("Y-m-01") . " 00:00:00", ":date_last" => date("Y-m-t") . " 23:59:59"));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row["count"];
     }

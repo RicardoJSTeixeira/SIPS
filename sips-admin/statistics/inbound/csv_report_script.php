@@ -1,7 +1,9 @@
 <?php
 require ("../../dbconnect_noutf8.php");
 require ("../../functions.php");
-header('Content-Type: text/csv; charset=utf-8');
+header('Content-Encoding: UTF-8');
+header('Content-type: text/csv; charset=UTF-8');
+echo "\xEF\xBB\xBF";
 header('Content-Disposition: attachment; filename=Report_Script_'.date("Y-m-d_H:i:s").'.csv');
 
 
@@ -54,7 +56,7 @@ $script_query = (($tem_Script == 1) ? "LEFT JOIN custom_$campanha_id B ON A.lead
 $stmt="	SELECT 
 			C.call_date AS 'Data da Chamada', C.user,
 			$campos, 
-			vcs.status_name as 'Feedback',C.campaign_id AS 'Linha Entrada', SEC_TO_TIME(C.length_in_sec) as 'Tempo de Chamada', C.queue_position as 'Posicao na Fila', C.queue_seconds as 'Tempo de Queue', C.term_reason as 'Motivo de Hangup'
+			vcs.status_name as 'Feedback',C.campaign_id AS 'Linha Entrada', SEC_TO_TIME(C.length_in_sec) as 'Tempo de Chamada', C.queue_position as 'Posicao na Fila', SEC_TO_TIME(C.queue_seconds) as 'Tempo de Queue', C.term_reason as 'Motivo de Hangup'
 		FROM vicidial_list A
 		INNER JOIN vicidial_closer_log AS C ON C.lead_id=A.lead_id
 		$script_query  

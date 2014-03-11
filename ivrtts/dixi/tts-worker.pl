@@ -77,8 +77,8 @@ if ($sthArows > 0)
         $stmtA = "UPDATE vicidial_list set extra2 = '$file_one', extra3 = '$file_two', status='NEW' where lead_id = $lead_id";
         $sthA = $dbhA->prepare($stmtA) or die "preparing: ",$dbhA->errstr;
         $sthA->execute or die "executing: $stmtA ", $dbhA->errstr;
-        print "My work is done, sleeping a bit \n";
-        usleep (100000*20);
+        print "My work is done \n";
+       
 
 	} else {
             # não encontrou nada, dorme 10 segs

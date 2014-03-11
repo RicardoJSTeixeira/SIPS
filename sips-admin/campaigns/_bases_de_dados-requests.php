@@ -28,7 +28,7 @@ function DBListBuilder($CampaignID, $Flag, $link) {
                 $js['db_id'][] = $row['list_id'];
                 $js['db_name'][] = $row['list_name'];
                 $js['db_leads'][] = $row['list_description'];
-                $js['db_create'][] = date("t-m-o", strtotime($row['create_date']));
+                $js['db_create'][] = date("d-m-o", strtotime($row['create_date']));
                 $js['db_active'][] = $row['active'];
             }
         }
@@ -42,7 +42,7 @@ function DBListBuilder($CampaignID, $Flag, $link) {
             $js['db_id'][] = $row['list_id'];
             $js['db_name'][] = $row['list_name'];
             $js['db_leads'][] = $row['list_description'];
-            $js['db_create'][] = date("t-m-o", strtotime($row['create_date']));
+            $js['db_create'][] = date("d-m-o", strtotime($row['create_date']));
             $js['db_active'][] = $row['active'];
         }
         echo json_encode($js);
@@ -315,11 +315,11 @@ function DBWizardMatchFields($DBID, $MatchFields, $ListFields, $ConvertedFile, $
 
                 $js['insert_id'][] = mysql_insert_id();
 
-                $js['insert'][] = "	INSERT INTO vicidial_list 
+               /* $js['insert'][] = "	INSERT INTO vicidial_list 
 							(" . $mysqlListFields . "entry_date, called_since_last_reset, gmt_offset_now, last_local_call_time, list_id, status ) 
 							VALUES 
 							(" . $mysqlValues . "'$entry_date', '$called_since_last_reset', '$gmt_offset', '$last_local_call_time', '$DBID', 'NEW')
-						";
+						";*/
 
                 $TotalInserted++;
             }

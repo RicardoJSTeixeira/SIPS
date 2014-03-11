@@ -1,5 +1,5 @@
 
-var requisition = function(base_requisition, options_ext)
+var requisition = function(basic_path, options_ext)
 {
 
 
@@ -11,12 +11,12 @@ var requisition = function(base_requisition, options_ext)
 
 
     $.extend(true, this.config, options_ext);
-    this.base_requisitions = base_requisition;
+    this.basic_path = basic_path;
     var aparelho = [], pilha = [], peça = [], optgroups = [], product = 1;
     this.init = function()
     {
         $.get("/AM/view/requisitions/requisition_modal.html", function(data) {
-            me.base_requisitions.append(data);
+            me.basic_path.append(data);
 
 
         });
@@ -276,7 +276,7 @@ var requisition = function(base_requisition, options_ext)
             "fnServerParams": function(aoData) {
                 aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
             },
-            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Anexo"}, {"sTitle": "Status"}, {"sTitle": "Produtos"}],
+            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Anexo"},  {"sTitle": "Produtos"},{"sTitle": "Status"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 

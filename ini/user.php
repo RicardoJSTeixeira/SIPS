@@ -333,9 +333,19 @@ class mysiblings extends user {
 
     public function get_campaigns() {
         if ($this->is_all_campaigns == 1)
-            $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y'";
+            $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y' order by campaign_name asc";
         else
-            $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y' and campaign_id in ('" . join("','", $this->allowed_campaigns) . "')";
+            $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y' and campaign_id in ('" . join("','", $this->allowed_campaigns) . "') order by campaign_name asc";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function get_bd() {
+        if ($this->is_all_campaigns == 1)
+            $query = "SELECT  vl.list_id id,vl.list_name name,vl.campaign_id,vl.active,vc.campaign_name FROM  vicidial_lists vl left join vicidial_campaigns vc on vc.campaign_id=vl.campaign_id order by vc.campaign_name,vl.list_id asc";
+        else
+            $query = "SELECT  vl.list_id id,vl.list_name name,vl.campaign_id,vl.active,vc.campaign_name FROM  vicidial_lists vl left join vicidial_campaigns vc on vc.campaign_id=vl.campaign_id where  vl.campaign_id in ('" . join("','", $this->allowed_campaigns) . "') order by vc.campaign_name,vl.list_id asc";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

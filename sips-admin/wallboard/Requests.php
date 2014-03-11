@@ -4,6 +4,7 @@ error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
 require("../../ini/dbconnect.php");
 require("../../ini/user.php");
+require("../../ini/db.php");
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -15,6 +16,8 @@ $user_class = new user;
 if (!$user_class->id) {
     exit;
 }
+
+$user_sibling = new mysiblings($db);
 switch ($action) {
 
 
@@ -406,13 +409,13 @@ switch ($action) {
             $query = str_replace("date_sub(now(), INTERVAL time_span hour)", "'" . $today . "'", $query);
         else
             $query = str_replace("time_span", $tempo, $query);
-      
+
         $round_numerator = 60 * 5;
         $rounded_time = ( round(time() / $round_numerator) * $round_numerator );
         $rounded_time = date("Y-m-d H:i:s", $rounded_time);
         $query = str_replace("now()", "'" . $rounded_time . "'", $query);
 
-       
+
 
 
 
@@ -438,7 +441,7 @@ switch ($action) {
 
 
 
-    case '4'://inbound
+    case '4_inbound'://inbound
         $linha = explode(",", $linha_inbound);
 
         for ($i = 0; $i < count($linha); $i++) {
@@ -531,9 +534,98 @@ switch ($action) {
         echo json_encode($js);
         break;
 
+    case '4_outbound'://outbound
+        $campaign = explode(",", $campanha);
+
+        for ($i = 0; $i < count($campaign); $i++) {
+            $campaign[$i] = "'" . $campaign[$i] . "'";
+        }
+        $campanha = implode(",", $campaign);
 
 
-    case 'get_agents':// Inbound agentes,campaign,status
+        $stmtB = "select sum(calls_today),sum(drops_today),sum(answers_today),sum(hold_sec_stat_one),sum(hold_sec_stat_two),sum(hold_sec_answer_calls),sum(hold_sec_drop_calls),sum(hold_sec_queue_calls),AVG(drops_today_pct) from vicidial_campaign_stats where campaign_id in($campanha)";
+
+        $rslt = mysql_query($stmtB, $link) or die(mysql_error());
+        while ($row = mysql_fetch_row($rslt)) {
+            $hold_sec_stat_one = $row[3];
+            $hold_sec_stat_two = $row[4];
+            $hold_sec_answer_calls = $row[5];
+            $hold_sec_drop_calls = $row[6];
+            $hold_sec_queue_calls = $row[7];
+            $drops_today_pct = ceil(intval($row[8]));
+
+            if (($dropsTODAY > 0) and ($answersTODAY > 0)) {
+                $drpctTODAY = ( ($dropsTODAY / $callsTODAY) * 100);
+                $drpctTODAY = round($drpctTODAY, 2);
+                $drpctTODAY = sprintf("%01.2f", $drpctTODAY);
+            } else {
+                $drpctTODAY = 0;
+            }
+
+            if ($callsTODAY > 0) {
+                $AVGhold_sec_queue_calls = ($hold_sec_queue_calls / $callsTODAY);
+                $AVGhold_sec_queue_calls = round($AVGhold_sec_queue_calls, 0);
+            } else {
+                $AVGhold_sec_queue_calls = 0;
+            }
+
+            if ($dropsTODAY > 0) {
+                $AVGhold_sec_drop_calls = ($hold_sec_drop_calls / $dropsTODAY);
+                $AVGhold_sec_drop_calls = round($AVGhold_sec_drop_calls, 0);
+            } else {
+                $AVGhold_sec_drop_calls = 0;
+            }
+
+            if ($answersTODAY > 0) {
+                $PCThold_sec_stat_one = ( ($hold_sec_stat_one / $answersTODAY) * 100);
+                $PCThold_sec_stat_one = round($PCThold_sec_stat_one, 2);
+                $PCThold_sec_stat_one = sprintf("%01.2f", $PCThold_sec_stat_one);
+                $PCThold_sec_stat_two = ( ($hold_sec_stat_two / $answersTODAY) * 100);
+                $PCThold_sec_stat_two = round($PCThold_sec_stat_two, 2);
+                $PCThold_sec_stat_two = sprintf("%01.2f", $PCThold_sec_stat_two);
+                $AVGhold_sec_answer_calls = ($hold_sec_answer_calls / $answersTODAY);
+                $AVGhold_sec_answer_calls = round($AVGhold_sec_answer_calls, 0);
+            } else {
+                $PCThold_sec_stat_one = 0;
+                $PCThold_sec_stat_two = 0;
+                $AVGhold_sec_answer_calls = 0;
+            }
+            $today = date("Y-m-d") . " 00:00:00";
+            $tomorrow = date("Y-m-d") . " 23:59:59";
+
+            $callsTODAY = 0;
+            $dropsTODAY = 0;
+            $answersTODAY = 0;
+
+            $query = "select status,count(status) as status1 from vicidial_log where  call_date between '$today' and '$tomorrow' and  campaign_id in($campanha) and status not like ('AFTHRS') group by status";
+            $query = mysql_query($query, $link) or die(mysql_error());
+            while ($row = mysql_fetch_assoc($query)) {
+                $callsTODAY+=$row["status1"];
+                if ($row["status"] === "DROP")
+                    $dropsTODAY = $row["status1"];
+                else if ($row["status"] != "QUEUE")
+                    $answersTODAY += $row["status1"];
+            }
+            $query = "select ifnull(sum(length_in_sec),0) as total_sec from vicidial_log where  call_date between '$today' and '$tomorrow' and  campaign_id in($campanha) and lead_id is not null";
+            
+            $query = mysql_query($query, $link) or die(mysql_error());
+            $row2 = mysql_fetch_assoc($query);
+    
+            $js[] = array(
+                chamadas_efectuadas => $callsTODAY,
+                chamadas_n_atendidas => $callsTODAY - $answersTODAY,
+                chamadas_n_atendidas_percent => $callsTODAY == 0 ? 0 : ($callsTODAY / $answersTODAY) * 100,
+                chamadas_atendidas => $answersTODAY,
+                tma1 => $PCThold_sec_stat_one,
+                tma2 => $PCThold_sec_stat_two,
+                tma => $row2["total_sec"],
+            ); 
+    
+        } 
+        echo json_encode($js);
+        break;
+
+    case 'get_agents_inbound':// Inbound agentes,campaign,status
         $js = array();
         $linha_inbound = str_replace(",", "|", $linha_inbound);
         $query = "SELECT status  FROM `vicidial_live_agents` where status in('QUEUE','PAUSED','READY','CLOSER','INCALL') and closer_campaigns REGEXP  '$linha_inbound'";
@@ -543,7 +635,17 @@ switch ($action) {
         }
         echo json_encode($js);
         break;
+    case 'get_agents_outbound':// Inbound agentes,campaign,status
+        $js = array();
+        $linha_inbound = str_replace(",", "|", $linha_inbound);
+        $query = "SELECT status  FROM `vicidial_live_agents` where status in('QUEUE','PAUSED','READY','CLOSER','INCALL') and campaign_id in  ('" . implode("','", explode(",", $campanha)) . "')";
 
+        $query = mysql_query($query, $link) or die(mysql_error());
+        while ($row = mysql_fetch_assoc($query)) {
+            $js[] = $row["status"];
+        }
+        echo json_encode($js);
+        break;
 
 
 
@@ -657,14 +759,7 @@ union all
 
 //graficos-----------------------------------------
 //flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS --------------flot EXTRAS -------------- 
-    case 'campaign':
-        $query = "SELECT  a.campaign_id,b.campaign_name  FROM  vicidial_campaign_statuses a inner join vicidial_campaigns b on a.campaign_id=b.campaign_id and active='y'  group by  campaign_id ";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(campaign_id => $row["campaign_id"], campaign_name => $row["campaign_name"]);
-        }
-        echo json_encode($js);
-        break;
+
     case 'user':
         $query = "SELECT vicidial_users.user as user, vicidial_users.full_name as full_name FROM vicidial_users  where vicidial_users.user is not null and  vicidial_users.active='y'";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -682,14 +777,15 @@ union all
         echo json_encode($js);
         break;
 
-    case 'inbound':
-        $query = "SELECT group_id,group_name FROM vicidial_inbound_groups";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            $js[] = array(id => $row["group_id"], name => $row["group_name"]);
-        }
-        echo json_encode($js);
+    case 'campaign':
+        echo json_encode($user_sibling->get_campaigns());
         break;
+    case 'inbound':
+        echo json_encode($user_sibling->get_linha_inbound());
+        break;
+
+
+
 
     case 'status_venda':
         $query = "(SELECT status ,status_name  FROM vicidial_campaign_statuses where visible='1' group by status)

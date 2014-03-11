@@ -4416,7 +4416,8 @@ function  DispoSelect_submit_allowed()
                                     dispoAtt: campaign_status[DispoChoice],
                                     campaign_id: campaign_id.value,
                                     user: user,
-                                    client: clientName
+                                    client: clientName,
+                                    length_in_sec: AgainCalLSecondS
                                 }, function(data) {
                                     console.log(data);
                                 });
@@ -4429,6 +4430,18 @@ function  DispoSelect_submit_allowed()
                 return true;
             } else {
                 vcFormIFrame.submit_manual(function() {
+                    $.post('ajax/non_sale_actions.php', {
+                                    uniqueid: unique_id_hack,
+                                    lead_id: lead_id_hack,
+                                    dispo: DispoChoice,
+                                    dispoAtt: campaign_status[DispoChoice],
+                                    campaign_id: campaign_id.value,
+                                    user: user,
+                                    client: clientName,
+                                    length_in_sec: AgainCalLSecondS
+                                }, function(data) {
+                                    console.log(data);
+                                });
                     DispoSubmitFinalStep();
                     $('#vcFormIFrame', parent.window.document)[0].src = "";
 

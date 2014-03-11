@@ -129,8 +129,8 @@ while(<STDIN>)
        # print "O CONTEXTO DESTA CRAP É: $context";
 	
 	if ( ($context =~ 'aceitaivr') or ($context =~ 'audiofinal') or ($context =~ 'ouviuivr') ) { $status_final = 'MSG001'; } 
-	if ($context =~ 'declinaivr') { $status_final = 'MSG002'; } 
-	if ($context =~ 'solicitacontacto') { $status_final = 'MSG007'; } 
+	if ($context =~ 'declinaivr') { $status_final = 'MSG003'; } 
+	if ($context =~ 'solicitacontacto') { $status_final = 'MSG006'; } 
 	
 $agi_string = "O CONTEXTO EM QUE ENTROU É: $context E O STATUS É $status_final";   &agi_output;
 	

@@ -57,8 +57,14 @@ switch ($action) {
         echo json_encode($script->get_scripts($user->user_group));
         break;
 
-    case "get_scripts_by_campaign":
-        echo json_encode($script->get_scripts_by_campaign($id_campaign));
+    case "get_render_scripts_by_campaign":
+
+        $temp = $script->get_scripts_by_lead_id($lead_id);
+       
+            if (count($temp)>0)
+            echo json_encode($temp);
+        else
+            echo json_encode($script->get_render_scripts_by_campaign($id_campaign));
         break;
 
     case "get_scripts_by_id_script":
@@ -66,7 +72,7 @@ switch ($action) {
         break;
 
     case "get_results_to_populate":
-        echo json_encode($script->get_results_to_populate($search_spice,$lead_id, $id_script, $unique_id));
+        echo json_encode($script->get_results_to_populate($search_spice, $lead_id, $id_script, $unique_id));
         break;
 
     case "get_pages":
@@ -96,16 +102,19 @@ switch ($action) {
     case 'get_campaign':
         echo json_encode($user_sibling->get_campaigns());
         break;
+    case 'get_bd':
+        echo json_encode($user_sibling->get_bd());
+        break;
     case 'get_linha_inbound':
         echo json_encode($user_sibling->get_linha_inbound());
         break;
 
-     case 'iscloud':
+    case 'iscloud':
         echo json_encode($script->iscloud());
         break;
 
     case 'has_rules':
-        echo json_encode($script->has_rules($tag));
+        echo json_encode($script->has_rules($tag,$id_script));
         break;
 
     case "get_image_pdf":
@@ -119,7 +128,8 @@ switch ($action) {
     //-----------------EDIT---------------------------//
     //------------------------------------------------//
     case "edit_script":
-        echo json_encode($script->edit_script($name, $id_script, $campaign));
+        echo json_encode($script->edit_script($name, $id_script, $campaign,$linha_inbound,$bd));
+    
         break;
 
     case "edit_page":

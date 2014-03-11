@@ -45,72 +45,66 @@ class crm_main_class {
         return $js;
     }
 
-    function get_statuses($campaign_id) {
+    function get_status_name($list, $status) {
 
-        $query1 = "select a.status,a.status_name from vicidial_statuses a union all select b.status,b.status_name from vicidial_campaign_statuses b where b.campaign_id=? ";
+        $query1 = "select a.campaign_id from vicidial_campaigns a inner join vicidial_lists b on a.campaign_id=b.campaign_id where b.list_id=?";
         $stmt = $this->db->prepare($query1);
-        $stmt->execute(array($campaign_id));
+        $stmt->execute(array($list));
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $campaign = $row["campaign_id"];
 
-        while ($row_status = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $js[] = array("status" => $row_status["status"], "status_name" => $row_status["status_name"]);
-        }
 
-        return $js;
+        $query1 = "select * from (select a.status,a.status_name from vicidial_statuses a union all select b.status,b.status_name from vicidial_campaign_statuses b where b.campaign_id=?) statuses where statuses.status=? ";
+        $stmt = $this->db->prepare($query1);
+        $stmt->execute(array($campaign, $status));
+        $row_status = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row_status["status_name"];
     }
 
     function get_last_call($lead_id) {
-        $query = "select * from (SELECT vl.call_date,vl.uniqueid,vl.status FROM `vicidial_log` vl where vl.lead_id=?
-                union all
-                SELECT vla.call_date,vla.uniqueid,vla.status FROM `vicidial_log_archive` vla where vla.lead_id=?
-                union all
-                SELECT vcl.call_date,vcl.uniqueid,vcl.status FROM `vicidial_closer_log` vcl where vcl.lead_id=?
-                union all
-                SELECT vcla.call_date,vcla.uniqueid,vcla.status FROM `vicidial_closer_log_archive` vcla where vcla.lead_id=?) calls order by calls.call_date desc limit 1";
+        $query = "
+            SELECT * from (select a.call_date,a.status,a.list_id,a.length_in_sec from vicidial_log a where a.lead_id=? union all select b.call_date,b.status,b.list_id,b.length_in_sec from vicidial_log_archive b where b.lead_id=? union all
+            select c.call_date,c.status,c.list_id,c.length_in_sec from vicidial_closer_log c where c.lead_id=? union all select d.call_date,d.status,d.list_id,d.length_in_sec from vicidial_closer_log_archive d where d.lead_id=?) calls order by call_date desc limit 1 ";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($lead_id, $lead_id, $lead_id, $lead_id));
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $query1 = "select * from (select a.status,a.status_name from vicidial_statuses a union all select b.status,b.status_name from vicidial_campaign_statuses b right join vicidial_list c on c.lead_id=? right join vicidial_lists d on d.list_id=c.list_id where d.campaign_id=b.campaign_id) status ";
-        $status_search = array($lead_id);
-        $stmt = $this->db->prepare($query1);
-        $stmt->execute($status_search);
-        $row_status = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($row_status as $value) {
-            if ($row["status"] == $value["status"]) {
-                $row["status_name"] = $value["status_name"];
-            }
-        }
-        $js = array("call_date" => $row["call_date"], "uniqueid" => $row["uniqueid"], "status_name" => $row["status_name"]);
-        return $js;
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function get_info_client($data_inicio, $data_fim, $campanha, $linha_inbound, $campaign_linha_inbound, $bd, $agente, $feedback, $cd, $script_info, $lead_id, $phone_number, $type_search) {
         $js['aaData'] = array();
         $variables = array();
         $join = "";
-               $script_fields = "";
-
+        $script_fields = "";
         if ($lead_id != "" && $lead_id != null) {
             $query = "
-            SELECT lead_id,first_name,phone_number,status,'last_call_date'
-            FROM   vicidial_list  
-            WHERE  lead_id= ?";
+            SELECT a.lead_id,a.first_name,a.phone_number,users.full_name,a.status,a.last_local_call_time,a.list_id
+            FROM   vicidial_list a    left join vicidial_users users on users.user=a.user
+            WHERE  a.lead_id= ?";
             $variables[] = $lead_id;
             $stmt = $this->db->prepare($query);
             $stmt->execute($variables);
-            while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
                 $temp = $this->get_last_call($row[0]);
-                $row[3] = $temp["status_name"];
-                $row[4] = $temp["call_date"];
-                $row[4] = $row[4] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
+                if (!$temp) {
+                    $row[4] = $this->get_status_name($row[6], $row[4]);
+                    $row[5] = "Sem chamada";
+                } else {
+                    $row[4] = $this->get_status_name($temp["list_id"], $temp["status"]);
+                    $row[5] = $temp["call_date"];
+                }
+                $row[5] = $row[5] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
                         . "<span class='btn btn-mini criar_marcacao' data-lead_id='$row[0]'><i class='icon-edit'></i>Criar Marcação</span></div>";
                 $js['aaData'][] = $row;
             }
             return $js;
         } elseif ($phone_number != "" && $phone_number != null) {
             $query = "
-            SELECT lead_id,first_name, phone_number, status,'last_call_date' 
-            FROM   vicidial_list
-            WHERE   phone_number= ? or address3=? or alt_phone=?  ";
+            SELECT a.lead_id,a.first_name, a.phone_number, users.full_name, a.status, a.last_local_call_time 
+            FROM   vicidial_list a 
+            left join vicidial_users users on users.user=a.user
+            WHERE   a.phone_number= ? or a.address3=? or a.alt_phone=?  ";
             $variables[] = $phone_number;
             $variables[] = $phone_number;
             $variables[] = $phone_number;
@@ -118,74 +112,72 @@ class crm_main_class {
             $stmt->execute($variables);
             while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
                 $temp = $this->get_last_call($row[0]);
-                $row[3] = $temp["status_name"];
-                $row[4] = $temp["call_date"];
-                $row[4] = $row[4] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
+                if (!$temp) {
+                    $row[4] = $this->get_status_name($row[6], $row[4]);
+                    $row[5] = "Sem chamada";
+                } else {
+                    $row[4] = $this->get_status_name($temp["list_id"], $temp["status"]);
+                    $row[5] = $temp["call_date"];
+                }
+                $row[5] = $row[5] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
                         . "<span class='btn btn-mini criar_marcacao' data-lead_id='$row[0]'><i class='icon-edit'></i>Criar Marcação</span></div>";
                 $js['aaData'][] = $row;
             }
             return $js;
         } else {
-//se for pra procurar por campanha
-            if ($campaign_linha_inbound == 1) {
-                if (!empty($bd)) {
-                    $cbd = " a.list_id =?";
-                    $variables[] = $bd;
-                } else {
-                    $query = "SELECT list_id FROM vicidial_lists WHERE campaign_id=:campanha";
-                    $stmt = $this->db->prepare($query);
-                    $stmt->execute(array(":campanha" => $campanha));
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $variables[] = $row["list_id"];
-                        $temp[] = $row["list_id"];
-                    }
-                    if (empty($temp)) {
-                        echo json_encode($js);
-                        exit();
-                    }
-                    for ($index = 0; $index < count($temp); $index++) {
-                        $temp1.="?,";
-                    }
-                    $cbd = " a.list_id in(" . rtrim($temp1, ",") . ")";
-                }
+            if (!empty($bd)) {
+                $cbd = " a.list_id =?";
+                $variables[] = $bd;
             } else {
-                $cbd = " calls.campaign_id=?";
-                $variables[] = $linha_inbound;
+                $query = "SELECT list_id FROM vicidial_lists WHERE campaign_id=:campanha";
+                $stmt = $this->db->prepare($query);
+                $stmt->execute(array(":campanha" => $campanha));
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $variables[] = $row["list_id"];
+                    $temp[] = $row["list_id"];
+                }
+                if (empty($temp)) {
+                    echo json_encode($js);
+                    exit();
+                }
+                for ($index = 0; $index < count($temp); $index++) {
+                    $temp1.="?,";
+                }
+                $cbd = " a.list_id in(" . rtrim($temp1, ",") . ")";
             }
             $where = $cbd;
 //--------------------------------------------------------------------------------DATAS
             if (!empty($data_inicio) && !empty($data_fim)) {
 
                 if ($type_search == "last_call") {
-                    $where = $where . " and calls.call_date between ? and ?";
+                    $where = $where . " and a.last_local_call_time between ? and ?";
                 } else {
                     $where = $where . " and a.entry_date between ? and ?";
                 }
-
                 $variables[] = $data_inicio . " 00:00:00";
                 $variables[] = $data_fim . " 23:59:59";
             }
 //----------------------------------------------------------------------AGENTES
             if (!empty($agente)) {
-                $where = $where . " and calls.user=?";
+                $where = $where . " and a.user LIKE ?";
                 $variables[] = $agente;
             }
 //----------------------------------------------------------------------FEEDBACKS
             if (!empty($feedback)) {
-                $where = $where . " and calls.status=?";
+                $where = $where . " and a.status LIKE ?";
                 $variables[] = $feedback;
             }
-            //----------------------------------------------------------------------CAMPOS DINAMICOS
+//----------------------------------------------------------------------CAMPOS DINAMICOS
             if (!empty($cd)) {
                 $cd = json_decode($cd);
                 $ao = " and ";
                 foreach ($cd as $cp) {
-                    $where = $where . $ao . $cp->name . " = ?";
-                    $variables[] = $cp->value;
+                    $where = $where . $ao . "a." . $cp->name . " LIKE ?";
+                    $variables[] = "%" . $cp->value . "%";
                     $ao = " or ";
                 }
             }
-            //----------------------------------------------------------------------SCRIPT
+//----------------------------------------------------------------------SCRIPT
             if (!empty($script_info)) {
                 $script_info = json_decode($script_info);
                 if (sizeof($script_info) > 0) {
@@ -211,50 +203,26 @@ class crm_main_class {
                     $script_fields = "(" . $script_fields . ")";
                 }
             }
-
-            if ($campaign_linha_inbound == 1) {
-                $join1 = " left join   vicidial_log  calls  on calls.lead_id=a.lead_id ";
-                $join2 = " left join   vicidial_log_archive  calls  on calls.lead_id=a.lead_id ";
-            } else {
-                $join1 = " left join   vicidial_closer_log  calls  on calls.lead_id=a.lead_id ";
-                $join2 = " left join   vicidial_closer_log_archive  calls  on calls.lead_id=a.lead_id ";
-            }
-            $statuses = $this->get_statuses($campanha);
-
-            $query1 = "select a.lead_id,a.first_name,a.phone_number, calls.status  ,calls.call_date  from vicidial_list a $join1"
-                    . " where $where $script_fields group by a.lead_id  limit 20000";
-            $query2 = "select a.lead_id,a.first_name,a.phone_number,calls.status  ,calls.call_date  from vicidial_list a $join2"
-                    . " where $where $script_fields group by a.lead_id limit 20000";
+            $query = "select a.lead_id,a.first_name,a.phone_number,users.full_name, vcs.status_name,a.last_local_call_time,a.list_id  from vicidial_list a"
+                    . " left join (select status, status_name from vicidial_campaign_statuses where campaign_id = '$campanha' UNION ALL select status, status_name from vicidial_statuses) vcs on a.status = vcs.status"
+                    . " left join vicidial_users users on users.user=a.user $join where $where $script_fields limit 20000";
 
 
 
-            $stmt1 = $this->db->prepare($query1);
-            $stmt1->execute($variables);
-            while ($row = $stmt1->fetch(PDO::FETCH_NUM)) {
-                $clients[$row[0]] = $row;
-            }
-
-
-            $stmt2 = $this->db->prepare($query2);
+            #echo $query;
+            $stmt2 = $this->db->prepare($query);
             $stmt2->execute($variables);
             while ($row = $stmt2->fetch(PDO::FETCH_NUM)) {
                 $clients[$row[0]] = $row;
             }
-
-
             if (isset($clients)) {
                 foreach ($clients as $value) {
-                    foreach ($statuses as $value1) {
-                        if ($value1["status"] == $value[3])
-                            $value[3] = $value1["status_name"];
-                    }
-                    $value[4] = $value[4] . "<div class='view-button' ><span data-lead_id='$value[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
+                    $value[5] = $value[5] . "<div class='view-button' ><span data-lead_id='$value[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
                             . "<span class='btn btn-mini criar_marcacao' data-lead_id='$value[0]'><i class='icon-edit'></i>Criar Marcação</span></div>";
                     $js['aaData'][] = $value;
                 }
                 return $js;
-            }
-            else {
+            } else {
                 $js['aaData'] = array();
                 return $js;
             }
@@ -266,94 +234,101 @@ class crm_main_class {
         $js['aaData'] = array();
         $variables = array();
         $join = "";
-
         $script_fields = "";
 
         $table = "";
 
-        if ($campaign_linha_inbound == 1)
-            $table = "(select a.uniqueid,a.list_id, a.lead_id,a.phone_number,a.length_in_sec,a.call_date,a.user,a.status from vicidial_log a union all select b.uniqueid,b.list_id,b.lead_id,b.phone_number,b.length_in_sec,b.call_date,b.user,b.status from vicidial_log_archive b) calls";
-        else
-            $table = "(select a.uniqueid,a.campaign_id,a.lead_id,a.phone_number,a.length_in_sec,a.call_date,a.user,a.status from vicidial_closer_log a union all select b.uniqueid,b.campaign_id,b.lead_id,b.phone_number,b.length_in_sec,b.call_date,b.user,b.status from vicidial_closer_log_archive b) calls";
 
-        $statuses = $this->get_statuses($campanha);
+
+        $twoMonthsBefore = strtotime("-2 months", time());
+        $temp_data_inicio = strtotime($data_inicio);
+
+
+    
+        if ($campaign_linha_inbound == 1) {
+            if ($twoMonthsBefore > $temp_data_inicio) {
+                $table = "vicidial_log_archive calls";
+            } else {
+                $table = "vicidial_log calls";
+            }
+        } else {
+
+            if ($twoMonthsBefore > $temp_data_inicio) {
+                $table = "vicidial_closer_log_archive calls";
+            } else {
+                $table = "vicidial_closer_log calls";
+            }
+        }
+
+
 
         if ($lead_id != "" && $lead_id != null) {
             $query = "
-            SELECT calls.lead_id,c.first_name,  calls.phone_number,calls.status,calls.length_in_sec,calls.call_date 
-            FROM   $table 
+            SELECT c.lead_id,c.first_name,  calls.phone_number, users.full_name, calls.status,calls.length_in_sec,calls.call_date ,calls.list_id
+            FROM   $table
+                 left join vicidial_users users on users.user=calls.user
             left join vicidial_list c on c.lead_id=calls.lead_id
-            WHERE  calls.lead_id= ?";
-
+            WHERE  calls.lead_id= ? ";
+         
             $variables[] = $lead_id;
 
             $stmt = $this->db->prepare($query);
             $stmt->execute($variables);
             while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-                foreach ($statuses as $value) {
-                    if ($value["status"] == $row[3]) {
-                        $row[3] = $value["status_name"];
-                        break;
-                    }
-                }
-                $row[4] = gmdate("H:i:s", $row[4]);
-                $row[5] = $row[5] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
+
+                $row[4] = $this->get_status_name($row[7], $row[4]);
+                $row[5] = gmdate("H:i:s", $row[5]);
+
+                $row[6] = $row[6] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
                         . "<span class='btn btn-mini criar_marcacao' data-lead_id='$row[0]'><i class='icon-edit'></i>Criar Marcação</span></div>";
                 $js['aaData'][] = $row;
             }
             return $js;
         } elseif ($phone_number != "" && $phone_number != null) {
             $query = "
-            SELECT calls.lead_id,c.first_name, calls.phone_number,calls.status,calls.length_in_sec,calls.call_date 
-            FROM    $table 
-              left join vicidial_list c on c.lead_id=calls.lead_id
-            WHERE   c.phone_number= ? or c.address3=? or c.alt_phone=? ";
-
-            $variables[] = $phone_number;
-            $variables[] = $phone_number;
+            SELECT c.lead_id,c.first_name, calls.phone_number, users.full_name, calls.status,calls.length_in_sec,calls.call_date,calls.list_id FROM $table left join vicidial_list c on calls.lead_id=c.lead_id"
+                    . " left join vicidial_users users on users.user=calls.user  WHERE calls.phone_number LIKE ? ";
             $variables[] = $phone_number;
             $stmt = $this->db->prepare($query);
             $stmt->execute($variables);
             while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-                foreach ($statuses as $value) {
-                    if ($value["status"] == $row[3]) {
-                        $row[3] = $value["status_name"];
-                        break;
-                    }
-                }
-                $row[4] = gmdate("H:i:s", $row[4]);
-                $row[5] = $row[5] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
+
+                $row[4] = $this->get_status_name($row[7], $row[4]);
+                $row[5] = gmdate("H:i:s", $row[5]);
+                $row[6] = $row[6] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
                         . "<span class='btn btn-mini criar_marcacao' data-lead_id='$row[0]'><i class='icon-edit'></i>Criar Marcação</span></div>";
                 $js['aaData'][] = $row;
             }
             return $js;
         } else {
 
-
+            $variables[] = $campanha;
 
             if ($campaign_linha_inbound == 1) {
                 if (!empty($bd)) {
                     $cbd = " c.list_id =?";
                     $variables[] = $bd;
                 } else {
-                    $query = "SELECT list_id FROM vicidial_lists WHERE campaign_id=:campanha";
-                    $stmt = $this->db->prepare($query);
-                    $stmt->execute(array(":campanha" => $campanha));
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $variables[] = $row["list_id"];
-                        $temp[] = $row["list_id"];
-                    }
-                    if (empty($temp)) {
-                        echo json_encode($js);
-                        exit();
-                    }
-                    for ($index = 0; $index < count($temp); $index++) {
-                        $temp1.="?,";
-                    }
-                    $cbd = " c.list_id in(" . rtrim($temp1, ",") . ")";
+//                    $query = "SELECT list_id FROM vicidial_lists WHERE campaign_id=:campanha";
+//                    $stmt = $this->db->prepare($query);
+//                    $stmt->execute(array(":campanha" => $campanha));
+//                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+//                        $variables[] = $row["list_id"];
+//                        $temp[] = $row["list_id"];
+//                    }
+//                    if (empty($temp)) {
+//                        echo json_encode($js);
+//                        exit();
+//                    }
+//                    for ($index = 0; $index < count($temp); $index++) {
+//                        $temp1.="?,";
+//                    }
+//                    $cbd = " c.list_id in(" . rtrim($temp1, ",") . ")";
+                    $cbd = " calls.campaign_id=? ";
+                    $variables[] = $campanha;
                 }
             } else {
-                $cbd = " c.campaign_id=? ";
+                $cbd = " calls.campaign_id=? ";
                 $variables[] = $linha_inbound;
             }
             $where = $cbd;
@@ -365,32 +340,32 @@ class crm_main_class {
             }
 //----------------------------------------------------------------------AGENTES
             if (!empty($agente)) {
-                $where = $where . " and calls.user=?";
+                $where = $where . " and calls.user LIKE ?";
                 $variables[] = $agente;
             }
 //----------------------------------------------------------------------FEEDBACKS
             if (!empty($feedback)) {
-                $where = $where . " and calls.status=?";
+                $where = $where . " and calls.status LIKE ?";
                 $variables[] = $feedback;
             }
-            //----------------------------------------------------------------------CAMPOS DINAMICOS
+//----------------------------------------------------------------------CAMPOS DINAMICOS
             if (!empty($cd)) {
                 $cd = json_decode($cd);
                 $ao = " and ";
                 foreach ($cd as $cp) {
-                    $where = $where . $ao . $cp->name . "=?";
-                    $variables[] = $cp->value;
+                    $where = $where . $ao . "c." . $cp->name . "LIKE ?";
+                    $variables[] = "%" . $cp->value . "%";
                     $ao = " or ";
                 }
             }
-            //----------------------------------------------------------------------SCRIPT
+//----------------------------------------------------------------------SCRIPT
             if (!empty($script_info)) {
                 $script_info = json_decode($script_info);
                 if (sizeof($script_info) > 0) {
                     if ($campaign_linha_inbound == 1)
-                        $join = "left join script_result b on b.unique_id=a.uniqueid";
+                        $join = "left join script_result b on b.unique_id=calls.uniqueid";
                     else
-                        $join = "left join script_result b on b.unique_id=a.closecallid";
+                        $join = "left join script_result b on b.unique_id=calls.closecallid";
                     $where = $where . " and  b.campaign_id=?";
                     $variables[] = $campanha;
                     $ao = " and ";
@@ -409,31 +384,37 @@ class crm_main_class {
                             $ao = " and ";
                         }
                     }
-                    $script_fields = "(" . $script_fields . ")";
+                    # $script_fields = $script_fields . ")";
+                    #echo $script_fields;
                 }
             }
 
-            $query = "select calls.lead_id,c.first_name,  calls.phone_number,calls.status,calls.length_in_sec,calls.call_date  from $table  left join vicidial_list c on c.lead_id=calls.lead_id"
-                    . "  $join where $where $script_fields group by calls.uniqueid limit 20000 ";
+            $query = "select calls.lead_id,c.first_name,  calls.phone_number, users.full_name, st.status_name, calls.length_in_sec,calls.call_date,calls.list_id  from $table left join vicidial_list c on c.lead_id=calls.lead_id"
+                    . " left join (select status,status_name from vicidial_campaign_statuses where campaign_id = ? UNION ALL select status, status_name from vicidial_statuses) st on calls.status = st.status "
+                    . " left join vicidial_users users on users.user=calls.user  $join   where $where $script_fields   limit 20000 ";
 
-
-
+         
+            
+            #select calls.lead_id,c.first_name,  calls.phone_number, calls.user, st.status_name,calls.length_in_sec,calls.call_date,calls.list_id  from vicidial_log calls  left join vicidial_list c on c.lead_id=calls.lead_id left join (select status, status_name from vicidial_campaign_statuses where campaign_id = 'W00003' UNION ALL select status, status_name from vicidial_statuses) st on calls.status = st.status where  calls.campaign_id= 'W00003'  and date(calls.call_date) = date(now());
+            #    echo $query;
+            #     print_r($variables);
             $stmt = $this->db->prepare($query);
             $stmt->execute($variables);
+
+
+
             while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
 
-                foreach ($statuses as $value) {
-                    if ($value["status"] == $row[3]) {
-                        $row[3] = $value["status_name"];
-                        break;
-                    }
-                }
-
-                $row[4] = gmdate("H:i:s", $row[4]);
-                $row[5] = $row[5] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
+                $row[5] = gmdate("H:i:s", $row[5]);
+                $row[6] = $row[6] . "<div class='view-button' ><span data-lead_id='$row[0]' class='btn btn-mini ver_cliente' ><i class='icon-edit'></i>Ver</span>"
                         . "<span class='btn btn-mini criar_marcacao' data-lead_id='$row[0]'><i class='icon-edit'></i>Criar Marcação</span></div>";
                 $js['aaData'][] = $row;
             }
+
+
+
+
+
             return $js;
         }
         return false;

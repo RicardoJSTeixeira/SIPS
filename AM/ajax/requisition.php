@@ -27,7 +27,8 @@ switch ($action) {
         break;
 
     case "listar_requisition_to_datatable":
-        echo json_encode($requisitions->get_requisitions_to_database($show_admin));
+        echo json_encode($requisitions->  get_requisitions_to_datatable($show_admin));
+    
         break;
 
     case "listar_produtos":

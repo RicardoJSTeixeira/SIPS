@@ -44,7 +44,7 @@
             .leftDiv, .rightDiv {padding:5px; }
             .grid{border: 1px inset #000000;}
             .leftDiv .item { text-align:center; border:1px solid #EEF; background-color:#FFF;padding:3px; margin-bottom: 2px; min-height: 35px; }
-            .rightDiv .item { text-align:center; border:1px dashed #AAA; background-color:#FFF;padding:3px;}
+            .rightDiv .item { text-align:center; border:1px dashed #288dd4; background-color:#FFF;padding:1px;}
             .helperPick {border:4px solid #288dd4!important; text-align:center;width:auto}
             #add_rule_button{margin:12px;}
             legend{border-bottom: 8px  groove #a1a1a9;margin-bottom: 0px;}
@@ -67,8 +67,8 @@
                 max-height:300px;
                 width:95%;    
             }
-            #edit_div{border:2px solid #AAAAAA;}
-            #rigth_list{overflow-y:scroll;max-height:30em;}
+            #edit_div{border:4px solid #268a16;}
+            #rigth_list{overflow-y:scroll;max-height:26em;}
             .grid-title .pull-right {margin: 3px;}
             .grid-title .pull-left {margin: 3px;}
             #tabs-1 textarea
@@ -165,6 +165,13 @@
                         <select id="script_campanha_selector" class="chosen-select" multiple="multiple"  data-placeholder="Selecione uma/várias campanhas"   ></select>
                     </div> 
                 </div>
+                <div class="formRow">
+                    <strong  >Base de dados</strong>
+                    <div class="formRight">
+                        <select id="script_bd_selector" class="chosen-select" multiple="multiple"  data-placeholder="Selecione uma/várias Base de dados"   ></select>
+                        <label class="help-inline">&#10041 - Bases de Dados Activas</label>  
+                    </div> 
+                </div>
                 <div class="formRow linha_inbound_div">
                     <strong >Linha Inbound</strong>
                     <div class="formRight">
@@ -227,12 +234,6 @@
             </div>
         </div>
         <!--------------- MODALS------------- MODALS------------- MODALS------------- MODALS------------- MODALS------------- MODALS------------- MODALS--> 
-
-
-        <div id="popover_div"></div>
-
-
-
 
         <!--barra de paginas e scripts-->
         <h2>Scripts Dinâmicos </h2>
@@ -373,7 +374,7 @@
                                             <div class="formRight">
                                                 <div class="input-append">
                                                     <select id="select_ajax_script" ></select>
-                                                    <button class="btn-danger btn icon-alone" id="remove_uploaded_file"><i class="icon-remove"></i></button>
+                                                    <button class="btn-danger btn icon-alone" id="remove_uploaded_file_ajax"><i class="icon-remove"></i></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -672,6 +673,18 @@
                                     <div class="formRight">
                                         <input type="radio" id="time_format_minute" name="time_format" value="0"/>     <label class="radio inline"  for="time_format_minute"><span></span>AAAA-MM-DD HH:MM</label>
                                     </div>
+                                </div>
+
+
+
+
+                                <div class="formRow" >
+                                    <i class="icon-question-sign" ></i>   
+                                    <strong>Apenas dias úteis:</strong>
+                                    <div class="formRight" >
+                                        <input   type="checkbox" id="only_week_days" name="owd" value="1">
+                                        <label class="checkbox inline" for="only_week_days"><span></span>Sim</label>
+                                    </div>
 
 
 
@@ -756,7 +769,7 @@
                                         <strong>Titulo:</strong>
 
                                         <div class="formRight">
-                                            <input  maxlength="250" class="span ipl_input validate[required]" id="ipl_edit" name="ipl_edit" type="text" placeholder="Titulo" />
+                                            <input  maxlength="250" class="span ipl_input" id="ipl_edit" name="ipl_edit" type="text" placeholder="Titulo" />
                                         </div>
                                     </div>
                                 </form>

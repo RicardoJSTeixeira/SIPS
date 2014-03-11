@@ -30,12 +30,13 @@ if ( file_exists("/etc/astguiclient.conf") )
 	}
 
 $host = "mysql:host=".$VARDB_server .";dbname=" . $VARDB_database . ";charset=utf8";
-
+$varDbUser="sipsadmin";
+$varDbPass="sipsps2012";
 try {
-    $db = new PDO($host, $VARDB_user, $VARDB_pass);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db = new PDO($host, $varDbUser, $varDbPass);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
     $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 } catch (PDOException $e) {
     die('Connection failed: ' . $e->getMessage());
 }
-
+ 

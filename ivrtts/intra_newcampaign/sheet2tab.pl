@@ -29,24 +29,14 @@
 #
 
 # disable when not debugging
-# use strict;
-# use warnings;
+#use strict;
+#use warnings;
 
 use Spreadsheet::Read;
-
-use Encode;
-
-#use encoding qw/ cp1252 STDOUT cp1252 STDIN  cp1252 /;
-
-#binmode STDERR, ":encoding(cp1252)";
-
-
 
 sub scrub_lead_field 
 	{
 	my $lead_field = $_[0];
-
-	#$lead_field	=~ s/[^[:ascii:]]+//gi;
 
 	# remove bad characters
 	$lead_field	=~ s/\'|\\|\"|;|\`|\224//gi;
@@ -73,9 +63,7 @@ else
 
 open( OUTFILE , ">$outfile" ) or die $!;
 
-# binmode OUTFILE, ":encoding(cp1252)";
-
-my $debug = 1;
+my $debug = 0;
 
 my $out_delim = "\t";
 
@@ -115,23 +103,19 @@ for ( $rowPos = 1; $rowPos <= $maxRow; $rowPos++  )
 			$field = "";
 			}
 
-		#if ($debug) { print STDERR "field = '$field'\n"; };
+		if ($debug) { print STDERR "field = '$field'\n"; };
 
 		$field = scrub_lead_field( $field );
 
-if ($debug) { print STDERR encode("UTF-8", $field); };
-
-		print OUTFILE encode("UTF-8", $field);
+		print OUTFILE $field;
 
 		if ( $colPos < $maxCol ) 
 			{
-
-			print OUTFILE encode("UTF-8", $out_delim);
+			print OUTFILE $out_delim;
 			} 
 		else 
 			{
-
-			print OUTFILE encode("UTF-8", "\n");
+			print OUTFILE "\n";
 			}
 		}
 	}

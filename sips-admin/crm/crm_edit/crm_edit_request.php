@@ -50,27 +50,28 @@ switch ($action) {
 
         $has_script = false;
         $output['aaData'] = array();
-        $calls_out = $crmEdit->get_calls_outbound($lead_id);
-        $calls_in = $crmEdit->get_calls_inbound($lead_id);
+        $calls_out = $crmEdit->get_calls_outbound($lead_id,$campaign_id);
+        $calls_in = $crmEdit->get_calls_inbound($lead_id,$campaign_id);
         foreach ($calls_out as $value) {
             $calls[] = $value;
         }
         foreach ($calls_in as $value) {
             $calls[] = $value;
-        }
+        } 
 
         if (count($calls, 1) > 0) {
             foreach ($calls as $key => &$value) {
                 $value[1] = gmdate("H:i:s", $value[1]);
                 $has_script = false;
-                $count = $crmEdit->check_has_script($value["campaign_id"]);
+                $count = $crmEdit->check_has_script($value["campaign_id"],$lead_id);
+    
                 if ($value[2] != "N/A")
                     $value[2] = gmdate("H:i:s", $value[2]) . " Posição: " . $value[13];
-                if ($count[0] > 0) {
+                if ($count  > 0) {
                     $has_script = true;
                 }
                 if ($user->user_level > 5 && $has_script) {
-                    $value[10] = $value[10] . " <div class='view-button edit_item'><a class='btn btn-mini btn-primary' target='_new' href='/sips-admin/crm/crm_edit/script_placeholder.html?lead_id=" . $lead_id . "&campaign_id=" . $value["campaign_id"] . "&user=$user->full_name&pass=$user->password&isadmin=1&unique_id=" . $value["uniqueid"] . "'><i class='icon-bookmark'></i>Script</a></div>";
+                    $value[10] = $value[10] . " <div class='view-button edit_item'><a class='btn btn-mini btn-primary' target='_new' href='/sips-admin/crm/crm_edit/script_placeholder.html?lead_id=" . $lead_id . "&campaign_id=" . $value["campaign_id"] . "&user=$user->full_name&pass=$user->password&isadmin=1&unique_id=" . $value["uniqueid"] . "&save_overwrite=1'><i class='icon-bookmark'></i>Script</a></div>";
                 }
             }
             $output['aaData'] = $calls;

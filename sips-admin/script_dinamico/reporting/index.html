@@ -1,3 +1,4 @@
+ 
 <!DOCTYPE html>
 <html>
     <head>
@@ -25,6 +26,8 @@
         <script type="text/javascript" src="/bootstrap/js/jquery.jgrowl.js"></script>
         <script type="text/javascript" src="/bootstrap/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
         <script type="text/javascript" src="/bootstrap/js/datetimepicker/locales/bootstrap-datetimepicker.pt.js"></script>
+        <script type="text/javascript" src="/bootstrap/js/moment.min.js"></script>
+
 
         <script type="text/javascript" src="/bootstrap/js/bootstrap-fileupload.min.js"></script>
 
@@ -35,152 +38,218 @@
         <style>
 
 
-            #column_order li { margin: 0 5px 5px 5px; padding: 3px; font-size: 1.1em;  }
+            #column_order li {
+                margin: 0 5px 5px 5px; 
+                padding: 8px; 
+                font-size: 1.0em;
+                -moz-border-radius: 5px;
+                border-radius: 6px;  }
 
-            #column_order li input { margin-bottom: 0px;}
+            #column_order li input { margin-bottom: 4px; width:90%}
             .remove_list_item_button
             {
-                float: right;
+
                 height:1.1em;
 
             }
+
+
+            #loading {
+                width: 100%;
+                height: 100%;
+                top: 0px;
+                left: 0px;
+                position: fixed;
+                display: block;
+                opacity: 0.7;
+                background-color: #fff;
+                z-index: 99;
+                text-align: center;
+            }
+
+            #loading-image {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                z-index: 100;
+            }
+
+            #columns_div 
+            {
+                background-color: rgba(60,97,212,0.35);
+
+                -moz-border-radius: 5px;
+                border-radius: 6px;
+                padding-top:8px;
+                padding-bottom:8px;
+                padding-left:4px;
+                padding-right:4px;
+            }
+            #columns_div ul
+            {
+
+                color:#000 ;
+
+            }
+
 
         </style>
     </head>
     <body> 
 
 
-
-        <div id="co_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 id="myModalLabel">Ordenação de colunas</h3>
-            </div>
-            <div class="modal-body">
-
-                <div id="template_div">
-
-                    <h5>Template</h5>
-                    <span  class="input-append">
-                        <select id="oc_template"></select>
-                        <button class="btn btn-primary icon-plus" id="new_template_div_opener_button"> Novo</button>
-                        <button class="btn btn-warning  icon-pencil" id="edit_template_div_opener_button"> Editar</button>
-                        <button class="btn btn-danger icon-remove " id="delete_template_button"> Apagar</button>
-                    </span>
-
-                    <div  class="input-append" id="new_template_div" style="display:none">
-
-                        <input id="new_template_input" maxlength="45" type="text" placeholder="Nome do template novo">
-                        <button class="btn" id="new_template_button">Criar</button>
-                    </div> 
-                    <div  class="input-append" id="edit_template_div" style="display:none">
-                        <input id="edit_template_input" maxlength="45" type="text">
-                        <button class="btn" id="edit_template_button">Gravar</button>
-                    </div> 
-                </div>   
-
-                <div class="FormRow" id="div_crs">
-                    <input   type="checkbox" id="crs_contacts" name="crs" value="1">
-                    <label class="checkbox inline" for="crs_contacts"><span></span>Apenas chamadas com resultados de script</label>
-                </div>
-
-                <div class="FormRow" id="div_idb">
-                    <input   type="checkbox" id="so_bd_activas" name="only_active" checked value="1">
-                    <label class="checkbox inline" for="so_bd_activas"><span></span>Bases de Dados Inactivas</label>
-                </div>
-                <div class="FormRow hide" id="div_idc">
-                    <input   type="checkbox" id="by_calls" name="by_calls" value="1">
-                    <label class="checkbox inline" for="by_calls"><span></span>Uma linha por chamada</label>
-                </div>
-
-
-
-                <h5 id='column_order_title'>Ordenação de colunas</h5>
-                <ul  class="connectedSortable ui-helper-reset" id="column_order">
-
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="download_report_button"><i class='icon-download-alt'></i>Download Relatório</button>
-                <button class="btn" data-dismiss="modal" aria-hidden="true"><i class='icon-share-alt'></i>Sair</button>
-
-            </div>
-        </div>
-
-
-
-
         <div class="grid-title">
-            <div class="pull-left" ><i class="fam-script-error"></i> Report </div>
+            <div class="pull-left" ><i class="fam-script-error"></i> Report</div>
             <div class="pull-right"><a class="btn btn-inverse hide"  href="/sips-admin/script_dinamico/" target="_self">Voltar aos Scripts</a>
-
             </div>
         </div>
-        <div class="grid-content">
+        <div class="grid-content" id="main_div">
+            <div class="row-fluid"><!------------------------------------------------------------------------------------------------------------------------------------->
+                <div class="span4">  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
-  
 
-            <form id="form_filter" class="formular span4" >
-                <label>Report por:</label>
-                <div class="formRight">
 
-                    <input  type="radio" id="radio1" class="radio_opcao" name="ra" value="1" checked="checked">
-                    <label class=" radio inline"  for="radio1"><span></span>Campanha</label> 
-                </div> 
-                <div class="formRight">
 
-                    <input  type="radio" id="radio2" class="radio_opcao" name="ra" value="2" disabled="disabled" >
-                    <label class=" radio inline"  for="radio2"><span></span>Linha de inbound</label> 
-                </div> 
-                <div class="formRight">
-                    <input  type="radio" id="radio3" class="radio_opcao"  name="ra" value="3" >
-                    <label class="radio inline"  for="radio3"><span></span>Base de Dados</label> 
-                </div>
-                <div class="formRight time_div">
-                    <label>Data de Inicio:</label>
-                    <input  type="text" id="datetime_from" class="datetime_range validate[required]">
-                </div>
-                <div class="formRight time_div">
-                    <label>Data de Fim:</label>
-                    <input  type="text" id="datetime_to" class="datetime_range validate[required]" >  
-                </div>
-                <div class="formRight">
-                    <input  type="checkbox" id="allcontacts" name="ac" value="1">
-                    <label class="checkbox inline"  for="allcontacts"><span></span>Todos os contactos (sem datas limite)</label> 
-                </div>
 
-                <div class="formRow">
-                    <div class="formRight">
-                        <button class="btn " id="download_report"><i class="icon-edit"></i>Download do Report</button>
+
+
+
+                    <div id="radio_opcao_div">
+
+                        <h5>Relatório:</h5>
+                        <div class="formRight">
+                            <input  type="radio" id="radio1" class="radio_opcao" name="ra" value="1" checked="checked">
+                            <label class=" radio inline"  for="radio1"><span></span>Campanha</label> 
+                        </div> 
+                        <div class="formRight"> 
+                            <input  type="radio" id="radio2" class="radio_opcao" name="ra" value="2" disabled="disabled" >
+                            <label class=" radio inline"  for="radio2"><span></span>Linha de inbound(Em desenvolvimento)</label> 
+                        </div> 
+                        <div class="formRight">
+                            <input  type="radio" id="radio3" class="radio_opcao"  name="ra" value="3" >
+                            <label class="radio inline"  for="radio3"><span></span>Base de Dados</label> 
+                        </div>
+
+                        <div id="report_campanha" class="select_opcao">
+                            <h6>Campanha</h6>
+                            <select id="select_campanha" class=" chzn-select select_opcao" data-placeholder="Selecione uma campanha"></select>
+                        </div>
+                        <div id="report_linha_inbound" class="select_opcao">
+                            <h6>Linha de inbound</h6>
+                            <select id="select_linha_inbound" class=" chzn-select  select_opcao " data-placeholder="Selecione uma linha de inbound"></select>
+                        </div>
+                        <div id="report_bd" class="select_opcao">
+                            <h6>Base de dados</h6>
+
+                            <select id="select_base_dados" multiple="multiple"  class=" chzn-select  select_opcao  validate[required]" data-placeholder="Selecione uma base de dados" style="width:23em; "></select>
+                            <label class="help-inline">&#10041 - Bases de Dados Activas</label>  
+                        </div>
                     </div>
-                </div>
-            </form>
+
+
+                    <form id="form_filter" class="formular" >
+                        <h5>Download de dados:</h5>
+
+                        <div class="formRight">
+                            <input  type="radio" id="download_all_chamadas"  class="radio_dados" name="dd" value="6" >
+                            <label class=" radio inline"  for="download_all_chamadas"><span></span><strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Todas as chamadas incluindo respostas ao script"><i class="icon-question-sign"></i></strong> Todas as Chamadas c/ script</label> 
+                        </div>  
+                        <div class="formRight">
+
+                            <input  type="radio" id="download_script" class="radio_dados"  name="dd" value="1" checked="checked">
+                            <label class=" radio inline"  for="download_script"><span></span><strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Apenas chamadas com respostas ao Script"><i class="icon-question-sign"></i></strong> Script</label> 
+                        </div> 
+                        <div class="formRight">
+                            <input  type="radio" id="download_chamadas"  class="radio_dados" name="dd" value="2" >
+                            <label class=" radio inline"  for="download_chamadas"><span></span><strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Todas as chamadas atendidas"><i class="icon-question-sign"></i></strong> Chamadas Atendidas </label> 
+                        </div> 
+                        <div class="formRight">
+                            <input  type="radio" id="download_chamadas_n"  class="radio_dados" name="dd" value="3" >
+                            <label class=" radio inline"  for="download_chamadas_n"><span></span><strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Todas as chamadas não atendidas"><i class="icon-question-sign"></i></strong> Chamadas não Atendidas</label> 
+                        </div> 
+                        <div class="formRight">
+                            <input  type="radio" id="download_bd" class="radio_dados"  name="dd" value="4"   >
+                            <label class="radio inline"  for="download_bd"><span></span><strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Estado actual de base de dados (por data de Chamada)"><i class="icon-question-sign"></i></strong> Estado Base Dados - data chamada</label> 
+                        </div>
+                        <div class="formRight">
+                            <input  type="radio" id="download_bd_data_carreg" class="radio_dados"  name="dd" value="5"   >
+                            <label class="radio inline"  for="download_bd_data_carreg"><span></span><strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Estado actual de base de dados (por data de Carregamento)"><i class="icon-question-sign"></i></strong> Estado Base Dados - data carreg</label> 
+                        </div>
+                    </form>
+
+                    <div class="span6">
+
+
+                        <div id="template_div"  >
+                            <h5>Template</h5>
+                            <form id="template_form">
+                                <span  class="input-append input-prepend">
+                                    <button class="btn btn-primary icon-plus" title='Cria uma template nova' id="new_template_div_opener_button"></button>
+                                    <select id="oc_template" class="validate[required]"></select>
+
+                                    <button class="btn btn-warning  icon-cog" id="template_options_button"></button>
+                                </span>
+
+                                <div  class="formRow" id="new_template_div" style="display:none">
+                                    <span>Nova Template</span>
+                                    <div  class="input-append formRight" >
+                                        <input id="new_template_input" maxlength="45" type="text" placeholder="Nome do template novo">
+                                        <button class="btn btn-primary" id="new_template_button">Criar</button>
+                                    </div> 
+                                </div> 
 
 
 
 
-
-            <div class="span6">
-                <div id="report_campanha" class="select_opcao">
-
-                    <label>Campanha</label>
-                    <select id="select_campanha" class=" chzn-select select_opcao" data-placeholder="Selecione uma campanha"></select>
-
-                </div>
-                <div id="report_linha_inbound" class="select_opcao">
-
-                    <label>Linha de inbound</label>
-                    <select id="select_linha_inbound" class=" chzn-select  select_opcao " data-placeholder="Selecione uma linha de inbound"></select>
-
-                </div>
-                <div id="report_bd" class="select_opcao">
-                    <label>Base de dados</label>
-                    <select id="select_base_dados" multiple="multiple"  class=" chzn-select  select_opcao" data-placeholder="Selecione uma base de dados"></select>
-
-                </div>
+                                <div  class="formRow" id="edit_template_div" style="display:none">
+                                    <span>Alteração de nome</span>
+                                    <div  class="input-append formRight" >
+                                        <input id="edit_template_input" maxlength="45" type="text">
+                                        <button class="btn btn-primary" id="edit_template_button">Gravar</button>
+                                    </div>  
+                                </div>  
 
 
-            </div>
+                                <div id="template_options" class="formRow input-append" style="display:none">
+                                    <button class="btn  icon-pencil edit_template_button" id="edit_template_div_opener_button"> Editar</button>
+                                    <button class="btn btn-danger icon-remove edit_template_button" id="delete_template_button"> Apagar</button>
+                                    <button class="btn btn-success icon-refresh edit_template_button" id="update_template_button"> Actualizar <strong class="tooltip_info" data-toggle='tooltip' data-placement='top' title='' data-original-title="Actualiza a template restaurando todos os campos eliminados ou inseridos pelo script depois da criação da template  (Não altera a estrutura do template, adiciona no inicio)"><i class="icon-question-sign"></i></strong></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class='clear'></div>
+                    <form id="date_form" class="formular" >
+                        <div class=" time_div">
+                            <h4>Data de Inicio:</h4>
+                            <input  type="text" id="datetime_from" class="datetime_range validate[required]">
+                        </div>
+                        <div class=" time_div">
+                            <h4>Data de Fim:</h4>
+                            <input  type="text" id="datetime_to" class="datetime_range validate[required]" >  
+                        </div>
+                    </form>
+
+
+                    <div class="formRow">
+                        <button class="btn btn-primary " id="download_report"><i class="icon-download"></i>Download do Report</button>
+                    </div>
+
+                </div><!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+                <div class="span8"> <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+                    <div id="loading" style="display:none">
+                        <img id="loading-image" src="/images/icons/big-loader.gif" alt="Loading..." />
+                    </div>
+                    <div  id="columns_div"  ><!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+                        <h5 id="span_script_name"></h5>
+                        <h6 id='column_order_title'>Ordenação de colunas</h6>
+                        <form id="column_items_form">
+                            <ul  class="connectedSortable ui-helper-reset" id="column_order"></ul>
+                        </form>
+                    </div>
+                </div><!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+            </div><!------------------------------------------------------------------------------------------------------------------------------------->
 
 
         </div>
