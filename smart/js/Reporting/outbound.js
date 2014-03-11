@@ -90,6 +90,7 @@ function outboundList(today) {
         });
     }, 'json');
     function forTheWin(data, ar, sucesso, util, datas, hours, callback) {
+        //console.log(data);
         var areWeThereYet = datas.length;
         $.each(datas, function() {
             var campaign = '<span class="table-value cursor-pointer" data-oid="' + this.oid + '">' + this.oid + '</span>', id = this.oid, designation = this.designation;
@@ -98,14 +99,20 @@ function outboundList(today) {
                 $.each(result, function() {
                     totalCalls = totalCalls + this.calls;
                     totalTime = totalTime + this.length;
-                    if (data.sucesso[id].indexOf(this.status) >= 0) {
-                        totalSucesso = totalSucesso + this.calls;
+                    if (data.sucesso[id]) {
+                        if (data.sucesso[id].indexOf(this.status) >= 0) {
+                            totalSucesso = totalSucesso + this.calls;
+                        }
                     }
-                    if (data.util[id].indexOf(this.status) >= 0) {
-                        totalUtil = totalUtil + this.calls;
+                    if (data.util[id]) {
+                        if (data.util[id].indexOf(this.status) >= 0) {
+                            totalUtil = totalUtil + this.calls;
+                        }
                     }
-                    if (data.human[id].indexOf(this.status) >= 0) {
-                        totalHuman = totalHuman + this.calls;
+                    if (data.human[id]) {
+                        if (data.human[id].indexOf(this.status) >= 0) {
+                            totalHuman = totalHuman + this.calls;
+                        }
                     }
                 });
                 if (sucesso) {
