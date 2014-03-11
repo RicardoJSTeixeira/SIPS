@@ -53,7 +53,6 @@ $(function() {
                         .tooltip({placement: 'rigth'});
             }
 
-            $(item).data().stapleId = 'tempNoAgrupador';
             item.css({
                 height: item.height(),
                 width: item.width()
@@ -76,28 +75,33 @@ $(function() {
             $("body").removeClass("dragging");
             container.el.removeClass("active");
             _super(item);
-            item.data({stapleId: item.parent().parent().data().id});
+            item.data();
             if (item.data('itemType') === 'slave' && container.options.group === 'no-drop') {
                 item.remove();
             } else {
 
-                var ok = true;
-                $.each(container.items, function() {
-                    thata = $(this).data();
-                    itemdata = item.data();
-                    if (thata.propertyOf == itemdata.propertyOf && thata.status == itemdata.status && thata.stapleId == itemdata.stapleId) {
-                        item.remove();
-                        ok = false;
-                    }
+                if (typeof item.data().status != 'undefined') {
+                    var ok = true;
+                    $.each(container.items, function() {
+                        thata = $(this).data();
+                        itemdata = item.data();
+                        console.log(thata.stapleId);
+                        console.log(itemdata.stapleId);
+                        if (thata.propertyOf == itemdata.propertyOf && thata.status == itemdata.status) {
 
-                });
-                if (ok) {
-                    saveTemplate('editTemplate');
+                            item.remove();
+                            ok = false;
+                        }
+
+                    });
+                    if (ok) {
+                        saveTemplate('editTemplate');
+                    }
                 }
             }
 
         }
-    }
+    };
 
     function makeOptions(isDefault, data) {
 
@@ -106,6 +110,7 @@ $(function() {
             options.push(new Option('Criar nova Template...', 'default'));
         }
         $.each(data, function() {
+
             options.push(new Option(this.name, this.id));
         });
         return options;
@@ -139,6 +144,7 @@ $(function() {
         });
 
         //selects
+        // $('#selectTemplateList').chosen
         $(".chosen-select").chosen({no_results_text: "Sem resultados"});
 
         $.post("../constructor.php", {action: 'getTemplateList'}, function(data) {
@@ -158,7 +164,9 @@ $(function() {
         }, 'json');
 
         $.post("../constructor.php", {action: 'getUser'}, function(data) {
+
             $("#selectUser").append(makeOptions(false, data)).trigger("chosen:updated");
+
         }, 'json');
 
         //Events
@@ -183,6 +191,7 @@ $(function() {
 
             $(this).parent().tooltip('destroy').remove();
             saveTemplate('editTemplate');
+
         }).on('click', '#graphTypeButton', function(e) {
 
             $(this).parent().parent().data().graphType = $('#selectGraphType').find(':selected').data('graph');
@@ -196,6 +205,7 @@ $(function() {
                 $('#accordion').css('display', 'none');
             }
         });
+
         $('#selectTemplateList').on('change', function() {
 
             var myTemplateId = $('#selectTemplateList').val();
@@ -252,7 +262,6 @@ $(function() {
                 $('#deleteTempModal').hide();
             }
         });
-
 
         $('.box-icon').on('click', '#addStapleIco', function() {
             addStaple(function() {
@@ -472,13 +481,18 @@ $(function() {
             });
         });
     }
+    currentMousePos = {};
+    $(document).mousemove(function(event) {
+        currentMousePos.x = event.pageX;
+        currentMousePos.y = event.pageY;
+    });
     function makeSideLists() {
 
         if (selectedCabi == '#selectcampaign') {
 
             $.post("../constructor.php", {action: 'getFeedBack', campId: $('#selectAgrupador').find(':selected').val()}, function(data) {
 
-                selectFeeds(data, $('#selectAgrupador').find(':selected').val());
+                selectFeeds(data);
             }, 'json');
         } else if (selectedCabi == '#selectlist') {
 
@@ -560,6 +574,7 @@ $(function() {
         });
         $.each(count, function(index) {
             $('#accordion').css('display', 'block');
+
             if (this > 0) {
 
                 $('#accordion').find('#' + index).css('display', 'block');
@@ -598,9 +613,7 @@ $(function() {
         } else {
             $('#selectTemplateList').tooltip('show');
         }
-
     }
-
     function manualSerialize() {
         var
                 temp = {},
@@ -642,7 +655,6 @@ $(function() {
         dateRange.start = moment($('#dateStart').val()).format('YYYY-MM-DD');
         dateRange.end = moment($('#dateEnd').val()).format('YYYY-MM-DD');
 
-
         var typeId = [];
         if ($(selectedCabi).val() !== null) {
             typeId = $(selectedCabi).val();
@@ -666,7 +678,9 @@ $(function() {
                 $('#selectTemplateList').trigger('chosen:updated');
                 $('#bottom').css('display', 'block');
                 $('#selectTemplateList').change();
-                addStaple();
+                addStaple(function() {
+                    saveTemplate('editTemplate');
+                });
             } else {
                 var teste = $('#selectTemplateList option:selected').val();
                 $("#selectTemplateList").append($('<option>', {value: $('#selectTemplateList option:selected').val(), text: $('#inputName').val()}));
@@ -745,7 +759,7 @@ $(function() {
                             .append((
                                     $("<div>", {class: "box-content"})
                                     ).append(
-                                    $("<figure>", {'class': "demo", id: "graph" + index, style: " height: 400px;"})
+                                    $("<figure>", {'class': "demo", id: "graph" + index, style: " height: 300px;"})
                                     ))
 
 
@@ -753,7 +767,7 @@ $(function() {
             //dentro desse  abjecto existe um array com uma lista de  objectos, for each para percorrer essa lista. 
             $.each(this.values, function() {
                 //array que esta a ser feito o push(inserção de informação) com nome e o valor de cada objecto do array
-                if (this.value == 'n/a') {
+                if (this.value == null) {
                     this.value = 0;
                 }
                 graph.push({"x": this.name.substring(0, 12) + "...", "y": this.value});
@@ -771,6 +785,7 @@ $(function() {
             $("#content").append(tmp.end());
             /* vai chamar o função para criar o grafico, no graph vai a lista de objectos, cada objecto  com 1 nome e valor, 
              o #graph+index á o id do grafico, nome do grafico */
+
             var x = graphConstruct(graph, "#graph" + index, ".graph" + index);
         });
     }
@@ -786,7 +801,26 @@ $(function() {
                     "data": data}
             ]
         };
-        return new xChart("bar", obj, selector);
+        var tt = document.createElement('div'),
+                leftOffset, //= -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
+                topOffset; // = -32;
+        tt.className = 'ex-tooltip';
+        document.body.appendChild(tt);
+        tt.style.zIndex = 1000;
+        var opts = {
+            "tickHintX": 10,
+            'yMin': 0,
+            "mouseover": function(d, i) {
+                var pos = $(this).offset();
+                $(tt).text((d.x) + ': ' + d.y)
+                        .css({top: currentMousePos.y + 5, left: currentMousePos.x - 2})
+                        .show();
+            },
+            "mouseout": function() {
+                tt.style.display = 'none';
+            }
+        };
+        return new xChart("bar", obj, selector, opts);
     }
     init();
 }
