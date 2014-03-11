@@ -1,7 +1,8 @@
 <?php
 
-//ini_set(display_errors, 1);
-require '../../../ini/db.php';
+ini_set(display_errors, 1);
+
+require '../../ini/db.php';
 $server = "http://$VARDB_server:10000/ccstats/v0/";
 
 switch ($_POST['action']) {
