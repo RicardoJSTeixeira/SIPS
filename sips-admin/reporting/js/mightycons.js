@@ -85,8 +85,6 @@ $(function() {
                     $.each(container.items, function() {
                         thata = $(this).data();
                         itemdata = item.data();
-                        console.log(thata.stapleId);
-                        console.log(itemdata.stapleId);
                         if (thata.propertyOf == itemdata.propertyOf && thata.status == itemdata.status) {
 
                             item.remove();
@@ -402,7 +400,6 @@ $(function() {
         });
 
         $(selectedCabi).on('change', function() {
-            console.log('entrou');
             if ($("#selectTemplateList").val() !== 'default') {
                 var feedCheck = false;
                 var feed;
@@ -591,7 +588,7 @@ $(function() {
         $("#" + sitio).append($("<li>", {id: 'feed' + id, class: "highlight slave"})
                 .append($("<div>", {class: "item_content"})
                         .append($("<label>", {Class: 'handler', id: 'handler' + (guid())}).text(isto.name)))
-                .data({id: isto.id, status: isto.id, originalText: isto.name, text: isto.name, itemType: 'slave', raw: isto, title: "Original:" + isto.name, propertyOf: $('#selectAgrupador').find(':selected').val(), dataType: 'calls'})
+                .data({id: isto.id, status: isto.id, originalText: isto.name, text: isto.name, itemType: 'slave', raw: isto, title: "Original:" + isto.name + "\n" + "Pertence:" + $('#selectAgrupador').find(':selected').text(), propertyOf: $('#selectAgrupador').find(':selected').val(), dataType: 'calls'})
 
                 );
     }
