@@ -1,6 +1,6 @@
 <?php
 
-ini_set(display_errors, 1);
+//ini_set(display_errors, 1);
 //vai dissecar a váriaveis  que vêm do Post e Get
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
