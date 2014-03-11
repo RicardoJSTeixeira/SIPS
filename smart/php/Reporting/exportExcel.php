@@ -1,7 +1,7 @@
 <?php
 
 //ini_set(display_errors, 1);
-
+//error_reporting(E_ALL);
 
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
@@ -15,7 +15,7 @@ require '../phpexcel/Classes/PHPExcel.php';
 require '../../../ini/db.php';
 
 
-$server = "http://.$VARDB_server:10000/ccstats/v0/";
+$server = "http://$VARDB_server:10000/ccstats/v0/";
 //var_dump($server);
 
 
