@@ -1,5 +1,8 @@
 <?php
 
+//error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
+//ini_set('display_errors', 'On');
+
 require("../../ini/dbconnect.php");
 require("../../ini/user.php");
 foreach ($_POST as $key => $value) {
@@ -101,14 +104,19 @@ function RecycleAvailFeeds($CampaignID, $link) {
 }
 
 function RecycleActiveInactive($CampaignID, $RecycleID, $RecycleActive, $NumRecycle, $link) {
-    mysql_query("UPDATE vicidial_lead_recycle SET active='$RecycleActive' WHERE status='$RecycleID' AND campaign_id='$CampaignID'") or die(mysql_error());
-    mysql_query("UPDATE sips_campaign_stats SET recycle = recycle+($NumRecycle) WHERE campaign_id='$CampaignID'", $link) or die(mysql_error());
+      global $user;
+    mysql_query("UPDATE vicidial_lead_recycle SET active='" . mysql_real_escape_string($RecycleActive)."' WHERE status='" . mysql_real_escape_string($RecycleID)."' AND campaign_id='" . mysql_real_escape_string($CampaignID)."'", $link) or die(mysql_error());
+    mysql_query("UPDATE sips_campaign_stats SET recycle = recycle+(" . mysql_real_escape_string($NumRecycle).") WHERE campaign_id='" . mysql_real_escape_string($CampaignID)."'", $link) or die(mysql_error());
 
-    if ($sent_recycle_status == "Y") {
-        mysql_query("UPDATE vicidial_campaigns SET dial_statuses = CONCAT(' $RecycleID', dial_statuses) WHERE campaign_id='$CampaignID'") or die(mysql_error());
+    if ($RecycleActive == "Y") {
+        mysql_query("UPDATE vicidial_campaigns SET dial_statuses = CONCAT('" . mysql_real_escape_string(" ".$RecycleID)."', dial_statuses) WHERE campaign_id='" . mysql_real_escape_string($CampaignID)."'", $link) or die(mysql_error());
     } else {
-        mysql_query("UPDATE vicidial_campaigns SET dial_statuses = REPLACE(dial_statuses, ' $RecycleID', '') WHERE campaign_id='$CampaignID'") or die(mysql_error());
+        mysql_query("UPDATE vicidial_campaigns SET dial_statuses = REPLACE(dial_statuses, '" . mysql_real_escape_string(" ".$RecycleID)."', '') WHERE campaign_id='" . mysql_real_escape_string($CampaignID)."'", $link) or die(mysql_error());
     }
+    
+     $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user->id . "','" . $user->ip . "','RECYCLE','MODIFY','$CampaignID','ADMIN EDIT RECYCLE','" . mysql_real_escape_string("UPDATE vicidial_lead_recycle SET active='$RecycleActive' WHERE status='$RecycleID' AND campaign_id='$CampaignID'") . "')";
+    mysql_query($query) or die(mysql_error());
 }
 
 function ApplyRecycleToAllCampaings($RecycleID, $RecycleActive, $RecycleDelay, $RecycleTries, $link) {
