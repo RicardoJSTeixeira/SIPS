@@ -1,7 +1,7 @@
 <?php
 
-ini_set(display_errors, 1);
-
+//ini_set(display_errors, 1);
+//error_reporting(E_ALL);
 
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
@@ -12,16 +12,12 @@ foreach ($_GET as $key => $value) {
 
 require '../report_builder/excelwraper.php';
 require '../phpexcel/Classes/PHPExcel.php';
+require '../../../ini/db.php';
 
-try {
-    $db = new PDO('mysql:host=gonecomplus.dyndns.org;dbname=asterisk;charset=utf8', 'sipsadmin', 'sipsps2012', array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-} catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
-}
 
-$server = 'http://gonecomplus.dyndns.org:10000/ccstats/v0/';
+$server = "http://$VARDB_server:10000/ccstats/v0/";
+//var_dump($server);
+
 
 switch ($action) {
     case 'outTotais': outTotais($campaign, $start, $end, $db, $server);
@@ -78,7 +74,7 @@ function outTotais($campaign, $start, $end, $db, $server) {
         }
     }
 
-    $get_total = file_get_contents($server . "total/calls/$start/$end?campaign=$campaign");
+    $get_total = file_get_contents($server."total/calls/$start/$end?campaign=$campaign");
     $total_content = json_decode($get_total);
     $series[] = array('Total', $total_content[0]->calls);
 
@@ -350,7 +346,7 @@ function outHour($campaign, $start, $end, $pause, $db, $server) {
         }
     }
 
-    //print_r($ar);
+
     creat($ar, 'Hours', 'bars');
 }
 
@@ -509,7 +505,7 @@ function outTime($campaign, $start, $end, $pause, $db, $server) {
         }
     }
 
-    //print_r($ar);
+
     creat($ar, 'Timeline', 'lines');
 }
 

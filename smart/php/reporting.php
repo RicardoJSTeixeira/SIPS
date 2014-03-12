@@ -1,15 +1,9 @@
 <?php
 
 ini_set(display_errors, 1);
-try {
-    $db = new PDO('mysql:host=gonecomplus.dyndns.org;dbname=asterisk;charset=utf8', 'sipsadmin', 'sipsps2012', array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-} catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
-}
 
-
+require '../../ini/db.php';
+$server = "http://$VARDB_server:10000/ccstats/v0/";
 
 switch ($_POST['action']) {
     case 'recycling': getRecycling($db, $_POST['id']);
@@ -78,7 +72,7 @@ switch ($_POST['action']) {
 
 function getCampaignValue($db, $start, $end) {
     $campaign = array();
-    $get_total = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=campaign");
+    $get_total = file_get_contents($server."total/calls/$start/$end?by=campaign");
     $total_content = json_decode($get_total);
 
     foreach ($total_content as $value) {
@@ -106,7 +100,7 @@ function getCampaignValue($db, $start, $end) {
         }
 
        
-        $get_hour = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/agent_log/$start/$end?by=$value->campaign");
+        $get_hour = file_get_contents($server."total/agent_log/$start/$end?by=$value->campaign");
         $horas = json_decode($get_hour);
         
         foreach($horas as $valu){
@@ -114,7 +108,7 @@ function getCampaignValue($db, $start, $end) {
         }
 
         if (count($human) > 0) {
-            $get_total1 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?campaign=$value->campaign&status=" . implode(',', $human));
+            $get_total1 = file_get_contents($server."total/calls/$start/$end?campaign=$value->campaign&status=" . implode(',', $human));
             $total_content1 = json_decode($get_total1);
             foreach ($total_content1 as $value1) {
                 $campaign[$value->campaign]['human'] = $value1->calls;
@@ -122,7 +116,7 @@ function getCampaignValue($db, $start, $end) {
         }
 
         if (count($util) > 0) {
-            $get_total2 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?campaign=$value->campaign&status=" . implode(',', $util));
+            $get_total2 = file_get_contents($server."total/calls/$start/$end?campaign=$value->campaign&status=" . implode(',', $util));
             $total_content2 = json_decode($get_total2);
             foreach ($total_content2 as $value2) {
                 $campaign[$value->campaign]['util'] = $value2->calls;
@@ -130,7 +124,7 @@ function getCampaignValue($db, $start, $end) {
         }
 
         if (count($sucesso) > 0) {
-            $get_total3 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?campaign=$value->campaign&status=" . implode(',', $sucesso));
+            $get_total3 = file_get_contents($server."total/calls/$start/$end?campaign=$value->campaign&status=" . implode(',', $sucesso));
             $total_content3 = json_decode($get_total3);
             foreach ($total_content3 as $value3) {
                 $campaign[$value->campaign]['sucesso'] = $value3->calls;
@@ -196,7 +190,7 @@ function hour($db, $ar, $id, $start, $end) {
 
 
     if (in_array("total", $ar)) {
-        $get_total = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id");
+        $get_total = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id");
         $total_content = json_decode($get_total);
 
         foreach ($total_content as $value) {
@@ -204,7 +198,7 @@ function hour($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("talk", $ar)) {
-        $get_total1 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Hum));
+        $get_total1 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Hum));
         $total_content1 = json_decode($get_total1);
 
         foreach ($total_content1 as $value) {
@@ -212,7 +206,7 @@ function hour($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("drop", $ar)) {
-        $get_total2 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id&status=DROP");
+        $get_total2 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=DROP");
         $total_content2 = json_decode($get_total2);
 
         foreach ($total_content2 as $value) {
@@ -220,7 +214,7 @@ function hour($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("util", $ar)) {
-        $get_total3 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $utils));
+        $get_total3 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $utils));
         $total_content3 = json_decode($get_total3);
 
         foreach ($total_content3 as $value) {
@@ -228,7 +222,7 @@ function hour($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("sucesso", $ar)) {
-        $get_total4 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Suc));
+        $get_total4 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Suc));
         $total_content4 = json_decode($get_total4);
 
         foreach ($total_content4 as $value) {
@@ -236,7 +230,7 @@ function hour($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("callback", $ar)) {
-        $get_total5 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Callbacks));
+        $get_total5 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Callbacks));
         $total_content5 = json_decode($get_total5);
 
         foreach ($total_content5 as $value) {
@@ -244,7 +238,7 @@ function hour($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("complete", $ar)) {
-        $get_total6 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Completes));
+        $get_total6 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Completes));
         $total_content6 = json_decode($get_total6);
 
         foreach ($total_content6 as $value) {
@@ -252,7 +246,7 @@ function hour($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("nutil", $ar)) {
-        $get_total7 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $NUtils));
+        $get_total7 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $NUtils));
         $total_content7 = json_decode($get_total7);
 
         foreach ($total_content7 as $value) {
@@ -260,7 +254,7 @@ function hour($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("unwork", $ar)) {
-        $get_total8 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Unworkable));
+        $get_total8 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Unworkable));
         $total_content8 = json_decode($get_total8);
 
         foreach ($total_content8 as $value) {
@@ -326,7 +320,7 @@ function timeline($db, $ar, $id, $start, $end) {
 
 
     if (in_array("total", $ar)) {
-        $get_total = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id");
+        $get_total = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id");
         $total_content = json_decode($get_total);
 
         foreach ($total_content as $value) {
@@ -334,7 +328,7 @@ function timeline($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("talk", $ar)) {
-        $get_total1 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Hum));
+        $get_total1 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Hum));
         $total_content1 = json_decode($get_total1);
 
         foreach ($total_content1 as $value) {
@@ -342,7 +336,7 @@ function timeline($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("drop", $ar)) {
-        $get_total2 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id&status=DROP");
+        $get_total2 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=DROP");
         $total_content2 = json_decode($get_total2);
 
         foreach ($total_content2 as $value) {
@@ -350,7 +344,7 @@ function timeline($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("util", $ar)) {
-        $get_total3 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $utils));
+        $get_total3 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $utils));
         $total_content3 = json_decode($get_total3);
 
         foreach ($total_content3 as $value) {
@@ -358,7 +352,7 @@ function timeline($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("sucesso", $ar)) {
-        $get_total4 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Suc));
+        $get_total4 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Suc));
         $total_content4 = json_decode($get_total4);
 
         foreach ($total_content4 as $value) {
@@ -366,7 +360,7 @@ function timeline($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("callback", $ar)) {
-        $get_total5 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Callbacks));
+        $get_total5 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Callbacks));
         $total_content5 = json_decode($get_total5);
 
         foreach ($total_content5 as $value) {
@@ -374,7 +368,7 @@ function timeline($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("complete", $ar)) {
-        $get_total6 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Completes));
+        $get_total6 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Completes));
         $total_content6 = json_decode($get_total6);
 
         foreach ($total_content6 as $value) {
@@ -382,7 +376,7 @@ function timeline($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("nutil", $ar)) {
-        $get_total7 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $NUtils));
+        $get_total7 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $NUtils));
         $total_content7 = json_decode($get_total7);
 
         foreach ($total_content7 as $value) {
@@ -390,7 +384,7 @@ function timeline($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("unwork", $ar)) {
-        $get_total8 = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Unworkable));
+        $get_total8 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Unworkable));
         $total_content8 = json_decode($get_total8);
 
         foreach ($total_content8 as $value) {
@@ -429,14 +423,14 @@ function getAgentsCampaign($db, $id, $start, $end) {
         }
     }
 
-    $get_hours = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/agent_log/$start/$end?by=agent&campaign=$id");
+    $get_hours = file_get_contents($server."total/agent_log/$start/$end?by=agent&campaign=$id");
     $hours_content = json_decode($get_hours);
 
-    $get_calls = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=agent&campaign=$id");
+    $get_calls = file_get_contents($server."total/calls/$start/$end?by=agent&campaign=$id");
     $calls_content = json_decode($get_calls);
 
     if (count($sucesso)) {
-        $get_sucesso = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=agent&campaign=$id&status=" . implode(',', $sucesso));
+        $get_sucesso = file_get_contents($server."total/calls/$start/$end?by=agent&campaign=$id&status=" . implode(',', $sucesso));
         $sucesso_content = json_decode($get_sucesso);
         foreach ($sucesso_content as $value) {
             $sucess[$value->agent] = $value->calls;
@@ -444,7 +438,7 @@ function getAgentsCampaign($db, $id, $start, $end) {
     }
 
     if (count($util)) {
-        $get_util = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=agent&campaign=$id&status=" . implode(',', $util));
+        $get_util = file_get_contents($server."total/calls/$start/$end?by=agent&campaign=$id&status=" . implode(',', $util));
         $util_content = json_decode($get_util);
         foreach ($util_content as $value) {
             $positive[$value->agent] = $value->calls;
@@ -452,7 +446,7 @@ function getAgentsCampaign($db, $id, $start, $end) {
     }
 
     if (count($hu)) {
-        $get_human = file_get_contents("http://gonecomplus.dyndns.org:10000/ccstats/v0/total/calls/$start/$end?by=agent&campaign=$id&status=" . implode(',', $hu));
+        $get_human = file_get_contents($server."total/calls/$start/$end?by=agent&campaign=$id&status=" . implode(',', $hu));
         $hu_content = json_decode($get_human);
         foreach ($hu_content as $value) {
             $human[$value->agent] = $value->calls;
