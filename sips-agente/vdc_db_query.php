@@ -22,7 +22,7 @@ ini_set('display_errors', '1');
 #  - $ext_context - ('default','demo',...)
 #  - $ext_priority - ('1','2',...)
 #  - $campaign - ('testcamp',...)
-#  - $dial_timeout - ('60','26',...)
+#  - $dial_timeout - ('60','26',...)1008
 #  - $dial_prefix - ('9','8',...)
 #  - $campaign_cid - ('3125551212','0000000000',...)
 #  - $MDnextCID - ('M06301413000000002',...)
@@ -10056,6 +10056,7 @@ if ($ACTION == 'SEARCHRESULTSview') {
             $allowed_camp = "";
         } else {
             $tmp = explode(" ", $allowed_camp);
+            $allowed_camp="";
             foreach ($tmp as $value) {
                 $allowed_camp.="'" . trim($value) . "',";
             }
