@@ -711,25 +711,26 @@ function populate_element(tipo, element)
                 $("#not_validado_text").val("");
                 $("#select_ajax_script option:first").prop("selected", true);
             }
-
+ 
             break;
         case "radio":
             $("#radio_edit").val($("#" + id + " .label_geral").html());
             var string_elements = "";
-            var element_rlength = $("#" + id + " :radio").length;
+            var element_rlength = $("#" + id + " :radio").length; 
             var rname;
-            for (var count = 0; count < element_rlength; count++)
+           
+            for (var count = 0; count < element_rlength; count++) 
             {
-                rname = $("#" + id + " .radio_name")[count].innerText;
+                rname = $("#" + id + " .radio_name").eq(count).text();
                 if (count == element_rlength - 1)
                     string_elements += rname;
                 else
                     string_elements += rname + "\n";
-                string_elements = string_elements.replace("<span></span>", "");
+                string_elements = string_elements.replace("<span></span>", ""); 
             }
             $("#radio_textarea").val(string_elements);
             if (element.data("dispo") === "v")
-                $("#vertic_radio").attr('checked', true);
+                $("#vertic_radio").attr('checked', true); 
             else
                 $("#horiz_radio").attr('checked', true);
             break;
@@ -740,7 +741,7 @@ function populate_element(tipo, element)
             var cname;
             for (var count = 0; count < element_clength; count++)
             {
-                cname = $("#" + id + " .checkbox_name")[count].innerText;
+                cname = $("#" + id + " .checkbox_name").eq(count).text();
                 if (count == element_clength - 1)
                     string_elements += cname;
                 else
