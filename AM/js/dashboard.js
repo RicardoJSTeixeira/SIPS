@@ -1,12 +1,10 @@
 $(function() {
-
     var init = function(data) {
         var sch;
-       
-        sch = new calendar($("#calendar_day"), data,$("#calendar_client_modal"), $('#ext-events'));
+
+        sch = new calendar($("#calendar_day"), data, $("#calendar_client_modal"), $('#ext-events'));
         sch.reserveConstruct(data.tipo);
         sch.initModal();
-
     };
     $.post("ajax/calendar.php",
             {init: true, dash: true},
@@ -20,9 +18,7 @@ $(function() {
         "sPaginationType": "full_numbers",
         "sAjaxSource": 'ajax/dashboard.php',
         "fnServerParams": function(aoData) {
-            aoData.push(
-                    {"name": "action", "value": "populate_allm"},
-            {"name": "id_user"});
+            aoData.push({"name": "action", "value": "populate_allm"});
         },
         "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Morada"}, {"sTitle": "Data"}],
         "fnDrawCallback": function(oSettings, json) {
@@ -38,34 +34,26 @@ $(function() {
         "sPaginationType": "full_numbers",
         "sAjaxSource": 'ajax/dashboard.php',
         "fnServerParams": function(aoData) {
-            aoData.push(
-                    {"name": "action", "value": "populate_ncsm"},
-            {"name": "id_user"});
+            aoData.push({"name": "action", "value": "populate_ncsm"});
         },
         "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Morada"}, {"sTitle": "Data"}],
         "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
     });
 
     $.post("ajax/dashboard.php", {action: "populate_mp"}, function(data) {
-        $("#table_tbody_mp").empty();
-        var temp = "";
-        $.each(data, function()
-        {
-            if (moment().diff(this.start_date, "days") > 7)//Verificar se a data das marcaçoes pendentes excede 1semana/7dias
-                temp += "<tr class='error'><td>" + this.first_name + "</td><td>" + moment().from(this.start_date, true) + "</td></tr>";
-            else
-                temp += "<tr><td>" + this.first_name + "</td><td>" + moment().from(this.start_date, true) + "</td></tr>";
+        var
+                t = $("#table_tbody_mp").empty(),
+                temp = "";
+        $.each(data, function() {
+            temp += "<tr " + ((moment().diff(this.start_date, "days") > 7) ? "class='error'" : "") + "><td>" + this.first_name + "</td><td>" + moment().from(this.start_date, true) + "</td></tr>";
         });
-        $("#table_tbody_mp").append(temp);
+        t.append(temp);
     }, "json");
 
     $("#div_master").on("click", ".criar_marcacao", function()
     {
-        $("#div_master").hide();
-        $("#div_calendar")
-                .load("view/calendar.html")
-                .show()
-                .data().lead_id = $(this).data().lead_id;
+        var en=btoa($(this).data().lead_id);
+        $.history.push("view/calendar.html?id="+en);
     });
 
     $("#div_master").on("click", ".ver_cliente", function()
@@ -79,16 +67,15 @@ $(function() {
 
     $("#div_master").on("click", ".criar_encomenda", function()
     {
-        var config = new Object();
+        var config = new Object(), m;
         config.mensal = false;
         requisition1 = new requisition($("#div_requisition"), config);
 
         requisition1.init();
+        m = $("#new_requisiton_modal");
+        requisition1.new_requisition(m.find(".modal-body"), 0, $(this).data().lead_id);
 
-        requisition1.new_requisition_destroy($("#new_requisiton_modal .modal-body"));
-        requisition1.new_requisition($("#new_requisiton_modal .modal-body"), 0, $(this).data().lead_id);
-
-        $("#new_requisiton_modal").modal("show");
+        m.modal("show");
     });
 
 });

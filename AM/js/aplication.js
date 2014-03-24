@@ -1,6 +1,7 @@
 $(function() {
 
     $.history.on('load change pushed', function(event, url, type) {
+        
         $("#sidebar .active").removeClass("active");
         $("#sidebar").find("[href='" + url + "']").addClass("active");
 
@@ -14,8 +15,6 @@ $(function() {
 
     if (!window.location.hash.length) {
         $.history.push("view/dashboard.html");
-        $("#principal").load("view/dashboard.html");
-        $("#sidebar").find("[href='view/dashboard.html']").addClass("active");
     }
 
 
@@ -82,13 +81,24 @@ function get_messages()
         $.each(data, function()
         {
             msg_count++;
-            msg += " <div class='imessage'> <div class='imes'>\n\
-<div class='iauthor'>" + this.from + "</div>\n\
-<div class='itext'>" + this.msg + "</div></div>\n\
-<div class='idelete'><a><span data-msg_id='" + this.id_msg + "' class='dismiss_msg'><i class='icon-remove'></i></span></a></div>\n\
-<div class='clear'></div></div>";
+            msg += "<div class='imessage'>\n\
+                    <div class='imes'>\n\
+                    <div class='iauthor'>" + this.from + "</div>\n\
+                    <div class='itext'>" + this.msg + "</div>\n\
+                    </div>\n\
+                    <div class='idelete'><a><span data-msg_id='" + this.id_msg + "' class='dismiss_msg'><i class='icon-remove'></i></span></a></div>\n\
+                    <div class='clear'></div>\n\
+                    </div>";
         });
         $("#msg_count").text(msg_count);
         $("#imessage_placeholder").append(msg);
     }, "json");
+}
+
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
 }

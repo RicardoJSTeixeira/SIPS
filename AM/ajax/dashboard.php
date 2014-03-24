@@ -28,7 +28,7 @@ switch ($action) {
         $variables[] = $user->getUser()->username;
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
-        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             $row[3] = $row[3] . "<div class='view-button'><span class='btn btn-mini ver_cliente' data-lead_id='" . $row[0] . "'><i class='icon-edit'></i>Ver Cliente</span><span class='btn btn-mini criar_encomenda' data-lead_id='" . $row[0] . "'><i class='icon-edit'></i>Criar encomenda</span></div>";
             $output['aaData'][] = $row;
         }
@@ -46,8 +46,8 @@ switch ($action) {
         $variables[] = date("Y-m-d") . " 23:59:59";
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
-        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[3] = $row[3] . "<div class='view-button'><span class='btn btn-mini criar_marcacao'><i class='icon-edit'></i>Criar Marcação</span></div>";
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $row[3] = $row[3] . "<div class='view-button'><span class='btn btn-mini criar_marcacao' data-lead_id='$row[0]'><i class='icon-edit'></i>Criar Marcação</span></div>";
             $output['aaData'][] = $row;
         }
         echo json_encode($output);

@@ -532,11 +532,11 @@
                 var reservation = {
                     //Start reservation
                     create: function(b) {
-<?php if (isset($_GET["cp"]) OR isset($_GET["ref"])) { ?>
+                        if (opener) {
                             if (opener.marcado) {
                                 return false;
                             }
-<?php } ?>
+                        }
                         if (id_elemento) {
                             var elemento = opener.window.$("#" + id_elemento + " select");
                             if (elemento.data().live_marc === elemento.data().max_marc) {
@@ -561,12 +561,12 @@
                         function(data) {
                             if (data.sucess == "1") {
                                 $(bloco).removeClass("reservavel").addClass("reservado").addClass("t" + rtype.val()).attr("title", rtype.text());
-<?php if (isset($_GET["cp"]) OR isset($_GET["ref"])) { ?>
+                                if (opener) {
                                     $("#marcdata", opener.document).val($('.beg', bloco).val().substr(0, 10));
                                     $("#HOUR_marchora", opener.document).val($('.beg', bloco).val().substr(11, 2));
                                     $("#MINUTE_marchora", opener.document).val($('.beg', bloco).val().substr(14, 2));
                                     opener.marcado = true;
-<?php } ?>
+                                }
                                 if (id_elemento) {
                                     var elemento = opener.window.$("#" + id_elemento + " select");
                                     elemento.data().live_marc++;
@@ -601,9 +601,9 @@
                                 $(bloco_res).removeClass("reservado").removeClass(function(index, css) {
                                     return (css.match(/\bt\S+/g) || []).join(' ');
                                 }).removeAttr("title").addClass("reservavel");
-<?php if (isset($_GET["cp"]) OR isset($_GET["ref"])) { ?>
+                                if (opener) {
                                     opener.marcado = false;
-<?php } ?>
+                                }
                                 if (id_elemento) {
                                     var elemento = opener.window.$("#" + id_elemento + " select");
                                     elemento.data().live_marc--;
@@ -668,12 +668,12 @@
                                     return (css.match(/\bt\S+/g) || []).join(' ');
                                 }).removeAttr("title").removeClass("muda");
                                 $('.slot').removeClass("disponivel").not('.reservado').not('.bloqueado').addClass("reservavel");
-<?php if (isset($_GET["cp"]) OR isset($_GET["ref"])) { ?>
+                                if (opener) {
                                     $("#marcdata", opener.document).val($('.beg', bloco).val().substr(0, 10));
                                     $("#HOUR_marchora", opener.document).val($('.beg', bloco).val().substr(11, 2));
                                     $("#MINUTE_marchora", opener.document).val($('.beg', bloco).val().substr(14, 2));
                                     close();
-<?php } ?>
+                                }
                                 $("#loader").hide();
                                 slot2change = 0;
                             } else if (data.sucess == "0") {
