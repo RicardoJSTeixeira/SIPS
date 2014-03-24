@@ -25,27 +25,22 @@ switch ($action) {
         break;
 
     case "get_unread_messages":
-        $js=array();
         $query = "SELECT `id_msg`,`from`,`msg`,`event_date` from sips_msg where `to`=? and delivered=0";
         $stmt = $db->prepare($query);
         $stmt->execute(array($user->id));
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $js[] = array("id_msg" => $row["id_msg"], "from" => $row["from"], "msg" => $row["msg"], "event_date" => $row["event_date"]);
-        }
+        $js = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($js);
         break;
 
     case "edit_message_status":
-        $query = "UPDATE  sips_msg set delivered=1 where `id_msg`=?";
+        $query = "UPDATE  sips_msg set delivered=1 where `id_msg`=:id";
         $stmt = $db->prepare($query);
-        $stmt->execute(array($id_msg));
-        echo json_encode(1);
+        echo json_encode($stmt->execute(array(":id"=>$id_msg)));
         break;
     
     case "edit_message_status_by_user":
-        $query = "UPDATE  sips_msg set delivered=1 where `to`=?";
+        $query = "UPDATE  sips_msg set delivered=1 where `to`=:id";
         $stmt = $db->prepare($query);
-        $stmt->execute(array($user->id));
-        echo json_encode(1);
+        echo json_encode($stmt->execute(array(":id"=>$user->id)));
         break;
 }

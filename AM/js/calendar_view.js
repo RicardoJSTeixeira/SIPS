@@ -4,26 +4,31 @@ $(function() {
         var
                 sch,
                 modal_ext = $("#calendar_client_modal"),
-                lead_id;
+                lead_id,
+                id = getUrlVars().id;
 
-        if($("#div_calendar").length){
-            lead_id=$("#div_calendar").data().lead_id;
-            $("#client").show();
+        if (id) {
+            id = atob(id);
+            console.log(id);
+            lead_id = id;
         }
 
-        sch = new calendar($("#calendar"), data, modal_ext, $('#external-events'),lead_id);
+        sch = new calendar($("#calendar"), data, modal_ext, $('#external-events'), lead_id);
 
         sch.initModal(modal_ext);
         sch.reserveConstruct(data.tipo);
 
         sch.makeRefController(data.refs);
 
+        if (id) {
+            sch.userWidgetPopulate();
+        }
 
         $(document)
                 .off("click", ".no_consult_button")
                 .on("click", ".no_consult_button", function()
                 {
-  
+
                     var calendar_client = sch.modal_ext.data();
                     $.post("/AM/ajax/consulta.php",
                             {
