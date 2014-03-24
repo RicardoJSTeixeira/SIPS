@@ -14,79 +14,16 @@
     <div id="edit_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalLabel">Edição de produto</h3>
+            <h3 id="myModalLabel">Gestão de produto</h3>
         </div>
         <div class="modal-body">
-            <form id="edit_product_form" class="check_form">
-                <div class="formRow">
-                    <span>Nome</span>
-                    <div class="formRight">
-                        <input type="text" id="ep_name">
-                    </div>
-                </div>
-                <div class="formRow">
-                    <span>Parente</span>
-                    <div class="formRight">
-                        <select class="chosen-select  " id="ep_parent"  data-placeholder="Selecione um parent" ></select>
-                    </div>    
-                </div>
-                <div class="formRow">
-                    <span>Categoria</span>
-                    <div class="formRight">
-                        <select  id="ep_category">
-                            <option value="Pilha" >Pilha</option>
-                            <option value="Aparelho">Aparelho</option>
-                            <option value="Peça" >Peça</option>
-                        </select>
-                    </div>    
-                </div>
-
-                <div class="formRow">
-                    <span>Tipo</span>
-                    <div class="formRight">
-                        <select  id="ep_type">
-                            <option value="1" >Branch</option>
-                            <option value="3">Dispenser</option>
-                            <option value="5" >ASM</option>
-                            <option value="8" >Admin</option>
-                        </select>
-                    </div>    
-                </div>
-                <div class="formRow">
-                    <table >
-                        <thead>
-                            <tr>
-                                <th>Max Requisições por Mês</th>
-                                <th>Max Requisições por Semana</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="number" id="ep_mrm" value="1" class="validate[required]"></td>
-                                <td> <input type="number" id="ep_mrw" value="1" class="validate[required]"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="formRow">
-
-                    <div class="grid-title">
-                        <div class="pull-left">
-                            <span>Sub-peças deste produto</span>
-                        </div>
-                        <div class="pull-right">
-                            <button class="btn icon-chevron-down" id="button_filtro_children_cliente"></button>  
-                        </div>
-                    </div>
-                    <div id="child_product_datatable_div" style="display:none">
-                        <table class="table table-bordered table-mod" id="child_product_datatable" ></table>
-                    </div>
-                </div>
-            </form>
+            <div id="edit_product_div">
+                
+            </div>
         </div>
         <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-            <button class="btn btn-primary" id="edit_product_button">Editar</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Sair</button>
+            
         </div>
     </div>
 
@@ -97,60 +34,16 @@
             <h3 id="myModalLabel">Criação de produto</h3>
         </div>
         <div class="modal-body">
-            <form id="create_product_form" class="check_form">
-                <div class="formRow">
-                    <span>Nome</span>
-                    <input type="text" id="cp_name" class="validate[required]">
-                </div>
-                <div class="formRow">
-                    <span>Parente</span>
-                    <div class="formRight">
-                        <select class="chosen-select" id="cp_parent"  data-placeholder="Selecione um parent"></select>
-                    </div>    
-                </div>
-                <div class="formRow">
-                    <span>Categoria</span>
-                    <div class="formRight">
-                        <select  id="cp_category">
-                            <option value="Pilha" >Pilha</option>
-                            <option value="Aparelho">Aparelho</option>
-                            <option value="Peça" >Peça</option>
-                        </select>
-                    </div>    
-                </div>
-
-                <div class="formRow">
-                    <span>Tipo</span>
-                    <div class="formRight">
-                        <select  id="cp_type">
-                            <option value="1" >Branch</option>
-                            <option value="3">Dispenser</option>
-                            <option value="5" >ASM</option>
-                            <option value="8" >Admin</option>
-                        </select>
-                    </div>    
-                </div>
-                <div class="formRow">
-                    <table >
-                        <thead>
-                            <tr>
-                                <th>Max Requisições por Mês</th>
-                                <th>Max Requisições Especiais</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="number" id="cp_mrm" value="1" class="validate[required]"></td>
-                                <td> <input type="number" id="cp_mrw" value="1" class="validate[required]"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </form>
+           
+            <div id="create_product_div"></div>
+            
+        
+                
+   
         </div>
         <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-            <button class="btn btn-primary" id="create_product_button">Criar</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Sair</button>
+     
         </div>
     </div>
 
@@ -431,5 +324,6 @@
 </div>
 <script type="text/javascript" src="/bootstrap/js/bootstrap-fileupload.min.js"></script>
 <script type="text/javascript" src="/AM/lib_js/requisition.js" ></script>
+<script type="text/javascript" src="/AM/lib_js/product.js" ></script>
 <script type="text/javascript" src="/AM/lib_js/requests_class.js" ></script>
 <script type="text/javascript" src="js/admin.js?v=1"></script>
