@@ -12,7 +12,7 @@
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/demo_table.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/animate.min.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/datetimepicker.css" />
-        
+
 
         <script type="text/javascript" src="/jquery/jquery-1.8.3.js"></script>
         <script type="text/javascript" src="/bootstrap/js/moment.min.js"></script>
@@ -30,6 +30,11 @@
         if (isset($_GET["user"])) {
             $id_user = $_GET["user"];
         } else {
+            if (!$users->id) {
+                header("WWW-Authenticate: Basic realm=\"Go Contact Center\"");
+                header('HTTP/1.0 401 Unauthorized');
+                exit;
+            }
             $id_user = $users->id;
         }
 
