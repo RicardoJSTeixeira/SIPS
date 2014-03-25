@@ -76,7 +76,7 @@ if ($sthArows > 0)
         print "Converting message one: python /usr/share/Dixi/tts.py Vicente '$messageOne' > $file_one \n";
         print "Converting message two: python /usr/share/Dixi/tts.py Vicente '$messageTwo' > $file_two \n";
 
-        system("python /usr/share/Dixi/tts.py Vicente '$messageOne' > $file_one_temp; python /usr/share/Dixi/tts.py Vicente '$messageTwo' > $file_two_temp; sox -v 3.0 $file_one_temp $file_one; sox -v 3.0 $file_two_temp $file_two; chmod +x $file_one; chmod +x $file_two; rm $file_one_temp; rm $file_two_temp");
+        system("python /usr/share/Dixi/tts.py Vicente '$messageOne' > $file_one_temp; python /usr/share/Dixi/tts.py Vicente '$messageTwo' > $file_two_temp; sox -v 2.0 $file_one_temp $file_one; sox -v 2.0 $file_two_temp $file_two; chmod +x $file_one; chmod +x $file_two; rm $file_one_temp; rm $file_two_temp");
         
         $stmtA = "UPDATE vicidial_list set extra2 = '$file_one', extra3 = '$file_two', status='NEW' where lead_id = $lead_id";
         $sthA = $dbhA->prepare($stmtA) or die "preparing: ",$dbhA->errstr;
