@@ -29,7 +29,7 @@ var requisition = function(basic_path, options_ext)
 
     //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
     this.new_requisition = function(new_requisition_zone, current_requisition_zone, lead_id) {
-        new_requisition_zone.empty().off();
+        new_requisition_zone.off().empty();
         $.get("/AM/view/requisitions/new_requisition.html", function(data) {
             new_requisition_zone.append(data);
             new_requisition_zone.find('.fileupload').fileupload();
@@ -59,7 +59,7 @@ var requisition = function(basic_path, options_ext)
             $.post('/AM/ajax/products.php', {action: "get_produtos"},
             function(data)
             {
-                 
+
                 aparelho = [];
                 pilha = [];
                 peça = [];
@@ -268,21 +268,40 @@ var requisition = function(basic_path, options_ext)
 
     function get_encomendas_atuais(table_path, show_admin)
     {
-
-        var Table_view_requisition = table_path.dataTable({
-            "aaSorting": [[4, "desc"]],
-            "bSortClasses": false,
-            "bProcessing": true,
-            "bDestroy": true,
-            "bAutoWidth": false,
-            "sPaginationType": "full_numbers",
-            "sAjaxSource": '/AM/ajax/requisition.php',
-            "fnServerParams": function(aoData) {
-                aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
-            },
-            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}],
-            "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
-        });
+        if (show_admin)
+        {
+            var Table_view_requisition = table_path.dataTable({
+                "aaSorting": [[4, "desc"]],
+                "bSortClasses": false,
+                "bProcessing": true,
+                "bDestroy": true,
+                "bAutoWidth": false,
+                "sPaginationType": "full_numbers",
+                "sAjaxSource": '/AM/ajax/requisition.php',
+                "fnServerParams": function(aoData) {
+                    aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
+                },
+                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
+                "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
+            });
+        }
+        else
+        {
+            var Table_view_requisition = table_path.dataTable({
+                "aaSorting": [[4, "desc"]],
+                "bSortClasses": false,
+                "bProcessing": true,
+                "bDestroy": true,
+                "bAutoWidth": false,
+                "sPaginationType": "full_numbers",
+                "sAjaxSource": '/AM/ajax/requisition.php',
+                "fnServerParams": function(aoData) {
+                    aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
+                },
+                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"} ],
+                "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
+            });
+        }
 
         //VER PRODUTOS DE ENCOMENDAS FEITAS
         table_path.on("click", ".ver_requisition_products", function()
@@ -300,6 +319,25 @@ var requisition = function(basic_path, options_ext)
             },
                     "json");
         });
+
+
+        table_path.on("click", ".accept_requisition", function()
+        {
+            var this_button = $(this);
+            $.post('ajax/requisition.php', {action: "accept_requisition", id: $(this).val()}, function() {
+                this_button.parent("td").prev().text("Aprovado");
+            }, "json");
+        });
+
+        table_path.on("click", ".decline_requisition", function()
+        {
+            var this_button = $(this);
+            $.post('ajax/requisition.php', {action: "decline_requisition", id: $(this).val()}, function() {
+                this_button.parent().prev().text("Rejeitado");
+            }, "json");
+        });
+
+
     }
 
 

@@ -33,9 +33,19 @@ switch ($action) {
     case "get_produtos":
         echo json_encode($products->get_products());
         break;
+    
     case "get_produto_by_id":
         $produto = new product($db, $id);
         echo json_encode($produto->get_info());
+        break;
+
+    case "apagar_produto_by_id":
+        echo json_encode($products->remove_product($id));
+        break;
+
+    case "edit_product":
+        $produto = new product($db, $id);
+        echo json_encode($produto->edit_product($name, $max_req_m, $max_req_s,$parent, $category, $type));
         break;
 }
 

@@ -25,7 +25,7 @@ $(function()
     requests.get_relatorio_frota_to_datatable($("#admin_zone #pedidos_frota_datatable"));
 
     config = new Object();
-    
+
     product = new products(config);
 
     $("#admin_zone .chosen-select").chosen({no_results_text: "Sem resultados"});
@@ -49,13 +49,7 @@ $("#admin_zone .check_form").submit(function(e)
     e.preventDefault();
 });
 
-//OpçÔES TOGGLE
-$("#admin_zone .button_toggle_divs").click(function()
-{
 
-    $(this).parent().parent().parent().find(".div_admin_edit").toggle("blind");
-    $(this).toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
-});
 
 //------------
 
@@ -63,7 +57,7 @@ $("#admin_zone .button_toggle_divs").click(function()
 
 function get_info_product()
 {
-    product.init_to_datatable($("#admin_zone #view_product_datatable"), $("#admin_zone #edit_product_div"),$("#admin_zone #edit_product_modal"));
+    product.init_to_datatable($("#admin_zone #view_product_datatable"), $("#admin_zone #edit_product_div"), $("#admin_zone #edit_product_modal"));
 }
 //AGENTES------------------------------------------------------------------------------------------------------------------------------
 $("#admin_zone #agent_marc_transfer_button").click(function()
@@ -176,6 +170,7 @@ $("#admin_zone #create_product_modal_button").click(function()
 
     product.init_new_product($("#admin_zone #create_product_div"), function() {
         $("#admin_zone #create_product_modal").modal("hide");
+        product.init_to_datatable($("#admin_zone #view_product_datatable"), $("#admin_zone #edit_product_div"), $("#admin_zone #edit_product_modal"));
     });
     $("#admin_zone #create_product_modal").modal("show");
     $("#admin_zone .chosen-container").css("width", "250px");
@@ -226,7 +221,7 @@ $("#admin_zone").on("click", ".accept_requisition", function()
 {
     var this_button = $(this);
     $.post('ajax/requisition.php', {action: "accept_requisition", id: $(this).val()}, function() {
-        this_button.parent("div").parent("td").prev().text("Aprovado");
+        this_button.parent().next().text("Aprovado");
     }, "json");
 });
 
@@ -234,7 +229,7 @@ $("#admin_zone").on("click", ".decline_requisition", function()
 {
     var this_button = $(this);
     $.post('ajax/requisition.php', {action: "decline_requisition", id: $(this).val()}, function() {
-        this_button.parent("div").parent("td").prev().text("Rejeitado");
+        this_button.parent().next().text("Rejeitado");
     }, "json");
 });
 

@@ -19,10 +19,10 @@ class apoio_marketing extends requests_class {
         parent::__construct($db, $user_level, $user_id);
     }
 
-    public function create($data, $horario, $localidade, $local, $morada, $comments, $local_publicidade) {
-        $query = "INSERT INTO `spice_apoio_marketing`(`user`,`data_criaçao`, `data`,`horario`, `localidade`, `local`, `morada`, `comments`, `local_publicidade`,`status`) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    public function create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade) {
+        $query = "INSERT INTO `spice_apoio_marketing`(`user`,`data_criaçao`, `data_inicial`,`data_final`,`horario`, `localidade`, `local`, `morada`, `comments`, `local_publicidade`,`status`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($this->user_id, date("Y-m-d H:i:s"), $data, json_encode($horario), $localidade, $local, $morada, $comments, json_encode($local_publicidade), 0));
+        return $stmt->execute(array($this->user_id, date("Y-m-d H:i:s"), $data_inicial, $data_final, json_encode($horario), $localidade, $local, $morada, $comments, json_encode($local_publicidade), 0));
     }
 
     public function edit() {
@@ -35,29 +35,29 @@ class apoio_marketing extends requests_class {
 
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
 
-    public function get_to_datatable() {
+    public function get_to_datatable($show_admin) {
         $result['aaData'] = [];
-        $query = "SELECT id,user,data_criaçao,data,horario,localidade,local,morada,comments,'local_publicididade',status from spice_apoio_marketing";
+        $query = "SELECT id,user,data_criaçao,data_inicial,data_final,horario,localidade,local,morada,comments,'local_publicididade',status from spice_apoio_marketing";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[4] = "<div> <button class='btn ver_horario'  data-apoio_marketing_id='" . $row[0] . "'><i class='icon-eye-open'></i>Horario</button></div>";
-            $row[9] = "<div> <button class='btn ver_local_publicidade'  data-apoio_marketing_id='" . $row[0] . "' ><i class='icon-eye-open'></i>Ver localidades</button></div>";
+            $row[5] = "<div> <button class='btn ver_horario'  data-apoio_marketing_id='" . $row[0] . "'><i class='icon-eye-open'></i>Horario</button></div>";
+            $row[10] = "<div> <button class='btn ver_local_publicidade'  data-apoio_marketing_id='" . $row[0] . "' ><i class='icon-eye-open'></i>localidades</button></div>";
 
-            switch ($row[10]) {
+            switch ($row[11]) {
                 case "0":
-                    $row[10] = "Pedido enviado";
+                    $row[11] = "Pedido enviado";
                     break;
                 case "1":
-                    $row[10] = "Aprovado";
+                    $row[11] = "Aprovado";
                     break;
                 case "2":
-                    $row[10] = "Rejeitado";
+                    $row[11] = "Rejeitado";
                     break;
             }
-            if ($this->user_level > 5) {
-                $row[10] = $row[10] . " <button class='btn accept_apoio_marketing btn-success' value='" . $row["id"] . "'><i class= 'icon-ok'></i>Aceitar</button><button class='btn decline_apoio_marketing btn-warning' value='" . $row["id"] . "'><i class= 'icon-remove'></i>Rejeitar</button></div>";
+            if ($this->user_level > 5 || $show_admin == 1) {
+                $row[12] = $row[12] . " <button class='btn accept_apoio_marketing btn-success' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
             }
             $result['aaData'][] = $row;
         }
@@ -66,23 +66,32 @@ class apoio_marketing extends requests_class {
     }
 
     public function get_horario($id) {
-
+        $horarios = array();
         $query = "SELECT horario from spice_apoio_marketing where id=?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $value = json_decode($row["horario"]);
 
-        return $row["horario"];
+
+            $horarios[] = array("inicio1" => $value->inicio1, "inicio2" => $value->inicio2, "fim1" => $value->fim1, "fim2" => $value->fim2);
+        }
+
+        return $horarios;
     }
 
     public function get_locais_publicidade($id) {
-
+        $locais = array();
         $query = "SELECT local_publicidade from spice_apoio_marketing where id=?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            foreach (json_decode($row["local_publicidade"]) as $value) {
+                $locais[] = array("cp" => $value->cp, "freguesia" => $value->freguesia);
+            }
+        }
 
-        return $row["local_publicidade"];
+        return $locais;
     }
 
     public function accept_apoio_marketing($id) {
@@ -120,7 +129,7 @@ class correio extends requests_class {
     }
 
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
-    public function get_to_datatable() {
+    public function get_to_datatable($show_admin) {
         $result['aaData'] = [];
         $query = "SELECT id,user,carta_porte,data_envio,documento,lead_id,anexo,comments,status from spice_report_correio";
         $stmt = $this->_db->prepare($query);
@@ -140,8 +149,8 @@ class correio extends requests_class {
                     $row[8] = "Rejeitado";
                     break;
             }
-            if ($this->user_level > 5) {
-                $row[8] = $row[8] . " <button class='btn accept_report_correio btn-success' value='" . $row["id"] . "'><i class= 'icon-ok'></i>Aceitar</button><button class='btn decline_report_correio btn-warning' value='" . $row["id"] . "'><i class= 'icon-remove'></i>Rejeitar</button></div>";
+            if ($this->user_level > 5 || $show_admin == 1) {
+                $row[9] = $row[9] . " <button class='btn accept_report_correio btn-success' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_correio btn-warning' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
             }
             $result['aaData'][] = $row;
         }
@@ -184,7 +193,7 @@ class frota extends requests_class {
     }
 
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
-    public function get_to_datatable() {
+    public function get_to_datatable($show_admin) {
         $result['aaData'] = [];
         $query = "SELECT id,user,data,matricula,km,viatura,comments,ocorrencia,status from spice_report_frota";
         $stmt = $this->_db->prepare($query);
@@ -207,8 +216,8 @@ class frota extends requests_class {
 
             $row[7] = "<div> <button class='btn ver_ocorrencias'  data-relatorio_frota_id='" . $row[0] . "'><i class='icon-eye-open'></i>Ver Ocorrências</button></div>";
 
-            if ($this->user_level > 5) {
-                $row[8] = $row[8] . " <button class='btn accept_report_frota btn-success' value='" . $row["id"] . "'><i class= 'icon-ok'></i>Aceitar</button><button class='btn decline_report_frota btn-warning' value='" . $row["id"] . "'><i class= 'icon-remove'></i>Rejeitar</button></div>";
+            if ($this->user_level > 5 || $show_admin == 1) {
+                $row[9] = $row[9] . " <button class='btn accept_report_frota btn-success' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_frota btn-warning' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
             }
             $result['aaData'][] = $row;
         }
@@ -216,6 +225,7 @@ class frota extends requests_class {
     }
 
     public function accept_report_frota($id) {
+
         $query = "Update spice_report_frota set status=1 where id=?";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array($id));
@@ -225,6 +235,23 @@ class frota extends requests_class {
         $query = "Update spice_report_frota set status=2 where id=?";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array($id));
+    }
+
+    public function get_ocorrencias($id) {
+        $ocorrencia = array();
+        $query = "SELECT ocorrencia from spice_report_frota where id=?";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array($id));
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+
+            foreach (json_decode($row["ocorrencia"]) as $value) {
+                $ocorrencia[] = array("data" => $value->data, "ocorrencia" => $value->ocorrencia, "km" => $value->km);
+            }
+        }
+
+        return $ocorrencia;
     }
 
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________

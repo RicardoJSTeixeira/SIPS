@@ -49,18 +49,34 @@
             </tbody>
         </table>
     </div>
-    <div class="formRow">
+    <div class="formRow" id="product_children_div">
 
         <div class="grid-title">
             <div class="pull-left">
                 <span>Sub-peças deste produto</span>
             </div>
-            <div class="pull-right">
-                <button class="btn icon-chevron-down" id="button_filtro_children_cliente"></button>  
-            </div>
+
         </div>
-        <div id="child_product_datatable_div" style="display:none">
-            <table class="table table-bordered table-mod" id="child_product_datatable" ></table>
+        <table class="table table-bordered table-mod" id="child_product_datatable" >
+            <thead>
+                <tr>
+                    <th>
+                        Nome
+                    </th>
+                    <th>
+                        Categoria
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="formRow">
+        <div class="pull-right">
+            <button id="edit_product_button" class="btn btn-primary">Editar</button>
         </div>
     </div>
+
 </form>

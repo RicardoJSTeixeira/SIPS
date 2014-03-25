@@ -4,21 +4,23 @@
 
     <div class="formRow">
         <span>Nome</span>
-        <input type="text" id="cp_name" class="validate[required]">
+        <input type="text" id="new_name" class="validate[required]">
     </div>
     <div class="formRow">
         <span>Parente</span>
         <div class="formRight">
-            <select class="chosen-select" id="cp_parent" multiple  data-placeholder="Selecione um parent"></select>
+            <select class="chosen-select" id="new_parent" multiple  data-placeholder="Selecione um parent"></select>
         </div>    
     </div>
     <div class="formRow">
         <span>Categoria</span>
         <div class="formRight">
-            <select  id="cp_category">
-                <option value="Pilha" >Pilha</option>
-                <option value="Aparelho">Aparelho</option>
-                <option value="Peça" >Peça</option>
+            <select  id="new_category">
+                <option value="pilha" >Pilha</option>
+                <option value="aparelho">Aparelho</option>
+                <option value="acessorio" >Acessórios</option>
+                   <option value="molde" >Molde</option>
+                      <option value="economato" >Economato</option>
             </select>
         </div>    
     </div>
@@ -26,10 +28,10 @@
     <div class="formRow">
         <span>Tipo</span>
         <div class="formRight">
-            <input   type="checkbox" id="check_branch" name="tipo_user" value="branch" class="validate[minCheckbox[1]]">
-            <label class="checkbox inline" for="check_branch"><span></span>Branch</label>
-            <input   type="checkbox" id="check_dispenser" name="tipo_user" value="dispenser" class="validate[minCheckbox[1]]">
-            <label class="checkbox inline" for="check_dispenser"><span></span>Dispenser</label>
+            <input   type="checkbox" id="new_check_branch" name="new_tipo_user" value="branch" class="validate[minCheckbox[1]]">
+            <label class="checkbox inline" for="new_check_branch"><span></span>Branch</label>
+            <input   type="checkbox" id="new_check_dispenser" name="new_tipo_user" value="dispenser" class="validate[minCheckbox[1]]">
+            <label class="checkbox inline" for="new_check_dispenser"><span></span>Dispenser</label>
         </div>    
     </div>
     <div class="formRow">
@@ -42,8 +44,8 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><input type="number" id="cp_mrm" value="1" class="validate[required]"></td>
-                    <td> <input type="number" id="cp_mrw" value="1" class="validate[required]"></td>
+                    <td><input type="number" id="new_mrm" value="1" class="validate[required]"></td>
+                    <td> <input type="number" id="new_mrw" value="1" class="validate[required]"></td>
                 </tr>
             </tbody>
         </table>
@@ -51,5 +53,7 @@
 
 </form>
 <div class="formRow">
-    <button class="btn" id="create_new_product">Criar produto</button>
+    <div class="pull-right">
+    <button class="btn btn-primary" id="create_new_product">Criar produto</button>
+    </div>
 </div>
