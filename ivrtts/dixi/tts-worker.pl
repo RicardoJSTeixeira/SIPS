@@ -66,13 +66,17 @@ if ($sthArows > 0)
         tie my $uuid, 'OSSP::uuid::tie';
         $uuid = [ "v1" ];
         $file_one = "/srv/www/htdocs/ivrtts/dixi/files/$uuid.mp3";          
-        $file_two = "/srv/www/htdocs/ivrtts/dixi/files/$uuid.mp3";         
+        $file_two = "/srv/www/htdocs/ivrtts/dixi/files/$uuid.mp3";
+        
+        $file_one_temp = "$file_one.temp.mp3";
+        $file_two_temp = "$file_two.temp.mp3";  
+        
         untie $uuid;
         print "Got new lead, working on it \n";
         print "Converting message one: python /usr/share/Dixi/tts.py Vicente '$messageOne' > $file_one \n";
-        print "Converting message two: python /usr/share/Dixi/tts.py Vicente '$messageTwo' > $file_one \n";
+        print "Converting message two: python /usr/share/Dixi/tts.py Vicente '$messageTwo' > $file_two \n";
 
-        system("python /usr/share/Dixi/tts.py Vicente '$messageOne' > $file_one; python /usr/share/Dixi/tts.py Vicente '$messageTwo' > $file_two; chmod +x $file_one; chmod +x $file_two");
+        system("python /usr/share/Dixi/tts.py Vicente '$messageOne' > $file_one_temp; python /usr/share/Dixi/tts.py Vicente '$messageTwo' > $file_two_temp; sox -v 3.0 $file_one_temp $file_one; sox -v 3.0 $file_two_temp $file_two; chmod +x $file_one; chmod +x $file_two; rm $file_one_temp; rm $file_two_temp");
         
         $stmtA = "UPDATE vicidial_list set extra2 = '$file_one', extra3 = '$file_two', status='NEW' where lead_id = $lead_id";
         $sthA = $dbhA->prepare($stmtA) or die "preparing: ",$dbhA->errstr;
