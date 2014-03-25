@@ -219,16 +219,16 @@ var calendar = function(selector, data, modal_ext, ext, lead_id) {
                     html: true,
                     title: "Não há consulta",
                     content: '<select id="select_no_consult" name="">\n\
-        <option value="DEST">Desistiu</option>\n\
-  <option value="">Remarcou</option>\n\
-<option value="FAL">Faleceu</option>\n\
-        <option value="TINV">Telefone Invalido</option>\n\
-<option value="NOSHOW">No Show</option>\n\
-<option value="NATEN">Ninguém em casa</option>\n\\n\
-<option value="MOR">Morada Errada</option>\n\
-<option value="NTEC">Técnico não foi</option>\n\
-</select>\n\
-<button class="btn btn-primary no_consult_confirm_button">Fechar</button>',
+                                <option value="DEST">Desistiu</option>\n\
+                                <option value="">Remarcou</option>\n\
+                                <option value="FAL">Faleceu</option>\n\
+                                <option value="TINV">Telefone Invalido</option>\n\
+                                <option value="NOSHOW">No Show</option>\n\
+                                <option value="NATEN">Ninguém em casa</option>\n\\n\
+                                <option value="MOR">Morada Errada</option>\n\
+                                <option value="NTEC">Técnico não foi</option>\n\
+                            </select>\n\
+                            <button class="btn btn-primary no_consult_confirm_button">Fechar</button>',
                     trigger: 'click'
                 })
                 .end()
@@ -256,16 +256,28 @@ var calendar = function(selector, data, modal_ext, ext, lead_id) {
                 });
     };
     this.openClient = function(id, lead_id) {
-              $.post("/AM/ajax/client.php", {id: lead_id}, function(data) {
+        $.post("/AM/ajax/client.php", {id: lead_id, action: 'byName'}, function(data) {
             var tmp = "";
             $.each(data, function() {
                 tmp = tmp + "<dt>" + this.name + "</dt><dd>" + this.value + "</dd>";
             });
 
-            me.modal_ext.find("#client_info") 
+            me.modal_ext.find("#client_info")
                     .html(tmp);
             me.modal_ext.modal().data().id = id;
             me.modal_ext.modal().data().lead_id = lead_id;
+        }, "json");
+    };
+    this.userWidgetPopulate = function() {
+        $.post("/AM/ajax/client.php", {id: me.lead_id, action: 'default'}, function(data) {
+            $("#client")
+                    .find(".user-name").text(data.name)
+                    .end()
+                    .find(".user-email").text(data.address)
+                    .end()
+                    .find(".user-date").text(data.bDay)
+                    .end()
+                    .show();
         }, "json");
     };
     this.destroy = function() {
