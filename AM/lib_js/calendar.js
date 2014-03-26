@@ -1,7 +1,7 @@
-var calendar = function(selector, data, modal_ext, ext, lead_id) {
+var calendar = function(selector, data, modal_ext, ext, client) {
     var me = this;
     this.selector = selector;
-    this.lead_id = lead_id;
+    this.client = client || {};
     this.ext = ext;
     this.resource = "all";
     this.modal_ext = modal_ext;
@@ -12,6 +12,7 @@ var calendar = function(selector, data, modal_ext, ext, lead_id) {
             url: "/AM/ajax/calendar.php",
             type: "POST",
             data: {
+                action: "GetReservations",
                 resource: "all",
                 is_scheduler: false
             }
@@ -35,7 +36,7 @@ var calendar = function(selector, data, modal_ext, ext, lead_id) {
             day: 'dia'
         },
         eventClick: function(calEvent, jsEvent, view) {
-            if (calEvent.className[0] === "bloqueado") {
+            if (calEvent.className[0] === "bloqueado" || calEvent.closed) {
                 return false;
             }
             me.openClient(calEvent.id, calEvent.lead_id);
@@ -57,19 +58,20 @@ var calendar = function(selector, data, modal_ext, ext, lead_id) {
                         if (moment(this.start).unix() === moment(date).unix())
                         {
                             exist = true;
-                            return true;
+                            return false;
                         }
                     });
             if (exist) {
                 return false;
             }
 
-            var cEO = $(this).data('eventObject');
+            var cEO = $.extend({}, $(this).data('eventObject'));;
             cEO.start = moment(date).unix();
             cEO.end = moment(date).add("minutes", config.defaultEventMinutes).unix();
             cEO.allDay = allDay;
             $.post("/AM/ajax/calendar.php",
                     {
+                        action: "newReservation",
                         resource: me.resource,
                         rtype: cEO.rtype,
                         lead_id: cEO.lead_id,
@@ -109,7 +111,7 @@ var calendar = function(selector, data, modal_ext, ext, lead_id) {
                     },
                     html: true,
                     title: event.title,
-                    content: event.client_name,
+                    content: '<dl class="dl-horizontal"><dt>Nome</dt><dd>'+event.client_name+'</dd><dt>Campanha</dt><dd>'+event.codCamp+'</dd></dl>',
                     trigger: 'hover'
                 });
 
@@ -124,19 +126,13 @@ var calendar = function(selector, data, modal_ext, ext, lead_id) {
         }
     };
     this.change = function(event, dayDelta, minuteDelta, revertFunc) {
-        alert(
-                "A data final " + event.title + "foi alterada " +
-                dayDelta + " days and " +
-                minuteDelta + " minutes."
-                );
-
-        if (!confirm("Confirmar?")) {
+        if (!confirm("Pretende mesmo mudar a data?")) {
             revertFunc();
         } else {
             $.post("/AM/ajax/calendar.php",
                     {
                         id: event.id,
-                        change: true,
+                        action: "change",
                         start: moment(event.start).unix(),
                         end: moment(event.start).unix()
                     },
@@ -146,7 +142,6 @@ var calendar = function(selector, data, modal_ext, ext, lead_id) {
                 }
             }, "json").fail(revertFunc);
         }
-
     };
     this.reserveConstruct = function(tipo) {
         var
@@ -167,10 +162,14 @@ var calendar = function(selector, data, modal_ext, ext, lead_id) {
                 .each(function() {
                     data = $(this).data();
                     eventObject = {
+                        editable:true,
                         title: $.trim($(this).text()),
                         color: data.color,
                         rtype: data.rtype,
-                        lead_id: me.lead_id
+                        lead_id: me.client.id,
+                        client_name: me.client.name,
+                        codCamp: me.client.codCamp,
+                        close: false
                     };
 
                     $(this).data('eventObject', eventObject);
@@ -181,13 +180,11 @@ var calendar = function(selector, data, modal_ext, ext, lead_id) {
                         revertDuration: 0
                     });
 
-                })
-                .end();
-
-        if (typeof me.lead_id !== "undefined" && me.resource !== "all") {
-            ext.show();
+                });
+        if (typeof me.client.id !== "undefined" && me.resource !== "all") {
+            me.ext.show();
         } else {
-            ext.hide();
+            me.ext.hide();
         }
     };
     this.makeRefController = function(Refs) {
@@ -202,11 +199,11 @@ var calendar = function(selector, data, modal_ext, ext, lead_id) {
                     {
                         resource: selected[0].id,
                         is_scheduler: selected.data().is_scheduler,
-                        init: true
+                        action: "getRscContent"
                     },
             function(dat) {
                 me.destroy();
-                me = new calendar(me.selector, dat, me.modal_ext, me.ext, me.lead_id);
+                me = new calendar(me.selector, dat, me.modal_ext, me.ext, me.client);
                 me.reserveConstruct(dat.tipo);
             }, "json");
         });
@@ -246,7 +243,7 @@ var calendar = function(selector, data, modal_ext, ext, lead_id) {
                     $.post("/AM/ajax/calendar.php",
                             {
                                 id: data.id,
-                                remove: true
+                                action: "remove"
                             },
                     function(ok) {
                         if (ok) {
@@ -269,7 +266,7 @@ var calendar = function(selector, data, modal_ext, ext, lead_id) {
         }, "json");
     };
     this.userWidgetPopulate = function() {
-        $.post("/AM/ajax/client.php", {id: me.lead_id, action: 'default'}, function(data) {
+        $.post("/AM/ajax/client.php", {id: me.client.id, action: 'default'}, function(data) {
             $("#client")
                     .find(".user-name").text(data.name)
                     .end()

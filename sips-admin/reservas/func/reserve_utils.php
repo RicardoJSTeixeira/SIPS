@@ -28,8 +28,8 @@ function checkSeriesDate($date, $time1, $day1, $time2, $day2) {
     $time1 = explode(":", $time1);
     $time2 = explode(":", $time2);
 
-    $result1 = (date('Y-m-d H:i', strtotime($date)) >= date("Y-m-d H:i", strtotime(date('Y-m-d', strtotime($date)) . " +$time1[0] hours $time1[1] minutes ")));
-    $result2 = (date('Y-m-d H:i', strtotime($date)) <= date("Y-m-d H:i", strtotime(date('Y-m-d', strtotime($date)) . " +$time2[0] hours $time2[1] minutes ")));
+    $result1 = (strtotime($date) >= strtotime(date('Y-m-d', strtotime($date)) . " +$time1[0] hours $time1[1] minutes "));
+    $result2 = (strtotime($date) <= strtotime(date('Y-m-d', strtotime($date)) . " +$time2[0] hours $time2[1] minutes "));
     $result3 = date("N", strtotime($date)) >= $day1;
     $result4 = date("N", strtotime($date)) <= $day2;
     return ($result1 && $result2 && $result3 && $result4);
@@ -37,20 +37,20 @@ function checkSeriesDate($date, $time1, $day1, $time2, $day2) {
 
 function checkExecoesDate($date, $beg, $end) {
 
-    $result1 = (date('Y-m-d H:i', strtotime($date)) >= date("Y-m-d H:i", strtotime($beg)));
-    $result2 = (date('Y-m-d H:i', strtotime($date)) <= date("Y-m-d H:i", strtotime($end)));
+    $result1 = (strtotime($date) >= strtotime($beg));
+    $result2 = (strtotime($date) <= strtotime($end));
     return ($result1 && $result2);
 }
 
 function check2DateTimeEqual($data1, $data2) {
-    return (date('Y-m-d H:i', strtotime($data1)) == date('Y-m-d H:i', strtotime($data2)));
+    return (strtotime($data1) == strtotime($data2));
 }
 
 function checkReserva($beg, $end, $rbeg, $rend) {
-    $result1 = (date('Y-m-d H:i', strtotime($beg)) >= date("Y-m-d H:i", strtotime($rbeg)));
-    $result2 = (date('Y-m-d H:i', strtotime($beg)) <= date("Y-m-d H:i", strtotime($rend)));
-    $result5 = (date('Y-m-d H:i', strtotime($end)) >= date("Y-m-d H:i", strtotime($rbeg)));
-    $result6 = (date('Y-m-d H:i', strtotime($end)) <= date("Y-m-d H:i", strtotime($rend)));
+    $result1 = (strtotime($beg) >= strtotime($rbeg));
+    $result2 = (strtotime($beg) <= strtotime($rend));
+    $result5 = (strtotime($end) >= strtotime($rbeg));
+    $result6 = (strtotime($end) <= strtotime($rend));
     return ($result1 && $result2) OR ($result1 && $result6) OR ($result2 && $result5) OR ($result5 && $result6);
 }
 
@@ -231,5 +231,3 @@ function log_admin($topic, $event, $id, $query, $PHP_AUTH_USER, $IP, $comments =
         echo "Log Error: " . mysql_error() . " Whole query:" . $stmt;
     }
 }
-
-?>

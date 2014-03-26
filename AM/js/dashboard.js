@@ -7,7 +7,7 @@ $(function() {
         sch.initModal();
     };
     $.post("ajax/calendar.php",
-            {init: true, dash: true},
+            {action: "dashboardInit"},
     init, "json");
 
     //LISTAR CONSULTAS ABERTAS,FECHADAS

@@ -71,8 +71,7 @@ if (checkDateTime($_GET["dt"], "Y-m-d")) {
 
 $date_end = date("Y-m-d", strtotime($date . ' +7 days'));
 
-$days = floor((strtotime($date_end) - strtotime($date)) / (60 * 60 * 24));
-$days = ($days == 0) ? 1 : $days;
+$days = 7;
 ?>
 <!DOCTYPE html>
 <html>
@@ -169,7 +168,7 @@ $days = ($days == 0) ? 1 : $days;
             .min-input{
                 width: 2em !important;}
             #loader{
-                background: #f9f9f9;
+                background: #fff;
                 top: 0px;
                 left: 0px;
                 position: absolute;

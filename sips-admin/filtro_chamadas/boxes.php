@@ -64,11 +64,11 @@ function cria_listagem() {
 
     $date_orginal = $date;
 
-    $labels = array("Concluido" => "label-success", "Medio" => "label-warning", "Fraco" => "label-important");
-    $labels_ref = array("Fraco", "Medio", "Concluido");
+    $labels = array("Concluido" => "label-success", "Medio" => "label-warning", "Fraco" => "label-important", "nulo" => "label-info");
+    $labels_ref = array("Fraco", "Medio", "Concluido","nulo");
     $colors = array("red", "orange", "green");
 
-    $color_head = array("Concluido" => "success", "Medio" => "warning", "Fraco" => "error");
+    $color_head = array("Concluido" => "success", "Medio" => "warning", "Fraco" => "error", "nulo" => "info");
 
     $query = "SELECT b.id_resource, b.display_text, b.alias_code, a.blocks, a.begin_time, a.end_time+a.blocks end_time, count(c.id_resource) 'marc', b.`restrict_days` FROM `sips_sd_schedulers` a INNER JOIN `sips_sd_resources` b ON a.id_scheduler=b.id_scheduler left JOIN `sips_sd_reservations` c ON b.id_resource=c.id_resource and a.active=1 and b.active=1 and start_date between '$date 00:00:00' and '$date_end 23:59:59' group by b.id_resource";
     $result = mysql_query($query, $link) or die(mysql_error($link));
@@ -163,4 +163,3 @@ $boxes="";
     }
 return $boxes;
 }
-?>

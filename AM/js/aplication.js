@@ -1,15 +1,13 @@
 $(function() {
 
     $.history.on('load change pushed', function(event, url, type) {
-        
         $("#sidebar .active").removeClass("active");
-        $("#sidebar").find("[href='" + url + "']").addClass("active");
+        $("#sidebar").find("[href='" + url.split("?")[0] + "']").addClass("active");
 
         if (url.length) {
             $("#principal").load(url);
         } else {
             $.history.push("view/dashboard.html");
-            $("#principal").load("view/dashboard.html");
         }
     }).listen('hash');
 

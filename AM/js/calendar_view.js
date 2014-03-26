@@ -4,25 +4,29 @@ $(function() {
         var
                 sch,
                 modal_ext = $("#calendar_client_modal"),
-                lead_id,
-                id = getUrlVars().id;
+                client = getUrlVars();
 
-        if (id) {
-            id = atob(id);
-            console.log(id);
-            lead_id = id;
+
+        function startC(data) {console.log(client)
+            sch = new calendar($("#calendar"), data, modal_ext, $('#external-events'), client);
+
+            sch.initModal(modal_ext);
+            sch.reserveConstruct(data.tipo);
+
+            sch.makeRefController(data.refs);
         }
 
-        sch = new calendar($("#calendar"), data, modal_ext, $('#external-events'), lead_id);
-
-        sch.initModal(modal_ext);
-        sch.reserveConstruct(data.tipo);
-
-        sch.makeRefController(data.refs);
-
-        if (id) {
-            sch.userWidgetPopulate();
+        if (client.id) {
+            client.id = atob(client.id);
+            $.post("/AM/ajax/client.php", {action: "default", id: client.id}, function(clientI) {
+                client = clientI;
+                startC(data);
+                sch.userWidgetPopulate();
+            }, "json");
+        } else {
+            startC(data);
         }
+
 
         $(document)
                 .off("click", ".no_consult_button")
@@ -57,6 +61,6 @@ $(function() {
 
 
     $.post("/AM/ajax/calendar.php",
-            {init: true},
+            {action: "Init"},
     init, "json");
 });
