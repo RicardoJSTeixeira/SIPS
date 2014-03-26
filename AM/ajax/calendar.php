@@ -1,4 +1,8 @@
 <?php
+
+error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
+ini_set('display_errors', '1');
+
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 $start = filter_var($_POST["start"]);
 $end = filter_var($_POST["end"]);
@@ -12,64 +16,56 @@ $user->confirm_login();
 
 set_time_limit(1);
 
-if (filter_var($_POST["id"]) AND filter_var($_POST["remove"])) {
-    $calendar = new Calendars($db);
-    $id = filter_var($_POST["id"]);
-    $return = $calendar->removeReserva($id);
-    echo json_encode($return);
-    exit;
+$id = filter_var($_POST["id"]);
+$resource = filter_var($_POST["resource"]);
+$lead_id = filter_var($_POST["lead_id"]);
+$rtype = filter_var($_POST["rtype"]);
+$id = filter_var($_POST["id"]);
+
+switch (filter_var($_POST["action"])) {
+    case "dashboardInit":
+        startDash($db, $user);
+        break;
+    case "Init":
+        startDefault($db, $user);
+        break;
+    case "GetReservations":
+        if ($resource == "all") {
+            getAllReservations($db, $user, $start, $end);
+        } else {
+            getResourceContent($db, $resource, $start, $end);
+        }
+        break;
+    case "remove":
+        $calendar = new Calendars($db);
+        $return = $calendar->removeReserva($id);
+        echo json_encode($return);
+        break;
+    case "change":
+        $calendar = new Calendars($db);
+        $return = $calendar->changeReserva($id, $start, $end);
+        echo json_encode($return);
+        break;
+    case "getRscContent":
+        if ($resource != "all") {
+            startTotal($db, $resource);
+        } else {
+            startDefault($db, $user);
+        }
+        break;
+    case "newReservation":
+        $calendar = new Calendars($db);
+        $id = $calendar->newReserva($user->getUser()->username, $lead_id, $start, $end, $rtype, $resource);
+        echo json_encode($id);
+        break;
+
+    default:
+        echo "Are U an Hacker? if yes then please don't hurt my feelings :-)";
+        break;
 }
 
-if (filter_var($_POST["id"]) AND filter_var($_POST["change"]) AND filter_var($_POST["start"]) AND filter_var($_POST["end"])) {
-    $calendar = new Calendars($db);
-    $id = filter_var($_POST["id"]);
-    $start = date('Y-m-d H:i:s', filter_var($_POST["start"]));
-    $end = date('Y-m-d H:i:s', filter_var($_POST["end"]));
-    $return = $calendar->changeReserva($id, $start, $end);
-    echo json_encode($return);
-    exit;
-}
-
-if (filter_var($_POST["resource"]) AND filter_var($_POST["rtype"]) AND filter_var($_POST["start"]) AND filter_var($_POST["end"])) {
-    $resource = filter_var($_POST["resource"]);
-    $lead_id = filter_var($_POST["lead_id"]);
-    $rtype = filter_var($_POST["rtype"]);
-    $start = date('Y-m-d H:i:s', filter_var($_POST["start"]));
-    $end = date('Y-m-d H:i:s', filter_var($_POST["end"]));
-    $calendar = new Calendars($db);
-    $id = $calendar->newReserva($user->getUser()->username, $lead_id, $start, $end, $rtype, $resource);
-    echo json_encode($id);
-    exit;
-}
-
-if (filter_var($_POST["init"]) == true AND filter_var($_POST["resource"]) AND filter_var($_POST["resource"]) != "all") {
-    startTotal($db);
-    exit;
-}
-
-if (filter_var($_POST["init"]) == true AND filter_var($_POST["dash"]) == true) {
-    startDash($db, $user);
-    exit;
-}
-
-if (filter_var($_POST["init"]) == true) {
-    startDefault($db, $user);
-    exit;
-}
-
-if (filter_var($_POST["resource"]) == "all") {
-    getAllReservations($db, $user, $start, $end);
-    exit;
-}
-
-if (filter_var($_POST["resource"])) {
-    getResourceContent($db, filter_var($_POST["resource"]), $start, $end);
-    exit;
-}
-
-function startTotal($db) {
-    $id = filter_var($_POST["resource"]);
-    $calendar = new Calendar($db, $id, "rsc");
+function startTotal($db, $resource) {
+    $calendar = new Calendar($db, $resource, "rsc");
     $js = (object) array("tipo" => array(), "config" => array());
     $js->tipo = $calendar->getTipoReservas();
     $js->config = $calendar->getConfigs();
@@ -78,7 +74,7 @@ function startTotal($db) {
 
 function startDash($db, $user) {
     $calendar = new Calendars($db);
-    $js = (object) array("refs" => "", "tipo" => "", "config" => (object) array());
+    $js = (object) array("refs" => "", "tipo" => "", "config" => (object) array("header"=>array("center"=>"")));
     $js->refs = $calendar->getNames($user->getUser()->username);
     $js->config->defaultView = "agendaDay";
     //$js->config = $calendar->getConfigs();

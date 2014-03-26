@@ -10,9 +10,20 @@ Class Calendars {
 
     protected function _getReservas($is_scheduler, $id, $beg, $end) {
         if ($is_scheduler) {
-            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, d.postal_code, d.first_name FROM sips_sd_reservations a LEFT JOIN vicidial_list d ON a.lead_id = d.lead_id LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource WHERE b.id_scheduler=:id And start_date <=:end And start_date >=:beg";
+            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, e.display_text, d.postal_code, d.first_name, c.extra1 codCamp, IFNULL(e.id,false) closed "
+                    . "FROM sips_sd_reservations a "
+                    . "LEFT JOIN vicidial_list d ON a.lead_id = d.lead_id "
+                    . "LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource "
+                    . "LEFT JOIN sips_sd_reservations_types e ON a.id_reservation_type=e.id_reservations_types "
+                    . "LEFT JOIN spice_consulta f ON a.id_reservation=f.reserva_id "
+                    . "WHERE b.id_scheduler=:id And start_date <=:end And start_date >=:beg";
         } else {
-            $query = "SELECT id_reservation, start_date, end_date, id_resource,id_user,a.lead_id,id_reservation_type, c.postal_code, c.first_name FROM sips_sd_reservations a LEFT JOIN vicidial_list c ON a.lead_id = c.lead_id WHERE id_resource=:id And start_date <=:end And start_date >=:beg";
+            $query = "SELECT id_reservation, start_date, end_date, id_resource,id_user,a.lead_id,id_reservation_type, d.display_text, c.postal_code, c.first_name, c.extra1 codCamp, IFNULL(e.id,false) closed "
+                    . "FROM sips_sd_reservations a "
+                    . "LEFT JOIN vicidial_list c ON a.lead_id = c.lead_id "
+                    . "LEFT JOIN sips_sd_reservations_types d ON a.id_reservation_type=d.id_reservations_types "
+                    . "LEFT JOIN spice_consulta e ON a.id_reservation=e.reserva_id "
+                    . "WHERE id_resource=:id And start_date <=:end And start_date >=:beg";
         }
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id, ":end" => $end, ":beg" => $beg));
@@ -20,15 +31,16 @@ Class Calendars {
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $reservars[] = array(
                 'id' => $row->id_reservation,
-                'title' => ((is_null($row->postal_code)) ? "" : $row->postal_code),
+                'title' => ((is_null($row->postal_code)) ? $row->display_text : $row->postal_code.' - '.$row->display_text).(((bool)$row->closed)?" - Fechado":""),
                 'client_name' => (is_null($row->first_name) ? "" : $row->first_name),
                 'lead_id' => (is_null($row->lead_id) ? "" : $row->lead_id),
+                'codCamp' => (is_null($row->codCamp) ? "" : $row->codCamp),
                 'start' => $row->start_date,
                 'end' => $row->end_date,
                 'editable' => true,
                 'className' => "t" . $row->id_reservation_type,
                 'user' => $row->id_user,
-                'closed' => false
+                'closed' => (bool)$row->closed
             );
         }
         return $reservars;
@@ -146,22 +158,20 @@ Class Calendars {
     public function newReserva($user, $lead_id, $start, $end, $rtype, $resource) {
         $query = "INSERT INTO `sips_sd_reservations`(`start_date`, `end_date`, `has_accessories`, `id_reservation_type`, `id_resource`,`id_user`,`lead_id`) VALUES (:start, :end, '0', :rtype, :resource,:user,:lead_id)";
         $stmt = $this->_db->prepare($query);
-        $stmt->execute(array(":user" => $user, ":lead_id" => $lead_id, ":start" => $start, ":end" => $end, ":rtype" => $rtype, ":resource" => $resource));
+        $stmt->execute(array(":user" => $user, ":lead_id" => $lead_id, ":start" => date('Y-m-d H:i:s',$start), ":end" => date('Y-m-d H:i:s',$end), ":rtype" => $rtype, ":resource" => $resource));
         return $this->_db->lastInsertId();
     }
 
     public function removeReserva($id) {
         $query = "DELETE FROM sips_sd_reservations WHERE id_reservation=:id";
         $stmt = $this->_db->prepare($query);
-        $stmt->execute(array(":id" => $id));
-        return true;
+        return $stmt->execute(array(":id" => $id));
     }
 
     public function changeReserva($id, $start, $end) {
         $query = "UPDATE `sips_sd_reservations` SET `start_date`=:start,`end_date`=:end WHERE `id_reservation`=:id";
         $stmt = $this->_db->prepare($query);
-        $stmt->execute(array(":id" => $id, ":start" => $start, ":end" => $end));
-        return true;
+        return $stmt->execute(array(":id" => $id, ":start" => $start, ":end" => $end));
     }
 
 }
@@ -194,7 +204,7 @@ class Calendar extends Calendars {
         }
     }
 
-    public function getNames() {
+    public function getNames($user) {
         $name_arr = array();
         foreach ($this->_resources as $rsc) {
             $name_arr[] = $rsc->display_text;
@@ -206,7 +216,7 @@ class Calendar extends Calendars {
         return parent::_getReservas($this->_is_scheduler, ($this->_is_scheduler) ? $this->_id_scheduler : $this->_id_resource, \date('Y-m-d H:i:s', $beg), \date('Y-m-d H:i:s', $end));
     }
 
-    public function getTipoReservas() {
+    public function getTipoReservas($user_groups = array()) {
         return parent::getTipoReservas($this->_user_groups);
     }
 
@@ -214,11 +224,11 @@ class Calendar extends Calendars {
         return (object) array("defaultEventMinutes" => (int) $this->_resources[0]->blocks, "events" => (object) array("data" => (object) array("resource" => $this->_id_ref, "is_scheduler" => $this->_is_scheduler)), "slotMinutes" => (int) $this->_resources[0]->blocks, "minTime" => $this->_resources[0]->begin_time / 60, "maxTime" => $this->_resources[0]->end_time / 60, "sch" => $this->_id_scheduler);
     }
 
-    protected function _getSeries() {
-        return parent::_getSeries(($this->_is_scheduler) ? $this->_id_scheduler : $this->_id_resource, $this->_is_scheduler);
+    protected function _getSeries($id="", $is_scheduler="") {
+        return parent::_getSeries((($this->_is_scheduler) ? $this->_id_scheduler : $this->_id_resource), $this->_is_scheduler);
     }
 
-    protected function _getExcecoes() {
+    protected function _getExcecoes($id="", $is_scheduler="") {
         return parent::_getExcecoes(($this->_is_scheduler) ? $this->_id_scheduler : $this->_id_resource, $this->_is_scheduler);
     }
 
@@ -238,8 +248,7 @@ class Calendar extends Calendars {
                 }
             }
             $aux_date = strtotime("+1 day", $aux_date);
-        } while ($aux_date != $end);
-
+        } while (date('Y-m-d',$aux_date) != date('Y-m-d',$end));
         $excepcoes = $this->_getExcecoes();
         foreach ($excepcoes as $excepcao) {
             $blocks[] = array(

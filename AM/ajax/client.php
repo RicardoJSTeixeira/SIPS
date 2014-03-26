@@ -25,11 +25,11 @@ switch ($action) {
 
         break;
     case 'default':
-        $query = "SELECT first_name, middle_initial, last_name, address1, address2, date_of_birth FROM vicidial_list WHERE lead_id=:id limit 1";
+        $query = "SELECT lead_id, first_name, middle_initial, last_name, address1, address2, postal_code, date_of_birth, extra1  FROM vicidial_list WHERE lead_id=:id limit 1";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $row = $stmt->fetch(PDO::FETCH_OBJ);
-        $js = (object) array("name" => $row->first_name . " " . $row->middle_initial . " " . $row->last_name, "address" => $row->address . " " . $row->address1, "bDay" => $row->date_of_birth);
+        $js = (object) array("id"=>$row->lead_id, "name" => $row->first_name . " " . $row->middle_initial . " " . $row->last_name, "address" => $row->address . " " . $row->address1, "postalCode"=>$row->postal_code, "bDay" => $row->date_of_birth, "codCamp" => $row->extra1);
 
         break;
 
