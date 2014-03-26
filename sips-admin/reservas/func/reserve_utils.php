@@ -43,7 +43,7 @@ function checkExecoesDate($date, $beg, $end) {
 }
 
 function check2DateTimeEqual($data1, $data2) {
-    return (date('Y-m-d H:i', strtotime($data1)) == date('Y-m-d H:i', strtotime($data2)));
+    return (strtotime($data1) == strtotime($data2));
 }
 
 function checkReserva($beg, $end, $rbeg, $rend) {
@@ -231,5 +231,3 @@ function log_admin($topic, $event, $id, $query, $PHP_AUTH_USER, $IP, $comments =
         echo "Log Error: " . mysql_error() . " Whole query:" . $stmt;
     }
 }
-
-?>
