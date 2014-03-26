@@ -11,13 +11,13 @@
 <div id="admin_zone">
 
     <!--EDIçÃO DE PRODUTOS-->
-    <div id="edit_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+    <div id="product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">Gestão de produto</h3>
         </div>
         <div class="modal-body">
-            <div id="edit_product_div">
+            <div id="product_div">
 
             </div>
         </div>
@@ -27,26 +27,22 @@
         </div>
     </div>
 
-    <!--CRIAR DE PRODUTOS-->
-    <div id="create_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+    <!--EDIçÃO DE PRODUTOS-->
+    <div id="requisition_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalLabel">Criação de produto</h3>
+            <h3 id="myModalLabel">Produtos</h3>
         </div>
         <div class="modal-body">
+            <div id="requisition_product_div">
 
-            <div id="create_product_div"></div>
-
-
-
-
+            </div>
         </div>
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">Sair</button>
 
         </div>
     </div>
-
 
 
     <!--REMOVER PRODUTO-->
@@ -81,7 +77,7 @@
         </div>
     </div>
 
-    
+
     <!--Transferir marcações de um agente para outro-->
     <div id="agent_marc_transfer_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true" style="overflow:visible" >
         <div class="modal-header">
@@ -233,7 +229,7 @@
                             <div class="pull-left">
                                 <h5>Gestão de Pedido apoio Marketing</h5>
                             </div>
-                    
+
                         </div>
                         <div class="grid-content div_admin_edit" id="pedidos_apoio_marketing_master_div"  >
                             <table class="table table-bordered table-mod" id="pedidos_apoio_marketing_datatable"></table>

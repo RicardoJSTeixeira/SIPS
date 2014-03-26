@@ -2,6 +2,7 @@ var product;
 
 $(function()
 {
+     $("#admin_zone").off();
     $("#admin_zone .form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
     $("#admin_zone .check_form").validationEngine();
 
@@ -51,13 +52,9 @@ $("#admin_zone .check_form").submit(function(e)
 
 
 
-//------------
-
-
-
 function get_info_product()
 {
-    product.init_to_datatable($("#admin_zone #view_product_datatable"), $("#admin_zone #edit_product_div"), $("#admin_zone #edit_product_modal"));
+    product.init_to_datatable($("#admin_zone #view_product_datatable"), $("#admin_zone #product_div"), $("#admin_zone #product_modal"));
 }
 //AGENTES------------------------------------------------------------------------------------------------------------------------------
 $("#admin_zone #agent_marc_transfer_button").click(function()
@@ -80,7 +77,7 @@ $("#admin_zone #confirm_marc_transfer_button").click(function()
 $("#admin_zone").on("click", ".item_edit_button", function()
 {
     var item_id = $(this).data("product_id");
-    $("#admin_zone #edit_product_modal").data("product_id", item_id);
+    $("#admin_zone #product_modal").data("product_id", item_id);
     $("#admin_zone #ep_name").val();
     var Table_child_product = $('#admin_zone #child_product_datatable').dataTable({
         "aaSorting": [[0, "desc"]],
@@ -108,7 +105,7 @@ $("#admin_zone").on("click", ".item_edit_button", function()
         $("#admin_zone #ep_category option[value='" + data.category + "']").prop("selected", true);
         $("#admin_zone #ep_type option[value='" + data.type + "']").prop("selected", true);
         $("#admin_zone .chosen-container").css("width", "250px");
-        $("#admin_zone #edit_product_modal").modal("show");
+        $("#admin_zone #product_modal").modal("show");
     }, "json");
 });
 $("#admin_zone #edit_product_button").click(function()
@@ -116,7 +113,7 @@ $("#admin_zone #edit_product_button").click(function()
     if ($("#admin_zone #edit_product_form").validationEngine("validate"))
     {
         $.post('ajax/admin.php', {action: "editar_produto",
-            id: $("#admin_zone #edit_product_modal").data("product_id"),
+            id: $("#admin_zone #product_modal").data("product_id"),
             name: $("#admin_zone #ep_name").val(),
             parent: $("#admin_zone #ep_parent option:selected").val(),
             max_req_m: $("#admin_zone #ep_mrm").val(),
@@ -125,7 +122,7 @@ $("#admin_zone #edit_product_button").click(function()
             type: $("#admin_zone #ep_type option:selected").val()
         }, function() {
             get_info_product();
-            $("#admin_zone #edit_product_modal").modal("hide");
+            $("#admin_zone #product_modal").modal("hide");
         }, "json");
     }
 });
@@ -164,15 +161,11 @@ $("#admin_zone #removeAll_product_button").click(function()
 
 $("#admin_zone #create_product_modal_button").click(function()
 {
-
-
-
-
-    product.init_new_product($("#admin_zone #create_product_div"), function() {
-        $("#admin_zone #create_product_modal").modal("hide");
-        product.init_to_datatable($("#admin_zone #view_product_datatable"), $("#admin_zone #edit_product_div"), $("#admin_zone #edit_product_modal"));
+    product.init_new_product($("#admin_zone #product_div"), function() {
+        $("#admin_zone #product_modal").modal("hide");
+        product.init_to_datatable($("#admin_zone #view_product_datatable"), $("#admin_zone #product_div"), $("#admin_zone #product_modal"));
     });
-    $("#admin_zone #create_product_modal").modal("show");
+    $("#admin_zone #product_modal").modal("show");
     $("#admin_zone .chosen-container").css("width", "250px");
 
 
@@ -199,23 +192,7 @@ $("#admin_zone #download_excel_csm_button").click(function()
 
 //ENCOMENDAS ---------------ENCOMENDAS--------------ENCOMENDAS--------------------------ENCOMENDAS-------------ENCOMENDAS----------------ENCOMENDAS---------------------ENCOMENDAS--------------------------------------
 //VER PRODUTOS DE ENCOMENDAS FEITAS
-$("#admin_zone").on("click", ".ver_requisition_products", function()
-{
-    $.post('ajax/requisition.php', {action: "listar_produtos_por_encomenda",
-        id: $(this).val()}, function(data)
-    {
-        $("#admin_zone #ver_product_modal #show_requisition_products_tbody").empty();
-        $.each(data, function()
-        {
-            $("#admin_zone #ver_product_modal #show_requisition_products_tbody").append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.quantity + "</td></tr>");
-        })
-        $("#admin_zone #ver_product_modal").modal("show");
-    },
-            "json");
-
-
-
-});
+ 
 
 $("#admin_zone").on("click", ".accept_requisition", function()
 {
