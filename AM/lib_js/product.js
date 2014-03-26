@@ -23,7 +23,8 @@ var products = function(options_ext)
             product_path.off().empty();
             product_path.append(data);
             product_path.find(".form_datetime_day").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
-            product_path.find("#product_parent").chosen({no_results_text: "Sem resultados"});
+            product_path.find("#product_parent").chosen({no_results_text: "Sem resultados",width: "200px"});
+
             populate_parent(product_path.find("#product_parent"));
 
             update_products_datatable(datatable_path);
