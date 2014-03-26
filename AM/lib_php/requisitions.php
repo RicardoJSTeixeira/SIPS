@@ -32,11 +32,12 @@ Class requisitions {
             }
 
             $row[7] = "<div> <button class='btn ver_requisition_products' value='" . $row["id"] . "'><i class='icon-eye-open'></i>Ver</button></div>";
-            if ($this->_user_level > 5 && $show_admin == 1) 
-                $row[8] = $row[8] . " <button class='btn accept_requisition btn-success' value='" . $row["id"] . "'><i class= 'icon-ok'></i>Aceitar</button><button class='btn decline_requisition btn-warning' value='" . $row["id"] . "'><i class= 'icon-remove'></i>Rejeitar</button></div>";
+            if ($this->_user_level > 5 || $show_admin == 1) 
+                $row[9] = $row[9] . " <button class='btn accept_requisition btn-success' value='" . $row["id"] . "'><i class= 'icon-ok'></i>Aceitar</button><button class='btn decline_requisition btn-warning' value='" . $row["id"] . "'><i class= 'icon-remove'></i>Rejeitar</button></div>";
         
             $result['aaData'][] = $row;
         }
+                
         return $result;
     }
 

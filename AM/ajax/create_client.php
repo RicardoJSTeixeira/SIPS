@@ -25,6 +25,7 @@ switch ($action) {
         $variables[] = $campaign_id;
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
+        $js[] = array("name" => 'compart', "display_name" => "Comparticipação", "field_order" => 9);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $js[] = array("name" => $row["NAME"], "display_name" => $row["DISPLAY_NAME"], "field_order" => $row["field_order"]);
         }
@@ -37,25 +38,27 @@ switch ($action) {
         $variables[] = "NEW";
         $temp = $user->getUser();
         $variables[] = $temp->username;
-        $variables[] = isset($temp->list_id)?$temp->list_id:"0";
+        $variables[] = isset($temp->list_id) ? $temp->list_id : "0";
 
 
         foreach ($info as $value) {
-            $fields = $fields . " , " . $value["name"];
-            $values = $values . ", ? ";
-            $variables[] = $value["value"];
+            if ($value["name"] != "compart") {
+                $fields = $fields . " , " . $value["name"];
+                $values = $values . ", ? ";
+                $variables[] = $value["value"];
+            }
         }
 
 
 
         $query = "insert into vicidial_list (entry_date,status,user,list_id $fields) values (?,?,?,? $values) ";
- 
+
 
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
-        
+
         echo json_encode($db->lastInsertId());
 
         break;
 }
-?>
+

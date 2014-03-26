@@ -15,7 +15,7 @@ var requests_class = function(basic_path, options_ext)
 
     this.init_relatorio_correio = function()
     {
-        /*   $.get("/AM/view/requests/relatorio_correio_modal.html", function(data) {
+        /* $.get("/AM/view/requests/relatorio_correio_modal.html", function(data) {
          me.basic_path.append(data);
          });*/
     };
@@ -42,10 +42,8 @@ var requests_class = function(basic_path, options_ext)
                     else
                         return false;
                 }, finishButton: false});
-            am_zone.find(".form_datetime_day").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function(ev) {
-                am_zone.find(".form_datetime_hour").datetimepicker('update', $(this).val());
-            });
-            am_zone.find(".form_datetime_hour").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1});
+            am_zone.find(".form_datetime_day").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
+            am_zone.find(".form_datetime_hour").datetimepicker({format: ' hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1});
             //Adiciona Linhas
             am_zone.on("click", "#button_ldptable_add_line", function(e)
             {
@@ -64,17 +62,16 @@ var requests_class = function(basic_path, options_ext)
             am_zone.on("click", "#submit_am", function(e)
             {
                 e.preventDefault();
-                if (am_zone.find("#apoio_am_form").validationEngine("validate"))
+                if (am_zone.find("#apoio_am_form").validationEngine("validate") && am_zone.find("#table_tbody_ldp tr").length)
                 {
                     var local_publicidade_array = [];
                     $.each(am_zone.find("#table_tbody_ldp").find("tr"), function(data)
                     {
-                        local_publicidade_array.push(
-                                {cp: $(this).find(".linha_cp").val(),
-                                    freguesia: $(this).find(".linha_freg").val()});
+                        local_publicidade_array.push({cp: $(this).find(".linha_cp").val(), freguesia: $(this).find(".linha_freg").val()});
                     });
                     $.post("/AM/ajax/requests.php", {action: "criar_apoio_marketing",
-                        data: am_zone.find("#data_rastreio").val(),
+                        data_inicial: am_zone.find("#data_rastreio1").val(),
+                        data_final: am_zone.find("#data_rastreio2").val(),
                         horario: {inicio1: am_zone.find("#data_inicio1").val(), inicio2: am_zone.find("#data_inicio2").val(), fim1: am_zone.find("#data_fim1").val(), fim2: am_zone.find("#data_fim2").val()},
                         localidade: am_zone.find("#input_localidade").val(),
                         local: am_zone.find("#input_local_rastreio").val(),
@@ -101,9 +98,9 @@ var requests_class = function(basic_path, options_ext)
             "sPaginationType": "full_numbers",
             "sAjaxSource": '/AM/ajax/requests.php',
             "fnServerParams": function(aoData) {
-                aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"});
+                aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"}, {"name": "show_admin", "value": 1});
             },
-            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Data pedido"}, {"sTitle": "Data rastreio"}, {"sTitle": "Horario"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Local publicidade"}, {"sTitle": "Status"}],
+            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial rastreio"}, {"sTitle": "Data final rastreio"}, {"sTitle": "Horario"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Local publicidade"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 
@@ -112,11 +109,10 @@ var requests_class = function(basic_path, options_ext)
         {
             var id = $(this).data().apoio_marketing_id;
             $.post("ajax/requests.php", {action: "get_horario_from_apoio_marketing", id: id}, function(data) {
-
-                me.basic_path.find("#ver_horario_modal #inicio1").text(data.inicio1);
-                me.basic_path.find("#ver_horario_modal #inicio2").text(data.inicio2);
-                me.basic_path.find("#ver_horario_modal #fim1").text(data.fim1);
-                me.basic_path.find("#ver_horario_modal #fim2").text(data.fim2);
+                me.basic_path.find("#ver_horario_modal #inicio1").text(data[0].inicio1);
+                me.basic_path.find("#ver_horario_modal #inicio2").text(data[0].inicio2);
+                me.basic_path.find("#ver_horario_modal #fim1").text(data[0].fim1);
+                me.basic_path.find("#ver_horario_modal #fim2").text(data[0].fim2);
                 me.basic_path.find("#ver_horario_modal").modal("show");
             }, "json");
 
@@ -126,10 +122,12 @@ var requests_class = function(basic_path, options_ext)
         am_zone.on("click", ".ver_local_publicidade", function()
         {
             var id = $(this).data().apoio_marketing_id;
+
             $.post("/AM/ajax/requests.php", {action: "get_locais_publicidade_from_apoio_marketing", id: id}, function(data) {
                 me.basic_path.find("#ver_local_publicidade_modal #tbody_ver_local_publicidade").empty();
                 $.each(data, function()
                 {
+
                     me.basic_path.find("#ver_local_publicidade_modal #tbody_ver_local_publicidade").append("<tr><td>" + this.cp + "</td><td>" + this.freguesia + "</td></tr>");
                 });
                 me.basic_path.find("#ver_local_publicidade_modal").modal("show");
@@ -152,7 +150,7 @@ var requests_class = function(basic_path, options_ext)
         {
             var this_button = $(this);
             $.post('/AM/ajax/requests.php', {action: "decline_apoio_marketing", id: $(this).val()}, function() {
-                this_button.parent("td").prev().text("Rejeitado");
+                this_button.parent().prev().text("Rejeitado");
             }, "json");
         });
 
@@ -160,7 +158,9 @@ var requests_class = function(basic_path, options_ext)
 
 
 
-
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------CORREIO--------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     this.new_relatorio_correio = function(rc_zone)
     {
@@ -201,9 +201,11 @@ var requests_class = function(basic_path, options_ext)
             "sPaginationType": "full_numbers",
             "sAjaxSource": '/AM/ajax/requests.php',
             "fnServerParams": function(aoData) {
-                aoData.push({"name": "action", "value": "get_relatorio_correio_to_datatable"});
+                aoData.push({"name": "action", "value": "get_relatorio_correio_to_datatable"},
+                {"name": "show_admin", "value": 1}
+                );
             },
-            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Lead id"}, {"sTitle": "anexo"}, {"sTitle": "Observações"}, {"sTitle": "Status"}],
+            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Lead id"}, {"sTitle": "anexo"}, {"sTitle": "Observações"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 
@@ -224,7 +226,9 @@ var requests_class = function(basic_path, options_ext)
         });
     };
 
-
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------FROTA--------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     this.new_relatorio_frota = function(rf_zone)
     {
@@ -292,12 +296,44 @@ var requests_class = function(basic_path, options_ext)
             "sPaginationType": "full_numbers",
             "sAjaxSource": '/AM/ajax/requests.php',
             "fnServerParams": function(aoData) {
-                aoData.push({"name": "action", "value": "get_relatorio_frota_to_datatable"});
+                aoData.push({"name": "action", "value": "get_relatorio_frota_to_datatable"},
+                {"name": "show_admin", "value": 1});
             },
-            "aoColumns": [{"sTitle": "id"}, {"sTitle": "user"}, {"sTitle": "data"}, {"sTitle": "Matricula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrencias"}, {"sTitle": "Status"}],
+            "aoColumns": [{"sTitle": "id"}, {"sTitle": "user"}, {"sTitle": "data"}, {"sTitle": "Matricula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrencias"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 
+        rf_zone.on("click", ".ver_ocorrencias", function()
+        {
+            var id = $(this).data().relatorio_frota_id;
+            $.post("ajax/requests.php", {action: "get_ocorrencias_frota", id: id}, function(data) {
+                $.each(data, function()
+                {
+                    me.basic_path.find("#ver_occorrencia_frota_modal #ver_occorrencia_frota_tbody").append("<tr><td>" + this.data + "</td><td>" + this.km + "</td><td>" + this.ocorrencia + "</td></tr>");
+                })
+                me.basic_path.find("#ver_occorrencia_frota_modal").modal("show");
+            }, "json");
+
+
+        });
+
+
+
+        rf_zone.on("click", ".accept_report_frota", function()
+        {
+            var this_button = $(this);
+            $.post('/AM/ajax/requests.php', {action: "accept_report_frota", id: $(this).val()}, function() {
+                this_button.parent("td").prev().text("Aprovado");
+            }, "json");
+        });
+
+        rf_zone.on("click", ".decline_report_frota", function()
+        {
+            var this_button = $(this);
+            $.post('/AM/ajax/requests.php', {action: "decline_report_frota", id: $(this).val()}, function() {
+                this_button.parent("td").prev().text("Rejeitado");
+            }, "json");
+        });
 
 
     };

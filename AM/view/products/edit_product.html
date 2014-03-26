@@ -1,0 +1,82 @@
+
+<form id="edit_product_form" class="check_form">
+
+
+
+    <div class="formRow">
+        <span>Nome</span>
+        <input type="text" id="cp_name" class="validate[required]">
+    </div>
+    <div class="formRow">
+        <span>Parente</span>
+        <div class="formRight">
+            <select class="chosen-select" id="cp_parent" multiple  data-placeholder="Selecione um parent"></select>
+        </div>    
+    </div>
+    <div class="formRow">
+        <span>Categoria</span>
+        <div class="formRight">
+            <select  id="cp_category">
+                <option value="Pilha" >Pilha</option>
+                <option value="Aparelho">Aparelho</option>
+                <option value="Peça" >Peça</option>
+            </select>
+        </div>    
+    </div>
+
+    <div class="formRow">
+        <span>Tipo</span>
+        <div class="formRight">
+            <input   type="checkbox" id="check_branch" name="tipo_user" value="branch" class="validate[minCheckbox[1]]">
+            <label class="checkbox inline" for="check_branch"><span></span>Branch</label>
+            <input   type="checkbox" id="check_dispenser" name="tipo_user" value="dispenser" class="validate[minCheckbox[1]]">
+            <label class="checkbox inline" for="check_dispenser"><span></span>Dispenser</label>
+        </div>    
+    </div>
+    <div class="formRow">
+        <table >
+            <thead>
+                <tr>
+                    <th>Max Requisições por Mês</th>
+                    <th>Max Requisições Especiais</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="number" id="cp_mrm" value="1" class="validate[required]"></td>
+                    <td> <input type="number" id="cp_mrw" value="1" class="validate[required]"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="formRow" id="product_children_div">
+
+        <div class="grid-title">
+            <div class="pull-left">
+                <span>Sub-peças deste produto</span>
+            </div>
+
+        </div>
+        <table class="table table-bordered table-mod" id="child_product_datatable" >
+            <thead>
+                <tr>
+                    <th>
+                        Nome
+                    </th>
+                    <th>
+                        Categoria
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="formRow">
+        <div class="pull-right">
+            <button id="edit_product_button" class="btn btn-primary">Editar</button>
+        </div>
+    </div>
+
+</form>

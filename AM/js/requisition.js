@@ -7,21 +7,12 @@ $(function()
     requisition1.init();
     requisition1.get_current_requisitions($("#view_requisition_datatable"), 0);
 
+    config = new Object();
+    config.product_editable = false;
+    product = new products(config);
 
-    var Table_view_product = $('#view_product_datatable').dataTable({
-        "aaSorting": [[6, "asc"]],
-        "bSortClasses": false,
-        "bProcessing": true,
-        "bDestroy": true,
-        "bAutoWidth": false,
-        "sPaginationType": "full_numbers",
-        "sAjaxSource": 'ajax/admin.php',
-        "fnServerParams": function(aoData) {
-            aoData.push({"name": "action", "value": "listar_produtos_to_datatable"});
-        },
-        "aoColumns": [{"sTitle": "id"}, {"sTitle": "Nome"}, {"sTitle": "Parente"}, {"sTitle": "Max requisições mensais"}, {"sTitle": "Max requisições especiais"}, {"sTitle": "Categoria"}, {"sTitle": "Tipo"}],
-        "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
-    });
+    product.init_to_datatable($("#view_product_datatable"), $("#ver_produto_modal #see_produto_div"), $("#ver_produto_modal"));
+
 
 });
 

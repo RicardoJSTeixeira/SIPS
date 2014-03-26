@@ -1,4 +1,4 @@
-
+var product;
 
 $(function()
 {
@@ -24,7 +24,9 @@ $(function()
     requests.init_relatorio_frota();
     requests.get_relatorio_frota_to_datatable($("#admin_zone #pedidos_frota_datatable"));
 
+    config = new Object();
 
+    product = new products(config);
 
     $("#admin_zone .chosen-select").chosen({no_results_text: "Sem resultados"});
     $.post('ajax/admin.php', {action: "get_agentes"},
@@ -38,6 +40,7 @@ $(function()
         $("#admin_zone #select_agent_transfer1,#select_agent_transfer2").append(options).trigger("chosen:updated").css("width", "225px");
 
     }, "json");
+    get_info_product();
 });
 
 
@@ -46,13 +49,7 @@ $("#admin_zone .check_form").submit(function(e)
     e.preventDefault();
 });
 
-//OpçÔES TOGGLE
-$("#admin_zone .button_toggle_divs").click(function()
-{
 
-    $(this).parent().parent().parent().find(".div_admin_edit").toggle("blind");
-    $(this).toggleClass("icon-chevron-down").toggleClass("icon-chevron-up");
-});
 
 //------------
 
@@ -60,58 +57,7 @@ $("#admin_zone .button_toggle_divs").click(function()
 
 function get_info_product()
 {
-    //PRODUTOS-----------------------------------------------------------------------------------------------------------
-    var Table_view_product = $('#admin_zone #view_product_datatable').dataTable({
-        "aaSorting": [[6, "asc"]],
-        "bSortClasses": false,
-        "bProcessing": true,
-        "bDestroy": true,
-        "bAutoWidth": false,
-        "sPaginationType": "full_numbers",
-        "sAjaxSource": 'ajax/admin.php',
-        "fnServerParams": function(aoData) {
-            aoData.push({"name": "action", "value": "listar_produtos_to_datatable"});
-        },
-        "aoColumns": [{"sTitle": "id"}, {"sTitle": "Nome"}, {"sTitle": "Parente"}, {"sTitle": "Max requisições mensais"}, {"sTitle": "Max requisições especiais"}, {"sTitle": "Categoria"}, {"sTitle": "Tipo"}, {"sTitle": "Opções"}],
-        "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
-    });
-    $.post('ajax/admin.php', {action: "listar_produtos"},
-    function(data)
-    {
-        $("#admin_zone #ep_parent").empty().append("<option value='0'>Escolha um parente</option>");
-        $("#admin_zone #cp_parent").empty().append("<option value='0'>Sem Parente</option>");
-        var
-                temp = "<optgroup value='1' label='Aparelhos'></optgroup>\n\
-<optgroup value='2' label='Pilhas'></optgroup>\n\
-<optgroup value='3' label='Peças'></optgroup>",
-                aparelho = [],
-                pilha = [],
-                peça = [];
-        $("#admin_zone #ep_parent").append(temp);
-        $("#admin_zone #cp_parent").append(temp);
-        $.each(data, function()
-        {
-            switch (this.category)
-            {
-                case "Aparelho":
-                    aparelho.push("<option id=" + this.id + ">" + this.name + "</option>");
-                    break;
-                case "Pilha":
-                    pilha.push("<option id=" + this.id + ">" + this.name + "</option>");
-                    break;
-                case "Peça":
-                    peça.push("<option id=" + this.id + ">" + this.name + "</option>");
-                    break;
-            }
-        });
-        $("#admin_zone #ep_parent").find("optgroup[value='1']").append(aparelho).end()
-                .find("optgroup[value='2']").append(pilha).end()
-                .find("optgroup[value='3']").append(peça).end().trigger("chosen:updated");
-        $("#admin_zone #cp_parent").find("optgroup[value='1']").append(aparelho).end()
-                .find("optgroup[value='2']").append(pilha).end()
-                .find("optgroup[value='3']").append(peça).end().trigger("chosen:updated");
-    }, "json");
-
+    product.init_to_datatable($("#admin_zone #view_product_datatable"), $("#admin_zone #edit_product_div"), $("#admin_zone #edit_product_modal"));
 }
 //AGENTES------------------------------------------------------------------------------------------------------------------------------
 $("#admin_zone #agent_marc_transfer_button").click(function()
@@ -218,28 +164,21 @@ $("#admin_zone #removeAll_product_button").click(function()
 
 $("#admin_zone #create_product_modal_button").click(function()
 {
+
+
+
+
+    product.init_new_product($("#admin_zone #create_product_div"), function() {
+        $("#admin_zone #create_product_modal").modal("hide");
+        product.init_to_datatable($("#admin_zone #view_product_datatable"), $("#admin_zone #edit_product_div"), $("#admin_zone #edit_product_modal"));
+    });
     $("#admin_zone #create_product_modal").modal("show");
     $("#admin_zone .chosen-container").css("width", "250px");
-});
-$("#admin_zone #create_product_button").click(function()
-{
 
-    if ($("#admin_zone #create_product_form").validationEngine("validate"))
-    {
-        $.post('ajax/admin.php', {action: "criar_produto",
-            name: $("#admin_zone #cp_name").val(),
-            parent: $("#admin_zone #cp_parent option:selected").val(),
-            max_req_m: $("#admin_zone #cp_mrm").val(),
-            max_req_s: $("#admin_zone #cp_mrw").val(),
-            category: $("#admin_zone #cp_category").val(),
-            type: $("#admin_zone #cp_type option:selected").val()
 
-        }, function() {
-            get_info_product();
-            $("#admin_zone #create_product_modal").modal("hide");
-        }, "json");
-    }
+
 });
+
 ///------------------------------------------
 
 
@@ -282,7 +221,7 @@ $("#admin_zone").on("click", ".accept_requisition", function()
 {
     var this_button = $(this);
     $.post('ajax/requisition.php', {action: "accept_requisition", id: $(this).val()}, function() {
-        this_button.parent("div").parent("td").prev().text("Aprovado");
+        this_button.parent().next().text("Aprovado");
     }, "json");
 });
 
@@ -290,7 +229,7 @@ $("#admin_zone").on("click", ".decline_requisition", function()
 {
     var this_button = $(this);
     $.post('ajax/requisition.php', {action: "decline_requisition", id: $(this).val()}, function() {
-        this_button.parent("div").parent("td").prev().text("Rejeitado");
+        this_button.parent().next().text("Rejeitado");
     }, "json");
 });
 
