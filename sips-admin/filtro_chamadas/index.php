@@ -169,7 +169,7 @@ $days = ($days == 0) ? 1 : $days;
             .min-input{
                 width: 2em !important;}
             #loader{
-                background: #f9f9f9;
+                background: #fff;
                 top: 0px;
                 left: 0px;
                 position: absolute;
