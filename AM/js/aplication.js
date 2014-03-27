@@ -1,5 +1,7 @@
 $(function() {
 
+    $.ajaxSetup({cache: false});
+    moment.lang('pt');
     $.history.on('load change pushed', function(event, url, type) {
         $("#sidebar .active").removeClass("active");
         $("#sidebar").find("[href='" + url.split("?")[0] + "']").addClass("active");
@@ -95,7 +97,7 @@ function get_messages()
 
 function getUrlVars() {
     var vars = {};
-    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
         vars[key] = value;
     });
     return vars;

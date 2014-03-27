@@ -23,3 +23,12 @@
 .popover {
      z-index: 1001 !important;
 }
+.popover-content dt{
+    width:70px;
+}
+.popover-content dd{
+    margin-left:80px;
+}
+.popover-content dl{
+    margin:0;
+}

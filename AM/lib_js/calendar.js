@@ -29,6 +29,9 @@ var calendar = function(selector, data, modal_ext, ext, client) {
         monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
         monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
         firstDay: 1,
+        firstHour: (function() {
+            return ~~new Date().getUTCHours() - 2;
+        })(),
         buttonText: {
             today: 'hoje',
             month: 'mês',
@@ -36,10 +39,10 @@ var calendar = function(selector, data, modal_ext, ext, client) {
             day: 'dia'
         },
         eventClick: function(calEvent, jsEvent, view) {
-            if (calEvent.className[0] === "bloqueado" || calEvent.closed) {
+            if (calEvent.className[0] === "bloqueado" || !calEvent.editable) {
                 return false;
             }
-            me.openClient(calEvent.id, calEvent.lead_id);
+            me.openClient(calEvent.id, calEvent.lead_id, calEvent);
         },
         droppable: {
             agenda: true,
@@ -55,9 +58,10 @@ var calendar = function(selector, data, modal_ext, ext, client) {
             var exist = false;
             $.each(me.calendar.fullCalendar('clientEvents'),
                     function() {
-                        if (moment(this.start).unix() === moment(date).unix())
+                        if (((moment(this.start).unix() <= moment(date).unix()) && (moment(this.end).unix() >= moment(date).unix())) || ((moment(this.start).unix() >= moment(date).unix()) && (moment(this.end).unix() >= moment(date).unix())))
                         {
                             exist = true;
+                            $.jGrowl("Não é permitido marcações concorrentes.", {sticky: 4000});
                             return false;
                         }
                     });
@@ -65,7 +69,8 @@ var calendar = function(selector, data, modal_ext, ext, client) {
                 return false;
             }
 
-            var cEO = $.extend({}, $(this).data('eventObject'));;
+            var cEO = $.extend({}, $(this).data('eventObject'));
+            ;
             cEO.start = moment(date).unix();
             cEO.end = moment(date).add("minutes", config.defaultEventMinutes).unix();
             cEO.allDay = allDay;
@@ -111,7 +116,7 @@ var calendar = function(selector, data, modal_ext, ext, client) {
                     },
                     html: true,
                     title: event.title,
-                    content: '<dl class="dl-horizontal"><dt>Nome</dt><dd>'+event.client_name+'</dd><dt>Campanha</dt><dd>'+event.codCamp+'</dd></dl>',
+                    content: '<dl class="dl-horizontal"><dt>Nome</dt><dd>' + event.client_name + '</dd><dt>Campanha</dt><dd>' + event.codCamp + '</dd></dl>',
                     trigger: 'hover'
                 });
 
@@ -119,6 +124,35 @@ var calendar = function(selector, data, modal_ext, ext, client) {
             }
         },
         eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc) {
+            if (event.start < new Date().getTime()) {
+                revertFunc();
+                return false;
+            }
+            var exist = false;
+            $.each(me.calendar.fullCalendar('clientEvents'),
+                    function() {
+                        if (this.id === event.id)
+                        {
+                            return true;
+                        }
+                        if (
+                                ((moment(this.start).unix() < moment(event.end).unix()) && (moment(this.start).unix() > moment(event.start).unix()))
+                                ||
+                                ((moment(this.end).unix() > moment(event.start).unix()) && (moment(this.end).unix() < moment(event.end).unix()))
+                                ||
+                                ((moment(this.start).unix() <= moment(event.start).unix()) && (moment(this.end).unix() >= moment(event.end).unix()))
+                                )
+                        {
+                            exist = true;
+                            $.jGrowl("Não é permitido marcações concorrentes.", {sticky: 4000});
+                            return false;
+                        }
+                    });
+            if (exist) {
+                revertFunc();
+                return false;
+            }
+
             me.change(event, dayDelta, minuteDelta, revertFunc);
         },
         eventResize: function(event, dayDelta, minuteDelta, revertFunc) {
@@ -134,7 +168,7 @@ var calendar = function(selector, data, modal_ext, ext, client) {
                         id: event.id,
                         action: "change",
                         start: moment(event.start).unix(),
-                        end: moment(event.start).unix()
+                        end: moment(event.end).unix()
                     },
             function(ok) {
                 if (!ok) {
@@ -162,7 +196,7 @@ var calendar = function(selector, data, modal_ext, ext, client) {
                 .each(function() {
                     data = $(this).data();
                     eventObject = {
-                        editable:true,
+                        editable: true,
                         title: $.trim($(this).text()),
                         color: data.color,
                         rtype: data.rtype,
@@ -217,23 +251,24 @@ var calendar = function(selector, data, modal_ext, ext, client) {
                     title: "Não há consulta",
                     content: '<select id="select_no_consult" name="">\n\
                                 <option value="DEST">Desistiu</option>\n\
-                                <option value="">Remarcou</option>\n\
+                                <option value="RM">Remarcou</option>\n\
                                 <option value="FAL">Faleceu</option>\n\
                                 <option value="TINV">Telefone Invalido</option>\n\
                                 <option value="NOSHOW">No Show</option>\n\
-                                <option value="NATEN">Ninguém em casa</option>\n\\n\
+                                <option value="NATEN">Ninguém em casa</option>\n\
                                 <option value="MOR">Morada Errada</option>\n\
                                 <option value="NTEC">Técnico não foi</option>\n\
                             </select>\n\
-                            <button class="btn btn-primary no_consult_confirm_button">Fechar</button>',
+                            <button class="btn btn-primary" id="no_consult_confirm_button">Fechar</button>',
                     trigger: 'click'
                 })
                 .end()
                 .find("#btn_init_consult")
                 .click(function() {
-                    me.modal_ext.modal("hide");
-                    $("#div_master").hide();
-                    $("#div_consult").load("view/consulta.html").show();
+                    var
+                            en = btoa(me.modal_ext.modal("hide").data().lead_id),
+                            rs = btoa(me.modal_ext.modal("hide").data().lead_id);
+                    $.history.push("view/consulta.html?id=" + encodeURIComponent(en) + "&rs=" + encodeURIComponent(rs));
                 })
                 .end()
                 .find("#btn_trash")
@@ -250,19 +285,49 @@ var calendar = function(selector, data, modal_ext, ext, client) {
                             me.calendar.fullCalendar('removeEvents', data.id);
                         }
                     }, "json");
+                })
+                .end()
+                .on("click", "#no_consult_confirm_button", function()
+                    {var calendar_client = me.modal_ext.data();
+                    $.post("/AM/ajax/consulta.php",
+                            {
+                                action: "insert_consulta",
+                                reserva_id: calendar_client.id,
+                                lead_id: calendar_client.lead_id,
+                                consulta: 0,
+                                consulta_razao: $("#select_no_consult").val(),
+                                exame: "0",
+                                exame_razao: "",
+                                venda: 0,
+                                venda_razao: "",
+                                left_ear: 0,
+                                right_ear: 0,
+                                tipo_aparelho: "",
+                                descricao_aparelho: "",
+                                feedback: "Sem consulta"
+                            },
+                            function(){
+                                calendar_client.calEvent.editable=false;
+                                me.calendar.fullCalendar('updateEvent', calendar_client.calEvent);
+                            }
+                    , "json");
+                    me.modal_ext.modal("hide").find(".popover").hide();
                 });
+        ;
     };
-    this.openClient = function(id, lead_id) {
+    this.openClient = function(id, lead_id, calEvent) {
         $.post("/AM/ajax/client.php", {id: lead_id, action: 'byName'}, function(data) {
             var tmp = "";
             $.each(data, function() {
                 tmp = tmp + "<dt>" + this.name + "</dt><dd>" + this.value + "</dd>";
             });
 
-            me.modal_ext.find("#client_info")
+            me.modal_ext
+                    .find("#client_info")
                     .html(tmp);
-            me.modal_ext.modal().data().id = id;
-            me.modal_ext.modal().data().lead_id = lead_id;
+            me.modal_ext
+                    .data({id: id, lead_id: lead_id, calEvent: calEvent})
+                    .modal();
         }, "json");
     };
     this.userWidgetPopulate = function() {

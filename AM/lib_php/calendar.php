@@ -37,10 +37,9 @@ Class Calendars {
                 'codCamp' => (is_null($row->codCamp) ? "" : $row->codCamp),
                 'start' => $row->start_date,
                 'end' => $row->end_date,
-                'editable' => true,
+                'editable' => !(bool)$row->closed,
                 'className' => "t" . $row->id_reservation_type,
                 'user' => $row->id_user,
-                'closed' => (bool)$row->closed
             );
         }
         return $reservars;
@@ -171,7 +170,7 @@ Class Calendars {
     public function changeReserva($id, $start, $end) {
         $query = "UPDATE `sips_sd_reservations` SET `start_date`=:start,`end_date`=:end WHERE `id_reservation`=:id";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":id" => $id, ":start" => $start, ":end" => $end));
+        return $stmt->execute(array(":id" => $id, ":start" => date('Y-m-d H:i:s',$start), ":end" => date('Y-m-d H:i:s',$end)));
     }
 
 }
