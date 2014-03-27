@@ -1,0 +1,248 @@
+
+<form id="product_form" class="check_form">
+
+    <div  style="display:none">
+        <select id="colour_picker">
+            <option value="ffffff" >#ffffff</option>
+            <option value="ffccc9">#ffccc9</option>
+            <option value="ffce93">#ffce93</option>
+            <option value="fffc9e">#fffc9e</option>
+            <option value="ffffc7">#ffffc7</option>
+            <option value="9aff99">#9aff99</option>
+            <option value="96fffb">#96fffb</option>
+            <option value="cdffff">#cdffff</option>
+            <option value="cbcefb">#cbcefb</option>
+            <option value="cfcfcf">#cfcfcf</option>
+            <option value="fd6864">#fd6864</option>
+            <option value="fe996b">#fe996b</option>
+            <option value="fffe65">#fffe65</option>
+            <option value="fcff2f">#fcff2f</option>
+            <option value="67fd9a">#67fd9a</option>
+            <option value="38fff8">#38fff8</option>
+            <option value="68fdff">#68fdff</option>
+            <option value="9698ed">#9698ed</option>
+            <option value="c0c0c0">#c0c0c0</option>
+            <option value="fe0000">#fe0000</option>
+            <option value="f8a102">#f8a102</option>
+            <option value="ffcc67">#ffcc67</option>
+            <option value="f8ff00">#f8ff00</option>
+            <option value="34ff34">#34ff34</option>
+            <option value="68cbd0">#68cbd0</option>
+            <option value="34cdf9">#34cdf9</option>
+            <option value="6665cd">#6665cd</option>
+            <option value="9b9b9b">#9b9b9b</option>
+            <option value="cb0000">#cb0000</option>
+            <option value="f56b00" selected>#f56b00</option>
+            <option value="ffcb2f">#ffcb2f</option>
+            <option value="ffc702">#ffc702</option>
+            <option value="32cb00">#32cb00</option>
+            <option value="00d2cb">#00d2cb</option>
+            <option value="3166ff">#3166ff</option>
+            <option value="6434fc">#6434fc</option>
+            <option value="656565">#656565</option>
+            <option value="9a0000">#9a0000</option>
+            <option value="ce6301">#ce6301</option>
+            <option value="cd9934">#cd9934</option>
+            <option value="999903">#999903</option>
+            <option value="009901">#009901</option>
+            <option value="329a9d">#329a9d</option>
+            <option value="3531ff">#3531ff</option>
+            <option value="6200c9">#6200c9</option>
+            <option value="343434">#343434</option>
+            <option value="680100">#680100</option>
+            <option value="963400">#963400</option>
+            <option value="986536">#986536</option>
+            <option value="646809">#646809</option>
+            <option value="036400">#036400</option>
+            <option value="34696d">#34696d</option>
+            <option value="00009b">#00009b</option>
+            <option value="303498">#303498</option>
+            <option value="000000">#000000</option>
+            <option value="330001">#330001</option>
+            <option value="643403">#643403</option>
+            <option value="663234">#663234</option>
+            <option value="343300">#343300</option>
+            <option value="013300">#013300</option>
+            <option value="003532">#003532</option>
+            <option value="010066">#010066</option>
+            <option value="340096">#340096</option>
+        </select>
+    </div>
+
+    <div class="formRow">
+        <span>Nome</span>
+        <input type="text" id="product_name" class="validate[required]">
+    </div>
+    <div class="formRow">
+        <span>Parente</span>
+        <div class="formRight">
+            <select class="chosen-select" id="product_parent" multiple  data-placeholder="Selecione um parent"></select>
+        </div>    
+    </div>
+    <div class="formRow">
+        <span>Categoria</span>
+        <div class="formRight">
+            <select  id="product_category">
+                <option value="pilha" >Pilha</option>
+                <option value="aparelho">Aparelho</option>
+                <option value="acessorio" >Acessórios</option>
+                <option value="molde" >Molde</option>
+                <option value="economato" >Economato</option>
+            </select>
+        </div>    
+    </div>
+
+    <div class="formRow">
+        <span>Tipo</span>
+        <div class="formRight">
+            <input   type="checkbox" id="check_branch" name="tipo_user" value="branch" class="validate[minCheckbox[1]]">
+            <label class="checkbox inline" for="check_branch"><span></span>Branch</label>
+            <input   type="checkbox" id="check_dispenser" name="tipo_user" value="dispenser" class="validate[minCheckbox[1]]">
+            <label class="checkbox inline" for="check_dispenser"><span></span>Dispenser</label>
+        </div>    
+    </div>
+    <div class="formRow">
+        <table >
+            <thead>
+                <tr>
+                    <th>Max Requisições por Mês</th>
+                    <th>Max Requisições Especiais</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="number" id="product_mrm" value="1" class="validate[required]"></td>
+                    <td> <input type="number" id="product_mrw" value="1" class="validate[required]"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="formRow" id="product_color_div">
+        <table class="table table-bordered table-mod">
+            <thead>
+                <tr>
+                    <th>
+                        Cor
+                    </th>
+                    <th>
+                        Nome
+
+                    </th>
+                    <th id="add_line_color_th">
+                        <button class="btn btn-primary" id="button_color_add_line"><span class="icon-plus"></span></button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="table_tbody_color">
+            </tbody>
+        </table>
+    </div>
+    <div class="formRow" id="product_promotion_div">
+        <h5>Promoções</h5>
+        <table class="table table-bordered" id="promotion_table">
+            <thead>
+                <tr>
+                    <th>
+                        Activo
+                    </th>
+                    <th>
+                        HighLight
+                    </th>
+                    <th>
+                        Data Inicio
+                    </th>
+                    <th>
+                        Data Fim
+                    </th>
+                    <th>
+                        Opção
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="promotion_table_tbody">
+                <tr>
+                    <td>
+                        Sem promoções
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn" id="add_promotion_toggle">Adicionar</button>
+        <div id="promotion_div" style="display:none" >
+            <div class="formRow">
+                <div class="formRight">
+                    <input   type="checkbox" id="promotion_active" name="promotion_active"  >
+                    <label class="checkbox inline" for="promotion_active"><span></span>Activo</label>
+                </div>
+            </div>
+            <div class="formRow">
+                <div class="formRight">
+                    <input   type="checkbox" id="promotion_highlight" name="promotion_highlight"    >
+                    <label class="checkbox inline" for="promotion_highlight"><span></span>Highligh</label>
+                </div>
+            </div>
+
+
+            <div class="formRow">
+                <span>Data inicial da Promoção</span>
+                <div class="formRight">
+                    <input size="16" type="text" class="form_datetime_day validate[required]" readonly id="data_promoçao1" placeholder="Data inicial promoção">
+                </div>
+            </div>
+            <div class="formRow">
+                <span>Data final da Promoção</span>
+                <div class="formRight">
+                    <input size="16" type="text" class="form_datetime_day validate[required]" readonly id="data_promoçao2" placeholder="Data final promoção">
+                </div>
+            </div>
+
+            <button class="btn" id="add_promotion_button">Adicionar promoção</button>
+        </div>
+    </div>
+
+
+
+
+    <div class="formRow" id="product_children_div">
+
+        <div class="grid-title">
+            <div class="pull-left">
+                <span>Sub-peças deste produto</span>
+            </div>
+
+        </div>
+        <table class="table table-bordered table-mod" id="child_product_datatable" >
+            <thead>
+                <tr>
+                    <th>
+                        Nome
+                    </th>
+                    <th>
+                        Categoria
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
+    <div class="formRow" id="button_editar_produto">
+        <div class="pull-right">
+            <button id="edit_product_button" class="btn btn-primary">Editar</button>
+        </div>
+    </div>
+
+    <div class="formRow" id="button_criar_produto">
+        <div class="pull-right">
+            <button id="create_product_button" class="btn btn-primary">Criar</button>
+        </div>
+    </div>
+
+</form>

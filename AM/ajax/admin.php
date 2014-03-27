@@ -15,18 +15,10 @@ foreach ($_POST as $key => $value) {
 foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
-
 $user = new mysiblings($db);
-
 $products = new products($db);
-
 $apoio_marketing = new apoio_marketing($db, $user->user_level, $user->id);
-
-
 switch ($action) {
-
-
-
     case "download_excel_csm":
         header('Content-Encoding: UTF-8');
         header('Content-type: text/csv; charset=UTF-8');
@@ -97,12 +89,4 @@ switch ($action) {
         $stmt->execute(array($new_user, $old_user));
         echo(json_encode($stmt->rowCount()));
         break;
-
-
-    //------------------------------REQUESTS - APOIO MARKETING---------------------------
-    //-------------------------------------------------------------------------------------
-                    
-    //-------------------------------------------------------------------------------------
-
-                    
 }

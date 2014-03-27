@@ -1,5 +1,5 @@
 
-var requisition = function(basic_path, options_ext)
+var requisition = function(options_ext)
 {
 
 
@@ -11,20 +11,12 @@ var requisition = function(basic_path, options_ext)
 
 
     $.extend(true, this.config, options_ext);
-    this.basic_path = basic_path;
+
     var aparelho = [], pilha = [], peça = [], optgroups = [], product = 1;
-    this.init = function()
+
+    this.get_current_requisitions = function(table_path, modal_path, show_admin)
     {
-        $.get("/AM/view/requisitions/requisition_modal.html", function(data) {
-            me.basic_path.append(data);
-
-
-        });
-
-    };
-    this.get_current_requisitions = function(table_path, show_admin)
-    {
-        get_encomendas_atuais(table_path, show_admin);
+        get_encomendas_atuais(table_path, modal_path, show_admin);
     };
 
     //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
@@ -51,38 +43,11 @@ var requisition = function(basic_path, options_ext)
             if (lead_id)
                 new_requisition_zone.find("#new_requisition_lead_id").val(lead_id);
 
-            var produtos = new products();
-            produtos.get_produtos(new_requisition_zone.find("#new_requisition_products"));
 
 
 
-            $.post('/AM/ajax/products.php', {action: "get_produtos"},
-            function(data)
-            {
 
-                aparelho = [];
-                pilha = [];
-                peça = [];
-                optgroups = [];
-                optgroups.push("<option value='0'>Escolha um produto</option><optgroup value='1' label='Aparelhos'></optgroup>");
-                optgroups.push("<optgroup value = '2' label = 'Pilhas' > </optgroup>");
-                optgroups.push("<optgroup value = '3' label = 'Peças' > </optgroup>");
-                $.each(data, function()
-                {
-                    switch (this.category)
-                    {
-                        case "Aparelho":
-                            aparelho.push("<option data-max_month=" + this.max_req_m + " data-max_special=" + this.max_req_s + "  id=" + this.id + ">" + this.name + "</option>");
-                            break;
-                        case "Pilha":
-                            pilha.push("<option data-max_month=" + this.max_req_m + " data-max_special=" + this.max_req_s + " id=" + this.id + ">" + this.name + "</option>");
-                            break;
-                        case "Peça":
-                            peça.push("<option data-max_month=" + this.max_req_m + " data-max_special=" + this.max_req_s + " id=" + this.id + ">" + this.name + "</option>");
-                            break;
-                    }
-                });
-            }, "json");
+
         });
         // ADICIONAR E REMOVER ITEMS DA LISTA DE PRODUTOS NA NOVA ENCOMENDA----------------------------
         $(new_requisition_zone).on("click", "#new_requisition_product_add_line", function(e)
@@ -94,28 +59,26 @@ var requisition = function(basic_path, options_ext)
                                 <td ><span id='product_span_max" + product + "'></span></td>\n\
                                 <td> <input class='input-mini validate[required,custom[onlyNumberSp]]' id='product_input" + product + "' type='number' min='1' value='1'></td>\n\
                                 <td><button class='btn  remove_item_requisition_table' value='" + product + "'><i  class='icon-remove'></i> </button></td></tr>");
-            new_requisition_zone.find(" #product_select" + product).chosen({no_results_text: "Sem resultados"}).append(optgroups);
-            new_requisition_zone.find(" #product_select" + product)
-                    .find("optgroup[value='1']").append(aparelho).end()
-                    .find("optgroup[value='2']").append(pilha).end()
-                    .find("optgroup[value='3']").append(peça).end().trigger("chosen:updated").trigger("change");
+            new_requisition_zone.find(" #product_select" + product).chosen({no_results_text: "Sem resultados"});
+            populate_select(new_requisition_zone.find(" #product_select" + product));
+
             product += 1;
         });
         $(new_requisition_zone).on("change", ".new_requisition_select_product", function()
         {
-            if (new_requisition_zone.find(" #req_m_radio").is(":checked"))
+            if (new_requisition_zone.find("#req_m_radio").is(":checked"))
             {
-                new_requisition_zone.find(" #product_span_max" + $(this).data().linha_id).text($(this).find("option:selected").data().max_month);
-                new_requisition_zone.find(" #product_input" + $(this).data().linha_id).attr("max", ($(this).find("option:selected").data().max_month));
-                if (new_requisition_zone.find(" #product_input" + $(this).data().linha_id).val() > $(this).find("option:selected").data().max_month)
-                    new_requisition_zone.find(" #product_input" + $(this).data().linha_id).val($(this).find("option:selected").data().max_month);
+                new_requisition_zone.find("#product_span_max" + $(this).data().linha_id).text($(this).find("option:selected").data().max_month);
+                new_requisition_zone.find("#product_input" + $(this).data().linha_id).attr("max", ($(this).find("option:selected").data().max_month));
+                if (new_requisition_zone.find("#product_input" + $(this).data().linha_id).val() > $(this).find("option:selected").data().max_month)
+                    new_requisition_zone.find("#product_input" + $(this).data().linha_id).val($(this).find("option:selected").data().max_month);
             }
             else
             {
-                new_requisition_zone.find(" #product_span_max" + $(this).data().linha_id).text($(this).find("option:selected").data().max_special);
-                new_requisition_zone.find(" #product_input" + $(this).data().linha_id).attr("max", ($(this).find("option:selected").data().max_special));
-                if (new_requisition_zone.find(" #product_input" + $(this).data().linha_id).val() > $(this).find("option:selected").data().max_special)
-                    new_requisition_zone.find(" #product_input" + $(this).data().linha_id).val($(this).find("option:selected").data().max_special);
+                new_requisition_zone.find("#product_span_max" + $(this).data().linha_id).text($(this).find("option:selected").data().max_special);
+                new_requisition_zone.find("#product_input" + $(this).data().linha_id).attr("max", ($(this).find("option:selected").data().max_special));
+                if (new_requisition_zone.find("#product_input" + $(this).data().linha_id).val() > $(this).find("option:selected").data().max_special)
+                    new_requisition_zone.find("#product_input" + $(this).data().linha_id).val($(this).find("option:selected").data().max_special);
             }
             update_product_selects();
         });
@@ -266,8 +229,9 @@ var requisition = function(basic_path, options_ext)
         $("#new_requisition_product_tbody select").trigger("chosen:updated");
     }
 
-    function get_encomendas_atuais(table_path, show_admin)
+    function get_encomendas_atuais(table_path, modal_path, show_admin)
     {
+
         if (show_admin)
         {
             var Table_view_requisition = table_path.dataTable({
@@ -298,7 +262,7 @@ var requisition = function(basic_path, options_ext)
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
                 },
-                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"} ],
+                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
         }
@@ -309,17 +273,18 @@ var requisition = function(basic_path, options_ext)
             $.post('ajax/requisition.php', {action: "listar_produtos_por_encomenda",
                 id: $(this).val()}, function(data)
             {
-                $(" #ver_product_modal #show_requisition_products_tbody").empty();
+                var modal = modal_path.find(".modal-body");
+                modal.empty();
+                modal.append("<table class='table table-bordered'><thead><tr><th>Nome</th><th>Categoria</th><th>Quantidade</th></tr></thead><tbody></tbody></table>");
+                var temp = modal.find("tbody");
                 $.each(data, function()
                 {
-                    $(" #ver_product_modal #show_requisition_products_tbody").append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.quantity + "</td></tr>");
+                    temp.append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.quantity + "</td></tr>");
                 });
-
-                $("#ver_product_modal").modal("show");
+                modal_path.modal("show");
             },
                     "json");
         });
-
 
         table_path.on("click", ".accept_requisition", function()
         {
@@ -344,7 +309,57 @@ var requisition = function(basic_path, options_ext)
 
 
 
+    function populate_select(select)
+    {
 
+        $.post('/AM/ajax/products.php', {action: "get_produtos"},
+        function(data)
+        {
+
+            select.empty();
+            optgroups.push("<option value='0'>Escolha um produto</option><optgroup value='1' label='Aparelhos'></optgroup>");
+            var
+                    temp = "<option value='0'>Escolha um produto</option>\n\
+        <optgroup value='1' label='Aparelhos'></optgroup>\n\
+<optgroup value='2' label='Pilhas'></optgroup>\n\
+<optgroup value='3' label='Acessórios'></optgroup>\n\
+<optgroup value='4' label='Moldes'></optgroup>\n\
+<optgroup value='5' label='Economato'></optgroup>",
+                    aparelho = [],
+                    pilha = [],
+                    acessorio = [],
+                    molde = [],
+                    economato = [];
+            select.append(temp);
+            $.each(data, function()
+            {
+                switch (this.category)
+                {
+                    case "aparelho":
+                        aparelho.push("<option data-max_month=" + this.max_req_m + " data-max_special=" + this.max_req_s + " id=" + this.id + " value='" + this.id + "'>" + this.name + "</option>");
+                        break;
+                    case "pilha":
+                        pilha.push("<option data-max_month=" + this.max_req_m + " data-max_special=" + this.max_req_s + " id=" + this.id + " value='" + this.id + "'>" + this.name + "</option>");
+                        break;
+                    case "acessorio":
+                        acessorio.push("<option data-max_month=" + this.max_req_m + " data-max_special=" + this.max_req_s + " id=" + this.id + " value='" + this.id + "'>" + this.name + "</option>");
+                        break;
+                    case "molde":
+                        molde.push("<option data-max_month=" + this.max_req_m + " data-max_special=" + this.max_req_s + " id=" + this.id + " value='" + this.id + "'>" + this.name + "</option>");
+                        break;
+                    case "economato":
+                        economato.push("<option data-max_month=" + this.max_req_m + " data-max_special=" + this.max_req_s + " id=" + this.id + " value='" + this.id + "'>" + this.name + "</option>");
+                        break;
+                }
+            });
+            select.find("optgroup[value='1']").append(aparelho).end()
+                    .find("optgroup[value='2']").append(pilha).end()
+                    .find("optgroup[value='3']").append(acessorio).end()
+                    .find("optgroup[value='4']").append(molde).end()
+                    .find("optgroup[value='5']").append(economato).end().trigger("chosen:updated");
+            update_product_selects();
+        }, "json");
+    }
 
 
 };

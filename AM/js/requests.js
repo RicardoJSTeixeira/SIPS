@@ -1,9 +1,9 @@
 $(function()
 {
  
-    var requests = new requests_class($("#modal_div"));
+    var requests = new requests($("#modal_div"));
 
-
+ 
 //APOIO MARKETING - RASTrEIO
     $("#master_requests_div #button_apoio_marketing").click(function()
     {

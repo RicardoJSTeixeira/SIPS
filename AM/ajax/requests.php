@@ -7,7 +7,7 @@ $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require "$root/ini/db.php";
 require "$root/ini/dbconnect.php";
 require "$root/ini/user.php";
-require "$root/AM/lib_php/requests_class.php";
+require "$root/AM/lib_php/requests.php";
 
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
