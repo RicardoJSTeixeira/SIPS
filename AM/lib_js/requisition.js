@@ -12,7 +12,7 @@ var requisition = function(options_ext)
 
     $.extend(true, this.config, options_ext);
 
-    var aparelho = [], pilha = [], peça = [], optgroups = [], product = 1;
+    var product = 1;
 
     this.get_current_requisitions = function(table_path, modal_path, show_admin)
     {
@@ -307,7 +307,7 @@ var requisition = function(options_ext)
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
         function(data)
         {
-
+            var optgroups = [];
             select.empty();
             optgroups.push("<option value='0'>Escolha um produto</option><optgroup value='1' label='Aparelhos'></optgroup>");
             var
