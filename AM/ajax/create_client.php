@@ -25,13 +25,11 @@ switch ($action) {
         $variables[] = $campaign_id;
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
-        $js[] = array("name" => 'compart', "display_name" => "Comparticipação", "field_order" => 9);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $js[] = array("name" => $row["NAME"], "display_name" => $row["DISPLAY_NAME"], "field_order" => $row["field_order"]);
         }
         echo json_encode($js);
         break;
-
 
     case "create_client":
         $variables[] = date("Y-m-d H:i:s");
@@ -49,10 +47,7 @@ switch ($action) {
             }
         }
 
-
-
-        $query = "insert into vicidial_list (entry_date,status,user,list_id $fields) values (?,?,?,? $values) ";
-
+        $query = "INSERT INTO vicidial_list (entry_date,status,user,list_id $fields) VALUES (?,?,?,? $values) ";
 
         $stmt = $db->prepare($query);
         $stmt->execute($variables);

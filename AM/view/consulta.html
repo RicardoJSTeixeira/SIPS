@@ -1,4 +1,7 @@
-
+<style>
+    .tableradio_class table td:nth-child(1){width: 260px;}
+    .tableradio_class table td:nth-child(2){width: 90px;}
+</style>
 <div id="main_consulta_div">
 
 
@@ -17,18 +20,12 @@
         </table>
     </div>
 
-
-
-
     <div class="grid-title"> 
         <div class="pull-left">
             Consulta
         </div>
     </div>
-
     <div class="grid-content">
-
-
         <div class="formRow" id="inicial_option_div">
             <h4>Preencher audiograma?</h4>
             <div class="formRight">
@@ -36,9 +33,7 @@
                 <button class="btn btn-primary" id="pa_no">Não</button>
             </div>      
         </div>
-
-
-       <div id="no_exam_div" style="display:none">
+        <div id="no_exam_div" style="display:none">
             <div class="formRow">
                 <h4>Não há exame</h4>
                 <div class="formRow">
@@ -71,10 +66,7 @@
                 </div>
             </div>
         </div>
-        
         <div class="clear"></div>
-        
-        
         <div id="yes_exam_div" style="display:none" >
             <h3>Audiograma</h3>
             <div id="audiograma_placeholder" class="grid grid-content"></div>
@@ -89,7 +81,7 @@
                     <label class="radio inline"  for="venda_no"><span></span>Não</label>
                 </div>       
             </div>
-                        <div id="venda_div" class="grid grid-content" style="display:none">
+            <div id="venda_div" class="grid grid-content" style="display:none">
             </div>
             <div id="no_venda_div"  style="display:none">
                 <div class='formRow'>
@@ -112,10 +104,13 @@
                 <button class='btn btn-success right hidden' id='terminar_consulta'>Terminar Consulta</button>
             </div>
             <div class="formRow">
-                <button class="btn right hidden" id="validate_audio_script"><i class="icon-save"></i>Validar Script e Audiograma</button>
+                <button class="btn right hidden" id="validate_audio_script"><i class="icon-save"></i>Validar</button>
             </div>
             <div class="formRow">
                 <button class='btn btn-danger right hidden' id='terminar_consulta_no_exame' >Terminar Consulta sem Exame</button>
+            </div>
+            <div class="formRow">
+                <button class='btn btn-info right' onclick="location.reload();" >Inicio</button>
             </div>
         </div>
         <div id="main_requisition_div"></div>
