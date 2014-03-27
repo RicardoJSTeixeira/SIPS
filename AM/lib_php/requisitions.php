@@ -32,12 +32,12 @@ Class requisitions {
             }
 
             $row[7] = "<div> <button class='btn ver_requisition_products' value='" . $row["id"] . "'><i class='icon-eye-open'></i>Ver</button></div>";
-            if ($this->_user_level > 5 || $show_admin == 1) 
+            if ($this->_user_level > 5 || $show_admin == 1)
                 $row[9] = $row[9] . " <button class='btn accept_requisition btn-success' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_requisition btn-warning' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
-        
+
             $result['aaData'][] = $row;
         }
-                
+
         return $result;
     }
 
@@ -54,13 +54,14 @@ Class requisitions {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $productalia = [];
         foreach (json_decode($row["products"]) as $value) {
-            $productalia[$value->id] = $value->quantity;
+            $productalia[$value->id] = array("quantity" => $value->quantity, "color" => $value->color, "color_name" => $value->color_name);
         }
         $query = "SELECT id,name,category from spice_product where id in ('" . join("','", array_keys($productalia)) . "') order by category asc";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row1 = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $productalia[$row1["id"]] = ["name" => $row1["name"], "quantity" => $productalia[$row1["id"]], "category" => $row1["category"]];
+                
+            $productalia[$row1["id"]] = ["name" => $row1["name"], "quantity" => $productalia[$row1["id"]]["quantity"], "color" => $productalia[$row1["id"]]["color"], "color_name" => $productalia[$row1["id"]]["color_name"], "category" => $row1["category"]];
         }
         return $productalia;
     }
