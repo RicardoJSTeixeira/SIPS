@@ -1,0 +1,99 @@
+<div id="requisition_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Produtos</h3>
+    </div>
+    <div class="modal-body">
+        <div id="requisition_product_div">
+            <table class="table table-bordered table-mod" id="view_product_table">
+                <thead>
+                    <tr>
+                        <td>
+                            Nome
+                        </td>
+                        <td>
+                            Categoria
+                        </td>
+                        <td>
+                            Quantidade
+                        </td>
+                    </tr>
+                </thead>
+                <tbody id="view_product_tbody">
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Sair</button>
+
+    </div>
+</div>
+
+
+<div class="row-fluid">
+    <div class="span12 grid">
+        <div class="grid-title">
+            <div class="pull-left">
+                <h4>Gestão de Encomendas</h4>
+            </div>
+        </div>
+        <div class="grid-content div_admin_edit" id="requisition_master_div"  >
+            <table class="table table-bordered table-mod" id="view_requisition_datatable"></table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/AM/lib_js/requisition.js" ></script>
+<script type="text/javascript">
+
+
+    $(function()
+    {
+
+
+
+
+        //ENCOMENDAS--------------------------------------------------------------------------------------
+        var config = new Object();
+        requisition1 = new requisition($("#requisition_modal"), config);
+
+        requisition1.init();
+        requisition1.get_current_requisitions($("#view_requisition_datatable"), $("#requisition_modal"), 1);
+
+
+
+        $(".chosen-select").chosen({no_results_text: "Sem resultados"});
+        $.post('ajax/admin.php', {action: "get_agentes"},
+        function(data)
+        {
+            var options = "";
+            $.each(data, function()
+            {
+                options += "<option value='" + this.user + "'>" + this.full_name + "</option>";
+            });
+            $("#select_agent_transfer1,#select_agent_transfer2").append(options).trigger("chosen:updated").css("width", "225px");
+
+        }, "json");
+        ;
+    });
+
+    $("#admin_zone").on("click", ".accept_requisition", function()
+    {
+        var this_button = $(this);
+        $.post('ajax/requisition.php', {action: "accept_requisition", id: $(this).val()}, function() {
+            this_button.parent().next().text("Aprovado");
+        }, "json");
+    });
+
+    $("#admin_zone").on("click", ".decline_requisition", function()
+    {
+        var this_button = $(this);
+        $.post('ajax/requisition.php', {action: "decline_requisition", id: $(this).val()}, function() {
+            this_button.parent().next().text("Rejeitado");
+        }, "json");
+    });
+
+
+</script>

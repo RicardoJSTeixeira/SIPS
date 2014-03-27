@@ -1,0 +1,221 @@
+<link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-fileupload.min.css" />
+<!--Transferir marcações de um agente para outro-->
+<div id="agent_marc_transfer_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true" style="overflow:visible" >
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Transferir marcações</h3>
+    </div>
+    <div class="modal-body" style="overflow:visible">
+        <div class="formRow">
+            <span>Transferir marcações do agente:</span>
+            <div class="formRight">
+                <select class="chosen-select" id="select_agent_transfer1" data-placeholder="Selecione um agente"></select>
+            </div>  
+        </div> 
+        <div class="formRow">
+            <span>Para o agente:</span>
+            <div class="formRight">
+                <select class="chosen-select" id="select_agent_transfer2" data-placeholder="Selecione um agente"></select>
+            </div>  
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+        <button class="btn btn-primary" id="confirm_marc_transfer_button">Transferir</button>
+    </div>
+</div>
+
+
+<div class="row-fluid">
+    <div class="span4 grid">
+        <div class="grid-title">
+            <div class="pull-left">
+                <h4>Gestão de Agentes</h4>
+            </div>
+        </div>
+        <div class="grid-content div_admin_edit"  id="agent_master_div"  >
+            <button class="btn" id="agent_marc_transfer_button">Transfencias de marcações de um calendario para outro (sem verificação)</button>
+        </div>
+    </div>
+    <div class="span4 grid">
+        <div class="grid-title">
+            <div class="pull-left">
+                <h4>Gestão de Clientes</h4>
+            </div>
+        </div>
+        <div class="grid-content div_admin_edit"  id="client_master_div" >
+            <div class="formRow">
+                <button class="btn" id="download_csm_button">Download de dados de clientes sem marcação</button>
+            </div>
+            <div id="download_csm_div" style="display:none">
+                <form id="date_form">
+                    <input size="16" type="text" class="form_datetime validate[required]" id="data_inicio" placeholder="Data de Inicio">
+                    <input size="16" type="text" class="form_datetime validate[required]" id="data_fim" placeholder="Data de Fim">
+                </form>
+                <button class="btn btn-primary" id="download_excel_csm_button">Download</button>
+            </div>
+        </div>
+    </div>
+    <div class="span4 grid">
+        <div class="grid-title">
+            <div class="pull-left">
+                <h4>Gestão de Anexos</h4>
+            </div>
+        </div>
+        <div class="grid-content div_admin_edit" id="anexo_master_div"  >
+            <div class="formRow">
+                <div class="input-append">
+                    <select id="select_uploaded_files" ></select>
+                    <button class="btn-danger btn icon-alone" id="remove_uploaded_file"><i class="icon-remove"></i></button>
+                </div>
+            </div>
+            <div class="formRow">
+                <form enctype="multipart/form-data" action="" method="POST" id="anexo_input_form">
+                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                        <div class="input-append">
+                            <div class="uneditable-input"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Escolha um ficheiro</span><span class="fileupload-exists">Alterar</span><input type="file" name="file_upload_all" id="file_upload" /></span><a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remover</a>
+                        </div>
+                    </div>
+                </form>
+                <button class="btn" id="anexo_upload_button"  >upload</button>
+                <div class="formRight">
+                    <strong class="inline" id="label_anexo_info" >   </strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="/bootstrap/js/bootstrap-fileupload.min.js"></script>
+<script type="text/javascript">
+
+
+    $(function()
+    {
+
+        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}); 
+        $(".chosen-select").chosen({no_results_text: "Sem resultados",width:"200px"});
+        get_files_to_anexo();
+
+
+       
+        $.post('/AM/ajax/admin.php', {action: "get_agentes"},
+        function(data)
+        {
+            var options = "";
+            $.each(data, function()
+            {
+                options += "<option value='" + this.user + "'>" + this.full_name + "</option>";
+            });
+            $("#select_agent_transfer1,#select_agent_transfer2").append(options).trigger("chosen:updated").css("width", "225px");
+
+        }, "json");
+
+    });
+//AGENTES------------------------------------------------------------------------------------------------------------------------------
+    $("#agent_marc_transfer_button").click(function()
+    {
+        $("#agent_marc_transfer_modal").modal("show");
+    });
+
+//botao de confirmação de transferencia de marcaçoes
+    $("#confirm_marc_transfer_button").click(function()
+    {
+        $.post('ajax/admin.php', {action: "transferir_marcaçao_caledario", new_user: $("#select_agent_transfer1 option:selected").val(), old_user: $("#select_agent_transfer2 option:selected").val()},
+        function(data)
+        {
+            $.jGrowl("Transferencia de " + data + " marcações de " + $("#select_agent_transfer1 option:selected").text() + " para " + $("#select_agent_transfer2 option:selected").text() + " realizada com sucesso", {life: 8000});
+        }, "json");
+    });
+//PRODUTOS--------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+    $("#download_csm_button").click(function()
+    {
+        $("#download_csm_div").toggle("blind");
+    });
+    $("#download_excel_csm_button").click(function()
+    {
+        if ($("#date_form").validationEngine("validate"))
+        {
+            document.location.href = "ajax/admin.php?action=download_excel_csm";
+        }
+    });
+
+
+
+
+//FILE UPLOAD
+    $("#file_upload").change(function()
+    {
+        // var re_ext = new RegExp("(gif|jpeg|jpg|png|pdf)", "i");
+        var file = this.files[0];
+        var name = file.name;
+        var size = (Math.round((file.size / 1024 / 1024) * 100) / 100);
+        var type = file.type;
+        if (size > 10) {
+            $("#label_anexo_info").text("O tamanho do ficheiro ultrapassa os 10mb permitidos.");
+            $(this).fileupload('clear');
+        }
+        /*  if (!re_ext.test(type)) {
+         $("#label_ipl_info").text("A extensão do ficheiro seleccionado não é valida.");
+         $(this).fileupload('clear');
+         }*/
+        $("#label_ipl_info").text("");
+    });
+    $("#anexo_upload_button").click(function(e)
+    {
+        e.preventDefault();
+        var form = $("#anexo_input_form");
+
+        if (form.find('input[type="file"]').val() === '')
+            return false;
+        var formData = new FormData(form[0]);
+        formData.append("action", "upload");
+        $.ajax({
+            url: 'ajax/upload_file.php',
+            type: 'POST',
+            data: formData,
+            dataType: "json",
+            cache: false,
+            complete: function(data) {
+                $("#label_anexo_info").text(data.responseText);
+                $("#anexo_file_select").empty();
+                get_files_to_anexo();
+            },
+            contentType: false,
+            processData: false
+        });
+    });
+    
+  $("#remove_uploaded_file").on("click", function()
+    {
+        $.post("ajax/upload_file.php", {action: "delete", name: $("#select_uploaded_files option:selected").val()}, function(data) {
+            $("#label_anexo_info").text(data);
+            get_files_to_anexo();
+        });
+    });
+
+
+
+    function get_files_to_anexo()
+    {
+        $.post('ajax/upload_file.php', {action: "get_anexos"}, function(data)
+        {
+            $("#select_uploaded_files").empty();
+
+            $.each(data, function()
+            {
+                $("#select_uploaded_files").append("<option value='" + this.toString() + "'>" + this.toString() + "</option>");
+            });
+        }, "json");
+    }
+  
+//PEDIDOS---------------PEDIDOS------------------------PEDIDOS-------------------------------PEDIDOS----------------------PEDIDOS-----------------------------PEDIDOS-----------------------PEDIDOS------------------------
+
+</script>
+

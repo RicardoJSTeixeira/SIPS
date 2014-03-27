@@ -1,5 +1,5 @@
 
-var requisition = function(basic_path, options_ext)
+var requisition = function(options_ext)
 {
 
 
@@ -11,20 +11,12 @@ var requisition = function(basic_path, options_ext)
 
 
     $.extend(true, this.config, options_ext);
-    this.basic_path = basic_path;
+
     var aparelho = [], pilha = [], peça = [], optgroups = [], product = 1;
-    this.init = function()
+
+    this.get_current_requisitions = function(table_path, modal_path, show_admin)
     {
-        $.get("/AM/view/requisitions/requisition_modal.html", function(data) {
-            me.basic_path.append(data);
-
-
-        });
-
-    };
-    this.get_current_requisitions = function(table_path, show_admin)
-    {
-        get_encomendas_atuais(table_path, show_admin);
+        get_encomendas_atuais(table_path, modal_path, show_admin);
     };
 
     //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
@@ -237,8 +229,9 @@ var requisition = function(basic_path, options_ext)
         $("#new_requisition_product_tbody select").trigger("chosen:updated");
     }
 
-    function get_encomendas_atuais(table_path, show_admin)
+    function get_encomendas_atuais(table_path, modal_path, show_admin)
     {
+
         if (show_admin)
         {
             var Table_view_requisition = table_path.dataTable({
@@ -280,17 +273,18 @@ var requisition = function(basic_path, options_ext)
             $.post('ajax/requisition.php', {action: "listar_produtos_por_encomenda",
                 id: $(this).val()}, function(data)
             {
-                $(" #ver_product_modal #show_requisition_products_tbody").empty();
+                var modal = modal_path.find(".modal-body");
+                modal.empty();
+                modal.append("<table class='table table-bordered'><thead><tr><th>Nome</th><th>Categoria</th><th>Quantidade</th></tr></thead><tbody></tbody></table>");
+                var temp = modal.find("tbody");
                 $.each(data, function()
                 {
-                    $(" #ver_product_modal #show_requisition_products_tbody").append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.quantity + "</td></tr>");
+                    temp.append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.quantity + "</td></tr>");
                 });
-
-                $("#ver_product_modal").modal("show");
+                modal_path.modal("show");
             },
                     "json");
         });
-
 
         table_path.on("click", ".accept_requisition", function()
         {

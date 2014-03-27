@@ -1,4 +1,4 @@
-var requests_class = function(basic_path, options_ext)
+var requests = function(basic_path, options_ext)
 {
     var me = this;
     this.basic_path = basic_path;
@@ -307,9 +307,12 @@ var requests_class = function(basic_path, options_ext)
         {
             var id = $(this).data().relatorio_frota_id;
             $.post("ajax/requests.php", {action: "get_ocorrencias_frota", id: id}, function(data) {
+
+                var tbody = me.basic_path.find("#ver_occorrencia_frota_modal #ver_occorrencia_frota_tbody");
+                tbody.empty();
                 $.each(data, function()
                 {
-                    me.basic_path.find("#ver_occorrencia_frota_modal #ver_occorrencia_frota_tbody").append("<tr><td>" + this.data + "</td><td>" + this.km + "</td><td>" + this.ocorrencia + "</td></tr>");
+                    tbody.append("<tr><td>" + this.data + "</td><td>" + this.km + "</td><td>" + this.ocorrencia + "</td></tr>");
                 })
                 me.basic_path.find("#ver_occorrencia_frota_modal").modal("show");
             }, "json");

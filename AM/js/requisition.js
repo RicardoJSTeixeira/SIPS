@@ -2,16 +2,15 @@
 var requisition1;
 $(function()
 {
-    requisition1 = new requisition($("#main_requisition"));
-
-    requisition1.init();
-    requisition1.get_current_requisitions($("#view_requisition_datatable"), 0);
+    var config = new Object();
+    requisition1 = new requisition(config);
+    requisition1.get_current_requisitions($("#view_requisition_datatable"), $("#ver_produto_requisition_modal"), 0);
 
     config = new Object();
     config.product_editable = false;
     product = new products(config);
 
-    product.init_to_datatable($("#view_product_datatable"), $("#ver_produto_modal #see_produto_div"), $("#ver_produto_modal"));
+    product.init_to_datatable($("#view_product_datatable"), $("#ver_produto_modal"));
 
 
 });

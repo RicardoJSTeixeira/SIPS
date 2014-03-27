@@ -12,18 +12,18 @@ var products = function(options_ext)
 
 
 
-    this.init_to_datatable = function(datatable_path, product_path, product_modal)
+    this.init_to_datatable = function(datatable_path, product_modal)
     {
         var product_id = 0;
         datatable_path.off();
-
+        var product_path = product_modal.find(".modal-body");
         //PRODUTOS-----------------------------------------------------------------------------------------------------------
         $.get("/AM/view/products/product.html", function(data) {
 
             product_path.off().empty();
             product_path.append(data);
             product_path.find(".form_datetime_day").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
-            product_path.find("#product_parent").chosen({no_results_text: "Sem resultados",width: "200px"});
+            product_path.find("#product_parent").chosen({no_results_text: "Sem resultados", width: "200px"});
 
             populate_parent(product_path.find("#product_parent"));
 
@@ -37,7 +37,7 @@ var products = function(options_ext)
             $.post('/AM/ajax/products.php', {action: "get_produto_by_id", "id": product_id}, function(data) {
 
                 product_path.find("#add_promotion_toggle").show();
-                get_promocao();
+
                 product_path.find("#product_name").val(data.name);
                 product_path.find("#product_category").val(data.category);
                 product_path.find("#product_parent option").prop("disabled", false);
@@ -100,14 +100,16 @@ var products = function(options_ext)
             product_id = $(this).data("product_id");
             populate_modal(function()
             {
-                product_path.find("#add_promotion_toggle").hide();
-                product_path.find("#button_criar_produto").hide();
-                product_path.find("#button_editar_produto").hide();
-                product_path.find("#add_promotion_toggle").hide();
-                product_path.find(":input").prop("disabled", true);
-                product_path.find("select").prop("disabled", true).trigger("chosen:updated");
+                get_promocao(function()
+                {
+                    product_path.find("#add_promotion_toggle").hide();
+                    product_path.find("#button_criar_produto").hide();
+                    product_path.find("#button_editar_produto").hide();
+                    product_path.find("#add_promotion_toggle").hide();
+                    product_path.find(":input").prop("disabled", true);
+                    product_path.find("select").prop("disabled", true).trigger("chosen:updated");
+                });
             });
-
         });
 
 
@@ -116,12 +118,16 @@ var products = function(options_ext)
             product_id = $(this).data("product_id");
             populate_modal(function()
             {
-                product_path.find("#add_promotion_toggle").show();
-                product_path.find("#button_criar_produto").hide();
-                product_path.find("#button_editar_produto").show();
-                product_path.find("#add_promotion_toggle").show();
-                product_path.find(":input").prop("disabled", false);
-                product_path.find("select").prop("disabled", false).trigger("chosen:updated");
+                get_promocao(function()
+                {
+                    product_path.find("#add_promotion_toggle").show();
+                    product_path.find("#button_criar_produto").hide();
+                    product_path.find("#button_editar_produto").show();
+                    product_path.find("#add_promotion_toggle").show();
+                    product_path.find(":input").prop("disabled", false);
+                    product_path.find("select").prop("disabled", false).trigger("chosen:updated");
+                });
+
             });
 
             product_path.on("click", "#edit_product_button", function(e)
@@ -220,7 +226,7 @@ var products = function(options_ext)
             $(this).parent().parent().remove();
         });
 
-        function get_promocao()
+        function get_promocao(callback)
         {
             $.post('/AM/ajax/products.php', {action: "get_promotion", "id": product_id}, function(data) {
                 var tbody = product_path.find("#promotion_table_tbody");
@@ -245,6 +251,8 @@ var products = function(options_ext)
                 {
                     tbody.append("<tr><td>Sem promoções</td></tr>");
                 }
+                if (typeof callback === "function")
+                    callback();
 
             }, "json");
         }
@@ -283,7 +291,7 @@ var products = function(options_ext)
         $.get("/AM/view/products/product.html", function(data) {
             path.empty().off();
             path.append(data);
-            path.find("#product_parent").chosen({no_results_text: "Sem resultados"});
+            path.find("#product_parent").chosen({no_results_text: "Sem resultados", width: "200px"});
             populate_parent(path.find("#product_parent"));
 
             path.find("#button_editar_produto").hide();
@@ -351,8 +359,6 @@ var products = function(options_ext)
             path.on("click", ".remove_color", function(e)
             {
                 e.preventDefault();
-
-
                 $(this).parent().parent().remove();
             });
 
@@ -369,8 +375,7 @@ var products = function(options_ext)
         function(data)
         {
             select.empty();
-            var
-                    temp = "<optgroup value='1' label='Aparelhos'></optgroup>\n\
+            var temp = "<optgroup value='1' label='Aparelhos'></optgroup>\n\
 <optgroup value='2' label='Pilhas'></optgroup>\n\
 <optgroup value='3' label='Acessórios'></optgroup>\n\
 <optgroup value='4' label='Moldes'></optgroup>\n\
@@ -415,7 +420,6 @@ var products = function(options_ext)
 
     function update_products_datatable(datatable_path)
     {
-
         var Table_view_product = datatable_path.dataTable({
             "bSortClasses": false,
             "bProcessing": true,
@@ -429,6 +433,5 @@ var products = function(options_ext)
             "aoColumns": [{"sTitle": "id"}, {"sTitle": "Nome"}, {"sTitle": "Max requisições mensais"}, {"sTitle": "Max requisições especiais"}, {"sTitle": "Categoria"}, {"sTitle": "Tipo"}, {"sTitle": "Opções"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
-    }
-    ;
-}
+    }}
+;
