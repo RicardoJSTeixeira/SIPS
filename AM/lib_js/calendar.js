@@ -90,7 +90,8 @@ var calendar = function(selector, data, modal_ext, ext, client) {
                     "json");
         },
         eventRender: function(event, element, view) {
-            if (!event.url)
+            console.log(event.className)
+            if (!event.url && !event.bloqueio)
             {
                 element.popover({
                     placement: function(context, source) {

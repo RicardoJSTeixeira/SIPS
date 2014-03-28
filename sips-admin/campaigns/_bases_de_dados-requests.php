@@ -192,13 +192,21 @@ function DBMatchFields($CampaignID, $ConvertedFile, $link) {
 
     flush();
     fclose($file);
-
+    $sQuery = mysql_query("SELECT lead_order FROM vicidial_campaigns WHERE campaign_id = '$CampaignID';", $link);
+    $camp = mysql_fetch_object($sQuery);
+    
     $sQuery = mysql_query("SELECT Name, Display_name FROM vicidial_list_ref WHERE campaign_id = '$CampaignID' AND active = '1' ORDER BY field_order", $link);
 
     while ($row = mysql_fetch_row($sQuery)) {
         $js['name'][] = $row[0];
         $js['display_name'][] = $row[1];
     }
+   /* 
+    if($camp->lead_order=="UP RANK"){
+        $js['name'][] = "rank";
+        $js['display_name'][] = "Ranking";
+    }*/
+    
     echo json_encode($js);
 }
 
