@@ -12,7 +12,7 @@ var requisition = function(options_ext)
 
     $.extend(true, this.config, options_ext);
 
-    var aparelho = [], pilha = [], peça = [], optgroups = [], product = 1;
+    var product = 1;
 
     this.get_current_requisitions = function(table_path, modal_path, show_admin)
     {
@@ -44,10 +44,6 @@ var requisition = function(options_ext)
                 new_requisition_zone.find("#new_requisition_lead_id").val(lead_id);
 
 
-
-
-
-
         });
         // ADICIONAR E REMOVER ITEMS DA LISTA DE PRODUTOS NA NOVA ENCOMENDA----------------------------
         $(new_requisition_zone).on("click", "#new_requisition_product_add_line", function(e)
@@ -56,6 +52,7 @@ var requisition = function(options_ext)
             new_requisition_zone.find(" #new_requisition_product_tbody")
                     .append("<tr id='tr" + product + "'>\n\
                                 <td ><select data-linha_id=" + product + " id='product_select" + product + "' class='chosen-select new_requisition_select_product'></select></td>\n\
+              <td ><select class='input-medium select_color_picker' id='select_color_picker" + product + "'></select></td>\n\
                                 <td ><span id='product_span_max" + product + "'></span></td>\n\
                                 <td> <input class='input-mini validate[required,custom[onlyNumberSp]]' id='product_input" + product + "' type='number' min='1' value='1'></td>\n\
                                 <td><button class='btn  remove_item_requisition_table' value='" + product + "'><i  class='icon-remove'></i> </button></td></tr>");
@@ -66,6 +63,7 @@ var requisition = function(options_ext)
         });
         $(new_requisition_zone).on("change", ".new_requisition_select_product", function()
         {
+
             if (new_requisition_zone.find("#req_m_radio").is(":checked"))
             {
                 new_requisition_zone.find("#product_span_max" + $(this).data().linha_id).text($(this).find("option:selected").data().max_month);
@@ -80,7 +78,20 @@ var requisition = function(options_ext)
                 if (new_requisition_zone.find("#product_input" + $(this).data().linha_id).val() > $(this).find("option:selected").data().max_special)
                     new_requisition_zone.find("#product_input" + $(this).data().linha_id).val($(this).find("option:selected").data().max_special);
             }
-            update_product_selects();
+            var select = new_requisition_zone.find("#select_color_picker" + $(this).data().linha_id);
+            select.empty();
+            if ($(this).find("option:selected").data().color)
+            {
+
+
+                $.each($(this).find("option:selected").data().color, function()
+                {
+                    select.append("<option data-color_id='" + this.color + "' data-color_name='" + this.name + "'>" + this.name + "</option>");
+                });
+            }
+            else
+                select.append("<option>Padrão</option>");
+
         });
 // SUBMITAR A ENCOMENDA------------------------------------------------
         $(new_requisition_zone).on("click", "#new_requisition_submit_button", function()
@@ -93,7 +104,7 @@ var requisition = function(options_ext)
                 if (this_option_selected.val() !== "0")
                 {
                     count++;
-                    produtos.push({"id": this_option_selected.attr("id"), "quantity": $(this).find("input[type='number']").val()});
+                    produtos.push({"id": this_option_selected.attr("id"), "quantity": $(this).find("input[type='number']").val(), "color": $(this).find(".select_color_picker").find("option:selected").data().color_id, "color_name": $(this).find(".select_color_picker").find("option:selected").data().color_name});
                 }
                 else
                 {
@@ -208,26 +219,7 @@ var requisition = function(options_ext)
 
 
 
-    //EXTRA FUNCTIONS---------------------------------------------------------
-    function  update_product_selects()
-    {
 
-        var selected_options = [];
-        $("#new_requisition_product_tbody select option").prop("disabled", false);
-        $.each($("#new_requisition_product_tbody select"), function()
-        {
-            selected_options.push($(this).find("option:selected").attr("id"));
-        });
-
-        $.each(selected_options, function()
-        {
-            $("#new_requisition_product_tbody select option[id='" + this + "']").prop("disabled", true);
-
-        });
-
-
-        $("#new_requisition_product_tbody select").trigger("chosen:updated");
-    }
 
     function get_encomendas_atuais(table_path, modal_path, show_admin)
     {
@@ -270,20 +262,20 @@ var requisition = function(options_ext)
         //VER PRODUTOS DE ENCOMENDAS FEITAS
         table_path.on("click", ".ver_requisition_products", function()
         {
-            $.post('ajax/requisition.php', {action: "listar_produtos_por_encomenda",
-                id: $(this).val()}, function(data)
+            $.post('ajax/requisition.php', {action: "listar_produtos_por_encomenda", id: $(this).val()}, function(data)
             {
                 var modal = modal_path.find(".modal-body");
                 modal.empty();
-                modal.append("<table class='table table-bordered'><thead><tr><th>Nome</th><th>Categoria</th><th>Quantidade</th></tr></thead><tbody></tbody></table>");
+                modal.append("<table class='table table-bordered'><thead><tr><th>Nome</th><th>Categoria</th><th>Cor</th><th>Quantidade</th></tr></thead><tbody></tbody></table>");
                 var temp = modal.find("tbody");
                 $.each(data, function()
                 {
-                    temp.append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.quantity + "</td></tr>");
+                    if (!this.color_name)
+                        this.color_name = "Padrão";
+                    temp.append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td></tr>");
                 });
                 modal_path.modal("show");
-            },
-                    "json");
+            }, "json");
         });
 
         table_path.on("click", ".accept_requisition", function()
@@ -315,7 +307,7 @@ var requisition = function(options_ext)
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
         function(data)
         {
-
+            var optgroups = [];
             select.empty();
             optgroups.push("<option value='0'>Escolha um produto</option><optgroup value='1' label='Aparelhos'></optgroup>");
             var
@@ -336,19 +328,19 @@ var requisition = function(options_ext)
                 switch (this.category)
                 {
                     case "aparelho":
-                        aparelho.push("<option data-max_month=" + this.max_req_m + " data-max_special=" + this.max_req_s + " id=" + this.id + " value='" + this.id + "'>" + this.name + "</option>");
+                        aparelho.push("<option data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "' id='" + this.id + "' value='" + this.id + "'>" + this.name + "</option>");
                         break;
                     case "pilha":
-                        pilha.push("<option data-max_month=" + this.max_req_m + " data-max_special=" + this.max_req_s + " id=" + this.id + " value='" + this.id + "'>" + this.name + "</option>");
+                        pilha.push("<option data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "' id='" + this.id + "' value='" + this.id + "'>" + this.name + "</option>");
                         break;
                     case "acessorio":
-                        acessorio.push("<option data-max_month=" + this.max_req_m + " data-max_special=" + this.max_req_s + " id=" + this.id + " value='" + this.id + "'>" + this.name + "</option>");
+                        acessorio.push("<option data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "' id='" + this.id + "' value='" + this.id + "'>" + this.name + "</option>");
                         break;
                     case "molde":
-                        molde.push("<option data-max_month=" + this.max_req_m + " data-max_special=" + this.max_req_s + " id=" + this.id + " value='" + this.id + "'>" + this.name + "</option>");
+                        molde.push("<option data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "' id='" + this.id + "' value='" + this.id + "'>" + this.name + "</option>");
                         break;
                     case "economato":
-                        economato.push("<option data-max_month=" + this.max_req_m + " data-max_special=" + this.max_req_s + " id=" + this.id + " value='" + this.id + "'>" + this.name + "</option>");
+                        economato.push("<option data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "' id='" + this.id + "' value='" + this.id + "'>" + this.name + "</option>");
                         break;
                 }
             });
@@ -357,7 +349,7 @@ var requisition = function(options_ext)
                     .find("optgroup[value='3']").append(acessorio).end()
                     .find("optgroup[value='4']").append(molde).end()
                     .find("optgroup[value='5']").append(economato).end().trigger("chosen:updated");
-            update_product_selects();
+
         }, "json");
     }
 

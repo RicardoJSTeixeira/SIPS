@@ -69,9 +69,9 @@ $(function() {
     {
         var config = new Object(), m;
         config.mensal = false;
-        requisition1 = new requisition($("#div_requisition"), config);
+        requisition1 = new requisition(config);
 
-        requisition1.init();
+ 
         m = $("#new_requisiton_modal");
         requisition1.new_requisition(m.find(".modal-body"), 0, $(this).data().lead_id);
 
