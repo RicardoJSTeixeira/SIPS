@@ -25,7 +25,7 @@ function MiscOptionsBuilder(Flag)
                 $("#campaign_active_yes").parent().addClass("checked");
                 $("#campaign_type_auto").parent().addClass("checked");
                 $("#campaign_recording_yes").parent().addClass("checked");
-                $("#campaign_lead_order_random").parent().addClass("checked");
+                $("#campaign_lead_order_random").click();
                 $("#campaign_atrib_calls").val("Maior Tempo em Espera");
                 $("#campaign_callback_type_user").parent().addClass("checked");
 
@@ -89,11 +89,7 @@ function MiscOptionsBuilder(Flag)
                 } else {
                     $("#campaign_recording_no").parent().addClass("checked");
                 }
-                if (data.c_lead_order === "RANDOM") {
-                    $("#campaign_lead_order_random").parent().addClass("checked");
-                } else {
-                    $("#campaign_lead_order_ordered").parent().addClass("checked");
-                }
+                    $("input[name=campaign_lead_order][value='"+data.c_lead_order+"']").prop("checked",true).click();
                 if (data.c_next_agent_call === "longest_wait_time") {
                     $("#campaign_atrib_calls").val("Maior Tempo em Espera");
                 } else if (data.c_next_agent_call === "random") {
@@ -666,28 +662,15 @@ function CampaignRecordingSwitch()
 
 function CampaignLeadOrderSwitch()
 {
-    var LeadOrder;
-    if ($(this).attr("id") === 'campaign_lead_order_ordered')
-    {
-        LeadOrder = "DOWN";
-    }
-    else
-    {
-        LeadOrder = "RANDOM";
-    }
-    $.ajax({
-        type: "POST",
-        url: "_opcoes_gerais-requests.php",
-        data:
-                {
-                    action: "EditLeadOrder",
-                    CampaignID: CampaignID,
-                    LeadOrder: LeadOrder
-                },
-        success: function(data)
-        {
-        }
-    });
+    var LeadOrder = $(this).val();
+    
+    $.post("_opcoes_gerais-requests.php",
+            {
+                action: "EditLeadOrder",
+                CampaignID: CampaignID,
+                LeadOrder: LeadOrder
+            }
+    );
 
 }
 
@@ -1103,7 +1086,7 @@ $("body")
         .on("click", ".campaign-active-switch", CampaignActiveSwitch)
         .on("click", ".campaign-type-switch", CampaignTypeSwitch)
         .on("click", ".campaign-recording-switch", CampaignRecordingSwitch)
-        .on("click", ".campaign-lead-order-switch", CampaignLeadOrderSwitch)
+        .on("click", "input[name=campaign_lead_order]", CampaignLeadOrderSwitch)
         .on("click", "#btn-config-dial-status", {dialog: "#dialog-config-dial-status"}, DialogOpen)
         .on("focusin focusout keydown", "#campaign-name", EditCampaignName)
         .on("focusin focusout", "#campaign-description", EditCampaignDescription)
