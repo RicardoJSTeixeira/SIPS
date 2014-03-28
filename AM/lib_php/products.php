@@ -54,12 +54,7 @@ Class products {
         return $stmt->execute(array(":parent" => $id, ":child" => $id));
     }
 
-    public function remove_products() {
-        $stmt = $this->_db->prepare("delete from spice_product_assoc");
-        $stmt->execute();
-        $stmt = $this->_db->prepare("delete from spice_product");
-        return $stmt->execute();
-    }
+ 
 
     public function add_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color) {
 
@@ -67,13 +62,13 @@ Class products {
         $stmt->execute(array(":name" => $name, ":max_req_m" => $max_req_m, ":max_req_s" => $max_req_s, ":category" => $category, ":type" => json_encode($type), ":color" => json_encode($color)));
         $last_id = $this->_db->lastInsertId();
 
-        if (isset($parent))
+        if (isset($parent)) {
+            $stmt1 = $this->_db->prepare("insert into spice_product_assoc (`parent`, `child`) values (:parent,:child) ");
             foreach ($parent as $value) {
-
-                $stmt1 = $this->_db->prepare("insert into spice_product_assoc (   `parent`, `child`) values (:parent,:child) ");
                 $stmt1->execute(array(":parent" => $value, ":child" => $last_id));
-            };
-        return true;
+            }
+        }
+        return array($last_id,$name,$max_req_m,$max_req_s,$category,$type,"<button class='btn btn_ver_produto' data-product_id='" .$last_id . "'>Ver</button><button class='btn btn_editar_produto' data-product_id='" .$last_id . "'>Editar</button><button class='btn btn_apagar_produto' data-product_id='" . $last_id . "'>Apagar</button>");
     }
 
 }

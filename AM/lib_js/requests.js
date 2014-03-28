@@ -242,7 +242,7 @@ var requests = function(basic_path, options_ext)
             rf_zone.on("click", "#button_rf_table_add_line", function(e)
             {
                 e.preventDefault();
-                rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required] linha_data' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'></td><td><input class='validate[required] linha_ocorrencia' type='text' name='rf_ocorr" + rfinput_count + "'></td><td>  <input class='validate[required] linha_km' type='number' value='1' name='rf_km" + rfinput_count + "' min='1'></td><td>     <button class='btn btn-danger button_rf_table_remove_line'><span class='icon-minus'></span></button></td></tr>");
+                rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required] linha_data' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'></td><td><input class='validate[required] linha_ocorrencia' type='text' name='rf_ocorr" + rfinput_count + "'></td><td>  <input class='validate[required] linha_km' type='number' value='0' name='rf_km" + rfinput_count + "' min='0'></td><td>     <button class='btn btn-danger button_rf_table_remove_line'><span class='icon-minus'></span></button></td></tr>");
                 rf_zone.find("#rf_datetime" + rfinput_count).datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
                 rfinput_count++;
             });

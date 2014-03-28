@@ -1,5 +1,5 @@
 
-var requisition = function(options_ext)
+var requisition = function(geral_path, options_ext)
 {
 
 
@@ -8,43 +8,142 @@ var requisition = function(options_ext)
     this.config = new Object();
     this.config.mensal = true;
     this.config.especial = true;
-
-
-    $.extend(true, this.config, options_ext);
-
     var product = 1;
-
-    this.get_current_requisitions = function(table_path, modal_path, show_admin)
+    var modal = "";
+    var new_requisition_area = "";
+    var table_path = "";
+    var show_admin = 0;
+    $.extend(true, this.config, options_ext);
+    this.init = function(callback)
     {
-        get_encomendas_atuais(table_path, modal_path, show_admin);
+        $.get("/AM/view/requisitions/requisition.html", function(data) {
+
+
+            geral_path.off().empty().append(data);
+            geral_path.find("#new_requisition_div").hide();
+            modal = geral_path.find("#ver_product_requisition_modal");
+            new_requisition_area = geral_path.find("#new_requisition_div");
+
+
+
+            if (typeof callback === "function")
+                callback();
+        });
     };
 
-    //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
-    this.new_requisition = function(new_requisition_zone, current_requisition_zone, lead_id) {
-        new_requisition_zone.off().empty();
-        $.get("/AM/view/requisitions/new_requisition.html", function(data) {
-            new_requisition_zone.append(data);
-            new_requisition_zone.find('.fileupload').fileupload();
-            if (!me.config.mensal)
+
+    this.get_current_requisitions = function(table_path1, show_admin1)
+    {
+        table_path = table_path1;
+        show_admin = show_admin1;
+        get_encomendas_atuais(table_path, show_admin);
+
+    };
+
+
+    function get_encomendas_atuais(table_path, show_admin)
+    {
+
+        if (show_admin)
+        {
+            var Table_view_requisition = table_path.dataTable({
+                "bSortClasses": false,
+                "bProcessing": true,
+                "bDestroy": true,
+                "bAutoWidth": false,
+                "sPaginationType": "full_numbers",
+                "sAjaxSource": '/AM/ajax/requisition.php',
+                "fnServerParams": function(aoData) {
+                    aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
+                },
+                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
+                "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
+            });
+        }
+        else
+        {
+            var Table_view_requisition = table_path.dataTable({
+                "bSortClasses": false,
+                "bProcessing": true,
+                "bDestroy": true,
+                "bAutoWidth": false,
+                "sPaginationType": "full_numbers",
+                "sAjaxSource": '/AM/ajax/requisition.php',
+                "fnServerParams": function(aoData) {
+                    aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
+                },
+                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}],
+                "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
+            });
+        }
+
+        //VER PRODUTOS DE ENCOMENDAS FEITAS
+        table_path.on("click", ".ver_requisition_products", function()
+        {
+            $.post('ajax/requisition.php', {action: "listar_produtos_por_encomenda", id: $(this).val()}, function(data)
             {
-                new_requisition_zone.find("#req_m_radio").prop("disabled", true);
-            }
-            if (!me.config.especial)
-            { //Nao se força o selected nem hides no mensal pk por default começa o especial
-                new_requisition_zone.find("#req_m_radio").prop("checked", true);
-                new_requisition_zone.find("#req_s_radio").prop("disabled", true);
-                new_requisition_zone.find("#special_req_div").remove();
-            }
-            new_requisition_zone.find("#requisition_form").validationEngine();
-            new_requisition_zone.find("#requisition_form").show();
-
-
-            //preencher com lead_id enviado
-            if (lead_id)
-                new_requisition_zone.find("#new_requisition_lead_id").val(lead_id);
-
-
+                var modal_tbody = modal.find("#show_requisition_products_tbody");
+                $.each(data, function()
+                {
+                    if (!this.color_name)
+                        this.color_name = "Padrão";
+                    modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td></tr>");
+                });
+                modal.modal("show");
+            }, "json");
         });
+
+        table_path.on("click", ".accept_requisition", function()
+        {
+            var this_button = $(this);
+            $.post('ajax/requisition.php', {action: "accept_requisition", id: $(this).val()}, function() {
+                this_button.parent("td").prev().text("Aprovado");
+            }, "json");
+        });
+
+        table_path.on("click", ".decline_requisition", function()
+        {
+            var this_button = $(this);
+            $.post('ajax/requisition.php', {action: "decline_requisition", id: $(this).val()}, function() {
+                this_button.parent().prev().text("Rejeitado");
+            }, "json");
+        });
+
+
+    }
+
+
+
+
+
+
+
+//NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
+    this.new_requisition = function(new_requisition_zone, lead_id) {
+        new_requisition_zone.off().empty();
+        new_requisition_zone.append(new_requisition_area.show());
+
+        new_requisition_zone.find('.fileupload').fileupload();
+        if (!me.config.mensal)
+        {
+            new_requisition_zone.find("#req_m_radio").prop("disabled", true);
+        }
+        if (!me.config.especial)
+        { //Nao se força o selected nem hides no mensal pk por default começa o especial
+            new_requisition_zone.find("#req_m_radio").prop("checked", true);
+            new_requisition_zone.find("#req_s_radio").prop("disabled", true);
+            new_requisition_zone.find("#special_req_div").remove();
+        }
+        new_requisition_zone.find("#requisition_form").validationEngine();
+        new_requisition_zone.find("#requisition_form").show();
+
+
+        //preencher com lead_id enviado
+        if (lead_id)
+            new_requisition_zone.find("#new_requisition_lead_id").val(lead_id);
+
+
+
         // ADICIONAR E REMOVER ITEMS DA LISTA DE PRODUTOS NA NOVA ENCOMENDA----------------------------
         $(new_requisition_zone).on("click", "#new_requisition_product_add_line", function(e)
         {
@@ -52,10 +151,10 @@ var requisition = function(options_ext)
             new_requisition_zone.find(" #new_requisition_product_tbody")
                     .append("<tr id='tr" + product + "'>\n\
                                 <td ><select data-linha_id=" + product + " id='product_select" + product + "' class='chosen-select new_requisition_select_product'></select></td>\n\
-              <td ><select class='input-medium select_color_picker' id='select_color_picker" + product + "'></select></td>\n\
+                                <td ><select class='input-medium select_color_picker' id='select_color_picker" + product + "'></select></td>\n\
                                 <td ><span id='product_span_max" + product + "'></span></td>\n\
                                 <td> <input class='input-mini validate[required,custom[onlyNumberSp]]' id='product_input" + product + "' type='number' min='1' value='1'></td>\n\
-                                <td><button class='btn  remove_item_requisition_table' value='" + product + "'><i  class='icon-remove'></i> </button></td></tr>");
+                                <td><button class='btn icon-alone btn-danger remove_item_requisition_table' value='" + product + "'><i  class='icon-remove'></i> </button></td></tr>");
             new_requisition_zone.find(" #product_select" + product).chosen({no_results_text: "Sem resultados"});
             populate_select(new_requisition_zone.find(" #product_select" + product));
 
@@ -78,12 +177,13 @@ var requisition = function(options_ext)
                 if (new_requisition_zone.find("#product_input" + $(this).data().linha_id).val() > $(this).find("option:selected").data().max_special)
                     new_requisition_zone.find("#product_input" + $(this).data().linha_id).val($(this).find("option:selected").data().max_special);
             }
+
+
+
             var select = new_requisition_zone.find("#select_color_picker" + $(this).data().linha_id);
             select.empty();
             if ($(this).find("option:selected").data().color)
             {
-
-
                 $.each($(this).find("option:selected").data().color, function()
                 {
                     select.append("<option data-color_id='" + this.color + "' data-color_name='" + this.name + "'>" + this.name + "</option>");
@@ -91,20 +191,49 @@ var requisition = function(options_ext)
             }
             else
                 select.append("<option>Padrão</option>");
-
+            update_product_selects();
         });
+
+
+
+        function  update_product_selects()
+        {
+
+            var selected_options = [];
+            $("#new_requisition_product_tbody select option").prop("disabled", false);
+            $.each($("#new_requisition_product_tbody select"), function()
+            {
+                selected_options.push($(this).find("option:selected").attr("id"));
+            });
+
+            $.each(selected_options, function()
+            {
+                $("#new_requisition_product_tbody select option[id='" + this + "']").prop("disabled", true);
+
+            });
+
+
+            $("#new_requisition_product_tbody select").trigger("chosen:updated");
+        }
+
+
+
+
+
+
 // SUBMITAR A ENCOMENDA------------------------------------------------
         $(new_requisition_zone).on("click", "#new_requisition_submit_button", function()
         {
             var produtos = [];
             var count = 0;
+
             $.each(new_requisition_zone.find(" #new_requisition_product_tbody tr"), function()
             {
                 var this_option_selected = $(this).find("select").find("option:selected");
                 if (this_option_selected.val() !== "0")
                 {
                     count++;
-                    produtos.push({"id": this_option_selected.attr("id"), "quantity": $(this).find("input[type='number']").val(), "color": $(this).find(".select_color_picker").find("option:selected").data().color_id, "color_name": $(this).find(".select_color_picker").find("option:selected").data().color_name});
+                    produtos.push({"id": this_option_selected.attr("id"), "quantity": $(this).find("input[type='number']").val(), "color": $(this).find(".select_color_picker").find("option:selected").data().color_id || "", "color_name": $(this).find(".select_color_picker").find("option:selected").data().color_name || ""});
                 }
                 else
                 {
@@ -127,9 +256,14 @@ var requisition = function(options_ext)
                             contract_number: new_requisition_zone.find(" #new_requisition_contract").val(),
                             attachment: new_requisition_zone.find(".fileupload-preview").text(),
                             products_list: produtos},
-                        function() {
-                            if (current_requisition_zone !== undefined && current_requisition_zone !== 0 && current_requisition_zone != false)
-                                get_encomendas_atuais(current_requisition_zone);
+                        function(data) {
+                            if (table_path)
+                            {
+                                table_path.dataTable().fnAddData(data);
+                            }
+
+
+
                             $.jGrowl('Encomenda realizada com sucesso', {life: 4000});
                             new_requisition_zone.find(" #new_requisition_lead_id").val("");
                             new_requisition_zone.find(" #new_requisition_contract").val("");
@@ -212,98 +346,11 @@ var requisition = function(options_ext)
                 processData: false
             });
         });
-    };//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-//-------------------------------------------------------------------------------------
-
-
-
-
-
-
-    function get_encomendas_atuais(table_path, modal_path, show_admin)
-    {
-
-        if (show_admin)
-        {
-            var Table_view_requisition = table_path.dataTable({
-                "aaSorting": [[4, "desc"]],
-                "bSortClasses": false,
-                "bProcessing": true,
-                "bDestroy": true,
-                "bAutoWidth": false,
-                "sPaginationType": "full_numbers",
-                "sAjaxSource": '/AM/ajax/requisition.php',
-                "fnServerParams": function(aoData) {
-                    aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
-                },
-                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
-                "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
-            });
-        }
-        else
-        {
-            var Table_view_requisition = table_path.dataTable({
-                "aaSorting": [[4, "desc"]],
-                "bSortClasses": false,
-                "bProcessing": true,
-                "bDestroy": true,
-                "bAutoWidth": false,
-                "sPaginationType": "full_numbers",
-                "sAjaxSource": '/AM/ajax/requisition.php',
-                "fnServerParams": function(aoData) {
-                    aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
-                },
-                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}],
-                "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
-            });
-        }
-
-        //VER PRODUTOS DE ENCOMENDAS FEITAS
-        table_path.on("click", ".ver_requisition_products", function()
-        {
-            $.post('ajax/requisition.php', {action: "listar_produtos_por_encomenda", id: $(this).val()}, function(data)
-            {
-                var modal = modal_path.find(".modal-body");
-                modal.empty();
-                modal.append("<table class='table table-bordered'><thead><tr><th>Nome</th><th>Categoria</th><th>Cor</th><th>Quantidade</th></tr></thead><tbody></tbody></table>");
-                var temp = modal.find("tbody");
-                $.each(data, function()
-                {
-                    if (!this.color_name)
-                        this.color_name = "Padrão";
-                    temp.append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td></tr>");
-                });
-                modal_path.modal("show");
-            }, "json");
-        });
-
-        table_path.on("click", ".accept_requisition", function()
-        {
-            var this_button = $(this);
-            $.post('ajax/requisition.php', {action: "accept_requisition", id: $(this).val()}, function() {
-                this_button.parent("td").prev().text("Aprovado");
-            }, "json");
-        });
-
-        table_path.on("click", ".decline_requisition", function()
-        {
-            var this_button = $(this);
-            $.post('ajax/requisition.php', {action: "decline_requisition", id: $(this).val()}, function() {
-                this_button.parent().prev().text("Rejeitado");
-            }, "json");
-        });
-
-
-    }
-
-
-
+    };
 
 
     function populate_select(select)
     {
-
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
         function(data)
         {
@@ -312,11 +359,11 @@ var requisition = function(options_ext)
             optgroups.push("<option value='0'>Escolha um produto</option><optgroup value='1' label='Aparelhos'></optgroup>");
             var
                     temp = "<option value='0'>Escolha um produto</option>\n\
-        <optgroup value='1' label='Aparelhos'></optgroup>\n\
-<optgroup value='2' label='Pilhas'></optgroup>\n\
-<optgroup value='3' label='Acessórios'></optgroup>\n\
-<optgroup value='4' label='Moldes'></optgroup>\n\
-<optgroup value='5' label='Economato'></optgroup>",
+                            <optgroup value='1' label='Aparelhos'></optgroup>\n\
+                            <optgroup value='2' label='Pilhas'></optgroup>\n\
+                            <optgroup value='3' label='Acessórios'></optgroup>\n\
+                            <optgroup value='4' label='Moldes'></optgroup>\n\
+                            <optgroup value='5' label='Economato'></optgroup>",
                     aparelho = [],
                     pilha = [],
                     acessorio = [],
@@ -355,3 +402,7 @@ var requisition = function(options_ext)
 
 
 };
+
+
+
+
