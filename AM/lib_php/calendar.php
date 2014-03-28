@@ -31,14 +31,15 @@ Class Calendars {
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $reservars[] = array(
                 'id' => $row->id_reservation,
-                'title' => ((is_null($row->postal_code)) ? $row->display_text : $row->postal_code.' - '.$row->display_text).(((bool)$row->closed)?" - Fechado":""),
+                'title' => ((is_null($row->postal_code)) ? $row->display_text : $row->postal_code . ' - ' . $row->display_text) . (((bool) $row->closed) ? " - Fechado" : ""),
                 'client_name' => (is_null($row->first_name) ? "" : $row->first_name),
                 'lead_id' => (is_null($row->lead_id) ? "" : $row->lead_id),
                 'codCamp' => (is_null($row->codCamp) ? "" : $row->codCamp),
                 'start' => $row->start_date,
                 'end' => $row->end_date,
-                'editable' => !(bool)$row->closed,
+                'editable' => !(bool) $row->closed,
                 'className' => "t" . $row->id_reservation_type,
+                'bloqueio' => false,
                 'user' => $row->id_user,
             );
         }
@@ -157,7 +158,7 @@ Class Calendars {
     public function newReserva($user, $lead_id, $start, $end, $rtype, $resource) {
         $query = "INSERT INTO `sips_sd_reservations`(`start_date`, `end_date`, `has_accessories`, `id_reservation_type`, `id_resource`,`id_user`,`lead_id`) VALUES (:start, :end, '0', :rtype, :resource,:user,:lead_id)";
         $stmt = $this->_db->prepare($query);
-        $stmt->execute(array(":user" => $user, ":lead_id" => $lead_id, ":start" => date('Y-m-d H:i:s',$start), ":end" => date('Y-m-d H:i:s',$end), ":rtype" => $rtype, ":resource" => $resource));
+        $stmt->execute(array(":user" => $user, ":lead_id" => $lead_id, ":start" => date('Y-m-d H:i:s', $start), ":end" => date('Y-m-d H:i:s', $end), ":rtype" => $rtype, ":resource" => $resource));
         return $this->_db->lastInsertId();
     }
 
@@ -170,7 +171,7 @@ Class Calendars {
     public function changeReserva($id, $start, $end) {
         $query = "UPDATE `sips_sd_reservations` SET `start_date`=:start,`end_date`=:end WHERE `id_reservation`=:id";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":id" => $id, ":start" => date('Y-m-d H:i:s',$start), ":end" => date('Y-m-d H:i:s',$end)));
+        return $stmt->execute(array(":id" => $id, ":start" => date('Y-m-d H:i:s', $start), ":end" => date('Y-m-d H:i:s', $end)));
     }
 
 }
@@ -223,11 +224,11 @@ class Calendar extends Calendars {
         return (object) array("defaultEventMinutes" => (int) $this->_resources[0]->blocks, "events" => (object) array("data" => (object) array("resource" => $this->_id_ref, "is_scheduler" => $this->_is_scheduler)), "slotMinutes" => (int) $this->_resources[0]->blocks, "minTime" => $this->_resources[0]->begin_time / 60, "maxTime" => $this->_resources[0]->end_time / 60, "sch" => $this->_id_scheduler);
     }
 
-    protected function _getSeries($id="", $is_scheduler="") {
+    protected function _getSeries($id = "", $is_scheduler = "") {
         return parent::_getSeries((($this->_is_scheduler) ? $this->_id_scheduler : $this->_id_resource), $this->_is_scheduler);
     }
 
-    protected function _getExcecoes($id="", $is_scheduler="") {
+    protected function _getExcecoes($id = "", $is_scheduler = "") {
         return parent::_getExcecoes(($this->_is_scheduler) ? $this->_id_scheduler : $this->_id_resource, $this->_is_scheduler);
     }
 
@@ -242,12 +243,13 @@ class Calendar extends Calendars {
                         'start' => \date('Y-m-d H:i:s', strtotime($this->_stp($serie->start_time), $aux_date)),
                         'end' => \date('Y-m-d H:i:s', strtotime($this->_stp($serie->end_time), $aux_date)),
                         'editable' => false,
-                        'className' => "bloqueado"
+                        'className' => "bloqueado",
+                        'bloqueio' => true
                     );
                 }
             }
             $aux_date = strtotime("+1 day", $aux_date);
-        } while (date('Y-m-d',$aux_date) != date('Y-m-d',$end));
+        } while (date('Y-m-d', $aux_date) != date('Y-m-d', $end));
         $excepcoes = $this->_getExcecoes();
         foreach ($excepcoes as $excepcao) {
             $blocks[] = array(

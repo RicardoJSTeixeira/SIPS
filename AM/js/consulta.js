@@ -15,12 +15,10 @@ $(function()
     reserva_id = atob(decodeURIComponent(rse.rs));
 
     script = new render($("#main_consulta_div #script_placeholder"), "/sips-admin/script_dinamico/", 159, lead_id, 0, undefined, undefined, 0, 0);
-    var config = new Object();
-    config.save_overwrite = true;
+    var config = {save_overwrite: true};
     script.init(config);
 
-    $.get("view/audiograma/audiograma.html", function(data) {
-        $('#main_consulta_div #audiograma_placeholder').html(data);
+    $('#main_consulta_div #audiograma_placeholder').load("view/audiograma/audiograma.html", function() {
         consult_audiogra = new audiograma(lead_id);
     });
 
@@ -41,25 +39,42 @@ $("#main_consulta_div #pa_no").click(function()
 {
     consult_status = "no_exam";
     //SE NÃO HÁ EXAME PREENCHE RAZÕES
-    $("#main_consulta_div #no_exam_div").show();
-    $("#main_consulta_div #script_placeholder").hide();
-    $("#main_consulta_div #inicial_option_div").hide();
-    $("#main_consulta_div #terminar_consulta").removeClass("hidden");
+    $("#main_consulta_div")
+            .find("#no_exam_div")
+            .show()
+            .end()
+            .find("#script_placeholder")
+            .hide()
+            .end()
+            .find("#inicial_option_div")
+            .hide()
+            .end()
+            .find("#terminar_consulta")
+            .removeClass("hidden");
 });
 
 $("#main_consulta_div #pa_yes").click(function()
 {
     consult_status = "yes_exam";
-    $("#main_consulta_div #yes_exam_div").show();
-    $("#main_consulta_div #inicial_option_div").hide();
-    $("#main_consulta_div #terminar_consulta_no_exame").removeClass("hidden");
+    $("#main_consulta_div")
+            .find("#yes_exam_div")
+            .show()
+            .end()
+            .find("#inicial_option_div")
+            .hide()
+            .end()
+            .find("#terminar_consulta_no_exame")
+            .removeClass("hidden");
     $("#main_consulta_div #validate_audio_script").removeClass("hidden");
 });
 
 $("#main_consulta_div #terminar_consulta_no_exame").click(function()
 {
-    $("#main_consulta_div #no_exam_div").show();
-    $("#main_consulta_div #yes_exam_div").hide();
+    $("#main_consulta_div")
+            .find("#no_exam_div")
+            .show()
+            .end()
+            .find("#yes_exam_div").hide();
     $(this).prop("disabled", true);
 });
 //VENDA

@@ -27,9 +27,6 @@ $(function() {
             startC(data);
         }
 
-
-                
-
     };
 
     $.post("/AM/ajax/calendar.php",

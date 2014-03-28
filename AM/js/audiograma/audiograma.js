@@ -1,15 +1,18 @@
 var audiograma = function(lead_id) {
 
-    var values_regex = /[^0-9 \-\+\<\>]+/g;
-    var contas_regex = /[^0-9\-]+/g;
-    var lead_id = lead_id;
-    var me = this;
+    var
+            values_regex = /[^0-9 \-\+\<\>]+/g,
+            contas_regex = /[^0-9\-]+/g,
+            lead_id = lead_id,
+            me = this;
+
+    this.adg = $("#main_audiograma_div");
 
 
-    $("#main_audiograma_div #right_ear").text("Sem dados");
-    $("#main_audiograma_div #left_ear").text("Sem dados");
+    me.adg.find("#right_ear").text("Sem dados");
+    me.adg.find("#left_ear").text("Sem dados");
 
-    $("#main_audiograma_div #audiograma_form").on("submit", function(e)
+    me.adg.find("#audiograma_form").submit(function(e)
     {
         e.preventDefault();
     });
@@ -17,22 +20,22 @@ var audiograma = function(lead_id) {
     this.calculate = function(callback)
     {
 
-        var right_ear = {"value": 0, "text": "Sem Perda"};
-        var left_ear = {"value": 0, "text": "Sem Perda"};
-        var all_ear = {"value": 0, "text": "Ambos os ouvidos: Sem Perda"};
-
-
+        var
+                right_ear = {"value": 0, "text": "Sem Perda"},
+        left_ear = {"value": 0, "text": "Sem Perda"},
+        all_ear = {"value": 0, "text": "Ambos os ouvidos: Sem Perda"};
 
         //APRESENTA SO VALORES CALCULADOS DE CADA OUVIDO
 
-        var ar500 = (($("#main_audiograma_div #AR500").val().replace(contas_regex, "")));
-        var al500 = (($("#main_audiograma_div #AL500").val().replace(contas_regex, "")));
-        var ar1000 = (($("#main_audiograma_div #AR1000").val().replace(contas_regex, "")));
-        var al1000 = (($("#main_audiograma_div #AL1000").val().replace(contas_regex, "")));
-        var ar2000 = (($("#main_audiograma_div #AR2000").val().replace(contas_regex, "")));
-        var al2000 = (($("#main_audiograma_div #AL2000").val().replace(contas_regex, "")));
-        var ar4000 = (($("#main_audiograma_div #AR4000").val().replace(contas_regex, "")));
-        var al4000 = (($("#main_audiograma_div #AL4000").val().replace(contas_regex, "")));
+        var
+                ar500 = ((me.adg.find("#AR500").val().replace(contas_regex, ""))),
+                al500 = ((me.adg.find("#AL500").val().replace(contas_regex, ""))),
+                ar1000 = ((me.adg.find("#AR1000").val().replace(contas_regex, ""))),
+                al1000 = ((me.adg.find("#AL1000").val().replace(contas_regex, ""))),
+                ar2000 = ((me.adg.find("#AR2000").val().replace(contas_regex, ""))),
+                al2000 = ((me.adg.find("#AL2000").val().replace(contas_regex, ""))),
+                ar4000 = ((me.adg.find("#AR4000").val().replace(contas_regex, ""))),
+                al4000 = ((me.adg.find("#AL4000").val().replace(contas_regex, "")));
 
         right_ear.value = ((ar500 * 4) + (ar1000 * 3) + (ar2000 * 2) + (ar4000 * 1)) / 10;
         left_ear.value = ((al500 * 4) + (al1000 * 3) + (al2000 * 2) + (al4000 * 1)) / 10;
@@ -62,12 +65,12 @@ var audiograma = function(lead_id) {
             }
         }
 
-        $("#main_audiograma_div #right_ear").text(right_ear.text);
-        $("#main_audiograma_div #right_ear_value").val(right_ear.value);
-        $("#main_audiograma_div #left_ear").text(left_ear.text);
-        $("#main_audiograma_div #left_ear_value").val(left_ear.value);
-        $("#main_audiograma_div #all_ear").text(all_ear.text);
-        $("#main_audiograma_div #all_ear_value").val(all_ear.value);
+        me.adg.find("#right_ear").text(right_ear.text);
+        me.adg.find("#right_ear_value").val(right_ear.value);
+        me.adg.find("#left_ear").text(left_ear.text);
+        me.adg.find("#left_ear_value").val(left_ear.value);
+        me.adg.find("#all_ear").text(all_ear.text);
+        me.adg.find("#all_ear_value").val(all_ear.value);
         if (typeof callback === "function")
         {
             callback();
@@ -114,7 +117,7 @@ var audiograma = function(lead_id) {
             $('#bc_tooltip').tooltip('hide');
 
 
-        if ($("#main_audiograma_div #audiograma_form").validationEngine('validate') && bcstatus)
+        if (me.adg.find("#audiograma_form").validationEngine('validate') && bcstatus)
         {
             if (typeof validado === "function")
             {
@@ -136,7 +139,7 @@ var audiograma = function(lead_id) {
 
 
 //VALIDATE DOS MAX E MIN VALUES
-    $("#main_audiograma_div #audiograma_table input").on("focusout", function()
+    me.adg.find("#audiograma_table input").on("focusout", function()
     {
         var element = $(this);
         var min = element.data("min");
@@ -166,7 +169,7 @@ var audiograma = function(lead_id) {
         {
             $.each(this.value, function()
             {
-                $("#main_audiograma_div #" + this.name).val(this.value);
+                me.adg.find("#" + this.name).val(this.value);
             });
         });
     }, "json");
