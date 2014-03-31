@@ -44,7 +44,10 @@ Class requisitions {
     public function create_requisition($type, $lead_id, $contract_number, $attachment, $products_list) {
         $query = "INSERT INTO `spice_requisition`( `user`, `type`, `lead_id`, `date`, `contract_number`, `attachment`, `products`,`status`) VALUES ( :user,:type,:lead_id,:date,:contract_number,:attachment,:products,:status)";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":user" => $this->_user_id, ":type" => $type, ":lead_id" => $lead_id, ":date" => date('Y-m-d H:i:s'), ":contract_number" => $contract_number, ":attachment" => $attachment, ":products" => json_encode($products_list), ":status" => 0));
+        $data = date('Y-m-d H:i:s');
+        $stmt->execute(array(":user" => $this->_user_id, ":type" => $type, ":lead_id" => $lead_id, ":date" => $data, ":contract_number" => $contract_number, ":attachment" => $attachment, ":products" => json_encode($products_list), ":status" => 0));
+        $last_insert_id=$this->_db->lastInsertId();
+        return array($last_insert_id, $this->_user_id, $type, $lead_id, $data, $contract_number, $attachment, "<div> <button class='btn ver_requisition_products' value='" .$last_insert_id . "'><i class='icon-eye-open'></i>Ver</button></div>", "Pedido enviado");
     }
 
     public function get_products_by_requisiton($id) {
@@ -60,7 +63,7 @@ Class requisitions {
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row1 = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                
+
             $productalia[$row1["id"]] = ["name" => $row1["name"], "quantity" => $productalia[$row1["id"]]["quantity"], "color" => $productalia[$row1["id"]]["color"], "color_name" => $productalia[$row1["id"]]["color_name"], "category" => $row1["category"]];
         }
         return $productalia;

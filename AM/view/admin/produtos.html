@@ -1,53 +1,6 @@
-<!--REMOVER PRODUTO-->
-<div id="remove_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Eliminar produto</h3>
-    </div>
-    <div class="modal-body">
-        <p>Tem a certeza que deseja eliminar o produto?</p>
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-        <button class="btn btn-primary" id="remove_product_button">Sim, eliminar</button>
-    </div>
-</div>
-
-
-
-<!--REMOVER ALL PRODUTOS-->
-<div id="removeAll_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Eliminar produto</h3>
-    </div>
-    <div class="modal-body">
-        <p>Tem a certeza que deseja eliminar todos os produto?</p>
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-        <button class="btn btn-primary" id="removeAll_product_button">Sim, eliminar todos os produtos</button>
-    </div>
-</div>
-
-
-<!--EDIçÃO DE PRODUTOS-->
-<div id="product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Gestão de produto</h3>
-    </div>
-    <div class="modal-body">
-      
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Sair</button>
-
-    </div>
-</div>
 
 <div class="row-fluid">
-    <div class="span12 grid">
+    <div class="grid">
         <div class="grid-title">
             <div class="pull-left">
                 <h4>Gestão de Produtos</h4>
@@ -62,7 +15,7 @@
                 </div>
                 <div class="grid-content"  >
                     <button class="btn" id="create_product_modal_button">Criar novo Produto</button>
-                    <button class="btn" id="removeAll_product_modal_button">Apagar todos os Produtos</button>
+
                 </div>
             </div>
             <div class="span9">
@@ -73,126 +26,38 @@
                 </div>
                 <div class="grid-content"  >
                     <table class="table table-bordered table-mod" id="view_product_datatable"></table>
+
                 </div>
             </div>
+            <div class="clear"></div>
         </div>
     </div>
 </div>
+<div id="extra_div"></div>
 <script type="text/javascript" src="/AM/lib_js/product.js" ></script>
 <script type="text/javascript">
     var product;
 
     $(function()
     {
-        config = new Object();
-        product = new products(config);
-        get_info_product();
+        var config = new Object();
+        product = new products($("#extra_div"), config);
+        product.init(function() {
+            get_info_product();
+        });
     });
 
     function get_info_product()
     {
-        product.init_to_datatable($("#view_product_datatable"),   $("#product_modal"));
+        product.init_to_datatable($("#view_product_datatable"));
     }
-
-
-//PRODUTOS--------------------------------------------------------------------------------------------------------------------------------------------------
-//EDITAR PRODUTO
-    $("#admin_zone").on("click", ".item_edit_button", function()
-    {
-        var item_id = $(this).data("product_id");
-        $("#product_modal").data("product_id", item_id);
-        $("#ep_name").val();
-        var Table_child_product = $('#child_product_datatable').dataTable({
-            "aaSorting": [[0, "desc"]],
-            "bSortClasses": false,
-            "bProcessing": true,
-            "bDestroy": true,
-            "bAutoWidth": false,
-            "sPaginationType": "full_numbers",
-            "sAjaxSource": 'ajax/admin.php',
-            "fnServerParams": function(aoData) {
-                aoData.push({"name": "action", "value": "listar_produtos_to_datatable_by_parent"},
-                {"name": "parent", "value": item_id});
-            },
-            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Nome"}, {"sTitle": "Max requisições mensais"}, {"sTitle": "Max requisições especiais"}, {"sTitle": "Categoria"}],
-            "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
-        });
-        $.post('ajax/admin.php', {action: "listar_produto", id: $(this).data("product_id")},
-        function(data)
-        {
-
-            $("#ep_name").val(data.name);
-            $("#ep_parent optgroup option[id='" + data.parent + "']").prop("selected", true).trigger("chosen:updated");
-            $("#ep_mrm").val(data.max_req_m);
-            $("#ep_mrw").val(data.max_req_s);
-            $("#ep_category option[value='" + data.category + "']").prop("selected", true);
-            $("#ep_type option[value='" + data.type + "']").prop("selected", true);
-            $(".chosen-container").css("width", "250px");
-            $("#product_modal").modal("show");
-        }, "json");
-    });
-    $("#edit_product_button").click(function()
-    {
-        if ($("#edit_product_form").validationEngine("validate"))
-        {
-            $.post('ajax/admin.php', {action: "editar_produto",
-                id: $("#product_modal").data("product_id"),
-                name: $("#ep_name").val(),
-                parent: $("#ep_parent option:selected").val(),
-                max_req_m: $("#ep_mrm").val(),
-                max_req_s: ($("#ep_mrw").val() > $("#ep_mrm").val()) ? $("#ep_mrm").val() : $("#ep_mrw").val(),
-                category: $("#ep_category").val(),
-                type: $("#ep_type option:selected").val()
-            }, function() {
-                get_info_product();
-                $("#product_modal").modal("hide");
-            }, "json");
-        }
-    });
-//---------------------------------------------------------------------------------------------
-
-//REMOVER PRODUTO
-
-    $("#admin_zone").on("click", ".item_delete_button", function()
-    {
-        $(" #remove_product_modal").data("product_id", $(this).data("product_id")).modal("show");
-    });
-    $("#remove_product_button").click(function()
-    {
-        $.post('ajax/admin.php', {action: "apagar_produto",
-            id: $("#remove_product_modal").data("product_id")
-
-        }, function() {
-            get_info_product();
-            $("#remove_product_modal").modal("hide");
-        }, "json");
-    });
-//remover todos
-    $("#removeAll_product_modal_button").click(function()
-    {
-        $("#removeAll_product_modal").modal("show");
-    });
-    $("#removeAll_product_button").click(function()
-    {
-        $.post('ajax/admin.php', {action: "apagar_produtos"}, function() {
-            get_info_product();
-            $("#removeAll_product_modal").modal("hide");
-        }, "json");
-    });
-//-------------------------------------------------------------------------------------
-// CRIAR PRODUTO
 
     $("#create_product_modal_button").click(function()
     {
-        product.init_new_product($("#product_div"), function() {
-            $("#product_modal").modal("hide");
-            product.init_to_datatable($("#view_product_datatable"), $("#product_div"), $("#product_modal"));
+        product.init_new_product(function() {
+            product.init_to_datatable($("#view_product_datatable"));
         });
         $("#product_modal").modal("show");
-        $(".chosen-container").css("width", "250px");
-
-
-
     });
 
 </script>
