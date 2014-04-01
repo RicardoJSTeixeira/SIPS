@@ -1,5 +1,8 @@
 $(function() {
-
+    function setFavicon() {
+        var link = $('link[type="image/vnd\.microsoft\.icon"]').remove().attr("href");
+        $('<link href="' + link + '" rel="shortcut icon" type="image/vnd.microsoft.icon" />').appendTo('head');
+    }
     $.ajaxSetup({cache: false});
     moment.lang('pt');
     $.history.on('load change pushed', function(event, url, type) {
@@ -8,6 +11,7 @@ $(function() {
 
         if (url.length) {
             $("#principal").load(url);
+            setFavicon();
         } else {
             $.history.push("view/dashboard.html");
         }
