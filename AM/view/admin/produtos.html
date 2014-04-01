@@ -28,6 +28,11 @@
                     <table class="table table-bordered table-mod" id="view_product_datatable"></table>
 
                 </div>
+                <div class="formRow ">
+                    <span class="label label-important">Produtos Eliminados</span>
+                    <span class="label label-success">Produto com HighLight</span>
+                    <span class="label label-warning">Produtos Inativos</span>
+                </div>
             </div>
             <div class="clear"></div>
         </div>
@@ -43,7 +48,7 @@
         var config = new Object();
         product = new products($("#extra_div"), config);
         product.init(function() {
-           product.init_to_datatable($("#view_product_datatable"));
+            product.init_to_datatable($("#view_product_datatable"));
         });
     });
 
@@ -54,7 +59,7 @@
         product.init_new_product(function() {
             product.init_to_datatable($("#view_product_datatable"));
         });
-        
+
     });
 
 </script>

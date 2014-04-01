@@ -135,15 +135,10 @@ var requisition = function(geral_path, options_ext)
 //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
     this.new_requisition = function(new_requisition_zone, lead_id) {
         new_requisition_zone.off().empty();
-        new_requisition_zone.append(new_requisition_area.show());
-
+        new_requisition_zone.append(new_requisition_area.clone().show());
         new_requisition_zone.find('.fileupload').fileupload();
-
-
         new_requisition_zone.find("#requisition_form").validationEngine();
         new_requisition_zone.find("#requisition_form").show();
-
-
         //preencher com lead_id enviado
         new_requisition_zone.find(".tipo_div").hide();
         if (lead_id)
@@ -157,7 +152,6 @@ var requisition = function(geral_path, options_ext)
             me.tipo = "mensal";
             new_requisition_zone.find("#tipo_mensal").show();
         }
-
         // ADICIONAR E REMOVER ITEMS DA LISTA DE PRODUTOS NA NOVA ENCOMENDA----------------------------
         $(new_requisition_zone).on("click", "#new_requisition_product_add_line", function(e)
         {
@@ -170,18 +164,10 @@ var requisition = function(geral_path, options_ext)
                                 <td> <input class='input-mini validate[required,custom[onlyNumberSp]]' id='product_input" + product + "' type='number' min='1' value='1'></td>\n\
                                 <td><button class='btn icon-alone btn-danger remove_item_requisition_table' value='" + product + "'><i  class='icon-remove'></i> </button></td></tr>");
             new_requisition_zone.find(" #product_select" + product).chosen({no_results_text: "Sem resultados"});
-
-
-            if (me.tipo != "mensal")
-            {
                 populate_select(new_requisition_zone.find(" #product_select" + product), function() {
                     update_product_selects();
                 });
-            }
-            else
-            {
-                populate_select(new_requisition_zone.find(" #product_select" + product), null);
-            }
+           
             product += 1;
         });
         $(new_requisition_zone).on("change", ".new_requisition_select_product", function()
@@ -211,15 +197,10 @@ var requisition = function(geral_path, options_ext)
             }
             else
                 select.append("<option>Padrão</option>");
-            if (me.tipo != "mensal")
-            {
+       
                 
                     update_product_selects();
-               
-            }
-            
         });
-
 
 
         function  update_product_selects()
@@ -238,9 +219,6 @@ var requisition = function(geral_path, options_ext)
             });
             $("#new_requisition_product_tbody select").trigger("chosen:updated");
         }
-
-
-
 
 
 // SUBMITAR A ENCOMENDA------------------------------------------------

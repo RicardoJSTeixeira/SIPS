@@ -27,7 +27,7 @@ switch ($action) {
         break;
 
     case "criar_produto":
-        echo json_encode($products->add_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color));
+        echo json_encode($products->add_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color,$active));
         break;
 
     case "get_produtos":
@@ -45,7 +45,7 @@ switch ($action) {
 
     case "edit_product":
         $produto = new product($db, $id);
-        echo json_encode($produto->edit_product($name, $max_req_m, $max_req_s, $parent, $category, $type,$color));
+        echo json_encode($produto->edit_product($name, $max_req_m, $max_req_s, $parent, $category, $type,$color,$active));
         break;
 
     case "add_promotion":

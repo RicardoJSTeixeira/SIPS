@@ -40,6 +40,13 @@
                 </div>    
             </div>
             <div class="formRow">
+                <span>Ativo</span>
+                <div class="formRight">
+                    <input   type="checkbox" id="edit_product_active" name="edit_product_active" value="1" checked  >
+                    <label class="checkbox inline" for="edit_product_active"><span></span>Sim</label>
+                </div>    
+            </div>
+            <div class="formRow">
                 <span>Max Requisições</span>
                 <table >
                     <thead>
@@ -123,13 +130,13 @@
                         </div>
                     </div>
                     <div class="formRow">
-                        <span>Data inicial da Promoção</span>
+                        <span>Início</span>
                         <div class="formRight">
                             <input size="16" type="text" class="form_datetime_day validate[required]" readonly id="edit_product_data_promoçao1" placeholder="Data inicial promoção">
                         </div>
                     </div>
                     <div class="formRow">
-                        <span>Data final da Promoção</span>
+                        <span>Fim</span>
                         <div class="formRight">
                             <input size="16" type="text" class="form_datetime_day validate[required]" readonly id="edit_product_data_promoçao2" placeholder="Data final promoção">
                         </div>
@@ -207,6 +214,14 @@
                     <label class="checkbox inline" for="new_product_check_dispenser"><span></span>Dispenser</label>
                 </div>    
             </div>
+
+            <div class="formRow">
+                <span>Ativo</span>
+                <div class="formRight">
+                    <input   type="checkbox" id="new_product_active" name="new_product_active" value="1" checked  >
+                    <label class="checkbox inline" for="new_product_active"><span></span>Sim</label>
+                </div>    
+            </div>
             <div class="formRow">
                 <h5>Max Requisições</h5>
                 <table >
@@ -274,23 +289,7 @@
     </div>
 </div>
 
-
-
-<!--REMOVER ALL PRODUTOS-->
-<div id="removeAll_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Eliminar produto</h3>
-    </div>
-    <div class="modal-body">
-        <p>Tem a certeza que deseja eliminar todos os produto?</p>
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-        <button class="btn btn-primary" id="removeAll_product_button">Sim, eliminar todos os produtos</button>
-    </div>
-</div>
-
+ 
 
 
 

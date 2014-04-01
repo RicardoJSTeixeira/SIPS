@@ -227,7 +227,7 @@ var requests = function(basic_path, options_ext)
                 {"name": "show_admin", "value": 1}
                 );
             },
-            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Lead id"}, {"sTitle": "anexo"}, {"sTitle": "Observações"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
+            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Lead id"}, {"sTitle": "Anexo"}, {"sTitle": "Observações"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 
@@ -255,11 +255,12 @@ var requests = function(basic_path, options_ext)
             $.post("ajax/requests.php", {action: "get_anexo_correio", id: id_anexo},
             function(data1)
             {
-
+                var tbody = me.basic_path.find("#tbody_ver_anexo_correio");
+                tbody.empty();
                 $.each(data1, function()
                 {
-                   
-                    me.basic_path.find("#tbody_ver_anexo_correio").append("<tr><td><input type='checkbox' id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> " + this.toString() + " </label></td></tr>");
+
+                    tbody.append("<tr><td class='chex-table'><input type='checkbox' id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span>  </label></td><td>" + this + "</td></tr>");
                     anexo_number++;
                 });
 
