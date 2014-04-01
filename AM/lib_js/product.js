@@ -3,9 +3,8 @@ var products = function(geral_path, options_ext)
 {
     var me = this,
             product_id = 0,
-            product_modal = "",
             datatable_path = "";
-    
+
     this.file_uploaded = false;
     this.config = {};
     this.config.product_editable = true;
@@ -15,106 +14,11 @@ var products = function(geral_path, options_ext)
     {
         $.get("/AM/view/products/product.html", function(data) {
             geral_path.empty().off().append(data);
-            product_modal = geral_path.find("#product_modal");
-            product_modal.on("click", "#add_promotion_toggle", function(e)
-            {
-                e.preventDefault();
-                $(this).hide();
-                product_modal.find("#promotion_div").show();
-                product_modal.find("#promotion_active").prop("checked", false);
-                product_modal.find("#promotion_highlight").prop("checked", false);
-                product_modal.find("#data_promoçao1").val("");
-                product_modal.find("#data_promoçao2").val("");
-            });
-            product_modal.on("click", "#add_promotion_button", function(e)
-            {
-                e.preventDefault();
-                if (product_modal.find("#edit_product_form").validationEngine("validate"))
-                {
-                    $.post('/AM/ajax/products.php', {action: "add_promotion", "id": product_id,
-                        active: product_modal.find("#promotion_active").is(":checked"),
-                        highlight: product_modal.find("#promotion_highlight").is(":checked"),
-                        data_inicio: product_modal.find("#data_promoçao1").val(),
-                        data_fim: product_modal.find("#data_promoçao2").val()
-                    }, function(data) {
-                        get_promocao();
-                        product_modal.find("#add_promotion_toggle").show();
-                        product_modal.find("#promotion_div").hide();
-                    }, "json");
-                }
-            });
-            product_modal.on("change", "#product_category", function()
-            {
-                if ($(this).val() === "molde" || $(this).val() === "aparelho")
-                {
-                    product_modal.find("#product_color_div").show();
-                }
-                else
-                {
-                    product_modal.find("#table_tbody_color").empty();
-                    product_modal.find("#product_color_div").hide();
-                }
-            });
-            product_modal.on("click", "#button_color_add_line", function(e)
-            {
-                e.preventDefault();
-                product_modal.find("#table_tbody_color").append("<tr><td><select class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]'></td><td><button class='btn remove_color icon-alone'><i class='icon icon-remove'></i></button></td></tr>");
-                $("#table_tbody_color").find("select:last").append(product_modal.find("#colour_picker").find("option").clone()).colourPicker({
-                    ico: '/jquery/colourPicker/colourPicker.gif',
-                    title: false
-                });
-            });
-            product_modal.on("click", ".remove_color", function(e)
-            {
-                e.preventDefault();
-                $(this).parent().parent().remove();
-            });
-            product_modal.on("click", ".remove_promotion_button", function(e)
-            {
-                e.preventDefault();
-                var this_button = $(this);
-                e.preventDefault();
-                $.post('/AM/ajax/products.php', {action: "remove_promotion", "id": product_id, "id_promotion": this_button.data("id_promotion")
-                }, function(data) {
-                    this_button.parent().parent().remove();
-                }, "json");
-            });
 
-            product_modal.find("#create_product_button").click(function(e)
-            {
-                e.preventDefault();
-                var types = [];
-                $.each(product_modal.find("input[name='tipo_user']:checked"), function()
-                {
-                    types.push($(this).val());
-                });
-                var parents = [];
-                $.each(product_modal.find("#product_parent option:selected"), function()
-                {
-                    parents.push($(this).val());
-                });
-                var color = [];
-                $.each(product_modal.find("#table_tbody_color tr"), function()
-                {
-                    color.push({color: $(this).find(".color_picker_select").val(), name: $(this).find(".color_name").val()})
-                });
-                if (product_modal.find("#product_form").validationEngine("validate"))
-                    $.post('/AM/ajax/products.php', {action: "criar_produto",
-                        name: product_modal.find("#product_name").val(),
-                        max_req_m: product_modal.find("#product_mrm").val(),
-                        max_req_s: product_modal.find("#product_mrw").val(),
-                        category: product_modal.find("#product_category").val(),
-                        parent: parents,
-                        type: types,
-                        color: color
-                    }, function(data) {
-                        product_modal.modal("hide");
-                        if (datatable_path)
-                            datatable_path.dataTable().fnAddData(data);
-                    }, "json");
-            });
-
-
+            geral_path.find(".chosen-select").chosen({no_results_text: "Sem resultados", width: "200px"});
+            geral_path.find(".form_datetime_day").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
+            populate_parent(geral_path.find("#new_product_parent"));
+            populate_parent(geral_path.find("#edit_product_parent"));
             if (typeof callback === "function")
                 callback();
         });
@@ -124,27 +28,26 @@ var products = function(geral_path, options_ext)
 
     this.init_to_datatable = function(datatable_path1)
     {
+
         datatable_path = datatable_path1;
         datatable_path.off();
-        product_modal.find(".form_datetime_day").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
-        product_modal.find("#product_parent").chosen({no_results_text: "Sem resultados", width: "200px"});
-        populate_parent(product_modal.find("#product_parent"));
+        var edit_product_modal = geral_path.find("#edit_product_modal");
+
         update_products_datatable(datatable_path);
 
         datatable_path.on("click", ".btn_ver_produto", function()
         {
             product_id = $(this).data("product_id");
-            populate_modal(function()
+            populate_modal(edit_product_modal, function()
             {
-                get_promocao(function()
+                get_promocao(edit_product_modal, function()
                 {
-                    product_modal.find("#product_promotion_div").show();
-                    product_modal.find("#button_criar_produto").hide();
-                    product_modal.find("#button_editar_produto").hide();
- 
-                    product_modal.find(":input").prop("disabled", true);
-                    product_modal.find("select").prop("disabled", true).trigger("chosen:updated");
-                    product_modal.find("#sair_button").prop("disabled", false);
+                      edit_product_modal. find("#edit_product_button").hide();
+                    edit_product_modal.find(".modal-body").find("#edit_product_new_promotion_div").hide();
+                    edit_product_modal.find(".modal-body").find("#edit_product_add_promotion_toggle").hide();
+                    edit_product_modal.find(".modal-body").find("#edit_product_button_color_add_line").hide();
+                    edit_product_modal.find(".modal-body").find(":input").prop("disabled", true);
+                    edit_product_modal.find(".modal-body").find("select").prop("disabled", true).trigger("chosen:updated");
                 });
             });
         });
@@ -152,49 +55,62 @@ var products = function(geral_path, options_ext)
         datatable_path.on("click", ".btn_editar_produto", function()
         {
             product_id = $(this).data("product_id");
-            populate_modal(function()
+            populate_modal(edit_product_modal, function()
             {
-                get_promocao(function()
+                get_promocao(edit_product_modal, function()
                 {
-                    product_modal.find("#product_promotion_div").show();
-                    product_modal.find("#button_criar_produto").hide();
-                    product_modal.find("#button_editar_produto").show();
-          
-                    product_modal.find(":input").prop("disabled", false);
-                    product_modal.find("select").prop("disabled", false).trigger("chosen:updated");
-                    product_modal.find("#sair_button").prop("disabled", false);
+                    edit_product_modal. find("#edit_product_button").show();
+                    edit_product_modal.find(".modal-body").find("#edit_product_new_promotion_div").hide();
+                    edit_product_modal.find(".modal-body").find("#edit_product_add_promotion_toggle").show();
+                    edit_product_modal.find(".modal-body").find("#edit_product_button_color_add_line").show();
+                    edit_product_modal.find(".modal-body").find(":input").prop("disabled", false);
+                    edit_product_modal.find(".modal-body").find("select").prop("disabled", false).trigger("chosen:updated");
                 });
             });
-            product_modal.on("click", "#edit_product_button", function(e)
+
+
+            edit_product_modal.on("click", "#edit_product_button", function(e)
             {
                 e.preventDefault();
                 var types = [];
-                $.each(product_modal.find(":input[name='tipo_user']:checked"), function()
+                $.each(edit_product_modal.find(":input[name='edit_product_tipo_user']:checked"), function()
                 {
                     types.push($(this).val());
                 });
                 var parents = [];
-                $.each(product_modal.find("#product_parent option:selected"), function()
+                $.each(edit_product_modal.find("#edit_product_parent option:selected"), function()
                 {
                     parents.push($(this).val());
                 });
                 var color = [];
-                $.each(product_modal.find("#table_tbody_color tr"), function()
+                $.each(edit_product_modal.find("#edit_product_table_tbody_color tr"), function()
                 {
                     color.push({color: $(this).find(".color_picker_select").val(), name: $(this).find(".color_name").val()});
                 });
-                $.post('/AM/ajax/products.php', {action: "edit_product", "id": product_id,
-                    name: product_modal.find("#product_name").val(),
-                    max_req_m: product_modal.find("#product_mrm").val(),
-                    max_req_s: product_modal.find("#product_mrw").val(),
-                    category: product_modal.find("#product_category").val(),
-                    parent: parents,
-                    type: types,
-                    color: color}, function(data) {
 
-                    product_modal.modal("hide");
-                    update_products_datatable(datatable_path);
-                }, "json");
+                if (edit_product_modal.find("#edit_product_form").validationEngine("validate"))
+                {
+                    if (types.length)
+                    {
+
+                        $.post('/AM/ajax/products.php', {action: "edit_product", "id": product_id,
+                            name: edit_product_modal.find("#edit_product_name").val(),
+                            max_req_m: edit_product_modal.find("#edit_product_mrm").val(),
+                            max_req_s: edit_product_modal.find("#edit_product_mrw").val(),
+                            category: edit_product_modal.find("#edit_product_category").val(),
+                            parent: parents,
+                            type: types,
+                            color: color}, function(data) {
+
+                            edit_product_modal.modal("hide");
+                            update_products_datatable(datatable_path);
+                        }, "json");
+                    }
+                    else
+                    {
+                        $.jGrowl("Escolha um tipo, Branch ou Dispenser", {life: 3500});
+                    }
+                }
             });
         });
         datatable_path.on("click", ".btn_apagar_produto", function()
@@ -206,67 +122,135 @@ var products = function(geral_path, options_ext)
                 this_button.parent().parent().remove();
             }, "json");
         });
+
+        edit_product_modal.on("click", "#edit_product_add_promotion_toggle", function(e)
+        {
+            e.preventDefault();
+            $(this).hide();
+            edit_product_modal.find("#edit_product_new_promotion_div").show();
+            edit_product_modal.find("#edit_product_promotion_active").prop("checked", false);
+            edit_product_modal.find("#edit_product_promotion_highlight").prop("checked", false);
+            edit_product_modal.find("#edit_product_data_promoçao1").val("");
+            edit_product_modal.find("#edit_product_data_promoçao2").val("");
+        });
+
+        edit_product_modal.on("click", "#edit_product_add_promotion_button", function(e)
+        {
+            e.preventDefault();
+            if (edit_product_modal.find("#edit_product_form").validationEngine("validate"))
+            {
+                $.post('/AM/ajax/products.php', {action: "add_promotion", "id": product_id,
+                    active: edit_product_modal.find("#edit_product_promotion_active").is(":checked"),
+                    highlight: edit_product_modal.find("#edit_product_promotion_highlight").is(":checked"),
+                    data_inicio: edit_product_modal.find("#edit_product_data_promoçao1").val(),
+                    data_fim: edit_product_modal.find("#edit_product_data_promoçao2").val()
+                }, function(data) {
+                    get_promocao(edit_product_modal);
+                    edit_product_modal.find("#edit_product_add_promotion_toggle").show();
+                    edit_product_modal.find("#edit_product_new_promotion_div").hide();
+                }, "json");
+            }
+        });
+        edit_product_modal.on("change", "#edit_product_category", function()
+        {
+            if ($(this).val() === "molde" || $(this).val() === "aparelho")
+            {
+                edit_product_modal.find("#edit_product_color_div").show();
+            }
+            else
+            {
+                edit_product_modal.find("#edit_product_table_tbody_color").empty();
+                edit_product_modal.find("#edit_product_color_div").hide();
+            }
+        });
+        edit_product_modal.on("click", "#edit_product_button_color_add_line", function(e)
+        {
+            e.preventDefault();
+            edit_product_modal.find("#edit_product_table_tbody_color").append("<tr><td><select class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]'></td><td><button class='btn remove_color icon-alone btn-danger'><i class='icon icon-remove'></i></button></td></tr>");
+            $("#edit_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).colourPicker({
+                ico: '/jquery/colourPicker/colourPicker.gif',
+                title: false
+            });
+        });
+        edit_product_modal.on("click", ".remove_color", function(e)
+        {
+            e.preventDefault();
+            $(this).parent().parent().remove();
+        });
+        edit_product_modal.on("click", ".remove_promotion_button", function(e)
+        {
+            e.preventDefault();
+            var this_button = $(this);
+            e.preventDefault();
+            $.post('/AM/ajax/products.php', {action: "remove_promotion", "id": product_id, "id_promotion": this_button.data("id_promotion")
+            }, function(data) {
+                this_button.parent().parent().remove();
+            }, "json");
+        });
     };
-    function  populate_modal(callback)
+    function  populate_modal(modal, callback)
     {
         $.post('/AM/ajax/products.php', {action: "get_produto_by_id", "id": product_id}, function(data) {
-            product_modal.find("#add_promotion_toggle").show();
-            product_modal.find("#product_name").val(data.name);
-            product_modal.find("#product_category").val(data.category);
-            product_modal.find("#product_parent option").prop("disabled", false);
-            product_modal.find("#product_parent option[value='" + product_id + "']").prop("disabled", true);
-            product_modal.find("#product_parent").val(data.parent_ids).trigger("chosen:updated");
+
+            modal.find("#edit_product_name").val(data.name);
+            modal.find("#edit_product_category").val(data.category);
+            modal.find("#edit_product_parent option").prop("disabled", false);
+            modal.find("#edit_product_parent option[value='" + product_id + "']").prop("disabled", true);
+            modal.find("#edit_product_parent").val(data.parent_ids).trigger("chosen:updated");
             $.each(data.type, function()
             {
-                console.log(this);
-                product_modal.find(":checkbox[name='tipo_user'][value='" + this + "']").prop("checked", true);
+
+                modal.find(":checkbox[name='edit_product_tipo_user'][value='" + this + "']").prop("checked", true);
             });
-            product_modal.find("#product_mrm").val(data.max_req_m);
-            product_modal.find("#product_mrw").val(data.max_req_s);
-            product_modal.find("#child_product_datatable").find("tbody").empty();
+            modal.find("#edit_product_mrm").val(data.max_req_m);
+            modal.find("#edit_product_mrw").val(data.max_req_s);
+            modal.find("#edit_product_child_datatable").find("tbody").empty();
             if (data.children.length)
             {
-                product_modal.find("#product_children_div").show();
+                modal.find("#edit_product_children_div").show();
                 $.each(data.children, function()
                 {
-                    product_modal.find("#child_product_datatable").find("tbody").append("<tr><td>" + this.name + "</td><td>" + this.category + "</td></tr>");
+                    modal.find("#edit_product_child_datatable").find("tbody").append("<tr><td>" + this.name + "</td><td>" + this.category + "</td></tr>");
                 });
             }
             else
             {
-                product_modal.find("#product_children_div").hide();
+                modal.find("#edit_product_children_div").hide();
             }
 //--------------------------------------------------------------------------COLOR-----------------------------------------
+
             if (data.category == "molde" || data.category == "aparelho")
             {
+    
+                modal.find("#edit_product_color_div").show();
                 if (data.color)
                 {
-                    product_modal.find("#product_color_div").show();
-                    product_modal.find("#table_tbody_color").empty();
+                    modal.find("#edit_product_table_tbody_color").empty();
                     $.each(data.color, function()
                     {
-                        product_modal.find("#table_tbody_color").append("<tr><td><select class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]' value='" + this.name + "'></td><td><button class='btn icon-alone remove_color'><i class='icon icon-remove'></i></button></td></tr>");
-                        $("#table_tbody_color").find("select:last").append(product_modal.find("#colour_picker").find("option").clone()).val(this.color).colourPicker({
+                        modal.find("#edit_product_table_tbody_color").append("<tr><td><select class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]' value='" + this.name + "'></td><td><button class='btn icon-alone remove_color  btn-danger'><i class='icon icon-remove'></i></button></td></tr>");
+                        $("#edit_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).val(this.color).colourPicker({
                             ico: '/jquery/colourPicker/colourPicker.gif',
                             title: false
                         });
                     });
                 }
+      
             }
             else
             {
-                product_modal.find("#product_color_div").hide();
+                modal.find("#product_color_div").hide();
             }
-            product_modal.modal("show");
+            modal.modal("show");
             if (typeof callback === "function")
                 callback();
         }, "json");
     }
 
-    function get_promocao(callback)
+    function get_promocao(modal, callback)
     {
         $.post('/AM/ajax/products.php', {action: "get_promotion", "id": product_id}, function(data) {
-            var tbody = product_modal.find("#promotion_table_tbody");
+            var tbody = modal.find("#edit_product_promotion_table_tbody");
             tbody.empty();
             if (data.length)
             {
@@ -300,28 +284,100 @@ var products = function(geral_path, options_ext)
 
     this.init_new_product = function(callback)
     {
-        product_modal.find("input").prop("disabled", false);
-        product_modal.find("input:not(:checkbox)").val("");
-        product_modal.find("select").prop("disabled", false).trigger("chosen:updated");
-        product_modal.find("select").val("").trigger("chosen:updated");
-        product_modal.find("#sair_button").prop("disabled", false);
-        product_modal.find("#button_criar_produto").show();
-        product_modal.find("#button_editar_produto").hide();
-        product_modal.find("#product_children_div").hide();
-        product_modal.find("#product_promotion_div").hide();
-        product_modal.find("#product_color_div").hide();
 
-        product_modal.find("#product_mrm").val(5);
-        product_modal.find("#product_mrw").val(5);
-        product_modal.find("#product_category").trigger("change");
-        product_modal.find(":checkbox").prop("checked", false);
-        product_modal.find(":radio").prop("checked", false);
-        product_modal.show();
+        var new_product_modal = geral_path.find("#new_product_modal");
+
+
+
+        new_product_modal.find("input:not(:checkbox)").val("");
+        new_product_modal.find("select").val("").trigger("chosen:updated");
+        new_product_modal.find("#new_product_mrm").val(5);
+        new_product_modal.find("#new_product_mrw").val(5);
+        new_product_modal.find("#new_product_category").trigger("change");
+        new_product_modal.find(":checkbox").prop("checked", false);
+        new_product_modal.find(":radio").prop("checked", false);
+        new_product_modal.modal("show");
+
+        new_product_modal.find("#new_product_create_button").click(function(e)
+        {
+            e.preventDefault();
+            var types = [];
+            $.each(new_product_modal.find("input[name='new_product_tipo_user']:checked"), function()
+            {
+                types.push($(this).val());
+            });
+            var parents = [];
+            $.each(new_product_modal.find("#new_product_parent option:selected"), function()
+            {
+                parents.push($(this).val());
+            });
+            var color = [];
+            $.each(new_product_modal.find("#new_product_table_tbody_color tr"), function()
+            {
+                color.push({color: $(this).find(".color_picker_select").val(), name: $(this).find(".color_name").val()});
+            });
+            if (new_product_modal.find("#new_product_form").validationEngine("validate"))
+                if (types.length)
+                {
+                    $.post('/AM/ajax/products.php', {action: "criar_produto",
+                        name: new_product_modal.find("#new_product_name").val(),
+                        max_req_m: new_product_modal.find("#new_product_mrm").val(),
+                        max_req_s: new_product_modal.find("#new_product_mrw").val(),
+                        category: new_product_modal.find("#new_product_category").val(),
+                        parent: parents,
+                        type: types,
+                        color: color
+                    }, function(data) {
+                        new_product_modal.modal("hide");
+                        if (datatable_path)
+                            datatable_path.dataTable().fnAddData(data);
+                    }, "json");
+                }
+                else
+                {
+                    $.jGrowl("Escolha um tipo, Branch ou Dispenser", {life: 3500});
+                }
+        });
+
+
+
+
+        new_product_modal.on("change", "#new_product_category", function()
+        {
+            if ($(this).val() === "molde" || $(this).val() === "aparelho")
+            {
+                new_product_modal.find("#new_product_color_div").show();
+            }
+            else
+            {
+                new_product_modal.find("#new_product_table_tbody_color").empty();
+                new_product_modal.find("#new_product_color_div").hide();
+            }
+        });
+
+        new_product_modal.on("click", "#new_product_button_color_add_line", function(e)
+        {
+            e.preventDefault();
+            new_product_modal.find("#new_product_table_tbody_color").append("<tr><td><select class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]'></td><td><button class='btn remove_color icon-alone'><i class='icon icon-remove'></i></button></td></tr>");
+            $("#new_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).colourPicker({
+                ico: '/jquery/colourPicker/colourPicker.gif',
+                title: false
+            });
+        });
+        new_product_modal.on("click", ".remove_color", function(e)
+        {
+            e.preventDefault();
+            $(this).parent().parent().remove();
+        });
 
 
         if (typeof callback === "function")
             callback();
+
     };
+
+
+
     function populate_parent(select)
     {
         $.post('/AM/ajax/products.php', {action: "get_produtos"},

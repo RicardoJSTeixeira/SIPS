@@ -36,7 +36,30 @@
                 <div class="formRow">
                     <span>Docs e Objectos Associados</span>
                     <div class="formRight">
-                        <textarea id="input_doc_obj_assoc" name="doc_obj_assoc"></textarea>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Documento/Objecto
+                                    </th>
+                                    <th>
+                                        Opção
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="doc_obj_table_tbody">
+                                <tr>
+                                    <td><input  class='input-xlarge validate[required]' type='text' /></td>
+                                    <td><button class="btn btn-danger remove_doc_obj"><i class="icon icon-minus"></i></button></td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                        <button class="btn btn-primary" id="add_line_obj_doc"><i class="icon-plus"></i>Adicionar Documento/Objecto</button>
+
+
+
+
                     </div>
                 </div>
                 <div class="formRow">

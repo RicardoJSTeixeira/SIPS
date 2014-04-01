@@ -174,13 +174,27 @@ var requests = function(basic_path, options_ext)
                 e.preventDefault();
                 if (rc_zone.find("#relatorio_correio_form").validationEngine("validate"))
                 {
+
+
+
+                    var docs_objs = [];
+                    $.each(rc_zone.find("#doc_obj_table_tbody tr"), function()
+                    {
+                        docs_objs.push($(this).find("input").val());
+                    });
+
+
+
+
+
+
                     $.post("ajax/requests.php", {action: "criar_relatorio_correio",
                         carta_porte: rc_zone.find("#input_carta_porte").val(),
                         data: rc_zone.find("#data_envio_datetime").val(),
                         doc: rc_zone.find("#input_doc").val(),
                         lead_id: rc_zone.find("#input_lead_id").val(),
                         client_name: rc_zone.find("#input_client_name").val(),
-                        input_doc_obj_assoc: rc_zone.find("#input_doc_obj_assoc").val().length ? rc_zone.find("#input_doc_obj_assoc").val() : "",
+                        input_doc_obj_assoc: docs_objs,
                         comments: rc_zone.find("#input_comments").val().length ? rc_zone.find("#input_comments").val() : "Sem observações"},
                     function(data1)
                     {
@@ -189,6 +203,24 @@ var requests = function(basic_path, options_ext)
                     }, "json");
                 }
             });
+
+            rc_zone.on("click", "#add_line_obj_doc", function(e)
+            {
+
+                e.preventDefault();
+                rc_zone.find("#doc_obj_table_tbody").append("<tr><td><input class='input-xlarge validate[required]'  type='text' /></td>    <td><button class='btn btn-danger remove_doc_obj'><i class='icon icon-minus'></i></button></td></tr>");
+            });
+
+            rc_zone.on("click", ".remove_doc_obj", function(e)
+            {
+
+                e.preventDefault();
+
+                $(this).parent().parent().remove();
+                
+            });
+
+
         });
     };
     this.get_relatorio_correio_to_datatable = function(rc_zone)

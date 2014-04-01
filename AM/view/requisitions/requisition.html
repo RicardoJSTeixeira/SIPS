@@ -32,25 +32,28 @@
         <div class="row-fluid">
             <div class="span5">
                 <div class="FormRow">
-                    <h4>Tipo</h4>
-                    <div class="FormRight">
-                        <input  type="radio" id="req_m_radio" name="req_radio" value="1" >
-                        <label class="radio_name radio inline"  for="req_m_radio"><span></span>Mensal</label> 
-                        <input  type="radio" id="req_s_radio" name="req_radio"  value="2" checked="checked" >
-                        <label class="radio_name radio inline"  for="req_s_radio"><span></span>Especial</label>  
-                        <div   id="special_req_div">
-                            <div class="FormRow">
-                                <h4>Numero de Cliente</h4>
-                                <div class="FormRight">
-                                    <input type="text" id="new_requisition_lead_id" class="validate[required,custom[onlyNumberSp]]">
-                                </div>
+                    
+                    <div id="tipo_mensal" class="tipo_div formRight">
+                        <h4>Encomenda Mensal</h4>
+                    </div>
+                    <div id="tipo_especial"  class="tipo_div formRight">
+                        <h4>Encomenda Especial</h4>
+                        <div class="FormRow">
+                            <h4>Numero de Cliente</h4>
+                            <div class="FormRight">
+                                <input type="text" id="new_requisition_lead_id" class="validate[required,custom[onlyNumberSp]]">
                             </div>
-                            <div class="FormRow">
-                                <h4>Número de contrato</h4>
-                                <div class="FormRight">
-                                    <input id="new_requisition_contract" type="text" class="validate[required,custom[onlyNumberSp]]" >
-
-                                </div>
+                        </div>
+                        <div class="FormRow">
+                            <h4>Número de contrato</h4>
+                            <div class="FormRight">
+                                <input id="new_requisition_contract" type="text" class="validate[required,custom[onlyNumberSp]]" >
+                            </div>
+                        </div>
+                          <div class="FormRow">
+                            <h4>Código de Cliente</h4>
+                            <div class="FormRight">
+                                <input type="text" id="new_requisition_cod_cliente" class="validate[custom[onlyNumberSp]]">
                             </div>
                         </div>
                     </div>
@@ -79,9 +82,11 @@
                         <button id="new_requisition_product_add_line" class="btn btn-primary right"><i class="icon-plus"></i>Adicionar produto</button>
                     </div>
                 </div> 
-            </div>  
-            <div class="formRow">
-                <button class="btn btn-success right" id="new_requisition_submit_button"><i class="icon-check"></i>Encomendar</button>
+            </div> 
+
+
+            <div class="formRow pull-right">
+<button class="btn btn-success right" id="new_requisition_submit_button"><i class="icon-check"></i>Encomendar</button>
             </div> 
         </div>  
     </form>
@@ -102,5 +107,8 @@
         </div>
 
     </div> 
+    <footer>
+
+    </footer>
 </div> 
 <script type="text/javascript" src="/bootstrap/js/bootstrap-fileupload.min.js"></script>

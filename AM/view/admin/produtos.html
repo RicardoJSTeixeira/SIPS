@@ -43,21 +43,18 @@
         var config = new Object();
         product = new products($("#extra_div"), config);
         product.init(function() {
-            get_info_product();
+           product.init_to_datatable($("#view_product_datatable"));
         });
     });
 
-    function get_info_product()
-    {
-        product.init_to_datatable($("#view_product_datatable"));
-    }
+
 
     $("#create_product_modal_button").click(function()
     {
         product.init_new_product(function() {
             product.init_to_datatable($("#view_product_datatable"));
         });
-        $("#product_modal").modal("show");
+        
     });
 
 </script>

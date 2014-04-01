@@ -6,13 +6,13 @@ var requisition = function(geral_path, options_ext)
     var me = this;
     this.file_uploaded = false;
     this.config = new Object();
-    this.config.mensal = true;
-    this.config.especial = true;
+
     var product = 1;
     var modal = "";
     var new_requisition_area = "";
     var table_path = "";
     var show_admin = 0;
+    var tipo = "mensal";
     $.extend(true, this.config, options_ext);
     this.init = function(callback)
     {
@@ -43,7 +43,6 @@ var requisition = function(geral_path, options_ext)
 
     function get_encomendas_atuais(table_path, show_admin)
     {
-
         if (show_admin)
         {
             var Table_view_requisition = table_path.dataTable({
@@ -56,9 +55,31 @@ var requisition = function(geral_path, options_ext)
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
                 },
-                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
+                "fnDrawCallback": function() {
+
+
+                    $.each(Table_view_requisition.find(".cod_cliente_input"),function()
+                    {
+                         if(!$(this).val())
+                             $(this).parent().parent().addClass("error");
+                    })
+                   
+
+
+                },
+                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Código de cliente"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
+
+            Table_view_requisition.on("change", ".cod_cliente_input", function()
+            {
+                var requisition_number = $(this).data("requisition_id");
+                var value = $(this).val();
+                $.post('/AM/ajax/requisition.php', {action: "editar_encomenda", "req_id": requisition_number, "cod_cliente": value}, function(data) {
+
+                }, "json");
+            });
+
         }
         else
         {
@@ -72,11 +93,10 @@ var requisition = function(geral_path, options_ext)
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
                 },
-                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}],
+                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Código de cliente"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
         }
-
         //VER PRODUTOS DE ENCOMENDAS FEITAS
         table_path.on("click", ".ver_requisition_products", function()
         {
@@ -92,7 +112,6 @@ var requisition = function(geral_path, options_ext)
                 modal.modal("show");
             }, "json");
         });
-
         table_path.on("click", ".accept_requisition", function()
         {
             var this_button = $(this);
@@ -100,7 +119,6 @@ var requisition = function(geral_path, options_ext)
                 this_button.parent("td").prev().text("Aprovado");
             }, "json");
         });
-
         table_path.on("click", ".decline_requisition", function()
         {
             var this_button = $(this);
@@ -108,13 +126,7 @@ var requisition = function(geral_path, options_ext)
                 this_button.parent().prev().text("Rejeitado");
             }, "json");
         });
-
-
     }
-
-
-
-
 
 
 
@@ -124,25 +136,26 @@ var requisition = function(geral_path, options_ext)
         new_requisition_zone.append(new_requisition_area.show());
 
         new_requisition_zone.find('.fileupload').fileupload();
-        if (!me.config.mensal)
-        {
-            new_requisition_zone.find("#req_m_radio").prop("disabled", true);
-        }
-        if (!me.config.especial)
-        { //Nao se força o selected nem hides no mensal pk por default começa o especial
-            new_requisition_zone.find("#req_m_radio").prop("checked", true);
-            new_requisition_zone.find("#req_s_radio").prop("disabled", true);
-            new_requisition_zone.find("#special_req_div").remove();
-        }
+
+
         new_requisition_zone.find("#requisition_form").validationEngine();
         new_requisition_zone.find("#requisition_form").show();
 
-
+        new_requisition_zone.find(".tipo_div").hide();
         //preencher com lead_id enviado
+
+
         if (lead_id)
+        {
+            me.tipo = "especial";
+            new_requisition_zone.find("#tipo_especial").show();
             new_requisition_zone.find("#new_requisition_lead_id").val(lead_id);
-
-
+        }
+        else
+        {
+            me.tipo = "mensal";
+            new_requisition_zone.find("#tipo_mensal").show();
+        }
 
         // ADICIONAR E REMOVER ITEMS DA LISTA DE PRODUTOS NA NOVA ENCOMENDA----------------------------
         $(new_requisition_zone).on("click", "#new_requisition_product_add_line", function(e)
@@ -157,12 +170,10 @@ var requisition = function(geral_path, options_ext)
                                 <td><button class='btn icon-alone btn-danger remove_item_requisition_table' value='" + product + "'><i  class='icon-remove'></i> </button></td></tr>");
             new_requisition_zone.find(" #product_select" + product).chosen({no_results_text: "Sem resultados"});
             populate_select(new_requisition_zone.find(" #product_select" + product));
-
             product += 1;
         });
         $(new_requisition_zone).on("change", ".new_requisition_select_product", function()
         {
-
             if (new_requisition_zone.find("#req_m_radio").is(":checked"))
             {
                 new_requisition_zone.find("#product_span_max" + $(this).data().linha_id).text($(this).find("option:selected").data().max_month);
@@ -177,9 +188,6 @@ var requisition = function(geral_path, options_ext)
                 if (new_requisition_zone.find("#product_input" + $(this).data().linha_id).val() > $(this).find("option:selected").data().max_special)
                     new_requisition_zone.find("#product_input" + $(this).data().linha_id).val($(this).find("option:selected").data().max_special);
             }
-
-
-
             var select = new_requisition_zone.find("#select_color_picker" + $(this).data().linha_id);
             select.empty();
             if ($(this).find("option:selected").data().color)
@@ -198,7 +206,6 @@ var requisition = function(geral_path, options_ext)
 
         function  update_product_selects()
         {
-
             var selected_options = [];
             $("#new_requisition_product_tbody select option").prop("disabled", false);
             $.each($("#new_requisition_product_tbody select"), function()
@@ -211,11 +218,8 @@ var requisition = function(geral_path, options_ext)
                 $("#new_requisition_product_tbody select option[id='" + this + "']").prop("disabled", true);
 
             });
-
-
             $("#new_requisition_product_tbody select").trigger("chosen:updated");
         }
-
 
 
 
@@ -226,7 +230,6 @@ var requisition = function(geral_path, options_ext)
         {
             var produtos = [];
             var count = 0;
-
             $.each(new_requisition_zone.find(" #new_requisition_product_tbody tr"), function()
             {
                 var this_option_selected = $(this).find("select").find("option:selected");
@@ -248,11 +251,11 @@ var requisition = function(geral_path, options_ext)
             {
                 if (new_requisition_zone.find(" #requisition_form").validationEngine("validate"))
                 {
-                    if ((new_requisition_zone.find(".fileupload-preview").text().length > 0 && me.file_uploaded) || new_requisition_zone.find(".fileupload-preview").text().length == 0)
+                    if ((new_requisition_zone.find(".fileupload-preview").text().length > 0 && me.file_uploaded) || !new_requisition_zone.find(".fileupload-preview").text().length)
                     {
                         $.post('ajax/requisition.php', {action: "criar_encomenda",
-                            type: new_requisition_zone.find(" #req_m_radio").is(":checked") == true ? "month" : "special",
-                            lead_id: new_requisition_zone.find(" #new_requisition_lead_id").val(),
+                            type: me.tipo,
+                            lead_id: new_requisition_zone.find("#new_requisition_lead_id").val(),
                             contract_number: new_requisition_zone.find(" #new_requisition_contract").val(),
                             attachment: new_requisition_zone.find(".fileupload-preview").text(),
                             products_list: produtos},
@@ -261,14 +264,11 @@ var requisition = function(geral_path, options_ext)
                             {
                                 table_path.dataTable().fnAddData(data);
                             }
-
-
-
                             $.jGrowl('Encomenda realizada com sucesso', {life: 4000});
                             new_requisition_zone.find(" #new_requisition_lead_id").val("");
                             new_requisition_zone.find(" #new_requisition_contract").val("");
                             new_requisition_zone.find(" #new_requisition_product_tbody").empty();
-                            new_requisition_zone.find("#req_s_radio").trigger("change").prop("checked", true);
+
                             new_requisition_zone.find("#label_anexo_info").text("");
                             new_requisition_zone.find('.fileupload').fileupload("clear");
                         }, "json");
@@ -282,25 +282,7 @@ var requisition = function(geral_path, options_ext)
         {
             new_requisition_zone.find(" #new_requisition_product_tbody tr[id='tr" + $(this).val() + "']").empty();
         });
-        $(new_requisition_zone).on("change", "input[name='req_radio']", function()
-        {
-            new_requisition_zone.find(" .new_requisition_select_product").trigger("change");
-            if ($(this).val() == 2)
-                new_requisition_zone.find(" #special_req_div").show("blind");
-            else
-            {
-                $.post('ajax/requisition.php', {action: "check_month_requisitions",
-                    id: $(this).val()}, function(data)
-                {
-                    if (data > 0)
-                    {
-                        $.jGrowl('Já efectuou pelo menos 1 encomenda mensal este mês', {life: 4000});
 
-                    }
-
-                }, "json");
-            }
-        });
         $(new_requisition_zone).on("submit", " #requisition_form", function(e)
         {
             e.preventDefault();
