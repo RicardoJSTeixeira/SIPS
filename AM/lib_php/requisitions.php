@@ -25,9 +25,9 @@ Class requisitions {
 
                 if ($show_admin == 1) {
                     if ($row[6])
-                        $row[6] = "<input class='cod_cliente_input' data-requisition_id='$row[0]' value='$row[6]' type='text'/>";
+                        $row[6] = "<input class='cod_cliente_input validate[custom[onlyNumberSp]]' data-requisition_id='$row[0]' value='$row[6]' type='text'/>";
                     else
-                        $row[6] = "<input placeholder='Insira código de cliente' class='cod_cliente_input  ' data-requisition_id='$row[0]'   type='text'/>";
+                        $row[6] = "<input placeholder='Insira código de cliente' class='cod_cliente_input validate[custom[onlyNumberSp]] ' data-requisition_id='$row[0]'   type='text'/>";
                 }
                 else {
                     if (!$row[6])
@@ -49,7 +49,7 @@ Class requisitions {
                     break;
             }
 
-            $row[8] = "<div> <button class='btn ver_requisition_products' value='" . $row["id"] . "'><i class='icon-eye-open'></i>Ver</button></div>";
+            $row[8] = "<div> <button class='btn ver_requisition_products' value='" . $row[0] . "'><i class='icon-eye-open'></i>Ver</button></div>";
             if ($this->_user_level > 5 || $show_admin == 1)
                 $row[10] = $row[10] . " <button class='btn accept_requisition btn-success' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_requisition btn-warning' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
 

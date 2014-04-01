@@ -29,10 +29,15 @@ switch ($action) {
     case "criar_relatorio_correio":
         echo json_encode($relatorio_correio->create($carta_porte, $data, $doc, $lead_id, $input_doc_obj_assoc, $comments));
         break;
+    case "get_anexo_correio":
+        echo json_encode($relatorio_correio->get_anexo_correio($id));
+        break;
+
+
 
     case "criar_apoio_marketing":
 
-        echo json_encode($apoio_marketing->create($data_inicial,$data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade));
+        echo json_encode($apoio_marketing->create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade));
         break;
 
     case "get_apoio_marketing_to_datatable":
@@ -69,37 +74,37 @@ switch ($action) {
 
 
     case "accept_apoio_marketing":
-       echo json_encode($apoio_marketing->accept_apoio_marketing($id));
+        echo json_encode($apoio_marketing->accept_apoio_marketing($id));
         break;
 
     case "decline_apoio_marketing":
-      echo  json_encode($apoio_marketing->decline_apoio_marketing($id));
+        echo json_encode($apoio_marketing->decline_apoio_marketing($id));
         break;
-    
-    
-    
-    
-    
-    
-      case "accept_report_correio":
-       echo json_encode($relatorio_correio->accept_report_correio($id));
+
+
+
+
+
+
+    case "accept_report_correio":
+        echo json_encode($relatorio_correio->accept_report_correio($id));
         break;
 
     case "decline_report_correio":
-       echo json_encode($relatorio_correio->decline_report_correio($id));
+        echo json_encode($relatorio_correio->decline_report_correio($id));
         break;
-    
-    
-    
-    
-      case "accept_report_frota":
-       echo json_encode($relatorio_frota->accept_report_frota($id));
+
+
+
+
+    case "accept_report_frota":
+        echo json_encode($relatorio_frota->accept_report_frota($id));
         break;
 
     case "decline_report_frota":
-       echo json_encode($relatorio_frota->decline_report_frota($id));
+        echo json_encode($relatorio_frota->decline_report_frota($id));
         break;
-    
+
     default:
         echo 'Are you an hacker? if yes then please go change your underpants, it stinks!';
 }

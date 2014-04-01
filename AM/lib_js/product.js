@@ -37,6 +37,7 @@ var products = function(geral_path, options_ext)
 
         datatable_path.on("click", ".btn_ver_produto", function()
         {
+  
             product_id = $(this).data("product_id");
             populate_modal(edit_product_modal, function()
             {

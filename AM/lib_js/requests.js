@@ -15,9 +15,9 @@ var requests = function(basic_path, options_ext)
 
     this.init_relatorio_correio = function()
     {
-        /* $.get("/AM/view/requests/relatorio_correio_modal.html", function(data) {
-         me.basic_path.append(data);
-         });*/
+        $.get("/AM/view/requests/relatorio_correio_modal.html", function(data) {
+            me.basic_path.append(data);
+        });
     };
 
     this.init_relatorio_frota = function()
@@ -174,20 +174,11 @@ var requests = function(basic_path, options_ext)
                 e.preventDefault();
                 if (rc_zone.find("#relatorio_correio_form").validationEngine("validate"))
                 {
-
-
-
                     var docs_objs = [];
                     $.each(rc_zone.find("#doc_obj_table_tbody tr"), function()
                     {
                         docs_objs.push($(this).find("input").val());
                     });
-
-
-
-
-
-
                     $.post("ajax/requests.php", {action: "criar_relatorio_correio",
                         carta_porte: rc_zone.find("#input_carta_porte").val(),
                         data: rc_zone.find("#data_envio_datetime").val(),
@@ -206,19 +197,18 @@ var requests = function(basic_path, options_ext)
 
             rc_zone.on("click", "#add_line_obj_doc", function(e)
             {
-
                 e.preventDefault();
                 rc_zone.find("#doc_obj_table_tbody").append("<tr><td><input class='input-xlarge validate[required]'  type='text' /></td>    <td><button class='btn btn-danger remove_doc_obj'><i class='icon icon-minus'></i></button></td></tr>");
             });
 
             rc_zone.on("click", ".remove_doc_obj", function(e)
             {
-
                 e.preventDefault();
-
                 $(this).parent().parent().remove();
-                
             });
+
+
+
 
 
         });
@@ -255,6 +245,28 @@ var requests = function(basic_path, options_ext)
             $.post('/AM/ajax/requests.php', {action: "decline_report_correio", id: $(this).val()}, function() {
                 this_button.parent("td").prev().text("Rejeitado");
             }, "json");
+        });
+        rc_zone.on("click", ".ver_anexo_correio", function(e)
+        {
+
+            e.preventDefault();
+            var id_anexo = $(this).data().anexo_id;
+            var anexo_number = 1;
+            $.post("ajax/requests.php", {action: "get_anexo_correio", id: id_anexo},
+            function(data1)
+            {
+
+                $.each(data1, function()
+                {
+                   
+                    me.basic_path.find("#tbody_ver_anexo_correio").append("<tr><td><input type='checkbox' id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> " + this.toString() + " </label></td></tr>");
+                    anexo_number++;
+                });
+
+                me.basic_path.find("#ver_anexo_correio_modal").modal("show");
+            }, "json");
+
+
         });
     };
 

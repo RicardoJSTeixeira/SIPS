@@ -14,9 +14,9 @@ Class products {
             $row[5] = json_decode($row[5]);
 
             if ($product_editable == "true")
-                $row[6] = "<button class='btn btn_ver_produto' data-product_id='" . $row[0] . "'>Ver</button><button class='btn btn_editar_produto' data-product_id='" . $row[0] . "'>Editar</button><button class='btn btn_apagar_produto' data-product_id='" . $row[0] . "'>Apagar</button>";
+                $row[6] = "<button class='btn btn_ver_produto' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i>Ver</button><button class='btn btn_editar_produto btn-primary' data-product_id='" . $row[0] . "'><i class='icon-pencil'></i>Editar</button><button class='btn btn_apagar_produto btn-danger' data-product_id='" . $row[0] . "'><i class='icon-remove'></i>Apagar</button>";
             else
-                $row[6] = "<button class='btn btn_ver_produto' data-product_id='" . $row[0] . "'>Ver</button>";
+                $row[6] = "<button class='btn btn_ver_produto' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i>Ver</button>";
             $output['aaData'][] = $row;
         };
         return $output;

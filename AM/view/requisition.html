@@ -1,5 +1,5 @@
 <div class="row-fluid">
-    <div class="span6">
+    <div class="span12">
         <div class="grid ">
             <div class="grid-title">
                 <div class="pull-left">
@@ -13,8 +13,10 @@
 
         </div>
     </div>
+</div>
 
-    <div class="span6" id="product_master_div">
+<div class="row-fluid">
+    <div class="span9" id="product_master_div">
         <div class="grid ">
             <div class="grid-title">
                 <div class="pull-left">
@@ -27,36 +29,35 @@
             </div> 
         </div> 
     </div>
-
-</div>
-
-
-
-
-
-<div class="row-fluid">
-    <div class="span12">
-        <div class="grid">       
-            <div class="grid-title">
-                <div class="pull-left">
-                    <h4>Nova encomenda</h4>
-                </div>
-                <div class="pull-right">
-                    <button class="btn icon-chevron-down" id="button_filtro_new_requisition"></button>  
-                </div>
-            </div>
-
-
-            <div class="grid-content" id="new_requisition_div" style="display: none">
-
+    <div class="span2">
+         <div class="grid ">
+            
+        
+            <div class="grid-content">
+              <button class="btn btn-primary" id="button_new_requisition">Criar Nova Encomenda</button>
             </div> 
-        </div>
-
+        </div> 
+  
     </div>
 </div>
-<div class="row-fluid">
 
+
+
+<div id="new_requisition_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true"  style="width:102em;left:25%" >
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Nova encomenda</h3>
+    </div>
+    <div class="modal-body"  >
+        <div  id="new_requisition_div" >    </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Sair</button>
+    </div>
 </div>
+
+
+
 
 <div id="main_requisition"></div>
 <div id="extra_div"></div>

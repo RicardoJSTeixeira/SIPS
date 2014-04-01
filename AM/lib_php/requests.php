@@ -57,7 +57,7 @@ class apoio_marketing extends requests_class {
                     break;
             }
             if ($this->user_level > 5 || $show_admin == 1) {
-                $row[12] = $row[12] . " <button class='btn accept_apoio_marketing btn-success' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
+                $row[12] = $row[12] . " <button class='btn accept_apoio_marketing btn-success icon-alone' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
             }
             $result['aaData'][] = $row;
         }
@@ -72,8 +72,6 @@ class apoio_marketing extends requests_class {
         $stmt->execute(array($id));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $value = json_decode($row["horario"]);
-
-
             $horarios[] = array("inicio1" => $value->inicio1, "inicio2" => $value->inicio2, "fim1" => $value->fim1, "fim2" => $value->fim2);
         }
 
@@ -115,9 +113,9 @@ class correio extends requests_class {
     }
 
     public function create($carta_porte, $data, $doc, $lead_id, $input_doc_obj_assoc, $comments) {
-        $query = "INSERT INTO `spice_report_correio`(`user`, `carta_porte`, `data_envio`, `documento`, `lead_id`,  `anexo`, `comments`) VALUES (?,?,?,?,?,?,?)";
+        $query = "INSERT INTO `spice_report_correio`(`user`, `carta_porte`, `data_envio`, `documento`, `lead_id`,  `anexo`, `comments`) VALUES (:user,:carta_porte,:data_envio,:documento,:lead_id,:anexo,:comments)";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($this->user_id, $carta_porte, $data, $doc, $lead_id, $input_doc_obj_assoc, $comments));
+        return $stmt->execute(array(":user" => $this->user_id, ":carta_porte" => $carta_porte, ":data_envio" => $data, ":documento" => $doc, ":lead_id" => $lead_id, ":anexo" => json_encode($input_doc_obj_assoc), ":comments" => $comments));
     }
 
     public function edit() {
@@ -136,8 +134,10 @@ class correio extends requests_class {
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-
-
+            if ($row[6])
+                $row[6] = "<button data-anexo_id='$row[0]' class='btn ver_anexo_correio'>Anexos</button>";
+            else
+                $row[6] = "Sem anexo";
             switch ($row[8]) {
                 case "0":
                     $row[8] = "Pedido enviado";
@@ -150,7 +150,7 @@ class correio extends requests_class {
                     break;
             }
             if ($this->user_level > 5 || $show_admin == 1) {
-                $row[9] = $row[9] . " <button class='btn accept_report_correio btn-success' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_correio btn-warning' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
+                $row[9] = $row[9] . " <button class='btn accept_report_correio btn-success icon-alone' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_correio btn-warning icon-alone' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
             }
             $result['aaData'][] = $row;
         }
@@ -168,6 +168,22 @@ class correio extends requests_class {
         $query = "Update spice_report_correio set status=2 where id=?";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array($id));
+    }
+
+    public function get_anexo_correio($id) {
+        $query = "select anexo from spice_report_correio where id=:id";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":id" => $id));
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+
+            foreach (json_decode($row["anexo"]) as $value) {
+                $anexos[] = $value;
+            }
+        }
+
+        return $anexos;
     }
 
 }
@@ -217,7 +233,7 @@ class frota extends requests_class {
             $row[7] = "<div> <button class='btn ver_ocorrencias'  data-relatorio_frota_id='" . $row[0] . "'><i class='icon-eye-open'></i>Ver Ocorrências</button></div>";
 
             if ($this->user_level > 5 || $show_admin == 1) {
-                $row[9] = $row[9] . " <button class='btn accept_report_frota btn-success' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_frota btn-warning' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
+                $row[9] = $row[9] . " <button class='btn accept_report_frota btn-success icon-alone' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_frota btn-warning icon-alone' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
             }
             $result['aaData'][] = $row;
         }
