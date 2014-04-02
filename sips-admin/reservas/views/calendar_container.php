@@ -532,7 +532,7 @@
                 var reservation = {
                     //Start reservation
                     create: function(b) {
-                        if (opener) {
+                        if (opener && $("#marcdata", opener.document).length) {
                             if (opener.marcado) {
                                 return false;
                             }
@@ -561,7 +561,7 @@
                         function(data) {
                             if (data.sucess == "1") {
                                 $(bloco).removeClass("reservavel").addClass("reservado").addClass("t" + rtype.val()).attr("title", rtype.text());
-                                if (opener) {
+                                if (opener && $("#marcdata", opener.document).length) {
                                     $("#marcdata", opener.document).val($('.beg', bloco).val().substr(0, 10));
                                     $("#HOUR_marchora", opener.document).val($('.beg', bloco).val().substr(11, 2));
                                     $("#MINUTE_marchora", opener.document).val($('.beg', bloco).val().substr(14, 2));
@@ -601,7 +601,7 @@
                                 $(bloco_res).removeClass("reservado").removeClass(function(index, css) {
                                     return (css.match(/\bt\S+/g) || []).join(' ');
                                 }).removeAttr("title").addClass("reservavel");
-                                if (opener) {
+                                if (opener && $("#marcdata", opener.document).length) {
                                     opener.marcado = false;
                                 }
                                 if (id_elemento) {
@@ -668,7 +668,7 @@
                                     return (css.match(/\bt\S+/g) || []).join(' ');
                                 }).removeAttr("title").removeClass("muda");
                                 $('.slot').removeClass("disponivel").not('.reservado').not('.bloqueado').addClass("reservavel");
-                                if (opener) {
+                                if (opener && $("#marcdata", opener.document).length) {
                                     $("#marcdata", opener.document).val($('.beg', bloco).val().substr(0, 10));
                                     $("#HOUR_marchora", opener.document).val($('.beg', bloco).val().substr(11, 2));
                                     $("#MINUTE_marchora", opener.document).val($('.beg', bloco).val().substr(14, 2));
