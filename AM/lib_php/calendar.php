@@ -47,7 +47,7 @@ Class Calendars {
         return $reservars;
     }
 
-    protected function _getRefs($user) {
+    public function _getRefs($user) {
         $stmt = $this->_db->prepare("SELECT user, id_calendar, cal_type FROM sips_sd_agent_ref WHERE user=:user");
         $stmt->execute(array(":user" => $user));
         $refs = array();
