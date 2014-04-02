@@ -40,102 +40,9 @@ var requisition = function(geral_path, options_ext)
 
     };
 
-
-    function get_encomendas_atuais(table_path, show_admin)
-    {
-        if (show_admin)
-        {
-            var Table_view_requisition = table_path.dataTable({
-                "bSortClasses": false,
-                "bProcessing": true,
-                "bDestroy": true,
-                "bAutoWidth": false,
-                "sPaginationType": "full_numbers",
-                "sAjaxSource": '/AM/ajax/requisition.php',
-                "fnServerParams": function(aoData) {
-                    aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
-                },
-                "fnDrawCallback": function() {
-                    $.each(Table_view_requisition.find(".cod_cliente_input"), function()
-                    {
-                        if (!$(this).val())
-                            $(this).parent().parent().addClass("error");
-                    });
-                },
-                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Código de cliente"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
-                "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
-            });
-
-            Table_view_requisition.on("change", ".cod_cliente_input", function()
-            {
-                var requisition_number = $(this).data("requisition_id");
-                var value = $(this).val();
-                if (!$(this).validationEngine("validate"))
-                {
-                    if (value.length)
-                        $(this).parent().parent().removeClass("error");
-                    else
-                        $(this).parent().parent().addClass("error");
-                    $.post('/AM/ajax/requisition.php', {action: "editar_encomenda", "req_id": requisition_number, "cod_cliente": value}, function(data) {
-                    }, "json");
-                }
-            });
-
-        }
-        else
-        {
-            var Table_view_requisition = table_path.dataTable({
-                "bSortClasses": false,
-                "bProcessing": true,
-                "bDestroy": true,
-                "bAutoWidth": false,
-                "sPaginationType": "full_numbers",
-                "sAjaxSource": '/AM/ajax/requisition.php',
-                "fnServerParams": function(aoData) {
-                    aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
-                },
-                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Código de cliente"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}],
-                "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
-            });
-        }
-        //VER PRODUTOS DE ENCOMENDAS FEITAS
-        table_path.on("click", ".ver_requisition_products", function()
-        {
-            $.post('ajax/requisition.php', {action: "listar_produtos_por_encomenda", id: $(this).val()}, function(data)
-            {
-                var modal_tbody = modal.find("#show_requisition_products_tbody");
-                modal_tbody.empty();
-                $.each(data, function()
-                {
-                    if (!this.color_name)
-                        this.color_name = "Padrão";
-                    modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td></tr>");
-                });
-                modal.modal("show");
-            }, "json");
-        });
-        table_path.on("click", ".accept_requisition", function()
-        {
-            var this_button = $(this);
-            $.post('ajax/requisition.php', {action: "accept_requisition", id: $(this).val()}, function() {
-                this_button.parent("td").prev().text("Aprovado");
-            }, "json");
-        });
-        table_path.on("click", ".decline_requisition", function()
-        {
-            var this_button = $(this);
-            $.post('ajax/requisition.php', {action: "decline_requisition", id: $(this).val()}, function() {
-                this_button.parent().prev().text("Rejeitado");
-            }, "json");
-        });
-    }
-
-
-
 //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
     this.new_requisition = function(new_requisition_zone, lead_id) {
-        new_requisition_zone.off().empty();
-        new_requisition_zone.append(new_requisition_area.clone().show());
+        new_requisition_zone.off(); 
         new_requisition_zone.find('.fileupload').fileupload();
         new_requisition_zone.find("#requisition_form").validationEngine();
         new_requisition_zone.find("#requisition_form").show();
@@ -164,10 +71,10 @@ var requisition = function(geral_path, options_ext)
                                 <td> <input class='input-mini validate[required,custom[onlyNumberSp]]' id='product_input" + product + "' type='number' min='1' value='1'></td>\n\
                                 <td><button class='btn icon-alone btn-danger remove_item_requisition_table' value='" + product + "'><i  class='icon-remove'></i> </button></td></tr>");
             new_requisition_zone.find(" #product_select" + product).chosen({no_results_text: "Sem resultados"});
-                populate_select(new_requisition_zone.find(" #product_select" + product), function() {
-                    update_product_selects();
-                });
-           
+            populate_select(new_requisition_zone.find(" #product_select" + product), function() {
+                update_product_selects();
+            });
+
             product += 1;
         });
         $(new_requisition_zone).on("change", ".new_requisition_select_product", function()
@@ -197,9 +104,9 @@ var requisition = function(geral_path, options_ext)
             }
             else
                 select.append("<option>Padrão</option>");
-       
-                
-                    update_product_selects();
+
+
+            update_product_selects();
         });
 
 
@@ -325,6 +232,100 @@ var requisition = function(geral_path, options_ext)
             });
         });
     };
+
+
+
+    function get_encomendas_atuais(table_path, show_admin)
+    {
+        if (show_admin)
+        {
+            var Table_view_requisition = table_path.dataTable({
+                "bSortClasses": false,
+                "bProcessing": true,
+                "bDestroy": true,
+                "bAutoWidth": false,
+                "sPaginationType": "full_numbers",
+                "sAjaxSource": '/AM/ajax/requisition.php',
+                "fnServerParams": function(aoData) {
+                    aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
+                },
+                "fnDrawCallback": function() {
+                    $.each(Table_view_requisition.find(".cod_cliente_input"), function()
+                    {
+                        if (!$(this).val())
+                            $(this).parent().parent().addClass("error");
+                    });
+                },
+                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Código de cliente"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
+                "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
+            });
+
+            Table_view_requisition.on("change", ".cod_cliente_input", function()
+            {
+                var requisition_number = $(this).data("requisition_id");
+                var value = $(this).val();
+                if (!$(this).validationEngine("validate"))
+                {
+                    if (value.length)
+                        $(this).parent().parent().removeClass("error");
+                    else
+                        $(this).parent().parent().addClass("error");
+                    $.post('/AM/ajax/requisition.php', {action: "editar_encomenda", "req_id": requisition_number, "cod_cliente": value}, function(data) {
+                    }, "json");
+                }
+            });
+
+        }
+        else
+        {
+            var Table_view_requisition = table_path.dataTable({
+                "bSortClasses": false,
+                "bProcessing": true,
+                "bDestroy": true,
+                "bAutoWidth": false,
+                "sPaginationType": "full_numbers",
+                "sAjaxSource": '/AM/ajax/requisition.php',
+                "fnServerParams": function(aoData) {
+                    aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
+                },
+                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Código de cliente"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}],
+                "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
+            });
+        }
+        //VER PRODUTOS DE ENCOMENDAS FEITAS
+        table_path.on("click", ".ver_requisition_products", function()
+        {
+            $.post('ajax/requisition.php', {action: "listar_produtos_por_encomenda", id: $(this).val()}, function(data)
+            {
+                var modal_tbody = modal.find("#show_requisition_products_tbody");
+                modal_tbody.empty();
+                $.each(data, function()
+                {
+                    if (!this.color_name)
+                        this.color_name = "Padrão";
+                    modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td></tr>");
+                });
+                modal.modal("show");
+            }, "json");
+        });
+        table_path.on("click", ".accept_requisition", function()
+        {
+            var this_button = $(this);
+            $.post('ajax/requisition.php', {action: "accept_requisition", id: $(this).val()}, function() {
+                this_button.parent("td").prev().text("Aprovado");
+            }, "json");
+        });
+        table_path.on("click", ".decline_requisition", function()
+        {
+            var this_button = $(this);
+            $.post('ajax/requisition.php', {action: "decline_requisition", id: $(this).val()}, function() {
+                this_button.parent().prev().text("Rejeitado");
+            }, "json");
+        });
+    }
+
+
+
 
 
     function populate_select(select, callback)

@@ -10,7 +10,7 @@ Class products {
         $output['aaData'] = [];
 
 
-            $stmt = $this->_db->prepare("SELECT id,name,max_req_m,max_req_s,category,type,color,active,deleted from spice_product where deleted=0");
+        $stmt = $this->_db->prepare("SELECT id,name,max_req_m,max_req_s,category,type,color,active,deleted from spice_product where deleted=0");
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
 
@@ -21,7 +21,7 @@ Class products {
 
             $row[4] = ucfirst($row[4]);
 
-            $row[5] = ucwords(implode(", ",json_decode($row[5])));
+            $row[5] = ucwords(implode(", ", json_decode($row[5])));
 
             if (isset($row1["active"]))
                 $active = (bool) $row1["active"];
@@ -51,13 +51,34 @@ Class products {
     }
 
     public function get_products() {
+
         $stmt = $this->_db->prepare("SELECT id,name, max_req_m,max_req_s,category,type,color,active from spice_product where deleted=0");
         $stmt->execute();
+        $children = array();
+        $parent = array();
+
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
+
+            //get children  
+            $stmt1 = $this->_db->prepare("select a.id,a.name,a.category from spice_product  a inner join spice_product_assoc b on b.child=a.id where b.parent=:parent and a.deleted=0");
+            $stmt1->execute(array(":parent" => $row[0]));
+            while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+                $children[] = $row1;
+            }
+            //get parent
+            $stmt1 = $this->_db->prepare("select a.id,a.name,a.category from spice_product  a inner join spice_product_assoc b on b.parent=a.id where b.child=:child and a.deleted=0");
+            $stmt1->execute(array(":child" => $row[0]));
+            while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+                $parent[] = $row1;
+            }
+
+
             $row[5] = json_decode($row[5]);
             $row["type"] = json_decode($row["type"]);
             $row[6] = json_decode($row[6]);
             $row["color"] = json_decode($row["color"]);
+            $row["parents"] = $parent;
+            $row["children"] = $children;
             $output[] = $row;
         }
         return $output;
@@ -71,7 +92,7 @@ Class products {
     public function add_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active) {
 
         $stmt = $this->_db->prepare("insert into spice_product ( `name`,   `max_req_m`, `max_req_s`, `category`,`type`,`color`,`active`,`deleted`) values (:name, :max_req_m,:max_req_s,:category,:type,:color,:active,0) ");
-        $stmt->execute(array(":name" => $name, ":max_req_m" => $max_req_m, ":max_req_s" => $max_req_s, ":category" => $category, ":type" => json_encode($type), ":color" => json_encode($color), ":active" => $active));
+        $stmt->execute(array(":name" => $name, ":max_req_m" => $max_req_m, ":max_req_s" => $max_req_s, ":category" => $category, ":type" => json_encode($type), ":color" => json_encode($color), ":active" => $active == "true" ? 1 : 0));
         $last_id = $this->_db->lastInsertId();
 
         if (isset($parent)) {
@@ -120,7 +141,8 @@ class product extends products {
         $this->_category = $category;
         $this->_type = $type;
         $this->_color = $color;
-        $this->_active = $active;
+      
+        $this->_active = $active == "true" ? 1 : 0;
         $stmt = $this->_db->prepare("delete from spice_product_assoc where child=:child");
         $stmt->execute(array(":child" => $this->_id));
         if (isset($parent))
