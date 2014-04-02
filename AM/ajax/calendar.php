@@ -3,6 +3,8 @@
 error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
 
+date_default_timezone_set('Europe/Lisbon');
+
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 $start = filter_var($_POST["start"]);
 $end = filter_var($_POST["end"]);
@@ -16,7 +18,6 @@ $user->confirm_login();
 
 set_time_limit(1);
 
-$id = filter_var($_POST["id"]);
 $resource = filter_var($_POST["resource"]);
 $lead_id = filter_var($_POST["lead_id"]);
 $rtype = filter_var($_POST["rtype"]);
@@ -57,6 +58,11 @@ switch (filter_var($_POST["action"])) {
         $calendar = new Calendars($db);
         $id = $calendar->newReserva($user->getUser()->username, $lead_id, $start, $end, $rtype, $resource);
         echo json_encode($id);
+        break;
+    case "changeReservationResource":
+        $calendar = new Calendars($db);
+        $ok = $calendar->changeReservaResource($id, $resource);
+        echo json_encode($ok);
         break;
 
     default:

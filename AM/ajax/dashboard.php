@@ -38,12 +38,14 @@ switch ($action) {
 
 
     case "populate_ncsm"://NOVOS CLIENTES SEM MARCAÇÂO
+        /*$query = "SELECT lead_id,first_name,address1,entry_date from  vicidial_list 
+ where user=? and status='NEW' and list_id=99800002 and entry_date between :beg and :end and lead_id not in (select lead_id from sips_sd_reservations)";*/
         $query = "SELECT lead_id,first_name,address1,entry_date from  vicidial_list 
- where user=? and status='NEW' and list_id=99800002 and entry_date between ? and ? and lead_id not in (select lead_id from sips_sd_reservations)";
+ where user=:user and status='NEW' and list_id=99800002 and lead_id not in (select lead_id from sips_sd_reservations)";
 
-        $variables[] = $user->getUser()->username;
-        $variables[] = date("Y-m-d") . " 00:00:00";
-        $variables[] = date("Y-m-d") . " 23:59:59";
+        $variables["user"] = $user->getUser()->username;
+        //$variables["beg"] = date("Y-m-d") . " 00:00:00";
+        //$variables["end"] = date("Y-m-d") . " 23:59:59";
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {

@@ -21,7 +21,7 @@
     padding:0;
 }
 .popover {
-     z-index: 1001 !important;
+    z-index: 1001 !important;
 }
 .popover-content dt{
     width:70px;
@@ -31,4 +31,8 @@
 }
 .popover-content dl{
     margin:0;
+}
+.fc-event-icons{
+    position: absolute;
+    right: 2px;
 }
