@@ -10,7 +10,7 @@ $(function()
     });
 
 
-  
+
 
     var config = new Object();
     config.product_editable = false;
@@ -26,6 +26,10 @@ $(function()
 
 $("#button_new_requisition").click(function()
 {
-    requisition1.new_requisition($("#new_requisition_div"), null);
-    $("#new_requisition_modal").modal("show");
+
+  
+    $.history.push("view/new_requisition.html");
+    
+    
+   
 });

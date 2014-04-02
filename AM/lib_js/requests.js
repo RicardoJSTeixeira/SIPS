@@ -48,7 +48,7 @@ var requests = function(basic_path, options_ext)
             am_zone.on("click", "#button_ldptable_add_line", function(e)
             {
                 e.preventDefault();
-                am_zone.find("#table_tbody_ldp").append("<tr><td><input name='ldp_cp" + ldpinput_count + "' class='linha_cp validate[required]'></td><td><input name='ldp_freg" + ldpinput_count + "' class='linha_freg validate[required]'></td><td> <button class='btn btn-danger button_ldptable_remove_line' ><span class='icon-minus'></span></button></td></tr>");
+                am_zone.find("#table_tbody_ldp").append("<tr><td><input type='text' name='ldp_cp" + ldpinput_count + "' class='linha_cp validate[required]'></td><td><input type='text' name='ldp_freg" + ldpinput_count + "' class='linha_freg validate[required]'></td><td> <button class='btn btn-danger button_ldptable_remove_line' ><span class='icon-minus'></span></button></td></tr>");
                 ldpinput_count++;
             });
             //Remove Linhas
@@ -198,7 +198,7 @@ var requests = function(basic_path, options_ext)
             rc_zone.on("click", "#add_line_obj_doc", function(e)
             {
                 e.preventDefault();
-                rc_zone.find("#doc_obj_table_tbody").append("<tr><td><input class='input-xlarge validate[required]'  type='text' /></td>    <td><button class='btn btn-danger remove_doc_obj'><i class='icon icon-minus'></i></button></td></tr>");
+                rc_zone.find("#doc_obj_table_tbody").append("<tr><td><input class='input-xlarge validate[required]'  type='text' /></td>    <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
             });
 
             rc_zone.on("click", ".remove_doc_obj", function(e)
