@@ -3,6 +3,23 @@
     .tableradio_class table td:nth-child(2){width: 90px;}
 </style>
 <div id="main_consulta_div">
+    <div id="encomenda_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true"   >
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Encomenda</h3>
+        </div>
+        <div class="modal-body"  >
+            Deseja criar uma nova encomenda para este cliente?
+        </div>
+        <div class="modal-footer">
+            <button class="btn" id="new_request_button" data-dismiss="modal" aria-hidden="true">Sim</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Não</button>
+        </div>
+    </div>
+
+
+
+
 
 
     <div class="grid-content">
@@ -68,10 +85,11 @@
         </div>
         <div class="clear"></div>
         <div id="yes_exam_div" style="display:none" >
-            <h3>Audiograma</h3>
-            <div id="audiograma_placeholder" class="grid grid-content"></div>
+
             <h3>Script</h3>
             <div  id="script_placeholder" class="grid grid-content"></div>
+            <h3>Audiograma</h3>
+            <div id="audiograma_placeholder" class="grid grid-content"></div>
             <div class='formRow' id='venda_confirm_div' style="display:none">
                 <label>Venda:</label>
                 <div class='formRight'>
@@ -81,8 +99,7 @@
                     <label class="radio inline"  for="venda_no"><span></span>Não</label>
                 </div>       
             </div>
-            <div id="venda_div" class="grid grid-content">
-            </div>
+
             <div id="no_venda_div"  style="display:none">
                 <div class='formRow'>
                     <label>Razão</label>

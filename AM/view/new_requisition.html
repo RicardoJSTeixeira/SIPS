@@ -99,12 +99,26 @@
     <script>
                             $(function()
                             {
-
+                                var values = getUrlVars();
                                 var config = new Object();
                                 requisition1 = new requisition($("#extra_div"), config);
                                 requisition1.init(function()
                                 {
-                                    requisition1.new_requisition($("#new_requisition_div"), null);
+ 
+                                    if (values["lead_id"])
+                                        requisition1.new_requisition($("#new_requisition_div"), values["lead_id"]);
+                                    else
+                                        requisition1.new_requisition($("#new_requisition_div"), null);
                                 });
                             });
+
+
+                            function getUrlVars() {
+                                var vars = {};
+                                var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+                                    vars[key] = value;
+                                });
+                                return vars;
+                            }
+
     </script>
