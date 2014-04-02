@@ -9,7 +9,6 @@ var requisition = function(geral_path, options_ext)
 
     var product = 1;
     var modal = "";
-    var new_requisition_area = "";
     var table_path = "";
     var show_admin = 0;
     var tipo = "mensal";
@@ -22,10 +21,6 @@ var requisition = function(geral_path, options_ext)
             geral_path.off().empty().append(data);
             geral_path.find("#new_requisition_div").hide();
             modal = geral_path.find("#ver_product_requisition_modal");
-            new_requisition_area = geral_path.find("#new_requisition_div");
-
-
-
             if (typeof callback === "function")
                 callback();
         });
@@ -42,7 +37,7 @@ var requisition = function(geral_path, options_ext)
 
 //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
     this.new_requisition = function(new_requisition_zone, lead_id) {
-        new_requisition_zone.off(); 
+        new_requisition_zone.off();
         new_requisition_zone.find('.fileupload').fileupload();
         new_requisition_zone.find("#requisition_form").validationEngine();
         new_requisition_zone.find("#requisition_form").show();
@@ -106,24 +101,41 @@ var requisition = function(geral_path, options_ext)
                 select.append("<option>Padrão</option>");
 
 
-            update_product_selects();
+            update_product_selects(this);
         });
 
 
-        function  update_product_selects()
+        function  update_product_selects(that)
         {
             var selected_options = [];
-            $("#new_requisition_product_tbody select option").prop("disabled", false);
-            $.each($("#new_requisition_product_tbody select"), function()
+            var children = [];
+ 
+            $.each($("#new_requisition_product_tbody select").not(that), function()
             {
-                selected_options.push($(this).find("option:selected").attr("id"));
-            });
+                selected_options.push($(this).val());
 
+
+
+                if ($(this).find("option:selected").data("children"))
+                {
+                    $.each($(this).find("option:selected").data("children"), function()
+                    {
+                        children.push(this.id);
+                    });
+                }
+
+
+            });
+          //  $("#new_requisition_product_tbody select option").prop("disabled", true);
             $.each(selected_options, function()
             {
                 $("#new_requisition_product_tbody select option[value='" + this + "']").prop("disabled", true);
-
             });
+            $.each(children, function()
+            {
+                $("#new_requisition_product_tbody select option[value='" + this + "']").prop("disabled", false);
+            });
+
             $("#new_requisition_product_tbody select").trigger("chosen:updated");
         }
 
@@ -333,7 +345,10 @@ var requisition = function(geral_path, options_ext)
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
         function(data)
         {
+
             var optgroups = [];
+            var children = [];
+            var parent = [];
             select.empty();
             optgroups.push("<option value='0'>Escolha um produto</option><optgroup value='1' label='Aparelhos'></optgroup>");
             var
@@ -351,25 +366,49 @@ var requisition = function(geral_path, options_ext)
             select.append(temp);
             $.each(data, function()
             {
+                if (this.children)
+                    $.each(this.children, function()
+                    {
+                        children.push(this.id);
+                    });
+
+                
                 switch (this.category)
                 {
                     case "aparelho":
-                        aparelho.push("<option data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "' id='" + this.id + "' value='" + this.id + "'>" + this.name + "</option>");
+                        if (children.indexOf(this.id) == -1)
+                            aparelho.push("<option data-parent='" + JSON.stringify(this.parents) + "'  data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
+                        else
+                            aparelho.push("<option disabled data-parent='" + JSON.stringify(this.parents) + "'  data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
                         break;
                     case "pilha":
-                        pilha.push("<option data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "' id='" + this.id + "' value='" + this.id + "'>" + this.name + "</option>");
+                        if (children.indexOf(this.id) == -1)
+                            pilha.push("<option data-parent='" + JSON.stringify(this.parents) + "' data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
+                        else
+                            pilha.push("<option disabled data-parent='" + JSON.stringify(this.parents) + "' data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
                         break;
                     case "acessorio":
-                        acessorio.push("<option data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "' id='" + this.id + "' value='" + this.id + "'>" + this.name + "</option>");
+                        if (children.indexOf(this.id) == -1)
+                            acessorio.push("<option data-parent='" + JSON.stringify(this.parents) + "' data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "' value='" + this.id + "'>" + this.name + "</option>");
+                        else
+                            acessorio.push("<option disabled data-parent='" + JSON.stringify(this.parents) + "' data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
                         break;
                     case "molde":
-                        molde.push("<option data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "' id='" + this.id + "' value='" + this.id + "'>" + this.name + "</option>");
+                        if (children.indexOf(this.id) == -1)
+                            molde.push("<option data-parent='" + JSON.stringify(this.parents) + "' data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
+                        else
+                            molde.push("<option disabled data-parent='" + JSON.stringify(this.parents) + "' data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
                         break;
                     case "economato":
-                        economato.push("<option data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "' id='" + this.id + "' value='" + this.id + "'>" + this.name + "</option>");
+                        if (children.indexOf(this.id) == -1)
+                            economato.push("<option data-parent='" + JSON.stringify(this.parents) + "' data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "' value='" + this.id + "'>" + this.name + "</option>");
+                        else
+                            economato.push("<option disabled data-parent='" + JSON.stringify(this.parents) + "' data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
                         break;
                 }
             });
+
+
             select.find("optgroup[value='1']").append(aparelho).end()
                     .find("optgroup[value='2']").append(pilha).end()
                     .find("optgroup[value='3']").append(acessorio).end()

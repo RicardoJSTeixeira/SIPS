@@ -29,8 +29,10 @@ class apoio_marketing extends requests_class {
         
     }
 
-    public function delete() {
-        
+    public function delete($id) {
+        $query = "delete from spice_apoio_marketing where id=:id";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array(":id" => $id));
     }
 
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
@@ -57,7 +59,7 @@ class apoio_marketing extends requests_class {
                     break;
             }
             if ($this->user_level > 5 || $show_admin == 1) {
-                $row[12] = $row[12] . " <button class='btn accept_apoio_marketing btn-success icon-alone' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
+                $row[12] = $row[12] . " <button class='btn accept_apoio_marketing btn-success icon-alone' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button><button class='btn delete_apoio_marketing btn-danger ' value='" . $row["id"] . "'><i class= 'icon-remove'></i>Remover</button></div>";
             }
             $result['aaData'][] = $row;
         }

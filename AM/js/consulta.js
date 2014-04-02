@@ -82,28 +82,19 @@ $("#main_consulta_div input[name='vp_a']").change(function()
 {
     if ($(this).val() === "yes")
     {
-        $("#main_consulta_div #venda_div").show();
-        var config = new Object();
-        config.mensal = false;
-        requisition1 = new requisition($("#main_requisition_div"), config);
-        requisition1.init();
-        requisition1.new_requisition_destroy($("#venda_div"));
-        requisition1.new_requisition($("#venda_div"), false, lead_id);
-
         $("#main_consulta_div #no_venda_div").hide();
     }
     else
     {
-        $("#main_consulta_div #venda_div").hide();
         $("#main_consulta_div #no_venda_div").show();
     }
 });
 
 $("#main_consulta_div #validate_audio_script").on("click", function()
 {
-    script.validate_manual(function()
-    {
-        consult_audiogra.validate(function() {
+    consult_audiogra.validate(function() {
+        script.validate_manual(function()
+        {
             var status = consult_audiogra.calculate();
 
             if (status !== "0") //COM PERDA
@@ -139,8 +130,7 @@ $("#main_consulta_div #terminar_consulta").on("click", function()
         });
         $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: exame_razao, venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", feedback: ""}, function() {
             $.jGrowl('Consulta gravada sem exame', {life: 3000});
-            $("#div_consult").hide();
-            $("#div_master").show();
+                   $.history.push("view/dashboard.html");
 
         }, "json");
     }
@@ -167,19 +157,17 @@ $("#main_consulta_div #terminar_consulta").on("click", function()
 
                             if ($("#main_consulta_div #venda_yes").is(":checked"))//HA VENDA
                             {
-                                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 1, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), tipo_aparelho: $("#main_consulta_div #venda_div input[type='radio'][name='v_ta']:checked").val(), descricao_aparelho: $("#main_consulta_div #dma option:selected").text(), feedback: temp_feedback}, function() {
+                                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 1, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), feedback: temp_feedback}, function() {
                                     $.jGrowl('Consulta gravada com venda', {life: 3000});
-                                    $("#div_consult").hide();
-                                    $("#div_master").show();
+                                    $.history.push("view/dashboard.html");
 
                                 }, "json");
                             }
                             else//NÂO HA VENDA
                             {
-                                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: $("#main_consulta_div #no_venda_select option:selected").text(), left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), tipo_aparelho: "", descricao_aparelho: "", feedback: temp_feedback}, function() {
+                                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: $("#main_consulta_div #no_venda_select option:selected").text(), left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), feedback: temp_feedback}, function() {
                                     $.jGrowl('Consulta gravada sem venda', {life: 3000});
-                                    $("#div_consult").hide();
-                                    $("#div_master").show();
+                                    $.history.push("view/dashboard.html");
 
                                 }, "json");
                             }
@@ -188,18 +176,22 @@ $("#main_consulta_div #terminar_consulta").on("click", function()
                         }
                         else//NAO HA PERDA
                         {
-                            $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), tipo_aparelho: "", descricao_aparelho: "", feedback: "Sem perda"}, function() {
+                            $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), feedback: "Sem perda"}, function() {
                                 $.jGrowl('Consulta gravada sem perda', {life: 3000});
-                                $("#div_consult").hide();
-                                $("#div_master").show();
+                                $.history.push("view/dashboard.html");
 
                             }, "json");
                         }
-
+                        $("#encomenda_modal").modal("show");
                     }, false);
 
                 }, false);
 
 
     }
-}); 
+});
+
+$("#new_request_button").click(function()
+{
+    $.history.push("view/new_requisition.html?lead_id=" + lead_id);
+});
