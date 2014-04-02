@@ -70,12 +70,22 @@ $("#main_consulta_div #pa_yes").click(function()
 
 $("#main_consulta_div #terminar_consulta_no_exame").click(function()
 {
+
     $("#main_consulta_div")
             .find("#no_exam_div")
             .show()
             .end()
-            .find("#yes_exam_div").hide();
-    $(this).prop("disabled", true);
+            .find("#yes_exam_div")
+            .hide()
+            .end()
+            .find("#terminar_consulta")
+            .removeClass("hidden")
+            .end()
+            .find("#validate_audio_script")
+            .addClass("hidden")
+            .end();
+    ;
+    $(this).hide();
 });
 //VENDA
 $("#main_consulta_div input[name='vp_a']").change(function()
@@ -123,16 +133,25 @@ $("#main_consulta_div #terminar_consulta").on("click", function()
 {
     if (consult_status === "no_exam")//NÂO HA EXAME
     {
+
+
         var exame_razao = new Array();
         $.each($("#main_consulta_div #no_exam_div input[type='checkbox'][name='ne']:checked"), function()
         {
             exame_razao.push($(this).val());
         });
-        $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: exame_razao, venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", feedback: ""}, function() {
-            $.jGrowl('Consulta gravada sem exame', {life: 3000});
-                   $.history.push("view/dashboard.html");
 
-        }, "json");
+        if (exame_razao.length)
+        {
+
+            $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: exame_razao, venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", feedback: ""}, function() {
+                $.jGrowl('Consulta gravada sem exame', {life: 3000});
+                $.history.push("view/dashboard.html");
+
+            }, "json");
+        }
+        else
+            $.jGrowl('Selecione pelo menos uma razão', {life: 4000});
     }
     else//HA EXAME
     {
@@ -140,26 +159,20 @@ $("#main_consulta_div #terminar_consulta").on("click", function()
         script.validate_manual(
                 function() {
                     consult_audiogra.validate(function() {
-
                         script.submit_manual();
                         consult_audiogra.save(lead_id, false);
-
-
                         if (ha_perda)// HA PERDA
                         {
                             var temp_feedback = "";
-
                             if (parseInt(right_ear) >= parseInt(left_ear))
                                 temp_feedback = $("#main_consulta_div #right_ear").text();
                             else
                                 temp_feedback = $("#main_consulta_div #left_ear").text();
-
-
                             if ($("#main_consulta_div #venda_yes").is(":checked"))//HA VENDA
                             {
                                 $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 1, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), feedback: temp_feedback}, function() {
                                     $.jGrowl('Consulta gravada com venda', {life: 3000});
-                                    $.history.push("view/dashboard.html");
+                                    $("#encomenda_modal").modal("show");
 
                                 }, "json");
                             }
@@ -171,8 +184,6 @@ $("#main_consulta_div #terminar_consulta").on("click", function()
 
                                 }, "json");
                             }
-
-
                         }
                         else//NAO HA PERDA
                         {
@@ -182,12 +193,10 @@ $("#main_consulta_div #terminar_consulta").on("click", function()
 
                             }, "json");
                         }
-                        $("#encomenda_modal").modal("show");
+                       
                     }, false);
 
                 }, false);
-
-
     }
 });
 

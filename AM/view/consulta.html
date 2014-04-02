@@ -12,124 +12,137 @@
             Deseja criar uma nova encomenda para este cliente?
         </div>
         <div class="modal-footer">
-            <button class="btn" id="new_request_button" data-dismiss="modal" aria-hidden="true">Sim</button>
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Não</button>
+            <button class="btn btn-primary" id="new_request_button" data-dismiss="modal" aria-hidden="true">Sim</button>
+            <button class="btn" data-dismiss="modal" onclick=" $.history.push('view/dashboard.html');" aria-hidden="true">Não</button>
         </div>
     </div>
 
 
 
 
+    <div class="row-fluid">
+        <div class="grid span5">
+            <div class="grid-title">
+                <div class="pull-left">    Dados de cliente</div>
 
+                <div class="pull-right">   <button class="btn" onclick="history.back();" ><i class="icon-circle-arrow-left"></i>Voltar</button> </div>
+            </div>
+            <div class="grid-content">
+                <table id="table_client_info" class="table ">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Morada</th>
+                            <th>Data de Nascimento</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table_client_info_body">
 
-    <div class="grid-content">
-        <table id="table_client_info" class="table table-mod table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Morada</th>
-                    <th>Data de Nascimento</th>
-                </tr>
-            </thead>
-            <tbody id="table_client_info_body">
-
-            </tbody>
-        </table>
-    </div>
-
-    <div class="grid-title"> 
-        <div class="pull-left">
-            Consulta
-        </div>
-    </div>
-    <div class="grid-content">
-        <div class="formRow" id="inicial_option_div">
-            <h4>Preencher audiograma?</h4>
-            <div class="formRight">
-                <button class="btn btn-success" id="pa_yes">Sim</button>
-                <button class="btn btn-primary" id="pa_no">Não</button>
-            </div>      
-        </div>
-        <div id="no_exam_div" style="display:none">
-            <div class="formRow">
-                <h4>Não há exame</h4>
-                <div class="formRow">
-                    <input   type="checkbox" id="ne_cera" name="ne" value="LIMP">
-                    <label class="checkbox inline" for="ne_cera"><span></span>Cera</label>
-                </div>
-                <div class="formRow"> 
-                    <input   type="checkbox" id="ne_otorr" name="ne" value="OTOR">
-                    <label class="checkbox inline" for="ne_otorr"><span></span>Otorrino</label>
-                </div> 
-                <div class="formRow">
-                    <input   type="checkbox" id="ne_remarc" name="ne" value="">
-                    <label class="checkbox inline" for="ne_remarc"><span></span>Remarcou</label>
-                </div> 
-                <div class="formRow">
-                    <input   type="checkbox" id="ne_assist" name="ne" value="SERV">
-                    <label class="checkbox inline" for="ne_assist"><span></span>Assistência</label>
-                </div>
-                <div class="formRow">
-                    <input   type="checkbox" id="ne_inc" name="ne" value="INC">
-                    <label class="checkbox inline" for="ne_inc"><span></span>Incapacitado</label>
-                </div>
-                <div class="formRow">
-                    <input   type="checkbox" id="ne_info" name="ne" value="PINF">
-                    <label class="checkbox inline" for="ne_info"><span></span>Informação</label>
-                </div>
-                <div class="formRow">
-                    <input   type="checkbox" id="ne_other" name="ne" value="OUT">
-                    <label class="checkbox inline" for="ne_other"><span></span>Outros</label>
-                </div>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div class="clear"></div>
-        <div id="yes_exam_div" style="display:none" >
-
-            <h3>Script</h3>
-            <div  id="script_placeholder" class="grid grid-content"></div>
-            <h3>Audiograma</h3>
-            <div id="audiograma_placeholder" class="grid grid-content"></div>
-            <div class='formRow' id='venda_confirm_div' style="display:none">
-                <label>Venda:</label>
-                <div class='formRight'>
-                    <input  type="radio" id="venda_yes" value="yes" name="vp_a">
-                    <label class="radio inline"  for="venda_yes"><span></span>Sim</label>
-                    <input  type="radio" id="venda_no" value="no" name="vp_a">
-                    <label class="radio inline"  for="venda_no"><span></span>Não</label>
-                </div>       
-            </div>
-
-            <div id="no_venda_div"  style="display:none">
-                <div class='formRow'>
-                    <label>Razão</label>
-                    <div class='formRight'>
-                        <select id='no_venda_select'>
-                            <option value="PVP">Preço</option>
-                            <option value="FAM">Familiar</option>
-                            <option value="PAGU">Sem aproveitamento</option>
-                            <option value="CONC">Concorrência</option>
-                            <option value="PENS">Pensador</option>
-                            <option value="OUT">Outros</option>
-                        </select>
-                    </div>       
+        <div class="grid span11">
+            <div class="grid-title"> 
+                <div class="pull-left">
+                    Consulta
                 </div>
             </div>
+            <div class="grid-content">
+                <div   id="inicial_option_div">
+                    <h4>Preencher audiograma?</h4>
+                    <div class="formRight">
+                        <button class="btn btn-success" id="pa_yes">Sim</button>
+                        <button class="btn btn-primary" id="pa_no">Não</button>
+                    </div>      
+                </div>
+                <div id="no_exam_div" style="display:none">
+                    <div class="formRow">
+                        <form id='no_exam_form'>
+                            <h4>Não há exame</h4>
+                            <div class="formRow">
+                                <input   type="checkbox" id="ne_cera" name="ne" value="LIMP">
+                                <label class="checkbox inline" for="ne_cera"><span></span>Cera</label>
+                            </div>
+                            <div class="formRow"> 
+                                <input   type="checkbox" id="ne_otorr" name="ne" value="OTOR">
+                                <label class="checkbox inline" for="ne_otorr"><span></span>Otorrino</label>
+                            </div> 
+                            <div class="formRow">
+                                <input   type="checkbox" id="ne_remarc" name="ne" value="">
+                                <label class="checkbox inline" for="ne_remarc"><span></span>Remarcou</label>
+                            </div> 
+                            <div class="formRow">
+                                <input   type="checkbox" id="ne_assist" name="ne" value="SERV">
+                                <label class="checkbox inline" for="ne_assist"><span></span>Assistência</label>
+                            </div>
+                            <div class="formRow">
+                                <input   type="checkbox" id="ne_inc" name="ne" value="INC">
+                                <label class="checkbox inline" for="ne_inc"><span></span>Incapacitado</label>
+                            </div>
+                            <div class="formRow">
+                                <input   type="checkbox" id="ne_info" name="ne" value="PINF">
+                                <label class="checkbox inline" for="ne_info"><span></span>Informação</label>
+                            </div>
+                            <div class="formRow">
+                                <input   type="checkbox" id="ne_other" name="ne" value="OUT">
+                                <label class="checkbox inline" for="ne_other"><span></span>Outros</label>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div id="yes_exam_div" style="display:none" >
+
+                    <h4>Script</h4>
+                    <div  id="script_placeholder" class="grid-content"></div>
+                    <h4>Audiograma</h4>
+                    <div id="audiograma_placeholder" class="grid-content"></div>
+
+                    <div class='formRow' id='venda_confirm_div' style="display:none">
+                        <span style='font-size:2em'>Venda:</span>
+                        <div class='formRight'>
+                            <input  type="radio" id="venda_yes" value="yes" name="vp_a">
+                            <label class="radio inline"  for="venda_yes"><span></span>Sim</label>
+                            <input  type="radio" id="venda_no" value="no" name="vp_a">
+                            <label class="radio inline"  for="venda_no"><span></span>Não</label>
+                        </div>
+                    </div>
+                    <div id="no_venda_div"  style="display:none">
+                        <div class='formRow'>
+                            <label>Razão</label>
+                            <div class='formRight'>
+                                <select id='no_venda_select'>
+                                    <option value="PVP">Preço</option>
+                                    <option value="FAM">Familiar</option>
+                                    <option value="PAGU">Sem aproveitamento</option>
+                                    <option value="CONC">Concorrência</option>
+                                    <option value="PENS">Pensador</option>
+                                    <option value="OUT">Outros</option>
+                                </select>
+                            </div>       
+                        </div>
+                    </div>
+                </div>
+
+                <div class="formRow">
+                    <button class="btn right hidden" id="validate_audio_script"><i class="icon-save"></i>Validar</button>
+                    <button class='btn btn-success right hidden' id='terminar_consulta'>Terminar Consulta</button>
+                    <button class='btn btn-danger right hidden' id='terminar_consulta_no_exame' >Terminar Consulta sem Exame</button>
+                </div>
+
+                <div class="formRow">
+                    <button class='btn btn-info right' onclick="location.reload();" >Inicio</button>
+                </div>
+                <div class="clear"> </div>
+            </div>
+
+
+
+
+
         </div>
-        <div id="footer_div">
-            <div class="formRow">
-                <button class='btn btn-success right hidden' id='terminar_consulta'>Terminar Consulta</button>
-            </div>
-            <div class="formRow">
-                <button class="btn right hidden" id="validate_audio_script"><i class="icon-save"></i>Validar</button>
-            </div>
-            <div class="formRow">
-                <button class='btn btn-danger right hidden' id='terminar_consulta_no_exame' >Terminar Consulta sem Exame</button>
-            </div>
-            <div class="formRow">
-                <button class='btn btn-info right' onclick="location.reload();" >Inicio</button>
-            </div>
-        </div>
+
         <div id="main_requisition_div"></div>
     </div>
 </div>
