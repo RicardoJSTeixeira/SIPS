@@ -1,0 +1,2 @@
+Need to add 2 columns in sips_sd_reservations_types:
+    ALTER TABLE `sips_sd_reservations_types` ADD `min_time` INT NOT NULL , ADD `max_time` INT NOT NULL ;
