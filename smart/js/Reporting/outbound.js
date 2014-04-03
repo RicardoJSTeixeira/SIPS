@@ -1,5 +1,6 @@
 
 function outboundList(today) {
+
     var totalCalls = 0, talkCalls = 0, totalDrop = 0;
     api.get({datatype: 'calls', type: 'total', timeline: {start: today.format('YYYY-MM-DDT00:00'), end: today.format('YYYY-MM-DDT23:59')}, by: {calls: ['by=hour']}}, function(data) {
         var Call = [], Talk = [], Drop = [];
@@ -25,6 +26,7 @@ function outboundList(today) {
                             this.calls
                         ]);
                     });
+                    //console.log(Call);
                     final = [{data: Call, label: 'Total Calls'}, {data: Talk, label: 'Total Answer Calls'}, {data: Drop, label: 'Total Drop Calls'}];
                     graficos.floatLine('#out1', final);
                 });
