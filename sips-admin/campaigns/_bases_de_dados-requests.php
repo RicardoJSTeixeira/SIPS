@@ -201,11 +201,11 @@ function DBMatchFields($CampaignID, $ConvertedFile, $link) {
         $js['name'][] = $row[0];
         $js['display_name'][] = $row[1];
     }
-   /* 
+   
     if($camp->lead_order=="UP RANK"){
         $js['name'][] = "rank";
         $js['display_name'][] = "Ranking";
-    }*/
+    }
     
     echo json_encode($js);
 }
