@@ -8,7 +8,7 @@ Class Calendars {
         $this->_db = $db;
     }
 
-    protected function _getReservas($is_scheduler, $id, $beg, $end) {
+    protected function _getReservas($is_scheduler, $id, $beg, $end,$forceUneditable=false) {
         if ($is_scheduler) {
             $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, e.display_text, d.postal_code, d.first_name, c.extra1 codCamp, IFNULL(e.id,false) closed "
                     . "FROM sips_sd_reservations a "
@@ -37,7 +37,8 @@ Class Calendars {
                 'codCamp' => (is_null($row->codCamp) ? "" : $row->codCamp),
                 'start' => $row->start_date,
                 'end' => $row->end_date,
-                'editable' => !(bool) $row->closed,
+                'editable' => !((bool) $row->closed || $forceUneditable),
+                'closed' => (bool) $row->closed,
                 'className' => "t" . $row->id_reservation_type,
                 'bloqueio' => false,
                 'user' => $row->id_user,
@@ -46,7 +47,7 @@ Class Calendars {
         return $reservars;
     }
 
-    protected function _getRefs($user) {
+    public function _getRefs($user) {
         $stmt = $this->_db->prepare("SELECT user, id_calendar, cal_type FROM sips_sd_agent_ref WHERE user=:user");
         $stmt->execute(array(":user" => $user));
         $refs = array();
@@ -77,7 +78,7 @@ Class Calendars {
         $reservas = array();
         $refs = $this->_getRefs($user);
         foreach ($refs as $row) {
-            $reservas = \array_merge($reservas, $this->_getReservas($row->is_scheduler, $row->id, \date('Y-m-d H:i:s', $beg), \date('Y-m-d H:i:s', $end)));
+            $reservas = \array_merge($reservas, $this->_getReservas($row->is_scheduler, $row->id, \date('Y-m-d H:i:s', $beg), \date('Y-m-d H:i:s', $end),true));
         }
         return $reservas;
     }
@@ -93,7 +94,13 @@ Class Calendars {
         }
         $stmt->execute($user_groups);
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
-            $this->_tipo_reservas[] = (object) array("id" => $row->id_reservations_types, "css" => ".t" . $row->id_reservations_types . " {background: " . $row->color . ";}", "type" => $row->id_reservations_types, "text" => $row->display_text, "color" => $row->color);
+            $this->_tipo_reservas[] = (object) array(
+                "id" => $row->id_reservations_types, 
+                "css" => ".t" . $row->id_reservations_types . " {background: " . $row->color . ";}", 
+                "type" => $row->id_reservations_types, 
+                "text" => $row->display_text, 
+                "active" => (bool)$row->active, 
+                "color" => $row->color);
         }
         return $this->_tipo_reservas;
     }
@@ -172,6 +179,12 @@ Class Calendars {
         $query = "UPDATE `sips_sd_reservations` SET `start_date`=:start,`end_date`=:end WHERE `id_reservation`=:id";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":id" => $id, ":start" => date('Y-m-d H:i:s', $start), ":end" => date('Y-m-d H:i:s', $end)));
+    }
+    
+    public function changeReservaResource($id, $rsc_id) {
+        $query = "UPDATE `sips_sd_reservations` SET `id_resource`=:rsc_id WHERE `id_reservation`=:id";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array(":id" => $id, ":rsc_id" => $rsc_id));
     }
 
 }
@@ -256,7 +269,8 @@ class Calendar extends Calendars {
                 'start' => $excepcao->start_date,
                 'end' => $excepcao->end_date,
                 'editable' => false,
-                'className' => "bloqueado"
+                'className' => "bloqueado",
+                'bloqueio' => true
             );
         }
         return $blocks;

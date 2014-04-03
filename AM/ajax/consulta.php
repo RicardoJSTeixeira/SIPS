@@ -18,39 +18,31 @@ $variables = array();
 $unique_id = time() . "." . rand(1, 1000);
 switch ($action) {
     case "insert_consulta":
-        $query = "Insert into spice_consulta (id,data,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,tipo_aparelho,descricao_aparelho,feedback)
-            values (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        $variables[] = date("Y-m-d H:i:s");
-        $variables[] = $reserva_id;
-        $variables[] = $lead_id;
-        $variables[] = "campanha spice";
-        $variables[] = $consulta;
-        $variables[] = $consulta_razao;
-        $variables[] = $exame;
-        $variables[] = json_encode($exame_razao);
-        $variables[] = $venda;
-        $variables[] = $venda_razao;
-        $variables[] = $left_ear;
-        $variables[] = $right_ear;
-        $variables[] = $tipo_aparelho;
-        $variables[] = $descricao_aparelho;
-        $variables[] = $feedback;
+        $query = "Insert into spice_consulta (id,data,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,feedback)
+            values (NULL,:data,:reserva_id,:lead_id,:campanha,:consulta,:consulta_razao,:exame,:exame_razao,:venda,:venda_razao,:left_ear,:right_ear,:feedback)";
+
         $stmt = $db->prepare($query);
-        $stmt->execute($variables);
-      echo json_encode("1");
+        $stmt->execute(array(":data" => date("Y-m-d H:i:s"),
+            ":reserva_id" => $reserva_id,
+            ":lead_id" => $lead_id,
+            ":campanha" => "campanha_spice",
+            ":consulta" => $consulta,
+            ":consulta_razao" => $consulta_razao,
+            ":exame" => $exame,
+            ":exame_razao" => json_encode($exame_razao),
+            ":venda" => $venda,
+            ":venda_razao" => $venda_razao,
+            ":left_ear" => $left_ear,
+            ":right_ear" => $right_ear,
+            ":feedback" => $feedback));
+        echo json_encode("saved");
         break;
 
     case "get_client_info":
         $result = array();
-        $query = "SELECT first_name nome,address1 morada,date_of_birth data_nascimento from vicidial_list where lead_id=?";
-        $variables[] = $lead_id;
-        $stmt = $db->prepare($query);
-        $stmt->execute($variables);
-
+        $stmt = $db->prepare("SELECT first_name nome,address1 morada,date_of_birth data_nascimento from vicidial_list where lead_id=:lead_id");
+        $stmt->execute(array(":lead_id" => $lead_id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-
-
         echo json_encode($row);
         break;
 }

@@ -27,9 +27,10 @@ $(function()
 $("#button_new_requisition").click(function()
 {
 
-  
-    $.history.push("view/new_requisition.html");
-    
-    
-   
+ 
+        $.history.push("view/new_requisition.html");
+
+
 });
+
+
