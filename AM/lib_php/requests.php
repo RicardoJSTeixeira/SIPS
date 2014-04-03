@@ -20,7 +20,7 @@ class apoio_marketing extends requests_class {
     }
 
     public function create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade) {
-        $query = "INSERT INTO `spice_apoio_marketing`(`user`,`data_criaçao`, `data_inicial`,`data_final`,`horario`, `localidade`, `local`, `morada`, `comments`, `local_publicidade`,`status`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        $query = "INSERT INTO `spice_apoio_marketing`(`user`,`data_criacao`, `data_inicial`,`data_final`,`horario`, `localidade`, `local`, `morada`, `comments`, `local_publicidade`,`status`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array($this->user_id, date("Y-m-d H:i:s"), $data_inicial, $data_final, json_encode($horario), $localidade, $local, $morada, $comments, json_encode($local_publicidade), 0));
     }
@@ -39,7 +39,7 @@ class apoio_marketing extends requests_class {
 
     public function get_to_datatable($show_admin) {
         $result['aaData'] = [];
-        $query = "SELECT id,user,data_criaçao,data_inicial,data_final,horario,localidade,local,morada,comments,'local_publicididade',status from spice_apoio_marketing";
+        $query = "SELECT id,user,data_criacao,data_inicial,data_final,horario,localidade,local,morada,comments,'local_publicididade',status from spice_apoio_marketing";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
 
