@@ -2,7 +2,7 @@ var requests = function(basic_path, options_ext)
 {
     var me = this;
     this.basic_path = basic_path;
-    this.config = new Object();
+    this.config = {};
     $.extend(true, this.config, options_ext);
 
 
@@ -72,7 +72,11 @@ var requests = function(basic_path, options_ext)
                     $.post("/AM/ajax/requests.php", {action: "criar_apoio_marketing",
                         data_inicial: am_zone.find("#data_rastreio1").val(),
                         data_final: am_zone.find("#data_rastreio2").val(),
-                        horario: {inicio1: am_zone.find("#data_inicio1").val(), inicio2: am_zone.find("#data_inicio2").val(), fim1: am_zone.find("#data_fim1").val(), fim2: am_zone.find("#data_fim2").val()},
+                        horario: {
+                            inicio1: am_zone.find("#data_inicio1").val(), 
+                            inicio2: am_zone.find("#data_inicio2").val(), 
+                            fim1: am_zone.find("#data_fim1").val(), 
+                            fim2: am_zone.find("#data_fim2").val()},
                         localidade: am_zone.find("#input_localidade").val(),
                         local: am_zone.find("#input_local_rastreio").val(),
                         morada: am_zone.find("#input_morada_rastreio").val(),
@@ -103,8 +107,7 @@ var requests = function(basic_path, options_ext)
             "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial rastreio"}, {"sTitle": "Data final rastreio"}, {"sTitle": "Horario"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Local publicidade"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
-
-
+        
         am_zone.on("click", ".ver_horario", function()
         {
             var id = $(this).data().apoio_marketing_id;
@@ -115,8 +118,6 @@ var requests = function(basic_path, options_ext)
                 me.basic_path.find("#ver_horario_modal #fim2").text(data[0].fim2);
                 me.basic_path.find("#ver_horario_modal").modal("show");
             }, "json");
-
-
         });
 
         am_zone.on("click", ".ver_local_publicidade", function()
@@ -127,16 +128,11 @@ var requests = function(basic_path, options_ext)
                 me.basic_path.find("#ver_local_publicidade_modal #tbody_ver_local_publicidade").empty();
                 $.each(data, function()
                 {
-
                     me.basic_path.find("#ver_local_publicidade_modal #tbody_ver_local_publicidade").append("<tr><td>" + this.cp + "</td><td>" + this.freguesia + "</td></tr>");
                 });
                 me.basic_path.find("#ver_local_publicidade_modal").modal("show");
             }, "json");
-
-
         });
-
-
 
         am_zone.on("click", ".delete_apoio_marketing", function()
         {
@@ -145,8 +141,6 @@ var requests = function(basic_path, options_ext)
                 Table_pedido_apoio_marketing.dataTable().fnDeleteRow(this_button.closest('tr')[0]);
             }, "json");
         });
-
-
 
         am_zone.on("click", ".accept_apoio_marketing", function()
         {
@@ -165,7 +159,6 @@ var requests = function(basic_path, options_ext)
         });
 
     };
-
 
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -216,16 +209,11 @@ var requests = function(basic_path, options_ext)
                 e.preventDefault();
                 $(this).parent().parent().remove();
             });
-
-
-
-
-
         });
     };
     this.get_relatorio_correio_to_datatable = function(rc_zone)
     {
-        var Table_relatorio_correio = rc_zone.dataTable({
+        rc_zone.dataTable({
             "bSortClasses": false,
             "bProcessing": true,
             "bDestroy": true,
@@ -328,22 +316,19 @@ var requests = function(basic_path, options_ext)
                         viatura: rf_zone.find(":radio[name='rrf']:checked").val(),
                         ocorrencias: ocorrencias_array,
                         comments: rf_zone.find("#input_comments").val().length ? rf_zone.find("#input_comments").val() : ""},
-                    function(data1)
+                    function()
                     {
                         rf_zone.find(":input").val("");
                         $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
                     }, "json");
-
-
-
-
                 }
             });
         });
     };
+    
     this.get_relatorio_frota_to_datatable = function(rf_zone)
     {
-        var Table_relatorio_frota = rf_zone.dataTable({
+        rf_zone.dataTable({
             "bSortClasses": false,
             "bProcessing": true,
             "bDestroy": true,
@@ -368,14 +353,10 @@ var requests = function(basic_path, options_ext)
                 $.each(data, function()
                 {
                     tbody.append("<tr><td>" + this.data + "</td><td>" + this.km + "</td><td>" + this.ocorrencia + "</td></tr>");
-                })
+                });
                 me.basic_path.find("#ver_occorrencia_frota_modal").modal("show");
             }, "json");
-
-
         });
-
-
 
         rf_zone.on("click", ".accept_report_frota", function()
         {
@@ -392,9 +373,5 @@ var requests = function(basic_path, options_ext)
                 this_button.parent("td").prev().text("Rejeitado");
             }, "json");
         });
-
-
     };
-
-
 };
