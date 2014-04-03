@@ -134,14 +134,7 @@ var requests = function(basic_path, options_ext)
             }, "json");
         });
 
-        am_zone.on("click", ".delete_apoio_marketing", function()
-        {
-            var this_button = $(this);
-            $.post('/AM/ajax/requests.php', {action: "remover_apoio_marketing", id: $(this).val()}, function() {
-                Table_pedido_apoio_marketing.dataTable().fnDeleteRow(this_button.closest('tr')[0]);
-            }, "json");
-        });
-
+  
         am_zone.on("click", ".accept_apoio_marketing", function()
         {
             var this_button = $(this);
