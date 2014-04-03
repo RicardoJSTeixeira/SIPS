@@ -19,10 +19,25 @@ class apoio_marketing extends requests_class {
         parent::__construct($db, $user_level, $user_id);
     }
 
-    public function create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade) {
-        $query = "INSERT INTO `spice_apoio_marketing`(`user`,`data_criacao`, `data_inicial`,`data_final`,`horario`, `localidade`, `local`, `morada`, `comments`, `local_publicidade`,`status`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+                
+    public function create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade, $id_reservation) {
+        $query = "INSERT INTO `spice_apoio_marketing`(`user`,`data_criacao`, `data_inicial`,`data_final`,`horario`, `localidade`, `local`, `morada`, `comments`, `local_publicidade`,`status`,`id_reservation`) "
+                . "VALUES (:user,:now,:data_inicial,:data_final,:horario,:localidade,:local,:morada,:comments,:local_pub,:status,:id_reservation)";
+                
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($this->user_id, date("Y-m-d H:i:s"), $data_inicial, $data_final, json_encode($horario), $localidade, $local, $morada, $comments, json_encode($local_publicidade), 0));
+        return $stmt->execute(array(
+            ":user"=>$this->user_id,
+            ":now"=>date("Y-m-d H:i:s"),
+            ":data_inicial"=>$data_inicial,
+            ":data_final"=> $data_final,
+            ":horario"=> json_encode($horario),
+            ":localidade"=>$localidade, 
+            ":local"=>$local, 
+            ":morada"=>$morada, 
+            ":comments"=>$comments, 
+            ":local_pub"=>json_encode($local_publicidade), 
+            ":status"=>0,
+            ":id_reservation"=>json_encode($id_reservation)));
     }
 
     public function edit() {
