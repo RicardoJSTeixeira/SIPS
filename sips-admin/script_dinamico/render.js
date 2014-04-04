@@ -6,8 +6,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             array_id = [],
             events = {
                 onEverethingCompleted: function() {
+
                 }
             };
+
     $.extend(true, events, ext_events);
 
     this.script_id = script_id;
@@ -27,6 +29,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
 
         me.config.save_overwrite = false;
+        me.config.input_disabled = false;
         $.extend(true, me.config, ext_config);
 
 
@@ -36,6 +39,11 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 update_info(function() {
                     insert_element(function() {
                         starter(function() {
+                            if (me.config.input_disabled)
+                            {
+                                script_zone.find("input").prop("disabled", true).end()
+                                .find("select").prop("disabled", true).end();
+                            }
                             events.onEverethingCompleted(me);
                         });
                     });

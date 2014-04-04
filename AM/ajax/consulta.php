@@ -18,8 +18,8 @@ $variables = array();
 $unique_id = time() . "." . rand(1, 1000);
 switch ($action) {
     case "insert_consulta":
-        $query = "Insert into spice_consulta (id,data,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,feedback)
-            values (NULL,:data,:reserva_id,:lead_id,:campanha,:consulta,:consulta_razao,:exame,:exame_razao,:venda,:venda_razao,:left_ear,:right_ear,:feedback)";
+        $query = "Insert into spice_consulta (id,data,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,feedback,closed)
+            values (NULL,:data,:reserva_id,:lead_id,:campanha,:consulta,:consulta_razao,:exame,:exame_razao,:venda,:venda_razao,:left_ear,:right_ear,:feedback,:closed)";
 
         $stmt = $db->prepare($query);
         $stmt->execute(array(":data" => date("Y-m-d H:i:s"),
@@ -34,15 +34,27 @@ switch ($action) {
             ":venda_razao" => $venda_razao,
             ":left_ear" => $left_ear,
             ":right_ear" => $right_ear,
-            ":feedback" => $feedback));
+            ":feedback" => $feedback,
+            ":closed" => $closed));
         echo json_encode("saved");
         break;
 
     case "get_client_info":
-        $result = array();
+    
         $stmt = $db->prepare("SELECT first_name nome,address1 morada,date_of_birth data_nascimento from vicidial_list where lead_id=:lead_id");
         $stmt->execute(array(":lead_id" => $lead_id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         echo json_encode($row);
+        break;
+
+
+    case "get_consulta":
+        $result = array();
+        $stmt = $db->prepare("SELECT id,data,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,feedback,closed from spice_consulta where reserva_id=:reserva_id");
+        $stmt->execute(array(":reserva_id" => $reserva_id));
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($row)
+            $result=$row;
+        echo json_encode($result);
         break;
 }
