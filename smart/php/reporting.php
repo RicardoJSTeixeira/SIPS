@@ -3,6 +3,18 @@
 ini_set(display_errors, 1);
 
 require '../../ini/db.php';
+//$VARDB_server='goviragem.dyndns.org';
+$host = "mysql:host=".$VARDB_server .";dbname=" . $VARDB_database . ";charset=utf8";
+$varDbUser="sipsadmin";
+$varDbPass="sipsps2012";
+try {
+    $db = new PDO($host, $varDbUser, $varDbPass);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
+    $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+} catch (PDOException $e) {
+    die('Connection failed: ' . $e->getMessage());
+}
+
 $server = "http://$VARDB_server:10000/ccstats/v0/";
 
 switch ($_POST['action']) {
@@ -60,7 +72,7 @@ switch ($_POST['action']) {
         break;
     case 'getCampaignStatus':getCampaignStatus($db);
         break;
-    case 'getAgentsCampaign':getAgentsCampaign($db, $_POST['id'], $_POST['start'], $_POST['end']);
+    case 'getAgentsCampaign':getAgentsCampaign($db, $_POST['id'], $_POST['start'], $_POST['end'],$server);
         break;
     case 'timeline':timeline($db, $_POST['dados'], $_POST['id'], $_POST['start'], $_POST['end']);
         break;
@@ -68,6 +80,37 @@ switch ($_POST['action']) {
         break;
     case 'hour':hour($db, $_POST['dados'], $_POST['id'], $_POST['start'], $_POST['end']);
         break;
+    case 'databaseCallback': databaseCallback($db, $_POST['id']);
+        break;
+}
+
+function databaseCallback($db, $id){
+    $callback = array();
+    $date = array();
+    //$status = array();
+    //max=array();
+    
+    $stmt= $db->prepare("SELECT GROUP_CONCAT(`status`) as x,`attempt_maximum` as max,campaign_id FROM `vicidial_lead_recycle` WHERE campaign_id=:id and active='Y'");
+    $stmt->execute(array('id'=>$id));
+    While ($data = $stmt->fetch(PDO::FETCH_OBJ)) {
+     $status=$data->x; 
+     $max=$data->max;
+    }
+    
+    $stmt= $db->prepare("select entry_date, list_id from vicidial_list group by list_id order by entry_date asc");
+    $stmt->execute();
+    While ($data = $stmt->fetch(PDO::FETCH_OBJ)) {
+     $date[$data->list_id]=$data->entry_date;   
+    }
+    
+    $stmt= $db->prepare("select count(lead_id)as count, list_id as id from vicidial_callbacks where status in ('ACTIVE', 'LIVE') group by list_id");
+    $stmt->execute();
+    While ($data = $stmt->fetch(PDO::FETCH_OBJ)) {
+     $callback[$data->id]=$data->count;   
+    }
+    
+    
+    echo json_encode(array('Callback' => $callback, 'Date'=>$date, 'Status'=>$status, 'Max'=>$max));
 }
 
 function getCampaignValue($db, $start, $end) {
@@ -395,7 +438,7 @@ function timeline($db, $ar, $id, $start, $end) {
     echo json_encode(array('Total' => $total, 'Talk' => $talk, 'Util' => $util, 'Sucesso' => $sucesso, 'Callback' => $callback, 'Complete' => $complete, 'NUtil' => $nutil, 'Unwork' => $unwork, 'Drop' => $drop));
 }
 
-function getAgentsCampaign($db, $id, $start, $end) {
+function getAgentsCampaign($db, $id, $start, $end,$server) {
     $sql = "select * FROM `vicidial_campaign_statuses` Where campaign_id ='" . $id . "' and selectable ='y'";
     $stmt = $db->prepare($sql);
     $stmt->execute();
@@ -422,10 +465,10 @@ function getAgentsCampaign($db, $id, $start, $end) {
             $hu[] = $data->status;
         }
     }
-
+   
     $get_hours = file_get_contents($server."total/agent_log/$start/$end?by=agent&campaign=$id");
     $hours_content = json_decode($get_hours);
-
+   
     $get_calls = file_get_contents($server."total/calls/$start/$end?by=agent&campaign=$id");
     $calls_content = json_decode($get_calls);
 
