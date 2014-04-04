@@ -25,12 +25,10 @@ $(function()
     $.post("ajax/consulta.php", {action: "get_client_info", lead_id: lead_id},
     function(data)
     {
-        $("#main_consulta_div #table_client_info_body").append(
-                $("<tr>")
-                .append($("<td>").text(data.nome))
-                .append($("<td>").text(data.morada))
-                .append($("<td>").text(data.data_nascimento))
-                );
+        $("#main_consulta_div #client_name").text(data.nome);
+        $("#main_consulta_div #client_address").text(data.morada);
+        $("#main_consulta_div #client_birth_date").text(data.data_nascimento);
+
     }, "json");
 });
 
@@ -39,54 +37,32 @@ $("#main_consulta_div #pa_no").click(function()
 {
     consult_status = "no_exam";
     //SE NÃO HÁ EXAME PREENCHE RAZÕES
+    $("#main_consulta_div").find("#options_div").show();
+
     $("#main_consulta_div")
-            .find("#no_exam_div")
-            .show()
-            .end()
-            .find("#script_placeholder")
-            .hide()
-            .end()
-            .find("#inicial_option_div")
-            .hide()
-            .end()
-            .find("#terminar_consulta")
-            .removeClass("hidden");
+            .find("#no_exam_div").show().end()
+            .find("#terminar_consulta_div").show().end()
+            .find("#inicial_option_div").hide();
 });
 
 $("#main_consulta_div #pa_yes").click(function()
 {
     consult_status = "yes_exam";
+    $("#main_consulta_div").find("#options_div").show();
     $("#main_consulta_div")
-            .find("#yes_exam_div")
-            .show()
-            .end()
-            .find("#inicial_option_div")
-            .hide()
-            .end()
-            .find("#terminar_consulta_no_exame")
-            .removeClass("hidden");
-    $("#main_consulta_div #validate_audio_script").removeClass("hidden");
-});
+            .find("#audiograma_main_div").show().end()
+            .find("#script_main_div").show().end()
+            .find("#first_info_div").hide().end()
+            .find("#terminar_consulta_no_exame_div").show().end();
+    $("#main_consulta_div #validate_audio_script_div").show();
 
-$("#main_consulta_div #terminar_consulta_no_exame").click(function()
-{
 
-    $("#main_consulta_div")
-            .find("#no_exam_div")
-            .show()
-            .end()
-            .find("#yes_exam_div")
-            .hide()
-            .end()
-            .find("#terminar_consulta")
-            .removeClass("hidden")
-            .end()
-            .find("#validate_audio_script")
-            .addClass("hidden")
-            .end();
+    $("#main_consulta_div").find("#first_info_div")
+            .hide();
     ;
-    $(this).hide();
 });
+
+
 //VENDA
 $("#main_consulta_div input[name='vp_a']").change(function()
 {
@@ -106,29 +82,42 @@ $("#main_consulta_div #validate_audio_script").on("click", function()
         script.validate_manual(function()
         {
             var status = consult_audiogra.calculate();
+            $("#main_consulta_div #exam_outcome_div").show();
 
             if (status !== "0") //COM PERDA
             {
-                $("#main_consulta_div #venda_confirm_div").show();
                 right_ear = $("#main_consulta_div #right_ear_value").val();
                 left_ear = $("#main_consulta_div #left_ear_value").val();
-                $("#main_consulta_div #venda_yes").prop("checked", true).trigger("change");
-                $("#main_consulta_div #terminar_consulta").removeClass("hidden");
-                $("#main_consulta_div #terminar_consulta_no_exame").addClass("hidden");
+                $("#main_consulta_div #venda_confirm_div");
+                $("#main_consulta_div #terminar_consulta_div").show();
+                $("#main_consulta_div #terminar_consulta_no_exame_div").hide();
                 ha_perda = 1;
             }
             else if (status === "0") // SEM PERDA 
             {
-                $("#main_consulta_div #venda_confirm_div").show();
-                $("#main_consulta_div #venda_no").prop("checked", true).trigger("change");
-                $("#main_consulta_div #terminar_consulta").removeClass("hidden");
-                $("#main_consulta_div #terminar_consulta_no_exame").addClass("hidden");
+
+                $("#main_consulta_div #terminar_consulta_div").show();
+                $("#main_consulta_div #terminar_consulta_no_exame_div").hide();
                 ha_perda = 0;
             }
         });
     }, false);
 });
 
+
+
+$("#new_request_button").click(function()
+{
+    $.history.push("view/new_requisition.html?lead_id=" + lead_id);
+});
+
+$("#new_marcacao_button").click(function()
+{
+    var en = btoa(lead_id);
+    $.history.push("view/calendar.html?id=" + en);
+});
+
+//OPTIONS DIV--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 $("#main_consulta_div #terminar_consulta").on("click", function()
 {
     if (consult_status === "no_exam")//NÂO HA EXAME
@@ -146,7 +135,7 @@ $("#main_consulta_div #terminar_consulta").on("click", function()
 
             $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: exame_razao, venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", feedback: ""}, function() {
                 $.jGrowl('Consulta gravada sem exame', {life: 3000});
-                $.history.push("view/dashboard.html");
+           $("#marcacao_modal").modal("show");
 
             }, "json");
         }
@@ -180,7 +169,7 @@ $("#main_consulta_div #terminar_consulta").on("click", function()
                             {
                                 $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: $("#main_consulta_div #no_venda_select option:selected").text(), left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), feedback: temp_feedback}, function() {
                                     $.jGrowl('Consulta gravada sem venda', {life: 3000});
-                                    $.history.push("view/dashboard.html");
+                                     $("#marcacao_modal").modal("show");
 
                                 }, "json");
                             }
@@ -189,18 +178,70 @@ $("#main_consulta_div #terminar_consulta").on("click", function()
                         {
                             $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), feedback: "Sem perda"}, function() {
                                 $.jGrowl('Consulta gravada sem perda', {life: 3000});
-                                $.history.push("view/dashboard.html");
+                                  $("#marcacao_modal").modal("show");
 
                             }, "json");
                         }
-                       
+
                     }, false);
 
                 }, false);
     }
 });
-
-$("#new_request_button").click(function()
+$("#main_consulta_div #terminar_consulta_no_exame").click(function()
 {
-    $.history.push("view/new_requisition.html?lead_id=" + lead_id);
+    consult_status = "no_exam";
+    $("#main_consulta_div")
+            .find("#validate_audio_script_div").hide().end()
+            .find("#terminar_consulta_no_exame_div").hide().end()
+            .find("#terminar_consulta_div").show().end()
+            .find("#script_main_div").hide().end()
+            .find("#audiograma_main_div").hide().end()
+            .find("#first_info_div").show().end()
+            .find("#inicial_option_div").hide().end()
+            .find("#no_exam_div").show().end();
+
+});
+
+
+//SCRIPT VALIDATE AND SAVE
+$("#main_consulta_div #validate_script_button").click(function()
+{
+    script.validate_manual(function()
+    {
+        $.jGrowl('Script validado com sucesso!', {life: 3000});
+    }, false);
+});
+
+$("#main_consulta_div #save_script_button").click(function()
+{
+    script.validate_manual(function()
+    {
+        script.submit_manual(function()
+        {
+            $.jGrowl('Script gravado com sucesso!', {life: 3000});
+        });
+    }, false);
+
+});
+//AUDIOGRAMA VALIDATE AND SAVE
+$("#main_consulta_div #validate_audiograma_button").click(function()
+{
+    consult_audiogra.validate(function()
+    {
+        $.jGrowl('AudioGrama validado com sucesso!', {life: 3000});
+    }, false);
+});
+
+$("#main_consulta_div #save_audiograma_button").click(function()
+{
+
+    consult_audiogra.validate(function()
+    {
+        consult_audiogra.save(lead_id, function()
+        {
+            $.jGrowl('AudioGrama gravado com sucesso!', {life: 3000});
+        });
+    }, false);
+
 });
