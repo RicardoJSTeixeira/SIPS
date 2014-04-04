@@ -110,7 +110,7 @@ if($action=="send_email")
     
        
     $message = Swift_Message::newInstance('Eficiência Energética - Proposta Retific Power®')
-        ->setFrom(array('info@exemplyrigor.com' => 'Sónia Ferreira'))
+        ->setFrom(array('info@exemplyrigor.com' => 'Departamento Comercial'))
         ->setTo(array($email_address => $email_name));
     
     $message->attach(Swift_Attachment::fromPath('attachments/EmpresaEenergy.pdf'));
@@ -129,22 +129,21 @@ if($action=="send_email")
 		<br><br>
 		Neste sentido, enviamos em anexo, uma breve apresentação do nosso produto e empresa.<br>
 		Deixa-mos o nosso site onde poderá ver todos os serviços que prestamos. <br>
-		<a href="www.exeplyrigot.com">www.exemplyrigor.com</a>
+		<a href="http://www.exemplyrigor.com/">www.exemplyrigor.com</a>
 		<br><br>
 		Agradeço desde já a atenção, estando ao dispor para qualquer esclarecimento que entenda necessário.
 		<br><br>
 		Os melhores cumprimentos,
 		<br><br>
 
-        <span style="font-size:12px; font-family:Arial;"><b><font color="#404040">Sónia Ferreira</font></b></span> <br>
         <span style="font-size:11px; font-family:Arial;"><b><font color="#404040">Departamento Comercial</font></b></span> <br>
 
        	<table><tr><td><img src="'.$cid1.'"></td></tr></table>
         <a href="www.exemplyrigor.com"><b>www.exemplyrigor.com</b></a><br>
-        <a href="mailto:sferreira@exemplyrigor.com">sferreira@exemplyrigor.com</a> <br>
+        <a href="mailto:info@exemplyrigor.com">info@exemplyrigor.com</a> <br>
         
         <span style="font-size:16px; font-family:Arial;"><b><font color="#404040">Nº ÚNICO +351 707 200 220</font></b></span> <br>
-        <span style="font-size:11px; font-family:Arial;"><b><font color="#404040">Tel/Fax: &nbsp;&nbsp;&nbsp;&nbsp;         +351 214 759 910 </font></b></span> <br>
+        <span style="font-size:11px; font-family:Arial;"><b><font color="#404040">Tel/Fax: &nbsp;&nbsp;&nbsp;&nbsp;         +351 218 219 064 </font></b></span> <br>
         
         <span style="font-size:11px; font-family:Arial;"><b><font color="#404040">Facebook: <a href="www.facebook.com/Exemplyrigor">Eenergy - Exemplyrigor</a></font></b></span> <br>  <br>
       
@@ -152,7 +151,7 @@ if($action=="send_email")
 	  
 	  
 	  
-	  	<span style="font-size:11px; font-family:Arial;"><b><font color="#404040">ESPANHA -  Calle Diagonal nº 48 1º Planta, 2ª Puerta-  08420 - Canovelles -  Barcelona  -  Spain  - LISBOA -  Rua Josefa de Óbidos, 5 B  -  2650 - 210 Alfornelos  -  Amadora  -  Portugal</font></b></span><br>
+	  	<span style="font-size:11px; font-family:Arial;"><b><font color="#404040">ESPANHA -  Calle Diagonal nº 48 1º Planta, 2ª Puerta-  08420 - Canovelles -  Barcelona  -  Spain  - LISBOA -  Avenida Casal Ribeiro, 18 4ºD  -  1000 - 092 Saldanha  -  Lisboa  -  Portugal</font></b></span><br>
 	  
         <span style="font-size:11px; font-family:Arial;"><b><font color="#404040">ESPANHA - PORTUGAL</font></b></span>
 		
