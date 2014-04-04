@@ -17,7 +17,7 @@
         </div>
     </div>
 
-<div id="marcacao_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true"   >
+    <div id="marcacao_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true"   >
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">Marcação</h3>
@@ -36,33 +36,14 @@
 
         <div class="span2">
             <div class="row-fluid">
-                <div class="grid  ">
-                    <div class="grid-title">
-                        <div class="pull-left"><i class="icon-user"></i>     Dados cliente</div>
-
-                        <div class="pull-right">   <button class="btn icon-alone" onclick="history.back();" ><i class="icon-circle-arrow-left"></i></button> </div>
+                      <div class="grid" >
+                    <div class="grid-title"><div class="pull-left">Cliente</div><div class="pull-right"><button onclick="history.back();" title="Voltar" class="btn icon-alone"><i class="icon-circle-arrow-left"></i></button></div></div>
+                    <div class="user c_bg-2">
+                        <div class="user-name" style="height:auto;  " id="client_name">Nome</div>
+                        <div class="user-email" id="client_address">Morada</div>
+                        <div class="user-date" id="client_birth_date">Cod. Postal</div>
+                        <div class="clear"></div>
                     </div>
-                    <div class="grid-content">
-                        <div class="formRow">
-                            <h5> Nome </h5>
-                            <div class="formRight">
-                                <span id="client_name"></span>
-                            </div>
-                        </div>
-                        <div class="formRow">
-                            <h5> Morada </h5>
-                            <div class="formRight">
-                                <span id="client_address"></span>
-                            </div>
-                        </div>
-                        <div class="formRow">
-                            <h5> Data de Nascimento </h5>
-                            <div class="formRight">
-                                <span id="client_birth_date"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="clear"></div>
                 </div>
                 <div class="grid " id="options_div" style="position:fixed;bottom: 10px; width:13.529915%; display:none">
                     <div class="grid-title">
@@ -186,7 +167,7 @@
                     <div class="grid-content">
                         <div  id="script_placeholder"  ></div>
                         <button class="btn btn-inverse" id="validate_script_button"><i class="icon-save"></i>Validar</button>
-                   
+
                     </div>
                 </div>
 
@@ -199,7 +180,7 @@
                     <div class="grid-content">
                         <div  id="audiograma_placeholder"  ></div>
                         <button class="btn btn-inverse" id="validate_audiograma_button"><i class="icon-save"></i>Validar</button>
-           
+
                     </div>
                 </div>
             </div> 

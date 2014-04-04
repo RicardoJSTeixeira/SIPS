@@ -166,6 +166,7 @@
             </div>
 
         </form>
+       
     </div>
     <div class="modal-footer">
         <button class="btn" data-dismiss="modal" id="sair_button" aria-hidden="true">Sair</button>
@@ -180,93 +181,11 @@
         <h3  >Novo Produto</h3>
     </div>
     <div class="modal-body">
-        <form id="new_product_form" class="check_form">
-            <div class="formRow">
-                <span>Nome</span>
-                <div class="formRight">
-                    <input type="text" id="new_product_name" class="validate[required]">
-                </div>
-            </div>
-            <div class="formRow">
-                <span>Parente</span>
-                <div class="formRight">
-                    <select class="chosen-select" id="new_product_parent" multiple  data-placeholder="Selecione um parent"></select>
-                </div>    
-            </div>
-            <div class="formRow">
-                <span>Categoria</span>
-                <div class="formRight">
-                    <select  id="new_product_category">
-                        <option value="pilha" >Pilha</option>
-                        <option value="aparelho">Aparelho</option>
-                        <option value="acessorio" >Acessórios</option>
-                        <option value="molde" >Molde</option>
-                        <option value="economato" >Economato</option>
-                    </select>
-                </div>    
-            </div>
-            <div class="formRow">
-                <span>Tipo</span>
-                <div class="formRight">
-                    <input   type="checkbox" id="new_product_check_branch" name="new_product_tipo_user" value="branch" class="validate[minCheckbox[1]]">
-                    <label class="checkbox inline" for="new_product_check_branch"><span></span>Branch</label>
-                    <input   type="checkbox" id="new_product_check_dispenser" name="new_product_tipo_user" value="dispenser" class="validate[minCheckbox[1]]">
-                    <label class="checkbox inline" for="new_product_check_dispenser"><span></span>Dispenser</label>
-                </div>    
-            </div>
 
-            <div class="formRow">
-                <span>Ativo</span>
-                <div class="formRight">
-                    <input   type="checkbox" id="new_product_active" name="new_product_active" value="1" checked  >
-                    <label class="checkbox inline" for="new_product_active"><span></span>Sim</label>
-                </div>    
-            </div>
-            <div class="formRow">
-                <h5>Max Requisições</h5>
-                <table >
-                    <thead>
-                        <tr>
-                            <th>Mensal</th>
-                            <th>Especial</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="number" id="new_product_mrm" value="5" class="input-mini validate[required]"></td>
-                            <td><input type="number" id="new_product_mrw" value="5" class="input-mini validate[required]"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="formRow" id="new_product_color_div" style="display:none">
-                <table class="table table-bordered table-mod">
-                    <thead>
-                        <tr>
-                            <th>
-                                Cor
-                            </th>
-                            <th>
-                                Nome
-
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="new_product_table_tbody_color">
-                    </tbody>
-                </table>
-                <div class="formRow pull-right">
-                    <button class="btn btn-primary" id="new_product_button_color_add_line"><span class="icon-plus"></span>Adicionar Cor</button>
-                </div>
-            </div>
-
-
-
-        </form>
     </div>
     <div class="modal-footer">
         <button class="btn" data-dismiss="modal" id="sair_button" aria-hidden="true">Sair</button>
-        <button id="new_product_create_button" class="btn btn-primary">Criar</button>
+
     </div>
 </div>
 
@@ -289,7 +208,7 @@
     </div>
 </div>
 
- 
+
 
 
 
