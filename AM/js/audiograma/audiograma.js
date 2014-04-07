@@ -131,8 +131,6 @@ var audiograma = function(lead_id) {
                 nao_validado();
             }
         }
-
-
         return false;
     };
 

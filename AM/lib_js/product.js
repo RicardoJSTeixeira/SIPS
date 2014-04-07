@@ -328,6 +328,7 @@ var products = function(geral_path, options_ext)
                     molde = [],
                     economato = [];
             select.append(temp);
+            console.log(data);
             $.each(data, function()
             {
                 switch (this.category)

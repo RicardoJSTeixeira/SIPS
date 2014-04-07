@@ -507,7 +507,7 @@ class script {
 
             $query2 = "INSERT INTO script_rules (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) select NULL,:temp_id_script,tipo_elemento,tag_trigger,tag_trigger2,:tag_target,tipo,param1,param2 from script_rules where tag_target=:tag_target_old and tipo='goto'";
             $stmt2 = $this->db->prepare($query2);
-            $stmt2->execute(array(":temp_id_script" => $temp_script_id, ":tag_target" => json_encode($temp_page), ":tag_target_old" => json_encode((string)$row["id"])));
+            $stmt2->execute(array(":temp_id_script" => $temp_script_id, ":tag_target" => json_encode($temp_page), ":tag_target_old" => json_encode((string) $row["id"])));
 //elements
             $query3 = "INSERT INTO script_dinamico (`id`,tag, `id_script`,id_page, type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,default_value,required,hidden,param1) select NULL,tag,?,?,type, `ordem`,dispo, `texto`, `placeholder`, `max_length`, `values_text`,default_value,required,hidden,param1 from script_dinamico where id_script=? and id_page= ?  ";
             $stmt3 = $this->db->prepare($query3);
@@ -615,15 +615,10 @@ class script {
             }
         }
         if (count($sql)) {
-            if ($admin_review == "1") {
+            if ($admin_review == "1" || $save_overwrite == true) {
                 $query = "Delete from script_result where unique_id=:unique_id and lead_id=:lead_id";
                 $stmt = $this->db->prepare($query);
                 $stmt->execute(array(":unique_id" => $unique_id, ":lead_id" => $lead_id));
-            }
-            if ($save_overwrite == true) {
-                $query = "Delete from script_result where unique_id=:unique_id and lead_id=:lead_id";
-                $stmt = $this->db->prepare($query);
-                $stmt->execute(array(":unique_id" => 0, ":lead_id" => $lead_id));
             }
 
             $query = "INSERT INTO `script_result`(`date`,`id_script`,`user_id`,`unique_id`,`campaign_id`,`lead_id`, `tag_elemento`, `valor`,`param_1`) VALUES  " . implode(',', $sql);
