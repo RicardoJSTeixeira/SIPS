@@ -3,7 +3,7 @@
 ini_set(display_errors, 1);
 
 require '../../ini/db.php';
-//$VARDB_server='goviragem.dyndns.org';
+$VARDB_server='goviragem.dyndns.org';
 $host = "mysql:host=".$VARDB_server .";dbname=" . $VARDB_database . ";charset=utf8";
 $varDbUser="sipsadmin";
 $varDbPass="sipsps2012";

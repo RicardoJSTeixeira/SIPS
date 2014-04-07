@@ -5,14 +5,14 @@ function databaseList() {
         "bDestroy": true,
         "aaSorting": [[2, "desc"]],
         "aoColumns": [
-            {"sTitle": "ID", "sClass": "", "sWidth": "50px", "sType": "string"},
-            {"sTitle": "Campaign Designation", "sClass": "", "sWidth": "150px"},
-            {"sTitle": "Total Database", "sClass": "", "sWidth": "50px"},
-            {"sTitle": "Total Contact", "sClass": "", "sWidth": "50px"},
-            {"sTitle": "Total NEW", "sClass": "", "sWidth": "50px"},
-            {"sTitle": "", "sClass": "", "sWidth": "50px"},
-            {"sTitle": "", "sClass": "", "sWidth": "50px"},
-            {"sTitle": "", "sClass": "", "sWidth": "50px"}],
+            {"sTitle": "ID", "sClass": "", "sWidth": "50px", "sType": "string", "bVisible": true},
+            {"sTitle": "Campaign Designation", "sClass": "", "sWidth": "150px","bVisible": true},
+            {"sTitle": "Total Database", "sClass": "", "sWidth": "50px","bVisible": true},
+            {"sTitle": "Total Contact", "sClass": "", "sWidth": "50px","bVisible": true},
+            {"sTitle": "Total NEW", "sClass": "", "sWidth": "50px","bVisible": true},
+            {"sTitle": "", "sClass": "", "sWidth": "50px","bVisible": false},
+            {"sTitle": "", "sClass": "", "sWidth": "50px","bVisible": false},
+            {"sTitle": "", "sClass": "", "sWidth": "50px","bVisible": false}],
         "sDom": "<'dt-top-row'Tlf>r<'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'p>>",
         "oTableTools": {
             "aButtons": [{
