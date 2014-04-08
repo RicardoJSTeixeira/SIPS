@@ -1,6 +1,6 @@
 var calendar = function(selector, data, modals, ext, client, user) {
     var me = this;
-    this.user=user;
+    this.user = user;
     this.selector = selector;
     this.client = client || {};
     this.ext = ext;
@@ -357,7 +357,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                     },
             function(dat) {
                 me.destroy();
-                me = new calendar(me.selector, dat, me.modals, me.ext, me.client,me.user);
+                me = new calendar(me.selector, dat, me.modals, me.ext, me.client, me.user);
                 me.reserveConstruct(dat.tipo);
             }, "json");
         });
@@ -487,8 +487,9 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 .add("#btn_view_consult")
                 .click(function() {
                     var
-                            en = btoa(me.modal_ext.modal("hide").data().lead_id),
-                            rs = btoa(me.modal_ext.modal("hide").data().id);
+                            data = me.modal_ext.modal("hide").data().calEvent,
+                            en = btoa(data.lead_id),
+                            rs = btoa(data.id);
                     $.history.push("view/consulta.html?id=" + encodeURIComponent(en) + "&rs=" + encodeURIComponent(rs));
                 });
 
@@ -517,8 +518,15 @@ var calendar = function(selector, data, modals, ext, client, user) {
             $.each(data, function() {
                 tmp = tmp + "<dt>" + this.name + "</dt><dd>" + this.value + "</dd>";
             });
+            if (calEvent.user !== me.user.username && me.user.user_level < 5) {
 
-            if (calEvent.closed) {
+                me.modal_ext
+                        .find(".modal-footer span")
+                        .hide()
+                        .end()
+                        .find("#btn_view_consult")
+                        .hide();
+            } else if (calEvent.closed) {
                 me.modal_ext
                         .find(".modal-footer span")
                         .hide()
@@ -532,15 +540,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         .end()
                         .find("#btn_view_consult")
                         .hide();
-                if (calEvent.user !== me.user.username && me.user.user_level < 5) {
-                    me.modal_ext
-                            .find(".btn_trash")
-                            .hide();
-                } else {
-                    me.modal_ext
-                            .find(".btn_trash")
-                            .show();
-                }
+
             }
             me.modal_ext
                     .find("#client_info")
