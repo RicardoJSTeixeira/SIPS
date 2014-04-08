@@ -69,6 +69,7 @@ $end_date = date("o-m-d");
                         <th># SMS</th>
                         <th>Status</th>
                         <th>Process</th>
+                        <th>Response</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
