@@ -35,7 +35,7 @@ $(function() {
         $.post("/AM/ajax/calendar.php",
                 {action: "Init"},
         function(data) {
-            init(data, user.user_level);
+            init(data, user);
         }, "json");
     }, "json");
 

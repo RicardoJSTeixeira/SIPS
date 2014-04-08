@@ -32,10 +32,11 @@ switch (filter_var($_POST["action"])) {
         startDefault($db, $user);
         break;
     case "GetReservations":
+        $u = $user->getUser();
         if ($resource == "all") {
             getAllReservations($db, $user, $start, $end);
         } else {
-            getResourceContent($db, $resource, $start, $end);
+            getResourceContent($db, $resource, $start, $end, ($u->user_level < 5) ? $u->username : "");
         }
         break;
     case "remove":
@@ -72,7 +73,7 @@ switch (filter_var($_POST["action"])) {
         $refs = $calendar->_getRefs($userID->username);
         $id = array();
         while ($ref = array_pop($refs)) {
-            $id = $calendar->newReserva($userID->username, "", $start, $end, $system_types[$rtype], $ref->id,$obs);
+            $id = $calendar->newReserva($userID->username, "", $start, $end, $system_types[$rtype], $ref->id, $obs);
         }
         echo json_encode(true);
         break;
@@ -115,10 +116,10 @@ function getAllReservations($db, $user, $start, $end) {
     echo json_encode($reservas);
 }
 
-function getResourceContent($db, $resource, $start, $end) {
+function getResourceContent($db, $resource, $start, $end, $username) {
     $id = $resource;
     $calendar = new Calendar($db, $id, "rsc");
-    $reservas = $calendar->getReservas($start, $end);
+    $reservas = $calendar->getReservas($start, $end, $username);
     $bloqueios = $calendar->getBloqueios($start, $end);
     $js = array_merge($reservas, $bloqueios);
     echo json_encode($js);

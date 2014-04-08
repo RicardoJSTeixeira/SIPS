@@ -65,12 +65,6 @@ $(function()
 
 
 
-
-
-
-
-
-
         $.post("ajax/consulta.php", {action: "get_client_info", lead_id: lead_id},
         function(data)
         {

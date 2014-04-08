@@ -8,7 +8,7 @@ Class Calendars {
         $this->_db = $db;
     }
 
-    protected function _getReservas($is_scheduler, $id, $beg, $end, $forceUneditable = false) {
+    protected function _getReservas($is_scheduler, $id, $beg, $end, $forceUneditable = false, $username = "") {
         if ($is_scheduler) {
             $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, e.display_text, d.postal_code, d.first_name, c.extra1 codCamp, changed, IFNULL(e.id,false) closed, obs "
                     . "FROM sips_sd_reservations a "
@@ -33,17 +33,17 @@ Class Calendars {
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $reservars[] = array(
                 'id' => $row->id_reservation,
-                'title' => $row->rsc_name." ".((is_null($row->postal_code)) ? $row->display_text : $row->postal_code . ' - ' . $row->display_text) . (((bool) $row->closed) ? " - Fechado" : ""),
+                'title' => $row->rsc_name . " " . ((is_null($row->postal_code)) ? $row->display_text : $row->postal_code . ' - ' . $row->display_text) . (((bool) $row->closed) ? " - Fechado" : ""),
                 'client_name' => (is_null($row->first_name) ? "" : $row->first_name),
                 'lead_id' => (is_null($row->lead_id) ? "" : $row->lead_id),
                 'codCamp' => (is_null($row->codCamp) ? "" : $row->codCamp),
                 'start' => $row->start_date,
                 'end' => $row->end_date,
-                'editable' => !(((bool) $row->closed || $forceUneditable ) || ($system_types[$row->id_reservation_type])),
+                'editable' => !(((bool) $row->closed || $forceUneditable ) || ($system_types[$row->id_reservation_type]) || (($username) ? $username != $row->id_user : false)),
                 'closed' => (bool) $row->closed,
                 'changed' => (int) $row->changed,
-                'className' => "t" . $row->id_reservation_type .(((bool)$row->del)?" del":""),
-                'bloqueio' => false || ($system_types[$row->id_reservation_type]=="Apoio Markting"),
+                'className' => "t" . $row->id_reservation_type . (((bool) $row->del) ? " del" : ""),
+                'bloqueio' => false || ($system_types[$row->id_reservation_type] == "Apoio Markting"),
                 'user' => $row->id_user,
                 'system' => (bool) $system_types[$row->id_reservation_type],
                 'rsc' => (int) $row->id_resource,
@@ -123,8 +123,8 @@ Class Calendars {
                         "css" => ".t" . $row->id_reservations_types . " {background: " . $row->color . ";}",
                         "type" => $row->id_reservations_types,
                         "text" => $row->display_text,
-                        "max" => (int)$row->max_time,
-                        "min" => (int)$row->min_time,
+                        "max" => (int) $row->max_time,
+                        "min" => (int) $row->min_time,
                         "active" => (bool) !(!$row->active || ($row->user_group == "SYSTEM")),
                         "color" => $row->color);
         }
@@ -251,8 +251,8 @@ class Calendar extends Calendars {
         return implode(" ", $name_arr);
     }
 
-    public function getReservas($beg, $end) {
-        return parent::_getReservas($this->_is_scheduler, ($this->_is_scheduler) ? $this->_id_scheduler : $this->_id_resource, \date('Y-m-d H:i:s', $beg), \date('Y-m-d H:i:s', $end));
+    public function getReservas($beg, $end, $username) {
+        return parent::_getReservas($this->_is_scheduler, ($this->_is_scheduler) ? $this->_id_scheduler : $this->_id_resource, \date('Y-m-d H:i:s', $beg), \date('Y-m-d H:i:s', $end), false, $username);
     }
 
     public function getTipoReservas($user_groups = array()) {

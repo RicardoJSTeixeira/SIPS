@@ -1,5 +1,6 @@
-var calendar = function(selector, data, modals, ext, client, uLevel) {
+var calendar = function(selector, data, modals, ext, client, user) {
     var me = this;
+    this.user=user;
     this.selector = selector;
     this.client = client || {};
     this.ext = ext;
@@ -356,7 +357,7 @@ var calendar = function(selector, data, modals, ext, client, uLevel) {
                     },
             function(dat) {
                 me.destroy();
-                me = new calendar(me.selector, dat, me.modals, me.ext, me.client);
+                me = new calendar(me.selector, dat, me.modals, me.ext, me.client,me.user);
                 me.reserveConstruct(dat.tipo);
             }, "json");
         });
@@ -531,6 +532,15 @@ var calendar = function(selector, data, modals, ext, client, uLevel) {
                         .end()
                         .find("#btn_view_consult")
                         .hide();
+                if (calEvent.user !== me.user.username && me.user.user_level < 5) {
+                    me.modal_ext
+                            .find(".btn_trash")
+                            .hide();
+                } else {
+                    me.modal_ext
+                            .find(".btn_trash")
+                            .show();
+                }
             }
             me.modal_ext
                     .find("#client_info")
@@ -541,6 +551,16 @@ var calendar = function(selector, data, modals, ext, client, uLevel) {
         }, "json");
     };
     this.openSpecialEvent = function(calEvent) {
+
+        if (calEvent.user !== me.user.username && me.user.user_level < 5) {
+            me.modal_special
+                    .find(".btn_trash")
+                    .hide();
+        } else {
+            me.modal_special
+                    .find(".btn_trash")
+                    .show();
+        }
 
         me.modal_special
                 .find(".modal-body")
@@ -570,7 +590,7 @@ var calendar = function(selector, data, modals, ext, client, uLevel) {
     var config = $.extend(true, this.config, data.config);
     this.calendar = selector.fullCalendar(config);
 
-    if (uLevel > 5) {
+    if (me.user.user_level > 5) {
         me.modal_ext.find("#btn_change").removeClass("hide");
     }
 };
