@@ -21,6 +21,7 @@ set_time_limit(1);
 $resource = filter_var($_POST["resource"]);
 $lead_id = filter_var($_POST["lead_id"]);
 $rtype = filter_var($_POST["rtype"]);
+$obs = filter_var($_POST["obs"]);
 $id = filter_var($_POST["id"]);
 
 switch (filter_var($_POST["action"])) {
@@ -64,6 +65,17 @@ switch (filter_var($_POST["action"])) {
         $ok = $calendar->changeReservaResource($id, $resource);
         echo json_encode($ok);
         break;
+    case "special-event":
+        $calendar = new Calendars($db);
+        $system_types = $calendar->getSystemTypes();
+        $userID = $user->getUser();
+        $refs = $calendar->_getRefs($userID->username);
+        $id = array();
+        while ($ref = array_pop($refs)) {
+            $id = $calendar->newReserva($userID->username, "", $start, $end, $system_types[$rtype], $ref->id,$obs);
+        }
+        echo json_encode(true);
+        break;
 
     default:
         echo "Are U an Hacker? if yes then please don't hurt my feelings :-)";
@@ -80,10 +92,9 @@ function startTotal($db, $resource) {
 
 function startDash($db, $user) {
     $calendar = new Calendars($db);
-    $js = (object) array("refs" => "", "tipo" => "", "config" => (object) array("header"=>array("center"=>"")));
+    $js = (object) array("refs" => "", "tipo" => "", "config" => (object) array("header" => array("center" => "")));
     $js->refs = $calendar->getNames($user->getUser()->username);
     $js->config->defaultView = "agendaDay";
-    //$js->config = $calendar->getConfigs();
     $js->tipo = $calendar->getTipoReservas();
     echo json_encode($js);
 }

@@ -52,11 +52,11 @@ class apoio_marketing extends requests_class {
 
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
 
-    public function get_to_datatable($show_admin) {
+    public function get_to_datatable($show_admin,$status=0) {
         $result['aaData'] = [];
-        $query = "SELECT id,user,data_criacao,data_inicial,data_final,horario,localidade,local,morada,comments,'local_publicididade',status from spice_apoio_marketing";
+        $query = "SELECT id,user,data_criacao,data_inicial,data_final,horario,localidade,local,morada,comments,'local_publicididade',status from spice_apoio_marketing where status=:status";
         $stmt = $this->_db->prepare($query);
-        $stmt->execute();
+        $stmt->execute(array($status));
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
             $row[5] = "<div> <button class='btn ver_horario'  data-apoio_marketing_id='" . $row[0] . "'><i class='icon-eye-open'></i>Horario</button></div>";
@@ -74,7 +74,7 @@ class apoio_marketing extends requests_class {
                     break;
             }
             if ($this->user_level > 5 || $show_admin == 1) {
-                $row[12] = $row[12] . " <button class='btn accept_apoio_marketing btn-success icon-alone' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button> </div>";
+                $row[12] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button> </div>";
             }
             $result['aaData'][] = $row;
         }
@@ -109,6 +109,14 @@ class apoio_marketing extends requests_class {
         return $locais;
     }
 
+    public function get_reservation($id) {
+        $query = "Select id_reservation From spice_apoio_marketing where id=:id";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":id"=>$id));
+        $reservation_id=$stmt->fetch(PDO::FETCH_OBJ);
+        return $reservation_id->id_reservation; 
+    }
+    
     public function accept_apoio_marketing($id) {
         $query = "Update spice_apoio_marketing set status=1 where id=?";
         $stmt = $this->_db->prepare($query);
@@ -167,7 +175,7 @@ class correio extends requests_class {
                     break;
             }
             if ($this->user_level > 5 || $show_admin == 1) {
-                $row[9] = $row[9] . " <button class='btn accept_report_correio btn-success icon-alone' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_correio btn-warning icon-alone' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
+                $row[9] = "<div class='btn-group'><button class='btn accept_report_correio btn-success icon-alone' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_correio btn-warning icon-alone' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
             }
             $result['aaData'][] = $row;
         }
@@ -250,7 +258,7 @@ class frota extends requests_class {
             $row[7] = "<div> <button class='btn ver_ocorrencias'  data-relatorio_frota_id='" . $row[0] . "'><i class='icon-eye-open'></i>Ver Ocorrências</button></div>";
 
             if ($this->user_level > 5 || $show_admin == 1) {
-                $row[9] = $row[9] . " <button class='btn accept_report_frota btn-success icon-alone' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_frota btn-warning icon-alone' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
+                $row[9] = "<div class='btn-group'><button class='btn accept_report_frota btn-success icon-alone' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_frota btn-warning icon-alone' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
             }
             $result['aaData'][] = $row;
         }

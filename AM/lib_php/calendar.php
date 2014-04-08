@@ -4,13 +4,13 @@ Class Calendars {
 
     protected $_db;
 
-    public function __construct($db) {
+    public function __construct(PDO $db) {
         $this->_db = $db;
     }
 
-    protected function _getReservas($is_scheduler, $id, $beg, $end,$forceUneditable=false) {
+    protected function _getReservas($is_scheduler, $id, $beg, $end, $forceUneditable = false) {
         if ($is_scheduler) {
-            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, e.display_text, d.postal_code, d.first_name, c.extra1 codCamp, IFNULL(e.id,false) closed "
+            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, e.display_text, d.postal_code, d.first_name, c.extra1 codCamp, changed, IFNULL(e.id,false) closed, obs "
                     . "FROM sips_sd_reservations a "
                     . "LEFT JOIN vicidial_list d ON a.lead_id = d.lead_id "
                     . "LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource "
@@ -18,30 +18,39 @@ Class Calendars {
                     . "LEFT JOIN spice_consulta f ON a.id_reservation=f.reserva_id "
                     . "WHERE b.id_scheduler=:id And start_date <=:end And start_date >=:beg";
         } else {
-            $query = "SELECT id_reservation, start_date, end_date, id_resource,id_user,a.lead_id,id_reservation_type, d.display_text, c.postal_code, c.first_name, c.extra1 codCamp, IFNULL(e.id,false) closed "
+            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, d.display_text, c.postal_code, c.first_name, c.extra1 codCamp, changed, IFNULL(e.id,false) closed, obs "
                     . "FROM sips_sd_reservations a "
                     . "LEFT JOIN vicidial_list c ON a.lead_id = c.lead_id "
+                    . "LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource "
                     . "LEFT JOIN sips_sd_reservations_types d ON a.id_reservation_type=d.id_reservations_types "
                     . "LEFT JOIN spice_consulta e ON a.id_reservation=e.reserva_id "
-                    . "WHERE id_resource=:id And start_date <=:end And start_date >=:beg";
+                    . "WHERE a.id_resource=:id And start_date <=:end And start_date >=:beg";
         }
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id, ":end" => $end, ":beg" => $beg));
         $reservars = array();
+        $system_types = $this->getSystemTypes(false);
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $reservars[] = array(
                 'id' => $row->id_reservation,
-                'title' => ((is_null($row->postal_code)) ? $row->display_text : $row->postal_code . ' - ' . $row->display_text) . (((bool) $row->closed) ? " - Fechado" : ""),
+                'title' => $row->rsc_name." ".((is_null($row->postal_code)) ? $row->display_text : $row->postal_code . ' - ' . $row->display_text) . (((bool) $row->closed) ? " - Fechado" : ""),
                 'client_name' => (is_null($row->first_name) ? "" : $row->first_name),
                 'lead_id' => (is_null($row->lead_id) ? "" : $row->lead_id),
                 'codCamp' => (is_null($row->codCamp) ? "" : $row->codCamp),
                 'start' => $row->start_date,
                 'end' => $row->end_date,
-                'editable' => !((bool) $row->closed || $forceUneditable),
+                'editable' => !(((bool) $row->closed || $forceUneditable ) || ($system_types[$row->id_reservation_type])),
                 'closed' => (bool) $row->closed,
-                'className' => "t" . $row->id_reservation_type,
-                'bloqueio' => false,
+                'changed' => (int) $row->changed,
+                'className' => "t" . $row->id_reservation_type .(((bool)$row->del)?" del":""),
+                'bloqueio' => false || ($system_types[$row->id_reservation_type]=="Apoio Markting"),
                 'user' => $row->id_user,
+                'system' => (bool) $system_types[$row->id_reservation_type],
+                'rsc' => (int) $row->id_resource,
+                'max' => (int) $row->max_time,
+                'min' => (int) $row->min_time,
+                'del' => (bool) $row->del,
+                'obs' => $row->obs
             );
         }
         return $reservars;
@@ -53,16 +62,30 @@ Class Calendars {
         $refs = array();
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             if ($row->cal_type != "SCHEDULER") {
-                $refs[] = (object) array("is_scheduler" => false, "id" => $row->id_calendar);
+                $refs[] = (object) array("id" => $row->id_calendar);
             } else {
                 $rsc = $this->_db->prepare("SELECT id_resource FROM sips_sd_resources WHERE id_scheduler=:id AND active=1");
                 $rsc->execute(array(":id" => $row->id_calendar));
                 while ($row_rsc = $rsc->fetch(PDO::FETCH_OBJ)) {
-                    $refs[] = (object) array("is_scheduler" => false, "id" => $row_rsc->id_resource);
+                    $refs[] = (object) array("id" => $row_rsc->id_resource);
                 }
             }
         }
         return $refs;
+    }
+
+    public function getSystemTypes($inverted = true) {
+        $stmt = $this->_db->prepare("SELECT id_reservations_types, display_text, color,active FROM sips_sd_reservations_types WHERE user_group='SYSTEM'");
+        $stmt->execute();
+        $system = array();
+        while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
+            if ($inverted) {
+                $system[$row->display_text] = $row->id_reservations_types;
+            } else {
+                $system[$row->id_reservations_types] = $row->display_text;
+            }
+        }
+        return $system;
     }
 
     public function getNames($user) {
@@ -78,29 +101,32 @@ Class Calendars {
         $reservas = array();
         $refs = $this->_getRefs($user);
         foreach ($refs as $row) {
-            $reservas = \array_merge($reservas, $this->_getReservas($row->is_scheduler, $row->id, \date('Y-m-d H:i:s', $beg), \date('Y-m-d H:i:s', $end),true));
+            $reservas = \array_merge($reservas, $this->_getReservas($row->is_scheduler, $row->id, \date('Y-m-d H:i:s', $beg), \date('Y-m-d H:i:s', $end), true));
         }
         return $reservas;
     }
 
     public function getTipoReservas($user_groups = array()) {
         if ($user_groups) {
+            $user_groups[] = "SYSTEM";
             for ($index = 0; $index < count($user_groups); $index++) {
                 $prepare_hack.="?,";
             }
-            $stmt = $this->_db->prepare("SELECT id_reservations_types, display_text, color,active FROM sips_sd_reservations_types where user_group in (" . rtrim($prepare_hack, ",") . ");");
+            $stmt = $this->_db->prepare("SELECT id_reservations_types, display_text, color, min_time, max_time, active, user_group FROM sips_sd_reservations_types where user_group in (" . rtrim($prepare_hack, ",") . ");");
         } else {
-            $stmt = $this->_db->prepare("SELECT id_reservations_types, display_text, color,active FROM sips_sd_reservations_types");
+            $stmt = $this->_db->prepare("SELECT id_reservations_types, display_text, color, min_time, max_time, active, user_group FROM sips_sd_reservations_types");
         }
         $stmt->execute($user_groups);
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $this->_tipo_reservas[] = (object) array(
-                "id" => $row->id_reservations_types, 
-                "css" => ".t" . $row->id_reservations_types . " {background: " . $row->color . ";}", 
-                "type" => $row->id_reservations_types, 
-                "text" => $row->display_text, 
-                "active" => (bool)$row->active, 
-                "color" => $row->color);
+                        "id" => $row->id_reservations_types,
+                        "css" => ".t" . $row->id_reservations_types . " {background: " . $row->color . ";}",
+                        "type" => $row->id_reservations_types,
+                        "text" => $row->display_text,
+                        "max" => (int)$row->max_time,
+                        "min" => (int)$row->min_time,
+                        "active" => (bool) !(!$row->active || ($row->user_group == "SYSTEM")),
+                        "color" => $row->color);
         }
         return $this->_tipo_reservas;
     }
@@ -162,11 +188,11 @@ Class Calendars {
         return $stmt->fetch(PDO::FETCH_OBJ)->name;
     }
 
-    public function newReserva($user, $lead_id, $start, $end, $rtype, $resource) {
-        $query = "INSERT INTO `sips_sd_reservations`(`start_date`, `end_date`, `has_accessories`, `id_reservation_type`, `id_resource`,`id_user`,`lead_id`) VALUES (:start, :end, '0', :rtype, :resource,:user,:lead_id)";
+    public function newReserva($user, $lead_id, $start, $end, $rtype, $resource, $obs = "") {
+        $query = "INSERT INTO `sips_sd_reservations`(`start_date`, `end_date`, `has_accessories`, `id_reservation_type`, `id_resource`,`id_user`,`lead_id`,`obs`) VALUES (:start, :end, '0', :rtype, :resource,:user,:lead_id,:obs)";
         $stmt = $this->_db->prepare($query);
-        $stmt->execute(array(":user" => $user, ":lead_id" => $lead_id, ":start" => date('Y-m-d H:i:s', $start), ":end" => date('Y-m-d H:i:s', $end), ":rtype" => $rtype, ":resource" => $resource));
-        return $this->_db->lastInsertId();
+        $stmt->execute(array(":user" => $user, ":lead_id" => $lead_id, ":start" => date('Y-m-d H:i:s', $start), ":end" => date('Y-m-d H:i:s', $end), ":rtype" => $rtype, ":resource" => $resource, ":obs" => $obs));
+        return (int) $this->_db->lastInsertId();
     }
 
     public function removeReserva($id) {
@@ -176,11 +202,11 @@ Class Calendars {
     }
 
     public function changeReserva($id, $start, $end) {
-        $query = "UPDATE `sips_sd_reservations` SET `start_date`=:start,`end_date`=:end WHERE `id_reservation`=:id";
+        $query = "UPDATE `sips_sd_reservations` SET `start_date`=:start,`end_date`=:end, changed=changed+1 WHERE `id_reservation`=:id";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":id" => $id, ":start" => date('Y-m-d H:i:s', $start), ":end" => date('Y-m-d H:i:s', $end)));
     }
-    
+
     public function changeReservaResource($id, $rsc_id) {
         $query = "UPDATE `sips_sd_reservations` SET `id_resource`=:rsc_id WHERE `id_reservation`=:id";
         $stmt = $this->_db->prepare($query);
@@ -234,7 +260,7 @@ class Calendar extends Calendars {
     }
 
     public function getConfigs() {
-        return (object) array("defaultEventMinutes" => (int) $this->_resources[0]->blocks, "events" => (object) array("data" => (object) array("resource" => $this->_id_ref, "is_scheduler" => $this->_is_scheduler)), "slotMinutes" => (int) $this->_resources[0]->blocks, "minTime" => $this->_resources[0]->begin_time / 60, "maxTime" => $this->_resources[0]->end_time / 60, "sch" => $this->_id_scheduler);
+        return (object) array("defaultEventMinutes" => (int) $this->_resources[0]->blocks, "events" => (object) array("data" => (object) array("resource" => $this->_id_ref)), "slotMinutes" => (int) $this->_resources[0]->blocks, "minTime" => $this->_resources[0]->begin_time / 60, "maxTime" => $this->_resources[0]->end_time / 60, "sch" => $this->_id_scheduler);
     }
 
     protected function _getSeries($id = "", $is_scheduler = "") {

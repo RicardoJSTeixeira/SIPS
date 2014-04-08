@@ -36,9 +36,10 @@ switch ($action) {
     case "criar_apoio_marketing":
         $calendar = new Calendars($db);
         $refs = $calendar->_getRefs($userID->username);
+        $system_types=$calendar->getSystemTypes();
         $id = array();
         while ($ref = array_pop($refs)) {
-            $id[] = $calendar->newReserva($userID->username, "", strtotime($data_inicial . " " . $horario["inicio1"]), strtotime($data_final . " " . $horario["fim2"]), 25, $ref->id);
+            $id[] = $calendar->newReserva($userID->username, "", strtotime($data_inicial . " " . $horario["inicio1"]), strtotime($data_final . " " . $horario["fim2"]), $system_types["Apoio Markting"], $ref->id);
         }
         $ok = $apoio_marketing->create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade, $id);
         echo json_encode($ok);
@@ -83,27 +84,18 @@ switch ($action) {
         echo json_encode($relatorio_frota->get_ocorrencias($id));
         break;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    //Admin
 
     case "accept_apoio_marketing":
         echo json_encode($apoio_marketing->accept_apoio_marketing($id));
         break;
 
     case "decline_apoio_marketing":
+        $calendar = new Calendars($db);
+        $idRst = json_decode($apoio_marketing->get_reservation($id));
+        while ($rst = array_pop($idRst)) {
+            $calendar->removeReserva($rst);
+        }
         echo json_encode($apoio_marketing->decline_apoio_marketing($id));
         break;
 

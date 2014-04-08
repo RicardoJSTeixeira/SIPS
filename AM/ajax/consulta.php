@@ -36,11 +36,19 @@ switch ($action) {
             ":right_ear" => $right_ear,
             ":feedback" => $feedback,
             ":closed" => $closed));
+
+        if ($consulta_razao == "RM") {
+            $query = "UPDATE sips_sd_reservations SET del='1' where id_reservation=:id";
+
+            $stmt = $db->prepare($query);
+            $stmt->execute(array(":id" => $reserva_id));
+        }
+
         echo json_encode("saved");
         break;
 
     case "get_client_info":
-    
+
         $stmt = $db->prepare("SELECT first_name nome,address1 morada,date_of_birth data_nascimento from vicidial_list where lead_id=:lead_id");
         $stmt->execute(array(":lead_id" => $lead_id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -53,8 +61,9 @@ switch ($action) {
         $stmt = $db->prepare("SELECT id,data,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,feedback,closed from spice_consulta where reserva_id=:reserva_id");
         $stmt->execute(array(":reserva_id" => $reserva_id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if($row)
-            $result=$row;
+        if ($row) {
+            $result = $row;
+        }
         echo json_encode($result);
         break;
 }
