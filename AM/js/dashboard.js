@@ -1,15 +1,26 @@
 $(function() {
-    var init = function(data) {
-        var sch;
+    var init = function(data, user) {
+        var
+                sch,
+                modals = {};
 
-        sch = new calendar($("#calendar_day"), data, $("#calendar_client_modal"), $('#ext-events'));
+        modals.client = $("#calendar_client_modal");
+        modals.special = $("#calendar_special_event");
+
+        data.config.height = "488";
+
+        sch = new calendar($("#calendar_day"), data, modals, $('#ext-events'), {}, user);
         sch.reserveConstruct(data.tipo);
         sch.initModal();
     };
-    $.post("ajax/calendar.php",
-            {action: "dashboardInit"},
-    init, "json");
 
+    $.post("/AM/ajax/user_info.php", function(user) {
+        $.post("/AM/ajax/calendar.php",
+                {action: "dashboardInit"},
+        function(data) {
+            init(data, user);
+        }, "json");
+    }, "json");
     //LISTAR CONSULTAS ABERTAS,FECHADAS
     var allTable = $('#table_allm').dataTable({
         "bSortClasses": false,
@@ -52,8 +63,8 @@ $(function() {
 
     $("#div_master").on("click", ".criar_marcacao", function()
     {
-        var en=btoa($(this).data().lead_id);
-        $.history.push("view/calendar.html?id="+en);
+        var en = btoa($(this).data().lead_id);
+        $.history.push("view/calendar.html?id=" + en);
     });
 
     $("#div_master").on("click", ".ver_cliente", function()
@@ -71,7 +82,7 @@ $(function() {
         config.mensal = false;
         requisition1 = new requisition(config);
 
- 
+
         m = $("#new_requisiton_modal");
         requisition1.new_requisition(m.find(".modal-body"), 0, $(this).data().lead_id);
 

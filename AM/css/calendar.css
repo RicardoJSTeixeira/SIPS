@@ -36,3 +36,7 @@
     position: absolute;
     right: 2px;
 }
+
+.del{
+    opacity:0.5;
+}

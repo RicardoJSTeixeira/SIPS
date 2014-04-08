@@ -19,7 +19,21 @@ $(function()
                 input3 = $("#inputs_div3");
         $.each(data, function()
         {
-            elmt = $("<input>", {type: "text", id: this.name, name: this.name});
+            if (this.name === "extra5") {
+                elmt = $("<select>", {id: this.name, name: this.name});
+                var
+                        o,
+                        options = [],
+                        tmp = ["ADM (ADME/ADMA/ADMFA)", "ADSE", "APL", "CGD", "Centro Nac. de Protecção Contra Riscos Profissionais", "EDP", "OUTRAS", "PETROGAL", "PT/CTT ACS", "SAD-PSP", "SAD/GNR (ADMG)", "SAMS", "SEG. SOCIAL", "Serviços Sociais do Ministério da Justiça"];
+
+                options.push(new Option("", ""));
+                while (o = tmp.shift()) {
+                    options.push(new Option(o, o));
+                }
+                elmt.append(options);
+            } else {
+                elmt = $("<input>", {type: "text", id: this.name, name: this.name});
+            }
             switch (this.name)
             {
                 case "PHONE_NUMBER":
@@ -73,7 +87,6 @@ $(function()
         $("#inputs_div1").append($("<div>", {class: "clear"}));
         $("#inputs_div2").append($("<div>", {class: "clear"}));
         $("#inputs_div3").append($("<div>", {class: "clear"}));
-        $("#extra5").autocomplete({source: ["ADSE", "ADM (ADME/ADMA/ADMFA)", "SAD/GNR (ADMG)", "SAD-PSP", "Serviços Sociais do Ministério da Justiça", "SAMS", "PT/CTT ACS", "Centro Nac. de Protecção Contra Riscos Profissionais", "APL", "SEG. SOCIAL", "PETROGAL", "EDP", "CGD", "OUTRAS"]});
         $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
     }
     , "json");

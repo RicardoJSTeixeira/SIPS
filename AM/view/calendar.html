@@ -7,7 +7,7 @@
             <div class="grid hide" id="client">
                 <div class="grid-title"><div class="pull-left">Cliente</div><div class="pull-right"><button onclick="history.back();" title="Voltar" class="btn icon-alone"><i class="icon-circle-arrow-left"></i></button></div></div>
                 <div class="user c_bg-2">
-                    <div class="user-name">Nome</div>
+                    <div class="user-name" style="heigth:auto">Nome</div>
                     <div class="user-email">Morada</div>
                     <div class="user-date">Cod. Postal</div>
                     <div class="clear"></div>
@@ -24,6 +24,41 @@
             <div class="grid hide" id='external-events'>
                 <div class="grid-title"><div class="pull-left">Tipo de Reservas</div></div>
                 <div class="grid-content">
+                </div>
+            </div>
+
+
+            <div class="grid hide" id='special-event'>
+                <div class="grid-title"><div class="pull-left">Criar evento</div></div>
+                <div class="grid-content">
+                    <form id="special-event-form">
+                        <div class="control-group">
+                            <div class="controls">
+                                <input type="text" id="special-event-beg" class="span12" placeholder="Inicio" required>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <input type="text" id="special-event-end" class="span12" placeholder="Fim" required>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <textarea id="special-event-obs" class="span12" placeholder="Escreva aqui observações ..." required></textarea>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <input type="radio" id="special-event-type-p" name="special-event-type" value="Pessoal" checked><label for="special-event-type-p" class="checkbox inline"><span></span>Pessoal</label>
+                                <input type="radio" id="special-event-type-pro" name="special-event-type" value="Profissional"><label for="special-event-type-pro" class="checkbox inline"><span></span>Profissional</label>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <button class="btn btn-info"><i class="icon-plus-sign"></i>Criar</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -47,7 +82,7 @@
 <div id="calendar_client_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Cliente</h3>
+        <h3>Cliente</h3>
     </div>
     <div class="modal-body">
         <dl class="dl-horizontal" id="client_info">
@@ -55,13 +90,31 @@
     </div>
     <div class="modal-footer" style="text-align: inherit !important;">
         <span class="left">
-            <button class="btn btn-danger icon-alone" id="btn_trash" ><i class="icon-trash"></i></button>
+            <button class="btn btn-danger icon-alone btn_trash" ><i class="icon-trash"></i></button>
             <button class="btn btn-info icon-alone hide" id="btn_change" ><i class="icon-share-alt"></i></button>
+        </span>
+            <button class="btn btn-link right" data-dismiss="modal" aria-hidden="true">Fechar</button>
+        <span class="right">
+            <button class="btn btn-warning" id="btn_no_consult">Não há Consulta</button>
+            <button class="btn btn-success" id="btn_init_consult">Iniciar Consulta</button>
+        </span>
+            <button class="btn btn-success right" id="btn_view_consult" style="display:none">Ver Consulta</button>
+    </div>
+</div>
+
+<div id="calendar_special_event" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>Evento especial</h3>
+    </div>
+    <div class="modal-body">
+    </div>
+    <div class="modal-footer" style="text-align: inherit !important;">
+        <span class="left">
+            <button class="btn btn-danger icon-alone btn_trash" ><i class="icon-trash"></i></button>
         </span>
         <span class="right">
             <button class="btn btn-link" data-dismiss="modal" aria-hidden="true">Fechar</button>
-            <button class="btn btn-warning" id="btn_no_consult">Não há Consulta</button>
-            <button class="btn btn-success" id="btn_init_consult">Iniciar Consulta</button>
         </span>
     </div>
 </div>
