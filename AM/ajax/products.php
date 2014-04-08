@@ -22,12 +22,24 @@ $products = new products($db);
 
 
 switch ($action) {
+
+
+    case "get_level_child":
+        echo json_encode($products->get_child_level($id));
+        break;
+
+    case "get_level_parent":
+        echo json_encode($products->get_parent_level($id));
+        break;
+
+    
+
     case "listar_produtos_to_datatable":
         echo json_encode($products->get_products_to_datatable($product_editable));
         break;
 
     case "criar_produto":
-        echo json_encode($products->add_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color,$active));
+        echo json_encode($products->add_product($name,$price, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active));
         break;
 
     case "get_produtos":
@@ -45,7 +57,7 @@ switch ($action) {
 
     case "edit_product":
         $produto = new product($db, $id);
-        echo json_encode($produto->edit_product($name, $max_req_m, $max_req_s, $parent, $category, $type,$color,$active));
+        echo json_encode($produto->edit_product($name,$price, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active));
         break;
 
     case "add_promotion":
@@ -60,7 +72,7 @@ switch ($action) {
 
     case "get_promotion":
         $produto = new product($db, $id);
-        echo  json_encode($produto->get_promotion());
+        echo json_encode($produto->get_promotion());
         break;
 }
 
