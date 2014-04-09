@@ -47,31 +47,6 @@ Class products {
 
     public function get_products() {
 
-        $stmt = $this->_db->prepare("SELECT id,name,price, max_req_m,max_req_s,category,type,color,active from spice_product where deleted=0");
-        $stmt->execute();
-        $children = array();
-        $parent = array();
-
-        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-
-
-
-
-
-            //  $level = in_array($row[0], $product_levels) ? array_search($row[0], $product_levels) : 1;
-            //  $row[9] = $level;
-            //  $row["level"] = $level;
-            $row[6] = json_decode($row[6]);
-            $row["type"] = json_decode($row["type"]);
-            $row[7] = json_decode($row[7]);
-            $row["color"] = json_decode($row["color"]);
-            $row["parents"] = $parent;
-            $row["children"] = $children;
-            $output[] = $row;
-        }
-
-
-
 
         $relations = array();
         $stmt = $this->_db->prepare("select parent,child from spice_product_assoc");
@@ -83,13 +58,58 @@ Class products {
 
 
 
-        foreach ($relations as $key => $value) {
-            
+
+        $stmt = $this->_db->prepare("SELECT id,name,price, max_req_m,max_req_s,category,type,color,active from spice_product where deleted=0");
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
+
+           
+
+            foreach ($relations as $key => $value) {
+                foreach ($value as $value1) {
+                    if ($value1 == $row[0]) {
+                        $row["parent"][] = $key;
+                    }
+                }
+            }
+
+            //  $level = in_array($row[0], $product_levels) ? array_search($row[0], $product_levels) : 1;
+            //  $row[9] = $level;
+            //  $row["level"] = $level;
+            $row[6] = json_decode($row[6]);
+            $row["type"] = json_decode($row["type"]);
+            $row[7] = json_decode($row[7]);
+            $row["color"] = json_decode($row["color"]);
+
+            $output[] = $row;
+        }
+        
+        foreach ($output as &$value) {
+            $value["children"][] = $this->buildTree($output, $value[0]);
+        }
+        return $output;
+    }
+
+    function buildTree(array $elements, $parentId) {
+        $branch = array();
+
+        foreach ($elements as $element) {
+            foreach ($element["parent"] as $parent) {
+                if ($parent == $parentId) {
+                    $children = $this->buildTree($elements, $element[0]);
+                    if ($children) {
+                        $element['children'] = $children;
+                    }
+                    $branch[] = array(id => $element[0], children => $element["children"]);
+                }
+            }
         }
 
+        return $branch;
+    }
 
-
-        return $output;
+    public function level_calculator($output) {
+        $output;
     }
 
     public function remove_product($id) {
