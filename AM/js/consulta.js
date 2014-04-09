@@ -189,7 +189,7 @@ $("#main_consulta_div #terminar_consulta").on("click", function()
             });
             if (exame_razao.length)
             {
-                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: exame_razao, venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", feedback: "", closed: 0}, function() {
+                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: exame_razao, venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", feedback: "", closed: 1}, function() {
                     $.jGrowl('Consulta gravada sem exame', {life: 3000});
                     $("#marcacao_modal").modal("show");
 
