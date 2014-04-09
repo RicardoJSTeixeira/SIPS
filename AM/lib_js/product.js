@@ -266,9 +266,6 @@ var products = function(geral_path, options_ext)
                     $.jGrowl("Escolha um tipo, Branch ou Dispenser", {life: 3500});
                 }
         });
-
-
-
         new_product_path.off("change", "#new_product_category");
         new_product_path.on("change", "#new_product_category", function()
         {
@@ -454,14 +451,6 @@ var products = function(geral_path, options_ext)
 
 
 
-
-
-
-
-
-
-
-
     function populate_parent(select, level, callback)
     {
         var out_level = level;
@@ -483,9 +472,11 @@ var products = function(geral_path, options_ext)
             var option = "";
             $.each(data, function()
             {
-                if (this.level + out_level >= 5) {
-                    option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Max.Lvl. " + this.name + "</option>";
 
+                var level = find_level(this);
+
+                if (level - out_level <= 1) {
+                    option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Max.Lvl. " + this.name + "</option>";
                 } else
                     option = "<option  id=" + this.id + "  value='" + this.id + "'>" + this.name + "</option>";
                 switch (this.category)
@@ -519,5 +510,20 @@ var products = function(geral_path, options_ext)
 
 
     }
+
+    function find_level(element)
+    {
+        var level = 1;
+        if (element.children)
+        {
+            $.each(element.children, function()
+            {
+                level = level + find_level(this);
+            });
+        }
+
+        return level;
+    }
+
 
 };

@@ -23,15 +23,6 @@ $products = new products($db);
 
 switch ($action) {
 
-
-    case "get_level_child":
-        echo json_encode($products->get_child_level($id));
-        break;
-
-    case "get_level_parent":
-        echo json_encode($products->get_parent_level($id));
-        break;
-
     
 
     case "listar_produtos_to_datatable":

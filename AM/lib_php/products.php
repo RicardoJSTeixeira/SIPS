@@ -8,8 +8,6 @@ Class products {
 
     public function get_products_to_datatable($product_editable) {
         $output['aaData'] = [];
-
-
         $stmt = $this->_db->prepare("SELECT id,name,price,max_req_m,max_req_s,category,type,color,active,deleted from spice_product where deleted=0");
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
@@ -19,23 +17,12 @@ Class products {
             $date = date("Y-m-d");
             $stmt1->execute(array(":id" => $row[0], ":data1" => $date, ":data2" => $date));
             $row1 = $stmt1->fetch(PDO::FETCH_BOTH);
-
             $row[5] = ucfirst($row[5]);
-
             $row[6] = ucwords(implode(", ", json_decode($row[6])));
-
-
-            $level = $this->get_levels($row[0]);
-            $row[10] = $level;
-            $row["level"] = $level;
-
-
             if (isset($row1["active"]))
                 $active = (bool) $row1["active"];
             else
                 $active = (bool) $row["active"];
-
-
             if ($product_editable == "true")
                 $row[7] = "<button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "' data-level='" . $row["level"] . "' data-deleted='" . (bool) $row["deleted"] . "' class='btn btn_ver_produto icon-alone hide' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button><button class='btn btn_editar_produto btn-primary  icon-alone' data-product_id='" . $row[0] . "' data-level='" . $row["level"] . "'><i class='icon-pencil'></i></button><button class='btn btn_apagar_produto btn-danger  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-remove'></i></button>";
             else
@@ -46,25 +33,16 @@ Class products {
     }
 
     public function get_products() {
-
-
         $relations = array();
         $stmt = $this->_db->prepare("select parent,child from spice_product_assoc");
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $relations[$row["parent"]][] = $row["child"];
         }
-
-
-
-
-
         $stmt = $this->_db->prepare("SELECT id,name,price, max_req_m,max_req_s,category,type,color,active from spice_product where deleted=0");
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-
-           
-
+            $row["parent"] = array();
             foreach ($relations as $key => $value) {
                 foreach ($value as $value1) {
                     if ($value1 == $row[0]) {
@@ -72,44 +50,36 @@ Class products {
                     }
                 }
             }
-
-            //  $level = in_array($row[0], $product_levels) ? array_search($row[0], $product_levels) : 1;
-            //  $row[9] = $level;
-            //  $row["level"] = $level;
             $row[6] = json_decode($row[6]);
             $row["type"] = json_decode($row["type"]);
             $row[7] = json_decode($row[7]);
             $row["color"] = json_decode($row["color"]);
-
             $output[] = $row;
         }
-        
         foreach ($output as &$value) {
-            $value["children"][] = $this->buildTree($output, $value[0]);
+            $temp = $this->buildTree($output, $value[0]);
+            if ($temp)
+                $value["children"] = $temp;
+            else
+                $value["children"] = array();
         }
         return $output;
     }
 
     function buildTree(array $elements, $parentId) {
         $branch = array();
-
         foreach ($elements as $element) {
-            foreach ($element["parent"] as $parent) {
-                if ($parent == $parentId) {
-                    $children = $this->buildTree($elements, $element[0]);
-                    if ($children) {
-                        $element['children'] = $children;
-                    }
+            if (in_array($parentId, $element["parent"])) {
+                $children = $this->buildTree($elements, $element[0]);
+                if ($children) {
+                    $element['children'] = $children;
                     $branch[] = array(id => $element[0], children => $element["children"]);
+                } else {
+                    $branch[] = array(id => $element[0], children => array());
                 }
             }
         }
-
         return $branch;
-    }
-
-    public function level_calculator($output) {
-        $output;
     }
 
     public function remove_product($id) {
@@ -192,24 +162,15 @@ class product extends products {
     }
 
     public function get_info() {
-        $children = array();
-        $parent = array();
-        $parent_ids = array();
-        //get children  
-        $stmt = $this->_db->prepare("select a.id,a.name,a.category from spice_product  a inner join spice_product_assoc b on b.child=a.id where b.parent=:parent and a.deleted=0");
-        $stmt->execute(array(":parent" => $this->_id));
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $children[] = $row;
-        }
-        //get parent
-        $stmt = $this->_db->prepare("select a.id,a.name,a.category from spice_product  a inner join spice_product_assoc b on b.parent=a.id where b.child=:child and a.deleted=0");
-        $stmt->execute(array(":child" => $this->_id));
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $parent[] = $row;
-            $parent_ids[] = $row["id"];
-        }
-        $level = $this->get_parent_level($this->_id);
-        return array("id" => $this->_id, "name" => $this->_name, "price" => $this->_price, "max_req_m" => $this->_max_req_m, "children" => $children, "parent" => $parent, "parent_ids" => $parent_ids, "max_req_s" => $this->_max_req_s, "category" => $this->_category, "type" => json_decode($this->_type), "color" => json_decode($this->_color), "active" => $this->_active, "level" => $level);
+
+        $temp = $this->buildTree($output, $this->_id);
+        if ($temp)
+            $value["children"] = $temp;
+        else
+            $value["children"] = array();
+
+
+        return array("id" => $this->_id, "name" => $this->_name, "price" => $this->_price, "max_req_m" => $this->_max_req_m, "max_req_s" => $this->_max_req_s, "category" => $this->_category, "type" => json_decode($this->_type), "color" => json_decode($this->_color), "active" => $this->_active, "level" => $this->_level);
     }
 
     public function add_promotion($active, $highlight, $data_inicio, $data_fim) {
