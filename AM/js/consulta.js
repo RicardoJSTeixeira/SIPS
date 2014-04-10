@@ -19,8 +19,9 @@ $(function()
     $.post("ajax/consulta.php", {action: "get_consulta", reserva_id: reserva_id},
     function(data)
     {
-        if (data.closed)
+        if (data)
         {
+
             $("#main_consulta_div").find("#options_div").hide();
             $("#main_consulta_div")
                     .find("#audiograma_main_div").show().end()
@@ -37,10 +38,12 @@ $(function()
                 $("#main_consulta_div #no_venda_select").val(data.venda_razao);
                 $("#main_consulta_div #no_venda_div").show();
             }
-            consult_closed = true;
+            if (data.closed)
+            {
+                consult_closed = true;
+            }
+
         }
-
-
 
         script = new render($("#main_consulta_div #script_placeholder"), "/sips-admin/script_dinamico/", 159, lead_id, reserva_id, undefined, undefined, 0, 0);
 
@@ -186,7 +189,7 @@ $("#main_consulta_div #terminar_consulta").on("click", function()
             });
             if (exame_razao.length)
             {
-                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: exame_razao, venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", feedback: "", closed: 0}, function() {
+                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: exame_razao, venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", feedback: "", closed: 1}, function() {
                     $.jGrowl('Consulta gravada sem exame', {life: 3000});
                     $("#marcacao_modal").modal("show");
 

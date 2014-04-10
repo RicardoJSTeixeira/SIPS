@@ -13,6 +13,12 @@
                 </div>
             </div>
             <div class="formRow">
+                <span>Preço</span>
+                <div class="formRight">
+                    <input type="number" id="edit_product_price" class="validate[required]">
+                </div>
+            </div>
+            <div class="formRow">
                 <span>Parente</span>
                 <div class="formRight">
                     <select class="chosen-select" id="edit_product_parent" multiple  data-placeholder="Selecione um parent"></select>
@@ -115,7 +121,9 @@
                         </tr>
                     </tbody>
                 </table>
-                <button class="btn" id="edit_product_add_promotion_toggle">Adicionar</button>
+                <div class="formRow">
+                    <button class="btn btn-primary" id="edit_product_add_promotion_toggle">Adicionar promoção</button>
+                </div>
                 <div id="edit_product_new_promotion_div" style="display:none" >
                     <div class="formRow">
                         <div class="formRight">
@@ -166,7 +174,7 @@
             </div>
 
         </form>
-       
+
     </div>
     <div class="modal-footer">
         <button class="btn" data-dismiss="modal" id="sair_button" aria-hidden="true">Sair</button>
@@ -174,20 +182,102 @@
     </div>
 </div>
 
+
+
+
+
+
+
+
 <!--Novo  PRODUTOS-->
-<div id="new_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3  >Novo Produto</h3>
-    </div>
-    <div class="modal-body">
 
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" id="sair_button" aria-hidden="true">Sair</button>
+<form id="new_product_form" class="check_form" style="display:none">
 
+
+
+    <fieldset>
+        <label for="new_product_name">Nome</label>
+        <input type="text" id="new_product_name" class="validate[required]">
+        <label for="new_product_price">Preço</label>
+        <input type="text" id="new_product_price" class="validate[required]">
+        <label for="new_product_parent">Parente</label>
+        <select class="chosen-select" id="new_product_parent" multiple  data-placeholder="Selecione um parent"></select>
+        <label for="new_product_category">Categoria</label>
+        <select  id="new_product_category">
+            <option value="pilha" >Pilha</option>
+            <option value="aparelho">Aparelho</option>
+            <option value="acessorio" >Acessórios</option>
+            <option value="molde" >Molde</option>
+            <option value="economato" >Economato</option>
+        </select>
+
+
+        <label>Tipo</label>
+        <input   type="checkbox" id="new_product_check_branch" name="new_product_tipo_user" value="branch" class="validate[minCheckbox[1]]">
+        <label class="checkbox inline" for="new_product_check_branch"><span></span>Branch</label>
+        <input   type="checkbox" id="new_product_check_dispenser" name="new_product_tipo_user" value="dispenser" class="validate[minCheckbox[1]]">
+        <label class="checkbox inline" for="new_product_check_dispenser"><span></span>Dispenser</label>
+
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2">Max. Requisições</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>    
+                        <label>Mensais</label>
+                    </td>
+                    <td>
+                        <label>Especiais</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="number" id="new_product_mrm" value="5" class="input-mini validate[required]">
+                    </td>
+                    <td>
+                        <input type="number" id="new_product_mrw" value="5" class="input-mini validate[required]">
+                    </td>
+                </tr>
+            </tbody></table>
+    </fieldset>
+
+
+    <div class="formRow" id="new_product_color_div" style="display:none">
+        <table class="table table-bordered table-mod">
+            <thead>
+                <tr>
+                    <th>
+                        Cor
+                    </th>
+                    <th>
+                        Nome
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="new_product_table_tbody_color">
+            </tbody>
+        </table>
+        <div class="formRow pull-right">
+            <button class="btn btn-primary" id="new_product_button_color_add_line"><span class="icon-plus"></span>Adicionar Cor</button>
+        </div>
     </div>
-</div>
+    <div class="formRow">
+        <button class="btn btn-primary" id="create_new_product_button">Criar </button>   
+    </div>
+
+
+</form>
+
+
+
+
+
+
+
+
 
 
 

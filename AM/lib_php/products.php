@@ -8,91 +8,96 @@ Class products {
 
     public function get_products_to_datatable($product_editable) {
         $output['aaData'] = [];
-
-
-        $stmt = $this->_db->prepare("SELECT id,name,max_req_m,max_req_s,category,type,color,active,deleted from spice_product where deleted=0");
+        $stmt = $this->_db->prepare("SELECT id,name,price,max_req_m,max_req_s,category,type,color,active,deleted from spice_product where deleted=0");
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-
+            $row[2] = $row[2] . "€";
+            $row["price"] = $row["price"] . "€";
             $stmt1 = $this->_db->prepare("SELECT highlight,active,data_inicio,data_fim from spice_promocao where product_id=:id and data_inicio<=:data1 and data_fim>=:data2 order by id desc limit 1");
             $date = date("Y-m-d");
             $stmt1->execute(array(":id" => $row[0], ":data1" => $date, ":data2" => $date));
             $row1 = $stmt1->fetch(PDO::FETCH_BOTH);
-
-            $row[4] = ucfirst($row[4]);
-
-            $row[5] = ucwords(implode(", ", json_decode($row[5])));
-
+            $row[5] = ucfirst($row[5]);
+            $row[6] = ucwords(implode(", ", json_decode($row[6])));
             if (isset($row1["active"]))
                 $active = (bool) $row1["active"];
             else
                 $active = (bool) $row["active"];
-
-
             if ($product_editable == "true")
-                $row[6] = "<button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "'  data-deleted='" . (bool) $row["deleted"] . "' class='btn btn_ver_produto icon-alone hide' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button><button class='btn btn_editar_produto btn-primary  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-pencil'></i></button><button class='btn btn_apagar_produto btn-danger  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-remove'></i></button>";
+                $row[7] = "<button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "' data-level='" . $row["level"] . "' data-deleted='" . (bool) $row["deleted"] . "' class='btn btn_ver_produto icon-alone hide' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button><button class='btn btn_editar_produto btn-primary  icon-alone' data-product_id='" . $row[0] . "' data-level='" . $row["level"] . "'><i class='icon-pencil'></i></button><button class='btn btn_apagar_produto btn-danger  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-remove'></i></button>";
             else
-                $row[6] = "<button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "'  data-deleted='" . (bool) $row["deleted"] . "' class='btn btn_ver_produto  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button>";
+                $row[7] = "<button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "' data-level='" . $row["level"] . "'  data-deleted='" . (bool) $row["deleted"] . "' class='btn btn_ver_produto  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button>";
             $output['aaData'][] = $row;
         }
         return $output;
     }
 
-    public function get_products_to_datatable_by_id($parent) {
-        $output['aaData'] = array();
-        $stmt = $this->_db->prepare("SELECT id,name, max_req_m,max_req_s,category,type,color,active from spice_product where parent=:parent and deleted=0");
-        $stmt->execute(array(":parent" => $parent));
-
-        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[5] = json_decode($row[5]);
-            $output['aaData'][] = $row;
-        }
-        return $output;
-    }
-
-    public function get_products() {
-
-        $stmt = $this->_db->prepare("SELECT id,name, max_req_m,max_req_s,category,type,color,active from spice_product where deleted=0");
+    public function get_products($id) {
+        $relations = array();
+        $stmt = $this->_db->prepare("select parent,child from spice_product_assoc");
         $stmt->execute();
-        $children = array();
-        $parent = array();
-
-        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-
-            //get children  
-            $stmt1 = $this->_db->prepare("select a.id,a.name,a.category from spice_product  a inner join spice_product_assoc b on b.child=a.id where b.parent=:parent and a.deleted=0");
-            $stmt1->execute(array(":parent" => $row[0]));
-            while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
-                $children[] = $row1;
-            }
-            //get parent
-            $stmt1 = $this->_db->prepare("select a.id,a.name,a.category from spice_product  a inner join spice_product_assoc b on b.parent=a.id where b.child=:child and a.deleted=0");
-            $stmt1->execute(array(":child" => $row[0]));
-            while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
-                $parent[] = $row1;
-            }
-
-
-            $row[5] = json_decode($row[5]);
-            $row["type"] = json_decode($row["type"]);
-            $row[6] = json_decode($row[6]);
-            $row["color"] = json_decode($row["color"]);
-            $row["parents"] = $parent;
-            $row["children"] = $children;
-            $output[] = $row;
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $relations[$row["parent"]][] = $row["child"];
         }
-        return $output;
+        $stmt = $this->_db->prepare("SELECT id,name,price, max_req_m,max_req_s,category,type,color,active from spice_product where deleted=0");
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
+            $row["parent"] = array();
+            foreach ($relations as $key => $value) {
+                foreach ($value as $value1) {
+                    if ($value1 == $row[0]) {
+                        $row["parent"][] = $key;
+                    }
+                }
+            }
+            $row[6] = json_decode($row[6]);
+            $row["type"] = json_decode($row["type"]);
+            $row[7] = json_decode($row[7]);
+            $row["color"] = json_decode($row["color"]);
+            $output[$row[0]] = $row;
+        }
+        foreach ($output as &$value) {
+            $temp = $this->buildTree($output, $value[0]);
+            if ($temp)
+                $value["children"] = $temp;
+            else
+                $value["children"] = array();
+        }
+        if ($id) {
+
+            return $output[$id];
+        } else {
+            return $output;
+        }
+    }
+
+    function buildTree(array $elements, $parentId) {
+        $branch = array();
+        foreach ($elements as $element) {
+            if (in_array($parentId, $element["parent"])) {
+                $children = $this->buildTree($elements, $element[0]);
+                if ($children) {
+                    $element['children'] = $children;
+                    $branch[] = array(id => $element[0], children => $element["children"]);
+                } else {
+                    $branch[] = array(id => $element[0], children => array());
+                }
+            }
+        }
     }
 
     public function remove_product($id) {
+        $stmt = $this->_db->prepare("delete from spice_product_assoc where child=:id or parent=:id2");
+        $stmt->execute(array(":id" => $id, ":id2" => $id));
+
         $stmt = $this->_db->prepare("update spice_product set deleted=1  where id=:id");
         return $stmt->execute(array(":id" => $id));
     }
 
-    public function add_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active) {
+    public function add_product($name, $price, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active) {
 
-        $stmt = $this->_db->prepare("insert into spice_product ( `name`,   `max_req_m`, `max_req_s`, `category`,`type`,`color`,`active`,`deleted`) values (:name, :max_req_m,:max_req_s,:category,:type,:color,:active,0) ");
-        $stmt->execute(array(":name" => $name, ":max_req_m" => $max_req_m, ":max_req_s" => $max_req_s, ":category" => $category, ":type" => json_encode($type), ":color" => json_encode($color), ":active" => $active == "true" ? 1 : 0));
+        $stmt = $this->_db->prepare("insert into spice_product ( `name`, `price`,  `max_req_m`, `max_req_s`, `category`,`type`,`color`,`active`,`deleted`) values (:name,:price, :max_req_m,:max_req_s,:category,:type,:color,:active,0) ");
+        $stmt->execute(array(":name" => $name, ":price" => $price, ":max_req_m" => $max_req_m, ":max_req_s" => $max_req_s, ":category" => $category, ":type" => json_encode($type), ":color" => json_encode($color), ":active" => 1));
         $last_id = $this->_db->lastInsertId();
 
         if (isset($parent)) {
@@ -101,7 +106,7 @@ Class products {
                 $stmt1->execute(array(":parent" => $value, ":child" => $last_id));
             }
         }
-        return array($last_id, $name, $max_req_m, $max_req_s, $category, $type, "<button data-active='" . $active . "' data-highlight='0'  class='btn btn_ver_produto  icon-alone hide'  data-product_id='" . $last_id . "'><i class='icon-eye-open'></i></button><button class='btn btn_editar_produto btn-primary  icon-alone' data-product_id='" . $last_id . "'><i class='icon-pencil'></i></button><button class='btn btn_apagar_produto btn-danger  icon-alone' data-product_id='" . $last_id . "'><i class='icon-remove'></i></button>");
+        return array($last_id, $name, $price, $max_req_m, $max_req_s, $category, $type, "<button data-active='" . $active . "' data-highlight='0'  class='btn btn_ver_produto  icon-alone hide'   data-level='0' data-product_id='" . $last_id . "'><i class='icon-eye-open'></i></button><button data-level='0' class='btn btn_editar_produto btn-primary  icon-alone' data-product_id='" . $last_id . "'><i class='icon-pencil'></i></button><button class='btn btn_apagar_produto btn-danger  icon-alone' data-product_id='" . $last_id . "'><i class='icon-remove'></i></button>");
     }
 
 }
@@ -111,6 +116,7 @@ class product extends products {
     protected $_db;
     protected $_id;
     protected $_name;
+    protected $_price;
     protected $_max_req_m;
     protected $_max_req_s;
     protected $_parent;
@@ -121,11 +127,12 @@ class product extends products {
 
     public function __construct(PDO $db, $id) {
         $this->_db = $db;
-        $stmt = $this->_db->prepare("SELECT id,name ,max_req_m,max_req_s,category,type,color,active from spice_product where id=:id ");
+        $stmt = $this->_db->prepare("SELECT id,name , price,max_req_m,max_req_s,category,type,color,active from spice_product where id=:id ");
         $stmt->execute(array(":id" => $id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->_id = $row["id"];
         $this->_name = $row["name"];
+        $this->_price = $row["price"];
         $this->_max_req_m = $row["max_req_m"];
         $this->_max_req_s = $row["max_req_s"];
         $this->_category = $row["category"];
@@ -134,14 +141,14 @@ class product extends products {
         $this->_active = $row["active"];
     }
 
-    public function edit_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active) {
+    public function edit_product($name, $price, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active) {
         $this->_name = $name;
+        $this->_price = $price;
         $this->_max_req_m = $max_req_m;
         $this->_max_req_s = $max_req_s;
         $this->_category = $category;
         $this->_type = $type;
         $this->_color = $color;
-      
         $this->_active = $active == "true" ? 1 : 0;
         $stmt = $this->_db->prepare("delete from spice_product_assoc where child=:child");
         $stmt->execute(array(":child" => $this->_id));
@@ -149,33 +156,13 @@ class product extends products {
             foreach ($parent as $value) {
                 $stmt = $this->_db->prepare("insert into spice_product_assoc (`parent`, `child`) values (:parent,:child) ");
                 $stmt->execute(array(":parent" => $value, ":child" => $this->_id));
-            }
+            };
         return $this->edit_product_save();
     }
 
     public function edit_product_save() {
-        $stmt = $this->_db->prepare("update spice_product set name=:name, max_req_m=:max_req_m,max_req_s=:max_req_s,category=:category,type=:type,color=:color,active=:active where id=:id");
-        return $stmt->execute(array(":id" => $this->_id, ":name" => $this->_name, ":max_req_m" => $this->_max_req_m, ":max_req_s" => $this->_max_req_s, ":category" => $this->_category, ":type" => json_encode($this->_type), ":color" => json_encode($this->_color), ":active" => $this->_active));
-    }
-
-    public function get_info() {
-        $children = array();
-        $parent = array();
-        $parent_ids = array();
-        //get children  
-        $stmt = $this->_db->prepare("select a.id,a.name,a.category from spice_product  a inner join spice_product_assoc b on b.child=a.id where b.parent=:parent and a.deleted=0");
-        $stmt->execute(array(":parent" => $this->_id));
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $children[] = $row;
-        }
-        //get parent
-        $stmt = $this->_db->prepare("select a.id,a.name,a.category from spice_product  a inner join spice_product_assoc b on b.parent=a.id where b.child=:child and a.deleted=0");
-        $stmt->execute(array(":child" => $this->_id));
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $parent[] = $row;
-            $parent_ids[] = $row["id"];
-        }
-        return array("id" => $this->_id, "name" => $this->_name, "max_req_m" => $this->_max_req_m, "children" => $children, "parent" => $parent, "parent_ids" => $parent_ids, "max_req_s" => $this->_max_req_s, "category" => $this->_category, "type" => json_decode($this->_type), "color" => json_decode($this->_color), "active" => $this->_active);
+        $stmt = $this->_db->prepare("update spice_product set name=:name,price=:price, max_req_m=:max_req_m,max_req_s=:max_req_s,category=:category,type=:type,color=:color,active=:active where id=:id");
+        return $stmt->execute(array(":id" => $this->_id, ":name" => $this->_name, ":price" => $this->_price, ":max_req_m" => $this->_max_req_m, ":max_req_s" => $this->_max_req_s, ":category" => $this->_category, ":type" => json_encode($this->_type), ":color" => json_encode($this->_color), ":active" => $this->_active));
     }
 
     public function add_promotion($active, $highlight, $data_inicio, $data_fim) {
