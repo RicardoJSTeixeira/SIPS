@@ -23,23 +23,23 @@ $products = new products($db);
 
 switch ($action) {
 
-    
+
 
     case "listar_produtos_to_datatable":
         echo json_encode($products->get_products_to_datatable($product_editable));
         break;
 
     case "criar_produto":
-        echo json_encode($products->add_product($name,$price, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active));
+        echo json_encode($products->add_product($name, $price, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active));
         break;
 
     case "get_produtos":
-        echo json_encode($products->get_products());
+        echo json_encode($products->get_products(null));
         break;
 
     case "get_produto_by_id":
-        $produto = new product($db, $id);
-        echo json_encode($produto->get_info());
+
+        echo json_encode($products->get_products($id));
         break;
 
     case "apagar_produto_by_id":
@@ -48,7 +48,7 @@ switch ($action) {
 
     case "edit_product":
         $produto = new product($db, $id);
-        echo json_encode($produto->edit_product($name,$price, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active));
+        echo json_encode($produto->edit_product($name, $price, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active));
         break;
 
     case "add_promotion":

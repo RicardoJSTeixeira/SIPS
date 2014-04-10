@@ -32,7 +32,7 @@ Class products {
         return $output;
     }
 
-    public function get_products() {
+    public function get_products($id) {
         $relations = array();
         $stmt = $this->_db->prepare("select parent,child from spice_product_assoc");
         $stmt->execute();
@@ -54,7 +54,7 @@ Class products {
             $row["type"] = json_decode($row["type"]);
             $row[7] = json_decode($row[7]);
             $row["color"] = json_decode($row["color"]);
-            $output[] = $row;
+            $output[$row[0]] = $row;
         }
         foreach ($output as &$value) {
             $temp = $this->buildTree($output, $value[0]);
@@ -63,7 +63,12 @@ Class products {
             else
                 $value["children"] = array();
         }
-        return $output;
+        if ($id) {
+
+            return $output[$id];
+        } else {
+            return $output;
+        }
     }
 
     function buildTree(array $elements, $parentId) {
@@ -79,7 +84,6 @@ Class products {
                 }
             }
         }
-        return $branch;
     }
 
     public function remove_product($id) {
@@ -159,18 +163,6 @@ class product extends products {
     public function edit_product_save() {
         $stmt = $this->_db->prepare("update spice_product set name=:name,price=:price, max_req_m=:max_req_m,max_req_s=:max_req_s,category=:category,type=:type,color=:color,active=:active where id=:id");
         return $stmt->execute(array(":id" => $this->_id, ":name" => $this->_name, ":price" => $this->_price, ":max_req_m" => $this->_max_req_m, ":max_req_s" => $this->_max_req_s, ":category" => $this->_category, ":type" => json_encode($this->_type), ":color" => json_encode($this->_color), ":active" => $this->_active));
-    }
-
-    public function get_info() {
-
-        $temp = $this->buildTree($output, $this->_id);
-        if ($temp)
-            $value["children"] = $temp;
-        else
-            $value["children"] = array();
-
-
-        return array("id" => $this->_id, "name" => $this->_name, "price" => $this->_price, "max_req_m" => $this->_max_req_m, "max_req_s" => $this->_max_req_s, "category" => $this->_category, "type" => json_decode($this->_type), "color" => json_decode($this->_color), "active" => $this->_active, "level" => $this->_level);
     }
 
     public function add_promotion($active, $highlight, $data_inicio, $data_fim) {
