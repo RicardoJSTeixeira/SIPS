@@ -160,7 +160,7 @@ class correio extends requests_class {
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
             if ($row[6])
-                $row[6] = "<button data-anexo_id='$row[0]' class='btn ver_anexo_correio'>Anexos</button>";
+                $row[6] = "<button data-anexo_id='$row[0]' class='btn ver_anexo_correio'><i class='icon-eye-open'></i>Anexos</button>";
             else
                 $row[6] = "Sem anexo";
             switch ($row[8]) {

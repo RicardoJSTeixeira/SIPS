@@ -1,139 +1,123 @@
 <!--EDIçÃO DE PRODUTOS-->
-<div id="edit_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+<div id="edit_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3  >Gestão de produto</h3>
+        <h3 >Gestão de produto</h3>
     </div>
     <div class="modal-body">
         <form id="edit_product_form" class="check_form">
             <div class="formRow">
                 <span>Nome</span>
                 <div class="formRight">
-                    <input type="text" id="edit_product_name" class="validate[required]">
+                    <input type="text" id="edit_product_name" class="span validate[required]">
                 </div>
             </div>
             <div class="formRow">
                 <span>Preço</span>
                 <div class="formRight">
-                    <input type="number" id="edit_product_price" class="validate[required]">
+                    <input type="number" id="edit_product_price" class="span validate[required]">
                 </div>
             </div>
             <div class="formRow">
                 <span>Parente</span>
                 <div class="formRight">
-                    <select class="chosen-select" id="edit_product_parent" multiple  data-placeholder="Selecione um parent"></select>
-                </div>    
+                    <select class="chosen-select" id="edit_product_parent" multiple data-placeholder="Selecione um parent"></select>
+                </div> 
             </div>
             <div class="formRow">
                 <span>Categoria</span>
                 <div class="formRight">
-                    <select  id="edit_product_category">
+                    <select id="edit_product_category" class="span">
                         <option value="pilha" >Pilha</option>
                         <option value="aparelho">Aparelho</option>
                         <option value="acessorio" >Acessórios</option>
                         <option value="molde" >Molde</option>
                         <option value="economato" >Economato</option>
                     </select>
-                </div>    
+                </div> 
             </div>
             <div class="formRow">
                 <span>Tipo</span>
                 <div class="formRight">
-                    <input   type="checkbox" id="edit_product_check_branch" name="edit_product_tipo_user" value="branch" class="validate[minCheckbox[1]]">
+                    <input type="checkbox" id="edit_product_check_branch" name="edit_product_tipo_user" value="branch" class="validate[minCheckbox[1]]">
                     <label class="checkbox inline" for="edit_product_check_branch"><span></span>Branch</label>
-                    <input   type="checkbox" id="edit_product_check_dispenser" name="edit_product_tipo_user" value="dispenser" class="validate[minCheckbox[1]]">
+                    <input type="checkbox" id="edit_product_check_dispenser" name="edit_product_tipo_user" value="dispenser" class="validate[minCheckbox[1]]">
                     <label class="checkbox inline" for="edit_product_check_dispenser"><span></span>Dispenser</label>
-                </div>    
+                </div> 
             </div>
             <div class="formRow">
                 <span>Ativo</span>
                 <div class="formRight">
-                    <input   type="checkbox" id="edit_product_active" name="edit_product_active" value="1" checked  >
+                    <input type="checkbox" id="edit_product_active" name="edit_product_active" value="1" checked >
                     <label class="checkbox inline" for="edit_product_active"><span></span>Sim</label>
-                </div>    
+                </div> 
             </div>
             <div class="formRow">
-                <span>Max Requisições</span>
-                <table >
-                    <thead>
-                        <tr>
-                            <th>Mensal</th>
-                            <th>Especial</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="number" id="edit_product_mrm" value="5" class="input-mini validate[required]"></td>
-                            <td><input type="number" id="edit_product_mrw" value="5" class="input-mini validate[required]"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <span><b>Max Requisições</b></span>
+                <div class="formRight">
+                    <table >
+                        <thead>
+                            <tr>
+                                <td>Mensal</td>
+                                <td>Especial</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="number" id="edit_product_mrm" value="5" class="input-mini validate[required]"></td>
+                                <td><input type="number" id="edit_product_mrw" value="5" class="input-mini validate[required]"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="formRow" id="edit_product_color_div" style="display:none">
                 <table class="table table-bordered table-mod">
                     <thead>
                         <tr>
-                            <th>
-                                Cor
-                            </th>
-                            <th>
-                                Nome
-
-                            </th>
-
+                            <th>Cor</th>
+                            <th>Nome</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="edit_product_table_tbody_color">
                     </tbody>
                 </table>
                 <div class="formRow pull-right">
-                    <button class="btn btn-primary" id="edit_product_button_color_add_line"><span class="icon-plus"></span>Adicionar Cor</button>
-
+                    <button class="btn btn-primary right" id="edit_product_button_color_add_line"><i class="icon-plus-sign"></i>Adicionar</button>
                 </div>
             </div>
             <div class="formRow" id="edit_product_promotion_div">
                 <h5>Promoções</h5>
-                <table class="table table-bordered"  >
+                <table class="table table-bordered table-mod" >
                     <thead>
                         <tr>
-                            <th>
-                                Activo
-                            </th>
-                            <th>
-                                HighLight
-                            </th>
-                            <th>
-                                Data Inicio
-                            </th>
-                            <th>
-                                Data Fim
-                            </th>
-                            <th>
-                                Opção
-                            </th>
+                            <th>Activo</th>
+                            <th>HighLight</th>
+                            <th>Data Inicio</th>
+                            <th>Data Fim</th>
+                            <th>Opção</th>
                         </tr>
                     </thead>
                     <tbody id="edit_product_promotion_table_tbody">
                         <tr>
-                            <td colspan="5">
-                                Sem promoções
-                            </td>
+                            <td colspan="5">Sem promoções</td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="formRow">
-                    <button class="btn btn-primary" id="edit_product_add_promotion_toggle">Adicionar promoção</button>
+                    <button class="btn btn-primary right" id="edit_product_add_promotion_toggle"><i class="icon-plus-sign"></i>Adicionar</button>
                 </div>
                 <div id="edit_product_new_promotion_div" style="display:none" >
                     <div class="formRow">
                         <div class="formRight">
-                            <input   type="checkbox" id="edit_product_promotion_active" name="promotion_active"  >
+                            <input type="checkbox" id="edit_product_promotion_active" name="promotion_active" >
                             <label class="checkbox inline" for="edit_product_promotion_active"><span></span>Activo</label>
                         </div>
                     </div>
                     <div class="formRow">
                         <div class="formRight">
-                            <input   type="checkbox" id="edit_product_promotion_highlight" name="promotion_highlight"    >
+                            <input type="checkbox" id="edit_product_promotion_highlight" name="promotion_highlight" >
                             <label class="checkbox inline" for="edit_product_promotion_highlight"><span></span>Highligh</label>
                         </div>
                     </div>
@@ -153,50 +137,43 @@
                 </div>
             </div>
 
-
-
             <div class="formRow" id="edit_product_children_div">
                 <h5>Sub-peças deste produto</h5>
                 <table class="table table-bordered table-mod" id="edit_product_child_datatable" >
                     <thead>
                         <tr>
-                            <th>
-                                Nome
-                            </th>
-                            <th>
-                                Categoria
-                            </th>
+                            <th>Nome</th>
+                            <th>Categoria</th>
                         </tr>
                     </thead>
                     <tbody>
                     </tbody>
                 </table>
             </div>
-
         </form>
-
     </div>
     <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" id="sair_button" aria-hidden="true">Sair</button>
-        <button id="edit_product_button" class="btn btn-primary">Editar</button>
+        <button id="edit_product_button" class="btn btn-success">Editar</button>
+        <button class="btn btn-link" data-dismiss="modal" id="sair_button" aria-hidden="true">Fechar</button>
     </div>
 </div>
 
-
-
-<!--Novo  PRODUTOS-->
+<!--Novo PRODUTOS-->
 
 <form id="new_product_form" class="check_form" style="display:none">
 
     <fieldset>
         <label for="new_product_name">Nome</label>
-        <input type="text" id="new_product_name" class="validate[required]">
+        <input type="text" id="new_product_name" class="span validate[required]">
         <label for="new_product_price">Preço</label>
-        <input type="text" id="new_product_price" class="validate[required]">
+        <div class="input-append">
+            <input type="text" id="new_product_price" class="span3 text-right validate[required]">
+            <span class="add-on">€</span>
+        </div>
         <label for="new_product_parent">Parente</label>
-        <select class="chosen-select" id="new_product_parent" multiple  data-placeholder="Selecione um parent"></select>
+        <select class="chosen-select" id="new_product_parent" multiple data-placeholder="Selecione um parent"></select>
         <label for="new_product_category">Categoria</label>
-        <select  id="new_product_category">
+        <select id="new_product_category" class="span">
             <option value="pilha" >Pilha</option>
             <option value="aparelho">Aparelho</option>
             <option value="acessorio" >Acessórios</option>
@@ -204,22 +181,17 @@
             <option value="economato" >Economato</option>
         </select>
 
-
         <label>Tipo</label>
-        <input   type="checkbox" id="new_product_check_branch" name="new_product_tipo_user" value="branch" class="validate[minCheckbox[1]]">
+        <input type="checkbox" id="new_product_check_branch" name="new_product_tipo_user" value="branch" class="validate[minCheckbox[1]]">
         <label class="checkbox inline" for="new_product_check_branch"><span></span>Branch</label>
-        <input   type="checkbox" id="new_product_check_dispenser" name="new_product_tipo_user" value="dispenser" class="validate[minCheckbox[1]]">
+        <input type="checkbox" id="new_product_check_dispenser" name="new_product_tipo_user" value="dispenser" class="validate[minCheckbox[1]]">
         <label class="checkbox inline" for="new_product_check_dispenser"><span></span>Dispenser</label>
 
+        <label><b>Max. Requisições</b></label>
         <table>
-            <thead>
-                <tr>
-                    <th colspan="2">Max. Requisições</th>
-                </tr>
-            </thead>
             <tbody>
                 <tr>
-                    <td>    
+                    <td> 
                         <label>Mensais</label>
                     </td>
                     <td>
@@ -234,9 +206,9 @@
                         <input type="number" id="new_product_mrw" value="5" class="input-mini validate[required]">
                     </td>
                 </tr>
-            </tbody></table>
+            </tbody>
+        </table>
     </fieldset>
-
 
     <div class="formRow" id="new_product_color_div" style="display:none">
         <table class="table table-bordered table-mod">
@@ -258,18 +230,13 @@
         </div>
     </div>
     <div class="formRow">
-        <button class="btn btn-primary" id="create_new_product_button">Criar </button>   
+        <button class="right btn btn-success" id="create_new_product_button"><i class="icon-plus-sign"></i>Criar</button> 
     </div>
+    <div class="clear"></div>
 </form>
 
-
-
-
-
-
-
 <!--REMOVER PRODUTO-->
-<div id="remove_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+<div id="remove_product_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3 id="myModalLabel">Eliminar produto</h3>
@@ -278,16 +245,12 @@
         <p>Tem a certeza que deseja eliminar o produto?</p>
     </div>
     <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-        <button class="btn btn-primary" id="remove_product_button">Sim, eliminar</button>
+        <button class="btn btn-danger" id="remove_product_button">Sim, eliminar</button>
+        <button class="btn btn-link" data-dismiss="modal" aria-hidden="true">Cancelar</button>
     </div>
 </div>
 
-
-
-
-
-<div  style="display:none">
+<div style="display:none">
     <select id="colour_picker">
         <option value="ffffff" >#ffffff</option>
         <option value="ffccc9">#ffccc9</option>

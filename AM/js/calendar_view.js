@@ -41,12 +41,12 @@ $(function() {
 
 
     $("#special-event-beg")
-            .datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2})
+            .datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, startDate: moment().format("YYYY-MM-DD")})
             .on('changeDate', function() {
                 $("#special-event-end").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
             });
     $("#special-event-end")
-            .datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2})
+            .datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, startDate: moment().format("YYYY-MM-DD")})
             .on('changeDate', function() {
                 $("#datetime_from").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
             });

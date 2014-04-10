@@ -1,3 +1,7 @@
+html{
+    background: #F9F9F9;
+}
+
 .header {
     background: #f05d49; /* Old browsers */
     background: -moz-linear-gradient(top, #f05d49 0%, #ef462f 5%, #d13620 100%); /* FF3.6+ */
