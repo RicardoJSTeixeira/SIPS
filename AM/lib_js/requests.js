@@ -228,7 +228,7 @@ var requests = function(basic_path, options_ext)
                 {"name": "show_admin", "value": 1}
                 );
             },
-            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Lead id"}, {"sTitle": "Anexo"}, {"sTitle": "Observações"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
+            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Lead id"}, {"sTitle": "Anexo", "sWidth":"75px"}, {"sTitle": "Observações"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth":"50px"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 
@@ -344,7 +344,7 @@ var requests = function(basic_path, options_ext)
                 aoData.push({"name": "action", "value": "get_relatorio_frota_to_datatable"},
                 {"name": "show_admin", "value": 1});
             },
-            "aoColumns": [{"sTitle": "id"}, {"sTitle": "user"}, {"sTitle": "data"}, {"sTitle": "Matricula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrencias"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
+            "aoColumns": [{"sTitle": "id"}, {"sTitle": "user"}, {"sTitle": "data"}, {"sTitle": "Matricula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrencias", "sWidth":"150px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth":"50px"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 
