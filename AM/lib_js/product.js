@@ -56,7 +56,7 @@ var products = function(geral_path, options_ext)
         datatable_path.on("click", ".btn_editar_produto", function()
         {
             product_id = $(this).data("product_id");
-            
+
 
             populate_modal(edit_product_modal, function()
             {
@@ -214,7 +214,7 @@ var products = function(geral_path, options_ext)
         new_product_path1.append(geral_path.find("#new_product_form"));
         var new_product_path = new_product_path1;
         clean_new_product_area(new_product_path);
-        populate_parent(new_product_path.find("#new_product_parent"), null, null);
+        populate_parent(new_product_path.find("#new_product_parent"), null, null, null);
 
 
         new_product_path.find("#create_new_product_button").click(function(e)
@@ -360,14 +360,14 @@ var products = function(geral_path, options_ext)
     function  populate_modal(modal, callback)
     {
         $.post('/AM/ajax/products.php', {action: "get_produto_by_id", "id": product_id}, function(data) {
-            populate_parent(geral_path.find("#edit_product_parent"), find_level(data), function()
+            populate_parent(geral_path.find("#edit_product_parent"), find_level(data), get_children(data), function()
             {
                 modal.find("#edit_product_name").val(data.name);
                 modal.find("#edit_product_price").val(data.price);
                 modal.find("#edit_product_category").val(data.category);
 
                 modal.find("#edit_product_parent option[value='" + product_id + "']").prop("disabled", true);
-                modal.find("#edit_product_parent").val(data.parent_ids).trigger("chosen:updated");
+                modal.find("#edit_product_parent").val(data.parent).trigger("chosen:updated");
                 modal.find("#edit_product_active").prop("checked", data.active);
                 $.each(data.type, function()
                 {
@@ -450,8 +450,9 @@ var products = function(geral_path, options_ext)
 
 
 
-    function populate_parent(select, level, callback)
+    function populate_parent(select, level, children, callback)
     {
+    
         var out_level = level;
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
         function(data)
@@ -474,10 +475,27 @@ var products = function(geral_path, options_ext)
 
                 var level = find_level(this);
 
-                if (level - out_level <= 1) {
+
+
+
+                if (out_level)
+                {
+                    level = level - out_level;
+                }
+
+
+
+
+                option = "<option  id=" + this.id + "  value='" + this.id + "'>" + this.name + "</option>";
+                if (level < 1)
                     option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Max.Lvl. " + this.name + "</option>";
-                } else
-                    option = "<option  id=" + this.id + "  value='" + this.id + "'>" + this.name + "</option>";
+                if (children)
+                {
+                    if (children.indexOf(this.id) != -1)
+                        option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Assoc. " + this.name + "</option>";
+                }
+
+
                 switch (this.category)
                 {
                     case "aparelho":
@@ -524,5 +542,30 @@ var products = function(geral_path, options_ext)
         return level;
     }
 
+    function get_children(element)
+    {
+        var children = [];
+        if (element.children)
+        {
+            $.each(element.children, function()
+            {
+                children.push(this.id);
+                get_children_extra(this, children);
 
+            });
+        }
+        return children;
+    }
+
+    function get_children_extra(element, children)
+    {
+        if (element.children)
+        {
+            $.each(element.children, function()
+            {
+                children.push(this.id);
+                get_children_extra(this, children);
+            });
+        }
+    }
 };

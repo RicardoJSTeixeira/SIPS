@@ -64,7 +64,6 @@ Class products {
                 $value["children"] = array();
         }
         if ($id) {
-
             return $output[$id];
         } else {
             return $output;
@@ -78,12 +77,13 @@ Class products {
                 $children = $this->buildTree($elements, $element[0]);
                 if ($children) {
                     $element['children'] = $children;
-                    $branch[] = array(id => $element[0], children => $element["children"]);
+                    $branch[] = array(id => $element[0], children => $element["children"], category => $element["category"],name => $element["name"]);
                 } else {
-                    $branch[] = array(id => $element[0], children => array());
+                    $branch[] = array(id => $element[0], children => array(), category => "",name => "");
                 }
             }
         }
+        return $branch;
     }
 
     public function remove_product($id) {
