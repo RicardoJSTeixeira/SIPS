@@ -7,6 +7,7 @@ var products = function(geral_path, options_ext)
     this.file_uploaded = false;
     this.config = {};
     this.config.product_editable = true;
+    this.Table_view_product;
 
     $.extend(true, this.config, options_ext);
     this.init = function(callback)
@@ -14,7 +15,7 @@ var products = function(geral_path, options_ext)
         $.get("/AM/view/products/product.html", function(data) {
             geral_path.empty().off().append(data);
 
-            geral_path.find(".chosen-select").chosen({no_results_text: "Sem resultados", width: "200px"});
+            geral_path.find(".chosen-select").chosen({no_results_text: "Sem resultados", width: "100%"});
             geral_path.find(".form_datetime_day").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
 
 
@@ -314,47 +315,41 @@ var products = function(geral_path, options_ext)
         new_product_path.find("#new_product_form").show();
     }
 
-
-
-
-
-
     function update_products_datatable(datatable_path)
     {
-        var Table_view_product = datatable_path.dataTable({
-            "bSortClasses": false,
-            "bProcessing": true,
-            "bDestroy": true,
-            "bAutoWidth": false,
-            "sPaginationType": "full_numbers",
-            "sAjaxSource": '/AM/ajax/products.php',
-            "fnServerParams": function(aoData) {
-                aoData.push({"name": "action", "value": "listar_produtos_to_datatable"}, {"name": "product_editable", "value": me.config.product_editable});
-            },
-            "fnDrawCallback": function() {
-                $.each(Table_view_product.find(".btn_ver_produto"), function()
-                {
-                    if ($(this).data().deleted)
+        if (!me.Table_view_product) {
+            me.Table_view_product = datatable_path.dataTable({
+                "bSortClasses": false,
+                "bProcessing": true,
+                "bDestroy": true,
+                "bAutoWidth": false,
+                "sPaginationType": "full_numbers",
+                "sAjaxSource": '/AM/ajax/products.php',
+                "fnServerParams": function(aoData) {
+                    aoData.push({"name": "action", "value": "listar_produtos_to_datatable"}, {"name": "product_editable", "value": me.config.product_editable});
+                },
+                "fnDrawCallback": function() {
+                    $.each(me.Table_view_product.find(".btn_ver_produto"), function()
                     {
-                        $(this).parent().parent().addClass("error");
-                    }
-                    else
-                    {
-                        if (!$(this).data().active)
+                        if ($(this).data().deleted)
                         {
-                            $(this).parent().parent().addClass("warning");
+                            $(this).closest("tr").addClass("error");
                         }
-                        else {
-
-                            if ($(this).data().highlight)
-                                $(this).parent().parent().addClass("success");
+                        else if (!$(this).data().active)
+                        {
+                            $(this).closest("tr").addClass("warning");
                         }
-                    }
-                });
-            },
-            "aoColumns": [{"sTitle": "Id"}, {"sTitle": "Nome"}, {"sTitle": "Preço"}, {"sTitle": "Max mensal"}, {"sTitle": "Max especial"}, {"sTitle": "Categoria"}, {"sTitle": "Tipo"}, {"sTitle": "Opções"}],
-            "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
-        });
+                        else if ($(this).data().highlight) {
+                            $(this).closest("tr").addClass("success");
+                        }
+                    });
+                },
+                "aoColumns": [{"sTitle": "Id"}, {"sTitle": "Nome"}, {"sTitle": "Preço"}, {"sTitle": "Max mensal"}, {"sTitle": "Max especial"}, {"sTitle": "Categoria"}, {"sTitle": "Tipo"}, {"sTitle": "Opções"}],
+                "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
+            });
+        } else {
+            me.Table_view_product.fnReloadAjax();
+        }
     }
 
     function  populate_modal(modal, callback)
@@ -398,7 +393,7 @@ var products = function(geral_path, options_ext)
                         modal.find("#edit_product_table_tbody_color").empty();
                         $.each(data.color, function()
                         {
-                            modal.find("#edit_product_table_tbody_color").append("<tr><td><select class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]' value='" + this.name + "'></td><td><button class='btn icon-alone remove_color  btn-danger'><i class='icon icon-remove'></i></button></td></tr>");
+                            modal.find("#edit_product_table_tbody_color").append("<tr><td><select class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]' value='" + this.name + "'></td><td><button class='btn icon-alone remove_color  btn-danger'><i class='icon icon-trash'></i></button></td></tr>");
                             $("#edit_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).val(this.color).colourPicker({
                                 ico: '/jquery/colourPicker/colourPicker.gif',
                                 title: false
@@ -435,7 +430,7 @@ var products = function(geral_path, options_ext)
                         this.highlight = "sim";
                     else
                         this.highlight = "nao";
-                    tbody.append("<tr><td>" + this.active + "</td><td>" + this.highlight + "</td><td>" + this.data_inicio + "</td><td>" + this.data_fim + "</td><td><button class='btn remove_promotion_button' data-id_promotion='" + this.id + "'>Remover</button></td></tr>")
+                    tbody.append("<tr><td>" + this.active + "</td><td>" + this.highlight + "</td><td>" + this.data_inicio + "</td><td>" + this.data_fim + "</td><td><button class='btn btn-danger icon-alone remove_promotion_button' data-id_promotion='" + this.id + "'><i class='icon-trash'></i></button></td></tr>")
                 });
             }
             else
@@ -452,7 +447,7 @@ var products = function(geral_path, options_ext)
 
     function populate_parent(select, level, children, callback)
     {
-    
+
         var out_level = level;
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
         function(data)

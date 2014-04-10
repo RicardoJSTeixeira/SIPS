@@ -19,7 +19,7 @@
                     <span>Horário da Manhã</span>
                     <div class="formRight">
                         <input size="16" type="text" class="form_datetime_hour validate[required]" readonly id="data_inicio1" placeholder="Hora inicio do rastreio">
-                    </div>    
+                    </div>  
                     <div class="formRight">
                         <input size="16" type="text" class="form_datetime_hour validate[required]" readonly id="data_inicio2" placeholder="">
                     </div>
@@ -28,7 +28,7 @@
                     <span>Horário da Tarde</span>
                     <div class="formRight">
                         <input size="16" type="text" class="form_datetime_hour validate[required]" readonly id="data_fim1" placeholder="">
-                    </div>    
+                    </div>  
                     <div class="formRight">
                         <input size="16" type="text" class="form_datetime_hour validate[required]" readonly id="data_fim2" placeholder="Hora fim do rastreio">
                     </div>
@@ -38,26 +38,26 @@
                 <div class="formRow">
                     <span>Localidade</span>
                     <div class="formRight">
-                        <input type="text"    id="input_localidade" class="validate[required]"  >
-                    </div>    
+                        <input type="text" id="input_localidade" class="validate[required]" >
+                    </div>  
                 </div>
                 <div class="formRow">
                     <span>Local de rastreio</span>
                     <div class="formRight">
-                        <input type="text"  id="input_local_rastreio"  class="validate[required]" >
-                    </div>    
+                        <input type="text" id="input_local_rastreio" class="validate[required]" >
+                    </div>  
                 </div>
                 <div class="formRow">
                     <span>Morada de rastreio</span>
                     <div class="formRight">
-                        <input type="text"  id="input_morada_rastreio" class="validate[required]"  >
-                    </div>    
+                        <input type="text" id="input_morada_rastreio" class="validate[required]" >
+                    </div>  
                 </div>
                 <div class="formRow">
                     <span>Observações</span>
                     <div class="formRight">
-                        <textarea   id="input_observaçoes"  ></textarea>
-                    </div>    
+                        <textarea  id="input_observaçoes" ></textarea>
+                    </div>  
                 </div>
             </div>
         </div>
@@ -70,20 +70,17 @@
                 <table class="table table-bordered table-mod">
                     <thead>
                         <tr>
-                            <th>
-                                Código Postal
-                            </th>
-                            <th>
-                                Nome da Freguesia
-
-                            </th>
-                            <th>
-                                <button class="btn btn-primary" id="button_ldptable_add_line"><span class="icon-plus"></span></button>
-                            </th>
+                            <th>Código Postal</th>
+                            <th>Nome da Freguesia</th>
+                            <th><button class="btn btn-primary" id="button_ldptable_add_line"><i class="icon-plus"></i></button></th>
                         </tr>
                     </thead>
                     <tbody id="table_tbody_ldp">
-                        <tr><td><input name="ldp_cp1" type="text" class="linha_cp validate[required]"></td><td><input name="ldp_freg1" type="text" class="linha_freg validate[required]"></td><td>   <button class="btn btn-danger button_ldptable_remove_line" ><span class="icon-minus"></span></button></td></tr>
+                        <tr>
+                            <td><input name="ldp_cp1" type="text" class="linha_cp validate[required,custom[onlyNumberSp]]"></td>
+                            <td><input name="ldp_freg1" type="text" class="linha_freg validate[required]"></td>
+                            <td><button class="btn btn-danger button_ldptable_remove_line" ><i class="icon-minus"></i></button></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

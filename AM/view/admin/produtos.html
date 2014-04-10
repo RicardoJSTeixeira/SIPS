@@ -1,43 +1,35 @@
-
+<style>
+    fieldset .chosen-container,fieldset input[type="checkbox"] + label{
+        margin-bottom: 9px !important;
+    }
+</style>
 <div class="row-fluid">
-    <div class="grid span4">
+    <div class="grid span3">
         <div class="grid-title">
             <div class="pull-left">
                 Criar Novo Produto
             </div>
         </div>
-
-        <div class="grid-content"  >
+        <div class="grid-content" >
             <div id="new_product_div"></div>
-
         </div>
-
-
         <div class="clear"></div>
     </div>
-
-
-
-    <div class="grid span8">
+    <div class="grid span9">
         <div class="grid-title">
             <div class="pull-left">
                 Produtos
             </div>
         </div>
-
-        <div class="grid-content"  >
+        <div class="grid-content" >
             <table class="table table-bordered table-mod" id="view_product_datatable"></table>
-
+            <div class="formRow ">
+                <span class="label label-success">Produto com HighLight</span>
+                <span class="label label-warning">Produtos Inativos</span>
+            </div>
         </div>
-        <div class="formRow ">
-            <span class="label label-important">Produtos Eliminados</span>
-            <span class="label label-success">Produto com HighLight</span>
-            <span class="label label-warning">Produtos Inativos</span>
-        </div>
-
         <div class="clear"></div>
     </div>
-   
 </div>
 
 <div id="extra_div"></div>
@@ -49,13 +41,10 @@
         var config = new Object();
         product = new products($("#extra_div"), config);
         product.init(function() {
-          product.init_new_product($("#new_product_div"), function() {
-              product.init_to_datatable($("#view_product_datatable"));
+            product.init_new_product($("#new_product_div"), function() {
+                product.init_to_datatable($("#view_product_datatable"));
             });
         });
     });
-    
-    
-  
 
 </script>
