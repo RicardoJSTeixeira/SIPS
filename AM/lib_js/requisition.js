@@ -6,7 +6,6 @@ var requisition = function(geral_path, options_ext)
     var me = this;
     this.file_uploaded = false;
     this.config = new Object();
-
     var product = 1;
     var modal = "";
     var table_path = "";
@@ -25,18 +24,15 @@ var requisition = function(geral_path, options_ext)
                 callback();
         });
     };
-
-
     this.get_current_requisitions = function(table_path1, show_admin1)
     {
         table_path = table_path1;
         show_admin = show_admin1;
         get_encomendas_atuais(table_path, show_admin);
-
     };
-
 //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
     this.new_requisition = function(new_requisition_zone, lead_id) {
+
         new_requisition_zone.off();
         new_requisition_zone.find('.fileupload').fileupload();
         new_requisition_zone.find("#requisition_form").validationEngine();
@@ -58,87 +54,84 @@ var requisition = function(geral_path, options_ext)
         $(new_requisition_zone).on("click", "#new_requisition_product_add_line", function(e)
         {
             e.preventDefault();
-            new_requisition_zone.find(" #new_requisition_product_tbody")
-                    .append("<tr id='tr" + product + "'>\n\
-                                <td ><select data-linha_id=" + product + " id='product_select" + product + "' class='chosen-select new_requisition_select_product'></select></td>\n\
-                                <td ><select class='input-medium select_color_picker' id='select_color_picker" + product + "'></select></td>\n\
-                                <td ><span id='product_span_max" + product + "'></span></td>\n\
-                                <td> <input class='input-mini validate[required,custom[onlyNumberSp]]' id='product_input" + product + "' type='number' min='1' value='1'></td>\n\
-                                <td><button class='btn icon-alone btn-danger remove_item_requisition_table' value='" + product + "'><i  class='icon-remove'></i> </button></td></tr>");
-            new_requisition_zone.find(" #product_select" + product).chosen({no_results_text: "Sem resultados"});
-            populate_select(new_requisition_zone.find(" #product_select" + product), function() {
-                update_product_selects();
-            });
-
-            product += 1;
+            new_requisition_zone.append(new_requisition_zone.find("#placeholder_new_products_master_div").clone().prop("id", "grid_product" + product).show());
+            add_sub_product(new_requisition_zone.find("#grid_product" + product));
+            product++;
         });
-        $(new_requisition_zone).on("change", ".new_requisition_select_product", function()
+        $(new_requisition_zone).on("change", ".select_product", function()
         {
-            if (me.tipo == "mensal")
+            var this_div = $(this).parent().parent().parent();
+            if ($(this).val() == 0)
             {
-                new_requisition_zone.find("#product_span_max" + $(this).data().linha_id).text($(this).find("option:selected").data().max_month);
-                new_requisition_zone.find("#product_input" + $(this).data().linha_id).attr("max", ($(this).find("option:selected").data().max_month));
-                if (new_requisition_zone.find("#product_input" + $(this).data().linha_id).val() > $(this).find("option:selected").data().max_month)
-                    new_requisition_zone.find("#product_input" + $(this).data().linha_id).val($(this).find("option:selected").data().max_month);
+                this_div.find(".select_color_picker").empty();
+                this_div.find(".product_span_max").text("");
+                this_div.find(".quantity_input").val("");
+                remove_sub_product(this_div.next());
             }
             else
             {
-                new_requisition_zone.find("#product_span_max" + $(this).data().linha_id).text($(this).find("option:selected").data().max_special);
-                new_requisition_zone.find("#product_input" + $(this).data().linha_id).attr("max", ($(this).find("option:selected").data().max_special));
-                if (new_requisition_zone.find("#product_input" + $(this).data().linha_id).val() > $(this).find("option:selected").data().max_special)
-                    new_requisition_zone.find("#product_input" + $(this).data().linha_id).val($(this).find("option:selected").data().max_special);
-            }
-            var select = new_requisition_zone.find("#select_color_picker" + $(this).data().linha_id);
-            select.empty();
-            if ($(this).find("option:selected").data().color)
-            {
-                $.each($(this).find("option:selected").data().color, function()
+                if (me.tipo == "mensal")
                 {
-                    select.append("<option data-color_id='" + this.color + "' data-color_name='" + this.name + "'>" + this.name + "</option>");
-                });
-            }
-            else
-                select.append("<option>Padrão</option>");
-
-
-            update_product_selects(this);
-        });
-
-
-        function  update_product_selects(that)
-        {
-            var selected_options = [];
-            var children = [];
- 
-            $.each($("#new_requisition_product_tbody select").not(that), function()
-            {
-                selected_options.push($(this).val());
-
-
-
-                if ($(this).find("option:selected").data("children"))
+                    this_div.find(".product_span_max").text($(this).find("option:selected").data().max_month);
+                    this_div.find(".quantity_input").attr("max", ($(this).find("option:selected").data().max_month));
+                    if (this_div.find(".quantity_input").val() > $(this).find("option:selected").data().max_month)
+                        this_div.find(".quantity_input").val($(this).find("option:selected").data().max_month);
+                }
+                else
                 {
-                    $.each($(this).find("option:selected").data("children"), function()
+                    this_div.find(".product_span_max").text($(this).find("option:selected").data().max_special);
+                    this_div.find(".quantity_input").attr("max", ($(this).find("option:selected").data().max_special));
+                    if (this_div.find(".quantity_input").val() > $(this).find("option:selected").data().max_special)
+                        this_div.find(".quantity_input").val($(this).find("option:selected").data().max_special);
+                }
+                var select = this_div.find(".select_color_picker");
+                select.empty();
+                if ($(this).find("option:selected").data().color)
+                {
+                    $.each($(this).find("option:selected").data().color, function()
                     {
-                        children.push(this.id);
+                        select.append("<option data-color_id='" + this.color + "' data-color_name='" + this.name + "'>" + this.name + "</option>");
                     });
                 }
+                else
+                    select.append("<option>Padrão</option>");
+                add_sub_product(this_div.parent().parent());
+            }
+        });
+        function add_sub_product(grid)
+        {
+
+            var this_div = grid.find(".requisition_form");
+            this_div.append(new_requisition_zone.find("#placeholder_new_product").clone().prop("id", "").show());
+            //select
+            this_div.find(".select_div").last().append("<select  class='chosen-select select_product'></select>");
+            //color    
+            this_div.find(".color_div").last().append("<select class='input-medium select_color_picker'></select>");
+            //Max    
+            this_div.find(".max_div").last().append("<span class='product_span_max'></span>");
+            //Quantity    
+            this_div.find(".quantity_div").last().append("<input class='quantity_input input-mini validate[required,custom[onlyNumberSp]]'  type='number' min='1' value='1'>");
+            this_div.find(".select_product").last().chosen({no_results_text: "Sem resultados"});
 
 
-            });
-          //  $("#new_requisition_product_tbody select option").prop("disabled", true);
-            $.each(selected_options, function()
+            if (this_div.find(".select_product").eq(-2).val() > 0)
             {
-                $("#new_requisition_product_tbody select option[value='" + this + "']").prop("disabled", true);
-            });
-            $.each(children, function()
-            {
-                $("#new_requisition_product_tbody select option[value='" + this + "']").prop("disabled", false);
-            });
+                $.post('/AM/ajax/products.php', {action: "get_produto_by_id", id: this_div.find(".select_product").eq(-2).val()},
+                function(data1)
+                {
 
-            $("#new_requisition_product_tbody select").trigger("chosen:updated");
+                    populate_select(this_div.find(".select_product").last(), get_children(data1), null);
+                }, "json");
+            }
+            else
+                populate_select(this_div.find(".select_product").last(), null, null);
         }
 
+        function remove_sub_product(div)
+        {
+
+            div.remove();
+        }
 
 // SUBMITAR A ENCOMENDA------------------------------------------------
         $(new_requisition_zone).on("click", "#new_requisition_submit_button", function()
@@ -183,7 +176,6 @@ var requisition = function(geral_path, options_ext)
                             new_requisition_zone.find(" #new_requisition_lead_id").val("");
                             new_requisition_zone.find(" #new_requisition_contract").val("");
                             new_requisition_zone.find(" #new_requisition_product_tbody").empty();
-
                             new_requisition_zone.find("#label_anexo_info").text("");
                             new_requisition_zone.find('.fileupload').fileupload("clear");
                         }, "json");
@@ -195,14 +187,13 @@ var requisition = function(geral_path, options_ext)
         });
         $(new_requisition_zone).on("click", ".remove_item_requisition_table", function()
         {
-            new_requisition_zone.find(" #new_requisition_product_tbody tr[id='tr" + $(this).val() + "']").empty();
+            new_requisition_zone.find("#grid" + $(this).val()).remove();
+            $.jGrowl('Linha de produtos removida com sucesso', {life: 4000});
         });
-
         $(new_requisition_zone).on("submit", " #requisition_form", function(e)
         {
             e.preventDefault();
         });
-
         //FILE UPLOAD
         $(new_requisition_zone).on("change", '#file_upload', function() {
             // var re_ext = new RegExp("(gif|jpeg|jpg|png|pdf)", "i");
@@ -244,9 +235,6 @@ var requisition = function(geral_path, options_ext)
             });
         });
     };
-
-
-
     function get_encomendas_atuais(table_path, show_admin)
     {
         if (show_admin)
@@ -271,7 +259,6 @@ var requisition = function(geral_path, options_ext)
                 "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Código de cliente"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
-
             Table_view_requisition.on("change", ".cod_cliente_input", function()
             {
                 var requisition_number = $(this).data("requisition_id");
@@ -286,7 +273,6 @@ var requisition = function(geral_path, options_ext)
                     }, "json");
                 }
             });
-
         }
         else
         {
@@ -340,19 +326,17 @@ var requisition = function(geral_path, options_ext)
 
 
 
-    function populate_select(select, callback)
+    function populate_select(select, children, callback)
     {
+
+
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
         function(data)
         {
-
             var optgroups = [];
-            var children = [];
-            var parent = [];
             select.empty();
             optgroups.push("<option value='0'>Escolha um produto</option><optgroup value='1' label='Aparelhos'></optgroup>");
-            var
-                    temp = "<option value='0'>Escolha um produto</option>\n\
+            var temp = "<option value='0'>Escolha um produto</option>\n\
                             <optgroup value='1' label='Aparelhos'></optgroup>\n\
                             <optgroup value='2' label='Pilhas'></optgroup>\n\
                             <optgroup value='3' label='Acessórios'></optgroup>\n\
@@ -364,51 +348,35 @@ var requisition = function(geral_path, options_ext)
                     molde = [],
                     economato = [];
             select.append(temp);
+           
             $.each(data, function()
             {
-                if (this.children)
-                    $.each(this.children, function()
-                    {
-                        children.push(this.id);
-                    });
+               
+                if (children)
+                {
+                    if (children.indexOf(this.id) === -1)
+                        return true;
+                }
 
-                
                 switch (this.category)
                 {
                     case "aparelho":
-                        if (children.indexOf(this.id) == -1)
-                            aparelho.push("<option data-parent='" + JSON.stringify(this.parents) + "'  data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
-                        else
-                            aparelho.push("<option disabled data-parent='" + JSON.stringify(this.parents) + "'  data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
+                        aparelho.push("<option data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
                         break;
                     case "pilha":
-                        if (children.indexOf(this.id) == -1)
-                            pilha.push("<option data-parent='" + JSON.stringify(this.parents) + "' data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
-                        else
-                            pilha.push("<option disabled data-parent='" + JSON.stringify(this.parents) + "' data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
+                        pilha.push("<option data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
                         break;
                     case "acessorio":
-                        if (children.indexOf(this.id) == -1)
-                            acessorio.push("<option data-parent='" + JSON.stringify(this.parents) + "' data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "' value='" + this.id + "'>" + this.name + "</option>");
-                        else
-                            acessorio.push("<option disabled data-parent='" + JSON.stringify(this.parents) + "' data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
+                        acessorio.push("<option data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
                         break;
                     case "molde":
-                        if (children.indexOf(this.id) == -1)
-                            molde.push("<option data-parent='" + JSON.stringify(this.parents) + "' data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
-                        else
-                            molde.push("<option disabled data-parent='" + JSON.stringify(this.parents) + "' data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
+                        molde.push("<option data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
                         break;
                     case "economato":
-                        if (children.indexOf(this.id) == -1)
-                            economato.push("<option data-parent='" + JSON.stringify(this.parents) + "' data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "' value='" + this.id + "'>" + this.name + "</option>");
-                        else
-                            economato.push("<option disabled data-parent='" + JSON.stringify(this.parents) + "' data-children='" + JSON.stringify(this.children) + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
+                        economato.push("<option data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
                         break;
                 }
             });
-
-
             select.find("optgroup[value='1']").append(aparelho).end()
                     .find("optgroup[value='2']").append(pilha).end()
                     .find("optgroup[value='3']").append(acessorio).end()
@@ -416,11 +384,54 @@ var requisition = function(geral_path, options_ext)
                     .find("optgroup[value='5']").append(economato).end().trigger("chosen:updated");
             if (typeof callback === "function")
                 callback();
-        }, "json");
+        }
+        , "json");
     }
 
 
-};
+
+    function find_level(element)
+    {
+        var level = 1;
+        if (element.children)
+        {
+            $.each(element.children, function()
+            {
+                level = level + find_level(this);
+            });
+        }
+
+        return level;
+    }
+
+    function get_children(element)
+    {
+        var children = [];
+        if (element.children)
+        {
+            $.each(element.children, function()
+            {
+                children.push(this.id);
+                get_children_extra(this, children);
+            });
+        }
+        return children;
+    }
+
+    function get_children_extra(element, children)
+    {
+        if (element.children)
+        {
+            $.each(element.children, function()
+            {
+                children.push(this.id);
+                get_children_extra(this, children);
+            });
+        }
+    }
+
+}
+;
 
 
 
