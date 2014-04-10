@@ -94,7 +94,7 @@ var requests = function(basic_path, options_ext)
     };
     this.get_apoio_marketing_to_datatable = function(am_zone)
     {
-        var Table_pedido_apoio_marketing = am_zone.dataTable({
+        am_zone.dataTable({
             "bSortClasses": false,
             "bProcessing": true,
             "bDestroy": true,

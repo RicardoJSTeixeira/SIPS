@@ -40,14 +40,16 @@ $(function() {
     }, "json");
 
 
-    $("#special-event-beg").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function(ev) {
-        $("#special-event-end")
-                .datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
-    });
-    $("#special-event-end").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function(ev) {
-        $("#datetime_from")
-                .datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
-    });
+    $("#special-event-beg")
+            .datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2})
+            .on('changeDate', function() {
+                $("#special-event-end").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
+            });
+    $("#special-event-end")
+            .datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2})
+            .on('changeDate', function() {
+                $("#datetime_from").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
+            });
 
     $("#special-event-form").submit(function(e) {
         e.preventDefault();

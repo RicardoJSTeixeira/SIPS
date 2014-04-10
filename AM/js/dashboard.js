@@ -12,6 +12,47 @@ $(function() {
         sch = new calendar($("#calendar_day"), data, modals, $('#ext-events'), {}, user);
         sch.reserveConstruct(data.tipo);
         sch.initModal();
+        
+        
+        //LISTAR CONSULTAS ABERTAS,FECHADAS
+       var
+       columns_allm=[{"sTitle": "ID", "sWidth": "70px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Ref.", "sWidth": "70px"}, {"sTitle": "Cod. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "70px"}, {"sTitle": "Postal", "sWidth": "70px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "400px"}],
+       columns_ncsm=[{"sTitle": "ID", "sWidth": "70px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Ref.", "sWidth": "70px"}, {"sTitle": "Cod. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "70px"}, {"sTitle": "Postal", "sWidth": "70px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "220px"}];
+        
+        if(user.user_level>5){
+            columns_allm.push({"sTitle": "User", "sWidth": "70px"});
+            columns_ncsm.push({"sTitle": "User", "sWidth": "70px"});
+        }
+    $('#table_allm').dataTable({
+        "bSortClasses": false,
+        "bProcessing": true,
+        "bDestroy": true,
+        "sPaginationType": "full_numbers",
+        "sAjaxSource": 'ajax/dashboard.php',
+        "fnServerParams": function(aoData) {
+            aoData.push({"name": "action", "value": "populate_allm"});
+        },
+        "aoColumns": columns_allm,
+        "fnDrawCallback": function(oSettings, json) {
+            $('#table_allm').show();
+        },
+        "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
+    });
+
+    $('#table_ncsm').dataTable({
+        "bSortClasses": false,
+        "bProcessing": true,
+        "bDestroy": true,
+        "sPaginationType": "full_numbers",
+        "sAjaxSource": 'ajax/dashboard.php',
+        "fnServerParams": function(aoData) {
+            aoData.push({"name": "action", "value": "populate_ncsm"});
+        },
+        "aoColumns": columns_ncsm,
+        "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
+    });
+        
+        
     };
 
     $.post("/AM/ajax/user_info.php", function(user) {
@@ -21,35 +62,7 @@ $(function() {
             init(data, user);
         }, "json");
     }, "json");
-    //LISTAR CONSULTAS ABERTAS,FECHADAS
-    var allTable = $('#table_allm').dataTable({
-        "bSortClasses": false,
-        "bProcessing": true,
-        "bDestroy": true,
-        "sPaginationType": "full_numbers",
-        "sAjaxSource": 'ajax/dashboard.php',
-        "fnServerParams": function(aoData) {
-            aoData.push({"name": "action", "value": "populate_allm"});
-        },
-        "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Morada"}, {"sTitle": "Data"}],
-        "fnDrawCallback": function(oSettings, json) {
-            $('#table_allm').show();
-        },
-        "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
-    });
-
-    var ncsmTable = $('#table_ncsm').dataTable({
-        "bSortClasses": false,
-        "bProcessing": true,
-        "bDestroy": true,
-        "sPaginationType": "full_numbers",
-        "sAjaxSource": 'ajax/dashboard.php',
-        "fnServerParams": function(aoData) {
-            aoData.push({"name": "action", "value": "populate_ncsm"});
-        },
-        "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Morada"}, {"sTitle": "Data"}],
-        "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
-    });
+    
 
     $.post("ajax/dashboard.php", {action: "populate_mp"}, function(data) {
         var
