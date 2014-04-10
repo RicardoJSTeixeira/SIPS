@@ -45,7 +45,7 @@ var products = function(geral_path, options_ext)
                     edit_product_modal.find(".modal-body").find("#edit_product_button_color_add_line").hide();
                     edit_product_modal.find(".modal-body").find(":input").prop("disabled", true);
                     edit_product_modal.find(".modal-body").find("select").prop("disabled", true).trigger("chosen:updated");
-                    edit_product_modal.find(".modal-body").find(".color_picker_select").parent().find("a").hide()
+                    edit_product_modal.find(".modal-body").find(".color_picker_select").parent().find("a").hide();
                 });
             });
 
