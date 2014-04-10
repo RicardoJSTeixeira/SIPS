@@ -1,6 +1,3 @@
- 
-
-
 <div class="row-fluid">
     <div class="span12 grid">
         <div class="grid-title">
@@ -10,7 +7,7 @@
         </div>
         <div class="grid-content div_admin_edit" id="requisition_master_div"  >
             <table class="table table-bordered table-mod" id="view_requisition_datatable"></table>
-                    <div class="clear">  </div>
+            <div class="clear"></div>
         </div>
 
     </div>
@@ -21,27 +18,17 @@
 <script type="text/javascript" src="/AM/lib_js/requisition.js" ></script>
 <script type="text/javascript">
 
-
     $(function()
     {
 
-
-
-
         //ENCOMENDAS--------------------------------------------------------------------------------------
         var config = new Object();
-
-
-
 
         requisition1 = new requisition($("#extra_div"), config);
         requisition1.init(function()
         {
             requisition1.get_current_requisitions($("#view_requisition_datatable"), 1);
         });
-
-
-
 
 
         $(".chosen-select").chosen({no_results_text: "Sem resultados"});
@@ -56,7 +43,7 @@
             $("#select_agent_transfer1,#select_agent_transfer2").append(options).trigger("chosen:updated").css("width", "225px");
 
         }, "json");
-        ;
+
     });
 
     $("#admin_zone").on("click", ".accept_requisition", function()
@@ -74,6 +61,5 @@
             this_button.parent().next().text("Rejeitado");
         }, "json");
     });
-
 
 </script>

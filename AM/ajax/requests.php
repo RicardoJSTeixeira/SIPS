@@ -122,5 +122,3 @@ switch ($action) {
     default:
         echo 'Are you an hacker? if yes then please go change your underpants, it stinks!';
 }
-
-    

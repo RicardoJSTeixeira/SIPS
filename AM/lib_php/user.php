@@ -27,7 +27,7 @@ class UserLogin {
     }
 
     protected function _checkCredentials() {
-        $stmt = $this->_db->prepare('SELECT user,pass,user_level,full_name,allowed_campaigns from vicidial_users a left join vicidial_user_groups b on a.user_group=b.user_group WHERE user=:user');
+        $stmt = $this->_db->prepare('SELECT user,pass,a.user_group,user_level,full_name,allowed_campaigns from vicidial_users a left join vicidial_user_groups b on a.user_group=b.user_group WHERE user=:user');
         $stmt->execute(array(":user" => $this->_username));
         if ($stmt->rowCount()) {
             $user = $stmt->fetch(PDO::FETCH_OBJ);
@@ -43,11 +43,11 @@ class UserLogin {
         $camp= preg_replace("/-ALL-CAMPAIGNS-/",'', $this->_user->allowed_campaigns);
         $camp=explode(" ", trim(rtrim($camp, " -")));
         $camp=$camp[0]; 
-        $stmt=$this->_db->prepare("Select list_id From vicidial_lists WHERE campaign_id=:id");
+        $stmt=$this->_db->prepare("Select list_id From vicidial_lists WHERE campaign_id=:id limit 1");
         $stmt->execute(array(":id"=>$camp));
         $lists=$stmt->fetchAll(PDO::FETCH_OBJ);
         $list=$lists[0]->list_id;
-        return (object) array("name" => $this->_user->full_name, "username" => $this->_user->user, "campaign"=>$camp, "list_id"=>$list, "user_level"=>$this->_user->user_level);
+        return (object) array("name" => $this->_user->full_name, "username" => $this->_user->user, "campaign"=>$camp, "list_id"=>$list, "user_level"=>$this->_user->user_level, "user_group"=>$this->_user->user_group);
     }
 
     public function logout() {
