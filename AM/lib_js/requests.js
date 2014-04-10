@@ -43,14 +43,14 @@ var requests = function(basic_path, options_ext)
                         return false;
                 }, finishButton: false});
             am_zone.find("#data_rastreio1").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, startDate: moment().format("YYYY-MM-DD")})
-            .on('changeDate', function() {
-                $("#data_rastreio2").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
-            });
+                    .on('changeDate', function() {
+                        $("#data_rastreio2").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
+                    });
             am_zone.find("#data_rastreio2").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, startDate: moment().format("YYYY-MM-DD")})
-            .on('changeDate', function() {
-                $("#data_rastreio1").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
-            });
-                        
+                    .on('changeDate', function() {
+                        $("#data_rastreio1").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
+                    });
+
             am_zone.find(".form_datetime_hour").datetimepicker({format: ' hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1});
             //Adiciona Linhas
             am_zone.on("click", "#button_ldptable_add_line", function(e)
@@ -81,9 +81,9 @@ var requests = function(basic_path, options_ext)
                         data_inicial: am_zone.find("#data_rastreio1").val(),
                         data_final: am_zone.find("#data_rastreio2").val(),
                         horario: {
-                            inicio1: am_zone.find("#data_inicio1").val(), 
-                            inicio2: am_zone.find("#data_inicio2").val(), 
-                            fim1: am_zone.find("#data_fim1").val(), 
+                            inicio1: am_zone.find("#data_inicio1").val(),
+                            inicio2: am_zone.find("#data_inicio2").val(),
+                            fim1: am_zone.find("#data_fim1").val(),
                             fim2: am_zone.find("#data_fim2").val()},
                         localidade: am_zone.find("#input_localidade").val(),
                         local: am_zone.find("#input_local_rastreio").val(),
@@ -102,7 +102,7 @@ var requests = function(basic_path, options_ext)
     };
     this.get_apoio_marketing_to_datatable = function(am_zone)
     {
-        am_zone.dataTable({
+        var apoio_markting_table = am_zone.dataTable({
             "bSortClasses": false,
             "bProcessing": true,
             "bDestroy": true,
@@ -115,7 +115,7 @@ var requests = function(basic_path, options_ext)
             "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial rastreio"}, {"sTitle": "Data final rastreio"}, {"sTitle": "Horario"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Local publicidade"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
-        
+
         am_zone.on("click", ".ver_horario", function()
         {
             var id = $(this).data().apoio_marketing_id;
@@ -142,12 +142,13 @@ var requests = function(basic_path, options_ext)
             }, "json");
         });
 
-  
+
         am_zone.on("click", ".accept_apoio_marketing", function()
         {
             var this_button = $(this);
             $.post('/AM/ajax/requests.php', {action: "accept_apoio_marketing", id: $(this).val()}, function() {
                 this_button.parent("td").prev().text("Aprovado");
+                apoio_markting_table.fnReloadAjax();
             }, "json");
         });
 
@@ -156,6 +157,7 @@ var requests = function(basic_path, options_ext)
             var this_button = $(this);
             $.post('/AM/ajax/requests.php', {action: "decline_apoio_marketing", id: $(this).val()}, function() {
                 this_button.parent().prev().text("Rejeitado");
+                apoio_markting_table.fnReloadAjax();
             }, "json");
         });
 
@@ -214,7 +216,7 @@ var requests = function(basic_path, options_ext)
     };
     this.get_relatorio_correio_to_datatable = function(rc_zone)
     {
-        rc_zone.dataTable({
+        var relatorio_correio_table = rc_zone.dataTable({
             "bSortClasses": false,
             "bProcessing": true,
             "bDestroy": true,
@@ -235,6 +237,7 @@ var requests = function(basic_path, options_ext)
             var this_button = $(this);
             $.post('/AM/ajax/requests.php', {action: "accept_report_correio", id: $(this).val()}, function() {
                 this_button.parent("td").prev().text("Aprovado");
+                relatorio_correio_table.fnReloadAjax();
             }, "json");
         });
 
@@ -243,6 +246,7 @@ var requests = function(basic_path, options_ext)
             var this_button = $(this);
             $.post('/AM/ajax/requests.php', {action: "decline_report_correio", id: $(this).val()}, function() {
                 this_button.parent("td").prev().text("Rejeitado");
+                relatorio_correio_table.fnReloadAjax();
             }, "json");
         });
         rc_zone.on("click", ".ver_anexo_correio", function(e)
@@ -286,7 +290,7 @@ var requests = function(basic_path, options_ext)
             rf_zone.on("click", "#button_rf_table_add_line", function(e)
             {
                 e.preventDefault();
-                rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required] linha_data' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'></td><td><input class='validate[required] linha_ocorrencia' type='text' name='rf_ocorr" + rfinput_count + "'></td><td>  <input class='validate[required] linha_km' type='number' value='0' name='rf_km" + rfinput_count + "' min='0'></td><td>     <button class='btn btn-danger button_rf_table_remove_line icon-alone'><i class='icon-minus'></i></button></td></tr>");
+                rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required] linha_data' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'></td><td><input class='validate[required] linha_ocorrencia' type='text' name='rf_ocorr" + rfinput_count + "'></td><td>  <input class='validate[required] linha_km' type='number' value='0' name='rf_km" + rfinput_count + "' min='0'></td><td><button class='btn btn-danger button_rf_table_remove_line icon-alone'><i class='icon-minus'></i></button></td></tr>");
                 rf_zone.find("#rf_datetime" + rfinput_count).datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
                 rfinput_count++;
             });
@@ -326,10 +330,10 @@ var requests = function(basic_path, options_ext)
             });
         });
     };
-    
+
     this.get_relatorio_frota_to_datatable = function(rf_zone)
     {
-        rf_zone.dataTable({
+        var relatorio_frota_table = rf_zone.dataTable({
             "bSortClasses": false,
             "bProcessing": true,
             "bDestroy": true,
@@ -364,6 +368,7 @@ var requests = function(basic_path, options_ext)
             var this_button = $(this);
             $.post('/AM/ajax/requests.php', {action: "accept_report_frota", id: $(this).val()}, function() {
                 this_button.parent("td").prev().text("Aprovado");
+                relatorio_frota_table.fnReloadAjax();
             }, "json");
         });
 
@@ -372,6 +377,7 @@ var requests = function(basic_path, options_ext)
             var this_button = $(this);
             $.post('/AM/ajax/requests.php', {action: "decline_report_frota", id: $(this).val()}, function() {
                 this_button.parent("td").prev().text("Rejeitado");
+                relatorio_frota_table.fnReloadAjax();
             }, "json");
         });
     };

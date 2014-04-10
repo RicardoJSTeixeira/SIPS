@@ -18,15 +18,11 @@ var products = function(geral_path, options_ext)
             geral_path.find(".chosen-select").chosen({no_results_text: "Sem resultados", width: "100%"});
             geral_path.find(".form_datetime_day").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
 
-
             if (typeof callback === "function")
                 callback();
         });
 
-
     };
-
-
 
     this.init_to_datatable = function(datatable_path1)
     {
@@ -49,6 +45,7 @@ var products = function(geral_path, options_ext)
                     edit_product_modal.find(".modal-body").find("#edit_product_button_color_add_line").hide();
                     edit_product_modal.find(".modal-body").find(":input").prop("disabled", true);
                     edit_product_modal.find(".modal-body").find("select").prop("disabled", true).trigger("chosen:updated");
+                    edit_product_modal.find(".modal-body").find(".color_picker_select").parent().find("a").hide()
                 });
             });
 
@@ -137,9 +134,6 @@ var products = function(geral_path, options_ext)
             }, "json");
         });
 
-
-
-
         edit_product_modal.on("click", "#edit_product_add_promotion_toggle", function(e)
         {
             e.preventDefault();
@@ -201,7 +195,7 @@ var products = function(geral_path, options_ext)
             var this_button = $(this);
             e.preventDefault();
             $.post('/AM/ajax/products.php', {action: "remove_promotion", "id": product_id, "id_promotion": this_button.data("id_promotion")
-            }, function(data) {
+            }, function() {
                 this_button.parent().parent().remove();
             }, "json");
         });
@@ -216,7 +210,6 @@ var products = function(geral_path, options_ext)
         var new_product_path = new_product_path1;
         clean_new_product_area(new_product_path);
         populate_parent(new_product_path.find("#new_product_parent"), null, null, null);
-
 
         new_product_path.find("#create_new_product_button").click(function(e)
         {
@@ -300,8 +293,6 @@ var products = function(geral_path, options_ext)
 
     };
 
-
-
     function clean_new_product_area(new_product_path)
     {
         new_product_path.find("input:not(:checkbox)").val("");
@@ -344,7 +335,7 @@ var products = function(geral_path, options_ext)
                         }
                     });
                 },
-                "aoColumns": [{"sTitle": "Id"}, {"sTitle": "Nome"}, {"sTitle": "Preço"}, {"sTitle": "Max mensal"}, {"sTitle": "Max especial"}, {"sTitle": "Categoria"}, {"sTitle": "Tipo"}, {"sTitle": "Opções"}],
+                "aoColumns": [{"sTitle": "Id"}, {"sTitle": "Nome"}, {"sTitle": "Preço"}, {"sTitle": "Max mensal"}, {"sTitle": "Max especial"}, {"sTitle": "Categoria"}, {"sTitle": "Tipo"}, {"sTitle": "Opções", "sWidth":"50px"}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
         } else {
@@ -385,7 +376,7 @@ var products = function(geral_path, options_ext)
                 }
 //--------------------------------------------------------------------------COLOR-----------------------------------------
 
-                if (data.category == "molde" || data.category == "aparelho")
+                if (data.category === "molde" || data.category === "aparelho")
                 {
                     modal.find("#edit_product_color_div").show();
                     if (data.color)
@@ -430,7 +421,7 @@ var products = function(geral_path, options_ext)
                         this.highlight = "sim";
                     else
                         this.highlight = "nao";
-                    tbody.append("<tr><td>" + this.active + "</td><td>" + this.highlight + "</td><td>" + this.data_inicio + "</td><td>" + this.data_fim + "</td><td><button class='btn btn-danger icon-alone remove_promotion_button' data-id_promotion='" + this.id + "'><i class='icon-trash'></i></button></td></tr>")
+                    tbody.append("<tr><td>" + this.active + "</td><td>" + this.highlight + "</td><td>" + this.data_inicio + "</td><td>" + this.data_fim + "</td><td><button class='btn btn-danger icon-alone remove_promotion_button' data-id_promotion='" + this.id + "'><i class='icon-trash'></i></button></td></tr>");
                 });
             }
             else
@@ -442,12 +433,8 @@ var products = function(geral_path, options_ext)
         }, "json");
     }
 
-
-
-
     function populate_parent(select, level, children, callback)
     {
-
         var out_level = level;
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
         function(data)
@@ -470,26 +457,19 @@ var products = function(geral_path, options_ext)
 
                 var level = find_level(this);
 
-
-
-
                 if (out_level)
                 {
                     level = level - out_level;
                 }
-
-
-
 
                 option = "<option  id=" + this.id + "  value='" + this.id + "'>" + this.name + "</option>";
                 if (level < 1)
                     option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Max.Lvl. " + this.name + "</option>";
                 if (children)
                 {
-                    if (children.indexOf(this.id) != -1)
+                    if (children.indexOf(this.id) !== -1)
                         option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Assoc. " + this.name + "</option>";
                 }
-
 
                 switch (this.category)
                 {
@@ -519,7 +499,6 @@ var products = function(geral_path, options_ext)
             if (typeof callback === "function")
                 callback();
         }, "json");
-
 
     }
 

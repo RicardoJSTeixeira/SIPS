@@ -27,7 +27,7 @@ Class products {
             if ($product_editable == "true") {
                 $row[7] = "<span class='btn-group'><button class='btn btn_editar_produto btn-primary  icon-alone' data-product_id='" . $row[0] . "' data-level='" . $row["level"] . "'><i class='icon-pencil'></i></button><button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "' data-level='" . $row["level"] . "' data-deleted='" . (bool) $row["deleted"] . "' class='btn btn_ver_produto icon-alone hide' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button><button class='btn btn_apagar_produto btn-danger  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-trash'></i></button></span>";
             } else {
-                $row[7] = "<button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "' data-level='" . $row["level"] . "'  data-deleted='" . (bool) $row["deleted"] . "' class='btn btn_ver_produto  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button>";
+                $row[7] = "<button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "' data-level='" . $row["level"] . "'  data-deleted='" . (bool) $row["deleted"] . "' class='btn btn-info btn_ver_produto  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button>";
             }
             $output['aaData'][] = $row;
         }
