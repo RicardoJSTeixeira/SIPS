@@ -31,13 +31,11 @@ $(function() {
         }
 
     };
-    $.post("/AM/ajax/user_info.php", function(user) {
         $.post("/AM/ajax/calendar.php",
                 {action: "Init"},
         function(data) {
-            init(data, user);
+            init(data, SpiceU);
         }, "json");
-    }, "json");
 
 
     $("#special-event-beg")

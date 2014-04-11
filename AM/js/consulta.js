@@ -45,7 +45,7 @@ $(function()
 
         }
 
-        script = new render($("#main_consulta_div #script_placeholder"), "/sips-admin/script_dinamico/", 159, lead_id, reserva_id, undefined, undefined, 0, 0);
+        script = new render($("#main_consulta_div #script_placeholder"), "/sips-admin/script_dinamico/", undefined, lead_id, reserva_id, SpiceU.username, SpiceU.camp, 0, 0);
 
         var config = {save_overwrite: true, input_disabled: consult_closed};
         script.init(config);

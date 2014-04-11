@@ -39,14 +39,27 @@ $(function() {
         "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
     });
 
-    $('#table_ncsm').dataTable({
+    $('#table_ncsm_toissue').dataTable({
         "bSortClasses": false,
         "bProcessing": true,
         "bDestroy": true,
         "sPaginationType": "full_numbers",
         "sAjaxSource": 'ajax/dashboard.php',
         "fnServerParams": function(aoData) {
-            aoData.push({"name": "action", "value": "populate_ncsm"});
+            aoData.push({"name": "action", "value": "populate_ncsm_toissue"});
+        },
+        "aoColumns": columns_ncsm,
+        "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
+    });
+        
+    $('#table_ncsm_nottoissue').dataTable({
+        "bSortClasses": false,
+        "bProcessing": true,
+        "bDestroy": true,
+        "sPaginationType": "full_numbers",
+        "sAjaxSource": 'ajax/dashboard.php',
+        "fnServerParams": function(aoData) {
+            aoData.push({"name": "action", "value": "populate_ncsm_nottoissue"});
         },
         "aoColumns": columns_ncsm,
         "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
@@ -55,13 +68,11 @@ $(function() {
         
     };
 
-    $.post("/AM/ajax/user_info.php", function(user) {
         $.post("/AM/ajax/calendar.php",
                 {action: "dashboardInit"},
         function(data) {
-            init(data, user);
+            init(data, SpiceU);
         }, "json");
-    }, "json");
     
 
     $.post("ajax/dashboard.php", {action: "populate_mp"}, function(data) {
@@ -95,7 +106,6 @@ $(function() {
         config.mensal = false;
         requisition1 = new requisition(config);
 
-
         m = $("#new_requisiton_modal");
         requisition1.new_requisition(m.find(".modal-body"), 0, $(this).data().lead_id);
 
@@ -103,4 +113,3 @@ $(function() {
     });
 
 });
- 
