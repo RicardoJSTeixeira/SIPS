@@ -1,13 +1,13 @@
  
 
 
+<div id="new_requisition_div" >
+    <div class="grid">
+        <div class="grid-content">
 
-<div class="grid">
-    <div class="grid-content">
-        <div id="new_requisition_div" >
             <form id="requisition_form">
                 <div class="row-fluid">
-                    <div class="span5">
+                    <div class="span12">
                         <button class="btn" onclick="history.back();" ><i class="icon-circle-arrow-left"></i>Voltar</button>
                         <div class="FormRow">
 
@@ -36,33 +36,7 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
-                    <div class="span7">
-                        <div class="FormRow">
-                            <h4>Produtos</h4>
-                            <div class="FormRight">
-                                <table class="table table-bordered table-mod-2">
-                                    <thead>
-                                        <tr>
-                                            <th>Nome do Produto</th>
-                                            <th>Cor</th>
-                                            <th>Max</th>
-                                            <th>Quantidade</th>
-                                            <th>Opção</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="new_requisition_product_tbody">
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="formRow">
-                                <button id="new_requisition_product_add_line" class="btn btn-primary right"><i class="icon-plus"></i>Adicionar produto</button>
-                            </div>
-                        </div> 
-                    </div> 
-
-
                     <div class="formRow pull-right">
                         <button class="btn btn-success right" id="new_requisition_submit_button"><i class="icon-check"></i>Encomendar</button>
                     </div> 
@@ -85,18 +59,63 @@
                 </div>
 
             </div> 
+            <div class="formRow">
+                <button id="new_requisition_product_add_line" class="btn btn-primary right"><i class="icon-plus"></i>Adicionar produto</button>
+            </div>
+            <div class="clear"></div>
         </div> 
     </div> 
 
 
+    <div class="grid" style="display:none" id="placeholder_new_products_master_div">
+        <div class="grid-title">
+            <div class="pull-left">
+                Produto
+            </div>
+            <div class="pull-right">
+                <button class='btn icon-alone btn-danger remove_item_requisition_table'><i  class='icon-remove'></i> </button>
+            </div>
+        </div>
+        <div class="grid-content">
+            <div class="row-fluid">
+                <form class="requisition_form">
+                </form>
+            </div>
 
+        </div> 
+    </div> 
 
-    <div id="extra_div">
+    <div id="placeholder_new_product" class="span2" style="display:none">
+        <div class="FormRow">
+            <span  >Produto</span>
+            <div class="formRight select_div" >
+            </div>        
+        </div>
+        <div class="FormRow">
+            <span  >Cor</span>
+            <div class="formRight color_div" >
+            </div>        
+        </div>
+        <div class="FormRow">
+            <span  >Max</span>
+            <div class="formRight max_div" >
+            </div>        
+        </div>
+        <div class="FormRow">
+            <span  >Quantidade</span>
+            <div class="formRight quantity_div" >
+            </div>        
+        </div>
+        <div class="clear"></div>
+    </div>    
+</div> 
 
-    </div>
-    <script type="text/javascript" src="/AM/lib_js/product.js" ></script>
-    <script type="text/javascript" src="/AM/js/requisition.js" ></script>
-    <script>
+<div id="extra_div">
+
+</div>
+<script type="text/javascript" src="/AM/lib_js/product.js" ></script>
+<script type="text/javascript" src="/AM/js/requisition.js" ></script>
+<script>
                             $(function()
                             {
                                 var values = getUrlVars();
@@ -104,7 +123,7 @@
                                 requisition1 = new requisition($("#extra_div"), config);
                                 requisition1.init(function()
                                 {
- 
+
                                     if (values["lead_id"])
                                         requisition1.new_requisition($("#new_requisition_div"), values["lead_id"]);
                                     else
@@ -121,4 +140,4 @@
                                 return vars;
                             }
 
-    </script>
+</script>
