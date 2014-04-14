@@ -99,12 +99,16 @@
         <div class="span12">
             <ul id="tabs" class="nav nav-tabs tabs-main">
                 <li class="active"><a href="#Todas" data-toggle="tab">Todas as Marcações</a></li>
-                <li><a href="#NovoCli" data-toggle="tab">Novos Clientes Sem Marcação</a></li>
+                <li><a href="#NovoCli" data-toggle="tab">Novos Clientes Analisados</a></li>
+                <li><a href="#NovoCliissue" data-toggle="tab">Novos Clientes Sem Marcação</a></li>
             </ul>
             <div class="tab-content tabs-main-content">
+                <div class="tab-pane tab-overflow-main" id="NovoCliissue">
+                    <table class="table table-mod table-bordered table-striped" id='table_ncsm_toissue'></table>
+                </div>
                 <div class="tab-pane tab-overflow-main" id="NovoCli">
 
-                    <table class="table table-mod table-bordered table-striped" id='table_ncsm'></table>
+                    <table class="table table-mod table-bordered table-striped" id='table_ncsm_nottoissue'></table>
                 </div>
                 <div class="tab-pane active tab-overflow-main" id="Todas">
                     <table class="table table-mod table-bordered table-striped" id='table_allm'></table>      

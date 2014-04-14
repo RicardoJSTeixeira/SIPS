@@ -1,3 +1,4 @@
+var SpiceU={};
 $(function() {
     function setFavicon() {
         var link = $('link[type="image/vnd\.microsoft\.icon"]').remove().attr("href");
@@ -39,6 +40,7 @@ $(function() {
 
 
     $.post("ajax/user_info.php", function(user) {
+        SpiceU=user;
         $.jGrowl('Bem vindo ' + user.name, {life: 4000});
         $("#user-name").text(user.name);
     }, "json")

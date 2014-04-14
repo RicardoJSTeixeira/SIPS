@@ -21,8 +21,9 @@ $variables = array();
 $js = array();
 switch ($action) {
     case "get_fields":
+        $u=$user->getUser();
         $query = "SELECT NAME,DISPLAY_NAME,field_order FROM `vicidial_list_ref` WHERE campaign_id=? and active='1' ORDER BY field_order asc";
-        $variables[] = $campaign_id;
+        $variables[] = $u->campaign;
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -34,9 +35,9 @@ switch ($action) {
     case "create_client":
         $variables[] = date("Y-m-d H:i:s");
         $variables[] = "NEW";
-        $temp = $user->getUser();
-        $variables[] = $temp->username;
-        $variables[] = isset($temp->list_id) ? $temp->list_id : "0";
+        $u = $user->getUser();
+        $variables[] = $u->username;
+        $variables[] = $u->list_id;
 
 
         foreach ($info as $value) {

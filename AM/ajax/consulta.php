@@ -57,13 +57,9 @@ switch ($action) {
 
 
     case "get_consulta":
-        $result = array();
         $stmt = $db->prepare("SELECT id,data,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,feedback,closed from spice_consulta where reserva_id=:reserva_id");
         $stmt->execute(array(":reserva_id" => $reserva_id));
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($row) {
-            $result = $row;
-        }
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
         echo json_encode($result);
         break;
 }

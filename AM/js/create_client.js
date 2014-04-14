@@ -6,7 +6,7 @@ $(function()
         }, finishButton: false});
 
     $("#verif_client_data").validationEngine();
-    $.post("ajax/create_client.php", {action: "get_fields", campaign_id: "W00002"},
+    $.post("ajax/create_client.php", {action: "get_fields"},
     function(data)
     {
         $("#inputs_div1").empty();
@@ -31,6 +31,8 @@ $(function()
                     options.push(new Option(o, o));
                 }
                 elmt.append(options);
+            } else if(this.name === "extra6"){
+                elmt = $("<input>", {type: "text", disabled:true, id: this.name, name: this.name, val:"NO"});
             } else {
                 elmt = $("<input>", {type: "text", id: this.name, name: this.name});
             }
