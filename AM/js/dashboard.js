@@ -90,6 +90,11 @@ $(function() {
         var en = btoa($(this).data().lead_id);
         $.history.push("view/calendar.html?id=" + en);
     });
+    $("#div_master").on("click", ".recomendacoes", function()
+    {
+        var en = btoa($(this).data().lead_id);
+        $.history.push("view/mass_client.html?id=" + en);
+    });
 
     $("#div_master").on("click", ".ver_cliente", function()
     {
@@ -111,5 +116,6 @@ $(function() {
 
         m.modal("show");
     });
+    
 
 });

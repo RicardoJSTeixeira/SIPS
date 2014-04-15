@@ -110,7 +110,6 @@ var calendar = function(selector, data, modals, ext, client, user) {
             function(id) {
                 cEO.id = id;
                 me.calendar.fullCalendar('renderEvent', cEO, true);
-                console.log(cEO);
                 $("#external-events").remove();
             },
                     "json");
@@ -570,16 +569,14 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 .modal();
     };
     this.userWidgetPopulate = function() {
-        $.post("/AM/ajax/client.php", {id: me.client.id, action: 'default'}, function(data) {
             $("#client")
-                    .find(".user-name").text(data.name)
+                    .find(".user-name").text(me.client.name)
                     .end()
-                    .find(".user-email").text(data.address)
+                    .find(".user-email").text(me.client.address)
                     .end()
-                    .find(".user-date").text(data.bDay)
+                    .find(".user-date").text(me.client.bDay)
                     .end()
                     .show();
-        }, "json");
     };
     this.destroy = function() {
         this.calendar.fullCalendar('destroy');

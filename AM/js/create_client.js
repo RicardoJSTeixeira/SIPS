@@ -16,7 +16,9 @@ $(function()
                 custom_class = "",
                 input1 = $("#inputs_div1"),
                 input2 = $("#inputs_div2"),
-                input3 = $("#inputs_div3");
+                input3 = $("#inputs_div3"),
+                elmt,
+                hide="";
         $.each(data, function()
         {
             if (this.name === "extra5") {
@@ -74,13 +76,18 @@ $(function()
                 case "extra10":
                     input = input2;
                     break;
+                case "extra6":
+                case "extra7":
+                    hide = " hide";
+                    break;
                 default:
+                    hide="";
                     input = input3;
                     break;
             }
-            elmt.attr("class", custom_class);
+            elmt.addClass(custom_class);
 
-            input.append($("<div>", {class: "formRow"})
+            input.append($("<div>", {class: "formRow"+hide})
                     .append($("<label>").text(this.display_name))
                     .append($("<div>", {class: "formRight"})
                             .append(elmt)));

@@ -7,4 +7,4 @@ $user = new UserLogin($db);
 $user->confirm_login();
 
     $data=$user->getUser();
-    echo json_encode(array("name"=>$data->name,"user_level"=>$data->user_level,"username"=>$data->username,"camp"=>$data->campaign));
+    echo json_encode(array("name"=>(string)$data->name,"user_level"=>(int)$data->user_level,"username"=>(string)$data->username,"camp"=>(string)$data->campaign));
