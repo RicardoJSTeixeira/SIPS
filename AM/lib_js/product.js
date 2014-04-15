@@ -7,6 +7,7 @@ var products = function(geral_path, options_ext)
     this.file_uploaded = false;
     this.config = {};
     this.config.product_editable = true;
+    this.Table_view_product;
 
     $.extend(true, this.config, options_ext);
     this.init = function(callback)
@@ -14,18 +15,14 @@ var products = function(geral_path, options_ext)
         $.get("/AM/view/products/product.html", function(data) {
             geral_path.empty().off().append(data);
 
-            geral_path.find(".chosen-select").chosen({no_results_text: "Sem resultados", width: "200px"});
+            geral_path.find(".chosen-select").chosen({no_results_text: "Sem resultados", width: "100%"});
             geral_path.find(".form_datetime_day").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
-
 
             if (typeof callback === "function")
                 callback();
         });
 
-
     };
-
-
 
     this.init_to_datatable = function(datatable_path1)
     {
@@ -48,6 +45,7 @@ var products = function(geral_path, options_ext)
                     edit_product_modal.find(".modal-body").find("#edit_product_button_color_add_line").hide();
                     edit_product_modal.find(".modal-body").find(":input").prop("disabled", true);
                     edit_product_modal.find(".modal-body").find("select").prop("disabled", true).trigger("chosen:updated");
+                    edit_product_modal.find(".modal-body").find(".color_picker_select").parent().find("a").hide();
                 });
             });
 
@@ -56,7 +54,7 @@ var products = function(geral_path, options_ext)
         datatable_path.on("click", ".btn_editar_produto", function()
         {
             product_id = $(this).data("product_id");
-            
+
 
             populate_modal(edit_product_modal, function()
             {
@@ -136,9 +134,6 @@ var products = function(geral_path, options_ext)
             }, "json");
         });
 
-
-
-
         edit_product_modal.on("click", "#edit_product_add_promotion_toggle", function(e)
         {
             e.preventDefault();
@@ -200,7 +195,7 @@ var products = function(geral_path, options_ext)
             var this_button = $(this);
             e.preventDefault();
             $.post('/AM/ajax/products.php', {action: "remove_promotion", "id": product_id, "id_promotion": this_button.data("id_promotion")
-            }, function(data) {
+            }, function() {
                 this_button.parent().parent().remove();
             }, "json");
         });
@@ -214,8 +209,7 @@ var products = function(geral_path, options_ext)
         new_product_path1.append(geral_path.find("#new_product_form"));
         var new_product_path = new_product_path1;
         clean_new_product_area(new_product_path);
-        populate_parent(new_product_path.find("#new_product_parent"), null, null);
-
+        populate_parent(new_product_path.find("#new_product_parent"), null, null, null);
 
         new_product_path.find("#create_new_product_button").click(function(e)
         {
@@ -299,8 +293,6 @@ var products = function(geral_path, options_ext)
 
     };
 
-
-
     function clean_new_product_area(new_product_path)
     {
         new_product_path.find("input:not(:checkbox)").val("");
@@ -314,60 +306,54 @@ var products = function(geral_path, options_ext)
         new_product_path.find("#new_product_form").show();
     }
 
-
-
-
-
-
     function update_products_datatable(datatable_path)
     {
-        var Table_view_product = datatable_path.dataTable({
-            "bSortClasses": false,
-            "bProcessing": true,
-            "bDestroy": true,
-            "bAutoWidth": false,
-            "sPaginationType": "full_numbers",
-            "sAjaxSource": '/AM/ajax/products.php',
-            "fnServerParams": function(aoData) {
-                aoData.push({"name": "action", "value": "listar_produtos_to_datatable"}, {"name": "product_editable", "value": me.config.product_editable});
-            },
-            "fnDrawCallback": function() {
-                $.each(Table_view_product.find(".btn_ver_produto"), function()
-                {
-                    if ($(this).data().deleted)
+        if (!me.Table_view_product) {
+            me.Table_view_product = datatable_path.dataTable({
+                "bSortClasses": false,
+                "bProcessing": true,
+                "bDestroy": true,
+                "bAutoWidth": false,
+                "sPaginationType": "full_numbers",
+                "sAjaxSource": '/AM/ajax/products.php',
+                "fnServerParams": function(aoData) {
+                    aoData.push({"name": "action", "value": "listar_produtos_to_datatable"}, {"name": "product_editable", "value": me.config.product_editable});
+                },
+                "fnDrawCallback": function() {
+                    $.each(me.Table_view_product.find(".btn_ver_produto"), function()
                     {
-                        $(this).parent().parent().addClass("error");
-                    }
-                    else
-                    {
-                        if (!$(this).data().active)
+                        if ($(this).data().deleted)
                         {
-                            $(this).parent().parent().addClass("warning");
+                            $(this).closest("tr").addClass("error");
                         }
-                        else {
-
-                            if ($(this).data().highlight)
-                                $(this).parent().parent().addClass("success");
+                        else if (!$(this).data().active)
+                        {
+                            $(this).closest("tr").addClass("warning");
                         }
-                    }
-                });
-            },
-            "aoColumns": [{"sTitle": "Id"}, {"sTitle": "Nome"}, {"sTitle": "Preço"}, {"sTitle": "Max mensal"}, {"sTitle": "Max especial"}, {"sTitle": "Categoria"}, {"sTitle": "Tipo"}, {"sTitle": "Opções"}],
-            "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
-        });
+                        else if ($(this).data().highlight) {
+                            $(this).closest("tr").addClass("success");
+                        }
+                    });
+                },
+                "aoColumns": [{"sTitle": "Id"}, {"sTitle": "Nome"}, {"sTitle": "Preço"}, {"sTitle": "Max mensal"}, {"sTitle": "Max especial"}, {"sTitle": "Categoria"}, {"sTitle": "Tipo"}, {"sTitle": "Opções", "sWidth":"50px"}],
+                "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
+            });
+        } else {
+            me.Table_view_product.fnReloadAjax();
+        }
     }
 
     function  populate_modal(modal, callback)
     {
         $.post('/AM/ajax/products.php', {action: "get_produto_by_id", "id": product_id}, function(data) {
-            populate_parent(geral_path.find("#edit_product_parent"), find_level(data), function()
+            populate_parent(geral_path.find("#edit_product_parent"), find_level(data), get_children(data), function()
             {
                 modal.find("#edit_product_name").val(data.name);
                 modal.find("#edit_product_price").val(data.price);
                 modal.find("#edit_product_category").val(data.category);
 
                 modal.find("#edit_product_parent option[value='" + product_id + "']").prop("disabled", true);
-                modal.find("#edit_product_parent").val(data.parent_ids).trigger("chosen:updated");
+                modal.find("#edit_product_parent").val(data.parent).trigger("chosen:updated");
                 modal.find("#edit_product_active").prop("checked", data.active);
                 $.each(data.type, function()
                 {
@@ -390,7 +376,7 @@ var products = function(geral_path, options_ext)
                 }
 //--------------------------------------------------------------------------COLOR-----------------------------------------
 
-                if (data.category == "molde" || data.category == "aparelho")
+                if (data.category === "molde" || data.category === "aparelho")
                 {
                     modal.find("#edit_product_color_div").show();
                     if (data.color)
@@ -398,7 +384,7 @@ var products = function(geral_path, options_ext)
                         modal.find("#edit_product_table_tbody_color").empty();
                         $.each(data.color, function()
                         {
-                            modal.find("#edit_product_table_tbody_color").append("<tr><td><select class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]' value='" + this.name + "'></td><td><button class='btn icon-alone remove_color  btn-danger'><i class='icon icon-remove'></i></button></td></tr>");
+                            modal.find("#edit_product_table_tbody_color").append("<tr><td><select class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]' value='" + this.name + "'></td><td><button class='btn icon-alone remove_color  btn-danger'><i class='icon icon-trash'></i></button></td></tr>");
                             $("#edit_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).val(this.color).colourPicker({
                                 ico: '/jquery/colourPicker/colourPicker.gif',
                                 title: false
@@ -435,7 +421,7 @@ var products = function(geral_path, options_ext)
                         this.highlight = "sim";
                     else
                         this.highlight = "nao";
-                    tbody.append("<tr><td>" + this.active + "</td><td>" + this.highlight + "</td><td>" + this.data_inicio + "</td><td>" + this.data_fim + "</td><td><button class='btn remove_promotion_button' data-id_promotion='" + this.id + "'>Remover</button></td></tr>")
+                    tbody.append("<tr><td>" + this.active + "</td><td>" + this.highlight + "</td><td>" + this.data_inicio + "</td><td>" + this.data_fim + "</td><td><button class='btn btn-danger icon-alone remove_promotion_button' data-id_promotion='" + this.id + "'><i class='icon-trash'></i></button></td></tr>");
                 });
             }
             else
@@ -447,10 +433,7 @@ var products = function(geral_path, options_ext)
         }, "json");
     }
 
-
-
-
-    function populate_parent(select, level, callback)
+    function populate_parent(select, level, children, callback)
     {
         var out_level = level;
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
@@ -474,10 +457,20 @@ var products = function(geral_path, options_ext)
 
                 var level = find_level(this);
 
-                if (level - out_level <= 1) {
+                if (out_level)
+                {
+                    level = level - out_level;
+                }
+
+                option = "<option  id=" + this.id + "  value='" + this.id + "'>" + this.name + "</option>";
+                if (level < 1)
                     option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Max.Lvl. " + this.name + "</option>";
-                } else
-                    option = "<option  id=" + this.id + "  value='" + this.id + "'>" + this.name + "</option>";
+                if (children)
+                {
+                    if (children.indexOf(this.id) !== -1)
+                        option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Assoc. " + this.name + "</option>";
+                }
+
                 switch (this.category)
                 {
                     case "aparelho":
@@ -507,7 +500,6 @@ var products = function(geral_path, options_ext)
                 callback();
         }, "json");
 
-
     }
 
     function find_level(element)
@@ -524,5 +516,30 @@ var products = function(geral_path, options_ext)
         return level;
     }
 
+    function get_children(element)
+    {
+        var children = [];
+        if (element.children)
+        {
+            $.each(element.children, function()
+            {
+                children.push(this.id);
+                get_children_extra(this, children);
 
+            });
+        }
+        return children;
+    }
+
+    function get_children_extra(element, children)
+    {
+        if (element.children)
+        {
+            $.each(element.children, function()
+            {
+                children.push(this.id);
+                get_children_extra(this, children);
+            });
+        }
+    }
 };

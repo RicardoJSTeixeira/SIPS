@@ -6,7 +6,7 @@ $(function()
         }, finishButton: false});
 
     $("#verif_client_data").validationEngine();
-    $.post("ajax/create_client.php", {action: "get_fields", campaign_id: "W00002"},
+    $.post("ajax/create_client.php", {action: "get_fields"},
     function(data)
     {
         $("#inputs_div1").empty();
@@ -16,7 +16,9 @@ $(function()
                 custom_class = "",
                 input1 = $("#inputs_div1"),
                 input2 = $("#inputs_div2"),
-                input3 = $("#inputs_div3");
+                input3 = $("#inputs_div3"),
+                elmt,
+                hide="";
         $.each(data, function()
         {
             if (this.name === "extra5") {
@@ -31,6 +33,8 @@ $(function()
                     options.push(new Option(o, o));
                 }
                 elmt.append(options);
+            } else if(this.name === "extra6"){
+                elmt = $("<input>", {type: "text", disabled:true, id: this.name, name: this.name, val:"NO"});
             } else {
                 elmt = $("<input>", {type: "text", id: this.name, name: this.name});
             }
@@ -72,13 +76,18 @@ $(function()
                 case "extra10":
                     input = input2;
                     break;
+                case "extra6":
+                case "extra7":
+                    hide = " hide";
+                    break;
                 default:
+                    hide="";
                     input = input3;
                     break;
             }
-            elmt.attr("class", custom_class);
+            elmt.addClass(custom_class);
 
-            input.append($("<div>", {class: "formRow"})
+            input.append($("<div>", {class: "formRow"+hide})
                     .append($("<label>").text(this.display_name))
                     .append($("<div>", {class: "formRight"})
                             .append(elmt)));

@@ -1,6 +1,6 @@
 <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-fileupload.min.css" />
 <!--Transferir marcações de um agente para outro-->
-<div id="agent_marc_transfer_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true" style="overflow:visible" >
+<div id="agent_marc_transfer_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true" style="overflow:visible" >
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3 id="myModalLabel">Transferir marcações</h3>
@@ -94,12 +94,12 @@
     $(function()
     {
 
-        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}); 
-        $(".chosen-select").chosen({no_results_text: "Sem resultados",width:"200px"});
+        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
+        $(".chosen-select").chosen({no_results_text: "Sem resultados", width: "200px"});
         get_files_to_anexo();
 
 
-       
+
         $.post('/AM/ajax/admin.php', {action: "get_agentes"},
         function(data)
         {
@@ -130,10 +130,6 @@
     });
 //PRODUTOS--------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-
-
-
     $("#download_csm_button").click(function()
     {
         $("#download_csm_div").toggle("blind");
@@ -145,8 +141,6 @@
             document.location.href = "ajax/admin.php?action=download_excel_csm";
         }
     });
-
-
 
 
 //FILE UPLOAD
@@ -191,8 +185,8 @@
             processData: false
         });
     });
-    
-  $("#remove_uploaded_file").on("click", function()
+
+    $("#remove_uploaded_file").on("click", function()
     {
         $.post("ajax/upload_file.php", {action: "delete", name: $("#select_uploaded_files option:selected").val()}, function(data) {
             $("#label_anexo_info").text(data);
@@ -214,8 +208,7 @@
             });
         }, "json");
     }
-  
+
 //PEDIDOS---------------PEDIDOS------------------------PEDIDOS-------------------------------PEDIDOS----------------------PEDIDOS-----------------------------PEDIDOS-----------------------PEDIDOS------------------------
 
 </script>
-

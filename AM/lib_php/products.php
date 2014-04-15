@@ -19,14 +19,16 @@ Class products {
             $row1 = $stmt1->fetch(PDO::FETCH_BOTH);
             $row[5] = ucfirst($row[5]);
             $row[6] = ucwords(implode(", ", json_decode($row[6])));
-            if (isset($row1["active"]))
+            if (isset($row1["active"])) {
                 $active = (bool) $row1["active"];
-            else
+            } else {
                 $active = (bool) $row["active"];
-            if ($product_editable == "true")
-                $row[7] = "<button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "' data-level='" . $row["level"] . "' data-deleted='" . (bool) $row["deleted"] . "' class='btn btn_ver_produto icon-alone hide' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button><button class='btn btn_editar_produto btn-primary  icon-alone' data-product_id='" . $row[0] . "' data-level='" . $row["level"] . "'><i class='icon-pencil'></i></button><button class='btn btn_apagar_produto btn-danger  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-remove'></i></button>";
-            else
-                $row[7] = "<button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "' data-level='" . $row["level"] . "'  data-deleted='" . (bool) $row["deleted"] . "' class='btn btn_ver_produto  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button>";
+            }
+            if ($product_editable == "true") {
+                $row[7] = "<span class='btn-group'><button class='btn btn_editar_produto btn-primary  icon-alone' data-product_id='" . $row[0] . "' data-level='" . $row["level"] . "'><i class='icon-pencil'></i></button><button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "' data-level='" . $row["level"] . "' data-deleted='" . (bool) $row["deleted"] . "' class='btn btn_ver_produto icon-alone hide' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button><button class='btn btn_apagar_produto btn-danger  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-trash'></i></button></span>";
+            } else {
+                $row[7] = "<button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "' data-level='" . $row["level"] . "'  data-deleted='" . (bool) $row["deleted"] . "' class='btn btn-info btn_ver_produto  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button>";
+            }
             $output['aaData'][] = $row;
         }
         return $output;
@@ -34,37 +36,31 @@ Class products {
 
     public function get_products($id) {
         $relations = array();
-        $stmt = $this->_db->prepare("select parent,child from spice_product_assoc");
+        $stmt = $this->_db->prepare("select parent, child from spice_product_assoc");
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $relations[$row["parent"]][] = $row["child"];
         }
-        $stmt = $this->_db->prepare("SELECT id,name,price, max_req_m,max_req_s,category,type,color,active from spice_product where deleted=0");
+        $stmt = $this->_db->prepare("SELECT id, name, price, max_req_m, max_req_s, category, type, color, active from spice_product where deleted=0");
         $stmt->execute();
-        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $row["parent"] = array();
             foreach ($relations as $key => $value) {
                 foreach ($value as $value1) {
-                    if ($value1 == $row[0]) {
+                    if ($value1 == $row["id"]) {
                         $row["parent"][] = $key;
                     }
                 }
             }
-            $row[6] = json_decode($row[6]);
             $row["type"] = json_decode($row["type"]);
-            $row[7] = json_decode($row[7]);
             $row["color"] = json_decode($row["color"]);
-            $output[$row[0]] = $row;
+            $output[$row["id"]] = $row;
         }
+
         foreach ($output as &$value) {
-            $temp = $this->buildTree($output, $value[0]);
-            if ($temp)
-                $value["children"] = $temp;
-            else
-                $value["children"] = array();
+            $value["children"] = $this->buildTree($output, $value["id"]);
         }
         if ($id) {
-
             return $output[$id];
         } else {
             return $output;
@@ -75,15 +71,10 @@ Class products {
         $branch = array();
         foreach ($elements as $element) {
             if (in_array($parentId, $element["parent"])) {
-                $children = $this->buildTree($elements, $element[0]);
-                if ($children) {
-                    $element['children'] = $children;
-                    $branch[] = array(id => $element[0], children => $element["children"]);
-                } else {
-                    $branch[] = array(id => $element[0], children => array());
-                }
+                $branch[] = array("id" => $element["id"], "children" => $this->buildTree($elements, $element["id"]), "category" => $element["category"], "name" => $element["name"]);
             }
         }
+        return $branch;
     }
 
     public function remove_product($id) {
@@ -152,11 +143,12 @@ class product extends products {
         $this->_active = $active == "true" ? 1 : 0;
         $stmt = $this->_db->prepare("delete from spice_product_assoc where child=:child");
         $stmt->execute(array(":child" => $this->_id));
-        if (isset($parent))
+        if (isset($parent)) {
             foreach ($parent as $value) {
                 $stmt = $this->_db->prepare("insert into spice_product_assoc (`parent`, `child`) values (:parent,:child) ");
                 $stmt->execute(array(":parent" => $value, ":child" => $this->_id));
-            };
+            }
+        }
         return $this->edit_product_save();
     }
 

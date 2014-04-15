@@ -12,17 +12,18 @@ $(function() {
         sch = new calendar($("#calendar_day"), data, modals, $('#ext-events'), {}, user);
         sch.reserveConstruct(data.tipo);
         sch.initModal();
-    };
-
-    $.post("/AM/ajax/user_info.php", function(user) {
-        $.post("/AM/ajax/calendar.php",
-                {action: "dashboardInit"},
-        function(data) {
-            init(data, user);
-        }, "json");
-    }, "json");
-    //LISTAR CONSULTAS ABERTAS,FECHADAS
-    var allTable = $('#table_allm').dataTable({
+        
+        
+        //LISTAR CONSULTAS ABERTAS,FECHADAS
+       var
+       columns_allm=[{"sTitle": "ID", "sWidth": "70px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Ref.", "sWidth": "70px"}, {"sTitle": "Cod. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "70px"}, {"sTitle": "Postal", "sWidth": "70px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "400px"}],
+       columns_ncsm=[{"sTitle": "ID", "sWidth": "70px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Ref.", "sWidth": "70px"}, {"sTitle": "Cod. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "70px"}, {"sTitle": "Postal", "sWidth": "70px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "220px"}];
+        
+        if(user.user_level>5){
+            columns_allm.push({"sTitle": "User", "sWidth": "70px"});
+            columns_ncsm.push({"sTitle": "User", "sWidth": "70px"});
+        }
+    $('#table_allm').dataTable({
         "bSortClasses": false,
         "bProcessing": true,
         "bDestroy": true,
@@ -31,25 +32,48 @@ $(function() {
         "fnServerParams": function(aoData) {
             aoData.push({"name": "action", "value": "populate_allm"});
         },
-        "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Morada"}, {"sTitle": "Data"}],
+        "aoColumns": columns_allm,
         "fnDrawCallback": function(oSettings, json) {
             $('#table_allm').show();
         },
         "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
     });
 
-    var ncsmTable = $('#table_ncsm').dataTable({
+    $('#table_ncsm_toissue').dataTable({
         "bSortClasses": false,
         "bProcessing": true,
         "bDestroy": true,
         "sPaginationType": "full_numbers",
         "sAjaxSource": 'ajax/dashboard.php',
         "fnServerParams": function(aoData) {
-            aoData.push({"name": "action", "value": "populate_ncsm"});
+            aoData.push({"name": "action", "value": "populate_ncsm_toissue"});
         },
-        "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Nome"}, {"sTitle": "Morada"}, {"sTitle": "Data"}],
+        "aoColumns": columns_ncsm,
         "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
     });
+        
+    $('#table_ncsm_nottoissue').dataTable({
+        "bSortClasses": false,
+        "bProcessing": true,
+        "bDestroy": true,
+        "sPaginationType": "full_numbers",
+        "sAjaxSource": 'ajax/dashboard.php',
+        "fnServerParams": function(aoData) {
+            aoData.push({"name": "action", "value": "populate_ncsm_nottoissue"});
+        },
+        "aoColumns": columns_ncsm,
+        "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
+    });
+        
+        
+    };
+
+        $.post("/AM/ajax/calendar.php",
+                {action: "dashboardInit"},
+        function(data) {
+            init(data, SpiceU);
+        }, "json");
+    
 
     $.post("ajax/dashboard.php", {action: "populate_mp"}, function(data) {
         var
@@ -65,6 +89,11 @@ $(function() {
     {
         var en = btoa($(this).data().lead_id);
         $.history.push("view/calendar.html?id=" + en);
+    });
+    $("#div_master").on("click", ".recomendacoes", function()
+    {
+        var en = btoa($(this).data().lead_id);
+        $.history.push("view/mass_client.html?id=" + en);
     });
 
     $("#div_master").on("click", ".ver_cliente", function()
@@ -82,12 +111,11 @@ $(function() {
         config.mensal = false;
         requisition1 = new requisition(config);
 
-
         m = $("#new_requisiton_modal");
         requisition1.new_requisition(m.find(".modal-body"), 0, $(this).data().lead_id);
 
         m.modal("show");
     });
+    
 
 });
- 

@@ -35,6 +35,7 @@ switch ($action) {
         echo json_encode($products->get_products());
         break;
 
+    
 
     case "criar_encomenda":
         echo json_encode($requisitions->create_requisition($type, $lead_id, $contract_number, $attachment, $products_list));

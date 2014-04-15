@@ -119,7 +119,7 @@ $whereLOGallowed_campaignsSQL = "WHERE campaign_id REGEXP '^$allowed_camps_regex
                     <?php
                 } else {
 
-                    $stmt = "UPDATE vicidial_user_groups set user_group='$user_group', group_name='$group_name',allowed_campaigns='$campaigns_value',agent_xfer_consultative='Y',agent_xfer_dial_override='Y',agent_xfer_vm_transfer='Y',agent_xfer_blind_transfer='Y',agent_xfer_dial_with_customer='Y',agent_xfer_park_customer_dial='Y',agent_fullscreen='N' where user_group='$OLDuser_group';";
+                    $stmt = "UPDATE vicidial_user_groups set user_group='$user_group', group_name='$group_name',allowed_campaigns='$campaigns_value',agent_xfer_consultative='Y',agent_xfer_dial_override='Y',agent_xfer_vm_transfer='Y',agent_xfer_blind_transfer='Y',agent_xfer_dial_with_customer='Y',agent_xfer_park_customer_dial='Y',agent_fullscreen='Y' where user_group='$OLDuser_group';";
                     $rslt = mysql_query($stmt, $link) or die(mysql_error());
                     ?> 
                     <script>

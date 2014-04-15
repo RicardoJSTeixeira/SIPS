@@ -190,16 +190,19 @@ function get_templates(campaign)
                     //SCRIPT
                     if (Object.size(data))
                     {
+                          show_template = true;
                         $("#oc_template").trigger("change");
                         script_id = data[0];
                         $("#span_script_name").text("Nome do Script ->  " + data[1]);
                         $("#column_order_title").text("Ordernação de colunas");
                         $("#column_order").empty();
                         $("#download_report").prop("disabled", false);
+                      
                     }
                     else
                     {
 // NAO HA SCRIPT     
+                       
                         $("#span_script_name").text("Sem Script");
                         script_id = undefined;
                         if ($("#download_script").is(":checked"))
@@ -296,6 +299,7 @@ function update_elements(type)
 
 $("#oc_template").on("change", function()
 {
+
     if (show_template)
         get_elements_by_template($("#oc_template option:selected").val());
 });

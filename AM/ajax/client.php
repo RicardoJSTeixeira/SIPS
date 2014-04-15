@@ -18,9 +18,9 @@ switch ($action) {
         $stmt->execute(array(":id" => $id));
         $row = $stmt->fetch(PDO::FETCH_OBJ);
         $js = array(
-            (object) array("name" => "Nome", "value" => $row->first_name . " " . $row->middle_initial . " " . $row->last_name),
-            (object) array("name" => "Morada", "value" => $row->address . " " . $row->address1),
-            (object) array("name" => "Data de nascimento", "value" => $row->date_of_birth)
+            (object) array("name" => "Nome", "value" => (string)$row->first_name . " " . $row->middle_initial . " " . $row->last_name),
+            (object) array("name" => "Morada", "value" => (string)$row->address . " " . $row->address1),
+            (object) array("name" => "Data de nascimento", "value" => (string)$row->date_of_birth)
         );
 
         break;
@@ -29,7 +29,7 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $row = $stmt->fetch(PDO::FETCH_OBJ);
-        $js = (object) array("id"=>$row->lead_id, "name" => $row->first_name . " " . $row->middle_initial . " " . $row->last_name, "address" => $row->address . " " . $row->address1, "postalCode"=>$row->postal_code, "bDay" => $row->date_of_birth, "codCamp" => $row->extra1);
+        $js = (object) array("id"=>(int)$row->lead_id, "name" => (string)$row->first_name . " " . $row->middle_initial . " " . $row->last_name, "address" => (string)$row->address . " " . $row->address1, "postalCode"=>(string)$row->postal_code, "bDay" => (string)$row->date_of_birth, "codCamp" => (string)$row->extra1);
 
         break;
 
