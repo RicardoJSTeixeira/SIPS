@@ -148,7 +148,7 @@ $boxes="";
         }
           
         
-        $boxes.="<div class='grid span2 cantouchthis glow ".$color_head[$labels_ref[$range]]."' data-resource='$schdl[id_scheduler]' data-campaign='' data-active='' >
+        $boxes.="<div class='grid span2 cantouchthis glow ".$color_head[$labels_ref[$range]]."' data-resource='".$schdl['id_scheduler']."' data-campaign='' data-active='' >
             <div class='grid-title box_title ".$labels[$labels_ref[$range]]."'>
                 <div class='pull-left tooltip-top' data-t='tooltip' title='$schdl[display_text]'>$schdl[display_text]</div>
                 <div class='pull-right'><i class='play '></i></div>
