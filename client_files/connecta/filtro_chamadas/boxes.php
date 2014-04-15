@@ -64,7 +64,7 @@ function cria_listagem($campaign) {
     $r1 = mysql_fetch_row($r1);
     $resources_list = $r1[0];
     if ($resources_list != null && $resources_list != '') {
-    $q2 ="select a.id_scheduler, a.display_text, count(b.id_resource) as childs_cound, GROUP_CONCAT(b.id_resource) as childs,  a.blocks, a.begin_time, a.end_time+blocks as end_time, b.restrict_days from sips_sd_schedulers a inner join sips_sd_resources b on a.id_scheduler = b.id_scheduler where a.active = 1 and b.active = 1 and a.id_scheduler in ($resources_list) group by id_scheduler;";
+    $q2 ="select a.id_scheduler, a.display_text, count(b.id_resource) as childs_cound, GROUP_CONCAT(b.id_resource) as childs,  a.blocks, a.begin_time, a.end_time+blocks as end_time, b.restrict_days, a.active from sips_sd_schedulers a inner join sips_sd_resources b on a.id_scheduler = b.id_scheduler where a.active = 1 and b.active = 1 and a.id_scheduler in ($resources_list) group by id_scheduler;";
     $result = mysql_query($q2,$link);
     
    
@@ -146,12 +146,23 @@ $boxes="";
             $perc=100;
             $range=3;
         }
-          
         
-        $boxes.="<div class='grid span2 cantouchthis glow ".$color_head[$labels_ref[$range]]."' data-resource='$schdl[id_scheduler]' data-campaign='' data-active='' >
+        $isFilter = "SELECT * from sips_sd_filter where id_resource = ".$schdl['id_scheduler'];
+       
+        $isFilterActive = mysql_query($isFilter,$link);
+        
+        if (mysql_num_rows($isFilterActive) > 0) {
+            $light = 'led-green';
+            $play  = 'icon-pause';
+        } else {
+            $light = 'led-red';
+            $play  = 'icon-play';
+        }
+        
+        $boxes.="<div class='grid span2 cantouchthis glow ".$color_head[$labels_ref[$range]]."' data-resource='".$schdl['id_scheduler']."' data-campaign='' data-active='".$schdl['active']."' >
             <div class='grid-title box_title ".$labels[$labels_ref[$range]]."'>
                 <div class='pull-left tooltip-top' data-t='tooltip' title='$schdl[display_text]'>$schdl[display_text]</div>
-                <div class='pull-right'><i class='play '></i></div>
+                <div class='pull-right'><i class='play $play'></i></div>
                 <div class='clear'></div>   
             </div>
 
@@ -163,7 +174,7 @@ $boxes="";
                         <input type='text' readonly='' class='min-input' value='$max'>
                     </span>
                     <span style='display:inline' class='$colors[$range]'>".round($perc*1.2)."%</span>
-                    <span class='pull-right led'></span>
+                    <span class='pull-right led $light'></span>
                 </div>
             </div>
         </div>";
