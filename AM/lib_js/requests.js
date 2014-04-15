@@ -32,7 +32,7 @@ var requests = function(basic_path, options_ext)
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     this.new_apoio_marketing = function(am_zone)
     {
-        var ldpinput_count = 2;
+        var ldpinput_count = 1;
         am_zone.empty().off();
         $.get("/AM/view/requests/apoio_marketing.html", function(data) {
             am_zone.append(data);
@@ -53,12 +53,12 @@ var requests = function(basic_path, options_ext)
 
             am_zone.find(".form_datetime_hour").datetimepicker({format: ' hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1});
             //Adiciona Linhas
-            am_zone.on("click", "#button_ldptable_add_line", function(e)
+            am_zone.find("#button_ldptable_add_line").click(function(e)
             {
                 e.preventDefault();
                 am_zone.find("#table_tbody_ldp").append("<tr><td><input type='text' name='ldp_cp" + ldpinput_count + "' class='linha_cp validate[required,custom[onlyNumberSp]]'></td><td><input type='text' name='ldp_freg" + ldpinput_count + "' class='linha_freg validate[required]'></td><td> <button class='btn btn-danger button_ldptable_remove_line icon-alone' ><i class='icon-minus'></i></button></td></tr>");
                 ldpinput_count++;
-            });
+            }).click();
             //Remove Linhas
             am_zone.on("click", ".button_ldptable_remove_line", function(e)
             {
@@ -201,11 +201,11 @@ var requests = function(basic_path, options_ext)
                 }
             });
 
-            rc_zone.on("click", "#add_line_obj_doc", function(e)
+            rc_zone.find("#add_line_obj_doc").click(function(e)
             {
                 e.preventDefault();
                 rc_zone.find("#doc_obj_table_tbody").append("<tr><td><input class='input-xlarge validate[required]'  type='text' /></td>    <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
-            });
+            }).click();
 
             rc_zone.on("click", ".remove_doc_obj", function(e)
             {
@@ -287,13 +287,13 @@ var requests = function(basic_path, options_ext)
             rf_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
             rf_zone.find(".rf_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
             //Adiciona Linhas
-            rf_zone.on("click", "#button_rf_table_add_line", function(e)
+            rf_zone.find( "#button_rf_table_add_line").click(function(e)
             {
                 e.preventDefault();
                 rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required] linha_data' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'></td><td><input class='validate[required] linha_ocorrencia' type='text' name='rf_ocorr" + rfinput_count + "'></td><td>  <input class='validate[required] linha_km' type='number' value='0' name='rf_km" + rfinput_count + "' min='0'></td><td><button class='btn btn-danger button_rf_table_remove_line icon-alone'><i class='icon-minus'></i></button></td></tr>");
                 rf_zone.find("#rf_datetime" + rfinput_count).datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
                 rfinput_count++;
-            });
+            }).click();
             //Remove Linhas
             rf_zone.on("click", ".button_rf_table_remove_line", function(e)
             {

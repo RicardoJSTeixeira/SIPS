@@ -22,7 +22,7 @@ switch ($action) {
 
     case "populate_allm"://ALL MARCAÇOES
         $u = $user->getUser();
-        $variables[":list"]=$u->list_id;
+        $variables[":list"] = $u->list_id;
         if ($u->user_level > 5) {
             $query = "SELECT a.lead_id, b.first_name, extra1, extra2, middle_initial, postal_code, b.address1, a.start_date, a.id_user from sips_sd_reservations a 
             left join vicidial_list b on a.lead_id=b.lead_id 
@@ -38,7 +38,12 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $row[7] = $row[7] . "<div class='view-button'><span class='btn btn-mini ver_cliente' data-lead_id='" . $row[0] . "'><i class='icon-edit'></i>Cliente</span><span class='btn btn-mini criar_encomenda' data-lead_id='" . $row[0] . "'><i class='icon-edit'></i>Encomenda</span><span class='btn btn-mini criar_marcacao' data-lead_id='$row[0]'><i class='icon-edit'></i>Marcação</span></div>";
+            $row[7] = $row[7] . "<div class='view-button'>"
+                    . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[0]' title='Ver Cliente'><i class='icon-edit'></i></button>"
+                    . "<button class='btn btn-mini icon-alone criar_encomenda' data-lead_id='$row[0]' title='Nova Encomenda'><i class='icon-shopping-cart'></i></button>"
+                    . "<button class='btn btn-mini icon-alone criar_marcacao' data-lead_id='$row[0]' title='Marcar Consulta'><i class='icon-calendar'></i></button>"
+                    . "<button class='btn btn-mini icon-alone recomendacoes' data-lead_id='$row[0]' title='Recomendados'><i class='icon-plus-sign'></i></button>"
+                    . "</div>";
             $output['aaData'][] = $row;
         }
 
@@ -47,7 +52,7 @@ switch ($action) {
 
     case "populate_ncsm_toissue"://NOVOS CLIENTES SEM MARCAÇÂO
         $u = $user->getUser();
-        $variables[":list"]=$u->list_id;
+        $variables[":list"] = $u->list_id;
         if ($u->user_level > 5) {
             $query = "SELECT a.lead_id, first_name, extra1, extra2, middle_initial, postal_code, address1, entry_date, a.user from  vicidial_list a
                 inner join vicidial_users b on a.user=b.user
@@ -64,7 +69,11 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $row[7] = $row[7] . "<div class='view-button'><span class='btn btn-mini ver_cliente' data-lead_id='" . $row[0] . "'><i class='icon-edit'></i>Cliente</span><span class='btn btn-mini criar_marcacao' data-lead_id='$row[0]'><i class='icon-edit'></i>Marcação</span></div>";
+            $row[7] = $row[7] . "<div class='view-button'>"
+                    . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[0]' title='Ver Cliente'><i class='icon-edit'></i></button>"
+                    . "<button class='btn btn-mini icon-alone criar_marcacao' data-lead_id='$row[0]' title='Marcar Consulta'><i class='icon-calendar'></i></button>"
+                    . "<button class='btn btn-mini icon-alone recomendacoes' data-lead_id='$row[0]' title='Recomendados'><i class='icon-plus-sign'></i></button>"
+                    . "</div>";
             $output['aaData'][] = $row;
         }
         echo json_encode($output);
@@ -72,7 +81,7 @@ switch ($action) {
 
     case "populate_ncsm_nottoissue"://NOVOS CLIENTES SEM MARCAÇÂO
         $u = $user->getUser();
-        $variables[":list"]=$u->list_id;
+        $variables[":list"] = $u->list_id;
         if ($u->user_level > 5) {
             $query = "SELECT a.lead_id, first_name, extra1, extra2, middle_initial, postal_code, address1, entry_date, a.user from  vicidial_list a
                 inner join vicidial_users b on a.user=b.user
@@ -89,7 +98,11 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $row[7] = $row[7] . "<div class='view-button'><span class='btn btn-mini ver_cliente' data-lead_id='" . $row[0] . "'><i class='icon-edit'></i>Cliente</span><span class='btn btn-mini criar_marcacao' data-lead_id='$row[0]'><i class='icon-edit'></i>Marcação</span></div>";
+            $row[7] = $row[7] . "<div class='view-button'>"
+                    . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[0]' title='Ver Cliente'><i class='icon-edit'></i></button>"
+                    . "<button class='btn btn-mini icon-alone criar_marcacao' data-lead_id='$row[0]' title='Marcar Consulta'><i class='icon-calendar'></i></button>"
+                    . "<button class='btn btn-mini icon-alone recomendacoes' data-lead_id='$row[0]' title='Recomendados'><i class='icon-plus-sign'></i></button>"
+                    . "</div>";
             $output['aaData'][] = $row;
         }
         echo json_encode($output);
