@@ -190,13 +190,14 @@ function get_templates(campaign)
                     //SCRIPT
                     if (Object.size(data))
                     {
+                          show_template = true;
                         $("#oc_template").trigger("change");
                         script_id = data[0];
                         $("#span_script_name").text("Nome do Script ->  " + data[1]);
                         $("#column_order_title").text("Ordernação de colunas");
                         $("#column_order").empty();
                         $("#download_report").prop("disabled", false);
-                        show_template = true;
+                      
                     }
                     else
                     {
