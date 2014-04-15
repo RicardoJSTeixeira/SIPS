@@ -41,7 +41,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
             day: 'dia'
         },
         eventClick: function(calEvent, jsEvent, view) {
-            if (calEvent.bloqueio) {
+            if (calEvent.bloqueio || calEvent.del) {
                 return false;
             }
             if (calEvent.system) {

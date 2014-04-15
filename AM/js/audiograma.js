@@ -80,8 +80,8 @@ var audiograma = function(lead_id) {
 
     };
 
-    this.save = function(lead_id, callback) { //Grava na BASE DE DADOS
-        $.post("ajax/audiograma/audiograma.php", {action: "save_audiograma", lead_id: lead_id, info: $("#main_audiograma_div #audiograma_form").serializeArray()}, function() {
+    this.save = function(lead_id,reservation_id, callback) { //Grava na BASE DE DADOS
+        $.post("ajax/audiograma.php", {action: "save_audiograma", lead_id: lead_id, reservation_id: reservation_id, info: $("#main_audiograma_div #audiograma_form").serializeArray()}, function() {
             if (typeof callback === "function")
             {
                 callback();
@@ -160,7 +160,7 @@ var audiograma = function(lead_id) {
 
 
 
-    $.post("ajax/audiograma/audiograma.php", {action: "populate", lead_id: lead_id},
+    $.post("ajax/audiograma.php", {action: "populate", lead_id: lead_id},
     function(data)
     {
         $.each(data, function()
