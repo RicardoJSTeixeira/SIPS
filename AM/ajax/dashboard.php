@@ -54,13 +54,13 @@ switch ($action) {
         $u = $user->getUser();
         $variables[":list"] = $u->list_id;
         if ($u->user_level > 5) {
-            $query = "SELECT a.lead_id, first_name, extra1, extra2, middle_initial, postal_code, address1, entry_date, a.user from  vicidial_list a
+            $query = "SELECT a.lead_id, first_name, extra1, extra2, middle_initial, postal_code, address1, a.entry_date, a.user from  vicidial_list a
                 inner join vicidial_users b on a.user=b.user
                 left join sips_sd_reservations c on a.lead_id=c.lead_id
                 where b.user_group=:user_group and list_id=:list and c.lead_id is null and extra6='YES' limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
-            $query = "SELECT a.lead_id, first_name, extra1, extra2, middle_initial, postal_code, address1, entry_date from  vicidial_list a
+            $query = "SELECT a.lead_id, first_name, extra1, extra2, middle_initial, postal_code, address1, a.entry_date from  vicidial_list a
                 left join sips_sd_reservations b on a.lead_id=b.lead_id
                 where user=:user and list_id=:list and lead_id is null and extra6='YES' limit 20000";
             $variables[":user"] = $u->username;
@@ -83,13 +83,13 @@ switch ($action) {
         $u = $user->getUser();
         $variables[":list"] = $u->list_id;
         if ($u->user_level > 5) {
-            $query = "SELECT a.lead_id, first_name, extra1, extra2, middle_initial, postal_code, address1, entry_date, a.user from  vicidial_list a
+            $query = "SELECT a.lead_id, first_name, extra1, extra2, middle_initial, postal_code, address1, a.entry_date, a.user from  vicidial_list a
                 inner join vicidial_users b on a.user=b.user
                 left join sips_sd_reservations c on a.lead_id=c.lead_id
                 where b.user_group=:user_group and list_id=:list and c.lead_id is null and extra6='NO' limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
-            $query = "SELECT a.lead_id, first_name, extra1, extra2, middle_initial, postal_code, address1, entry_date from  vicidial_list a
+            $query = "SELECT a.lead_id, first_name, extra1, extra2, middle_initial, postal_code, address1, a.entry_date from  vicidial_list a
                 left join sips_sd_reservations b on a.lead_id=b.lead_id
                 where user=:user and list_id=:list and lead_id is null and extra6='NO' limit 20000";
             $variables[":user"] = $u->username;
