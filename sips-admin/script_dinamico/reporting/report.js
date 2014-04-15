@@ -196,10 +196,12 @@ function get_templates(campaign)
                         $("#column_order_title").text("Ordernação de colunas");
                         $("#column_order").empty();
                         $("#download_report").prop("disabled", false);
+                        show_template = true;
                     }
                     else
                     {
 // NAO HA SCRIPT     
+                       
                         $("#span_script_name").text("Sem Script");
                         script_id = undefined;
                         if ($("#download_script").is(":checked"))
@@ -296,6 +298,7 @@ function update_elements(type)
 
 $("#oc_template").on("change", function()
 {
+
     if (show_template)
         get_elements_by_template($("#oc_template option:selected").val());
 });

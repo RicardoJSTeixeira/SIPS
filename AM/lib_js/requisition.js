@@ -60,25 +60,31 @@ var requisition = function(geral_path, options_ext)
 
         });
 
-        $(new_requisition_zone).on("click", ".add_sub_product", function(e)
+        $(new_requisition_zone).on("click", ".add_second_sub_product", function(e)
         {
-            add_second_sub_product();
+            e.preventDefault();
+            add_second_sub_product($(this).closest(".level_div"));
         });
 
+        $(new_requisition_zone).on("click", ".remove_second_sub_product", function(e)
+        {
+            e.preventDefault();
 
+            $(this).closest(".sub_product_div").remove();
+        });
 
         $(new_requisition_zone).on("change", ".select_product", function()
         {
             var this_div = $(this).closest(".sub_product_div");
-
+ 
 
             if ($(this).val() == 0)
             {
                 this_div.find(".select_color_picker").empty();
                 this_div.find(".product_span_max").text("");
                 this_div.find(".quantity_input").val("");
-
-                remove_sub_product(this_div.closest(".level_div").next());
+                if (!get_previous_product(this_div).length + get_next_product(this_div).length)
+                    remove_sub_product(this_div.closest(".level_div").next());
             }
             else
             {
@@ -110,49 +116,72 @@ var requisition = function(geral_path, options_ext)
 
 
                 //Verifica se ha + children, se sim, adiciona novo sub produto
-
-
                 $.post('/AM/ajax/products.php', {action: "get_produto_by_id", id: $(this).val()},
                 function(data1)
                 {
                     if (get_children(data1).length)
-                        add_sub_product(this_div.closest(".level_div").next());
+                    {
 
+                        if (!get_next_level(this_div.closest(".level_div")).find(".select_product").length)
+                            add_sub_product(this_div.closest(".level_div").next(), get_parents(get_previous_level(this_div.closest(".level_div"))));
+                    }
                 }, "json");
 
             }
         });
-        function add_sub_product(div)
+
+
+        function get_previous_level(div)
         {
-            var selected_value = [];
+            return div.prev(".level_div");
+        }
+        function get_next_level(div)
+        {
+            return div.next(".level_div");
+        }
+        function get_next_product(div)
+        {
+            return div.next(".sub_product_div");
+        }
+        function get_previous_product(div)
+        {
+            return div.prev(".sub_product_div");
+        }
+        function get_parents(div)
+        {
+            var parents = [];
 
-            if (div.closest(".level_div").prev().find(".select_product").length)
-            {
-                $.each(div.closest(".level_div").prev().find(".select_product"), function()
+            if (div.closest(".level_div").find(".select_product").length)
+                $.each(div.closest(".level_div").find(".select_product"), function()
                 {
-
-                    selected_value.push(parseInt($(this).find("option:selected").val()));
+                    parents.push(parseInt($(this).find("option:selected").val()));
                 });
-            }
 
 
+            return parents;
+        }
+        function add_sub_product(div, parents)
+        {
+            div.append(new_requisition_zone.find("#placeholder_new_product").clone().prop("id", "").show());
 
-            div.append(new_requisition_zone.find("#placeholder_new_product").clone().prop("id", "").prop("selected_value", selected_value).show());
-
-            prepare_new_sub_product(div.find(".sub_product_div").last());
+            prepare_new_sub_product(div.find(".sub_product_div").last(), parents);
             product_sub++;
         }
 
-        function add_second_sub_product(grid)
+        function add_second_sub_product(div, parents)
         {
+            div.append(new_requisition_zone.find("#placeholder_new_product").clone().prop("id", "").show());
 
+            prepare_new_sub_product(div.find(".sub_product_div").last(), parents);
+            product_sub++;
         }
 
-
-        function prepare_new_sub_product(this_div)
+        function prepare_new_sub_product(this_div, parents)
         {
-
-            var parents = this_div.prop("selected_value");
+            if (parents)
+                var parents = parents;
+            else
+                var parents = get_parents(this_div);
 
 
             //select
@@ -189,12 +218,24 @@ var requisition = function(geral_path, options_ext)
                             }
                         }
                     });
-console.log(children);
-                    populate_select(this_div.find(".select_product"),children, null);
+
+                    populate_select(this_div.find(".select_product"), children, parents, null);
                 }, "json");
             }
             else
-                populate_select(this_div.find(".select_product"), null, null);
+                populate_select(this_div.find(".select_product"), null, parents, null);
+        }
+
+        function update_selects(div)
+        {
+
+            $.each(div.find(".select_product"), function()
+            {
+                populate_select(div.find(".select_product"), null, get_parents(div), null);
+            });
+
+
+
         }
 
         function remove_sub_product(div)
@@ -207,7 +248,7 @@ console.log(children);
             div.empty();
         }
 
-        function populate_select(select, children, callback)
+        function populate_select(select, children, parents, callback)
         {
             $.post('/AM/ajax/products.php', {action: "get_produtos"},
             function(data)
@@ -228,12 +269,25 @@ console.log(children);
                         economato = [];
                 select.append(temp);
 
+                console.log(children);
+                console.log(parents);
+
+
                 $.each(data, function()
                 {
 
+
                     if (children)
                     {
-                        if (children.indexOf(this.id) === -1)
+                        if (children.length)
+                            if (children.indexOf(this.id) === -1)
+                                return true;
+                    }
+
+                    if (parents)
+                    {
+                        console.log(parents.indexOf(this.id) != -1);
+                        if (parents.indexOf(this.id) != -1)
                             return true;
                     }
 
@@ -369,7 +423,6 @@ console.log(children);
             });
         });
     }
-    ;
     function get_encomendas_atuais(table_path, show_admin)
     {
         if (show_admin)
