@@ -13,6 +13,14 @@ for ($i = 0; $i < $self - 2; $i++) {
 define("ROOT", $header);
 require(ROOT . "ini/dbconnect.php");
 
+// reset ao hopper da campanha
+
+$q = "DELETE from vicidial_hopper where campaign_id='".mysql_real_escape_string($_POST['campaign'])."' and status IN('READY','QUEUE','DONE')";
+mysql_query($q, $link);
+
+// força o hopper
+
+
 //Pesquiso uma linha com o branch
 $query = "SELECT id_resource FROM `sips_sd_filter` WHERE id_resource=" . mysql_real_escape_string($_POST['branch']) ." AND campaign_id='".mysql_real_escape_string($_POST['campaign'])."'";
 $result = mysql_query($query, $link) or die("1".mysql_error());

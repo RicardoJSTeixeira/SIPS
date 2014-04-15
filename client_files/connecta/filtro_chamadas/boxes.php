@@ -159,6 +159,9 @@ $boxes="";
             $play  = 'icon-play';
         }
         
+        $leadCount = "select count(*) as tleads from vicidial_hopper a inner join vicidial_list b on a.lead_id = b.lead_id where b.city LIKE '%$schdl[display_text]%' and a.campaign_id = '$campaign'";
+        $leadCountQuery = mysql_fetch_assoc(mysql_query($leadCount));
+        
         $boxes.="<div class='grid span2 cantouchthis glow ".$color_head[$labels_ref[$range]]."' data-resource='".$schdl['id_scheduler']."' data-campaign='' data-active='".$schdl['active']."' >
             <div class='grid-title box_title ".$labels[$labels_ref[$range]]."'>
                 <div class='pull-left tooltip-top' data-t='tooltip' title='$schdl[display_text]'>$schdl[display_text]</div>
@@ -166,7 +169,7 @@ $boxes="";
                 <div class='clear'></div>   
             </div>
 
-            <div class='grid-content ".((round($perc) < 33) ? $labels['Fraco'] : '')."'>
+            <div class='grid-content ".((round($perc) < 33) ? $labels['Fraco'] : '')."' style='text-align: center'>
                 <div class='btn-modal'>
                     <span class='control-group ".$color_head[$labels_ref[$range]]."'>
                         <input type='text' readonly='' class='min-input' value='$nMarc[marc]'>
@@ -176,6 +179,7 @@ $boxes="";
                     <span style='display:inline' class='$colors[$range]'>".round($perc*1.2)."%</span>
                     <span class='pull-right led $light'></span>
                 </div>
+                T. Leads: $leadCountQuery[tleads]
             </div>
         </div>";
     }
