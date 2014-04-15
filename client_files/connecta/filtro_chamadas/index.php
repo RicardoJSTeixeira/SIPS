@@ -326,12 +326,12 @@ $days = ($days == 0) ? 1 : $days;
                         boxes = $("#box-container > div[data-resource]");
                         boxes.click(activator);
                         boxes.each(function(index) {
-                            $(this).attr("data-campaign", camp).attr("data-active", 0).find(".play").attr("class", "play icon-play").parent().parent().parent().find(".led").attr("class", "pull-right led led-red");
+                            $(this).attr("data-campaign", camp)
                         });
-                        $(data).each(function(index) {
-                           // console.log(this);
-                            boxes.parent().find("[data-resource=" + this + "]").attr("data-active", 1).find(".play").attr("class", "play icon-pause").parent().parent().parent().find(".led").attr("class", "pull-right led led-green");
-                        });
+//                        $(data).each(function(index) {
+//                            console.log(this);
+//                            boxes.parent().find("[data-resource=" + $(this.boxes).data.resource + "]").attr("data-active", 1).find(".play").attr("class", "play icon-pause").parent().parent().parent().find(".led").attr("class", "pull-right led led-green");
+//                        });
                     }, "json")
                             .fail(function() {
                                 makeAlert("#wr", "Ups Ocorreu um erro ao carregar os filtros", "Peço desculpa.", 1, true, false);
