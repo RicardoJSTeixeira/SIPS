@@ -13,6 +13,7 @@ var requisition = function(geral_path, options_ext)
     var show_admin = 0;
     var tipo = "mensal";
     var is_master_product = false;
+    var produtos = [];
     $.extend(true, this.config, options_ext);
     this.init = function(callback)
     {
@@ -34,6 +35,16 @@ var requisition = function(geral_path, options_ext)
     };
 //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
     this.new_requisition = function(new_requisition_zone, lead_id) {
+
+
+        $.post('/AM/ajax/products.php', {action: "get_produtos"},
+        function(data)
+        {
+            $.each(data, function() {
+                produtos[this.id] = this;
+            });
+        }, "json");
+
 
         new_requisition_zone.off();
         new_requisition_zone.find('.fileupload').fileupload();
@@ -81,7 +92,6 @@ var requisition = function(geral_path, options_ext)
         $(new_requisition_zone).on("change", ".select_product", function()
         {
             var this_div = $(this).closest(".sub_product_div");
-
             if ($(this).val() == 0)
             {
                 this_div.find(".select_color_picker").empty();
@@ -92,12 +102,8 @@ var requisition = function(geral_path, options_ext)
                     remove_sub_product(this_div.closest(".level_div").next());
 
                 }
-                update_selects(this_div.closest(".level_div"));
-
                 this_div.find(".color_div").parent().hide();
-
                 this_div.find(".FormRow").last().hide();
-                populate_select($(this), null);
             }
             else
             {
@@ -107,7 +113,6 @@ var requisition = function(geral_path, options_ext)
                     this_div.find(".color_div").parent().show();
                 else
                     this_div.find(".color_div").parent().hide();
-
                 if (me.tipo == "mensal")
                 {
                     this_div.find(".product_span_max").text("Nº Max." + $(this).find("option:selected").data("max_month"));
@@ -133,23 +138,16 @@ var requisition = function(geral_path, options_ext)
                 }
                 else
                     select.append("<option>Padrão</option>");
-
                 //Verifica se ha + children, se sim, adiciona novo sub produto
-                $.post('/AM/ajax/products.php', {action: "get_produto_by_id", id: $(this).val()},
-                function(data1)
+                var children = [];
+                children = get_children($(this).val());
+                if (children.length)
                 {
-                    if (get_children(data1).length)
-                    {
-                        if (!get_next_level(this_div.closest(".level_div")).find(".select_product").length)
-                            add_sub_product(this_div.closest(".level_div").next());
-                    }
-                    $.each(new_requisition_zone.find(".select_product"), function()
-                    {
-                        populate_select($(this), null);
-                    })
-                }, "json");
+                    if (!get_next_level(this_div.closest(".level_div")).find(".select_product").length)
+                        add_sub_product(this_div.closest(".level_div").next());
+                }
             }
-
+            update_selects(this_div.closest(".level_div"));
         });
 
 
@@ -157,7 +155,7 @@ var requisition = function(geral_path, options_ext)
         {
             if (get_next_level(level).find(".select_product").length)
                 update_selects(get_next_level(level));
-
+ 
             $.each(level.find(".select_product"), function()
             {
                 populate_select($(this), null);
@@ -186,32 +184,25 @@ var requisition = function(geral_path, options_ext)
 
         function get_parents(level)
         {
-
             var parents = [];
-
             if (level.find(".select_product").length)
                 $.each(level.find(".select_product"), function()
                 {
-                    parents.push(parseInt($(this).val()));
+                    if (parseInt($(this).val()) != 0)
+                        parents.push(parseInt($(this).val()));
                 });
-
-
             if (get_previous_level(level).find(".select_product").length)
                 $.each(get_previous_level(level).find(".select_product"), function()
                 {
-                    parents.push(parseInt($(this).val()));
+                    if (parseInt($(this).val()) != 0)
+                        parents.push(parseInt($(this).val()));
                 });
-
-
             return parents;
         }
         function add_sub_product(div)
         {
-
             div.append(new_requisition_zone.find("#placeholder_new_product").clone().prop("id", "").show());
-
             prepare_new_sub_product(div.find(".sub_product_div").last());
-            product_sub++;
         }
 
 
@@ -252,77 +243,86 @@ var requisition = function(geral_path, options_ext)
 
         function populate_select(select, callback)
         {
+
             var selected_value = select.val();
             var is_empty = true;
-            $.post('/AM/ajax/products.php', {action: "get_produtos"},
-            function(data)
-            {
-                var optgroups = [];
-                select.empty();
-                optgroups.push("<option value='0'>Escolha um produto</option><optgroup value='1' label='Aparelhos'></optgroup>");
-                var temp = "<option value='0'>Escolha um produto</option>\n\
+
+            var optgroups = [];
+            select.empty();
+            optgroups.push("<option value='0'>Escolha um produto</option><optgroup value='1' label='Aparelhos'></optgroup>");
+            var temp = "<option value='0'>Escolha um produto</option>\n\
                             <optgroup value='1' label='Aparelhos'></optgroup>\n\
                             <optgroup value='2' label='Pilhas'></optgroup>\n\
                             <optgroup value='3' label='Acessórios'></optgroup>\n\
                             <optgroup value='4' label='Moldes'></optgroup>\n\
                             <optgroup value='5' label='Economato'></optgroup>",
-                        aparelho = [],
-                        pilha = [],
-                        acessorio = [],
-                        molde = [],
-                        economato = [];
-                select.append(temp);
-                var parents = get_parents(select.closest(".level_div"));
-                $.each(data, function()
-                {
-                    var children = get_children(this);
+                    aparelho = [],
+                    pilha = [],
+                    acessorio = [],
+                    molde = [],
+                    economato = [];
+            select.append(temp);
+            var parents = get_parents(select.closest(".level_div"));
+            var children = [];
 
-                    if (children.length)
-                    {
-                        if (children.indexOf(this.id) != -1)
-                            return true;
-                    }
-
-                    if (parents)
-                    {
-                        if (parents.indexOf(this.id) != -1)
-                            return true;
-                    }
-
-
-
-                    is_empty = false;
-                    switch (this.category)
-                    {
-                        case "aparelho":
-                            aparelho.push("<option data-category='" + this.category + "'  data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
-                            break;
-                        case "pilha":
-                            pilha.push("<option data-category='" + this.category + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
-                            break;
-                        case "acessorio":
-                            acessorio.push("<option data-category='" + this.category + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
-                            break;
-                        case "molde":
-                            molde.push("<option data-category='" + this.category + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
-                            break;
-                        case "economato":
-                            economato.push("<option data-category='" + this.category + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
-                            break;
-                    }
-                });
-                select.find("optgroup[value='1']").append(aparelho).end()
-                        .find("optgroup[value='2']").append(pilha).end()
-                        .find("optgroup[value='3']").append(acessorio).end()
-                        .find("optgroup[value='4']").append(molde).end()
-                        .find("optgroup[value='5']").append(economato).end().val(selected_value).trigger("chosen:updated");
-                if (is_empty)
-                    select.closest(".sub_product_div").remove();
-
-                if (typeof callback === "function")
-                    callback();
+            for (var i = 0; i < parents.length; i++)
+            {
+                children = children.concat(get_children(parents[i]));
             }
-            , "json");
+
+
+            console.log(parents);
+            console.log(children);
+
+
+            $.each(produtos, function()
+            {
+                if (parents)
+                {
+                    if (parents.indexOf(this.id) != -1)
+                        return true;
+                }
+
+                /*  if (children.length)
+                 {
+                 if (children.indexOf(this.id) == -1)
+                 return true;
+                 }
+                 */
+                is_empty = false;
+                switch (this.category)
+                {
+                    case "aparelho":
+                        aparelho.push("<option data-category='" + this.category + "'  data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
+                        break;
+                    case "pilha":
+                        pilha.push("<option data-category='" + this.category + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
+                        break;
+                    case "acessorio":
+                        acessorio.push("<option data-category='" + this.category + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
+                        break;
+                    case "molde":
+                        molde.push("<option data-category='" + this.category + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
+                        break;
+                    case "economato":
+                        economato.push("<option data-category='" + this.category + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
+                        break;
+                }
+            });
+
+
+            select.find("optgroup[value='1']").append(aparelho).end()
+                    .find("optgroup[value='2']").append(pilha).end()
+                    .find("optgroup[value='3']").append(acessorio).end()
+                    .find("optgroup[value='4']").append(molde).end()
+                    .find("optgroup[value='5']").append(economato).end().val(selected_value).trigger("chosen:updated");
+
+            if (is_empty)
+                select.closest(".sub_product_div").remove();
+
+            if (typeof callback === "function")
+                callback();
+
         }
 
 // SUBMITAR A ENCOMENDA------------------------------------------------
@@ -516,31 +516,26 @@ var requisition = function(geral_path, options_ext)
 
 
 
-    function find_level(element)
-    {
-        var level = 1;
-        if (element.children)
-        {
-            $.each(element.children, function()
-            {
-                level = level + find_level(this);
-            });
-        }
-        return level;
-    }
 
-    function get_children(element)
+
+    function get_children(id)
     {
         var children = [];
-        if (element.children)
-        {
-            $.each(element.children, function()
+        if (produtos[id])
+            if (produtos[id].children)
             {
-                children.push(this.id);
-                get_children_extra(this, children);
-            });
-        }
+
+                $.each(produtos[id].children, function()
+                {
+                    children.push(this.id);
+
+
+                    get_children_extra(this, children);
+                });
+            }
+
         return children;
+
     }
 
     function get_children_extra(element, children)
