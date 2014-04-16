@@ -52,7 +52,7 @@ $(function()
 
 
 
-        $('#main_consulta_div #audiograma_placeholder').load("view/audiograma/audiograma.html", function() {
+        $('#main_consulta_div #audiograma_placeholder').load("view/audiograma.html", function() {
             consult_audiogra = new audiograma(lead_id);
             if (consult_closed)
             {
@@ -204,7 +204,7 @@ $("#main_consulta_div #terminar_consulta").on("click", function()
                     function() {
                         consult_audiogra.validate(function() {
                             script.submit_manual();
-                            consult_audiogra.save(lead_id, false);
+                            consult_audiogra.save(lead_id, reserva_id, false);
                             if (ha_perda)// HA PERDA
                             {
                                 var temp_feedback = "";
@@ -272,4 +272,4 @@ $("#main_consulta_div #validate_audiograma_button").click(function()
     }, false);
 });
 
- 
+

@@ -196,7 +196,7 @@ $days = ($days == 0) ? 1 : $days;
             <div class="grid">
                 <div class="grid-title">
                     <div class="pull-left">Filtro de Agendas. De <?= $date . "  a  " . $date_end . "." ?> // Total:<b id="total"></b></div>
-                    <div class="pull-right"></div>
+                    <div class="pull-right"><b>Atenção! Activar/Desactivar filtros limpa o dialer! (Dialer Refresh: 1min)</b></div>
                     <div class="clear"></div>
                 </div>
                 <div class="grid-content">
@@ -236,6 +236,7 @@ $days = ($days == 0) ? 1 : $days;
         <script>
             var total = 0;
             var boxes = undefined;
+            var globalInterval = false;
             function filtro(id, target) {
                 $("#" + id).change(function() {
                     if (this.checked) {
@@ -315,6 +316,18 @@ $days = ($days == 0) ? 1 : $days;
                 $("#campaigns_list").change(function() {
                     $("#box-container").html('');
                     var camp = $(this).val();
+                    reload(camp);
+                    
+                    if (globalInterval) {
+                        clearInterval(globalInterval);
+                    }
+                    
+                    setInterval(function(){
+                        reload($("#campaigns_list").val())
+                    }, 1000 * 15)
+                });
+                
+                function reload(camp) {
                     $.post("boxes.php", {campaign: camp, data_i: "<?= $date ?>", data_f: "<?= $date_end ?>", dias:<?= $days ?>},
                     function(data) {
                         if (!data.boxes) {
@@ -326,18 +339,19 @@ $days = ($days == 0) ? 1 : $days;
                         boxes = $("#box-container > div[data-resource]");
                         boxes.click(activator);
                         boxes.each(function(index) {
-                            $(this).attr("data-campaign", camp).attr("data-active", 0).find(".play").attr("class", "play icon-play").parent().parent().parent().find(".led").attr("class", "pull-right led led-red");
+                            $(this).attr("data-campaign", camp)
                         });
-                        $(data).each(function(index) {
-                           // console.log(this);
-                            boxes.parent().find("[data-resource=" + this + "]").attr("data-active", 1).find(".play").attr("class", "play icon-pause").parent().parent().parent().find(".led").attr("class", "pull-right led led-green");
-                        });
+//                        $(data).each(function(index) {
+//                            console.log(this);
+//                            boxes.parent().find("[data-resource=" + $(this.boxes).data.resource + "]").attr("data-active", 1).find(".play").attr("class", "play icon-pause").parent().parent().parent().find(".led").attr("class", "pull-right led led-green");
+//                        });
                     }, "json")
                             .fail(function() {
                                 makeAlert("#wr", "Ups Ocorreu um erro ao carregar os filtros", "Peço desculpa.", 1, true, false);
                             });
-
-                });
+                }
+                
+                
             });
         </script>
     </body>

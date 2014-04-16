@@ -1,5 +1,10 @@
  
-
+<style>
+    .select_product
+    {
+        width:180px;
+    }
+</style>
 
 <div id="new_requisition_div" >
     <div class="grid">
@@ -61,6 +66,7 @@
             </div> 
             <div class="formRow">
                 <button id="new_requisition_product_add_line" class="btn btn-primary right"><i class="icon-plus"></i>Adicionar produto</button>
+
             </div>
             <div class="clear"></div>
         </div> 
@@ -91,34 +97,39 @@
     </div> 
 
     <div id="placeholder_new_product" class="sub_product_div" style="display:none">
-        <div class="pull-right">
-            <button class='btn icon-alone btn-success add_second_sub_product'><i  class='icon-plus'></i> </button>
+      
+            <div class="pull-right input-prepend input-append">
+                <button class='btn icon-alone btn-danger remove_second_sub_product'><i  class='icon-minus'></i> </button>
+                <button class='btn icon-alone btn-success add_second_sub_product'><i  class='icon-plus'></i> </button>
+            </div>
+            <div class="pull-left">
+                <h4>Produto</h4>
+            </div>
+        
+
+
+        <div>
+            <div class="FormRow">
+
+                <div class="formRight select_div" >
+                </div>        
+            </div>
+            <div class="FormRow" style="display:none">
+                <span  >Cor</span>
+                <div class="formRight color_div" >
+                </div>        
+            </div>
+            <div class="FormRow" style="display:none">
+                <span  >Quantidade</span>
+                <div class=" quantity_div" >
+                </div>
+                <span class="help-inline max_div"> </span>
+            </div>
+            <div class="clear"></div>
         </div>
-          <div class="pull-left">
-            <button class='btn icon-alone btn-warning remove_second_sub_product'><i  class='icon-minus'></i> </button>
-        </div>
-        <div class="FormRow">
-            <span  >Produto</span>
-            <div class="formRight select_div" >
-            </div>        
-        </div>
-        <div class="FormRow">
-            <span  >Cor</span>
-            <div class="formRight color_div" >
-            </div>        
-        </div>
-        <div class="FormRow">
-            <span  >Max</span>
-            <div class="formRight max_div" >
-            </div>        
-        </div>
-        <div class="FormRow">
-            <span  >Quantidade</span>
-            <div class="formRight quantity_div" >
-            </div>        
-        </div>
-        <div class="clear"></div>
-    </div>    
+
+    </div>
+
 </div> 
 
 <div id="extra_div">
