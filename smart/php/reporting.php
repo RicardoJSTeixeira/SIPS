@@ -466,7 +466,7 @@ function getAgentsCampaign($db, $id, $start, $end,$server) {
         }
     }
    
-    $get_hours = file_get_contents($server."total/agent_log/$start/$end?by=agent&campaign=$id");
+    $get_hours = file_get_contents($server."total/agent_log/$start/$end?campaign=$id");
     $hours_content = json_decode($get_hours);
    
     $get_calls = file_get_contents($server."total/calls/$start/$end?by=agent&campaign=$id");
