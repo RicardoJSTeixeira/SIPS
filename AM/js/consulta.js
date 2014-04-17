@@ -160,7 +160,8 @@ $("#main_consulta_div #validate_audio_script").on("click", function()
 
 $("#new_request_button").click(function()
 {
-    $.history.push("view/new_requisition.html?lead_id=" + lead_id);
+    var en = btoa(lead_id);
+    $.history.push("view/new_requisition.html?id=" + en);
 });
 
 $("#new_marcacao_button").click(function()

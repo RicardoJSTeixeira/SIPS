@@ -95,7 +95,6 @@ var products = function(geral_path, options_ext)
 
                         $.post('/AM/ajax/products.php', {action: "edit_product", "id": product_id,
                             name: edit_product_modal.find("#edit_product_name").val(),
-                            price: edit_product_modal.find("#edit_product_price").val(),
                             max_req_m: edit_product_modal.find("#edit_product_mrm").val(),
                             max_req_s: edit_product_modal.find("#edit_product_mrw").val(),
                             category: edit_product_modal.find("#edit_product_category").val(),
@@ -208,7 +207,7 @@ var products = function(geral_path, options_ext)
 
         new_product_path1.append(geral_path.find("#new_product_form"));
         var new_product_path = new_product_path1;
-        clean_new_product_area(new_product_path);
+        clear_new_product_area(new_product_path);
         populate_parent(new_product_path.find("#new_product_parent"), null, null, null);
 
         new_product_path.find("#create_new_product_button").click(function(e)
@@ -234,7 +233,6 @@ var products = function(geral_path, options_ext)
                 {
                     $.post('/AM/ajax/products.php', {action: "criar_produto",
                         name: new_product_path.find("#new_product_name").val(),
-                        price: new_product_path.find("#new_product_price").val(),
                         max_req_m: new_product_path.find("#new_product_mrm").val(),
                         max_req_s: new_product_path.find("#new_product_mrw").val(),
                         category: new_product_path.find("#new_product_category").val(),
@@ -248,7 +246,7 @@ var products = function(geral_path, options_ext)
                         {
                             datatable_path.dataTable().fnAddData(data);
                             $.jGrowl("Produto criado com sucesso", {life: 3500});
-                            clean_new_product_area(new_product_path);
+                            clear_new_product_area(new_product_path);
                         }
                     }, "json");
                 }
@@ -263,6 +261,11 @@ var products = function(geral_path, options_ext)
             if ($(this).val() === "molde" || $(this).val() === "aparelho")
             {
                 new_product_path.find("#new_product_color_div").show();
+                new_product_path.find("#new_product_table_tbody_color").append("<tr><td><select class=' input-small color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]' value='Beje'></td><td><button class='btn btn-danger remove_color icon-alone'><i class='icon icon-trash'></i></button></td></tr>");
+                $("#new_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).colourPicker({
+                    ico: '/jquery/colourPicker/colourPicker.gif',
+                    title: false
+                });
             }
             else
             {
@@ -293,16 +296,16 @@ var products = function(geral_path, options_ext)
 
     };
 
-    function clean_new_product_area(new_product_path)
+    function clear_new_product_area(new_product_path)
     {
         new_product_path.find("input:not(:checkbox)").val("");
         new_product_path.find("select").val("").trigger("chosen:updated");
-        new_product_path.find("#new_product_price").val(0);
+        populate_parent(new_product_path.find("#new_product_parent"), null, null, null);
         new_product_path.find("#new_product_mrm").val(5);
         new_product_path.find("#new_product_mrw").val(5);
         new_product_path.find("#new_product_category").trigger("change");
-        new_product_path.find(":checkbox").prop("checked", false);
-        new_product_path.find(":radio").prop("checked", false);
+        new_product_path.find(":checkbox").prop("checked", true);
+        new_product_path.find(":radio").prop("checked", true);
         new_product_path.find("#new_product_form").show();
     }
 
@@ -335,7 +338,7 @@ var products = function(geral_path, options_ext)
                         }
                     });
                 },
-                "aoColumns": [{"sTitle": "Id"}, {"sTitle": "Nome"}, {"sTitle": "Preço"}, {"sTitle": "Max mensal"}, {"sTitle": "Max especial"}, {"sTitle": "Categoria"}, {"sTitle": "Tipo"}, {"sTitle": "Opções", "sWidth":"50px"}],
+                "aoColumns": [{"sTitle": "Id", "sWidth": "25px"}, {"sTitle": "Nome"}, {"sTitle": "M.Mensal", "sWidth": "50px"}, {"sTitle": "M.Especial", "sWidth": "50px"}, {"sTitle": "Categoria", "sWidth": "70px"}, {"sTitle": "Tipo", "sWidth": "110px"}, {"sTitle": "Opções", "sWidth": "50px"}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
         } else {
@@ -349,7 +352,7 @@ var products = function(geral_path, options_ext)
             populate_parent(geral_path.find("#edit_product_parent"), find_level(data), get_children(data), function()
             {
                 modal.find("#edit_product_name").val(data.name);
-                modal.find("#edit_product_price").val(data.price);
+
                 modal.find("#edit_product_category").val(data.category);
 
                 modal.find("#edit_product_parent option[value='" + product_id + "']").prop("disabled", true);
@@ -444,12 +447,14 @@ var products = function(geral_path, options_ext)
                         <optgroup value='2' label='Pilhas'></optgroup>\n\
                         <optgroup value='3' label='Acessórios'></optgroup>\n\
                         <optgroup value='4' label='Moldes'></optgroup>\n\
-                        <optgroup value='5' label='Economato'></optgroup>",
+                        <optgroup value='5' label='Economato'></optgroup>\n\
+<optgroup value='6' label='gama'></optgroup>",
                     aparelho = [],
                     pilha = [],
                     acessorio = [],
                     molde = [],
-                    economato = [];
+                    economato = [],
+                    gama = [];
             select.append(temp);
             var option = "";
             $.each(data, function()
@@ -487,6 +492,8 @@ var products = function(geral_path, options_ext)
                         break;
                     case "economato":
                         economato.push(option);
+                    case "gama":
+                        gama.push(option);
                         break;
                 }
             });
@@ -495,7 +502,8 @@ var products = function(geral_path, options_ext)
                     .find("optgroup[value='2']").append(pilha).end()
                     .find("optgroup[value='3']").append(acessorio).end()
                     .find("optgroup[value='4']").append(molde).end()
-                    .find("optgroup[value='5']").append(economato).end().trigger("chosen:updated");
+                    .find("optgroup[value='5']").append(economato).end()
+                    .find("optgroup[value='6']").append(gama).end().trigger("chosen:updated");
             if (typeof callback === "function")
                 callback();
         }, "json");

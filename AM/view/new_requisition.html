@@ -4,6 +4,12 @@
     {
         width:180px;
     }
+    .level_highlight
+    {
+        background-color: #2ba6cb;
+        border: 1px #000;
+    }
+
 </style>
 
 <div id="new_requisition_div" >
@@ -85,11 +91,11 @@
         <div class="grid-content">
             <div class="row-fluid">
                 <form class="requisition_form">
+                    <div class="span2 level_div "></div>
                     <div class="span2 level_div"></div>
+                    <div class="span2 level_div "></div> 
                     <div class="span2 level_div"></div>
-                    <div class="span2 level_div"></div> 
-                    <div class="span2 level_div"></div>
-                    <div class="span2 level_div"></div>
+                    <div class="span2 level_div "></div>
                 </form>
             </div>
 
@@ -144,20 +150,14 @@
                                 requisition1.init(function()
                                 {
 
-                                    if (values["lead_id"])
-                                        requisition1.new_requisition($("#new_requisition_div"), values["lead_id"]);
+                                    if (values["id"])
+                                        requisition1.new_requisition($("#new_requisition_div"), values["id"]);
                                     else
                                         requisition1.new_requisition($("#new_requisition_div"), null);
                                 });
                             });
 
 
-                            function getUrlVars() {
-                                var vars = {};
-                                var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
-                                    vars[key] = value;
-                                });
-                                return vars;
-                            }
+                  
 
 </script>
