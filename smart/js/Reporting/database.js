@@ -71,7 +71,7 @@ function databaseList() {
         $.each(data, function(data) {
             totalsNEWS += this.count;
             if (totalNEW[this._id.database.campaign.oid]) {
-                totalNEW[this._id.database.campaign.oid] = this.count;
+                totalNEW[this._id.database.campaign.oid] =totalNEW[this._id.database.campaign.oid]+ this.count;
             } else {
                 totalNEW[this._id.database.campaign.oid] = this.count;
             }
@@ -133,14 +133,14 @@ function database(campaignID) {
         "bDestroy": true,
         "aaSorting": [[3, "desc"]],
         "aoColumns": [
-            {"sTitle": "Lista", "sClass": "", "sWidth": "50px", "sType": "string"},
-            {"sTitle": "Nome", "sClass": "", "sWidth": "150px"},
-            {"sTitle": "Data Carregamento", "sClass": "", "sWidth": "50px"},
+            {"sTitle": "Lista", "sClass": "", "sWidth": "50px", "sType": "string", bVisible: false},
+            {"sTitle": "Nome", "sClass": "", "sWidth": "100px"},
+            {"sTitle": "Data", "sClass": "", "sWidth": "50px"},
             {"sTitle": "Carregados", "sClass": "", "sWidth": "50px"},
             {"sTitle": "Iniciais", "sClass": "", "sWidth": "50px"},
-            {"sTitle": "Agendamentos", "sClass": "", "sWidth": "50px"},
-            {"sTitle": "Incidencias", "sClass": "", "sWidth": "50px"},
-            {"sTitle": "Max Limits", "sClass": "", "sWidth": "50px"},
+            {"sTitle": "Agend.", "sClass": "", "sWidth": "50px"},
+            {"sTitle": "Inci.s", "sClass": "", "sWidth": "50px"},
+            {"sTitle": "Max Lim.", "sClass": "", "sWidth": "50px"},
             {"sTitle": "Fechados", "sClass": "", "sWidth": "50px"},
             {"sTitle": "VC", "sClass": "", "sWidth": "50px"},
             {"sTitle": "Vendas", "sClass": "", "sWidth": "50px"},
@@ -291,7 +291,7 @@ function database(campaignID) {
                     agendadas = callback[this.oid];
                 }
                 if (date[this.oid]) {
-                    data = date[this.oid];
+                    data = moment(date[this.oid]).format('YYYY-MM-DD');
                 }
                 if (vc) {
                     reach = Math.round((vc / fechados) * 100);

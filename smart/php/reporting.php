@@ -4,12 +4,12 @@ ini_set(display_errors, 1);
 
 require '../../ini/db.php';
 
-$host = "mysql:host=".$VARDB_server .";dbname=" . $VARDB_database . ";charset=utf8";
-$varDbUser="sipsadmin";
-$varDbPass="sipsps2012";
+$host = "mysql:host=" . $VARDB_server . ";dbname=" . $VARDB_database . ";charset=utf8";
+$varDbUser = "sipsadmin";
+$varDbPass = "sipsps2012";
 try {
     $db = new PDO($host, $varDbUser, $varDbPass);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 } catch (PDOException $e) {
     die('Connection failed: ' . $e->getMessage());
@@ -18,6 +18,8 @@ try {
 $server = "http://$VARDB_server:10000/ccstats/v0/";
 
 switch ($_POST['action']) {
+    case 'agentsCampaign':agentsCampaign($db, $_POST['id'], $_POST['start'], $_POST['end']);
+        break;
     case 'recycling': getRecycling($db, $_POST['id']);
         break;
     case 'getStatus': getStatus($db, $_POST['id']);
@@ -72,9 +74,9 @@ switch ($_POST['action']) {
         break;
     case 'getCampaignStatus':getCampaignStatus($db);
         break;
-    case 'getAgentsCampaign':getAgentsCampaign($db, $_POST['id'], $_POST['start'], $_POST['end'],$server);
+    case 'getAgentsCampaign':getAgentsCampaign($db, $_POST['id'], $_POST['start'], $_POST['end'], $server);
         break;
-    case 'timeline':timeline($db, $_POST['dados'], $_POST['id'], $_POST['start'], $_POST['end']);
+    case 'timeline':timeline($db, $server, $_POST['dados'], $_POST['id'], $_POST['start'], $_POST['end']);
         break;
     case 'getCampaignValue': getCampaignValue($db, $_POST['start'], $_POST['end']);
         break;
@@ -84,38 +86,47 @@ switch ($_POST['action']) {
         break;
 }
 
-function databaseCallback($db, $id){
+function agentsCampaign($db, $id, $start, $end) {
+    $sql="select user as agent from vicidial_log where campaign_id like '$id' and call_date between '$start' and '$end' group by user";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+    $data = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+    echo json_encode(array('Agents' => $data));
+}
+
+function databaseCallback($db, $id) {
     $callback = array();
     $date = array();
     //$status = array();
     //max=array();
-    
-    $stmt= $db->prepare("SELECT GROUP_CONCAT(`status`) as x,`attempt_maximum` as max,campaign_id FROM `vicidial_lead_recycle` WHERE campaign_id=:id and active='Y'");
-    $stmt->execute(array('id'=>$id));
+
+    $stmt = $db->prepare("SELECT GROUP_CONCAT(`status`) as x,`attempt_maximum` as max,campaign_id FROM `vicidial_lead_recycle` WHERE campaign_id=:id and active='Y'");
+    $stmt->execute(array('id' => $id));
     While ($data = $stmt->fetch(PDO::FETCH_OBJ)) {
-     $status=$data->x; 
-     $max=$data->max;
+        $status = $data->x;
+        $max = $data->max;
     }
-    
-    $stmt= $db->prepare("select entry_date, list_id from vicidial_list group by list_id order by entry_date asc");
+
+    $stmt = $db->prepare("select entry_date, list_id from vicidial_list group by list_id order by entry_date asc");
     $stmt->execute();
     While ($data = $stmt->fetch(PDO::FETCH_OBJ)) {
-     $date[$data->list_id]=$data->entry_date;   
+        $date[$data->list_id] = $data->entry_date;
     }
-    
-    $stmt= $db->prepare("select count(lead_id)as count, list_id as id from vicidial_callbacks where status in ('ACTIVE', 'LIVE') group by list_id");
+
+    $stmt = $db->prepare("select count(lead_id)as count, list_id as id from vicidial_callbacks where status in ('ACTIVE', 'LIVE') group by list_id");
     $stmt->execute();
     While ($data = $stmt->fetch(PDO::FETCH_OBJ)) {
-     $callback[$data->id]=$data->count;   
+        $callback[$data->id] = $data->count;
     }
-    
-    
-    echo json_encode(array('Callback' => $callback, 'Date'=>$date, 'Status'=>$status, 'Max'=>$max));
+
+
+    echo json_encode(array('Callback' => $callback, 'Date' => $date, 'Status' => $status, 'Max' => $max));
 }
 
 function getCampaignValue($db, $start, $end) {
     $campaign = array();
-    $get_total = file_get_contents($server."total/calls/$start/$end?by=campaign");
+    $get_total = file_get_contents($server . "total/calls/$start/$end?by=campaign");
     $total_content = json_decode($get_total);
 
     foreach ($total_content as $value) {
@@ -142,16 +153,16 @@ function getCampaignValue($db, $start, $end) {
             }
         }
 
-       
-        $get_hour = file_get_contents($server."total/agent_log/$start/$end?by=$value->campaign");
+
+        $get_hour = file_get_contents($server . "total/agent_log/$start/$end?by=$value->campaign");
         $horas = json_decode($get_hour);
-        
-        foreach($horas as $valu){
-            $campaign[$value->campaign]['horas']= $valu->sum_talk + $valu->sum_pause + $valu->sum_dead + $valu->sum_dispo + $valu->sum_wait + $valu->sum_billable_pause;
+
+        foreach ($horas as $valu) {
+            $campaign[$value->campaign]['horas'] = $valu->sum_talk + $valu->sum_pause + $valu->sum_dead + $valu->sum_dispo + $valu->sum_wait + $valu->sum_billable_pause;
         }
 
         if (count($human) > 0) {
-            $get_total1 = file_get_contents($server."total/calls/$start/$end?campaign=$value->campaign&status=" . implode(',', $human));
+            $get_total1 = file_get_contents($server . "total/calls/$start/$end?campaign=$value->campaign&status=" . implode(',', $human));
             $total_content1 = json_decode($get_total1);
             foreach ($total_content1 as $value1) {
                 $campaign[$value->campaign]['human'] = $value1->calls;
@@ -159,7 +170,7 @@ function getCampaignValue($db, $start, $end) {
         }
 
         if (count($util) > 0) {
-            $get_total2 = file_get_contents($server."total/calls/$start/$end?campaign=$value->campaign&status=" . implode(',', $util));
+            $get_total2 = file_get_contents($server . "total/calls/$start/$end?campaign=$value->campaign&status=" . implode(',', $util));
             $total_content2 = json_decode($get_total2);
             foreach ($total_content2 as $value2) {
                 $campaign[$value->campaign]['util'] = $value2->calls;
@@ -167,7 +178,7 @@ function getCampaignValue($db, $start, $end) {
         }
 
         if (count($sucesso) > 0) {
-            $get_total3 = file_get_contents($server."total/calls/$start/$end?campaign=$value->campaign&status=" . implode(',', $sucesso));
+            $get_total3 = file_get_contents($server . "total/calls/$start/$end?campaign=$value->campaign&status=" . implode(',', $sucesso));
             $total_content3 = json_decode($get_total3);
             foreach ($total_content3 as $value3) {
                 $campaign[$value->campaign]['sucesso'] = $value3->calls;
@@ -233,82 +244,82 @@ function hour($db, $ar, $id, $start, $end) {
 
 
     if (in_array("total", $ar)) {
-        $get_total = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id");
+        $get_total = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id");
         $total_content = json_decode($get_total);
 
         foreach ($total_content as $value) {
-            $total[] = array($value->hour, round($value->length/60));
+            $total[] = array($value->hour, round($value->length / 60));
         }
     }
     if (in_array("talk", $ar)) {
-        $get_total1 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Hum));
+        $get_total1 = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Hum));
         $total_content1 = json_decode($get_total1);
 
         foreach ($total_content1 as $value) {
-            $talk[] = array($value->hour, round($value->length/60));
+            $talk[] = array($value->hour, round($value->length / 60));
         }
     }
     if (in_array("drop", $ar)) {
-        $get_total2 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=DROP");
+        $get_total2 = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id&status=DROP");
         $total_content2 = json_decode($get_total2);
 
         foreach ($total_content2 as $value) {
-            $drop[] = array($value->hour, round($value->length/60));
+            $drop[] = array($value->hour, round($value->length / 60));
         }
     }
     if (in_array("util", $ar)) {
-        $get_total3 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $utils));
+        $get_total3 = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $utils));
         $total_content3 = json_decode($get_total3);
 
         foreach ($total_content3 as $value) {
-            $util[] = array($value->hour, round($value->length/60));
+            $util[] = array($value->hour, round($value->length / 60));
         }
     }
     if (in_array("sucesso", $ar)) {
-        $get_total4 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Suc));
+        $get_total4 = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Suc));
         $total_content4 = json_decode($get_total4);
 
         foreach ($total_content4 as $value) {
-            $sucesso[] = array($value->hour, round($value->length/60));
+            $sucesso[] = array($value->hour, round($value->length / 60));
         }
     }
     if (in_array("callback", $ar)) {
-        $get_total5 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Callbacks));
+        $get_total5 = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Callbacks));
         $total_content5 = json_decode($get_total5);
 
         foreach ($total_content5 as $value) {
-            $callback[] = array($value->hour, round($value->length/60));
+            $callback[] = array($value->hour, round($value->length / 60));
         }
     }
     if (in_array("complete", $ar)) {
-        $get_total6 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Completes));
+        $get_total6 = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Completes));
         $total_content6 = json_decode($get_total6);
 
         foreach ($total_content6 as $value) {
-            $complete[] = array($value->hour, round($value->length/60));
+            $complete[] = array($value->hour, round($value->length / 60));
         }
     }
     if (in_array("nutil", $ar)) {
-        $get_total7 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $NUtils));
+        $get_total7 = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $NUtils));
         $total_content7 = json_decode($get_total7);
 
         foreach ($total_content7 as $value) {
-            $nutil[] = array($value->hour, round($value->length/60));
+            $nutil[] = array($value->hour, round($value->length / 60));
         }
     }
     if (in_array("unwork", $ar)) {
-        $get_total8 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Unworkable));
+        $get_total8 = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Unworkable));
         $total_content8 = json_decode($get_total8);
 
         foreach ($total_content8 as $value) {
-            $unwork[] = array($value->hour, round($value->length/60));
+            $unwork[] = array($value->hour, round($value->length / 60));
         }
     }
 
     echo json_encode(array('Total' => $total, 'Talk' => $talk, 'Util' => $util, 'Sucesso' => $sucesso, 'Callback' => $callback, 'Complete' => $complete, 'NUtil' => $nutil, 'Unwork' => $unwork, 'Drop' => $drop));
 }
 
-function timeline($db, $ar, $id, $start, $end) {
+function timeline($db, $server, $ar, $id, $start, $end) {
     $total = array();
     $talk = array();
     $drop = array();
@@ -363,7 +374,7 @@ function timeline($db, $ar, $id, $start, $end) {
 
 
     if (in_array("total", $ar)) {
-        $get_total = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id");
+        $get_total = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id");
         $total_content = json_decode($get_total);
 
         foreach ($total_content as $value) {
@@ -371,7 +382,7 @@ function timeline($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("talk", $ar)) {
-        $get_total1 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Hum));
+        $get_total1 = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Hum));
         $total_content1 = json_decode($get_total1);
 
         foreach ($total_content1 as $value) {
@@ -379,7 +390,7 @@ function timeline($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("drop", $ar)) {
-        $get_total2 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=DROP");
+        $get_total2 = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id&status=DROP");
         $total_content2 = json_decode($get_total2);
 
         foreach ($total_content2 as $value) {
@@ -387,7 +398,7 @@ function timeline($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("util", $ar)) {
-        $get_total3 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $utils));
+        $get_total3 = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $utils));
         $total_content3 = json_decode($get_total3);
 
         foreach ($total_content3 as $value) {
@@ -395,7 +406,7 @@ function timeline($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("sucesso", $ar)) {
-        $get_total4 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Suc));
+        $get_total4 = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Suc));
         $total_content4 = json_decode($get_total4);
 
         foreach ($total_content4 as $value) {
@@ -403,7 +414,7 @@ function timeline($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("callback", $ar)) {
-        $get_total5 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Callbacks));
+        $get_total5 = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Callbacks));
         $total_content5 = json_decode($get_total5);
 
         foreach ($total_content5 as $value) {
@@ -411,7 +422,7 @@ function timeline($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("complete", $ar)) {
-        $get_total6 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Completes));
+        $get_total6 = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Completes));
         $total_content6 = json_decode($get_total6);
 
         foreach ($total_content6 as $value) {
@@ -419,7 +430,7 @@ function timeline($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("nutil", $ar)) {
-        $get_total7 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $NUtils));
+        $get_total7 = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $NUtils));
         $total_content7 = json_decode($get_total7);
 
         foreach ($total_content7 as $value) {
@@ -427,7 +438,7 @@ function timeline($db, $ar, $id, $start, $end) {
         }
     }
     if (in_array("unwork", $ar)) {
-        $get_total8 = file_get_contents($server."total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Unworkable));
+        $get_total8 = file_get_contents($server . "total/calls/$start/$end?by=hour&campaign=$id&status=" . implode(',', $Unworkable));
         $total_content8 = json_decode($get_total8);
 
         foreach ($total_content8 as $value) {
@@ -438,7 +449,7 @@ function timeline($db, $ar, $id, $start, $end) {
     echo json_encode(array('Total' => $total, 'Talk' => $talk, 'Util' => $util, 'Sucesso' => $sucesso, 'Callback' => $callback, 'Complete' => $complete, 'NUtil' => $nutil, 'Unwork' => $unwork, 'Drop' => $drop));
 }
 
-function getAgentsCampaign($db, $id, $start, $end,$server) {
+function getAgentsCampaign($db, $id, $start, $end, $server) {
     $sql = "select * FROM `vicidial_campaign_statuses` Where campaign_id ='" . $id . "' and selectable ='y'";
     $stmt = $db->prepare($sql);
     $stmt->execute();
@@ -465,15 +476,15 @@ function getAgentsCampaign($db, $id, $start, $end,$server) {
             $hu[] = $data->status;
         }
     }
-   
-    $get_hours = file_get_contents($server."total/agent_log/$start/$end?campaign=$id");
+
+    $get_hours = file_get_contents($server . "total/agent_log/$start/$end?campaign=$id");
     $hours_content = json_decode($get_hours);
-   
-    $get_calls = file_get_contents($server."total/calls/$start/$end?by=agent&campaign=$id");
+
+    $get_calls = file_get_contents($server . "total/calls/$start/$end?by=agent&campaign=$id");
     $calls_content = json_decode($get_calls);
 
     if (count($sucesso)) {
-        $get_sucesso = file_get_contents($server."total/calls/$start/$end?by=agent&campaign=$id&status=" . implode(',', $sucesso));
+        $get_sucesso = file_get_contents($server . "total/calls/$start/$end?by=agent&campaign=$id&status=" . implode(',', $sucesso));
         $sucesso_content = json_decode($get_sucesso);
         foreach ($sucesso_content as $value) {
             $sucess[$value->agent] = $value->calls;
@@ -481,7 +492,7 @@ function getAgentsCampaign($db, $id, $start, $end,$server) {
     }
 
     if (count($util)) {
-        $get_util = file_get_contents($server."total/calls/$start/$end?by=agent&campaign=$id&status=" . implode(',', $util));
+        $get_util = file_get_contents($server . "total/calls/$start/$end?by=agent&campaign=$id&status=" . implode(',', $util));
         $util_content = json_decode($get_util);
         foreach ($util_content as $value) {
             $positive[$value->agent] = $value->calls;
@@ -489,7 +500,7 @@ function getAgentsCampaign($db, $id, $start, $end,$server) {
     }
 
     if (count($hu)) {
-        $get_human = file_get_contents($server."total/calls/$start/$end?by=agent&campaign=$id&status=" . implode(',', $hu));
+        $get_human = file_get_contents($server . "total/calls/$start/$end?by=agent&campaign=$id&status=" . implode(',', $hu));
         $hu_content = json_decode($get_human);
         foreach ($hu_content as $value) {
             $human[$value->agent] = $value->calls;
