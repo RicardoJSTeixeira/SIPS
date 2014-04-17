@@ -14,10 +14,8 @@ var products = function(geral_path, options_ext)
     {
         $.get("/AM/view/products/product.html", function(data) {
             geral_path.empty().off().append(data);
-
             geral_path.find(".chosen-select").chosen({no_results_text: "Sem resultados", width: "100%"});
             geral_path.find(".form_datetime_day").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
-
             if (typeof callback === "function")
                 callback();
         });
@@ -33,8 +31,6 @@ var products = function(geral_path, options_ext)
         datatable_path.on("click", ".btn_ver_produto", function()
         {
             product_id = $(this).data("product_id");
-
-
             populate_modal(edit_product_modal, function()
             {
                 get_promocao(edit_product_modal, function()
@@ -48,14 +44,10 @@ var products = function(geral_path, options_ext)
                     edit_product_modal.find(".modal-body").find(".color_picker_select").parent().find("a").hide();
                 });
             });
-
         });
-
         datatable_path.on("click", ".btn_editar_produto", function()
         {
             product_id = $(this).data("product_id");
-
-
             populate_modal(edit_product_modal, function()
             {
                 get_promocao(edit_product_modal, function()
@@ -68,7 +60,6 @@ var products = function(geral_path, options_ext)
                     edit_product_modal.find(".modal-body").find("select").prop("disabled", false).trigger("chosen:updated");
                 });
             });
-
             edit_product_modal.on("click", "#edit_product_button", function(e)
             {
                 e.preventDefault();
@@ -87,7 +78,6 @@ var products = function(geral_path, options_ext)
                 {
                     color.push({color: $(this).find(".color_picker_select").val(), name: $(this).find(".color_name").val()});
                 });
-
                 if (edit_product_modal.find("#edit_product_form").validationEngine("validate"))
                 {
                     if (types.length)
@@ -132,7 +122,6 @@ var products = function(geral_path, options_ext)
                 geral_path.find("#remove_product_modal").modal("hide");
             }, "json");
         });
-
         edit_product_modal.on("click", "#edit_product_add_promotion_toggle", function(e)
         {
             e.preventDefault();
@@ -143,7 +132,6 @@ var products = function(geral_path, options_ext)
             edit_product_modal.find("#edit_product_data_promoçao1").val("");
             edit_product_modal.find("#edit_product_data_promoçao2").val("");
         });
-
         edit_product_modal.on("click", "#edit_product_add_promotion_button", function(e)
         {
             e.preventDefault();
@@ -173,7 +161,6 @@ var products = function(geral_path, options_ext)
                 edit_product_modal.find("#edit_product_color_div").hide();
             }
         });
-
         edit_product_modal.on("click", "#edit_product_button_color_add_line", function(e)
         {
             e.preventDefault();
@@ -204,12 +191,10 @@ var products = function(geral_path, options_ext)
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     this.init_new_product = function(new_product_path1, callback)
     {
-
         new_product_path1.append(geral_path.find("#new_product_form"));
         var new_product_path = new_product_path1;
         clear_new_product_area(new_product_path);
         populate_parent(new_product_path.find("#new_product_parent"), null, null, null);
-
         new_product_path.find("#create_new_product_button").click(function(e)
         {
             e.preventDefault();
@@ -289,11 +274,8 @@ var products = function(geral_path, options_ext)
             e.preventDefault();
             $(this).parent().parent().remove();
         });
-
-
         if (typeof callback === "function")
             callback();
-
     };
 
     function clear_new_product_area(new_product_path)
@@ -352,9 +334,7 @@ var products = function(geral_path, options_ext)
             populate_parent(geral_path.find("#edit_product_parent"), find_level(data), get_children(data), function()
             {
                 modal.find("#edit_product_name").val(data.name);
-
                 modal.find("#edit_product_category").val(data.category);
-
                 modal.find("#edit_product_parent option[value='" + product_id + "']").prop("disabled", true);
                 modal.find("#edit_product_parent").val(data.parent).trigger("chosen:updated");
                 modal.find("#edit_product_active").prop("checked", data.active);
@@ -378,7 +358,6 @@ var products = function(geral_path, options_ext)
                     modal.find("#edit_product_children_div").hide();
                 }
 //--------------------------------------------------------------------------COLOR-----------------------------------------
-
                 if (data.category === "molde" || data.category === "aparelho")
                 {
                     modal.find("#edit_product_color_div").show();
@@ -397,7 +376,6 @@ var products = function(geral_path, options_ext)
                 }
                 else
                 {
-
                     modal.find("#edit_product_color_div").hide();
                 }
                 modal.modal("show");
@@ -448,7 +426,7 @@ var products = function(geral_path, options_ext)
                         <optgroup value='3' label='Acessórios'></optgroup>\n\
                         <optgroup value='4' label='Moldes'></optgroup>\n\
                         <optgroup value='5' label='Economato'></optgroup>\n\
-<optgroup value='6' label='gama'></optgroup>",
+                        <optgroup value='6' label='gama'></optgroup>",
                     aparelho = [],
                     pilha = [],
                     acessorio = [],
@@ -459,14 +437,12 @@ var products = function(geral_path, options_ext)
             var option = "";
             $.each(data, function()
             {
-
                 var level = find_level(this);
 
                 if (out_level)
                 {
                     level = level - out_level;
                 }
-
                 option = "<option  id=" + this.id + "  value='" + this.id + "'>" + this.name + "</option>";
                 if (level < 1)
                     option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Max.Lvl. " + this.name + "</option>";
@@ -475,7 +451,6 @@ var products = function(geral_path, options_ext)
                     if (children.indexOf(this.id) !== -1)
                         option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Assoc. " + this.name + "</option>";
                 }
-
                 switch (this.category)
                 {
                     case "aparelho":
@@ -497,7 +472,6 @@ var products = function(geral_path, options_ext)
                         break;
                 }
             });
-
             select.find("optgroup[value='1']").append(aparelho).end()
                     .find("optgroup[value='2']").append(pilha).end()
                     .find("optgroup[value='3']").append(acessorio).end()
@@ -507,7 +481,6 @@ var products = function(geral_path, options_ext)
             if (typeof callback === "function")
                 callback();
         }, "json");
-
     }
 
     function find_level(element)
@@ -520,7 +493,6 @@ var products = function(geral_path, options_ext)
                 level = level + find_level(this);
             });
         }
-
         return level;
     }
 
@@ -533,7 +505,6 @@ var products = function(geral_path, options_ext)
             {
                 children.push(this.id);
                 get_children_extra(this, children);
-
             });
         }
         return children;

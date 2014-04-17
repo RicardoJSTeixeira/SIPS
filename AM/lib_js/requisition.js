@@ -5,9 +5,8 @@ var requisition = function(geral_path, options_ext)
 
     var me = this;
     this.file_uploaded = false;
-    this.config = new Object();
-    var product = 1;
-    var product_sub = 1;
+    this.config = {};
+
     var modal = "";
     var table_path = "";
     var show_admin = 0;

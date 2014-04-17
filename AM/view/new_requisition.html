@@ -144,20 +144,12 @@
 <script>
                             $(function()
                             {
-                                var values = getUrlVars();
-                                var config = new Object();
-                                requisition1 = new requisition($("#extra_div"), config);
+                                var client = getUrlVars();
+
+                                requisition1 = new requisition($("#extra_div"), {});
                                 requisition1.init(function()
                                 {
-
-                                    if (values["id"])
-                                        requisition1.new_requisition($("#new_requisition_div"), values["id"]);
-                                    else
-                                        requisition1.new_requisition($("#new_requisition_div"), null);
+                                    requisition1.new_requisition($("#new_requisition_div"), client.id);
                                 });
                             });
-
-
-                  
-
 </script>
