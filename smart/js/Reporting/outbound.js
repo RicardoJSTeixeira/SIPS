@@ -77,7 +77,7 @@ function outboundList(today) {
 
         api.get({datatype: 'agent_log', type: 'total', timeline: {start: today.format('YYYY-MM-DDT00:00'), end: today.format('YYYY-MM-DDT23:59')}, by: {calls: ['by=campaign']}}, function(time) {
             $.each(time, function() {
-                hours[this.campaign] = this.sum_dead + this.sum_pause + this.sum_billable_pause + this.sum_dispo + this.sum_talk + this.sum_wait;
+                hours[this.campaign] = this.sum_dead +  this.sum_billable_pause + this.sum_dispo + this.sum_talk + this.sum_wait;
             });
         });
         api.get({datatype: 'campaigns', type: 'datatype'}, function(datas) {
@@ -725,7 +725,7 @@ function performance(CampaignID, start, end) {
         api.get({datatype: 'agent_log', type: 'total', timeline: {start: start, end: end}, by: {calls: ['campaign=' + CampaignID]}}, function(dat) {
             // //console.log(dat);
             if (dat) {
-                horas = dat[0].sum_billable_pause + dat[0].sum_dead + dat[0].sum_dispo + dat[0].sum_pause + dat[0].sum_talk + dat[0].sum_wait;
+                horas = dat[0].sum_billable_pause + dat[0].sum_dead + dat[0].sum_dispo + dat[0].sum_talk + dat[0].sum_wait;
                 $('#aag6').html((horas / 3600).toFixed(3));
             }
             api.get({datatype: 'calls', type: 'total', 'timeline': {'start': start, 'end': end}, 'by': {'calls': ['campaign=' + CampaignID + '&by=status']}}, function(info) {
