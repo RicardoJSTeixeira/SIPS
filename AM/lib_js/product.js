@@ -19,7 +19,6 @@ var products = function(geral_path, options_ext)
             if (typeof callback === "function")
                 callback();
         });
-
     };
 
     this.init_to_datatable = function(datatable_path1)
@@ -82,7 +81,6 @@ var products = function(geral_path, options_ext)
                 {
                     if (types.length)
                     {
-
                         $.post('/AM/ajax/products.php', {action: "edit_product", "id": product_id,
                             name: edit_product_modal.find("#edit_product_name").val(),
                             max_req_m: edit_product_modal.find("#edit_product_mrm").val(),
@@ -92,7 +90,6 @@ var products = function(geral_path, options_ext)
                             type: types,
                             color: color,
                             active: edit_product_modal.find("#edit_product_active").is(":checked")}, function(data) {
-
                             edit_product_modal.modal("hide");
                             update_products_datatable(datatable_path);
                         }, "json");
@@ -106,7 +103,6 @@ var products = function(geral_path, options_ext)
         });
         datatable_path.on("click", ".btn_apagar_produto", function()
         {
-
             geral_path.find("#remove_product_modal").modal("show");
             geral_path.find("#remove_product_button").data("button", $(this));
             geral_path.find("#remove_product_button").data("product_id", $(this).data("product_id"));

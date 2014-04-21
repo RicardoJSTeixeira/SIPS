@@ -2,12 +2,35 @@
 <style>
     .select_product
     {
-        width:180px;
+        width:100%;
     }
     .level_highlight
     {
         background-color: #2ba6cb;
         border: 1px #000;
+    }
+    .level_div{
+
+        width: 19%!important;
+        margin: 2px!important;
+    }
+
+    .level_div_extra
+    {
+        width: 19%!important;
+        margin: 2px!important;
+    }
+
+    .sub_product_div
+    {
+        border: 1px  solid black;
+        padding: 4px;
+    }
+
+
+    .select_color_picker
+    {
+        width:105px;
     }
 
 </style>
@@ -90,45 +113,58 @@
         </div>
         <div class="grid-content">
             <div class="row-fluid">
+
+                <div class="level_div_extra span2"></div>
+                <div class="level_div_extra span2"><button data-level="level2" class='span btn icon-alone btn-success add_second_sub_product' ><i  class='icon-plus'></i> </button></div>
+                <div class="level_div_extra span2"><button data-level="level3" class='span btn icon-alone btn-success add_second_sub_product' disabled><i  class='icon-plus'></i> </button></div> 
+                <div class="level_div_extra span2"><button data-level="level4" class='span btn icon-alone btn-success add_second_sub_product' disabled><i  class='icon-plus'></i> </button></div>
+                <div class="level_div_extra span2"><button data-level="level5" class='span btn icon-alone btn-success add_second_sub_product' disabled><i  class='icon-plus'></i> </button></div>
+
+            </div>
+            <div class="row-fluid">
                 <form class="requisition_form">
-                    <div class="span2 level_div "></div>
-                    <div class="span2 level_div"></div>
-                    <div class="span2 level_div "></div> 
-                    <div class="span2 level_div"></div>
-                    <div class="span2 level_div "></div>
+                    <div class="level_div span2" data-level="level1"></div>
+                    <div class="level_div span2" data-level="level2"></div>
+                    <div class="level_div span2" data-level="level3"></div> 
+                    <div class="level_div span2" data-level="level4"></div>
+                    <div class="level_div span2" data-level="level5"></div>
                 </form>
             </div>
 
         </div> 
     </div> 
 
-    <div id="placeholder_new_product" class="sub_product_div" style="display:none; ">
+    <div id="placeholder_new_product" class="sub_product_div  " style="display:none; ">
 
-        <div class="pull-right input-prepend input-append">
-            <button class='btn icon-alone btn-danger remove_second_sub_product'><i  class='icon-minus'></i> </button>
-            <button class='btn icon-alone btn-success add_second_sub_product'><i  class='icon-plus'></i> </button>
+        <div class="row-fluid">
+            <div class="span9">
+
+                <div class=" select_div" >
+                </div>        
+
+            </div>
+            <div class="span3">
+                <button class='btn  btn-danger icon-alone remove_second_sub_product span'><i  class='icon-minus'></i> </button>
+            </div>
         </div>
+        <div class="row-fluid">
+            <div class="span6">
+                <div class="quantity_master_div" style="display:none">
+                    <span  >Quantidade</span>
+                    <div class=" quantity_div" >
+                    </div>
 
-
-
-
-        <div>
-            <div class="FormRow">
-
-                <div class="formRight select_div" >
-                </div>        
-            </div>
-            <div class="FormRow" style="display:none">
-                <span  >Cor</span>
-                <div class="formRight color_div" >
-                </div>        
-            </div>
-            <div class="FormRow" style="display:none">
-                <span  >Quantidade</span>
-                <div class=" quantity_div" >
                 </div>
-                <span class="help-inline max_div"> </span>
             </div>
+            <div class="span6">
+                <div class="color_master_div" style="display:none">
+                    <span  >Cor</span>
+                    <div class="color_div" >
+                    </div>        
+                </div>
+            </div>
+
+
             <div class="clear"></div>
         </div>
 

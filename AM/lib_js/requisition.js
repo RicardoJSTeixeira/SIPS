@@ -13,6 +13,7 @@ var requisition = function(geral_path, options_ext)
     var tipo = "mensal";
     var is_master_product = false;
     var produtos = [];
+    var product_id = 1;
     $.extend(true, this.config, options_ext);
     this.init = function(callback)
     {
@@ -67,7 +68,10 @@ var requisition = function(geral_path, options_ext)
         {
             e.preventDefault();
             is_master_product = true;
+
             new_requisition_zone.append(new_requisition_zone.find("#placeholder_new_product_div").clone().prop("id", "").show());
+
+
             add_sub_product(new_requisition_zone.find(".product_div").last().find(".level_div").first(), function() {
                 update_selects(new_requisition_zone.find(".product_div").last().find(".level_div"));
             });
@@ -76,13 +80,13 @@ var requisition = function(geral_path, options_ext)
 
         $(new_requisition_zone).on("click", ".add_second_sub_product", function(e)
         {
+
             e.preventDefault();
             var that = $(this);
-            add_sub_product(that.closest(".level_div"), function() {
-                update_selects(that.closest(".level_div"));
+
+            add_sub_product(new_requisition_zone.find(".requisition_form").find("*[data-level=" + that.data().level + "]"), function() {
+                update_selects(new_requisition_zone.find(".requisition_form").find("*[data-level=" + that.data().level + "]"));
             });
-
-
         });
 
         $(new_requisition_zone).on("click", ".remove_second_sub_product", function(e)
@@ -112,18 +116,18 @@ var requisition = function(geral_path, options_ext)
                 {
                     remove_sub_product(this_div.closest(".level_div").next());
                 }
-                this_div.find(".color_div").parent().hide();
-                this_div.find(".FormRow").last().hide();
+                this_div.find(".color_master_div").hide();
+                this_div.find(".quantity_master_div").hide();
 
             }
             else
             {
-                this_div.find(".FormRow").last().show();
+                this_div.find(".quantity_master_div").show();
 //ESCONDER/MOSTRAR A COR
                 if (select.find("option:selected").data("category") == "aparelho" || select.find("option:selected").data("category") == "molde")
-                    this_div.find(".color_div").parent().show();
+                    this_div.find(".color_master_div").show();
                 else
-                    this_div.find(".color_div").parent().hide();
+                    this_div.find(".color_master_div").hide();
                 if (me.tipo == "mensal")
                 {
                     this_div.find(".product_span_max").text("Nº Max." + select.find("option:selected").data("max_month"));
@@ -140,10 +144,12 @@ var requisition = function(geral_path, options_ext)
                 }
                 var select_color = this_div.find(".select_color_picker");
                 select_color.empty();
-                if (select_color.find("option:selected").data("color"))
+
+                if (select.find("option:selected").data("color"))
                 {
-                    $.each(select_color.find("option:selected").data("color"), function()
+                    $.each(select.find("option:selected").data("color"), function()
                     {
+
                         select_color.append("<option  data-color_id='" + this.color + "' data-color_name='" + this.name + "'>" + this.name + "</option>");
                     });
                 }
@@ -156,11 +162,12 @@ var requisition = function(geral_path, options_ext)
                 if (children.length)
                 {
                     if (!get_level_product_count(get_next_level(this_div.closest(".level_div"))))
-                        add_sub_product(this_div.closest(".level_div").next(), null);
+                        add_sub_product(get_next_level(this_div.closest(".level_div")), function() {
+
+                        });
                 }
 
-
-
+            //    new_requisition_zone.find(".requisition_form").find("*[data-level=" + that.data().level + "]");
 
             }
             populate_select(select, null);
@@ -234,10 +241,20 @@ var requisition = function(geral_path, options_ext)
 
         function is_first_element(div)
         {
-            if (get_previous_product(div).length && get_previous_level(div.closest(".level_div")))
+
+            if (get_previous_level(div.closest(".level_div")).find(".sub_product_div").length)
                 return false;
             else
                 return true;
+        }
+
+        function is_first_in_column(div)
+        {
+
+            if (div.closest(".level_div").find(".sub_product_div").first().attr("id") == div.attr("id"))
+                return true;
+            else
+                return false;
         }
 
 
@@ -245,27 +262,24 @@ var requisition = function(geral_path, options_ext)
         function get_parents(level)
         {
             var parents = [];
+            if (get_previous_level(level).find(".select_product").length)
+                parents = get_parents(get_previous_level(level));
+
             if (level.find(".select_product").length)
                 $.each(level.find(".select_product"), function()
                 {
                     if (~~($(this).val()) != 0)
                         parents.push(~~($(this).val()));
                 });
-            if (get_previous_level(level).find(".select_product").length)
-                $.each(get_previous_level(level).find(".select_product"), function()
-                {
-                    if (~~($(this).val()) != 0)
-                        parents.push(~~($(this).val()));
-                });
-
             return parents;
         }
+
+
         function add_sub_product(div, callback)
         {
-            div.append(new_requisition_zone.find("#placeholder_new_product").clone().prop("id", "").show());
+            div.append(new_requisition_zone.find("#placeholder_new_product").clone().prop("id", "product" + product_id++).show());
             prepare_new_sub_product(div.find(".sub_product_div").last(), callback);
         }
-
 
 
         function prepare_new_sub_product(this_div, callback)
@@ -274,8 +288,7 @@ var requisition = function(geral_path, options_ext)
             this_div.find(".select_div").empty().append("<select  class='chosen-select select_product'></select>");
             //color    
             this_div.find(".color_div").empty().append("<select class='input-medium select_color_picker'></select>");
-            //Max    
-            this_div.find(".max_div").empty().append("<span class='product_span_max'></span>");
+
             //Quantity    
             this_div.find(".quantity_div").empty().append("<input class='quantity_input input-mini validate[required,custom[onlyNumberSp]]'  type='number' min='1' value='1'>");
             this_div.find(".select_product").chosen({no_results_text: "Sem resultados"});
@@ -285,7 +298,7 @@ var requisition = function(geral_path, options_ext)
             {
                 is_master_product = false;
                 this_div.find(".remove_second_sub_product").hide();
-                this_div.find(".add_second_sub_product").hide();
+
             }
             if (typeof callback === "function")
                 callback();
@@ -305,7 +318,6 @@ var requisition = function(geral_path, options_ext)
 
         function populate_select(select, callback)
         {
-
             var selected_value = select.val();
             var is_empty = true;
 
@@ -318,7 +330,7 @@ var requisition = function(geral_path, options_ext)
                             <optgroup value='3' label='Acessórios'></optgroup>\n\
                             <optgroup value='4' label='Moldes'></optgroup>\n\
                             <optgroup value='5' label='Economato'></optgroup>\n\
-  <optgroup value='6' label='Gama'></optgroup>",
+                             <optgroup value='6' label='Gama'></optgroup>",
                     aparelho = [],
                     pilha = [],
                     acessorio = [],
@@ -328,38 +340,27 @@ var requisition = function(geral_path, options_ext)
             select.append(temp);
             var parents = get_parents(select.closest(".level_div"));
             var children = [];
-
             for (var i = 0; i < parents.length; i++)
             {
                 children = children.concat(get_children(parents[i]));
             }
-
-
-
             $.each(produtos, function()
             {
                 if (parents.length)
                 {
                     if (parents.indexOf(this.id) != -1)
                         return true;
-
-
                     if (children.length)
                     {
                         if (children.indexOf(this.id) == -1)
                             return true;
                     }
-
                 }
                 else
                 {
                     if (!is_first_element(select.closest(".sub_product_div")))
                         select.closest(".sub_product_div").remove();
                 }
-
-
-
-
                 is_empty = false;
                 switch (this.category)
                 {
@@ -383,21 +384,16 @@ var requisition = function(geral_path, options_ext)
                         break;
                 }
             });
-
-
             select.find("optgroup[value='1']").append(aparelho).end()
                     .find("optgroup[value='2']").append(pilha).end()
                     .find("optgroup[value='3']").append(acessorio).end()
                     .find("optgroup[value='4']").append(molde).end()
                     .find("optgroup[value='5']").append(economato).end()
                     .find("optgroup[value='6']").append(gama).end().val(selected_value).trigger("chosen:updated");
-
             if (is_empty)
                 select.closest(".sub_product_div").remove();
-
             if (typeof callback === "function")
                 callback();
-
         }
 
 // SUBMITAR A ENCOMENDA------------------------------------------------
