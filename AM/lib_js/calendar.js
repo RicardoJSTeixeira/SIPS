@@ -63,10 +63,6 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 cEO.end = moment(date).add("minutes", config.defaultEventMinutes).unix();
             }
 
-
-
-
-
             cEO.allDay = allDay;
 
             if (!me.calendar.fullCalendar('getView').name.match("agenda")) {
@@ -342,16 +338,15 @@ var calendar = function(selector, data, modals, ext, client, user) {
         }
     };
     this.makeRefController = function(Refs) {
-        var temp = "<tr><td class=\"chex-table\"><input type=\"radio\" checked name=\"single-refs\" id=\"all\" ><label for=\"all\"><span></span></label></td><td><label for=\"all\" class=\"btn-link\">Todos</label></td></tr>";
+        var temp = "<tr><td class=\"chex-table\"><input type=\"radio\" checked name=\"single-refs\" value=\"all\" id=\"all\" ><label for=\"all\"><span></span></label></td><td><label for=\"all\" class=\"btn-link\">Todos</label></td></tr>";
         $.each(Refs, function() {
-            temp = temp + "<tr><td class=\"chex-table\"><input type=\"radio\" name=\"single-refs\" id=\"" + this.id + "\" ><label for=\"" + this.id + "\"><span></span></label></td><td><label for=\"" + this.id + "\" class=\"btn-link\">" + this.name + "</label></td></tr>";
+            temp = temp + "<tr><td class=\"chex-table\"><input type=\"radio\" name=\"single-refs\" value=\"" + this.id + "\" id=\"" + this.id + "\" ><label for=\"" + this.id + "\"><span></span></label></td><td><label for=\"" + this.id + "\" class=\"btn-link\">" + this.name + "</label></td></tr>";
         });
         $("#refs tbody").html(temp);
-        $("#refs tbody input").change(function() {
-            var selected = $(this);
+        $("#refs tbody [name=single-refs]").change(function() {
             $.post("/AM/ajax/calendar.php",
                     {
-                        resource: selected[0].id,
+                        resource: $(this).val(),
                         action: "getRscContent"
                     },
             function(dat) {
@@ -370,7 +365,6 @@ var calendar = function(selector, data, modals, ext, client, user) {
                     title: "Não há consulta",
                     content: '<select id="select_no_consult">\n\
                                 <option value="DEST">Desistiu</option>\n\
-                                <option value="RM">Remarcar</option>\n\
                                 <option value="FAL">Faleceu</option>\n\
                                 <option value="TINV">Telefone Invalido</option>\n\
                                 <option value="NOSHOW">No Show</option>\n\
@@ -388,7 +382,8 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 .on("click", "#no_consult_confirm_button", function()
                 {
 
-                    var calendar_client = me.modal_ext.data();
+                    var calendar_client = me.modal_ext.data(),
+                            cResult = $("#select_no_consult").val();
                     $.post("/AM/ajax/consulta.php",
                             {
                                 action: "insert_consulta",
@@ -396,7 +391,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                                 lead_id: calendar_client.calEvent.lead_id,
                                 closed: true,
                                 consulta: 0,
-                                consulta_razao: $("#select_no_consult").val(),
+                                consulta_razao: cResult,
                                 exame: "0",
                                 exame_razao: "",
                                 venda: 0,
@@ -409,12 +404,10 @@ var calendar = function(selector, data, modals, ext, client, user) {
                             },
                     function() {
                         calendar_client.calEvent.editable = false;
+                        calendar_client.calEvent.closed = true;
+                        calendar_client.calEvent.del = (cResult === 'DEST');
+                        calendar_client.calEvent.className += (cResult === 'DEST') ? ' del' : '';
                         me.calendar.fullCalendar('updateEvent', calendar_client.calEvent);
-
-                        if ($("#select_no_consult").val() === "RM") {
-                            var en = btoa(calendar_client.calEvent.lead_id);
-                            $.history.push("view/calendar.html?id=" + en);
-                        }
                     }
                     , "json");
                     me.modal_ext.modal("hide").find(".popover").hide();
@@ -569,14 +562,14 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 .modal();
     };
     this.userWidgetPopulate = function() {
-            $("#client")
-                    .find(".user-name").text(me.client.name)
-                    .end()
-                    .find(".user-email").text(me.client.address)
-                    .end()
-                    .find(".user-date").text(me.client.bDay)
-                    .end()
-                    .show();
+        $("#client")
+                .find(".user-name").text(me.client.name)
+                .end()
+                .find(".user-email").text(me.client.address)
+                .end()
+                .find(".user-date").text(me.client.bDay)
+                .end()
+                .show();
     };
     this.destroy = function() {
         this.calendar.fullCalendar('destroy');

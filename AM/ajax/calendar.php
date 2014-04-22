@@ -70,10 +70,14 @@ switch (filter_var($_POST["action"])) {
         $calendar = new Calendars($db);
         $system_types = $calendar->getSystemTypes();
         $userID = $user->getUser();
-        $refs = $calendar->_getRefs($userID->username);
-        $id = array();
-        while ($ref = array_pop($refs)) {
-            $id = $calendar->newReserva($userID->username, "", $start, $end, $system_types[$rtype], $ref->id, $obs);
+        if ($resource == "all") {
+            $refs = $calendar->_getRefs($userID->username);
+            $id = array();
+            while ($ref = array_pop($refs)) {
+                $id = $calendar->newReserva($userID->username, "", $start, $end, $system_types[$rtype], $ref->id, $obs);
+            }
+        } else {
+            $id = $calendar->newReserva($userID->username, "", $start, $end, $system_types[$rtype], $resource, $obs);
         }
         echo json_encode(true);
         break;

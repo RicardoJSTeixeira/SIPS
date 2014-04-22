@@ -51,7 +51,7 @@ class script {
         $stmt->execute(array(":lead_id" => $lead_id));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $row["nome_operador"] = $operador;
-            $js = $row;
+            $js = array_map(function($a){return (string)$a;},$row);
         }
         return $js;
     }
