@@ -41,7 +41,7 @@ switch ($action) {
         $system_types=$calendar->getSystemTypes();
         $id = array();
         while ($ref = array_pop($refs)) {
-            $id[] = $calendar->newReserva($userID->username, "", strtotime($data_inicial . " " . $horario["inicio1"]), strtotime($data_final . " " . $horario["fim2"]), $system_types["Apoio Markting"], $ref->id);
+            $id[] = $calendar->newReserva($userID->username, "", strtotime($data_inicial . " " . $horario["inicio1"]), strtotime($data_final . " " . $horario["fim2"]), $system_types["Rastreio c/ MKT"], $ref->id);
         }
         $ok = $apoio_marketing->create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade, $id);
         echo json_encode($ok);

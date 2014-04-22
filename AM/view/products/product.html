@@ -12,12 +12,7 @@
                     <input type="text" id="edit_product_name" class="span validate[required]">
                 </div>
             </div>
-            <div class="formRow">
-                <span>Preço</span>
-                <div class="formRight">
-                    <input type="number" id="edit_product_price" class="span validate[required]">
-                </div>
-            </div>
+
             <div class="formRow">
                 <span>Parente</span>
                 <div class="formRight">
@@ -33,6 +28,7 @@
                         <option value="acessorio" >Acessórios</option>
                         <option value="molde" >Molde</option>
                         <option value="economato" >Economato</option>
+                        <option value="gama" >Gama</option>
                     </select>
                 </div> 
             </div>
@@ -165,11 +161,7 @@
     <fieldset>
         <label for="new_product_name">Nome</label>
         <input type="text" id="new_product_name" class="span validate[required]">
-        <label for="new_product_price">Preço</label>
-        <div class="input-append">
-            <input type="text" id="new_product_price" class="span3 text-right validate[required]">
-            <span class="add-on">€</span>
-        </div>
+
         <label for="new_product_parent">Parente</label>
         <select class="chosen-select" id="new_product_parent" multiple data-placeholder="Selecione um parent"></select>
         <label for="new_product_category">Categoria</label>
@@ -179,12 +171,13 @@
             <option value="acessorio" >Acessórios</option>
             <option value="molde" >Molde</option>
             <option value="economato" >Economato</option>
+            <option value="gama" >Gama</option>
         </select>
 
         <label>Tipo</label>
-        <input type="checkbox" id="new_product_check_branch" name="new_product_tipo_user" value="branch" class="validate[minCheckbox[1]]">
+        <input type="checkbox" id="new_product_check_branch" name="new_product_tipo_user" value="branch"  checked class="validate[minCheckbox[1]]">
         <label class="checkbox inline" for="new_product_check_branch"><span></span>Branch</label>
-        <input type="checkbox" id="new_product_check_dispenser" name="new_product_tipo_user" value="dispenser" class="validate[minCheckbox[1]]">
+        <input type="checkbox" id="new_product_check_dispenser" name="new_product_tipo_user" value="dispenser" checked class="validate[minCheckbox[1]]">
         <label class="checkbox inline" for="new_product_check_dispenser"><span></span>Dispenser</label>
 
         <label><b>Max. Requisições</b></label>
@@ -219,6 +212,9 @@
                     </th>
                     <th>
                         Nome
+                    </th>
+                    <th>
+
                     </th>
                 </tr>
             </thead>
@@ -275,13 +271,14 @@
         <option value="f8a102">#f8a102</option>
         <option value="ffcc67">#ffcc67</option>
         <option value="f8ff00">#f8ff00</option>
+        <option value="f5f5dc" selected>#f5f5dc</option>
         <option value="34ff34">#34ff34</option>
         <option value="68cbd0">#68cbd0</option>
         <option value="34cdf9">#34cdf9</option>
         <option value="6665cd">#6665cd</option>
         <option value="9b9b9b">#9b9b9b</option>
         <option value="cb0000">#cb0000</option>
-        <option value="f56b00" selected>#f56b00</option>
+        <option value="f56b00" >#f56b00</option>
         <option value="ffcb2f">#ffcb2f</option>
         <option value="ffc702">#ffc702</option>
         <option value="32cb00">#32cb00</option>

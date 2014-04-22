@@ -16,11 +16,12 @@ $(function() {
                     .end()
                     .show();
         }, "json");
+
+        zone.find(".grid-title .pull-left").text('Recomendações Pedidas');
     };
 
     this.init = function(zone, rid) {
         var recomendado = rid || "";
-
         zone.append($("<input>", {type: "hidden", value: recomendado, name: "recomendado"}));
 
         zone.find("#plus-client").click(function(e) {
@@ -35,26 +36,29 @@ $(function() {
                             .append($("<input>", {type: "text", name: "cname[]", placeholder: "", class: "span validate[required]"}))
                             )
                     .append($("<td>")
-                            .append($("<input>", {type: "text", name: "cmorada[]", placeholder: "", class: "span validate[required]"}))
+                            .append($("<input>", {type: "text", name: "cmorada[]", placeholder: "", class: "span " + ((!~~recomendado) ? "validate[required]" : "")}))
                             )
                     .append($("<td>")
-                            .append($("<input>", {type: "text", name: "cpostal[]", placeholder: "", class: "span validate[minSize[4]]"}))
+                            .append($("<input>", {type: "text", name: "clocal[]", placeholder: "", class: "span validate[required]"}))
+                            )
+                    .append($("<td>")
+                            .append($("<input>", {type: "text", name: "cpostal[]", placeholder: "", class: "span " + ((!~~recomendado) ? "validate[minSize[4]]" : "")}))
                             )
                     .append($("<td>")
                             .append($("<input>", {type: "text", name: "ctel[]", placeholder: "", class: "span validate[required,custom[onlyNumberSp],minSize[9]]"}))
                             )
                     .append($("<td>")
-                            .append($("<input>", {type: "text", name: "ctlm[]", placeholder: "", class: "span validate[custom[onlyNumberSp],minSize[9]]"}))
+                            .append($("<input>", {type: "text", name: "ctlm[]", placeholder: "", class: "span"}))
                             )
                     .append($("<td>")
                             .append($("<input>", {type: "text", name: "cemail[]", placeholder: "", class: "span validate[custom[email]]"}))
                             )
                     .append($("<td>")
-                            .append($("<input>", {type: "text", name: "cbd[]", placeholder: "", readonly: true})
-                                    .datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2, initialDate:new Date(moment().subtract('years', 65).format())}))
+                            .append($("<input>", {type: "text", name: "cbd[]", placeholder: "", readonly: true, class: ((!~~recomendado) ? "validate[required]" : "")})
+                                    .datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2, initialDate: new Date(moment().subtract('years', 65).format())}))
                             )
                     .append($("<td>")
-                            .append($("<select>", {name: "ctoissue[]", class: "span validate[required]"}).append([new Option("Seleccione uma Opção", ""), new Option("Yes", "YES"), new Option("No", "NO")]))
+                            .append($("<select>", {name: "ctoissue[]", class: "span validate[required]"}).append([new Option("Seleccione uma Opção", ""), new Option("CallCenter", "YES"), new Option("Dispenser", "NO")]))
                             )
                     .append($("<td>")
                             .append($("<button>", {class: "btn btn-danger icon-alone rmvc"})

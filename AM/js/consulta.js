@@ -14,8 +14,6 @@ $(function()
     lead_id = atob(decodeURIComponent(rse.id));
     reserva_id = atob(decodeURIComponent(rse.rs));
 
-
-
     $.post("ajax/consulta.php", {action: "get_consulta", reserva_id: reserva_id},
     function(data)
     {
@@ -50,8 +48,6 @@ $(function()
         var config = {save_overwrite: true, input_disabled: consult_closed};
         script.init(config);
 
-
-
         $('#main_consulta_div #audiograma_placeholder').load("view/audiograma.html", function() {
             consult_audiogra = new audiograma(lead_id);
             if (consult_closed)
@@ -66,26 +62,14 @@ $(function()
             }
         });
 
-
-
-        $.post("ajax/consulta.php", {action: "get_client_info", lead_id: lead_id},
-        function(data)
-        {
-            $("#main_consulta_div #client_name").text(data.nome);
-            $("#main_consulta_div #client_address").text(data.morada);
-            $("#main_consulta_div #client_birth_date").text(data.data_nascimento);
+        $.post("/AM/ajax/client.php", {action: "default", id: lead_id}, function(clientI) {
+        
+            $("#main_consulta_div #client_name").text(clientI.name);
+            $("#main_consulta_div #client_address").text(clientI.address);
+            $("#main_consulta_div #client_birth_date").text(clientI.bDay);
         }, "json");
 
-
-
     }, "json");
-
-
-
-
-
-
-
 });
 
 //EXAME
@@ -112,7 +96,6 @@ $("#main_consulta_div #pa_yes").click(function()
     $("#main_consulta_div").find("#first_info_div")
             .hide();
 });
-
 
 //VENDA
 $("#main_consulta_div input[name='vp_a']").change(function()
@@ -156,14 +139,13 @@ $("#main_consulta_div #validate_audio_script").on("click", function()
     }, false);
 });
 
-
-
 $("#new_request_button").click(function()
 {
-    $.history.push("view/new_requisition.html?lead_id=" + lead_id);
+    var en = btoa(lead_id);
+    $.history.push("view/new_requisition.html?id=" + en);
 });
 
-$("#new_marcacao_button").click(function()
+$(".new_marcacao_button").click(function()
 {
     var en = btoa(lead_id);
     $.history.push("view/calendar.html?id=" + en);
@@ -173,17 +155,15 @@ $("#new_marcacao_button").click(function()
 $("#main_consulta_div #terminar_consulta").on("click", function()
 {
 
-    if (consult_closed)
+    if (consult_closed){
         $.history.push('view/dashboard.html');
-
+    }
     else
     {
-
-
         if (consult_status === "no_exam")//NÂO HA EXAME
         {
-            var exame_razao = new Array();
-            $.each($("#main_consulta_div #no_exam_div input[type='checkbox'][name='ne']:checked"), function()
+            var exame_razao = [];
+            $.each($("#main_consulta_div #no_exam_div input[type='radio'][name='ne']:checked"), function()
             {
                 exame_razao.push($(this).val());
             });
@@ -253,7 +233,6 @@ $("#main_consulta_div #terminar_consulta_no_exame").click(function()
             .find("#no_exam_div").show().end();
 });
 
-
 //SCRIPT VALIDATE AND SAVE
 $("#main_consulta_div #validate_script_button").click(function()
 {
@@ -268,8 +247,9 @@ $("#main_consulta_div #validate_audiograma_button").click(function()
 {
     consult_audiogra.validate(function()
     {
+      consult_audiogra.calculate();
+    }, function()
+    {
         $.jGrowl('AudioGrama validado com sucesso!', {life: 3000});
-    }, false);
+    });
 });
-
-
