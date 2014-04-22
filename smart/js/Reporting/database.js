@@ -6,13 +6,13 @@ function databaseList() {
         "aaSorting": [[2, "desc"]],
         "aoColumns": [
             {"sTitle": "ID", "sClass": "", "sWidth": "50px", "sType": "string", "bVisible": true},
-            {"sTitle": "Campaign Designation", "sClass": "", "sWidth": "150px","bVisible": true},
-            {"sTitle": "Total Database", "sClass": "", "sWidth": "50px","bVisible": true},
-            {"sTitle": "Total Contact", "sClass": "", "sWidth": "50px","bVisible": true},
-            {"sTitle": "Total NEW", "sClass": "", "sWidth": "50px","bVisible": true},
-            {"sTitle": "", "sClass": "", "sWidth": "50px","bVisible": false},
-            {"sTitle": "", "sClass": "", "sWidth": "50px","bVisible": false},
-            {"sTitle": "", "sClass": "", "sWidth": "50px","bVisible": false}],
+            {"sTitle": "Campaign Designation", "sClass": "", "sWidth": "150px", "bVisible": true},
+            {"sTitle": "Total Database", "sClass": "", "sWidth": "50px", "bVisible": true},
+            {"sTitle": "Total Contact", "sClass": "", "sWidth": "50px", "bVisible": true},
+            {"sTitle": "Total NEW", "sClass": "", "sWidth": "50px", "bVisible": true},
+            {"sTitle": "", "sClass": "", "sWidth": "50px", "bVisible": false},
+            {"sTitle": "", "sClass": "", "sWidth": "50px", "bVisible": false},
+            {"sTitle": "", "sClass": "", "sWidth": "50px", "bVisible": false}],
         "sDom": "<'dt-top-row'Tlf>r<'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'p>>",
         "oTableTools": {
             "aButtons": [{
@@ -34,13 +34,15 @@ function databaseList() {
 
 
     var win = 3;
-    var totalDB = [], totalContact = [], totalNEW = [], callback, date, totalsDB = 0, totalsCONTACTS = 0, totalsNEWS = 0;
+    var totalDB = {}, totalContact = {}, totalNEW = {}, callback, date, totalsDB = 0, totalsCONTACTS = 0, totalsNEWS = 0;
     //http://gonecomplus.dyndns.org:10000/ccstats/v0/count/databases?by=campaign
     api.get({datatype: 'databases', type: 'count', by: {calls: ['campaign']}}, function(data) {
-        //console.log(data);
+        console.log(data);
         $.each(data, function() {
-            totalDB[this._id.campaign.oid] = this.count;
-            totalsDB += this.count;
+            if (this._id.campaign) {
+                totalDB[this._id.campaign.oid] = this.count;
+                totalsDB += this.count;
+            }
         });
         win--;
         if (!win) {
@@ -69,7 +71,7 @@ function databaseList() {
         $.each(data, function(data) {
             totalsNEWS += this.count;
             if (totalNEW[this._id.database.campaign.oid]) {
-                totalNEW[this._id.database.campaign.oid] = this.count;
+                totalNEW[this._id.database.campaign.oid] =totalNEW[this._id.database.campaign.oid]+ this.count;
             } else {
                 totalNEW[this._id.database.campaign.oid] = this.count;
             }
@@ -82,12 +84,12 @@ function databaseList() {
 
     function list() {
         // console.log(win);
-        var back = [],at=[];
-        back.push([0, totalsDB],[1,totalsCONTACTS],[2,totalsNEWS]);
-        at.push([0, 'Total Databases'],[1, 'Total Contacts'],[2,' Total News']);
+        var back = [], at = [];
+        back.push([0, totalsDB], [1, totalsCONTACTS], [2, totalsNEWS]);
+        at.push([0, 'Total Databases'], [1, 'Total Contacts'], [2, ' Total News']);
         var dataset = [{label: "", data: back, color: "#57889C"}];
         graficos.floatBar('#databases12', dataset, at, '<span style="display:none;">%x</span> %y ');
-        
+
         api.get({datatype: 'campaigns', type: 'datatype'}, function(data) {
             var ar = [], tamanho = data.length;
             $.each(data, function() {
@@ -131,14 +133,14 @@ function database(campaignID) {
         "bDestroy": true,
         "aaSorting": [[3, "desc"]],
         "aoColumns": [
-            {"sTitle": "Lista", "sClass": "", "sWidth": "50px", "sType": "string"},
-            {"sTitle": "Nome", "sClass": "", "sWidth": "150px"},
-            {"sTitle": "Data Carregamento", "sClass": "", "sWidth": "50px"},
+            {"sTitle": "Lista", "sClass": "", "sWidth": "50px", "sType": "string", bVisible: false},
+            {"sTitle": "Nome", "sClass": "", "sWidth": "100px"},
+            {"sTitle": "Data", "sClass": "", "sWidth": "50px"},
             {"sTitle": "Carregados", "sClass": "", "sWidth": "50px"},
             {"sTitle": "Iniciais", "sClass": "", "sWidth": "50px"},
-            {"sTitle": "Agendamentos", "sClass": "", "sWidth": "50px"},
-            {"sTitle": "Incidencias", "sClass": "", "sWidth": "50px"},
-            {"sTitle": "Max Limits", "sClass": "", "sWidth": "50px"},
+            {"sTitle": "Agend.", "sClass": "", "sWidth": "50px"},
+            {"sTitle": "Inci.s", "sClass": "", "sWidth": "50px"},
+            {"sTitle": "Max Lim.", "sClass": "", "sWidth": "50px"},
             {"sTitle": "Fechados", "sClass": "", "sWidth": "50px"},
             {"sTitle": "VC", "sClass": "", "sWidth": "50px"},
             {"sTitle": "Vendas", "sClass": "", "sWidth": "50px"},
@@ -289,7 +291,7 @@ function database(campaignID) {
                     agendadas = callback[this.oid];
                 }
                 if (date[this.oid]) {
-                    data = date[this.oid];
+                    data = moment(date[this.oid]).format('YYYY-MM-DD');
                 }
                 if (vc) {
                     reach = Math.round((vc / fechados) * 100);

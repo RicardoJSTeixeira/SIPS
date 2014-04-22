@@ -26,7 +26,7 @@ function outboundList(today) {
                             this.calls
                         ]);
                     });
-                    //console.log(Call);
+                    ////console.log(Call);
                     final = [{data: Call, label: 'Total Calls'}, {data: Talk, label: 'Total Answer Calls'}, {data: Drop, label: 'Total Drop Calls'}];
                     graficos.floatLine('#out1', final);
                 });
@@ -64,11 +64,8 @@ function outboundList(today) {
             });
         }
     });
-
-
-
-
     $.post('../php/reporting.php', {action: 'getCampaignStatus'}, function(data) {
+        ////console.log(data);
         var hours = {};
         var sucesso = false, util = false;
         if (Object.keys(data.sucesso).length) {
@@ -78,88 +75,238 @@ function outboundList(today) {
             util = true;
         }
 
-        //http://gonecomplus.dyndns.org:10000/ccstats/v0/total/agent_log/2014-02-20T00:01/2014-02-20T23:59?by=campaign
         api.get({datatype: 'agent_log', type: 'total', timeline: {start: today.format('YYYY-MM-DDT00:00'), end: today.format('YYYY-MM-DDT23:59')}, by: {calls: ['by=campaign']}}, function(time) {
             $.each(time, function() {
-                hours[this.campaign] = this.sum_dead + this.sum_pause + this.sum_billable_pause + this.sum_dispo + this.sum_talk + this.sum_wait;
+                hours[this.campaign] = this.sum_dead +  this.sum_billable_pause + this.sum_dispo + this.sum_talk + this.sum_wait;
             });
-            api.get({datatype: 'campaigns', type: 'datatype'}, function(datas) {
-                var ar = [];
-                forTheWin(data, ar, sucesso, util, datas, hours, function(back) {
-                    $('#campaign-table').dataTable().fnAddData(back);
+        });
+        api.get({datatype: 'campaigns', type: 'datatype'}, function(datas) {
+            make(data, function(totalCalls, totalTime, totalSucesso, totalUtil, totalHuman) {
+                var ar = [], areWeThereYet = datas.length;
+
+                $.each(datas, function() {
+                    var sucesso_hour = 0, reach = 0, response = 0, campaign = '<span class="table-value cursor-pointer" data-oid="' + this.oid + '">' + this.oid + '</span>',
+                            calls = 0, time = 0, sucessos = 0;
+
+                    if (sucesso) {
+                        if (totalSucesso[this.oid]) {
+                            sucessos = totalSucesso[this.oid];
+                        }
+
+                        if (totalSucesso[this.oid] && hours[this.oid]) {
+                            sucesso_hour = totalSucesso[this.oid] / (hours[this.oid] / 3600);
+                        } else {
+                            sucesso_hour = 0;
+                        }
+                    } else {
+                        sucesso_hour = 'Undefined';
+                        totalSucesso = 'Undefined';
+                        //sucesso= 'Undefined';
+                    }
+                    if (totalUtil[this.oid] && totalCalls[this.oid]) {
+                        if (totalUtil[this.oid] > 0 && totalCalls[this.oid] > 0) {
+                            reach = totalUtil[this.oid] / totalCalls[this.oid];
+                            reach = reach.toFixed(2);
+                        } else {
+                            reach = 0;
+                        }
+                    } else {
+                        reach = 'Undefined';
+                    }
+                    if (totalSucesso[this.oid] && totalUtil[this.oid]) {
+                        if (totalSucesso[this.oid] && totalUtil[this.oid]) {
+                            response = totalSucesso[this.oid] / totalUtil[this.oid];
+                            response = response.toFixed(2);
+                        }
+                    } else {
+                        response = 'Undefined';
+                    }
+
+                    if (totalCalls[this.oid]) {
+                        calls = totalCalls[this.oid];
+                    }
+                    if (totalTime[this.oid]) {
+                        time = totalTime[this.oid];
+                    }
+
+                    ar.push([campaign, this.designation, calls, moment().hours(0).minutes(0).seconds(time).format('HH:mm:ss'), sucessos, sucesso_hour.toFixed(2), reach, response]);
+
+                    areWeThereYet--;
+                    if (!areWeThereYet) {
+                        ////console.log(ar);
+                        $('#campaign-table').dataTable().fnClearTable();
+                        $('#campaign-table').dataTable().fnAddData(ar);
+                    }
                 });
             });
         });
-    }, 'json');
-    function forTheWin(data, ar, sucesso, util, datas, hours, callback) {
-        //console.log(data);
-        var areWeThereYet = datas.length;
-        $.each(datas, function() {
-            var campaign = '<span class="table-value cursor-pointer" data-oid="' + this.oid + '">' + this.oid + '</span>', id = this.oid, designation = this.designation;
-            var totalCalls = 0, totalSucesso = 0, totalUtil = 0, totalTime = 0, sucesso_hour = 0, reach = 0, response = 0, id = this.oid, totalHuman = 0;
-            api.get({datatype: 'calls', type: 'total', timeline: {start: today.format('YYYY-MM-DDT00:00'), end: today.format('YYYY-MM-DDT23:59')}, by: {calls: ['by=status&campaign=' + this.oid]}}, function(result) {
+
+
+        function make(data, callback) {
+            console.log(data);
+            var totalCalls = {}, totalTime = {}, totalSucesso = {}, totalUtil = {}, totalHuman = {};
+            api.get({datatype: 'calls', type: 'total', timeline: {start: today.format('YYYY-MM-DDT00:00'), end: today.format('YYYY-MM-DDT23:59')}, by: {calls: ['by=status,campaign']}}, function(result) {
+                var fun = result.length;
+                console.log(result);
                 $.each(result, function() {
-                    totalCalls = totalCalls + this.calls;
-                    totalTime = totalTime + this.length;
-                    if (data.sucesso[id]) {
-                        if (data.sucesso[id].indexOf(this.status) >= 0) {
-                            totalSucesso = totalSucesso + this.calls;
+
+                    var oid = this.campaign;
+
+
+                    if (!totalCalls[oid]) {
+                        totalCalls[oid] = this.calls;
+                    } else {
+                        totalCalls[oid] = totalCalls[oid] + this.calls;
+                    }
+                    if (!totalTime[oid]) {
+                        totalTime[oid] = this.length;
+                    } else {
+                        totalTime[oid] = totalTime[oid] + this.length;
+                    }
+
+                    if (data.sucesso[oid]) {
+                        if (data.sucesso[oid].indexOf(this.status) >= 0) {
+                            if (oid == "W00003") {
+                                console.log(oid + ' Status: ' + this.status + ' - ' + data.sucesso[oid].indexOf(this.status));
+                            }
+                            if (!totalSucesso[oid]) {
+                                totalSucesso[oid] = this.calls;
+                            } else {
+                                totalSucesso[oid] = totalSucesso[oid] + this.calls;
+                            }
                         }
                     }
-                    if (data.util[id]) {
-                        if (data.util[id].indexOf(this.status) >= 0) {
-                            totalUtil = totalUtil + this.calls;
+
+                    if (data.util[oid]) {
+                        if (data.util[oid].indexOf(this.status) >= 0) {
+                            if (!totalUtil[oid]) {
+                                totalUtil[oid] = this.calls;
+                            } else {
+                                totalUtil[oid] = totalUtil[oid] + this.calls;
+                            }
                         }
                     }
-                    if (data.human[id]) {
-                        if (data.human[id].indexOf(this.status) >= 0) {
-                            totalHuman = totalHuman + this.calls;
+
+                    if (data.human[oid]) {
+                        if (data.human[oid].indexOf(this.status)>=0) {
+                            if (!totalHuman[oid]) {
+                                totalHuman[oid] = this.calls;
+                            } else {
+                                totalHuman[oid] = totalHuman[oid] + this.calls;
+                            }
                         }
+                    }
+                    fun--;
+                    ////console.log('fun:' + fun);
+                    if (!fun) {
+                        // //console.log(totalSucesso)
+                        callback(totalCalls, totalTime, totalSucesso, totalUtil, totalHuman);
+                        ////console.log(totalCalls);
+                        ////console.log(totalSucesso);
                     }
                 });
-                if (sucesso) {
-                    if (totalSucesso > 0 && hours[id] > 0) {
-                        sucesso_hour = totalSucesso / (hours[id] / 3600);
-                        sucesso_hour = sucesso_hour.toFixed(2);
-                    } else {
-                        sucesso_hour = 0;
-                    }
-
-                } else {
-                    sucesso_hour = 'Undefined';
-                    totalSucesso = 'Undefined';
+                if (!fun) {
+                    callback(totalCalls, totalTime, totalSucesso, totalUtil, totalHuman);
                 }
-                if (util) {
-                    if (totalUtil > 0 && totalCalls > 0) {
-                        reach = totalUtil / totalHuman;
-                        reach = reach.toFixed(2);
-                    } else {
-                        reach = 0;
-                    }
-
-                } else {
-                    reach = 'Undefined';
-                }
-                if (sucesso && util) {
-                    if (totalSucesso > 0 && totalUtil > 0) {
-                        response = totalSucesso / totalUtil;
-                        response = response.toFixed(2);
-                    } else {
-                        response = 0;
-                    }
-                } else {
-                    response = 'Undefined';
-                }
-
-                ar.push([campaign, designation, totalCalls, moment().hours(0).minutes(0).seconds(totalTime).format('HH:mm:ss'), totalSucesso, sucesso_hour, reach, response]);
-                areWeThereYet--;
-                if (!areWeThereYet) {
-                    callback(ar);
-                }
-
             });
-        });
-    }
+        }
+        ;
+    }, 'json');
+
+
+
+    /*$.post('../php/reporting.php', {action: 'getCampaignStatus'}, function(data) {
+     var hours = {};
+     var sucesso = false, util = false;
+     if (Object.keys(data.sucesso).length) {
+     sucesso = true;
+     }
+     if (Object.keys(data.util).length) {
+     util = true;
+     }
+     
+     //http://gonecomplus.dyndns.org:10000/ccstats/v0/total/agent_log/2014-02-20T00:01/2014-02-20T23:59?by=campaign
+     api.get({datatype: 'agent_log', type: 'total', timeline: {start: today.format('YYYY-MM-DDT00:00'), end: today.format('YYYY-MM-DDT23:59')}, by: {calls: ['by=campaign']}}, function(time) {
+     $.each(time, function() {
+     hours[this.campaign] = this.sum_dead + this.sum_pause + this.sum_billable_pause + this.sum_dispo + this.sum_talk + this.sum_wait;
+     });
+     api.get({datatype: 'campaigns', type: 'datatype'}, function(datas) {
+     var ar = [];
+     forTheWin(data, ar, sucesso, util, datas, hours, function(back) {
+     $('#campaign-table').dataTable().fnAddData(back);
+     });
+     });
+     });
+     }, 'json');
+     function forTheWin(data, ar, sucesso, util, datas, hours, callback) {
+     ////console.log(data);
+     var areWeThereYet = datas.length;
+     $.each(datas, function() {
+     var campaign = '<span class="table-value cursor-pointer" data-oid="' + this.oid + '">' + this.oid + '</span>', id = this.oid, designation = this.designation;
+     var totalCalls = 0, totalSucesso = 0, totalUtil = 0, totalTime = 0, sucesso_hour = 0, reach = 0, response = 0, id = this.oid, totalHuman = 0;
+     api.get({datatype: 'calls', type: 'total', timeline: {start: today.format('YYYY-MM-DDT00:00'), end: today.format('YYYY-MM-DDT23:59')}, by: {calls: ['by=status&campaign=' + this.oid]}}, function(result) {
+     $.each(result, function() {
+     totalCalls = totalCalls + this.calls;
+     totalTime = totalTime + this.length;
+     if (data.sucesso[id]) {
+     if (data.sucesso[id].indexOf(this.status) >= 0) {
+     totalSucesso = totalSucesso + this.calls;
+     }
+     }
+     if (data.util[id]) {
+     if (data.util[id].indexOf(this.status) >= 0) {
+     totalUtil = totalUtil + this.calls;
+     }
+     }
+     if (data.human[id]) {
+     if (data.human[id].indexOf(this.status) >= 0) {
+     totalHuman = totalHuman + this.calls;
+     }
+     }
+     });
+     if (sucesso) {
+     if (totalSucesso > 0 && hours[id] > 0) {
+     sucesso_hour = totalSucesso / (hours[id] / 3600);
+     sucesso_hour = sucesso_hour.toFixed(2);
+     } else {
+     sucesso_hour = 0;
+     }
+     
+     } else {
+     sucesso_hour = 'Undefined';
+     totalSucesso = 'Undefined';
+     }
+     if (util) {
+     if (totalUtil > 0 && totalCalls > 0) {
+     reach = totalUtil / totalHuman;
+     reach = reach.toFixed(2);
+     } else {
+     reach = 0;
+     }
+     
+     } else {
+     reach = 'Undefined';
+     }
+     if (sucesso && util) {
+     if (totalSucesso > 0 && totalUtil > 0) {
+     response = totalSucesso / totalUtil;
+     response = response.toFixed(2);
+     } else {
+     response = 0;
+     }
+     } else {
+     response = 'Undefined';
+     }
+     
+     ar.push([campaign, designation, totalCalls, moment().hours(0).minutes(0).seconds(totalTime).format('HH:mm:ss'), totalSucesso, sucesso_hour, reach, response]);
+     areWeThereYet--;
+     if (!areWeThereYet) {
+     callback(ar);
+     }
+     
+     });
+     });
+     }*/
 
 
     $.post('../php/reporting.php', {action: 'agents'}, function(data) {
@@ -282,14 +429,13 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                     $('#outbound-campaign-title').html('<h6> ' + CampaignID + ' - ' + campaigns[CampaignID] + '</h6>');
                     initialize();
                     performance(CampaignID, start, end);
-                    agentsOut(CampaignID, start, end);
+                    agentsOut(CampaignID, start, end, agents);
                     feedbacks(CampaignID, start, end, statuses);
                     total(CampaignID, start, end);
                     timeline(CampaignID, start, end);
                     hour(CampaignID, start, end);
                     pause(CampaignID, start, end, agents);
                     exportsOut(CampaignID, start, end, agents);
-
                     $('#outbound').on('click', '#btn-out-timeline', function() {
                         $('#btn-out-timeline-ok').show();
                         $(this).hide();
@@ -298,7 +444,6 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                         $('#out-time-inactive').hide();
                         $('#out-timeline-legendas i').css('color', '#FAFAFA');
                     });
-
                     $('#outbound').on('click', '#btn-out-timeline-ok', function() {
                         ar = ['1'], color = ['#57889C', '#356e35', '#990329', '#FF6103', '#c79121', '#360068a0', '#d9ce00', '#519c00', '#FF00B3'], final = [], talk = [], totals = [], drop = [];
                         $('#btn-out-timeline').show();
@@ -307,7 +452,7 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                         $('#out-time-active').hide();
                         $('#out-time-inactive').show();
                         var all = $('#out-time-active input[type="checkbox"]:checked');
-                        //console.log(all);
+                        ////console.log(all);
                         if (!all) {
                             $('#example3_select').fadeIn();
                         } else {
@@ -319,7 +464,7 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                             $.post('../php/reporting.php', {action: 'timeline', id: CampaignID, dados: ar, start: start, end: end}, function(data) {
                                 var win = ar.length;
                                 $.each(ar, function(key, val) {
-                                    ////console.log(key + '-' + val);
+                                    //////console.log(key + '-' + val);
                                     if (val === 'total') {
                                         final.push({label: 'Total Calls', data: data.Total});
                                     }
@@ -350,13 +495,13 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
 
                                     win--;
                                     if (!win) {
+                                        //console.log(final);
                                         graficos.floatLine('#example3', final);
                                     }
                                 });
                             }, 'json');
                         }
                     });
-
                     $('#outbound').on('click', '#btn-out-hour', function() {
                         $('#btn-out-hour-ok').show();
                         $(this).hide();
@@ -365,7 +510,6 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                         $('#out-hour-inactive').hide();
                         $('#out-hour-legendas i').css('color', '#FAFAFA');
                     });
-
                     $('#outbound').on('click', '#btn-out-hour-ok', function() {
                         ar = ['1'], color = ['#57889C', '#356e35', '#990329', '#FF6103', '#c79121', '#360068a0', '#d9ce00', '#519c00', '#FF00B3'], final = [], talk = [], totals = [], drop = [];
                         $('#btn-out-hour').show();
@@ -373,7 +517,7 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                         $('#out-hour-active').hide();
                         $('#out-hour-inactive').show();
                         var all = $('#out-hour-active input[type="checkbox"]:checked');
-                        //console.log(all);
+                        ////console.log(all);
                         if (!all) {
                             $('#example4_select').fadeIn();
                         } else {
@@ -421,8 +565,6 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                             }, 'json');
                         }
                     });
-
-
                     $('#outbound').on('click', '#outbound-feedbacks tr', function() {
                         var status = $(this)[0].cells[0].childNodes[0].dataset.status;
                         $('#feedbacks-details').fadeIn(400, function() {
@@ -473,9 +615,7 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                                 });
                             });
                         });
-
                     });
-
                     $('#outbound').on('click', '#outbound-agents tr', function() {
                         var agent = $(this)[0].cells[0].childNodes[0].dataset.id;
                         var hour = 0;
@@ -531,10 +671,8 @@ function outbound(start, end, CampaignID, campaigns, statuses, agents, databases
                                     });
                                 });
                             });
-
                         });
                     });
-
                 });
             }
             else {
@@ -562,7 +700,6 @@ function initialize() {
     $('#out-time-complete i').css('color', '#FAFAFA');
     $('#out-time-nutil i').css('color', '#FAFAFA');
     $('#out-time-unwork i').css('color', '#FAFAFA');
-
     $('#out-hour-total i').css('color', '#57889C');
     $('#out-hour-talk i').css('color', '#356E35');
     $('#out-hour-drop i').css('color', '#990329');
@@ -572,165 +709,69 @@ function initialize() {
     $('#out-hour-complete i').css('color', '#FAFAFA');
     $('#out-hour-nutil i').css('color', '#FAFAFA');
     $('#out-hour-unwork i').css('color', '#FAFAFA');
-
     $('#out-hour-active input').prop('checked', false);
     $('#out-time-active input').prop('checked', false);
-
     $('#out-time-total1 input').prop('checked', true);
     $('#out-hour-total1 input').prop('checked', true);
     $('#out-time-talk1 input').prop('checked', true);
     $('#out-hour-talk1 input').prop('checked', true);
     $('#out-time-drop1 input').prop('checked', true);
     $('#out-hour-drop1 input').prop('checked', true);
-
 }
 
 function performance(CampaignID, start, end) {
     $.post('../php/reporting.php', {action: 'getStatus', id: CampaignID}, function(data) {
-        if (data) {
-
-            if (!data.Answer.length) {
-                $('#out-time-talk').css('display', 'none');
-                $('#out-time-talk1').css('display', 'none');
-                $('#out-hour-talk').css('display', 'none');
-                $('#out-hour-talk1').css('display', 'none');
-            } else {
-                $('#out-time-talk').css('display', 'block');
-                $('#out-time-talk1').css('display', 'block');
-                $('#out-hour-talk').css('display', 'block');
-                $('#out-hour-talk1').css('display', 'block');
+        var calls = 0, time = 0, sucesso = 0, dnc = 0, nutil = 0, util = 0, unworkable = 0, callback = 0, complete = 0, first = 0, second = 0, tres = 0, quatro = 0, cinco = 0, seis = 0, horas = 0;
+        api.get({datatype: 'agent_log', type: 'total', timeline: {start: start, end: end}, by: {calls: ['campaign=' + CampaignID]}}, function(dat) {
+            // //console.log(dat);
+            if (dat) {
+                horas = dat[0].sum_billable_pause + dat[0].sum_dead + dat[0].sum_dispo + dat[0].sum_talk + dat[0].sum_wait;
+                $('#aag6').html((horas / 3600).toFixed(3));
             }
-            if (!data.Callback.length) {
-                $('#out-time-callback').css('display', 'none');
-                $('#out-time-callback1').css('display', 'none');
-                $('#out-hour-callback').css('display', 'none');
-                $('#out-hour-callback1').css('display', 'none');
-            } else {
-                $('#out-time-callback').css('display', 'block');
-                $('#out-time-callback1').css('display', 'block');
-                $('#out-hour-callback').css('display', 'block');
-                $('#out-hour-callback1').css('display', 'block');
-            }
-            if (!data.Complete.length) {
-                $('#out-time-complete').css('display', 'none');
-                $('#out-time-complete1').css('display', 'none');
-                $('#out-hour-complete').css('display', 'none');
-                $('#out-hour-complete1').css('display', 'none');
-            } else {
-                $('#out-time-complete').css('display', 'block');
-                $('#out-time-complete1').css('display', 'block');
-                $('#out-hour-complete').css('display', 'block');
-                $('#out-hour-complete1').css('display', 'block');
-            }
-            if (!data.DROP.length) {
-                $('#out-time-drop').css('display', 'none');
-                $('#out-time-drop1').css('display', 'none');
-                $('#out-hour-drop').css('display', 'none');
-                $('#out-hour-drop1').css('display', 'none');
-            } else {
-                $('#out-time-drop').css('display', 'block');
-                $('#out-time-drop1').css('display', 'block');
-                $('#out-hour-drop').css('display', 'block');
-                $('#out-hour-drop1').css('display', 'block');
-            }
-            if (!data.NUtil.length) {
-                $('#out-time-nutil').css('display', 'none');
-                $('#out-time-nutil1').css('display', 'none');
-                $('#out-hour-nutil').css('display', 'none');
-                $('#out-hour-nutil1').css('display', 'none');
-            } else {
-                $('#out-time-nutil').css('display', 'block');
-                $('#out-time-nutil1').css('display', 'block');
-                $('#out-hour-nutil').css('display', 'block');
-                $('#out-hour-nutil1').css('display', 'block');
-            }
-            if (!data.Sucesso.length) {
-                $('#out-time-sucesso').css('display', 'none');
-                $('#out-time-sucesso1').css('display', 'none');
-                $('#out-hour-sucesso').css('display', 'none');
-                $('#out-hour-sucesso1').css('display', 'none');
-            } else {
-                $('#out-time-sucesso').css('display', 'block');
-                $('#out-time-sucesso1').css('display', 'block');
-                $('#out-hour-sucesso').css('display', 'block');
-                $('#out-hour-sucesso1').css('display', 'block');
-            }
-            if (!data.Unworkable.length) {
-                $('#out-time-unwork').css('display', 'none');
-                $('#out-time-unwork1').css('display', 'none');
-                $('#out-hour-unwork').css('display', 'none');
-                $('#out-hour-unwork1').css('display', 'none');
-            } else {
-                $('#out-time-unwork').css('display', 'block');
-                $('#out-time-unwork1').css('display', 'block');
-                $('#out-hour-unwork').css('display', 'block');
-                $('#out-hour-unwork1').css('display', 'block');
-            }
-            if (!data.Util.length) {
-                $('#out-time-util').css('display', 'none');
-                $('#out-time-util1').css('display', 'none');
-                $('#out-hour-util').css('display', 'none');
-                $('#out-hour-util1').css('display', 'none');
-            } else {
-                $('#out-time-util').css('display', 'block');
-                $('#out-time-util1').css('display', 'block');
-                $('#out-hour-util').css('display', 'block');
-                $('#out-hour-util1').css('display', 'block');
-            }
-
-
-            var calls = 0, time = 0, sucesso = 0, dnc = 0, nutil = 0, util = 0, unworkable = 0, callback = 0, complete = 0, first = 0, second = 0, horas = 0;
-            api.get({datatype: 'agent_log', type: 'total', timeline: {start: start, end: end}, by: {calls: ['campaign=' + CampaignID]}}, function(dat) {
-                if (dat) {
-                    horas = dat[0].sum_billable_pause + dat[0].sum_dead + dat[0].sum_dispo + dat[0].sum_pause + dat[0].sum_talk + dat[0].sum_wait;
-                }
-                api.get({datatype: 'calls', type: 'total', 'timeline': {'start': start, 'end': end}, 'by': {'calls': ['campaign=' + CampaignID + '&by=status']}}, function(info) {
-
-                    $.each(info, function() {
-                        calls += this.calls;
-                        time += moment.duration(this.length, 's').humanize();
-                        if (data.Sucesso.indexOf(this.status) >= 0) {
-                            sucesso += this.calls;
-                        }
-                        if (data.DNC.indexOf(this.status) >= 0) {
-                            dnc += this.calls;
-                        }
-                        if (data.NUtil.indexOf(this.status) >= 0) {
-                            nutil += this.calls;
-                        }
-                        if (data.Util.indexOf(this.status) >= 0) {
-                            util += this.calls;
-                        }
-                        if (data.Unworkable.indexOf(this.status) >= 0) {
-                            unworkable += this.calls;
-                        }
-                        if (data.Callback.indexOf(this.status) >= 0) {
-                            callback += this.calls;
-                        }
-                        if (data.Complete.indexOf(this.status) >= 0) {
-                            complete += this.calls;
-                        }
-                    });
-                    first = ((util / complete) * 100) / 1;
-                    second = ((sucesso / util) * 100) / 1;
-                    graficos.performance('#outbound-useful-closed', Math.round(first));
-                    graficos.performance('#outbound-sucess-useful', Math.round(second));
-                    graficos.performance('#outbound-sucess-hour', Math.round((sucesso / (horas / 3600)) * 100));
-                    graficos.performance('#outbound-useful-hour', Math.round((util / (horas / 3600)) * 100));
-                    graficos.performance('#outbound-not-hour', Math.round((nutil / (horas / 3600)) * 100));
+            api.get({datatype: 'calls', type: 'total', 'timeline': {'start': start, 'end': end}, 'by': {'calls': ['campaign=' + CampaignID + '&by=status']}}, function(info) {
+                // //console.log(info);
+                $.each(info, function() {
+                    calls += this.calls;
+                    time += moment.duration(this.length, 's').humanize();
+                    if (data.Sucesso.indexOf(this.status) >= 0) {
+                        sucesso += this.calls;
+                    }
+                    if (data.DNC.indexOf(this.status) >= 0) {
+                        dnc += this.calls;
+                    }
+                    if (data.NUtil.indexOf(this.status) >= 0) {
+                        nutil += this.calls;
+                    }
+                    if (data.Util.indexOf(this.status) >= 0) {
+                        util += this.calls;
+                    }
+                    if (data.Unworkable.indexOf(this.status) >= 0) {
+                        unworkable += this.calls;
+                    }
+                    if (data.Callback.indexOf(this.status) >= 0) {
+                        callback += this.calls;
+                    }
+                    if (data.Complete.indexOf(this.status) >= 0) {
+                        complete += this.calls;
+                    }
                 });
+                first = ((util / complete) * 100) / 1;
+                second = ((sucesso / util) * 100) / 1;
+                tres = sucesso / (horas / 3600);
+                quatro = util / (horas / 3600);
+                cinco = nutil / (horas / 3600);
+                $('#aag1').html(first.toFixed(3) + ' %');
+                $('#aag2').html(second.toFixed(3) + '%');
+                $('#aag3').html(tres.toFixed(3));
+                $('#aag4').html(quatro.toFixed(3));
+                $('#aag5').html(cinco.toFixed(3));
             });
-        } else {
-            graficos.performance('#outbound-useful-closed', 0);
-            graficos.performance('#outbound-sucess-useful', 0);
-            graficos.performance('#outbound-sucess-hour', 0);
-            graficos.performance('#outbound-useful-hour', 0);
-            graficos.performance('#outbound-not-hour', 0);
-        }
+        });
     }, 'json');
 }
 
-function agentsOut(CampaignID, start, end) {
+function agentsOut(CampaignID, start, end, agents) {
+    //console.log(agents);
     $.post('../php/reporting.php', {action: 'getAgentsCampaign', id: CampaignID, start: start, end: end}, function(data) {
         $('#outbound-agents').dataTable().fnClearTable();
         $('#outbound-agents').dataTable({"bProcessing": true, "aaSorting": [[3, "desc"]], "sPaginationType": "bootstrap", "bLengthChange": false, "bDestroy": true,
@@ -748,49 +789,41 @@ function agentsOut(CampaignID, start, end) {
                     $(this).addClass('btn-sm btn-default');
                 });
             }});
-        api.get({datatype: 'campaign_group_agent', type: 'datatype', by: {calls: ['campaign=' + CampaignID]}}, function(d) {
-            var ar = [];
-            GamesBegin(ar, data, d, function(back) {
-                $('#outbound-agents').dataTable().fnAddData(back);
-            });
-        });
-    }, 'json');
-    function GamesBegin(ar, data, d, callback) {
-        var win = d.length;
-        $.each(d, function() {
-            var id = this.agent, name = '<span class="outbound-agents-click cursor-pointer" data-id="' + this.agent + '">' + this.full_name + '</span>', totalTime = 0, totalCalls = 0, totalSucesso = 0, avg = 0, sucesso_hour = 0, reach = 0, response = 0;
-            if (data.Calls[this.agent]) {
-                totalCalls = data.Calls[this.agent];
-            }
-            if (data.Time[this.agent]) {
-                totalTime = data.Time[this.agent];
-            }
-            if (data.Sucesso[this.agent]) {
-                totalSucesso = data.Sucesso[this.agent];
-            }
-            if (data.Hour[this.agent] && data.Sucesso[this.agent]) {
-                sucesso_hour = data.Calls[this.agent] / (data.Hour[this.agent] / 3600);
-                sucesso_hour = sucesso_hour.toFixed(2);
-            }
-            if (data.Util[this.agent] && data.Human[this.agent]) {
-                reach = data.Util[this.agent] / data.Human[this.agent];
-                reach = reach.toFixed(2);
-            }
-            if (data.Sucesso[this.agent] && data.Util[this.agent]) {
-                response = data.Sucesso[this.agent] / data.Util[this.agent];
-                response = response.toFixed(2);
-            }
-            if (totalTime / totalCalls > 0) {
-                avg = Math.round(totalTime / totalCalls);
+        $.post('../php/reporting.php', {action: 'agentsCampaign', id: CampaignID, start: moment(start).format('YYYY-MM-DD 00:00:01'), end: moment(end).format('YYYY-MM-DD 23:59:59')}, function(d) {
+            var ar = [], d = d.Agents;
 
-            }
-            ar.push([name, id, moment().hours(0).minutes(0).seconds(totalTime).format('HH:mm:ss'), totalCalls, moment().hours(0).minutes(0).seconds(avg).format('HH:mm:ss'), totalSucesso, sucesso_hour, reach, response]);
-            win--;
-            if (!win) {
-                callback(ar);
-            }
-        });
-    }
+            $.each(d, function(i, value) {
+                var id = this.agent, name = '<span class="outbound-agents-click cursor-pointer" data-id="' + this.agent + '">' + agents[this.agent] + '</span>', totalTime = 0, totalCalls = 0, totalSucesso = 0, avg = 0, sucesso_hour = 0, reach = 0, response = 0;
+                if (data.Calls[this.agent]) {
+                    totalCalls = data.Calls[this.agent];
+                }
+                if (data.Time[this.agent]) {
+                    totalTime = data.Time[this.agent];
+                }
+                if (data.Sucesso[this.agent]) {
+                    totalSucesso = data.Sucesso[this.agent];
+                }
+                if (data.Hour[this.agent] && data.Sucesso[this.agent]) {
+                    sucesso_hour = data.Calls[this.agent] / (data.Hour[this.agent] / 3600);
+                    sucesso_hour = sucesso_hour.toFixed(3);
+                }
+                if (data.Util[this.agent] && data.Human[this.agent]) {
+                    reach = data.Util[this.agent] / data.Human[this.agent];
+                    reach = reach.toFixed(2);
+                }
+                if (data.Sucesso[this.agent] && data.Util[this.agent]) {
+                    response = data.Sucesso[this.agent] / data.Util[this.agent];
+                    response = response.toFixed(2);
+                }
+                if (totalTime / totalCalls > 0) {
+                    avg = Math.round(totalTime / totalCalls);
+                }
+                ar.push([name, id, moment().hours(0).minutes(0).seconds(totalTime).format('HH:mm:ss'), totalCalls, moment().hours(0).minutes(0).seconds(avg).format('HH:mm:ss'), totalSucesso, sucesso_hour, reach, response]);
+            });
+            $('#outbound-agents').dataTable().fnClearTable();
+            $('#outbound-agents').dataTable().fnAddData(ar);
+        }, 'json');
+    }, 'json');
 }
 
 function feedbacks(CampaignID, start, end, statuses) {
@@ -828,6 +861,7 @@ function feedbacks(CampaignID, start, end, statuses) {
                     hours = this.calls / horas;
                     ar.push([feedback, name, calls, time, avg, hours.toFixed(2)]);
                 });
+                $('#outbound-feedbacks').dataTable().fnClearTable();
                 $('#outbound-feedbacks').dataTable().fnAddData(ar);
             });
         });
@@ -844,9 +878,10 @@ function total(CampaignID, start, end) {
                     total = datas[0].calls;
                     a++;
                 }
-                back.push([a, total]);
-                at.push([a, 'Total Calls']);
+                // back.push([a, total]);
+                // at.push([a, 'Total Calls']);
                 var dataset = [{label: "", data: back, color: "#57889C"}];
+                //console.log(dataset);
                 graficos.floatBar('#example1', dataset, at, '<span style="display:none;">%x</span> %y Calls');
             });
         });
@@ -932,13 +967,13 @@ function hour(CampaignID, start, end) {
                             Math.round(this.length / 60)
                         ]);
                     });
-                    //console.log('Total');
-                    //console.log(totalTime);
-                    //console.log('Total Talk');
-                    //console.log(talkTime);
-                    //console.log('Total Drop');
-                    //console.log(dropTime);
-                    finalT.push({data: totalTime, bars: {show: true, barWidth: 0.2, order: 1}}, {data: talkTime, bars: {show: true, barWidth: 0.2, order: 2}});  //, {data: dropTime, bars: {show: true, barWidth: 0.2, order: 3}});
+                    ////console.log('Total');
+                    ////console.log(totalTime);
+                    ////console.log('Total Talk');
+                    ////console.log(talkTime);
+                    ////console.log('Total Drop');
+                    ////console.log(dropTime);
+                    finalT.push({data: totalTime, bars: {show: true, barWidth: 0.2, order: 1}}, {data: talkTime, bars: {show: true, barWidth: 0.2, order: 2}}); //, {data: dropTime, bars: {show: true, barWidth: 0.2, order: 3}});
                     graficos.floatBar('#example4', finalT, undefined, "%x h - %y min");
                 });
             });
@@ -1001,6 +1036,7 @@ function pause(CampaignID, start, end, agents) {
                             }
                         });
                         function loops(back) {
+                            graficos.pie('#out-pause-pie', []);
                             $('#outbound-pause-agents').dataTable().fnClearTable();
                             $('#outbound-pause-agents').dataTable().fnAddData(back);
                             graficos.pie('#out-pause-pie', pie);
@@ -1023,7 +1059,6 @@ function feedbacksAgents(ar, data, CampaignID, start, end, callback) {
             }
             if (time / calls > 0) {
                 avg = Math.round(time / calls);
-
             }
             if (calls / (horas / 3600) > 0) {
                 calls_hour = calls / (horas / 3600);
@@ -1085,32 +1120,24 @@ function  exportsOut(CampaignID, start, end, agents) {
         var url = "../php/Reporting/exportExcel.php?action=outTotais&campaign=" + CampaignID + "&start=" + start + "&end=" + end;
         document.location.href = url;
     });
-
     $("#outbound").on('click', '#out-excel-pause', function() {
         var url = "../php/Reporting/exportExcel.php?action=outPause&campaign=" + CampaignID + "&start=" + start + "&end=" + end;
         document.location.href = url;
     });
-
     $("#outbound").on('click', '#out-excel-hours', function() {
         var ar = [], all = $('#out-hour-active input[type="checkbox"]:checked');
         $.each(all, function(index, value) {
             ar.push($(this).data().txt);
         });
-
         var url = "../php/Reporting/exportExcel.php?action=outHour&campaign=" + CampaignID + "&start=" + start + "&end=" + end + '&pause=' + ar.join(',');
         document.location.href = url;
-
     });
-
     $("#outbound").on('click', '#out-excel-time', function() {
         var ar = [], all = $('#out-time-active input[type="checkbox"]:checked');
         $.each(all, function(index, value) {
             ar.push($(this).data().txt);
         });
-
         var url = "../php/Reporting/exportExcel.php?action=outTime&campaign=" + CampaignID + "&start=" + start + "&end=" + end + '&pause=' + ar.join(',');
         document.location.href = url;
-
     });
-
 }
