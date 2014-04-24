@@ -400,7 +400,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                                 right_ear: 0,
                                 tipo_aparelho: "",
                                 descricao_aparelho: "",
-                                feedback: "Sem consulta"
+                                feedback: "SCONS"
                             },
                     function() {
                         calendar_client.calEvent.editable = false;
@@ -513,7 +513,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
             if (calEvent.user !== me.user.username && me.user.user_level < 5) {
 
                 me.modal_ext
-                        .find(".modal-footer span")
+                        .find(".modal-footer span.left")
                         .hide()
                         .end()
                         .find("#btn_view_consult")
@@ -560,16 +560,6 @@ var calendar = function(selector, data, modals, ext, client, user) {
         me.modal_special
                 .data({calEvent: calEvent})
                 .modal();
-    };
-    this.userWidgetPopulate = function() {
-        $("#client")
-                .find(".user-name").text(me.client.name)
-                .end()
-                .find(".user-email").text(me.client.address)
-                .end()
-                .find(".user-date").text(me.client.bDay)
-                .end()
-                .show();
     };
     this.destroy = function() {
         this.calendar.fullCalendar('destroy');

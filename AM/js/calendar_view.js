@@ -9,7 +9,7 @@ $(function() {
         modals.client = $("#calendar_client_modal");
         modals.special = $("#calendar_special_event");
 
-        function startC(data) {
+        function startC(data, client) {
             sch = new calendar($("#calendar"), data, modals, $('#external-events'), client, user);
 
             sch.initModal(data.refs);
@@ -17,14 +17,15 @@ $(function() {
 
             sch.makeRefController(data.refs);
         }
+        var client_box;
 
         if (client.id) {
             client.id = atob(client.id);
-            $.post("/AM/ajax/client.php", {action: "default", id: client.id}, function(clientI) {
+            client_box = new clientBox({id: client.id});
+            client_box.init(function(clientI) {
                 client = clientI;
-                startC(data);
-                sch.userWidgetPopulate();
-            }, "json");
+                startC(data, clientI);
+            });
         } else {
             $("#special-event").removeClass("hide");
             startC(data);

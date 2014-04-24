@@ -37,28 +37,20 @@
 
         <div class="span2">
             <div class="row-fluid">
-                <div class="grid" >
-                    <div class="grid-title"><div class="pull-left">Cliente</div><div class="pull-right"><button onclick="history.back();" title="Voltar" class="btn icon-alone"><i class="icon-circle-arrow-left"></i></button></div></div>
-                    <div class="user c_bg-2">
-                        <div class="user-name" style="height:auto;  " id="client_name"></div>
-                        <div class="user-email" id="client_address"></div>
-                        <div class="user-date" id="client_birth_date"></div>
-                        <div class="clear"></div>
-                    </div>
-                </div>
+                <div id="clientBox"></div>
                 <div class="grid " id="options_div" style="position:fixed;bottom: 10px; width:13.529915%; display:none">
                     <div class="grid-title">
                         <div class="pull-left"><i class="icon-cogs"></i> Opções</div>
+                        <div class="pull-rigth">
+                            <button class='btn btn-danger icon alone' id='terminar_consulta_no_exame' title="Terminar Consulta sem Exame" ><i class="icon"></i></button>
+                        </div>
                     </div>
                     <div class="grid-content">
                         <div class="formRow" id="validate_audio_script_div" style="display:none">
-                            <button class="btn  " id="validate_audio_script" ><i class="icon-save"></i>Validar e concluir</button>
+                            <button class="btn  " id="validate_audio_script" ><i class="icon-save"></i>Concluir</button>
                         </div>
                         <div class="formRow " id="terminar_consulta_div" style="display:none">
                             <button class='btn btn-success  ' id='terminar_consulta' >Terminar Consulta</button>
-                        </div>
-                        <div class="formRow " id="terminar_consulta_no_exame_div" style="display:none">
-                            <button class='btn btn-danger ' id='terminar_consulta_no_exame' >Terminar Consulta sem Exame</button>
                         </div>
                     </div>
                     <div class="clear"></div>
@@ -70,7 +62,7 @@
                 <div id="first_info_div">
                     <div id="inicial_option_div" class="grid">
                         <div class="grid-title">
-                            <div class="pull-left">Consulta com exame?</div>
+                            <div class="pull-left">Consulta com Teste?</div>
                         </div>
                         <div class="grid-content">
                             <button class="btn btn-success" id="pa_yes">Sim</button>
@@ -109,7 +101,7 @@
                                 <label class="radio" for="ne_info"><span></span>Informação</label>
                             </div>
                             <div class="formRow">
-                                <input type="radio" id="ne_amost" name="ne" value="AMOST">
+                                <input type="radio" id="ne_amost" name="ne" value="AMOS">
                                 <label class="radio" for="ne_amost"><span></span>Amostra</label>
                             </div>
                         </form>
@@ -170,7 +162,7 @@
                                     <option value="PAGU">Sem aproveitamento</option>
                                     <option value="CONC">Concorrência</option>
                                     <option value="PENS">Pensador</option>
-                                    <option value="ESTET">Estética/Conforto</option>
+                                    <option value="EST">Estética/Conforto</option>
                                     <option value="SPERD">Sem Perda</option>
                                 </select>
                             </div>   

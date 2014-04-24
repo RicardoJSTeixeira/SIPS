@@ -50,8 +50,26 @@ var requests = function(basic_path, options_ext)
                     .on('changeDate', function() {
                         $("#data_rastreio1").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
                     });
+                    
+            am_zone.find("#data_inicio1").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt",  startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
+                    .on('changeDate', function() {
+                        $("#data_inicio2").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT'+$(this).val()));
+                    });
+            am_zone.find("#data_inicio2").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt",  startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
+                    .on('changeDate', function() {
+                        $("#data_inicio1").datetimepicker('setEndDate', moment().format('YYYY-MM-DDT'+$(this).val()));
+                        $("#data_fim1").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT'+$(this).val()));
+                    });
+                    
+            am_zone.find("#data_fim1").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt",  startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
+                    .on('changeDate', function() {
+                        $("#data_fim2").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT'+$(this).val()));
+                    });
+            am_zone.find("#data_fim2").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt",  startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
+                    .on('changeDate', function() {
+                        $("#data_fim1").datetimepicker('setEndDate', moment().format('YYYY-MM-DDT'+$(this).val()));
+                    });
 
-            am_zone.find(".form_datetime_hour").datetimepicker({format: ' hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1});
             //Adiciona Linhas
             am_zone.find("#button_ldptable_add_line").click(function(e)
             {

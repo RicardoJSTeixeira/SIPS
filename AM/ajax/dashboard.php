@@ -62,7 +62,7 @@ switch ($action) {
         } else {
             $query = "SELECT a.lead_id, first_name, extra1, extra2, middle_initial, postal_code, address1, a.entry_date from  vicidial_list a
                 left join sips_sd_reservations b on a.lead_id=b.lead_id
-                where user=:user and list_id=:list and lead_id is null and extra6='NO' limit 20000";
+                where user=:user and list_id=:list and b.lead_id is null and extra6='NO' limit 20000";
             $variables[":user"] = $u->username;
         }
 
@@ -95,7 +95,7 @@ switch ($action) {
                 FROM `vicidial_list` a 
                 inner join `vicidial_list` b on a.extra7=b.lead_id 
                 left join sips_sd_reservations c on a.lead_id=c.lead_id
-                where user=:user and a.list_id=:list and c.lead_id is null and a.extra6='NO' limit 20000";
+                where a.user=:user and a.list_id=:list and c.lead_id is null and a.extra6='NO' limit 20000";
             $variables[":user"] = $u->username;
         }
 

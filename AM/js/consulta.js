@@ -62,12 +62,8 @@ $(function()
             }
         });
 
-        $.post("/AM/ajax/client.php", {action: "default", id: lead_id}, function(clientI) {
-        
-            $("#main_consulta_div #client_name").text(clientI.name);
-            $("#main_consulta_div #client_address").text(clientI.address);
-            $("#main_consulta_div #client_birth_date").text(clientI.bDay);
-        }, "json");
+        var client_box = new clientBox({id: reserva_id, byReserv: true});
+        client_box.init();
 
     }, "json");
 });
@@ -115,7 +111,7 @@ $("#main_consulta_div #validate_audio_script").on("click", function()
     consult_audiogra.validate(function() {
         script.validate_manual(function()
         {
-            $('html, body').animate({scrollTop: 0}, 'fast');
+            $('html, body').animate({scrollTop: $(document).height()}, 'fast');
             var status = consult_audiogra.calculate();
             $("#main_consulta_div #exam_outcome_div").show();
 
@@ -155,7 +151,7 @@ $(".new_marcacao_button").click(function()
 $("#main_consulta_div #terminar_consulta").on("click", function()
 {
 
-    if (consult_closed){
+    if (consult_closed) {
         $.history.push('view/dashboard.html');
     }
     else
@@ -169,7 +165,7 @@ $("#main_consulta_div #terminar_consulta").on("click", function()
             });
             if (exame_razao.length)
             {
-                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: exame_razao, venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", feedback: "", closed: 1}, function() {
+                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: exame_razao, venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", feedback: "SPERD", closed: 1}, function() {
                     $.jGrowl('Consulta gravada sem exame', {life: 3000});
                     $("#marcacao_modal").modal("show");
 
@@ -187,21 +183,16 @@ $("#main_consulta_div #terminar_consulta").on("click", function()
                             consult_audiogra.save(lead_id, reserva_id, false);
                             if (ha_perda)// HA PERDA
                             {
-                                var temp_feedback = "";
-                                if (parseInt(right_ear) >= parseInt(left_ear))
-                                    temp_feedback = $("#main_consulta_div #right_ear").text();
-                                else
-                                    temp_feedback = $("#main_consulta_div #left_ear").text();
                                 if ($("#main_consulta_div #venda_yes").is(":checked"))//HA VENDA
                                 {
-                                    $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 1, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), feedback: temp_feedback, closed: 1}, function() {
+                                    $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 1, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), feedback: "TV", closed: 1}, function() {
                                         $.jGrowl('Consulta gravada com venda', {life: 3000});
                                         $("#encomenda_modal").modal("show");
                                     }, "json");
                                 }
                                 else//NÂO HA VENDA
                                 {
-                                    $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: $("#main_consulta_div #no_venda_select option:selected").val(), left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), feedback: temp_feedback, closed: 1}, function() {
+                                    $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: $("#main_consulta_div #no_venda_select option:selected").val(), left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), feedback: "TNV", closed: 1}, function() {
                                         $.jGrowl('Consulta gravada sem venda', {life: 3000});
                                         $("#marcacao_modal").modal("show");
                                     }, "json");
@@ -209,7 +200,7 @@ $("#main_consulta_div #terminar_consulta").on("click", function()
                             }
                             else//NAO HA PERDA
                             {
-                                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), feedback: "Sem perda", closed: 1}, function() {
+                                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), feedback: "SPERD", closed: 1}, function() {
                                     $.jGrowl('Consulta gravada sem perda', {life: 3000});
                                     $("#marcacao_modal").modal("show");
                                 }, "json");
@@ -247,7 +238,7 @@ $("#main_consulta_div #validate_audiograma_button").click(function()
 {
     consult_audiogra.validate(function()
     {
-      consult_audiogra.calculate();
+        consult_audiogra.calculate();
     }, function()
     {
         $.jGrowl('AudioGrama validado com sucesso!', {life: 3000});

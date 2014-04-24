@@ -1,9 +1,15 @@
 $(function()
 {
 
-    $('#form_create_client').stepy({backLabel: "Anterior", nextLabel: "Seguinte", next: function() {
-            return ($(this).validationEngine("validate"));
-        }, finishButton: false});
+    $('#form_create_client').stepy(
+            {
+                backLabel: "Anterior",
+                nextLabel: "Seguinte",
+                next: function() {
+                    return ($(this).validationEngine("validate"));
+                },
+                finishButton: false
+            });
 
     $("#verif_client_data").validationEngine();
     $.post("ajax/create_client.php", {action: "get_fields"},
@@ -27,11 +33,17 @@ $(function()
                 options = optionsRaw.map(function(v) {
                     return new Option(v, v);
                 });
-                elmt.append(options);
+                elmt
+                        .append(options)
+                        .change(function() {
+                            if ($(this).val() === "OUTRAS") {
+                                $(this).replaceWith($("<input>", {type: "text", id: $(this).prop("id"), name: $(this).prop("name")}));
+                            }
+                        });
             } else if (this.name === "TITLE") {
                 elmt = $(mt = $("<select>", {id: this.name, name: this.name, class: "input-mini"}).append([new Option("", ""), new Option("Sr.", "Sr."), new Option("Sra.", "Sra.")]));
             } else if (this.name === "extra6") {
-                elmt = $("<input>", {type: "text", disabled: true, id: this.name, name: this.name, val: "YES"});
+                elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "NO"});
             } else {
                 elmt = $("<input>", {type: "text", id: this.name, name: this.name});
             }
@@ -64,6 +76,9 @@ $(function()
                 case "MIDDLE_INITIAL":
                     input = input1;
                     break;
+                case "LAST_NAME":
+                    input = input1;
+                break;
                 case "ADDRESS1":
                 case "CITY":
                     custom_class = "validate[required]";
@@ -97,7 +112,7 @@ $(function()
         $("#inputs_div1").append($("<div>", {class: "clear"}));
         $("#inputs_div2").append($("<div>", {class: "clear"}));
         $("#inputs_div3").append($("<div>", {class: "clear"}));
-        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
+        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, initialDate: new Date(moment().subtract('years', 65).format())});
     }
     , "json");
 

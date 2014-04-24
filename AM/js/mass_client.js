@@ -5,21 +5,6 @@ $(function() {
             client = getUrlVars();
 
 
-    this.userWidgetPopulate = function(id) {
-        $.post("/AM/ajax/client.php", {id: id, action: 'default'}, function(data) {
-            $("#client")
-                    .find(".user-name").text(data.name)
-                    .end()
-                    .find(".user-email").text(data.address)
-                    .end()
-                    .find(".user-date").text(data.bDay)
-                    .end()
-                    .show();
-        }, "json");
-
-        zone.find(".grid-title .pull-left").text('Recomendações Pedidas');
-    };
-
     this.init = function(zone, rid) {
         var recomendado = rid || "";
         zone.append($("<input>", {type: "hidden", value: recomendado, name: "recomendado"}));
@@ -85,7 +70,8 @@ $(function() {
     };
 
     if (client.id) {
-        me.userWidgetPopulate(atob(client.id));
+        var client_box = new clientBox({id: atob(client.id)});
+        client_box.init();
         me.init(zone, atob(client.id));
     } else {
         me.init(zone);

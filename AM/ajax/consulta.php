@@ -29,7 +29,7 @@ switch ($action) {
             ":consulta" => $consulta,
             ":consulta_razao" => $consulta_razao,
             ":exame" => $exame,
-            ":exame_razao" => json_encode($exame_razao),
+            ":exame_razao" => $exame_razao,
             ":venda" => $venda,
             ":venda_razao" => $venda_razao,
             ":left_ear" => $left_ear,
