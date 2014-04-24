@@ -50,36 +50,7 @@ switch ($action) {
         echo json_encode($output);
         break;
 
-    case "populate_ncsm_toissue"://NOVOS CLIENTES SEM MARCAÇÂO
-        $u = $user->getUser();
-        $variables[":list"] = $u->list_id;
-        if ($u->user_level > 5) {
-            $query = "SELECT a.lead_id, first_name, extra1, extra2, middle_initial, postal_code, address1, a.entry_date, a.user from  vicidial_list a
-                inner join vicidial_users b on a.user=b.user
-                left join sips_sd_reservations c on a.lead_id=c.lead_id
-                where b.user_group=:user_group and list_id=:list and c.lead_id is null and extra6='YES' limit 20000";
-            $variables[":user_group"] = $u->user_group;
-        } else {
-            $query = "SELECT a.lead_id, first_name, extra1, extra2, middle_initial, postal_code, address1, a.entry_date from  vicidial_list a
-                left join sips_sd_reservations b on a.lead_id=b.lead_id
-                where user=:user and list_id=:list and lead_id is null and extra6='YES' limit 20000";
-            $variables[":user"] = $u->username;
-        }
-
-        $stmt = $db->prepare($query);
-        $stmt->execute($variables);
-        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $row[7] = $row[7] . "<div class='view-button'>"
-                    . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[0]' title='Ver Cliente'><i class='icon-edit'></i></button>"
-                    . "<button class='btn btn-mini icon-alone criar_marcacao' data-lead_id='$row[0]' title='Marcar Consulta'><i class='icon-calendar'></i></button>"
-                    . "<button class='btn btn-mini icon-alone recomendacoes' data-lead_id='$row[0]' title='Recomendados'><i class='icon-plus-sign'></i></button>"
-                    . "</div>";
-            $output['aaData'][] = $row;
-        }
-        echo json_encode($output);
-        break;
-
-    case "populate_ncsm_nottoissue"://NOVOS CLIENTES SEM MARCAÇÂO
+    case "populate_ncsm"://NOVOS CLIENTES SEM MARCAÇÂO
         $u = $user->getUser();
         $variables[":list"] = $u->list_id;
         if ($u->user_level > 5) {
@@ -91,7 +62,7 @@ switch ($action) {
         } else {
             $query = "SELECT a.lead_id, first_name, extra1, extra2, middle_initial, postal_code, address1, a.entry_date from  vicidial_list a
                 left join sips_sd_reservations b on a.lead_id=b.lead_id
-                where user=:user and list_id=:list and lead_id is null and extra6='NO' limit 20000";
+                where user=:user and list_id=:list and b.lead_id is null and extra6='NO' limit 20000";
             $variables[":user"] = $u->username;
         }
 
@@ -108,27 +79,52 @@ switch ($action) {
         echo json_encode($output);
         break;
 
+    case "populate_ncsm_r"://NOVOS CLIENTES SEM MARCAÇÂO Recomendados
+        $u = $user->getUser();
+        $variables[":list"] = $u->list_id;
+        if ($u->user_level > 5) {
+            $query = "SELECT b.first_name, b.extra2, a.lead_id, a.first_name, a.extra1, a.extra2, a.middle_initial, a.postal_code, a.address1, a.entry_date, a.user 
+                FROM `vicidial_list` a 
+                inner join `vicidial_list` b on a.extra7=b.lead_id 
+                inner join vicidial_users c on a.user=c.user
+                left join sips_sd_reservations d on a.lead_id=d.lead_id
+                where c.user_group=:user_group and a.list_id=:list and d.lead_id is null and a.extra6='NO' limit 20000";
+            $variables[":user_group"] = $u->user_group;
+        } else {
+            $query = "SELECT b.first_name, b.extra2, a.lead_id, a.first_name, a.extra1, a.extra2, a.middle_initial, a.postal_code, a.address1, a.entry_date
+                FROM `vicidial_list` a 
+                inner join `vicidial_list` b on a.extra7=b.lead_id 
+                left join sips_sd_reservations c on a.lead_id=c.lead_id
+                where a.user=:user and a.list_id=:list and c.lead_id is null and a.extra6='NO' limit 20000";
+            $variables[":user"] = $u->username;
+        }
+
+        $stmt = $db->prepare($query);
+        $stmt->execute($variables);
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $row[9] = $row[9] . "<div class='view-button'>"
+                    . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[0]' title='Ver Cliente'><i class='icon-edit'></i></button>"
+                    . "<button class='btn btn-mini icon-alone criar_marcacao' data-lead_id='$row[0]' title='Marcar Consulta'><i class='icon-calendar'></i></button>"
+                    . "<button class='btn btn-mini icon-alone recomendacoes' data-lead_id='$row[0]' title='Recomendados'><i class='icon-plus-sign'></i></button>"
+                    . "</div>";
+            $output['aaData'][] = $row;
+        }
+        echo json_encode($output);
+        break;
+
     case "populate_mp"://MARCAÇÕES PENDENTES
-        $query = "SELECT b.first_name, a.start_date from sips_sd_reservations a 
+        $query = "SELECT b.first_name, a.start_date, a.lead_id, a.id_reservation from sips_sd_reservations a 
             left join vicidial_list b on a.lead_id=b.lead_id 
             where a.id_user=? and a.end_date<? order by a.end_date asc";
         $variables[] = $user->getUser()->username;
         $variables[] = date("Y-m-d");
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
-        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode($row);
+        $data=array();
+        while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
+            $data[]=array("first_name"=>(string)$row->first_name,"start_date"=>$row->start_date,"lead_id"=>$row->lead_id,"id_reservation"=>$row->id_reservation);
+        }
+        echo json_encode($data);
         break;
 
-    case "get_consultas":
-        $query = "SELECT a.id_reservation, a.start_date, a.end_date, a.lead_id, b.first_name, b.address1, b.date_of_birth, c.consulta, c.exame, c.venda from sips_sd_reservations a 
-            left join vicidial_list b on a.lead_id=b.lead_id 
-            left join spice_consulta c on c.lead_id=a.lead_id 
-            where id_user=?";
-        $variables[] = "sandraaguiar";
-        $stmt = $db->prepare($query);
-        $stmt->execute($variables);
-        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode($row);
-        break;
 }

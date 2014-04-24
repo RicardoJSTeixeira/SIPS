@@ -8,7 +8,7 @@
 </style>
 <style id="reserve_types"></style>
 
-<div id="cliente_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+<div id="cliente_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3 id="myModalLabel">Dados de Cliente</h3>
@@ -77,7 +77,7 @@
             </div>
             <div class="grid">
                 <div class="grid-title">
-                    <div class="pull-left">Marcações Pendentes</div>
+                    <div class="pull-left">Consultas Pendentes</div>
                 </div>
                 <div style="overflow: auto;max-height:36em"  >
                     <table class="table table-mod archives" id='table_mp'>
@@ -99,16 +99,16 @@
         <div class="span12">
             <ul id="tabs" class="nav nav-tabs tabs-main">
                 <li class="active"><a href="#Todas" data-toggle="tab">Todas as Marcações</a></li>
-                <li><a href="#NovoCli" data-toggle="tab">Novos Clientes Analisados</a></li>
-                <li><a href="#NovoCliissue" data-toggle="tab">Novos Clientes Sem Marcação</a></li>
+                <li><a href="#NovoCliR" data-toggle="tab">Recomendações</a></li>
+                <li><a href="#NovoCli" data-toggle="tab">Leads</a></li>
             </ul>
             <div class="tab-content tabs-main-content">
-                <div class="tab-pane tab-overflow-main" id="NovoCliissue">
-                    <table class="table table-mod table-bordered table-striped" id='table_ncsm_toissue'></table>
-                </div>
                 <div class="tab-pane tab-overflow-main" id="NovoCli">
+                    <table class="table table-mod table-bordered table-striped" id='table_ncsm'></table>
+                </div>
+                <div class="tab-pane tab-overflow-main" id="NovoCliR">
 
-                    <table class="table table-mod table-bordered table-striped" id='table_ncsm_nottoissue'></table>
+                    <table class="table table-mod table-bordered table-striped" id='table_ncsm_r'></table>
                 </div>
                 <div class="tab-pane active tab-overflow-main" id="Todas">
                     <table class="table table-mod table-bordered table-striped" id='table_allm'></table>      

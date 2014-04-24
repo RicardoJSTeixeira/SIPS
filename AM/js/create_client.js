@@ -1,9 +1,15 @@
 $(function()
 {
 
-    $('#form_create_client').stepy({backLabel: "Anterior", nextLabel: "Seguinte", next: function() {
-            return ($(this).validationEngine("validate"));
-        }, finishButton: false});
+    $('#form_create_client').stepy(
+            {
+                backLabel: "Anterior",
+                nextLabel: "Seguinte",
+                next: function() {
+                    return ($(this).validationEngine("validate"));
+                },
+                finishButton: false
+            });
 
     $("#verif_client_data").validationEngine();
     $.post("ajax/create_client.php", {action: "get_fields"},
@@ -18,23 +24,26 @@ $(function()
                 input2 = $("#inputs_div2"),
                 input3 = $("#inputs_div3"),
                 elmt,
-                hide="";
+                hide = "";
         $.each(data, function()
         {
             if (this.name === "extra5") {
                 elmt = $("<select>", {id: this.name, name: this.name});
-                var
-                        o,
-                        options = [],
-                        tmp = ["ADM (ADME/ADMA/ADMFA)", "ADSE", "APL", "CGD", "Centro Nac. de Protecção Contra Riscos Profissionais", "EDP", "OUTRAS", "PETROGAL", "PT/CTT ACS", "SAD-PSP", "SAD/GNR (ADMG)", "SAMS", "SEG. SOCIAL", "Serviços Sociais do Ministério da Justiça"];
-
-                options.push(new Option("", ""));
-                while (o = tmp.shift()) {
-                    options.push(new Option(o, o));
-                }
-                elmt.append(options);
-            } else if(this.name === "extra6"){
-                elmt = $("<input>", {type: "text", disabled:true, id: this.name, name: this.name, val:"NO"});
+                var optionsRaw = ["", "ADM (ADME/ADMA/ADMFA)", "ADSE", "APL", "CGD", "Centro Nac. de Protecção Contra Riscos Profissionais", "EDP", "PETROGAL", "PT/CTT ACS", "SAD-PSP", "SAD/GNR (ADMG)", "SAMS", "SEG. SOCIAL", "Serviços Sociais do Ministério da Justiça", "OUTRAS"];
+                options = optionsRaw.map(function(v) {
+                    return new Option(v, v);
+                });
+                elmt
+                        .append(options)
+                        .change(function() {
+                            if ($(this).val() === "OUTRAS") {
+                                $(this).replaceWith($("<input>", {type: "text", id: $(this).prop("id"), name: $(this).prop("name")}));
+                            }
+                        });
+            } else if (this.name === "TITLE") {
+                elmt = $(mt = $("<select>", {id: this.name, name: this.name, class: "input-mini"}).append([new Option("", ""), new Option("Sr.", "Sr."), new Option("Sra.", "Sra.")]));
+            } else if (this.name === "extra6") {
+                elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "NO"});
             } else {
                 elmt = $("<input>", {type: "text", id: this.name, name: this.name});
             }
@@ -55,19 +64,26 @@ $(function()
                     input = input1;
                     break;
                 case "DATE_OF_BIRTH":
-                    custom_class = "form_datetime  input-small";
+                    custom_class = "form_datetime  input-small validate[required]";
                     input = input1;
                     break;
                 case "EMAIL":
                     input = input1;
                     custom_class = "validate[custom[email]]";
+                    break;
+                case "TITLE":
+                    custom_class = "validate[required]";
                 case "MIDDLE_INITIAL":
                     input = input1;
                     break;
+                case "LAST_NAME":
+                    input = input1;
+                break;
                 case "ADDRESS1":
+                case "CITY":
+                    custom_class = "validate[required]";
                 case "ADDRESS2":
                 case "POSTAL_CODE":
-                case "CITY":
                 case "PROVINCE":
                 case "STATE":
                 case "COUNTRY_CODE":
@@ -81,13 +97,13 @@ $(function()
                     hide = " hide";
                     break;
                 default:
-                    hide="";
+                    hide = "";
                     input = input3;
                     break;
             }
             elmt.addClass(custom_class);
 
-            input.append($("<div>", {class: "formRow"+hide})
+            input.append($("<div>", {class: "formRow" + hide})
                     .append($("<label>").text(this.display_name))
                     .append($("<div>", {class: "formRight"})
                             .append(elmt)));
@@ -96,7 +112,7 @@ $(function()
         $("#inputs_div1").append($("<div>", {class: "clear"}));
         $("#inputs_div2").append($("<div>", {class: "clear"}));
         $("#inputs_div3").append($("<div>", {class: "clear"}));
-        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
+        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, initialDate: new Date(moment().subtract('years', 65).format())});
     }
     , "json");
 

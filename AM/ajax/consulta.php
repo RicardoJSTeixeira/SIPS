@@ -29,7 +29,7 @@ switch ($action) {
             ":consulta" => $consulta,
             ":consulta_razao" => $consulta_razao,
             ":exame" => $exame,
-            ":exame_razao" => json_encode($exame_razao),
+            ":exame_razao" => $exame_razao,
             ":venda" => $venda,
             ":venda_razao" => $venda_razao,
             ":left_ear" => $left_ear,
@@ -37,7 +37,7 @@ switch ($action) {
             ":feedback" => $feedback,
             ":closed" => $closed));
 
-        if ($consulta_razao == "RM") {
+        if ($consulta_razao == "DEST") {
             $query = "UPDATE sips_sd_reservations SET del='1' where id_reservation=:id";
 
             $stmt = $db->prepare($query);
@@ -46,15 +46,6 @@ switch ($action) {
 
         echo json_encode("saved");
         break;
-
-    case "get_client_info":
-
-        $stmt = $db->prepare("SELECT first_name nome,address1 morada,date_of_birth data_nascimento from vicidial_list where lead_id=:lead_id");
-        $stmt->execute(array(":lead_id" => $lead_id));
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        echo json_encode($row);
-        break;
-
 
     case "get_consulta":
         $stmt = $db->prepare("SELECT id,data,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,feedback,closed from spice_consulta where reserva_id=:reserva_id");

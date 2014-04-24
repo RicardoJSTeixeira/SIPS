@@ -37,9 +37,9 @@ function confirmacao($lead_id, $dispoAtt, $link) {
         mysql_query($qdelete, $link) or die(mysql_error());
     }
 
-    if (!$dispoAtt["completed"]) {
-        return false;
-    } else {
+    if ($dispoAtt["completed"] == 'true') {
         removeConfirm($lead_id, $link);
+    } else {
+        return false;
     }
 }
