@@ -26,6 +26,7 @@ $userID = $user->getUser();
 $apoio_marketing = new apoio_marketing($db, $userID->user_level, $userID->username);
 $relatorio_correio = new correio($db, $userID->user_level, $userID->username);
 $relatorio_frota = new frota($db, $userID->user_level, $userID->username);
+    
 switch ($action) {
     case "criar_relatorio_frota":
         echo json_encode($relatorio_frota->create($data, $matricula, $km, $viatura, $ocorrencias, $comments));
@@ -38,7 +39,7 @@ switch ($action) {
     case "criar_apoio_marketing":
         $calendar = new Calendars($db);
         $refs = $calendar->_getRefs($userID->username);
-        $system_types=$calendar->getSystemTypes();
+        $system_types = $calendar->getSystemTypes();
         $id = array();
         while ($ref = array_pop($refs)) {
             $id[] = $calendar->newReserva($userID->username, "", strtotime($data_inicial . " " . $horario["inicio1"]), strtotime($data_final . " " . $horario["fim2"]), $system_types["Apoio Markting"], $ref->id);
@@ -71,6 +72,10 @@ switch ($action) {
 
     case "get_anexo_correio":
         echo json_encode($relatorio_correio->get_anexo_correio($id));
+        break;
+
+    case "save_anexo_correio":
+        echo json_encode($relatorio_correio->save_anexo_correio($id,$anexos));
         break;
 
     case "get_horario_from_apoio_marketing":
