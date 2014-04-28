@@ -28,7 +28,7 @@
         </div>
         <div class="modal-footer">
             <button class="btn btn-success new_marcacao_button" data-dismiss="modal" aria-hidden="true">Sim</button>
-            <button class="btn" data-dismiss="modal" onclick=" $.history.push('view/dashboard.html');" aria-hidden="true">Não</button>
+            <button class="btn" data-dismiss="modal" onclick="$.history.push('view/dashboard.html');" aria-hidden="true">Não</button>
         </div>
     </div>
 
@@ -41,16 +41,19 @@
                 <div class="grid " id="options_div" style="position:fixed;bottom: 10px; width:13.529915%; display:none">
                     <div class="grid-title">
                         <div class="pull-left"><i class="icon-cogs"></i> Opções</div>
-                        <div class="pull-rigth">
-                            <button class='btn btn-danger icon alone' id='terminar_consulta_no_exame' title="Terminar Consulta sem Exame" ><i class="icon"></i></button>
+                        <div class="pull-right">
+                            <button class='btn btn-danger icon-alone' id='terminar_consulta_no_exame' title="Terminar Consulta sem Exame" ><i class="icon-user-md"></i></button>
                         </div>
                     </div>
                     <div class="grid-content">
                         <div class="formRow" id="validate_audio_script_div" style="display:none">
-                            <button class="btn  " id="validate_audio_script" ><i class="icon-save"></i>Concluir</button>
+                            <button class="btn btn-success btn-block" id="validate_audio_script" ><i class="icon-share-alt"></i>Avançar</button>
                         </div>
                         <div class="formRow " id="terminar_consulta_div" style="display:none">
-                            <button class='btn btn-success  ' id='terminar_consulta' >Terminar Consulta</button>
+                            <button class='btn btn-success btn-block' id='terminar_consulta' ><i class="icon-save"></i>Terminar Consulta</button>
+                        </div>
+                        <div class="formRow" id="validate_audio_script_save_div" style="display:none">
+                            <button class="btn btn-primary btn-block" id="exit_save" ><i class="icon-save"></i>Gravar sem Concluir</button>
                         </div>
                     </div>
                     <div class="clear"></div>
@@ -166,6 +169,58 @@
                                     <option value="SPERD">Sem Perda</option>
                                 </select>
                             </div>   
+                        </div>
+                    </div>
+                    <div id="yes_venda_div"  style="display:none">
+                        <div class='formRow'>
+                            <label>Aparelho vendido</label>
+                            <div class='formRight'>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:20px">#</th>
+                                            <th>Marca</th>
+                                            <th>Gama</th>
+                                            <th>Modelo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>Dir</th>
+                                            <td>
+                                                <input type="text" class="span"/>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="span"/>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="span"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Esq</th>
+                                            <td>
+                                                <input type="text" class="span"/>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="span"/>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="span"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>   
+                        </div>
+                        <div class='formRow'>
+                            <label>Tipo venda</label>
+                            <div class='formRight'>
+                                <input  type="radio" id="tp_vd_yes" value="Bilateral" name="tp_vd">
+                                <label class="radio inline"  for="tp_vd_yes"><span></span>Bilateral</label>
+                                <input  type="radio" id="tp_vd_no" value="Unilateral" name="tp_vd">
+                                <label class="radio inline"  for="tp_vd_no"><span></span>Unilateral</label>
+                            </div>
                         </div>
                     </div>
                     <div class="clear"></div>

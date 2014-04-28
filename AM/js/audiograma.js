@@ -42,12 +42,12 @@ var audiograma = function(lead_id) {
 
         if (right_ear.value < 35 && left_ear.value < 35)
         {
-            all_ear.text = "Ambos os ouvidos: Sem perda";
+            all_ear.text = "Resultado: Sem perda";
             all_ear.value = 0;
         }
         else
         {
-            all_ear.text = "";
+            all_ear.text = "Resultado: Perda";
             all_ear.value = 1;
             if (right_ear.value >= 35 && right_ear.value < 65)
             {
@@ -88,10 +88,6 @@ var audiograma = function(lead_id) {
             }
         }, "json");
     };
-
-
-
-
 
     this.validate = function(validado, nao_validado)
     {
@@ -134,8 +130,6 @@ var audiograma = function(lead_id) {
         return false;
     };
 
-
-
 //VALIDATE DOS MAX E MIN VALUES
     me.adg.find("#audiograma_table input").on("focusout", function()
     {
@@ -157,8 +151,6 @@ var audiograma = function(lead_id) {
                 element.val("-" + min);
         }
     });
-
-
 
     $.post("ajax/audiograma.php", {action: "populate", lead_id: lead_id},
     function(data)

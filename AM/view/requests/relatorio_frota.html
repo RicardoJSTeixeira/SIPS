@@ -14,13 +14,15 @@
                 <div class="formRow">
                     <span>Matricula</span>
                     <div class="formRight">
-                        <input   type="text" id="input_matricula" name="matricula" class="validate[required]" >
+                        <input   type="text" id="input_matricula" name="matricula" class="validate[required,custom[matricula]]" maxlength="6" >
                     </div>
                 </div>
                 <div class="formRow">
                     <span>Kms</span>
                     <div class="formRight">
-                        <input   type="text" id="input_km" name="Kms" class="validate[required,custom[onlyNumberSp]]" >
+                        <div class="input-append">
+                            <input type="text" id="input_km" name="Kms" class="validate[required,custom[onlyNumberSp]] text-right input-small" maxlength="6" ><span class="add-on">km</span>
+                        </div>
                     </div>
                 </div>
 

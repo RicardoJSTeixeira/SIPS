@@ -51,6 +51,12 @@
 				"alertText": "* Apenas letras permitido"
 		};
   
+  		$.validationEngineLanguage.allRules["matricula"] = {
+				// Good for database fields
+				"regex": /(^\d{2}[a-zA-Z]{2}\d{2}$)|(^[a-zA-Z]{2}\d{2}\d{2}$)|(^\d{2}\d{2}[a-zA-Z]{2}$)/,
+				"alertText": "* Formato XX1111 11XX11 1111XX."
+		};
+  
 	//	# more validations may be added after this point
 	}
 })(jQuery);

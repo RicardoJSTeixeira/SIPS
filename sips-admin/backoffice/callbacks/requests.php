@@ -46,7 +46,7 @@ switch ($action) {
         $query = "SELECT a.lead_id,b.first_name,d.campaign_name,a.entry_time,a.callback_time,a.comments,a.callback_id from vicidial_callbacks a 
             left join vicidial_list b on a.lead_id=b.lead_id
             left join vicidial_campaigns d on d.campaign_id=a.campaign_id where a.recipient='$recipient' $inactive  and a.user='$user' $date";
-  
+
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $row["comments"] = htmlspecialchars($row["comments"]);
@@ -138,8 +138,13 @@ switch ($action) {
 
 
     case "reset_callbacks_by_user":
-        $query = "UPDATE vicidial_callbacks b left join vicidial_list a  on a.lead_id=b.lead_id set b.status='INACTIVE', a.status='NEW', a.called_since_last_reset='N' where  b.user='$user' ";
-        $query = mysql_query($query, $link) or die(mysql_error());
+        $query1 = "UPDATE vicidial_callbacks b left join vicidial_list a  on a.lead_id=b.lead_id set b.status='INACTIVE', a.status='NEW', a.called_since_last_reset='N' where  b.user='$user' ";
+        mysql_query($query1, $link) or die(mysql_error());
+
+        $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
+                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CALLBACKS LIST','RESET','$user','ADMIN RESET CALLBACKS','" . mysql_real_escape_string($query1) . "')";
+        mysql_query($query) or die(mysql_error());
+
         echo("1");
         break;
 
@@ -150,15 +155,23 @@ switch ($action) {
         else
             $date = "";
 
-        $query = "UPDATE vicidial_callbacks b left join  vicidial_list a   on a.lead_id=b.lead_id set b.status='INACTIVE', a.status='NEW', a.called_since_last_reset='N' where b.user='$user' and b.campaign_id='$campaign_id' $date  ";
-        $query = mysql_query($query, $link) or die(mysql_error());
+        $query1 = "UPDATE vicidial_callbacks b left join  vicidial_list a   on a.lead_id=b.lead_id set b.status='INACTIVE', a.status='NEW', a.called_since_last_reset='N' where b.user='$user' and b.campaign_id='$campaign_id' $date  ";
+        mysql_query($query1, $link) or die(mysql_error());
+
+        $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
+                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CALLBACKS LIST','RESET','$user','ADMIN RESET CALLBACKS','" . mysql_real_escape_string($query1) . "')";
+        mysql_query($query) or die(mysql_error());
         echo("1");
         break;
 
 
     case "reset_callbacks_by_id":
-        $query = "UPDATE vicidial_callbacks b left join vicidial_list a on a.lead_id=b.lead_id set  b.status='INACTIVE', a.status='NEW', a.called_since_last_reset='N'  where b.callback_id='$callback_id'";
-        $query = mysql_query($query, $link) or die(mysql_error());
+        $query1 = "UPDATE vicidial_callbacks b left join vicidial_list a on a.lead_id=b.lead_id set  b.status='INACTIVE', a.status='NEW', a.called_since_last_reset='N'  where b.callback_id='$callback_id'";
+        mysql_query($query1, $link) or die(mysql_error());
+
+        $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
+                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CALLBACK LIST','RESET','$callback_id','ADMIN RESET CALLBACK','" . mysql_real_escape_string($query1) . "')";
+        mysql_query($query) or die(mysql_error());
         echo("1");
         break;
 
@@ -167,22 +180,34 @@ switch ($action) {
 
 
     case "edit_callbacks_by_id":
-        $query = "UPDATE `vicidial_callbacks` SET user='$user',campaign_id='$campaign_id',callback_time='$callback_date', comments='$comments' WHERE callback_id=$callback_id";
-        $query = mysql_query($query, $link) or die(mysql_error());
+        $query1 = "UPDATE `vicidial_callbacks` SET user='$user',campaign_id='$campaign_id',callback_time='$callback_date', comments='$comments' WHERE callback_id=$callback_id";
+        mysql_query($query1, $link) or die(mysql_error());
+
+        $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
+                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CALLBACK LIST','RESET','$callback_id','ADMIN RESET CALLBACK','" . mysql_real_escape_string($query1) . "')";
+        mysql_query($query) or die(mysql_error());
         echo("1");
         break;
 
 
     case "transfer_callbacks_to_agent":
-        $query = "UPDATE `vicidial_callbacks` SET user='$new_user' WHERE user='$old_user'";
-        $query = mysql_query($query, $link) or die(mysql_error());
+        $query1 = "UPDATE `vicidial_callbacks` SET user='$new_user' WHERE user='$old_user'";
+        mysql_query($query1, $link) or die(mysql_error());
+
+        $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
+                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CALLBACK LIST','TRANSFER','$callback_id','ADMIN TRANSFER CALLBACK','" . mysql_real_escape_string($query1) . "')";
+        mysql_query($query) or die(mysql_error());
         echo("1");
         break;
 
 
     case "transfer_callbacks_to_agent_by_c":
-        $query = "UPDATE `vicidial_callbacks` SET user='$new_user', campaign_id='$campaign_id' WHERE user='$old_user'";
-        $query = mysql_query($query, $link) or die(mysql_error());
+        $query1 = "UPDATE `vicidial_callbacks` SET user='$new_user', campaign_id='$campaign_id' WHERE user='$old_user'";
+        mysql_query($query1, $link) or die(mysql_error());
+
+        $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
+                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','CALLBACK LIST','TRANSFER','$callback_id','ADMIN TRANSFER CALLBACK','" . mysql_real_escape_string($query1) . "')";
+        mysql_query($query) or die(mysql_error());
         echo("1");
         break;
 }
