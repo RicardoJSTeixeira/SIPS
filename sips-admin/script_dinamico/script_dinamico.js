@@ -12,7 +12,6 @@ var regex_text = /[^a-zA-Z0-9éÉçÇãÃâÂóÓõÕáÁàÀíÍêÊúÚôÔº�
 var regex_split = /\n/g;
 var list_ui;
 var list_item;
-//mostra/esconde os elementos associados ao edit               
 function editor_toggle(tipo)
 {
     $(".item").removeClass("helperPick");
@@ -38,7 +37,6 @@ function editor_toggle(tipo)
         $(".footer_save_cancel button").prop('disabled', true);
     }
 }
-
 
 $(function() {
 
@@ -92,7 +90,7 @@ $(function() {
                 }
                 if ($(this).data().uiSortable.currentItem.hasClass("pagination_class"))
                 {
-                    item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "pagination", $(this).data().uiSortable.currentItem.index(), "h", 0, 0, 0, 0, 0, 0, 0, 0);
+                    item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "pagination", $(this).data().uiSortable.currentItem.index(), "h", 0, 0, 0, [], 0, 0, 0, 0);
                 }
                 if ($(this).data().uiSortable.currentItem.hasClass("radio_class"))
                 {
@@ -124,7 +122,7 @@ $(function() {
                 }
                 if ($(this).data().uiSortable.currentItem.hasClass("datepicker_class"))
                 {
-                    item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_datepicker")[0].innerHTML, "2", 0, 0, 0, 0, 0, 0);
+                    item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_datepicker")[0].innerHTML, "2", 0, [], 0, 0, 0, 0);
                 }
                 if ($(this).data().uiSortable.currentItem.hasClass("scheduler_class"))
                 {
@@ -140,7 +138,7 @@ $(function() {
                 }
                 if ($(this).data().uiSortable.currentItem.hasClass("button_class"))
                 {
-                    item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "button", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .botao")[0].innerHTML, 0, 0, [], 0, 0, 0, 0);
+                    item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "button", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .botao")[0].innerHTML, 0, 0, [], 0, 0, 0, "");
                 }
                 editor_toggle("off");
             }
@@ -364,6 +362,19 @@ $("#apagar_elemento").click(function()
 
 });
 
+$("#button_use_script").click(function()
+{
+
+    if ($(this).is(":checked"))
+    {
+        $("#div_url_input").show();
+    }
+    else
+    {
+        $("#div_url_input").hide();
+    }
+});
+
 function update_script(callback)
 {
     $(".chosen-select").chosen(({no_results_text: "Sem resultados"}));
@@ -446,7 +457,6 @@ function update_pages(callback)
             var option = "";
             $("#select_default_value").append("<option value='0' data-campaign_id='0'>Sem Valor por Defeito</option>");
             $.each(data4, function() {
-
                 if ($("#tags_select optgroup[label='" + this.campaign_name + "']").length)
                 {
                     option = "<option data-campaign_id='" + this.campaign_id + "' value='" + this.name + "'>" + this.display_name + "</option>";
@@ -455,24 +465,17 @@ function update_pages(callback)
                 }
                 else
                 {
-
                     $("#tags_select").append("<optgroup class='tag_group' data-campaign_id='" + this.campaign_id + "' label='" + this.campaign_name + "'></optgroup>");
                     $("#select_default_value").append("<optgroup class='tag_group' data-campaign_id='" + this.campaign_id + "' label='" + this.campaign_name + "'></optgroup>");
-
                     option = "<option data-campaign_id='" + this.campaign_id + "'  value='" + this.name + "'>" + this.display_name + "</option>";
                     $("#tags_select optgroup[label='" + this.campaign_name + "']").append(option);
                     if (this.name != "NOME_OPERADOR")
                         $("#select_default_value optgroup[label='" + this.campaign_name + "']").append(option);
                 }
-
             });
             $("#tags_select").trigger("chosen:updated");
             $("#tag_label").text("§" + $("#tags_select option:selected").val() + "§");
         }, "json");
-
-
-
-
     }, "json");
 }
 function update_info()
@@ -657,7 +660,9 @@ function update_info()
                             .data("tag", this.tag)
                             .addClass("element")
                             .data("type", "button")
-                            .data("hidden", this.hidden);
+                            .data("hidden", this.hidden)
+                            .data("url", this.param1)
+                            .data("url_elements", this.values_text);
                     insert_element("button", item, this);
                     break;
             }
@@ -670,7 +675,6 @@ function update_info()
 
 function populate_element(tipo, element)
 {
-
     rules_manager(tipo, element);
     $("#tabs").tabs("enable");
     $("#select_default_value").val("");
@@ -711,26 +715,26 @@ function populate_element(tipo, element)
                 $("#not_validado_text").val("");
                 $("#select_ajax_script option:first").prop("selected", true);
             }
- 
+
             break;
         case "radio":
             $("#radio_edit").val($("#" + id + " .label_geral").html());
             var string_elements = "";
-            var element_rlength = $("#" + id + " :radio").length; 
+            var element_rlength = $("#" + id + " :radio").length;
             var rname;
-           
-            for (var count = 0; count < element_rlength; count++) 
+
+            for (var count = 0; count < element_rlength; count++)
             {
                 rname = $("#" + id + " .radio_name").eq(count).text();
                 if (count == element_rlength - 1)
                     string_elements += rname;
                 else
                     string_elements += rname + "\n";
-                string_elements = string_elements.replace("<span></span>", ""); 
+                string_elements = string_elements.replace("<span></span>", "");
             }
             $("#radio_textarea").val(string_elements);
             if (element.data("dispo") === "v")
-                $("#vertic_radio").attr('checked', true); 
+                $("#vertic_radio").attr('checked', true);
             else
                 $("#horiz_radio").attr('checked', true);
             break;
@@ -875,6 +879,24 @@ function populate_element(tipo, element)
             break;
         case "button":
             $("#button_edit").val($("#" + id + " .botao").text());
+
+
+
+
+            if (element.data("url").length)
+            {
+                $("#div_url_input").show();
+                $("#button_use_script").prop("checked", true);
+                $("#input_url").val(element.data("url"));
+                $("#select_elements_to_url").val(element.data("url_elements")).trigger('chosen:updated');
+            }
+            else
+            {
+                $("#div_url_input").hide();
+                $("#button_use_script").prop("checked", false);
+                $("#input_url").val("");
+                $("#select_elements_to_url").val("").trigger('chosen:updated');
+            }
             $(".required_class").hide();
             break;
     }
@@ -1226,7 +1248,9 @@ function edit_element(opcao, element, data)
                 editor_toggle("off");
                 $("#button_edit").val($("#button_edit").val().replace(regex_text, ''));
                 $("#" + id + " .botao").text($("#button_edit").val());
-                item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "button", element.index(), "h", $("#button_edit").val(), 0, 0, 0, 0, 0, $("#item_hidden").is(':checked'));
+                element.data("url", $("#button_use_script").is(":checked") ? $("#input_url").val() : "");
+                element.data("url_elements", $("#button_use_script").is(":checked") ? $("#select_elements_to_url").val() : "");
+                item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "button", element.index(), "h", $("#button_edit").val(), 0, 0, $("#button_use_script").is(":checked") ? $("#select_elements_to_url").val() : "", $("#button_use_script").is(":checked") ? $("#input_url").val() : "", 0, $("#item_hidden").is(':checked'), "POST");
             }
             break;
     }
@@ -1681,6 +1705,8 @@ function rules_manager(tipo, element)
     }
 
     $("#rule_target_select option[value='" + element.data("tag") + "']").prop('disabled', true).trigger("chosen:updated");
+
+
     rts.trigger("change");
 }
 
@@ -1691,6 +1717,7 @@ function rules_update_targets()
     function(data5)
     {
         $("#rule_target_select").empty();
+        $("#select_elements_to_url").empty();
         var temp_type = "";
         $.each(data5, function(index, value) {
             switch (this.type)
@@ -1735,8 +1762,10 @@ function rules_update_targets()
                     break;
             }
             $("#rule_target_select").append("<option value=" + this.tag + ">" + this.tag + " --- " + temp_type + "</option>"); //povoar os alvos com as tags e tipos dos elementos
+            $("#select_elements_to_url").append("<option value=" + this.tag + ">" + this.tag + " --- " + temp_type + "</option>");
         });
         $('#rule_target_select').trigger('chosen:updated');
+        $("#select_elements_to_url").trigger('chosen:updated');
     }, "json");
 }
 

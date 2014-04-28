@@ -9,9 +9,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
                 }
             };
-
     $.extend(true, events, ext_events);
-
     this.script_id = script_id;
     this.lead_id = lead_id;
     this.unique_id = unique_id;
@@ -23,7 +21,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     this.nao_validado_function = false;
     this.has_script = true;
     this.config = new Object();
-
     this.init = function(ext_config)
     {
 
@@ -31,8 +28,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         me.config.save_overwrite = false;
         me.config.input_disabled = false;
         $.extend(true, me.config, ext_config);
-
-
         $.ajaxSetup({cache: false});
         before_all(function() {
             update_script(function() {
@@ -42,7 +37,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             if (me.config.input_disabled)
                             {
                                 script_zone.find("input").prop("disabled", true).end()
-                                .find("select").prop("disabled", true).end();
+                                        .find("select").prop("disabled", true).end();
                             }
                             events.onEverethingCompleted(me);
                         });
@@ -51,7 +46,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             });
         });
     };
-
     function before_all(callback)
     {
         if (me.lead_id)
@@ -61,7 +55,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             {
                 if (Object.size(info1))
                     me.client_info = info1;
-
                 if (typeof callback === "function")
                 {
                     callback();
@@ -128,7 +121,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         array_id["radio"] = 0;
         array_id["checkbox"] = 0;
         array_id["input"] = 0;
-
         $(script_zone).on("click", "#script_div .previous_pag", function(e) {
             e.preventDefault();
             var temp = script_zone.find(".pag_div:visible").prev(".pag_div");
@@ -138,7 +130,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 temp.show();
             }
         });
-
         $(script_zone).on("click", "#script_div .next_pag", function(e) {
             e.preventDefault();
             me.validate_manual(function() {
@@ -150,7 +141,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 }
             }, false);
         });
-
         $(script_zone).on("click", "#script_div .scheduler_button_go", function(e) {
             e.preventDefault();
             var select = $(this).prev("select");
@@ -160,14 +150,12 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 window.open(url, 'Calendario', 'fullscreen=yes, scrollbars=auto,status=1');
             }
         });
-
         $(script_zone).on("click", "#script_div .pdf_button", function(e)
         {
             var url = file_path + "files/" + $(this).attr("file");
             window.open(url, 'PDF', 'fullscreen=no, scrollbars=auto');
         });
     });
-
 //UPDATES DE INFO
     function update_script(callback)
     {
@@ -208,7 +196,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 if (Object.size(data))
                 {
                     me.script_id = data.id;
-
                     if (typeof callback === "function")
                     {
                         callback();
@@ -265,7 +252,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     input.placeholder = info.placeholder;
                     input.maxLength = info.max_length;
                     input.name = info.tag;
-
                     if (info.default_value)
                         if (info.default_value.name != 0 && Object.size(me.client_info) && !me.admin_review)
                         {
@@ -559,8 +545,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
                     if (info.max_length == 1)
                         options.daysOfWeekDisabled = [0, 6];
-
-
                     script_zone.find("input[name='" + info.tag + "']").datetimepicker(options).keypress(function(e) {
                         e.preventDefault();
                     }).bind("cut copy paste", function(e) {
@@ -614,6 +598,41 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     break;
                 case "button":
                     element.find(".botao").text(info.texto);
+                    if (info.param1.length)
+
+                    {
+
+                        $(script_zone).on("click", "#script_div #" + info.tag + " button", function()//atribuir os ons a cada value
+                        {
+
+                            var this_elements = [];
+                            var this_info = $(this).closest(".item").data("info");
+                            $.each(this_info.values_text, function()
+                            {
+
+                                switch ($("[name=" + ~~this + "]").parents(".item").data("info").type)
+                                {
+                                    case "radio":
+                                    case "checkbox":
+                                        this_elements.push({name: ~~this, value: $("[name=" + ~~this + "]:checked").val()});
+                                        break;
+                                    case "select":
+                                        this_elements.push({name: ~~this, value: $("[name=" + ~~this + "]:selected").val()});
+                                        break;
+                                    default:
+                                        this_elements.push({name: ~~this, value: $("[name=" + ~~this + "]").val()});
+                                        break;
+                                }
+
+                            });
+                    
+                            $.post(file_path + "proxy.php", {csurl: this_info.param1, elements: this_elements},
+                            function() {
+
+
+                            }, "json");
+                        });
+                    }
                     break;
             }
         });
@@ -823,7 +842,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 $(script_zone).on("change", "#script_div #" + this.tag_trigger + " .form_datetime", function()//atribuir os ons a cada value
                                 {
                                     var temp = data[index];
-
                                     if (temp.param2.type == "fixed") {
                                         var tempo1, tempo2;
                                         time1 = moment(temp.param2.data_inicial);
@@ -850,7 +868,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                         var time1 = moment();
                                         var tempo2 = temp.param2.data_final.split("|");
                                         var time2 = moment();
-
                                         if (temp.param2.data_inicial != "#|#|#|#")
                                         {
                                             if (tempo1[0] != "#")
@@ -894,8 +911,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                             }
                                         }
                                     }
-                                }
-                                );
+                                });
                                 break;
                         }
                         break;
@@ -920,7 +936,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         break;
                 }
             });
-
             if (typeof callback === "function")
             {
                 callback();
@@ -933,7 +948,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         $.each(script_zone.find(".tagReplace"), function()
         {
             var this_label = $(this);
-
             $(script_zone).on("change", "#script_div #" + this_label.data("id") + " input,#" + this_label.data("id") + " select", function() {
                 $("." + this_label.data("id") + "tag").text($(this).val());
             });
@@ -948,7 +962,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     {
         e.preventDefault();
     });
-
     $('html').bind('keypress', function(e)
     {
         if (e.keyCode == 13)
@@ -956,7 +969,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             return false;
         }
     });
-
     this.submit_manual = function(callback)
     {
         $.post(file_path + "requests.php", {action: "save_form_result", "save_overwrite": me.config.save_overwrite, id_script: me.script_id, results: $("#script_form").serializeArray(), user_id: me.user_id, unique_id: me.unique_id, campaign_id: me.campaign_id, lead_id: me.lead_id, admin_review: me.admin_review},
@@ -968,27 +980,18 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             }
         }, "json").fail(function() {
             console.log("FAIL saving data because-->id_script-" + me.script_id + "|user_id->" + me.user_id + "|unique_id->" + me.unique_id + "|campaign_id->" + me.campaign_id + "|lead_id->" + me.lead_id + "|admin_review->" + me.admin_review);
-
         });
     };
-
     this.validate_manual = function(validado, nao_validado)
     {
-
         me.validado_function = validado;
         me.nao_validado_function = nao_validado;
-
-
         script_zone.find("#script_form").submit();
-
-
     };
-
     $(script_zone).on("click", ".botao", function(e)
     {
         e.preventDefault();
     });
-
     Object.size = function(a)
     {
         var count = 0;
@@ -1000,12 +1003,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         }
         return count;
     };
-
 };
-
-
-
-
 // VALIDATION ENGINE ESPECIFIC RULES
 function checknif(field, rules, i, options) {
 
@@ -1072,18 +1070,17 @@ function isValidCard(cardNumber) {
     var ccard = new Array(cardNumber.length);
     var i = 0;
     var sum = 0;
-
     // 6 digit is issuer identifier
     // 1 last digit is check digit
     // most card number > 11 digit
     if (cardNumber.length < 11) {
         return false;
     }
-    // Init Array with Credit Card Number
+// Init Array with Credit Card Number
     for (i = 0; i < cardNumber.length; i++) {
         ccard[i] = parseInt(cardNumber.charAt(i));
     }
-    // Run step 1-5 above above
+// Run step 1-5 above above
     for (i = 0; i < cardNumber.length; i = i + 2) {
         ccard[i] = ccard[i] * 2;
         if (ccard[i] > 9) {
