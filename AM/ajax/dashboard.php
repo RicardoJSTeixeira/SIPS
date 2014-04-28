@@ -3,6 +3,7 @@
 error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
 require '../lib_php/db.php';
+require "../lib_php/calendar.php";
 
 require '../lib_php/user.php';
 foreach ($_POST as $key => $value) {
@@ -112,19 +113,31 @@ switch ($action) {
         echo json_encode($output);
         break;
 
-    case "populate_mp"://MARCAÇÕES PENDENTES
-        $query = "SELECT b.first_name, a.start_date, a.lead_id, a.id_reservation from sips_sd_reservations a 
+    case "populate_mp"://MARCAÇÕES PENDENTE
+        $username = $user->getUser()->username;
+        $calendar = new Calendars($db);
+        $refs = $calendar->_getRefs($username);
+        $refs = array_map(function($a) {
+            return $a->id;
+        }, $refs);
+        $refs = implode(",", $refs);
+        $query = "SELECT * FROM (SELECT b.first_name, a.start_date, a.lead_id, a.id_reservation,a.end_date,'' closed from sips_sd_reservations a 
             left join vicidial_list b on a.lead_id=b.lead_id 
-            where a.id_user=? and a.end_date<? order by a.end_date asc";
-        $variables[] = $user->getUser()->username;
-        $variables[] = date("Y-m-d");
+            left join spice_consulta c on c.reserva_id=a.id_reservation
+            where a.id_resource in ($refs) and a.end_date<:date and c.id is NULL
+            UNION ALL
+            SELECT b.first_name, a.start_date, a.lead_id, a.id_reservation,a.end_date,'...por fechar' closed from sips_sd_reservations a 
+            left join vicidial_list b on a.lead_id=b.lead_id 
+            left join spice_consulta c on c.reserva_id=a.id_reservation
+            where a.id_resource in ($refs) and a.end_date<:date1 and c.closed=0) a order by a.end_date asc";
+        $variables[":date"] = date("Y-m-d");
+        $variables[":date1"] = date("Y-m-d");
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
-        $data=array();
+        $data = array();
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
-            $data[]=array("first_name"=>(string)$row->first_name,"start_date"=>$row->start_date,"lead_id"=>$row->lead_id,"id_reservation"=>$row->id_reservation);
+            $data[] = array("first_name" => (string) $row->first_name."<span class='right'>$row->closed</span>", "start_date" => $row->start_date, "lead_id" => $row->lead_id, "id_reservation" => $row->id_reservation);
         }
         echo json_encode($data);
         break;
-
 }

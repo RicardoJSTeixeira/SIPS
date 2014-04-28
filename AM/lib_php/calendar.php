@@ -10,7 +10,7 @@ Class Calendars {
 
     protected function _getReservas($is_scheduler, $id, $beg, $end, $forceUneditable = false, $username = "") {
         if ($is_scheduler) {
-            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, e.display_text, d.postal_code, d.first_name, c.extra1 codCamp, changed, IFNULL(e.closed,0) closed, obs "
+            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, e.display_text, d.postal_code, d.first_name, c.extra1 codCamp, changed, e.closed, obs "
                     . "FROM sips_sd_reservations a "
                     . "LEFT JOIN vicidial_list d ON a.lead_id = d.lead_id "
                     . "LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource "
@@ -18,7 +18,7 @@ Class Calendars {
                     . "LEFT JOIN spice_consulta f ON a.id_reservation=f.reserva_id "
                     . "WHERE b.id_scheduler=:id And start_date <=:end And start_date >=:beg";
         } else {
-            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, d.display_text, c.postal_code, c.first_name, c.extra1 codCamp, changed, IFNULL(e.closed,0) closed, obs "
+            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, d.display_text, c.postal_code, c.first_name, c.extra1 codCamp, changed, e.closed, obs "
                     . "FROM sips_sd_reservations a "
                     . "LEFT JOIN vicidial_list c ON a.lead_id = c.lead_id "
                     . "LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource "
@@ -64,11 +64,9 @@ Class Calendars {
             if ($row->cal_type != "SCHEDULER") {
                 $refs[] = (object) array("id" => $row->id_calendar);
             } else {
-                $rsc = $this->_db->prepare("SELECT id_resource FROM sips_sd_resources WHERE id_scheduler=:id AND active=1");
+                $rsc = $this->_db->prepare("SELECT id_resource id FROM sips_sd_resources WHERE id_scheduler=:id AND active=1");
                 $rsc->execute(array(":id" => $row->id_calendar));
-                while ($row_rsc = $rsc->fetch(PDO::FETCH_OBJ)) {
-                    $refs[] = (object) array("id" => $row_rsc->id_resource);
-                }
+                $refs = $rsc->fetchALL(PDO::FETCH_OBJ);
             }
         }
         return $refs;

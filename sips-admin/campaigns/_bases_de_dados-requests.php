@@ -362,12 +362,13 @@ function DBResetGetDBList($CampaignID, $link) {
     echo json_encode($js);
 }
 function DBResetLists($Lists2Reset, $link) {
+    global $user_class;
     foreach ($Lists2Reset as $value) {
         $query1 = "UPDATE vicidial_list SET called_since_last_reset='N' WHERE list_id = '$value'";
         mysql_query($query1) or die(mysql_error());
 
         $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
-                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->id . "','" . $user_class->ip . "','LISTS','RESET','$value','ADMIN RESET LIST','" . mysql_real_escape_string($query1) . "')";
+                . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $user_class->full_name . "','" . $user_class->ip . "','LISTS','RESET','$value','ADMIN RESET LIST','" . mysql_real_escape_string($query1) . "')";
         mysql_query($query) or die(mysql_error());
     }
 }

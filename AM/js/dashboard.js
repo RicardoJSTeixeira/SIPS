@@ -123,7 +123,7 @@ $(function() {
         var
                 data = $(this).data(),
                 en = btoa(data.cid),
-                rs = btoa(data.id);
+                rs = btoa(data.rid);
         $.history.push("view/consulta.html?id=" + encodeURIComponent(en) + "&rs=" + encodeURIComponent(rs));
     });
 

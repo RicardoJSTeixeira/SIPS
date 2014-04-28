@@ -53,9 +53,9 @@ class apoio_marketing extends requests_class {
 
     public function get_to_datatable($show_admin, $status = 0) {
         $result['aaData'] = [];
-        $query = "SELECT id,user,data_criacao,data_inicial,data_final,horario,localidade,local,morada,comments,'local_publicididade',status from spice_apoio_marketing where status=:status";
+        $query = "SELECT id,user,data_criacao,data_inicial,data_final,horario,localidade,local,morada,comments,'local_publicididade',status from spice_apoio_marketing";
         $stmt = $this->_db->prepare($query);
-        $stmt->execute(array($status));
+        $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
             $row[5] = "<div> <button class='btn ver_horario'  data-apoio_marketing_id='" . $row[0] . "'><i class='icon-eye-open'></i>Horario</button></div>";
