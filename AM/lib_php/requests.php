@@ -19,25 +19,24 @@ class apoio_marketing extends requests_class {
         parent::__construct($db, $user_level, $user_id);
     }
 
-                
     public function create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade, $id_reservation) {
         $query = "INSERT INTO `spice_apoio_marketing`(`user`,`data_criacao`, `data_inicial`,`data_final`,`horario`, `localidade`, `local`, `morada`, `comments`, `local_publicidade`,`status`,`id_reservation`) "
                 . "VALUES (:user,:now,:data_inicial,:data_final,:horario,:localidade,:local,:morada,:comments,:local_pub,:status,:id_reservation)";
-                
+
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(
-            ":user"=>$this->user_id,
-            ":now"=>date("Y-m-d H:i:s"),
-            ":data_inicial"=>$data_inicial,
-            ":data_final"=> $data_final,
-            ":horario"=> json_encode($horario),
-            ":localidade"=>$localidade, 
-            ":local"=>$local, 
-            ":morada"=>$morada, 
-            ":comments"=>$comments, 
-            ":local_pub"=>json_encode($local_publicidade), 
-            ":status"=>0,
-            ":id_reservation"=>json_encode($id_reservation)));
+                    ":user" => $this->user_id,
+                    ":now" => date("Y-m-d H:i:s"),
+                    ":data_inicial" => $data_inicial,
+                    ":data_final" => $data_final,
+                    ":horario" => json_encode($horario),
+                    ":localidade" => $localidade,
+                    ":local" => $local,
+                    ":morada" => $morada,
+                    ":comments" => $comments,
+                    ":local_pub" => json_encode($local_publicidade),
+                    ":status" => 0,
+                    ":id_reservation" => json_encode($id_reservation)));
     }
 
     public function edit() {
@@ -52,7 +51,7 @@ class apoio_marketing extends requests_class {
 
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
 
-    public function get_to_datatable($show_admin,$status=0) {
+    public function get_to_datatable($show_admin, $status = 0) {
         $result['aaData'] = [];
         $query = "SELECT id,user,data_criacao,data_inicial,data_final,horario,localidade,local,morada,comments,'local_publicididade',status from spice_apoio_marketing";
         $stmt = $this->_db->prepare($query);
@@ -112,11 +111,11 @@ class apoio_marketing extends requests_class {
     public function get_reservation($id) {
         $query = "Select id_reservation From spice_apoio_marketing where id=:id";
         $stmt = $this->_db->prepare($query);
-        $stmt->execute(array(":id"=>$id));
-        $reservation_id=$stmt->fetch(PDO::FETCH_OBJ);
-        return $reservation_id->id_reservation; 
+        $stmt->execute(array(":id" => $id));
+        $reservation_id = $stmt->fetch(PDO::FETCH_OBJ);
+        return $reservation_id->id_reservation;
     }
-    
+
     public function accept_apoio_marketing($id) {
         $query = "Update spice_apoio_marketing set status=1 where id=?";
         $stmt = $this->_db->prepare($query);
@@ -184,15 +183,15 @@ class correio extends requests_class {
     }
 
     public function accept_report_correio($id) {
-        $query = "Update spice_report_correio set status=1 where id=?";
+        $query = "Update spice_report_correio set status=1 where id=:id";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($id));
+        return $stmt->execute(array(":id" => $id));
     }
 
     public function decline_report_correio($id) {
-        $query = "Update spice_report_correio set status=2 where id=?";
+        $query = "Update spice_report_correio set status=2 where id=:id";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($id));
+        return $stmt->execute(array(":id" => $id));
     }
 
     public function get_anexo_correio($id) {
@@ -209,6 +208,12 @@ class correio extends requests_class {
         }
 
         return $anexos;
+    }
+
+    public function save_anexo_correio($id, $anexos) {
+        $query = "update spice_report_correio set anexo=:anexo where id=:id";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array(":id" => $id, ":anexo" => json_encode($anexos)));
     }
 
 }

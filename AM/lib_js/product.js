@@ -160,7 +160,7 @@ var products = function(geral_path, options_ext)
         edit_product_modal.on("click", "#edit_product_button_color_add_line", function(e)
         {
             e.preventDefault();
-            edit_product_modal.find("#edit_product_table_tbody_color").append("<tr><td><select class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]'></td><td><button class='btn remove_color icon-alone btn-danger'><i class='icon icon-remove'></i></button></td></tr>");
+            edit_product_modal.find("#edit_product_table_tbody_color").append("<tr><td><select class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]'></td><td><button class='btn remove_color icon-alone btn-danger'><i class='icon icon-trash'></i></button></td></tr>");
             $("#edit_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).colourPicker({
                 ico: '/jquery/colourPicker/colourPicker.gif',
                 title: false
@@ -258,7 +258,7 @@ var products = function(geral_path, options_ext)
         new_product_path.on("click", "#new_product_button_color_add_line", function(e)
         {
             e.preventDefault();
-            new_product_path.find("#new_product_table_tbody_color").append("<tr><td><select class=' input-small color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]'></td><td><button class='btn remove_color icon-alone'><i class='icon icon-remove'></i></button></td></tr>");
+            new_product_path.find("#new_product_table_tbody_color").append("<tr><td><select class=' input-small color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]'></td><td><button class='btn remove_color icon-alone btn.danger'><i class='icon icon-trash'></i></button></td></tr>");
             $("#new_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).colourPicker({
                 ico: '/jquery/colourPicker/colourPicker.gif',
                 title: false
@@ -327,12 +327,12 @@ var products = function(geral_path, options_ext)
     function  populate_modal(modal, callback)
     {
         $.post('/AM/ajax/products.php', {action: "get_produto_by_id", "id": product_id}, function(data) {
-            populate_parent(geral_path.find("#edit_product_parent"), find_level(data), get_children(data), function()
+            populate_parent(geral_path.find("#edit_product_parent"), data.parent_level, get_children(data), function()
             {
                 modal.find("#edit_product_name").val(data.name);
                 modal.find("#edit_product_category").val(data.category);
                 modal.find("#edit_product_parent option[value='" + product_id + "']").prop("disabled", true);
-                modal.find("#edit_product_parent").val(data.parent).trigger("chosen:updated");
+                modal.find("#edit_product_parent").val(data.parents_id).trigger("chosen:updated");
                 modal.find("#edit_product_active").prop("checked", data.active);
                 $.each(data.type, function()
                 {
@@ -346,6 +346,7 @@ var products = function(geral_path, options_ext)
                     modal.find("#edit_product_children_div").show();
                     $.each(data.children, function()
                     {
+
                         modal.find("#edit_product_child_datatable").find("tbody").append("<tr><td>" + this.name + "</td><td>" + this.category + "</td></tr>");
                     });
                 }
@@ -410,9 +411,10 @@ var products = function(geral_path, options_ext)
         }, "json");
     }
 
-    function populate_parent(select, level, children, callback)
+    function populate_parent(select, level_out, children, callback)
     {
-        var out_level = level;
+        var out_level = level_out;
+        var level = 0;
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
         function(data)
         {
@@ -422,7 +424,7 @@ var products = function(geral_path, options_ext)
                         <optgroup value='3' label='Acessórios'></optgroup>\n\
                         <optgroup value='4' label='Moldes'></optgroup>\n\
                         <optgroup value='5' label='Economato'></optgroup>\n\
-                        <optgroup value='6' label='gama'></optgroup>",
+                        <optgroup value='6' label='Gama'></optgroup>",
                     aparelho = [],
                     pilha = [],
                     acessorio = [],
@@ -433,14 +435,13 @@ var products = function(geral_path, options_ext)
             var option = "";
             $.each(data, function()
             {
-                var level = find_level(this);
 
                 if (out_level)
                 {
-                    level = level - out_level;
+                    level = level + out_level - 1;
                 }
                 option = "<option  id=" + this.id + "  value='" + this.id + "'>" + this.name + "</option>";
-                if (level < 1)
+                if (this.parent_level >= 4)
                     option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Max.Lvl. " + this.name + "</option>";
                 if (children)
                 {
@@ -479,18 +480,7 @@ var products = function(geral_path, options_ext)
         }, "json");
     }
 
-    function find_level(element)
-    {
-        var level = 1;
-        if (element.children)
-        {
-            $.each(element.children, function()
-            {
-                level = level + find_level(this);
-            });
-        }
-        return level;
-    }
+
 
     function get_children(element)
     {

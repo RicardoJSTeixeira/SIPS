@@ -6,20 +6,19 @@ var requisition = function(geral_path, options_ext)
     var me = this;
     this.file_uploaded = false;
     this.config = {};
+    var product_tree,
+            modal = "",
+            table_path = "",
+            show_admin = 0,
+            tipo = "mensal",
+            produtos = [];
 
-    var modal = "";
-    var table_path = "";
-    var show_admin = 0;
-    var tipo = "mensal";
-    var is_master_product = false;
-    var produtos = [];
-    var product_id = 1;
+
+
     $.extend(true, this.config, options_ext);
     this.init = function(callback)
     {
         $.get("/AM/view/requisitions/requisition.html", function(data) {
-
-
             geral_path.off().empty().append(data);
             geral_path.find("#new_requisition_div").hide();
             modal = geral_path.find("#ver_product_requisition_modal");
@@ -35,412 +34,92 @@ var requisition = function(geral_path, options_ext)
     };
 //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
     this.new_requisition = function(new_requisition_zone, lead_id) {
-
-
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
         function(data)
         {
-            $.each(data, function() {
-                produtos[this.id] = this;
+            var options = "<option value='0'>Escolha um produto</option>";
+            $.each(data, function()
+            {
+                produtos[this.id] = (this);
+                if (this.parent_level <= 0)
+                    options += "<option value='" + this.id + "'>" + this.name + "</option>";
             });
+            $("#product_selector").append(options);
         }, "json");
-
-
         new_requisition_zone.off();
-        new_requisition_zone.find('.fileupload').fileupload();
-        new_requisition_zone.find("#requisition_form").validationEngine();
-        new_requisition_zone.find("#requisition_form").show();
-        //preencher com lead_id enviado
-        new_requisition_zone.find(".tipo_div").hide();
+        new_requisition_zone.find('.fileupload').fileupload().end()
+                .find("#form_encomenda_especial").validationEngine().end()
+                .find("#form_encomenda_especial").show().end()
+                .find(".tipo_div").hide();
         if (lead_id)
         {
             me.tipo = "especial";
             new_requisition_zone.find("#tipo_especial").show();
-            new_requisition_zone.find("#new_requisition_lead_id").val(lead_id);
+            new_requisition_zone.find("#tipo_encomenda").text("Encomenda Especial");
         }
         else
         {
             me.tipo = "mensal";
-            new_requisition_zone.find("#tipo_mensal").show();
+            new_requisition_zone.find("#tipo_encomenda").text("Encomenda Mensal");
         }
-        // ADICIONAR E REMOVER ITEMS DA LISTA DE PRODUTOS NA NOVA ENCOMENDA----------------------------
-        $(new_requisition_zone).on("click", "#new_requisition_product_add_line", function(e)
+        new_requisition_zone.find("#save_single_product").prop("disabled", true);
+        $(new_requisition_zone).on("change", "#product_selector", function()
         {
-            e.preventDefault();
-            is_master_product = true;
+            if (product_tree)
+                product_tree.destroy();
 
-            new_requisition_zone.append(new_requisition_zone.find("#placeholder_new_product_div").clone().prop("id", "").show());
-
-
-            add_sub_product(new_requisition_zone.find(".product_div").last().find(".level_div").first(), function() {
-                update_selects(new_requisition_zone.find(".product_div").last().find(".level_div"));
-            });
-
-        });
-
-        $(new_requisition_zone).on("click", ".add_second_sub_product", function(e)
-        {
-
-            e.preventDefault();
-            var that = $(this);
-
-            add_sub_product(new_requisition_zone.find(".requisition_form").find("*[data-level=" + that.data().level + "]"), function() {
-                update_selects(new_requisition_zone.find(".requisition_form").find("*[data-level=" + that.data().level + "]"));
-            });
-        });
-
-        $(new_requisition_zone).on("click", ".remove_second_sub_product", function(e)
-        {
-            e.preventDefault();
-            update_selects($(this).closest(".level_div"));
-            $(this).closest(".sub_product_div").remove();
-        });
-
-
-
-
-
-
-
-
-        function select_change_extra(this_div)
-        {
-            var select = this_div.find(".select_product");
-            if (select.val() == 0)
+            if (~~$(this).val() === 0)
             {
-                this_div.find(".select_color_picker").empty();
-                this_div.find(".product_span_max").text("");
-                this_div.find(".quantity_input").val("");
-
-                if (get_level_product_count(this_div.closest(".level_div")) <= 1 || !level_has_product_values(this_div.closest(".level_div")))
-                {
-                    remove_sub_product(this_div.closest(".level_div").next());
-                }
-                this_div.find(".color_master_div").hide();
-                this_div.find(".quantity_master_div").hide();
-
-            }
-            else
-            {
-                this_div.find(".quantity_master_div").show();
-//ESCONDER/MOSTRAR A COR
-                if (select.find("option:selected").data("category") == "aparelho" || select.find("option:selected").data("category") == "molde")
-                    this_div.find(".color_master_div").show();
-                else
-                    this_div.find(".color_master_div").hide();
-                if (me.tipo == "mensal")
-                {
-                    this_div.find(".product_span_max").text("Nº Max." + select.find("option:selected").data("max_month"));
-                    this_div.find(".quantity_input").attr("max", (select.find("option:selected").data("max_month")));
-                    if (this_div.find(".quantity_input").val() > select.find("option:selected").data("max_month"))
-                        this_div.find(".quantity_input").val(select.find("option:selected").data("max_month"));
-                }
-                else
-                {
-                    this_div.find(".product_span_max").text("Nº Max." + select.find("option:selected").data("max_special"));
-                    this_div.find(".quantity_input").attr("max", (select.find("option:selected").data("max_special")));
-                    if (this_div.find(".quantity_input").val() > select.find("option:selected").data("max_special"))
-                        this_div.find(".quantity_input").val(select.find("option:selected").data("max_special"));
-                }
-                var select_color = this_div.find(".select_color_picker");
-                select_color.empty();
-
-                if (select.find("option:selected").data("color"))
-                {
-                    $.each(select.find("option:selected").data("color"), function()
-                    {
-
-                        select_color.append("<option  data-color_id='" + this.color + "' data-color_name='" + this.name + "'>" + this.name + "</option>");
-                    });
-                }
-                else
-                    select_color.append("<option>Padrão</option>");
-                //Verifica se ha + children, se sim, adiciona novo sub produto
-                var children = [];
-                children = get_children(select.val());
-
-                if (children.length)
-                {
-                    if (!get_level_product_count(get_next_level(this_div.closest(".level_div"))))
-                        add_sub_product(get_next_level(this_div.closest(".level_div")), function() {
-
-                        });
-                }
-
-            //    new_requisition_zone.find(".requisition_form").find("*[data-level=" + that.data().level + "]");
-
-            }
-            populate_select(select, null);
-        }
-
-
-
-
-        $(new_requisition_zone).on("change", ".select_product", function()
-        {
-            update_selects($(this).closest(".level_div"));
-        });
-
-
-        function   update_selects(level)
-        {
-            $.each(level.find(".sub_product_div"), function()
-            {
-                select_change_extra($(this));
-            });
-
-            if (get_next_level(level).find(".sub_product_div").length)
-                update_selects(get_next_level(level));
-        }
-
-
-        function get_previous_level(div)
-        {
-            return div.prev(".level_div");
-        }
-        function get_next_level(div)
-        {
-            return div.next(".level_div");
-        }
-        function get_next_product(div)
-        {
-            return div.next(".sub_product_div");
-        }
-
-        function get_previous_product(div)
-        {
-            return div.prev(".sub_product_div");
-        }
-
-        function get_level_product_count(level)
-        {
-            return level.find(".sub_product_div").length;
-        }
-
-        function get_level_product_values(level)
-        {
-            var values = [];
-            $.each(level.find(".sub_product_div"), function()
-            {
-                values.push($(this).val());
-            });
-            return values;
-        }
-
-        function level_has_product_values(level)
-        {
-            var has_value = false;
-            $.each(level.find(".select_product"), function()
-            {
-                if ($(this).val() != 0)
-                    has_value = true;
-            });
-
-            return has_value;
-        }
-
-        function is_first_element(div)
-        {
-
-            if (get_previous_level(div.closest(".level_div")).find(".sub_product_div").length)
+                new_requisition_zone.find("#save_single_product").prop("disabled", true);
                 return false;
+            }
             else
-                return true;
-        }
-
-        function is_first_in_column(div)
-        {
-
-            if (div.closest(".level_div").find(".sub_product_div").first().attr("id") == div.attr("id"))
-                return true;
-            else
-                return false;
-        }
-
-
-
-        function get_parents(level)
-        {
-            var parents = [];
-            if (get_previous_level(level).find(".select_product").length)
-                parents = get_parents(get_previous_level(level));
-
-            if (level.find(".select_product").length)
-                $.each(level.find(".select_product"), function()
-                {
-                    if (~~($(this).val()) != 0)
-                        parents.push(~~($(this).val()));
-                });
-            return parents;
-        }
-
-
-        function add_sub_product(div, callback)
-        {
-            div.append(new_requisition_zone.find("#placeholder_new_product").clone().prop("id", "product" + product_id++).show());
-            prepare_new_sub_product(div.find(".sub_product_div").last(), callback);
-        }
-
-
-        function prepare_new_sub_product(this_div, callback)
-        {
-            //select
-            this_div.find(".select_div").empty().append("<select  class='chosen-select select_product'></select>");
-            //color    
-            this_div.find(".color_div").empty().append("<select class='input-medium select_color_picker'></select>");
-
-            //Quantity    
-            this_div.find(".quantity_div").empty().append("<input class='quantity_input input-mini validate[required,custom[onlyNumberSp]]'  type='number' min='1' value='1'>");
-            this_div.find(".select_product").chosen({no_results_text: "Sem resultados"});
-
-            populate_select((this_div).find(".select_product"), null);
-            if (is_master_product)
             {
-                is_master_product = false;
-                this_div.find(".remove_second_sub_product").hide();
-
+                new_requisition_zone.find("#save_single_product").prop("disabled", false);
             }
-            if (typeof callback === "function")
-                callback();
-        }
-
-
-        function remove_sub_product(level)
-        {
-            if (level.find(".sub_product_div").length)
-            {
-                remove_sub_product(level.next(".level_div"));
-            }
-            level.empty();
-        }
-
-
-
-        function populate_select(select, callback)
-        {
-            var selected_value = select.val();
-            var is_empty = true;
-
-            var optgroups = [];
-            select.empty();
-            optgroups.push("<option value='0'>Escolha um produto</option><optgroup value='1' label='Aparelhos'></optgroup>");
-            var temp = "<option value='0'>Escolha um produto</option>\n\
-                            <optgroup value='1' label='Aparelhos'></optgroup>\n\
-                            <optgroup value='2' label='Pilhas'></optgroup>\n\
-                            <optgroup value='3' label='Acessórios'></optgroup>\n\
-                            <optgroup value='4' label='Moldes'></optgroup>\n\
-                            <optgroup value='5' label='Economato'></optgroup>\n\
-                             <optgroup value='6' label='Gama'></optgroup>",
-                    aparelho = [],
-                    pilha = [],
-                    acessorio = [],
-                    molde = [],
-                    economato = [],
-                    gama = [];
-            select.append(temp);
-            var parents = get_parents(select.closest(".level_div"));
-            var children = [];
-            for (var i = 0; i < parents.length; i++)
-            {
-                children = children.concat(get_children(parents[i]));
-            }
-            $.each(produtos, function()
-            {
-                if (parents.length)
-                {
-                    if (parents.indexOf(this.id) != -1)
-                        return true;
-                    if (children.length)
-                    {
-                        if (children.indexOf(this.id) == -1)
-                            return true;
-                    }
-                }
-                else
-                {
-                    if (!is_first_element(select.closest(".sub_product_div")))
-                        select.closest(".sub_product_div").remove();
-                }
-                is_empty = false;
-                switch (this.category)
-                {
-                    case "aparelho":
-                        aparelho.push("<option data-category='" + this.category + "'  data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
-                        break;
-                    case "pilha":
-                        pilha.push("<option data-category='" + this.category + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
-                        break;
-                    case "acessorio":
-                        acessorio.push("<option data-category='" + this.category + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
-                        break;
-                    case "molde":
-                        molde.push("<option data-category='" + this.category + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
-                        break;
-                    case "economato":
-                        economato.push("<option data-category='" + this.category + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
-                        break;
-                    case "gama":
-                        gama.push("<option data-category='" + this.category + "' data-color='" + JSON.stringify(this.color) + "' data-max_month='" + this.max_req_m + "' data-max_special='" + this.max_req_s + "'  value='" + this.id + "'>" + this.name + "</option>");
-                        break;
-                }
-            });
-            select.find("optgroup[value='1']").append(aparelho).end()
-                    .find("optgroup[value='2']").append(pilha).end()
-                    .find("optgroup[value='3']").append(acessorio).end()
-                    .find("optgroup[value='4']").append(molde).end()
-                    .find("optgroup[value='5']").append(economato).end()
-                    .find("optgroup[value='6']").append(gama).end().val(selected_value).trigger("chosen:updated");
-            if (is_empty)
-                select.closest(".sub_product_div").remove();
-            if (typeof callback === "function")
-                callback();
-        }
-
+            product_tree = new tree("#tree", [produtos[$(this).val()]], me.tipo, $(this).val());
+            product_tree.init();
+        });
 // SUBMITAR A ENCOMENDA------------------------------------------------
         $(new_requisition_zone).on("click", "#new_requisition_submit_button", function()
         {
-            var produtos = [];
+            var produtos_encomenda = [];
             var count = 0;
-            $.each(new_requisition_zone.find(" #new_requisition_product_tbody tr"), function()
+            $.each(new_requisition_zone.find(" #produtos_encomendados tr"), function()
             {
-                var this_option_selected = $(this).find("select").find("option:selected");
-                if (this_option_selected.val() !== "0")
+                if ($(this).hasClass("product_line"))
                 {
                     count++;
-                    produtos.push({"id": this_option_selected.attr("id"), "quantity": $(this).find("input[type='number']").val(), "color": $(this).find(".select_color_picker").find("option:selected").data().color_id || "", "color_name": $(this).find(".select_color_picker").find("option:selected").data().color_name || ""});
-                }
-                else
-                {
-                    $.jGrowl('Existe um ou mais produtos para selecionar', {life: 4000});
-                    count = 0;
-                    return false;
+                    produtos_encomenda.push({id: $(this).find(".td_name").attr("id_product"), quantity: ~~$(this).find(".td_quantity").text(), color: $(this).find(".td_color").attr("color")});
                 }
             });
+
             if (!count)
-                $.jGrowl('Certifique-se que os produtos estão correctamente escolhidos', {life: 4000});
+                $.jGrowl('Escolha pelo menos 1 produto', {life: 4000});
             else
             {
-                if (new_requisition_zone.find(" #requisition_form").validationEngine("validate"))
+                if (new_requisition_zone.find(" #form_encomenda_especial").validationEngine("validate"))
                 {
                     if ((new_requisition_zone.find(".fileupload-preview").text().length > 0 && me.file_uploaded) || !new_requisition_zone.find(".fileupload-preview").text().length)
                     {
                         $.post('ajax/requisition.php', {action: "criar_encomenda",
                             type: me.tipo,
-                            lead_id: new_requisition_zone.find("#new_requisition_lead_id").val(),
-                            contract_number: new_requisition_zone.find(" #new_requisition_contract").val(),
+                            lead_id: lead_id,
+                            contract_number: new_requisition_zone.find("#new_requisition_contract").val(),
                             attachment: new_requisition_zone.find(".fileupload-preview").text(),
-                            products_list: produtos},
+                            products_list: produtos_encomenda},
                         function(data) {
+                            $.jGrowl('Encomenda realizada com sucesso', {life: 4000});
+                            new_requisition_zone.find(" #new_requisition_contract").val("").end()
+                                    .find(" #new_requisition_product_tbody").empty().end()
+                                    .find("#label_anexo_info").text("").end()
+                                    .find('.fileupload').fileupload("clear");
+                            history.back();
                             if (table_path)
                             {
                                 table_path.dataTable().fnAddData(data);
                             }
-                            $.jGrowl('Encomenda realizada com sucesso', {life: 4000});
-                            new_requisition_zone.find(" #new_requisition_lead_id").val("");
-                            new_requisition_zone.find(" #new_requisition_contract").val("");
-                            new_requisition_zone.find(" #new_requisition_product_tbody").empty();
-                            new_requisition_zone.find("#label_anexo_info").text("");
-                            new_requisition_zone.find('.fileupload').fileupload("clear");
+
                         }, "json");
                     }
                     else
@@ -448,15 +127,85 @@ var requisition = function(geral_path, options_ext)
                 }
             }
         });
-        $(new_requisition_zone).on("click", ".remove_item_requisition_table", function()
+
+
+        $(new_requisition_zone).on("click", '#save_single_product', function(e)
         {
-            $(this).closest(".grid").remove();
-            $.jGrowl('Linha de produtos removida com sucesso', {life: 4000});
+            var produtos_single = [],
+                    has_products = 0;
+            $.each($("#tree").find(".product_item"), function()
+            {
+                if ($(this).find("input[type=checkbox]").is(":checked"))
+                {
+                    has_products++;
+                    produtos_single.push(
+                            {id: $(this).prop("id_product"),
+                                name: $(this).prop("name_product"),
+                                category: $(this).prop("category_product"),
+                                quantity: ~~$(this).find(".input_quantity").val(),
+                                color_id: $(this).find(".color_select").val(),
+                                color_name: $(this).find(".color_select option:selected").text()});
+                    if (me.tipo == "especial")
+                        produtos[$(this).prop("id_product")].max_req_s -= ~~$(this).find(".input_quantity").val();
+                    else
+                        produtos[$(this).prop("id_product")].max_req_m -= ~~$(this).find(".input_quantity").val();
+                }
+            });
+            if (!has_products)
+            {
+                $.jGrowl('Selecione pelo menos 1 produto', {life: 4000});
+                return false;
+            }
+            new_requisition_zone.find("#product_selector").val(0).trigger("change");
+            var new_product = "";
+            new_product = ($("<div>", {class: "grid"})
+                    .append($("<div>")));
+            var produtos_in_text = new_product.find("div:last").append($("<table>", {class: "table table-mod table-striped table-condensed"})
+                    .append($("<thead>")
+                            .append($("<tr>")
+                                    .append($("<th>").text("Nome").css("width", "420px"))
+                                    .append($("<th>").text("Categoria").css("width", "120px"))
+                                    .append($("<th>").text("#").attr("title", "Quantidade").css("width", "50px"))
+                                    .append($("<th>").text("Cor").css("width", "150px").append($("<button>", {class: "btn btn-danger btn-mini icon-alone right remove_produto_encomendado"}).append($("<i>", {class: "icon icon-trash"}))))
+                                    ))
+                    .append($("<tbody>"))).find("tbody");
+            $.each(produtos_single, function()
+            {
+                produtos_in_text.append($("<tr>", {class: "product_line"})
+                        .append($("<td>", {class: "td_name", id_product: this.id}).text(this.name))
+                        .append($("<td>", {class: "td_category"}).text(this.category.capitalize()))
+                        .append($("<td>", {class: "td_quantity"}).text(this.quantity))
+                        .append($("<td>", {class: "td_color", color: this.color_id}).text(this.color_name))
+                        );
+            });
+            new_requisition_zone.find("#produtos_encomendados").append(new_product);
         });
-        $(new_requisition_zone).on("submit", " #requisition_form", function(e)
+
+
+
+
+
+        $(new_requisition_zone).on("click", " .remove_produto_encomendado", function(e)
+        {
+
+            $.each($(this).closest(".grid").find("tr"), function()
+            {
+                if ($(this).hasClass("product_line"))
+                {
+                    if (me.tipo = "especial")
+                        produtos[$(this).find(".td_name").attr("id_product")].max_req_s = produtos[$(this).find(".td_name").attr("id_product")].max_req_s + ~~$(this).find(".td_quantity").text();
+                    else
+                        produtos[$(this).find(".td_name").attr("id_product")].max_req_m = produtos[$(this).find(".td_name").attr("id_product")].max_req_m + ~~$(this).find(".td_quantity").text();
+                }
+            });
+            $(this).closest(".grid").remove();
+        });
+
+        $(new_requisition_zone).on("submit", " #form_encomenda_especial", function(e)
         {
             e.preventDefault();
         });
+
         //FILE UPLOAD
         $(new_requisition_zone).on("change", '#file_upload', function() {
             // var re_ext = new RegExp("(gif|jpeg|jpg|png|pdf)", "i");
@@ -498,6 +247,14 @@ var requisition = function(geral_path, options_ext)
             });
         });
     }
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     function get_encomendas_atuais(table_path, show_admin)
     {
         if (show_admin)
@@ -585,44 +342,7 @@ var requisition = function(geral_path, options_ext)
         });
     }
 
-
-
-
-
-    function get_children(id)
-    {
-        var children = [];
-        if (produtos[id])
-            if (produtos[id].children)
-            {
-
-                $.each(produtos[id].children, function()
-                {
-                    children.push(this.id);
-
-
-                    get_children_extra(this, children);
-                });
-            }
-
-        return children;
-
-    }
-
-    function get_children_extra(element, children)
-    {
-        if (element.children)
-        {
-            $.each(element.children, function()
-            {
-                children.push(this.id);
-                get_children_extra(this, children);
-            });
-        }
-    }
-
-}
-;
+};
 
 
 

@@ -11,7 +11,7 @@ Class requisitions {
     public function get_requisitions_to_datatable($show_admin) {
 
         $result['aaData'] = [];
-        $query = "SELECT id,user,type,lead_id,date,contract_number,cod_cliente,attachment,'products',status  from spice_requisition where user=:user";
+        $query = "SELECT sr.id,sr.user,sr.type,sr.lead_id,sr.date,sr.contract_number,vl.list_id,sr.attachment,'products',sr.status  from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id where sr.user=:user";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user" => $this->_user_id));
 
@@ -21,8 +21,6 @@ Class requisitions {
                 $row[6] = "não utilizado";
             } else {
                 $row[2] = "Especial";
-
-
                 if ($show_admin == 1) {
                     if ($row[6])
                         $row[6] = "<input class='cod_cliente_input validate[custom[onlyNumberSp]]' data-requisition_id='$row[0]' value='$row[6]' type='text'/>";
@@ -34,9 +32,7 @@ Class requisitions {
                         $row[6] = "não introduzido";
                 }
             }
-
             $row[3] = $row[3] == "0" ? "Não utilizado" : $row[3];
-
             switch ($row[9]) {
                 case "0":
                     $row[9] = "Pedido enviado";
@@ -69,7 +65,7 @@ Class requisitions {
         $query = "INSERT INTO `spice_requisition`( `user`, `type`, `lead_id`, `date`, `contract_number`, `attachment`, `products`,`status`) VALUES ( :user,:type,:lead_id,:date,:contract_number,:attachment,:products,:status)";
         $stmt = $this->_db->prepare($query);
         $data = date('Y-m-d H:i:s');
-        $stmt->execute(array(":user" => $this->_user_id, ":type" => $type, ":lead_id" => $lead_id, ":date" => $data, ":contract_number" => $contract_number, ":attachment" => $attachment, ":products" => json_encode($products_list), ":status" => 0));
+        $stmt->execute(array(":user" => $this->_user_id, ":type" => $type, ":lead_id" => $lead_id, ":date" => $data, ":contract_number" =>  $contract_number, ":attachment" => $attachment, ":products" => json_encode($products_list), ":status" => 0));
         $last_insert_id = $this->_db->lastInsertId();
         return array($last_insert_id, $this->_user_id, $type, $lead_id, $data, $contract_number, $attachment, "<div> <button class='btn ver_requisition_products' value='" . $last_insert_id . "'><i class='icon-eye-open'></i>Ver</button></div>", "Pedido enviado");
     }

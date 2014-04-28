@@ -40,7 +40,8 @@ Class products {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $relations[$row["parent"]][] = $row["child"];
         }
-        $stmt = $this->_db->prepare("SELECT id, name,  max_req_m, max_req_s, category, type, color, active from spice_product where deleted=0");
+
+        $stmt = $this->_db->prepare("SELECT id, name,  max_req_m, max_req_s, category, type, color, active from spice_product where deleted=0 order by name asc");
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $row["parent"] = array();
@@ -48,17 +49,30 @@ Class products {
                 foreach ($value as $value1) {
                     if ($value1 == $row["id"]) {
                         $row["parent"][] = $key;
+                          $row["parents_id"][] = $key;
                     }
                 }
             }
             $row["type"] = json_decode($row["type"]);
             $row["color"] = json_decode($row["color"]);
+
             $output[$row["id"]] = $row;
         }
-
+//ATRIBUIÇÂO DE CHILDS E PARENTS
         foreach ($output as &$value) {
+
             $value["children"] = $this->buildTree($output, $value["id"]);
+            $value["children_level"] = $this->get_level_child($value) - 1;
+            $temp = array();
+            if ($value["parent"])
+                foreach ($value["parent"] as &$value2) {
+                    $temp[] = $output[$value2];
+                };
+            $value["parent"] = $temp;
+
+            $value["parent_level"] = $this->get_level_parent($value) - 1;
         }
+
         if ($id) {
             return $output[$id];
         } else {
@@ -70,10 +84,34 @@ Class products {
         $branch = array();
         foreach ($elements as $element) {
             if (in_array($parentId, $element["parent"])) {
-                $branch[] = array("id" => $element["id"], "children" => $this->buildTree($elements, $element["id"]), "category" => $element["category"], "name" => $element["name"]);
+                $branch[] = $element + array("children" => $this->buildTree($elements, $element["id"]));
             }
         }
         return $branch;
+    }
+
+    function get_level_parent($element) {
+        $level = 1;
+        $temp = array();
+        if ($element["parent"]) {
+            foreach ($element["parent"] as $value) {
+                $temp[] = $level + $this->get_level_parent($value);
+            }
+            return max($temp);
+        }
+        return $level;
+    }
+
+    function get_level_child($element) {
+        $level = 1;
+        $temp = array();
+        if ($element["children"]) {
+            foreach ($element["children"] as $value) {
+                $temp[] = $level + $this->get_level_child($value);
+            }
+            return max($temp);
+        }
+        return $level;
     }
 
     public function remove_product($id) {
@@ -137,7 +175,7 @@ class product extends products {
         $this->_max_req_s = $max_req_s;
         $this->_category = $category;
         $this->_type = $type;
-        $this->_color = $color;
+        $this->_color = isset($color) ? $color : array();
         $this->_active = $active == "true" ? 1 : 0;
         $stmt = $this->_db->prepare("delete from spice_product_assoc where child=:child");
         $stmt->execute(array(":child" => $this->_id));

@@ -28,14 +28,11 @@ switch ($action) {
 
     case "listar_requisition_to_datatable":
         echo json_encode($requisitions->get_requisitions_to_datatable($show_admin));
-
         break;
 
     case "listar_produtos":
         echo json_encode($products->get_products());
         break;
-
-    
 
     case "criar_encomenda":
         echo json_encode($requisitions->create_requisition($type, $lead_id, $contract_number, $attachment, $products_list));

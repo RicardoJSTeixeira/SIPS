@@ -201,7 +201,7 @@ var requests = function(basic_path, options_ext)
                     var docs_objs = [];
                     $.each(rc_zone.find("#doc_obj_table_tbody tr"), function()
                     {
-                        docs_objs.push($(this).find("input").val());
+                        docs_objs.push({value: $(this).find("input").val(), confirmed: false});
                     });
                     $.post("ajax/requests.php", {action: "criar_relatorio_correio",
                         carta_porte: rc_zone.find("#input_carta_porte").val(),
@@ -246,7 +246,7 @@ var requests = function(basic_path, options_ext)
                 {"name": "show_admin", "value": 1}
                 );
             },
-            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Lead id"}, {"sTitle": "Anexo", "sWidth":"75px"}, {"sTitle": "Observações"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth":"50px"}],
+            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Lead id"}, {"sTitle": "Anexo", "sWidth": "75px"}, {"sTitle": "Observações"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 
@@ -280,15 +280,25 @@ var requests = function(basic_path, options_ext)
                 tbody.empty();
                 $.each(data1, function()
                 {
-
-                    tbody.append("<tr><td class='chex-table'><input type='checkbox' id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span>  </label></td><td>" + this + "</td></tr>");
+                    if (this.confirmed == "true")
+                        tbody.append("<tr><td class='chex-table'><input type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' checked id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span>  </label></td><td>" + this.value + "</td></tr>");
+                    else
+                        tbody.append("<tr><td class='chex-table'><input type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span>  </label></td><td>" + this.value + "</td></tr>");
                     anexo_number++;
                 });
 
                 me.basic_path.find("#ver_anexo_correio_modal").modal("show");
             }, "json");
+        });
 
-
+        me.basic_path.on("click", ".checkbox_confirm_anexo", function(e)
+        {
+            var anexo_array = [];
+            $.each($(this).closest("#tbody_ver_anexo_correio").find("tr"), function()
+            {
+                anexo_array.push({value: $(this).find("td").last().text(), confirmed: $(this).find("td").first().find(":checkbox").is(":checked")});
+            });
+            $.post("/AM/ajax/requests.php", {action: "save_anexo_correio", id: $(this).val(), anexos: anexo_array}, "json");
         });
     };
 
@@ -305,7 +315,7 @@ var requests = function(basic_path, options_ext)
             rf_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
             rf_zone.find(".rf_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
             //Adiciona Linhas
-            rf_zone.find( "#button_rf_table_add_line").click(function(e)
+            rf_zone.find("#button_rf_table_add_line").click(function(e)
             {
                 e.preventDefault();
                 rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required] linha_data' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'></td><td><input class='validate[required] linha_ocorrencia' type='text' name='rf_ocorr" + rfinput_count + "'></td><td>  <input class='validate[required] linha_km' type='number' value='0' name='rf_km" + rfinput_count + "' min='0'></td><td><button class='btn btn-danger button_rf_table_remove_line icon-alone'><i class='icon-minus'></i></button></td></tr>");
@@ -362,7 +372,7 @@ var requests = function(basic_path, options_ext)
                 aoData.push({"name": "action", "value": "get_relatorio_frota_to_datatable"},
                 {"name": "show_admin", "value": 1});
             },
-            "aoColumns": [{"sTitle": "id"}, {"sTitle": "user"}, {"sTitle": "data"}, {"sTitle": "Matricula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrencias", "sWidth":"150px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth":"50px"}],
+            "aoColumns": [{"sTitle": "id"}, {"sTitle": "user"}, {"sTitle": "data"}, {"sTitle": "Matricula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrencias", "sWidth": "150px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 
