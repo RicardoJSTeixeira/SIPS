@@ -140,6 +140,10 @@ $(function() {
                 {
                     item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "button", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .botao")[0].innerHTML, 0, 0, [], 0, 0, 0, "");
                 }
+                if ($(this).data().uiSortable.currentItem.hasClass("validation_class"))
+                {
+                    item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "validation", $(this).data().uiSortable.currentItem.index(), "h", "", 0, 0, [], 0, 0, 0, "");
+                }
                 editor_toggle("off");
             }
         });
@@ -299,6 +303,10 @@ $(document).on("click", ".element", function(e) {
         case "button":
             $("#button_layout_editor").show();
             populate_element("button", $(this));
+            break;
+        case "validation":
+            $("#validation_layout_editor").show();
+            populate_element("validation", $(this));
             break;
     }
 });
@@ -707,14 +715,12 @@ function populate_element(tipo, element)
                 $("#not_validado_text").val("");
                 $("#select_ajax_script option:first").prop("selected", true);
             }
-
             break;
         case "radio":
             $("#radio_edit").val($("#" + id + " .label_geral").html());
             var string_elements = "";
             var element_rlength = $("#" + id + " :radio").length;
             var rname;
-
             for (var count = 0; count < element_rlength; count++)
             {
                 rname = $("#" + id + " .radio_name").eq(count).text();
@@ -871,7 +877,7 @@ function populate_element(tipo, element)
             break;
         case "button":
             $("#button_edit").val($("#" + id + " .botao").text());
- 
+
             if (element.data("url").length)
             {
                 $("#div_url_input").show();
