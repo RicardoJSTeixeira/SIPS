@@ -48,7 +48,7 @@ function MiscOptionsBuilder(Flag)
                     }
                     else
                     {
-                        $("#table-groups-1").append("<tr><td width=10px><input class='groups-checkbox' " + Checked + " type='checkbox' value='" + data.user_groups_id[index] + "' name='" + data.user_groups_id[index] + "' id='" + data.user_groups_id[index] + "'></td><td style='padding-top:1px'><label style='display:inline;' for='" + data.user_groups_id[index] + "'>" + data.user_groups_name[index] + "</label></td></tr>")
+                        $("#table-groups-1").append("<tr><td width=10px><input class='groups-checkbox' " + Checked + " type='checkbox' value='" + data.user_groups_id[index] + "' name='" + data.user_groups_id[index] + "' id='" + data.user_groups_id[index] + "'></td><td style='padding-top:1px'><label style='display:inline;' for='" + data.user_groups_id[index] + "'>" + data.user_groups_name[index] + "</label></td></tr>");
                     }
                 });
 
@@ -63,7 +63,7 @@ function MiscOptionsBuilder(Flag)
                 var Checked;
                 var OddEven;
                 $("#campaign-name").val(data.c_name);
-                $("#campaign-description").val(data.c_description)
+                $("#campaign-description").val(data.c_description);
                 if (data.c_active === "Y") {
                     $("#campaign_active_yes").parent().addClass("checked");
                 } else {
@@ -84,6 +84,11 @@ function MiscOptionsBuilder(Flag)
                     $("#ratio-spinner").val(data.c_auto_dial_level);
                     $("#wizard-tabs").tabs("enable", 1);
                 }
+                
+                if(data.c_agent_dial_owner_only==="USER"){
+                    $("#campaign-owner-only").parent().addClass("checked");
+                }
+                
                 if (data.c_recording === "ALLFORCE") {
                     $("#campaign_recording_yes").parent().addClass("checked");
                 } else {
@@ -97,7 +102,7 @@ function MiscOptionsBuilder(Flag)
                 } else {
                     $("#campaign_atrib_calls").val("Menos Chamadas Recebidas");
                 }
-                if (data.c_my_callback_option == "UNCHECKED") {
+                if (data.c_my_callback_option === "UNCHECKED") {
                     $("#campaign_callback_type_global").parent().addClass("checked");
                 } else {
                     $("#campaign_callback_type_user").parent().addClass("checked");
@@ -192,7 +197,7 @@ function MiscOptionsBuilder(Flag)
                     else
                     {
                         //if( (($("#table-groups-1 tr").length/2) % 1) == 0){ OddEven = " odd-even-table-rows"; } else { OddEven = "";}
-                        $("#table-groups-1").append("<tr class='" + OddEven + "'><td width=10px><input class='groups-checkbox' " + Checked + " type='checkbox' value='" + data.user_groups_id[index] + "' name='" + data.user_groups_id[index] + "' id='" + data.user_groups_id[index] + "'></td><td style='padding-top:1px'><label style='display:inline;' for='" + data.user_groups_id[index] + "'>" + data.user_groups_name[index] + "</label></td></tr>")
+                        $("#table-groups-1").append("<tr class='" + OddEven + "'><td width=10px><input class='groups-checkbox' " + Checked + " type='checkbox' value='" + data.user_groups_id[index] + "' name='" + data.user_groups_id[index] + "' id='" + data.user_groups_id[index] + "'></td><td style='padding-top:1px'><label style='display:inline;' for='" + data.user_groups_id[index] + "'>" + data.user_groups_name[index] + "</label></td></tr>");
                     }
 
                 });
@@ -208,7 +213,7 @@ function MiscOptionsBuilder(Flag)
 
 function MiscOptionsElemInit()
 {
-    $("#options-scroll-container").slimScroll({height: '350px', alwaysVisible: "true", size: "5px"})
+    $("#options-scroll-container").slimScroll({height: '350px', alwaysVisible: "true", size: "5px"});
     $("#btn-config-inbound").button();
     $("#btn-config-dial-status").button();
     $("#btn-check-all-groups").button();
@@ -293,7 +298,7 @@ function MiscOptionsElemInit()
         spin: function(event, ui)
         {
             //console.log(ui.value, $(this).attr("aria-valuenow"))
-            if (ui.value !== $(this).attr("aria-valuenow") || ui.value == 2)
+            if (ui.value !== $(this).attr("aria-valuenow") || ~~ui.value === 2)
             {
                 $.ajax({
                     type: "POST",
@@ -389,11 +394,11 @@ function DialogConfigDialStatusOnOpen()
                 }
                 if (((index / 2) % 1) !== 0)
                 {
-                    $("#table-config-dial-status-2").append("<tr><td>" + Recycle + "</td><td width=10px><input " + Disabled + " class='checkbox-edit-dial-status' " + Checked + " type='checkbox' value='" + data.status[index] + "' name='" + data.status[index] + "' id='" + data.status[index] + "'></td><td style='padding-top:1px'><label style='display:inline;' for='" + data.status[index] + "'>" + data.status_name[index] + "</label></td></tr>")
+                    $("#table-config-dial-status-2").append("<tr><td>" + Recycle + "</td><td width=10px><input " + Disabled + " class='checkbox-edit-dial-status' " + Checked + " type='checkbox' value='" + data.status[index] + "' name='" + data.status[index] + "' id='" + data.status[index] + "'></td><td style='padding-top:1px'><label style='display:inline;' for='" + data.status[index] + "'>" + data.status_name[index] + "</label></td></tr>");
                 }
                 else
                 {
-                    $("#table-config-dial-status-1").append("<tr><td>" + Recycle + "</td><td width=10px><input " + Disabled + " class='checkbox-edit-dial-status' " + Checked + " type='checkbox' value='" + data.status[index] + "' name='" + data.status[index] + "' id='" + data.status[index] + "'></td><td style='padding-top:1px'><label style='display:inline;' for='" + data.status[index] + "'>" + data.status_name[index] + "</label></td></tr>")
+                    $("#table-config-dial-status-1").append("<tr><td>" + Recycle + "</td><td width=10px><input " + Disabled + " class='checkbox-edit-dial-status' " + Checked + " type='checkbox' value='" + data.status[index] + "' name='" + data.status[index] + "' id='" + data.status[index] + "'></td><td style='padding-top:1px'><label style='display:inline;' for='" + data.status[index] + "'>" + data.status_name[index] + "</label></td></tr>");
                 }
 
             });
@@ -464,11 +469,11 @@ function DialogConfigInboundOnOpen()
 
                 if (((index / 2) % 1) !== 0)
                 {
-                    $("#table-config-inbound-campaigns-2").append("<tr><td width=10px><input " + Checked + " class='checkbox-edit-inbound-groups' type='checkbox' value='" + data.group_id[index] + "' name='" + data.group_id[index] + "' id='" + data.group_id[index] + "'></td><td style='padding-top:1px'><label style='display:inline;' for='" + data.group_id[index] + "'>" + data.group_name[index] + "</label></td></tr>")
+                    $("#table-config-inbound-campaigns-2").append("<tr><td width=10px><input " + Checked + " class='checkbox-edit-inbound-groups' type='checkbox' value='" + data.group_id[index] + "' name='" + data.group_id[index] + "' id='" + data.group_id[index] + "'></td><td style='padding-top:1px'><label style='display:inline;' for='" + data.group_id[index] + "'>" + data.group_name[index] + "</label></td></tr>");
                 }
                 else
                 {
-                    $("#table-config-inbound-campaigns-1").append("<tr><td width=10px><input " + Checked + " class='checkbox-edit-inbound-groups' type='checkbox' value='" + data.group_id[index] + "' name='" + data.group_id[index] + "' id='" + data.group_id[index] + "'></td><td style='padding-top:1px'><label style='display:inline;' for='" + data.group_id[index] + "'>" + data.group_name[index] + "</label></td></tr>")
+                    $("#table-config-inbound-campaigns-1").append("<tr><td width=10px><input " + Checked + " class='checkbox-edit-inbound-groups' type='checkbox' value='" + data.group_id[index] + "' name='" + data.group_id[index] + "' id='" + data.group_id[index] + "'></td><td style='padding-top:1px'><label style='display:inline;' for='" + data.group_id[index] + "'>" + data.group_name[index] + "</label></td></tr>");
                 }
 
             });
@@ -509,7 +514,7 @@ function GroupsCheckAll()
         if (!$(this).parent().hasClass("checked"))
         {
             $(this).parent().addClass("checked");
-            AllGroups.push($(this).attr("id"))
+            AllGroups.push($(this).attr("id"));
         }
     });
     $.ajax({
@@ -520,10 +525,7 @@ function GroupsCheckAll()
                     action: "EditCampaignAllowedGroupsALL",
                     CampaignID: CampaignID,
                     AllGroups: AllGroups
-                },
-        success: function(data)
-        {
-        }
+                }
     });
 }
 
@@ -535,7 +537,7 @@ function GroupsUncheckAll()
         if (!$(this).parent().parent().hasClass("disabled"))
         {
             $(this).parent().removeClass("checked");
-            NoGroups.push($(this).attr("id"))
+            NoGroups.push($(this).attr("id"));
         }
     });
     $.ajax({
@@ -572,11 +574,8 @@ function CampaignActiveSwitch()
                 {
                     action: "EditCampaignActive",
                     CampaignID: CampaignID,
-                    CampaignActive: CampaignActive,
-                },
-        success: function(data)
-        {
-        }
+                    CampaignActive: CampaignActive
+                }
     });
 }
 
@@ -626,13 +625,24 @@ function CampaignTypeSwitch()
                     CampaignID: CampaignID,
                     CampaignType: CampaignType,
                     TempRatio: TempCampaignRatio
-                },
-        success: function(data)
-        {
-        }
+                }
     });
 
 }
+
+function CampaignOwnerOnly(){
+      $.ajax({
+        type: "POST",
+        url: "_opcoes_gerais-requests.php",
+        data:
+                {
+                    action: "EditCampaignOwnerOnly",
+                    CampaignID: CampaignID,
+                    CampaignOwnerOnly: ~~$(this).is(":checked")
+                }
+    });
+}
+
 
 function CampaignRecordingSwitch()
 {
@@ -653,10 +663,7 @@ function CampaignRecordingSwitch()
                     action: "EditCampaignRecording",
                     CampaignID: CampaignID,
                     CampaignRecording: Recording
-                },
-        success: function(data)
-        {
-        }
+                }
     });
 }
 
@@ -689,7 +696,7 @@ function EditCampaignName(event)
                 $(this).css("border-color", "#C0C0C0");
                 if (editedCampaignName !== $(this).val())
                 {
-                    $(".span-active-campaign-name").html($("#campaign-name").val())
+                    $(".span-active-campaign-name").html($("#campaign-name").val());
                     $.ajax({
                         type: "POST",
                         url: "_opcoes_gerais-requests.php",
@@ -869,11 +876,7 @@ function CampaignShowAgentLeads() {
                     action: "CampaignShowAgentLeads",
                     CampaignID: CampaignID,
                     Checked: Checked
-                },
-        success: function(data)
-        {
-
-        }
+                }
     });
 }
 
@@ -895,11 +898,7 @@ function CampaignShowAgentLeadsCount() {
                     action: "CampaignShowAgentLeadsCount",
                     CampaignID: CampaignID,
                     Checked: Checked
-                },
-        success: function(data)
-        {
-
-        }
+                }
     });
 }
 
@@ -921,11 +920,7 @@ function CampaignShowAgentLeadsInqueue() {
                     action: "CampaignShowAgentLeadsInqueue",
                     CampaignID: CampaignID,
                     Checked: Checked
-                },
-        success: function(data)
-        {
-
-        }
+                }
     });
 }
 
@@ -947,11 +942,7 @@ function CampaignAllowAgentSearch() {
                     action: "CampaignAllowAgentSearch",
                     CampaignID: CampaignID,
                     Checked: Checked
-                },
-        success: function(data)
-        {
-
-        }
+                }
     });
 }
 
@@ -973,11 +964,7 @@ function CampaignTransfers() {
                     action: "CampaignTransfers",
                     CampaignID: CampaignID,
                     Checked: Checked
-                },
-        success: function(data)
-        {
-
-        }
+                }
     });
 }
 
@@ -999,11 +986,7 @@ function CampaignDTMF() {
                     action: "CampaignDTMF",
                     CampaignID: CampaignID,
                     Checked: Checked
-                },
-        success: function(data)
-        {
-
-        }
+                }
     });
 }
 function CampaignCopyRecord() {
@@ -1024,11 +1007,7 @@ function CampaignCopyRecord() {
                     action: "CampaignCopyRecord",
                     CampaignID: CampaignID,
                     Checked: Checked
-                },
-        success: function(data)
-        {
-
-        }
+                }
     });
 }
 
@@ -1048,10 +1027,7 @@ function campaignCallbackLimit_geral()
                         action: "CampaignCallbackLimit_geral",
                         CampaignID: CampaignID,
                         max: $("#campaign_callback_geral_limit").val()
-                    },
-            success: function(data)
-            {
-            }
+                    }
         });
     }
 }
@@ -1069,10 +1045,7 @@ function campaignCallbackLimit_individual()
                         action: "CampaignCallbackLimit_individual",
                         CampaignID: CampaignID,
                         max: $("#campaign_callback_individual_limit").val()
-                    },
-            success: function(data)
-            {
-            }
+                    }
         });
     }
 }
@@ -1085,6 +1058,7 @@ $("body")
         .on("click", "#btn-uncheck-all-groups", GroupsUncheckAll)
         .on("click", ".campaign-active-switch", CampaignActiveSwitch)
         .on("click", ".campaign-type-switch", CampaignTypeSwitch)
+        .on("click", "#campaign-owner-only", CampaignOwnerOnly)
         .on("click", ".campaign-recording-switch", CampaignRecordingSwitch)
         .on("click", "input[name=campaign_lead_order]", CampaignLeadOrderSwitch)
         .on("click", "#btn-config-dial-status", {dialog: "#dialog-config-dial-status"}, DialogOpen)
