@@ -599,22 +599,25 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 case "button":
                     element.find(".botao").text(info.texto);
                     if (info.param1.length)
-
                     {
-
                         $(script_zone).on("click", "#script_div #" + info.tag + " button", function()//atribuir os ons a cada value
                         {
-
                             var this_elements = [];
                             var this_info = $(this).closest(".item").data("info");
-                            $.each(this_info.values_text, function()
+                            $.each(this_info.default_value, function()
                             {
-
                                 switch ($("[name=" + ~~this + "]").parents(".item").data("info").type)
                                 {
                                     case "radio":
-                                    case "checkbox":
                                         this_elements.push({name: ~~this, value: $("[name=" + ~~this + "]:checked").val()});
+                                        break;
+                                    case "checkbox":
+                                        var temp = [];
+                                        $.each($("[name=" + ~~this + "]:checked"), function()
+                                        {
+                                            temp.push($(this).val());
+                                        });
+                                        this_elements.push({name: ~~this, value: temp});
                                         break;
                                     case "select":
                                         this_elements.push({name: ~~this, value: $("[name=" + ~~this + "]:selected").val()});
@@ -623,15 +626,30 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                         this_elements.push({name: ~~this, value: $("[name=" + ~~this + "]").val()});
                                         break;
                                 }
-
                             });
-
-                            /*  $.get(file_path + "proxy.php", {csurl: this_info.default_value, elements: this_elements},
-                             function() {
-                             }, "json");*/
-                            $.get(file_path + "proxy.php", {csurl: this_info.default_value},
-                            function() {
-                            }, "json");
+                            $.ajax({
+                                type: this_info.param1,
+                                url: file_path + "proxy.php",
+                                data: {csurl: this_info.values_text, elements: this_elements},
+                                dataType: "json",
+                                success: function(data)
+                                {
+                                    $.each(data, function()
+                                    {
+                                        if (~~this.name)
+                                            if ($("[name=" + ~~this.name + "]"))
+                                                switch ($("[name=" + ~~this.name + "]").parents(".item").data("info").type)
+                                                {
+                                                    case "radio":
+                                                        $("[name=" + ~~this.name + "][value='" + this.value + "']").prop("checked", true);
+                                                        break;
+                                                    default:
+                                                        $("[name=" + ~~this.name + "]").val(this.value);
+                                                        break;
+                                                }
+                                    });
+                                }
+                            });
                         });
                     }
                     break;

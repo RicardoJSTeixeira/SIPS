@@ -354,17 +354,14 @@ $("#limite_datas_toggle").on("click", function()
 });
 $("#apagar_elemento").click(function()
 {
-
     item_database("delete_item", list_item.attr("id"), 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), 0, list_item.index(), 0, 0, 0, 0, 0, 0, 0, 0, list_item.data("tag"));
     list_ui.item.remove();
     editor_toggle("off");
     rules_update_targets();
-
 });
 
 $("#button_use_script").click(function()
 {
-
     if ($(this).is(":checked"))
     {
         $("#div_url_input").show();
@@ -409,9 +406,6 @@ function update_script(callback)
                 callback();
             update_pages();
         }
-
-
-
     }, "json");
 }
 function update_pages(callback)
@@ -445,9 +439,6 @@ function update_pages(callback)
                 callback();
             update_info();
         }
-
-
-
         //Get das tags dos campos dinâmicos
         $.post("requests.php", {action: "get_tag_fields", id_script: $("#script_selector option:selected").val()},
         function(data4)
@@ -661,8 +652,8 @@ function update_info()
                             .addClass("element")
                             .data("type", "button")
                             .data("hidden", this.hidden)
-                            .data("url", this.default_value)
-                            .data("url_elements", this.values_text)
+                            .data("url", this.values_text)
+                            .data("url_elements", this.default_value)
                             .data("type_post", this.param1);
                     insert_element("button", item, this);
                     break;
@@ -879,11 +870,8 @@ function populate_element(tipo, element)
             }
             break;
         case "button":
- 
             $("#button_edit").val($("#" + id + " .botao").text());
-
-
-
+ 
             if (element.data("url").length)
             {
                 $("#div_url_input").show();
@@ -1258,7 +1246,7 @@ function edit_element(opcao, element, data)
                 {
                     element.data("url", $("#input_url").val())
                             .data("url_elements", $("#select_elements_to_url").val())
-                            .data("type_post", $("radio[name='type_post']:checked").val());
+                            .data("type_post", $("input[name='type_post']:checked").val());
                 }
                 else
                 {
