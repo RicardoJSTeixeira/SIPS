@@ -11,28 +11,28 @@ Class requisitions {
     public function get_requisitions_to_datatable($show_admin) {
 
         $result['aaData'] = [];
-        $query = "SELECT sr.id,sr.user,sr.type,sr.lead_id,sr.date,sr.contract_number,vl.list_id,sr.attachment,'products',sr.status  from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id where sr.user=:user";
+        $query = "SELECT sr.id,sr.user,sr.type,sr.lead_id,sr.date,sr.contract_number,vl.extra2,sr.attachment,'products',sr.status  from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id where sr.user=:user";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user" => $this->_user_id));
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             if ($row[2] == "mensal") {
                 $row[2] = "Mensal";
-                $row[6] = "não utilizado";
+                $row[6] = "<i class='icon-ban-circle'></i>";
             } else {
                 $row[2] = "Especial";
                 if ($show_admin == 1) {
                     if ($row[6])
-                        $row[6] = "<input class='cod_cliente_input validate[custom[onlyNumberSp]]' data-requisition_id='$row[0]' value='$row[6]' type='text'/>";
+                        $row[6] = "$row[6]";
                     else
-                        $row[6] = "<input placeholder='Insira código de cliente' class='cod_cliente_input validate[custom[onlyNumberSp]] ' data-requisition_id='$row[0]'   type='text'/>";
+                        $row[6] = "<input placeholder='Insira código de cliente' class='cod_cliente_input span validate[custom[onlyNumberSp]]' data-clientID='$row[3]' type='text'/>";
                 }
                 else {
                     if (!$row[6])
-                        $row[6] = "não introduzido";
+                        $row[6] = "<i class='icon-ban-circle'></i>";
                 }
             }
-            $row[3] = $row[3] == "0" ? "Não utilizado" : $row[3];
+            $row[3] = $row[3] == "0" ? "<i class='icon-ban-circle'></i>" : $row[3];
             switch ($row[9]) {
                 case "0":
                     $row[9] = "Pedido enviado";
@@ -45,9 +45,9 @@ Class requisitions {
                     break;
             }
 
-            $row[8] = "<div> <button class='btn ver_requisition_products' value='" . $row[0] . "'><i class='icon-eye-open'></i>Ver</button></div>";
+            $row[8] = "<div><button class='btn ver_requisition_products' value='" . $row[0] . "'><i class='icon-eye-open'></i>Ver</button></div>";
             if ($this->_user_level > 5 || $show_admin == 1)
-                $row[10] = $row[10] . " <button class='btn accept_requisition btn-success' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_requisition btn-warning' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+                $row[10] = $row[10] . " <span class='btn-group'><button class='btn accept_requisition icon-alone btn-success' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_requisition icon-alone btn-warning' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div></span>";
 
             $result['aaData'][] = $row;
         }
@@ -55,10 +55,10 @@ Class requisitions {
         return $result;
     }
 
-    public function edit_requisition($req_id, $cod_cliente) {
-        $query = "Update spice_requisition set cod_cliente=:cod_cliente where id=:req_id";
+    public function edit_requisition($id, $cod_cliente) {
+        $query = "Update vicidial_list set extra2=:cod_cliente where lead_id=:id";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":cod_cliente" => $cod_cliente, ":req_id" => $req_id));
+        return $stmt->execute(array(":cod_cliente" => $cod_cliente, ":id" => $id));
     }
 
     public function create_requisition($type, $lead_id, $contract_number, $attachment, $products_list) {

@@ -1,8 +1,13 @@
+<style>
+    .cod_cliente_input{
+        margin-bottom: 0px !important;
+    }
+</style>
 <div class="row-fluid">
     <div class="span12 grid">
         <div class="grid-title">
             <div class="pull-left">
-                <h4>Gestão de Encomendas</h4>
+                Gestão de Encomendas
             </div>
         </div>
         <div class="grid-content div_admin_edit" id="requisition_master_div"  >
@@ -20,46 +25,11 @@
 
     $(function()
     {
-
-        //ENCOMENDAS--------------------------------------------------------------------------------------
-        var config = new Object();
-
-        requisition1 = new requisition($("#extra_div"), config);
+        requisition1 = new requisition($("#extra_div"), {});
         requisition1.init(function()
         {
             requisition1.get_current_requisitions($("#view_requisition_datatable"), 1);
         });
-
-
-        $(".chosen-select").chosen({no_results_text: "Sem resultados"});
-        $.post('ajax/admin.php', {action: "get_agentes"},
-        function(data)
-        {
-            var options = "";
-            $.each(data, function()
-            {
-                options += "<option value='" + this.user + "'>" + this.full_name + "</option>";
-            });
-            $("#select_agent_transfer1,#select_agent_transfer2").append(options).trigger("chosen:updated").css("width", "225px");
-
-        }, "json");
-
-    });
-
-    $("#admin_zone").on("click", ".accept_requisition", function()
-    {
-        var this_button = $(this);
-        $.post('ajax/requisition.php', {action: "accept_requisition", id: $(this).val()}, function() {
-            this_button.parent().next().text("Aprovado");
-        }, "json");
-    });
-
-    $("#admin_zone").on("click", ".decline_requisition", function()
-    {
-        var this_button = $(this);
-        $.post('ajax/requisition.php', {action: "decline_requisition", id: $(this).val()}, function() {
-            this_button.parent().next().text("Rejeitado");
-        }, "json");
     });
 
 </script>

@@ -435,7 +435,6 @@ var products = function(geral_path, options_ext)
             var option = "";
             $.each(data, function()
             {
-
                 if (out_level)
                 {
                     level = level + out_level - 1;
@@ -479,8 +478,6 @@ var products = function(geral_path, options_ext)
                 callback();
         }, "json");
     }
-
-
 
     function get_children(element)
     {

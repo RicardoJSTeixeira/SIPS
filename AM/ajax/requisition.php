@@ -39,7 +39,7 @@ switch ($action) {
         break;
 
     case "editar_encomenda":
-        echo json_encode($requisitions->edit_requisition($req_id, $cod_cliente));
+        echo json_encode($requisitions->edit_requisition($clientID, $cod_cliente));
         break;
 
     case "listar_produtos_por_encomenda":

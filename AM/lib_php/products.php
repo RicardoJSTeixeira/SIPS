@@ -24,7 +24,7 @@ Class products {
                 $active = (bool) $row["active"];
             }
             if ($product_editable == "true") {
-                $row[6] = "<span class='btn-group'><button class='btn btn_editar_produto btn-primary  icon-alone' data-product_id='" . $row[0] . "' data-level='" . $row["level"] . "'><i class='icon-pencil'></i></button><button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "' data-level='" . $row["level"] . "' data-deleted='" . (bool) $row["deleted"] . "' class='btn btn_ver_produto icon-alone hide' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button><button class='btn btn_apagar_produto btn-danger  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-trash'></i></button></span>";
+                $row[6] = "<span class='btn-group'><button class='btn btn_editar_produto btn-primary icon-alone' data-product_id='" . $row[0] . "' data-level='" . $row["level"] . "'><i class='icon-pencil'></i></button><button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "' data-level='" . $row["level"] . "' data-deleted='" . (bool) $row["deleted"] . "' class='btn btn_ver_produto icon-alone hide' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button><button class='btn btn_apagar_produto btn-danger icon-alone' data-product_id='" . $row[0] . "'><i class='icon-trash'></i></button></span>";
             } else {
                 $row[6] = "<button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "' data-level='" . $row["level"] . "'  data-deleted='" . (bool) $row["deleted"] . "' class='btn btn-info btn_ver_produto  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button>";
             }
@@ -33,7 +33,7 @@ Class products {
         return $output;
     }
 
-    public function get_products($id) {
+    public function get_products($id=null) {
         $relations = array();
         $stmt = $this->_db->prepare("select parent, child from spice_product_assoc");
         $stmt->execute();
