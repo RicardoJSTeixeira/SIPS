@@ -831,6 +831,38 @@
                                             <input  maxlength="50" class="span button_input validate[required]" id="button_edit" name="button_edit" type="text" placeholder="Texto do Botão" />
                                         </div>
                                     </div>
+                                    <div class="formRow" >
+                                        <input   type="checkbox" id="button_use_script" name="bus" value="1">
+                                        <label class="checkbox inline" for="button_use_script"><span></span>Usar script exterior</label>
+                                    </div>
+                                    <div   id="div_url_input" style="display:none">
+                                        <div class="formRow" >
+                                            <strong>Url de execução de script</strong>
+                                            <div class="formRight" >
+                                                <input type="text" id="input_url" class="validate[required] input-xlarge" >   
+                                            </div>
+                                        </div>
+
+                                        <div class="formRow" >
+                                            <strong>Tipo de pedido</strong>
+                                            <div class="formRight" >
+                                                <input  type="radio" id="type_post" name="type_post" value="POST" checked>
+                                                <label for="type_post"><span></span>POST</label>   
+                                                <input  type="radio" id="type_get" name="type_post" value="GET">
+                                                <label for="type_get"><span></span>GET</label>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="formRow" >
+                                            <strong>Elementos que serão enviados</strong>
+                                            <div class="formRight" >
+                                                <select id="select_elements_to_url" class="chosen-select" multiple="multiple"  data-placeholder="Selecione um/vários elementos"   ></select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
                                 </form>
                             </div>
 

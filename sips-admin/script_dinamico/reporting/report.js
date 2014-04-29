@@ -190,19 +190,19 @@ function get_templates(campaign)
                     //SCRIPT
                     if (Object.size(data))
                     {
-                          show_template = true;
+                        show_template = true;
                         $("#oc_template").trigger("change");
                         script_id = data[0];
                         $("#span_script_name").text("Nome do Script ->  " + data[1]);
                         $("#column_order_title").text("Ordernação de colunas");
                         $("#column_order").empty();
                         $("#download_report").prop("disabled", false);
-                      
+
                     }
                     else
                     {
 // NAO HA SCRIPT     
-                       
+
                         $("#span_script_name").text("Sem Script");
                         script_id = undefined;
                         if ($("#download_script").is(":checked"))
@@ -224,6 +224,27 @@ function get_templates(campaign)
             }
             else
             {
+ 
+
+                $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
+                function(data)
+                {
+                    //SCRIPT
+                    if (data.length())
+                    {
+                        script_id = data[0];
+                    }
+                }, "json");
+
+
+
+
+
+
+
+
+
+
                 $("#span_script_name").text("Crie uma Template");
                 $("#oc_template").empty().append("<option value=''>Crie um template</option>");
                 $("#column_order_title").text("");
