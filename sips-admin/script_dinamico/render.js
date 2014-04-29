@@ -625,11 +625,12 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 }
 
                             });
-                    
-                            $.post(file_path + "proxy.php", {csurl: this_info.param1, elements: this_elements},
+
+                            /*  $.get(file_path + "proxy.php", {csurl: this_info.default_value, elements: this_elements},
+                             function() {
+                             }, "json");*/
+                            $.get(file_path + "proxy.php", {csurl: this_info.default_value},
                             function() {
-
-
                             }, "json");
                         });
                     }

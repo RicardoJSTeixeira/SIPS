@@ -661,8 +661,9 @@ function update_info()
                             .addClass("element")
                             .data("type", "button")
                             .data("hidden", this.hidden)
-                            .data("url", this.param1)
-                            .data("url_elements", this.values_text);
+                            .data("url", this.default_value)
+                            .data("url_elements", this.values_text)
+                            .data("type_post", this.param1);
                     insert_element("button", item, this);
                     break;
             }
@@ -878,8 +879,8 @@ function populate_element(tipo, element)
             }
             break;
         case "button":
+ 
             $("#button_edit").val($("#" + id + " .botao").text());
-
 
 
 
@@ -889,6 +890,10 @@ function populate_element(tipo, element)
                 $("#button_use_script").prop("checked", true);
                 $("#input_url").val(element.data("url"));
                 $("#select_elements_to_url").val(element.data("url_elements")).trigger('chosen:updated');
+                if (element.data("type_post") === "POST")
+                    $("#type_post").prop("checked", true);
+                else
+                    $("#type_get").prop("checked", true);
             }
             else
             {
@@ -1248,9 +1253,21 @@ function edit_element(opcao, element, data)
                 editor_toggle("off");
                 $("#button_edit").val($("#button_edit").val().replace(regex_text, ''));
                 $("#" + id + " .botao").text($("#button_edit").val());
-                element.data("url", $("#button_use_script").is(":checked") ? $("#input_url").val() : "");
-                element.data("url_elements", $("#button_use_script").is(":checked") ? $("#select_elements_to_url").val() : "");
-                item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "button", element.index(), "h", $("#button_edit").val(), 0, 0, $("#button_use_script").is(":checked") ? $("#select_elements_to_url").val() : "", $("#button_use_script").is(":checked") ? $("#input_url").val() : "", 0, $("#item_hidden").is(':checked'), "POST");
+
+                if ($("#button_use_script").is(":checked"))
+                {
+                    element.data("url", $("#input_url").val())
+                            .data("url_elements", $("#select_elements_to_url").val())
+                            .data("type_post", $("radio[name='type_post']:checked").val());
+                }
+                else
+                {
+                    element.data("url", "")
+                            .data("url_elements", "")
+                            .data("type_post", "");
+                }
+
+                item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "button", element.index(), "h", $("#button_edit").val(), 0, 0, element.data("url"), element.data("url_elements"), 0, $("#item_hidden").is(':checked'), element.data("type_post"));
             }
             break;
     }
