@@ -73,6 +73,7 @@ $(function() {
         var client_box = new clientBox({id: atob(client.id)});
         client_box.init();
         me.init(zone, atob(client.id));
+        zone.find(".grid-title .pull-left").text('Recomendações Pedidas');
     } else {
         me.init(zone);
     }

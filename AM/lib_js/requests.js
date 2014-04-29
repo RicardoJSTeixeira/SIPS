@@ -50,24 +50,24 @@ var requests = function(basic_path, options_ext)
                     .on('changeDate', function() {
                         $("#data_rastreio1").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
                     });
-                    
-            am_zone.find("#data_inicio1").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt",  startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
+
+            am_zone.find("#data_inicio1").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
                     .on('changeDate', function() {
-                        $("#data_inicio2").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT'+$(this).val()));
+                        $("#data_inicio2").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT' + $(this).val()));
                     });
-            am_zone.find("#data_inicio2").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt",  startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
+            am_zone.find("#data_inicio2").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
                     .on('changeDate', function() {
-                        $("#data_inicio1").datetimepicker('setEndDate', moment().format('YYYY-MM-DDT'+$(this).val()));
-                        $("#data_fim1").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT'+$(this).val()));
+                        $("#data_inicio1").datetimepicker('setEndDate', moment().format('YYYY-MM-DDT' + $(this).val()));
+                        $("#data_fim1").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT' + $(this).val()));
                     });
-                    
-            am_zone.find("#data_fim1").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt",  startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
+
+            am_zone.find("#data_fim1").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
                     .on('changeDate', function() {
-                        $("#data_fim2").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT'+$(this).val()));
+                        $("#data_fim2").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT' + $(this).val()));
                     });
-            am_zone.find("#data_fim2").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt",  startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
+            am_zone.find("#data_fim2").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
                     .on('changeDate', function() {
-                        $("#data_fim1").datetimepicker('setEndDate', moment().format('YYYY-MM-DDT'+$(this).val()));
+                        $("#data_fim1").datetimepicker('setEndDate', moment().format('YYYY-MM-DDT' + $(this).val()));
                     });
 
             //Adiciona Linhas
@@ -130,7 +130,7 @@ var requests = function(basic_path, options_ext)
             "fnServerParams": function(aoData) {
                 aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"}, {"name": "show_admin", "value": 1});
             },
-            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial rastreio"}, {"sTitle": "Data final rastreio"}, {"sTitle": "Horario"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Local publicidade"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
+            "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser"}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial rastreio"}, {"sTitle": "Data final rastreio"}, {"sTitle": "Horario", "sWidth": "75px"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Local publicidade", "sWidth": "75px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 
@@ -173,10 +173,14 @@ var requests = function(basic_path, options_ext)
         am_zone.on("click", ".decline_apoio_marketing", function()
         {
             var this_button = $(this);
-            $.post('/AM/ajax/requests.php', {action: "decline_apoio_marketing", id: $(this).val()}, function() {
-                this_button.parent().prev().text("Rejeitado");
-                apoio_markting_table.fnReloadAjax();
-            }, "json");
+            bootbox.confirm("Tem a certeza?", function(result) {
+                if (result) {
+                    $.post('/AM/ajax/requests.php', {action: "decline_apoio_marketing", id: this_button.val()}, function() {
+                        this_button.parent().prev().text("Rejeitado");
+                        apoio_markting_table.fnReloadAjax();
+                    }, "json");
+                }
+            });
         });
 
     };
@@ -246,7 +250,7 @@ var requests = function(basic_path, options_ext)
                 {"name": "show_admin", "value": 1}
                 );
             },
-            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Lead id"}, {"sTitle": "Anexo", "sWidth": "75px"}, {"sTitle": "Observações"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px"}],
+            "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser"}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Ref.ª de Cliente"}, {"sTitle": "Anexo", "sWidth": "75px"}, {"sTitle": "Observações"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 
@@ -262,10 +266,14 @@ var requests = function(basic_path, options_ext)
         rc_zone.on("click", ".decline_report_correio", function()
         {
             var this_button = $(this);
-            $.post('/AM/ajax/requests.php', {action: "decline_report_correio", id: $(this).val()}, function() {
-                this_button.parent("td").prev().text("Rejeitado");
-                relatorio_correio_table.fnReloadAjax();
-            }, "json");
+            bootbox.confirm("Tem a certeza?", function(result) {
+                if (result) {
+                    $.post('/AM/ajax/requests.php', {action: "decline_report_correio", id: this_button.val()}, function() {
+                        this_button.parent("td").prev().text("Rejeitado");
+                        relatorio_correio_table.fnReloadAjax();
+                    }, "json");
+                }
+            });
         });
         rc_zone.on("click", ".ver_anexo_correio", function(e)
         {
@@ -280,7 +288,7 @@ var requests = function(basic_path, options_ext)
                 tbody.empty();
                 $.each(data1, function()
                 {
-                    if (this.confirmed == "true")
+                    if (~~this.confirmed)
                         tbody.append("<tr><td class='chex-table'><input type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' checked id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span>  </label></td><td>" + this.value + "</td></tr>");
                     else
                         tbody.append("<tr><td class='chex-table'><input type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span>  </label></td><td>" + this.value + "</td></tr>");
@@ -296,7 +304,7 @@ var requests = function(basic_path, options_ext)
             var anexo_array = [];
             $.each($(this).closest("#tbody_ver_anexo_correio").find("tr"), function()
             {
-                anexo_array.push({value: $(this).find("td").last().text(), confirmed: $(this).find("td").first().find(":checkbox").is(":checked")});
+                anexo_array.push({value: $(this).find("td").last().text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked")});
             });
             $.post("/AM/ajax/requests.php", {action: "save_anexo_correio", id: $(this).val(), anexos: anexo_array}, "json");
         });
@@ -314,6 +322,7 @@ var requests = function(basic_path, options_ext)
             rf_zone.append(data);
             rf_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
             rf_zone.find(".rf_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
+            rf_zone.find("#input_km").autotab('number');
             //Adiciona Linhas
             rf_zone.find("#button_rf_table_add_line").click(function(e)
             {
@@ -372,7 +381,7 @@ var requests = function(basic_path, options_ext)
                 aoData.push({"name": "action", "value": "get_relatorio_frota_to_datatable"},
                 {"name": "show_admin", "value": 1});
             },
-            "aoColumns": [{"sTitle": "id"}, {"sTitle": "user"}, {"sTitle": "data"}, {"sTitle": "Matricula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrencias", "sWidth": "150px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px"}],
+            "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser"}, {"sTitle": "data"}, {"sTitle": "Matricula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrencias", "sWidth": "150px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 
@@ -403,10 +412,14 @@ var requests = function(basic_path, options_ext)
         rf_zone.on("click", ".decline_report_frota", function()
         {
             var this_button = $(this);
-            $.post('/AM/ajax/requests.php', {action: "decline_report_frota", id: $(this).val()}, function() {
-                this_button.parent("td").prev().text("Rejeitado");
-                relatorio_frota_table.fnReloadAjax();
-            }, "json");
+            bootbox.confirm("Tem a certeza?", function(result) {
+                if (result) {
+                    $.post('/AM/ajax/requests.php', {action: "decline_report_frota", id: this_button.val()}, function() {
+                        this_button.parent("td").prev().text("Rejeitado");
+                        relatorio_frota_table.fnReloadAjax();
+                    }, "json");
+                }
+            });
         });
     };
 };

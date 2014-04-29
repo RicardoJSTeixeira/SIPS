@@ -1,21 +1,18 @@
-
 var requisition = function(geral_path, options_ext)
 {
-
-
-    var me = this;
     this.file_uploaded = false;
     this.config = {};
-    var product_tree,
+    this.tipo = "mensal";
+    var
+            me = this,
+            product_tree,
             modal = "",
             table_path = "",
             show_admin = 0,
-            tipo = "mensal",
             produtos = [];
 
-
-
     $.extend(true, this.config, options_ext);
+
     this.init = function(callback)
     {
         $.get("/AM/view/requisitions/requisition.html", function(data) {
@@ -128,7 +125,6 @@ var requisition = function(geral_path, options_ext)
             }
         });
 
-
         $(new_requisition_zone).on("click", '#save_single_product', function(e)
         {
             var produtos_single = [],
@@ -138,14 +134,15 @@ var requisition = function(geral_path, options_ext)
                 if ($(this).find("input[type=checkbox]").is(":checked"))
                 {
                     has_products++;
-                    produtos_single.push(
-                            {id: $(this).prop("id_product"),
-                                name: $(this).prop("name_product"),
-                                category: $(this).prop("category_product"),
-                                quantity: ~~$(this).find(".input_quantity").val(),
-                                color_id: $(this).find(".color_select").val(),
-                                color_name: $(this).find(".color_select option:selected").text()});
-                    if (me.tipo == "especial")
+                    produtos_single.push({
+                        id: $(this).prop("id_product"),
+                        name: $(this).prop("name_product"),
+                        category: $(this).prop("category_product"),
+                        quantity: ~~$(this).find(".input_quantity").val(),
+                        color_id: $(this).find(".color_select").val(),
+                        color_name: $(this).find(".color_select option:selected").text()
+                    });
+                    if (me.tipo === "especial")
                         produtos[$(this).prop("id_product")].max_req_s -= ~~$(this).find(".input_quantity").val();
                     else
                         produtos[$(this).prop("id_product")].max_req_m -= ~~$(this).find(".input_quantity").val();
@@ -158,17 +155,21 @@ var requisition = function(geral_path, options_ext)
             }
             new_requisition_zone.find("#product_selector").val(0).trigger("change");
             var new_product = "";
-            new_product = ($("<div>", {class: "grid"})
-                    .append($("<div>")));
-            var produtos_in_text = new_product.find("div:last").append($("<table>", {class: "table table-mod table-striped table-condensed"})
-                    .append($("<thead>")
-                            .append($("<tr>")
-                                    .append($("<th>").text("Nome").css("width", "420px"))
-                                    .append($("<th>").text("Categoria").css("width", "120px"))
-                                    .append($("<th>").text("#").attr("title", "Quantidade").css("width", "50px"))
-                                    .append($("<th>").text("Cor").css("width", "150px").append($("<button>", {class: "btn btn-danger btn-mini icon-alone right remove_produto_encomendado"}).append($("<i>", {class: "icon icon-trash"}))))
-                                    ))
-                    .append($("<tbody>"))).find("tbody");
+
+            new_product = ($("<div>", {class: "grid"}).append($("<div>")));
+
+            var produtos_in_text = new_product
+                    .find("div:last")
+                    .append($("<table>", {class: "table table-mod table-striped table-condensed"})
+                            .append($("<thead>")
+                                    .append($("<tr>")
+                                            .append($("<th>").text("Nome").css("width", "420px"))
+                                            .append($("<th>").text("Categoria").css("width", "120px"))
+                                            .append($("<th>").text("#").attr("title", "Quantidade").css("width", "50px"))
+                                            .append($("<th>").text("Cor").css("width", "150px").append($("<button>", {class: "btn btn-danger btn-mini icon-alone right remove_produto_encomendado"}).append($("<i>", {class: "icon icon-trash"}))))
+                                            ))
+                            .append($("<tbody>")))
+                    .find("tbody");
             $.each(produtos_single, function()
             {
                 produtos_in_text.append($("<tr>", {class: "product_line"})
@@ -181,18 +182,13 @@ var requisition = function(geral_path, options_ext)
             new_requisition_zone.find("#produtos_encomendados").append(new_product);
         });
 
-
-
-
-
         $(new_requisition_zone).on("click", " .remove_produto_encomendado", function(e)
         {
-
             $.each($(this).closest(".grid").find("tr"), function()
             {
                 if ($(this).hasClass("product_line"))
                 {
-                    if (me.tipo = "especial")
+                    if (me.tipo === "especial")
                         produtos[$(this).find(".td_name").attr("id_product")].max_req_s = produtos[$(this).find(".td_name").attr("id_product")].max_req_s + ~~$(this).find(".td_quantity").text();
                     else
                         produtos[$(this).find(".td_name").attr("id_product")].max_req_m = produtos[$(this).find(".td_name").attr("id_product")].max_req_m + ~~$(this).find(".td_quantity").text();
@@ -246,7 +242,7 @@ var requisition = function(geral_path, options_ext)
                 processData: false
             });
         });
-    }
+    };
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -276,21 +272,27 @@ var requisition = function(geral_path, options_ext)
                             $(this).parent().parent().addClass("error");
                     });
                 },
-                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Código de cliente"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}, {"sTitle": "Opções"}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser"}, {"sTitle": "Tipo"}, {"sTitle": "ID Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Código de cliente"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "60px"}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             Table_view_requisition.on("change", ".cod_cliente_input", function()
             {
-                var requisition_number = $(this).data("requisition_id");
-                var value = $(this).val();
+                var that = $(this);
                 if (!$(this).validationEngine("validate"))
                 {
-                    if (value.length)
-                        $(this).parent().parent().removeClass("error");
-                    else
-                        $(this).parent().parent().addClass("error");
-                    $.post('/AM/ajax/requisition.php', {action: "editar_encomenda", "req_id": requisition_number, "cod_cliente": value}, function(data) {
-                    }, "json");
+                    if (that.val().length)
+                        bootbox.confirm("Tem a certeza que pretende actualizar para o codigo:" + that.val() + "?", function(result) {
+                            if (result) {
+                                $.post('/AM/ajax/requisition.php', {action: "editar_encomenda", "clientID": that.data().clientid, "cod_cliente": that.val()}, function(data) {
+                                    that
+                                            .closest("tr")
+                                            .removeClass("error")
+                                            .end()
+                                            .replaceWith(that.val());
+                                    Table_view_requisition.fnReloadAjax();
+                                }, "json");
+                            }
+                        });
                 }
             });
         }
@@ -321,7 +323,7 @@ var requisition = function(geral_path, options_ext)
                 {
                     if (!this.color_name)
                         this.color_name = "Padrão";
-                    modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td></tr>");
+                    modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category.capitalize() + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td></tr>");
                 });
                 modal.modal("show");
             }, "json");
@@ -331,19 +333,21 @@ var requisition = function(geral_path, options_ext)
             var this_button = $(this);
             $.post('ajax/requisition.php', {action: "accept_requisition", id: $(this).val()}, function() {
                 this_button.parent("td").prev().text("Aprovado");
+                Table_view_requisition.fnReloadAjax();
             }, "json");
         });
         table_path.on("click", ".decline_requisition", function()
         {
             var this_button = $(this);
-            $.post('ajax/requisition.php', {action: "decline_requisition", id: $(this).val()}, function() {
-                this_button.parent().prev().text("Rejeitado");
-            }, "json");
+            bootbox.confirm("Tem a certeza?", function(result) {
+                if (result) {
+                    $.post('ajax/requisition.php', {action: "decline_requisition", id: this_button.val()}, function() {
+                        this_button.parent().prev().text("Rejeitado");
+                        Table_view_requisition.fnReloadAjax();
+                    }, "json");
+                }
+            });
         });
     }
 
 };
-
-
-
-

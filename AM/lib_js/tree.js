@@ -1,7 +1,3 @@
-
-String.prototype.capitalize = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-};
 var tree = function(selector, data, type_encomenda, parent_id) {
     var checkbox_count = 1;
     var me = this;

@@ -30,7 +30,7 @@
         top: -11px;
         width: 1px;
         -webkit-transition: "border-color 0.1s ease 0.1s";
-        transition: "border-color 0.1s ease 0.1s"
+        transition: "border-color 0.1s ease 0.1s";
     }
 
     .tree li:after {
@@ -126,7 +126,7 @@
 
     <h4 id="tipo_encomenda"></h4>
 
-    <div id="tipo_especial"  class="tipo_div">
+    <div id="tipo_especial" class="tipo_div">
         <form id="form_encomenda_especial">
 
             <span class="input-prepend ">
@@ -150,14 +150,14 @@
                     <div id="tree" class="tree smart-form">
                     </div>
                     <hr>
-                    <button class=" btn btn-large btn-primary" id="save_single_product">Requisitar</button>
+                    <button class=" btn btn-large btn-primary" id="save_single_product"><i class="icon-shopping-cart"></i>Requisitar</button>
                 </div>
             </div>
             <div class="grid">
+                <div class="grid-title">
+                    <div class="pull-left">Anexo</div>
+                </div>
                 <div class="grid-content">
-
-
-                    <h4>Anexo</h4> 
                     <div class="formRow">
                         <form enctype="multipart/form-data" action="" method="POST" id="anexo_input_form">
                             <div class="fileupload fileupload-new" data-provides="fileupload">
@@ -166,17 +166,16 @@
                                 </div>
                             </div>
                         </form>
-                        <button class="btn" id="anexo_upload_button"  >upload</button>
+                        <button class="btn btn-success" id="anexo_upload_button" ><i class="icon-circle-arrow-up"></i>Upload</button>
                         <div class="formRight">
-                            <strong class="inline" id="label_anexo_info" >   </strong>
+                            <strong class="inline" id="label_anexo_info" >  </strong>
                         </div>
                     </div>
-
                     <div class="clear"></div>
                 </div> 
             </div> 
         </div>
-        <div class="grid-transparent span4"  >
+        <div class="grid-transparent span4" >
             <div class="grid-title">
                 <div class="pull-left">Produtos encomendados</div>
                 <div class="pull-right"><button class="btn btn-success right" id="new_requisition_submit_button"><i class="icon-check"></i>Encomendar</button></div>

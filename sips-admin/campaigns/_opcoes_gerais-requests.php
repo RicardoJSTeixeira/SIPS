@@ -158,7 +158,7 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
             mysql_query("INSERT INTO vicidial_campaign_statuses (status, status_name, selectable, human_answered, scheduled_callback, campaign_id, visible) VALUES ('$row[0]', '$row[1]', 'N', '$row[2]', '$row[3]', '$js[new_campaign_id]', '$row[4]')") or die(mysql_error());
         }
     } else {
-        $query = mysql_query("SELECT campaign_name, campaign_description, active, dial_method, auto_dial_level, campaign_recording, lead_order, next_agent_call, my_callback_option, campaign_allow_inbound, agent_display_dialable_leads, display_queue_count, view_calls_in_queue, agent_lead_search, agent_allow_transfers, agent_allow_dtmf,callback_hours_block,call_count_target,agent_allow_copy_record FROM vicidial_campaigns WHERE campaign_id='$CampaignID' LIMIT 1", $link) or die(mysql_error());
+        $query = mysql_query("SELECT campaign_name, campaign_description, active, dial_method, auto_dial_level, campaign_recording, lead_order, next_agent_call, my_callback_option, campaign_allow_inbound, agent_display_dialable_leads, display_queue_count, view_calls_in_queue, agent_lead_search, agent_allow_transfers, agent_allow_dtmf,callback_hours_block,call_count_target,agent_allow_copy_record,agent_dial_owner_only FROM vicidial_campaigns WHERE campaign_id='$CampaignID' LIMIT 1", $link) or die(mysql_error());
         $result = mysql_fetch_assoc($query) or die(mysql_error());
 
         $js['c_name'] = $result['campaign_name'];
@@ -170,6 +170,7 @@ function MiscOptionsBuilder($User, $UserGroup, $AllowedCampaigns, $CampaignID, $
         $js['c_lead_order'] = $result['lead_order'];
         $js['c_next_agent_call'] = $result['next_agent_call'];
         $js['c_my_callback_option'] = $result['my_callback_option'];
+        $js['c_agent_dial_owner_only'] = $result['agent_dial_owner_only'];
 
         $js['c_campaign_allow_inbound'] = $result['campaign_allow_inbound'];
 
@@ -376,6 +377,15 @@ function EditCampaignType($User,$CampaignID, $CampaignType, $TempRatio, $link) {
     mysql_query($query) or die(mysql_error());
 }
 
+function EditCampaignOwnerOnly($User,$CampaignID, $CampaignOwnerOnly, $link) {
+    $query1 = "UPDATE vicidial_campaigns SET agent_dial_owner_only='".(($CampaignOwnerOnly)?'USER':'NONE')."' WHERE campaign_id='$CampaignID'";
+    mysql_query($query1, $link) or die(mysql_error());
+
+    $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
+            . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $User->id . "','" . $User->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN CHANGE OWNER TYPE','" . mysql_real_escape_string($query1) . "')";
+    mysql_query($query) or die(mysql_error());
+}
+
 function EditCampaignRecording($User,$CampaignID, $CampaignRecording, $link) {
     $query1 = "UPDATE vicidial_campaigns SET campaign_recording='$CampaignRecording' WHERE campaign_id='$CampaignID'";
     mysql_query($query1, $link) or die(mysql_error());
@@ -563,5 +573,7 @@ switch ($action) {
     case "CampaignCallbackLimit_individual": CampaignCBLimit_individual($user, $CampaignID, $max, $link);
         break;
     case "CampaignCallbackLimit_geral": CampaignCBLimit_geral($user, $CampaignID, $max, $link);
+        break;
+    case "EditCampaignOwnerOnly": EditCampaignOwnerOnly($user, $CampaignID, $CampaignOwnerOnly, $link);
         break;
 }
