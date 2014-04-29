@@ -593,7 +593,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     }
                     else
                     {
-                        element.append($("<a>").attr("href", "http://" + info.values_text).text(info.values_text));
+                        element.append($("<a>").attr("href", "http://" + info.values_text).text(info.values_text).attr("target","_blank"));
                     }
                     break;
                 case "button":
