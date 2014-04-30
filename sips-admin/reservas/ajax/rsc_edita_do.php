@@ -19,6 +19,8 @@ $id_resource=preg_replace($only_nr, '' , $_POST["id"]);
                         id_resource=".mysql_real_escape_string($id_resource).";";
 
 	mysql_query($query,$link) or die( json_encode(array("sucess"=>0))."  ".mysql_error());   
+                
+        $query = "Delete LOW_PRIORITY FROM sips_sd_filter WHERE id_resource=" . mysql_real_escape_string($id_resource)."";
+	mysql_query($query,$link) or die( json_encode(array("sucess"=>0))."  ".mysql_error());  
+        
 	echo json_encode(array("sucess"=>1)); 
-?>
-
