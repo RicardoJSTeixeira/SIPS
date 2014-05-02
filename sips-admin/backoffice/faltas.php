@@ -98,7 +98,7 @@ if ($row['user_group'] == "ADMIN") {
                     $tabela = "";
                     $campaigns = "";
                     if (!eregi("ALL-CAMPAIGNS", $rugroups['allowed_campaigns'])) {
-                        $campaigns = " WHERE campaign_id IN ('" . str_replace(" ", "','", rtrim(trim($rugroups['allowed_campaigns']), " -")) . "') ";
+                        $campaigns = " AND campaign_id IN ('" . str_replace(" ", "','", rtrim(trim($rugroups['allowed_campaigns']), " -")) . "') ";
                     }
                     ?>
                     <div class='grid'>
@@ -114,7 +114,7 @@ if ($row['user_group'] == "ADMIN") {
                                     <th>Login</th>
                                     <th>Logout</th>
                                     <?php
-                                    $pausecodes = mysql_query("SELECT `pause_code`, `pause_code_name`, `max_time` FROM `vicidial_pause_codes` $campaigns GROUP BY `pause_code` ORDER BY `pause_code`") or die(mysql_error());
+                                    $pausecodes = mysql_query("SELECT `pause_code`, `pause_code_name`, `max_time` FROM `vicidial_pause_codes` WHERE active=1 $campaigns GROUP BY `pause_code` ORDER BY `pause_code`") or die(mysql_error());
                                     $pausequery1 = "";
                                     $pausequery2 = "";
                                     $tempos = array();
