@@ -51,15 +51,16 @@ class apoio_marketing extends requests_class {
 
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
 
-    public function get_to_datatable($show_admin, $status = 0) {
+    public function get_to_datatable($show_admin) {
         $result['aaData'] = [];
-        $query = "SELECT id,user,data_criacao,data_inicial,data_final,horario,localidade,local,morada,comments,'local_publicididade',status from spice_apoio_marketing";
+        $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
+        $query = "SELECT id,user,data_criacao,data_inicial,data_final,horario,localidade,local,morada,comments,'local_publicididade',status from spice_apoio_marketing $filter";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
 
-        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
-            $row[5] = "<div> <button class='btn ver_horario'  data-apoio_marketing_id='" . $row[0] . "'><i class='icon-eye-open'></i>Horario</button></div>";
-            $row[10] = "<div> <button class='btn ver_local_publicidade'  data-apoio_marketing_id='" . $row[0] . "' ><i class='icon-eye-open'></i>localidades</button></div>";
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $row[5] = "<div> <button class='btn ver_horario' data-apoio_marketing_id='" . $row[0] . "'><i class='icon-eye-open'></i>Horario</button></div>";
+            $row[10] = "<div> <button class='btn ver_local_publicidade' data-apoio_marketing_id='" . $row[0] . "' ><i class='icon-eye-open'></i>localidades</button></div>";
 
             switch ($row[11]) {
                 case "0":
@@ -72,9 +73,7 @@ class apoio_marketing extends requests_class {
                     $row[11] = "Rejeitado";
                     break;
             }
-            if ($this->user_level > 5 || $show_admin == 1) {
-                $row[12] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button> </div>";
-            }
+            $row[12] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
             $result['aaData'][] = $row;
         }
 
@@ -100,7 +99,8 @@ class apoio_marketing extends requests_class {
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            foreach (json_decode($row["local_publicidade"]) as $value) {
+            $_locais = json_decode($row["local_publicidade"]);
+            foreach ($_locais as $value) {
                 $locais[] = array("cp" => $value->cp, "freguesia" => $value->freguesia);
             }
         }
@@ -116,13 +116,13 @@ class apoio_marketing extends requests_class {
         return $reservation_id->id_reservation;
     }
 
-    public function accept_apoio_marketing($id) {
+    public function accept($id) {
         $query = "Update spice_apoio_marketing set status=1 where id=?";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array($id));
     }
 
-    public function decline_apoio_marketing($id) {
+    public function decline($id) {
         $query = "Update spice_apoio_marketing set status=2 where id=?";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array($id));
@@ -137,7 +137,7 @@ class correio extends requests_class {
     }
 
     public function create($carta_porte, $data, $doc, $lead_id, $input_doc_obj_assoc, $comments) {
-        $query = "INSERT INTO `spice_report_correio`(`user`, `carta_porte`, `data_envio`, `documento`, `lead_id`,  `anexo`, `comments`) VALUES (:user,:carta_porte,:data_envio,:documento,:lead_id,:anexo,:comments)";
+        $query = "INSERT INTO `spice_report_correio`(`user`, `carta_porte`, `data_envio`, `documento`, `lead_id`, `anexo`, `comments`) VALUES (:user,:carta_porte,:data_envio,:documento,:lead_id,:anexo,:comments)";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":user" => $this->user_id, ":carta_porte" => $carta_porte, ":data_envio" => $data, ":documento" => $doc, ":lead_id" => $lead_id, ":anexo" => json_encode($input_doc_obj_assoc), ":comments" => $comments));
     }
@@ -153,11 +153,12 @@ class correio extends requests_class {
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable($show_admin) {
         $result['aaData'] = [];
-        $query = "SELECT id,user,carta_porte,data_envio,documento,lead_id,anexo,comments,status from spice_report_correio";
+        $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
+        $query = "SELECT id,user,carta_porte,data_envio,documento,lead_id,anexo,comments,status from spice_report_correio $filter";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
 
-        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             if ($row[6])
                 $row[6] = "<button data-anexo_id='$row[0]' class='btn ver_anexo_correio'><i class='icon-eye-open'></i>Anexos</button>";
             else
@@ -173,22 +174,21 @@ class correio extends requests_class {
                     $row[8] = "Rejeitado";
                     break;
             }
-            if ($this->user_level > 5 || $show_admin == 1) {
-                $row[9] = "<div class='btn-group'><button class='btn accept_report_correio btn-success icon-alone' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_correio btn-warning icon-alone' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
-            }
+            $row[9] = "<div class='btn-group'><button class='btn accept_report_correio btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_correio btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+
             $result['aaData'][] = $row;
         }
 
         return $result;
     }
 
-    public function accept_report_correio($id) {
+    public function accept($id) {
         $query = "Update spice_report_correio set status=1 where id=:id";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":id" => $id));
     }
 
-    public function decline_report_correio($id) {
+    public function decline($id) {
         $query = "Update spice_report_correio set status=2 where id=:id";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":id" => $id));
@@ -200,9 +200,8 @@ class correio extends requests_class {
         $stmt->execute(array(":id" => $id));
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-
-
-            foreach (json_decode($row["anexo"]) as $value) {
+            $_anexos = json_decode($row["anexo"]);
+            foreach ($_anexos as $value) {
                 $anexos[] = $value;
             }
         }
@@ -241,11 +240,12 @@ class frota extends requests_class {
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable($show_admin) {
         $result['aaData'] = [];
-        $query = "SELECT id,user,data,matricula,km,viatura,comments,ocorrencia,status from spice_report_frota";
+        $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
+        $query = "SELECT id,user,data,matricula,km,viatura,comments,ocorrencia,status from spice_report_frota $filter";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
 
-        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
 
 
             switch ($row[8]) {
@@ -260,44 +260,208 @@ class frota extends requests_class {
                     break;
             }
 
-            $row[7] = "<div> <button class='btn ver_ocorrencias'  data-relatorio_frota_id='" . $row[0] . "'><i class='icon-eye-open'></i>Ver Ocorrências</button></div>";
+            $row[7] = "<div> <button class='btn ver_ocorrencias' data-relatorio_frota_id='" . $row[0] . "'><i class='icon-eye-open'></i>Ver Ocorrências</button></div>";
 
-            if ($this->user_level > 5 || $show_admin == 1) {
-                $row[9] = "<div class='btn-group'><button class='btn accept_report_frota btn-success icon-alone' value='" . $row["id"] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_frota btn-warning icon-alone' value='" . $row["id"] . "'><i class= 'icon-remove'></i></button></div>";
-            }
+            $row[9] = "<div class='btn-group'><button class='btn accept_report_frota btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_frota btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+
             $result['aaData'][] = $row;
         }
         return $result;
     }
 
-    public function accept_report_frota($id) {
+    public function accept($id) {
 
         $query = "Update spice_report_frota set status=1 where id=?";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array($id));
     }
 
-    public function decline_report_frota($id) {
+    public function decline($id) {
         $query = "Update spice_report_frota set status=2 where id=?";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array($id));
     }
 
-    public function get_ocorrencias($id) {
+    public function get($id) {
         $ocorrencia = array();
         $query = "SELECT ocorrencia from spice_report_frota where id=?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-
-
-            foreach (json_decode($row["ocorrencia"]) as $value) {
+            $ocorrencias = json_decode($row["ocorrencia"]);
+            foreach ($ocorrencias as $value) {
                 $ocorrencia[] = array("data" => $value->data, "ocorrencia" => $value->ocorrencia, "km" => $value->km);
             }
         }
 
         return $ocorrencia;
+    }
+
+//EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
+}
+
+class mensal_stock extends requests_class {
+
+    public function __construct($db, $user_level, $user_id) {
+        parent::__construct($db, $user_level, $user_id);
+    }
+
+    public function create($data, $produtos) {
+        $query = "INSERT INTO `spice_report_stock` (`user`, `data`, `produtos`) VALUES (?,?,?)";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
+    }
+
+    public function edit() {
+        
+    }
+
+    public function delete() {
+        
+    }
+
+    //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
+    public function get_to_datatable($show_admin) {
+        $result['aaData'] = [];
+        $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
+        $query = "SELECT id, user, data, produtos, status from spice_report_stock $filter";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+
+
+            switch ($row[4]) {
+                case "0":
+                    $row[4] = "Pedido enviado";
+                    break;
+                case "1":
+                    $row[4] = "Aprovado";
+                    break;
+                case "2":
+                    $row[4] = "Rejeitado";
+                    break;
+            }
+
+            $row[3] = "<div> <button class='btn ver_itens' data-stock_id='" . $row[0] . "'><i class='icon-eye-open'></i>Itens</button></div>";
+
+            $row[5] = "<div class='btn-group'><button class='btn accept_report_stock btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_stock btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+
+            $result['aaData'][] = $row;
+        }
+        return $result;
+    }
+
+    public function accept($id) {
+        $query = "Update spice_report_stock set status=1 where id=?";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array($id));
+    }
+
+    public function decline($id) {
+        $query = "Update spice_report_stock set status=2 where id=?";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array($id));
+    }
+
+    public function get($id) {
+        $produtos = array();
+        $query = "SELECT produtos from spice_report_stock where id=?";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array($id));
+
+        while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
+            $_produtos = json_decode($row->produtos);
+            foreach ($_produtos as $value) {
+                $produtos[] = array("quantidade" => $value->quantidade, "descricao" => $value->descricao, "serie" => $value->serie, "obs" => $value->obs);
+            }
+        }
+
+        return $produtos;
+    }
+
+//EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
+}
+
+class movimentacao_stock extends requests_class {
+
+    public function __construct($db, $user_level, $user_id) {
+        parent::__construct($db, $user_level, $user_id);
+    }
+
+    public function create($data, $produtos) {
+        $query = "INSERT INTO `spice_report_movimentacao` (`user`, `data`, `produtos`) VALUES (?,?,?)";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
+    }
+
+    public function edit() {
+        
+    }
+
+    public function delete() {
+        
+    }
+
+    //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
+    public function get_to_datatable($show_admin) {
+        $result['aaData'] = [];
+        $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
+        $query = "SELECT id, user, data, produtos, status from spice_report_movimentacao $filter";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+
+            switch ($row[4]) {
+                case "0":
+                    $row[4] = "Pedido enviado";
+                    break;
+                case "1":
+                    $row[4] = "Aprovado";
+                    break;
+                case "2":
+                    $row[4] = "Rejeitado";
+                    break;
+            }
+
+            $row[3] = "<div> <button class='btn ver_itens' data-movimentacao_id='" . $row[0] . "'><i class='icon-eye-open'></i>Itens</button></div>";
+
+            $row[5] = "<div class='btn-group'><button class='btn accept_report_movimentacao btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_movimentacao btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+
+            $result['aaData'][] = $row;
+        }
+        return $result;
+    }
+
+    public function accept($id) {
+
+        $query = "Update spice_report_movimentacao set status=1 where id=?";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array($id));
+    }
+
+    public function decline($id) {
+        $query = "Update spice_report_movimentacao set status=2 where id=?";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array($id));
+    }
+
+    public function get($id) {
+        $produtos = array();
+        $query = "SELECT produtos from spice_report_movimentacao where id=?";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array($id));
+
+        while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
+            $_produtos = json_decode($row->produtos);
+            foreach ($_produtos as $value) {
+                $produtos[] = array("quantidade" => $value->quantidade, "destinario" => $value->destinario, "descricao" => $value->descricao, "serie" => $value->serie, "obs" => $value->obs);
+            }
+        }
+
+        return $produtos;
     }
 
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
