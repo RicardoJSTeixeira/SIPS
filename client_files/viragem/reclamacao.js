@@ -1,12 +1,7 @@
-////open_page("../client_files/goviragem/reclamacao.html")
-
-
+////open_page("../client_files/viragem/reclamacao.html")
 
 var tables = {por_abrir: {}, abertos: {}, fechados: {}, expirados: {}};
 var concess_mail = [];
-
-
- 
 
 $(function()
 {
@@ -29,9 +24,8 @@ $(function()
 
       });
 
-
       $("#tabs").tabs();
-      $(".datetime_range").datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt", minView:2}).keypress(function(e) {
+      $(".datetime_range").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView:2}).keypress(function(e) {
             e.preventDefault();
       }).bind("cut copy paste", function(e) {
             e.preventDefault();
@@ -71,7 +65,7 @@ $(function()
                     tp_reclamacao: $("#modal_expirados #tipificacao_reclamacao_e"),
                     email: $("#modal_expirados #emails_destino_e")
               };
-      $("#button_send_mail").on("click", function()
+      $("#button_send_mail").click(function()
       {
             if ($("#radio2").is(":checked") || $("#email_agentes").val() !== null)
             {
@@ -104,7 +98,7 @@ $(function()
                   $.jGrowl('Escolha um ou vários emails', {life: 3000});
             }
       });
-      $("#button_gravar").on("click", function()
+      $("#button_gravar").click(function()
       {
             $("#button_pesquisa").click();
             if ($("#modal_abertos_fechados #checkbox1").is(":checked"))
@@ -227,8 +221,7 @@ $(function()
       });
 });
 
-
-$("#concessionarios").on("change", function()
+$("#concessionarios").change(function()
 {
       $("#email_agentes").empty();
       var temp = "";
@@ -242,14 +235,12 @@ $("#concessionarios").on("change", function()
       $("#email_agentes").trigger("liszt:updated");
 });
 
-
-
-$("#button_pesquisa").on("click", function(e)
+$("#button_pesquisa").click(function(e)
 {
       e.preventDefault();
       if ($("#dateform").validationEngine('validate'))
       {
-            $("#report_reclamacao").removeClass("hidden");
+            $("#report_reclamacao").removeClass("hide");
             $.post("requests.php", {action: "get_table_data", data_inicio: $("#datetime_from").val(), data_fim: $("#datetime_to").val()},
             function(data) {
                   tables.por_abrir.fnClearTable();
@@ -283,7 +274,7 @@ $("#button_pesquisa").on("click", function(e)
       }
 });
 
-$("#report_download").on("click", function()
+$("#report_download").click(function()
 {
       if ($("#concessionarios_report").val() != "")
       {

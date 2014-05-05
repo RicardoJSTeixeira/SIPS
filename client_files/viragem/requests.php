@@ -25,23 +25,24 @@ switch ($action) {
 
     case "get_table_data":
         //ABERTOS E FECHADOS
-        $query = "SELECT id,lead_id,nome,campanha,comentario,email,data,tipo,tipo_reclamacao,tipificacao_reclamacao from reclamacao  where data between '$data_inicio' and '$data_fim' order by data desc";
+        $query = "SELECT id,lead_id,nome,campanha,comentario,email,data,tipo,tipo_reclamacao,tipificacao_reclamacao from reclamacao  where data between '$data_inicio 00:00:00' and '$data_fim 23:59:59' order by data desc";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            if ((int) $row["tipo"])
-                $js["fechados"][] = array("id" => $row["id"],"nome" => $row["nome"], "campanha" => $row["campanha"], "tipo_reclamacao" => $row["tipo_reclamacao"], "tipificacao_reclamacao" => $row["tipificacao_reclamacao"], "data" => $row["data"], "lead_id" => $row["lead_id"], "comentario" => $row["comentario"], "email" => json_decode($row["email"]), "tipo" => ((int) $row["tipo"]) ? "Fechados" : "Abertos");
-            else
-                $js["abertos"][] = array("id" => $row["id"],"nome" => $row["nome"], "campanha" => $row["campanha"], "tipo_reclamacao" => $row["tipo_reclamacao"], "tipificacao_reclamacao" => $row["tipificacao_reclamacao"], "data" => $row["data"],  "lead_id" => $row["lead_id"], "comentario" => $row["comentario"], "email" => json_decode($row["email"]), "tipo" => ((int) $row["tipo"]) ? "Fechados" : "Abertos");
+            if ((int) $row["tipo"]) {
+                $js["fechados"][] = array("id" => $row["id"], "nome" => $row["nome"], "campanha" => $row["campanha"], "tipo_reclamacao" => $row["tipo_reclamacao"], "tipificacao_reclamacao" => $row["tipificacao_reclamacao"], "data" => $row["data"], "lead_id" => $row["lead_id"], "comentario" => $row["comentario"], "email" => json_decode($row["email"]), "tipo" => ((int) $row["tipo"]) ? "Fechados" : "Abertos");
+            } else {
+                $js["abertos"][] = array("id" => $row["id"], "nome" => $row["nome"], "campanha" => $row["campanha"], "tipo_reclamacao" => $row["tipo_reclamacao"], "tipificacao_reclamacao" => $row["tipificacao_reclamacao"], "data" => $row["data"], "lead_id" => $row["lead_id"], "comentario" => $row["comentario"], "email" => json_decode($row["email"]), "tipo" => ((int) $row["tipo"]) ? "Fechados" : "Abertos");
+            }
         }
         //EXPIRADOS
         $date = date("Y-m-d H:i:s", strtotime('-1 month'));
-        $query = "SELECT id,lead_id,nome,campanha,comentario,email,data,tipo,tipo_reclamacao,tipificacao_reclamacao from reclamacao where data<'$date' and tipo='0' order  by data desc";
+        $query = "SELECT id,lead_id,nome,campanha,comentario,email,data,tipo,tipo_reclamacao,tipificacao_reclamacao from reclamacao where data<'$date 00:00:00' and tipo='0' order  by data desc";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            $js["expirados"][] = array("id" => $row["id"],"nome" => $row["nome"], "campanha" => $row["campanha"], "tipo_reclamacao" => $row["tipo_reclamacao"], "tipificacao_reclamacao" => $row["tipificacao_reclamacao"], "data" => $row["data"],  "lead_id" => $row["lead_id"], "comentario" => $row["comentario"], "email" => json_decode($row["email"]), "tipo" => ((int) $row["tipo"]) ? "Fechado" : "Aberto");
+            $js["expirados"][] = array("id" => $row["id"], "nome" => $row["nome"], "campanha" => $row["campanha"], "tipo_reclamacao" => $row["tipo_reclamacao"], "tipificacao_reclamacao" => $row["tipificacao_reclamacao"], "data" => $row["data"], "lead_id" => $row["lead_id"], "comentario" => $row["comentario"], "email" => json_decode($row["email"]), "tipo" => ((int) $row["tipo"]) ? "Fechado" : "Aberto");
         }
         //POR ABRIR
-        $query = "SELECT a.lead_id,c.first_name,a.campaign_id,b.campaign_name, a.call_date from vicidial_log a inner join vicidial_campaigns b on a.campaign_id=b.campaign_id left join vicidial_list c on a.lead_id=c.lead_id left join reclamacao d on d.lead_id=a.lead_id where a.status='S00014' and d.lead_id is NULL and call_date between '$data_inicio' and '$data_fim'";
+        $query = "SELECT a.lead_id,c.first_name,a.campaign_id,b.campaign_name, a.call_date from vicidial_log a inner join vicidial_campaigns b on a.campaign_id=b.campaign_id left join vicidial_list c on a.lead_id=c.lead_id left join reclamacao d on d.lead_id=a.lead_id where a.status='S00014' and d.lead_id is NULL and call_date between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             $js["por_abrir"][] = array("nome" => $row["first_name"], "campanha" => $row["campaign_name"], "data" => $row["call_date"], "campaign_id" => $row["campaign_id"], "lead_id" => $row["lead_id"], "tipo" => "por_abrir");
@@ -79,8 +80,9 @@ switch ($action) {
     case "send_mail":
         $result = 1;
         $email = is_array($email) ? $email : array();
+        $date = date("Y-m-d H:i:s");
         //save to DB
-        $query = "INSERT INTO `reclamacao`(`id`, `lead_id`, `nome`, `campanha`, `comentario`, `email`, `data`, `tipo`,tipo_reclamacao,tipificacao_reclamacao,concessionario) VALUES (NULL,$lead_id,'$nome','$campanha','$comentario','" . mysql_real_escape_string(json_encode($email)) . "','" . date("Y-m-d H:i:s") . "',$tipo,'$tipo_reclamacao','$tipificacao_reclamacao','$concessionario')";
+        $query = "INSERT INTO `reclamacao`(`lead_id`, `nome`, `campanha`, `comentario`, `email`, `data`, `tipo`,tipo_reclamacao,tipificacao_reclamacao,concessionario) VALUES ($lead_id,'$nome','$campanha','$comentario','" . mysql_real_escape_string(json_encode($email)) . "','" . $date . "',$tipo,'$tipo_reclamacao','$tipificacao_reclamacao','$concessionario')";
         $query = mysql_query($query, $link) or die(mysql_error());
 
         if ($tipo) {
@@ -90,7 +92,10 @@ switch ($action) {
             $mailer = Swift_Mailer::newInstance($transport);
             // Create the message
             $message = Swift_Message::newInstance();
-            $query = "SELECT date_of_birth,address3,address2,last_name,middle_initial from vicidial_list where lead_id='$lead_id'";
+            $daFields = getDafields($lead_id);
+
+            $query = "SELECT " . $daFields['Data da Visita'] . " 'data', " . $daFields['Telefone'] . " 'telemovel', " . $daFields['Marca'] . " 'marca'," . $daFields['Modelo'] . " 'modelo'," . $daFields['Matricula'] . " 'matricula' from vicidial_list where lead_id='$lead_id'";
+            
             $query = mysql_query($query, $link) or die(mysql_error());
             $row = mysql_fetch_assoc($query);
 
@@ -99,9 +104,6 @@ switch ($action) {
                     ->setSubject($tipo_reclamacao)
                     ->setBody(
                             '
-                        
-
-
 <div align="center">
   <table border="0" cellspacing="0" cellpadding="0" width="500" style="width:375.0pt">
     <tbody>
@@ -142,7 +144,7 @@ switch ($action) {
                         </span>
                       </b>
                       <span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
-                        &nbsp;'.$tipo_reclamacao.' 
+                        &nbsp;' . $tipo_reclamacao . ' 
                         <u>
                         </u>
                         <u>
@@ -165,7 +167,7 @@ switch ($action) {
                         </span>
                       </b>
                       <span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
-                        &nbsp;'.$tipificacao_reclamacao .'
+                        &nbsp;' . $tipificacao_reclamacao . '
                         <u>
                         </u>
                         <u>
@@ -188,7 +190,7 @@ switch ($action) {
                         </span>
                       </b>
                       <span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
-                        &nbsp;'. $row["country_code"] .'
+                        &nbsp;' . $row["data"] . '
                         <u>
                         </u>
                         <u>
@@ -211,7 +213,7 @@ switch ($action) {
                         </span>
                       </b>
                       <span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
-                        &nbsp;'.$date.'
+                        &nbsp;' . $date . '
                         <u>
                         </u>
                         <u>
@@ -243,7 +245,7 @@ switch ($action) {
                     <div>
                       <p class="MsoNormal">
                         <span style="font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
-                          Nome:&nbsp;'. $nome .'
+                          Nome:&nbsp;' . $nome . '
                         </span>
                         <span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
                           <u>
@@ -256,7 +258,7 @@ switch ($action) {
                     <div>
                       <p class="MsoNormal">
                         <span style="font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
-                          Telemóvel:&nbsp;'.$row["address3"].'
+                          Telemóvel:&nbsp;' . $row["telemovel"] . '
                         </span>
                         <span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
                           <u>
@@ -270,7 +272,7 @@ switch ($action) {
                     <div>
                       <p class="MsoNormal">
                         <span style="font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
-                          Marca:&nbsp;'.$row["extra5"].'
+                          Marca:&nbsp;' . $row["marca"] . '
                         </span>
                         <span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
                           <u>
@@ -283,7 +285,7 @@ switch ($action) {
                     <div>
                       <p class="MsoNormal">
                         <span style="font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
-                          Modelo:&nbsp;'.$row["city"].'
+                          Modelo:&nbsp;' . $row["modelo"] . '
                         </span>
                         <span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
                           <u>
@@ -296,7 +298,7 @@ switch ($action) {
                     <div>
                       <p class="MsoNormal">
                         <span style="font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
-                          Matrícula:&nbsp;'.$row["title"].'
+                          Matrícula:&nbsp;' . $row["matricula"] . '
                         </span>
                         <span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
                           <u>
@@ -321,7 +323,7 @@ switch ($action) {
                     <p class="MsoNormal">
                       <span>
                         <span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">
-                          '.$comentario.'
+                          ' . $comentario . '
                         </span>
                         <u>
                         </u>
@@ -415,9 +417,6 @@ switch ($action) {
         break;
 
 
-
-
-
     case "write_to_file":
         header('Content-Encoding: UTF-8');
         header('Content-type: text/csv; charset=UTF-8');
@@ -426,16 +425,12 @@ switch ($action) {
 
         $output = fopen('php://output', 'w');
 
-
-        $titles = array('lead', 'nome', 'campanha', 'comentario', 'email', 'data', 'tipo', 'tipo_reclamacao', 'tipificacao_reclamacao', 'concessionario');
-
-
+        $titles = array('Lead', 'Nome', 'Campanha', 'Comentário', 'Email', 'Data', 'Tipo', 'Tipo Reclamação', 'Tipificação Reclamação', 'Concessionário');
 
         fputcsv($output, $titles, ";", '"');
 
         $query = "SELECT lead_id,nome,campanha,comentario,email,data,tipo,tipo_reclamacao,tipificacao_reclamacao,concessionario from reclamacao where data between '$data_inicio' and '$data_fim' and concessionario=$concessionario_id";
         $result = mysql_query($query, $link) or die(mysql_error());
-
 
         $client = array();
         while ($row1 = mysql_fetch_assoc($result)) {
@@ -452,16 +447,21 @@ switch ($action) {
             fputcsv($output, $client, ";", '"');
         }
 
-
-
         fclose($output);
         break;
 }
-?>
 
+function getDafields($lead_id) {
+    global $link;
+    $result = mysql_query("SELECT campaign_id id from vicidial_log where lead_id='$lead_id' and status='S00014' limit 1;", $link) or die(mysql_error());
+    $log = mysql_fetch_object($result);
 
+    $fields_raw = mysql_query("SELECT name, display_name from vicidial_list_ref where campaign_id='$log->id';", $link) or die(mysql_error());
 
+    $fields = array();
+    while ($row = mysql_fetch_object($fields_raw)) {
+        $fields[$row->display_name] = $row->name;
+    }
 
-
-
-
+    return $fields;
+}
