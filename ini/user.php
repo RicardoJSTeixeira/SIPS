@@ -332,30 +332,68 @@ class mysiblings extends user {
     }
 
     public function get_campaigns() {
+        $camp = array();
+
         if ($this->is_all_campaigns == 1)
             $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y' order by campaign_name asc";
         else
             $query = "SELECT  campaign_id id,campaign_name name FROM  vicidial_campaigns where active='y' and campaign_id in ('" . join("','", $this->allowed_campaigns) . "') order by campaign_name asc";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+            $query1 = "SELECT count(id_camp_linha) count from script_assoc where id_camp_linha=:id_cl and tipo='campaign'";
+            $stmt1 = $this->db->prepare($query1);
+            $stmt1->execute(array(":id_cl" => $row["id"]));
+            $row1 = $stmt1->fetch(PDO::FETCH_ASSOC);
+
+            $row["script_count"] = $row1["count"];
+            $camp[] = $row;
+        }
+        return $camp;
     }
 
     public function get_bd() {
+        $bd = array();
         if ($this->is_all_campaigns == 1)
             $query = "SELECT  vl.list_id id,vl.list_name name,vl.campaign_id,vl.active,vc.campaign_name FROM  vicidial_lists vl left join vicidial_campaigns vc on vc.campaign_id=vl.campaign_id order by vc.campaign_name,vl.list_id asc";
         else
             $query = "SELECT  vl.list_id id,vl.list_name name,vl.campaign_id,vl.active,vc.campaign_name FROM  vicidial_lists vl left join vicidial_campaigns vc on vc.campaign_id=vl.campaign_id where  vl.campaign_id in ('" . join("','", $this->allowed_campaigns) . "') order by vc.campaign_name,vl.list_id asc";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+            $query1 = "SELECT count(id_camp_linha) count from script_assoc where id_camp_linha=:id_cl and tipo='bd'";
+            $stmt1 = $this->db->prepare($query1);
+            $stmt1->execute(array(":id_cl" => $row["id"]));
+            $row1 = $stmt1->fetch(PDO::FETCH_ASSOC);
+
+            $row["script_count"] = $row1["count"];
+            $bd[] = $row;
+        }
+        return $bd;
     }
 
     public function get_linha_inbound() {
+        $li = array();
         $query = "SELECT group_id  id,group_name  name FROM vicidial_inbound_groups";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+            $query1 = "SELECT count(id_camp_linha) count from script_assoc where id_camp_linha=:id_cl and tipo='bd'";
+            $stmt1 = $this->db->prepare($query1);
+            $stmt1->execute(array(":id_cl" => $row["id"]));
+            $row1 = $stmt1->fetch(PDO::FETCH_ASSOC);
+
+            $row["script_count"] = $row1["count"];
+            $li[] = $row;
+        }
+        return $li;
     }
 
     public function get_feedbacks($campaign_id) {
