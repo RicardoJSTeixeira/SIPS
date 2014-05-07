@@ -11,6 +11,7 @@ require "$root/AM/lib_php/requests.php";
 require "$root/AM/lib_php/db.php";
 require "$root/AM/lib_php/calendar.php";
 require "$root/AM/lib_php/user.php";
+require "$root/AM/lib_php/msg_alerts.php";
 
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
@@ -28,7 +29,7 @@ $relatorio_correio = new correio($db, $userID->user_level, $userID->username);
 $relatorio_frota = new frota($db, $userID->user_level, $userID->username);
 $relatorio_mensal_stock = new mensal_stock($db, $userID->user_level, $userID->username);
 $relatorio_movimentacao_stock = new movimentacao_stock($db, $userID->user_level, $userID->username);
-    
+$alert = new alerts($db, $userID->username);
 switch ($action) {
     //ADDs
     case "criar_relatorio_frota":
@@ -116,7 +117,11 @@ switch ($action) {
     //Accepts Declines
 
     case "accept_apoio_marketing":
-        echo json_encode($apoio_marketing->accept($id));
+        $result=$apoio_marketing->accept($id);
+        if($result){
+            $alert->make($result->user, 'Apoio Mkt. Aprovado') ;
+        }
+        echo json_encode(true);
         break;
 
     case "decline_apoio_marketing":
@@ -125,39 +130,76 @@ switch ($action) {
         while ($rst = array_pop($idRst)) {
             $calendar->removeReserva($rst);
         }
-        echo json_encode($apoio_marketing->decline($id));
+        $result=$apoio_marketing->decline($id);
+        if($result){
+            $alert->make($result->user, "Apoio Mkt. Recusado Motivo:$motivo") ;
+        }
+        echo json_encode(true);
         break;
 
     case "accept_report_correio":
-        echo json_encode($relatorio_correio->accept($id));
+        $result=$relatorio_correio->accept($id);
+        if($result){
+            $alert->make($result->user, 'Correio Aprovado') ;
+        }
+        echo json_encode(true);
         break;
 
     case "decline_report_correio":
-        echo json_encode($relatorio_correio->decline($id));
+        $result=$relatorio_correio->decline($id);
+        if($result){
+            $alert->make($result->user, 'Correio Recusado') ;
+        }
+        echo json_encode(true);
         break;
 
     case "accept_report_frota":
-        echo json_encode($relatorio_frota->accept($id));
+        $result=$relatorio_frota->accept($id);
+        if($result){
+            $alert->make($result->user, 'Frota Aceite') ;
+        }
+        echo json_encode(true);
         break;
 
     case "decline_report_frota":
-        echo json_encode($relatorio_frota->decline($id));
+        $result=$relatorio_frota->decline($id);
+        if($result){
+            $alert->make($result->user, 'Frota Recusado') ;
+        }
+        echo json_encode(true);
         break;
 
     case "accept_report_stock":
+        $result=$relatorio_frota->accept($id);
+        if($result){
+            $alert->make($result->user, 'Frota Aceite') ;
+        }
+        echo json_encode(true);
         echo json_encode($relatorio_mensal_stock->accept($id));
         break;
 
     case "decline_report_stock":
-        echo json_encode($relatorio_mensal_stock->decline($id));
+        $result=$relatorio_mensal_stock->decline($id);
+        if($result){
+            $alert->make($result->user, 'Mensal Recusado') ;
+        }
+        echo json_encode(true);
         break;
 
     case "accept_report_movimentacao":
-        echo json_encode($relatorio_movimentacao_stock->accept($id));
+        $result=$relatorio_movimentacao_stock->accept($id);
+        if($result){
+            $alert->make($result->user, 'Movimentação Aceite') ;
+        }
+        echo json_encode(true);
         break;
 
     case "decline_report_movimentacao":
-        echo json_encode($relatorio_movimentacao_stock->decline($id));
+        $result=$relatorio_movimentacao_stock->decline($id);
+        if($result){
+            $alert->make($result->user, 'Movimentação Recusado') ;
+        }
+        echo json_encode(true);
         break;
    
     

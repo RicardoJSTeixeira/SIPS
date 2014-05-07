@@ -1,7 +1,6 @@
 var SpiceU = {};
 $.post("ajax/user_info.php", function(user) {
     SpiceU = user;
-    $.jGrowl('Bem vindo ' + user.name, {life: 4000});
     $("#user-name").text(user.name);
 
     if (user.user_level > 1) {
@@ -53,28 +52,47 @@ $(function() {
         $.history.push(href);
 
     });
-
-
     get_messages();
+    var messages_timeout = setInterval(get_messages, 1000 * 60);
+    get_alerts();
+    var alerts_timeout = setInterval(get_alerts, 1000 * 60);
 
 });
 
-$(".ichat").on("click", ".dismiss_msg", function()
-{
-    var id_msg = $(this).data().msg_id;
-    $.post("ajax/general_functions.php", {action: "edit_message_status", id_msg: id_msg}, function()
+$(".ichat").on("click", ".dismiss_msg", function(){
+    $.post("ajax/general_functions.php", {action: "edit_message_status", id_msg: $(this).data().msg_id}, function()
     {
         get_messages();
     }, "json");
 });
 
 
-$("#mark_all_read").click(function()
-{
+$("#mark_all_read").click(function(){
     $.post("ajax/general_functions.php", {action: "edit_message_status_by_user"}, function()
     {
         get_messages();
     }, "json");
+});
+
+$(".ichat").on("click", ".ok_alert", function(){
+    $.post("ajax/general_functions.php", {action: "set_readed", id_msg: $(this).data().id}, function()
+    {
+        get_alerts();
+    }, "json");
+});
+
+
+$("#mark_all_alerts_read").click(function(){
+    $.post("ajax/general_functions.php", {action: "set_all_readed"}, function()
+    {
+        get_alerts();
+    }, "json");
+});
+
+$("#notifications").click(function()
+{
+    var a=$("#alert_time");
+        a.text(a.data().update.fromNow());
 });
 
 
@@ -85,21 +103,43 @@ function get_messages()
     $.post("ajax/general_functions.php", {action: "get_unread_messages"}, function(data) {
         $("#imessage_placeholder").empty();
         var msg = "";
-        var msg_count = 0;
         $.each(data, function()
         {
-            msg_count++;
             msg += "<div class='imessage'>\n\
-                    <div class='imes'>\n\
-                    <div class='iauthor'>" + this.from + "</div>\n\
-                    <div class='itext'>" + this.msg + "</div>\n\
-                    </div>\n\
-                    <div class='idelete'><a><span data-msg_id='" + this.id_msg + "' class='dismiss_msg'><i class='icon-remove'></i></span></a></div>\n\
-                    <div class='clear'></div>\n\
+                        <div class='imes'>\n\
+                            <div class='iauthor'>" + this.from + "</div>\n\
+                            <div class='itext'>" + this.msg + "</div>\n\
+                        </div>\n\
+                        <div class='idelete'><a><span data-msg_id='" + this.id_msg + "' class='dismiss_msg'><i class='icon-remove'></i></span></a></div>\n\
+                        <div class='clear'></div>\n\
                     </div>";
         });
-        $("#msg_count").text(msg_count);
+        $("#msg_count").text(data.length);
         $("#imessage_placeholder").append(msg);
+    }, "json");
+}
+
+function get_alerts()
+{
+    console.log('ola eu sou um aletrsasdasdasdkluiyg !')
+
+    $.post("ajax/general_functions.php", {action: "get_alerts"}, function(data) {
+        $("#alerts-content").empty();
+        $("#alert_time").data("update",moment());
+        var msg = "";
+        $.each(data, function()
+        {
+            msg += "<div class='imessage'>\n\
+                        <div class='r_icon'><a href='javascript:void(0)' class='ok_alert' data-id='" + this.id + "'><i class='icon-comment'></i></a></div>\n\
+                        <div class='r_info'>\n\
+                            <div class='r_text'>" + this.alert + "</div>\n\
+                            <div class='r_text'><i class='icon-time'></i>"+moment(this.entry_date).fromNow()+"</div>\n\
+                        </div>\n\
+                        <div class='clear'></div>\n\
+                    </div>";
+        });
+        $("#alerts-count").text(data.length);
+        $("#alerts-content").append(msg);
     }, "json");
 }
 

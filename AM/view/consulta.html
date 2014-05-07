@@ -5,7 +5,7 @@
 <div id="main_consulta_div">
     <div id="encomenda_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true" >
         <div class="modal-header">
-            <h3 id="myModalLabel">Encomenda</h3>
+            <h3>Encomenda</h3>
         </div>
         <div class="modal-body"  >
             Deseja criar uma nova encomenda ou marcação para este cliente?
@@ -186,25 +186,34 @@
                                         <tr>
                                             <th>Dir</th>
                                             <td>
-                                                <input type="text" id='dMarca' class="span"/>
+                                                <input type="text" id='dMarca' class="span" readonly value="Oticon"/>
                                             </td>
                                             <td>
-                                                <input type="text" id='dGama' class="span"/>
+                                                <select id='dGama' class="span">
+                                                    <option value="">Escolha</option><option value="Alta Pro">Alta Pro</option><option value="Intiga 10">Intiga 10</option><option value="Chili 9">Chili 9</option><option value="Alta Pro">Alta Pro</option><option value="Agil">Agil</option><option value="Intiga 8">Intiga 8</option><option value="Acto Pro">Acto Pro</option><option value="Chili 7">Chili 7</option><option value="Acto Pro">Acto Pro</option><option value="Dual M9">Dual M9</option><option value="Chili 5">Chili 5</option><option value="Ino Pro">Ino Pro</option><option value="Intiga 6">Intiga 6</option><option value="Sumo DM">Sumo DM</option><option value="Dual M7">Dual M7</option><option value="Ino Pro">Ino Pro</option><option value="Dual M5">Dual M5</option><option value="Hit">Hit</option><option value="Hit">Hit</option><option value="AM 90 (swift 90+)">AM 90 (swift 90+)</option><option value="AM 100 (swift 70+)">AM 100 (swift 70+)</option><option value="Nera">Nera</option><option value="Nera Pro">Nera Pro</option>
+                                                </select>
                                             </td>
                                             <td>
-                                                <input type="text" id='dModelo' class="span"/>
+                                                <select id='dModelo' class="span">
+                                                    <option value="">Escolha</option><option value="CIC">CIC</option><option value="CIC PW">CIC PW</option><option value="MIC">MIC</option><option value="MIC PW">MIC PW</option><option value="ITE">ITE</option><option value="ITE PW">ITE PW</option><option value="CE">CE</option><option value="CE PW">CE PW</option><option value="BTE">BTE</option><option value="MINI-BTE">MINI-BTE</option><option value="RITE">RITE</option><option value="RITE PW">RITE PW</option><option value="MINI-RITE">MINI-RITE</option><option value="MINI-RITE PW">MINI-RITE PW</option>
+                                                </select>
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>Esq</th>
                                             <td>
-                                                <input type="text" id='eMarca' class="span"/>
+                                                <input type="text" id='eMarca' class="span" readonly value="Oticon"/>
                                             </td>
                                             <td>
-                                                <input type="text" id='eGama' class="span"/>
+
+                                                <select id='eGama' class="span">
+                                                    <option value="">Escolha</option><option value="Alta Pro">Alta Pro</option><option value="Intiga 10">Intiga 10</option><option value="Chili 9">Chili 9</option><option value="Alta Pro">Alta Pro</option><option value="Agil">Agil</option><option value="Intiga 8">Intiga 8</option><option value="Acto Pro">Acto Pro</option><option value="Chili 7">Chili 7</option><option value="Acto Pro">Acto Pro</option><option value="Dual M9">Dual M9</option><option value="Chili 5">Chili 5</option><option value="Ino Pro">Ino Pro</option><option value="Intiga 6">Intiga 6</option><option value="Sumo DM">Sumo DM</option><option value="Dual M7">Dual M7</option><option value="Ino Pro">Ino Pro</option><option value="Dual M5">Dual M5</option><option value="Hit">Hit</option><option value="Hit">Hit</option><option value="AM 90 (swift 90+)">AM 90 (swift 90+)</option><option value="AM 100 (swift 70+)">AM 100 (swift 70+)</option><option value="Nera">Nera</option><option value="Nera Pro">Nera Pro</option>
+                                                </select>
                                             </td>
                                             <td>
-                                                <input type="text" id='eModelo' class="span"/>
+                                                <select id='eModelo' class="span">
+                                                    <option value="">Escolha</option><option value="CIC">CIC</option><option value="CIC PW">CIC PW</option><option value="MIC">MIC</option><option value="MIC PW">MIC PW</option><option value="ITE">ITE</option><option value="ITE PW">ITE PW</option><option value="CE">CE</option><option value="CE PW">CE PW</option><option value="BTE">BTE</option><option value="MINI-BTE">MINI-BTE</option><option value="RITE">RITE</option><option value="RITE PW">RITE PW</option><option value="MINI-RITE">MINI-RITE</option><option value="MINI-RITE PW">MINI-RITE PW</option>
+                                                </select>
                                             </td>
                                         </tr>
                                     </tbody>

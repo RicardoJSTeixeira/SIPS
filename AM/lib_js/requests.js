@@ -150,9 +150,9 @@ var requests = function(basic_path, options_ext)
             am_zone.on("click", ".decline_apoio_marketing", function()
             {
                 var this_button = $(this);
-                bootbox.confirm("Tem a certeza?", function(result) {
-                    if (result) {
-                        $.post('/AM/ajax/requests.php', {action: "decline_apoio_marketing", id: this_button.val()}, function() {
+                bootbox.prompt("Qual o motivo?", function(result) {
+                    if (result!==null) {
+                        $.post('/AM/ajax/requests.php', {action: "decline_apoio_marketing", id: this_button.val(),motivo:result}, function() {
                             this_button.parent().prev().text("Rejeitado");
                             apoio_markting_table.fnReloadAjax();
                         }, "json");
