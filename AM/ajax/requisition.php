@@ -3,10 +3,12 @@
 error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
 
+
+
+
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-require "$root/ini/db.php";
-require "$root/ini/dbconnect.php";
-require "$root/ini/user.php";
+require "$root/AM/lib_php/db.php";
+require "$root/AM/lib_php/user.php";
 require "$root/AM/lib_php/products.php";
 require "$root/AM/lib_php/requisitions.php";
 foreach ($_POST as $key => $value) {
@@ -16,10 +18,12 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 
-$user = new users($db);
+$user = new UserLogin($db);
+$user->confirm_login();
+$userID = $user->getUser();
 
 $products = new products($db);
-$requisitions = new requisitions($db, $user->user_level, $user->id);
+$requisitions = new requisitions($db, $userID->user_level, $userID->username);
 
 switch ($action) {
     case "listar_produtos_to_datatable":
@@ -27,7 +31,7 @@ switch ($action) {
         break;
 
     case "listar_requisition_to_datatable":
-        echo json_encode($requisitions->get_requisitions_to_datatable($show_admin));
+        echo json_encode($requisitions->get_requisitions_to_datatable());
         break;
 
     case "listar_produtos":

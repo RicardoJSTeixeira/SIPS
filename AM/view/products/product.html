@@ -23,12 +23,14 @@
                 <span>Categoria</span>
                 <div class="formRight">
                     <select id="edit_product_category" class="span">
-                        <option value="pilha" >Pilha</option>
-                        <option value="aparelho">Aparelho</option>
-                        <option value="acessorio" >Acessórios</option>
-                        <option value="molde" >Molde</option>
-                        <option value="economato" >Economato</option>
-                        <option value="gama" >Gama</option>
+                        <option value="BTE">BTE</option>
+                        <option value="RITE">RITE</option>
+                        <option value="INTRA">INTRA</option>
+                        <option value="Pilha" >Pilha</option>
+                        <option value="Acessório" >Acessórios</option>
+                        <option value="Molde" >Molde</option>
+                        <option value="Economato" >Economato</option>
+                        <option value="Gama" >Gama</option>
                     </select>
                 </div> 
             </div>
@@ -147,7 +149,9 @@
                 </table>
             </div>
         </form>
+        <div class="clear"></div>
     </div>
+
     <div class="modal-footer">
         <button id="edit_product_button" class="btn btn-success">Editar</button>
         <button class="btn btn-link" data-dismiss="modal" id="sair_button" aria-hidden="true">Fechar</button>
@@ -166,12 +170,14 @@
         <select class="chosen-select" id="new_product_parent" multiple data-placeholder="Selecione um parent"></select>
         <label for="new_product_category">Categoria</label>
         <select id="new_product_category" class="span">
-            <option value="pilha" >Pilha</option>
-            <option value="aparelho">Aparelho</option>
-            <option value="acessorio" >Acessórios</option>
-            <option value="molde" >Molde</option>
-            <option value="economato" >Economato</option>
-            <option value="gama" >Gama</option>
+                   <option value="BTE">BTE</option>
+                        <option value="RITE">RITE</option>
+                        <option value="INTRA">INTRA</option>
+                        <option value="Pilha" >Pilha</option>
+                        <option value="Acessório" >Acessórios</option>
+                        <option value="Molde" >Molde</option>
+                        <option value="Economato" >Economato</option>
+                        <option value="Gama" >Gama</option>
         </select>
 
         <label>Tipo</label>
@@ -207,28 +213,23 @@
         <table class="table table-bordered table-mod">
             <thead>
                 <tr>
-                    <th>
-                        Cor
-                    </th>
-                    <th>
-                        Nome
-                    </th>
-                    <th>
-
-                    </th>
+                    <th>Cor</th>
+                    <th>Nome</th>
+                    <th><button class="btn btn-primary  icon-alone" title="Adiciona uma nova cor ao produto" id="new_product_button_color_add_line"><span class="icon-plus"></span></button></th>
                 </tr>
             </thead>
             <tbody id="new_product_table_tbody_color">
             </tbody>
         </table>
-        <div class="formRow pull-right">
-            <button class="btn btn-primary" id="new_product_button_color_add_line"><span class="icon-plus"></span>Adicionar Cor</button>
-        </div>
+
     </div>
-    <div class="formRow">
+
+    <div class="form-footer">
         <button class="right btn btn-success" id="create_new_product_button"><i class="icon-plus-sign"></i>Criar</button> 
+        <div class="clear"></div>
     </div>
-    <div class="clear"></div>
+
+
 </form>
 
 <!--REMOVER PRODUTO-->
@@ -240,6 +241,7 @@
     <div class="modal-body">
         <p>Tem a certeza que deseja eliminar o produto?</p>
     </div>
+    <div class="clear"></div>
     <div class="modal-footer">
         <button class="btn btn-danger" id="remove_product_button">Sim, eliminar</button>
         <button class="btn btn-link" data-dismiss="modal" aria-hidden="true">Cancelar</button>

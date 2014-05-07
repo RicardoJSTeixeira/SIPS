@@ -4,9 +4,8 @@ error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
 
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-require "$root/ini/db.php";
-require "$root/ini/dbconnect.php";
-require "$root/ini/user.php";
+require "$root/AM/lib_php/db.php";
+require "$root/AM/lib_php/user.php";
 require "$root/AM/lib_php/products.php";
 
 foreach ($_POST as $key => $value) {
@@ -16,8 +15,9 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 
-$user = new users($db);
-
+$user = new UserLogin($db);
+$user->confirm_login();
+    
 $products = new products($db);
 
 
@@ -30,7 +30,7 @@ switch ($action) {
         break;
 
     case "criar_produto":
-        echo json_encode($products->add_product($name,  $max_req_m, $max_req_s, $parent, $category, $type, $color, $active));
+        echo json_encode($products->add_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active));
         break;
 
     case "get_produtos":
@@ -47,7 +47,7 @@ switch ($action) {
 
     case "edit_product":
         $produto = new product($db, $id);
-        echo json_encode($produto->edit_product($name,  $max_req_m, $max_req_s, $parent, $category, $type, $color, $active));
+        echo json_encode($produto->edit_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active));
         break;
 
     case "add_promotion":

@@ -8,20 +8,23 @@ Class requisitions {
         $this->_db = $db;
     }
 
-    public function get_requisitions_to_datatable($show_admin) {
-
+    public function get_requisitions_to_datatable() {
         $result['aaData'] = [];
-        $query = "SELECT sr.id,sr.user,sr.type,sr.lead_id,sr.date,sr.contract_number,vl.extra2,sr.attachment,'products',sr.status  from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id where sr.user=:user";
+        $filter = ($this->_user_level < 5 ) ? ' where sr.user like "' . $this->_user_id . '" ' : '';
+        $query = "SELECT sr.id,sr.user,sr.type,sr.lead_id,sr.date,sr.contract_number,vl.extra2,sr.attachment,'products',sr.status  from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id $filter";
+
         $stmt = $this->_db->prepare($query);
-        $stmt->execute(array(":user" => $this->_user_id));
+        $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+
             if ($row[2] == "mensal") {
                 $row[2] = "Mensal";
                 $row[6] = "<i class='icon-ban-circle'></i>";
+                $row[5] = "<i class='icon-ban-circle'></i>";
             } else {
                 $row[2] = "Especial";
-                if ($show_admin == 1) {
+                if ($this->user_level > 5) {
                     if ($row[6])
                         $row[6] = "$row[6]";
                     else
@@ -46,8 +49,7 @@ Class requisitions {
             }
 
             $row[8] = "<div><button class='btn ver_requisition_products' value='" . $row[0] . "'><i class='icon-eye-open'></i>Ver</button></div>";
-            if ($this->_user_level > 5 || $show_admin == 1)
-                $row[10] = $row[10] . " <span class='btn-group'><button class='btn accept_requisition icon-alone btn-success' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_requisition icon-alone btn-warning' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div></span>";
+            $row[10] = $row[10] . " <span class='btn-group'><button class='btn accept_requisition icon-alone btn-success' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_requisition icon-alone btn-warning' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div></span>";
 
             $result['aaData'][] = $row;
         }
@@ -65,7 +67,7 @@ Class requisitions {
         $query = "INSERT INTO `spice_requisition`( `user`, `type`, `lead_id`, `date`, `contract_number`, `attachment`, `products`,`status`) VALUES ( :user,:type,:lead_id,:date,:contract_number,:attachment,:products,:status)";
         $stmt = $this->_db->prepare($query);
         $data = date('Y-m-d H:i:s');
-        $stmt->execute(array(":user" => $this->_user_id, ":type" => $type, ":lead_id" => $lead_id, ":date" => $data, ":contract_number" =>  $contract_number, ":attachment" => $attachment, ":products" => json_encode($products_list), ":status" => 0));
+        $stmt->execute(array(":user" => $this->_user_id, ":type" => $type, ":lead_id" => $lead_id, ":date" => $data, ":contract_number" => $contract_number, ":attachment" => $attachment, ":products" => json_encode($products_list), ":status" => 0));
         $last_insert_id = $this->_db->lastInsertId();
         return array($last_insert_id, $this->_user_id, $type, $lead_id, $data, $contract_number, $attachment, "<div> <button class='btn ver_requisition_products' value='" . $last_insert_id . "'><i class='icon-eye-open'></i>Ver</button></div>", "Pedido enviado");
     }

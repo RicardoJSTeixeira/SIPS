@@ -4,11 +4,11 @@ var requests = function(basic_path, options_ext)
     var basic_path = basic_path;
     this.config = {};
     $.extend(true, this.config, options_ext);
-    
-    if(SpiceU.user_level<5){
+
+    if (SpiceU.user_level < 5) {
         $("#principal button.btn-info").hide();
     }
-    
+
     this.apoio_marketing = {
         init: function()
         {
@@ -109,12 +109,12 @@ var requests = function(basic_path, options_ext)
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"});
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser","bVisible": (SpiceU.user_level>5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial rastreio"}, {"sTitle": "Data final rastreio"}, {"sTitle": "Horario", "sWidth": "75px"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Local publicidade", "sWidth": "75px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px","bVisible": (SpiceU.user_level>5)}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial rastreio"}, {"sTitle": "Data final rastreio"}, {"sTitle": "Horario", "sWidth": "75px"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Local publicidade", "sWidth": "75px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_AM').click(function(event) {
                 event.preventDefault();
-                table2csv(apoio_markting_table, 'full', '#'+am_zone[0].id);
+                table2csv(apoio_markting_table, 'full', '#' + am_zone[0].id);
             });
             am_zone.on("click", ".ver_horario", function()
             {
@@ -196,28 +196,42 @@ var requests = function(basic_path, options_ext)
                 rf_zone.on("click", "#submit_rf", function(e)
                 {
                     e.preventDefault();
+
                     if (rf_zone.find("#relatorio_frota_form").validationEngine("validate"))
                     {
-                        var ocorrencias_array = [];
-                        $.each(rf_zone.find("#table_tbody_rf").find("tr"), function(data)
+                       var soma = 0;
+                        $.each(rf_zone.find("#table_tbody_rf").find(".linha_km"), function()
                         {
-                            ocorrencias_array.push(
-                                    {data: $(this).find(".linha_data").val(),
-                                        ocorrencia: $(this).find(".linha_ocorrencia").val(),
-                                        km: $(this).find(".linha_km").val()});
+                            soma = soma + ~~$(this).val();
                         });
-                        $.post("/AM/ajax/requests.php", {action: "criar_relatorio_frota",
-                            data: rf_zone.find("#input_data").val(),
-                            matricula: rf_zone.find("#input_matricula").val(),
-                            km: rf_zone.find("#input_km").val(),
-                            viatura: rf_zone.find(":radio[name='rrf']:checked").val(),
-                            ocorrencias: ocorrencias_array,
-                            comments: rf_zone.find("#input_comments").val().length ? rf_zone.find("#input_comments").val() : ""},
-                        function()
+
+                        if (soma > ~~rf_zone.find("#input_km").val())
                         {
-                            rf_zone.find(":input").val("");
-                            $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
-                        }, "json");
+                            $.jGrowl("O número de Kms nas ocorrência é superior aos Kms totais no relatório");
+                        }
+                        else
+                        {
+                            var ocorrencias_array = [];
+                            $.each(rf_zone.find("#table_tbody_rf").find("tr"), function(data)
+                            {
+                                ocorrencias_array.push(
+                                        {data: $(this).find(".linha_data").val(),
+                                            ocorrencia: $(this).find(".linha_ocorrencia").val(),
+                                            km: $(this).find(".linha_km").val()});
+                            });
+                            $.post("/AM/ajax/requests.php", {action: "criar_relatorio_frota",
+                                data: rf_zone.find("#input_data").val(),
+                                matricula: rf_zone.find("#input_matricula").val(),
+                                km: rf_zone.find("#input_km").val(),
+                                viatura: rf_zone.find(":radio[name='rrf']:checked").val(),
+                                ocorrencias: ocorrencias_array,
+                                comments: rf_zone.find("#input_comments").val().length ? rf_zone.find("#input_comments").val() : ""},
+                            function()
+                            {
+                                rf_zone.find(":input").val("");
+                                $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
+                            }, "json");
+                        }
                     }
                 });
             });
@@ -234,12 +248,12 @@ var requests = function(basic_path, options_ext)
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "get_relatorio_frota_to_datatable"});
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser","bVisible": (SpiceU.user_level>5)}, {"sTitle": "data"}, {"sTitle": "Matricula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrencias", "sWidth": "150px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px","bVisible": (SpiceU.user_level>5)}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "data"}, {"sTitle": "Matricula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrencias", "sWidth": "150px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_F').click(function(event) {
                 event.preventDefault();
-                table2csv(relatorio_frota_table, 'full', '#'+rf_zone[0].id);
+                table2csv(relatorio_frota_table, 'full', '#' + rf_zone[0].id);
             });
             rf_zone.on("click", ".ver_ocorrencias", function()
             {
@@ -341,12 +355,12 @@ var requests = function(basic_path, options_ext)
                     aoData.push({"name": "action", "value": "get_relatorio_correio_to_datatable"}
                     );
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser","bVisible": (SpiceU.user_level>5)}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Ref.ª de Cliente"}, {"sTitle": "Anexo", "sWidth": "75px"}, {"sTitle": "Observações"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px","bVisible": (SpiceU.user_level>5)}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Ref.ª de Cliente"}, {"sTitle": "Anexo", "sWidth": "75px"}, {"sTitle": "Observações"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_C').click(function(event) {
                 event.preventDefault();
-                table2csv(relatorio_correio_table, 'full', '#'+rc_zone[0].id);
+                table2csv(relatorio_correio_table, 'full', '#' + rc_zone[0].id);
             });
             rc_zone.on("click", ".accept_report_correio", function()
             {
@@ -381,8 +395,8 @@ var requests = function(basic_path, options_ext)
                     tbody.empty();
                     $.each(data1, function()
                     {
-                            tbody.append("<tr><td class='chex-table'><input type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' "+((~~this.confirmed)?"checked":"")+" "+((SpiceU.user_level<5)?"disabled":"")+" id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td>" + this.value + "</td></tr>");
-                          anexo_number++;
+                        tbody.append("<tr><td class='chex-table'><input type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " " + ((SpiceU.user_level < 5) ? "disabled" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td>" + this.value + "</td></tr>");
+                        anexo_number++;
                     });
                     basic_path.find("#ver_anexo_correio_modal").modal("show");
                 }, "json");
@@ -453,12 +467,12 @@ var requests = function(basic_path, options_ext)
                     aoData.push({"name": "action", "value": "get_relatorio_stock_to_datatable"}
                     );
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser","bVisible": (SpiceU.user_level>5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px","bVisible": (SpiceU.user_level>5)}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_S').click(function(event) {
                 event.preventDefault();
-                table2csv(relatorio_stock_table, 'full', '#'+rc_zone[0].id);
+                table2csv(relatorio_stock_table, 'full', '#' + rc_zone[0].id);
             });
             rc_zone.on("click", ".accept_report_stock", function()
             {
@@ -559,12 +573,12 @@ var requests = function(basic_path, options_ext)
                     aoData.push({"name": "action", "value": "get_relatorio_movimentacao_to_datatable"}
                     );
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser","bVisible": (SpiceU.user_level>5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px","bVisible": (SpiceU.user_level>5)}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_MS').click(function(event) {
                 event.preventDefault();
-                table2csv(relatorio_moviment_stock_table, 'full', '#'+rc_zone[0].id);
+                table2csv(relatorio_moviment_stock_table, 'full', '#' + rc_zone[0].id);
             });
             rc_zone.on("click", ".accept_report_movimentacao", function()
             {

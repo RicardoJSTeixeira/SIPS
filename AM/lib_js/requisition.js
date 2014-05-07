@@ -8,11 +8,8 @@ var requisition = function(geral_path, options_ext)
             product_tree,
             modal = "",
             table_path = "",
-            show_admin = 0,
             produtos = [];
-
     $.extend(true, this.config, options_ext);
-
     this.init = function(callback)
     {
         $.get("/AM/view/requisitions/requisition.html", function(data) {
@@ -23,31 +20,14 @@ var requisition = function(geral_path, options_ext)
                 callback();
         });
     };
-    this.get_current_requisitions = function(table_path1, show_admin1)
+    this.get_current_requisitions = function(table_path1)
     {
         table_path = table_path1;
-        show_admin = show_admin1;
-        get_encomendas_atuais(table_path, show_admin);
+        get_encomendas_atuais(table_path);
     };
 //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
     this.new_requisition = function(new_requisition_zone, lead_id) {
-        $.post('/AM/ajax/products.php', {action: "get_produtos"},
-        function(data)
-        {
-            var options = "<option value='0'>Escolha um produto</option>";
-            $.each(data, function()
-            {
-                produtos[this.id] = (this);
-                if (this.parent_level <= 0)
-                    options += "<option value='" + this.id + "'>" + this.name + "</option>";
-            });
-            $("#product_selector").append(options);
-        }, "json");
-        new_requisition_zone.off();
-        new_requisition_zone.find('.fileupload').fileupload().end()
-                .find("#form_encomenda_especial").validationEngine().end()
-                .find("#form_encomenda_especial").show().end()
-                .find(".tipo_div").hide();
+         $("#product_selector") .chosen({no_results_text: "Sem resultados" });;
         if (lead_id)
         {
             me.tipo = "especial";
@@ -58,13 +38,90 @@ var requisition = function(geral_path, options_ext)
         {
             me.tipo = "mensal";
             new_requisition_zone.find("#tipo_encomenda").text("Encomenda Mensal");
+            new_requisition_zone.find("#tipo_especial").hide();
         }
+        $.post('/AM/ajax/products.php', {action: "get_produtos"},
+        function(data)
+        {
+            var option = "<option value='0'>Escolha um produto</option>";
+            $("#product_selector").append(option) ;
+            var temp = "<optgroup value='1' label='BTE'></optgroup>\n\
+                        <optgroup value='2' label='RITE'></optgroup>\n\
+                        <optgroup value='3' label='INTRA'></optgroup>\n\
+                        <optgroup value='4' label='Pilhas'></optgroup>\n\
+                        <optgroup value='5' label='Acessórios'></optgroup>\n\
+                        <optgroup value='6' label='Moldes'></optgroup>\n\
+                        <optgroup value='7' label='Economato'></optgroup>\n\
+                        <optgroup value='8' label='Gama'></optgroup>",
+                    BTE = [],
+                    RITE = [],
+                    INTRA = [],
+                    pilha = [],
+                    acessorio = [],
+                    molde = [],
+                    economato = [],
+                    gama = [];
+            $("#product_selector").append(temp);
+
+            $.each(data, function()
+            {
+                produtos[this.id] = (this);
+                if (me.tipo == "especial")
+                {
+                    if (this.parent_level <= 0)
+                        option = "<option value='" + this.id + "'>" + this.name + "</option>";
+                }
+                else
+                {
+                    option = "<option value='" + this.id + "'>" + this.name + "</option>";
+                }
+                switch (this.category)
+                {
+              case "BTE":
+                        BTE.push(option);
+                        break;
+                    case "RITE":
+                        RITE.push(option);
+                        break;
+                    case "INTRA":
+                        INTRA.push(option);
+                        break;
+                    case "Pilha":
+                        pilha.push(option);
+                        break;
+                    case "Acessório":
+                        acessorio.push(option);
+                        break;
+                    case "Molde":
+                        molde.push(option);
+                        break; 
+                    case "Economato":
+                        economato.push(option);
+                    case "Gama":
+                        gama.push(option);
+                        break;
+                }
+            });
+            $("#product_selector").find("optgroup[value='1']").append(BTE).end()
+                    .find("optgroup[value='2']").append(RITE).end()
+                    .find("optgroup[value='3']").append(INTRA).end()
+                    .find("optgroup[value='4']").append(pilha).end()
+                    .find("optgroup[value='5']").append(acessorio).end()
+                    .find("optgroup[value='6']").append(molde).end()
+                    .find("optgroup[value='7']").append(economato).end()
+                    .find("optgroup[value='8']").append(gama).end().trigger("chosen:updated");;
+        }, "json");
+        new_requisition_zone.off();
+        new_requisition_zone.find('.fileupload').fileupload().end()
+                .find("#form_encomenda_especial").validationEngine().end()
+                .find("#form_encomenda_especial").show().end()
+                .find(".tipo_div").hide();
+
         new_requisition_zone.find("#save_single_product").prop("disabled", true);
         $(new_requisition_zone).on("change", "#product_selector", function()
         {
             if (product_tree)
                 product_tree.destroy();
-
             if (~~$(this).val() === 0)
             {
                 new_requisition_zone.find("#save_single_product").prop("disabled", true);
@@ -90,7 +147,6 @@ var requisition = function(geral_path, options_ext)
                     produtos_encomenda.push({id: $(this).find(".td_name").attr("id_product"), quantity: ~~$(this).find(".td_quantity").text(), color: $(this).find(".td_color").attr("color")});
                 }
             });
-
             if (!count)
                 $.jGrowl('Escolha pelo menos 1 produto', {life: 4000});
             else
@@ -111,7 +167,7 @@ var requisition = function(geral_path, options_ext)
                                     .find(" #new_requisition_product_tbody").empty().end()
                                     .find("#label_anexo_info").text("").end()
                                     .find('.fileupload').fileupload("clear");
-                            history.back();
+                            $.history.push("view/requisition.html");
                             if (table_path)
                             {
                                 table_path.dataTable().fnAddData(data);
@@ -124,7 +180,6 @@ var requisition = function(geral_path, options_ext)
                 }
             }
         });
-
         $(new_requisition_zone).on("click", '#save_single_product', function(e)
         {
             var produtos_single = [],
@@ -155,9 +210,7 @@ var requisition = function(geral_path, options_ext)
             }
             new_requisition_zone.find("#product_selector").val(0).trigger("change");
             var new_product = "";
-
             new_product = ($("<div>", {class: "grid"}).append($("<div>")));
-
             var produtos_in_text = new_product
                     .find("div:last")
                     .append($("<table>", {class: "table table-mod table-striped table-condensed"})
@@ -181,7 +234,6 @@ var requisition = function(geral_path, options_ext)
             });
             new_requisition_zone.find("#produtos_encomendados").append(new_product);
         });
-
         $(new_requisition_zone).on("click", " .remove_produto_encomendado", function(e)
         {
             $.each($(this).closest(".grid").find("tr"), function()
@@ -196,12 +248,10 @@ var requisition = function(geral_path, options_ext)
             });
             $(this).closest(".grid").remove();
         });
-
         $(new_requisition_zone).on("submit", " #form_encomenda_especial", function(e)
         {
             e.preventDefault();
         });
-
         //FILE UPLOAD
         $(new_requisition_zone).on("change", '#file_upload', function() {
             // var re_ext = new RegExp("(gif|jpeg|jpg|png|pdf)", "i");
@@ -251,30 +301,31 @@ var requisition = function(geral_path, options_ext)
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    function get_encomendas_atuais(table_path, show_admin)
+    function get_encomendas_atuais(table_path)
     {
-        if (show_admin)
+        var Table_view_requisition = table_path.dataTable({
+            "bSortClasses": false,
+            "bProcessing": true,
+            "bDestroy": true,
+            "bAutoWidth": false,
+            "sPaginationType": "full_numbers",
+            "sAjaxSource": '/AM/ajax/requisition.php',
+            "fnServerParams": function(aoData) {
+                aoData.push({"name": "action", "value": "listar_requisition_to_datatable"});
+            },
+            "fnDrawCallback": function() {
+                $.each(Table_view_requisition.find(".cod_cliente_input"), function()
+                {
+                    if (!$(this).val())
+                        $(this).parent().parent().addClass("error");
+                });
+            },
+            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Dispenser", "bVisible": SpiceU.user_level > 5}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente", "sType": 'numeric'}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Código de cliente"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "60px", "bVisible": SpiceU.user_level > 5}],
+            "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
+        });
+
+        if (SpiceU.user_level > 5)
         {
-            var Table_view_requisition = table_path.dataTable({
-                "bSortClasses": false,
-                "bProcessing": true,
-                "bDestroy": true,
-                "bAutoWidth": false,
-                "sPaginationType": "full_numbers",
-                "sAjaxSource": '/AM/ajax/requisition.php',
-                "fnServerParams": function(aoData) {
-                    aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
-                },
-                "fnDrawCallback": function() {
-                    $.each(Table_view_requisition.find(".cod_cliente_input"), function()
-                    {
-                        if (!$(this).val())
-                            $(this).parent().parent().addClass("error");
-                    });
-                },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser"}, {"sTitle": "Tipo"}, {"sTitle": "ID Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Código de cliente"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "60px"}],
-                "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
-            });
             Table_view_requisition.on("change", ".cod_cliente_input", function()
             {
                 var that = $(this);
@@ -296,22 +347,7 @@ var requisition = function(geral_path, options_ext)
                 }
             });
         }
-        else
-        {
-            var Table_view_requisition = table_path.dataTable({
-                "bSortClasses": false,
-                "bProcessing": true,
-                "bDestroy": true,
-                "bAutoWidth": false,
-                "sPaginationType": "full_numbers",
-                "sAjaxSource": '/AM/ajax/requisition.php',
-                "fnServerParams": function(aoData) {
-                    aoData.push({"name": "action", "value": "listar_requisition_to_datatable"}, {"name": "show_admin", "value": show_admin});
-                },
-                "aoColumns": [{"sTitle": "id"}, {"sTitle": "Agente"}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente"}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Código de cliente"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}],
-                "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
-            });
-        }
+
         //VER PRODUTOS DE ENCOMENDAS FEITAS
         table_path.on("click", ".ver_requisition_products", function()
         {

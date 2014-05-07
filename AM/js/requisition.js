@@ -4,7 +4,7 @@ $(function()
     requisition1 = new requisition($("#extra_div"), {});
     requisition1.init(function()
     {
-        requisition1.get_current_requisitions($("#view_requisition_datatable"), 0);
+        requisition1.get_current_requisitions($("#view_requisition_datatable"));
     });
 });
 

@@ -7,33 +7,37 @@ Class products {
     }
 
     public function get_products_to_datatable($product_editable) {
-        $output['aaData'] = [];
+        $output['aaData'] = array();
         $stmt = $this->_db->prepare("SELECT id,name,max_req_m,max_req_s,category,type,color,active,deleted from spice_product where deleted=0");
         $stmt->execute();
-        while ($row = $stmt->fetch(PDO::FETCH_BOTH)) {
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
 
             $stmt1 = $this->_db->prepare("SELECT highlight,active,data_inicio,data_fim from spice_promocao where product_id=:id and data_inicio<=:data1 and data_fim>=:data2 order by id desc limit 1");
             $date = date("Y-m-d");
             $stmt1->execute(array(":id" => $row[0], ":data1" => $date, ":data2" => $date));
-            $row1 = $stmt1->fetch(PDO::FETCH_BOTH);
+            $row1 = $stmt1->fetch(PDO::FETCH_NUM);
             $row[4] = ucfirst($row[4]);
             $row[5] = ucwords(implode(", ", json_decode($row[5])));
-            if (isset($row1["active"])) {
-                $active = (bool) $row1["active"];
+            if (isset($row1[1])) {
+                $active = (bool) $row1[1];
             } else {
-                $active = (bool) $row["active"];
+                $active = (bool) $row[7];
             }
             if ($product_editable == "true") {
-                $row[6] = "<span class='btn-group'><button class='btn btn_editar_produto btn-primary icon-alone' data-product_id='" . $row[0] . "' data-level='" . $row["level"] . "'><i class='icon-pencil'></i></button><button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "' data-level='" . $row["level"] . "' data-deleted='" . (bool) $row["deleted"] . "' class='btn btn_ver_produto icon-alone hide' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button><button class='btn btn_apagar_produto btn-danger icon-alone' data-product_id='" . $row[0] . "'><i class='icon-trash'></i></button></span>";
+                $row[6] = "<span class='btn-group'>"
+                        . "<button class='btn btn_editar_produto btn-primary icon-alone' data-product_id='" . $row[0] . "'><i class='icon-pencil'></i></button>"
+                        . "<button data-active='" . $active . "' data-highlight='" . (bool) $row1[0] . "'   data-deleted='" . (bool) $row["deleted"] . "' class='btn btn_ver_produto icon-alone hide' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button>"
+                        . "<button class='btn btn_apagar_produto btn-danger icon-alone' data-product_id='" . $row[0] . "'><i class='icon-trash'></i></button>"
+                        . "</span>";
             } else {
-                $row[6] = "<button data-active='" . $active . "' data-highlight='" . (bool) $row1["highlight"] . "' data-level='" . $row["level"] . "'  data-deleted='" . (bool) $row["deleted"] . "' class='btn btn-info btn_ver_produto  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button>";
+                $row[6] = "<button data-active='" . $active . "' data-highlight='" . (bool) $row1[0] . "'   data-deleted='" . (bool) $row[8] . "' class='btn btn-info btn_ver_produto  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button>";
             }
             $output['aaData'][] = $row;
         }
         return $output;
     }
 
-    public function get_products($id=null) {
+    public function get_products($id = null) {
         $relations = array();
         $stmt = $this->_db->prepare("select parent, child from spice_product_assoc");
         $stmt->execute();
@@ -41,7 +45,7 @@ Class products {
             $relations[$row["parent"]][] = $row["child"];
         }
 
-        $stmt = $this->_db->prepare("SELECT id, name,  max_req_m, max_req_s, category, type, color, active from spice_product where deleted=0 order by name asc");
+        $stmt = $this->_db->prepare("SELECT id, name,  max_req_m, max_req_s, category, type, color, active from spice_product where deleted=0");
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $row["parent"] = array();
@@ -49,7 +53,7 @@ Class products {
                 foreach ($value as $value1) {
                     if ($value1 == $row["id"]) {
                         $row["parent"][] = $key;
-                          $row["parents_id"][] = $key;
+                        $row["parents_id"][] = $key;
                     }
                 }
             }
@@ -76,6 +80,11 @@ Class products {
         if ($id) {
             return $output[$id];
         } else {
+            $temp = array();
+            foreach ($output as $key => $row) {
+                $temp[$key] = $row['name'];
+            }
+            array_multisort($temp, SORT_ASC, $output);
             return $output;
         }
     }
@@ -134,7 +143,12 @@ Class products {
                 $stmt1->execute(array(":parent" => $value, ":child" => $last_id));
             }
         }
-        return array($last_id, $name, $max_req_m, $max_req_s, $category, $type, "<button data-active='" . $active . "' data-highlight='0'  class='btn btn_ver_produto  icon-alone hide'   data-level='0' data-product_id='" . $last_id . "'><i class='icon-eye-open'></i></button><button data-level='0' class='btn btn_editar_produto btn-primary  icon-alone' data-product_id='" . $last_id . "'><i class='icon-pencil'></i></button><button class='btn btn_apagar_produto btn-danger  icon-alone' data-product_id='" . $last_id . "'><i class='icon-remove'></i></button>");
+
+        return array($last_id, $name, $max_req_m, $max_req_s, ucfirst($category), ucwords(implode(", ", json_decode(json_encode($type)))), "<span class='btn-group'>"
+            . "<button class='btn btn_editar_produto btn-primary icon-alone' data-product_id='" . $last_id . "'><i class='icon-pencil'></i></button>"
+            . "<button data-active='1' data-highlight='0'   data-deleted='0' class='btn btn_ver_produto icon-alone hide' data-product_id='" . $last_id . "'><i class='icon-eye-open'></i></button>"
+            . "<button class='btn btn_apagar_produto btn-danger icon-alone' data-product_id='" . $last_id . "'><i class='icon-trash'></i></button>"
+            . "</span>");
     }
 
 }

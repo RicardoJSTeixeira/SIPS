@@ -147,7 +147,7 @@ var products = function(geral_path, options_ext)
         });
         edit_product_modal.on("change", "#edit_product_category", function()
         {
-            if ($(this).val() === "molde" || $(this).val() === "aparelho")
+            if ($(this).val() === "Molde" || $(this).val() === "BTE" || $(this).val() === "RITE" || $(this).val() === "INTRA")
             {
                 edit_product_modal.find("#edit_product_color_div").show();
             }
@@ -190,7 +190,11 @@ var products = function(geral_path, options_ext)
         new_product_path1.append(geral_path.find("#new_product_form"));
         var new_product_path = new_product_path1;
         clear_new_product_area(new_product_path);
-        populate_parent(new_product_path.find("#new_product_parent"), null, null, null);
+
+        populate_parent(new_product_path.find("#new_product_parent"), null, null, function() {
+            new_product_path.find("#new_product_category").trigger("change");
+        });
+
         new_product_path.find("#create_new_product_button").click(function(e)
         {
             e.preventDefault();
@@ -239,7 +243,8 @@ var products = function(geral_path, options_ext)
         new_product_path.off("change", "#new_product_category");
         new_product_path.on("change", "#new_product_category", function()
         {
-            if ($(this).val() === "molde" || $(this).val() === "aparelho")
+            new_product_path.find("#new_product_table_tbody_color").empty();
+            if ($(this).val() === "Molde" || $(this).val() === "BTE" || $(this).val() === "RITE" || $(this).val() === "INTRA")
             {
                 new_product_path.find("#new_product_color_div").show();
                 new_product_path.find("#new_product_table_tbody_color").append("<tr><td><select class=' input-small color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]' value='Beje'></td><td><button class='btn btn-danger remove_color icon-alone'><i class='icon icon-trash'></i></button></td></tr>");
@@ -258,7 +263,7 @@ var products = function(geral_path, options_ext)
         new_product_path.on("click", "#new_product_button_color_add_line", function(e)
         {
             e.preventDefault();
-            new_product_path.find("#new_product_table_tbody_color").append("<tr><td><select class=' input-small color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]'></td><td><button class='btn remove_color icon-alone btn.danger'><i class='icon icon-trash'></i></button></td></tr>");
+            new_product_path.find("#new_product_table_tbody_color").append("<tr><td><select class=' input-small color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]'></td><td><button class='btn remove_color icon-alone btn-danger'><i class='icon icon-trash'></i></button></td></tr>");
             $("#new_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).colourPicker({
                 ico: '/jquery/colourPicker/colourPicker.gif',
                 title: false
@@ -355,7 +360,7 @@ var products = function(geral_path, options_ext)
                     modal.find("#edit_product_children_div").hide();
                 }
 //--------------------------------------------------------------------------COLOR-----------------------------------------
-                if (data.category === "molde" || data.category === "aparelho")
+                if (data.category === "Molde" || data.category === "BTE" || data.category === "RITE" || data.category === "INTRA")
                 {
                     modal.find("#edit_product_color_div").show();
                     if (data.color)
@@ -419,13 +424,17 @@ var products = function(geral_path, options_ext)
         function(data)
         {
             select.empty();
-            var temp = "<optgroup value='1' label='Aparelhos'></optgroup>\n\
-                        <optgroup value='2' label='Pilhas'></optgroup>\n\
-                        <optgroup value='3' label='Acessórios'></optgroup>\n\
-                        <optgroup value='4' label='Moldes'></optgroup>\n\
-                        <optgroup value='5' label='Economato'></optgroup>\n\
-                        <optgroup value='6' label='Gama'></optgroup>",
-                    aparelho = [],
+            var temp = "<optgroup value='1' label='BTE'></optgroup>\n\
+                        <optgroup value='2' label='RITE'></optgroup>\n\
+                        <optgroup value='3' label='INTRA'></optgroup>\n\
+                        <optgroup value='4' label='Pilhas'></optgroup>\n\
+                        <optgroup value='5' label='Acessórios'></optgroup>\n\
+                        <optgroup value='6' label='Moldes'></optgroup>\n\
+                        <optgroup value='7' label='Economato'></optgroup>\n\
+                        <optgroup value='8' label='Gama'></optgroup>",
+                    BTE = [],
+                    RITE = [],
+                    INTRA = [],
                     pilha = [],
                     acessorio = [],
                     molde = [],
@@ -449,31 +458,39 @@ var products = function(geral_path, options_ext)
                 }
                 switch (this.category)
                 {
-                    case "aparelho":
-                        aparelho.push(option);
+                    case "BTE":
+                        BTE.push(option);
                         break;
-                    case "pilha":
+                    case "RITE":
+                        RITE.push(option);
+                        break;
+                    case "INTRA":
+                        INTRA.push(option);
+                        break;
+                    case "Pilha":
                         pilha.push(option);
                         break;
-                    case "acessorio":
+                    case "Acessório":
                         acessorio.push(option);
                         break;
-                    case "molde":
+                    case "Molde":
                         molde.push(option);
                         break;
-                    case "economato":
+                    case "Economato":
                         economato.push(option);
-                    case "gama":
+                    case "Gama":
                         gama.push(option);
                         break;
                 }
             });
-            select.find("optgroup[value='1']").append(aparelho).end()
-                    .find("optgroup[value='2']").append(pilha).end()
-                    .find("optgroup[value='3']").append(acessorio).end()
-                    .find("optgroup[value='4']").append(molde).end()
-                    .find("optgroup[value='5']").append(economato).end()
-                    .find("optgroup[value='6']").append(gama).end().trigger("chosen:updated");
+            select.find("optgroup[value='1']").append(BTE).end()
+                    .find("optgroup[value='2']").append(RITE).end()
+                    .find("optgroup[value='3']").append(INTRA).end()
+                    .find("optgroup[value='4']").append(pilha).end()
+                    .find("optgroup[value='5']").append(acessorio).end()
+                    .find("optgroup[value='6']").append(molde).end()
+                    .find("optgroup[value='7']").append(economato).end()
+                    .find("optgroup[value='8']").append(gama).end().trigger("chosen:updated");
             if (typeof callback === "function")
                 callback();
         }, "json");
