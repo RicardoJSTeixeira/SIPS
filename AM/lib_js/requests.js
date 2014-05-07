@@ -4,14 +4,17 @@ var requests = function(basic_path, options_ext)
     var basic_path = basic_path;
     this.config = {};
     $.extend(true, this.config, options_ext);
-
-
+    
+    if(SpiceU.user_level<5){
+        $("#principal button.btn-info").hide();
+    }
+    
     this.apoio_marketing = {
         init: function()
         {
             $.get("/AM/view/requests/apoio_marketing_modal.html", function(data) {
                 basic_path.append(data);
-            },'html');
+            }, 'html');
         },
         new : function(am_zone)
         {
@@ -33,7 +36,6 @@ var requests = function(basic_path, options_ext)
                         .on('changeDate', function() {
                             $("#data_rastreio1").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
                         });
-
                 am_zone.find("#data_inicio1").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
                         .on('changeDate', function() {
                             $("#data_inicio2").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT' + $(this).val()));
@@ -43,7 +45,6 @@ var requests = function(basic_path, options_ext)
                             $("#data_inicio1").datetimepicker('setEndDate', moment().format('YYYY-MM-DDT' + $(this).val()));
                             $("#data_fim1").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT' + $(this).val()));
                         });
-
                 am_zone.find("#data_fim1").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
                         .on('changeDate', function() {
                             $("#data_fim2").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT' + $(this).val()));
@@ -52,7 +53,6 @@ var requests = function(basic_path, options_ext)
                         .on('changeDate', function() {
                             $("#data_fim1").datetimepicker('setEndDate', moment().format('YYYY-MM-DDT' + $(this).val()));
                         });
-
                 //Adiciona Linhas
                 am_zone.find("#button_ldptable_add_line").click(function(e) {
                     e.preventDefault();
@@ -64,7 +64,6 @@ var requests = function(basic_path, options_ext)
                     e.preventDefault();
                     $(this).parent().parent().remove();
                 });
-
                 //SUBMIT
                 am_zone.on("click", "#submit_am", function(e)
                 {
@@ -108,12 +107,15 @@ var requests = function(basic_path, options_ext)
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": '/AM/ajax/requests.php',
                 "fnServerParams": function(aoData) {
-                    aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"}, {"name": "show_admin", "value": 1});
+                    aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"});
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser"}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial rastreio"}, {"sTitle": "Data final rastreio"}, {"sTitle": "Horario", "sWidth": "75px"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Local publicidade", "sWidth": "75px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px"}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser","bVisible": (SpiceU.user_level>5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial rastreio"}, {"sTitle": "Data final rastreio"}, {"sTitle": "Horario", "sWidth": "75px"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Local publicidade", "sWidth": "75px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px","bVisible": (SpiceU.user_level>5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
-
+            $('#export_AM').click(function(event) {
+                event.preventDefault();
+                table2csv(apoio_markting_table, 'full', '#'+am_zone[0].id);
+            });
             am_zone.on("click", ".ver_horario", function()
             {
                 var id = $(this).data().apoio_marketing_id;
@@ -125,11 +127,9 @@ var requests = function(basic_path, options_ext)
                     basic_path.find("#ver_horario_modal").modal("show");
                 }, "json");
             });
-
             am_zone.on("click", ".ver_local_publicidade", function()
             {
                 var id = $(this).data().apoio_marketing_id;
-
                 $.post("/AM/ajax/requests.php", {action: "get_locais_publicidade_from_apoio_marketing", id: id}, function(data) {
                     basic_path.find("#ver_local_publicidade_modal #tbody_ver_local_publicidade").empty();
                     $.each(data, function()
@@ -139,8 +139,6 @@ var requests = function(basic_path, options_ext)
                     basic_path.find("#ver_local_publicidade_modal").modal("show");
                 }, "json");
             });
-
-
             am_zone.on("click", ".accept_apoio_marketing", function()
             {
                 var this_button = $(this);
@@ -149,7 +147,6 @@ var requests = function(basic_path, options_ext)
                     apoio_markting_table.fnReloadAjax();
                 }, "json");
             });
-
             am_zone.on("click", ".decline_apoio_marketing", function()
             {
                 var this_button = $(this);
@@ -162,16 +159,14 @@ var requests = function(basic_path, options_ext)
                     }
                 });
             });
-
         }
     };
-
     this.relatorio_frota = {
         init: function()
         {
             $.get("/AM/view/requests/relatorio_frota_modal.html", function(data) {
                 basic_path.append(data);
-            },'html');
+            }, 'html');
         },
         new : function(rf_zone)
         {
@@ -186,8 +181,9 @@ var requests = function(basic_path, options_ext)
                 rf_zone.find("#button_rf_table_add_line").click(function(e)
                 {
                     e.preventDefault();
-                    rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required] linha_data' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'></td><td><input class='validate[required] linha_ocorrencia' type='text' name='rf_ocorr" + rfinput_count + "'></td><td>  <input class='validate[required] linha_km' type='number' value='0' name='rf_km" + rfinput_count + "' min='0'></td><td><button class='btn btn-danger button_rf_table_remove_line icon-alone'><i class='icon-minus'></i></button></td></tr>");
+                    rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required] linha_data span' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'></td><td><input class='validate[required] linha_ocorrencia span' type='text' name='rf_ocorr" + rfinput_count + "'></td><td><input class='validate[required] linha_km text-right' type='text' value='0' name='rf_km" + rfinput_count + "' size='16'/></td><td><button class='btn btn-danger button_rf_table_remove_line icon-alone'><i class='icon-minus'></i></button></td></tr>");
                     rf_zone.find("#rf_datetime" + rfinput_count).datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
+                    rf_zone.find("[name=rf_km" + rfinput_count + "]").autotab('number');
                     rfinput_count++;
                 }).click();
                 //Remove Linhas
@@ -236,13 +232,15 @@ var requests = function(basic_path, options_ext)
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": '/AM/ajax/requests.php',
                 "fnServerParams": function(aoData) {
-                    aoData.push({"name": "action", "value": "get_relatorio_frota_to_datatable"},
-                    {"name": "show_admin", "value": 1});
+                    aoData.push({"name": "action", "value": "get_relatorio_frota_to_datatable"});
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser"}, {"sTitle": "data"}, {"sTitle": "Matricula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrencias", "sWidth": "150px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px"}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser","bVisible": (SpiceU.user_level>5)}, {"sTitle": "data"}, {"sTitle": "Matricula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrencias", "sWidth": "150px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px","bVisible": (SpiceU.user_level>5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
-
+            $('#export_F').click(function(event) {
+                event.preventDefault();
+                table2csv(relatorio_frota_table, 'full', '#'+rf_zone[0].id);
+            });
             rf_zone.on("click", ".ver_ocorrencias", function()
             {
                 var id = $(this).data().relatorio_frota_id;
@@ -257,7 +255,6 @@ var requests = function(basic_path, options_ext)
                     basic_path.find("#ver_occorrencia_frota_modal").modal("show");
                 }, "json");
             });
-
             rf_zone.on("click", ".accept_report_frota", function()
             {
                 var this_button = $(this);
@@ -266,7 +263,6 @@ var requests = function(basic_path, options_ext)
                     relatorio_frota_table.fnReloadAjax();
                 }, "json");
             });
-
             rf_zone.on("click", ".decline_report_frota", function()
             {
                 var this_button = $(this);
@@ -281,13 +277,12 @@ var requests = function(basic_path, options_ext)
             });
         }
     };
-
     this.relatorio_correio = {
         init: function()
         {
             $.get("/AM/view/requests/relatorio_correio_modal.html", function(data) {
                 basic_path.append(data);
-            },'html');
+            }, 'html');
         },
         new : function(rc_zone)
         {
@@ -314,20 +309,18 @@ var requests = function(basic_path, options_ext)
                             client_name: rc_zone.find("#input_client_name").val(),
                             input_doc_obj_assoc: docs_objs,
                             comments: rc_zone.find("#input_comments").val().length ? rc_zone.find("#input_comments").val() : "Sem observações"},
-                        function(data1)
+                        function()
                         {
                             rc_zone.find(":input").val("");
                             $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
                         }, "json");
                     }
                 });
-
                 rc_zone.find("#add_line_obj_doc").click(function(e)
                 {
                     e.preventDefault();
-                    rc_zone.find("#doc_obj_table_tbody").append("<tr><td><input class='input-xlarge validate[required]'  type='text' /></td>    <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
+                    rc_zone.find("#doc_obj_table_tbody").append("<tr><td><input class='validate[required] span' type='text' /></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
                 }).click();
-
                 rc_zone.on("click", ".remove_doc_obj", function(e)
                 {
                     e.preventDefault();
@@ -345,14 +338,16 @@ var requests = function(basic_path, options_ext)
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": '/AM/ajax/requests.php',
                 "fnServerParams": function(aoData) {
-                    aoData.push({"name": "action", "value": "get_relatorio_correio_to_datatable"},
-                    {"name": "show_admin", "value": 1}
+                    aoData.push({"name": "action", "value": "get_relatorio_correio_to_datatable"}
                     );
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser"}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Ref.ª de Cliente"}, {"sTitle": "Anexo", "sWidth": "75px"}, {"sTitle": "Observações"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px"}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser","bVisible": (SpiceU.user_level>5)}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Ref.ª de Cliente"}, {"sTitle": "Anexo", "sWidth": "75px"}, {"sTitle": "Observações"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px","bVisible": (SpiceU.user_level>5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
-
+            $('#export_C').click(function(event) {
+                event.preventDefault();
+                table2csv(relatorio_correio_table, 'full', '#'+rc_zone[0].id);
+            });
             rc_zone.on("click", ".accept_report_correio", function()
             {
                 var this_button = $(this);
@@ -361,7 +356,6 @@ var requests = function(basic_path, options_ext)
                     relatorio_correio_table.fnReloadAjax();
                 }, "json");
             });
-
             rc_zone.on("click", ".decline_report_correio", function()
             {
                 var this_button = $(this);
@@ -387,17 +381,12 @@ var requests = function(basic_path, options_ext)
                     tbody.empty();
                     $.each(data1, function()
                     {
-                        if (~~this.confirmed)
-                            tbody.append("<tr><td class='chex-table'><input type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' checked id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span>  </label></td><td>" + this.value + "</td></tr>");
-                        else
-                            tbody.append("<tr><td class='chex-table'><input type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span>  </label></td><td>" + this.value + "</td></tr>");
-                        anexo_number++;
+                            tbody.append("<tr><td class='chex-table'><input type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' "+((~~this.confirmed)?"checked":"")+" "+((SpiceU.user_level<5)?"disabled":"")+" id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td>" + this.value + "</td></tr>");
+                          anexo_number++;
                     });
-
                     basic_path.find("#ver_anexo_correio_modal").modal("show");
                 }, "json");
             });
-
             basic_path.on("click", ".checkbox_confirm_anexo", function(e)
             {
                 var anexo_array = [];
@@ -409,4 +398,217 @@ var requests = function(basic_path, options_ext)
             });
         }
     };
+    this.relatorio_mensal_stock = {
+        init: function() {
+//             $.get("/AM/view/requests/relatorio_mensal_stock_modal.html", function(data) {
+//             basic_path.append(data);
+//             }, 'html');
+        },
+        new : function(rc_zone) {
+            rc_zone.empty().off();
+            $.get("/AM/view/requests/relatorio_mensal_stock.html", function(data) {
+                rc_zone.append(data);
+                rc_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).val(moment().format('YYYY-MM-DD'));
+                //SUBMIT
+                rc_zone.on("click", "#submit_rfms", function(e) {
+                    e.preventDefault();
+                    if (rc_zone.find("#relatorio_mensal_stock_form").validationEngine("validate")) {
+                        var prdt_objs = [];
+                        $.each(rc_zone.find("#table_tbody_rfms tr"), function() {
+                            prdt_objs.push({quantidade: $(this).find(".quant").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
+                        });
+                        $.post("ajax/requests.php",
+                                {
+                                    action: "criar_relatorio_mensal_stock",
+                                    data: rc_zone.find("#input_data").val(),
+                                    produtos: prdt_objs
+                                },
+                        function(data1)
+                        {
+                            rc_zone.find(":input").val("");
+                            $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
+                        }, "json");
+                    }
+                });
+                rc_zone.find("#button_rfms_table_add_line").click(function(e) {
+                    e.preventDefault();
+                    rc_zone.find("#table_tbody_rfms").append("<tr><td><input class='validate[required] span text-right quant' type='text' /></td> <td><input class='validate[required] span desc' type='text' /></td> <td><input class='validate[required] span serie' type='text' /></td> <td><textarea class='validate[required] span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
+                    rc_zone.find(".quant").autotab('number');
+                }).click();
+                rc_zone.on("click", ".remove_doc_obj", function(e) {
+                    e.preventDefault();
+                    $(this).parent().parent().remove();
+                });
+            });
+        },
+        get_to_datatable: function(rc_zone) {
+            var relatorio_stock_table = rc_zone.dataTable({
+                "bSortClasses": false,
+                "bProcessing": true,
+                "bDestroy": true,
+                "bAutoWidth": false,
+                "sPaginationType": "full_numbers",
+                "sAjaxSource": '/AM/ajax/requests.php',
+                "fnServerParams": function(aoData) {
+                    aoData.push({"name": "action", "value": "get_relatorio_stock_to_datatable"}
+                    );
+                },
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser","bVisible": (SpiceU.user_level>5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px","bVisible": (SpiceU.user_level>5)}],
+                "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
+            });
+            $('#export_S').click(function(event) {
+                event.preventDefault();
+                table2csv(relatorio_stock_table, 'full', '#'+rc_zone[0].id);
+            });
+            rc_zone.on("click", ".accept_report_stock", function()
+            {
+                var this_button = $(this);
+                $.post('/AM/ajax/requests.php', {action: "accept_report_stock", id: $(this).val()}, function() {
+                    this_button.parent("td").prev().text("Aprovado");
+                    relatorio_stock_table.fnReloadAjax();
+                }, "json");
+            });
+            rc_zone.on("click", ".decline_report_stock", function()
+            {
+                var this_button = $(this);
+                bootbox.confirm("Tem a certeza?", function(result) {
+                    if (result) {
+                        $.post('/AM/ajax/requests.php', {action: "decline_report_stock", id: this_button.val()}, function() {
+                            this_button.parent("td").prev().text("Rejeitado");
+                            relatorio_stock_table.fnReloadAjax();
+                        }, "json");
+                    }
+                });
+            });
+            rc_zone.on("click", ".ver_itens", function(e)
+            {
+
+                e.preventDefault();
+                var id_anexo = $(this).data().stock_id;
+                $.post("ajax/requests.php", {action: "get_itens_stock", id: id_anexo},
+                function(data)
+                {
+                    var
+                            content,
+                            tbody = "";
+                    $.each(data, function()
+                    {
+                        tbody += "<tr><td>" + this.quantidade + "</td><td>" + this.descricao + "</td><td>" + this.serie + "</td><td>" + this.obs + "</td></tr>";
+                    });
+                    content = "<table class='table table-mod table-bordered table-striped table-condesed'>\n\
+                                <thead><tr><th>#</th><th>Descrição</th><th>Nº Serie</th><th>Observações</th></tr></thead>\n\
+                                <tbody>" + tbody + "</tbody>\n\
+                               </table>";
+                    bootbox.alert(content);
+                }, "json");
+            });
+        }
+    }
+    this.relatorio_movimentacao_stock = {
+        init: function() {
+//            $.get("/AM/view/requests/relatorio_movimentacao_stock_modal.html", function(data) {
+//                basic_path.append(data);
+//            }, 'html');
+        },
+        new : function(rc_zone) {
+            rc_zone.empty().off();
+            $.get("/AM/view/requests/relatorio_movimentacao_stock.html", function(data) {
+                rc_zone.append(data);
+                rc_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).val(moment().format('YYYY-MM-DD'));
+                //SUBMIT
+                rc_zone.on("click", "#submit_rfms", function(e) {
+                    e.preventDefault();
+                    if (rc_zone.find("#relatorio_movimentacao_stock_form").validationEngine("validate")) {
+                        var prdt_objs = [];
+                        $.each(rc_zone.find("#table_tbody_rfms tr"), function() {
+                            prdt_objs.push({quantidade: $(this).find(".quant").val(), destinario: $(this).find(".desc").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
+                        });
+                        $.post("ajax/requests.php",
+                                {
+                                    action: "criar_relatorio_movimentacao_stock",
+                                    data: rc_zone.find("#input_data").val(),
+                                    produtos: prdt_objs
+                                },
+                        function()
+                        {
+                            rc_zone.find(":input").val("");
+                            $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
+                        }, "json");
+                    }
+                });
+                rc_zone.find("#button_rfms_table_add_line").click(function(e) {
+                    e.preventDefault();
+                    rc_zone.find("#table_tbody_rfms").append("<tr><td><input class='validate[required] span text-right quant' type='text' /></td> <td><input class='validate[required] span dest' type='text' /></td> <td><input class='validate[required] span desc' type='text' /></td> <td><input class='validate[required] span serie' type='text' /></td> <td><textarea class='validate[required] span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
+                    rc_zone.find(".quant").autotab('number');
+                }).click();
+                rc_zone.on("click", ".remove_doc_obj", function(e) {
+                    e.preventDefault();
+                    $(this).parent().parent().remove();
+                });
+            });
+        },
+        get_to_datatable: function(rc_zone) {
+            var relatorio_moviment_stock_table = rc_zone.dataTable({
+                "bSortClasses": false,
+                "bProcessing": true,
+                "bDestroy": true,
+                "bAutoWidth": false,
+                "sPaginationType": "full_numbers",
+                "sAjaxSource": '/AM/ajax/requests.php',
+                "fnServerParams": function(aoData) {
+                    aoData.push({"name": "action", "value": "get_relatorio_movimentacao_to_datatable"}
+                    );
+                },
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser","bVisible": (SpiceU.user_level>5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px","bVisible": (SpiceU.user_level>5)}],
+                "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
+            });
+            $('#export_MS').click(function(event) {
+                event.preventDefault();
+                table2csv(relatorio_moviment_stock_table, 'full', '#'+rc_zone[0].id);
+            });
+            rc_zone.on("click", ".accept_report_movimentacao", function()
+            {
+                var this_button = $(this);
+                $.post('/AM/ajax/requests.php', {action: "accept_report_movimentacao", id: $(this).val()}, function() {
+                    this_button.parent("td").prev().text("Aprovado");
+                    relatorio_moviment_stock_table.fnReloadAjax();
+                }, "json");
+            });
+            rc_zone.on("click", ".decline_report_movimentacao", function()
+            {
+                var this_button = $(this);
+                bootbox.confirm("Tem a certeza?", function(result) {
+                    if (result) {
+                        $.post('/AM/ajax/requests.php', {action: "decline_report_movimentacao", id: this_button.val()}, function() {
+                            this_button.parent("td").prev().text("Rejeitado");
+                            relatorio_moviment_stock_table.fnReloadAjax();
+                        }, "json");
+                    }
+                });
+            });
+            rc_zone.on("click", ".ver_itens", function(e)
+            {
+
+                e.preventDefault();
+                var id_anexo = $(this).data().movimentacao_id;
+                $.post("ajax/requests.php", {action: "get_itens_movimentacao", id: id_anexo},
+                function(data)
+                {
+                    var
+                            content,
+                            tbody = "";
+                    $.each(data, function()
+                    {
+                        tbody += "<tr><td>" + this.quantidade + "</td><td>" + this.destinario + "</td><td>" + this.descricao + "</td><td>" + this.serie + "</td><td>" + this.obs + "</td></tr>";
+                    });
+                    content = "<table class='table table-mod table-bordered table-striped table-condesed'>\n\
+                                <thead><tr><th>#</th><th>Destinário</th><th>Descrição</th><th>Nº Serie</th><th>Observações</th></tr></thead>\n\
+                                <tbody>" + tbody + "</tbody>\n\
+                               </table>";
+                    bootbox.alert(content);
+                }, "json");
+            });
+        }
+    }
+
 };

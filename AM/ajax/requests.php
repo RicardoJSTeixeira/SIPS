@@ -26,8 +26,11 @@ $userID = $user->getUser();
 $apoio_marketing = new apoio_marketing($db, $userID->user_level, $userID->username);
 $relatorio_correio = new correio($db, $userID->user_level, $userID->username);
 $relatorio_frota = new frota($db, $userID->user_level, $userID->username);
+$relatorio_mensal_stock = new mensal_stock($db, $userID->user_level, $userID->username);
+$relatorio_movimentacao_stock = new movimentacao_stock($db, $userID->user_level, $userID->username);
     
 switch ($action) {
+    //ADDs
     case "criar_relatorio_frota":
         echo json_encode($relatorio_frota->create($data, $matricula, $km, $viatura, $ocorrencias, $comments));
         break;
@@ -47,13 +50,17 @@ switch ($action) {
         $ok = $apoio_marketing->create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade, $id);
         echo json_encode($ok);
         break;
-
-    case "remover_apoio_marketing":
-
-        echo json_encode($apoio_marketing->delete($id));
+                 
+    case "criar_relatorio_mensal_stock":
+        echo json_encode($relatorio_mensal_stock->create($data,$produtos));
+        break;
+    
+    case "criar_relatorio_movimentacao_stock":
+        echo json_encode($relatorio_movimentacao_stock->create($data,$produtos));
         break;
 
-
+    
+    //Gets to Datatables
     case "get_apoio_marketing_to_datatable":
 
         echo json_encode($apoio_marketing->get_to_datatable($show_admin));
@@ -63,13 +70,21 @@ switch ($action) {
 
         echo json_encode($relatorio_correio->get_to_datatable($show_admin));
         break;
-
-
+    
     case "get_relatorio_frota_to_datatable":
-
         echo json_encode($relatorio_frota->get_to_datatable($show_admin));
         break;
+    
+    case "get_relatorio_stock_to_datatable":
+        echo json_encode($relatorio_mensal_stock->get_to_datatable($show_admin));
+        break;
+    
+    case "get_relatorio_movimentacao_to_datatable":
+        echo json_encode($relatorio_movimentacao_stock->get_to_datatable($show_admin));
+        break;
 
+    
+    //Get extras
     case "get_anexo_correio":
         echo json_encode($relatorio_correio->get_anexo_correio($id));
         break;
@@ -86,15 +101,22 @@ switch ($action) {
         echo json_encode($apoio_marketing->get_locais_publicidade($id));
         break;
 
-
     case "get_ocorrencias_frota":
-        echo json_encode($relatorio_frota->get_ocorrencias($id));
+        echo json_encode($relatorio_frota->get($id));
         break;
 
-    //Admin
+    case "get_itens_stock":
+        echo json_encode($relatorio_mensal_stock->get($id));
+        break;
+
+    case "get_itens_movimentacao":
+        echo json_encode($relatorio_movimentacao_stock->get($id));
+        break;
+
+    //Accepts Declines
 
     case "accept_apoio_marketing":
-        echo json_encode($apoio_marketing->accept_apoio_marketing($id));
+        echo json_encode($apoio_marketing->accept($id));
         break;
 
     case "decline_apoio_marketing":
@@ -103,27 +125,43 @@ switch ($action) {
         while ($rst = array_pop($idRst)) {
             $calendar->removeReserva($rst);
         }
-        echo json_encode($apoio_marketing->decline_apoio_marketing($id));
+        echo json_encode($apoio_marketing->decline($id));
         break;
 
-
     case "accept_report_correio":
-        echo json_encode($relatorio_correio->accept_report_correio($id));
+        echo json_encode($relatorio_correio->accept($id));
         break;
 
     case "decline_report_correio":
-        echo json_encode($relatorio_correio->decline_report_correio($id));
+        echo json_encode($relatorio_correio->decline($id));
         break;
 
-
     case "accept_report_frota":
-        echo json_encode($relatorio_frota->accept_report_frota($id));
+        echo json_encode($relatorio_frota->accept($id));
         break;
 
     case "decline_report_frota":
-        echo json_encode($relatorio_frota->decline_report_frota($id));
+        echo json_encode($relatorio_frota->decline($id));
         break;
 
+    case "accept_report_stock":
+        echo json_encode($relatorio_mensal_stock->accept($id));
+        break;
+
+    case "decline_report_stock":
+        echo json_encode($relatorio_mensal_stock->decline($id));
+        break;
+
+    case "accept_report_movimentacao":
+        echo json_encode($relatorio_movimentacao_stock->accept($id));
+        break;
+
+    case "decline_report_movimentacao":
+        echo json_encode($relatorio_movimentacao_stock->decline($id));
+        break;
+   
+    
+    
     default:
         echo 'Are you an hacker? if yes then please go change your underpants, it stinks!';
 }

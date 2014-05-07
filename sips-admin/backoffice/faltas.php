@@ -167,7 +167,7 @@ if ($row['user_group'] == "ADMIN") {
                                         }
                                         $red = ($row[$column_num] == "Falta" or ($column_num > 3 AND $row[$column_num] > $tempos[$column_num - 4] AND $tempos[$column_num - 4] != 0));
 
-                                        $td_content = ($column_num < 4) ? $row[$column_num] : (($row[$column_num]>3600)?gmdate("G:i:s", $row[$column_num]):gmdate("i:s", $row[$column_num]));
+                                        $td_content = ($column_num < 4) ? $row[$column_num] : (($row[$column_num]>3600)?date("G:i:s", $row[$column_num]):date("i:s", $row[$column_num]));
                                         ?>
                                             <td><?= ($red) ? '<span class="label label-important">' : "" ?><?= $td_content ?><?= ($red) ? '</span>' : '' ?></td>
                                         <?php } ?>

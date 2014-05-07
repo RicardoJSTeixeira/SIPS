@@ -490,7 +490,7 @@ function CampaignTransfers($User,$CampaignID, $Checked, $link) {
     
      $query = "Insert into vicidial_admin_log(`admin_log_id`, `event_date`, `user`, `ip_address`, `event_section`, `event_type`, `record_id`, `event_code`, `event_sql`)"
             . "values(NULL,'" . date("Y-m-d H:i:s") . "','" . $User->id . "','" . $User->ip . "','CAMPAIGNS','MODIFY','$CampaignID','ADMIN ALLOW AGENTS TRANFERS','" . mysql_real_escape_string($query1) . "')";
-    mysql_query($query) or die(mysql_error());
+    echo mysql_query($query) or die(mysql_error());
 }
 
 function CampaignDTMF($CampaignID, $Checked, $link) {
@@ -564,7 +564,7 @@ switch ($action) {
         break;
     case "CampaignAllowAgentSearch": CampaignAllowAgentSearch($CampaignID, $Checked, $link);
         break;
-    case "CampaignTransfers": CampaignTransfers($CampaignID, $Checked, $link);
+    case "CampaignTransfers": CampaignTransfers($user,$CampaignID, $Checked, $link);
         break;
     case "CampaignDTMF": CampaignDTMF($CampaignID, $Checked, $link);
         break;
@@ -575,5 +575,7 @@ switch ($action) {
     case "CampaignCallbackLimit_geral": CampaignCBLimit_geral($user, $CampaignID, $max, $link);
         break;
     case "EditCampaignOwnerOnly": EditCampaignOwnerOnly($user, $CampaignID, $CampaignOwnerOnly, $link);
+        break;
+    default: echo 'Are u an unicorn?';
         break;
 }

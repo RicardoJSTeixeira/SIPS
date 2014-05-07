@@ -21,7 +21,7 @@ switch ($action) {
         $row = $stmt->fetch(PDO::FETCH_OBJ);
         $js = array(
             (object) array("name" => "Cod. Mkt.", "value" => (string) $row->extra1),
-            (object) array("name" => "Nome", "value" => (string) $row->first_name . " " . $row->middle_initial . " " . $row->last_name),
+            (object) array("name" => "Nome", "value" => (string) $row->first_name . " " . $row->last_name),
             (object) array("name" => "Localidade", "value" => (string) $row->city),
             (object) array("name" => "Codigo Postal", "value" => (string) $row->postal_code),
             (object) array("name" => "Morada", "value" => (string) $row->address . " " . $row->address1)
@@ -35,7 +35,7 @@ switch ($action) {
         $row = $stmt->fetch(PDO::FETCH_OBJ);
         $js = (object) array(
                     "id" => (int) $row->lead_id,
-                    "name" => (string) $row->first_name . " " . $row->middle_initial . " " . $row->last_name,
+                    "name" => (string) $row->first_name . " " . $row->last_name,
                     "address" => (string) $row->address . " " . $row->address1,
                     "postalCode" => (string) $row->postal_code,
                     "bDay" => (string) $row->date_of_birth,
@@ -53,7 +53,7 @@ switch ($action) {
         $js = (object) array(
                     "id" => (int) $row->lead_id,
                     "phone" => (int) $row->phone_number,
-                    "name" => (string) $row->first_name . " " . $row->middle_initial . " " . $row->last_name,
+                    "name" => (string) $row->first_name . " " . $row->last_name,
                     "address" => (string) $row->address1 . " " . $row->address2 . " " . $row->address4,
                     "local" => (string) $row->local,
                     "postalCode" => (string) $row->postal_code,

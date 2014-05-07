@@ -1,4 +1,20 @@
 var SpiceU = {};
+$.post("ajax/user_info.php", function(user) {
+    SpiceU = user;
+    $.jGrowl('Bem vindo ' + user.name, {life: 4000});
+    $("#user-name").text(user.name);
+
+    if (user.user_level > 1) {
+        $("#sidebar li.role-dispenser:not(.role-admin)").hide();
+    } else {
+        $("#sidebar li.role-admin:not(.role-dispenser)").hide();
+    }
+
+}, "json")
+        .fail(function() {
+            window.location = "logout.php";
+        });
+
 $(function() {
     function setFavicon() {
         var link = $('link[type="image/vnd\.microsoft\.icon"]').remove().attr("href");
@@ -38,21 +54,6 @@ $(function() {
 
     });
 
-    $.post("ajax/user_info.php", function(user) {
-        SpiceU = user;
-        $.jGrowl('Bem vindo ' + user.name, {life: 4000});
-        $("#user-name").text(user.name);
-
-        if (user.user_level > 1) {
-            $("#sidebar li.role-dispenser").hide();
-        } else {
-            $("#sidebar li.role-admin").hide();
-        }
-
-    }, "json")
-            .fail(function() {
-                window.location = "logout.php";
-            });
 
     get_messages();
 

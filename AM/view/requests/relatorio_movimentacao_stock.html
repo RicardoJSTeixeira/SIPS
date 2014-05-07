@@ -1,0 +1,40 @@
+<form id="relatorio_movimentacao_stock_form">
+    <div class="grid-title">
+        <div class="pull-left">Mensal de Stock</div>
+    </div>
+    <div class="grid-content">
+        <div class="row-fluid">
+            <div class="span4"> 
+                <div class="formRow">
+                    <span>Data</span>
+                    <div class="formRight">
+                        <input size="16" type="text" name="data" class="form_datetime validate[required] input-small" readonly id="input_data"  placeholder="Data">
+                    </div>
+                </div>
+            </div>
+            <div class="span8"> 
+                <div class="formRow">
+                    <table class="table table-bordered table-mod" id="table_ocorrencias">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;" title="Quantidade">#</th>
+                                <th>Destinatário</th>
+                                <th>Descrição</th>
+                                <th>Nº Serie</th>
+                                <th>Observações</th>
+                                <th style="width: 30px;">
+                                    <button class="btn btn-primary icon-alone" id="button_rfms_table_add_line"><i class="icon-plus"></i></button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="table_tbody_rfms">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="formRow">
+                    <button class="btn btn-primary right" id="submit_rfms">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

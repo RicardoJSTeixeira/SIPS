@@ -1,51 +1,72 @@
 <div id="admin_extra_zone"></div>
 <div class="row-fluid">
-
     <div class="grid span12">
         <div class="grid-title">
-            <div class="pull-left">
-                Gestão de Pedido apoio Marketing
+            <div class="pull-left">Apoio Marketing</div>
+            <div class="pull-right">
+                <button class="btn btn-lg btn-info" id="export_AM"><i class='icon-download'></i>Transferir</button>
             </div>
-
         </div>
         <div class="grid-content div_admin_edit" id="pedidos_apoio_marketing_master_div"  >
             <table class="table table-bordered table-mod" id="pedidos_apoio_marketing_datatable"></table>
             <div class="clear"></div>
         </div>
-
     </div>
-
 </div>
 <div class="row-fluid">
-
     <div class="grid span12">
         <div class="grid-title">
-            <div class="pull-left">
-                Gestão de Pedidos de correio
+            <div class="pull-left">Correio</div>
+            <div class="pull-right">
+                <button class="btn btn-lg btn-info" id="export_C"><i class='icon-download'></i>Transferir</button>
             </div>
-
         </div>
         <div class="grid-content div_admin_edit" id="pedidos_correio_master_div" >
             <table class="table table-bordered table-mod" id="pedidos_correio_datatable"></table>
             <div class="clear"></div>
         </div>
-
     </div>
-
 </div>
 <div class="row-fluid">
     <div class="grid span12">
         <div class="grid-title">
-            <div class="pull-left">
-                Gestão de Pedido de Frota
+            <div class="pull-left">Relatório de Frota</div>
+            <div class="pull-right">
+                <button class="btn btn-lg btn-info" id="export_F"><i class='icon-download'></i>Transferir</button>
             </div>
-
         </div>
         <div class="grid-content div_admin_edit" id="pedidos_frota_master_div"  >
             <table class="table table-bordered table-mod" id="pedidos_frota_datatable"></table>
             <div class="clear"></div>
         </div>
-
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="grid span12">
+        <div class="grid-title">
+            <div class="pull-left">Relatório de Stock</div>   
+            <div class='pull-right'>
+                <button class="btn btn-lg btn-info" id="export_S"><i class='icon-download'></i>Transferir</button>
+            </div>   
+        </div>
+        <div class="grid-content div_admin_edit" id="pedidos_stock_master_div"  >
+            <table class="table table-bordered table-mod" id="pedidos_stock_datatable"></table>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="grid span12">
+        <div class="grid-title">
+            <div class="pull-left">Movimentações de Stock</div>
+            <div class="pull-right">
+                <button class="btn btn-lg btn-info" id="export_MS"><i class='icon-download'></i>Transferir</button>
+            </div>
+        </div>
+        <div class="grid-content div_admin_edit" id="pedidos_movimentacao_master_div"  >
+            <table class="table table-bordered table-mod" id="pedidos_movimentacao_datatable"></table>
+            <div class="clear"></div>
+        </div>
     </div>
 </div>
 
@@ -55,13 +76,22 @@
 
     $(function()
     {
-        requests1 = new requests($("#admin_extra_zone"), {});
-        requests1.apoio_marketing.init();
-        requests1.apoio_marketing.get_to_datatable($("#pedidos_apoio_marketing_datatable"));
-        requests1.relatorio_correio.init();
-        requests1.relatorio_correio.get_to_datatable($("#pedidos_correio_datatable"));
-        requests1.relatorio_frota.init();
-        requests1.relatorio_frota.get_to_datatable($("#pedidos_frota_datatable"));
+        Rq = new requests($("#admin_extra_zone"), {});
+
+        Rq.apoio_marketing.init();
+        Rq.apoio_marketing.get_to_datatable($("#pedidos_apoio_marketing_datatable"));
+
+        Rq.relatorio_correio.init();
+        Rq.relatorio_correio.get_to_datatable($("#pedidos_correio_datatable"));
+
+        Rq.relatorio_frota.init();
+        Rq.relatorio_frota.get_to_datatable($("#pedidos_frota_datatable"));
+
+        Rq.relatorio_mensal_stock.init();
+        Rq.relatorio_mensal_stock.get_to_datatable($("#pedidos_stock_datatable"));
+
+        Rq.relatorio_movimentacao_stock.init();
+        Rq.relatorio_movimentacao_stock.get_to_datatable($("#pedidos_movimentacao_datatable"));
     });
 
 

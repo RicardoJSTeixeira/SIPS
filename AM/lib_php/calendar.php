@@ -66,7 +66,9 @@ Class Calendars {
             } else {
                 $rsc = $this->_db->prepare("SELECT id_resource id FROM sips_sd_resources WHERE id_scheduler=:id AND active=1");
                 $rsc->execute(array(":id" => $row->id_calendar));
-                $refs = $rsc->fetchALL(PDO::FETCH_OBJ);
+                while ($rscs = $rsc->fetch(PDO::FETCH_OBJ)) {
+                    $refs[] = $rscs;
+                }
             }
         }
         return $refs;

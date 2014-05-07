@@ -389,7 +389,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                                 action: "insert_consulta",
                                 reserva_id: calendar_client.calEvent.id,
                                 lead_id: calendar_client.calEvent.lead_id,
-                                closed: true,
+                                closed: 1,
                                 consulta: 0,
                                 consulta_razao: cResult,
                                 exame: "0",
@@ -510,21 +510,20 @@ var calendar = function(selector, data, modals, ext, client, user) {
             $.each(data, function() {
                 tmp = tmp + "<dt>" + this.name + "</dt><dd>" + this.value + "</dd>";
             });
-            if (calEvent.user !== me.user.username && me.user.user_level < 5) {
-
-                me.modal_ext
-                        .find(".modal-footer span.left")
-                        .hide()
-                        .end()
-                        .find("#btn_view_consult")
-                        .hide();
-            } else if (calEvent.closed) {
+            if (calEvent.closed) {
                 me.modal_ext
                         .find(".modal-footer span")
                         .hide()
                         .end()
                         .find("#btn_view_consult")
                         .show();
+            } else if (calEvent.user !== me.user.username && me.user.user_level < 5) {
+                me.modal_ext
+                        .find(".modal-footer span.left")
+                        .hide()
+                        .end()
+                        .find("#btn_view_consult")
+                        .hide();
             } else {
                 me.modal_ext
                         .find(".modal-footer span")
