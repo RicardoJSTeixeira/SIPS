@@ -163,7 +163,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                     title: event.title,
                     content: (function() {
                         if (!event.system) {
-                            return '<dl class="dl-horizontal"><dt>Nome</dt><dd>' + event.client_name + '</dd><dt>Campanha</dt><dd>' + event.codCamp + '</dd></dl>';
+                            return '<dl class="dl-horizontal"><dt>Nome</dt><dd>' + event.client_name + '</dd><dt>Cod. Mkt.</dt><dd>' + event.codCamp + '</dd><dt>Cod Postal</dt><dd>' + event.postal + '</dd></dl>';
                         } else {
                             return event.obs;
                         }
@@ -368,7 +368,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                                 <option value="FAL">Faleceu</option>\n\
                                 <option value="TINV">Telefone Invalido</option>\n\
                                 <option value="NOSHOW">No Show</option>\n\
-                                <option value="NATEN">Ninguém em casa</option>\n\
+                                <option value="NAT">Ninguém em casa</option>\n\
                                 <option value="MOR">Morada Errada</option>\n\
                                 <option value="NTEC">Técnico não foi</option>\n\
                             </select>\n\
@@ -399,6 +399,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                                 left_ear: 0,
                                 right_ear: 0,
                                 tipo_aparelho: "",
+                                produtos: "",
                                 descricao_aparelho: "",
                                 feedback: "SCONS"
                             },

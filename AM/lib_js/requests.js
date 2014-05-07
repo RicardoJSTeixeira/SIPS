@@ -4,11 +4,11 @@ var requests = function(basic_path, options_ext)
     var basic_path = basic_path;
     this.config = {};
     $.extend(true, this.config, options_ext);
-    
-    if(SpiceU.user_level<5){
+
+    if (SpiceU.user_level < 5) {
         $("#principal button.btn-info").hide();
     }
-    
+
     this.apoio_marketing = {
         init: function()
         {
@@ -36,20 +36,20 @@ var requests = function(basic_path, options_ext)
                         .on('changeDate', function() {
                             $("#data_rastreio1").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
                         });
-                am_zone.find("#data_inicio1").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
+                am_zone.find("#data_inicio1").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD"), minuteStep: 30})
                         .on('changeDate', function() {
                             $("#data_inicio2").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT' + $(this).val()));
                         });
-                am_zone.find("#data_inicio2").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
+                am_zone.find("#data_inicio2").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD"), minuteStep: 30})
                         .on('changeDate', function() {
                             $("#data_inicio1").datetimepicker('setEndDate', moment().format('YYYY-MM-DDT' + $(this).val()));
                             $("#data_fim1").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT' + $(this).val()));
                         });
-                am_zone.find("#data_fim1").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
+                am_zone.find("#data_fim1").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD"), minuteStep: 30})
                         .on('changeDate', function() {
                             $("#data_fim2").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT' + $(this).val()));
                         });
-                am_zone.find("#data_fim2").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD")})
+                am_zone.find("#data_fim2").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD"), minuteStep: 30})
                         .on('changeDate', function() {
                             $("#data_fim1").datetimepicker('setEndDate', moment().format('YYYY-MM-DDT' + $(this).val()));
                         });
@@ -109,12 +109,12 @@ var requests = function(basic_path, options_ext)
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"});
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser","bVisible": (SpiceU.user_level>5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial rastreio"}, {"sTitle": "Data final rastreio"}, {"sTitle": "Horario", "sWidth": "75px"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Local publicidade", "sWidth": "75px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px","bVisible": (SpiceU.user_level>5)}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial rastreio"}, {"sTitle": "Data final rastreio"}, {"sTitle": "Horario", "sWidth": "75px"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Local publicidade", "sWidth": "75px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_AM').click(function(event) {
                 event.preventDefault();
-                table2csv(apoio_markting_table, 'full', '#'+am_zone[0].id);
+                table2csv(apoio_markting_table, 'full', '#' + am_zone[0].id);
             });
             am_zone.on("click", ".ver_horario", function()
             {
@@ -181,7 +181,7 @@ var requests = function(basic_path, options_ext)
                 rf_zone.find("#button_rf_table_add_line").click(function(e)
                 {
                     e.preventDefault();
-                    rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required] linha_data span' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'></td><td><input class='validate[required] linha_ocorrencia span' type='text' name='rf_ocorr" + rfinput_count + "'></td><td><input class='validate[required] linha_km text-right' type='text' value='0' name='rf_km" + rfinput_count + "' size='16'/></td><td><button class='btn btn-danger button_rf_table_remove_line icon-alone'><i class='icon-minus'></i></button></td></tr>");
+                    rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required] linha_data span' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'></td><td><input class='validate[required] linha_ocorrencia span' type='text' name='rf_ocorr" + rfinput_count + "'></td><td><input class='validate[required] linha_km text-right' type='text' value='0' maxlength='6' name='rf_km" + rfinput_count + "' size='16'/></td><td><button class='btn btn-danger button_rf_table_remove_line icon-alone'><i class='icon-minus'></i></button></td></tr>");
                     rf_zone.find("#rf_datetime" + rfinput_count).datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
                     rf_zone.find("[name=rf_km" + rfinput_count + "]").autotab('number');
                     rfinput_count++;
@@ -234,12 +234,12 @@ var requests = function(basic_path, options_ext)
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "get_relatorio_frota_to_datatable"});
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser","bVisible": (SpiceU.user_level>5)}, {"sTitle": "data"}, {"sTitle": "Matricula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrencias", "sWidth": "150px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px","bVisible": (SpiceU.user_level>5)}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "data"}, {"sTitle": "Matricula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrencias", "sWidth": "150px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_F').click(function(event) {
                 event.preventDefault();
-                table2csv(relatorio_frota_table, 'full', '#'+rf_zone[0].id);
+                table2csv(relatorio_frota_table, 'full', '#' + rf_zone[0].id);
             });
             rf_zone.on("click", ".ver_ocorrencias", function()
             {
@@ -341,12 +341,12 @@ var requests = function(basic_path, options_ext)
                     aoData.push({"name": "action", "value": "get_relatorio_correio_to_datatable"}
                     );
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser","bVisible": (SpiceU.user_level>5)}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Ref.ª de Cliente"}, {"sTitle": "Anexo", "sWidth": "75px"}, {"sTitle": "Observações"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px","bVisible": (SpiceU.user_level>5)}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Ref.ª de Cliente"}, {"sTitle": "Anexo", "sWidth": "75px"}, {"sTitle": "Observações"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_C').click(function(event) {
                 event.preventDefault();
-                table2csv(relatorio_correio_table, 'full', '#'+rc_zone[0].id);
+                table2csv(relatorio_correio_table, 'full', '#' + rc_zone[0].id);
             });
             rc_zone.on("click", ".accept_report_correio", function()
             {
@@ -381,8 +381,8 @@ var requests = function(basic_path, options_ext)
                     tbody.empty();
                     $.each(data1, function()
                     {
-                            tbody.append("<tr><td class='chex-table'><input type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' "+((~~this.confirmed)?"checked":"")+" "+((SpiceU.user_level<5)?"disabled":"")+" id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td>" + this.value + "</td></tr>");
-                          anexo_number++;
+                        tbody.append("<tr><td class='chex-table'><input type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " " + ((SpiceU.user_level < 5) ? "disabled" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td>" + this.value + "</td></tr>");
+                        anexo_number++;
                     });
                     basic_path.find("#ver_anexo_correio_modal").modal("show");
                 }, "json");
@@ -432,7 +432,7 @@ var requests = function(basic_path, options_ext)
                 });
                 rc_zone.find("#button_rfms_table_add_line").click(function(e) {
                     e.preventDefault();
-                    rc_zone.find("#table_tbody_rfms").append("<tr><td><input class='validate[required] span text-right quant' type='text' /></td> <td><input class='validate[required] span desc' type='text' /></td> <td><input class='validate[required] span serie' type='text' /></td> <td><textarea class='validate[required] span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
+                    rc_zone.find("#table_tbody_rfms").append("<tr><td><input class='validate[required] span text-right quant' type='text' /></td> <td><input class='validate[required] span desc' type='text' /></td> <td><input class='validate[required] span serie' type='text' /></td> <td><textarea class='span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
                     rc_zone.find(".quant").autotab('number');
                 }).click();
                 rc_zone.on("click", ".remove_doc_obj", function(e) {
@@ -453,12 +453,12 @@ var requests = function(basic_path, options_ext)
                     aoData.push({"name": "action", "value": "get_relatorio_stock_to_datatable"}
                     );
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser","bVisible": (SpiceU.user_level>5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px","bVisible": (SpiceU.user_level>5)}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_S').click(function(event) {
                 event.preventDefault();
-                table2csv(relatorio_stock_table, 'full', '#'+rc_zone[0].id);
+                table2csv(relatorio_stock_table, 'full', '#' + rc_zone[0].id);
             });
             rc_zone.on("click", ".accept_report_stock", function()
             {
@@ -538,7 +538,7 @@ var requests = function(basic_path, options_ext)
                 });
                 rc_zone.find("#button_rfms_table_add_line").click(function(e) {
                     e.preventDefault();
-                    rc_zone.find("#table_tbody_rfms").append("<tr><td><input class='validate[required] span text-right quant' type='text' /></td> <td><input class='validate[required] span dest' type='text' /></td> <td><input class='validate[required] span desc' type='text' /></td> <td><input class='validate[required] span serie' type='text' /></td> <td><textarea class='validate[required] span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
+                    rc_zone.find("#table_tbody_rfms").append("<tr><td><input class='validate[required] span text-right quant' type='text' /></td> <td><input class='validate[required] span dest' type='text' /></td> <td><input class='validate[required] span desc' type='text' /></td> <td><input class='validate[required] span serie' type='text' /></td> <td><textarea class='span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
                     rc_zone.find(".quant").autotab('number');
                 }).click();
                 rc_zone.on("click", ".remove_doc_obj", function(e) {
@@ -559,12 +559,12 @@ var requests = function(basic_path, options_ext)
                     aoData.push({"name": "action", "value": "get_relatorio_movimentacao_to_datatable"}
                     );
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser","bVisible": (SpiceU.user_level>5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "50px","bVisible": (SpiceU.user_level>5)}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_MS').click(function(event) {
                 event.preventDefault();
-                table2csv(relatorio_moviment_stock_table, 'full', '#'+rc_zone[0].id);
+                table2csv(relatorio_moviment_stock_table, 'full', '#' + rc_zone[0].id);
             });
             rc_zone.on("click", ".accept_report_movimentacao", function()
             {
@@ -602,13 +602,12 @@ var requests = function(basic_path, options_ext)
                         tbody += "<tr><td>" + this.quantidade + "</td><td>" + this.destinario + "</td><td>" + this.descricao + "</td><td>" + this.serie + "</td><td>" + this.obs + "</td></tr>";
                     });
                     content = "<table class='table table-mod table-bordered table-striped table-condesed'>\n\
-                                <thead><tr><th>#</th><th>Destinário</th><th>Descrição</th><th>Nº Serie</th><th>Observações</th></tr></thead>\n\
+                                <thead><tr><th>#</th><th>Destinatário</th><th>Descrição</th><th>Nº Serie</th><th>Observações</th></tr></thead>\n\
                                 <tbody>" + tbody + "</tbody>\n\
                                </table>";
                     bootbox.alert(content);
                 }, "json");
             });
         }
-    }
-
+    };
 };

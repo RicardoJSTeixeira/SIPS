@@ -33,10 +33,11 @@ Class Calendars {
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $reservars[] = array(
                 'id' => $row->id_reservation,
-                'title' => $row->rsc_name . " " . ((is_null($row->postal_code)) ? $row->display_text : $row->postal_code . ' - ' . $row->display_text) . (((bool) $row->closed) ? " - Fechado" : ""),
+                'title' => $row->rsc_name . " " .  $row->display_text . (((bool) $row->closed) ? " - Fechado" : ""),
                 'client_name' => (is_null($row->first_name) ? "" : $row->first_name),
                 'lead_id' => (is_null($row->lead_id) ? "" : $row->lead_id),
                 'codCamp' => (is_null($row->codCamp) ? "" : $row->codCamp),
+                'postal' => (is_null($row->postal_code) ? "" : $row->postal_code),
                 'start' => $row->start_date,
                 'end' => $row->end_date,
                 'editable' => !(((bool) $row->closed || $forceUneditable ) || ($system_types[$row->id_reservation_type]) || (($username) ? $username != $row->id_user : false)),

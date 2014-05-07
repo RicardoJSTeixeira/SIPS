@@ -24,6 +24,7 @@ $(function()
                 input2 = $("#inputs_div2"),
                 input3 = $("#inputs_div3"),
                 elmt,
+                specialE,
                 hide = "";
         $.each(data, function()
         {
@@ -33,15 +34,31 @@ $(function()
                 options = optionsRaw.map(function(v) {
                     return new Option(v, v);
                 });
+                magia=function() {
+                            if ($(this).val() === "OUTRAS") {
+                                $(this).replaceWith(
+                                        $('<div>', {class: 'input-append'})
+                                        .append(
+                                                $("<input>", {type: "text", id: $(this).prop("id"), name: $(this).prop("name")})
+                                                )
+                                        .append(
+                                                $('<btn>', {class: 'btn icon-alone'})
+                                                .append(
+                                                        $('<i>', {class: 'icon-undo'})
+                                                        )
+                                                .click(function() {
+                                                    $(this).parent().replaceWith(specialE.val("").change(magia));
+                                                })
+                                                )
+                                        );
+                            }
+                        };
                 elmt
                         .append(options)
-                        .change(function() {
-                            if ($(this).val() === "OUTRAS") {
-                                $(this).replaceWith($("<input>", {type: "text", id: $(this).prop("id"), name: $(this).prop("name")}));
-                            }
-                        });
+                        .change(magia);
+                specialE = elmt;
             } else if (this.name === "TITLE") {
-                elmt = $(mt = $("<select>", {id: this.name, name: this.name, class: "input-mini"}).append([new Option("", ""), new Option("Sr.", "Sr."), new Option("Sra.", "Sra.")]));
+                elmt = $(mt = $("<select>", {id: this.name, name: this.name, class: "input-mini"}).append([new Option("", ""), new Option("Sr.", "Sr."), new Option("Sra. D.", "Sra. D.")]));
             } else if (this.name === "extra6") {
                 elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "NO"});
             } else {
@@ -78,7 +95,7 @@ $(function()
                     break;
                 case "LAST_NAME":
                     input = input1;
-                break;
+                    break;
                 case "ADDRESS1":
                 case "CITY":
                     custom_class = "validate[required]";

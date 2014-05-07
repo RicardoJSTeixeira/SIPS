@@ -17,12 +17,12 @@ var clientBox = function(configs) {
                                 </div>\n\
                             </div>\n\
                             <div class='user c_bg-2'>\n\
-                                <div class='user-name' style='height:auto; ' id='client_name'></div>\n\
-                                <div class='user-email' id='client_address'></div>\n\
+                                <div class='user-name' id='client_cod_camp'></div>\n\
+                                <div class='user-email' id='client_ref_client'></div>\n\
+                                <div class='user-email' style='height:auto; ' id='client_name'></div>\n\
+                                <div class='user-date' id='client_address'></div>\n\
                                 <div class='user-date' id='client_postal'></div>\n\
                                 <div class='user-date' id='client_local'></div>\n\
-                                <div class='user-date' id='client_ref_client'></div>\n\
-                                <div class='user-date' id='client_cod_camp'></div>\n\
                                 <div class='user-date' id='client_tel'></div>\n\
                                 <div class='user-date' id='client_birth_date'></div>\n\
                                 <div class='user-date' id='client_date'></div>\n\
@@ -62,7 +62,7 @@ var clientBox = function(configs) {
                     .text(clientI.bDay)
                     .end()
                     .find("#client_date")
-                    .text(clientI.date)
+                    .text(function(){return (clientI.date)?moment(clientI.date).format('LLLL'):''})
                     .end()
                     .find("#client_rsc")
                     .text(clientI.rscName)
