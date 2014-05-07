@@ -35,7 +35,7 @@ class apoio_marketing extends requests_class {
                     ":morada" => $morada,
                     ":comments" => $comments,
                     ":local_pub" => json_encode($local_publicidade),
-                    ":status" => 0,
+                    ":status" => 1,
                     ":id_reservation" => json_encode($id_reservation)));
     }
 
@@ -62,18 +62,21 @@ class apoio_marketing extends requests_class {
             $row[5] = "<div> <button class='btn ver_horario' data-apoio_marketing_id='" . $row[0] . "'><i class='icon-eye-open'></i>Horario</button></div>";
             $row[10] = "<div> <button class='btn ver_local_publicidade' data-apoio_marketing_id='" . $row[0] . "' ><i class='icon-eye-open'></i>localidades</button></div>";
 
+
             switch ($row[11]) {
                 case "0":
+                    $row[12] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
                     $row[11] = "Pedido enviado";
                     break;
                 case "1":
-                    $row[11] = "Aprovado";
+                    $row[12] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
+                    $row[11] = "<span class='label label-success'>Aprovado</span>";
                     break;
                 case "2":
-                    $row[11] = "Rejeitado";
+                    $row[12] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
+                    $row[11] = "<span class='label label-important'>Rejeitado</span>";
                     break;
             }
-            $row[12] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
             $result['aaData'][] = $row;
         }
 
@@ -165,16 +168,18 @@ class correio extends requests_class {
                 $row[6] = "Sem anexo";
             switch ($row[8]) {
                 case "0":
+                    $row[9] = "<div class='btn-group'><button class='btn accept_report_correio btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_correio btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
                     $row[8] = "Pedido enviado";
                     break;
                 case "1":
-                    $row[8] = "Aprovado";
+                    $row[9] = "<div class='btn-group'><button class='btn accept_report_correio btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_correio btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+                    $row[8] = "<span class='label label-success'>Aprovado</span>";
                     break;
                 case "2":
-                    $row[8] = "Rejeitado";
+                    $row[9] = "<div class='btn-group'><button class='btn accept_report_correio btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_correio btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+                    $row[8] = "<span class='label label-important'>Pendente</span>";
                     break;
             }
-            $row[9] = "<div class='btn-group'><button class='btn accept_report_correio btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_correio btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
 
             $result['aaData'][] = $row;
         }
@@ -250,19 +255,21 @@ class frota extends requests_class {
 
             switch ($row[8]) {
                 case "0":
+                    $row[9] = "<div class='btn-group'><button class='btn accept_report_frota btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_frota btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
                     $row[8] = "Pedido enviado";
                     break;
                 case "1":
-                    $row[8] = "Aprovado";
+                    $row[9] = "<div class='btn-group'><button class='btn accept_report_frota btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_frota btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+                    $row[8] = "<span class='label label-success'>Aprovado</span>";
                     break;
                 case "2":
-                    $row[8] = "Rejeitado";
+                    $row[9] = "<div class='btn-group'><button class='btn accept_report_frota btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_frota btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+                    $row[8] = "<span class='label label-important'>Pendente</span>";
                     break;
             }
 
             $row[7] = "<div> <button class='btn ver_ocorrencias' data-relatorio_frota_id='" . $row[0] . "'><i class='icon-eye-open'></i>Ver Ocorrências</button></div>";
 
-            $row[9] = "<div class='btn-group'><button class='btn accept_report_frota btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_frota btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
 
             $result['aaData'][] = $row;
         }
@@ -334,19 +341,21 @@ class mensal_stock extends requests_class {
 
             switch ($row[4]) {
                 case "0":
+                    $row[5] = "<div class='btn-group'><button class='btn accept_report_stock btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_stock btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
                     $row[4] = "Pedido enviado";
                     break;
                 case "1":
-                    $row[4] = "Aprovado";
+                    $row[5] = "<div class='btn-group'><button class='btn accept_report_stock btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_stock btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+                    $row[4] = "<span class='label label-success'>Aprovado</span>";
                     break;
                 case "2":
-                    $row[4] = "Rejeitado";
+                    $row[5] = "<div class='btn-group'><button class='btn accept_report_stock btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_stock btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+                    $row[4] = "<span class='label label-important'>Pendente</span>";
                     break;
             }
 
             $row[3] = "<div> <button class='btn ver_itens' data-stock_id='" . $row[0] . "'><i class='icon-eye-open'></i>Itens</button></div>";
 
-            $row[5] = "<div class='btn-group'><button class='btn accept_report_stock btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_stock btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
 
             $result['aaData'][] = $row;
         }
@@ -416,19 +425,21 @@ class movimentacao_stock extends requests_class {
 
             switch ($row[4]) {
                 case "0":
+                    $row[5] = "<div class='btn-group'><button class='btn accept_report_movimentacao btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_movimentacao btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
                     $row[4] = "Pedido enviado";
                     break;
                 case "1":
-                    $row[4] = "Aprovado";
+                    $row[5] = "<div class='btn-group'><button class='btn accept_report_movimentacao btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_movimentacao btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+                    $row[4] = "<span class='label label-success'>Aprovado</span>";
                     break;
                 case "2":
-                    $row[4] = "Rejeitado";
+                    $row[5] = "<div class='btn-group'><button class='btn accept_report_movimentacao btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_movimentacao btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+                    $row[4] = "<span class='label label-important'>Pendente</span>";
                     break;
             }
 
             $row[3] = "<div> <button class='btn ver_itens' data-movimentacao_id='" . $row[0] . "'><i class='icon-eye-open'></i>Itens</button></div>";
 
-            $row[5] = "<div class='btn-group'><button class='btn accept_report_movimentacao btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_movimentacao btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
 
             $result['aaData'][] = $row;
         }
