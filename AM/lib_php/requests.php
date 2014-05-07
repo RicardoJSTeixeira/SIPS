@@ -2,6 +2,7 @@
 
 abstract class requests_class {
 
+    protected $_db;
     public $user_level = 0;
     public $user_id = "no_user";
 
@@ -39,19 +40,10 @@ class apoio_marketing extends requests_class {
                     ":id_reservation" => json_encode($id_reservation)));
     }
 
-    public function edit() {
-        
-    }
-
-    public function delete($id) {
-        $query = "delete from spice_apoio_marketing where id=:id";
-        $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":id" => $id));
-    }
 
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
 
-    public function get_to_datatable($show_admin) {
+    public function get_to_datatable() {
         $result['aaData'] = [];
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
         $query = "SELECT id,user,data_criacao,data_inicial,data_final,horario,localidade,local,morada,comments,'local_publicididade',status from spice_apoio_marketing $filter";
@@ -120,15 +112,25 @@ class apoio_marketing extends requests_class {
     }
 
     public function accept($id) {
-        $query = "Update spice_apoio_marketing set status=1 where id=?";
+        $query = "Update spice_apoio_marketing set status=1 where id=:id";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($id));
+
+        $stmt->execute(array(":id" => $id));
+        return $this->getUser($id);
     }
 
     public function decline($id) {
         $query = "Update spice_apoio_marketing set status=2 where id=?";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($id));
+        $stmt->execute(array($id));
+        return $this->getUser($id);
+    }
+
+    private function getUser($id) {
+        $query = "Select user FROM spice_apoio_marketing where id=:id";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":id" => $id));
+        return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
 }
@@ -145,16 +147,8 @@ class correio extends requests_class {
         return $stmt->execute(array(":user" => $this->user_id, ":carta_porte" => $carta_porte, ":data_envio" => $data, ":documento" => $doc, ":lead_id" => $lead_id, ":anexo" => json_encode($input_doc_obj_assoc), ":comments" => $comments));
     }
 
-    public function edit() {
-        
-    }
-
-    public function delete() {
-        
-    }
-
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
-    public function get_to_datatable($show_admin) {
+    public function get_to_datatable() {
         $result['aaData'] = [];
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
         $query = "SELECT id,user,carta_porte,data_envio,documento,lead_id,anexo,comments,status from spice_report_correio $filter";
@@ -190,13 +184,15 @@ class correio extends requests_class {
     public function accept($id) {
         $query = "Update spice_report_correio set status=1 where id=:id";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":id" => $id));
+        $stmt->execute(array(":id" => $id));
+        return $this->getUser($id);
     }
 
     public function decline($id) {
         $query = "Update spice_report_correio set status=2 where id=:id";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":id" => $id));
+        $stmt->execute(array(":id" => $id));
+        return $this->getUser($id);
     }
 
     public function get_anexo_correio($id) {
@@ -220,6 +216,13 @@ class correio extends requests_class {
         return $stmt->execute(array(":id" => $id, ":anexo" => json_encode($anexos)));
     }
 
+    private function getUser($id) {
+        $query = "Select user FROM spice_report_correio where id=:id";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":id" => $id));
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
 }
 
 class frota extends requests_class {
@@ -234,16 +237,8 @@ class frota extends requests_class {
         return $stmt->execute(array($this->user_id, $data, $matricula, $km, $viatura, $comments, json_encode($ocorrencias)));
     }
 
-    public function edit() {
-        
-    }
-
-    public function delete() {
-        
-    }
-
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
-    public function get_to_datatable($show_admin) {
+    public function get_to_datatable() {
         $result['aaData'] = [];
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
         $query = "SELECT id,user,data,matricula,km,viatura,comments,ocorrencia,status from spice_report_frota $filter";
@@ -280,13 +275,15 @@ class frota extends requests_class {
 
         $query = "Update spice_report_frota set status=1 where id=?";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($id));
+        $stmt->execute(array($id));
+        return $this->getUser($id);
     }
 
     public function decline($id) {
         $query = "Update spice_report_frota set status=2 where id=?";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($id));
+        $stmt->execute(array($id));
+        return $this->getUser($id);
     }
 
     public function get($id) {
@@ -305,6 +302,13 @@ class frota extends requests_class {
         return $ocorrencia;
     }
 
+    private function getUser($id) {
+        $query = "Select user FROM spice_report_correio where id=:id";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":id" => $id));
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
 }
 
@@ -320,16 +324,8 @@ class mensal_stock extends requests_class {
         return $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
     }
 
-    public function edit() {
-        
-    }
-
-    public function delete() {
-        
-    }
-
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
-    public function get_to_datatable($show_admin) {
+    public function get_to_datatable() {
         $result['aaData'] = [];
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
         $query = "SELECT id, user, data, produtos, status from spice_report_stock $filter";
@@ -365,13 +361,15 @@ class mensal_stock extends requests_class {
     public function accept($id) {
         $query = "Update spice_report_stock set status=1 where id=?";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($id));
+        $stmt->execute(array($id));
+        return $this->getUser($id);
     }
 
     public function decline($id) {
         $query = "Update spice_report_stock set status=2 where id=?";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($id));
+        $stmt->execute(array($id));
+        return $this->getUser($id);
     }
 
     public function get($id) {
@@ -390,6 +388,13 @@ class mensal_stock extends requests_class {
         return $produtos;
     }
 
+    private function getUser($id) {
+        $query = "Select user FROM spice_report_stock where id=:id";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":id" => $id));
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
 }
 
@@ -405,16 +410,8 @@ class movimentacao_stock extends requests_class {
         return $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
     }
 
-    public function edit() {
-        
-    }
-
-    public function delete() {
-        
-    }
-
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
-    public function get_to_datatable($show_admin) {
+    public function get_to_datatable() {
         $result['aaData'] = [];
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
         $query = "SELECT id, user, data, produtos, status from spice_report_movimentacao $filter";
@@ -450,13 +447,15 @@ class movimentacao_stock extends requests_class {
 
         $query = "Update spice_report_movimentacao set status=1 where id=?";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($id));
+        $stmt->execute(array($id));
+        return $this->getUser($id);
     }
 
     public function decline($id) {
         $query = "Update spice_report_movimentacao set status=2 where id=?";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($id));
+        $stmt->execute(array($id));
+        return $this->getUser($id);
     }
 
     public function get($id) {
@@ -473,6 +472,13 @@ class movimentacao_stock extends requests_class {
         }
 
         return $produtos;
+    }
+
+    private function getUser($id) {
+        $query = "Select user FROM spice_report_stock where id=:id";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":id" => $id));
+        return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________

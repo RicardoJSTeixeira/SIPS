@@ -13,6 +13,7 @@ $(function()
     rse = getUrlVars();
     lead_id = atob(decodeURIComponent(rse.id));
     reserva_id = atob(decodeURIComponent(rse.rs));
+    $("#dModelo, #dGama, #eModelo, #eGama").chosen({no_results_text: "Sem resultados", width: "100%"});
     $.post("ajax/consulta.php", {action: "get_consulta", reserva_id: reserva_id},
     function(data)
     {
