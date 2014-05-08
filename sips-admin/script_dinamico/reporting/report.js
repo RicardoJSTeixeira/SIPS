@@ -204,7 +204,7 @@ function get_templates(campaign)
 // NAO HA SCRIPT     
 
                         $("#span_script_name").text("Sem Script");
-                        script_id = undefined;
+                        script_id = null;
                         if ($("#download_script").is(":checked"))
                         {
                             show_template = false;
@@ -224,7 +224,6 @@ function get_templates(campaign)
             }
             else
             {
-alert("a");
 
                 $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
                 function(data)
@@ -234,26 +233,20 @@ alert("a");
                     {
                         script_id = data[0];
                     }
+                    else
+                        script_id = null;
+
+
+                    $("#span_script_name").text("Crie uma Template");
+                    $("#oc_template").empty().append("<option value=''>Crie um template</option>");
+                    $("#column_order_title").text("");
+                    $("#column_order").empty();
+
+                    $("#template_options_button").prop("disabled", true);
+                    $(".edit_template_button").prop("disabled", true);
+                    $("#template_options").hide();
+                    $("#download_report").prop("disabled", true);
                 }, "json");
-
-
-
-
-
-
-
-
-
-
-                $("#span_script_name").text("Crie uma Template");
-                $("#oc_template").empty().append("<option value=''>Crie um template</option>");
-                $("#column_order_title").text("");
-                $("#column_order").empty();
-
-                $("#template_options_button").prop("disabled", true);
-                $(".edit_template_button").prop("disabled", true);
-                $("#template_options").hide();
-                $("#download_report").prop("disabled", true);
             }
         }, "json");
     }
