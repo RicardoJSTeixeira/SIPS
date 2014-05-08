@@ -20,6 +20,7 @@ var tree = function(selector, data, type_encomenda, parent_id) {
             max_value = data.max_req_m;
         else
             max_value = data.max_req_s;
+        
         if (max_value < 1)
             return false;
 

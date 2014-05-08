@@ -38,18 +38,20 @@ Class requisitions {
             $row[3] = $row[3] == "0" ? "<i class='icon-ban-circle'></i>" : $row[3];
             switch ($row[9]) {
                 case "0":
+                    $row[10] = "<div class='btn-group'> <button class='btn accept_requisition btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_requisition btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
                     $row[9] = "Pedido enviado";
                     break;
                 case "1":
-                    $row[9] = "Aprovado";
+                    $row[10] = "<div class='btn-group'> <button class='btn accept_requisition btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_requisition btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
+                    $row[9] = "<span class='label label-success'>Aprovado</span>";
                     break;
                 case "2":
-                    $row[9] = "Rejeitado";
+                    $row[10] = "<div class='btn-group'> <button class='btn accept_requisition btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_requisition btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
+                    $row[9] = "<span class='label label-important'>Rejeitado</span>";
                     break;
             }
 
             $row[8] = "<div><button class='btn ver_requisition_products' value='" . $row[0] . "'><i class='icon-eye-open'></i>Ver</button></div>";
-            $row[10] = $row[10] . " <span class='btn-group'><button class='btn accept_requisition icon-alone btn-success' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_requisition icon-alone btn-warning' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div></span>";
 
             $result['aaData'][] = $row;
         }
