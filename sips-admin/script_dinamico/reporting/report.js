@@ -224,15 +224,27 @@ function get_templates(campaign)
             }
             else
             {
-                 $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
+alert("a");
+
+                $.post("requests.php", {action: "check_has_script", campaign_id: campaign},
                 function(data)
                 {
                     //SCRIPT
-                    if (data.length())
+                    if (Object.size(data))
                     {
                         script_id = data[0];
                     }
                 }, "json");
+
+
+
+
+
+
+
+
+
+
                 $("#span_script_name").text("Crie uma Template");
                 $("#oc_template").empty().append("<option value=''>Crie um template</option>");
                 $("#column_order_title").text("");
