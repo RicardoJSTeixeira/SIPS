@@ -18,7 +18,7 @@ $(function() {
         var
                 columns_allm = [{"sTitle": "ID", "sWidth": "70px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Ref.", "sWidth": "70px"}, {"sTitle": "Cod. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "70px"}, {"sTitle": "Postal", "sWidth": "70px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "270px"}],
                 columns_ncsm = [{"sTitle": "ID", "sWidth": "70px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Ref.", "sWidth": "70px"}, {"sTitle": "Cod. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "70px"}, {"sTitle": "Postal", "sWidth": "70px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "240px"}],
-                columns_ncsm_r = [{"sTitle": "Nome Recomendador", "sWidth": "140px"},{"sTitle": "Cod. Ref. Rec.", "sWidth": "70px"},{"sTitle": "ID", "sWidth": "70px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Ref.", "sWidth": "70px"}, {"sTitle": "Cod. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "70px"}, {"sTitle": "Postal", "sWidth": "70px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "240px"}];
+                columns_ncsm_r = [{"sTitle": "Nome Recomendador", "sWidth": "140px"}, {"sTitle": "Cod. Ref. Rec.", "sWidth": "70px"}, {"sTitle": "ID", "sWidth": "70px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Ref.", "sWidth": "70px"}, {"sTitle": "Cod. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "70px"}, {"sTitle": "Postal", "sWidth": "70px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "240px"}];
 
         if (user.user_level > 5) {
             columns_allm.push({"sTitle": "User", "sWidth": "70px"});
@@ -100,11 +100,9 @@ $(function() {
 
     $("#div_master").on("click", ".ver_cliente", function()
     {
-
-        var cliente = new crm_edit($("#cliente_modal .modal-body"), "/sips-admin/crm/", $(this).data("lead_id"));
-        cliente.destroy();
-        cliente.init();
-        $("#cliente_modal").modal("show");
+        var client = new cliente_info($(this).data("lead_id"), null);
+        client.init(null);
+    
     });
 
     $("#div_master").on("click", ".criar_encomenda", function()

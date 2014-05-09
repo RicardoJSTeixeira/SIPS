@@ -27,7 +27,8 @@ var requisition = function(geral_path, options_ext)
     };
 //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
     this.new_requisition = function(new_requisition_zone, lead_id) {
-         $("#product_selector") .chosen({no_results_text: "Sem resultados" });;
+        $("#product_selector").chosen({no_results_text: "Sem resultados"});
+
         if (lead_id)
         {
             me.tipo = "especial";
@@ -44,7 +45,7 @@ var requisition = function(geral_path, options_ext)
         function(data)
         {
             var option = "<option value='0'>Escolha um produto</option>";
-            $("#product_selector").append(option) ;
+            $("#product_selector").append(option);
             var temp = "<optgroup value='1' label='BTE'></optgroup>\n\
                         <optgroup value='2' label='RITE'></optgroup>\n\
                         <optgroup value='3' label='INTRA'></optgroup>\n\
@@ -68,16 +69,20 @@ var requisition = function(geral_path, options_ext)
                 produtos[this.id] = (this);
                 if (me.tipo == "especial")
                 {
+                    if (this.max_req_s < 1)
+                        return true;
                     if (this.parent_level <= 0)
                         option = "<option value='" + this.id + "'>" + this.name + "</option>";
                 }
                 else
                 {
+                    if (this.max_req_m < 1)
+                        return true;
                     option = "<option value='" + this.id + "'>" + this.name + "</option>";
                 }
                 switch (this.category)
                 {
-              case "BTE":
+                    case "BTE":
                         BTE.push(option);
                         break;
                     case "RITE":
@@ -94,7 +99,7 @@ var requisition = function(geral_path, options_ext)
                         break;
                     case "Molde":
                         molde.push(option);
-                        break; 
+                        break;
                     case "Economato":
                         economato.push(option);
                     case "Gama":
@@ -109,7 +114,7 @@ var requisition = function(geral_path, options_ext)
                     .find("optgroup[value='5']").append(acessorio).end()
                     .find("optgroup[value='6']").append(molde).end()
                     .find("optgroup[value='7']").append(economato).end()
-                    .find("optgroup[value='8']").append(gama).end().trigger("chosen:updated");;
+                    .find("optgroup[value='8']").append(gama).end().trigger("chosen:updated");
         }, "json");
         new_requisition_zone.off();
         new_requisition_zone.find('.fileupload').fileupload().end()
@@ -233,20 +238,38 @@ var requisition = function(geral_path, options_ext)
                         );
             });
             new_requisition_zone.find("#produtos_encomendados").append(new_product);
+            new_requisition_zone.find("#product_selector").val(0).trigger("chosen:updated");
         });
         $(new_requisition_zone).on("click", " .remove_produto_encomendado", function(e)
         {
-            $.each($(this).closest(".grid").find("tr"), function()
-            {
-                if ($(this).hasClass("product_line"))
-                {
-                    if (me.tipo === "especial")
-                        produtos[$(this).find(".td_name").attr("id_product")].max_req_s = produtos[$(this).find(".td_name").attr("id_product")].max_req_s + ~~$(this).find(".td_quantity").text();
-                    else
-                        produtos[$(this).find(".td_name").attr("id_product")].max_req_m = produtos[$(this).find(".td_name").attr("id_product")].max_req_m + ~~$(this).find(".td_quantity").text();
+            var this_button = $(this);
+
+            bootbox.confirm("Tem a certeza que pretende remover esta encomenda? Certifique-se que não tem produtos selecionados na zona da Hierarquia", function(result) {
+                if (result) {
+                    $.each(this_button.closest(".grid").find("tr"), function()
+                    {
+                        if ($(this).hasClass("product_line"))
+                        {
+                            if (me.tipo === "especial")
+                                produtos[$(this).find(".td_name").attr("id_product")].max_req_s = produtos[$(this).find(".td_name").attr("id_product")].max_req_s + ~~$(this).find(".td_quantity").text();
+                            else
+                                produtos[$(this).find(".td_name").attr("id_product")].max_req_m = produtos[$(this).find(".td_name").attr("id_product")].max_req_m + ~~$(this).find(".td_quantity").text();
+                        }
+                    });
+                    new_requisition_zone.find("#product_selector").val(0).trigger("chosen:updated").trigger("change");
+                    this_button.closest(".grid").remove();
                 }
             });
-            $(this).closest(".grid").remove();
+
+
+
+
+
+
+
+
+
+
         });
         $(new_requisition_zone).on("submit", " #form_encomenda_especial", function(e)
         {
@@ -320,10 +343,9 @@ var requisition = function(geral_path, options_ext)
                         $(this).parent().parent().addClass("error");
                 });
             },
-            "aoColumns": [{"sTitle": "id"}, {"sTitle": "Dispenser", "bVisible": SpiceU.user_level > 5}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente", "sType": 'numeric'}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Código de cliente"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Status"}, {"sTitle": "Opções", "sWidth": "60px", "bVisible": SpiceU.user_level > 5}],
+            "aoColumns": [{"sTitle": "Id"}, {"sTitle": "Dispenser", "bVisible": SpiceU.user_level > 5}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente", "sType": 'numeric'}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Código de cliente"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "60px", "bVisible": SpiceU.user_level > 5}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
-
         if (SpiceU.user_level > 5)
         {
             Table_view_requisition.on("change", ".cod_cliente_input", function()
