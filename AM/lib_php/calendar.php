@@ -32,26 +32,26 @@ Class Calendars {
         $system_types = $this->getSystemTypes(false);
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $reservars[] = array(
-                'id' => $row->id_reservation,
-                'title' => $row->rsc_name . " " .  $row->display_text . (((bool) $row->closed) ? " - Fechado" : ""),
-                'client_name' => (is_null($row->first_name) ? "" : $row->first_name),
-                'lead_id' => (is_null($row->lead_id) ? "" : $row->lead_id),
-                'codCamp' => (is_null($row->codCamp) ? "" : $row->codCamp),
-                'postal' => (is_null($row->postal_code) ? "" : $row->postal_code),
-                'start' => $row->start_date,
-                'end' => $row->end_date,
+                'id' => (int) $row->id_reservation,
+                'title' => (string) $row->rsc_name . " " . $row->display_text . (((bool) $row->closed) ? " - Fechado" : ""),
+                'client_name' => (string) (is_null($row->first_name) ? "" : $row->first_name),
+                'lead_id' => (int) (is_null($row->lead_id) ? "" : $row->lead_id),
+                'codCamp' => (string) (is_null($row->codCamp) ? "" : $row->codCamp),
+                'postal' => (string) (is_null($row->postal_code) ? "" : $row->postal_code),
+                'start' => (string) $row->start_date,
+                'end' => (string) $row->end_date,
                 'editable' => !(((bool) $row->closed || $forceUneditable ) || ($system_types[$row->id_reservation_type]) || (($username) ? $username != $row->id_user : false)),
                 'closed' => (bool) $row->closed,
                 'changed' => (int) $row->changed,
-                'className' => "t" . $row->id_reservation_type . (((bool) $row->del) ? " del" : ""),
+                'className' => (string) "t" . $row->id_reservation_type . (((bool) $row->del) ? " del" : ""),
                 'bloqueio' => false || ($system_types[$row->id_reservation_type] == "Apoio Markting"),
-                'user' => $row->id_user,
+                'user' => (string) $row->id_user,
                 'system' => (bool) $system_types[$row->id_reservation_type],
                 'rsc' => (int) $row->id_resource,
                 'max' => (int) $row->max_time,
                 'min' => (int) $row->min_time,
                 'del' => (bool) $row->del,
-                'obs' => $row->obs
+                'obs' => (string) $row->obs
             );
         }
         return $reservars;
