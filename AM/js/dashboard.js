@@ -16,14 +16,14 @@ $(function() {
 
         //LISTAR CONSULTAS ABERTAS,FECHADAS
         var
-                columns_allm = [{"sTitle": "ID", "sWidth": "70px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Ref.", "sWidth": "70px"}, {"sTitle": "Cod. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "70px"}, {"sTitle": "Postal", "sWidth": "70px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "270px"}],
-                columns_ncsm = [{"sTitle": "ID", "sWidth": "70px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Ref.", "sWidth": "70px"}, {"sTitle": "Cod. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "70px"}, {"sTitle": "Postal", "sWidth": "70px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "240px"}],
-                columns_ncsm_r = [{"sTitle": "Nome Recomendador", "sWidth": "140px"}, {"sTitle": "Cod. Ref. Rec.", "sWidth": "70px"}, {"sTitle": "ID", "sWidth": "70px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Ref.", "sWidth": "70px"}, {"sTitle": "Cod. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "70px"}, {"sTitle": "Postal", "sWidth": "70px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "240px"}];
+                columns_allm = [{"sTitle": "ID", "sWidth": "70px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Referência", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "70px"}, {"sTitle": "Postal", "sWidth": "70px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "270px"}],
+                columns_ncsm = [{"sTitle": "ID", "sWidth": "70px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Referência", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "70px"}, {"sTitle": "Postal", "sWidth": "70px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "240px"}],
+                columns_ncsm_r = [{"sTitle": "Nome Recomendador", "sWidth": "140px"}, {"sTitle": "Cod. Mkt. Rec.", "sWidth": "70px"}, {"sTitle": "ID", "sWidth": "70px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Referência", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "70px"}, {"sTitle": "Postal", "sWidth": "70px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "240px"}];
 
         if (user.user_level > 5) {
-            columns_allm.push({"sTitle": "User", "sWidth": "70px"});
-            columns_ncsm.push({"sTitle": "User", "sWidth": "70px"});
-            columns_ncsm_r.push({"sTitle": "User", "sWidth": "70px"});
+            columns_allm.push({"sTitle": "Dispenser", "sWidth": "70px"});
+            columns_ncsm.push({"sTitle": "Dispenser", "sWidth": "70px"});
+            columns_ncsm_r.push({"sTitle": "Dispenser", "sWidth": "70px"});
         }
         $('#table_allm').dataTable({
             "bSortClasses": false,
@@ -102,19 +102,15 @@ $(function() {
     {
         var client = new cliente_info($(this).data("lead_id"), null);
         client.init(null);
-    
+
     });
 
     $("#div_master").on("click", ".criar_encomenda", function()
     {
-        var config = new Object(), m;
-        config.mensal = false;
-        requisition1 = new requisition(config);
-
-        m = $("#new_requisiton_modal");
-        requisition1.new_requisition(m.find(".modal-body"), 0, $(this).data().lead_id);
-
-        m.modal("show");
+        var
+                data = $(this).data(),
+                en = btoa(data.lead_id);
+        $.history.push("view/new_requisition.html?id=" + en);
     });
 
     $("#table_tbody_mp").on('click', '.initC', function() {

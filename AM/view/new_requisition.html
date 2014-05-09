@@ -129,22 +129,46 @@
     <div id="tipo_especial" class="tipo_div">
         <form id="form_encomenda_especial">
 
-            <span class="input-prepend ">
+
+
+
+            <span class="input-prepend  ">
                 <span class="add-on">Número de contrato</span>
                 <input id="new_requisition_contract" type="text" class="validate[required]" >
             </span>
+
+
 
         </form>
     </div>
 
 
     <div class="row-fluid">
-        <div class="span8">
-               <div>Produto <select class="chosen-select" id="product_selector"></select></div>
-            <div class="grid ">
+        <div class="span4">
+            <div id="clientBox"></div>
+            <div class="grid-transparent" >
                 <div class="grid-title">
+                    <div class="pull-left">Produtos encomendados</div>
+                    <div class="pull-right"><button class="btn btn-success right" id="new_requisition_submit_button"><i class="icon-check"></i>Encomendar</button></div>
+
+                </div>
+
+                <div id="produtos_encomendados">
+
+                </div>
+            </div>
+        </div>
+        <div class="span8">
+
+            <div class="clear"></div>
+            <div class="grid ">
+                <div class="grid-title" style="overflow:visible">
                     <div class="pull-left">Hierarquia</div>
-                 
+                    <div class="pull-right">
+                        Produto
+                        <select class="chosen-select" id="product_selector"></select>
+
+                    </div>
                 </div>
                 <div class="grid-content">
 
@@ -176,16 +200,7 @@
                 </div> 
             </div> 
         </div>
-        <div class="grid-transparent span4" >
-            <div class="grid-title">
-                <div class="pull-left">Produtos encomendados</div>
-                <div class="pull-right"><button class="btn btn-success right" id="new_requisition_submit_button"><i class="icon-check"></i>Encomendar</button></div>
 
-            </div>
-            <div id="produtos_encomendados">
-
-            </div>
-        </div>
 
     </div>
 </div> 

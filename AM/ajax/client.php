@@ -66,6 +66,24 @@ switch ($action) {
 
         break;
 
+
+    case 'byLeadToInfo':
+        $query = "SELECT lead_id, first_name, middle_initial, last_name, phone_number, address1,city, address2, address3, city , postal_code, date_of_birth, email ,comments, extra1  , extra2    FROM vicidial_list WHERE lead_id=:id limit 1";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":id" => $id));
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $js = array();
+        $js[] = array("name" => "first_name", "original_texto" => "Nome", "value" => $row["first_name"]);
+        $js[] = array("name" => "phone_number", "original_texto" => "telefone", "value" => $row["phone_number"]);
+        $js[] = array("name" => "address1", "original_texto" => "Morada", "value" => $row["address1"]);
+         $js[] = array("name" => "city", "original_texto" => "Cidade", "value" => $row["city"]);
+        $js[] = array("name" => "alt_phone", "original_texto" => "Telefoe alternativ", "value" => $row["alt_phone"]);
+        $js[] = array("name" => "postal_code", "original_texto" => "Codigo postal", "value" => $row["postal_code"]);
+        $js[] = array("name" => "email", "original_texto" => "email", "value" => $row["email"]);
+        $js[] = array("name" => "comments", "original_texto" => "commentarios", "value" => $row["comments"]);
+        $js[] = array("name" => "extra1", "original_texto" => "Codigo de marketing", "value" => $row["extra1"]);
+        $js[] = array("name" => "extra2", "original_texto" => "Referencia de cliente", "value" => $row["extra2"]);
+
     default:
         break;
 }

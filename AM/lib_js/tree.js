@@ -21,8 +21,8 @@ var tree = function(selector, data, type_encomenda, parent_id) {
         else
             max_value = data.max_req_s;
         
-        if (max_value < 1)
-            return false;
+     //   if (max_value < 1)
+     //       return false;
 
 // METER COR NA OPTION DO SELECT BACKGROUND COLOR
         var quantity_temp = "";

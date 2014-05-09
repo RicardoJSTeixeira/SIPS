@@ -40,7 +40,6 @@ class apoio_marketing extends requests_class {
                     ":id_reservation" => json_encode($id_reservation)));
     }
 
-
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
 
     public function get_to_datatable() {
@@ -156,8 +155,9 @@ class correio extends requests_class {
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $approved = $row[8] == "1" ? 1 : 0;
             if ($row[6])
-                $row[6] = "<button data-anexo_id='$row[0]' class='btn ver_anexo_correio'><i class='icon-eye-open'></i>Anexos</button>";
+                $row[6] = "<button data-anexo_id='$row[0]' data-approved='$approved' class='btn ver_anexo_correio'><i class='icon-eye-open'></i>Anexos</button>";
             else
                 $row[6] = "Sem anexo";
             switch ($row[8]) {

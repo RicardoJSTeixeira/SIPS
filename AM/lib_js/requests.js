@@ -166,22 +166,18 @@ var requests = function(basic_path, options_ext)
         {
             $.get("/AM/view/requests/relatorio_frota_modal.html", function(data) {
                 basic_path.append(data);
-
-
-
-
             }, 'html');
         },
         new : function(rf_zone)
         {
             var rfinput_count = 2;
             rf_zone.empty().off();
+            var availableTags = ["Revisão", "Mudança de óleo", "Mudança de pneus"];
             $.get("/AM/view/requests/relatorio_frota.html", function(data) {
                 rf_zone.append(data);
                 rf_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
                 rf_zone.find(".rf_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
                 rf_zone.find("#input_km").autoNumeric('init', {mDec: '0'});
-
 
                 //Adiciona Linhas
                 rf_zone.find("#button_rf_table_add_line").click(function(e)
@@ -190,8 +186,8 @@ var requests = function(basic_path, options_ext)
                     rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required] linha_data span' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'></td><td><input class='validate[required] linha_ocorrencia span' type='text' name='rf_ocorr" + rfinput_count + "'></td><td><input class='validate[required] linha_km text-right ' type='text' value='0' maxlength='6' name='rf_km" + rfinput_count + "' size='16'/></td><td><button class='btn btn-danger button_rf_table_remove_line icon-alone'><i class='icon-minus'></i></button></td></tr>");
                     rf_zone.find("#rf_datetime" + rfinput_count).datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
                     rf_zone.find("[name='rf_km" + rfinput_count + "']").autoNumeric('init', {mDec: '0'});
+                    $("[name='rf_ocorr" + rfinput_count + "']").autocomplete({source: availableTags});
                     rfinput_count++;
-
                 }).click();
                 //Remove Linhas
                 rf_zone.on("click", ".button_rf_table_remove_line", function(e)
@@ -199,11 +195,6 @@ var requests = function(basic_path, options_ext)
                     e.preventDefault();
                     $(this).parent().parent().remove();
                 });
-
-
-
-
-
                 //SUBMIT
                 rf_zone.on("click", "#submit_rf", function(e)
                 {
@@ -304,12 +295,7 @@ var requests = function(basic_path, options_ext)
                     }
                 });
             });
-
-
-
-        }
-    }
-    ;
+        }};
     this.relatorio_correio = {
         init: function()
         {
@@ -383,11 +369,16 @@ var requests = function(basic_path, options_ext)
             });
             rc_zone.on("click", ".accept_report_correio", function()
             {
-                var this_button = $(this);
-                $.post('/AM/ajax/requests.php', {action: "accept_report_correio", id: $(this).val()}, function() {
-                    this_button.parent("td").prev().text("Aprovado");
-                    relatorio_correio_table.fnReloadAjax();
-                }, "json");
+                if ($(this).parents("td").prev().prev().prev().find("button").data().approved)
+                {
+                    var this_button = $(this);
+                    $.post('/AM/ajax/requests.php', {action: "accept_report_correio", id: $(this).val()}, function() {
+                        this_button.parent("td").prev().text("Aprovado");
+                        relatorio_correio_table.fnReloadAjax();
+                    }, "json");
+                }
+                else
+                    $.jGrowl("Verifique os anexos 1º, antes de aprovar.");
             });
             rc_zone.on("click", ".decline_report_correio", function()
             {
@@ -403,7 +394,6 @@ var requests = function(basic_path, options_ext)
             });
             rc_zone.on("click", ".ver_anexo_correio", function(e)
             {
-
                 e.preventDefault();
                 var id_anexo = $(this).data().anexo_id;
                 var anexo_number = 1;
@@ -417,17 +407,24 @@ var requests = function(basic_path, options_ext)
                         tbody.append("<tr><td class='chex-table'><input type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " " + ((SpiceU.user_level < 5) ? "disabled" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td>" + this.value + "</td></tr>");
                         anexo_number++;
                     });
+                    basic_path.find(".anexo_exit_button").data("id_correio", id_anexo);
                     basic_path.find("#ver_anexo_correio_modal").modal("show");
                 }, "json");
             });
-            basic_path.on("click", ".checkbox_confirm_anexo", function(e)
+            basic_path.on("click", ".anexo_exit_button", function(e)
             {
                 var anexo_array = [];
-                $.each($(this).closest("#tbody_ver_anexo_correio").find("tr"), function()
+                var this_button = $(this);
+                var data_ver_button = rc_zone.find("[data-anexo_id='" + this_button.data().id_correio + "']");
+                data_ver_button.data().approved = 1;
+                $.each(this_button.parents("#ver_anexo_correio_modal").find("tr"), function()
                 {
                     anexo_array.push({value: $(this).find("td").last().text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked")});
+
+                    if (!~~~~$(this).find("td").first().find(":checkbox").is(":checked"))
+                        data_ver_button.data().approved = 0;
                 });
-                $.post("/AM/ajax/requests.php", {action: "save_anexo_correio", id: $(this).val(), anexos: anexo_array}, "json");
+                $.post("/AM/ajax/requests.php", {action: "save_anexo_correio", id: this_button.data().id_correio, anexos: anexo_array}, "json");
             });
         }
     };
