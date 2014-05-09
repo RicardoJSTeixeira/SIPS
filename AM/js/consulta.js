@@ -229,7 +229,7 @@ $("#main_consulta_div #terminar_consulta").on("click", function() {
         {
             if ($("#main_consulta_div #no_exam_div input[name='ne']:checked").length)
             {
-                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: $("#main_consulta_div #no_exam_div input[name='ne']:checked").val(), venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", produtos: produtos, feedback: "SPERD", closed: 1}, function() {
+                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: $("#main_consulta_div #no_exam_div input[name='ne']:checked").val(), venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", produtos: produtos, feedback: "STEST", closed: 1}, function() {
                     $.jGrowl('Consulta gravada sem exame', {life: 3000});
                     $("#marcacao_modal").modal("show");
                 }, "json");
