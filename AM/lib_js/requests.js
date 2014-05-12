@@ -149,7 +149,7 @@ var requests = function(basic_path, options_ext)
 
                     if (data[0].tipo == 1)
                         basic_path.find("#ver_horario_modal .horario_all_master").show();
-                    if (data[0].tipo == 2)
+                    if (data[0].tipo == 2) 
                         basic_path.find("#ver_horario_modal #horario_manha").show();
                     if (data[0].tipo == 3)
                         basic_path.find("#ver_horario_modal #horario_tarde").show();
