@@ -170,12 +170,11 @@ switch ($action) {
         break;
 
     case "accept_report_stock":
-        $result=$relatorio_frota->accept($id);
+        $result=$relatorio_mensal_stock->accept($id);
         if($result){
             $alert->make($result->user, 'Frota Aceite') ;
         }
         echo json_encode(true);
-        echo json_encode($relatorio_mensal_stock->accept($id));
         break;
 
     case "decline_report_stock":
