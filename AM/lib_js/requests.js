@@ -64,35 +64,60 @@ var requests = function(basic_path, options_ext)
                     e.preventDefault();
                     $(this).parent().parent().remove();
                 });
+                am_zone.on("change", "[name='horario_check']", function(e) {
+
+                    if ($(this).val() == 1)
+                    {
+                        am_zone.find("#horario_manha").show();
+                        am_zone.find("#horario_tarde").show();
+                    }
+                    else if ($(this).val() == 2)
+                    {
+                        am_zone.find("#horario_manha").show();
+                        am_zone.find("#horario_tarde").hide();
+                    }
+                    else
+                    {
+                        am_zone.find("#horario_manha").hide();
+                        am_zone.find("#horario_tarde").show();
+                    }
+                });
+
                 //SUBMIT
                 am_zone.on("click", "#submit_am", function(e)
                 {
                     e.preventDefault();
-                    if (am_zone.find("#apoio_am_form").validationEngine("validate") && am_zone.find("#table_tbody_ldp tr").length)
+                    if (am_zone.find("#apoio_am_form").validationEngine("validate"))
                     {
-                        var local_publicidade_array = [];
-                        $.each(am_zone.find("#table_tbody_ldp").find("tr"), function(data) {
-                            local_publicidade_array.push({cp: $(this).find(".linha_cp").val(), freguesia: $(this).find(".linha_freg").val()});
-                        });
-                        $.post("/AM/ajax/requests.php", {action: "criar_apoio_marketing",
-                            data_inicial: am_zone.find("#data_rastreio1").val(),
-                            data_final: am_zone.find("#data_rastreio2").val(),
-                            horario: {
-                                inicio1: am_zone.find("#data_inicio1").val(),
-                                inicio2: am_zone.find("#data_inicio2").val(),
-                                fim1: am_zone.find("#data_fim1").val(),
-                                fim2: am_zone.find("#data_fim2").val()},
-                            localidade: am_zone.find("#input_localidade").val(),
-                            local: am_zone.find("#input_local_rastreio").val(),
-                            morada: am_zone.find("#input_morada_rastreio").val(),
-                            comments: am_zone.find("#input_observaçoes").val(),
-                            local_publicidade: local_publicidade_array},
-                        function(data1)
+                        if (am_zone.find("#table_tbody_ldp tr").length)
                         {
-                            $('#apoio_am_form').stepy('step', 1);
-                            am_zone.find(":input").val("");
-                            $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
-                        }, "json");
+                            var local_publicidade_array = [];
+                            $.each(am_zone.find("#table_tbody_ldp").find("tr"), function(data) {
+                                local_publicidade_array.push({cp: $(this).find(".linha_cp").val(), freguesia: $(this).find(".linha_freg").val()});
+                            });
+                            $.post("/AM/ajax/requests.php", {action: "criar_apoio_marketing",
+                                data_inicial: am_zone.find("#data_rastreio1").val(),
+                                data_final: am_zone.find("#data_rastreio2").val(),
+                                horario: {
+                                    tipo: am_zone.find("[name='horario_check']:checked").val(),
+                                    inicio1: am_zone.find("#data_inicio1").val(),
+                                    inicio2: am_zone.find("#data_inicio2").val(),
+                                    fim1: am_zone.find("#data_fim1").val(),
+                                    fim2: am_zone.find("#data_fim2").val()},
+                                localidade: am_zone.find("#input_localidade").val(),
+                                local: am_zone.find("#input_local_rastreio").val(),
+                                morada: am_zone.find("#input_morada_rastreio").val(),
+                                comments: am_zone.find("#input_observaçoes").val(),
+                                local_publicidade: local_publicidade_array},
+                            function(data1)
+                            {
+                                $('#apoio_am_form').stepy('step', 1);
+                                am_zone.find(":input").val("");
+                                $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
+                            }, "json");
+                        }
+                        else
+                            $.jGrowl("Selecione pelo menos uma Freguesia/Código de Postal", {life: 4000});
                     }
                 });
             });
@@ -120,10 +145,21 @@ var requests = function(basic_path, options_ext)
             {
                 var id = $(this).data().apoio_marketing_id;
                 $.post("ajax/requests.php", {action: "get_horario_from_apoio_marketing", id: id}, function(data) {
-                    basic_path.find("#ver_horario_modal #inicio1").text(data[0].inicio1);
-                    basic_path.find("#ver_horario_modal #inicio2").text(data[0].inicio2);
-                    basic_path.find("#ver_horario_modal #fim1").text(data[0].fim1);
-                    basic_path.find("#ver_horario_modal #fim2").text(data[0].fim2);
+                    basic_path.find("#ver_horario_modal .horario_all_master").hide();
+
+                    if (data[0].tipo == 1)
+                        basic_path.find("#ver_horario_modal .horario_all_master").show();
+                    if (data[0].tipo == 2)
+                        basic_path.find("#ver_horario_modal #horario_manha").show();
+                    if (data[0].tipo == 3)
+                        basic_path.find("#ver_horario_modal #horario_tarde").show();
+
+
+                    basic_path.find("#ver_horario_modal #manha_inicio").text(data[0].inicio1);
+                    basic_path.find("#ver_horario_modal #manha_fim").text(data[0].inicio2);
+                    basic_path.find("#ver_horario_modal #tarde_inicio").text(data[0].fim1);
+                    basic_path.find("#ver_horario_modal #tarde_fim").text(data[0].fim2);
+
                     basic_path.find("#ver_horario_modal").modal("show");
                 }, "json");
             });
@@ -201,43 +237,48 @@ var requests = function(basic_path, options_ext)
                     e.preventDefault();
                     if (rf_zone.find("#relatorio_frota_form").validationEngine("validate"))
                     {
-                        var soma = 0;
-                        $.each(rf_zone.find("#table_tbody_rf").find(".linha_km"), function()
+                        if (rf_zone.find("#table_tbody_rf tr").length)
                         {
-                            soma = soma + ~~$(this).autoNumeric('get');
-                        });
-                        if (!soma)
-                        {
-                            $.jGrowl("Insira pelo menos uma ocorrência ");
-                            return false;
-                        }
-                        if (soma > ~~rf_zone.find("#input_km").val())
-                        {
-                            $.jGrowl("O número de Kms nas ocorrência é superior aos Kms totais no relatório");
+                            var soma = 0;
+                            $.each(rf_zone.find("#table_tbody_rf").find(".linha_km"), function()
+                            {
+                                soma = soma + ~~$(this).autoNumeric('get');
+                            });
+                            if (!soma)
+                            {
+                                $.jGrowl("Insira pelo menos uma ocorrência ");
+                                return false;
+                            }
+                            if (soma > ~~rf_zone.find("#input_km").val())
+                            {
+                                $.jGrowl("O número de Kms nas ocorrência é superior aos Kms totais no relatório");
+                            }
+                            else
+                            {
+                                var ocorrencias_array = [];
+                                $.each(rf_zone.find("#table_tbody_rf").find("tr"), function(data)
+                                {
+                                    ocorrencias_array.push(
+                                            {data: $(this).find(".linha_data").val(),
+                                                ocorrencia: $(this).find(".linha_ocorrencia").val(),
+                                                km: $(this).find(".linha_km").autoNumeric('get')});
+                                });
+                                $.post("/AM/ajax/requests.php", {action: "criar_relatorio_frota",
+                                    data: rf_zone.find("#input_data").val(),
+                                    matricula: rf_zone.find("#input_matricula").val(),
+                                    km: rf_zone.find("#input_km").val(),
+                                    viatura: rf_zone.find(":radio[name='rrf']:checked").val(),
+                                    ocorrencias: ocorrencias_array,
+                                    comments: rf_zone.find("#input_comments").val().length ? rf_zone.find("#input_comments").val() : ""},
+                                function()
+                                {
+                                    rf_zone.find(":input").val("");
+                                    $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
+                                }, "json");
+                            }
                         }
                         else
-                        {
-                            var ocorrencias_array = [];
-                            $.each(rf_zone.find("#table_tbody_rf").find("tr"), function(data)
-                            {
-                                ocorrencias_array.push(
-                                        {data: $(this).find(".linha_data").val(),
-                                            ocorrencia: $(this).find(".linha_ocorrencia").val(),
-                                            km: $(this).find(".linha_km").autoNumeric('get')});
-                            });
-                            $.post("/AM/ajax/requests.php", {action: "criar_relatorio_frota",
-                                data: rf_zone.find("#input_data").val(),
-                                matricula: rf_zone.find("#input_matricula").val(),
-                                km: rf_zone.find("#input_km").val(),
-                                viatura: rf_zone.find(":radio[name='rrf']:checked").val(),
-                                ocorrencias: ocorrencias_array,
-                                comments: rf_zone.find("#input_comments").val().length ? rf_zone.find("#input_comments").val() : ""},
-                            function()
-                            {
-                                rf_zone.find(":input").val("");
-                                $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
-                            }, "json");
-                        }
+                            $.jGrow("selecione pelo menos uma ocorrencia", {life: 4000});
                     }
                 });
             });
@@ -315,25 +356,31 @@ var requests = function(basic_path, options_ext)
                     e.preventDefault();
                     if (rc_zone.find("#relatorio_correio_form").validationEngine("validate"))
                     {
-                        var docs_objs = [];
-                        $.each(rc_zone.find("#doc_obj_table_tbody tr"), function()
+                        if (rc_zone.find("#doc_obj_table_tbody tr").length)
                         {
-                            docs_objs.push({value: $(this).find("input").val(), confirmed: false});
-                        });
-                        $.post("ajax/requests.php", {action: "criar_relatorio_correio",
-                            carta_porte: rc_zone.find("#input_carta_porte").val(),
-                            data: rc_zone.find("#data_envio_datetime").val(),
-                            doc: rc_zone.find("#input_doc").val(),
-                            lead_id: rc_zone.find("#input_lead_id").val(),
-                            client_name: rc_zone.find("#input_client_name").val(),
-                            input_doc_obj_assoc: docs_objs,
-                            comments: rc_zone.find("#input_comments").val().length ? rc_zone.find("#input_comments").val() : "Sem observações"},
-                        function()
-                        {
-                            rc_zone.find(":input").val("");
-                            $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
-                        }, "json");
+                            var docs_objs = [];
+                            $.each(rc_zone.find("#doc_obj_table_tbody tr"), function()
+                            {
+                                docs_objs.push({value: $(this).find("input").val(), confirmed: false});
+                            });
+                            $.post("ajax/requests.php", {action: "criar_relatorio_correio",
+                                carta_porte: rc_zone.find("#input_carta_porte").val(),
+                                data: rc_zone.find("#data_envio_datetime").val(),
+                                doc: rc_zone.find("#input_doc").val(),
+                                lead_id: rc_zone.find("#input_lead_id").val(),
+                                client_name: rc_zone.find("#input_client_name").val(),
+                                input_doc_obj_assoc: docs_objs,
+                                comments: rc_zone.find("#input_comments").val().length ? rc_zone.find("#input_comments").val() : "Sem observações"},
+                            function()
+                            {
+                                rc_zone.find(":input").val("");
+                                $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
+                            }, "json");
+                        }
+                        else
+                            $.jGrowl("Selecione pelo menos um ", {life: 4000});
                     }
+
                 });
                 rc_zone.find("#add_line_obj_doc").click(function(e)
                 {
@@ -444,20 +491,25 @@ var requests = function(basic_path, options_ext)
                     e.preventDefault();
                     if (rc_zone.find("#relatorio_mensal_stock_form").validationEngine("validate")) {
                         var prdt_objs = [];
-                        $.each(rc_zone.find("#table_tbody_rfms tr"), function() {
-                            prdt_objs.push({quantidade: $(this).find(".quant").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
-                        });
-                        $.post("ajax/requests.php",
-                                {
-                                    action: "criar_relatorio_mensal_stock",
-                                    data: rc_zone.find("#input_data").val(),
-                                    produtos: prdt_objs
-                                },
-                        function(data1)
+                        if (rc_zone.find("#table_tbody_rfms tr").length)
                         {
-                            rc_zone.find(":input").val("");
-                            $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
-                        }, "json");
+                            $.each(rc_zone.find("#table_tbody_rfms tr"), function() {
+                                prdt_objs.push({quantidade: $(this).find(".quant").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
+                            });
+                            $.post("ajax/requests.php",
+                                    {
+                                        action: "criar_relatorio_mensal_stock",
+                                        data: rc_zone.find("#input_data").val(),
+                                        produtos: prdt_objs
+                                    },
+                            function(data1)
+                            {
+                                rc_zone.find(":input").val("");
+                                $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
+                            }, "json");
+                        }
+                        else
+                            $.jGrowl("Preencha pelo menos uma linha.");
                     }
                 });
                 rc_zone.find("#button_rfms_table_add_line").click(function(e) {
@@ -550,20 +602,25 @@ var requests = function(basic_path, options_ext)
                     e.preventDefault();
                     if (rc_zone.find("#relatorio_movimentacao_stock_form").validationEngine("validate")) {
                         var prdt_objs = [];
-                        $.each(rc_zone.find("#table_tbody_rfms tr"), function() {
-                            prdt_objs.push({quantidade: $(this).find(".quant").val(), destinario: $(this).find(".desc").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
-                        });
-                        $.post("ajax/requests.php",
-                                {
-                                    action: "criar_relatorio_movimentacao_stock",
-                                    data: rc_zone.find("#input_data").val(),
-                                    produtos: prdt_objs
-                                },
-                        function()
+                        if (rc_zone.find("#table_tbody_rfms tr").length)
                         {
-                            rc_zone.find(":input").val("");
-                            $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
-                        }, "json");
+                            $.each(rc_zone.find("#table_tbody_rfms tr"), function() {
+                                prdt_objs.push({quantidade: $(this).find(".quant").val(), destinario: $(this).find(".desc").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
+                            });
+                            $.post("ajax/requests.php",
+                                    {
+                                        action: "criar_relatorio_movimentacao_stock",
+                                        data: rc_zone.find("#input_data").val(),
+                                        produtos: prdt_objs
+                                    },
+                            function()
+                            {
+                                rc_zone.find(":input").val("");
+                                $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
+                            }, "json");
+                        }
+                        else
+                            $.jGrowl("Preencha pelo menos uma linha.");
                     }
                 });
                 rc_zone.find("#button_rfms_table_add_line").click(function(e) {

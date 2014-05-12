@@ -87,7 +87,7 @@ class apoio_marketing extends requests_class {
         $stmt->execute(array($id));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $value = json_decode($row["horario"]);
-            $horarios[] = array("inicio1" => $value->inicio1, "inicio2" => $value->inicio2, "fim1" => $value->fim1, "fim2" => $value->fim2);
+            $horarios[] = array("tipo" => $value->tipo,"inicio1" => $value->inicio1, "inicio2" => $value->inicio2, "fim1" => $value->fim1, "fim2" => $value->fim2);
         }
 
         return $horarios;
