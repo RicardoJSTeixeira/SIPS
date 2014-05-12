@@ -45,11 +45,11 @@ var cliente_info = function(lead_id, options_ext)
                             break;
                     }
                 }
-            }); 
-            var final = ($("<div>", {class: "row-fluid"}).append($("<div>", {class: "span6"}).append($("<h4>", {class:"icon-user"}).text(" Info de cliente")).append(client_info))
-                    .append($("<div>", {class: "span6"}).append($("<h4>", {class:"icon-home"}).text(" Morada")).append(client_address))
-                    .append($("<div>", {class: "span12"}).append($("<h4>", {class:"icon-star"}).text(" Info Extra")).append(client_extra)));
-                    bootbox.alert(final);
+            });
+            var final = ($("<div>", {class: "row-fluid"}).append($("<div>", {class: "span6"}).append($("<h4>", {class: "icon-user"}).text(" Info de cliente")).append(client_info))
+                    .append($("<div>", {class: "span6"}).append($("<h4>", {class: "icon-home"}).text(" Morada")).append(client_address)))
+                    .append($("<div>", {class: "row-fluid"}).append($("<div>", {class: "span12"}).append($("<h4>", {class: "icon-star"}).text(" Info Extra")).append(client_extra)));
+            bootbox.alert(final);
         }, "json");
         if (typeof callback === "function")
             callback();

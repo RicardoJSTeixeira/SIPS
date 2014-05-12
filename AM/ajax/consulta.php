@@ -27,7 +27,7 @@ switch ($action) {
             values (NULL,:data,:reserva_id,:lead_id,:campanha,:consulta,:consulta_razao,:exame,:exame_razao,:venda,:venda_razao,:left_ear,:right_ear,:produtos,:feedback,:closed)";
 
         $stmt = $db->prepare($query);
-        $stmt->execute(array(":data" => date("Y-m-d H:i:s"),
+        $stmt->execute(array(":data" => date("d-m-Y H:i:s"),
             ":reserva_id" => $reserva_id,
             ":lead_id" => $lead_id,
             ":campanha" => "campanha_spice",

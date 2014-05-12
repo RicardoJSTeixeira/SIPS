@@ -27,7 +27,7 @@ class apoio_marketing extends requests_class {
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(
                     ":user" => $this->user_id,
-                    ":now" => date("Y-m-d H:i:s"),
+                    ":now" => date("Y-m-d H:i:s"),//GRAVAR NESTE FORMATO, so A ler é q se muda para d-m-Y
                     ":data_inicial" => $data_inicial,
                     ":data_final" => $data_final,
                     ":horario" => json_encode($horario),
@@ -50,6 +50,12 @@ class apoio_marketing extends requests_class {
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+
+            $row[2] = date("d-m-Y H:i:s", strtotime($row[2]));
+            $row[3] = date("d-m-Y H:i:s", strtotime($row[3]));
+            $row[4] = date("d-m-Y H:i:s", strtotime($row[4]));
+
+
             $row[5] = "<div> <button class='btn ver_horario' data-apoio_marketing_id='" . $row[0] . "'><i class='icon-eye-open'></i>Horario</button></div>";
             $row[10] = "<div> <button class='btn ver_local_publicidade' data-apoio_marketing_id='" . $row[0] . "' ><i class='icon-eye-open'></i>localidades</button></div>";
 
@@ -156,6 +162,8 @@ class correio extends requests_class {
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             $approved = $row[8] == "1" ? 1 : 0;
+
+            $row[3] = date("d-m-Y H:i:s", strtotime($row[3]));
             if ($row[6])
                 $row[6] = "<button data-anexo_id='$row[0]' data-approved='$approved' class='btn ver_anexo_correio'><i class='icon-eye-open'></i>Anexos</button>";
             else
@@ -174,7 +182,6 @@ class correio extends requests_class {
                     $row[8] = "<span class='label label-important'>Pendente</span>";
                     break;
             }
-
             $result['aaData'][] = $row;
         }
 
@@ -247,7 +254,7 @@ class frota extends requests_class {
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
 
-
+            $row[2] = date("d-m-Y H:i:s", strtotime($row[2]));
             switch ($row[8]) {
                 case "0":
                     $row[9] = "<div class='btn-group'><button class='btn accept_report_frota btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_frota btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
@@ -295,7 +302,7 @@ class frota extends requests_class {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $ocorrencias = json_decode($row["ocorrencia"]);
             foreach ($ocorrencias as $value) {
-                $ocorrencia[] = array("data" => $value->data, "ocorrencia" => $value->ocorrencia, "km" => $value->km);
+                $ocorrencia[] = array("data" => $row[3] = date("d-m-Y H:i:s", strtotime($value->data)), "ocorrencia" => $value->ocorrencia, "km" => $value->km);
             }
         }
 
@@ -334,7 +341,7 @@ class mensal_stock extends requests_class {
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
 
-
+            $row[2] = date("d-m-Y H:i:s", strtotime($row[2]));
             switch ($row[4]) {
                 case "0":
                     $row[5] = "<div class='btn-group'><button class='btn accept_report_stock btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_stock btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
@@ -419,7 +426,7 @@ class movimentacao_stock extends requests_class {
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-
+            $row[2] = date("d-m-Y H:i:s", strtotime($row[2]));
             switch ($row[4]) {
                 case "0":
                     $row[5] = "<div class='btn-group'><button class='btn accept_report_movimentacao btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_movimentacao btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
