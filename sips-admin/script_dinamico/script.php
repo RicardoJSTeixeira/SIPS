@@ -481,7 +481,7 @@ class script {
             $stmt = $this->db->prepare($query);
            return    $stmt->execute(array("NULL", $id_script, $tipo_elemento, $tag_trigger, json_encode($tag_trigger2), json_encode($tag_target), $tipo, $param1, json_encode($param2)));
         }
-        return 1;
+        return 0;
     }
 
     public function duplicate_script($user_group, $nome_script, $id_script) {
