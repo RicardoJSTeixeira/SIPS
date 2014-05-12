@@ -687,7 +687,6 @@ function populate_element(tipo, element)
     else
         $("#item_hidden").attr('checked', false);
     $("#label_tag").text("@" + element.data("tag") + "@");
-         $(".required_class").show();
     var id = element.data("id");
     switch (tipo)
     {
