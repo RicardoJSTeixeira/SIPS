@@ -79,10 +79,10 @@ switch ($action) {
          $js[] = array("name" => "city", "original_texto" => "Cidade", "value" => $row["city"]);
         $js[] = array("name" => "alt_phone", "original_texto" => "Telefoe alternativ", "value" => $row["alt_phone"]);
         $js[] = array("name" => "postal_code", "original_texto" => "Codigo postal", "value" => $row["postal_code"]);
-        $js[] = array("name" => "email", "original_texto" => "email", "value" => $row["email"]);
-        $js[] = array("name" => "comments", "original_texto" => "commentarios", "value" => $row["comments"]);
+        $js[] = array("name" => "email", "original_texto" => "Email", "value" => $row["email"]);
+        $js[] = array("name" => "comments", "original_texto" => "Commentarios", "value" => $row["comments"]);
         $js[] = array("name" => "extra1", "original_texto" => "Codigo de marketing", "value" => $row["extra1"]);
-        $js[] = array("name" => "extra2", "original_texto" => "Referencia de cliente", "value" => $row["extra2"]);
+        $js[] = array("name" => "extra2", "original_texto" => "Referência de cliente", "value" => $row["extra2"]);
 
     default:
         break;
