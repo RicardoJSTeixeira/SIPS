@@ -17,7 +17,7 @@ abstract class requests_class {
 class apoio_marketing extends requests_class {
 
     public function __construct($db, $user_level, $user_id) {
-        parent::__construct($db, $user_level, $user_id); 
+        parent::__construct($db, $user_level, $user_id);
     }
 
     public function create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade, $id_reservation) {
@@ -27,7 +27,7 @@ class apoio_marketing extends requests_class {
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(
                     ":user" => $this->user_id,
-                    ":now" => date("Y-m-d H:i:s"),//GRAVAR NESTE FORMATO, so A ler é q se muda para d-m-Y
+                    ":now" => date("Y-m-d H:i:s"), //GRAVAR NESTE FORMATO, so A ler é q se muda para d-m-Y
                     ":data_inicial" => $data_inicial,
                     ":data_final" => $data_final,
                     ":horario" => json_encode($horario),
@@ -43,7 +43,7 @@ class apoio_marketing extends requests_class {
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
 
     public function get_to_datatable() {
-        $result['aaData'] = [];
+        $result['aaData'] = array();
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
         $query = "SELECT id,user,data_criacao,data_inicial,data_final,horario,localidade,local,morada,comments,'local_publicididade',status from spice_apoio_marketing $filter";
         $stmt = $this->_db->prepare($query);
@@ -87,7 +87,7 @@ class apoio_marketing extends requests_class {
         $stmt->execute(array($id));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $value = json_decode($row["horario"]);
-            $horarios[] = array("tipo" => $value->tipo,"inicio1" => $value->inicio1, "inicio2" => $value->inicio2, "fim1" => $value->fim1, "fim2" => $value->fim2);
+            $horarios[] = array("tipo" => $value->tipo, "inicio1" => $value->inicio1, "inicio2" => $value->inicio2, "fim1" => $value->fim1, "fim2" => $value->fim2);
         }
 
         return $horarios;
@@ -152,7 +152,7 @@ class correio extends requests_class {
         return $stmt->execute(array(":user" => $this->user_id, ":carta_porte" => $carta_porte, ":data_envio" => $data, ":documento" => $doc, ":lead_id" => $lead_id, ":anexo" => json_encode($input_doc_obj_assoc), ":comments" => $comments));
     }
 
-    //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
+//EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
         $result['aaData'] = [];
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
@@ -162,24 +162,24 @@ class correio extends requests_class {
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             $approved = $row[8] == "1" ? 1 : 0;
-
+   
             $row[3] = date("d-m-Y H:i:s", strtotime($row[3]));
             if ($row[6])
-                $row[6] = "<button data-anexo_id='$row[0]' data-approved='$approved' class='btn ver_anexo_correio'><i class='icon-eye-open'></i>Anexos</button>";
+                $row[6] = "<button data-anexo_id = '$row[0]' data-approved = '$approved' class = 'btn ver_anexo_correio'><i class = 'icon-eye-open'></i>Anexos</button>";
             else
                 $row[6] = "Sem anexo";
             switch ($row[8]) {
                 case "0":
-                    $row[9] = "<div class='btn-group'><button class='btn accept_report_correio btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_correio btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+                    $row[9] = "<div class = 'btn-group'><button class = 'btn accept_report_correio btn-success icon-alone' value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_correio btn-warning icon-alone' value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
                     $row[8] = "Pedido enviado";
                     break;
                 case "1":
-                    $row[9] = "<div class='btn-group'><button class='btn accept_report_correio btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_correio btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
-                    $row[8] = "<span class='label label-success'>Aprovado</span>";
+                    $row[9] = "<div class = 'btn-group'><button class = 'btn accept_report_correio btn-success icon-alone' disabled value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_correio btn-warning icon-alone' value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
+                    $row[8] = "<span class = 'label label-success'>Aprovado</span>";
                     break;
                 case "2":
-                    $row[9] = "<div class='btn-group'><button class='btn accept_report_correio btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_correio btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
-                    $row[8] = "<span class='label label-important'>Pendente</span>";
+                    $row[9] = "<div class = 'btn-group'><button class = 'btn accept_report_correio btn-success icon-alone' value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_correio btn-warning icon-alone' disabled value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
+                    $row[8] = "<span class = 'label label-important'>Pendente</span>";
                     break;
             }
             $result['aaData'][] = $row;
@@ -189,21 +189,21 @@ class correio extends requests_class {
     }
 
     public function accept($id) {
-        $query = "Update spice_report_correio set status=1 where id=:id";
+        $query = "Update spice_report_correio set status = 1 where id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $this->getUser($id);
     }
 
     public function decline($id) {
-        $query = "Update spice_report_correio set status=2 where id=:id";
+        $query = "Update spice_report_correio set status = 2 where id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $this->getUser($id);
     }
 
     public function get_anexo_correio($id) {
-        $query = "select anexo from spice_report_correio where id=:id";
+        $query = "select anexo from spice_report_correio where id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
 
@@ -218,13 +218,13 @@ class correio extends requests_class {
     }
 
     public function save_anexo_correio($id, $anexos) {
-        $query = "update spice_report_correio set anexo=:anexo where id=:id";
+        $query = "update spice_report_correio set anexo = :anexo where id = :id";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":id" => $id, ":anexo" => json_encode($anexos)));
     }
 
     private function getUser($id) {
-        $query = "Select user FROM spice_report_correio where id=:id";
+        $query = "Select user FROM spice_report_correio where id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
@@ -239,7 +239,7 @@ class frota extends requests_class {
     }
 
     public function create($data, $matricula, $km, $viatura, $ocorrencias, $comments) {
-        $query = "INSERT INTO `spice_report_frota` (`user`, `data`, `matricula`, `km`, `viatura`, `comments`, `ocorrencia`) VALUES (?,?,?,?,?,?,?)";
+        $query = "INSERT INTO `spice_report_frota` (`user`, `data`, `matricula`, `km`, `viatura`, `comments`, `ocorrencia`) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array($this->user_id, $data, $matricula, $km, $viatura, $comments, json_encode($ocorrencias)));
     }
@@ -248,7 +248,7 @@ class frota extends requests_class {
     public function get_to_datatable() {
         $result['aaData'] = [];
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
-        $query = "SELECT id,user,data,matricula,km,viatura,comments,ocorrencia,status from spice_report_frota $filter";
+        $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status from spice_report_frota $filter";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
 
@@ -257,20 +257,20 @@ class frota extends requests_class {
             $row[2] = date("d-m-Y H:i:s", strtotime($row[2]));
             switch ($row[8]) {
                 case "0":
-                    $row[9] = "<div class='btn-group'><button class='btn accept_report_frota btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_frota btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+                    $row[9] = "<div class = 'btn-group'><button class = 'btn accept_report_frota btn-success icon-alone' value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_frota btn-warning icon-alone' value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
                     $row[8] = "Pedido enviado";
                     break;
                 case "1":
-                    $row[9] = "<div class='btn-group'><button class='btn accept_report_frota btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_frota btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
-                    $row[8] = "<span class='label label-success'>Aprovado</span>";
+                    $row[9] = "<div class = 'btn-group'><button class = 'btn accept_report_frota btn-success icon-alone' disabled value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_frota btn-warning icon-alone' value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
+                    $row[8] = "<span class = 'label label-success'>Aprovado</span>";
                     break;
                 case "2":
-                    $row[9] = "<div class='btn-group'><button class='btn accept_report_frota btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_frota btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
-                    $row[8] = "<span class='label label-important'>Pendente</span>";
+                    $row[9] = "<div class = 'btn-group'><button class = 'btn accept_report_frota btn-success icon-alone' value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_frota btn-warning icon-alone' disabled value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
+                    $row[8] = "<span class = 'label label-important'>Pendente</span>";
                     break;
             }
 
-            $row[7] = "<div> <button class='btn ver_ocorrencias' data-relatorio_frota_id='" . $row[0] . "'><i class='icon-eye-open'></i>Ver Ocorrências</button></div>";
+            $row[7] = "<div> <button class = 'btn ver_ocorrencias' data-relatorio_frota_id = '" . $row[0] . "'><i class = 'icon-eye-open'></i>Ver Ocorrências</button></div>";
 
 
             $result['aaData'][] = $row;
@@ -280,14 +280,14 @@ class frota extends requests_class {
 
     public function accept($id) {
 
-        $query = "Update spice_report_frota set status=1 where id=?";
+        $query = "Update spice_report_frota set status = 1 where id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         return $this->getUser($id);
     }
 
     public function decline($id) {
-        $query = "Update spice_report_frota set status=2 where id=?";
+        $query = "Update spice_report_frota set status = 2 where id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         return $this->getUser($id);
@@ -295,7 +295,7 @@ class frota extends requests_class {
 
     public function get($id) {
         $ocorrencia = array();
-        $query = "SELECT ocorrencia from spice_report_frota where id=?";
+        $query = "SELECT ocorrencia from spice_report_frota where id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
 
@@ -310,7 +310,7 @@ class frota extends requests_class {
     }
 
     private function getUser($id) {
-        $query = "Select user FROM spice_report_correio where id=:id";
+        $query = "Select user FROM spice_report_correio where id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
@@ -326,7 +326,7 @@ class mensal_stock extends requests_class {
     }
 
     public function create($data, $produtos) {
-        $query = "INSERT INTO `spice_report_stock` (`user`, `data`, `produtos`) VALUES (?,?,?)";
+        $query = "INSERT INTO `spice_report_stock` (`user`, `data`, `produtos`) VALUES (?, ?, ?)";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
     }
@@ -344,20 +344,20 @@ class mensal_stock extends requests_class {
             $row[2] = date("d-m-Y H:i:s", strtotime($row[2]));
             switch ($row[4]) {
                 case "0":
-                    $row[5] = "<div class='btn-group'><button class='btn accept_report_stock btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_stock btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+                    $row[5] = "<div class = 'btn-group'><button class = 'btn accept_report_stock btn-success icon-alone' value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_stock btn-warning icon-alone' value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
                     $row[4] = "Pedido enviado";
                     break;
                 case "1":
-                    $row[5] = "<div class='btn-group'><button class='btn accept_report_stock btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_stock btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
-                    $row[4] = "<span class='label label-success'>Aprovado</span>";
+                    $row[5] = "<div class = 'btn-group'><button class = 'btn accept_report_stock btn-success icon-alone' disabled value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_stock btn-warning icon-alone' value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
+                    $row[4] = "<span class = 'label label-success'>Aprovado</span>";
                     break;
                 case "2":
-                    $row[5] = "<div class='btn-group'><button class='btn accept_report_stock btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_stock btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
-                    $row[4] = "<span class='label label-important'>Pendente</span>";
+                    $row[5] = "<div class = 'btn-group'><button class = 'btn accept_report_stock btn-success icon-alone' value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_stock btn-warning icon-alone' disabled value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
+                    $row[4] = "<span class = 'label label-important'>Pendente</span>";
                     break;
             }
 
-            $row[3] = "<div> <button class='btn ver_itens' data-stock_id='" . $row[0] . "'><i class='icon-eye-open'></i>Itens</button></div>";
+            $row[3] = "<div> <button class = 'btn ver_itens' data-stock_id = '" . $row[0] . "'><i class = 'icon-eye-open'></i>Itens</button></div>";
 
 
             $result['aaData'][] = $row;
@@ -366,14 +366,14 @@ class mensal_stock extends requests_class {
     }
 
     public function accept($id) {
-        $query = "Update spice_report_stock set status=1 where id=?";
+        $query = "Update spice_report_stock set status = 1 where id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         return $this->getUser($id);
     }
 
     public function decline($id) {
-        $query = "Update spice_report_stock set status=2 where id=?";
+        $query = "Update spice_report_stock set status = 2 where id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         return $this->getUser($id);
@@ -381,7 +381,7 @@ class mensal_stock extends requests_class {
 
     public function get($id) {
         $produtos = array();
-        $query = "SELECT produtos from spice_report_stock where id=?";
+        $query = "SELECT produtos from spice_report_stock where id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
 
@@ -396,7 +396,7 @@ class mensal_stock extends requests_class {
     }
 
     private function getUser($id) {
-        $query = "Select user FROM spice_report_stock where id=:id";
+        $query = "Select user FROM spice_report_stock where id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
@@ -412,7 +412,7 @@ class movimentacao_stock extends requests_class {
     }
 
     public function create($data, $produtos) {
-        $query = "INSERT INTO `spice_report_movimentacao` (`user`, `data`, `produtos`) VALUES (?,?,?)";
+        $query = "INSERT INTO `spice_report_movimentacao` (`user`, `data`, `produtos`) VALUES (?, ?, ?)";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
     }
@@ -429,20 +429,20 @@ class movimentacao_stock extends requests_class {
             $row[2] = date("d-m-Y H:i:s", strtotime($row[2]));
             switch ($row[4]) {
                 case "0":
-                    $row[5] = "<div class='btn-group'><button class='btn accept_report_movimentacao btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_movimentacao btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
+                    $row[5] = "<div class = 'btn-group'><button class = 'btn accept_report_movimentacao btn-success icon-alone' value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_movimentacao btn-warning icon-alone' value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
                     $row[4] = "Pedido enviado";
                     break;
                 case "1":
-                    $row[5] = "<div class='btn-group'><button class='btn accept_report_movimentacao btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_movimentacao btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
-                    $row[4] = "<span class='label label-success'>Aprovado</span>";
+                    $row[5] = "<div class = 'btn-group'><button class = 'btn accept_report_movimentacao btn-success icon-alone' disabled value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_movimentacao btn-warning icon-alone' value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
+                    $row[4] = "<span class = 'label label-success'>Aprovado</span>";
                     break;
                 case "2":
-                    $row[5] = "<div class='btn-group'><button class='btn accept_report_movimentacao btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_report_movimentacao btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button></div>";
-                    $row[4] = "<span class='label label-important'>Pendente</span>";
+                    $row[5] = "<div class = 'btn-group'><button class = 'btn accept_report_movimentacao btn-success icon-alone' value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_movimentacao btn-warning icon-alone' disabled value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
+                    $row[4] = "<span class = 'label label-important'>Pendente</span>";
                     break;
             }
 
-            $row[3] = "<div> <button class='btn ver_itens' data-movimentacao_id='" . $row[0] . "'><i class='icon-eye-open'></i>Itens</button></div>";
+            $row[3] = "<div> <button class = 'btn ver_itens' data-movimentacao_id = '" . $row[0] . "'><i class = 'icon-eye-open'></i>Itens</button></div>";
 
 
             $result['aaData'][] = $row;
@@ -452,14 +452,14 @@ class movimentacao_stock extends requests_class {
 
     public function accept($id) {
 
-        $query = "Update spice_report_movimentacao set status=1 where id=?";
+        $query = "Update spice_report_movimentacao set status = 1 where id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         return $this->getUser($id);
     }
 
     public function decline($id) {
-        $query = "Update spice_report_movimentacao set status=2 where id=?";
+        $query = "Update spice_report_movimentacao set status = 2 where id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         return $this->getUser($id);
@@ -467,7 +467,7 @@ class movimentacao_stock extends requests_class {
 
     public function get($id) {
         $produtos = array();
-        $query = "SELECT produtos from spice_report_movimentacao where id=?";
+        $query = "SELECT produtos from spice_report_movimentacao where id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
 
@@ -482,7 +482,7 @@ class movimentacao_stock extends requests_class {
     }
 
     private function getUser($id) {
-        $query = "Select user FROM spice_report_stock where id=:id";
+        $query = "Select user FROM spice_report_stock where id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
