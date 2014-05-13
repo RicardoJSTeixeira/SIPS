@@ -154,7 +154,7 @@ class correio extends requests_class {
 
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
-        $result['aaData'] = [];
+        $result['aaData'] = array();
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
         $query = "SELECT id,user,carta_porte,data_envio,documento,lead_id,anexo,comments,status from spice_report_correio $filter";
         $stmt = $this->_db->prepare($query);
@@ -246,7 +246,7 @@ class frota extends requests_class {
 
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
-        $result['aaData'] = [];
+        $result['aaData'] = array();
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
         $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status from spice_report_frota $filter";
         $stmt = $this->_db->prepare($query);
@@ -333,7 +333,7 @@ class mensal_stock extends requests_class {
 
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
-        $result['aaData'] = [];
+        $result['aaData'] = array();
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
         $query = "SELECT id, user, data, produtos, status from spice_report_stock $filter";
         $stmt = $this->_db->prepare($query);
@@ -419,7 +419,7 @@ class movimentacao_stock extends requests_class {
 
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
-        $result['aaData'] = [];
+        $result['aaData'] = array();
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
         $query = "SELECT id, user, data, produtos, status from spice_report_movimentacao $filter";
         $stmt = $this->_db->prepare($query);
