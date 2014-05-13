@@ -441,6 +441,7 @@ var requests = function(basic_path, options_ext)
             });
             rc_zone.on("click", ".ver_anexo_correio", function(e)
             {
+
                 e.preventDefault();
                 var id_anexo = $(this).data().anexo_id;
                 var anexo_number = 1;
@@ -452,7 +453,7 @@ var requests = function(basic_path, options_ext)
 
                     var tbody = basic_path.find("#tbody_ver_anexo_correio");
                     tbody.empty();
-                   
+
                     $.each(data1, function()
                     {
                         tbody.append("<tr><td class='chex-table'><input " + ((status) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " " + ((SpiceU.user_level < 5) ? "disabled" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td>" + this.value + "</td></tr>");
@@ -481,34 +482,34 @@ var requests = function(basic_path, options_ext)
     };
     this.relatorio_mensal_stock = {
         init: function() {
-//             $.get("/AM/view/requests/relatorio_mensal_stock_modal.html", function(data) {
-//             basic_path.append(data);
-//             }, 'html');
+            $.get("/AM/view/requests/relatorio_mensal_stock_modal.html", function(data) {
+                basic_path.append(data);
+            }, 'html');
         },
-        new : function(rc_zone) {
-            rc_zone.empty().off();
+        new : function(rms_zone) {
+            rms_zone.empty().off();
             $.get("/AM/view/requests/relatorio_mensal_stock.html", function(data) {
-                rc_zone.append(data);
-                rc_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).val(moment().format('YYYY-MM-DD'));
+                rms_zone.append(data);
+                rms_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).val(moment().format('YYYY-MM-DD'));
                 //SUBMIT
-                rc_zone.on("click", "#submit_rfms", function(e) {
+                rms_zone.on("click", "#submit_rfms", function(e) {
                     e.preventDefault();
-                    if (rc_zone.find("#relatorio_mensal_stock_form").validationEngine("validate")) {
+                    if (rms_zone.find("#relatorio_mensal_stock_form").validationEngine("validate")) {
                         var prdt_objs = [];
-                        if (rc_zone.find("#table_tbody_rfms tr").length)
+                        if (rms_zone.find("#table_tbody_rfms tr").length)
                         {
-                            $.each(rc_zone.find("#table_tbody_rfms tr"), function() {
+                            $.each(rms_zone.find("#table_tbody_rfms tr"), function() {
                                 prdt_objs.push({quantidade: $(this).find(".quant").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
                             });
                             $.post("ajax/requests.php",
                                     {
                                         action: "criar_relatorio_mensal_stock",
-                                        data: rc_zone.find("#input_data").val(),
+                                        data: rms_zone.find("#input_data").val(),
                                         produtos: prdt_objs
                                     },
                             function(data1)
                             {
-                                rc_zone.find(":input").val("");
+                                rms_zone.find(":input").val("");
                                 $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
                             }, "json");
                         }
@@ -516,19 +517,19 @@ var requests = function(basic_path, options_ext)
                             $.jGrowl("Preencha pelo menos uma linha.");
                     }
                 });
-                rc_zone.find("#button_rfms_table_add_line").click(function(e) {
+                rms_zone.find("#button_rfms_table_add_line").click(function(e) {
                     e.preventDefault();
-                    rc_zone.find("#table_tbody_rfms").append("<tr><td><input class='validate[required] span text-right quant' type='text' /></td> <td><input class='validate[required] span desc' type='text' /></td> <td><input class='validate[required] span serie' type='text' /></td> <td><textarea class='span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
-                    rc_zone.find(".quant").autotab('number');
+                    rms_zone.find("#table_tbody_rfms").append("<tr><td><input class='validate[required] span text-right quant' type='text' /></td> <td><input class='validate[required] span desc' type='text' /></td> <td><input class='validate[required] span serie' type='text' /></td> <td><textarea class='span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
+                    rms_zone.find(".quant").autotab('number');
                 }).click();
-                rc_zone.on("click", ".remove_doc_obj", function(e) {
+                rms_zone.on("click", ".remove_doc_obj", function(e) {
                     e.preventDefault();
                     $(this).parent().parent().remove();
                 });
             });
         },
-        get_to_datatable: function(rc_zone) {
-            var relatorio_stock_table = rc_zone.dataTable({
+        get_to_datatable: function(rms_zone) {
+            var relatorio_stock_table = rms_zone.dataTable({
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -544,17 +545,23 @@ var requests = function(basic_path, options_ext)
             });
             $('#export_S').click(function(event) {
                 event.preventDefault();
-                table2csv(relatorio_stock_table, 'full', '#' + rc_zone[0].id);
+                table2csv(relatorio_stock_table, 'full', '#' + rms_zone[0].id);
             });
-            rc_zone.on("click", ".accept_report_stock", function()
+            rms_zone.on("click", ".accept_report_stock", function()
             {
+
                 var this_button = $(this);
-                $.post('/AM/ajax/requests.php', {action: "accept_report_stock", id: $(this).val()}, function() {
-                    this_button.parent("td").prev().text("Aprovado");
-                    relatorio_stock_table.fnReloadAjax();
-                }, "json");
+                if ($(this).parents("td").prev().prev().find("button").data().approved)
+                {
+                    $.post('/AM/ajax/requests.php', {action: "accept_report_stock", id: $(this).val()}, function() {
+                        this_button.parent("td").prev().text("Aprovado");
+                        relatorio_stock_table.fnReloadAjax();
+                    }, "json");
+                }
+                else
+                    $.jGrowl("Verifique os produtos 1º, antes de aprovar.");
             });
-            rc_zone.on("click", ".decline_report_stock", function()
+            rms_zone.on("click", ".decline_report_stock", function()
             {
                 var this_button = $(this);
                 bootbox.confirm("Tem a certeza?", function(result) {
@@ -566,60 +573,91 @@ var requests = function(basic_path, options_ext)
                     }
                 });
             });
-            rc_zone.on("click", ".ver_itens", function(e)
+
+
+
+            rms_zone.on("click", ".ver_produto_stock", function(e)
             {
 
                 e.preventDefault();
-                var id_anexo = $(this).data().stock_id;
-                $.post("ajax/requests.php", {action: "get_itens_stock", id: id_anexo},
-                function(data)
+                var id_stock = $(this).data().stock_id;
+                var anexo_number = 1;
+                var status = $(this).data().approved;
+
+                $.post("ajax/requests.php", {action: "get_itens_stock", id: id_stock},
+                function(data1)
                 {
-                    var
-                            content,
-                            tbody = "";
-                    $.each(data, function()
+
+                    var tbody = basic_path.find("#tbody_ver_produto_mensal_stock");
+                    tbody.empty();
+
+                    $.each(data1, function()
                     {
-                        tbody += "<tr><td>" + this.quantidade + "</td><td>" + this.descricao + "</td><td>" + this.serie + "</td><td>" + this.obs + "</td></tr>";
+
+                        tbody.append("<tr><td><input " + ((status) ? "disabled" : "") + " type='checkbox' value='" + id_stock + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " " + ((SpiceU.user_level < 5) ? "disabled" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td class='td_helper_quantidade'>" + this.quantidade + "</td><td class='td_helper_descricao'>" + this.descricao + "</td><td class='td_helper_serie'>" + this.serie + "</td><td class='td_helper_obs'>" + this.obs + "</td></tr>");
+                        anexo_number++;
                     });
-                    content = "<table class='table table-mod table-bordered table-striped table-condesed'>\n\
-                                <thead><tr><th>#</th><th>Descrição</th><th>N. Série</th><th>Observações</th></tr></thead>\n\
-                                <tbody>" + tbody + "</tbody>\n\
-                               </table>";
-                    bootbox.alert(content);
+                    basic_path.find(".stock_exit_button").data("id_stock", id_stock);
+                    basic_path.find("#ver_anexo_mensal_stock_modal").modal("show");
                 }, "json");
             });
+            basic_path.on("click", ".stock_exit_button", function(e)
+            {
+                var anexo_array = [];
+                var this_button = $(this);
+                var data_ver_button = rms_zone.find("[data-stock_id='" + this_button.data().id_stock + "']");
+                data_ver_button.data().approved = 1;
+                $.each(this_button.parents("#ver_anexo_mensal_stock_modal").find("#tbody_ver_produto_mensal_stock").find("tr"), function()
+                {
+
+                    anexo_array.push({quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked")});
+                    if (!~~~~$(this).find("td").first().find(":checkbox").is(":checked"))
+                        data_ver_button.data().approved = 0;
+                });
+
+                $.post("/AM/ajax/requests.php", {action: "save_stock", id: this_button.data().id_stock, produtos: anexo_array}, "json");
+            });
+
+
+
+
+
+
+
+
+
         }
     }
     this.relatorio_movimentacao_stock = {
         init: function() {
-//            $.get("/AM/view/requests/relatorio_movimentacao_stock_modal.html", function(data) {
-//                basic_path.append(data);
-//            }, 'html');
+            $.get("/AM/view/requests/relatorio_movimentacao_stock_modal.html", function(data) {
+                basic_path.append(data);
+            }, 'html');
         },
-        new : function(rc_zone) {
-            rc_zone.empty().off();
+        new : function(rmovs) {
+            rmovs.empty().off();
             $.get("/AM/view/requests/relatorio_movimentacao_stock.html", function(data) {
-                rc_zone.append(data);
-                rc_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).val(moment().format('YYYY-MM-DD'));
+                rmovs.append(data);
+                rmovs.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).val(moment().format('YYYY-MM-DD'));
                 //SUBMIT
-                rc_zone.on("click", "#submit_rfms", function(e) {
+                rmovs.on("click", "#submit_rfms", function(e) {
                     e.preventDefault();
-                    if (rc_zone.find("#relatorio_movimentacao_stock_form").validationEngine("validate")) {
+                    if (rmovs.find("#relatorio_movimentacao_stock_form").validationEngine("validate")) {
                         var prdt_objs = [];
-                        if (rc_zone.find("#table_tbody_rfms tr").length)
+                        if (rmovs.find("#table_tbody_rfms tr").length)
                         {
-                            $.each(rc_zone.find("#table_tbody_rfms tr"), function() {
+                            $.each(rmovs.find("#table_tbody_rfms tr"), function() {
                                 prdt_objs.push({quantidade: $(this).find(".quant").val(), destinario: $(this).find(".desc").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
                             });
                             $.post("ajax/requests.php",
                                     {
                                         action: "criar_relatorio_movimentacao_stock",
-                                        data: rc_zone.find("#input_data").val(),
+                                        data: rmovs.find("#input_data").val(),
                                         produtos: prdt_objs
                                     },
                             function()
                             {
-                                rc_zone.find(":input").val("");
+                                rmovs.find(":input").val("");
                                 $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
                             }, "json");
                         }
@@ -627,19 +665,19 @@ var requests = function(basic_path, options_ext)
                             $.jGrowl("Preencha pelo menos uma linha.");
                     }
                 });
-                rc_zone.find("#button_rfms_table_add_line").click(function(e) {
+                rmovs.find("#button_rfms_table_add_line").click(function(e) {
                     e.preventDefault();
-                    rc_zone.find("#table_tbody_rfms").append("<tr><td><input class='validate[required] span text-right quant' type='text' /></td> <td><input class='validate[required] span dest' type='text' /></td> <td><input class='validate[required] span desc' type='text' /></td> <td><input class='validate[required] span serie' type='text' /></td> <td><textarea class='span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
-                    rc_zone.find(".quant").autotab('number');
+                    rmovs.find("#table_tbody_rfms").append("<tr><td><input class='validate[required] span text-right quant' type='text' /></td> <td><input class='validate[required] span dest' type='text' /></td> <td><input class='validate[required] span desc' type='text' /></td> <td><input class='validate[required] span serie' type='text' /></td> <td><textarea class='span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
+                    rmovs.find(".quant").autotab('number');
                 }).click();
-                rc_zone.on("click", ".remove_doc_obj", function(e) {
+                rmovs.on("click", ".remove_doc_obj", function(e) {
                     e.preventDefault();
                     $(this).parent().parent().remove();
                 });
             });
         },
-        get_to_datatable: function(rc_zone) {
-            var relatorio_moviment_stock_table = rc_zone.dataTable({
+        get_to_datatable: function(rmovs) {
+            var relatorio_moviment_stock_table = rmovs.dataTable({
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -655,17 +693,22 @@ var requests = function(basic_path, options_ext)
             });
             $('#export_MS').click(function(event) {
                 event.preventDefault();
-                table2csv(relatorio_moviment_stock_table, 'full', '#' + rc_zone[0].id);
+                table2csv(relatorio_moviment_stock_table, 'full', '#' + rmovs[0].id);
             });
-            rc_zone.on("click", ".accept_report_movimentacao", function()
+            rmovs.on("click", ".accept_report_movimentacao", function()
             {
                 var this_button = $(this);
-                $.post('/AM/ajax/requests.php', {action: "accept_report_movimentacao", id: $(this).val()}, function() {
-                    this_button.parent("td").prev().text("Aprovado");
-                    relatorio_moviment_stock_table.fnReloadAjax();
-                }, "json");
+                if ($(this).parents("td").prev().prev().find("button").data().approved)
+                {
+                    $.post('/AM/ajax/requests.php', {action: "accept_report_movimentacao", id: $(this).val()}, function() {
+                        this_button.parent("td").prev().text("Aprovado");
+                        relatorio_moviment_stock_table.fnReloadAjax();
+                    }, "json");
+                }
+                else
+                    $.jGrowl("Verifique os anexos 1º, antes de aprovar.");
             });
-            rc_zone.on("click", ".decline_report_movimentacao", function()
+            rmovs.on("click", ".decline_report_movimentacao", function()
             {
                 var this_button = $(this);
                 bootbox.confirm("Tem a certeza?", function(result) {
@@ -677,27 +720,46 @@ var requests = function(basic_path, options_ext)
                     }
                 });
             });
-            rc_zone.on("click", ".ver_itens", function(e)
+            rmovs.on("click", ".ver_produto_mov_stock", function(e)
             {
 
                 e.preventDefault();
-                var id_anexo = $(this).data().movimentacao_id;
-                $.post("ajax/requests.php", {action: "get_itens_movimentacao", id: id_anexo},
-                function(data)
+                var id_movimentacao = $(this).data().movimentacao_id;
+                var anexo_number = 1;
+                var status = $(this).data().approved;
+
+                $.post("ajax/requests.php", {action: "get_itens_movimentacao", id: id_movimentacao},
+                function(data1)
                 {
-                    var
-                            content,
-                            tbody = "";
-                    $.each(data, function()
+
+                    var tbody = basic_path.find("#tbody_ver_produto_movimentacao_stock");
+                    tbody.empty();
+
+                    $.each(data1, function()
                     {
-                        tbody += "<tr><td>" + this.quantidade + "</td><td>" + this.destinario + "</td><td>" + this.descricao + "</td><td>" + this.serie + "</td><td>" + this.obs + "</td></tr>";
+
+                        tbody.append("<tr><td><input " + ((status) ? "disabled" : "") + " type='checkbox' value='" + id_movimentacao + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " " + ((SpiceU.user_level < 5) ? "disabled" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td class='td_helper_quantidade'>" + this.quantidade + "</td><td class='td_helper_descricao'>" + this.descricao + "</td><td class='td_helper_serie'>" + this.serie + "</td><td class='td_helper_obs'>" + this.obs + "</td></tr>");
+                        anexo_number++;
                     });
-                    content = "<table class='table table-mod table-bordered table-striped table-condesed'>\n\
-                                <thead><tr><th>#</th><th>Destinatário</th><th>Descrição</th><th>N. Série</th><th>Observações</th></tr></thead>\n\
-                                <tbody>" + tbody + "</tbody>\n\
-                               </table>";
-                    bootbox.alert(content);
+                    basic_path.find(".stock_mov_exit_button").data("id_stock", id_movimentacao);
+                    basic_path.find("#ver_anexo_mov_stock_modal").modal("show");
                 }, "json");
+            });
+            basic_path.on("click", ".stock_mov_exit_button", function(e)
+            {
+                var anexo_array = [];
+                var this_button = $(this);
+                var data_ver_button = rmovs.find("[data-movimentacao_id='" + this_button.data().id_stock + "']");
+                data_ver_button.data().approved = 1;
+                $.each(this_button.parents("#ver_anexo_mov_stock_modal").find("#tbody_ver_produto_movimentacao_stock").find("tr"), function()
+                {
+
+                    anexo_array.push({quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked")});
+                    if (!~~~~$(this).find("td").first().find(":checkbox").is(":checked"))
+                        data_ver_button.data().approved = 0;
+                });
+
+                $.post("/AM/ajax/requests.php", {action: "save_mov_stock", id: this_button.data().id_stock, produtos: anexo_array}, "json");
             });
         }
     };

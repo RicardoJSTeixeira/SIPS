@@ -155,8 +155,8 @@ class correio extends requests_class {
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             $approved = $row[8] == "1" ? 1 : 0;
-   
-            $row[3] = date("d-m-Y H:i:s", strtotime($row[3]));
+
+            $row[3] = date("d-m-Y", strtotime($row[3]));
             if ($row[6])
                 $row[6] = "<button data-anexo_id = '$row[0]' data-approved = '$approved' class = 'btn ver_anexo_correio'><i class = 'icon-eye-open'></i>Anexos</button>";
             else
@@ -333,7 +333,7 @@ class mensal_stock extends requests_class {
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-
+            $approved = $row[4] == "1" ? 1 : 0;
             $row[2] = date("d-m-Y H:i:s", strtotime($row[2]));
             switch ($row[4]) {
                 case "0":
@@ -350,7 +350,7 @@ class mensal_stock extends requests_class {
                     break;
             }
 
-            $row[3] = "<div> <button class = 'btn ver_itens' data-stock_id = '" . $row[0] . "'><i class = 'icon-eye-open'></i>Itens</button></div>";
+            $row[3] = "<div> <button class = 'btn  ver_produto_stock' data-approved = '$approved' data-stock_id = '" . $row[0] . "'><i class = 'icon-eye-open'></i>Itens</button></div>";
 
 
             $result['aaData'][] = $row;
@@ -381,11 +381,17 @@ class mensal_stock extends requests_class {
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $_produtos = json_decode($row->produtos);
             foreach ($_produtos as $value) {
-                $produtos[] = array("quantidade" => $value->quantidade, "descricao" => $value->descricao, "serie" => $value->serie, "obs" => $value->obs);
+                $produtos[] = array("quantidade" => $value->quantidade, "descricao" => $value->descricao, "serie" => $value->serie, "obs" => $value->obs, "confirmed" => $value->confirmed);
             }
         }
 
         return $produtos;
+    }
+
+    public function save_stock($id, $produtos) {
+        $query = "update spice_report_stock set produtos = :produtos where id = :id";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array(":id" => $id, ":produtos" => json_encode($produtos)));
     }
 
     private function getUser($id) {
@@ -419,6 +425,7 @@ class movimentacao_stock extends requests_class {
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $approved = $row[4] == "1" ? 1 : 0;
             $row[2] = date("d-m-Y H:i:s", strtotime($row[2]));
             switch ($row[4]) {
                 case "0":
@@ -435,7 +442,7 @@ class movimentacao_stock extends requests_class {
                     break;
             }
 
-            $row[3] = "<div> <button class = 'btn ver_itens' data-movimentacao_id = '" . $row[0] . "'><i class = 'icon-eye-open'></i>Itens</button></div>";
+            $row[3] = "<div> <button class = 'btn  ver_produto_mov_stock' data-approved = '$approved' data-movimentacao_id = '" . $row[0] . "'><i class = 'icon-eye-open'></i>Itens</button></div>";
 
 
             $result['aaData'][] = $row;
@@ -467,7 +474,7 @@ class movimentacao_stock extends requests_class {
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $_produtos = json_decode($row->produtos);
             foreach ($_produtos as $value) {
-                $produtos[] = array("quantidade" => $value->quantidade, "destinario" => $value->destinario, "descricao" => $value->descricao, "serie" => $value->serie, "obs" => $value->obs);
+                $produtos[] = array("quantidade" => $value->quantidade, "destinario" => $value->destinario, "descricao" => $value->descricao, "serie" => $value->serie, "obs" => $value->obs, "confirmed" => $value->confirmed);
             }
         }
 
@@ -479,6 +486,12 @@ class movimentacao_stock extends requests_class {
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function save_mov_stock($id, $produtos) {
+        $query = "update spice_report_movimentacao set produtos = :produtos where id = :id";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array(":id" => $id, ":produtos" => json_encode($produtos)));
     }
 
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________

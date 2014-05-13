@@ -1,26 +1,15 @@
 <div id="admin_extra_zone"></div>
 
 <ul class="nav nav-tabs tabs-main">
-  <li class="active"><a href="#mkt" data-toggle="tab">Apoio Markting</a></li>
-  <li><a href="#mail" data-toggle="tab">Correio</a></li>
+ 
+  <li class="active"><a href="#mail" data-toggle="tab">Correio</a></li>
   <li><a href="#frt" data-toggle="tab">Frota</a></li>
   <li><a href="#stk" data-toggle="tab">Stock</a></li>
   <li><a href="#mstk" data-toggle="tab">Movimentações</a></li>
 </ul>
 <div class="tab-content tabs-main-content">
-    <div class="tab-pane active" id="mkt">
-        <div class="grid-title">
-            <div class="pull-left">Apoio Marketing</div>
-            <div class="pull-right">
-                <button class="btn btn-lg btn-info" id="export_AM"><i class='icon-download'></i>Transferir</button>
-            </div>
-        </div>
-        <div class="grid-content div_admin_edit" id="pedidos_apoio_marketing_master_div"  >
-            <table class="table table-bordered table-mod" id="pedidos_apoio_marketing_datatable"></table>
-            <div class="clear"></div>
-        </div>
-    </div>
-    <div class="tab-pane" id="mail">
+ 
+    <div class="tab-pane active" id="mail">
         <div class="grid-title">
             <div class="pull-left">Correio</div>
             <div class="pull-right">
@@ -78,9 +67,7 @@
     {
         Rq = new requests($("#admin_extra_zone"), {});
 
-        Rq.apoio_marketing.init();
-        Rq.apoio_marketing.get_to_datatable($("#pedidos_apoio_marketing_datatable"));
-
+    
         Rq.relatorio_correio.init();
         Rq.relatorio_correio.get_to_datatable($("#pedidos_correio_datatable"));
 

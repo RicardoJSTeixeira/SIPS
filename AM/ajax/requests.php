@@ -112,6 +112,16 @@ switch ($action) {
         echo json_encode($relatorio_correio->save_anexo_correio($id, $anexos));
         break;
 
+    case "save_stock":
+        echo json_encode($relatorio_mensal_stock->save_stock($id, $produtos));
+        break;
+
+    case "save_mov_stock":
+        echo json_encode($relatorio_movimentacao_stock->save_mov_stock($id, $produtos));
+        break;
+
+
+
     case "get_horario_from_apoio_marketing":
         echo json_encode($apoio_marketing->get_horario($id));
         break;
