@@ -39,6 +39,7 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $row[7] = date("d-m-Y H:i:s", strtotime($row[7]));
             $row[7] = $row[7] . "<div class='view-button'>"
                     . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[0]' title='Ver Cliente'><i class='icon-edit'></i></button>"
                     . "<button class='btn btn-mini icon-alone criar_encomenda' data-lead_id='$row[0]' title='Nova Encomenda'><i class='icon-shopping-cart'></i></button>"
@@ -70,6 +71,7 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $row[7]= date("d-m-Y H:i:s", strtotime($row[7]));
             $row[7] = $row[7] . "<div class='view-button'>"
                     . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[0]' title='Ver Cliente'><i class='icon-edit'></i></button>"
                     . "<button class='btn btn-mini icon-alone criar_marcacao' data-lead_id='$row[0]' title='Marcar Consulta'><i class='icon-calendar'></i></button>"
@@ -103,6 +105,7 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+           $row[9]=  date("d-m-Y H:i:s", strtotime($row[9]));
             $row[9] = $row[9] . "<div class='view-button'>"
                     . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[2]' title='Ver Cliente'><i class='icon-edit'></i></button>"
                     . "<button class='btn btn-mini icon-alone criar_marcacao' data-lead_id='$row[2]' title='Marcar Consulta'><i class='icon-calendar'></i></button>"
@@ -136,7 +139,7 @@ switch ($action) {
         $stmt->execute($variables);
         $data = array();
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
-            $data[] = array("first_name" => (string) $row->first_name."<span class='right'>$row->closed</span>", "start_date" => $row->start_date, "lead_id" => $row->lead_id, "id_reservation" => $row->id_reservation);
+            $data[] = array("first_name" => (string) $row->first_name . "<span class='right'>$row->closed</span>", "start_date" => $row->start_date, "lead_id" => $row->lead_id, "id_reservation" => $row->id_reservation);
         }
         echo json_encode($data);
         break;

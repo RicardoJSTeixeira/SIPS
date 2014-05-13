@@ -151,7 +151,7 @@
 			return this.each(function() {
 				/** Create a jGrowl Instance on the Container if it does not exist **/
 				if ( $(this).data('jGrowl.instance') == undefined ) {
-					$(this).data('jGrowl.instance', $.extend( new $.fn.jGrowl(), { notifications: [], element: null, interval: null } ));
+					$(this).data('jGrowl.instance', $.extend( new $.fn.jGrowl(), { notifications: [], element: null, interval: null  } ));
 					$(this).data('jGrowl.instance').startup( this );
 				}
 
@@ -176,7 +176,7 @@
 			position: 			'top-right',
 			glue:				'after',
 			theme:				'default',
-			themeState:			'highlight',
+			themeState:			'',
 			corners:			'10px',
 			check:				250,
 			life:				3000,

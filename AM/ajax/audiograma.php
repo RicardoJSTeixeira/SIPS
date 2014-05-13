@@ -39,7 +39,7 @@ switch ($action) {
             $variables[] = $unique_id;
             $variables[] = $key;
             $variables[] = json_encode($value);
-            $variables[] = date('Y-m-d H:i:s');
+            $variables[] = date('d-m-Y H:i:s');
             $stmt = $db->prepare($query);
             $stmt->execute($variables);
         }
