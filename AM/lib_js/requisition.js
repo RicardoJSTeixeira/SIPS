@@ -8,7 +8,8 @@ var requisition = function(geral_path, options_ext)
             product_tree,
             modal = "",
             table_path = "",
-            produtos = [];
+            produtos = [],
+            EData;
     $.extend(true, this.config, options_ext);
     this.init = function(callback)
     {
@@ -35,7 +36,7 @@ var requisition = function(geral_path, options_ext)
             new_requisition_zone.find("#tipo_especial").show();
             new_requisition_zone.find("#tipo_encomenda").text("Encomenda Especial");
             var client_box;
-         
+
             client_box = new clientBox({id: lead_id, byReserv: false});
             client_box.init();
         }
@@ -357,7 +358,7 @@ var requisition = function(geral_path, options_ext)
                         $(this).parent().parent().addClass("error");
                 });
             },
-            "aoColumns": [{"sTitle": "Id"}, {"sTitle": "Dispenser", "bVisible": SpiceU.user_level > 5}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente", "sType": 'numeric'}, {"sTitle": "Data"}, {"sTitle": "Número de contrato"}, {"sTitle": "Código de cliente"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "60px", "bVisible": SpiceU.user_level > 5}],
+            "aoColumns": [{"sTitle": "Id"}, {"sTitle": "Dispenser", "bVisible": SpiceU.user_level > 5}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente", "sType": 'numeric'}, {"sTitle": "Data"}, {"sTitle": "Nº de contrato"}, {"sTitle": "Referência"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "60px", "bVisible": SpiceU.user_level > 5}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
         if (SpiceU.user_level > 5)
@@ -383,28 +384,53 @@ var requisition = function(geral_path, options_ext)
                 }
             });
         }
+        table_path.on("click", ".ver_cliente", function()
+        {
+            var client = new cliente_info($(this).data("lead_id"), null);
+            client.init(null);
 
+        });
         //VER PRODUTOS DE ENCOMENDAS FEITAS
         table_path.on("click", ".ver_requisition_products", function()
         {
+            var that = this;
             $.post('ajax/requisition.php', {action: "listar_produtos_por_encomenda", id: $(this).val()}, function(data)
             {
-                var modal_tbody = modal.find("#show_requisition_products_tbody");
-                modal_tbody.empty();
+                var
+                        modal_tbody = modal.find("#show_requisition_products_tbody").empty(),
+                        EInfotmp = [],
+                        EInfo = [];
+                EData = {bInfo: [], products: []};
+                $(that).parents("tr").find('td:not(:eq(0)):not(:eq(6)):not(:eq(6)):not(:eq(7))').each(function(i) {
+                    EInfotmp.push(this.innerText);
+                });
+                EInfo = {'Dispenser': EInfotmp[0] + "", 'Tipo': EInfotmp[1] + "", 'Id Cliente': EInfotmp[2] + "", 'Data': EInfotmp[3] + "", 'Nr de contrato': EInfotmp[4] + "", 'Referencia': EInfotmp[5] + "", 'Estado': EInfotmp[6] + ""};
+                EData.bInfo.push(EInfo);
+
                 $.each(data, function()
                 {
-                    if (!this.color_name)
-                        this.color_name = "Padrão";
+                    this.color_name = (!this.color_name) ? "Padrão" : this.color_name;
+                    EData.products.push({Nome: this.name, Categoria: this.category.capitalize(), Cor: this.color_name, Quantidade: this.quantity});
+
                     modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category.capitalize() + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td></tr>");
                 });
                 modal.modal("show");
             }, "json");
         });
+
+        modal.on("click", "#print_requisition", function()
+        {
+            var doc = new jsPDF('p', 'pt', 'a4', true);
+            last = doc.table(5, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {autoSize: true, printHeaders: true});
+
+            doc.table(20, 80, EData.products, null, {autoSize: true, printHeaders: true});
+
+            doc.save(moment().format());
+        });
+
         table_path.on("click", ".accept_requisition", function()
         {
-            var this_button = $(this);
             $.post('ajax/requisition.php', {action: "accept_requisition", id: $(this).val()}, function() {
-                this_button.parent("td").prev().text("Aprovado");
                 Table_view_requisition.fnReloadAjax();
             }, "json");
         });
@@ -414,7 +440,6 @@ var requisition = function(geral_path, options_ext)
             bootbox.confirm("Tem a certeza?", function(result) {
                 if (result) {
                     $.post('ajax/requisition.php', {action: "decline_requisition", id: this_button.val()}, function() {
-                        this_button.parent().prev().text("Rejeitado");
                         Table_view_requisition.fnReloadAjax();
                     }, "json");
                 }
