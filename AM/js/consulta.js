@@ -186,14 +186,12 @@ $("#main_consulta_div #validate_audio_script").on("click", function()
                 left_ear = $("#main_consulta_div #left_ear_value").val();
                 $("#main_consulta_div #venda_confirm_div");
                 $("#main_consulta_div #terminar_consulta_div").show();
-                $("#main_consulta_div #terminar_consulta_no_exame").hide();
                 ha_perda = 1;
             }
             else if (status === "0") // SEM PERDA 
             {
 
                 $("#main_consulta_div #terminar_consulta_div").show();
-                $("#main_consulta_div #terminar_consulta_no_exame").hide();
                 ha_perda = 0;
             }
         });
@@ -320,4 +318,57 @@ $("#main_consulta_div #validate_audiograma_button").click(function() {
     {
         $.jGrowl('AudioGrama validado com sucesso!', {life: 3000});
     });
+});
+
+$(".onlynumber").autotab("numeric");
+
+$("#print_proposta").click(function() {
+
+    var
+            modal = $("#proposta_modal"),
+            p1 = {modelo: modal.find("#p1modelo").val(), valor: modal.find("#p1valor").val(), quantidade: modal.find("#p1qt").val(), entrada: modal.find("#p1entrada").val(), meses: modal.find("#p1meses").val()},
+    p2 = {modelo: modal.find("#p2modelo").val(), valor: modal.find("#p2valor").val(), quantidade: modal.find("#p2qt").val(), entrada: modal.find("#p2entrada").val(), meses: modal.find("#p2meses").val()},
+    p3 = {modelo: modal.find("#p3modelo").val(), valor: modal.find("#p3valor").val(), quantidade: modal.find("#p3qt").val(), entrada: modal.find("#p3entrada").val(), meses: modal.find("#p3meses").val()},
+    doc = new jsPDF('p', 'pt', 'a4', true),
+            y = new function() {
+                var me = this;
+                this.y = 0;
+                this.pos = function(mais) {
+                    if (mais) {
+                        me.y += mais;
+                    }
+                    me.y += 20;
+                    return me.y;
+                };
+            };
+    doc.text(20, y.pos(20), 'Exmo(a) Senhor(a),');
+    doc.text(20, y.pos(), 'Vimos apresentar a nossa melhor proposta para a solução');
+    doc.text(20, y.pos(), 'correctiva adequada à sua perda auditiva:');
+    doc.setFontSize(22);
+    doc.text(20, y.pos(10), 'Proposta 1');
+    doc.setFontSize(16);
+    doc.text(20, y.pos(), p1.modelo);
+    doc.text(20, y.pos(), p1.valor + "€");
+    doc.text(20, y.pos(), p1.quantidade + ' Prótese(s) digital(ais) de última geração');
+    doc.text(20, y.pos(), p1.entrada + '% Entrada ' + p1.valor * (p1.entrada / 100) + '€');
+    doc.text(20, y.pos(), p1.meses + ' Prestações ' + (p1.valor - (p1.valor * (p1.entrada / 100))) / p1.meses + '€');
+    doc.setFontSize(22);
+    doc.text(20, y.pos(10), 'Proposta 2');
+    doc.setFontSize(16);
+    doc.text(20, y.pos(), p2.modelo);
+    doc.text(20, y.pos(), p2.valor + "€");
+    doc.text(20, y.pos(), p2.quantidade + ' Prótese(s) digital(ais) de última geração');
+    doc.text(20, y.pos(), p2.entrada + '% Entrada ' + p2.valor * (p2.entrada / 100) + '€');
+    doc.text(20, y.pos(), p2.meses + ' Prestações ' + (p2.valor - (p2.valor  * (p2.entrada / 100))) / p2.meses + '€');
+    doc.setFontSize(22);
+    doc.text(20, y.pos(10), 'Proposta 3');
+    doc.setFontSize(16);
+    doc.text(20, y.pos(), p3.modelo);
+    doc.text(20, y.pos(), p3.valor + "€");
+    doc.text(20, y.pos(), p3.quantidade + ' Prótese(s) digital(ais) de última geração');
+    doc.text(20, y.pos(), p3.entrada + '% Entrada ' + p3.valor * (p3.entrada / 100) + '€');
+    doc.text(20, y.pos(), p3.meses + ' Prestações ' + (p3.valor - (p3.valor * (p3.entrada / 100))) / p3.meses + '€');
+    //last = doc.table(5, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {autoSize: true, printHeaders: true});
+
+    doc.save(moment().format());
 });
