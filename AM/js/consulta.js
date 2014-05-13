@@ -137,7 +137,9 @@ $("#main_consulta_div #pa_no").click(function()
     $("#main_consulta_div")
             .find("#no_exam_div").show().end()
             .find("#terminar_consulta_div").show().end()
-            .find("#inicial_option_div").hide();
+            .find("#inicial_option_div").hide().end()
+            .find("#terminar_consulta_no_exame").hide();
+
 });
 
 $("#main_consulta_div #pa_yes").click(function()

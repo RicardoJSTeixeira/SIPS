@@ -4,13 +4,6 @@ $(function()
     var Rq = new requests($("#modal_div"));
 
 
-//APOIO MARKETING - RASTrEIO
-    $("#master_requests_div #button_apoio_marketing").click(function()
-    {
-        Rq.apoio_marketing.new($("#master_requests_div #div_apoio_marketing"));
-        $("#master_requests_div .request_div").hide();
-        $("#master_requests_div #div_apoio_marketing").show();
-    });
 
 
 //RELATORIO CORREIO

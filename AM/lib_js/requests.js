@@ -149,7 +149,7 @@ var requests = function(basic_path, options_ext)
 
                     if (data[0].tipo == 1)
                         basic_path.find("#ver_horario_modal .horario_all_master").show();
-                    if (data[0].tipo == 2) 
+                    if (data[0].tipo == 2)
                         basic_path.find("#ver_horario_modal #horario_manha").show();
                     if (data[0].tipo == 3)
                         basic_path.find("#ver_horario_modal #horario_tarde").show();
@@ -444,14 +444,18 @@ var requests = function(basic_path, options_ext)
                 e.preventDefault();
                 var id_anexo = $(this).data().anexo_id;
                 var anexo_number = 1;
+                var status = $(this).data().approved;
+
                 $.post("ajax/requests.php", {action: "get_anexo_correio", id: id_anexo},
                 function(data1)
                 {
+
                     var tbody = basic_path.find("#tbody_ver_anexo_correio");
                     tbody.empty();
+                   
                     $.each(data1, function()
                     {
-                        tbody.append("<tr><td class='chex-table'><input type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " " + ((SpiceU.user_level < 5) ? "disabled" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td>" + this.value + "</td></tr>");
+                        tbody.append("<tr><td class='chex-table'><input " + ((status) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " " + ((SpiceU.user_level < 5) ? "disabled" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td>" + this.value + "</td></tr>");
                         anexo_number++;
                     });
                     basic_path.find(".anexo_exit_button").data("id_correio", id_anexo);

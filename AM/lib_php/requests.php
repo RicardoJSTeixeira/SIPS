@@ -55,11 +55,8 @@ class apoio_marketing extends requests_class {
             $row[3] = date("d-m-Y H:i:s", strtotime($row[3]));
             $row[4] = date("d-m-Y H:i:s", strtotime($row[4]));
 
-
             $row[5] = "<div> <button class='btn ver_horario' data-apoio_marketing_id='" . $row[0] . "'><i class='icon-eye-open'></i>Horario</button></div>";
             $row[10] = "<div> <button class='btn ver_local_publicidade' data-apoio_marketing_id='" . $row[0] . "' ><i class='icon-eye-open'></i>localidades</button></div>";
-
-
             switch ($row[11]) {
                 case "0":
                     $row[12] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
@@ -76,7 +73,6 @@ class apoio_marketing extends requests_class {
             }
             $result['aaData'][] = $row;
         }
-
         return $result;
     }
 
@@ -89,7 +85,6 @@ class apoio_marketing extends requests_class {
             $value = json_decode($row["horario"]);
             $horarios[] = array("tipo" => $value->tipo, "inicio1" => $value->inicio1, "inicio2" => $value->inicio2, "fim1" => $value->fim1, "fim2" => $value->fim2);
         }
-
         return $horarios;
     }
 
@@ -104,7 +99,6 @@ class apoio_marketing extends requests_class {
                 $locais[] = array("cp" => $value->cp, "freguesia" => $value->freguesia);
             }
         }
-
         return $locais;
     }
 
@@ -119,7 +113,6 @@ class apoio_marketing extends requests_class {
     public function accept($id) {
         $query = "Update spice_apoio_marketing set status=1 where id=:id";
         $stmt = $this->_db->prepare($query);
-
         $stmt->execute(array(":id" => $id));
         return $this->getUser($id);
     }
@@ -154,7 +147,7 @@ class correio extends requests_class {
 
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
-        $result['aaData'] = [];
+        $result['aaData'] = array();
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
         $query = "SELECT id,user,carta_porte,data_envio,documento,lead_id,anexo,comments,status from spice_report_correio $filter";
         $stmt = $this->_db->prepare($query);
@@ -246,7 +239,7 @@ class frota extends requests_class {
 
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
-        $result['aaData'] = [];
+        $result['aaData'] = array();
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
         $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status from spice_report_frota $filter";
         $stmt = $this->_db->prepare($query);
@@ -333,7 +326,7 @@ class mensal_stock extends requests_class {
 
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
-        $result['aaData'] = [];
+        $result['aaData'] = array();
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
         $query = "SELECT id, user, data, produtos, status from spice_report_stock $filter";
         $stmt = $this->_db->prepare($query);
@@ -419,7 +412,7 @@ class movimentacao_stock extends requests_class {
 
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
-        $result['aaData'] = [];
+        $result['aaData'] = array();
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
         $query = "SELECT id, user, data, produtos, status from spice_report_movimentacao $filter";
         $stmt = $this->_db->prepare($query);
