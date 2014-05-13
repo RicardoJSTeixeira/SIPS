@@ -22,7 +22,7 @@ var cliente_info = function(lead_id, options_ext)
                 {
                     temp = ($("<div>", {class: "formRow"})
                             .append($("<span>").text(this.original_texto + ":"))
-                            .append($("<div>", {class: "formRight"})
+                            .append($("<div>", {class: "right"})
                                     .append($("<span>").text(this.value))));
                     switch (this.name)
                     {
@@ -48,7 +48,7 @@ var cliente_info = function(lead_id, options_ext)
             });
             var final = ($("<div>", {class: "row-fluid"}).append($("<div>", {class: "span6"}).append($("<h4>", {class: "icon-user"}).text(" Info de cliente")).append(client_info))
                     .append($("<div>", {class: "span6"}).append($("<h4>", {class: "icon-home"}).text(" Morada")).append(client_address)))
-                    .append($("<div>", {class: "row-fluid"}).append($("<div>", {class: "span12"}).append($("<h4>", {class: "icon-star"}).text(" Info Extra")).append(client_extra)));
+                    .append($("<div>", {class: "row-fluid"}).append($("<div>", {class: "span6"}).append($("<h4>", {class: "icon-star"}).text(" Info Extra")).append(client_extra)));
             bootbox.alert(final);
         }, "json");
         if (typeof callback === "function")

@@ -37,7 +37,7 @@ Class requisitions {
                         $row[6] = "<i class='icon-ban-circle'></i>";
                 }
             }
-            $row[3] = $row[3] == "0" ? "<i class='icon-ban-circle'></i>" : "$row[3] <button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[3]' title='Ver Cliente'><i class='icon-edit'></i></button>";
+            $row[3] = $row[3] == "0" ? "<i class='icon-ban-circle'></i>" : "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[3]' title='Ver Cliente'><i class='icon-edit'></i></button> $row[3]";
             switch ($row[9]) {
                 case "0":
                     $row[10] = "<div class='btn-group'> <button class='btn accept_requisition btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_requisition btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
