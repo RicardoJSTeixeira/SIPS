@@ -55,11 +55,8 @@ class apoio_marketing extends requests_class {
             $row[3] = date("d-m-Y H:i:s", strtotime($row[3]));
             $row[4] = date("d-m-Y H:i:s", strtotime($row[4]));
 
-
             $row[5] = "<div> <button class='btn ver_horario' data-apoio_marketing_id='" . $row[0] . "'><i class='icon-eye-open'></i>Horario</button></div>";
             $row[10] = "<div> <button class='btn ver_local_publicidade' data-apoio_marketing_id='" . $row[0] . "' ><i class='icon-eye-open'></i>localidades</button></div>";
-
-
             switch ($row[11]) {
                 case "0":
                     $row[12] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
@@ -76,7 +73,6 @@ class apoio_marketing extends requests_class {
             }
             $result['aaData'][] = $row;
         }
-
         return $result;
     }
 
@@ -89,7 +85,6 @@ class apoio_marketing extends requests_class {
             $value = json_decode($row["horario"]);
             $horarios[] = array("tipo" => $value->tipo, "inicio1" => $value->inicio1, "inicio2" => $value->inicio2, "fim1" => $value->fim1, "fim2" => $value->fim2);
         }
-
         return $horarios;
     }
 
@@ -104,7 +99,6 @@ class apoio_marketing extends requests_class {
                 $locais[] = array("cp" => $value->cp, "freguesia" => $value->freguesia);
             }
         }
-
         return $locais;
     }
 
@@ -119,7 +113,6 @@ class apoio_marketing extends requests_class {
     public function accept($id) {
         $query = "Update spice_apoio_marketing set status=1 where id=:id";
         $stmt = $this->_db->prepare($query);
-
         $stmt->execute(array(":id" => $id));
         return $this->getUser($id);
     }

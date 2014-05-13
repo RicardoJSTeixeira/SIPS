@@ -126,7 +126,6 @@ Class products {
     public function remove_product($id) {
         $stmt = $this->_db->prepare("delete from spice_product_assoc where child=:id or parent=:id2");
         $stmt->execute(array(":id" => $id, ":id2" => $id));
-
         $stmt = $this->_db->prepare("update spice_product set deleted=1  where id=:id");
         return $stmt->execute(array(":id" => $id));
     }
