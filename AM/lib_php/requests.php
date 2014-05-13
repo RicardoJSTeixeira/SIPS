@@ -17,7 +17,7 @@ abstract class requests_class {
 class apoio_marketing extends requests_class {
 
     public function __construct($db, $user_level, $user_id) {
-        parent::__construct($db, $user_level, $user_id);
+        parent::__construct($db, $user_level, $user_id); 
     }
 
     public function create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade, $id_reservation) {
