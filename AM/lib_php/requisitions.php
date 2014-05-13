@@ -48,8 +48,8 @@ Class requisitions {
                     $row[9] = "<span class='label label-success'>Aprovado</span>";
                     break;
                 case "2":
-                    $row[10] = "<div class='btn-group'> <button class='btn accept_requisition btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_requisition btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
-                    $row[9] = "<span class='label label-important'>Rejeitado</span>";
+                    $row[10] = "<div class='btn-group'> <button class='btn accept_requisition btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_requisition btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
+                    $row[9] = "<span class='label label-important'>Pendente</span>";
                     break;
             }
 
