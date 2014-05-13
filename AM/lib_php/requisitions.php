@@ -81,7 +81,7 @@ Class requisitions {
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array("id" => $id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $productalia = [];
+        $productalia = array();
         foreach (json_decode($row["products"]) as $value) {
             $productalia[$value->id] = array("quantity" => $value->quantity, "color" => $value->color, "color_name" => $value->color_name);
         }
