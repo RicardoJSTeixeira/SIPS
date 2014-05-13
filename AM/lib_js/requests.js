@@ -295,7 +295,7 @@ var requests = function(basic_path, options_ext)
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "get_relatorio_frota_to_datatable"});
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "data"}, {"sTitle": "Matricula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrencias", "sWidth": "150px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data"}, {"sTitle": "Matrícula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrências", "sWidth": "150px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_F').click(function(event) {
@@ -578,7 +578,7 @@ var requests = function(basic_path, options_ext)
                         tbody += "<tr><td>" + this.quantidade + "</td><td>" + this.descricao + "</td><td>" + this.serie + "</td><td>" + this.obs + "</td></tr>";
                     });
                     content = "<table class='table table-mod table-bordered table-striped table-condesed'>\n\
-                                <thead><tr><th>#</th><th>Descrição</th><th>Nº Serie</th><th>Observações</th></tr></thead>\n\
+                                <thead><tr><th>#</th><th>Descrição</th><th>N. Série</th><th>Observações</th></tr></thead>\n\
                                 <tbody>" + tbody + "</tbody>\n\
                                </table>";
                     bootbox.alert(content);
@@ -689,7 +689,7 @@ var requests = function(basic_path, options_ext)
                         tbody += "<tr><td>" + this.quantidade + "</td><td>" + this.destinario + "</td><td>" + this.descricao + "</td><td>" + this.serie + "</td><td>" + this.obs + "</td></tr>";
                     });
                     content = "<table class='table table-mod table-bordered table-striped table-condesed'>\n\
-                                <thead><tr><th>#</th><th>Destinatário</th><th>Descrição</th><th>Nº Serie</th><th>Observações</th></tr></thead>\n\
+                                <thead><tr><th>#</th><th>Destinatário</th><th>Descrição</th><th>N. Série</th><th>Observações</th></tr></thead>\n\
                                 <tbody>" + tbody + "</tbody>\n\
                                </table>";
                     bootbox.alert(content);
