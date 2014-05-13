@@ -90,7 +90,7 @@ Class requisitions {
         $stmt->execute();
         while ($row1 = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-            $productalia[$row1["id"]] = ["name" => $row1["name"], "quantity" => $productalia[$row1["id"]]["quantity"], "color" => $productalia[$row1["id"]]["color"], "color_name" => $productalia[$row1["id"]]["color_name"], "category" => $row1["category"]];
+            $productalia[$row1["id"]] = array("name" => $row1["name"], "quantity" => $productalia[$row1["id"]]["quantity"], "color" => $productalia[$row1["id"]]["color"], "color_name" => $productalia[$row1["id"]]["color_name"], "category" => $row1["category"]);
         }
         return $productalia;
     }
