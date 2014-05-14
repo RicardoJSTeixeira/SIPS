@@ -121,8 +121,6 @@ function get_messages()
 
 function get_alerts()
 {
-    console.log('ola eu sou um aletrsasdasdasdkluiyg !')
-
     $.post("ajax/general_functions.php", {action: "get_alerts"}, function(data) {
         $("#alerts-content").empty();
         $("#alert_time").data("update",moment());

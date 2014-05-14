@@ -19,7 +19,7 @@
 
     <div id="marcacao_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true" >
         <div class="modal-header">
-            <h3 id="myModalLabel">Marcação</h3>
+            <h3>Marcação</h3>
         </div>
         <div class="modal-body"  >
             Deseja criar uma nova marcação de consulta para este cliente?
@@ -30,6 +30,83 @@
         </div>
     </div>
 
+    <div id="proposta_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true" >
+        <div class="modal-header">
+            <h3>Proposta Comercial</h3>
+        </div>
+        <table class="table table-mod">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Modelo proposto</th>
+                    <th style="width: 60px;">Valor</th>
+                    <th style="width: 60px;">Qtd.</th>
+                    <th style="width: 60px;">Entrada</th>
+                    <th style="width: 60px;">Nº meses</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>1ª</th>
+                    <td>
+                        <input type="text" id='p1modelo' class="span"  value=""/>
+                    </td>
+                    <td>
+                        <input type="text" id='p1valor' class="span text-right onlynumber"  value=""/>
+                    </td>
+                    <td>
+                        <input type="text" id='p1qt' class="span text-right onlynumber"  value=""/>
+                    </td>
+                    <td>
+                        <input type="text" id='p1entrada' class="span text-right onlynumber"  value=""/>
+                    </td>
+                    <td>
+                        <input type="text" id='p1meses' class="span text-right onlynumber"  value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>2ª</th>
+                    <td>
+                        <input type="text" id='p2modelo' class="spant"  value=""/>
+                    </td>
+                    <td>
+                        <input type="text" id='p2valor' class="span text-right onlynumber"  value=""/>
+                    </td>
+                    <td>
+                        <input type="text" id='p2qt' class="span text-right onlynumber"  value=""/>
+                    </td>
+                    <td>
+                        <input type="text" id='p2entrada' class="span text-right onlynumber"  value=""/>
+                    </td>
+                    <td>
+                        <input type="text" id='p2meses' class="span text-right onlynumber"  value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>3ª</th>
+                    <td>
+                        <input type="text" id='p3modelo' class="span"  value=""/>
+                    </td>
+                    <td>
+                        <input type="text" id='p3valor' class="span text-right onlynumber"  value=""/>
+                    </td>
+                    <td>
+                        <input type="text" id='p3qt' class="span text-right onlynumber"  value=""/>
+                    </td>
+                    <td>
+                        <input type="text" id='p3entrada' class="span text-right onlynumber"  value=""/>
+                    </td>
+                    <td>
+                        <input type="text" id='p3meses' class="span text-right onlynumber"  value=""/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="modal-footer">
+            <button class="btn btn-success" id="print_proposta"><i class="icon-print"></i>Imprimir</button>
+            <button class="btn btn-link" data-dismiss="modal" aria-hidden="true">Sair</button>
+        </div>
+    </div>
 
     <div class="row-fluid">
 
@@ -40,6 +117,7 @@
                     <div class="grid-title">
                         <div class="pull-left"><i class="icon-cogs"></i> Opções</div>
                         <div class="pull-right">
+                            <a href="#proposta_modal" role="button" class="btn" data-toggle="modal"><i class="icon-gift"></i>Proposta</a>
                             <button class='btn btn-danger icon-alone' id='terminar_consulta_no_exame' title="Terminar Consulta sem Exame" ><i class="icon-user-md"></i></button>
                         </div>
                     </div>
@@ -173,7 +251,7 @@
                         <div class='formRow'>
                             <label>Aparelho vendido</label>
                             <div class='formRight'>
-                                <table class="table table-bordered">
+                                <table class="table table-mod table-bordered">
                                     <thead>
                                         <tr>
                                             <th style="width:20px">#</th>
@@ -205,7 +283,6 @@
                                                 <input type="text" id='eMarca' class="span" readonly value="Oticon"/>
                                             </td>
                                             <td>
-
                                                 <select id='eGama' class="span">
                                                     <option value="">Escolha</option><option value="Alta Pro">Alta Pro</option><option value="Intiga 10">Intiga 10</option><option value="Chili 9">Chili 9</option><option value="Alta Pro">Alta Pro</option><option value="Agil">Agil</option><option value="Intiga 8">Intiga 8</option><option value="Acto Pro">Acto Pro</option><option value="Chili 7">Chili 7</option><option value="Acto Pro">Acto Pro</option><option value="Dual M9">Dual M9</option><option value="Chili 5">Chili 5</option><option value="Ino Pro">Ino Pro</option><option value="Intiga 6">Intiga 6</option><option value="Sumo DM">Sumo DM</option><option value="Dual M7">Dual M7</option><option value="Ino Pro">Ino Pro</option><option value="Dual M5">Dual M5</option><option value="Hit">Hit</option><option value="Hit">Hit</option><option value="AM 90 (swift 90+)">AM 90 (swift 90+)</option><option value="AM 100 (swift 70+)">AM 100 (swift 70+)</option><option value="Nera">Nera</option><option value="Nera Pro">Nera Pro</option>
                                                 </select>
