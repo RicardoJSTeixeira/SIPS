@@ -75,6 +75,7 @@ $end_date = date("o-m-d");
                 </thead>
                 <tbody></tbody>
             </table>
+            <div class="clear"></div>
         </div>
     </div>
 </div>
