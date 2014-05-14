@@ -25,11 +25,8 @@ function get_sms($db, $filters, $start_date, $end_date) {
     $results=array();
    # echo "select status_date, destination, content, nr_sms, IF (status = 0, 'Delivered', IF (status = 1, 'Pending', IF (status = 2, 'Failed', 'Unknown'))) as status, process from sms.sms_status_report where status_date between '$start_date' and '$end_date'";
     $stmt = $db->prepare("select post_date, status_date, destination, content, nr_sms, IF (status = 0, 'Delivered', IF (status = 1, 'Pending', IF (status = 2, 'Failed', 'Unknown'))) as status, process, response from sms.sms_status_report_v2 where post_date between '$start_date 00:00:01' and '$end_date 23:59:59' and status in ($filters)");
-    $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_NUM);
+    $stmt->execute(); 
     
-    
-    
-    $js = array("aaData" => $results);
+    $js = array("aaData" => $stmt->fetchAll(PDO::FETCH_NUM));
     echo json_encode($js);
 }
