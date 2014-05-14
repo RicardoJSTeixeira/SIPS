@@ -358,7 +358,7 @@ var requisition = function(geral_path, options_ext)
                         $(this).parent().parent().addClass("error");
                 });
             },
-            "aoColumns": [{"sTitle": "Id"}, {"sTitle": "Dispenser", "bVisible": SpiceU.user_level > 5}, {"sTitle": "Tipo"}, {"sTitle": "Id Cliente", "sType": 'numeric'}, {"sTitle": "Data"}, {"sTitle": "Nº de contrato"}, {"sTitle": "Referência"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "60px", "bVisible": SpiceU.user_level > 5}],
+            "aoColumns": [{"sTitle": "Id"}, {"sTitle": "Dispenser", "bVisible": SpiceU.user_level > 5}, {"sTitle": "Tipo"}, {"sTitle": "Ref.ª de Cliente", "sType": 'numeric'}, {"sTitle": "Data"}, {"sTitle": "Nº de contrato"}, {"sTitle": "Referência"}, {"sTitle": "Anexo"}, {"sTitle": "Produtos"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "60px", "bVisible": SpiceU.user_level > 5}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
         if (SpiceU.user_level > 5)

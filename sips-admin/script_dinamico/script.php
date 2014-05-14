@@ -51,7 +51,9 @@ class script {
         $stmt->execute(array(":lead_id" => $lead_id));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $row["nome_operador"] = $operador;
-            $js = array_map(function($a){return (string)$a;},$row);
+            $js = array_map(function($a) {
+                return (string) $a;
+            }, $row);
         }
         return $js;
     }
@@ -263,7 +265,7 @@ class script {
                     $temp = $temp[0];
                     foreach ($temp as $value) {
                         $value1 = str_replace("@", "", $value);
-                        $values_text = preg_replace("/\@(\d{1,5})\@/", "<span data-id=" . $value . " class='" . $value . "tag tagReplace'></span>", $values_text);
+                        $values_text = preg_replace("/\@(\d{1,5})\@/", "<span data-id=" . $value1 . " class='" . $value1 . "tag tagReplace'></span>", $values_text);
                     }
                     $row["values_text"] = json_encode($values_text);
                 }
@@ -477,11 +479,9 @@ class script {
 
     public function add_rules($tag_trigger2, $tag_trigger, $tag_target, $id_script, $tipo_elemento, $tipo, $param1, $param2) {
 
-            $query = "INSERT INTO `script_rules` (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) VALUES (?,?,?,?,?,?,?,?,?)";
-            $stmt = $this->db->prepare($query);
-           return    $stmt->execute(array("NULL", $id_script, $tipo_elemento, $tag_trigger, json_encode($tag_trigger2), json_encode($tag_target), $tipo, $param1, json_encode($param2)));
-        
- 
+        $query = "INSERT INTO `script_rules` (id,id_script,tipo_elemento,tag_trigger,tag_trigger2,tag_target,tipo,param1,param2) VALUES (?,?,?,?,?,?,?,?,?)";
+        $stmt = $this->db->prepare($query);
+        return $stmt->execute(array("NULL", $id_script, $tipo_elemento, $tag_trigger, json_encode($tag_trigger2), json_encode($tag_target), $tipo, $param1, json_encode($param2)));
     }
 
     public function duplicate_script($user_group, $nome_script, $id_script) {

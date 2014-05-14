@@ -48,11 +48,11 @@ Class products {
         $stmt = $this->_db->prepare("SELECT id, name,  max_req_m, max_req_s, category, type, color, active from spice_product where deleted=0");
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $row["parent"] = array();
+
+            $row["parents_id"] = array();
             foreach ($relations as $key => $value) {
                 foreach ($value as $value1) {
                     if ($value1 == $row["id"]) {
-                        $row["parent"][] = $key;
                         $row["parents_id"][] = $key;
                     }
                 }
@@ -68,14 +68,32 @@ Class products {
             $value["children"] = $this->buildTree($output, $value["id"]);
             $value["children_level"] = $this->get_level_child($value) - 1;
             $temp = array();
-            if ($value["parent"])
-                foreach ($value["parent"] as &$value2) {
-                    $temp[] = $output[$value2];
+            if ($value["parents_id"])
+                foreach ($value["parents_id"] as $value2) {
+                    // $temp[] = $output[$value2];
+                    $temp[] = $value2;
                 };
             $value["parent"] = $temp;
+        }
+
+
+        foreach ($output as &$value) {
+
+            foreach ($value["parents_id"] as $value2) {
+                $temp[] = $output[$value2];
+                $temp[] = $value2;
+            };
+            $value["parent"] = $temp;
+        }
+        foreach ($output as &$value) {
 
             $value["parent_level"] = $this->get_level_parent($value) - 1;
         }
+
+
+
+
+
 
         if ($id) {
             return $output[$id];
@@ -92,7 +110,9 @@ Class products {
     function buildTree(array $elements, $parentId) {
         $branch = array();
         foreach ($elements as $element) {
-            if (in_array($parentId, $element["parent"])) {
+
+            if (in_array($parentId, $element["parents_id"])) {
+
                 $branch[] = $element + array("children" => $this->buildTree($elements, $element["id"]));
             }
         }

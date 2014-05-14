@@ -77,6 +77,7 @@ var products = function(geral_path, options_ext)
                 {
                     color.push({color: $(this).find(".color_picker_select").val(), name: $(this).find(".color_name").val()});
                 });
+    
                 if (edit_product_modal.find("#edit_product_form").validationEngine("validate"))
                 {
                     if (types.length)
@@ -92,6 +93,7 @@ var products = function(geral_path, options_ext)
                             active: edit_product_modal.find("#edit_product_active").is(":checked")}, function(data) {
                             edit_product_modal.modal("hide");
                             update_products_datatable(datatable_path);
+                            edit_product_modal.find("#edit_product_table_tbody_color tr").remove();
                         }, "json");
                     }
                     else
@@ -346,6 +348,7 @@ var products = function(geral_path, options_ext)
                 modal.find("#edit_product_mrm").val(data.max_req_m);
                 modal.find("#edit_product_mrw").val(data.max_req_s);
                 modal.find("#edit_product_child_datatable").find("tbody").empty();
+      
                 if (data.children.length)
                 {
                     modal.find("#edit_product_children_div").show();

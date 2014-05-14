@@ -125,6 +125,7 @@ var requests = function(basic_path, options_ext)
         get_to_datatable: function(am_zone)
         {
             var apoio_markting_table = am_zone.dataTable({
+                  "aaSorting": [[2, "desc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -286,6 +287,7 @@ var requests = function(basic_path, options_ext)
         get_to_datatable: function(rf_zone)
         {
             var relatorio_frota_table = rf_zone.dataTable({
+                 "aaSorting": [[2, "desc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -397,6 +399,7 @@ var requests = function(basic_path, options_ext)
         get_to_datatable: function(rc_zone)
         {
             var relatorio_correio_table = rc_zone.dataTable({
+                 "aaSorting": [[3, "desc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -530,6 +533,7 @@ var requests = function(basic_path, options_ext)
         },
         get_to_datatable: function(rms_zone) {
             var relatorio_stock_table = rms_zone.dataTable({
+                 "aaSorting": [[2, "desc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -678,6 +682,7 @@ var requests = function(basic_path, options_ext)
         },
         get_to_datatable: function(rmovs) {
             var relatorio_moviment_stock_table = rmovs.dataTable({
+                 "aaSorting": [[2, "desc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -727,7 +732,7 @@ var requests = function(basic_path, options_ext)
                 var id_movimentacao = $(this).data().movimentacao_id;
                 var anexo_number = 1;
                 var status = $(this).data().approved;
-
+ 
                 $.post("ajax/requests.php", {action: "get_itens_movimentacao", id: id_movimentacao},
                 function(data1)
                 {
