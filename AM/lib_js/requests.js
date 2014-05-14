@@ -134,7 +134,7 @@ var requests = function(basic_path, options_ext)
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"});
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial rastreio"}, {"sTitle": "Data final rastreio"}, {"sTitle": "Horario", "sWidth": "75px"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Local publicidade", "sWidth": "75px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial"}, {"sTitle": "Data final"}, {"sTitle": "Horario", "sWidth": "75px"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Local publicidade", "sWidth": "75px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_AM').click(function(event) {
