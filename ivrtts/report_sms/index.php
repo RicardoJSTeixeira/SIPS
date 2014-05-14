@@ -43,6 +43,7 @@ $end_date = date("o-m-d");
             <div class="span3" style="text-align: center">
                 <button class="btn  btn-success" id="reload" name="reload" value="Reload">Load Report</button>
                 <button class="btn  btn-success" id="export_all" disabled name="export_all" >Export Report</button>
+                <span class="help-inline">Limited to 20000 results</span>
             </div>    
         </div>
     </div>
@@ -74,6 +75,7 @@ $end_date = date("o-m-d");
                 </thead>
                 <tbody></tbody>
             </table>
+            <div class="clear"></div>
         </div>
     </div>
 </div>
