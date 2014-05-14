@@ -263,7 +263,7 @@ class script {
                     $temp = $temp[0];
                     foreach ($temp as $value) {
                         $value1 = str_replace("@", "", $value);
-                        $values_text = preg_replace("/\@(\d{1,5})\@/", "<span data-id=" . $value . " class='" . $value . "tag tagReplace'></span>", $values_text);
+                        $values_text = preg_replace("/\@(\d{1,5})\@/", "<span data-id=" . $value1 . " class='" . $value1 . "tag tagReplace'></span>", $values_text);
                     }
                     $row["values_text"] = json_encode($values_text);
                 }
