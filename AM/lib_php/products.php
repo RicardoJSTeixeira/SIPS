@@ -50,10 +50,14 @@ Class products {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
             $row["parents_id"] = array();
+            $row["children_id"] = array();
             foreach ($relations as $key => $value) {
                 foreach ($value as $value1) {
                     if ($value1 == $row["id"]) {
                         $row["parents_id"][] = $key;
+                    }
+                    if ($key == $row["id"]) {
+                        $row["children_id"][] = $value1;
                     }
                 }
             }
@@ -64,35 +68,13 @@ Class products {
         }
 //ATRIBUIÇÂO DE CHILDS E PARENTS
         foreach ($output as &$value) {
-
-            $value["children"] = $this->buildTree($output, $value["id"]);
-            $value["children_level"] = $this->get_level_child($value) - 1;
-            $temp = array();
-            if ($value["parents_id"])
-                foreach ($value["parents_id"] as $value2) {
-                    // $temp[] = $output[$value2];
-                    $temp[] = $value2;
-                };
-            $value["parent"] = $temp;
-        }
-
-
-        foreach ($output as &$value) {
-
-            foreach ($value["parents_id"] as $value2) {
-                $temp[] = $output[$value2];
-                $temp[] = $value2;
-            };
-            $value["parent"] = $temp;
+            $value["parent"] = $this->buildTree_parent($output, $value["id"]);
+            $value["children"] = $this->buildTree_child($output, $value["id"]);
         }
         foreach ($output as &$value) {
-
             $value["parent_level"] = $this->get_level_parent($value) - 1;
+            $value["children_level"] = $this->get_level_child($value) - 1;
         }
-
-
-
-
 
 
         if ($id) {
@@ -107,13 +89,25 @@ Class products {
         }
     }
 
-    function buildTree(array $elements, $parentId) {
+    function buildTree_child(array $elements, $parentId) {
         $branch = array();
         foreach ($elements as $element) {
 
             if (in_array($parentId, $element["parents_id"])) {
 
-                $branch[] = $element + array("children" => $this->buildTree($elements, $element["id"]));
+                $branch[] = $element + array("children" => $this->buildTree_child($elements, $element["id"]));
+            }
+        }
+        return $branch;
+    }
+
+    function buildTree_parent(array $elements, $childrentId) {
+        $branch = array();
+        foreach ($elements as $element) {
+
+            if (in_array($childrentId, $element["children_id"])) {
+
+                $branch[] = $element + array("parent" => $this->buildTree_parent($elements, $element["id"]));
             }
         }
         return $branch;
