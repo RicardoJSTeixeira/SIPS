@@ -53,7 +53,7 @@ var requests = function(basic_path, options_ext)
                 //Adiciona Linhas
                 am_zone.find("#button_ldptable_add_line").click(function(e) {
                     e.preventDefault();
-                    am_zone.find("#table_tbody_ldp").append("<tr><td><input type='text' name='ldp_cp" + ldpinput_count + "' class='linha_cp validate[required,custom[onlyNumberSp]]'></td><td><input type='text' name='ldp_freg" + ldpinput_count + "' class='linha_freg validate[required]'></td><td> <button class='btn btn-danger button_ldptable_remove_line icon-alone' ><i class='icon-minus'></i></button></td></tr>");
+                    am_zone.find("#table_tbody_ldp").append("<tr><td><input type='text' name='ldp_cp" + ldpinput_count + "' class='linha_cp validate[required,custom[onlyNumberSp]]' maxlength='4'></td><td><input type='text' name='ldp_freg" + ldpinput_count + "' class='linha_freg validate[required]'></td><td> <button class='btn btn-danger button_ldptable_remove_line icon-alone' ><i class='icon-minus'></i></button></td></tr>");
                     ldpinput_count++;
                 }).click();
                 //Remove Linhas

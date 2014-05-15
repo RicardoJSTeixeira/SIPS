@@ -27,7 +27,7 @@ class apoio_marketing extends requests_class {
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(
                     ":user" => $this->user_id,
-                    ":now" => date("Y-m-d H:i:s"), //GRAVAR NESTE FORMATO, so A ler é q se muda para d-m-Y
+                    ":now" => date("Y-m-d H:i:s"),
                     ":data_inicial" => $data_inicial,
                     ":data_final" => $data_final,
                     ":horario" => json_encode($horario),
@@ -51,11 +51,6 @@ class apoio_marketing extends requests_class {
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
 
-
-
-            $row[2] = date("d-m-Y H:i:s", strtotime($row[2]));
-            $row[3] = date("d-m-Y H:i:s", strtotime($row[3]));
-            $row[4] = date("d-m-Y H:i:s", strtotime($row[4]));
 
             $row[5] = "<div> <button class='btn ver_horario' data-apoio_marketing_id='" . $row[0] . "'><i class='icon-eye-open'></i>Horario</button></div>";
             $row[10] = "<div> <button class='btn ver_local_publicidade' data-apoio_marketing_id='" . $row[0] . "' ><i class='icon-eye-open'></i>localidades</button></div>";
