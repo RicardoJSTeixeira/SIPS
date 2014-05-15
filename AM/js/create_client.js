@@ -58,7 +58,7 @@ $(function()
                         .change(magia);
                 specialE = elmt;
             } else if (this.name === "TITLE") {
-                elmt = $(mt = $("<select>", {id: this.name, name: this.name, class: "input-mini"}).append([new Option("", ""), new Option("Sr.", "Sr."), new Option("Sra. D.", "Sra. D.")]));
+                elmt = $(mt = $("<select>", {id: this.name, name: this.name, class: "input-mini"}).attr('data-prompt-position','topRight:120').append([new Option("", ""), new Option("Sr.", "Sr."), new Option("Sra. D.", "Sra. D.")]));
             } else if (this.name === "extra6") {
                 elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "NO"});
             } else {
@@ -93,6 +93,7 @@ $(function()
                 case "MIDDLE_INITIAL":
                     input = input1;
                     break;
+                case "extra2":
                 case "LAST_NAME":
                     input = input1;
                     break;
@@ -129,7 +130,8 @@ $(function()
         $("#inputs_div1").append($("<div>", {class: "clear"}));
         $("#inputs_div2").append($("<div>", {class: "clear"}));
         $("#inputs_div3").append($("<div>", {class: "clear"}));
-        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, initialDate: new Date(moment().subtract('years', 65).format())});
+        $("#PHONE_NUMBER").autotab('numeric');
+        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, initialDate: new Date(moment().subtract('years', 65).format())}).attr('data-prompt-position','topRight:120');
     }
     , "json");
 
