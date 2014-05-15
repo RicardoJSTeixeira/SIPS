@@ -141,7 +141,7 @@ var requisition = function(geral_path, options_ext)
             {
                 new_requisition_zone.find("#save_single_product").prop("disabled", false);
             }
-            product_tree = new tree("#tree", [produtos[$(this).val()]], me.tipo, $(this).val());
+            product_tree = new tree("#tree", [produtos[$(this).val()]], me.tipo, $(this).val(),produtos);
             product_tree.init();
         });
 
@@ -418,7 +418,7 @@ var requisition = function(geral_path, options_ext)
             }, "json");
         });
 
-        modal.on("click", "#print_requisition", function()
+      /*  modal.on("click", "#print_requisition", function()
         {
             var doc = new jsPDF('p', 'pt', 'a4', true);
             last = doc.table(5, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {autoSize: true, printHeaders: true});
@@ -426,7 +426,7 @@ var requisition = function(geral_path, options_ext)
             doc.table(20, 80, EData.products, null, {autoSize: true, printHeaders: true});
 
             doc.save(moment().format());
-        });
+        });*/
 
         table_path.on("click", ".accept_requisition", function()
         {

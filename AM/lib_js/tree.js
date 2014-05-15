@@ -1,9 +1,47 @@
-var tree = function(selector, data, type_encomenda, parent_id) {
+var tree = function(selector, data, type_encomenda, parent_id, produtos) {
     var checkbox_count = 1;
     var me = this;
     this.treeRaw = data;
     this.selector = selector;
+
+
+
+    function construct(data) {
+        var temp = $("<ul>");
+        $.each(data.children, function() {
+            if (typeof this.children === "object") {
+                temp.append(feed(this).find("ul").replaceWith(construct(this)).end());
+            } else {
+                temp.append(feed(this));
+            }
+        });
+        return temp;
+    }
+
+
+    this.init = function() {
+        var UL;
+        $.each(me.treeRaw, function() {
+            UL = $("<ul>").append(feed(this));
+            if (typeof this.children === "object") {
+                UL.find("ul").replaceWith(construct(this));
+            }
+            UL.appendTo(me.selector);
+        });
+        $(me.selector + " label, " + me.selector + " label > span ," + me.selector + " input[type=checkbox]").click(function(e) {
+            e.stopPropagation();
+        });
+        $(me.selector + " label, " + me.selector + " label > span ," + me.selector + " input[type=number]").click(function(e) {
+            e.stopPropagation();
+        });
+        $(me.selector + " label, " + me.selector + " label > span ," + me.selector + " select").click(function(e) {
+            e.stopPropagation();
+        });
+        startPlugin();
+    };
+
     function feed(data) {
+        data=produtos[data.id];
         var hasChilds = false;
         if (typeof data.children === "object") {
             hasChilds = Boolean(data.children.length);
@@ -20,9 +58,9 @@ var tree = function(selector, data, type_encomenda, parent_id) {
             max_value = data.max_req_m;
         else
             max_value = data.max_req_s;
-        
-     //   if (max_value < 1)
-     //       return false;
+
+        //   if (max_value < 1)
+        //       return false;
 
 // METER COR NA OPTION DO SELECT BACKGROUND COLOR
         var quantity_temp = "";
@@ -141,39 +179,9 @@ var tree = function(selector, data, type_encomenda, parent_id) {
     }
 
 
-    function construct(data) {
-        var temp = $("<ul>");
-        $.each(data.children, function() {
-            if (typeof this.children === "object") {
-                temp.append(feed(this).find("ul").replaceWith(construct(this)).end());
-            } else {
-                temp.append(feed(this));
-            }
-        });
-        return temp;
-    }
 
 
-    this.init = function() {
-        var UL;
-        $.each(me.treeRaw, function() {
-            UL = $("<ul>").append(feed(this));
-            if (typeof this.children === "object") {
-                UL.find("ul").replaceWith(construct(this));
-            }
-            UL.appendTo(me.selector);
-        });
-        $(me.selector + " label, " + me.selector + " label > span ," + me.selector + " input[type=checkbox]").click(function(e) {
-            e.stopPropagation();
-        });
-        $(me.selector + " label, " + me.selector + " label > span ," + me.selector + " input[type=number]").click(function(e) {
-            e.stopPropagation();
-        });
-        $(me.selector + " label, " + me.selector + " label > span ," + me.selector + " select").click(function(e) {
-            e.stopPropagation();
-        });
-        startPlugin();
-    };
+
     function getChildrenChanges(elm) {
         var children = [], current = {};
         $(elm).find(" > ul > li").each(function() {
