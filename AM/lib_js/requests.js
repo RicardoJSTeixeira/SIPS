@@ -23,10 +23,7 @@ var requests = function(basic_path, options_ext)
             $.get("/AM/view/requests/apoio_marketing.html", function(data) {
                 am_zone.append(data);
                 $('#apoio_am_form').stepy({backLabel: "Anterior", nextLabel: "Seguinte", next: function() {
-                        if (am_zone.find("#apoio_am_form").validationEngine("validate"))
-                            return true;
-                        else
-                            return false;
+                        return ~~am_zone.find("#apoio_am_form").validationEngine("validate");
                     }, finishButton: false});
                 am_zone.find("#data_rastreio1").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, startDate: moment().format("YYYY-MM-DD")})
                         .on('changeDate', function() {
@@ -66,33 +63,27 @@ var requests = function(basic_path, options_ext)
                 });
                 am_zone.on("change", "[name='horario_check']", function(e) {
 
-                    if ($(this).val() == 1)
-                    {
+                    if (~~$(this).val() === 1) {
                         am_zone.find("#horario_manha").show();
                         am_zone.find("#horario_tarde").show();
                     }
-                    else if ($(this).val() == 2)
-                    {
+                    else if (~~$(this).val() === 2) {
                         am_zone.find("#horario_manha").show();
                         am_zone.find("#horario_tarde").hide();
                     }
-                    else
-                    {
+                    else {
                         am_zone.find("#horario_manha").hide();
                         am_zone.find("#horario_tarde").show();
                     }
                 });
 
                 //SUBMIT
-                am_zone.on("click", "#submit_am", function(e)
-                {
+                am_zone.on("click", "#submit_am", function(e) {
                     e.preventDefault();
-                    if (am_zone.find("#apoio_am_form").validationEngine("validate"))
-                    {
-                        if (am_zone.find("#table_tbody_ldp tr").length)
-                        {
+                    if (am_zone.find("#apoio_am_form").validationEngine("validate")) {
+                        if (am_zone.find("#table_tbody_ldp tr").length) {
                             var local_publicidade_array = [];
-                            $.each(am_zone.find("#table_tbody_ldp").find("tr"), function(data) {
+                            $.each(am_zone.find("#table_tbody_ldp").find("tr"), function() {
                                 local_publicidade_array.push({cp: $(this).find(".linha_cp").val(), freguesia: $(this).find(".linha_freg").val()});
                             });
                             $.post("/AM/ajax/requests.php", {action: "criar_apoio_marketing",
@@ -109,8 +100,7 @@ var requests = function(basic_path, options_ext)
                                 morada: am_zone.find("#input_morada_rastreio").val(),
                                 comments: am_zone.find("#input_observaçoes").val(),
                                 local_publicidade: local_publicidade_array},
-                            function(data1)
-                            {
+                            function() {
                                 $('#apoio_am_form').stepy('step', 1);
                                 am_zone.find(":input").val("");
                                 $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
@@ -122,10 +112,9 @@ var requests = function(basic_path, options_ext)
                 });
             });
         },
-        get_to_datatable: function(am_zone)
-        {
+        get_to_datatable: function(am_zone) {
             var apoio_markting_table = am_zone.dataTable({
-                  "aaSorting": [[2, "desc"]],
+                "aaSorting": [[2, "desc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -142,19 +131,17 @@ var requests = function(basic_path, options_ext)
                 event.preventDefault();
                 table2csv(apoio_markting_table, 'full', '#' + am_zone[0].id);
             });
-            am_zone.on("click", ".ver_horario", function()
-            {
-                var id = $(this).data().apoio_marketing_id;
+            am_zone.on("click", ".ver_horario", function() {
+                var id = ~~$(this).data().apoio_marketing_id;
                 $.post("ajax/requests.php", {action: "get_horario_from_apoio_marketing", id: id}, function(data) {
                     basic_path.find("#ver_horario_modal .horario_all_master").hide();
 
-                    if (data[0].tipo == 1)
+                    if (~~data[0].tipo === 1)
                         basic_path.find("#ver_horario_modal .horario_all_master").show();
-                    if (data[0].tipo == 2)
+                    if (~~data[0].tipo === 2)
                         basic_path.find("#ver_horario_modal #horario_manha").show();
-                    if (data[0].tipo == 3)
+                    if (~~data[0].tipo === 3)
                         basic_path.find("#ver_horario_modal #horario_tarde").show();
-
 
                     basic_path.find("#ver_horario_modal #manha_inicio").text(data[0].inicio1);
                     basic_path.find("#ver_horario_modal #manha_fim").text(data[0].inicio2);
@@ -164,9 +151,8 @@ var requests = function(basic_path, options_ext)
                     basic_path.find("#ver_horario_modal").modal("show");
                 }, "json");
             });
-            am_zone.on("click", ".ver_local_publicidade", function()
-            {
-                var id = $(this).data().apoio_marketing_id;
+            am_zone.on("click", ".ver_local_publicidade", function() {
+                var id = ~~$(this).data().apoio_marketing_id;
                 $.post("/AM/ajax/requests.php", {action: "get_locais_publicidade_from_apoio_marketing", id: id}, function(data) {
                     basic_path.find("#ver_local_publicidade_modal #tbody_ver_local_publicidade").empty();
                     $.each(data, function()
@@ -176,16 +162,14 @@ var requests = function(basic_path, options_ext)
                     basic_path.find("#ver_local_publicidade_modal").modal("show");
                 }, "json");
             });
-            am_zone.on("click", ".accept_apoio_marketing", function()
-            {
+            am_zone.on("click", ".accept_apoio_marketing", function() {
                 var this_button = $(this);
                 $.post('/AM/ajax/requests.php', {action: "accept_apoio_marketing", id: $(this).val()}, function() {
                     this_button.parent("td").prev().text("Aprovado");
                     apoio_markting_table.fnReloadAjax();
                 }, "json");
             });
-            am_zone.on("click", ".decline_apoio_marketing", function()
-            {
+            am_zone.on("click", ".decline_apoio_marketing", function() {
                 var this_button = $(this);
                 bootbox.prompt("Qual o motivo?", function(result) {
                     if (result !== null) {
@@ -199,14 +183,12 @@ var requests = function(basic_path, options_ext)
         }
     };
     this.relatorio_frota = {
-        init: function()
-        {
+        init: function() {
             $.get("/AM/view/requests/relatorio_frota_modal.html", function(data) {
                 basic_path.append(data);
             }, 'html');
         },
-        new : function(rf_zone)
-        {
+        new : function(rf_zone) {
             var rfinput_count = 2;
             rf_zone.empty().off();
             var availableTags = ["Revisão", "Mudança de óleo", "Mudança de pneus"];
@@ -217,8 +199,7 @@ var requests = function(basic_path, options_ext)
                 rf_zone.find("#input_km").autoNumeric('init', {mDec: '0'});
 
                 //Adiciona Linhas
-                rf_zone.find("#button_rf_table_add_line").click(function(e)
-                {
+                rf_zone.find("#button_rf_table_add_line").click(function(e) {
                     e.preventDefault();
                     rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required] linha_data span' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'  data-prompt-position='topRight:120'></td><td><input class='validate[required] linha_ocorrencia span' type='text' name='rf_ocorr" + rfinput_count + "'></td><td><input class='validate[required] linha_km text-right ' type='text' value='0' maxlength='6' name='rf_km" + rfinput_count + "' size='16'/></td><td><button class='btn btn-danger button_rf_table_remove_line icon-alone'><i class='icon-minus'></i></button></td></tr>");
                     rf_zone.find("#rf_datetime" + rfinput_count).datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
@@ -227,38 +208,29 @@ var requests = function(basic_path, options_ext)
                     rfinput_count++;
                 }).click();
                 //Remove Linhas
-                rf_zone.on("click", ".button_rf_table_remove_line", function(e)
-                {
+                rf_zone.on("click", ".button_rf_table_remove_line", function(e) {
                     e.preventDefault();
                     $(this).parent().parent().remove();
                 });
                 //SUBMIT
-                rf_zone.on("click", "#submit_rf", function(e)
-                {
+                rf_zone.on("click", "#submit_rf", function(e) {
                     e.preventDefault();
-                    if (rf_zone.find("#relatorio_frota_form").validationEngine("validate"))
-                    {
-                        if (rf_zone.find("#table_tbody_rf tr").length)
-                        {
+                    if (rf_zone.find("#relatorio_frota_form").validationEngine("validate")) {
+                        if (rf_zone.find("#table_tbody_rf tr").length) {
                             var soma = 0;
-                            $.each(rf_zone.find("#table_tbody_rf").find(".linha_km"), function()
-                            {
+                            $.each(rf_zone.find("#table_tbody_rf").find(".linha_km"), function() {
                                 soma = soma + ~~$(this).autoNumeric('get');
                             });
-                            if (!soma)
-                            {
+                            if (!soma) {
                                 $.jGrowl("Insira pelo menos uma ocorrência ");
                                 return false;
                             }
-                            if (soma > ~~rf_zone.find("#input_km").val())
-                            {
+                            if (soma > ~~rf_zone.find("#input_km").autoNumeric('get')) {
                                 $.jGrowl("O número de Kms nas ocorrência é superior aos Kms totais no relatório");
                             }
-                            else
-                            {
+                            else {
                                 var ocorrencias_array = [];
-                                $.each(rf_zone.find("#table_tbody_rf").find("tr"), function(data)
-                                {
+                                $.each(rf_zone.find("#table_tbody_rf").find("tr"), function() {
                                     ocorrencias_array.push(
                                             {data: $(this).find(".linha_data").val(),
                                                 ocorrencia: $(this).find(".linha_ocorrencia").val(),
@@ -267,12 +239,11 @@ var requests = function(basic_path, options_ext)
                                 $.post("/AM/ajax/requests.php", {action: "criar_relatorio_frota",
                                     data: rf_zone.find("#input_data").val(),
                                     matricula: rf_zone.find("#input_matricula").val(),
-                                    km: rf_zone.find("#input_km").val(),
+                                    km: rf_zone.find("#input_km").autoNumeric('get'),
                                     viatura: rf_zone.find(":radio[name='rrf']:checked").val(),
                                     ocorrencias: ocorrencias_array,
                                     comments: rf_zone.find("#input_comments").val().length ? rf_zone.find("#input_comments").val() : ""},
-                                function()
-                                {
+                                function() {
                                     rf_zone.find(":input").val("");
                                     $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
                                 }, "json");
@@ -284,10 +255,9 @@ var requests = function(basic_path, options_ext)
                 });
             });
         },
-        get_to_datatable: function(rf_zone)
-        {
+        get_to_datatable: function(rf_zone) {
             var relatorio_frota_table = rf_zone.dataTable({
-                 "aaSorting": [[2, "desc"]],
+                "aaSorting": [[2, "desc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -304,8 +274,7 @@ var requests = function(basic_path, options_ext)
                 event.preventDefault();
                 table2csv(relatorio_frota_table, 'full', '#' + rf_zone[0].id);
             });
-            rf_zone.on("click", ".ver_ocorrencias", function()
-            {
+            rf_zone.on("click", ".ver_ocorrencias", function() {
                 var id = $(this).data().relatorio_frota_id;
                 $.post("ajax/requests.php", {action: "get_ocorrencias_frota", id: id}, function(data) {
 
@@ -318,16 +287,14 @@ var requests = function(basic_path, options_ext)
                     basic_path.find("#ver_occorrencia_frota_modal").modal("show");
                 }, "json");
             });
-            rf_zone.on("click", ".accept_report_frota", function()
-            {
+            rf_zone.on("click", ".accept_report_frota", function() {
                 var this_button = $(this);
                 $.post('/AM/ajax/requests.php', {action: "accept_report_frota", id: $(this).val()}, function() {
                     this_button.parent("td").prev().text("Aprovado");
                     relatorio_frota_table.fnReloadAjax();
                 }, "json");
             });
-            rf_zone.on("click", ".decline_report_frota", function()
-            {
+            rf_zone.on("click", ".decline_report_frota", function() {
                 var this_button = $(this);
                 bootbox.confirm("Tem a certeza?", function(result) {
                     if (result) {
@@ -340,29 +307,25 @@ var requests = function(basic_path, options_ext)
             });
         }};
     this.relatorio_correio = {
-        init: function()
-        {
+        init: function() {
             $.get("/AM/view/requests/relatorio_correio_modal.html", function(data) {
                 basic_path.append(data);
             }, 'html');
         },
-        new : function(rc_zone)
-        {
+        new : function(rc_zone) {
             rc_zone.empty().off();
             $.get("/AM/view/requests/relatorio_correio.html", function(data) {
                 rc_zone.append(data);
                 rc_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
                 //SUBMIT
-                rc_zone.on("click", "#submit_rc", function(e)
-                {
+                rc_zone.on("click", "#submit_rc", function(e) {
                     e.preventDefault();
                     if (rc_zone.find("#relatorio_correio_form").validationEngine("validate"))
                     {
                         if (rc_zone.find("#doc_obj_table_tbody tr").length)
                         {
                             var docs_objs = [];
-                            $.each(rc_zone.find("#doc_obj_table_tbody tr"), function()
-                            {
+                            $.each(rc_zone.find("#doc_obj_table_tbody tr"), function() {
                                 docs_objs.push({value: $(this).find("input").val(), confirmed: false});
                             });
                             $.post("ajax/requests.php", {action: "criar_relatorio_correio",
@@ -373,8 +336,7 @@ var requests = function(basic_path, options_ext)
                                 client_name: rc_zone.find("#input_client_name").val(),
                                 input_doc_obj_assoc: docs_objs,
                                 comments: rc_zone.find("#input_comments").val().length ? rc_zone.find("#input_comments").val() : "Sem observações"},
-                            function()
-                            {
+                            function() {
                                 rc_zone.find(":input").val("");
                                 $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
                             }, "json");
@@ -384,22 +346,19 @@ var requests = function(basic_path, options_ext)
                     }
 
                 });
-                rc_zone.find("#add_line_obj_doc").click(function(e)
-                {
+                rc_zone.find("#add_line_obj_doc").click(function(e) {
                     e.preventDefault();
                     rc_zone.find("#doc_obj_table_tbody").append("<tr><td><input class='validate[required] span' type='text' /></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
                 }).click();
-                rc_zone.on("click", ".remove_doc_obj", function(e)
-                {
+                rc_zone.on("click", ".remove_doc_obj", function(e) {
                     e.preventDefault();
                     $(this).parent().parent().remove();
                 });
             });
         },
-        get_to_datatable: function(rc_zone)
-        {
+        get_to_datatable: function(rc_zone) {
             var relatorio_correio_table = rc_zone.dataTable({
-                 "aaSorting": [[3, "desc"]],
+                "aaSorting": [[3, "desc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -417,10 +376,8 @@ var requests = function(basic_path, options_ext)
                 event.preventDefault();
                 table2csv(relatorio_correio_table, 'full', '#' + rc_zone[0].id);
             });
-            rc_zone.on("click", ".accept_report_correio", function()
-            {
-                if ($(this).parents("td").prev().prev().prev().find("button").data().approved)
-                {
+            rc_zone.on("click", ".accept_report_correio", function() {
+                if ($(this).parents("td").prev().prev().prev().find("button").data().approved) {
                     var this_button = $(this);
                     $.post('/AM/ajax/requests.php', {action: "accept_report_correio", id: $(this).val()}, function() {
                         this_button.parent("td").prev().text("Aprovado");
@@ -430,8 +387,7 @@ var requests = function(basic_path, options_ext)
                 else
                     $.jGrowl("Verifique os anexos 1º, antes de aprovar.");
             });
-            rc_zone.on("click", ".decline_report_correio", function()
-            {
+            rc_zone.on("click", ".decline_report_correio", function() {
                 var this_button = $(this);
                 bootbox.confirm("Tem a certeza?", function(result) {
                     if (result) {
@@ -442,42 +398,40 @@ var requests = function(basic_path, options_ext)
                     }
                 });
             });
-            rc_zone.on("click", ".ver_anexo_correio", function(e)
-            {
-
+            rc_zone.on("click", ".ver_anexo_correio", function(e) {
                 e.preventDefault();
-                var id_anexo = $(this).data().anexo_id;
-                var anexo_number = 1;
-                var status = $(this).data().approved;
+                var
+                        id_anexo = ~~$(this).data().anexo_id,
+                        anexo_number = 1,
+                        status = ~~$(this).data().approved;
 
                 $.post("ajax/requests.php", {action: "get_anexo_correio", id: id_anexo},
-                function(data1)
-                {
+                function(data) {
+                    var tbody = basic_path.find("#tbody_ver_anexo_correio").empty();
 
-                    var tbody = basic_path.find("#tbody_ver_anexo_correio");
-                    tbody.empty();
-
-                    $.each(data1, function()
+                    $.each(data, function()
                     {
-                        tbody.append("<tr><td class='chex-table'><input " + ((status) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " " + ((SpiceU.user_level < 5) ? "disabled" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td>" + this.value + "</td></tr>");
+                        tbody.append("<tr><td class='chex-table'><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td>" + this.value + "</td></tr>");
                         anexo_number++;
                     });
                     basic_path.find(".anexo_exit_button").data("id_correio", id_anexo);
                     basic_path.find("#ver_anexo_correio_modal").modal("show");
                 }, "json");
             });
-            basic_path.on("click", ".anexo_exit_button", function(e)
-            {
-                var anexo_array = [];
-                var this_button = $(this);
-                var data_ver_button = rc_zone.find("[data-anexo_id='" + this_button.data().id_correio + "']");
+            basic_path.on("click", ".anexo_exit_button", function(e) {
+                var
+                        anexo_array = [],
+                        this_button = $(this),
+                        data_ver_button = rc_zone.find("[data-anexo_id='" + this_button.data().id_correio + "']");
+                if (~~data_ver_button.data().approved)
+                    return false;
                 data_ver_button.data().approved = 1;
-                $.each(this_button.parents("#ver_anexo_correio_modal").find("tr"), function()
-                {
+                $.each(this_button.parents("#ver_anexo_correio_modal").find("tr"), function() {
                     anexo_array.push({value: $(this).find("td").last().text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked")});
 
-                    if (!~~~~$(this).find("td").first().find(":checkbox").is(":checked"))
+                    if (!~~$(this).find("td").first().find(":checkbox").is(":checked")) {
                         data_ver_button.data().approved = 0;
+                    }
                 });
                 $.post("/AM/ajax/requests.php", {action: "save_anexo_correio", id: this_button.data().id_correio, anexos: anexo_array}, "json");
             });
@@ -510,7 +464,7 @@ var requests = function(basic_path, options_ext)
                                         data: rms_zone.find("#input_data").val(),
                                         produtos: prdt_objs
                                     },
-                            function(data1)
+                            function()
                             {
                                 rms_zone.find(":input").val("");
                                 $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
@@ -522,8 +476,12 @@ var requests = function(basic_path, options_ext)
                 });
                 rms_zone.find("#button_rfms_table_add_line").click(function(e) {
                     e.preventDefault();
-                    rms_zone.find("#table_tbody_rfms").append("<tr><td><input class='validate[required] span text-right quant' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span desc' type='text' /></td> <td><input class='validate[required] span serie' type='text' /></td> <td><textarea class='span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
-                    rms_zone.find(".quant").autotab('number');
+                    rms_zone
+                            .find("#table_tbody_rfms")
+                            .append("<tr><td><input class='validate[required] span text-right quant' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span desc' type='text' /></td> <td><input class='validate[required] span serie' type='text' /></td> <td><textarea class='span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>")
+                            .end()
+                            .find(".quant")
+                            .autotab('number');
                 }).click();
                 rms_zone.on("click", ".remove_doc_obj", function(e) {
                     e.preventDefault();
@@ -533,7 +491,7 @@ var requests = function(basic_path, options_ext)
         },
         get_to_datatable: function(rms_zone) {
             var relatorio_stock_table = rms_zone.dataTable({
-                 "aaSorting": [[2, "desc"]],
+                "aaSorting": [[2, "desc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -553,10 +511,8 @@ var requests = function(basic_path, options_ext)
             });
             rms_zone.on("click", ".accept_report_stock", function()
             {
-
                 var this_button = $(this);
-                if ($(this).parents("td").prev().prev().find("button").data().approved)
-                {
+                if ($(this).parents("td").prev().prev().find("button").data().approved) {
                     $.post('/AM/ajax/requests.php', {action: "accept_report_stock", id: $(this).val()}, function() {
                         this_button.parent("td").prev().text("Aprovado");
                         relatorio_stock_table.fnReloadAjax();
@@ -578,27 +534,20 @@ var requests = function(basic_path, options_ext)
                 });
             });
 
-
-
             rms_zone.on("click", ".ver_produto_stock", function(e)
             {
-
                 e.preventDefault();
-                var id_stock = $(this).data().stock_id;
-                var anexo_number = 1;
-                var status = $(this).data().approved;
+                var
+                        id_stock = ~~$(this).data().stock_id,
+                        anexo_number = 1,
+                        status = ~~$(this).data().approved;
 
                 $.post("ajax/requests.php", {action: "get_itens_stock", id: id_stock},
-                function(data1)
-                {
+                function(data1) {
+                    var tbody = basic_path.find("#tbody_ver_produto_mensal_stock").empty();
 
-                    var tbody = basic_path.find("#tbody_ver_produto_mensal_stock");
-                    tbody.empty();
-
-                    $.each(data1, function()
-                    {
-
-                        tbody.append("<tr><td><input " + ((status) ? "disabled" : "") + " type='checkbox' value='" + id_stock + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " " + ((SpiceU.user_level < 5) ? "disabled" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td class='td_helper_quantidade'>" + this.quantidade + "</td><td class='td_helper_descricao'>" + this.descricao + "</td><td class='td_helper_serie'>" + this.serie + "</td><td class='td_helper_obs'>" + this.obs + "</td></tr>");
+                    $.each(data1, function() {
+                        tbody.append("<tr><td><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_stock + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td class='td_helper_quantidade'>" + this.quantidade + "</td><td class='td_helper_descricao'>" + this.descricao + "</td><td class='td_helper_serie'>" + this.serie + "</td><td class='td_helper_obs'>" + this.obs + "</td></tr>");
                         anexo_number++;
                     });
                     basic_path.find(".stock_exit_button").data("id_stock", id_stock);
@@ -607,31 +556,24 @@ var requests = function(basic_path, options_ext)
             });
             basic_path.on("click", ".stock_exit_button", function(e)
             {
-                var anexo_array = [];
-                var this_button = $(this);
-                var data_ver_button = rms_zone.find("[data-stock_id='" + this_button.data().id_stock + "']");
+                var
+                        anexo_array = [],
+                        this_button = $(this),
+                        data_ver_button = rms_zone.find("[data-stock_id='" + this_button.data().id_stock + "']");
+                if (~~data_ver_button.data().approved)
+                    return false;
                 data_ver_button.data().approved = 1;
                 $.each(this_button.parents("#ver_anexo_mensal_stock_modal").find("#tbody_ver_produto_mensal_stock").find("tr"), function()
                 {
-
                     anexo_array.push({quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked")});
-                    if (!~~~~$(this).find("td").first().find(":checkbox").is(":checked"))
+                    if (!~~$(this).find("td").first().find(":checkbox").is(":checked"))
                         data_ver_button.data().approved = 0;
                 });
 
                 $.post("/AM/ajax/requests.php", {action: "save_stock", id: this_button.data().id_stock, produtos: anexo_array}, "json");
             });
-
-
-
-
-
-
-
-
-
         }
-    }
+    };
     this.relatorio_movimentacao_stock = {
         init: function() {
             $.get("/AM/view/requests/relatorio_movimentacao_stock_modal.html", function(data) {
@@ -648,8 +590,7 @@ var requests = function(basic_path, options_ext)
                     e.preventDefault();
                     if (rmovs.find("#relatorio_movimentacao_stock_form").validationEngine("validate")) {
                         var prdt_objs = [];
-                        if (rmovs.find("#table_tbody_rfms tr").length)
-                        {
+                        if (rmovs.find("#table_tbody_rfms tr").length) {
                             $.each(rmovs.find("#table_tbody_rfms tr"), function() {
                                 prdt_objs.push({quantidade: $(this).find(".quant").val(), destinario: $(this).find(".desc").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
                             });
@@ -671,8 +612,12 @@ var requests = function(basic_path, options_ext)
                 });
                 rmovs.find("#button_rfms_table_add_line").click(function(e) {
                     e.preventDefault();
-                    rmovs.find("#table_tbody_rfms").append("<tr><td><input class='validate[required] span text-right quant' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span dest' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span desc' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span serie' type='text' data-prompt-position='topRight:120' /></td> <td><textarea class='span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
-                    rmovs.find(".quant").autotab('number');
+                    rmovs
+                            .find("#table_tbody_rfms")
+                            .append("<tr><td><input class='validate[required] span text-right quant' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span dest' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span desc' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span serie' type='text' data-prompt-position='topRight:120' /></td> <td><textarea class='span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>")
+                            .end()
+                            .find(".quant")
+                            .autotab('number');
                 }).click();
                 rmovs.on("click", ".remove_doc_obj", function(e) {
                     e.preventDefault();
@@ -682,7 +627,7 @@ var requests = function(basic_path, options_ext)
         },
         get_to_datatable: function(rmovs) {
             var relatorio_moviment_stock_table = rmovs.dataTable({
-                 "aaSorting": [[2, "desc"]],
+                "aaSorting": [[2, "desc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -700,11 +645,9 @@ var requests = function(basic_path, options_ext)
                 event.preventDefault();
                 table2csv(relatorio_moviment_stock_table, 'full', '#' + rmovs[0].id);
             });
-            rmovs.on("click", ".accept_report_movimentacao", function()
-            {
+            rmovs.on("click", ".accept_report_movimentacao", function() {
                 var this_button = $(this);
-                if ($(this).parents("td").prev().prev().find("button").data().approved)
-                {
+                if ($(this).parents("td").prev().prev().find("button").data().approved) {
                     $.post('/AM/ajax/requests.php', {action: "accept_report_movimentacao", id: $(this).val()}, function() {
                         this_button.parent("td").prev().text("Aprovado");
                         relatorio_moviment_stock_table.fnReloadAjax();
@@ -713,8 +656,7 @@ var requests = function(basic_path, options_ext)
                 else
                     $.jGrowl("Verifique os anexos 1º, antes de aprovar.");
             });
-            rmovs.on("click", ".decline_report_movimentacao", function()
-            {
+            rmovs.on("click", ".decline_report_movimentacao", function() {
                 var this_button = $(this);
                 bootbox.confirm("Tem a certeza?", function(result) {
                     if (result) {
@@ -725,40 +667,38 @@ var requests = function(basic_path, options_ext)
                     }
                 });
             });
-            rmovs.on("click", ".ver_produto_mov_stock", function(e)
-            {
+            rmovs.on("click", ".ver_produto_mov_stock", function(e) {
 
                 e.preventDefault();
-                var id_movimentacao = $(this).data().movimentacao_id;
-                var anexo_number = 1;
-                var status = $(this).data().approved;
- 
+                var
+                        id_movimentacao = ~~$(this).data().movimentacao_id,
+                        anexo_number = 1,
+                        status = ~~$(this).data().approved;
+
                 $.post("ajax/requests.php", {action: "get_itens_movimentacao", id: id_movimentacao},
-                function(data1)
-                {
+                function(data1) {
+                    var tbody = basic_path.find("#tbody_ver_produto_movimentacao_stock").empty();
 
-                    var tbody = basic_path.find("#tbody_ver_produto_movimentacao_stock");
-                    tbody.empty();
-
-                    $.each(data1, function()
-                    {
-
-                        tbody.append("<tr><td><input " + ((status) ? "disabled" : "") + " type='checkbox' value='" + id_movimentacao + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " " + ((SpiceU.user_level < 5) ? "disabled" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td class='td_helper_quantidade'>" + this.quantidade + "</td><td class='td_helper_descricao'>" + this.descricao + "</td><td class='td_helper_serie'>" + this.serie + "</td><td class='td_helper_obs'>" + this.obs + "</td></tr>");
+                    $.each(data1, function() {
+                        tbody.append("<tr><td><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_movimentacao + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td class='td_helper_quantidade'>" + this.quantidade + "</td><td class='td_helper_descricao'>" + this.descricao + "</td><td class='td_helper_serie'>" + this.serie + "</td><td class='td_helper_obs'>" + this.obs + "</td></tr>");
                         anexo_number++;
                     });
                     basic_path.find(".stock_mov_exit_button").data("id_stock", id_movimentacao);
                     basic_path.find("#ver_anexo_mov_stock_modal").modal("show");
                 }, "json");
             });
-            basic_path.on("click", ".stock_mov_exit_button", function(e)
-            {
-                var anexo_array = [];
-                var this_button = $(this);
-                var data_ver_button = rmovs.find("[data-movimentacao_id='" + this_button.data().id_stock + "']");
+            basic_path.on("click", ".stock_mov_exit_button", function(e) {
+                var
+                        anexo_array = [],
+                        this_button = $(this),
+                        data_ver_button = rmovs.find("[data-movimentacao_id='" + this_button.data().id_stock + "']");
+
+                if (~~data_ver_button.data().approved)
+                    return false;
+
                 data_ver_button.data().approved = 1;
                 $.each(this_button.parents("#ver_anexo_mov_stock_modal").find("#tbody_ver_produto_movimentacao_stock").find("tr"), function()
                 {
-
                     anexo_array.push({quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked")});
                     if (!~~~~$(this).find("td").first().find(":checkbox").is(":checked"))
                         data_ver_button.data().approved = 0;
