@@ -57,9 +57,26 @@ $(function() {
     get_alerts();
     var alerts_timeout = setInterval(get_alerts, 1000 * 60);
 
+
+    //Init all the modals | for the multiples datatoggles..
+    $(document).on('click.modal.data-api', '[data-toggle!="modal"][data-toggle~="modal"]', function(e) {
+        var $this = $(this)
+                , href = $this.attr('href')
+                , $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) //strip for ie7
+                , option = $target.data('modal') ? 'toggle' : $.extend({remote: !/#/.test(href) && href}, $target.data(), $this.data())
+
+        e.preventDefault();
+
+        $target
+                .modal(option)
+                .one('hide', function() {
+                    $this.focus();
+                });
+    });
+
 });
 
-$(".ichat").on("click", ".dismiss_msg", function(){
+$(".ichat").on("click", ".dismiss_msg", function() {
     $.post("ajax/general_functions.php", {action: "edit_message_status", id_msg: $(this).data().msg_id}, function()
     {
         get_messages();
@@ -67,14 +84,14 @@ $(".ichat").on("click", ".dismiss_msg", function(){
 });
 
 
-$("#mark_all_read").click(function(){
+$("#mark_all_read").click(function() {
     $.post("ajax/general_functions.php", {action: "edit_message_status_by_user"}, function()
     {
         get_messages();
     }, "json");
 });
 
-$(".ichat").on("click", ".ok_alert", function(){
+$(".ichat").on("click", ".ok_alert", function() {
     $.post("ajax/general_functions.php", {action: "set_readed", id_msg: $(this).data().id}, function()
     {
         get_alerts();
@@ -82,7 +99,7 @@ $(".ichat").on("click", ".ok_alert", function(){
 });
 
 
-$("#mark_all_alerts_read").click(function(){
+$("#mark_all_alerts_read").click(function() {
     $.post("ajax/general_functions.php", {action: "set_all_readed"}, function()
     {
         get_alerts();
@@ -91,8 +108,8 @@ $("#mark_all_alerts_read").click(function(){
 
 $("#notifications").click(function()
 {
-    var a=$("#alert_time");
-        a.text(a.data().update.fromNow());
+    var a = $("#alert_time");
+    a.text(a.data().update.fromNow());
 });
 
 
@@ -123,7 +140,7 @@ function get_alerts()
 {
     $.post("ajax/general_functions.php", {action: "get_alerts"}, function(data) {
         $("#alerts-content").empty();
-        $("#alert_time").data("update",moment());
+        $("#alert_time").data("update", moment());
         var msg = "";
         $.each(data, function()
         {
@@ -131,7 +148,7 @@ function get_alerts()
                         <div class='r_icon'><a href='javascript:void(0)' class='ok_alert' data-id='" + this.id + "'><i class='icon-comment'></i></a></div>\n\
                         <div class='r_info'>\n\
                             <div class='r_text'>" + this.alert + "</div>\n\
-                            <div class='r_text'><i class='icon-time'></i>"+moment(this.entry_date).fromNow()+"</div>\n\
+                            <div class='r_text'><i class='icon-time'></i>" + moment(this.entry_date).fromNow() + "</div>\n\
                         </div>\n\
                         <div class='clear'></div>\n\
                     </div>";
@@ -220,3 +237,4 @@ $.fn.dataTableExt.oApi.fnReloadAjax = function(oSettings, sNewSource, fnCallback
 String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 };
+

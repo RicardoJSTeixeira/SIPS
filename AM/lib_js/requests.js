@@ -220,7 +220,7 @@ var requests = function(basic_path, options_ext)
                 rf_zone.find("#button_rf_table_add_line").click(function(e)
                 {
                     e.preventDefault();
-                    rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required] linha_data span' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'></td><td><input class='validate[required] linha_ocorrencia span' type='text' name='rf_ocorr" + rfinput_count + "'></td><td><input class='validate[required] linha_km text-right ' type='text' value='0' maxlength='6' name='rf_km" + rfinput_count + "' size='16'/></td><td><button class='btn btn-danger button_rf_table_remove_line icon-alone'><i class='icon-minus'></i></button></td></tr>");
+                    rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required] linha_data span' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'  data-prompt-position='topRight:120'></td><td><input class='validate[required] linha_ocorrencia span' type='text' name='rf_ocorr" + rfinput_count + "'></td><td><input class='validate[required] linha_km text-right ' type='text' value='0' maxlength='6' name='rf_km" + rfinput_count + "' size='16'/></td><td><button class='btn btn-danger button_rf_table_remove_line icon-alone'><i class='icon-minus'></i></button></td></tr>");
                     rf_zone.find("#rf_datetime" + rfinput_count).datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
                     rf_zone.find("[name='rf_km" + rfinput_count + "']").autoNumeric('init', {mDec: '0'});
                     $("[name='rf_ocorr" + rfinput_count + "']").autocomplete({source: availableTags});
@@ -522,7 +522,7 @@ var requests = function(basic_path, options_ext)
                 });
                 rms_zone.find("#button_rfms_table_add_line").click(function(e) {
                     e.preventDefault();
-                    rms_zone.find("#table_tbody_rfms").append("<tr><td><input class='validate[required] span text-right quant' type='text' /></td> <td><input class='validate[required] span desc' type='text' /></td> <td><input class='validate[required] span serie' type='text' /></td> <td><textarea class='span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
+                    rms_zone.find("#table_tbody_rfms").append("<tr><td><input class='validate[required] span text-right quant' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span desc' type='text' /></td> <td><input class='validate[required] span serie' type='text' /></td> <td><textarea class='span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
                     rms_zone.find(".quant").autotab('number');
                 }).click();
                 rms_zone.on("click", ".remove_doc_obj", function(e) {
@@ -671,7 +671,7 @@ var requests = function(basic_path, options_ext)
                 });
                 rmovs.find("#button_rfms_table_add_line").click(function(e) {
                     e.preventDefault();
-                    rmovs.find("#table_tbody_rfms").append("<tr><td><input class='validate[required] span text-right quant' type='text' /></td> <td><input class='validate[required] span dest' type='text' /></td> <td><input class='validate[required] span desc' type='text' /></td> <td><input class='validate[required] span serie' type='text' /></td> <td><textarea class='span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
+                    rmovs.find("#table_tbody_rfms").append("<tr><td><input class='validate[required] span text-right quant' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span dest' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span desc' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span serie' type='text' data-prompt-position='topRight:120' /></td> <td><textarea class='span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
                     rmovs.find(".quant").autotab('number');
                 }).click();
                 rmovs.on("click", ".remove_doc_obj", function(e) {
