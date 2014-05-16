@@ -28,6 +28,11 @@ var requisition = function(geral_path, options_ext)
     };
 //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
     this.new_requisition = function(new_requisition_zone, lead_id) {
+  
+
+
+
+
         $("#product_selector").chosen({no_results_text: "Sem resultados"});
 
         if (lead_id)
@@ -141,7 +146,7 @@ var requisition = function(geral_path, options_ext)
             {
                 new_requisition_zone.find("#save_single_product").prop("disabled", false);
             }
-            product_tree = new tree("#tree", [produtos[$(this).val()]], me.tipo, $(this).val(),produtos);
+            product_tree = new tree("#tree", [produtos[$(this).val()]], me.tipo, $(this).val(), produtos);
             product_tree.init();
         });
 
@@ -290,46 +295,7 @@ var requisition = function(geral_path, options_ext)
         {
             e.preventDefault();
         });
-        //FILE UPLOAD
-        $(new_requisition_zone).on("change", '#file_upload', function() {
-            // var re_ext = new RegExp("(gif|jpeg|jpg|png|pdf)", "i");
-            var file = this.files[0];
-            var name = file.name;
-            var size = (Math.round((file.size / 1024 / 1024) * 100) / 100);
-            var type = file.type;
-            if (size > 10) {
-                new_requisition_zone.find("#label_anexo_info").text("O tamanho do ficheiro ultrapassa os 10mb permitidos.");
-                $(this).fileupload('clear');
-            }
-            /*  if (!re_ext.test(type)) {
-             $("#label_ipl_info").text("A extensão do ficheiro seleccionado não é valida.");
-             $(this).fileupload('clear');
-             }*/
-            new_requisition_zone.find("#label_anexo_info").text("");
-            me.file_uploaded = false;
-        });
-        $(new_requisition_zone).on("click", '#anexo_upload_button', function(e)
-        {
-            e.preventDefault();
-            var form = new_requisition_zone.find("#anexo_input_form");
-            if (form.find('input[type="file"]').val() === '')
-                return false;
-            var formData = new FormData(form[0]);
-            formData.append("action", "upload");
-            $.ajax({
-                url: 'ajax/upload_file.php',
-                type: 'POST',
-                data: formData,
-                dataType: "json",
-                cache: false,
-                complete: function(data) {
-                    new_requisition_zone.find("#label_anexo_info").text(data.responseText);
-                    me.file_uploaded = true;
-                },
-                contentType: false,
-                processData: false
-            });
-        });
+
     };
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -418,15 +384,15 @@ var requisition = function(geral_path, options_ext)
             }, "json");
         });
 
-      /*  modal.on("click", "#print_requisition", function()
-        {
-            var doc = new jsPDF('p', 'pt', 'a4', true);
-            last = doc.table(5, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {autoSize: true, printHeaders: true});
-
-            doc.table(20, 80, EData.products, null, {autoSize: true, printHeaders: true});
-
-            doc.save(moment().format());
-        });*/
+        /*  modal.on("click", "#print_requisition", function()
+         {
+         var doc = new jsPDF('p', 'pt', 'a4', true);
+         last = doc.table(5, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {autoSize: true, printHeaders: true});
+         
+         doc.table(20, 80, EData.products, null, {autoSize: true, printHeaders: true});
+         
+         doc.save(moment().format());
+         });*/
 
         table_path.on("click", ".accept_requisition", function()
         {

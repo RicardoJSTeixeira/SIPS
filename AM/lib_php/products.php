@@ -47,8 +47,9 @@ Class products {
 
         $stmt = $this->_db->prepare("SELECT id, name,  max_req_m, max_req_s, category, type, color, active from spice_product where deleted=0");
         $stmt->execute();
+        $output=array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-
+ 
             $row["parents_id"] = array();
             $row["children_id"] = array();
             foreach ($relations as $key => $value) {
@@ -67,6 +68,7 @@ Class products {
             $output[$row["id"]] = $row;
         }
 //ATRIBUIÇÂO DE CHILDS E PARENTS
+       
         foreach ($output as &$value) {
             $value["parent"] = $this->buildTree_parent($output, $value["id"]);
             $value["children"] = $this->buildTree_child($output, $value["id"]);
