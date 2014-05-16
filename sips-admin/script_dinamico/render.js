@@ -481,6 +481,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     element.find(".form_datetime")[0].name = info.tag;
                     var options = {};
                     options.format = "yyyy-mm-dd hh:ii";
+                    options.format = 'YYYY-MM-DD HH:mm';
                     options.minView = 0;
                     options.autoclose = true;
                     options.language = "pt";
@@ -488,25 +489,31 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     {
                         case "0":
                             options.format = 'yyyy-mm-dd hh:ii';
+                            options.format_rules = 'YYYY-MM-DD HH:mm';
                             options.minView = 0;
                             break;
                         case "1":
                             options.format = 'yyyy-mm-dd hh';
+                            options.format_rules = 'YYYY-MM-DD HH';
                             options.minView = 1;
                             break;
                         case "2":
                             options.format = 'yyyy-mm-dd';
+                            options.format_rules = 'YYYY-MM-DD';
                             options.minView = 2;
                             break;
                         case "3":
                             options.format = 'dd-mm-yyyy';
+                            options.format_rules = 'DD-MM-YYYY';
                             options.minView = 2;
                             break;
                         default:
                             options.format = 'yyyy-mm-dd';
+                            options.format_rules = 'YYYY-MM-DD';
                             options.minView = 2;
                             break;
                     }
+
                     if (info.values_text.type == "dynamic")//dynamic
                     {
                         if (info.values_text.data_inicial != "#|#|#|#")
@@ -545,7 +552,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
                     if (info.max_length == 1)
                         options.daysOfWeekDisabled = [0, 6];
-                    script_zone.find("input[name='" + info.tag + "']").datetimepicker(options).keypress(function(e) {
+                    script_zone.find("input[name='" + info.tag + "']").datetimepicker(options).data("format", options.format_rules).keypress(function(e) {
                         e.preventDefault();
                     }).bind("cut copy paste", function(e) {
                         e.preventDefault();
@@ -593,7 +600,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     }
                     else
                     {
-                        element.append($("<a>").attr("href", "http://" + info.values_text).text(info.values_text).attr("target","_blank"));
+                        element.append($("<a>").attr("href", "http://" + info.values_text).text(info.values_text).attr("target", "_blank"));
                     }
                     break;
                 case "button":
@@ -861,6 +868,8 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 $(script_zone).on("change", "#script_div #" + this.tag_trigger + " .form_datetime", function()//atribuir os ons a cada value
                                 {
                                     var temp = data[index];
+                                    var this_val = moment($(this).val(), $(this).data().format);
+
                                     if (temp.param2.type == "fixed") {
                                         var tempo1, tempo2;
                                         time1 = moment(temp.param2.data_inicial);
@@ -868,16 +877,16 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                         if (temp.param2.data_inicial != "" && temp.param2.data_final != "")
                                         {
 
-                                            if ((time1.isBefore($(this).val()) || time1.isSame($(this).val())) && (time2.isAfter($(this).val()) || time2.isSame($(this).val())))
+                                            if ((time1.isBefore(this_val) || time1.isSame(this_val)) && (time2.isAfter(this_val) || time2.isSame(this_val)))
                                                 rules_work(data[index]);
                                         }
                                         else
                                         {
                                             if (temp.param2.data_inicial != "")
-                                                if (time1.isBefore($(this).val()) || time1.isSame($(this).val()))
+                                                if (time1.isBefore(this_val) || time1.isSame(this_val))
                                                     rules_work(data[index]);
                                             if (temp.param2.data_final != "")
-                                                if (time2.isAfter($(this).val()) || time2.isSame($(this).val()))
+                                                if (time2.isAfter(this_val) || time2.isSame(this_val))
                                                     rules_work(data[index]);
                                         }
                                     }
@@ -912,20 +921,22 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 
                                         if (temp.param2.data_inicial != "#|#|#|#" && temp.param2.data_final != "#|#|#|#")
                                         {
-                                            if ((time1.isBefore($(this).val()) || time1.isSame($(this).val())) && (time2.isAfter($(this).val()) || time2.isSame($(this).val())))
+                                            if ((time1.isBefore(this_val) || time1.isSame(this_val)) && (time2.isAfter(this_val) || time2.isSame(this_val)))
+                                            {
                                                 rules_work(data[index]);
+                                            }
                                         }
                                         else
                                         {
                                             if (temp.param2.data_inicial != "#|#|#|#")
                                             {
 
-                                                if (time1.isBefore($(this).val()) || time1.isSame($(this).val()))
+                                                if (time1.isBefore(this_val) || time1.isSame(this_val))
                                                     rules_work(data[index]);
                                             }
                                             if (temp.param2.data_final != "#|#|#|#")
                                             {
-                                                if (time2.isAfter($(this).val()) || time2.isSame($(this).val()))
+                                                if (time2.isAfter(this_val) || time2.isSame(this_val))
                                                     rules_work(data[index]);
                                             }
                                         }
