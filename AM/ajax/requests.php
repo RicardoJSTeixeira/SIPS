@@ -63,11 +63,13 @@ switch ($action) {
                 break;
         }
 
+        $apoioID = $apoio_marketing->create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade);
+
         while ($ref = array_pop($refs)) {
-            $id[] = $calendar->newReserva($userID->username, "", strtotime($data_inicial . " " . $start), strtotime($data_final . " " . $end), $system_types["Rastreio c/ MKT"], $ref->id);
+            $id[] = $calendar->newReserva($userID->username, "", strtotime($data_inicial . " " . $start), strtotime($data_final . " " . $end), $system_types["Rastreio c/ MKT"], $ref->id, '', $apoioID);
         }
-        $ok = $apoio_marketing->create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade, $id);
-        echo json_encode($ok);
+
+        echo json_encode($apoio_marketing->setReservation($apoioID, $id));
         break;
 
     case "criar_relatorio_mensal_stock":
@@ -120,7 +122,9 @@ switch ($action) {
         echo json_encode($relatorio_movimentacao_stock->save_mov_stock($id, $produtos));
         break;
 
-
+    case "get_one_mkt";
+        echo json_encode($apoio_marketing->get_one($id));
+        exit;
 
     case "get_horario_from_apoio_marketing":
         echo json_encode($apoio_marketing->get_horario($id));

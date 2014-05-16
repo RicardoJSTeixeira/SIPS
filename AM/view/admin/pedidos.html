@@ -1,14 +1,20 @@
+<style>
+    .cod_cliente_input{
+        margin-bottom: 0px !important;
+    }
+</style>
 <div id="admin_extra_zone"></div>
 
 <ul class="nav nav-tabs tabs-main">
- 
-  <li class="active"><a href="#mail" data-toggle="tab">Correio</a></li>
-  <li><a href="#frt" data-toggle="tab">Frota</a></li>
-  <li><a href="#stk" data-toggle="tab">Stock</a></li>
-  <li><a href="#mstk" data-toggle="tab">Movimentações</a></li>
+
+    <li class="active"><a href="#mail" data-toggle="tab">Correio</a></li>
+    <li><a href="#frt" data-toggle="tab">Frota</a></li>
+    <li><a href="#stk" data-toggle="tab">Stock</a></li>
+    <li><a href="#mstk" data-toggle="tab">Movimentações</a></li>
+    <li><a href="#enc" data-toggle="tab">Encomendas</a></li>
 </ul>
 <div class="tab-content tabs-main-content">
- 
+
     <div class="tab-pane active" id="mail">
         <div class="grid-title">
             <div class="pull-left">Correio</div>
@@ -57,6 +63,20 @@
             <div class="clear"></div>
         </div>
     </div>
+    <div class="tab-pane" id="enc">
+        <div class="grid-title">
+            <div class="pull-left">
+                Gestão de Encomendas
+            </div>
+            <div class="pull-right">
+                <button class="btn btn-lg btn-info" id="export_ENC"><i class='icon-download'></i>Transferir</button>
+            </div>
+        </div>
+        <div class="grid-content div_admin_edit" id="requisition_master_div"  >
+            <table class="table table-bordered table-mod" id="view_requisition_datatable"></table>
+            <div class="clear"></div>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript" src="/AM/lib_js/requests.js" ></script>
@@ -67,7 +87,7 @@
     {
         Rq = new requests($("#admin_extra_zone"), {});
 
-    
+
         Rq.relatorio_correio.init();
         Rq.relatorio_correio.get_to_datatable($("#pedidos_correio_datatable"));
 
@@ -82,5 +102,18 @@
     });
 
 
+
+</script>
+<script type="text/javascript" src="/AM/lib_js/requisition.js" ></script>
+<script type="text/javascript">
+
+    $(function()
+    {
+        requisition1 = new requisition($("#admin_extra_zone"), {});
+        requisition1.init(function()
+        {
+            requisition1.get_current_requisitions($("#view_requisition_datatable"), 1);
+        });
+    });
 
 </script>

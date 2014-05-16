@@ -266,8 +266,6 @@ var requisition = function(geral_path, options_ext)
             }
         });
 
-
-
         $(new_requisition_zone).on("click", " .remove_produto_encomendado", function(e)
         {
             var this_button = $(this);
@@ -289,7 +287,6 @@ var requisition = function(geral_path, options_ext)
                     this_button.closest(".grid").remove();
                 }
             });
-
         });
         $(new_requisition_zone).on("submit", " #form_encomenda_especial", function(e)
         {
@@ -297,14 +294,7 @@ var requisition = function(geral_path, options_ext)
         });
 
     };
-//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     function get_encomendas_atuais(table_path)
     {
         var Table_view_requisition = table_path.dataTable({
@@ -350,6 +340,11 @@ var requisition = function(geral_path, options_ext)
                 }
             });
         }
+
+        $('#export_ENC').click(function(event) {
+            event.preventDefault();
+            table2csv(Table_view_requisition, 'full', '#' + table_path[0].id);
+        });
         table_path.on("click", ".ver_cliente", function()
         {
             var client = new cliente_info($(this).data("lead_id"), null);
@@ -383,16 +378,17 @@ var requisition = function(geral_path, options_ext)
                 modal.modal("show");
             }, "json");
         });
+ 
+        modal.on("click", "#print_requisition", function()
+        {
+            var doc = new jsPDF('p', 'pt', 'a4', true);
+            last = doc.table(5, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {autoSize: true, printHeaders: true});
 
-        /*  modal.on("click", "#print_requisition", function()
-         {
-         var doc = new jsPDF('p', 'pt', 'a4', true);
-         last = doc.table(5, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {autoSize: true, printHeaders: true});
-         
-         doc.table(20, 80, EData.products, null, {autoSize: true, printHeaders: true});
-         
-         doc.save(moment().format());
-         });*/
+            doc.table(20, 80, EData.products, null, {autoSize: true, printHeaders: true});
+
+            doc.save(moment().format());
+        });
+ 
 
         table_path.on("click", ".accept_requisition", function()
         {
