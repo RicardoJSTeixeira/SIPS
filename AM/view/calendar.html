@@ -86,12 +86,12 @@
             <button class="btn btn-danger icon-alone btn_trash" ><i class="icon-trash"></i></button>
             <button class="btn btn-info icon-alone hide" id="btn_change" ><i class="icon-share-alt"></i></button>
         </span>
-            <button class="btn btn-link right" data-dismiss="modal" aria-hidden="true">Fechar</button>
+        <button class="btn btn-link right" data-dismiss="modal" aria-hidden="true">Fechar</button>
         <span class="right">
             <button class="btn btn-warning" id="btn_no_consult">Não há Consulta</button>
             <button class="btn btn-success" id="btn_init_consult">Iniciar Consulta</button>
         </span>
-            <button class="btn btn-success right" id="btn_view_consult" style="display:none">Ver Consulta</button>
+        <button class="btn btn-success right" id="btn_view_consult" style="display:none">Ver Consulta</button>
     </div>
 </div>
 
@@ -107,6 +107,70 @@
             <button class="btn btn-danger icon-alone btn_trash" ><i class="icon-trash"></i></button>
         </span>
         <span class="right">
+            <button class="btn btn-link" data-dismiss="modal" aria-hidden="true">Fechar</button>
+        </span>
+    </div>
+</div>
+
+<div id="calendar_mkt" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>Apoio Markting</h3>
+    </div>
+    <div class="modal-body">
+        <ul class="nav nav-tabs tabs-main" style="margin-top: 0;">
+
+            <li class="active"><a href="#tab_mkt_info" data-toggle="tab">Info</a></li>
+            <li><a href="#tab_mkt_rel" data-toggle="tab">Relatório</a></li>
+
+        </ul>
+
+        <div class="tab-content tabs-main-content">
+            <div class="tab-pane active" id="tab_mkt_info">
+            </div>
+
+            <div class="tab-pane " id="tab_mkt_rel">
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label" for="a">Cod. Mkt.</label>
+                        <div class="controls">
+                            <input type="text" id="a" placeholder="">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="a">Efectuados</label>
+                        <div class="controls">
+                            <input type="text" id="a" placeholder="">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="a">Com Perda</label>
+                        <div class="controls">
+                            <input type="text" id="a" placeholder="">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="a">Vendas</label>
+                        <div class="controls">
+                            <input type="text" id="a" placeholder="quantidade">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="a">Valor</label>
+                        <div class="controls">
+                            <input type="text" id="a" placeholder="€">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" style="text-align: inherit !important;">
+        <span class="left">
+            <button class="btn btn-danger icon-alone btn_trash hide" title="Auto Rejeitar" ><i class="icon-trash"></i></button>
+        </span>
+        <span class="right">
+            <button class="btn btn-success">Gravar</button>
             <button class="btn btn-link" data-dismiss="modal" aria-hidden="true">Fechar</button>
         </span>
     </div>

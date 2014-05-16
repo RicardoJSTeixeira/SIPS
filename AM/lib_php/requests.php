@@ -20,24 +20,24 @@ class apoio_marketing extends requests_class {
         parent::__construct($db, $user_level, $user_id);
     }
 
-    public function create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade, $id_reservation) {
-        $query = "INSERT INTO `spice_apoio_marketing`(`user`,`data_criacao`, `data_inicial`,`data_final`,`horario`, `localidade`, `local`, `morada`, `comments`, `local_publicidade`,`status`,`id_reservation`) "
-                . "VALUES (:user,:now,:data_inicial,:data_final,:horario,:localidade,:local,:morada,:comments,:local_pub,:status,:id_reservation)";
+    public function create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade) {
+        $query = "INSERT INTO `spice_apoio_marketing`(`user`,`data_criacao`, `data_inicial`,`data_final`,`horario`, `localidade`, `local`, `morada`, `comments`, `local_publicidade`,`status`) "
+                . "VALUES (:user,:now,:data_inicial,:data_final,:horario,:localidade,:local,:morada,:comments,:local_pub,:status)";
 
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(
-                    ":user" => $this->user_id,
-                    ":now" => date("Y-m-d H:i:s"),
-                    ":data_inicial" => $data_inicial,
-                    ":data_final" => $data_final,
-                    ":horario" => json_encode($horario),
-                    ":localidade" => $localidade,
-                    ":local" => $local,
-                    ":morada" => $morada,
-                    ":comments" => $comments,
-                    ":local_pub" => json_encode($local_publicidade),
-                    ":status" => 1,
-                    ":id_reservation" => json_encode($id_reservation)));
+        $stmt->execute(array(
+            ":user" => $this->user_id,
+            ":now" => date("Y-m-d H:i:s"),
+            ":data_inicial" => $data_inicial,
+            ":data_final" => $data_final,
+            ":horario" => json_encode($horario),
+            ":localidade" => $localidade,
+            ":local" => $local,
+            ":morada" => $morada,
+            ":comments" => $comments,
+            ":local_pub" => json_encode($local_publicidade),
+            ":status" => 1));
+        return $this->_db->lastInsertId();
     }
 
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
@@ -126,6 +126,23 @@ class apoio_marketing extends requests_class {
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function setReservation($id, $ref) {
+        $query = "UPDATE spice_apoio_marketing set id_reservation=:id_reservation where id=:id";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array(":id_reservation" => json_encode($ref), ":id" => $id));
+    }
+
+    public function get_one($id) {
+        $query = "SELECT `user`, `data_criacao`, `data_inicial`, `data_final`, `horario`, `localidade`, `local`, `morada`, `comments`, `local_publicidade` FROM `spice_apoio_marketing` WHERE id=:id";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":id" => $id));
+        $ap = $stmt->fetch(PDO::FETCH_OBJ);
+
+        $ap->horario = json_decode($ap->horario);
+        $ap->local_publicidade = json_decode($ap->local_publicidade);
+        return $ap;
     }
 
 }

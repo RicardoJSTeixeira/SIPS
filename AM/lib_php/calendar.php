@@ -10,7 +10,7 @@ Class Calendars {
 
     protected function _getReservas($is_scheduler, $id, $beg, $end, $forceUneditable = false, $username = "") {
         if ($is_scheduler) {
-            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, e.display_text, d.postal_code, d.first_name, c.extra1 codCamp, changed, e.closed, obs "
+            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, e.display_text, d.postal_code, d.first_name, c.extra1 codCamp, changed, e.closed, obs, extra_id "
                     . "FROM sips_sd_reservations a "
                     . "LEFT JOIN vicidial_list d ON a.lead_id = d.lead_id "
                     . "LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource "
@@ -18,7 +18,7 @@ Class Calendars {
                     . "LEFT JOIN spice_consulta f ON a.id_reservation=f.reserva_id "
                     . "WHERE b.id_scheduler=:id And start_date <=:end And start_date >=:beg";
         } else {
-            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, d.display_text, c.postal_code, c.first_name, c.extra1 codCamp, changed, e.closed, obs "
+            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, d.display_text, c.postal_code, c.first_name, c.extra1 codCamp, changed, e.closed, obs, extra_id "
                     . "FROM sips_sd_reservations a "
                     . "LEFT JOIN vicidial_list c ON a.lead_id = c.lead_id "
                     . "LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource "
@@ -40,13 +40,14 @@ Class Calendars {
                 'postal' => (string) (is_null($row->postal_code) ? "" : $row->postal_code),
                 'start' => (string) $row->start_date,
                 'end' => (string) $row->end_date,
-                'editable' => !(((bool) $row->closed || $forceUneditable ) || ($system_types[$row->id_reservation_type]) || (($username) ? $username != $row->id_user : false)),
+                'editable' => (bool) !(((bool) $row->closed || $forceUneditable ) || ($system_types[$row->id_reservation_type]) || (($username) ? $username != $row->id_user : false)),
                 'closed' => (bool) $row->closed,
                 'changed' => (int) $row->changed,
                 'className' => (string) "t" . $row->id_reservation_type . (((bool) $row->del) ? " del" : ""),
-                'bloqueio' => false || ($system_types[$row->id_reservation_type] == "Apoio Markting"),
+                'bloqueio' => (bool) false || ($system_types[$row->id_reservation_type] == "Rastreio c/ MKT"),
                 'user' => (string) $row->id_user,
                 'system' => (bool) $system_types[$row->id_reservation_type],
+                'extra_id' => (int) $row->extra_id,
                 'rsc' => (int) $row->id_resource,
                 'max' => (int) $row->max_time,
                 'min' => (int) $row->min_time,
@@ -189,10 +190,10 @@ Class Calendars {
         return $stmt->fetch(PDO::FETCH_OBJ)->name;
     }
 
-    public function newReserva($user, $lead_id, $start, $end, $rtype, $resource, $obs = "") {
-        $query = "INSERT INTO `sips_sd_reservations`(`start_date`, `end_date`, `has_accessories`, `id_reservation_type`, `id_resource`,`id_user`,`lead_id`,`obs`) VALUES (:start, :end, '0', :rtype, :resource, :user, :lead_id, :obs)";
+    public function newReserva($user, $lead_id, $start, $end, $rtype, $resource, $obs = "", $extraid = "") {
+        $query = "INSERT INTO `sips_sd_reservations`(`start_date`, `end_date`, `has_accessories`, `id_reservation_type`, `id_resource`,`id_user`,`lead_id`,`obs`,`extra_id`) VALUES (:start, :end, '0', :rtype, :resource, :user, :lead_id, :obs, :extra_id)";
         $stmt = $this->_db->prepare($query);
-        $stmt->execute(array(":user" => $user, ":lead_id" => $lead_id, ":start" => date('Y-m-d H:i:s', $start), ":end" => date('Y-m-d H:i:s', $end), ":rtype" => $rtype, ":resource" => $resource, ":obs" => $obs));
+        $stmt->execute(array(":user" => $user, ":lead_id" => $lead_id, ":start" => date('Y-m-d H:i:s', $start), ":end" => date('Y-m-d H:i:s', $end), ":rtype" => $rtype, ":resource" => $resource, ":obs" => $obs, ":extra_id" => $extraid));
         return (int) $this->_db->lastInsertId();
     }
 

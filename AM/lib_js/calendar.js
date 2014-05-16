@@ -41,6 +41,9 @@ var calendar = function(selector, data, modals, ext, client, user) {
             day: 'dia'
         },
         eventClick: function(calEvent, jsEvent, view) {
+            if (calEvent.bloqueio && calEvent.system) {
+                me.openMkt(calEvent);
+            }
             if (calEvent.bloqueio || calEvent.del) {
                 return false;
             }
@@ -560,6 +563,36 @@ var calendar = function(selector, data, modals, ext, client, user) {
         me.modal_special
                 .data({calEvent: calEvent})
                 .modal();
+    };
+
+    this.openMkt = function(calEvent) {
+        $.post("ajax/requests.php", {action: 'get_one_mkt', id: calEvent.extra_id}, function(data) {
+            console.log(data);
+            var postal = (function() {
+                var pt = "";
+                $.each(data.local_publicidade, function() {
+                    pt += '<dd>' + this.cp + ' - ' + this.freguesia + '</dd>';
+                });
+                return pt;
+            })();
+            console.log(postal);
+            var html = '<dl class="dl-horizontal">\n\
+                            <dt>Pedido</dt>\n\
+                            <dd>' + moment(data.data_criacao).fromNow() + '</dd>\n\
+                            <dt>Localidade</dt>\n\
+                            <dd>' + data.localidade + '</dd>\n\
+                            <dt>Local</dt>\n\
+                            <dd>' + data.local + '</dd>\n\
+                            <dt>Morada</dt>\n\
+                            <dd>' + data.morada + '</dd>\n\
+                            <dt>Observações</dt>\n\
+                            <dd>' + data.comments + '</dd>\n\
+                            <dt>Códigos Postais</dt>\n\
+                            ' + postal + '\n\
+                        </dl>';
+            $("#tab_mkt_info").html(html);
+            me.modals.mkt.modal('show');
+        }, 'json');
     };
     this.destroy = function() {
         this.calendar.fullCalendar('destroy');
