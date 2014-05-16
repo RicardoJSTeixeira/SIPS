@@ -1683,8 +1683,6 @@ $("#save_button_layout").click(function()//Fecha o dialog e grava as alteraçõe
 //-------------------------------------------------------------------------------------RULES
 function rules_manager(tipo, element)
 {
-
-
     var rts = $("#rule_trigger_select");
     rts.empty();
     switch (tipo)
@@ -1716,11 +1714,8 @@ function rules_manager(tipo, element)
     }
 
     $("#rule_target_select option[value='" + element.data("tag") + "']").prop('disabled', true).trigger("chosen:updated");
-
-
     rts.trigger("change");
 }
-
 function rules_update_targets()
 {
     //Get o tipo e tag de todos os elementos para o select dos alvos (regras)
@@ -1813,10 +1808,6 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
                 }
 
                 $("#rule_table").show();
-                if (this.tag_trigger2 == "1")
-                    this.tag_trigger2 = "resposta"; //por questões visuais na tabela
-                if (this.tag_trigger2 == "2")
-                    this.tag_trigger2 = "Click"; //por questões visuais na tabela
 
 
 
@@ -1832,8 +1823,14 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
                 }
                 else
                 {
+
+                    if (this.param1 == "answer")
+                        this.param1 = "Resposta"; //por questões visuais na tabela
+                    if (this.param1 == "click")
+                        this.param1 = "Click"; //por questões visuais na tabela
+
                     $("#rule_manager_list").append($("<tr>")
-                            .append($("<td>").text(this.tag_trigger2))
+                            .append($("<td>").text(this.param1=="value_input"?this.tag_trigger2:this.param1))
                             .append($("<td>").text(this.tipo))
                             .append($("<td>").text((this.tipo == "ir para página") ? $("#go_to_select option[value=" + this.tag_target + "]").text() : this.tag_target))
                             .append($("<td>").append($("<button>").addClass("icon-remove rule_delete_icon btn btn-inverse span").data("id", this.id).data("tag_trigger", this.tag_trigger)))
@@ -1951,9 +1948,9 @@ $("#add_rule_button").click(function()
                     {
                         case "answer":
                             if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, "answer", $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
                             else
-                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, "answer", $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
                             break;
                         case "value_input":
                             if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
@@ -1989,9 +1986,9 @@ $("#add_rule_button").click(function()
                     {
                         case "answer":
                             if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, "answer", $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
                             else
-                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, "answer", $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
                             break;
                         case "value_select":
                             if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
@@ -2006,9 +2003,9 @@ $("#add_rule_button").click(function()
                     {
                         case "answer":
                             if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, "answer", $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
                             else
-                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, "answer", $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
                             break;
                     }
                     break;
@@ -2017,17 +2014,17 @@ $("#add_rule_button").click(function()
                     {
                         case "answer":
                             if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, "answer", $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
                             else
-                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, "answer", $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
                             break;
                         case "date":
 
 
                             if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "date", $("#add_rule_button").data("date_limit_element").get_time());
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, "answer", $("#rule_target_select").val(), $("#regra_select").val(), "date", $("#add_rule_button").data("date_limit_element").get_time());
                             else
-                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "date", $("#add_rule_button").data("date_limit_element").get_time());
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, "answer", $("#go_to_select").val(), $("#regra_select").val(), "date", $("#add_rule_button").data("date_limit_element").get_time());
                             break;
                     }
                     break;
@@ -2036,18 +2033,18 @@ $("#add_rule_button").click(function()
                     {
                         case "answer":
                             if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, "answer", $("#rule_target_select").val(), $("#regra_select").val(), "answer", "0");
                             else
-                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 1, $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
+                                rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, "answer", $("#go_to_select").val(), $("#regra_select").val(), "answer", 0);
                             break;
                     }
                     break;
                 case "button":
 
                     if ($("#regra_select").val() === "show" || $("#regra_select").val() === "hide")
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#rule_target_select").val(), $("#regra_select").val(), "click", 0);
+                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, "click", $("#rule_target_select").val(), $("#regra_select").val(), "click", 0);
                     else
-                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, 2, $("#go_to_select").val(), $("#regra_select").val(), "click", 0);
+                        rules_database("add_rules", 0, $("#script_selector option:selected").val(), selected_type, selected_tag, "click", $("#go_to_select").val(), $("#regra_select").val(), "click", 0);
 
 
             }
