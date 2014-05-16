@@ -5,13 +5,11 @@ var requests = function(basic_path, options_ext)
     this.config = {};
     $.extend(true, this.config, options_ext);
 
-    if (SpiceU.user_level < 5) {
-        $("#principal button.btn-info").hide();
-    }
-
     this.apoio_marketing = {
         init: function()
         {
+
+
             $.get("/AM/view/requests/apoio_marketing_modal.html", function(data) {
                 basic_path.append(data);
             }, 'html');

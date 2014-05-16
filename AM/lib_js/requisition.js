@@ -17,6 +17,7 @@ var requisition = function(geral_path, options_ext)
             geral_path.off().empty().append(data);
             geral_path.find("#new_requisition_div").hide();
             modal = geral_path.find("#ver_product_requisition_modal");
+         
             if (typeof callback === "function")
                 callback();
         });

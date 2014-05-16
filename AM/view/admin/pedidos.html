@@ -70,6 +70,7 @@
             </div>
             <div class="pull-right">
                 <button class="btn btn-lg btn-info" id="export_ENC"><i class='icon-download'></i>Transferir</button>
+                <a  href="#view/new_requisition.html " class="btn btn-primary" id="button_new_requisition" ><i class="icon-shopping-cart"></i>Novo</a>
             </div>
         </div>
         <div class="grid-content div_admin_edit" id="requisition_master_div"  >
@@ -83,8 +84,7 @@
 <script type="text/javascript">
     var product;
 
-    $(function()
-    {
+    $(function() {
         Rq = new requests($("#admin_extra_zone"), {});
 
 
@@ -107,11 +107,17 @@
 <script type="text/javascript" src="/AM/lib_js/requisition.js" ></script>
 <script type="text/javascript">
 
-    $(function()
-    {
+    $(function() {
         requisition1 = new requisition($("#admin_extra_zone"), {});
         requisition1.init(function()
         {
+            console.log(SpiceU.user_level);
+            if (SpiceU.user_level > 5) {
+                $("#button_new_requisition").hide();
+            }
+            else {
+                $("#principal button.btn-info").hide();
+            }
             requisition1.get_current_requisitions($("#view_requisition_datatable"), 1);
         });
     });
