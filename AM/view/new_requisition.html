@@ -174,27 +174,30 @@
 
                     <div id="tree" class="tree smart-form">
                     </div>
-                    <hr>
-                    <button class=" btn btn-large btn-primary" id="save_single_product"><i class="icon-shopping-cart"></i>Requisitar</button>
+                    <div class='form-footer'>
+                        <button class=" btn btn-large btn-primary" id="save_single_product"><i class="icon-shopping-cart"></i>Requisitar</button>
+                    </div>
                 </div>
             </div>
-            <div class="grid">
+            <div class="grid" >
                 <div class="grid-title">
                     <div class="pull-left">Anexo</div>
-                </div>
-                <div class="grid-content">
-
-
-                    <span id="error_upload_log"></span>
-                    <div id="container">
-                        <button id="browse" class="btn">Procurar...</button>
-                        <button style="display:none" id="start-upload" class="btn btn-primary">Começar Upload</button>
-
+                    <div class="pull-right">
+                        <button id="browse" class="btn"><i class="icon-search"></i>Procurar...</button>
+                        <button style="display:none" id="start-upload" class="btn btn-info"><i class='icon-upload'></i>Começar Upload</button>
                     </div>
-
-                    <ul id="filelist"></ul>
-                    <div class="clear"></div>
-                </div> 
+                </div>
+                <table class="table table-mod table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Progresso</th>
+                            <th>Tamanho</th>
+                        </tr>
+                    </thead>
+                    <tbody id="filelist"></tbody>
+                </table>
+                <div class="clear"></div>
             </div> 
         </div>
 
@@ -206,79 +209,96 @@
 
 
 <div id="extra_div"></div>
+<script type="text/javascript" src="/AM/lib_js/requisition.js" ></script>
 <script type="text/javascript" src="/AM/lib_js/product.js" ></script>
 <script type="text/javascript" src="/AM/lib_js/tree.js" ></script>
 
 
-
-
-
-
-
 <script src="/bootstrap/js/plupload.full.min.js"></script>
-
-
-
-
-
+<script type="text/javascript" src="/bootstrap/js/plupload_language/pt_BR.js"></script>
 
 
 <script>
+    var uploader;
+    $(function() {
+        var unique_number = (Math.floor(Math.random() * 1000) + 1);
 
-    var unique_number = (Math.floor(Math.random() * 1000) + 1);
-    $("#new_requisition_submit_button").data("anexo_random_number", unique_number);
-    var uploader = new plupload.Uploader({
-        browse_button: 'browse', // this can be an id of a DOM element or the DOM element itself
-        url: '/AM/ajax/upload_file.php?action=upload&id=' + unique_number,
-        filters: {
-            mime_types: [
-                {title: "Image files", extensions: "jpg,gif,png"},
-                {title: "Zip files", extensions: "zip"},
-                {title: "Text Files", extensions: "txt,doc,docx"},
-                {title: "PDF Files", extensions: "pdf"}
-            ],
-            max_file_size: "20mb",
-            prevent_duplicates: true
-        },
-        init: {
-            PostInit: function() {
-                document.getElementById('filelist').innerHTML = '';
-                document.getElementById('start-upload').onclick = function() {
+        $("#new_requisition_submit_button").data("anexo_random_number", unique_number);
 
-                    uploader.start();
-                    return false;
-                };
+        uploader = new plupload.Uploader({
+            browse_button: 'browse', // this can be an id of a DOM element or the DOM element itself
+            url: '/AM/ajax/upload_file.php?action=upload&id=' + unique_number,
+            filters: {
+                mime_types: [
+                    {title: "Image files", extensions: "jpg,gif,png"},
+                    {title: "Zip files", extensions: "zip"},
+                    {title: "Text Files", extensions: "txt,doc,docx"},
+                    {title: "PDF Files", extensions: "pdf"}
+                ],
+                max_file_size: "20mb",
+                prevent_duplicates: true
             },
-            FilesAdded: function(up, files) {
-                plupload.each(files, function(file) {
-                    document.getElementById('filelist').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
-                });
-                $("#start-upload").show();
-            },
-            UploadProgress: function(up, file) {
-                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
-            },
-            Error: function(up, err) {
+            init: {
+                PostInit: function() {
+                    document.getElementById('filelist').innerHTML = '';
+                    document.getElementById('start-upload').onclick = function() {
 
-                $.jGrowl(err.message, {life: 3000});
+                        uploader.start();
+                        return false;
+                    };
+                },
+                FilesAdded: function(up, files) {
+                    plupload.each(files, function(file) {
+                        $('#filelist').append('\
+                                            <tr id="' + file.id + '">\n\
+                                                <td>' + file.name + '</td>\n\
+                                                <td>\n\
+                                                    <div class="progress progress-warning active progress-striped">\n\
+                                                    <div class="bar" style="width: 0%"></div>\n\
+                                                    </div>\n\
+                                                </td>\n\
+                                                <td>' + plupload.formatSize(file.size) + '\n\
+                                                    <div class="view-button">\n\
+                                                        <button data-id="' + file.id + '" class="btn btn-mini icon-alone delete_anexo_line" ><i class="icon-trash"></i></button></td>\n\
+                                                    </div>\n\
+                                                </td>\n\
+                                            </tr>');
+                    });
+                    $("#start-upload").show();
+                },
+                UploadProgress: function(up, file) {
+                    document.getElementById(file.id).getElementsByClassName('bar')[0].style.width = file.percent + '%';
+                },
+                Error: function(up, err) {
 
-            },
-            FileUploaded: function(up, file, info) {
+                    $.jGrowl(err.file.name + "&#8594;" + err.message, {life: 3000});
 
-                $.jGrowl(info.response, {life: 3000});
+                },
+                FileUploaded: function(up, file, info) {
+
+                    $.jGrowl(info.response, {life: 3000});
+                    $("#filelist").find(".delete_anexo_line").prop("disabled", true);
+
+                }
 
             }
 
-        }
+        });
+        uploader.init();
+        $("#filelist").on("click", ".delete_anexo_line", function()
+        {
+            if (uploader.removeFile(uploader.getFile($(this).data().id))) {
+                $(this).closest("tr").remove();
+            }
+        })
 
-    });
-    uploader.init();
-    $(function() {
 
         var client = getUrlVars();
-        requisition1 = new requisition($("#extra_div"), {});
+
+        requisition1 = new requisition($("#extra_div"), {uploader: uploader});
         requisition1.init(function()
         {
+
             requisition1.new_requisition($("#new_requisition_div"), (client.id) ? atob(client.id) : '');
         });
     });
