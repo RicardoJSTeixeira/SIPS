@@ -251,7 +251,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     var input = element.find(".input_texto")[0];
                     input.placeholder = info.placeholder;
                     input.maxLength = info.max_length;
-                    input.name = info.tag;
+                    input.setAttribute("name", info.tag);
                     if (info.default_value)
                         if (info.default_value.name != 0 && Object.size(me.client_info) && !me.admin_review)
                         {
@@ -396,11 +396,11 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     break;
                 case "textfield":
                     element.find(".label_geral")[0].innerHTML = info.values_text;
-                    element.find(".label_geral")[0].name = info.tag;
+                    element.find(".label_geral")[0].setAttribute("name", info.tag);
                     break;
                 case "legend":
                     element.find(".label_geral")[0].innerHTML = info.values_text;
-                    element.find(".label_geral")[0].name = info.tag;
+                    element.find(".label_geral")[0].setAttribute("name", info.tag);
                     break;
                 case "tableradio":
                     element.find(".label_geral")[0].innerHTML = info.texto;
@@ -478,7 +478,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     element.find(".label_geral")[0].innerHTML = info.texto;
                     if (info.required)
                         element.find(".form_datetime").addClass("validate[required] text-input datepicker");
-                    element.find(".form_datetime")[0].name = info.tag;
+                    element.find(".form_datetime")[0].setAttribute("name", info.tag);
                     var options = {};
                     options.format = "yyyy-mm-dd hh:ii";
                     options.format = 'YYYY-MM-DD HH:mm';
@@ -577,7 +577,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     break;
                 case "textarea":
                     element.find(".label_geral")[0].innerHTML = info.texto;
-                    element.find(".input_textarea")[0].name = info.tag;
+                    element.find(".input_textarea")[0].setAttribute("name", info.tag);
                     if (info.required)
                         element.find(".input_textarea").addClass("validate[required]");
                     break;
@@ -648,10 +648,18 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                                 switch ($("[name=" + ~~this.name + "]").parents(".item").data("info").type)
                                                 {
                                                     case "radio":
-                                                        $("[name=" + ~~this.name + "][value='" + this.value + "']").prop("checked", true);
+                                                    case "checkbox":
+                                                        $("[name=" + ~~this.name + "][value='" + this.value + "']").prop("checked", true).trigger("change");
+                                                        break;
+                                                    case "textarea":
+                                                        $("[name=" + ~~this.name + "]").val(this.value).trigger("focusout");
+                                                        break;
+                                                    case "texto":
+                                                        $("[name=" + ~~this.name + "]").val(this.value).trigger("keyup").trigger("focusout");
                                                         break;
                                                     default:
-                                                        $("[name=" + ~~this.name + "]").val(this.value);
+                                                        $("[name=" + ~~this.name + "]").val(this.value).trigger("change");
+
                                                         break;
                                                 }
                                     });
