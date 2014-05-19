@@ -1,5 +1,7 @@
 <?php
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -12,13 +14,15 @@ $destiny = getcwd() . "/files/";
 
 
 
-/*switch ($action) {
+switch ($action) {
 
     case "upload":
-        if (file_exists($destiny . $_FILES["file_upload_all"]["name"])) {
-            echo $_FILES["file_upload_all"]["name"] . " Já existe. ";
+        $fileName = $_FILES["file"]["name"];
+        if (file_exists($destiny . $fileName)) {
+            echo $fileName . " Já existe. ";
+            return false;
         } else {
-            if (move_uploaded_file($_FILES["file_upload_all"]["tmp_name"], $destiny . $_FILES["file_upload_all"]["name"]))
+            if (move_uploaded_file($_FILES["file"]["tmp_name"], $destiny . $fileName))
                 echo "Guardado";
             else
                 echo "Não Guardado";
@@ -38,24 +42,28 @@ $destiny = getcwd() . "/files/";
         $dh = @opendir($destiny);
 
         while (false !== ( $file = readdir($dh) )) {
-            if ($file != "dummy.gitignore"&&$file != ".."&&$file != ".")
+            if ($file != "dummy.gitignore" && $file != ".." && $file != ".")
                 $js[] = $file;
         }
 
         closedir($dh);
         echo json_encode($js);
         break;
-}*/
-
-
- 
- 
-if (empty($_FILES) || $_FILES["file"]["error"]) {
-  die('{"OK": 0}');
 }
+
+
  
-$fileName = $_FILES["file"]["name"];
-move_uploaded_file($_FILES["file"]["tmp_name"], "uploads/$fileName");
  
-die('{"OK": 1}');
-?>
+    /*
+
+ case "upload":
+        if (file_exists($destiny . $_FILES["file_upload_all"]["name"])) {
+            echo $_FILES["file_upload_all"]["name"] . " Já existe. ";
+        } else {
+            if (move_uploaded_file($_FILES["file_upload_all"]["tmp_name"], $destiny . $_FILES["file_upload_all"]["name"]))
+                echo "Guardado";
+            else
+                echo "Não Guardado";
+        }
+        break; 
+           */
