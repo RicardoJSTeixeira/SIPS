@@ -6,6 +6,7 @@ $(function() {
 
         modals.client = $("#calendar_client_modal");
         modals.special = $("#calendar_special_event");
+        modals.mkt = $("#calendar_mkt");
 
         data.config.height = "488";
 

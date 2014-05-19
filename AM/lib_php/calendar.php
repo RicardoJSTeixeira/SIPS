@@ -10,7 +10,7 @@ Class Calendars {
 
     protected function _getReservas($is_scheduler, $id, $beg, $end, $forceUneditable = false, $username = "") {
         if ($is_scheduler) {
-            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, e.display_text, d.postal_code, d.first_name, c.extra1 codCamp, changed, e.closed, obs, extra_id "
+            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, e.display_text, d.postal_code, d.first_name, c.extra1 codCamp, changed, e.closed, obs, extra_id, has_accessories "
                     . "FROM sips_sd_reservations a "
                     . "LEFT JOIN vicidial_list d ON a.lead_id = d.lead_id "
                     . "LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource "
@@ -18,7 +18,7 @@ Class Calendars {
                     . "LEFT JOIN spice_consulta f ON a.id_reservation=f.reserva_id "
                     . "WHERE b.id_scheduler=:id And start_date <=:end And start_date >=:beg";
         } else {
-            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, d.display_text, c.postal_code, c.first_name, c.extra1 codCamp, changed, e.closed, obs, extra_id "
+            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, d.display_text, c.postal_code, c.first_name, c.extra1 codCamp, changed, e.closed, obs, extra_id, has_accessories "
                     . "FROM sips_sd_reservations a "
                     . "LEFT JOIN vicidial_list c ON a.lead_id = c.lead_id "
                     . "LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource "
@@ -41,7 +41,7 @@ Class Calendars {
                 'start' => (string) $row->start_date,
                 'end' => (string) $row->end_date,
                 'editable' => (bool) !(((bool) $row->closed || $forceUneditable ) || ($system_types[$row->id_reservation_type]) || (($username) ? $username != $row->id_user : false)),
-                'closed' => (bool) $row->closed,
+                'closed' => (bool) $row->closed || $row->has_accessories,
                 'changed' => (int) $row->changed,
                 'className' => (string) "t" . $row->id_reservation_type . (((bool) $row->del) ? " del" : ""),
                 'bloqueio' => (bool) false || ($system_types[$row->id_reservation_type] == "Rastreio c/ MKT"),
@@ -199,6 +199,18 @@ Class Calendars {
 
     public function removeReserva($id) {
         $query = "DELETE FROM sips_sd_reservations WHERE id_reservation=:id";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array(":id" => $id));
+    }
+    
+    public function deleteReserva($id) {
+        $query = "UPDATE `sips_sd_reservations` SET `del`=1 WHERE `id_reservation`=:id";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array(":id" => $id));
+    }
+    
+    public function closeMKT($id) {
+        $query = "UPDATE `sips_sd_reservations` SET `has_accessories`=1 WHERE `id_reservation`=:id";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":id" => $id));
     }

@@ -62,6 +62,80 @@
     </div>
 </div>
 
+<div id="calendar_mkt" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>Apoio Markting</h3>
+    </div>
+    <div class="modal-body">
+        <ul class="nav nav-tabs tabs-main" style="margin-top: 0;">
+
+            <li class="active"><a href="#tab_mkt_info" data-toggle="tab">Info</a></li>
+            <li><a href="#tab_mkt_rel" data-toggle="tab">Relatório</a></li>
+
+        </ul>
+
+        <div class="tab-content tabs-main-content">
+            <div class="tab-pane active" id="tab_mkt_info">
+            </div>
+
+            <div class="tab-pane " id="tab_mkt_rel">
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label" for="cod">Cod. Mkt.</label>
+                        <div class="controls">
+                            <input type="text" id="cod" class="validate[required]" placeholder="" data-prompt-position='topRight:120'>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="total_rastreios">Efectuados</label>
+                        <div class="controls">
+                            <input type="text" id="total_rastreios" class="span1 text-right validate[required]" placeholder="" data-prompt-position='topRight:120'>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="rastreios_perda">Com Perda</label>
+                        <div class="controls">
+                            <input type="text" id="rastreios_perda" class="span1 text-right validate[required]" placeholder="" data-prompt-position='topRight:120'>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="vendas">Vendas</label>
+                        <div class="controls">
+                            <div class="input-append">
+                                <input type="text" id="vendas" class="span1 text-right validate[required]" placeholder="" data-prompt-position='topRight:120'>
+                                <span class="add-on">Qt</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="valor">Valor</label>
+                        <div class="controls">
+                            <div class="input-append">
+                                <input type="text" id="valor" class="span2 text-right validate[required]" placeholder="20000" data-prompt-position='topRight:120'>
+                                <span class="add-on">€</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn btn-success" id="save_mkt">Gravar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" style="text-align: inherit !important;">
+        <span class="left">
+            <button class="btn btn-danger icon-alone btn_trash hide" title="Auto Rejeitar" ><i class="icon-trash"></i></button>
+        </span>
+        <span class="right">
+            <button class="btn btn-link" data-dismiss="modal" aria-hidden="true">Fechar</button>
+        </span>
+    </div>
+</div>
+
 <div id="div_master" class="content">
     <div class="row-fluid">
         <div class="span6">
