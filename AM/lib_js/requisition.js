@@ -1,5 +1,7 @@
 var requisition = function(geral_path, options_ext)
 {
+
+    var me = this;
     this.file_uploaded = false;
     this.config = {};
     this.tipo = "mensal";
@@ -17,7 +19,6 @@ var requisition = function(geral_path, options_ext)
             geral_path.off().empty().append(data);
             geral_path.find("#new_requisition_div").hide();
             modal = geral_path.find("#ver_product_requisition_modal");
-
             if (typeof callback === "function")
                 callback();
         });
@@ -29,20 +30,13 @@ var requisition = function(geral_path, options_ext)
     };
 //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
     this.new_requisition = function(new_requisition_zone, lead_id) {
-
-
-
-
-
         $("#product_selector").chosen({no_results_text: "Sem resultados"});
-
         if (lead_id)
         {
             me.tipo = "especial";
             new_requisition_zone.find("#tipo_especial").show();
             new_requisition_zone.find("#tipo_encomenda").text("Encomenda Especial");
             var client_box;
-
             client_box = new clientBox({id: lead_id, byReserv: false});
             client_box.init();
         }
@@ -74,7 +68,6 @@ var requisition = function(geral_path, options_ext)
                     economato = [],
                     gama = [];
             $("#product_selector").append(temp);
-
             $.each(data, function()
             {
                 produtos[this.id] = (this);
@@ -132,7 +125,6 @@ var requisition = function(geral_path, options_ext)
                 .find("#form_encomenda_especial").validationEngine().end()
                 .find("#form_encomenda_especial").show().end()
                 .find(".tipo_div").hide();
-
         new_requisition_zone.find("#save_single_product").prop("disabled", true);
         $(new_requisition_zone).on("change", "#product_selector", function()
         {
@@ -150,8 +142,6 @@ var requisition = function(geral_path, options_ext)
             product_tree = new tree("#tree", [produtos[$(this).val()]], me.tipo, $(this).val(), produtos);
             product_tree.init();
         });
-
-
 //----------------------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------SAVE SINGLE PRODUCT--------------------------
         $(new_requisition_zone).on("click", '#save_single_product', function(e)
@@ -217,56 +207,50 @@ var requisition = function(geral_path, options_ext)
             new_requisition_zone.find("#produtos_encomendados").append(new_product);
             new_requisition_zone.find("#product_selector").val(0).trigger("chosen:updated");
         });
-
-
         //-------------------------------------------------------------------------------------------------------------------------------------------------------------
         //---------------------------------------------------------------------------------------------------------- SUBMITAR A ENCOMENDA------------------------------
         $(new_requisition_zone).on("click", "#new_requisition_submit_button", function()
         {
-            var anexo_random_number = $(this).data().anexo_random_number;
-          
-            var produtos_encomenda = [];
-            var count_anexo =0;
-            var count = 0;
-            $.each(new_requisition_zone.find(" #produtos_encomendados tr"), function()
+            var upload_complete = 1;
+
+            $.each(me.config.uploader.files, function()
             {
-                if ($(this).hasClass("product_line"))
-                {
-                    count++;
-                    produtos_encomenda.push({id: $(this).find(".td_name").attr("id_product"), quantity: ~~$(this).find(".td_quantity").text(), color: $(this).find(".td_color").attr("color")});
+                if (this.percent !== 100) {
+                    upload_complete = 0;
+                    $.jGrowl('Certifique-se de que os ficheiros de anexo foram carregados para o servidor', {life: 4000});
+                    return false;
                 }
-            });
-
-
-            $.each(new_requisition_zone.find("#filelist div"), function()
-            {
-
- 
-                count_anexo++;
-             
 
             });
 
-
-
-
-
-
-
-
-            if (!count)
-                $.jGrowl('Escolha pelo menos 1 produto', {life: 4000});
-            else
+            if (upload_complete)
             {
-                if (new_requisition_zone.find(" #form_encomenda_especial").validationEngine("validate"))
+                var anexo_random_number = $(this).data().anexo_random_number;
+
+                var produtos_encomenda = [];
+               
+                var count = 0;
+                $.each(new_requisition_zone.find(" #produtos_encomendados tr"), function()
                 {
-                    if ((new_requisition_zone.find(".fileupload-preview").text().length > 0 && me.file_uploaded) || !new_requisition_zone.find(".fileupload-preview").text().length)
+                    if ($(this).hasClass("product_line"))
                     {
+                        count++;
+                        produtos_encomenda.push({id: $(this).find(".td_name").attr("id_product"), quantity: ~~$(this).find(".td_quantity").text(), color: $(this).find(".td_color").attr("color")});
+                    }
+                });
+
+                 if (!count)
+                    $.jGrowl('Escolha pelo menos 1 produto', {life: 4000});
+                else
+                {
+                    if (new_requisition_zone.find(" #form_encomenda_especial").validationEngine("validate"))
+                    {
+
                         $.post('ajax/requisition.php', {action: "criar_encomenda",
                             type: me.tipo,
                             lead_id: lead_id,
                             contract_number: new_requisition_zone.find("#new_requisition_contract").val(),
-                            attachment: count_anexo,
+                            attachment: me.config.uploader.files.length,
                             products_list: produtos_encomenda},
                         function(data) {
                             $.jGrowl('Encomenda realizada com sucesso', {life: 4000});
@@ -276,7 +260,7 @@ var requisition = function(geral_path, options_ext)
 
                             $.post('/AM/ajax/upload_file.php', {action: "move_files_to_new_folder", old_id: anexo_random_number, new_id: data[0]},
                             function(data) {
-                                $.history.push("view/requisition.html");
+                                $.history.push("view/admin/pedidos.html?enc=0");
                             }, "json");
 
 
@@ -284,10 +268,12 @@ var requisition = function(geral_path, options_ext)
 
                         }, "json");
                     }
-                    else
-                        $.jGrowl('Certifique-se de que o ficheiro de anexo foi carregado para o servidor (botao "upload")', {life: 4000});
+
                 }
             }
+
+
+
         });
 
         $(new_requisition_zone).on("click", " .remove_produto_encomendado", function(e)
@@ -316,9 +302,7 @@ var requisition = function(geral_path, options_ext)
         {
             e.preventDefault();
         });
-
     };
-
     function get_encomendas_atuais(table_path)
     {
         var Table_view_requisition = table_path.dataTable({
@@ -373,7 +357,6 @@ var requisition = function(geral_path, options_ext)
         {
             var client = new cliente_info($(this).data("lead_id"), null);
             client.init(null);
-
         });
         //VER PRODUTOS DE ENCOMENDAS FEITAS
         table_path.on("click", ".ver_requisition_products", function()
@@ -391,29 +374,22 @@ var requisition = function(geral_path, options_ext)
                 });
                 EInfo = {'Dispenser': EInfotmp[0] + "", 'Tipo': EInfotmp[1] + "", 'Id Cliente': EInfotmp[2] + "", 'Data': EInfotmp[3] + "", 'Nr de contrato': EInfotmp[4] + "", 'Referencia': EInfotmp[5] + "", 'Estado': EInfotmp[6] + ""};
                 EData.bInfo.push(EInfo);
-
                 $.each(data, function()
                 {
                     this.color_name = (!this.color_name) ? "Padrão" : this.color_name;
                     EData.products.push({Nome: this.name, Categoria: this.category.capitalize(), Cor: this.color_name, Quantidade: this.quantity});
-
                     modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category.capitalize() + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td></tr>");
                 });
                 modal.modal("show");
             }, "json");
         });
-
         modal.on("click", "#print_requisition", function()
         {
             var doc = new jsPDF('p', 'pt', 'a4', true);
             last = doc.table(5, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {autoSize: true, printHeaders: true});
-
             doc.table(20, 80, EData.products, null, {autoSize: true, printHeaders: true});
-
             doc.save(moment().format());
         });
-
-
         table_path.on("click", ".accept_requisition", function()
         {
             $.post('ajax/requisition.php', {action: "accept_requisition", id: $(this).val()}, function() {
