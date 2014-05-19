@@ -1,4 +1,4 @@
- 
+<link type="text/css" rel="stylesheet" href="/bootstrap/plupload-2.1.2/js/jquery.ui.plupload/css/jquery.ui.plupload.css" /> 
 <style>
     .tree {
         min-height: 20px;
@@ -121,7 +121,7 @@
 
 
 </style>
-    <link type="text/css" rel="stylesheet" href=" /bootstrap/plupload-2.1.2/js/jquery.ui.plupload/css/jquery.ui.plupload.css" />
+
 <div id="new_requisition_div" >
 
     <h4 id="tipo_encomenda"></h4>
@@ -183,14 +183,16 @@
                     <div class="pull-left">Anexo</div>
                 </div>
                 <div class="grid-content">
-                    <ul id="filelist"></ul>
-                    <br />
+
+
 
                     <div id="container">
-                        <a id="browse" href="javascript:;">[Browse...]</a>
-                        <a id="start-upload" href="javascript:;">[Start Upload]</a>
-                    </div>
+                        <button id="browse" class="btn">Procurar...</button>
+                        <button id="start-upload" class="btn btn-primary">Começar Upload</button>
 
+                    </div>
+                    <span id="error_upload_log"></span>
+                    <ul id="filelist"></ul>
                     <div class="clear"></div>
                 </div> 
             </div> 
@@ -208,12 +210,12 @@
 <script type="text/javascript" src="/AM/lib_js/tree.js" ></script>
 
 
-<script type="text/javascript" src="/AMjs/plupload.full.min.js" ></script>
 
 
 
 
-<script src=" /bootstrap/plupload-2.1.2/js/plupload.full.min.js"></script>
+
+<script src="/bootstrap/plupload-2.1.2/js/plupload.full.min.js"></script>
 
 
 
@@ -224,14 +226,34 @@
 <script>
     var uploader = new plupload.Uploader({
         browse_button: 'browse', // this can be an id of a DOM element or the DOM element itself
-        url: 'upload.php'
+        url: '/AM/ajax/upload_file.php?action=upload',
+        init: {
+            PostInit: function() {
+                document.getElementById('filelist').innerHTML = '';
+                document.getElementById('start-upload').onclick = function() {
+                    uploader.start();
+                    return false;
+                };
+            },
+            FilesAdded: function(up, files) {
+                plupload.each(files, function(file) {
+                    document.getElementById('filelist').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
+                });
+            },
+            UploadProgress: function(up, file) {
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+            },
+            Error: function(up, err) {
+                alert("a");
+                document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
+            },
+            FileUploaded: function(up, file, info) {
+
+                $("#error_upload_log").text($("#error_upload_log").text() + info.response);
+            }
+        }
     });
-
     uploader.init();
-
-
-
-
     $(function() {
 
         var client = getUrlVars();
