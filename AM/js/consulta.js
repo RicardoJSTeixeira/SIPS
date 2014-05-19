@@ -122,7 +122,6 @@ $(function()
                         .find("#script_main_div")
                         .find(":input").prop("disabled", true).end()
                         .find("button").prop("disabled", true).end();
-
             }
         });
 
@@ -221,7 +220,6 @@ $("#main_consulta_div #terminar_consulta").on("click", function() {
     }
     else
     {
-
         var produtos = {
             direito: {marca: $("#main_consulta_div #dMarca").val(), gama: $("#main_consulta_div #dGama").val(), modelo: $("#main_consulta_div #dModelo").val()},
             esquerdo: {marca: $("#main_consulta_div #eMarca").val(), gama: $("#main_consulta_div #eGama").val(), modelo: $("#main_consulta_div #eModelo").val()},
