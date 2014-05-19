@@ -8,11 +8,7 @@ foreach ($_POST as $key => $value) {
 foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
-
-
 $destiny = getcwd() . "/files/";
-
-
 
 switch ($action) {
 
@@ -22,12 +18,58 @@ switch ($action) {
             echo $fileName . " Já existe. ";
             return false;
         } else {
-            if (move_uploaded_file($_FILES["file"]["tmp_name"], $destiny . $fileName))
-                echo "Guardado";
+            if (move_uploaded_file($_FILES["file"]["tmp_name"], $destiny . $id . "_-_" . $fileName))
+                echo "$fileName Guardado";
             else
-                echo "Não Guardado";
+                echo "$fileName Não Guardado";
         }
         break;
+
+
+    case "move_files_to_new_folder":
+
+
+        if (!file_exists($destiny . $new_id . "_encomenda")) {
+
+
+            mkdir($destiny . $new_id . "_encomenda", 0777, true);
+
+
+
+
+            $srcDir = $destiny;
+            $destDir = $destiny . $new_id . "_encomenda";
+
+            if (file_exists($destDir)) {
+                if (is_dir($destDir)) {
+                    if (is_writable($destDir)) {
+                        if ($handle = opendir($srcDir)) {
+                            while (false !== ($file = readdir($handle))) {
+                                if (is_file($srcDir . '/' . $file)) {
+                                    if (strstr($file, $old_id . "_-_")) {
+                                        rename($srcDir . '/' . $file, $destDir . '/' . $file);
+                                    }
+                                }
+                            }
+                            closedir($handle);
+                        } else {
+                            echo(json_encode("$srcDir não pode ser aberto."));
+                        }
+                    } else {
+                        echo(json_encode("$destDir não permite escrita"));
+                    }
+                } else {
+                    echo(json_encode("$destDir não é um caminho valido!"));
+                }
+            } else {
+                echo(json_encode("$destDir não existe"));
+            }
+        } else
+            echo(json_encode("A pasta escolhida ja existe"));
+
+        echo(json_encode("Pasta de anexos criada"));
+        break;
+
 
     case "delete":
         if (unlink($destiny . $name))
@@ -50,20 +92,3 @@ switch ($action) {
         echo json_encode($js);
         break;
 }
-
-
- 
- 
-    /*
-
- case "upload":
-        if (file_exists($destiny . $_FILES["file_upload_all"]["name"])) {
-            echo $_FILES["file_upload_all"]["name"] . " Já existe. ";
-        } else {
-            if (move_uploaded_file($_FILES["file_upload_all"]["tmp_name"], $destiny . $_FILES["file_upload_all"]["name"]))
-                echo "Guardado";
-            else
-                echo "Não Guardado";
-        }
-        break; 
-           */
