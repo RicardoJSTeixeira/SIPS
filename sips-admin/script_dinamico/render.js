@@ -379,7 +379,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     }
                     break;
                 case "multichoice":
-                    element.empty(); 
+                    element.empty();
                     element.append($("<label>").addClass("label_multichoice label_geral tagReplace").text(info.texto));
                     var multichoices = info.values_text;
                     if (info.required)
@@ -648,10 +648,18 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                                 switch ($("[name=" + ~~this.name + "]").parents(".item").data("info").type)
                                                 {
                                                     case "radio":
-                                                        $("[name=" + ~~this.name + "][value='" + this.value + "']").prop("checked", true);
+                                                    case "checkbox":
+                                                        $("[name=" + ~~this.name + "][value='" + this.value + "']").prop("checked", true).trigger("change");
+                                                        break;
+                                                    case "textarea":
+                                                        $("[name=" + ~~this.name + "]").val(this.value).trigger("focusout");
+                                                        break;
+                                                    case "texto":
+                                                        $("[name=" + ~~this.name + "]").val(this.value).trigger("keyup").trigger("focusout");
                                                         break;
                                                     default:
-                                                        $("[name=" + ~~this.name + "]").val(this.value);
+                                                        $("[name=" + ~~this.name + "]").val(this.value).trigger("change");
+
                                                         break;
                                                 }
                                     });
