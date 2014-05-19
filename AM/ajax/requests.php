@@ -83,12 +83,10 @@ switch ($action) {
 
     //Gets to Datatables
     case "get_apoio_marketing_to_datatable":
-
         echo json_encode($apoio_marketing->get_to_datatable());
         break;
 
     case "get_relatorio_correio_to_datatable":
-
         echo json_encode($relatorio_correio->get_to_datatable());
         break;
 
@@ -103,7 +101,6 @@ switch ($action) {
     case "get_relatorio_movimentacao_to_datatable":
         echo json_encode($relatorio_movimentacao_stock->get_to_datatable());
         break;
-
 
     //Get extras
     case "get_anexo_correio":
@@ -124,6 +121,15 @@ switch ($action) {
 
     case "get_one_mkt";
         echo json_encode($apoio_marketing->get_one($id));
+        exit;
+
+    case "set_mkt_report";
+        $calendar = new Calendars($db);
+        $idRst = $apoio_marketing->get_reservations($id);
+        while ($rst = array_pop($idRst)) {
+            $calendar->closeMKT($rst);
+        }
+        echo json_encode($apoio_marketing->set_report($id,$cod,$total_rastreios,$rastreios_perda,$vendas,$valor));
         exit;
 
     case "get_horario_from_apoio_marketing":
@@ -158,7 +164,7 @@ switch ($action) {
 
     case "decline_apoio_marketing":
         $calendar = new Calendars($db);
-        $idRst = json_decode($apoio_marketing->get_reservation($id));
+        $idRst = $apoio_marketing->get_reservations($id);
         while ($rst = array_pop($idRst)) {
             $calendar->removeReserva($rst);
         }
@@ -232,8 +238,6 @@ switch ($action) {
         }
         echo json_encode(true);
         break;
-
-
 
     default:
         echo 'Are you an hacker? if yes then please go change your underpants, it stinks!';

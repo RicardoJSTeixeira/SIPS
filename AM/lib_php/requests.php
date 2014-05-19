@@ -99,12 +99,12 @@ class apoio_marketing extends requests_class {
         return $locais;
     }
 
-    public function get_reservation($id) {
+    public function get_reservations($id) {
         $query = "Select id_reservation From spice_apoio_marketing where id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $reservation_id = $stmt->fetch(PDO::FETCH_OBJ);
-        return $reservation_id->id_reservation;
+        return json_decode($reservation_id->id_reservation);
     }
 
     public function accept($id) {
@@ -135,7 +135,7 @@ class apoio_marketing extends requests_class {
     }
 
     public function get_one($id) {
-        $query = "SELECT `user`, `data_criacao`, `data_inicial`, `data_final`, `horario`, `localidade`, `local`, `morada`, `comments`, `local_publicidade` FROM `spice_apoio_marketing` WHERE id=:id";
+        $query = "SELECT `user`, `data_criacao`, `data_inicial`, `data_final`, `horario`, `localidade`, `local`, `morada`, `comments`, `local_publicidade`, `cod`, `total_rastreios`, `rastreios_perda`, `vendas`, `valor`, `closed` FROM `spice_apoio_marketing` WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $ap = $stmt->fetch(PDO::FETCH_OBJ);
@@ -143,6 +143,12 @@ class apoio_marketing extends requests_class {
         $ap->horario = json_decode($ap->horario);
         $ap->local_publicidade = json_decode($ap->local_publicidade);
         return $ap;
+    }
+
+    public function set_report($id, $cod, $total_rastreios, $rastreios_perda, $vendas, $valor) {
+        $query = "UPDATE spice_apoio_marketing SET cod=:cod, total_rastreios=:total_rastreios, rastreios_perda=:rastreios_perda, vendas=:vendas, valor=:valor, closed=1 WHERE id=:id";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array(":cod" => $cod, ":total_rastreios" => $total_rastreios, ":rastreios_perda" => $rastreios_perda, ":vendas" => $vendas, ":valor" => $valor, ":id" => $id));
     }
 
 }

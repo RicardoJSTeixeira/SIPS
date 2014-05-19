@@ -13,6 +13,7 @@ foreach ($_GET as $key => $value) {
 }
 
 $user = new UserLogin($db);
+$calendar = new Calendars($db);
 
 $variables = array();
 $unique_id = time() . "." . rand(1, 1000);
@@ -44,10 +45,7 @@ switch ($action) {
             ":closed" => $closed));
 
         if ($consulta_razao == "DEST") {
-            $query = "UPDATE sips_sd_reservations SET del='1' where id_reservation=:id";
-
-            $stmt = $db->prepare($query);
-            $stmt->execute(array(":id" => $reserva_id));
+            $calendar->deleteReserva($reserva_id);
         }
 
         echo json_encode("saved");
