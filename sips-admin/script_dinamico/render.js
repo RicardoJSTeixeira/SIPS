@@ -379,7 +379,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     }
                     break;
                 case "multichoice":
-                    element.empty();
+                    element.empty(); 
                     element.append($("<label>").addClass("label_multichoice label_geral tagReplace").text(info.texto));
                     var multichoices = info.values_text;
                     if (info.required)
