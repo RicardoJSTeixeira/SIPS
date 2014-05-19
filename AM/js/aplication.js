@@ -74,7 +74,7 @@ $(function() {
                 });
     });
 
-    $('#alerts-content,#imessage_placeholder').slimScroll();
+    $('#alerts-content,#imessage_placeholder').slimScroll({railDraggable:!1});
 });
 
 $(".ichat").on("click", ".dismiss_msg", function() {
