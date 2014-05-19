@@ -366,55 +366,60 @@ var calendar = function(selector, data, modals, ext, client, user) {
                     placement: "top",
                     html: true,
                     title: "Não há consulta",
-                    content: '<select id="select_no_consult">\n\
-                                <option value="DEST">Desistiu</option>\n\
-                                <option value="FAL">Faleceu</option>\n\
-                                <option value="TINV">Telefone Invalido</option>\n\
-                                <option value="NOSHOW">No Show</option>\n\
-                                <option value="NAT">Ninguém em casa</option>\n\
-                                <option value="MOR">Morada Errada</option>\n\
-                                <option value="NTEC">Técnico não foi</option>\n\
-                            </select>\n\
-                            <button class="btn btn-primary" id="no_consult_confirm_button">Fechar</button>',
+                    content: '<form  id="no_consult_confirm">\n\
+                                <select id="select_no_consult" class="validate[required]">\n\
+                                    <option value="">Seleccione um opção</option>\n\
+                                    <option value="DEST">Desistiu</option>\n\
+                                    <option value="FAL">Faleceu</option>\n\
+                                    <option value="TINV">Telefone Invalido</option>\n\
+                                    <option value="NOSHOW">No Show</option>\n\
+                                    <option value="NAT">Ninguém em casa</option>\n\
+                                    <option value="MOR">Morada Errada</option>\n\
+                                    <option value="NTEC">Técnico não foi</option>\n\
+                                </select>\n\
+                                <button class="btn btn-primary">Fechar</button>\n\
+                            </form>',
                     trigger: 'click'
                 })
                 .on("hidden", function(e) {
                     e.stopPropagation();
                 })
                 .end()
-                .on("click", "#no_consult_confirm_button", function()
+                .on("submit", "#no_consult_confirm", function()
                 {
 
                     var calendar_client = me.modal_ext.data(),
                             cResult = $("#select_no_consult").val();
-                    $.post("/AM/ajax/consulta.php",
-                            {
-                                action: "insert_consulta",
-                                reserva_id: calendar_client.calEvent.id,
-                                lead_id: calendar_client.calEvent.lead_id,
-                                closed: 1,
-                                consulta: 0,
-                                consulta_razao: cResult,
-                                exame: "0",
-                                exame_razao: "",
-                                venda: 0,
-                                venda_razao: "",
-                                left_ear: 0,
-                                right_ear: 0,
-                                tipo_aparelho: "",
-                                produtos: "",
-                                descricao_aparelho: "",
-                                feedback: "SCONS"
-                            },
-                    function() {
-                        calendar_client.calEvent.editable = false;
-                        calendar_client.calEvent.closed = true;
-                        calendar_client.calEvent.del = (cResult === 'DEST');
-                        calendar_client.calEvent.className += (cResult === 'DEST') ? ' del' : '';
-                        me.calendar.fullCalendar('updateEvent', calendar_client.calEvent);
+                    if ($(this).validationEngine('validate')) {
+                        $.post("/AM/ajax/consulta.php",
+                                {
+                                    action: "insert_consulta",
+                                    reserva_id: calendar_client.calEvent.id,
+                                    lead_id: calendar_client.calEvent.lead_id,
+                                    closed: 1,
+                                    consulta: 0,
+                                    consulta_razao: cResult,
+                                    exame: "0",
+                                    exame_razao: "",
+                                    venda: 0,
+                                    venda_razao: "",
+                                    left_ear: 0,
+                                    right_ear: 0,
+                                    tipo_aparelho: "",
+                                    produtos: "",
+                                    descricao_aparelho: "",
+                                    feedback: "SCONS"
+                                },
+                        function() {
+                            calendar_client.calEvent.editable = false;
+                            calendar_client.calEvent.closed = true;
+                            calendar_client.calEvent.del = (cResult === 'DEST');
+                            calendar_client.calEvent.className += (cResult === 'DEST') ? ' del' : '';
+                            me.calendar.fullCalendar('updateEvent', calendar_client.calEvent);
+                        }
+                        , "json");
+                        me.modal_ext.modal("hide").find(".popover").hide();
                     }
-                    , "json");
-                    me.modal_ext.modal("hide").find(".popover").hide();
                 })
                 .find("#btn_change")
                 .popover({
@@ -611,11 +616,11 @@ var calendar = function(selector, data, modals, ext, client, user) {
                     .end()
                     .data({calEvent: calEvent})
                     .find("#tab_mkt_rel")
-                    .find("#cod").val((~~data.closed)?data.cod:'').prop('readonly', ~~data.closed).end()
-                    .find("#total_rastreios").val((~~data.closed)?data.total_rastreios:'').prop('readonly', ~~data.closed).end()
-                    .find("#rastreios_perda").val((~~data.closed)?data.rastreios_perda:'').prop('readonly', ~~data.closed).end()
-                    .find("#vendas").val((~~data.closed)?data.vendas:'').prop('readonly', ~~data.closed).end()
-                    .find("#valor").val((~~data.closed)?data.valor:'').prop('readonly', ~~data.closed).end()
+                    .find("#cod").val((~~data.closed) ? data.cod : '').prop('readonly', ~~data.closed).end()
+                    .find("#total_rastreios").val((~~data.closed) ? data.total_rastreios : '').prop('readonly', ~~data.closed).end()
+                    .find("#rastreios_perda").val((~~data.closed) ? data.rastreios_perda : '').prop('readonly', ~~data.closed).end()
+                    .find("#vendas").val((~~data.closed) ? data.vendas : '').prop('readonly', ~~data.closed).end()
+                    .find("#valor").val((~~data.closed) ? data.valor : '').prop('readonly', ~~data.closed).end()
                     .find("#save_mkt").prop('disabled', ~~data.closed).end()
                     .end()
                     .modal('show');

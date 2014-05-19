@@ -83,9 +83,70 @@ $(function() {
                 t = $("#table_tbody_mp").empty(),
                 temp = "";
         $.each(data, function() {
-            temp += "<tr " + ((moment().diff(this.start_date, "days") > 7) ? "class='error'" : "") + "><td>" + this.first_name + "</td><td>" + moment().from(this.start_date, true) + " <div class='view-button'><button class='btn btn-mini icon-alone initC' data-cid='" + this.lead_id + "' data-rid='" + this.id_reservation + "' title='Iniciar Consulta'><i class='icon-share-alt'></i></button></div></td></tr>";
+            temp += "<tr " + ((moment().diff(this.start_date, "days") > 7) ? "class='error'" : "") + ">\n\
+                        <td>" + this.first_name + "</td>\n\
+                        <td>" + moment().from(this.start_date, true) + " <div class='view-button'>\n\
+                            <button class='btn btn-mini icon-alone initC' data-cid='" + this.lead_id + "' data-rid='" + this.id_reservation + "' data-toggle='tooltip' title='Iniciar Consulta'><i class='icon-share-alt'></i></button>\n\
+                            <button class='btn btn-mini icon-alone initSC' data-cid='" + this.lead_id + "' data-rid='" + this.id_reservation + "' data-toggle='tooltip' title='Sem Consulta'><i class='icon-minus-sign'></i></button></div>\n\
+                        </td>\n\
+                    </tr>";
         });
-        t.append(temp);
+        t.append(temp)
+                .find(".initSC")
+                .popover({
+                    placement: "left",
+                    html: true,
+                    title: "Não há consulta",
+                    content: '<form  id="no_consult_confirm">\n\
+                                <select id="select_no_consult" class="validate[required]">\n\
+                                    <option value="">Seleccione um opção</option>\n\
+                                    <option value="DEST">Desistiu</option>\n\
+                                    <option value="FAL">Faleceu</option>\n\
+                                    <option value="TINV">Telefone Invalido</option>\n\
+                                    <option value="NOSHOW">No Show</option>\n\
+                                    <option value="NAT">Ninguém em casa</option>\n\
+                                    <option value="MOR">Morada Errada</option>\n\
+                                    <option value="NTEC">Técnico não foi</option>\n\
+                                </select>\n\
+                                <button class="btn btn-primary">Fechar</button>\n\
+                            </form>',
+                    trigger: 'click'
+                })
+                .end()
+                .on("submit", "#no_consult_confirm", function()
+                {
+                    var
+                            that = $(this),
+                            clientData = that.closest('.view-button').find('.initSC').data(),
+                            cResult = that.find("#select_no_consult").val();
+                    if (that.validationEngine('validate')) {
+                        $.post("/AM/ajax/consulta.php",
+                                {
+                                    action: "insert_consulta",
+                                    reserva_id: clientData.rid,
+                                    lead_id: clientData.cid,
+                                    closed: 1,
+                                    consulta: 0,
+                                    consulta_razao: cResult,
+                                    exame: "0",
+                                    exame_razao: "",
+                                    venda: 0,
+                                    venda_razao: "",
+                                    left_ear: 0,
+                                    right_ear: 0,
+                                    tipo_aparelho: "",
+                                    produtos: "",
+                                    descricao_aparelho: "",
+                                    feedback: "SCONS"
+                                },
+                        function() {
+                            $.jGrowl('Consulta fechada com sucesso!');
+                            that.closest('tr').remove();
+                        }
+                        , "json");
+                    }
+                })
+                .find('[data-toggle~="tooltip"]').tooltip({container: 'body'});
     }, "json");
 
     $("#div_master").on("click", ".criar_marcacao", function()
