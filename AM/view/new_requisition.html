@@ -121,7 +121,7 @@
 
 
 </style>
-
+    <link type="text/css" rel="stylesheet" href=" /bootstrap/plupload-2.1.2/js/jquery.ui.plupload/css/jquery.ui.plupload.css" />
 <div id="new_requisition_div" >
 
     <h4 id="tipo_encomenda"></h4>
@@ -183,7 +183,13 @@
                     <div class="pull-left">Anexo</div>
                 </div>
                 <div class="grid-content">
-           
+                    <ul id="filelist"></ul>
+                    <br />
+
+                    <div id="container">
+                        <a id="browse" href="javascript:;">[Browse...]</a>
+                        <a id="start-upload" href="javascript:;">[Start Upload]</a>
+                    </div>
 
                     <div class="clear"></div>
                 </div> 
@@ -202,9 +208,12 @@
 <script type="text/javascript" src="/AM/lib_js/tree.js" ></script>
 
 
+<script type="text/javascript" src="/AMjs/plupload.full.min.js" ></script>
 
 
 
+
+<script src=" /bootstrap/plupload-2.1.2/js/plupload.full.min.js"></script>
 
 
 
@@ -213,7 +222,12 @@
 
 
 <script>
+    var uploader = new plupload.Uploader({
+        browse_button: 'browse', // this can be an id of a DOM element or the DOM element itself
+        url: 'upload.php'
+    });
 
+    uploader.init();
 
 
 

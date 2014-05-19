@@ -12,7 +12,7 @@ $destiny = getcwd() . "/files/";
 
 
 
-switch ($action) {
+/*switch ($action) {
 
     case "upload":
         if (file_exists($destiny . $_FILES["file_upload_all"]["name"])) {
@@ -45,4 +45,17 @@ switch ($action) {
         closedir($dh);
         echo json_encode($js);
         break;
+}*/
+
+
+ 
+ 
+if (empty($_FILES) || $_FILES["file"]["error"]) {
+  die('{"OK": 0}');
 }
+ 
+$fileName = $_FILES["file"]["name"];
+move_uploaded_file($_FILES["file"]["tmp_name"], "uploads/$fileName");
+ 
+die('{"OK": 1}');
+?>
