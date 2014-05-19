@@ -17,7 +17,7 @@ var requisition = function(geral_path, options_ext)
             geral_path.off().empty().append(data);
             geral_path.find("#new_requisition_div").hide();
             modal = geral_path.find("#ver_product_requisition_modal");
-         
+
             if (typeof callback === "function")
                 callback();
         });
@@ -29,7 +29,7 @@ var requisition = function(geral_path, options_ext)
     };
 //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
     this.new_requisition = function(new_requisition_zone, lead_id) {
-  
+
 
 
 
@@ -223,7 +223,10 @@ var requisition = function(geral_path, options_ext)
         //---------------------------------------------------------------------------------------------------------- SUBMITAR A ENCOMENDA------------------------------
         $(new_requisition_zone).on("click", "#new_requisition_submit_button", function()
         {
+            var anexo_random_number = $(this).data().anexo_random_number;
+          
             var produtos_encomenda = [];
+            var count_anexo =0;
             var count = 0;
             $.each(new_requisition_zone.find(" #produtos_encomendados tr"), function()
             {
@@ -233,6 +236,24 @@ var requisition = function(geral_path, options_ext)
                     produtos_encomenda.push({id: $(this).find(".td_name").attr("id_product"), quantity: ~~$(this).find(".td_quantity").text(), color: $(this).find(".td_color").attr("color")});
                 }
             });
+
+
+            $.each(new_requisition_zone.find("#filelist div"), function()
+            {
+
+ 
+                count_anexo++;
+             
+
+            });
+
+
+
+
+
+
+
+
             if (!count)
                 $.jGrowl('Escolha pelo menos 1 produto', {life: 4000});
             else
@@ -245,19 +266,21 @@ var requisition = function(geral_path, options_ext)
                             type: me.tipo,
                             lead_id: lead_id,
                             contract_number: new_requisition_zone.find("#new_requisition_contract").val(),
-                            attachment: new_requisition_zone.find(".fileupload-preview").text(),
+                            attachment: count_anexo,
                             products_list: produtos_encomenda},
                         function(data) {
                             $.jGrowl('Encomenda realizada com sucesso', {life: 4000});
-                            new_requisition_zone.find(" #new_requisition_contract").val("").end()
-                                    .find(" #new_requisition_product_tbody").empty().end()
-                                    .find("#label_anexo_info").text("").end()
-                                    .find('.fileupload').fileupload("clear");
-                            $.history.push("view/requisition.html");
-                            if (table_path)
-                            {
-                                table_path.dataTable().fnAddData(data);
-                            }
+
+
+
+
+                            $.post('/AM/ajax/upload_file.php', {action: "move_files_to_new_folder", old_id: anexo_random_number, new_id: data[0]},
+                            function(data) {
+                                $.history.push("view/requisition.html");
+                            }, "json");
+
+
+
 
                         }, "json");
                     }
@@ -379,7 +402,7 @@ var requisition = function(geral_path, options_ext)
                 modal.modal("show");
             }, "json");
         });
- 
+
         modal.on("click", "#print_requisition", function()
         {
             var doc = new jsPDF('p', 'pt', 'a4', true);
@@ -389,7 +412,7 @@ var requisition = function(geral_path, options_ext)
 
             doc.save(moment().format());
         });
- 
+
 
         table_path.on("click", ".accept_requisition", function()
         {

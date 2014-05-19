@@ -1,4 +1,4 @@
-<link type="text/css" rel="stylesheet" href="/bootstrap/plupload-2.1.2/js/jquery.ui.plupload/css/jquery.ui.plupload.css" /> 
+<link type="text/css" rel="stylesheet" href="/bootstrap/css/jquery.ui.plupload.css" /> 
 <style>
     .tree {
         min-height: 20px;
@@ -185,13 +185,13 @@
                 <div class="grid-content">
 
 
-
+                    <span id="error_upload_log"></span>
                     <div id="container">
                         <button id="browse" class="btn">Procurar...</button>
-                        <button id="start-upload" class="btn btn-primary">Começar Upload</button>
+                        <button style="display:none" id="start-upload" class="btn btn-primary">Começar Upload</button>
 
                     </div>
-                    <span id="error_upload_log"></span>
+
                     <ul id="filelist"></ul>
                     <div class="clear"></div>
                 </div> 
@@ -215,7 +215,7 @@
 
 
 
-<script src="/bootstrap/plupload-2.1.2/js/plupload.full.min.js"></script>
+<script src="/bootstrap/js/plupload.full.min.js"></script>
 
 
 
@@ -224,13 +224,27 @@
 
 
 <script>
+
+    var unique_number = (Math.floor(Math.random() * 1000) + 1);
+    $("#new_requisition_submit_button").data("anexo_random_number", unique_number);
     var uploader = new plupload.Uploader({
         browse_button: 'browse', // this can be an id of a DOM element or the DOM element itself
-        url: '/AM/ajax/upload_file.php?action=upload',
+        url: '/AM/ajax/upload_file.php?action=upload&id=' + unique_number,
+        filters: {
+            mime_types: [
+                {title: "Image files", extensions: "jpg,gif,png"},
+                {title: "Zip files", extensions: "zip"},
+                {title: "Text Files", extensions: "txt,doc,docx"},
+                {title: "PDF Files", extensions: "pdf"}
+            ],
+            max_file_size: "20mb",
+            prevent_duplicates: true
+        },
         init: {
             PostInit: function() {
                 document.getElementById('filelist').innerHTML = '';
                 document.getElementById('start-upload').onclick = function() {
+
                     uploader.start();
                     return false;
                 };
@@ -239,19 +253,24 @@
                 plupload.each(files, function(file) {
                     document.getElementById('filelist').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
                 });
+                $("#start-upload").show();
             },
             UploadProgress: function(up, file) {
                 document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
             },
             Error: function(up, err) {
-                alert("a");
-                document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
+
+                $.jGrowl(err.message, {life: 3000});
+
             },
             FileUploaded: function(up, file, info) {
 
-                $("#error_upload_log").text($("#error_upload_log").text() + info.response);
+                $.jGrowl(info.response, {life: 3000});
+
             }
+
         }
+
     });
     uploader.init();
     $(function() {
