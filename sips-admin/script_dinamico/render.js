@@ -652,10 +652,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                                         $("[name=" + ~~this.name + "][value='" + this.value + "']").prop("checked", true).trigger("change");
                                                         break;
                                                     case "textarea":
-                                                        $("[name=" + ~~this.name + "]").val(this.value).trigger("focusout");
+                                                        $("[name=" + ~~this.name + "]").val(this.value).trigger("focusout").trigger("change");
                                                         break;
                                                     case "texto":
-                                                        $("[name=" + ~~this.name + "]").val(this.value).trigger("keyup").trigger("focusout");
+                                                        $("[name=" + ~~this.name + "]").val(this.value).trigger("keyup").trigger("focusout").trigger("change");
                                                         break;
                                                     default:
                                                         $("[name=" + ~~this.name + "]").val(this.value).trigger("change");
