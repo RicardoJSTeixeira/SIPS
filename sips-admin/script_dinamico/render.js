@@ -255,7 +255,12 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     if (info.default_value)
                         if (info.default_value.name != 0 && Object.size(me.client_info) && !me.admin_review)
                         {
-                            input.value = me.client_info[info.default_value.name.toLowerCase()];
+ 
+                            if (info.default_value.name == "lead_id")
+                                input.value = me.lead_id;
+                     
+                            else
+                                input.value = me.client_info[info.default_value.name.toLowerCase()];
                         }
                     var pattern = [];
                     if (info.required)
