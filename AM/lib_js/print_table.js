@@ -34,7 +34,7 @@ function table2csv(oTable, exportmode, tableElm) {
     // if a csv div is already open, delete it
     if ($('.csv-data').length)
         $('.csv-data').remove();
-    // open a div with a download link
+    // open a div with a download link 
     $('body').append($("<form>", {id: 'csv_tmp', enctype: 'multipart/form-data', method: 'post', action: 'lib_php/print_table.php'}).append($("<textarea>", {name: "csv"}).html(csv)));
     $("#csv_tmp").submit().remove();
 }

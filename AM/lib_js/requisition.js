@@ -370,7 +370,7 @@ var requisition = function(geral_path, options_ext)
                 $.each(data, function()
                 {
                     this.color_name = (!this.color_name) ? "Padrão" : this.color_name;
-                    EData.products.push({Nome: this.name, Categoria: this.category.capitalize(), Cor: this.color_name, Quantidade: this.quantity});
+                    EData.products.push({Nome: this.name, Categoria: this.category.capitalize(), Cor: this.color_name, Qt: this.quantity});
                     modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category.capitalize() + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td></tr>");
                 });
                 modal.modal("show");
@@ -393,8 +393,8 @@ var requisition = function(geral_path, options_ext)
         modal.on("click", "#print_requisition", function()
         {
             var doc = new jsPDF('p', 'pt', 'a4', true);
-            last = doc.table(5, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {autoSize: true, printHeaders: true});
-            doc.table(20, 80, EData.products, null, {autoSize: true, printHeaders: true});
+            last = doc.table(20, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {autoSize: true, printHeaders: true,fontSize:10});
+            doc.table(20, 80, EData.products, ['Nome', 'Categoria', 'Cor', 'Qt'], {autoSize: true, printHeaders: true});
             doc.save(moment().format());
         });
         table_path.on("click", ".accept_requisition", function()
