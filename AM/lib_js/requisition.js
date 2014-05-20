@@ -17,7 +17,7 @@ var requisition = function(geral_path, options_ext)
     this.init = function(callback)
     {
         $.get("/AM/view/requisitions/requisition.html", function(data) {
-            geral_path.off().empty().append(data);
+            geral_path.append(data);
             geral_path.find("#new_requisition_div").hide();
             modal = geral_path.find("#ver_product_requisition_modal");
             modal_anexo = geral_path.find("#ver_anexo_requisition_modal");
@@ -73,7 +73,7 @@ var requisition = function(geral_path, options_ext)
             $.each(data, function()
             {
                 produtos[this.id] = (this);
-                if (me.tipo == "especial")
+                if (me.tipo === "especial")
                 {
                     if (this.max_req_s < 1)
                         return true;
@@ -257,24 +257,15 @@ var requisition = function(geral_path, options_ext)
                         function(data) {
                             $.jGrowl('Encomenda realizada com sucesso', {life: 4000});
 
-
-
-
                             $.post('/AM/ajax/upload_file.php', {action: "move_files_to_new_folder", old_id: anexo_random_number, new_id: data[0]},
                             function(data) {
                                 $.history.push("view/admin/pedidos.html?enc=0");
                             }, "json");
 
-
-
-
                         }, "json");
                     }
-
                 }
             }
-
-
 
         });
 
