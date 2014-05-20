@@ -21,15 +21,15 @@ $variables = array();
 $js = array();
 switch ($action) {
     case "get_fields":
-        $u=$user->getUser();
-        $query = "SELECT NAME,DISPLAY_NAME,field_order FROM `vicidial_list_ref` WHERE campaign_id=? and active='1' ORDER BY field_order asc";
+        $u = $user->getUser();
+        $query = "SET CHARACTER SET utf8;";
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        $query = "SELECT name,display_name,field_order FROM `vicidial_list_ref` WHERE campaign_id=? and active='1' ORDER BY field_order asc";
         $variables[] = $u->campaign;
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $js[] = array("name" => $row["NAME"], "display_name" => $row["DISPLAY_NAME"], "field_order" => $row["field_order"]);
-        }
-        echo json_encode($js);
+        echo json_encode($stmt->fetchAll(PDO::FETCH_OBJ));
         break;
 
     case "create_client":
@@ -38,8 +38,6 @@ switch ($action) {
         $u = $user->getUser();
         $variables[] = $u->username;
         $variables[] = $u->list_id;
-
-
         foreach ($info as $value) {
             if ($value["name"] != "compart") {
                 $fields = $fields . " , " . $value["name"];
@@ -47,14 +45,10 @@ switch ($action) {
                 $variables[] = $value["value"];
             }
         }
-
         $query = "INSERT INTO vicidial_list (entry_date,status,user,list_id $fields) VALUES (?,?,?,? $values) ";
-
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
-
         echo json_encode($db->lastInsertId());
-
         break;
 }
 

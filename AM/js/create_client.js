@@ -28,6 +28,7 @@ $(function()
                 hide = "";
         $.each(data, function()
         {
+ 
             if (this.name === "extra5") {
                 elmt = $("<select>", {id: this.name, name: this.name});
                 var optionsRaw = ["", "ADM (ADME/ADMA/ADMFA)", "ADSE", "APL", "CGD", "Centro Nac. de Protecção Contra Riscos Profissionais", "EDP", "PETROGAL", "PT/CTT ACS", "SAD-PSP", "SAD/GNR (ADMG)", "SAMS", "SEG. SOCIAL", "Serviços Sociais do Ministério da Justiça", "OUTRAS"];
