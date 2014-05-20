@@ -9,6 +9,7 @@ var requisition = function(geral_path, options_ext)
             me = this,
             product_tree,
             modal = "",
+            modal_anexo = "",
             table_path = "",
             produtos = [],
             EData;
@@ -19,6 +20,7 @@ var requisition = function(geral_path, options_ext)
             geral_path.off().empty().append(data);
             geral_path.find("#new_requisition_div").hide();
             modal = geral_path.find("#ver_product_requisition_modal");
+            modal_anexo = geral_path.find("#ver_anexo_requisition_modal");
             if (typeof callback === "function")
                 callback();
         });
@@ -228,7 +230,7 @@ var requisition = function(geral_path, options_ext)
                 var anexo_random_number = $(this).data().anexo_random_number;
 
                 var produtos_encomenda = [];
-               
+
                 var count = 0;
                 $.each(new_requisition_zone.find(" #produtos_encomendados tr"), function()
                 {
@@ -239,7 +241,7 @@ var requisition = function(geral_path, options_ext)
                     }
                 });
 
-                 if (!count)
+                if (!count)
                     $.jGrowl('Escolha pelo menos 1 produto', {life: 4000});
                 else
                 {
@@ -381,6 +383,20 @@ var requisition = function(geral_path, options_ext)
                     modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category.capitalize() + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td></tr>");
                 });
                 modal.modal("show");
+            }, "json");
+        });
+        table_path.on("click", ".ver_requisition_anexo", function()
+        {
+            modal_anexo.modal("show");
+            var this_folder = $(this).val() + "_encomenda";
+            $.post('/AM/ajax/upload_file.php', {action: "get_anexos", folder: this_folder}, function(data)
+            {
+                var options = "";
+                $.each(data, function()
+                {
+                    options += "<tr><td>" + this + "<div class='view-button'><a class='btn btn-mini' href='/AM/ajax/files/" + this_folder + "/" + this + "' download='" + this + "'><i class='icon-download'></i>Download</a></div></td></tr>";
+                });
+                modal_anexo.find("#show_requisition_anexos_tbody").html(options);
             }, "json");
         });
         modal.on("click", "#print_requisition", function()

@@ -27,19 +27,10 @@ switch ($action) {
 
 
     case "move_files_to_new_folder":
-
-
         if (!file_exists($destiny . $new_id . "_encomenda")) {
-
-
             mkdir($destiny . $new_id . "_encomenda", 0777, true);
-
-
-
-
             $srcDir = $destiny;
             $destDir = $destiny . $new_id . "_encomenda";
-
             if (file_exists($destDir)) {
                 if (is_dir($destDir)) {
                     if (is_writable($destDir)) {
@@ -47,7 +38,12 @@ switch ($action) {
                             while (false !== ($file = readdir($handle))) {
                                 if (is_file($srcDir . '/' . $file)) {
                                     if (strstr($file, $old_id . "_-_")) {
-                                        rename($srcDir . '/' . $file, $destDir . '/' . $file);
+
+
+                                        $temp_file = str_replace($old_id . "_-_", "", $file);
+    
+
+                                        rename($srcDir . '/' . $file, $destDir . '/' . $temp_file);
                                     }
                                 }
                             }
@@ -81,7 +77,7 @@ switch ($action) {
 
     case "get_anexos":
         $js = array();
-        $dh = @opendir($destiny);
+        $dh = @opendir($destiny . $folder);
 
         while (false !== ( $file = readdir($dh) )) {
             if ($file != "dummy.gitignore" && $file != ".." && $file != ".")
