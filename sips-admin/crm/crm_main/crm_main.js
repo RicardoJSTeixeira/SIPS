@@ -64,7 +64,7 @@ var crm_main = function(crm_main_zone, file_path)
                     });
                 });
             });
-        });
+        },'html');
 
     };
     this.destroy = function()
@@ -371,7 +371,7 @@ var crm_main = function(crm_main_zone, file_path)
         if (crm_main_zone.find("#input_lead").val() !== "" || crm_main_zone.find("#input_phone").val() !== "") {
             crm_main_zone.find("#button_filtro").removeClass("icon-chevron-up").removeClass("icon-chevron-down").addClass("icon-chevron-down");
             crm_main_zone.find("#div_filtro_content").hide("blind");
-            crm_main_zone.find("#filter_form").validationEngine("hideAll");
+            $(this).validationEngine("hideAll");
 
             if (crm_main_zone.find("#radio_client").is(":checked"))
                 search("client");
@@ -379,11 +379,11 @@ var crm_main = function(crm_main_zone, file_path)
                 search("calls");
         }
         else {
-            if (crm_main_zone.find("#filter_form").validationEngine("validate"))
+            if ($(this).validationEngine("validate"))
             {
                 crm_main_zone.find("#button_filtro").removeClass("icon-chevron-up").removeClass("icon-chevron-down").addClass("icon-chevron-down");
                 crm_main_zone.find("#div_filtro_content").hide("blind");
-                crm_main_zone.find("#filter_form").validationEngine("hideAll");
+                $(this).validationEngine("hideAll");
                 if (crm_main_zone.find("#radio_client").is(":checked"))
                     search("client");
                 else
@@ -510,10 +510,7 @@ var crm_main = function(crm_main_zone, file_path)
         }
     });
 
-    crm_main_zone.on("click", "#close_calendario_div_button", function() {
-        crm_main_zone.find("#calendar_master_div").hide("blind");
-    });
-
+   
 //------------------------------------------------------------EXTRA FUNCTIONS
     function toggle_resultado(type) {
         if (type === "show") {
@@ -571,14 +568,7 @@ var crm_main = function(crm_main_zone, file_path)
         return temp_type;
     }
 
-    $(crm_main_zone).on("click", ".criar_marcacao", function() {
-
-        crm_main_zone.find("#calendar_master_div").show("blind");
-        crm_main_zone.find("#calendar_div")
-                .load("/AM/view/calendar.html")
-                .data().lead_id = $(this).data().lead_id;
-    });
-
+    
 //----------Fechar TAGS
     $(crm_main_zone).on("click", ".close_tag", function() {
         $(this).parent().remove();

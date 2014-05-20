@@ -678,7 +678,15 @@ var requests = function(basic_path, options_ext)
                     var tbody = basic_path.find("#tbody_ver_produto_movimentacao_stock").empty();
 
                     $.each(data1, function() {
-                        tbody.append("<tr><td><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_movimentacao + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td class='td_helper_quantidade'>" + this.quantidade + "</td><td class='td_helper_descricao'>" + this.descricao + "</td><td class='td_helper_serie'>" + this.serie + "</td><td class='td_helper_obs'>" + this.obs + "</td></tr>");
+                        tbody.append("\
+                            <tr>\n\
+                                <td><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_movimentacao + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td>\n\
+                                <td class='td_helper_destinario'>" + this.destinario + "</td>\n\
+                                <td class='td_helper_quantidade'>" + this.quantidade + "</td>\n\
+                                <td class='td_helper_descricao'>" + this.descricao + "</td>\n\
+                                <td class='td_helper_serie'>" + this.serie + "</td>\n\
+                                <td class='td_helper_obs'>" + this.obs + "</td>\n\
+                            </tr>");
                         anexo_number++;
                     });
                     basic_path.find(".stock_mov_exit_button").data("id_stock", id_movimentacao);
@@ -697,8 +705,8 @@ var requests = function(basic_path, options_ext)
                 data_ver_button.data().approved = 1;
                 $.each(this_button.parents("#ver_anexo_mov_stock_modal").find("#tbody_ver_produto_movimentacao_stock").find("tr"), function()
                 {
-                    anexo_array.push({quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked")});
-                    if (!~~~~$(this).find("td").first().find(":checkbox").is(":checked"))
+                    anexo_array.push({destinario: $(this).find(".td_helper_destinario").text(),quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked")});
+                    if (!~~$(this).find("td").first().find(":checkbox").is(":checked"))
                         data_ver_button.data().approved = 0;
                 });
 

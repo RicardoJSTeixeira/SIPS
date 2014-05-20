@@ -1,5 +1,3 @@
-
-
 $(function()
 {
     moment.lang("pt");
