@@ -488,4 +488,10 @@ class crm_edit_class {
         return 0;
     }
 
+    public function resubmit_contact($lead_id, $campaign_id, $list_id, $user = "", $alt = "NONE", $priority = "0") {
+        $query = "INSERT INTO `asterisk`.`vicidial_hopper` (`lead_id`, `campaign_id`, `status`, `user`, `list_id`, `gmt_offset_now`, `state`, `alt_dial`, `priority`, `source`, `vendor_lead_code`) VALUES ( :lead_id, :campaign_id, 'READY', :user, :list_id, '0.00', '', :alt, :priority, 'S', '')";
+        $stmt = $this->db->prepare($query);
+        return $stmt->execute(array(":lead_id" => $lead_id, ":campaign_id" => $campaign_id, ":list_id" => $list_id, ":user" => $user, ":alt" => $alt, ":priority" => $priority));
+    }
+
 }

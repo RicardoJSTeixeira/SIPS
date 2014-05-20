@@ -47,8 +47,6 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                                 $(this).hide();
                                             });
 
-
-
                                             $(crm_edit_zone).on("click", "#confirm_feedback", function()
                                             {
                                                 if (!crm_edit_zone.find("#confirm_feedback_div").is(":visible"))
@@ -77,21 +75,16 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                                 }
                                             });
 
-                                            $(crm_edit_zone).on("click", "#lead_edit_save_button", function()
-                                            {
+                                            $(crm_edit_zone).on("click", "#lead_edit_save_button", function() {
                                                 save_dynamic_fields();
                                             });
 
-                                            $(crm_edit_zone).on("change", "#feedback_list", function()
-                                            {
-                                                if (me.user_level > 5)
-                                                {
-                                                    if ($(this).find("option:selected").data("sale") == "Y")
-                                                    {
+                                            $(crm_edit_zone).on("change", "#feedback_list", function() {
+                                                if (me.user_level > 5) {
+                                                    if ($(this).find("option:selected").data("sale") === "Y") {
                                                         crm_edit_zone.find("#confirm_feedback").show();
                                                     }
-                                                    else
-                                                    {
+                                                    else {
                                                         crm_edit_zone.find("#confirm_feedback").hide();
                                                         crm_edit_zone.find("#confirm_feedback_div").hide();
                                                     }
@@ -99,26 +92,33 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                                                 }
                                             });
                                             //insere nova entrada
-                                            $(crm_edit_zone).on("click", "#confirm_feedback_button", function()
-                                            {
+                                            $(crm_edit_zone).on("click", "#confirm_feedback_button", function() {
                                                 if (crm_edit_zone.find("#textarea_comment").val().length)
                                                     $.post(file_path + "crm_edit/crm_edit_request.php", {action: "add_info_crm", lead_id: me.lead_id, option: crm_edit_zone.find('input[name="radio_confirm_group"]:checked').val(), campaign_id: me.campaign_id, agent: crm_edit_zone.find("#agente_selector option:selected").val(), comment: crm_edit_zone.find("#textarea_comment").val()},
-                                                    function(data)
-                                                    {
+                                                    function(data) {
                                                         get_validation();
                                                     }, "json");
                                             });
-                                            if (typeof callback === "function")
-                                            {
+                                            //insere nova entrada
+                                            $(crm_edit_zone).on("click", "#resubmit_contact", function() {
+                                                bootbox.confirm("Tem a certeza que pretende resubmeter este contacto?", function(result) {
+                                                    if (!result)
+                                                        return true;
+
+                                                    $.post(file_path + "crm_edit/crm_edit_request.php", {action: "resubmit_contact", lead_id: me.lead_id, campaign_id: me.campaign_id, list_id: me.list_id},
+                                                    function() {
+                                                        $.jGrowl("Contacto resubmetido com sucesso!");
+                                                    }, "json");
+                                                });
+                                            });
+                                            if (typeof callback === "function") {
                                                 callback();
                                             }
-
-
 
                                             $(".button_table_chamada_lettersize").click(function()
                                             {
 
-                                                if ($(this).val() == "plus")
+                                                if ($(this).val() === "plus")
                                                 {
                                                     me.table_chamadas_font_size++;
                                                     $("#table_chamadas").css("font-size", me.table_chamadas_font_size + "px");
@@ -147,11 +147,9 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     function get_in_out(callback)
     {
         $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_in_out"},
-        function(data)
-        {
+        function(data) {
             me.in_outbound = data;
-            if (typeof callback === "function")
-            {
+            if (typeof callback === "function") {
                 callback();
             }
         }, "json");
@@ -160,11 +158,9 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     function get_user_level(callback)
     {
         $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_user_level"},
-        function(data)
-        {
+        function(data) {
             me.user_level = data;
-            if (typeof callback === "function")
-            {
+            if (typeof callback === "function") {
                 callback();
             }
         }, "json");
@@ -177,14 +173,12 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         {
             crm_edit_zone.find("#agente_selector").empty();
             var temp = "";
-            $.each(data, function(index, value)
-            {
-                temp += "<option value=" + this.user + ">" + this.full_name + "</option>";
+            $.each(data, function() {
+                temp += "<option value='" + this.user + "'>" + this.full_name + "</option>";
             });
             crm_edit_zone.find("#agente_selector").append(temp).trigger("chosen:updated");
-            ;
-            if (typeof callback === "function")
-            {
+
+            if (typeof callback === "function") {
                 callback();
             }
         }, "json");
@@ -200,13 +194,11 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
             var data_last_fromNow = "";
             var data_last_format = "";
             var data_is_archive = false;
-            if (data.data_load)
-            {
+            if (data.data_load) {
                 data_load_fromNow = moment(data.data_load).fromNow();
                 data_load_format = moment(data.data_load).format("D-MMMM-YYYY HH:mm:ss");
             }
-            if (data.data_last)
-            {
+            if (data.data_last) {
                 data_last_fromNow = moment(data.data_last).fromNow();
                 data_last_format = moment(data.data_last).format("D-MMMM-YYYY HH:mm:ss");
                 data_is_archive = moment(data.data_last).isBefore(moment().subtract('month', 2));
@@ -225,82 +217,68 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                     "<td>" + data_load_fromNow + "</td>" +
                     "<td>" + data_last_format + "</td>" +
                     "<td>" + data_last_fromNow + "</td></tr>");
-            if (typeof callback === "function")
-            {
+            if (typeof callback === "function") {
                 callback();
             }
         }, "json");
     }
 
-    function get_dynamic_fields(callback)
-    {
+    function get_dynamic_fields(callback) {
         $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_dynamic_fields", lead_id: me.lead_id, campaign_id: me.campaign_id, list_id: me.list_id},
-        function(data)
-        {
+        function(data) {
             var dynamic_field = "";
             crm_edit_zone.find("#dynamic_field_div1").empty();
             crm_edit_zone.find("#dynamic_field_div2").empty();
 
             var controler = 1;
-            $.each(data, function()
-            {
+            $.each(data, function() {
 
-                if (this.type == "normal")
-                {
+                if (this.type === "normal") {
                     dynamic_field =
                             " <div class='control-group'>" +
                             "     <label class='control-label'>" + this.display_name + "</label>" +
                             "          <div class='controls' >";
-                    if (this.name == "COMMENTS")
-                    {
+                    if (this.name === "COMMENTS") {
                         dynamic_field += "<textarea readonly name='" + this.name + "' id='" + this.name + "'  >" + this.value + "</textarea>";
                     }
-                    else
-                    {
+                    else {
                         dynamic_field += "     <input readonly type=text name='" + this.name + "' id='" + this.name + "'  value='" + this.value + "'></div></div>";
                     }
                     if (controler) {
                         controler = 0;
                         crm_edit_zone.find("#dynamic_field_div1").append(dynamic_field);
                     }
-                    else
-                    {
+                    else {
                         controler = 1;
                         crm_edit_zone.find("#dynamic_field_div2").append(dynamic_field);
                     }
                 }
-                else
-
-                {
-                       dynamic_field =
+                else {
+                    dynamic_field =
                             " <div class='control-group'>" +
-                            "     <label class='control-label'>" + this.display_name + "</label>" +
-                            "          <div class='controls' >";
-                       dynamic_field += "     <input readonly type=text name='" + this.name + "' id='" + this.name + "'  value='" + this.value + "'></div></div>";
+                            "<label class='control-label'>" + this.display_name + "</label>" +
+                            "<div class='controls' >";
+                    dynamic_field += "     <input readonly type=text name='" + this.name + "' id='" + this.name + "'  value='" + this.value + "'></div></div>";
                     crm_edit_zone.find("#dynamic_field_div3").append(dynamic_field);
                     crm_edit_zone.find("#lead_edit__extra_button").show();
                 }
             });
 
 
-            if (typeof callback === "function")
-            {
+            if (typeof callback === "function") {
                 callback();
             }
         }, "json");
     }
 
-    function get_feedbacks(callback)
-    {
+    function get_feedbacks(callback) {
         $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_feedbacks", campaign_id: me.campaign_id, list_id: me.list_id},
-        function(data)
-        {
+        function(data) {
             var options = "";
             var exists = false;
 
-            $.each(data, function()
-            {
-                if (this.status == me.feedback)
+            $.each(data, function() {
+                if (this.status === me.feedback)
                 {
                     options += "<option data-sale=" + this.sale + " selected value=" + this.status + ">" + this.status_name + "</option>";
                     exists = true;
@@ -312,9 +290,8 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
             if (!exists)
                 options += "<option data-sale=" + me.feedback + " selected value=" + me.feedback + ">" + me.feedback + "</option>";
 
-
             crm_edit_zone.find("#feedback_list").append(options);
-            if (crm_edit_zone.find("#feedback_list option:selected").data("sale") == "Y" && me.user_level > 5)
+            if (crm_edit_zone.find("#feedback_list option:selected").data("sale") === "Y" && me.user_level > 5)
                 crm_edit_zone.find("#confirm_feedback").show();
             if (typeof callback === "function")
             {
@@ -326,7 +303,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     function get_calls(callback)
     {
 
-        var Table_chamadas = crm_edit_zone.find('#table_chamadas').dataTable({
+        crm_edit_zone.find('#table_chamadas').dataTable({
             "aaSorting": [[0, "desc"]],
             "bSortClasses": true,
             "bProcessing": true,
@@ -355,17 +332,14 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 
-
-
         if (typeof callback === "function")
         {
             callback();
         }
     }
 
-    function get_recordings(callback)
-    {
-        var Table_recording = crm_edit_zone.find('#table_recording').dataTable({
+    function get_recordings(callback) {
+        crm_edit_zone.find('#table_recording').dataTable({
             "aaSorting": [[0, "desc"], [2, "desc"]],
             "bSortClasses": false,
             "bProcessing": true,
@@ -386,8 +360,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     }
 
 //-------------------------------------Save changes
-    function save_dynamic_fields()
-    {
+    function save_dynamic_fields() {
         var fields = new Array();
         $.each(crm_edit_zone.find(".dynamic_field_divs input,textarea"), function()
         {
@@ -405,21 +378,18 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     }
 
 
-    function save_feedback()
-    {
+    function save_feedback() {
         $.post(file_path + "crm_edit/crm_edit_request.php", {action: "save_feedback", lead_id: me.lead_id, feedback: crm_edit_zone.find("#feedback_list option:selected").val()}, "json");
     }
 
-    function get_validation(callback)
-    {
+    function get_validation(callback) {
 
         $.post(file_path + "crm_edit/crm_edit_request.php", {action: "get_info_crm_confirm_feedback", lead_id: me.lead_id},
         function(data)
         {
             crm_edit_zone.find("#comment_log_tbody").empty();
             crm_edit_zone.find("#radio_confirm_no").prop("checked", true);
-            if (Object.size(data))
-            {
+            if (Object.size(data)) {
                 $.each(data, function() {
                     crm_edit_zone.find("#comment_log_tbody").append($("<tr>")
                             .append($("<td>").text(this.comment))
@@ -428,9 +398,9 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                             .append($("<td>").text(this.admin))
                             .append($("<td>").text(this.date))
                             );
-                    if (this.sale == "1")
+                    if (~~this.sale === 1)
                         crm_edit_zone.find("#radio_confirm_yes").prop("checked", true);
-                    else if (this.sale == "0")
+                    else if (~~this.sale === 0)
                         crm_edit_zone.find("#radio_confirm_no").prop("checked", true);
                     else
                         crm_edit_zone.find("#radio_confirm_return").prop("checked", true);
@@ -439,8 +409,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
                     crm_edit_zone.find("#textarea_comment").val("");
                 });
             }
-            else
-            {
+            else {
                 crm_edit_zone.find("#textarea_comment").val("");
                 crm_edit_zone.find("#div_comentarios").hide();
                 crm_edit_zone.find("#radio_confirm_no").prop("checked", true);
@@ -451,8 +420,7 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
     }
 
 //----------------------------------------Extra functions
-    Object.size = function(a)
-    {
+    Object.size = function(a) {
         var count = 0;
         var i;
         for (i in a) {
@@ -462,6 +430,4 @@ var crm_edit = function(crm_edit_zone, file_path, lead_id)
         }
         return count;
     };
-
-
-}
+};

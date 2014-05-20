@@ -139,6 +139,9 @@ switch ($action) {
     case "get_info_crm_confirm_feedback":
         echo json_encode($crmEdit->get_info_crm_confirm_feedback($lead_id));
         break;
+    case "resubmit_contact":
+        echo json_encode($crmEdit->resubmit_contact($lead_id,$campaign_id,$list_id));
+        break;
 }
 
 function curPageURL() {
