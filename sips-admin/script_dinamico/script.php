@@ -252,11 +252,11 @@ class script {
             // TAGS -> @          
             $temp = "";
             if (preg_match_all("/\@(\d{1,5})\@/", $row["texto"], $temp)) {
+
                 $temp = $temp[0];
                 foreach ($temp as $value) {
                     $value1 = str_replace("@", "", $value);
-
-                    $row["texto"] = preg_replace("/$value/", "<span data-id=" . $value1 . " class='" . $value1 . "tag tagReplace'></span>", $row["texto"]);
+                    $row["texto"] = preg_replace("/\@$value1\@/", "<span data-id=" . $value1 . " class='" . $value1 . "tag tagReplace'></span>", $row["texto"]);
                 }
             }
             if ($row["type"] == "legend" || $row["type"] == "textfield") {
@@ -265,7 +265,7 @@ class script {
                     $temp = $temp[0];
                     foreach ($temp as $value) {
                         $value1 = str_replace("@", "", $value);
-                        $values_text = preg_replace("/\@(\d{1,5})\@/", "<span data-id=" . $value1 . " class='" . $value1 . "tag tagReplace'></span>", $values_text);
+                        $values_text = preg_replace("/\@$value1\@/", "<span data-id=" . $value1 . " class='" . $value1 . "tag tagReplace'></span>", $values_text);
                     }
                     $row["values_text"] = json_encode($values_text);
                 }
@@ -381,26 +381,24 @@ class script {
 
 
     public function edit_script($name, $id_script, $campaign, $linha_inbound, $bd) {
-        
+
         $query = "update script_dinamico_master set name=:name where id=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script, ":name" => $name));
-    
+
         $query = "delete from script_assoc where id_script=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
-  
+
         if (isset($campaign)) {
-     
+
             foreach ($campaign as $value) {
-                  
+
                 $query = "INSERT INTO `script_assoc` (`id_script`, `id_camp_linha`, `tipo`) values(:id_script,:value,'campaign')";
                 $stmt = $this->db->prepare($query);
-          
+
                 $stmt->execute(array(":id_script" => $id_script, ":value" => $value));
-                     
             }
-            
         }
         if (isset($linha_inbound)) {
             foreach ($linha_inbound as $value) {

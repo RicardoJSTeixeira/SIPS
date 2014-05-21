@@ -452,7 +452,7 @@ var products = function(geral_path, options_ext)
                 {
                     level = level + out_level - 1;
                 }
-                console.log(level);
+              
                 option = "<option  id=" + this.id + "  value='" + this.id + "'>" + this.name + "</option>";
                 if (this.parent_level >= 4)
                     option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Max.Lvl. " + this.name + "</option>";
