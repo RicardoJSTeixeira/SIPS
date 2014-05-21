@@ -23,10 +23,10 @@ function confirmacao($lead_id, $dispoAtt, $link) {
         $qdelete = "update crm_confirm_feedback_last set sale = '1' where lead_id='" . mysql_real_escape_string($lead_id) . "';";
         mysql_query($qdelete, $link) or die(mysql_error());
     }
-    if (!$dispoAtt["completed"]) {
-        return false;
-    } else {
+    if ($dispoAtt["completed"] == 'true') {
         removeConfirm($lead_id, $link);
+    } else {
+        return false;
     }
 }
 

@@ -381,30 +381,37 @@ class script {
 
 
     public function edit_script($name, $id_script, $campaign, $linha_inbound, $bd) {
+        
         $query = "update script_dinamico_master set name=:name where id=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script, ":name" => $name));
+    
         $query = "delete from script_assoc where id_script=:id_script";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
-
+  
         if (isset($campaign)) {
+     
             foreach ($campaign as $value) {
-                $query = "INSERT INTO `script_assoc` values(:id_script,:value,'campaign')";
+                  
+                $query = "INSERT INTO `script_assoc` (`id_script`, `id_camp_linha`, `tipo`) values(:id_script,:value,'campaign')";
                 $stmt = $this->db->prepare($query);
+          
                 $stmt->execute(array(":id_script" => $id_script, ":value" => $value));
+                     
             }
+            
         }
         if (isset($linha_inbound)) {
             foreach ($linha_inbound as $value) {
-                $query = "INSERT INTO `script_assoc` values(:id_script,:value,'linha_inbound')";
+                $query = "INSERT INTO `script_assoc` ( `id_script`, `id_camp_linha`, `tipo`) values(:id_script,:value,'linha_inbound')";
                 $stmt = $this->db->prepare($query);
                 $stmt->execute(array(":id_script" => $id_script, ":value" => $value));
             }
         }
         if (isset($bd)) {
             foreach ($bd as $value) {
-                $query = "INSERT INTO `script_assoc` values(:id_script,:value,'bd')";
+                $query = "INSERT INTO `script_assoc` ( `id_script`, `id_camp_linha`, `tipo`) values(:id_script,:value,'bd')";
                 $stmt = $this->db->prepare($query);
                 $stmt->execute(array(":id_script" => $id_script, ":value" => $value));
             }

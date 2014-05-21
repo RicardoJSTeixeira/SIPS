@@ -454,7 +454,10 @@ function update_pages(callback)
             $("#select_default_value").empty();
             $("#tags_select .tag_group").remove();
             var option = "";
-            $("#select_default_value").append("<option value='0' data-campaign_id='0'>Sem Valor por Defeito</option>");
+            $("#select_default_value").append("<option value='0' data-campaign_id='0'>Sem Valor por Defeito</option>")
+                    .append("<option value='lead_id' data-campaign_id='0'>ID do Cliente</option>")
+                    .append("<option value='nome_operador' data-campaign_id='0'>Nome do Operador</option>")
+                    ;
             $.each(data4, function() {
                 if ($("#tags_select optgroup[label='" + this.campaign_name + "']").length)
                 {
@@ -697,11 +700,14 @@ function populate_element(tipo, element)
             $("#placeholder_edit").val($("#" + id + " .input_texto").attr("placeholder"));
             $("#max_length_edit").val($("#" + id + " .input_texto").attr("maxLength"));
             $(".validation input:radio[name='regex_texto'][value=" + element.data("regex") + "]").prop("checked", true);
-
+ 
             if ($("#select_default_value optgroup[data-campaign_id='" + element.data("default_value").campaign_id + "']").length)
                 $("#select_default_value optgroup[data-campaign_id='" + element.data("default_value").campaign_id + "'] option[value='" + element.data("default_value").name + "']").prop("selected", true);
             else
-                $("#select_default_value  option[value='0']").prop("selected", true);
+            {
+                $("#select_default_value  option[value='"+element.data("default_value").name+"']").prop("selected", true);
+            }
+                
             if (element.data("php_script") != "0")
             {
 
@@ -1830,7 +1836,7 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
                         this.param1 = "Click"; //por questões visuais na tabela
 
                     $("#rule_manager_list").append($("<tr>")
-                            .append($("<td>").text(this.param1=="value_input"?this.tag_trigger2:this.param1))
+                            .append($("<td>").text(this.param1 == "value_input" ? this.tag_trigger2 : this.param1))
                             .append($("<td>").text(this.tipo))
                             .append($("<td>").text((this.tipo == "ir para página") ? $("#go_to_select option[value=" + this.tag_target + "]").text() : this.tag_target))
                             .append($("<td>").append($("<button>").addClass("icon-remove rule_delete_icon btn btn-inverse span").data("id", this.id).data("tag_trigger", this.tag_trigger)))
