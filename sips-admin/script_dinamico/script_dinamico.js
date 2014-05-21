@@ -689,6 +689,7 @@ function populate_element(tipo, element)
         $("#item_hidden").attr('checked', true);
     else
         $("#item_hidden").attr('checked', false);
+    $(".required_class").show();
     $("#label_tag").text("@" + element.data("tag") + "@");
     var id = element.data("id");
     switch (tipo)
@@ -700,14 +701,14 @@ function populate_element(tipo, element)
             $("#placeholder_edit").val($("#" + id + " .input_texto").attr("placeholder"));
             $("#max_length_edit").val($("#" + id + " .input_texto").attr("maxLength"));
             $(".validation input:radio[name='regex_texto'][value=" + element.data("regex") + "]").prop("checked", true);
- 
+
             if ($("#select_default_value optgroup[data-campaign_id='" + element.data("default_value").campaign_id + "']").length)
                 $("#select_default_value optgroup[data-campaign_id='" + element.data("default_value").campaign_id + "'] option[value='" + element.data("default_value").name + "']").prop("selected", true);
             else
             {
-                $("#select_default_value  option[value='"+element.data("default_value").name+"']").prop("selected", true);
+                $("#select_default_value  option[value='" + element.data("default_value").name + "']").prop("selected", true);
             }
-                
+
             if (element.data("php_script") != "0")
             {
 
@@ -883,7 +884,7 @@ function populate_element(tipo, element)
             break;
         case "button":
             $("#button_edit").val($("#" + id + " .botao").text());
-
+            $("#button_validate_onclick").prop("checked", element.data("validate_onclick"));
             if (element.data("url").length)
             {
                 $("#div_url_input").show();
@@ -1266,8 +1267,8 @@ function edit_element(opcao, element, data)
                             .data("url_elements", "")
                             .data("type_post", "");
                 }
-
-                item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "button", element.index(), "h", $("#button_edit").val(), 0, 0, element.data("url"), element.data("url_elements"), 0, $("#item_hidden").is(':checked'), element.data("type_post"));
+                element.data("validate_onclick", $("#button_validate_onclick").is(":checked"));
+                item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "button", element.index(), "h", $("#button_edit").val(), 0, 0, element.data("url"), element.data("url_elements"), $("#button_validate_onclick").is(":checked"), $("#item_hidden").is(':checked'), element.data("type_post"));
             }
             break;
     }

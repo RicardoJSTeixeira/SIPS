@@ -619,7 +619,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 switch ($("[name=" + ~~this + "]").parents(".item").data("info").type)
                                 {
                                     case "radio":
-                                        this_elements.push({name: ~~this, value: $("[name=" + ~~this + "]:checked").val()});
+                                        this_elements.push({name: ~~this, value: $("[name=" + ~~this + "]:checked").val(), visible: $("[name=" + ~~this + "]").is(":visible")});
                                         break;
                                     case "checkbox":
                                         var temp = [];
@@ -627,16 +627,17 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                         {
                                             temp.push($(this).val());
                                         });
-                                        this_elements.push({name: ~~this, value: temp});
+                                        this_elements.push({name: ~~this, value: temp, visible: $("[name=" + ~~this + "]").is(":visible")});
                                         break;
                                     case "select":
-                                        this_elements.push({name: ~~this, value: $("[name=" + ~~this + "]:selected").val()});
+                                        this_elements.push({name: ~~this, value: $("[name=" + ~~this + "]:selected").val(), visible: $("[name=" + ~~this + "]").is(":visible")});
                                         break;
                                     default:
-                                        this_elements.push({name: ~~this, value: $("[name=" + ~~this + "]").val()});
+                                        this_elements.push({name: ~~this, value: $("[name=" + ~~this + "]").val(), visible: $("[name=" + ~~this + "]").is(":visible")});
                                         break;
                                 }
                             });
+
                             $.ajax({
                                 type: this_info.param1,
                                 url: file_path + "proxy.php",
@@ -969,11 +970,19 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                         }
                         break;
                     case "button":
+
                         $(script_zone).on("click", "#script_div #" + this.tag_trigger, function()//atribuir os ons a cada value
                         {
-                            rules_work(data[index]);
-                        }
-                        );
+                            if ($(this).data().info.required)
+                            {
+                                me.validate_manual(function()
+                                {
+                                    rules_work(data[index]);
+                                }, null);
+                            }
+                            else
+                                rules_work(data[index]);
+                        });
                         break;
                 }
             });
