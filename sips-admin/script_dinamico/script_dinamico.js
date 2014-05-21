@@ -665,6 +665,7 @@ function update_info()
                             .data("hidden", this.hidden)
                             .data("url", this.values_text)
                             .data("url_elements", this.default_value)
+                            .data("validate_onclick", this.required)
                             .data("type_post", this.param1);
                     insert_element("button", item, this);
                     break;
