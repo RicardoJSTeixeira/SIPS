@@ -81,16 +81,16 @@ function query($sQuery, $hDb_conn, $sError, $bDebug)
     
    // $lead_id;
    // $user;
-    $data_visita = $results[159];
+    $data_visita = str_replace("'", "", $results[159]);
     $hora_visita = '09h-18h';
-    $nome = $results[153];
-    $morada = $results[155];
-    $cp = $results[160];
-    $localidade = $results[156];
-    $concelho = $results[157];
-    $telefone = $results[154];
-    $entrega_docs = $results[161];
-    $observacoes = $results[165];
+    $nome = str_replace("'", "", $results[153]);
+    $morada = str_replace("'", "", $results[155]);
+    $cp = str_replace("'", "", $results[160]);
+    $localidade = str_replace("'", "", $results[156]);
+    $concelho = str_replace("'", "", $results[157]);
+    $telefone = str_replace("'", "", $results[154]);
+    $entrega_docs = str_replace("'", "", $results[161]);
+    $observacoes = str_replace("'", "", $results[165]);
                 
    // $query_final = "exec clientes.InserirVisitaMensageiros $lead_id, '$user', '$data_visita', '$hora_visita', '$nome', '$morada', '$cp', '$localidade', '$concelho', '$telefone', '$entrega_docs', '$observacoes'";
    // echo $query_final;
@@ -130,14 +130,14 @@ function connectaPostCalendar() {
   //  print_r($results);
 
     $tipo_vencimento = $results[20]; // cp co ->script 20
-    $nome_cliente = utf8_decode($results[73]); // first_name 73
+    $nome_cliente = utf8_decode(str_replace("'", "", $results[73])); // first_name 73
     $idade = $results[74]; // ->script 74
-    $morada = utf8_decode($results[75]); // script 75
-    $localidade = utf8_decode($results[76]); // city 76
+    $morada = utf8_decode(str_replace("'", "", $results[75])); // script 75
+    $localidade = utf8_decode(str_replace("'", "", $results[76])); // city 76
     $cod_postal = $results[77]; // 1234-567 script 77
     $telefone = $results[78]; // phone_number 78
     $telefone_alternativo = $results[79]; // alt_phone or address3 79
-    $observações = utf8_decode($results[80]); // comments 80
+    $observações = utf8_decode(str_replace("'", "", $results[80])); // comments 80
     $tipo_cartao = $results[81]; // ->script 81
     $num_cartoes = $results[82]; // ->script 82
     $nif = $results[87]; // ->script  87
@@ -151,7 +151,7 @@ function connectaPostCalendar() {
     $query = "SELECT a.display_text FROM sips_sd_schedulers a inner join sips_sd_resources b on a.id_scheduler = b.id_scheduler where id_resource = '$row[1]'";
     $query = mysql_query($query, $link) or die(mysql_error());
     $row = mysql_fetch_row($query);
-    $concelho = $row[0]; // provincia -> ref
+    $concelho = str_replace("'", "", $row[0]); // provincia -> ref
     
     $query = "SELECT DISTRITO FROM Distritos_BarclayCard where CONCELHO like '$concelho'";
     $query = mysql_query($query, $link) or die(mysql_error());
