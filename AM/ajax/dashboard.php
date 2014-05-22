@@ -42,7 +42,7 @@ switch ($action) {
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             $row[11] = $row[11] . "<div class='view-button'>"
                     . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[0]' title='Ver Cliente'><i class='icon-edit'></i></button>"
-                    . "<button class='btn btn-mini icon-alone criar_encomenda' data-lead_id='$row[0]' title='Nova Encomenda'><i class='icon-shopping-cart'></i></button>"
+                    . "<button class='btn btn-mini icon-alone criar_encomenda".(($row[10]!=='Fechada')?" hide":"")."' data-lead_id='$row[0]' title='Nova Encomenda'><i class='icon-shopping-cart'></i></button>"
                     . "<button class='btn btn-mini icon-alone criar_marcacao' data-lead_id='$row[0]' title='Marcar Consulta'><i class='icon-calendar'></i></button>"
                     . "<button class='btn btn-mini icon-alone recomendacoes' data-lead_id='$row[0]' title='Recomendados'><i class='icon-plus-sign'></i></button>"
                     . "</div>";

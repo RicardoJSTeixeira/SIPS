@@ -62,9 +62,10 @@ var date_limit = function(selector, limit)
 
 
 
-
+ 
         selector.append(html);
         selector.find(".datelimit_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
+    
         if (limit != "0")
         {
             if (me.limit.type == "dynamic")
@@ -83,8 +84,8 @@ var date_limit = function(selector, limit)
                 table2.find("#hour_f" + me.geral_name).val(data_f[3] == "#" ? "" : data_f[3]);
                 selector.find("#radio_date_type_filter2" + me.geral_name).prop("checked", true);
                 selector.find("#date_dynamic" + me.geral_name).show();
-            }
-            else
+            }  
+            else if (me.limit.type == "fixed")
             {
                 selector.find("#fixed_date1" + me.geral_name).val(limit.data_inicial.length ? limit.data_inicial : "");
                 selector.find("#fixed_date2" + me.geral_name).val(limit.data_final.length ? limit.data_final : "");

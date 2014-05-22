@@ -113,8 +113,9 @@ $(function() {
                     trigger: 'click'
                 })
                 .end()
-                .on("submit", "#no_consult_confirm", function()
+                .on("submit", "#no_consult_confirm", function(e)
                 {
+                    e.preventDefault();
                     var
                             that = $(this),
                             clientData = that.closest('.view-button').find('.initSC').data(),

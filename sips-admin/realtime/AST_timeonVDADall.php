@@ -2595,7 +2595,7 @@ $talking_to_print = mysql_num_rows($rslt);
 			if (!ereg("N",$agent_pause_codes_active))
 				{
 				$twentyfour_hours_ago = date("Y-m-d H:i:s", mktime(date("H")-24,date("i"),date("s"),date("m"),date("d"),date("Y")));
-				$stmtC="select pause_code_name from vicidial_agent_log a INNER JOIN vicidial_pause_codes b ON a.sub_status=b.pause_code where agent_log_id >= '$Aagent_log_id[$i]' and user='$Luser' limit 1;";
+				$stmtC="select pause_code_name from vicidial_agent_log a LEFT JOIN vicidial_pause_codes b ON a.sub_status=b.pause_code where agent_log_id >= '$Aagent_log_id[$i]' and user='$Luser' limit 1;";
 				$rsltC=mysql_query($stmtC,$link);
 				$rowC=mysql_fetch_row($rsltC);
 				$pausecode = $rowC[0];
