@@ -118,7 +118,7 @@ $(function () {
                     item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "legend", $(this).data().uiSortable.currentItem.index(), "h", "legend", 0, 0, $(".rightDiv .label_legend")[0].innerHTML, 0, 0, 0, 0);
                 }
                 if ($(this).data().uiSortable.currentItem.hasClass("datepicker_class")) {
-                    item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_datepicker")[0].innerHTML, "2", 0, [], 0, 0, 0, 0);
+                    item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_datepicker")[0].innerHTML, "2", 0, 0, 0, 0, 0, 0);
                 }
                 if ($(this).data().uiSortable.currentItem.hasClass("scheduler_class")) {
                     item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_scheduler")[0].innerHTML, 0, 5, [], 0, 0, 0, 1);
@@ -264,6 +264,7 @@ $(document).on("click", ".element", function (e) {
         populate_element("pagination", $(this));
         break;
     case "datepicker":
+ 
         var date_limit_element = new date_limit($("#date_limit_placeholder"), $(this).data("limit"));
         date_limit_element.init();
         $("#datepicker_layout_editor").data("data_limit_element", date_limit_element);
@@ -1817,7 +1818,7 @@ $("#rule_trigger_select").change(function () {
         break;
     case "date":
         $("#date_limit_rule_placeholder").show();
-        var date_limit_element2 = new date_limit($("#date_limit_rule_placeholder"), 0);
+        var date_limit_element2 = new date_limit($("#date_limit_rule_placeholder"),0);
         date_limit_element2.init();
         $("#add_rule_button").data("date_limit_element", date_limit_element2);
         break;
