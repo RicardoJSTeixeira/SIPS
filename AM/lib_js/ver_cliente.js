@@ -17,15 +17,16 @@ var cliente_info = function(lead_id, options_ext)
             id: lead_id},
         function(data1)
         {
+        
             $.each(data1, function()
             {
                 if (this.value)
                 {
                     temp = ($("<div>", {class: "formRow"})
-                            .append($("<span>").text(this.original_texto + ":"))
+                            .append($("<span>").text(this.display_name + ":"))
                             .append($("<div>", {class: "right"})
                                     .append($("<span>").text(this.value))));
-                    switch (this.name)
+                    switch (this.name.toLowerCase())
                     {
                         case "first_name":
                         case "phone_number":
