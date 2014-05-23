@@ -309,6 +309,7 @@ if ($_POST['nc_flag'] == "nc_post") {
                                         <option value="C/PNE"> Peniche </option>
                                         <option value="C/PNL"> Pinhel </option>
                                         <option value="C/PTS"> Ponte de Sor </option>
+                                        <option value="C/RMR"> Rio Maior </option>
                                         <option value="C/QLZ"> Queluz </option>
                                         <option value="C/SMC"> Samora Correia </option>
                                         <option value="C/SCD"> Santa Comba Dão </option>
