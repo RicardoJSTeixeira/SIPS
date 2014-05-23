@@ -142,6 +142,7 @@ switch ($action) {
         } else {
             $clean_text = $values_text;
         }
+        
         echo json_encode($script->edit_item($id_script, $id_page, $type, $ordem, $dispo, $texto, $placeholder, $max_length, $clean_text, $default_value, ($required == "true") ? "1" : "0", ($hidden == "true") ? "1" : "0", $param1, $id));
         break;
 
