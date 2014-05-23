@@ -515,31 +515,22 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     if (info.max_length == 1)
                         options.daysOfWeekDisabled = [0, 6];
 
-
                     if (info.default_value.length)
                     {
                         script_zone.on("change", "#script_div #" + info.tag, function()
                         {
-
                             var this_info = $(this).closest(".item").data("info");
                             var this_val = $(this).find(".form_datetime ").val();
                             var this_format = $(this).find(".form_datetime ").data().format;
                             var tempo = "";
                             $.each(this_info.default_value, function()
                             {
-
-
                                 tempo = moment(this_val, this_format);
-
                                 $("#" + this).find(".form_datetime ").val(tempo.format($("#" + this).find(".form_datetime ").data().format));
-
                             });
-
                         })
                     }
                     ;
-
-
                     script_zone.find("input[name='" + info.tag + "']").datetimepicker(options).data("format", options.format_rules).keypress(function(e) {
                         e.preventDefault();
                     }).bind("cut copy paste", function(e) {

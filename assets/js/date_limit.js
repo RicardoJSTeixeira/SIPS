@@ -62,10 +62,11 @@ var date_limit = function(selector, limit)
 
 
 
-
+  
         selector.append(html);
         selector.find(".datelimit_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
-        if (limit != "0")
+
+        if (~~limit !== 0)
         {
             if (me.limit.type == "dynamic")
             {

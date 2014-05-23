@@ -198,6 +198,7 @@ class script {
     }
 
     public function get_data_render($id_script, $lead_id, $operador) {
+       
         $js = array();
         $client_info = array();
         if (isset($lead_id)) {
@@ -272,6 +273,7 @@ class script {
             }
             $js[] = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "default_value" => json_decode($row["default_value"]), "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
         }
+    
         return $js;
     }
 
