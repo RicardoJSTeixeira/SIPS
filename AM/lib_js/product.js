@@ -77,7 +77,7 @@ var products = function(geral_path, options_ext)
                 {
                     color.push({color: $(this).find(".color_picker_select").val(), name: $(this).find(".color_name").val()});
                 });
-    
+
                 if (edit_product_modal.find("#edit_product_form").validationEngine("validate"))
                 {
                     if (types.length)
@@ -108,6 +108,8 @@ var products = function(geral_path, options_ext)
             geral_path.find("#remove_product_modal").modal("show");
             geral_path.find("#remove_product_button").data("button", $(this));
             geral_path.find("#remove_product_button").data("product_id", $(this).data("product_id"));
+
+
         });
         geral_path.off("click", "#remove_product_button");
         geral_path.on("click", "#remove_product_button", function()
@@ -116,6 +118,8 @@ var products = function(geral_path, options_ext)
             var product_id = $(this).data("product_id");
             $.post('/AM/ajax/products.php', {action: "apagar_produto_by_id", "id": product_id}, function(data) {
                 $.jGrowl("Produto apagado com sucesso", {life: 3500});
+                if ($("#new_product_parent").length)//actualizar a lista de parents do novo produto
+                    populate_parent($("#new_product_parent"), null, null, null);
                 datatable_path.dataTable().fnDeleteRow(this_button.closest('tr')[0]);
                 geral_path.find("#remove_product_modal").modal("hide");
             }, "json");
@@ -348,7 +352,7 @@ var products = function(geral_path, options_ext)
                 modal.find("#edit_product_mrm").val(data.max_req_m);
                 modal.find("#edit_product_mrw").val(data.max_req_s);
                 modal.find("#edit_product_child_datatable").find("tbody").empty();
-      
+
                 if (data.children.length)
                 {
                     modal.find("#edit_product_children_div").show();
@@ -421,7 +425,7 @@ var products = function(geral_path, options_ext)
 
     function populate_parent(select, level_out, children, callback)
     {
-        
+
         var out_level = level_out;
         var level = 0;
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
@@ -452,7 +456,7 @@ var products = function(geral_path, options_ext)
                 {
                     level = level + out_level - 1;
                 }
-              
+
                 option = "<option  id=" + this.id + "  value='" + this.id + "'>" + this.name + "</option>";
                 if (this.parent_level >= 4)
                     option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Max.Lvl. " + this.name + "</option>";

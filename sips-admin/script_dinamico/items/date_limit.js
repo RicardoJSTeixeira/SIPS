@@ -15,13 +15,13 @@ var date_limit = function(selector, limit)
 <div class="formRow" > \n\
 <strong>Data Inicial</strong> \n\
 <div class="formRight "> \n\
-<input size="16" type="text" class="datelimit_datetime " name="fixed_date1' + me.geral_name + '" id="fixed_date1' + me.geral_name + '"> \n\
+<input size="16" type="text" class="datelimit_datetime validate[required] " name="fixed_date1' + me.geral_name + '" id="fixed_date1' + me.geral_name + '"> \n\
 </div>\n\
  </div>\n\
  <div class="formRow"> \n\
 <strong>Data Final</strong>\n\
  <div class="formRight "> \n\
-<input size="16" type="text" class="datelimit_datetime " name="fixed_date2' + me.geral_name + '" id="fixed_date2' + me.geral_name + '"> \n\
+<input size="16" type="text" class="datelimit_datetime validate[required]" name="fixed_date2' + me.geral_name + '" id="fixed_date2' + me.geral_name + '"> \n\
 </div> \n\
 </div>\n\
  </div>\n\
@@ -32,10 +32,10 @@ var date_limit = function(selector, limit)
  <table id="table_date1' + me.geral_name + '">\n\
  <thead><th>Anos</th><th>Meses</th><th>Dias</th><th>Horas</th></thead>\n\
  <tbody> <tr>\n\
-<td> <input id="year_i' + me.geral_name + '" name="year_i" class="input-mini spinner " > </td>\n\
- <td><input id="month_i' + me.geral_name + '" name="month_i" class="input-mini spinner " > </td>\n\
- <td><input id="day_i' + me.geral_name + '" name="day_i" class="input-mini spinner " > </td> \n\
-<td><input id="hour_i' + me.geral_name + '" name="hour_i" class="input-mini spinner " > </td> </tr>\n\
+<td> <input id="year_i' + me.geral_name + '" name="year_i" class="input-mini spinner validate[groupRequired[fixed_date]]" > </td>\n\
+ <td><input id="month_i' + me.geral_name + '" name="month_i" class="input-mini spinner validate[groupRequired[fixed_date]]" > </td>\n\
+ <td><input id="day_i' + me.geral_name + '" name="day_i" class="input-mini spinner validate[groupRequired[fixed_date]]" > </td> \n\
+<td><input id="hour_i' + me.geral_name + '" name="hour_i" class="input-mini spinner validate[groupRequired[fixed_date]]" > </td> </tr>\n\
  </tbody> \n\
 </table> \n\
 </div> \n\
@@ -46,10 +46,10 @@ var date_limit = function(selector, limit)
 <table id="table_date2' + me.geral_name + '">\n\
  <thead><th>Anos</th><th>Meses</th><th>Dias</th><th>Horas</th></thead>\n\
  <tbody> <tr>\n\
-<td> <input id="year_f' + me.geral_name + '" name="year_f" class="input-mini spinner " > </td> \n\
-<td><input id="month_f' + me.geral_name + '" name="month_f" class="input-mini spinner " > </td> \n\
-<td><input id="day_f' + me.geral_name + '" name="day_f" class="input-mini spinner " > </td>\n\
- <td><input id="hour_f' + me.geral_name + '" name="hour_i" class="input-mini spinner " > </td> </tr> \n\
+<td> <input id="year_f' + me.geral_name + '" name="year_f" class="input-mini spinner validate[groupRequired[fixed_date]]" > </td> \n\
+<td><input id="month_f' + me.geral_name + '" name="month_f" class="input-mini spinner validate[groupRequired[fixed_date]]" > </td> \n\
+<td><input id="day_f' + me.geral_name + '" name="day_f" class="input-mini spinner validate[groupRequired[fixed_date]]" > </td>\n\
+ <td><input id="hour_f' + me.geral_name + '" name="hour_i" class="input-mini spinner validate[groupRequired[fixed_date]]" > </td> </tr> \n\
 </tbody> \n\
 </table> \n\
 </div> </div> </div> ';
@@ -65,8 +65,9 @@ var date_limit = function(selector, limit)
 
         selector.append(html);
         selector.find(".datelimit_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
-        if (limit != "0")
+        if (Object.keys(limit).length)
         {
+
             if (me.limit.type == "dynamic")
             {
                 var data_i = me.limit.data_inicial.split("|");
@@ -84,7 +85,7 @@ var date_limit = function(selector, limit)
                 selector.find("#radio_date_type_filter2" + me.geral_name).prop("checked", true);
                 selector.find("#date_dynamic" + me.geral_name).show();
             }
-            else
+            else if (me.limit.type == "fixed")
             {
                 selector.find("#fixed_date1" + me.geral_name).val(limit.data_inicial.length ? limit.data_inicial : "");
                 selector.find("#fixed_date2" + me.geral_name).val(limit.data_final.length ? limit.data_final : "");
@@ -111,7 +112,7 @@ var date_limit = function(selector, limit)
         selector.find("#date_dynamic input" + me.geral_name).on("blur", function() {
             $(this).val($(this).val().replace(/[^0-9]*$/g, ""));
         });
-              if (typeof callback === "function")
+        if (typeof callback === "function")
         {
             callback();
         }
@@ -141,7 +142,7 @@ var date_limit = function(selector, limit)
     };
     this.has_limit = function()
     {
-        return me.limit !== "0";
+        return Object.keys(limit).length;
     };
     this.destroy = function()
     {
