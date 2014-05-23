@@ -431,7 +431,8 @@ class script {
         $values_text = (!isset($values_text)) ? array() : $values_text;
         $query = "UPDATE script_dinamico SET id_script=?,id_page=?,type=?,ordem=?,dispo=?,texto=?,placeholder=?,max_length=?,values_text=?,default_value=?,required=?,hidden=?,param1=? WHERE id=?";
         $stmt = $this->db->prepare($query);
-
+        if (!$default_value)
+            $default_value = array();
         return $stmt->execute(array($id_script, $id_page, $type, $ordem, $dispo, $texto, json_encode($placeholder), $max_length, json_encode($values_text), json_encode($default_value), $required, $hidden, $param1, $id));
     }
 
@@ -478,7 +479,7 @@ class script {
         $query = "INSERT INTO script_dinamico (`id`, `tag`, `id_script`, `id_page`, `type`, `ordem`, `dispo`, `texto`, `placeholder`, `max_length`, `values_text`, `default_value`, `required`, `hidden`, `param1`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $stmt = $this->db->prepare($query);
 
- 
+
         return $stmt->execute(array("NULL", $tag, $id_script, $id_page, $type, $ordem, $dispo, $texto, json_encode($placeholder), $max_length, json_encode($values_text), json_encode($default_value), $required, $hidden, $param1));
     }
 

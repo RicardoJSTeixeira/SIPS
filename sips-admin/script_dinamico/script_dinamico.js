@@ -118,7 +118,7 @@ $(function() {
                     item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "legend", $(this).data().uiSortable.currentItem.index(), "h", "legend", 0, 0, $(".rightDiv .label_legend")[0].innerHTML, 0, 0, 0, 0);
                 }
                 if ($(this).data().uiSortable.currentItem.hasClass("datepicker_class")) {
-                    item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_datepicker")[0].innerHTML, "2", 0, [], 0, 0, 0, 0);
+                    item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_datepicker")[0].innerHTML, "2", 0, [], [], 0, 0, 0);
                 }
                 if ($(this).data().uiSortable.currentItem.hasClass("scheduler_class")) {
                     item_database("add_item", 0, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "scheduler", $(this).data().uiSortable.currentItem.index(), "h", $(".rightDiv .label_scheduler")[0].innerHTML, 0, 5, [], 0, 0, 0, 1);
@@ -588,7 +588,9 @@ function update_info() {
                             .data("limit", this.values_text)
                             .data("hidden", this.hidden)
                             .data("only_week_days", this.max_length)
+                            .data("alterar_outro_elemento", this.default_value)
                             .data("data_format", this.placeholder);
+
                     insert_element("datepicker", item, this);
                     break;
                 case "scheduler":
@@ -653,6 +655,7 @@ function update_info() {
 
 
 function populate_element(tipo, element) {
+
     rules_manager(tipo, element);
     $("#tabs").tabs("enable");
     $("#select_default_value").val("");
@@ -798,6 +801,19 @@ function populate_element(tipo, element) {
                 $("#only_week_days").prop("checked", true);
             else
                 $("#only_week_days").prop("checked", false);
+             if (Object.keys(element.data("alterar_outro_elemento")).length)
+            {
+                $("#alterar_outro_elemento").prop("checked", true);
+                $("#alterar_outro_elemento_div").show();
+                $("#alterar_outro_elemento_select").val(element.data("alterar_outro_elemento")).trigger("chosen:updated");
+            }
+            else
+            {
+                $("#alterar_outro_elemento").prop("checked", false);
+                $("#alterar_outro_elemento_div").hide();
+                $("#alterar_outro_elemento_select").val("").trigger("chosen:updated");
+            }
+
             break;
         case "scheduler":
             $("#tabs").tabs("disable", 1);
@@ -1115,16 +1131,16 @@ function edit_element(opcao, element, data) {
                     element.data("only_week_days", 1);
                 else
                     element.data("only_week_days", 0);
-                
+
                 if ($("#limite_datas_toggle").is(":checked"))
                     element.data("limit", $("#datepicker_layout_editor").data("data_limit_element").get_time());
                 else
                     element.data("limit", []);
-                
+
                 if ($("#alterar_outro_elemento").is(":checked"))
                     element.data("alterar_outro_elemento", $("#alterar_outro_elemento_select").val());
                 else
-                    element.data("alterar_outro_elemento", 0);
+                    element.data("alterar_outro_elemento", []);
 
                 item_database("edit_item", selected_id, 0, $("#script_selector option:selected").val(), $("#page_selector option:selected").val(), "datepicker", element.index(), "h", $("#datepicker_edit").val(), data_format, $("#only_week_days").is(":checked") ? 1 : 0, element.data("limit"), element.data("alterar_outro_elemento"), $("#item_required").is(':checked'), $("#item_hidden").is(':checked'));
             }
