@@ -52,22 +52,28 @@ class apoio_marketing extends requests_class {
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
 
 
-            $row[5] = "<div> <button class='btn ver_horario' data-apoio_marketing_id='" . $row[0] . "'><i class='icon-eye-open'></i>Horario</button></div>";
-            $row[10] = "<div> <button class='btn ver_local_publicidade' data-apoio_marketing_id='" . $row[0] . "' ><i class='icon-eye-open'></i>localidades</button></div>";
+            $row[5] = "<div> <button class='btn icon-alone ver_horario' data-apoio_marketing_id='" . $row[0] . "'><i class='icon-time'></i></button></div>";
+            $row[10] = "<div> <button class='btn icon-alone ver_local_publicidade' data-apoio_marketing_id='" . $row[0] . "' ><i class='icon-home'></i></button></div>";
             switch ($row[11]) {
                 case "0":
-                    $row[12] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
+                    $row[17] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
                     $row[11] = "Pedido enviado";
                     break;
                 case "1":
-                    $row[12] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
+                    $row[17] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
                     $row[11] = "<span class='label label-success'>Aprovado</span>";
                     break;
                 case "2":
-                    $row[12] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
+                    $row[17] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
                     $row[11] = "<span class='label label-important'>Rejeitado</span>";
                     break;
             }
+            
+            $row[12]=" ";
+            $row[13]=" ";
+            $row[14]=" ";
+            $row[15]=" ";
+            $row[16]=" ";
             $result['aaData'][] = $row;
         }
         return $result;
