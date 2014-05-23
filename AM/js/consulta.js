@@ -124,10 +124,11 @@ $(function()
                         .find("button").prop("disabled", true).end();
             }
         });
-
+ 
         var client_box = new clientBox({id: reserva_id, byReserv: true});
+     
         client_box.init();
-
+      
     }, "json");
 });
 

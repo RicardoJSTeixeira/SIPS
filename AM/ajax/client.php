@@ -45,7 +45,7 @@ switch ($action) {
                 . "WHERE id_reservation=:id limit 1";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id" => $id));
-        $row = $stmt->fetch(PDO::FETCH_OBJ);
+               $row = $stmt->fetch(PDO::FETCH_OBJ);
         $js = (object) array(
                     "id" => (int) $row->lead_id,
                     "phone" => (int) $row->phone_number,
@@ -61,7 +61,7 @@ switch ($action) {
                     "comments" => (string) $row->comments);
         break;
     case 'byLeadToInfo':
-        $dfields = array();
+        $js = array();
         $query = "SET CHARACTER SET utf8;";
         $stmt = $db->prepare($query);
         $stmt->execute();
@@ -69,20 +69,21 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute(array(":campaign_id" => $user->getUser()->campaign));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $dfields[$row["Name"]] = array("display_name" => $row["Display_name"], "name" => $row["Name"], "value" => "");
+            $js[$row["Name"]] = array("display_name" => $row["Display_name"], "name" => $row["Name"], "value" => "");
         }
-        $query = "SELECT " . implode(",", array_keys($dfields)) . "  FROM  vicidial_list where lead_id=:lead_id";
+        $query = "SELECT " . implode(",", array_keys($js)) . "  FROM  vicidial_list where lead_id=:lead_id";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":lead_id" => $id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        foreach ($dfields as $key => $value) {
+        foreach ($js as $key => $value) {
 
-            $dfields[$key]["value"] = $row[$key];
+            $js[$key]["value"] = $row[$key];
         }
-        echo json_encode($dfields);
+    
     default:
         break;
 }
 
 
 
+echo json_encode($js);
