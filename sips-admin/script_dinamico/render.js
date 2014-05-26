@@ -1,11 +1,9 @@
 var render = function(script_zone, file_path, script_id, lead_id, unique_id, user_id, campaign_id, admin_review, ext_events) {
-
     var
             me = this,
             array_id = [],
             events = {
                 onEverethingCompleted: function() {
-
                 }
             };
     $.extend(true, events, ext_events);
@@ -21,8 +19,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     this.has_script = true;
     this.config = new Object();
     this.init = function(ext_config) {
-
-
         me.config.save_overwrite = false;
         me.config.input_disabled = false;
         $.extend(true, me.config, ext_config);
@@ -222,8 +218,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             element.removeAttr("title");
             element.find(".label_titulo").remove();
             info = $(this).data("info");
-            if (info.hidden)
+            element.data("visible", !info.hidden);
+            if (info.hidden) {
                 element.css("display", "none");
+            }
             switch (info.type) {
                 case "texto":
                     element.find(".label_geral")[0].innerHTML = info.texto;
@@ -506,33 +504,23 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                 time2.add('hour', tempo2[3]);
                             options.endDate = time2.toDate();
                         }
-                    } else if (info.values_text.type == "fixed") //fixed
-                    {
+                    } else if (info.values_text.type == "fixed") {//fixed
                         options.startDate = info.values_text.data_inicial;
                         options.endDate = info.values_text.data_final;
                     }
-
                     if (info.max_length == 1)
                         options.daysOfWeekDisabled = [0, 6];
-
-                    if (~~info.default_value)
-                    {
-                        script_zone.on("change", "#script_div #" + info.tag, function()
-                        {
+                    if (~~info.default_value) {
+                        script_zone.on("change", "#script_div #" + info.tag, function() {
                             var this_info = $(this).closest(".item").data("info");
                             var this_datetime = $(this).find(".form_datetime ");
-
                             var tempo = "";
-
-                            $.each(this_info.default_value, function()
-                            {
-
+                            $.each(this_info.default_value, function() {
                                 tempo = moment(this_datetime.val(), this_datetime.data().format);
                                 $("#" + this).find(".form_datetime ").val(tempo.format($("#" + this).find(".form_datetime ").data().format));
                             });
                         })
                     }
-                    ;
                     script_zone.find("input[name='" + info.tag + "']").datetimepicker(options).data("format", options.format_rules).keypress(function(e) {
                         e.preventDefault();
                     }).bind("cut copy paste", function(e) {
@@ -587,13 +575,12 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             var this_elements = [];
                             var this_info = $(this).closest(".item").data("info");
                             $.each(this_info.default_value, function() {
-                              
                                 switch ($("[name=" + ~~this + "]").parents(".item").data("info").type) {
                                     case "radio":
                                         this_elements.push({
                                             name: ~~this,
                                             value: $("[name=" + ~~this + "]:checked").val(),
-                                            visible: $("[name=" + ~~this + "]").is(":visible")
+                                            visible: $("[name=" + ~~this + "]").parent(".item").data().visible
                                         });
                                         break;
                                     case "checkbox":
@@ -604,26 +591,26 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                         this_elements.push({
                                             name: ~~this,
                                             value: temp,
-                                            visible: $("[name=" + ~~this + "]").is(":visible")
+                                            visible: $("[name=" + ~~this + "]").parent(".item").data().visible
                                         });
                                         break;
                                     case "select":
                                         this_elements.push({
                                             name: ~~this,
                                             value: $("[name=" + ~~this + "]:selected").val(),
-                                            visible: $("[name=" + ~~this + "]").is(":visible")
+                                            visible: $("[name=" + ~~this + "]").parent(".item").data().visible
                                         });
                                         break;
                                     default:
                                         this_elements.push({
                                             name: ~~this,
                                             value: $("[name=" + ~~this + "]").val(),
-                                            visible: $("[name=" + ~~this + "]").is(":visible")
+                                            visible: $("[name=" + ~~this + "]").parent(".item").data().visible
                                         });
                                         break;
                                 }
                             });
- 
+
                             $.ajax({
                                 type: this_info.param1,
                                 url: file_path + "proxy.php",
@@ -714,12 +701,14 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                 var target = data.tag_target;
                 for (var count2 = 0; count2 < target.length; count2++) {
                     script_zone.find("#script_div #" + target[count2]).fadeOut(200);
+                    script_zone.find("#script_div #" + target[count2]).data("visible", false);
                 }
                 break;
             case "show":
                 var target = data.tag_target;
                 for (var count2 = 0; count2 < target.length; count2++) {
                     script_zone.find("#script_div #" + target[count2]).fadeIn(250);
+                    script_zone.find("#script_div #" + target[count2]).data("visible", true);
                 }
                 break;
             case "goto":

@@ -378,7 +378,7 @@ function update_script(callback) {
             $("#script_remove_button").prop('disabled', false);
             $("#page_selector_div button").prop('disabled', false);
             $("#opcao_script_button").prop('disabled', false);
-            var script = $("#script_selector option:selected").val();
+            var script = ~~$("#script_selector option:selected").val();
             $("#script_selector").empty();
             $.each(data, function(index, value) {
                 if (script === this.id) {
@@ -406,7 +406,7 @@ function update_pages(callback) {
         } else {
             $(".leftDiv").show();
             $("#opcao_page_button").prop('disabled', false);
-            var pag = $("#page_selector option:selected").val();
+            var pag = ~~$("#page_selector option:selected").val();
             $("#page_selector").empty();
             $("#go_to_select").empty();
             $("#page_position").empty();
@@ -801,8 +801,8 @@ function populate_element(tipo, element) {
                 $("#only_week_days").prop("checked", true);
             else
                 $("#only_week_days").prop("checked", false);
-            
-            if (~~element.data("alterar_outro_elemento")!=0)
+
+            if (~~element.data("alterar_outro_elemento") != 0)
             {
                 $("#alterar_outro_elemento").prop("checked", true);
                 $("#alterar_outro_elemento_div").show();
@@ -1571,26 +1571,21 @@ $('#script_selector').change(function() {
 });
 $("#opcao_script_button").click(function() //chama o edit do nome do script
 {
-    $("#script_campanha_selector").val("").trigger("chosen:updated");
-    $("#script_bd_selector").val("").trigger("chosen:updated");
-    $("#script_linha_inbound_selector").val("").trigger("chosen:updated");
-    $.post("requests.php", {
-        action: "get_camp_linha_by_id_script",
-        id_script: $("#script_selector option:selected").val()
-    },
-    function(data) {
 
+    $.post("requests.php", {action: "get_camp_linha_by_id_script", id_script: $("#script_selector option:selected").val()},
+    function(data) {
         var campaign = [];
         var linha_inbound = [];
         var bd = [];
         $("#script_campanha_selector option").prop("disabled", false);
         $("#script_bd_selector option").prop("disabled", false);
         $("#script_linha_inbound_selector option").prop("disabled", false);
-        var this_script = $("#script_selector option:selected").val();
+        var this_script = ~~$("#script_selector option:selected").val();
+
         $.each(data, function(index, value) {
 
             if (this.id_script === this_script) {
-                if (this.tipo === "campaign")
+                         if (this.tipo === "campaign")
                     campaign.push(this.id_camp_linha);
                 else if (this.tipo === "linha_inbound")
                     linha_inbound.push(this.id_camp_linha);
@@ -1605,6 +1600,7 @@ $("#opcao_script_button").click(function() //chama o edit do nome do script
                     $("#script_bd_selector option[value='" + this.id_camp_linha + "']").prop("disabled", true);
             }
         });
+
         $("#script_campanha_selector").val(campaign).trigger("chosen:updated");
         $("#script_linha_inbound_selector").val(linha_inbound).trigger("chosen:updated");
         $("#script_bd_selector").val(bd).trigger("chosen:updated");
