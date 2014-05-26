@@ -13,10 +13,10 @@ $(function()
     rse = getUrlVars();
     lead_id = atob(decodeURIComponent(rse.id));
     reserva_id = atob(decodeURIComponent(rse.rs));
-    
+
     $("#dModelo, #dGama, #eModelo, #eGama").chosen({no_results_text: "Sem resultados", width: "100%"});
     $('[data-toggle~="tooltip"]').tooltip({container: 'body'});
-    
+
     $.post("ajax/consulta.php", {action: "get_consulta", reserva_id: reserva_id},
     function(data)
     {
@@ -124,12 +124,17 @@ $(function()
                         .find("button").prop("disabled", true).end();
             }
         });
- 
+
         var client_box = new clientBox({id: reserva_id, byReserv: true});
-     
+
         client_box.init();
-      
+
     }, "json");
+});
+
+$("#main_consulta_div #checkbox_tp").click(function()
+{
+    $("#3_pessoa_div").toggle($(this).is(":checked"));
 });
 
 //EXAME
@@ -231,7 +236,7 @@ $("#main_consulta_div #terminar_consulta").on("click", function() {
         {
             if ($("#main_consulta_div #no_exam_div input[name='ne']:checked").length)
             {
-                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: $("#main_consulta_div #no_exam_div input[name='ne']:checked").val(), venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", produtos: produtos, feedback: "STEST", closed: 1}, function() {
+                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: $("#main_consulta_div #no_exam_div input[name='ne']:checked").val(), venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", produtos: produtos, feedback: "STEST", terceira_pessoa: $("#checkbox_tp").is(":checked") ? {tipo: $("[name='tp']").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
                     $.jGrowl('Consulta gravada sem exame', {life: 3000});
                     $("#marcacao_modal").modal("show");
                 }, "json");
@@ -254,15 +259,14 @@ $("#main_consulta_div #terminar_consulta").on("click", function() {
                                 //HA VENDA
                                 if ($("#main_consulta_div #venda_yes").is(":checked"))
                                 {
-                                    console.log(produtos);
-                                    $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 1, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "TV", closed: 1}, function() {
+                                    $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 1, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "TV", terceira_pessoa: $("#checkbox_tp").is(":checked") ? {tipo: $("[name='tp']").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
                                         $.jGrowl('Consulta gravada com venda', {life: 3000});
                                         $("#encomenda_modal").modal("show");
                                     }, "json");
                                 }
                                 else//NÂO HA VENDA
                                 {
-                                    $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: $("#main_consulta_div #no_venda_select option:selected").val(), left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "TNV", closed: 1}, function() {
+                                    $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: $("#main_consulta_div #no_venda_select option:selected").val(), left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "TNV", terceira_pessoa: $("#checkbox_tp").is(":checked") ? {tipo: $("[name='tp']").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
                                         $.jGrowl('Consulta gravada sem venda', {life: 3000});
                                         $("#marcacao_modal").modal("show");
                                     }, "json");
@@ -270,7 +274,7 @@ $("#main_consulta_div #terminar_consulta").on("click", function() {
                             }
                             else//NAO HA PERDA
                             {
-                                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "SPERD", closed: 1}, function() {
+                                $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "SPERD", terceira_pessoa: $("#checkbox_tp").is(":checked") ? {tipo: $("[name='tp']").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
                                     $.jGrowl('Consulta gravada sem perda', {life: 3000});
                                     $("#marcacao_modal").modal("show");
                                 }, "json");
@@ -290,7 +294,7 @@ $("#main_consulta_div #exit_save").click(function() {
 
     script.submit_manual();
     consult_audiogra.save(lead_id, reserva_id, false);
-    $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: ~~$("#main_consulta_div #venda_yes").is(":checked"), venda_razao: $("#main_consulta_div #no_venda_select option:selected").val(), left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "", closed: 0}, function() {
+    $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: ~~$("#main_consulta_div #venda_yes").is(":checked"), venda_razao: $("#main_consulta_div #no_venda_select option:selected").val(), left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "", terceira_pessoa: $("#checkbox_tp").is(":checked") ? {tipo: $("[name='tp']").val(), nome: $("#3_pessoa_input").val()} : [], closed: 0}, function() {
         $.jGrowl('Consulta gravada', {life: 3000});
     });
 
@@ -361,7 +365,7 @@ $("#print_proposta").click(function() {
     doc.text(20, y.pos(), p2.valor + "€");
     doc.text(20, y.pos(), p2.quantidade + ' Prótese(s) digital(ais) de última geração');
     doc.text(20, y.pos(), p2.entrada + '% Entrada ' + p2.valor * (p2.entrada / 100) + '€');
-    doc.text(20, y.pos(), p2.meses + ' Prestações ' + (p2.valor - (p2.valor  * (p2.entrada / 100))) / p2.meses + '€');
+    doc.text(20, y.pos(), p2.meses + ' Prestações ' + (p2.valor - (p2.valor * (p2.entrada / 100))) / p2.meses + '€');
     doc.setFontSize(22);
     doc.text(20, y.pos(10), 'Proposta 3');
     doc.setFontSize(16);

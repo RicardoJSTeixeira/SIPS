@@ -138,6 +138,9 @@
         </div>
         <div class="span10">
             <div class="row-fluid">
+
+
+
                 <div id="first_info_div">
                     <div id="inicial_option_div" class="grid">
                         <div class="grid-title">
@@ -147,6 +150,10 @@
                             <button class="btn btn-success" id="pa_yes">Sim</button>
                             <button class="btn btn-primary" id="pa_no">Não</button>
                             <div class="clear"></div>
+
+
+                            <div class="clear"></div>
+
                         </div>  
                     </div>
                     <div id="no_exam_div" class="grid" style="display:none">
@@ -188,6 +195,27 @@
                     </div>
                 </div>
 
+                <div class="grid">
+                    <div class="grid-content">
+                        <input   type="checkbox" id="checkbox_tp" name="tpm" value="1">
+                        <label class=" checkbox inline" for="checkbox_tp"><span></span>3ª Pessoa?</label>
+
+                        <div id="3_pessoa_div" style="display:none">
+                            <input  type="radio" id="tp_1" name="tp" value="marido/esposa" checked="checked">
+                            <label class="radio_name radio inline"  for="tp_1"><span></span>Marido/Esposa</label> 
+                            <input  type="radio" id="tp_2" name="tp" value="filho">
+                            <label class="radio_name radio inline"  for="tp_2"><span></span>Filho(a)</label> 
+                            <input  type="radio" id="tp_3" name="tp" value="familiar">
+                            <label class="radio_name radio inline"  for="tp_3"><span></span>Outro Familiar</label> 
+                            <input  type="radio" id="tp_4" name="tp" value="amigo">
+                            <label class="radio_name radio inline"  for="tp_4"><span></span>Amigo(a)</label> 
+                            <div class="formRow">
+                                <input id="3_pessoa_input" maxlength="100" type="text" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid" id="script_main_div" style="display:none">
                     <div class="grid-title">
                         <div class="pull-left">
@@ -196,6 +224,12 @@
                         <div class="pull-right"> <button class='btn btn-info right' onclick="location.reload();" >Inicio</button></div> 
                     </div>
                     <div class="grid-content">
+
+
+
+
+
+
                         <div  id="script_placeholder"  ></div>
 
                     </div>

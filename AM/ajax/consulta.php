@@ -25,8 +25,8 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute(array($reserva_id));
 
-        $query = "Insert into spice_consulta (data,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,produtos,feedback,closed)
-            values (:data,:reserva_id,:lead_id,:campanha,:consulta,:consulta_razao,:exame,:exame_razao,:venda,:venda_razao,:left_ear,:right_ear,:produtos,:feedback,:closed)";
+        $query = "Insert into spice_consulta (data,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,produtos,feedback,terceira_pessoa,closed)
+            values (:data,:reserva_id,:lead_id,:campanha,:consulta,:consulta_razao,:exame,:exame_razao,:venda,:venda_razao,:left_ear,:right_ear,:produtos,:feedback,:terceira_pessoa,:closed)";
 
         $stmt = $db->prepare($query);
         $stmt->execute(array(
@@ -44,6 +44,7 @@ switch ($action) {
             ":right_ear" => $right_ear,
             ":produtos" => json_encode($produtos),
             ":feedback" => $feedback,
+            ":terceira_pessoa" => $terceira_pessoa,
             ":closed" => $closed));
 
         if ($consulta_razao == "DEST") {
@@ -54,7 +55,7 @@ switch ($action) {
         break;
 
     case "get_consulta":
-        $stmt = $db->prepare("SELECT id,data,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,produtos,feedback,closed from spice_consulta where reserva_id=:reserva_id");
+        $stmt = $db->prepare("SELECT id,data,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,produtos,feedback,terceira_pessoa,closed from spice_consulta where reserva_id=:reserva_id");
         $stmt->execute(array(":reserva_id" => $reserva_id));
         if ($result = $stmt->fetch(PDO::FETCH_OBJ)) {
             $result->produtos = json_decode($result->produtos);
