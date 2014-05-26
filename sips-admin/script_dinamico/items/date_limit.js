@@ -65,40 +65,40 @@ var date_limit = function(selector, limit)
 
         selector.append(html);
         selector.find(".datelimit_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
-        if (Object.keys(limit).length)
-        {
-
-            if (me.limit.type == "dynamic")
+        if ( typeof(limit)=="Object")
+            if (Object.keys(limit).length)
             {
-                var data_i = me.limit.data_inicial.split("|");
-                var data_f = me.limit.data_final.split("|");
-                var table1 = selector.find("#table_date1" + me.geral_name);
-                table1.find("#year_i" + me.geral_name).val(data_i[0] == "#" ? "" : data_i[0]);
-                table1.find("#month_i" + me.geral_name).val(data_i[1] == "#" ? "" : data_i[1]);
-                table1.find("#day_i" + me.geral_name).val(data_i[2] == "#" ? "" : data_i[2]);
-                table1.find("#hour_i" + me.geral_name).val(data_i[3] == "#" ? "" : data_i[3]);
-                var table2 = selector.find("#table_date2" + me.geral_name);
-                table2.find("#year_f" + me.geral_name).val(data_f[0] == "#" ? "" : data_f[0]);
-                table2.find("#month_f" + me.geral_name).val(data_f[1] == "#" ? "" : data_f[1]);
-                table2.find("#day_f" + me.geral_name).val(data_f[2] == "#" ? "" : data_f[2]);
-                table2.find("#hour_f" + me.geral_name).val(data_f[3] == "#" ? "" : data_f[3]);
-                selector.find("#radio_date_type_filter2" + me.geral_name).prop("checked", true);
-                selector.find("#date_dynamic" + me.geral_name).show();
+                if (me.limit.type == "dynamic")
+                {
+                    var data_i = me.limit.data_inicial.split("|");
+                    var data_f = me.limit.data_final.split("|");
+                    var table1 = selector.find("#table_date1" + me.geral_name);
+                    table1.find("#year_i" + me.geral_name).val(data_i[0] == "#" ? "" : data_i[0]);
+                    table1.find("#month_i" + me.geral_name).val(data_i[1] == "#" ? "" : data_i[1]);
+                    table1.find("#day_i" + me.geral_name).val(data_i[2] == "#" ? "" : data_i[2]);
+                    table1.find("#hour_i" + me.geral_name).val(data_i[3] == "#" ? "" : data_i[3]);
+                    var table2 = selector.find("#table_date2" + me.geral_name);
+                    table2.find("#year_f" + me.geral_name).val(data_f[0] == "#" ? "" : data_f[0]);
+                    table2.find("#month_f" + me.geral_name).val(data_f[1] == "#" ? "" : data_f[1]);
+                    table2.find("#day_f" + me.geral_name).val(data_f[2] == "#" ? "" : data_f[2]);
+                    table2.find("#hour_f" + me.geral_name).val(data_f[3] == "#" ? "" : data_f[3]);
+                    selector.find("#radio_date_type_filter2" + me.geral_name).prop("checked", true);
+                    selector.find("#date_dynamic" + me.geral_name).show();
+                }
+                else if (me.limit.type == "fixed")
+                {
+                    selector.find("#fixed_date1" + me.geral_name).val(limit.data_inicial.length ? limit.data_inicial : "");
+                    selector.find("#fixed_date2" + me.geral_name).val(limit.data_final.length ? limit.data_final : "");
+                    selector.find("#radio_date_type_filter1" + me.geral_name).prop("checked", true);
+                    selector.find("#date_fixed" + me.geral_name).show();
+                }
             }
-            else if (me.limit.type == "fixed")
+            else
             {
-                selector.find("#fixed_date1" + me.geral_name).val(limit.data_inicial.length ? limit.data_inicial : "");
-                selector.find("#fixed_date2" + me.geral_name).val(limit.data_final.length ? limit.data_final : "");
+
                 selector.find("#radio_date_type_filter1" + me.geral_name).prop("checked", true);
                 selector.find("#date_fixed" + me.geral_name).show();
             }
-        }
-        else
-        {
-
-            selector.find("#radio_date_type_filter1" + me.geral_name).prop("checked", true);
-            selector.find("#date_fixed" + me.geral_name).show();
-        }
 
         selector.find(".spinner").spinner({});
         selector.find(".date_option_radio").on("click", function() {
@@ -142,7 +142,10 @@ var date_limit = function(selector, limit)
     };
     this.has_limit = function()
     {
-        return Object.keys(limit).length;
+        if ( typeof(limit)=="Object")
+            return Object.keys(limit).length;
+        else
+            return 0;
     };
     this.destroy = function()
     {

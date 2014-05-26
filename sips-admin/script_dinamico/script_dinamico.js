@@ -801,7 +801,8 @@ function populate_element(tipo, element) {
                 $("#only_week_days").prop("checked", true);
             else
                 $("#only_week_days").prop("checked", false);
-             if (Object.keys(element.data("alterar_outro_elemento")).length)
+            
+            if (~~element.data("alterar_outro_elemento")!=0)
             {
                 $("#alterar_outro_elemento").prop("checked", true);
                 $("#alterar_outro_elemento_div").show();
@@ -1135,7 +1136,7 @@ function edit_element(opcao, element, data) {
                 if ($("#limite_datas_toggle").is(":checked"))
                     element.data("limit", $("#datepicker_layout_editor").data("data_limit_element").get_time());
                 else
-                    element.data("limit", []);
+                    element.data("limit", 0);
 
                 if ($("#alterar_outro_elemento").is(":checked"))
                     element.data("alterar_outro_elemento", $("#alterar_outro_elemento_select").val());
