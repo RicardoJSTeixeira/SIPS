@@ -20,9 +20,17 @@ $(function()
     $.post("ajax/consulta.php", {action: "get_consulta", reserva_id: reserva_id},
     function(data)
     {
+
         if (data)
         {
 
+            if (data.terceira_pessoa.tipo)
+            {
+                $("#checkbox_tp").prop("checked", true).prop("disabled", true);
+                $("#3_pessoa_div").show().find("input").prop("disabled", true);
+                $("[name='tp'][value='" + data.terceira_pessoa.tipo + "']").prop(":checked", true);
+                $("#3_pessoa_input").val(data.terceira_pessoa.nome);
+            }
             $("#main_consulta_div")
                     .find("#options_div")
                     .toggle(!data.closed)
@@ -221,6 +229,7 @@ $(".new_marcacao_button").click(function()
 //OPTIONS DIV--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 $("#main_consulta_div #terminar_consulta").on("click", function() {
 
+
     if (consult_closed) {
         $.history.push('view/dashboard.html');
     }
@@ -244,6 +253,13 @@ $("#main_consulta_div #terminar_consulta").on("click", function() {
         }
         else//HA EXAME
         {
+            if ($("#checkbox_tp").is(":checked")) {
+                if (!$("#3_pessoa_input").val().length)
+                {
+                    $.jGrowl("Certifique-se que preenche correctamente a caixa de 3ª pessoa no topo", {life: 4000});
+                    return false;
+                }
+            }
             script.validate_manual(
                     function() {
                         consult_audiogra.validate(function() {
@@ -282,6 +298,7 @@ $("#main_consulta_div #terminar_consulta").on("click", function() {
                         }, false);
                     }, false);
         }
+
     }
 });
 $("#main_consulta_div #exit_save").click(function() {
