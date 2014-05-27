@@ -1584,7 +1584,7 @@ $("#opcao_script_button").click(function() //chama o edit do nome do script
 
         $.each(data, function(index, value) {
 
-            if (this.id_script === this_script) {
+            if (~~this.id_script === this_script) {
                          if (this.tipo === "campaign")
                     campaign.push(this.id_camp_linha);
                 else if (this.tipo === "linha_inbound")
