@@ -28,7 +28,7 @@ switch ($action) {
         $query = "Insert into spice_consulta (data,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,produtos,feedback,terceira_pessoa,closed)
             values (:data,:reserva_id,:lead_id,:campanha,:consulta,:consulta_razao,:exame,:exame_razao,:venda,:venda_razao,:left_ear,:right_ear,:produtos,:feedback,:terceira_pessoa,:closed)";
 
-        $stmt = $db->prepare($query); 
+        $stmt = $db->prepare($query);
         $stmt->execute(array(
             ":data" => date("Y-m-d H:i:s"),
             ":reserva_id" => $reserva_id,
@@ -58,8 +58,12 @@ switch ($action) {
         $stmt = $db->prepare("SELECT id,data,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,produtos,feedback,terceira_pessoa,closed from spice_consulta where reserva_id=:reserva_id");
         $stmt->execute(array(":reserva_id" => $reserva_id));
         if ($result = $stmt->fetch(PDO::FETCH_OBJ)) {
+            $result->consulta = (int) $result->consulta;
+            $result->exame = (int) $result->exame;
+            $result->venda = (int) $result->venda;
+            $result->closed = (int) $result->closed;
             $result->produtos = json_decode($result->produtos);
-              $result->terceira_pessoa = json_decode($result->terceira_pessoa);
+            $result->terceira_pessoa = json_decode($result->terceira_pessoa);
         }
         echo json_encode($result);
         break;

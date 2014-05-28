@@ -23,14 +23,14 @@ $(function()
 
         if (data)
         {
-
             if (data.terceira_pessoa.tipo)
             {
-                $("#checkbox_tp").prop("checked", true).prop("disabled", true);
-                $("#3_pessoa_div").show().find("input").prop("disabled", true);
+                $("#checkbox_tp").prop("checked", true);
+                $("#3_pessoa_div").show().find("input");
                 $("[name='tp'][value='" + data.terceira_pessoa.tipo + "']").prop(":checked", true);
                 $("#3_pessoa_input").val(data.terceira_pessoa.nome);
             }
+
             $("#main_consulta_div")
                     .find("#options_div")
                     .toggle(!data.closed)
@@ -108,8 +108,10 @@ $(function()
                             .find("[name=ne]").prop("disabled", true);
                 }
             }
+
             if (data.closed)
             {
+
                 consult_closed = true;
             }
 
@@ -129,7 +131,10 @@ $(function()
                         .find("button").prop("disabled", true).end().end()
                         .find("#script_main_div")
                         .find(":input").prop("disabled", true).end()
-                        .find("button").prop("disabled", true).end();
+                        .find("button").prop("disabled", true).end().end()
+                        .find("#3_pessoa_div")
+                        .find("input").prop("disabled", true).end().end()
+                        .find("#checkbox_tp").prop("disabled", true).end();
             }
         });
 
