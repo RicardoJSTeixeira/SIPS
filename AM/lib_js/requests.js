@@ -127,7 +127,7 @@ var requests = function(basic_path, options_ext)
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"});
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial", "sWidth": "65px"}, {"sTitle": "Data final", "sWidth": "65px"}, {"sTitle": "Horario"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Pub.", "sWidth": "1px"}, {"sTitle": "Estado"}, {"sTitle": "Coluna1"}, {"sTitle": "Coluna2"}, {"sTitle": "Coluna3"}, {"sTitle": "Coluna4"}, {"sTitle": "Coluna5"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5), "sWidth": "1px"}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial", "sWidth": "65px"}, {"sTitle": "Data final", "sWidth": "65px"}, {"sTitle": "Horario"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Pub.", "sWidth": "1px"}, {"sTitle": "Cod."}, {"sTitle": "Total"}, {"sTitle": "c/ Perda"}, {"sTitle": "Vendas"}, {"sTitle": "Valor"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5), "sWidth": "1px"}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_AM').click(function(event) {
