@@ -196,23 +196,43 @@
                 </div>
 
                 <div class="grid">
-                    <div class="grid-content">
-                        <input   type="checkbox" id="checkbox_tp" name="tpm" value="1">
-                        <label class=" checkbox inline" for="checkbox_tp"><span></span>3ª Pessoa?</label>
+                    <div class="grid-content" id="3_pessoa_master_div">
+                        <div class="formRow">
+                            <label>Cliente está acompanhado?</label>   
+                            <div class="formRight">
+                                <input type="radio" id="ca_s" name="ca" value="1" >
+                                <label class="radio" for="ca_s"><span></span>Sim</label>
+                                <input type="radio" id="ca_n" name="ca" value="0" checked="checked">
+                                <label class="radio" for="ca_n"><span></span>Não</label>
+                            </div>           
+                        </div>
+
+
 
                         <div id="3_pessoa_div" style="display:none">
-                            <input  type="radio" id="tp_1" name="tp" value="marido/esposa" checked="checked">
-                            <label class="radio_name radio inline"  for="tp_1"><span></span>Marido/Esposa</label> 
-                            <input  type="radio" id="tp_2" name="tp" value="filho">
-                            <label class="radio_name radio inline"  for="tp_2"><span></span>Filho(a)</label> 
-                            <input  type="radio" id="tp_3" name="tp" value="familiar">
-                            <label class="radio_name radio inline"  for="tp_3"><span></span>Outro Familiar</label> 
-                            <input  type="radio" id="tp_4" name="tp" value="amigo">
-                            <label class="radio_name radio inline"  for="tp_4"><span></span>Amigo(a)</label> 
                             <div class="formRow">
-                                <input id="3_pessoa_input"  maxlength="100" type="text" />
+                                <label>Acompanhante é:</label>
+                                <div class="formRight">
+                                    <input  type="radio" id="tp_1" name="tp" value="marido/esposa" checked="checked">
+                                    <label class="radio_name radio inline"  for="tp_1"><span></span>Marido/Esposa</label> 
+                                    <input  type="radio" id="tp_2" name="tp" value="filho">
+                                    <label class="radio_name radio inline"  for="tp_2"><span></span>Filho(a)</label> 
+                                    <input  type="radio" id="tp_3" name="tp" value="familiar">
+                                    <label class="radio_name radio inline"  for="tp_3"><span></span>Outro Familiar</label> 
+                                    <input  type="radio" id="tp_4" name="tp" value="amigo">
+                                    <label class="radio_name radio inline"  for="tp_4"><span></span>Amigo(a)</label> 
+                                </div>
+                            </div> 
+
+                            <div class="formRow">
+                                <label>Nome do acompanhante:</label>   
+                                <div class="formRight">
+                                    <input id="3_pessoa_input"  maxlength="100" type="text" />
+                                </div>
                             </div>
+
                         </div>
+                        <div class="clear"></div>
                     </div>
                 </div>
 
