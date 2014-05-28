@@ -1772,7 +1772,7 @@ function rules_database(opcao, Id, Id_script, Tipo_elemento, Id_trigger, Id_trig
                         this.param1 = "Click"; //por questões visuais na tabela
 
                     $("#rule_manager_list").append($("<tr>")
-                            .append($("<td>").text(this.param1 === "value_input" ? this.tag_trigger2 : this.param1))
+                            .append($("<td>").text(this.param1 === "value_input" || this.param1 === "value_select" ? this.tag_trigger2 : this.param1))
                             .append($("<td>").text(this.tipo))
                             .append($("<td>").text((this.tipo === "ir para página") ? $("#go_to_select option[value=" + this.tag_target + "]").text() : this.tag_target))
                             .append($("<td>").append($("<button>").addClass("icon-remove rule_delete_icon btn btn-inverse span").data("id", this.id).data("tag_trigger", this.tag_trigger)))
