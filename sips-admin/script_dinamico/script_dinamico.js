@@ -1585,7 +1585,7 @@ $("#opcao_script_button").click(function() //chama o edit do nome do script
         $.each(data, function(index, value) {
 
             if (~~this.id_script === this_script) {
-                         if (this.tipo === "campaign")
+                if (this.tipo === "campaign")
                     campaign.push(this.id_camp_linha);
                 else if (this.tipo === "linha_inbound")
                     linha_inbound.push(this.id_camp_linha);
@@ -2053,6 +2053,7 @@ $("#select_ajax_script").on("change", function() {
     $("#not_validado_text").val("");
 });
 $("#remove_uploaded_file_ajax").on("click", function() {
+
     $.post("upload.php", {
         action: "delete",
         name: $("#select_ajax_script option:selected").val()
@@ -2141,14 +2142,20 @@ function update_select() {
 }
 ;
 $("#remove_uploaded_file").on("click", function() {
+
+    $("#remove_upload_file_modal").modal("show");
+    $("#remove_upload_file_modal").find(".modal-body").empty().append($("<p>").text("Tem a certeza que deseja eliminar o ficheiro " + $("#ipl_file_select:selected").text()));
+});
+$("#remove_uploaded_file_modal").on("click", function() {
     $.post("upload.php", {
         action: "delete",
         name: $("#ipl_file_select option:selected").val()
     }, function(data) {
-
+         $("#remove_upload_file_modal").modal("hide");
         $("#label_ipl_info").text(data);
         update_select();
     });
+    
 });
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000
 

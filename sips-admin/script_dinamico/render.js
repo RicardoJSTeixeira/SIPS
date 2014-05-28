@@ -106,7 +106,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         array_id["radio"] = 0;
         array_id["checkbox"] = 0;
         array_id["input"] = 0;
-        
+
         $(script_zone).on("click", "#script_div .previous_pag", function(e) {
             e.preventDefault();
             var temp = script_zone.find(".pag_div:visible").prev(".pag_div");
@@ -135,7 +135,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
         });
         $(script_zone).on("click", "#script_div .pdf_button", function(e) {
             e.preventDefault();
-          var url = file_path + "files/" + $(this).attr("file");
+            var url = file_path + "files/" + $(this).attr("file");
             window.open(url, 'PDF', 'fullscreen=no, scrollbars=auto');
         });
     });
