@@ -2140,9 +2140,7 @@ function update_select() {
             $("#ipl_file_select option[data-type='image']").prop("disabled", true);
     }, "json");
 }
-;
 $("#remove_uploaded_file").on("click", function() {
-
     $("#remove_upload_file_modal").modal("show");
     $("#remove_upload_file_modal").find(".modal-body").empty().append($("<p>").text("Tem a certeza que deseja eliminar o ficheiro " + $("#ipl_file_select:selected").text()));
 });
@@ -2151,11 +2149,11 @@ $("#remove_uploaded_file_modal").on("click", function() {
         action: "delete",
         name: $("#ipl_file_select option:selected").val()
     }, function(data) {
-         $("#remove_upload_file_modal").modal("hide");
+        $("#remove_upload_file_modal").modal("hide");
         $("#label_ipl_info").text(data);
         update_select();
     });
-    
+
 });
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000
 
