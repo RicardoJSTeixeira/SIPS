@@ -64,7 +64,7 @@ switch ($action) {
         } else {
             $query = "SELECT a.lead_id, first_name, extra1, extra2, middle_initial, postal_code, city, phone_number, alt_phone, address1, a.entry_date from  vicidial_list a
                 left join sips_sd_reservations b on a.lead_id=b.lead_id
-                where user=:user and list_id=:list and b.lead_id is null and extra6='NO' and DATE(c.start_date)>'2014-05-01' limit 20000";
+                where user=:user and list_id=:list and b.lead_id is null and extra6='NO' and DATE(b.start_date)>'2014-05-01' limit 20000";
             $variables[":user"] = $u->username;
         }
 

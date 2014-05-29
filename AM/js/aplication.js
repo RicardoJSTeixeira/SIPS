@@ -1,5 +1,5 @@
 var SpiceU = {};
-$.post("ajax/user_info.php", function (user) {
+$.post("ajax/user_info.php", function(user) {
     SpiceU = user;
     $("#user-name").text(user.name);
 
@@ -10,20 +10,28 @@ $.post("ajax/user_info.php", function (user) {
     }
 
 }, "json")
-    .fail(function () {
-        window.location = "logout.php";
-    });
+        .fail(function() {
+            window.location = "logout.php";
+        });
 
-$(function () {
+$(function() {
+
     function setFavicon() {
         var link = $('link[type="image/vnd\.microsoft\.icon"]').remove().attr("href");
         $('<link href="' + link + '" rel="shortcut icon" type="image/vnd.microsoft.icon" />').appendTo('head');
     }
+
     $.ajaxSetup({
         cache: false
     });
+
     moment.lang('pt');
-    $.history.on('load change pushed', function (event, url, type) {
+
+    $.history.on('load change pushed', function(event, url, type) {
+        console.log(event)
+        if (event.type === "load" && url !=="view/dashboard.html") {
+            consultasMais();
+        }
         $("#sidebar .active").removeClass("active");
         $("#sidebar").find("[href='" + url.split("?")[0] + "']").addClass("active");
 
@@ -39,10 +47,10 @@ $(function () {
         $.history.push("view/dashboard.html");
     }
 
-    $('#sidebar a').click(function (e) {
+    $('#sidebar a').click(function(e) {
         e.preventDefault();
 
-        if ($(this).hasClass("active"))
+        if ($(this).hasClass("active") || $(this).parent().hasClass("disabled"))
             return false;
 
         var href = $(this).attr("href");
@@ -60,22 +68,22 @@ $(function () {
 
 
     //Init all the modals | for the multiples datatoggles..
-    $(document).on('click.modal.data-api', '[data-toggle!="modal"][data-toggle~="modal"]', function (e) {
+    $(document).on('click.modal.data-api', '[data-toggle!="modal"][data-toggle~="modal"]', function(e) {
         var $this = $(this),
-            href = $this.attr('href'),
-            $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) //strip for ie7
-            ,
-            option = $target.data('modal') ? 'toggle' : $.extend({
-                remote: !/#/.test(href) && href
-            }, $target.data(), $this.data())
+                href = $this.attr('href'),
+                $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) //strip for ie7
+                ,
+                option = $target.data('modal') ? 'toggle' : $.extend({
+            remote: !/#/.test(href) && href
+        }, $target.data(), $this.data());
 
         e.preventDefault();
 
         $target
-            .modal(option)
-            .one('hide', function () {
-                $this.focus();
-            });
+                .modal(option)
+                .one('hide', function() {
+                    $this.focus();
+                });
     });
 
     $('#alerts-content,#imessage_placeholder').slimScroll({
@@ -83,43 +91,43 @@ $(function () {
     });
 });
 
-$(".ichat").on("click", ".dismiss_msg", function () {
+$(".ichat").on("click", ".dismiss_msg", function() {
     $.post("ajax/general_functions.php", {
         action: "edit_message_status",
         id_msg: $(this).data().msg_id
-    }, function () {
+    }, function() {
         get_messages();
     }, "json");
 });
 
 
-$("#mark_all_read").click(function () {
+$("#mark_all_read").click(function() {
     $.post("ajax/general_functions.php", {
         action: "edit_message_status_by_user"
-    }, function () {
+    }, function() {
         get_messages();
     }, "json");
 });
 
-$(".ichat").on("click", ".ok_alert", function () {
+$(".ichat").on("click", ".ok_alert", function() {
     $.post("ajax/general_functions.php", {
         action: "set_readed",
         id_msg: $(this).data().id
-    }, function () {
+    }, function() {
         get_alerts();
     }, "json");
 });
 
 
-$("#mark_all_alerts_read").click(function () {
+$("#mark_all_alerts_read").click(function() {
     $.post("ajax/general_functions.php", {
         action: "set_all_readed"
-    }, function () {
+    }, function() {
         get_alerts();
     }, "json");
 });
 
-$("#notifications").click(function () {
+$("#notifications").click(function() {
     var a = $("#alert_time");
     a.text(a.data().update.fromNow());
 });
@@ -130,10 +138,10 @@ function get_messages() {
 
     $.post("ajax/general_functions.php", {
         action: "get_unread_messages"
-    }, function (data) {
+    }, function(data) {
         $("#imessage_placeholder").empty();
         var msg = "";
-        $.each(data, function () {
+        $.each(data, function() {
             msg = "<div class='imessage'>\n\
                         <div class='imes'>\n\
                             <div class='iauthor'>" + this.from + "</div>\n\
@@ -151,11 +159,11 @@ function get_messages() {
 function get_alerts() {
     $.post("ajax/general_functions.php", {
         action: "get_alerts"
-    }, function (data) {
+    }, function(data) {
         $("#alerts-content").empty();
         $("#alert_time").data("update", moment());
         var msg = "";
-        $.each(data, function () {
+        $.each(data, function() {
             msg = "<div class='imessage'>\n\
                         <div class='r_icon'><a href='javascript:void(0)' class='ok_alert' data-id='" + this.id + "'><i class='icon-comment'></i></a></div>\n\
                         <div class='r_info'>\n\
@@ -172,13 +180,13 @@ function get_alerts() {
 
 function getUrlVars() {
     var vars = {};
-    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
         vars[key] = value;
     });
     return vars;
 }
 
-$.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource, fnCallback, bStandingRedraw) {
+$.fn.dataTableExt.oApi.fnReloadAjax = function(oSettings, sNewSource, fnCallback, bStandingRedraw) {
     // DataTables 1.10 compatibility - if 1.10 then versionCheck exists.
     // 1.10s API has ajax reloading built in, so we use those abilities
     // directly.
@@ -210,13 +218,13 @@ $.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource, fnCallbac
 
     this.oApi._fnServerParams(oSettings, aData);
 
-    oSettings.fnServerData.call(oSettings.oInstance, oSettings.sAjaxSource, aData, function (json) {
+    oSettings.fnServerData.call(oSettings.oInstance, oSettings.sAjaxSource, aData, function(json) {
         /* Clear the old information from the table */
         that.oApi._fnClearTable(oSettings);
 
         /* Got the data - add it to the table */
         var aData = (oSettings.sAjaxDataProp !== "") ?
-            that.oApi._fnGetObjectDataFn(oSettings.sAjaxDataProp)(json) : json;
+                that.oApi._fnGetObjectDataFn(oSettings.sAjaxDataProp)(json) : json;
 
         for (var i = 0; i < aData.length; i++) {
             that.oApi._fnAddData(oSettings, aData[i]);
@@ -241,6 +249,24 @@ $.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource, fnCallbac
     }, oSettings);
 };
 
-String.prototype.capitalize = function () {
+String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 };
+
+
+function consultasMais() {
+    if (!localStorage.length) {
+        return false;
+    }
+    if (SpiceU.user_level > 5) {
+        return false;
+    }
+    if (~~localStorage.v7 > 7) {
+        bootbox.alert("Devido a ter <i class='label label-important'>" + localStorage.v7 + "</i> consultas com mais de 7 dias de atraso, só poderá usar o <i>Spice</i> para consultar e fechar consultas.");
+        $(".menu-sidebar").find("li:visible:not(:eq(0)):not(:eq(0))").addClass("disabled");
+        return false;
+    }
+    if (~~localStorage.v3 > 3) {
+        bootbox.alert("Cuidado que já tem <i class='label label-important'>" + localStorage.v3 + "</i> consultas com mais de 3 dias de atraso.");
+    }
+}
