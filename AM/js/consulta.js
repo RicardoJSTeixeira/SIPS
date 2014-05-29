@@ -210,16 +210,19 @@ $("#main_consulta_div #validate_audio_script").on("click", function() {
 $("#new_request_button").click(function()
 {
     var en = btoa(lead_id);
+    dropOneConsult();
     $.history.push("view/new_requisition.html?id=" + en);
 });
 
 $(".new_marcacao_button").click(function()
 {
     var en = btoa(lead_id);
+    dropOneConsult();
     $.history.push("view/calendar.html?id=" + en);
 });
 
-//OPTIONS DIV--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//OPTIONS DIV------------------------------------------------------------------
+//Gravar
 $("#main_consulta_div #terminar_consulta").on("click", function() {
 
 

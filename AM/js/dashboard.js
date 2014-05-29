@@ -151,6 +151,7 @@ $(function() {
                                 },
                         function() {
                             $.jGrowl('Consulta fechada com sucesso!');
+                            dropOneConsult();
                             that.closest('tr').remove();
                         }
                         , "json");

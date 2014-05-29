@@ -3,10 +3,10 @@ $.post("ajax/user_info.php", function(user) {
     SpiceU = user;
     $("#user-name").text(user.name);
 
-    if (user.user_level > 1) {
-        $("#sidebar li.role-dispenser:not(.role-admin)").hide();
+    if (user.user_level < 1) {
+        $("#sidebar li.role-dispenser:not(.role-admin)").show();
     } else {
-        $("#sidebar li.role-admin:not(.role-dispenser)").hide();
+        $("#sidebar li.role-admin:not(.role-dispenser)").show();
     }
 
 }, "json")
@@ -29,7 +29,7 @@ $(function() {
 
     $.history.on('load change pushed', function(event, url, type) {
         console.log(event)
-        if (event.type === "load" && url !=="view/dashboard.html") {
+        if (event.type === "load" && url !== "view/dashboard.html") {
             consultasMais();
         }
         $("#sidebar .active").removeClass("active");
@@ -263,10 +263,15 @@ function consultasMais() {
     }
     if (~~localStorage.v7 > 7) {
         bootbox.alert("Devido a ter <i class='label label-important'>" + localStorage.v7 + "</i> consultas com mais de 7 dias de atraso, só poderá usar o <i>Spice</i> para consultar e fechar consultas.");
-        $(".menu-sidebar").find("li:visible:not(:eq(0)):not(:eq(0))").addClass("disabled");
+        $(".menu-sidebar").find("li:not(:eq(0)):not(:eq(0))").addClass("disabled");
         return false;
     }
     if (~~localStorage.v3 > 3) {
         bootbox.alert("Cuidado que já tem <i class='label label-important'>" + localStorage.v3 + "</i> consultas com mais de 3 dias de atraso.");
     }
+}
+
+function dropOneConsult() {
+    localStorage.v3 = ~~localStorage.v3 - 1;
+    localStorage.v7 = ~~localStorage.v7 - 1;
 }
