@@ -2,8 +2,7 @@ var SpiceU = {};
 $.post("ajax/user_info.php", function(user) {
     SpiceU = user;
     $("#user-name").text(user.name);
-
-    if (user.user_level < 1) {
+    if (user.user_level < 5) {
         $("#sidebar li.role-dispenser:not(.role-admin)").show();
     } else {
         $("#sidebar li.role-admin:not(.role-dispenser)").show();
@@ -28,7 +27,6 @@ $(function() {
     moment.lang('pt');
 
     $.history.on('load change pushed', function(event, url, type) {
-        console.log(event)
         if (event.type === "load" && url !== "view/dashboard.html") {
             consultasMais();
         }
