@@ -3,14 +3,11 @@
 error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
 set_time_limit(1);
-
 require '../lib_php/db.php';
 require '../lib_php/calendar.php';
 require '../lib_php/user.php';
-
 $user = new UserLogin($db);
 $user->confirm_login();
-
 $id = filter_var($_POST['id']);
 $action = filter_var($_POST['action']);
 switch ($action) {
@@ -26,7 +23,6 @@ switch ($action) {
             (object) array("name" => "Codigo Postal", "value" => (string) $row->postal_code),
             (object) array("name" => "Morada", "value" => (string) $row->address . " " . $row->address1)
         );
-
         break;
     case 'default':
         $query = "SELECT lead_id, first_name, middle_initial, last_name, address1, address2, extra4 'address4', city 'local', postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient', comments FROM vicidial_list WHERE lead_id=:id limit 1";
@@ -49,7 +45,7 @@ switch ($action) {
                 . "WHERE id_reservation=:id limit 1";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id" => $id));
-        $row = $stmt->fetch(PDO::FETCH_OBJ);
+               $row = $stmt->fetch(PDO::FETCH_OBJ);
         $js = (object) array(
                     "id" => (int) $row->lead_id,
                     "phone" => (int) $row->phone_number,
@@ -63,30 +59,31 @@ switch ($action) {
                     "date" => (string) $row->start_date,
                     "rscName" => (string) $row->display_text,
                     "comments" => (string) $row->comments);
-
         break;
-
-
     case 'byLeadToInfo':
-        $query = "SELECT lead_id, first_name, middle_initial, last_name, phone_number, address1,city, address2, address3, city , postal_code, date_of_birth, email ,comments, extra1  , extra2    FROM vicidial_list WHERE lead_id=:id limit 1";
-        $stmt = $db->prepare($query);
-        $stmt->execute(array(":id" => $id));
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $js = array();
-        $js[] = array("name" => "first_name", "original_texto" => "Nome", "value" => (string) $row["first_name"]);
-        $js[] = array("name" => "phone_number", "original_texto" => "Telefone", "value" => (string) $row["phone_number"]);
-        $js[] = array("name" => "address1", "original_texto" => "Morada", "value" => (string) $row["address1"]);
-        $js[] = array("name" => "city", "original_texto" => "Cidade", "value" => (string) $row["city"]);
-        $js[] = array("name" => "alt_phone", "original_texto" => "Telefone alternativo", "value" => (string) $row["alt_phone"]);
-        $js[] = array("name" => "postal_code", "original_texto" => "Codigo postal", "value" => (string) $row["postal_code"]);
-        $js[] = array("name" => "email", "original_texto" => "Email", "value" => (string) $row["email"]);
-        $js[] = array("name" => "comments", "original_texto" => "Commentarios", "value" => (string) $row["comments"]);
-        $js[] = array("name" => "extra1", "original_texto" => "Codigo de marketing", "value" => (string) $row["extra1"]);
-        $js[] = array("name" => "extra2", "original_texto" => "Referência de cliente", "value" => (string) $row["extra2"]);
+        $query = "SET CHARACTER SET utf8;";
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        $query = "SELECT Name,Display_name   FROM vicidial_list_ref WHERE campaign_id=:campaign_id AND active=1 Order by field_order ASC";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":campaign_id" => $user->getUser()->campaign));
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $js[$row["Name"]] = array("display_name" => $row["Display_name"], "name" => $row["Name"], "value" => "");
+        }
+        $query = "SELECT " . implode(",", array_keys($js)) . "  FROM  vicidial_list where lead_id=:lead_id";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":lead_id" => $id));
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        foreach ($js as $key => $value) {
 
+            $js[$key]["value"] = $row[$key];
+        }
+    
     default:
         break;
 }
 
-echo json_encode($js);
 
+
+echo json_encode($js);

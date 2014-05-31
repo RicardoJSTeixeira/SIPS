@@ -60,8 +60,8 @@ switch ($action) {
     case "get_render_scripts_by_campaign":
 
         $temp = $script->get_scripts_by_lead_id($lead_id);
-       
-            if (count($temp)>0)
+
+        if (count($temp) > 0)
             echo json_encode($temp);
         else
             echo json_encode($script->get_render_scripts_by_campaign($id_campaign));
@@ -114,7 +114,7 @@ switch ($action) {
         break;
 
     case 'has_rules':
-        echo json_encode($script->has_rules($tag,$id_script));
+        echo json_encode($script->has_rules($tag, $id_script));
         break;
 
     case "get_image_pdf":
@@ -128,8 +128,8 @@ switch ($action) {
     //-----------------EDIT---------------------------//
     //------------------------------------------------//
     case "edit_script":
-        echo json_encode($script->edit_script($name, $id_script, $campaign,$linha_inbound,$bd));
-    
+        echo json_encode($script->edit_script($name, $id_script, $campaign, $linha_inbound, $bd));
+
         break;
 
     case "edit_page":
@@ -142,6 +142,7 @@ switch ($action) {
         } else {
             $clean_text = $values_text;
         }
+        
         echo json_encode($script->edit_item($id_script, $id_page, $type, $ordem, $dispo, $texto, $placeholder, $max_length, $clean_text, $default_value, ($required == "true") ? "1" : "0", ($hidden == "true") ? "1" : "0", $param1, $id));
         break;
 
@@ -160,6 +161,7 @@ switch ($action) {
         break;
 
     case "add_item":
+    
         echo $script->add_item($id_page, $id_script, $type, $ordem, $dispo, $texto, $placeholder, $max_length, $values_text, $default_value, $required, $hidden, $param1);
         break;
 

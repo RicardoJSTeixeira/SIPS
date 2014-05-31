@@ -7,8 +7,8 @@ var clientBox = function(configs) {
                 id: 0,
                 byReserv: false
             },
-    config = $.extend(defaults, configs);
-    template = "<div class='grid'>\n\
+    config = $.extend(defaults, configs),
+            template = "<div class='grid'>\n\
                             <div class='grid-title'>\n\
                                 <div class='pull-left'>Cliente</div>\n\
                                 <div class='pull-right'>\n\
@@ -31,10 +31,11 @@ var clientBox = function(configs) {
                                 <div class='clear'></div>\n\
                             </div>\n\
                         </div>";
-
+    this.client_info = [];
     this.init = function(callback) {
         var action = (config.byReserv) ? 'byReserv' : 'default';
         $.post("/AM/ajax/client.php", {action: action, id: config.id}, function(clientI) {
+            me.client_info = clientI;
             $(config.target)
                     .append(template)
                     .find("#client_name")
@@ -62,7 +63,9 @@ var clientBox = function(configs) {
                     .text(clientI.bDay)
                     .end()
                     .find("#client_date")
-                    .text(function(){return (clientI.date)?moment(clientI.date).format('LLLL'):''})
+                    .text(function() {
+                        return (clientI.date) ? moment(clientI.date).format('LLLL') : ''
+                    })
                     .end()
                     .find("#client_rsc")
                     .text(clientI.rscName)
@@ -70,7 +73,7 @@ var clientBox = function(configs) {
                     .find("#client_comments")
                     .text(clientI.comments)
                     .end();
-            if(typeof callback==='function'){
+            if (typeof callback === 'function') {
                 callback(clientI);
             }
         }, "json");
@@ -78,5 +81,9 @@ var clientBox = function(configs) {
 
     this.destroy = function() {
         $(me.target).empty();
+    };
+
+    this.get_info = function() {
+        return me.client_info;
     };
 };

@@ -1,0 +1,14 @@
+.r_info{
+    position:relative;
+}
+.imessage{
+    position:relative;
+}
+.menu-sidebar .disabled a{
+    opacity:0.5 !important;
+}
+.menu-sidebar .disabled:hover a{
+    opacity:0.5 !important;
+    color:#e0e0de !important;
+    text-shadow: none !important;
+}

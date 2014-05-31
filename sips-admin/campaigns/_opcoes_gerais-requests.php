@@ -395,7 +395,7 @@ function EditCampaignRecording($User,$CampaignID, $CampaignRecording, $link) {
     mysql_query($query) or die(mysql_error());
 }
 
-function EditLeadOrder($CampaignID, $LeadOrder, $link) {
+function EditLeadOrder($user_class, $CampaignID, $LeadOrder, $link) {
     $query1 = "UPDATE vicidial_campaigns SET lead_order='$LeadOrder' WHERE campaign_id='$CampaignID'";
     mysql_query($query1, $link) or die(mysql_error());
 

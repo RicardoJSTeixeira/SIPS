@@ -6,12 +6,15 @@ var requests = function(basic_path, options_ext)
     $.extend(true, this.config, options_ext);
 
     this.apoio_marketing = {
-        init: function()
+        init: function(callback)
         {
 
 
             $.get("/AM/view/requests/apoio_marketing_modal.html", function(data) {
                 basic_path.append(data);
+                if (typeof callback === "function") {
+                    callback();
+                }
             }, 'html');
         },
         new : function(am_zone)
@@ -62,17 +65,18 @@ var requests = function(basic_path, options_ext)
                 am_zone.on("change", "[name='horario_check']", function(e) {
 
                     if (~~$(this).val() === 1) {
-                        am_zone.find("#horario_manha").show();
-                        am_zone.find("#horario_tarde").show();
+                        am_zone.find("#horario_manha").show().end()
+                                .find("#horario_tarde").show();
                     }
                     else if (~~$(this).val() === 2) {
-                        am_zone.find("#horario_manha").show();
-                        am_zone.find("#horario_tarde").hide();
+                        am_zone.find("#horario_manha").show().end()
+                                .find("#horario_tarde").hide();
                     }
                     else {
-                        am_zone.find("#horario_manha").hide();
-                        am_zone.find("#horario_tarde").show();
+                        am_zone.find("#horario_manha").hide().end()
+                                .find("#horario_tarde").show();
                     }
+                    am_zone.find(".form_datetime_hour").val("").datetimepicker('setStartDate').datetimepicker('setEndDate');
                 });
 
                 //SUBMIT
@@ -111,6 +115,7 @@ var requests = function(basic_path, options_ext)
             });
         },
         get_to_datatable: function(am_zone) {
+
             var apoio_markting_table = am_zone.dataTable({
                 "aaSorting": [[2, "desc"]],
                 "bSortClasses": false,
@@ -122,7 +127,7 @@ var requests = function(basic_path, options_ext)
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"});
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial"}, {"sTitle": "Data final"}, {"sTitle": "Horario", "sWidth": "75px"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Local publicidade", "sWidth": "75px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial", "sWidth": "65px"}, {"sTitle": "Data final", "sWidth": "65px"}, {"sTitle": "Horario"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Pub.", "sWidth": "1px"}, {"sTitle": "Cod."}, {"sTitle": "Total"}, {"sTitle": "c/ Perda"}, {"sTitle": "Vendas"}, {"sTitle": "Valor"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5), "sWidth": "1px"}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_AM').click(function(event) {
@@ -705,7 +710,7 @@ var requests = function(basic_path, options_ext)
                 data_ver_button.data().approved = 1;
                 $.each(this_button.parents("#ver_anexo_mov_stock_modal").find("#tbody_ver_produto_movimentacao_stock").find("tr"), function()
                 {
-                    anexo_array.push({destinario: $(this).find(".td_helper_destinario").text(),quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked")});
+                    anexo_array.push({destinario: $(this).find(".td_helper_destinario").text(), quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked")});
                     if (!~~$(this).find("td").first().find(":checkbox").is(":checked"))
                         data_ver_button.data().approved = 0;
                 });

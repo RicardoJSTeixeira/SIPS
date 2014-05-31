@@ -12,20 +12,20 @@ function table2csv(oTable, exportmode, tableElm) {
         if (text !== "")
             headers.push(header); // actually datatables seems to copy my original headers so there ist an amount of TH cells which are empty
     });
-    csv += headers.join(',') + "\n";
+    csv += headers.join(' \t ') + "\n";
 
     // get table data
     if (exportmode === "full") { // total data
         var total = oTable.fnSettings().fnRecordsTotal();
-        for (i = 0; i < total; i++) {
+        for (i = 0; i < total; i++) { 
             var row = oTable.fnGetData(i);
-            row = strip_tags(row);
+            row = strip_tags(row).replace(/,/g,'\t');
             rows.push(row);
         }
     } else { // visible rows only
         $(tableElm + ' tbody tr:visible').each(function(index) {
             var row = oTable.fnGetData(this);
-            row = strip_tags(row);
+            row = strip_tags(row).replace(/,/g,'\t');
             rows.push(row);
         });
     }
@@ -35,8 +35,8 @@ function table2csv(oTable, exportmode, tableElm) {
     if ($('.csv-data').length)
         $('.csv-data').remove();
     // open a div with a download link 
-    $('body').append($("<form>", {id: 'csv_tmp', enctype: 'multipart/form-data', method: 'post', action: 'lib_php/print_table.php'}).append($("<textarea>", {name: "csv"}).html(csv)));
-    $("#csv_tmp").submit().remove();
+     window.location.href = 'data:application/vnd.ms-excel;charset=UTF-8,'
+                            + encodeURIComponent(csv);
 }
 
 function strip_tags(html) {
@@ -44,3 +44,4 @@ function strip_tags(html) {
     tmp.innerHTML = html;
     return tmp.textContent || tmp.innerText;
 }
+

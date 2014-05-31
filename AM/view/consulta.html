@@ -2,6 +2,8 @@
     .tableradio_class table td:nth-child(1){width: 260px;}
     .tableradio_class table td:nth-child(2){width: 90px;}
 </style>
+
+
 <div id="main_consulta_div">
     <div id="encomenda_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true" >
         <div class="modal-header">
@@ -34,74 +36,85 @@
         <div class="modal-header">
             <h3>Proposta Comercial</h3>
         </div>
-        <table class="table table-mod">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Modelo proposto</th>
-                    <th style="width: 60px;">Valor</th>
-                    <th style="width: 60px;">Qtd.</th>
-                    <th style="width: 60px;">Entrada</th>
-                    <th style="width: 60px;">Nº meses</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th>1ª</th>
-                    <td>
-                        <input type="text" id='p1modelo' class="span"  value=""/>
-                    </td>
-                    <td>
-                        <input type="text" id='p1valor' class="span text-right onlynumber"  value=""/>
-                    </td>
-                    <td>
-                        <input type="text" id='p1qt' class="span text-right onlynumber"  value=""/>
-                    </td>
-                    <td>
-                        <input type="text" id='p1entrada' class="span text-right onlynumber"  value=""/>
-                    </td>
-                    <td>
-                        <input type="text" id='p1meses' class="span text-right onlynumber"  value=""/>
-                    </td>
-                </tr>
-                <tr>
-                    <th>2ª</th>
-                    <td>
-                        <input type="text" id='p2modelo' class="spant"  value=""/>
-                    </td>
-                    <td>
-                        <input type="text" id='p2valor' class="span text-right onlynumber"  value=""/>
-                    </td>
-                    <td>
-                        <input type="text" id='p2qt' class="span text-right onlynumber"  value=""/>
-                    </td>
-                    <td>
-                        <input type="text" id='p2entrada' class="span text-right onlynumber"  value=""/>
-                    </td>
-                    <td>
-                        <input type="text" id='p2meses' class="span text-right onlynumber"  value=""/>
-                    </td>
-                </tr>
-                <tr>
-                    <th>3ª</th>
-                    <td>
-                        <input type="text" id='p3modelo' class="span"  value=""/>
-                    </td>
-                    <td>
-                        <input type="text" id='p3valor' class="span text-right onlynumber"  value=""/>
-                    </td>
-                    <td>
-                        <input type="text" id='p3qt' class="span text-right onlynumber"  value=""/>
-                    </td>
-                    <td>
-                        <input type="text" id='p3entrada' class="span text-right onlynumber"  value=""/>
-                    </td>
-                    <td>
-                        <input type="text" id='p3meses' class="span text-right onlynumber"  value=""/>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <form id="proposta_form">
+            <table class="table table-mod">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Modelo proposto</th>
+                        <th style="width: 60px;">Valor</th>
+                        <th style="width: 30px;">Qtd.</th>
+                        <th style="width: 54px;">Entrada</th>
+                        <th style="width: 60px;">Nº meses</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>1ª</th>
+                        <td>
+                            <input type="text" id='p1modelo' class="span validate[required]"  value=""/>
+                        </td>
+                        <td>
+                            <input type="text" id='p1valor' class="span text-right onlynumber validate[required]"  value=""  maxlength="5"/>
+                        </td>
+                        <td>
+                            <input type="text" id='p1qt' class="span text-right onlynumber validate[required]"  value=""  maxlength="2"/>
+                        </td>
+                        <td>
+                            <div class="input-append" >
+                                <input type="text" id='p1entrada' class="text-right onlynumber validate[required]" style="width:16px"  maxlength="2" value=""/>
+                                <span class="add-on">%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <input type="text" id='p1meses' class="span text-right onlynumber validate[required]"  value="" maxlength="2"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>2ª</th>
+                        <td>
+                            <input type="text" id='p2modelo' class="span"  value=""/>
+                        </td>
+                        <td>
+                            <input type="text" id='p2valor' class="span text-right onlynumber"  value="" maxlength="5"/>
+                        </td>
+                        <td>
+                            <input type="text" id='p2qt' class="span text-right onlynumber"  value=""  maxlength="2"/>
+                        </td>
+                        <td>
+                            <div class="input-append" >
+                                <input type="text" id='p2entrada' class="text-right onlynumber" style="width:16px"  maxlength="2" value=""/>
+                                <span class="add-on">%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <input type="text" id='p2meses' class="span text-right onlynumber"  value="" maxlength="2"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>3ª</th>
+                        <td>
+                            <input type="text" id='p3modelo' class="span"  value=""/>
+                        </td>
+                        <td>
+                            <input type="text" id='p3valor' class="span text-right onlynumber"  value="" maxlength="5"/>
+                        </td>
+                        <td>
+                            <input type="text" id='p3qt' class="span text-right onlynumber"  value=""  maxlength="2"/>
+                        </td>
+                        <td>
+                            <div class="input-append">
+                                <input type="text" id='p3entrada' class="text-right onlynumber" style="width:16px"  maxlength="2" value=""/>
+                                <span class="add-on">%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <input type="text" id='p3meses' class="span text-right onlynumber"  value="" maxlength="2"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>                 
         <div class="modal-footer">
             <button class="btn btn-success" id="print_proposta"><i class="icon-print"></i>Imprimir</button>
             <button class="btn btn-link" data-dismiss="modal" aria-hidden="true">Sair</button>
@@ -138,6 +151,9 @@
         </div>
         <div class="span10">
             <div class="row-fluid">
+
+
+
                 <div id="first_info_div">
                     <div id="inicial_option_div" class="grid">
                         <div class="grid-title">
@@ -147,6 +163,10 @@
                             <button class="btn btn-success" id="pa_yes">Sim</button>
                             <button class="btn btn-primary" id="pa_no">Não</button>
                             <div class="clear"></div>
+
+
+                            <div class="clear"></div>
+
                         </div>  
                     </div>
                     <div id="no_exam_div" class="grid" style="display:none">
@@ -188,6 +208,47 @@
                     </div>
                 </div>
 
+                <div class="grid">
+                    <div class="grid-content" id="3_pessoa_master_div">
+                        <div class="formRow">
+                            <label>Cliente está acompanhado?</label>   
+                            <div class="formRight">
+                                <input type="radio" id="ca_s" name="ca" value="1" >
+                                <label class="radio" for="ca_s"><span></span>Sim</label>
+                                <input type="radio" id="ca_n" name="ca" value="0" checked="checked">
+                                <label class="radio" for="ca_n"><span></span>Não</label>
+                            </div>           
+                        </div>
+
+
+
+                        <div id="3_pessoa_div" style="display:none">
+                            <div class="formRow">
+                                <label>Acompanhante é:</label>
+                                <div class="formRight">
+                                    <input  type="radio" id="tp_1" name="tp" value="marido/esposa" checked="checked">
+                                    <label class="radio_name radio inline"  for="tp_1"><span></span>Marido/Esposa</label> 
+                                    <input  type="radio" id="tp_2" name="tp" value="filho">
+                                    <label class="radio_name radio inline"  for="tp_2"><span></span>Filho(a)</label> 
+                                    <input  type="radio" id="tp_3" name="tp" value="familiar">
+                                    <label class="radio_name radio inline"  for="tp_3"><span></span>Outro Familiar</label> 
+                                    <input  type="radio" id="tp_4" name="tp" value="amigo">
+                                    <label class="radio_name radio inline"  for="tp_4"><span></span>Amigo(a)</label> 
+                                </div>
+                            </div> 
+
+                            <div class="formRow">
+                                <label>Nome do acompanhante:</label>   
+                                <div class="formRight">
+                                    <input id="3_pessoa_input"  maxlength="100" type="text" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+
                 <div class="grid" id="script_main_div" style="display:none">
                     <div class="grid-title">
                         <div class="pull-left">
@@ -196,6 +257,12 @@
                         <div class="pull-right"> <button class='btn btn-info right' onclick="location.reload();" >Inicio</button></div> 
                     </div>
                     <div class="grid-content">
+
+
+
+
+
+
                         <div  id="script_placeholder"  ></div>
 
                     </div>

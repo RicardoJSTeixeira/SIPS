@@ -28,6 +28,7 @@
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-fileupload.min.css" />
         <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-modal-tune.css" />
         <link type="text/css" rel="stylesheet" href="/jquery/themes/flick/bootstrap.css">
+        <link type="text/css" rel="stylesheet" href="css/spice.css">
         <link href="img/favicon.ico" type="image/vnd.microsoft.icon" rel="shortcut icon">
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
@@ -37,14 +38,6 @@
         <!-- Le fav and touch icons -->
         <link rel="shortcut icon" href="/images/icons/favicon.ico">
 
-        <style>            
-            .r_info{
-                position:relative;
-            }
-            .imessage{
-                position:relative;
-            }
-        </style>
 
     </head>
 
@@ -53,7 +46,7 @@
         <!--Header Start-->
         <div class="header" >
 
-           <!-- <a class="logo"><h1>SPICE</h1></a> -->
+            <!-- <a class="logo"><h1>SPICE</h1></a> -->
 
             <div class="pull-right">
 
@@ -146,16 +139,16 @@
             <ul class="menu-sidebar">
                 <li><a href="view/dashboard.html"><i class="icon-dashboard"></i> <span>Geral</span></a></li>
                 <li><a href="view/calendar.html"><i class="icon-calendar"></i> <span>Agenda</span></a></li>
-                <li class="role-dispenser role-branch"><a href="view/create_client.html"><i class="icon-plus"></i><span>Novo Cliente</span></a></li>
-                <li class="role-dispenser role-branch"><a href="view/mass_client.html"><i class="icon-plus-sign"></i> <span>Leads</span></a></li>
-                <li class="role-dispenser role-branch"><a href="view/requests.html"><i class="icon-briefcase"></i><span>Pedidos</span></a></li>
-                <li class="role-dispenser role-branch"><a href="view/requests_apoio_mkt.html"><i class="icon-envelope-alt"></i><span>Apoio Mkt.</span></a></li>
-                <li class="role-admin role-dispenser role-branch"><a href="view/admin/pedidos.html"><i class="icon-briefcase"></i><span>Gestão Pedidos</span></a></li>
-                <li class="role-admin"><a href="view/admin/pedidos_apoio_mkt.html"><i class="icon-envelope-alt"></i><span>Apoio Mkt</span></a></li>
-                <li class="role-admin"><a href="view/admin/produtos.html"><i class="icon-briefcase"></i><span>Produtos</span></a></li>
-                <li class="role-admin"><a href="view/report/consultas.html"><i class="icon-user-md"></i><span>Consultas</span></a></li>
-                <li class="role-admin"><a href="view/report/audiograma.html"><i class="icon-headphones"></i><span>Audiograma</span></a></li>
-                <li class="role-admin"><a href="view/admin/geral.html"><i class="icon-wrench"></i><span>Utils</span></a></li>
+                <li class="role-dispenser role-branch" style="display:none;"><a href="view/create_client.html"><i class="icon-plus"></i><span>Novo Cliente</span></a></li>
+                <li class="role-dispenser role-branch" style="display:none;"><a href="view/mass_client.html"><i class="icon-plus-sign"></i> <span>Leads</span></a></li>
+                <li class="role-dispenser role-branch" style="display:none;"><a href="view/requests.html"><i class="icon-briefcase"></i><span>Pedidos</span></a></li>
+                <li class="role-dispenser role-branch" style="display:none;"><a href="view/requests_apoio_mkt.html"><i class="icon-envelope-alt"></i><span>Apoio Mkt.</span></a></li>
+                <li class="role-admin role-dispenser role-branch" style="display:none;"><a href="view/admin/pedidos.html"><i class="icon-briefcase"></i><span>Gestão Pedidos</span></a></li>
+                <li class="role-admin" style="display:none;"><a href="view/admin/pedidos_apoio_mkt.html"><i class="icon-envelope-alt"></i><span>Apoio Mkt</span></a></li>
+                <li class="role-admin" style="display:none;"><a href="view/admin/produtos.html"><i class="icon-briefcase"></i><span>Produtos</span></a></li>
+                <li class="role-admin" style="display:none;"><a href="view/report/consultas.html"><i class="icon-user-md"></i><span>Consultas</span></a></li>
+                <li class="role-admin" style="display:none;"><a href="view/report/audiograma.html"><i class="icon-headphones"></i><span>Audiograma</span></a></li>
+                <li class="role-admin" style="display:none;"><a href="view/admin/geral.html"><i class="icon-wrench"></i><span>Utils</span></a></li>
             </ul>
         </div>
         <!--Sidebar END-->
@@ -218,7 +211,9 @@
         <script type="text/javascript" src="/bootstrap/js/jsPDF/jspdf.plugin.standard_fonts_metrics.js"></script> 
         <script type="text/javascript" src="/bootstrap/js/jsPDF/jspdf.plugin.split_text_to_size.js"></script>               
         <script type="text/javascript" src="/bootstrap/js/jsPDF/jspdf.plugin.from_html.js"></script>             
-        <script type="text/javascript" src="/bootstrap/js/jsPDF/jspdf.plugin.cell.js"></script>          
+        <script type="text/javascript" src="/bootstrap/js/jsPDF/jspdf.plugin.cell.js"></script>  
+        <script type="text/javascript" src="/bootstrap/js/jsPDF/jspdf.plugin.addimage.js"></script>  
+        <script type="text/javascript" src="/bootstrap/js/jsPDF/jspdf.plugin.split_text_to_size.js"></script>  
         <script type="text/javascript" src="/bootstrap/js/jsPDF/FileSaver/FileSaver.js"></script>
         <script type="text/javascript" src="/bootstrap/js/jsPDF/Deflate/adler32cs.js"></script>
         <script type="text/javascript" src="/bootstrap/js/jsPDF/Deflate/deflate.js"></script>
