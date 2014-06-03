@@ -256,7 +256,7 @@ function consultasMais() {
     }
 
     if (~~localStorage.v7 > 7) {
-        alerts.push({id: 0, message: "Devido a ter <i class='label label-important'>" + localStorage.v7 + "</i> consultas com mais de 7 dias de atraso, só poderá usar o <i>Spice</i> para consultar e fechar consultas.", callback: function() {
+        alerts.add({id: 0, message: "Devido a ter <i class='label label-important'>" + localStorage.v7 + "</i> consultas com mais de 7 dias de atraso, só poderá usar o <i>Spice</i> para consultar e fechar consultas.", callback: function() {
                 $(".menu-sidebar").find("li:not(:eq(0)):not(:eq(0))").addClass("disabled");
                 if ($(".menu-sidebar").find('.active').parent().index() > 1)
                     $.history.push("view/dashboard.html");
@@ -266,7 +266,7 @@ function consultasMais() {
     }
 
     if (~~localStorage.v3 > 3) {
-        alerts.push({id: 0, message: "Cuidado que já tem <i class='label label-important'>" + localStorage.v3 + "</i> consultas com mais de 3 dias de atraso.", callback: function() {
+        alerts.add({id: 0, message: "Cuidado que já tem <i class='label label-important'>" + localStorage.v3 + "</i> consultas com mais de 3 dias de atraso.", callback: function() {
             }});
     }
 }
