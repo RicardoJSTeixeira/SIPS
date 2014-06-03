@@ -1,4 +1,5 @@
 var SpiceU = {};
+
 var alerts = [];
 $(function() {
     $.post("ajax/user_info.php", function(user) {
