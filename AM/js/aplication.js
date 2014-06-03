@@ -11,7 +11,7 @@ $(function() {
             $("#sidebar li.role-admin:not(.role-dispenser)").show();
         }
         init();
-
+        alerts.init();
     }, "json")
             .fail(function() {
                 window.location = "logout.php";
@@ -56,11 +56,11 @@ function init() {
     });
 
     get_messages();
-    var messages_timeout = setInterval(get_messages, 1000 * 60);
+    var messages_timeout = setInterval(get_messages, 1000 * 15);
     get_alerts();
     var alerts_timeout = setInterval(function() {
         get_alerts();
-    }, 1000 * 60);
+    }, 1000 * 15);
 
 
 
@@ -208,7 +208,6 @@ function get_alerts(callback) {
         $.each(data, function() {
             if (SpiceU.user_level < 5) {
                 if (this.alert.search(/Apoio Mkt./i) != -1) {
-
                     alerts.add({id: this.id, message: "Á " + moment(this.entry_date).fromNow() + "-" + this.alert, callback: function() {
                             $.post("ajax/general_functions.php", {action: "set_readed", id_msg: this.id});
                         }});
@@ -255,7 +254,7 @@ function consultasMais() {
         return false;
     }
 
-    if (~~localStorage.v7 > 7) {
+  /*  if (~~localStorage.v7 > 7) {
         alerts.add({id: 0, message: "Devido a ter <i class='label label-important'>" + localStorage.v7 + "</i> consultas com mais de 7 dias de atraso, só poderá usar o <i>Spice</i> para consultar e fechar consultas.", callback: function() {
                 $(".menu-sidebar").find("li:not(:eq(0)):not(:eq(0))").addClass("disabled");
                 if ($(".menu-sidebar").find('.active').parent().index() > 1)
@@ -263,7 +262,7 @@ function consultasMais() {
             }});
 
         return false;
-    }
+    }*/
 
     if (~~localStorage.v3 > 3) {
         alerts.add({id: 0, message: "Cuidado que já tem <i class='label label-important'>" + localStorage.v3 + "</i> consultas com mais de 3 dias de atraso.", callback: function() {

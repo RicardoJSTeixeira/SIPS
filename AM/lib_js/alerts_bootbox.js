@@ -2,40 +2,30 @@ var alerts_class = function()
 {
 
     var alert_lst = [];
+    var me = this;
+    var alert_timeout = "";
 
-
-
-    this.add = function(item)
+    this.init = function()
     {
-        alert_lst.push(item);
+        alert_timeout = setInterval(me.create_alert, 1000);
+    };
 
-        this.create_alert();
-    }
-
-
-
-    this.remove = function(callback)
-    {
-        alert_lst.pop();
-        if (typeof callback === "function") {
-            callback();
-        }
-    }
-
-    this.search = function(id, callback)
-    {
+    this.add = function(item) {
         var found = false;
-        $.each(alert_lst, function()
-        {
-            if (id = this.id)
+        for (var i = 0; i < alert_lst.length; i++) {
+            if (alert_lst[i].id === item.id)
+            {
+                alert_lst[i] = item;
+                return true;
                 found = true;
-        });
-
-        return found;
-        if (typeof callback === "function") {
-            callback();
+            }
         }
-    }
+        if (!found)
+            alert_lst.push(item);
+
+        me.create_alert();
+
+    };
 
 
     this.create_alert = function(callback)
@@ -45,26 +35,36 @@ var alerts_class = function()
         {
             return false;
         }
-        if ($(".bootbox").length)
-        {
-            $(".bootbox .modal-footer a").click(function()
-            {
-                this.create_alert();
-            })
-            return false;
-        }
-        $.each(alert_lst, function()
-        {
-            bootbox.alert(this.message, function(a) {
-                if (typeof this.callback === "function") {
-                    this.callback();
-                }
-            });
-        });
 
+
+        var alert = "";
+        if (alert_lst.length)
+            alert = alert_lst.pop();
+        else
+            return false;
+
+
+        bootbox.alert(alert.message, function(a) {
+            if (typeof alert.callback === "function") {
+                alert.callback();
+            }
+        });
 
         if (typeof callback === "function") {
             callback();
         }
-    }
+
+    };
+
+
+    this.clear = function(callback) {
+        alert_lst = [];
+        if (typeof callback === "function") {
+            callback();
+        }
+    };
+
+
+
+
 }
