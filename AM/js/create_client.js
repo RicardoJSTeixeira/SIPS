@@ -10,6 +10,15 @@ $(function() {
                 finishButton: false
             });
 
+
+
+
+
+
+
+
+
+
     $("#verif_client_data").validationEngine();
     $.post("ajax/create_client.php", {action: "get_fields"},
     function(data) {
@@ -49,7 +58,6 @@ $(function() {
                                 );
                     }
                 };
-
                 elmt
                         .append(options)
                         .change(magia);
@@ -66,20 +74,21 @@ $(function() {
                 elmt.change(function() {
                     if (this.value.length < 9)
                         return false;
-
                     $.post("ajax/client.php", {action: "byWhat", what: this.name, value: this.value}, function(clients) {
                         if (!clients.length)
                             return false;
-
                         var trs = "";
                         $.each(clients, function() {
                             trs += "<tr>\n\
-                                        <td>"+this.first_name+" "+this.last_name+"</td>\n\
-                                        <td>"+this.phone_number+"</td>\n\
-                                        <td>"+this.middle_initial+"</td>\n\
-                                        <td>"+this.refClient+"</td>\n\
-                                        <td>"+this.date_of_birth+"</td>\n\
-                                    </tr>";
+                                        <td>" + this.first_name + " " + this.last_name + "</td>\n\
+                                        <td>" + this.phone_number + "</td>\n\
+                                        <td>" + this.middle_initial + "</td>\n\
+                                        <td>" + this.refClient + "</td>\n\
+                                        <td>" + this.date_of_birth + "</td>\n\
+                                    <td><div class='view-button'> <button class='btn btn-mini icon-alone ver_cliente' data-lead_id='" + this.lead_id + "' title='Ver Cliente'><i class='icon-edit'></i></button>\n\
+<button class = 'btn btn-mini icon-alone criar_encomenda' data-lead_id ='" + this.lead_id + "' title='Nova Encomenda'> <i class='icon-shopping-cart'></i></button>\n\
+<button class = 'btn btn-mini icon-alone criar_marcacao' data-lead_id ='" + this.lead_id + "' title='Marcar Consulta'> <i class='icon-calendar'></i></button></div></td>\n\
+                                                </tr>";
                         });
                         bootbox.alert("<div class='alert alert-warning'>Foi encontrado um cliente com estes dados.</div>\
                                         <table class='table table-mod table-bordered table-striped table-condensed'>\n\
@@ -89,13 +98,32 @@ $(function() {
                                                     <td>Nº</td>\n\
                                                     <td>Nif</td>\n\
                                                     <td>Ref. Cliente</td>\n\
-                                                    <td>Data de Nasc.</td>\n\
+                                                    <td>Data de Nasc.</td>\n\\n\
+                                                      <td style='width:30px;'>Opções</td>\n\
                                                 </tr>\n\
                                             </thead>\n\
                                             <tbody>\n\
-                                            "+trs+"\n\
+                                            " + trs + "\n\
                                             </tbody>\n\
-                                        </table>");
+                                        </table>").on("click", ".criar_marcacao", function()
+                        {
+                            bootbox.hideAll();
+                            var en = btoa($(this).data().lead_id);
+                            $.history.push("view/calendar.html?id=" + en);
+                        }).on("click", ".criar_encomenda", function()
+                        {
+                            bootbox.hideAll();
+                            var
+                                    data = $(this).data(),
+                                    en = btoa(data.lead_id);
+                            $.history.push("view/new_requisition.html?id=" + en);
+                        }).on("click", ".ver_cliente", function()
+                        {
+
+                            var client = new cliente_info($(this).data.lead_id, null);
+                            client.init(null);
+
+                        });
                     }, "json");
                 });
             }
@@ -110,7 +138,6 @@ $(function() {
                     custom_class = "validate[custom[onlyNumberSp]]";
                     input = input1;
                     break;
-
                 case "FIRST_NAME":
                     custom_class = "validate[required]";
                     input = input1;
@@ -155,7 +182,6 @@ $(function() {
                     break;
             }
             elmt.addClass(custom_class);
-
             input.append($("<div>", {class: "formRow" + hide})
                     .append($("<label>").text(this.display_name))
                     .append($("<div>", {class: "formRight"})
@@ -169,9 +195,7 @@ $(function() {
         $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, initialDate: new Date(moment().subtract('years', 65).format())}).attr('data-prompt-position', 'topRight:120');
     }
     , "json");
-
 });
-
 $("#form_create_client").submit(function(e) {
     e.preventDefault();
     if ($("#form_create_client").validationEngine("validate"))
@@ -185,7 +209,6 @@ $("#form_create_client").submit(function(e) {
         , "json");
     }
 });
-
 $("#btn_criar_marcacao").on("click", function() {
     var en = btoa($("#criar_marcacao").modal("hide").data("client_id"));
     $.history.push("view/calendar.html?id=" + en);
