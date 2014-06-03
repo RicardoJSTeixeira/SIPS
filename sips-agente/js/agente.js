@@ -4491,6 +4491,20 @@ function  DispoSelect_submit_allowed()
 
             }
             vcFormIFrame.document.form_custom_fields.submit();
+            if (isSALE) {
+                $.post('ajax/sale_actions.php', {
+                    uniqueid: unique_id_hack,
+                    lead_id: lead_id_hack,
+                    dispo: DispoChoice,
+                    dispoAtt: campaign_status[DispoChoice],
+                    campaign_id: campaign_id.value,
+                    user: user,
+                    client: clientName,
+                    length_in_sec: AgainCalLSecondS
+                }, function(data) {
+                    console.log(data);
+                });
+            }
             DispoSubmitFinalStep();
             return true;
         }

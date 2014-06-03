@@ -171,6 +171,7 @@ function connectaPostCalendar() {
 }
 
 function SendSms(){
+    usleep(2000000);
     if (isset($_GET['lead_id'])) { $lead_id = $_GET['lead_id']; } else { $lead_id = $_POST['lead_id']; }
     if (isset($_GET['uniqueid'])) { $unique_id = $_GET['uniqueid']; } else { $unique_id = $_POST['uniqueid']; }
     if (isset($_GET['user'])) { $user = $_GET['user']; } else { $user = $_POST['user']; }
