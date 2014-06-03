@@ -38,12 +38,8 @@ switch ($action) {
                             while (false !== ($file = readdir($handle))) {
                                 if (is_file($srcDir . '/' . $file)) {
                                     if (strstr($file, $old_id . "_-_")) {
-
-
                                         $temp_file = str_replace($old_id . "_-_", "", $file);
-    
-
-                                        rename($srcDir . '/' . $file, $destDir . '/' . $temp_file);
+                                            rename($srcDir . '/' . $file, $destDir . '/' . $temp_file);
                                     }
                                 }
                             }
@@ -62,10 +58,8 @@ switch ($action) {
             }
         } else
             echo(json_encode("A pasta escolhida ja existe"));
-
         echo(json_encode("Pasta de anexos criada"));
         break;
-
 
     case "delete":
         if (unlink($destiny . $name))
@@ -73,7 +67,6 @@ switch ($action) {
         else
             echo("Não foi possível remover o ficheiro");
         break;
-
 
     case "get_anexos":
         $js = array();
