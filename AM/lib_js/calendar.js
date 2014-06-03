@@ -525,6 +525,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 .find("form").submit(function(e) {
             e.preventDefault();
             if (me.modals.mkt.find("form").validationEngine('validate')) {
+                $("#save_mkt").prop('disabled', true);
                 $.post("ajax/requests.php", {
                     action: 'set_mkt_report',
                     id: me.modals.mkt.data().calEvent.extra_id,
@@ -533,7 +534,16 @@ var calendar = function(selector, data, modals, ext, client, user) {
                     rastreios_perda: $(this).find('#rastreios_perda').val(),
                     vendas: $(this).find('#vendas').val(),
                     valor: $(this).find('#valor').val()
-                }, function(data) {
+                }, function() {
+                    me.modals.mkt.modal("hide");
+                    $("#save_mkt").prop('disabled', false);
+                    $.jGrowl("Relatório enviado com sucesso!");
+                    $.each($("#calendar").fullCalendar("clientEvents", function(a) {
+                        return a.extra_id === me.modals.mkt.data().calEvent.extra_id;
+                    }), function() {
+                        this.closed = true;
+                        me.calendar.fullCalendar('updateEvent', this);
+                    });
                 }, 'json');
             }
         })

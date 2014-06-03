@@ -75,12 +75,12 @@ class apoio_marketing extends requests_class {
 
     public function get_horario($id) {
         $horarios = array();
-        $query = "SELECT horario from spice_apoio_marketing where id=?";
+        $query = "SELECT horario from spice_apoio_marketing where id=:id";
         $stmt = $this->_db->prepare($query);
-        $stmt->execute(array($id));
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $value = json_decode($row["horario"]);
-            $horarios[] = array("tipo" => $value->tipo, "inicio1" => $value->inicio1, "inicio2" => $value->inicio2, "fim1" => $value->fim1, "fim2" => $value->fim2);
+        $stmt->execute(array(":id" => $id));
+        if ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
+            $value = json_decode($row->horario);
+            $horarios = array("tipo" => $value->tipo, "inicio1" => $value->inicio1, "inicio2" => $value->inicio2, "fim1" => $value->fim1, "fim2" => $value->fim2);
         }
         return $horarios;
     }
@@ -178,10 +178,11 @@ class correio extends requests_class {
 
             $approved = $row[8] == "1" ? 1 : 0;
 
-            if ($row[6])
+            if ($row[6]) {
                 $row[6] = "<button data-anexo_id = '$row[0]' data-approved = '$approved' class = 'btn ver_anexo_correio'><i class = 'icon-eye-open'></i>Anexos</button>";
-            else
+            } else {
                 $row[6] = "Sem anexo";
+            }
             switch ($row[8]) {
                 case "0":
                     $row[9] = "<div class = 'btn-group'><button class = 'btn accept_report_correio btn-success icon-alone' value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_correio btn-warning icon-alone' value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";

@@ -1,5 +1,4 @@
-$(function()
-{
+$(function() {
 
     $('#form_create_client').stepy(
             {
@@ -13,11 +12,8 @@ $(function()
 
     $("#verif_client_data").validationEngine();
     $.post("ajax/create_client.php", {action: "get_fields"},
-    function(data)
-    {
-        $("#inputs_div1").empty();
-        $("#inputs_div2").empty();
-        $("#inputs_div3").empty();
+    function(data) {
+        $("#inputs_div1,#inputs_div2,#inputs_div3").empty();
         var input,
                 custom_class = "",
                 input1 = $("#inputs_div1"),
@@ -26,47 +22,85 @@ $(function()
                 elmt,
                 specialE,
                 hide = "";
-        $.each(data, function()
-        {
- 
+        $.each(data, function() {
+
             if (this.name === "extra5") {
                 elmt = $("<select>", {id: this.name, name: this.name});
                 var optionsRaw = ["", "ADM (ADME/ADMA/ADMFA)", "ADSE", "APL", "CGD", "Centro Nac. de Protecção Contra Riscos Profissionais", "EDP", "PETROGAL", "PT/CTT ACS", "SAD-PSP", "SAD/GNR (ADMG)", "SAMS", "SEG. SOCIAL", "Serviços Sociais do Ministério da Justiça", "OUTRAS"];
                 options = optionsRaw.map(function(v) {
                     return new Option(v, v);
                 });
-                magia=function() {
-                            if ($(this).val() === "OUTRAS") {
-                                $(this).replaceWith(
-                                        $('<div>', {class: 'input-append'})
+                magia = function() {
+                    if ($(this).val() === "OUTRAS") {
+                        $(this).replaceWith(
+                                $('<div>', {class: 'input-append'})
+                                .append(
+                                        $("<input>", {type: "text", id: $(this).prop("id"), name: $(this).prop("name")})
+                                        )
+                                .append(
+                                        $('<btn>', {class: 'btn icon-alone'})
                                         .append(
-                                                $("<input>", {type: "text", id: $(this).prop("id"), name: $(this).prop("name")})
+                                                $('<i>', {class: 'icon-undo'})
                                                 )
-                                        .append(
-                                                $('<btn>', {class: 'btn icon-alone'})
-                                                .append(
-                                                        $('<i>', {class: 'icon-undo'})
-                                                        )
-                                                .click(function() {
-                                                    $(this).parent().replaceWith(specialE.val("").change(magia));
-                                                })
-                                                )
-                                        );
-                            }
-                        };
+                                        .click(function() {
+                                            $(this).parent().replaceWith(specialE.val("").change(magia));
+                                        })
+                                        )
+                                );
+                    }
+                };
+
                 elmt
                         .append(options)
                         .change(magia);
                 specialE = elmt;
             } else if (this.name === "TITLE") {
-                elmt = $(mt = $("<select>", {id: this.name, name: this.name, class: "input-mini"}).attr('data-prompt-position','topRight:120').append([new Option("", ""), new Option("Sr.", "Sr."), new Option("Sra. D.", "Sra. D.")]));
+                elmt = $("<select>", {id: this.name, name: this.name, class: "input-mini"}).attr('data-prompt-position', 'topRight:120').append([new Option("", ""), new Option("Sr.", "Sr."), new Option("Sra. D.", "Sra. D.")]);
             } else if (this.name === "extra6") {
                 elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "NO"});
             } else {
                 elmt = $("<input>", {type: "text", id: this.name, name: this.name});
             }
-            switch (this.name)
-            {
+
+            if (this.name === "PHONE_NUMBER" || this.name === "extra2" || this.name === "MIDDLE_INITIAL") {
+                elmt.change(function() {
+                    if (this.value.length < 9)
+                        return false;
+
+                    $.post("ajax/client.php", {action: "byWhat", what: this.name, value: this.value}, function(clients) {
+                        if (!clients.length)
+                            return false;
+
+                        var trs = "";
+                        $.each(clients, function() {
+                            trs += "<tr>\n\
+                                        <td>"+this.first_name+" "+this.last_name+"</td>\n\
+                                        <td>"+this.phone_number+"</td>\n\
+                                        <td>"+this.middle_initial+"</td>\n\
+                                        <td>"+this.refClient+"</td>\n\
+                                        <td>"+this.date_of_birth+"</td>\n\
+                                    </tr>";
+                        });
+                        bootbox.alert("<div class='alert alert-warning'>Foi encontrado um cliente com estes dados.</div>\
+                                        <table class='table table-mod table-bordered table-striped table-condensed'>\n\
+                                            <thead>\n\
+                                                <tr>\n\
+                                                    <td>Nome</td>\n\
+                                                    <td>Nº</td>\n\
+                                                    <td>Nif</td>\n\
+                                                    <td>Ref. Cliente</td>\n\
+                                                    <td>Data de Nasc.</td>\n\
+                                                </tr>\n\
+                                            </thead>\n\
+                                            <tbody>\n\
+                                            "+trs+"\n\
+                                            </tbody>\n\
+                                        </table>");
+                    }, "json");
+                });
+            }
+
+            switch (this.name) {
                 case "PHONE_NUMBER":
                     custom_class = "validate[required,custom[onlyNumberSp],minSize[9]]";
                     input = input1;
@@ -132,14 +166,13 @@ $(function()
         $("#inputs_div2").append($("<div>", {class: "clear"}));
         $("#inputs_div3").append($("<div>", {class: "clear"}));
         $("#PHONE_NUMBER").autotab('numeric');
-        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, initialDate: new Date(moment().subtract('years', 65).format())}).attr('data-prompt-position','topRight:120');
+        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, initialDate: new Date(moment().subtract('years', 65).format())}).attr('data-prompt-position', 'topRight:120');
     }
     , "json");
 
 });
 
-$("#form_create_client").submit(function(e)
-{
+$("#form_create_client").submit(function(e) {
     e.preventDefault();
     if ($("#form_create_client").validationEngine("validate"))
     {
@@ -153,9 +186,7 @@ $("#form_create_client").submit(function(e)
     }
 });
 
-
-$("#btn_criar_marcacao").on("click", function()
-{
+$("#btn_criar_marcacao").on("click", function() {
     var en = btoa($("#criar_marcacao").modal("hide").data("client_id"));
     $.history.push("view/calendar.html?id=" + en);
 });

@@ -12,6 +12,7 @@ require "$root/AM/lib_php/db.php";
 require "$root/AM/lib_php/calendar.php";
 require "$root/AM/lib_php/user.php";
 require "$root/AM/lib_php/msg_alerts.php";
+require "$root/swiftemail/lib/swift_required.php";
 
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
@@ -62,13 +63,67 @@ switch ($action) {
                 $end = $horario["fim2"];
                 break;
         }
-
+                
         $apoioID = $apoio_marketing->create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade);
 
         while ($ref = array_pop($refs)) {
             $id[] = $calendar->newReserva($userID->username, "", strtotime($data_inicial . " " . $start), strtotime($data_final . " " . $end), $system_types["Rastreio c/ MKT"], $ref->id, '', $apoioID);
         }
 
+        $msg = "
+         <h3>PEDIDO DE APOIO MKT - RASTREIOS</h3>
+
+<strong>Dispenser:</strong>$userID->username
+<br>
+<br>
+
+<strong>Data de rastreio:</strong>$data_inicial
+<br>
+<br>
+
+<strong>Horário de rastreio:</strong> " . horario2mail($horario) . "
+<br>
+<br>
+
+<strong>Localidade:</strong> $localidade
+<br>
+<br>
+
+<strong>Local de rastreio:</strong> $local
+<br>
+<br>
+
+<strong>Morada:</strong> $morada
+<br>
+<br>
+
+<strong>Observações:</strong>
+<br>
+$comments
+<br>
+<br>
+
+<table>
+    <thead>
+        <tr>
+            <th width='100' bgcolor='#000000'>
+                <p style='color:#fff;margin:0;'>Código Postal</p>
+            </th>	
+            <th width='450' bgcolor='#000000'>
+                <p style='color:#fff;margin:0;'>Freguesia</p>
+            </th>	
+        </tr>
+    </thead>
+    <tbody>
+    " . postal2tr($local_publicidade) . "
+    </tbody>
+</table>
+<br>
+
+<strong>Submetido por:</strong> $userID->username - $userID->name";
+//marketing@acusticamedica.pt
+        send_email("rteixeira@finesource.eu", "Ricardo Teixeira", $msg, "RELATÓRIO DE RASTREIO - APOIO MKT - $userID->username - $ap->data_inicial");
+       
         echo json_encode($apoio_marketing->setReservation($apoioID, $id));
         break;
 
@@ -79,7 +134,6 @@ switch ($action) {
     case "criar_relatorio_movimentacao_stock":
         echo json_encode($relatorio_movimentacao_stock->create($data, $produtos));
         break;
-
 
     //Gets to Datatables
     case "get_apoio_marketing_to_datatable":
@@ -129,7 +183,61 @@ switch ($action) {
         while ($rst = array_pop($idRst)) {
             $calendar->closeMKT($rst);
         }
-        echo json_encode($apoio_marketing->set_report($id,$cod,$total_rastreios,$rastreios_perda,$vendas,$valor));
+
+        $ap = $apoio_marketing->get_one($id);
+
+        $msg = "
+<h3>RELATÓRIO DE RASTREIO - APOIO MKT</h3>
+
+    <strong>Localidade:</strong>
+<br>
+    $ap->local
+<br>
+<br>
+    <strong>Data de Rastreio:</strong>
+<br>
+    $ap->data_inicial
+<br>
+<br>
+    <strong>Cod. MKT:</strong>
+<br>
+    $cod
+<br>
+<br>
+    <strong>Dispenser:</strong>
+<br>
+    $userID->username
+<br>
+<br>
+    <strong>Rastreios efectuados:</strong>
+<br>
+    $total_rastreios
+<br>
+<br>
+    <strong>Rastreios com perda:</strong>
+<br>
+    $rastreios_perda
+<br>
+<br>
+    <strong>Vendas (QT):</strong>
+<br>
+    $vendas
+<br>
+<br>
+    <strong>Valor (€):</strong>
+<br>
+    $valor
+<br>
+<br>
+    <strong>Observações:</strong>
+<br>
+    $ap->data_inicial
+<br>
+<br>
+    <strong>Submetido por:</strong> $userID->username - $userID->name";
+//marketing@acusticamedica.pt
+        send_email("rteixeira@finesource.eu", "Ricardo Teixeira", $msg, "RELATÓRIO DE RASTREIO - APOIO MKT - $userID->username - $ap->data_inicial");
+        echo json_encode($apoio_marketing->set_report($id, $cod, $total_rastreios, $rastreios_perda, $vendas, $valor));
         exit;
 
     case "get_horario_from_apoio_marketing":
@@ -241,4 +349,43 @@ switch ($action) {
 
     default:
         echo 'Are you an hacker? if yes then please go change your underpants, it stinks!';
+}
+
+function send_email($email_address, $email_name, $msg, $assunto) {
+    $transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
+            ->setUsername('ccamemail@gmail.com')
+            ->setPassword('ccamemail1234');
+
+    $mailer = Swift_Mailer::newInstance($transport);
+
+    $message = Swift_Message::newInstance($assunto)
+            ->setFrom(array('ccamemail@gmail.com' => 'Acústica Médica'))
+            ->setTo(array($email_address => $email_name));
+
+    $message->setBody($msg, 'text/html');
+
+    $result = $mailer->send($message);
+
+    return ($result >= 1);
+}
+
+function postal2tr($postal) {
+    $trs = "";
+    foreach ($postal as $value) {
+        $trs.="<tr><td>$value[cp]</td><td>$value[freguesia]</td></tr>";
+    }
+    return $trs;
+}
+
+function horario2mail($horario) {
+    switch ($horario[tipo]) {
+        case 1:
+            return "das $horario[inicio1] às $horario[inicio2] e das $horario[fim1] às $horario[fim2]";
+        case 2:
+            return "das $horario[inicio1] às $horario[inicio2]";
+        case 3:
+            return "das $horario[fim1] às $horario[fim2]";
+        default:
+            break;
+    }
 }

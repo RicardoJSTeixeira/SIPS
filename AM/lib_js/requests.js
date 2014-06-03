@@ -8,8 +8,6 @@ var requests = function(basic_path, options_ext)
     this.apoio_marketing = {
         init: function(callback)
         {
-
-
             $.get("/AM/view/requests/apoio_marketing_modal.html", function(data) {
                 basic_path.append(data);
                 if (typeof callback === "function") {
@@ -80,8 +78,9 @@ var requests = function(basic_path, options_ext)
                 });
 
                 //SUBMIT
-                am_zone.on("click", "#submit_am", function(e) {
+                am_zone.find("#apoio_am_form").submit(function(e) {
                     e.preventDefault();
+                    am_zone.find("#submit_am").prop('disabled', true);
                     if (am_zone.find("#apoio_am_form").validationEngine("validate")) {
                         if (am_zone.find("#table_tbody_ldp tr").length) {
                             var local_publicidade_array = [];
@@ -92,7 +91,7 @@ var requests = function(basic_path, options_ext)
                                 data_inicial: am_zone.find("#data_rastreio1").val(),
                                 data_final: am_zone.find("#data_rastreio2").val(),
                                 horario: {
-                                    tipo: am_zone.find("[name='horario_check']:checked").val(),
+                                    tipo: ~~am_zone.find("[name='horario_check']:checked").val(),
                                     inicio1: am_zone.find("#data_inicio1").val(),
                                     inicio2: am_zone.find("#data_inicio2").val(),
                                     fim1: am_zone.find("#data_fim1").val(),
@@ -104,7 +103,8 @@ var requests = function(basic_path, options_ext)
                                 local_publicidade: local_publicidade_array},
                             function() {
                                 $('#apoio_am_form').stepy('step', 1);
-                                am_zone.find(":input").val("");
+                                am_zone.find("#apoio_am_form").get(0).reset();
+                                am_zone.find("#submit_am").prop('disabled', false);
                                 $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
                             }, "json");
                         }
@@ -127,7 +127,7 @@ var requests = function(basic_path, options_ext)
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"});
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial", "sWidth": "65px"}, {"sTitle": "Data final", "sWidth": "65px"}, {"sTitle": "Horario"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Pub.", "sWidth": "1px"}, {"sTitle": "Cod."}, {"sTitle": "Total"}, {"sTitle": "c/ Perda"}, {"sTitle": "Vendas"}, {"sTitle": "Valor"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5), "sWidth": "1px"}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial", "sWidth": "65px"}, {"sTitle": "Data final", "sWidth": "65px"}, {"sTitle": "Horario", "sWidth": "46px"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Pub.", "sWidth": "1px"}, {"sTitle": "Cod."}, {"sTitle": "Total", "sWidth": "31px"}, {"sTitle": "c/ Perda", "sWidth": "36px"}, {"sTitle": "Vendas", "sWidth": "46px"}, {"sTitle": "Valor", "sWidth": "33px"}, {"sTitle": "Estado", "sWidth": "63px"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_AM').click(function(event) {
@@ -136,20 +136,20 @@ var requests = function(basic_path, options_ext)
             });
             am_zone.on("click", ".ver_horario", function() {
                 var id = ~~$(this).data().apoio_marketing_id;
-                $.post("ajax/requests.php", {action: "get_horario_from_apoio_marketing", id: id}, function(data) {
+                $.post("ajax/requests.php", {action: "get_horario_from_apoio_marketing", id: id}, function(horario) {
                     basic_path.find("#ver_horario_modal .horario_all_master").hide();
 
-                    if (~~data[0].tipo === 1)
+                    if (~~horario.tipo === 1)
                         basic_path.find("#ver_horario_modal .horario_all_master").show();
-                    if (~~data[0].tipo === 2)
+                    if (~~horario.tipo === 2)
                         basic_path.find("#ver_horario_modal #horario_manha").show();
-                    if (~~data[0].tipo === 3)
+                    if (~~horario.tipo === 3)
                         basic_path.find("#ver_horario_modal #horario_tarde").show();
 
-                    basic_path.find("#ver_horario_modal #manha_inicio").text(data[0].inicio1);
-                    basic_path.find("#ver_horario_modal #manha_fim").text(data[0].inicio2);
-                    basic_path.find("#ver_horario_modal #tarde_inicio").text(data[0].fim1);
-                    basic_path.find("#ver_horario_modal #tarde_fim").text(data[0].fim2);
+                    basic_path.find("#ver_horario_modal #manha_inicio").text(horario.inicio1);
+                    basic_path.find("#ver_horario_modal #manha_fim").text(horario.inicio2);
+                    basic_path.find("#ver_horario_modal #tarde_inicio").text(horario.fim1);
+                    basic_path.find("#ver_horario_modal #tarde_fim").text(horario.fim2);
 
                     basic_path.find("#ver_horario_modal").modal("show");
                 }, "json");
@@ -216,7 +216,7 @@ var requests = function(basic_path, options_ext)
                     $(this).parent().parent().remove();
                 });
                 //SUBMIT
-                rf_zone.on("click", "#submit_rf", function(e) {
+                rf_zone.find("#relatorio_frota_form").submit(function(e) {
                     e.preventDefault();
                     if (rf_zone.find("#relatorio_frota_form").validationEngine("validate")) {
                         if (rf_zone.find("#table_tbody_rf tr").length) {
@@ -234,8 +234,8 @@ var requests = function(basic_path, options_ext)
                             else {
                                 var ocorrencias_array = [];
                                 $.each(rf_zone.find("#table_tbody_rf").find("tr"), function() {
-                                    ocorrencias_array.push(
-                                            {data: $(this).find(".linha_data").val(),
+                                    ocorrencias_array.push({
+                                                data: $(this).find(".linha_data").val(),
                                                 ocorrencia: $(this).find(".linha_ocorrencia").val(),
                                                 km: $(this).find(".linha_km").autoNumeric('get')});
                                 });
@@ -247,7 +247,7 @@ var requests = function(basic_path, options_ext)
                                     ocorrencias: ocorrencias_array,
                                     comments: rf_zone.find("#input_comments").val().length ? rf_zone.find("#input_comments").val() : ""},
                                 function() {
-                                    rf_zone.find(":input").val("");
+                                    rf_zone.find("#relatorio_frota_form").get(0).reset();
                                     $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
                                 }, "json");
                             }
@@ -321,7 +321,7 @@ var requests = function(basic_path, options_ext)
                 rc_zone.append(data);
                 rc_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
                 //SUBMIT
-                rc_zone.on("click", "#submit_rc", function(e) {
+                rc_zone.find("#relatorio_correio_form").submit(function(e) {
                     e.preventDefault();
                     if (rc_zone.find("#relatorio_correio_form").validationEngine("validate"))
                     {
@@ -340,7 +340,7 @@ var requests = function(basic_path, options_ext)
                                 input_doc_obj_assoc: docs_objs,
                                 comments: rc_zone.find("#input_comments").val().length ? rc_zone.find("#input_comments").val() : "Sem observações"},
                             function() {
-                                rc_zone.find(":input").val("");
+                                rc_zone.find("#relatorio_correio_form").get(0).reset();
                                 $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
                             }, "json");
                         }
@@ -452,7 +452,7 @@ var requests = function(basic_path, options_ext)
                 rms_zone.append(data);
                 rms_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).val(moment().format('YYYY-MM-DD'));
                 //SUBMIT
-                rms_zone.on("click", "#submit_rfms", function(e) {
+                rms_zone.find("#relatorio_mensal_stock_form").submit(function(e) {
                     e.preventDefault();
                     if (rms_zone.find("#relatorio_mensal_stock_form").validationEngine("validate")) {
                         var prdt_objs = [];
@@ -469,7 +469,7 @@ var requests = function(basic_path, options_ext)
                                     },
                             function()
                             {
-                                rms_zone.find(":input").val("");
+                                rms_zone.find("#relatorio_mensal_stock_form").get(0).reset();
                                 $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
                             }, "json");
                         }
@@ -589,7 +589,7 @@ var requests = function(basic_path, options_ext)
                 rmovs.append(data);
                 rmovs.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).val(moment().format('YYYY-MM-DD'));
                 //SUBMIT
-                rmovs.on("click", "#submit_rfms", function(e) {
+                rmovs.find("#relatorio_movimentacao_stock_form").submit(function(e) {
                     e.preventDefault();
                     if (rmovs.find("#relatorio_movimentacao_stock_form").validationEngine("validate")) {
                         var prdt_objs = [];
@@ -605,7 +605,7 @@ var requests = function(basic_path, options_ext)
                                     },
                             function()
                             {
-                                rmovs.find(":input").val("");
+                                rmovs.find("#relatorio_movimentacao_stock_form").get(0).reset();
                                 $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
                             }, "json");
                         }
