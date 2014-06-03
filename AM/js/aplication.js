@@ -1,6 +1,6 @@
 var SpiceU = {};
 
-var alerts = [];
+var alerts = new alerts_class();
 $(function() {
     $.post("ajax/user_info.php", function(user) {
         SpiceU = user;
@@ -11,6 +11,7 @@ $(function() {
             $("#sidebar li.role-admin:not(.role-dispenser)").show();
         }
         init();
+
     }, "json")
             .fail(function() {
                 window.location = "logout.php";
@@ -56,10 +57,13 @@ function init() {
 
     get_messages();
     var messages_timeout = setInterval(get_messages, 1000 * 60);
-    get_alerts(create_alerts);
+    get_alerts();
     var alerts_timeout = setInterval(function() {
-        get_alerts(create_alerts);
+        get_alerts();
     }, 1000 * 60);
+
+
+
     //Init all the modals | for the multiples datatoggles..
     $(document).on('click.modal.data-api', '[data-toggle!="modal"][data-toggle~="modal"]', function(e) {
         var $this = $(this),
@@ -204,10 +208,11 @@ function get_alerts(callback) {
         $.each(data, function() {
             if (SpiceU.user_level < 5) {
                 if (this.alert.search(/Apoio Mkt./i) != -1) {
-                    alerts.push({id: this.id, message: "Á " + moment(this.entry_date).fromNow() + "-" + this.alert, callback: function() {
+
+                    alerts.add({id: this.id, message: "Á " + moment(this.entry_date).fromNow() + "-" + this.alert, callback: function() {
                             $.post("ajax/general_functions.php", {action: "set_readed", id_msg: this.id});
-                            create_alerts();
                         }});
+
                     return true;
                 }
             }
@@ -228,16 +233,6 @@ function get_alerts(callback) {
     }, "json");
 }
 
-function create_alerts() {
-    if (alerts.length) {
-        var alert = alerts.shift();
-        bootbox.alert(alert.message, function() {
-            if (typeof alert.callback === "function") {
-                alert.callback();
-            }
-        });
-    }
-}
 
 
 function getUrlVars() {
@@ -263,7 +258,6 @@ function consultasMais() {
     if (~~localStorage.v7 > 7) {
         alerts.push({id: 0, message: "Devido a ter <i class='label label-important'>" + localStorage.v7 + "</i> consultas com mais de 7 dias de atraso, só poderá usar o <i>Spice</i> para consultar e fechar consultas.", callback: function() {
                 $(".menu-sidebar").find("li:not(:eq(0)):not(:eq(0))").addClass("disabled");
-                create_alerts();
                 if ($(".menu-sidebar").find('.active').parent().index() > 1)
                     $.history.push("view/dashboard.html");
             }});
@@ -273,7 +267,6 @@ function consultasMais() {
 
     if (~~localStorage.v3 > 3) {
         alerts.push({id: 0, message: "Cuidado que já tem <i class='label label-important'>" + localStorage.v3 + "</i> consultas com mais de 3 dias de atraso.", callback: function() {
-                create_alerts();
             }});
     }
 }
