@@ -80,17 +80,20 @@ $(function() {
                         var trs = "";
                         $.each(clients, function() {
                             trs += "<tr>\n\
-                                        <td>" + this.first_name + " " + this.last_name + "</td>\n\
-                                        <td>" + this.phone_number + "</td>\n\
-                                        <td>" + this.middle_initial + "</td>\n\
+                                        <td>" + this.name + "</td>\n\
+                                        <td>" + this.phone + "</td>\n\
+                                        <td>" + this.nif + "</td>\n\
                                         <td>" + this.refClient + "</td>\n\
-                                        <td>" + this.date_of_birth + "</td>\n\
-                                    <td><div class='view-button'> <button class='btn btn-mini icon-alone ver_cliente' data-lead_id='" + this.lead_id + "' title='Ver Cliente'><i class='icon-edit'></i></button>\n\
-<button class = 'btn btn-mini icon-alone criar_encomenda' data-lead_id ='" + this.lead_id + "' title='Nova Encomenda'> <i class='icon-shopping-cart'></i></button>\n\
-<button class = 'btn btn-mini icon-alone criar_marcacao' data-lead_id ='" + this.lead_id + "' title='Marcar Consulta'> <i class='icon-calendar'></i></button></div></td>\n\
-                                                </tr>";
+                                        <td>" + this.date_of_birth + "\n\
+                                            <div class='view-button'>\n\
+                                                <button class='btn btn-mini icon-alone ver_cliente' data-lead_id='" + this.id + "' title='Ver Cliente'><i class='icon-edit'></i></button>\n\
+                                                <button class = 'btn btn-mini icon-alone criar_encomenda' data-lead_id ='" + this.id + "' title='Nova Encomenda'> <i class='icon-shopping-cart'></i></button>\n\
+                                                <button class = 'btn btn-mini icon-alone criar_marcacao' data-lead_id ='" + this.id + "' title='Marcar Consulta'> <i class='icon-calendar'></i></button>\n\
+                                            </div>\n\
+                                        </td>\n\
+                                   </tr>";
                         });
-                        bootbox.alert("<div class='alert alert-warning'>Foi encontrado um cliente com estes dados.</div>\
+                        bootbox.alert("<div class='alert alert-warning'>Foi encontrado um cliente com estes dados.</div>\n\
                                         <table class='table table-mod table-bordered table-striped table-condensed'>\n\
                                             <thead>\n\
                                                 <tr>\n\
@@ -98,9 +101,8 @@ $(function() {
                                                     <td>Nº</td>\n\
                                                     <td>Nif</td>\n\
                                                     <td>Ref. Cliente</td>\n\
-                                                    <td>Data de Nasc.</td>\n\\n\
-                                                      <td style='width:30px;'>Opções</td>\n\
-                                                </tr>\n\
+                                                    <td style='width:170px';>Data de Nasc.</td>\n\
+                                               </tr>\n\
                                             </thead>\n\
                                             <tbody>\n\
                                             " + trs + "\n\
