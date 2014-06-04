@@ -14,7 +14,7 @@ $what = filter_var($_POST['what']);
 $value = filter_var($_POST['value']);
 switch ($action) {
     case 'byName':
-        $query = "SELECT first_name, last_name, address1, address2, city 'local', postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient', FROM vicidial_list WHERE lead_id=:id limit 1";
+        $query = "SELECT first_name, last_name, address1, address2, city 'local', postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient' FROM vicidial_list WHERE lead_id=:id limit 1";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $row = $stmt->fetch(PDO::FETCH_OBJ);
