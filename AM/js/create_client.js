@@ -72,7 +72,7 @@ $(function() {
 
             if (this.name === "PHONE_NUMBER" || this.name === "extra2" || this.name === "MIDDLE_INITIAL") {
                 elmt.change(function() {
-                    if (this.value.length < 9)
+                    if (this.value.length < 9 && (this.name === "PHONE_NUMBER" || this.name === "MIDDLE_INITIAL"))
                         return false;
                     $.post("ajax/client.php", {action: "byWhat", what: this.name, value: this.value}, function(clients) {
                         if (!clients.length)
