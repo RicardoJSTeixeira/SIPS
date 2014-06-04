@@ -19,11 +19,11 @@ switch ($action) {
         $stmt->execute(array(":id" => $id));
         $row = $stmt->fetch(PDO::FETCH_OBJ);
         $js = array(
-            array("name" => "Cod. Mkt.", "value" => $row->extra1),
-            array("name" => "Nome", "value" => $row->first_name . " " . $row->last_name),
-            array("name" => "Localidade", "value" => $row->local),
-            array("name" => "Codigo Postal", "value" => $row->postal_code),
-            array("name" => "Morada", "value" => $row->address1 . " " . $row->address2)
+            array("name" => "Cod. Mkt.", "value" => (String) $row->extra1),
+            array("name" => "Nome", "value" => (String) $row->first_name . " " . $row->last_name),
+            array("name" => "Localidade", "value" => (String) $row->local),
+            array("name" => "Codigo Postal", "value" => (String) $row->postal_code),
+            array("name" => "Morada", "value" => (String) $row->address1 . " " . $row->address2)
         );
         break;
     case 'default':
@@ -33,11 +33,11 @@ switch ($action) {
         $row = $stmt->fetch(PDO::FETCH_OBJ);
         $js = array(
             "id" => (int) $row->lead_id,
-            "name" => $row->first_name . " " . $row->last_name,
-            "address" => $row->address1 . " " . $row->address2 . " " . $row->address4,
-            "postalCode" => $row->postal_code,
-            "bDay" => $row->date_of_birth,
-            "codCamp" => $row->codmkt);
+            "name" => (String) $row->first_name . " " . $row->last_name,
+            "address" => (String) $row->address1 . " " . $row->address2 . " " . $row->address4,
+            "postalCode" => (String) $row->postal_code,
+            "bDay" => (String) $row->date_of_birth,
+            "codCamp" => (String) $row->codmkt);
         break;
     case 'byReserv':
         $query = "SELECT a.lead_id, first_name, last_name, phone_number, address1, address2, extra4 'address4', city 'local', postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient', comments, start_date, display_text  "
@@ -51,16 +51,16 @@ switch ($action) {
         $js = array(
             "id" => (int) $row->lead_id,
             "phone" => (int) $row->phone_number,
-            "name" => $row->first_name . " " . $row->last_name,
-            "address" => $row->address1 . " " . $row->address2 . " " . $row->address4,
-            "local" => $row->local,
-            "postalCode" => $row->postal_code,
-            "bDay" => $row->date_of_birth,
-            "refClient" => $row->refClient,
-            "codCamp" => $row->codmkt,
-            "date" => $row->start_date,
-            "rscName" => $row->display_text,
-            "comments" => $row->comments);
+            "name" => (String) $row->first_name . " " . $row->last_name,
+            "address" => (String) $row->address1 . " " . $row->address2 . " " . $row->address4,
+            "local" => (String) $row->local,
+            "postalCode" => (String) $row->postal_code,
+            "bDay" => (String) $row->date_of_birth,
+            "refClient" => (String) $row->refClient,
+            "codCamp" => (String) $row->codmkt,
+            "date" => (String) $row->start_date,
+            "rscName" => (String) $row->display_text,
+            "comments" => (String) $row->comments);
         break;
     case 'byLeadToInfo':
         $js = array();
@@ -82,10 +82,18 @@ switch ($action) {
         }
         break;
     case 'byWhat':
-        $query = "SELECT lead_id, first_name, middle_initial, last_name, phone_number, address1, address2, extra4 'address4', city 'local', postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient' FROM vicidial_list where $what=:value";
+        $query = "SELECT lead_id, first_name, middle_initial, last_name, phone_number, date_of_birth, extra2 'refClient' FROM vicidial_list where $what=:value";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":value" => $value));
-        $js = $stmt->fetchAll(PDO::FETCH_OBJ);
+        while ($row = $stmt->fetchAll(PDO::FETCH_OBJ)) {
+            $js[] = array(
+                "id" => (string) $row->lead_id,
+                "name" => (string) $row->first_name . " " . $row->last_name,
+                "nif" => (string) $row->middle_initial,
+                "phone" => (string) $row->phone_number,
+                "date_of_birth" => (string) $row->date_of_birth,
+                "refClient" => (string) $row->refClient);
+        }
         break;
     default:
         echo 'Are you an hacker? Or just a noob?';
