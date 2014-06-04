@@ -371,7 +371,7 @@ $("#print_proposta").click(function() {
         doc.setFontSize(10);
         doc.text(150, y.pos(15), p1.valor + " €");
         doc.text(240 - (p1.quantidade.length * 7), y.y, p1.quantidade + ' Prótese(s) digital(ais) de última geração');
-        doc.text(240 - (p1.entrada.length * 7) - 10, y.pos(10), p1.entrada + '% Entrada ');
+        doc.text(240 - (p1.entrada.length * 7) - 13, y.pos(10), p1.entrada + '% Entrada ');
         doc.text(144, y.y, (~~p1.valor * (~~p1.entrada / 100)).toFixed(2) + '€');
         doc.text(240 - (p1.meses.length * 7), y.pos(), p1.meses + ' Prestações ');
         var prestacao = ((~~p1.valor - (~~p1.valor * (~~p1.entrada / 100))) / ~~p1.meses).toFixed(2);
@@ -383,10 +383,11 @@ $("#print_proposta").click(function() {
             doc.setFontSize(10);
             doc.text(150, y.pos(15), p2.valor + " €");
             doc.text(240 - (p2.quantidade.length * 7), y.y, p2.quantidade + ' Prótese(s) digital(ais) de última geração');
-            doc.text(240 - (p2.entrada.length * 7) - 10, y.pos(10), p2.entrada + '% Entrada ');
+            doc.text(240 - (p2.entrada.length * 7) - 13, y.pos(10), p2.entrada + '% Entrada ');
             doc.text(144, y.y, (p2.valor * (p2.entrada / 100)).toFixed(2) + '€');
             doc.text(240 - (p2.meses.length * 7), y.pos(), p2.meses + ' Prestações ');
-            doc.text(144, y.y, ((~~p2.valor - (~~p2.valor * (~~p2.entrada / 100))) / ~~p2.meses).toFixed(2) + '€');
+            var prestacao = ((~~p2.valor - (~~p2.valor * (~~p2.entrada / 100))) / ~~p2.meses).toFixed(2);
+            doc.text(150 - prestacao.length, y.y, prestacao + '€');
         }
         if (p3.valor) {
             doc.setFontSize(14);
@@ -395,10 +396,11 @@ $("#print_proposta").click(function() {
             doc.setFontSize(10);
             doc.text(150, y.pos(15), p3.valor + " €");
             doc.text(240 - (p3.quantidade.length * 7), y.y, p3.quantidade + ' Prótese(s) digital(ais) de última geração');
-            doc.text(240 - (p3.entrada.length * 7) - 10, y.pos(10), p3.entrada + '% Entrada ');
+            doc.text(240 - (p3.entrada.length * 7) - 13, y.pos(10), p3.entrada + '% Entrada ');
             doc.text(144, y.y, (p3.valor * (p3.entrada / 100)).toFixed(2) + '€');
             doc.text(240 - (p3.meses.length * 7), y.pos(), p3.meses + ' Prestações ');
-            doc.text(144, y.y, ((~~p3.valor - (~~p3.valor * (~~p3.entrada / 100))) / ~~p3.meses).toFixed(2) + '€');
+            var prestacao = ((~~p3.valor - (~~p3.valor * (~~p3.entrada / 100))) / ~~p3.meses).toFixed(2);
+            doc.text(150 - prestacao.length, y.y, prestacao + '€');
         }
         //last = doc.table(5, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {autoSize: true, printHeaders: true});
 

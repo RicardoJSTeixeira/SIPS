@@ -431,6 +431,8 @@ var products = function(geral_path, options_ext)
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
         function(data)
         {
+                        var option = "";
+            
             select.empty();
             var temp = "<optgroup value='1' label='BTE'></optgroup>\n\
                         <optgroup value='2' label='RITE'></optgroup>\n\
@@ -449,9 +451,10 @@ var products = function(geral_path, options_ext)
                     economato = [],
                     gama = [];
             select.append(temp);
-            var option = "";
+
             $.each(data, function()
             {
+
                 if (out_level)
                 {
                     level = level + out_level - 1;
@@ -460,7 +463,7 @@ var products = function(geral_path, options_ext)
                 option = "<option  id=" + this.id + "  value='" + this.id + "'>" + this.name + "</option>";
                 if (this.parent_level >= 4)
                     option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Max.Lvl. " + this.name + "</option>";
-                if (children)
+                if (children) 
                 {
                     if (children.indexOf(this.id) !== -1)
                         option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Assoc. " + this.name + "</option>";

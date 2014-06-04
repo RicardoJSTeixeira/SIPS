@@ -69,18 +69,17 @@ var requisition = function(geral_path, options_ext) {
                     economato = [],
                     gama = [];
             $("#product_selector").append(temp);
+
             $.each(data, function() {
                 produtos[this.id] = (this);
                 if (me.tipo === "especial") {
                     if (this.max_req_s < 1)
                         return true;
-                    if (this.parent_level <= 0)
-                        option = "<option value='" + this.id + "'>" + this.name + "</option>";
                 } else {
                     if (this.max_req_m < 1)
                         return true;
-                    option = "<option value='" + this.id + "'>" + this.name + "</option>";
                 }
+                option = "<option value='" + this.id + "'>" + this.name + "</option>";
                 switch (this.category) {
                     case "BTE":
                         BTE.push(option);
