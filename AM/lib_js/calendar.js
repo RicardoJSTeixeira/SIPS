@@ -557,7 +557,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
         }, function(data) {
             var tmp = "";
             $.each(data, function() {
-                tmp = tmp + "<dt>" + this.name + "</dt><dd>-" + this.value + "</dd>";
+                tmp = tmp + "<dt>" + this.name + "</dt><dd>- " + this.value + "</dd>";
             });
             if (calEvent.closed) {
                 me.modal_ext
