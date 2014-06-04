@@ -6,9 +6,9 @@ $(function() {
         SpiceU = user;
         $("#user-name").text(user.name);
         if (user.user_level < 5) {
-            $("#sidebar li.role-dispenser:not(.role-admin)").show();
+            $("#sidebar li.role-dispenser").show();
         } else {
-            $("#sidebar li.role-admin:not(.role-dispenser)").show();
+            $("#sidebar li.role-admin").show();
         }
         init();
         alerts.init();
