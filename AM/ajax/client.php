@@ -14,12 +14,13 @@ $what = filter_var($_POST['what']);
 $value = filter_var($_POST['value']);
 switch ($action) {
     case 'byName':
-        $query = "SELECT first_name, last_name, address1, address2, city 'local', postal_code, date_of_birth, extra1 FROM vicidial_list WHERE lead_id=:id limit 1";
+        $query = "SELECT first_name, last_name, address1, address2, city 'local', postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient', FROM vicidial_list WHERE lead_id=:id limit 1";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $row = $stmt->fetch(PDO::FETCH_OBJ);
         $js = array(
-            array("name" => "Cod. Mkt.", "value" => (String) $row->extra1),
+            array("name" => "Cod. Mkt.", "value" => (String) $row->codmkt),
+            array("name" => "Ref. Cliente", "value" => (String) $row->refClient),
             array("name" => "Nome", "value" => (String) $row->first_name . " " . $row->last_name),
             array("name" => "Localidade", "value" => (String) $row->local),
             array("name" => "Codigo Postal", "value" => (String) $row->postal_code),
