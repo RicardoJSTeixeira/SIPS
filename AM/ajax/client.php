@@ -85,7 +85,7 @@ switch ($action) {
         $query = "SELECT lead_id, first_name, middle_initial, last_name, phone_number, date_of_birth, extra2 'refClient' FROM vicidial_list where $what=:value";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":value" => $value));
-        while ($row = $stmt->fetchAll(PDO::FETCH_OBJ)) {
+        while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $js[] = array(
                 "id" => (string) $row->lead_id,
                 "name" => (string) $row->first_name . " " . $row->last_name,
