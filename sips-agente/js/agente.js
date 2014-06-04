@@ -4497,7 +4497,7 @@ function  DispoSelect_submit_allowed()
                     lead_id: lead_id_hack,
                     dispo: DispoChoice,
                     dispoAtt: campaign_status[DispoChoice],
-                    campaign_id: campaign_id.value,
+                    campaign_id: campaign,
                     user: user,
                     client: clientName,
                     length_in_sec: AgainCalLSecondS
