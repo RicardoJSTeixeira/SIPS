@@ -25,14 +25,14 @@ switch ($action) {
         $u = $user->getUser();
         if ($u->user_level > 5) {
             $query = "SELECT a.lead_id, b.first_name, extra1, extra2, middle_initial, postal_code, b.city, b.phone_number, b.alt_phone, b.address1, IF(d.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, a.id_user from sips_sd_reservations a 
-            left join vicidial_list b on a.lead_id=b.lead_id 
+            inner join vicidial_list b on a.lead_id=b.lead_id 
             inner join vicidial_users c on b.user=c.user
             left join spice_consulta d on d.reserva_id=a.id_reservation
             where c.user_group=:user_group and DATE(a.start_date)>'2014-06-01' group by a.lead_id limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
             $query = "SELECT a.lead_id, b.first_name, extra1, extra2, middle_initial, postal_code, b.city, b.phone_number, b.alt_phone, b.address1, IF(c.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date from sips_sd_reservations a 
-            left join vicidial_list b on a.lead_id=b.lead_id 
+            inner join vicidial_list b on a.lead_id=b.lead_id 
             left join spice_consulta c on c.reserva_id=a.id_reservation
             where a.id_user=:user and DATE(a.start_date)>'2014-06-01' group by a.lead_id limit 20000";
             $variables[":user"] = $u->username;
