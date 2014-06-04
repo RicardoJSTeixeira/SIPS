@@ -122,7 +122,7 @@ $comments
 
 <strong>Submetido por:</strong> $userID->username - $userID->name";
 //marketing@acusticamedica.pt
-        send_email("rteixeira@finesource.eu", "Ricardo Teixeira", $msg, "RELATÓRIO DE RASTREIO - APOIO MKT - $userID->username - $ap->data_inicial");
+        send_email("marketing@acusticamedica.pt", "Marketing Acústica Médica", $msg, "RELATÓRIO DE RASTREIO - APOIO MKT - $userID->username - $ap->data_inicial");
        
         echo json_encode($apoio_marketing->setReservation($apoioID, $id));
         break;
@@ -236,7 +236,7 @@ $comments
 <br>
     <strong>Submetido por:</strong> $userID->username - $userID->name";
 //marketing@acusticamedica.pt
-        send_email("rteixeira@finesource.eu", "Ricardo Teixeira", $msg, "RELATÓRIO DE RASTREIO - APOIO MKT - $userID->username - $ap->data_inicial");
+        send_email("marketing@acusticamedica.pt", "Marketing Acústica Médica", $msg, "RELATÓRIO DE RASTREIO - APOIO MKT - $userID->username - $ap->data_inicial");
         echo json_encode($apoio_marketing->set_report($id, $cod, $total_rastreios, $rastreios_perda, $vendas, $valor));
         exit;
 
