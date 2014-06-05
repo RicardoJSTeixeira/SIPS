@@ -10,15 +10,6 @@ $(function() {
                 finishButton: false
             });
 
-
-
-
-
-
-
-
-
-
     $("#verif_client_data").validationEngine();
     $.post("ajax/create_client.php", {action: "get_fields"},
     function(data) {
@@ -70,9 +61,9 @@ $(function() {
                 elmt = $("<input>", {type: "text", id: this.name, name: this.name});
             }
 
-            if (this.name === "PHONE_NUMBER" || this.name === "extra2" || this.name === "MIDDLE_INITIAL") {
+            if (this.name === "PHONE_NUMBER" || this.name === "extra2" || this.name === "extra8") {
                 elmt.change(function() {
-                    if (this.value.length < 9 && (this.name === "PHONE_NUMBER" || this.name === "MIDDLE_INITIAL"))
+                    if (this.value.length < 9 && (this.name === "PHONE_NUMBER" || this.name === "extra8"))
                         return false;
                     $.post("ajax/client.php", {action: "byWhat", what: this.name, value: this.value}, function(clients) {
                         if (!clients.length)
@@ -144,7 +135,7 @@ $(function() {
                     input = input1;
                     break;
                 case "DATE_OF_BIRTH":
-                    custom_class = "form_datetime  input-small validate[required]";
+                    custom_class = "form_datetime input-small validate[required]";
                     input = input1;
                     break;
                 case "EMAIL":
@@ -153,18 +144,20 @@ $(function() {
                     break;
                 case "TITLE":
                     custom_class = "validate[required]";
-                case "MIDDLE_INITIAL":
+                case "extra8":
                     input = input1;
                     break;
                 case "extra2":
                 case "LAST_NAME":
+                case "MIDDLE_INITIAL":
                     input = input1;
                     break;
                 case "ADDRESS1":
                 case "CITY":
                     custom_class = "validate[required]";
-                case "ADDRESS2":
                 case "POSTAL_CODE":
+                    custom_class = "validate[required]";
+                case "ADDRESS2":
                 case "PROVINCE":
                 case "STATE":
                 case "COUNTRY_CODE":
@@ -176,6 +169,10 @@ $(function() {
                 case "extra6":
                 case "extra7":
                     hide = " hide";
+                    break;
+                case "extra1":
+                    custom_class = "validate[required]";
+                    input = input3;
                     break;
                 default:
                     hide = "";
