@@ -19,6 +19,7 @@ var clientBox = function(configs) {
                             <div class='user c_bg-2'>\n\
                                 <div class='user-name' id='client_cod_camp'></div>\n\
                                 <div class='user-email' id='client_ref_client'></div>\n\
+                                <div class='user-email' id='client_compart'></div>\n\
                                 <div class='user-email' style='height:auto; ' id='client_name'></div>\n\
                                 <div class='user-date' id='client_address'></div>\n\
                                 <div class='user-date' id='client_postal'></div>\n\
@@ -56,6 +57,9 @@ var clientBox = function(configs) {
                     .find("#client_cod_camp")
                     .text(clientI.codCamp)
                     .end()
+                    .find("#client_compart")
+                    .text(clientI.compart)
+                    .end()
                     .find("#client_tel")
                     .text(clientI.phone)
                     .end()
@@ -64,7 +68,7 @@ var clientBox = function(configs) {
                     .end()
                     .find("#client_date")
                     .text(function() {
-                        return (clientI.date) ? moment(clientI.date).format('LLLL') : ''
+                        return (clientI.date) ? moment(clientI.date).format('LLLL') : '';
                     })
                     .end()
                     .find("#client_rsc")
