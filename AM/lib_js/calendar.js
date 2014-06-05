@@ -21,6 +21,16 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 resource: "all"
             }
         },
+        columnFormat: {
+            month: 'ddd',
+            week: 'ddd d/M',
+            day: 'dddd'
+        },
+        titleFormat: {
+            month: 'MMMM yyyy',
+            week: "MMMM yyyy",
+            day: 'd MMMM yyyy'
+        },
         allDaySlot: false,
         defaultView: "agendaWeek",
         allDayDefault: false,
@@ -424,8 +434,8 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         function() {
                             calendar_client.calEvent.editable = false;
                             calendar_client.calEvent.closed = true;
-                            calendar_client.calEvent.del = (cResult === 'DEST');
-                            calendar_client.calEvent.className += (cResult === 'DEST') ? ' del' : '';
+                            calendar_client.calEvent.del = (cResult === 'DEST' || cResult === 'NOSHOW');
+                            calendar_client.calEvent.className += (cResult === 'DEST' || cResult === 'NOSHOW') ? ' del' : '';
                             me.calendar.fullCalendar('updateEvent', calendar_client.calEvent);
                             dropOneConsult();
                         }, "json");
