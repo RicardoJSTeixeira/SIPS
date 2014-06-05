@@ -15,7 +15,7 @@ $(function()
     lead_id = atob(decodeURIComponent(rse.id));
     reserva_id = atob(decodeURIComponent(rse.rs));
 
-    $("#dModelo, #dGama, #eModelo, #eGama").chosen({no_results_text: "Sem resultados", width: "100%"});
+    $("#dModelo, #dGama, #eModelo, #eGama, #p1modelo, #p2modelo, #p3modelo").chosen({no_results_text: "Sem resultados", width: "100%"});
     $('[data-toggle~="tooltip"]').tooltip({container: 'body'});
 
     $.post("ajax/consulta.php", {action: "get_consulta", reserva_id: reserva_id},
