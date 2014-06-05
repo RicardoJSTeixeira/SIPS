@@ -1,5 +1,5 @@
 
-var script,unique_id;
+var script;
 $(function()
 {
       var info = getUrlVars();

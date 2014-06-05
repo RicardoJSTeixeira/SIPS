@@ -387,7 +387,7 @@ switch ($action) {
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
 
-                echo(json_encode($file));
+                echo(json_encode($file)); 
                 break;
             case 2:
                 try {
