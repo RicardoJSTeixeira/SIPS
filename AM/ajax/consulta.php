@@ -47,7 +47,7 @@ switch ($action) {
             ":terceira_pessoa" => ($terceira_pessoa) ? json_encode($terceira_pessoa) : json_encode(array()),
             ":closed" => $closed));
 
-        if ($consulta_razao == "DEST") {
+        if ($consulta_razao == "DEST" || $consulta_razao == 'NOSHOW') {
             $calendar->deleteReserva($reserva_id);
         }
 
