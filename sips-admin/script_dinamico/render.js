@@ -689,7 +689,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     }
                 });
             }
-
             if (typeof callback === "function") {
                 callback();
             }
@@ -732,23 +731,17 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     case "texto":
                         switch (this.param1) {
                             case "value_input":
-
-                                $(script_zone).on("keyup", "#script_div #" + this.tag_trigger, function() //atribuir os ons a cada value
-                                {
+                                $(script_zone).on("keyup", "#script_div #" + this.tag_trigger, function() { //atribuir os ons a cada value
                                     var pattern = new RegExp('\\b' + data[index].tag_trigger2, 'i');
                                     if (script_zone.find("#script_div #" + data[index].tag_trigger + " input").val().match(pattern)) {
                                         rules_work(data[index]);
                                     }
-                                }
-                                );
+                                });
                                 break;
                             case "answer":
-
-                                $(script_zone).on("focusout", "#script_div #" + this.tag_trigger, function() //atribuir os ons a cada value
-                                {
+                                $(script_zone).on("focusout", "#script_div #" + this.tag_trigger, function() { //atribuir os ons a cada value
                                     rules_work(data[index]);
-                                }
-                                );
+                                });
                                 break;
                         }
                         break;
@@ -757,12 +750,10 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             case "value_select":
                                 var values = this.tag_trigger2;
                                 for (var count = 0; count < values.length; count++) {
-                                    $(script_zone).on("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']", function() //atribuir os ons a cada value
-                                    {
+                                    $(script_zone).on("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']", function() { //atribuir os ons a cada value
 
                                         rules_work(data[index]);
-                                    }
-                                    );
+                                    });
                                 }
                                 break;
                         }
@@ -772,11 +763,9 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             case "value_select":
                                 var values = this.tag_trigger2;
                                 for (var count = 0; count < values.length; count++) {
-                                    $(script_zone).on("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']", function() //atribuir os ons a cada value
-                                    {
+                                    $(script_zone).on("click", "#script_div #" + this.tag_trigger + " input[value='" + values[count] + "']", function() { //atribuir os ons a cada value
                                         rules_work(data[index]);
-                                    }
-                                    );
+                                    });
                                 }
                                 break;
                         }
@@ -786,8 +775,7 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                             case "value_select":
                                 var values = this.tag_trigger2;
                                 for (var count = 0; count < values.length; count++) {
-                                    $(script_zone).on("change", "#script_div #" + this.tag_trigger, function() //atribuir os ons a cada value
-                                    {
+                                    $(script_zone).on("change", "#script_div #" + this.tag_trigger, function() { //atribuir os ons a cada value
                                         if (data[index].tag_trigger2.indexOf($("#script_div #" + data[index].tag_trigger + " option:selected").val()) > -1)
                                             rules_work(data[index]);
                                     });
@@ -825,24 +813,19 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     case "datepicker":
                         switch (this.param1) {
                             case "answer":
-                                $(script_zone).on("change", "#script_div #" + this.tag_trigger, function() //atribuir os ons a cada value
-                                {
+                                $(script_zone).on("change", "#script_div #" + this.tag_trigger, function() { //atribuir os ons a cada value
                                     rules_work(data[index]);
-                                }
-                                );
+                                });
                                 break;
                             case "date":
-                                $(script_zone).on("change", "#script_div #" + this.tag_trigger + " .form_datetime", function() //atribuir os ons a cada value
-                                {
+                                $(script_zone).on("change", "#script_div #" + this.tag_trigger + " .form_datetime", function() { //atribuir os ons a cada value
                                     var temp = data[index];
                                     var this_val = moment($(this).val(), $(this).data().format);
-
                                     if (temp.param2.type == "fixed") {
                                         var tempo1, tempo2;
                                         time1 = moment(temp.param2.data_inicial);
                                         time2 = moment(temp.param2.data_final);
                                         if (temp.param2.data_inicial != "" && temp.param2.data_final != "") {
-
                                             if ((time1.isBefore(this_val) || time1.isSame(this_val)) && (time2.isAfter(this_val) || time2.isSame(this_val)))
                                                 rules_work(data[index]);
                                         } else {
@@ -878,14 +861,12 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                                             if (tempo2[3] != "#")
                                                 time2.add('hour', tempo2[3]);
                                         }
-
                                         if (temp.param2.data_inicial != "#|#|#|#" && temp.param2.data_final != "#|#|#|#") {
                                             if ((time1.isBefore(this_val) || time1.isSame(this_val)) && (time2.isAfter(this_val) || time2.isSame(this_val))) {
                                                 rules_work(data[index]);
                                             }
                                         } else {
                                             if (temp.param2.data_inicial != "#|#|#|#") {
-
                                                 if (time1.isBefore(this_val) || time1.isSame(this_val))
                                                     rules_work(data[index]);
                                             }
@@ -902,18 +883,14 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
                     case "textarea":
                         switch (this.param1) {
                             case "answer":
-                                $(script_zone).on("focusout", "#script_div #" + this.tag_trigger, function() //atribuir os ons a cada value
-                                {
+                                $(script_zone).on("focusout", "#script_div #" + this.tag_trigger, function() { //atribuir os ons a cada value
                                     rules_work(data[index]);
-                                }
-                                );
+                                });
                                 break;
                         }
                         break;
                     case "button":
-
-                        $(script_zone).on("click", "#script_div #" + this.tag_trigger, function() //atribuir os ons a cada value
-                        {
+                        $(script_zone).on("click", "#script_div #" + this.tag_trigger, function() { //atribuir os ons a cada value
                             if ($(this).data().info.required) {
                                 me.validate_manual(function() {
                                     rules_work(data[index]);
@@ -927,7 +904,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
             if (typeof callback === "function") {
                 callback();
             }
-
         }, "json");
     }
 
@@ -993,7 +969,6 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
 };
 // VALIDATION ENGINE ESPECIFIC RULES
 function checknif(field, rules, i, options) {
-
     var nif = field.val();
     var c;
     var checkDigit = 0;
@@ -1009,7 +984,6 @@ function checknif(field, rules, i, options) {
                 checkDigit = 0;
             }
             if (checkDigit !== parseInt(nif.charAt(8))) {
-
                 return "Introduza um NIF correto";
             }
         } else
@@ -1047,8 +1021,6 @@ function scheduler_verif(field, rules, i, options) {
 }
 
 function isValidCard(cardNumber) {
-
-
     var ccard = new Array(cardNumber.length);
     var i = 0;
     var sum = 0;

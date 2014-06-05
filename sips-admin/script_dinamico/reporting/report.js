@@ -92,12 +92,6 @@ $(function() {
                 $("#select_base_dados optgroup[label='" + $("#select_base_dados :selected").parent().attr("label") + "'] option").prop("disabled", false).trigger("liszt:updated");
             }
         });
-
-
-
-
-
-
     }, "json");
     $("#column_order").sortable({
         stop: function(event, ui) {

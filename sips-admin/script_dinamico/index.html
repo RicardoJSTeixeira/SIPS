@@ -111,23 +111,23 @@
         <!--------------- MODALS------------- MODALS------------- MODALS------------- MODALS------------- MODALS------------- MODALS------------- MODALS--> 
         <!---------MODALS DE CONFIRMAÇÂO DE DELETES  -->
 
-        
-                <div id="remove_upload_file_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
+
+        <div id="remove_upload_file_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h3 id="myModalLabel">Remover ficheiro</h3>
             </div>
             <div class="modal-body">
-                
+
             </div>
             <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
                 <button class="btn btn-primary" id="remove_uploaded_file_modal">Sim, eliminar</button>
             </div>
         </div>
-        
-        
-        
+
+
+
         <div id="script_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Script Modal" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -849,7 +849,6 @@
                                 <form class="form_edit_element">
                                     <div class="formRow" >
                                         <strong>Texto no Botão:</strong>
-
                                         <div class="formRight">
                                             <input  maxlength="50" class="span button_input validate[required]" id="button_edit" name="button_edit" type="text" placeholder="Texto do Botão" />
                                         </div>
@@ -871,27 +870,24 @@
                                                 <input type="text" id="input_url" class="validate[required] input-xlarge" >   
                                             </div>
                                         </div>
-
                                         <div class="formRow" >
-                                            <strong>Tipo de pedido</strong>
+                                            <strong>Tipo de pedido:</strong>
+                                            <div class="formRight" >
+                                                <input  type="radio" id="type_get" name="type_post" value="GET">
+                                                <label for="type_get"> <span> </span> GET </label>
+                                            </div>
                                             <div class="formRight" >
                                                 <input  type="radio" id="type_post" name="type_post" value="POST" checked>
-                                                <label for="type_post"> <span></span> POST </label>   
-                                                <input  type="radio" id="type_get" name="type_post" value="GET">
-                                                <label for="type_get"> <span></span> GET </label>
+                                                <label for="type_post"> <span> </span> POST </label>   
                                             </div>
                                         </div>
-
-
                                         <div class="formRow" >
                                             <strong>Elementos que serão enviados</strong>
                                             <div class="formRight" >
                                                 <select id="select_elements_to_url" class="chosen-select" multiple="multiple"  data-placeholder="Selecione um/vários elementos"   ></select>
                                             </div>
                                         </div>
-
                                     </div>
-
                                 </form>
                             </div>
 

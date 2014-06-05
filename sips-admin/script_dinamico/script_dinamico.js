@@ -37,7 +37,6 @@ function editor_toggle(tipo) {
 }
 
 $(function() {
-
     $('#rule_target_formright').tooltip({
         trigger: "manual"
     });
@@ -174,16 +173,11 @@ $(function() {
             $("#script_linha_inbound_selector").trigger("chosen:updated");
         }, "json");
 
-
-        $.post("requests.php", {
-            action: "iscloud"
-        },
+        $.post("requests.php", {action: "iscloud"},
         function(data2) {
-            if (data2)
-                $(".linha_inbound_div").hide();
-            else
-                $(".linha_inbound_div").show();
+            $(".linha_inbound_div").toggle(data2);
         }, "json");
+        
         $.post("requests.php", {
             action: "get_schedule"
         },
@@ -796,6 +790,8 @@ function populate_element(tipo, element) {
             break;
         case "datepicker":
             $("#datepicker_edit").val($("#" + id + " .label_geral").html());
+            $("#alterar_outro_elemento_select option").prop("disabled", false);
+            $("#alterar_outro_elemento_select option[value='" + element.data('tag') + "']").prop("disabled", true);
             $("#datepicker_layout_editor input:radio[name='time_format'][value=" + element.data("data_format") + "]").prop("checked", true);
             if (~~element.data("only_week_days") === 1)
                 $("#only_week_days").prop("checked", true);
@@ -1712,7 +1708,8 @@ function rules_update_targets() {
                     break;
             }
             $("#rule_target_select").append("<option value=" + this.tag + ">" + this.tag + " --- " + temp_type + "</option>"); //povoar os alvos com as tags e tipos dos elementos
-            $("#select_elements_to_url").append("<option value=" + this.tag + ">" + this.tag + " --- " + temp_type + "</option>");
+            if (this.type !== "pagination" && this.type !== "textfield" && this.type !== "ipl" && this.type !== "button" && this.type !== "legend")
+                $("#select_elements_to_url").append("<option value=" + this.tag + ">" + this.tag + " --- " + temp_type + "</option>");
             if (this.type === "datepicker")
                 $("#alterar_outro_elemento_select").append("<option value=" + this.tag + ">" + this.tag + " --- " + temp_type + "</option>");
         });

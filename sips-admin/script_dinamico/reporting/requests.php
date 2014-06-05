@@ -319,7 +319,7 @@ switch ($action) {
         switch ($result_filter) {
 
 
-
+//Apenas chamadas com resposta a script
             case 1:
                 try {
                     if (count($script_elements) > 0)
@@ -352,10 +352,10 @@ switch ($action) {
                     if (count($client_elements) > 0)
                         $client_elements_temp = "," . implode(",", $client_elements);
                     $query = "create table $final ENGINE=MYISAM select a.* $client_elements_temp,b.entry_date,b.called_count,IF(SUBSTRING_INDEX(b.called_count,'Y', -1) > c.attempt_maximum, 'Sim', 'Não')  called_since_last_reset  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id left join (select status, attempt_maximum from vicidial_lead_recycle where campaign_id='$campaign_id' group by status) c on a.status=c.status  order by b.lead_id,call_date asc; ";
-            
+
                     $stmt = $db->prepare($query);
-                    $stmt->execute(); 
-                    $file = "report" . date("Y-m-d_H-i-s"); 
+                    $stmt->execute();
+                    $file = "report" . date("Y-m-d_H-i-s");
                     $query = "set names 'UTF8'; select  " . implode(", ", $fields) . " from $final";
 
                     $fp = fopen("/tmp/$query_sql", "wb");
@@ -368,11 +368,6 @@ switch ($action) {
                     echo($ex);
                     exit;
                 }
-
-
-
-
-
                 system("rm /tmp/$query_sql");
                 system("rm /srv/www/htdocs/report_files/$file.txt");
                 system("rm /srv/www/htdocs/report_files/$file.csv");
@@ -491,9 +486,9 @@ switch ($action) {
                     $stmt->execute();
                     if (count($client_elements) > 0)
                         $client_elements_temp = ", " . implode(", ", $client_elements);
-                  
+
                     $query = "create table $final ENGINE = MYISAM select a.* $client_elements_temp,b.entry_date,b.called_count,IF(SUBSTRING_INDEX(b.called_count,'Y', -1) > c.attempt_maximum, 'Sim', 'Não')  called_since_last_reset  from $logscriptstatususer a left join vicidial_list b on a.lead_id = b.lead_id left join (select status, attempt_maximum from vicidial_lead_recycle where campaign_id='$campaign_id' group by status) c on a.status=c.status order by b.lead_id, call_date asc;";
-            
+
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $file = "report" . date("Y-m-d_H-i-s");
@@ -650,6 +645,8 @@ switch ($action) {
                 $stmt1->execute();
                 echo(json_encode($file));
                 break;
+
+            //Todas as Chamadas
             case 6:
                 try {
                     if (count($script_elements) > 0)
