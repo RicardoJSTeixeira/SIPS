@@ -381,6 +381,7 @@ if ($_POST['nc_flag'] == "nc_post") {
                                         <option value="B/PMB"> Consultório Pombal </option>
                                         <option value="B/PTL"> Consultório Portalegre </option>
                                         <option value="B/PTM"> Consultório Portimão </option>
+                                        <option value="B/BPOV"> Consultório Póvoa de Varzim </option>
                                         <option value="B/SAN"> Consultório Santarém </option>
                                         <option value="B/SMF"> Consultório Santa Maria da Feira </option>
                                         <option value="B/BRSA"> Consultório Santo Tirso </option>
