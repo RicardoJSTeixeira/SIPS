@@ -38,7 +38,7 @@ switch ($action) {
         break;
 
     case "criar_relatorio_correio":
-        echo json_encode($relatorio_correio->create($carta_porte, $data, $doc, $lead_id, $input_doc_obj_assoc, $comments));
+        echo json_encode($relatorio_correio->create($carta_porte, $data,  $input_doc_obj_assoc, $comments));
         break;
 
     case "criar_apoio_marketing":
@@ -278,7 +278,7 @@ $comments
         }
         $result = $apoio_marketing->decline($id);
         if ($result) {
-            $alert->make($result->user, "Apoio Mkt. Recusado Motivo:$motivo");
+            $alert->make($result->user, "Apoio Mkt. Recusado Motivo: $motivo");
         }
         echo json_encode(true);
         break;
@@ -294,7 +294,7 @@ $comments
     case "decline_report_correio":
         $result = $relatorio_correio->decline($id);
         if ($result) {
-            $alert->make($result->user, 'Correio Recusado');
+            $alert->make($result->user, "Correio Recusado Motivo: $motivo");
         }
         echo json_encode(true);
         break;
@@ -348,7 +348,7 @@ $comments
         break;
 
     default:
-        echo 'Are you an hacker? if yes then please go change your underpants, it stinks!';
+        echo 'Are you an hacker? if so, then please come to purosinonimo, where the company parties are full of alcohol and beautifull vanias';
 }
 
 function send_email($email_address, $email_name, $msg, $assunto) {
