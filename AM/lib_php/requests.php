@@ -159,42 +159,39 @@ class correio extends requests_class {
         parent::__construct($db, $user_level, $user_id);
     }
 
-    public function create($carta_porte, $data, $doc, $lead_id, $input_doc_obj_assoc, $comments) {
-        $query = "INSERT INTO `spice_report_correio`(`user`, `carta_porte`, `data_envio`, `documento`, `lead_id`, `anexo`, `comments`) VALUES (:user,:carta_porte,:data_envio,:documento,:lead_id,:anexo,:comments)";
+    public function create($carta_porte, $data, $input_doc_obj_assoc, $comments) {
+        $query = "INSERT INTO `spice_report_correio`(`user`, `carta_porte`, `data_envio`,  `anexo`, `comments`) VALUES (:user,:carta_porte,:data_envio,:anexo,:comments)";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":user" => $this->user_id, ":carta_porte" => $carta_porte, ":data_envio" => $data, ":documento" => $doc, ":lead_id" => $lead_id, ":anexo" => json_encode($input_doc_obj_assoc), ":comments" => $comments));
+        return $stmt->execute(array(":user" => $this->user_id, ":carta_porte" => $carta_porte, ":data_envio" => $data, ":anexo" => json_encode($input_doc_obj_assoc), ":comments" => $comments));
     }
 
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
-        $query = "SELECT id,user,carta_porte,data_envio,documento,lead_id,anexo,comments,status from spice_report_correio $filter";
+        $query = "SELECT id,user,carta_porte,data_envio,anexo,comments,status from spice_report_correio $filter";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            //Não é possivel visualizar novos pedidos 
-
-            $approved = $row[8] == "1" ? 1 : 0;
-
-            if ($row[6]) {
-                $row[6] = "<button data-anexo_id = '$row[0]' data-approved = '$approved' class = 'btn ver_anexo_correio'><i class = 'icon-eye-open'></i>Anexos</button>";
+            $approved = $row[6] == 1 ? 1 : 0;
+                      if ($row[4]) {
+                $row[4] = "<button data-anexo_id = '$row[0]' data-approved = '$approved' class = 'btn ver_anexo_correio'><i class = 'icon-eye-open'></i>Anexos</button>";
             } else {
-                $row[6] = "Sem anexo";
+                $row[4] = "Sem anexo";
             }
-            switch ($row[8]) {
+            switch ($row[6]) {
                 case "0":
-                    $row[9] = "<div class = 'btn-group'><button class = 'btn accept_report_correio btn-success icon-alone' value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_correio btn-warning icon-alone' value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
-                    $row[8] = "Pedido enviado";
+                    $row[7] = "<div class = 'btn-group'><button class = 'btn accept_report_correio btn-success icon-alone' value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_correio btn-warning icon-alone' value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
+                    $row[6] = "Pedido enviado";
                     break;
                 case "1":
-                    $row[9] = "<div class = 'btn-group'><button class = 'btn accept_report_correio btn-success icon-alone' disabled value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_correio btn-warning icon-alone' value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
-                    $row[8] = "<span class = 'label label-success'>Aprovado</span>";
+                    $row[7] = "<div class = 'btn-group'><button class = 'btn accept_report_correio btn-success icon-alone' disabled value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_correio btn-warning icon-alone' value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
+                    $row[6] = "<span class = 'label label-success'>Aprovado</span>";
                     break;
                 case "2":
-                    $row[9] = "<div class = 'btn-group'><button class = 'btn accept_report_correio btn-success icon-alone' value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_correio btn-warning icon-alone' disabled value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
-                    $row[8] = "<span class = 'label label-important'>Pendente</span>";
+                    $row[7] = "<div class = 'btn-group'><button class = 'btn accept_report_correio btn-success icon-alone' value = '" . $row[0] . "'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_correio btn-warning icon-alone' disabled value = '" . $row[0] . "'><i class = 'icon-remove'></i></button></div>";
+                    $row[6] = "<span class = 'label label-important'>Pendente</span>";
                     break;
             }
             $result['aaData'][] = $row;

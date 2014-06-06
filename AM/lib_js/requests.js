@@ -235,9 +235,9 @@ var requests = function(basic_path, options_ext)
                                 var ocorrencias_array = [];
                                 $.each(rf_zone.find("#table_tbody_rf").find("tr"), function() {
                                     ocorrencias_array.push({
-                                                data: $(this).find(".linha_data").val(),
-                                                ocorrencia: $(this).find(".linha_ocorrencia").val(),
-                                                km: $(this).find(".linha_km").autoNumeric('get')});
+                                        data: $(this).find(".linha_data").val(),
+                                        ocorrencia: $(this).find(".linha_ocorrencia").val(),
+                                        km: $(this).find(".linha_km").autoNumeric('get')});
                                 });
                                 $.post("/AM/ajax/requests.php", {action: "criar_relatorio_frota",
                                     data: rf_zone.find("#input_data").val(),
@@ -303,6 +303,7 @@ var requests = function(basic_path, options_ext)
                     if (result) {
                         $.post('/AM/ajax/requests.php', {action: "decline_report_frota", id: this_button.val()}, function() {
                             this_button.parent("td").prev().text("Rejeitado");
+
                             relatorio_frota_table.fnReloadAjax();
                         }, "json");
                     }
@@ -329,7 +330,7 @@ var requests = function(basic_path, options_ext)
                         {
                             var docs_objs = [];
                             $.each(rc_zone.find("#doc_obj_table_tbody tr"), function() {
-                                docs_objs.push({value: $(this).find("input").val(), confirmed: false});
+                                docs_objs.push({anexo: $(this).find(".input_anexo").val(), n_doc: $(this).find(".input_n_doc").val(), lead_id: $(this).find(".input_lead_id").val(), confirmed: false});
                             });
                             $.post("ajax/requests.php", {action: "criar_relatorio_correio",
                                 carta_porte: rc_zone.find("#input_carta_porte").val(),
@@ -351,7 +352,11 @@ var requests = function(basic_path, options_ext)
                 });
                 rc_zone.find("#add_line_obj_doc").click(function(e) {
                     e.preventDefault();
-                    rc_zone.find("#doc_obj_table_tbody").append("<tr><td><input class='validate[required] span' type='text' /></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
+                    rc_zone.find("#doc_obj_table_tbody").append("<tr>\n\
+<td><input class='validate[required] span input_anexo' type='text' /></td>\n\
+<td><input class='validate[required] span input_n_doc' type='text' /></td>\n\
+<td><input class='validate[required] span input_lead_id' type='text' /></td>\n\
+<td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>");
                 }).click();
                 rc_zone.on("click", ".remove_doc_obj", function(e) {
                     e.preventDefault();
@@ -372,7 +377,7 @@ var requests = function(basic_path, options_ext)
                     aoData.push({"name": "action", "value": "get_relatorio_correio_to_datatable"}
                     );
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento"}, {"sTitle": "Ref.ª de Cliente"}, {"sTitle": "Anexo", "sWidth": "75px"}, {"sTitle": "Observações"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Anexo", "sWidth": "75px"}, {"sTitle": "Observações"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_C').click(function(event) {
@@ -392,14 +397,22 @@ var requests = function(basic_path, options_ext)
             });
             rc_zone.on("click", ".decline_report_correio", function() {
                 var this_button = $(this);
-                bootbox.confirm("Tem a certeza?", function(result) {
-                    if (result) {
-                        $.post('/AM/ajax/requests.php', {action: "decline_report_correio", id: this_button.val()}, function() {
-                            this_button.parent("td").prev().text("Rejeitado");
+
+                bootbox.prompt("Qual o motivo?", function(result) {
+                    if (result !== null) {
+                        $.post('/AM/ajax/requests.php', {action: "decline_report_correio", id: this_button.val(), motivo: result}, function() {
+                           this_button.parent("td").prev().text("Rejeitado");
+                            this_button.parent("tr").find(".ver_anexo_correio").data("aproved", 0);
                             relatorio_correio_table.fnReloadAjax();
                         }, "json");
                     }
                 });
+
+
+
+
+
+ 
             });
             rc_zone.on("click", ".ver_anexo_correio", function(e) {
                 e.preventDefault();
@@ -407,14 +420,13 @@ var requests = function(basic_path, options_ext)
                         id_anexo = ~~$(this).data().anexo_id,
                         anexo_number = 1,
                         status = ~~$(this).data().approved;
-
                 $.post("ajax/requests.php", {action: "get_anexo_correio", id: id_anexo},
                 function(data) {
                     var tbody = basic_path.find("#tbody_ver_anexo_correio").empty();
-
                     $.each(data, function()
                     {
-                        tbody.append("<tr><td class='chex-table'><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td>" + this.value + "</td></tr>");
+
+                        tbody.append("<tr><td class='chex-table'><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo ' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td class='input_anexo'>" + this.anexo + "</td><td class='input_n_doc'>" + this.n_doc + "</td><td class='input_lead_id'>" + this.lead_id + "</td></tr>");
                         anexo_number++;
                     });
                     basic_path.find(".anexo_exit_button").data("id_correio", id_anexo);
@@ -429,8 +441,9 @@ var requests = function(basic_path, options_ext)
                 if (~~data_ver_button.data().approved)
                     return false;
                 data_ver_button.data().approved = 1;
-                $.each(this_button.parents("#ver_anexo_correio_modal").find("tr"), function() {
-                    anexo_array.push({value: $(this).find("td").last().text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked")});
+                $.each(this_button.parents("#ver_anexo_correio_modal").find("#tbody_ver_anexo_correio").find("tr"), function() {
+
+                    anexo_array.push({anexo: $(this).find(".input_anexo").text(), n_doc: $(this).find(".input_n_doc").text(), lead_id: $(this).find(".input_lead_id").text(), confirmed: ~~$(this).find(".checkbox_confirm_anexo").is(":checked")});
 
                     if (!~~$(this).find("td").first().find(":checkbox").is(":checked")) {
                         data_ver_button.data().approved = 0;
@@ -531,6 +544,7 @@ var requests = function(basic_path, options_ext)
                     if (result) {
                         $.post('/AM/ajax/requests.php', {action: "decline_report_stock", id: this_button.val()}, function() {
                             this_button.parent("td").prev().text("Rejeitado");
+                            this_button.parent("tr").find(".ver_produto_stock").data("aproved", 0);
                             relatorio_stock_table.fnReloadAjax();
                         }, "json");
                     }
@@ -677,7 +691,7 @@ var requests = function(basic_path, options_ext)
                         id_movimentacao = ~~$(this).data().movimentacao_id,
                         anexo_number = 1,
                         status = ~~$(this).data().approved;
-
+          
                 $.post("ajax/requests.php", {action: "get_itens_movimentacao", id: id_movimentacao},
                 function(data1) {
                     var tbody = basic_path.find("#tbody_ver_produto_movimentacao_stock").empty();

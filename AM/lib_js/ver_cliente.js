@@ -17,7 +17,7 @@ var cliente_info = function(lead_id, options_ext)
             id: lead_id},
         function(data1)
         {
-        
+            console.log(data1);
             $.each(data1, function()
             {
                 if (this.value)
@@ -29,9 +29,12 @@ var cliente_info = function(lead_id, options_ext)
                     switch (this.name.toLowerCase())
                     {
                         case "first_name":
+                        case "middle_initial":
+                        case "last_name":
                         case "phone_number":
                         case "alt_phone":
                         case "email":
+                        case "date_of_birth":
                             client_info.append(temp);
                             break;
                         case "address1":
@@ -43,6 +46,7 @@ var cliente_info = function(lead_id, options_ext)
                         case "comments":
                         case "extra1":
                         case "extra2":
+                        case "extra8":
                             client_extra.append(temp);
                             client_extra_count++;
                             break;
@@ -52,7 +56,7 @@ var cliente_info = function(lead_id, options_ext)
             var final = ($("<div>", {class: "row-fluid"}).append($("<div>", {class: "span6"}).append($("<h4>", {class: "icon-user"}).text(" Info de cliente")).append(client_info))
                     .append($("<div>", {class: "span6  "}).append($("<h4>", {class: "icon-home"}).text(" Morada")).append(client_address)))
                     .append($("<div>", {class: "row-fluid"}).append($("<div>", {class: "span7 ", id: "extra_info_div"}).append($("<h4>", {class: "icon-star"}).text(" Info Extra")).append(client_extra)));
-  if (!client_extra_count)
+            if (!client_extra_count)
                 final.find("#extra_info_div").parent().remove();
             bootbox.alert(final);
         }, "json");

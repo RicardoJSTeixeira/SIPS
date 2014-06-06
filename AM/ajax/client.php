@@ -67,9 +67,6 @@ switch ($action) {
         break;
     case 'byLeadToInfo':
         $js = array();
-        // $query = "SET CHARACTER SET utf8;";
-        // $stmt = $db->prepare($query);
-        // $stmt->execute();
         $query = "SELECT Name, Display_name FROM vicidial_list_ref WHERE campaign_id=:campaign_id AND active=1 Order by field_order ASC";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":campaign_id" => $user->getUser()->campaign));
@@ -83,6 +80,7 @@ switch ($action) {
         foreach ($js as $key => $value) {
             $js[$key]["value"] = $row[$key];
         }
+        $js=  array_values($js);
         break;
     case 'byWhat':
         $query = "SELECT lead_id, first_name, middle_initial, last_name, phone_number, date_of_birth, extra2 'refClient', extra8 'nif' FROM vicidial_list where $what=:value";
