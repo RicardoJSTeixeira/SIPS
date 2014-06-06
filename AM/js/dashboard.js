@@ -82,17 +82,17 @@ $(function() {
         var
                 t = $("#table_tbody_mp").empty(),
                 temp = "",
-                v7 = 0,
+                v6 = 0,
                 v3 = 0,
-                isV7 = false;
+                isV6 = false;
         $.each(data, function() {
-            if (isV7 = (moment().diff(this.start_date, "days") > 7)) {//!!é mesmo isto que se quer não é erro!!
-                v7++;
+            if (isV6 = (moment().diff(this.start_date, "days") > 6)) {//!!é mesmo isto que se quer não é erro!!
+                v6++;
             }
             if ((moment().diff(this.start_date, "days") > 3)) {//!!é mesmo isto que se quer não é erro!!
                 v3++;
             }
-            temp += "<tr " + ((isV7) ? "class='error'" : "") + ">\n\
+            temp += "<tr " + ((isV6) ? "class='error'" : "") + ">\n\
                         <td>" + this.first_name + "</td>\n\
                         <td>" + moment().from(this.start_date, true) + " <div class='view-button'>\n\
                             <button class='btn btn-mini icon-alone initC' data-cid='" + this.lead_id + "' data-rid='" + this.id_reservation + "' data-toggle='tooltip' title='Iniciar Consulta'><i class='icon-share-alt'></i></button>\n\
@@ -158,7 +158,7 @@ $(function() {
                     }
                 })
                 .find('[data-toggle~="tooltip"]').tooltip({container: 'body'});
-        localStorage.v7=v7;
+        localStorage.v6=v6;
         localStorage.v3=v3;
         consultasMais();
     }, "json");

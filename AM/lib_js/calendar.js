@@ -53,6 +53,9 @@ var calendar = function(selector, data, modals, ext, client, user) {
             day: 'dia'
         },
         eventClick: function(calEvent, jsEvent, view) {
+            if (isBlocked() && calEvent.start > new Date().getTime()) {
+                return false;
+            }
             if (calEvent.bloqueio && calEvent.system) {
                 me.openMkt(calEvent);
             }

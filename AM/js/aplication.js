@@ -248,11 +248,11 @@ function consultasMais() {
     if (!localStorage.length) {
         return false;
     }
-    if (SpiceU.user_level > 5) {
+    if (SpiceU.user_level > 1) {
         return false;
     }
 
-    if (~~localStorage.v7 > 7) {
+    if (~~localStorage.v6 > 1) {
         alerts.add({id: 0, message: "Devido a ter <i class='label label-important'>" + localStorage.v7 + "</i> consultas com mais de 7 dias de atraso, só poderá usar o <i>Spice</i> para consultar e fechar consultas.", callback: function() {
                 $(".menu-sidebar").find("li:not(:eq(0)):not(:eq(0))").addClass("disabled");
                 $(".criar_marcacao, .recomendacoes, .criar_encomenda").prop("disabled", true);
@@ -272,6 +272,9 @@ function consultasMais() {
 
 function dropOneConsult() {
     localStorage.v3 = ~~localStorage.v3 - 1;
-    localStorage.v7 = ~~localStorage.v7 - 1;
+    localStorage.v6 = ~~localStorage.v6 - 1;
 }
 
+function isBlocked() {
+    return localStorage.v6 > 0;
+}
