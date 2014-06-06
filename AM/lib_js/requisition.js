@@ -257,6 +257,8 @@ var requisition = function(geral_path, options_ext) {
                             } else
                                 must_have_anexo = false;
                         }
+                        $("#form_encomenda_especial :input").attr('readonly', true);
+                        $("#new_requisition_submit_button").prop("disabled", true);
                         $.post('ajax/requisition.php', {
                             action: "criar_encomenda",
                             type: me.tipo,
@@ -266,10 +268,13 @@ var requisition = function(geral_path, options_ext) {
                             products_list: produtos_encomenda
                         },
                         function(data) {
+
+                            $("#form_encomenda_especial :input").attr('readonly', false);
+                            $("#new_requisition_submit_button").prop("disabled", false);
                             $.jGrowl('Encomenda realizada com sucesso', {
                                 life: 4000
                             });
-
+                            history.back();
                             $.post('/AM/ajax/upload_file.php', {
                                 action: "move_files_to_new_folder",
                                 old_id: anexo_random_number,
@@ -312,7 +317,8 @@ var requisition = function(geral_path, options_ext) {
                 }
             });
         });
-        $(new_requisition_zone).on("submit", " #form_encomenda_especial", function(e) {
+        $(new_requisition_zone).on("submitw", " #form_encomenda_especial", function(e) {
+
             e.preventDefault();
         });
     };
