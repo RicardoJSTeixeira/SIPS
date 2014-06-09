@@ -264,10 +264,7 @@ $comments
 
     case "accept_apoio_marketing":
         $result = $apoio_marketing->accept($id);
-        if ($result) {
-            $alert->make($result->user, 'Apoio Mkt. Aprovado');
-        }
-        echo json_encode(true);
+            echo json_encode(true);
         break;
 
     case "decline_apoio_marketing":
@@ -285,9 +282,6 @@ $comments
 
     case "accept_report_correio":
         $result = $relatorio_correio->accept($id);
-        if ($result) {
-            $alert->make($result->user, 'Correio Aprovado');
-        }
         echo json_encode(true);
         break;
 
@@ -301,10 +295,7 @@ $comments
 
     case "accept_report_frota":
         $result = $relatorio_frota->accept($id);
-        if ($result) {
-            $alert->make($result->user, 'Frota Aceite');
-        }
-        echo json_encode(true);
+           echo json_encode(true);
         break;
 
     case "decline_report_frota":
@@ -317,10 +308,7 @@ $comments
 
     case "accept_report_stock":
         $result = $relatorio_mensal_stock->accept($id);
-        if ($result) {
-            $alert->make($result->user, 'Frota Aceite');
-        }
-        echo json_encode(true);
+            echo json_encode(true);
         break;
 
     case "decline_report_stock":
@@ -333,10 +321,7 @@ $comments
 
     case "accept_report_movimentacao":
         $result = $relatorio_movimentacao_stock->accept($id);
-        if ($result) {
-            $alert->make($result->user, 'Movimentação Aceite');
-        }
-        echo json_encode(true);
+            echo json_encode(true);
         break;
 
     case "decline_report_movimentacao":
