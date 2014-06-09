@@ -41,7 +41,7 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
     };
 
     function feed(data) {
-        data=produtos[data.id];
+        data = produtos[data.id];
         var hasChilds = false;
         if (typeof data.children === "object") {
             hasChilds = Boolean(data.children.length);
@@ -94,7 +94,8 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
                                         .find(".input_quantity")
                                         .not(this)
                                         .map(function() {
-                                            $(this).val(~~$(this).val() + add);
+                                            if (~~$(this).prop("max") >= (~~$(this).val() + add))
+                                                $(this).val(~~$(this).val() + add);
                                         });
                             })).css("display", "inline").hide();
         }
@@ -102,7 +103,7 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
         {
             quantity_temp = $("<div>", {class: " input-prepend quantity_div"})
                     .append($("<span>", {class: "add-on"}).text("Q."))
-                    .append($("<input>", {class: "input_quantity", type: "number", min: 1, max: max_value, value: 1, readonly: true}).on("change", function()
+                    .append($("<input>", {class: "input_quantity", type: "number", min: 1, max: max_value, value: 1}).on("change", function()
                     {
                         if ($(this).val() > ~~$(this).prop('max'))
                         {
