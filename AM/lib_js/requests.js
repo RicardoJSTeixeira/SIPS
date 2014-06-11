@@ -372,7 +372,7 @@ var requests = function(basic_path, options_ext) {
                     aoData.push({"name": "action", "value": "get_relatorio_correio_to_datatable"}
                     );
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Anexo", "sWidth": "75px"}, {"sTitle": "Observações"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
+                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento", "sWidth": "75px"}, {"sTitle": "Observações"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_C').click(function(event) {
@@ -393,16 +393,27 @@ var requests = function(basic_path, options_ext) {
                 e.preventDefault();
                 if ($("#add_anexo_div").validationEngine("validate"))
                 {
-                    var anexo_array = [], data_button = $(this).parents(".modal").find(".anexo_exit_button");
-                    anexo_array.push({anexo: $("#add_anexo_ficheiro"), n_doc: $("#add_anexo_documento"), lead_id: $("#add_anexo_lead_id"), confirmed: 0});
+
+                    var anexo_array = [];
+                    var data_button = $(this).parents(".modal").find(".anexo_exit_button");
+                    var temp = {anexo: $("#add_anexo_ficheiro").val(), n_doc: $("#add_anexo_documento").val(), lead_id: $("#add_anexo_lead_id").val(), confirmed: 0};
+                    anexo_array.push(temp);
                     $.each(data_button.parents("#ver_anexo_correio_modal").find("#tbody_ver_anexo_correio").find("tr"), function() {
                         anexo_array.push({anexo: $(this).find(".input_anexo").text(), n_doc: $(this).find(".input_n_doc").text(), lead_id: $(this).find(".input_lead_id").text(), confirmed: ~~$(this).find(".checkbox_confirm_anexo").is(":checked")});
-
                     });
-                    $.post("/AM/ajax/requests.php", {action: "save_anexo_correio", id: data_button.data().id_correio, anexos: anexo_array}, "json");
-                    $("#add_anexo_div").reset().hide();
-                    $("#ver_anexo_correio_modal").modal("hide");
-                    $(".ver_anexo_correio data[anexo_id=]")
+
+                    $.post('/AM/ajax/requests.php', {action: "save_anexo_correio", id: data_button.data().id_correio, anexos: anexo_array}, function() {
+                        var id_anexo = ~~basic_path.find("#tbody_ver_anexo_correio").find("tr").last().find(".checkbox_confirm_anexo").val() + 1;
+
+                        basic_path.find("#tbody_ver_anexo_correio").append("<tr><td class='chex-table'><input " + ((SpiceU.user_level < 5) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo '  id='anexo" + id_anexo + "' name='cci'><label class='checkbox inline' for='anexo" + id_anexo + "'><span></span> </label></td><td class='input_anexo'>" + temp.anexo + "</td><td class='input_n_doc'>" + temp.n_doc + "</td><td class='input_lead_id'>" + temp.lead_id + "</td></tr>");
+                        $("#add_anexo_div")[0].reset();
+                        $("#add_anexo_div").hide();
+
+                        $(".anexo_add_button").show();
+                        $(".anexo_exit_button").show();
+
+
+                    }, "json");
                 }
             });
 
@@ -411,7 +422,7 @@ var requests = function(basic_path, options_ext) {
                 e.preventDefault();
                 $("#add_anexo_div")[0].reset();
                 $("#add_anexo_div").hide();
-                 $(".anexo_add_button").show();
+                $(".anexo_add_button").show();
                 $(".anexo_exit_button").show();
             });
 
