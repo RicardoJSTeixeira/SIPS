@@ -11,12 +11,13 @@ class logger {
 
     private $_db;
     const APMKT="Apoio Mkt";
-    const MAIL="Correio";
+    const CAL="Calendário";
+    const ENC="Encomenda";
     const FROTA="Frota";
-    const STOCK="Stock";
+    const MAIL="Correio";
     const MOVSTOCK="Mov. Stock";
     const PROD="Produto";
-    const ENC="Encomenda";
+    const STOCK="Stock";
 
     public function __construct(PDO $db) {
         $this->_db = $db;
