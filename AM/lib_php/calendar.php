@@ -16,7 +16,7 @@ Class Calendars {
                     . "LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource "
                     . "LEFT JOIN sips_sd_reservations_types e ON a.id_reservation_type=e.id_reservations_types "
                     . "LEFT JOIN spice_consulta f ON a.id_reservation=f.reserva_id "
-                    . "WHERE b.id_scheduler=:id And start_date <=:end And start_date >=:beg";
+                    . "WHERE b.id_scheduler=:id AND start_date <=:end AND end_date >=:beg AND gone=0";
         } else {
             $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, d.display_text, c.postal_code, c.first_name, c.extra1 codCamp, changed, e.closed, obs, extra_id, has_accessories "
                     . "FROM sips_sd_reservations a "
@@ -24,7 +24,7 @@ Class Calendars {
                     . "LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource "
                     . "LEFT JOIN sips_sd_reservations_types d ON a.id_reservation_type=d.id_reservations_types "
                     . "LEFT JOIN spice_consulta e ON a.id_reservation=e.reserva_id "
-                    . "WHERE a.id_resource=:id And start_date <=:end And start_date >=:beg";
+                    . "WHERE a.id_resource=:id AND start_date <=:end AND end_date >=:beg AND gone=0";
         }
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id, ":end" => $end, ":beg" => $beg));
@@ -34,17 +34,17 @@ Class Calendars {
             $reservars[] = array(
                 'id' => (int) $row->id_reservation,
                 'title' => (string) $row->rsc_name . " " . $row->display_text . (((bool) $row->closed) ? " - Fechado" : ""),
-                'client_name' => (string) (is_null($row->first_name) ? "" : $row->first_name),
-                'lead_id' => (int) (is_null($row->lead_id) ? "" : $row->lead_id),
-                'codCamp' => (string) (is_null($row->codCamp) ? "" : $row->codCamp),
-                'postal' => (string) (is_null($row->postal_code) ? "" : $row->postal_code),
+                'client_name' => (string) $row->first_name,
+                'lead_id' => (int) $row->lead_id,
+                'codCamp' => (string) $row->codCamp,
+                'postal' => (string) $row->postal_code,
                 'start' => (string) $row->start_date,
                 'end' => (string) $row->end_date,
                 'editable' => (bool) !(((bool) $row->closed || $forceUneditable ) || ($system_types[$row->id_reservation_type]) || (($username) ? $username != $row->id_user : false)),
                 'closed' => (bool) $row->closed || $row->has_accessories,
                 'changed' => (int) $row->changed,
                 'className' => (string) "t" . $row->id_reservation_type . (((bool) $row->del) ? " del" : ""),
-                'bloqueio' => (bool) false || ($system_types[$row->id_reservation_type] == "Rastreio c/ MKT"),
+                'bloqueio' => (bool) ($system_types[$row->id_reservation_type] == "Rastreio c/ MKT"),
                 'user' => (string) $row->id_user,
                 'system' => (bool) $system_types[$row->id_reservation_type],
                 'extra_id' => (int) $row->extra_id,
@@ -198,7 +198,7 @@ Class Calendars {
     }
 
     public function removeReserva($id) {
-        $query = "DELETE FROM sips_sd_reservations WHERE id_reservation=:id";
+        $query = "UPDATE sips_sd_reservations SET `gone`=1 WHERE id_reservation=:id";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":id" => $id));
     }
