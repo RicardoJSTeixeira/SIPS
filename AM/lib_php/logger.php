@@ -7,23 +7,27 @@
  *
  * @author ricardo
  */
-class logger {
+class Logger {
 
     private $_db;
-    const APMKT="Apoio Mkt";
-    const CAL="Calendário";
-    const ENC="Encomenda";
-    const FROTA="Frota";
-    const MAIL="Correio";
-    const MOVSTOCK="Mov. Stock";
-    const PROD="Produto";
-    const STOCK="Stock";
+    const S_APMKT="Apoio Mkt";
+    const S_CAL="Calendário";
+    const S_ENC="Encomenda";
+    const S_FROTA="Frota";
+    const S_MAIL="Correio";
+    const S_MOVSTOCK="Mov. Stock";
+    const S_PROD="Produto";
+    const S_STOCK="Stock";
+    const T_INS="Insert";
+    const T_UPD="Update";
+    const T_DEL="Delete";
+    const T_RM="Remove";
 
     public function __construct(PDO $db) {
         $this->_db = $db;
     }
 
-    public function set($username, $id, $type, $note, $section) {
+    public function set($username, $id, $type, $section, $note) {
         $query = "INSERT INTO `spice_log` (`username`, `record_id`, `type`, `note`, `section`) VALUES (:username, :id, :type, :note, :section);";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":username" => $username, ":id" => $id, ":type" => $type, ":note" => $note, ":section" => $section));
