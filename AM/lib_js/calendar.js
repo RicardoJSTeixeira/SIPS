@@ -387,6 +387,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
         });
         $("#refs tbody").html(temp);
         $("#refs tbody [name=single-refs]").change(function() {
+            $.msg();
             $.post("/AM/ajax/calendar.php", {
                 resource: $(this).val(),
                 action: "getRscContent"
@@ -395,7 +396,11 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 me.destroy();
                 me = new calendar(me.selector, dat, me.modals, me.ext, me.client, me.user);
                 me.reserveConstruct(dat.tipo);
-            }, "json");
+                $.msg('unblock');
+            }, "json").fail(function(data) {
+                $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tenta novamente.');
+                $.msg('unblock', 5000);
+            });
         });
     };
     this.initModal = function(Refs) {
@@ -426,6 +431,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 .end()
                 .on("submit", "#no_consult_confirm", function(e) {
                     e.preventDefault();
+                    $.msg();
                     var calendar_client = me.modal_ext.data(),
                             cResult = $("#select_no_consult").val();
                     if ($(this).validationEngine('validate')) {
@@ -454,7 +460,12 @@ var calendar = function(selector, data, modals, ext, client, user) {
                             calendar_client.calEvent.className += (cResult === 'DEST' || cResult === 'NOSHOW') ? ' del' : '';
                             me.calendar.fullCalendar('updateEvent', calendar_client.calEvent);
                             dropOneConsult();
-                        }, "json");
+                            $.msg('unblock');
+                        }, "json").fail(function(data) {
+                            $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tenta novamente.');
+                            $.msg('unblock', 5000);
+                        });
+                        ;
                         me.modal_ext.modal("hide").find(".popover").hide();
                     }
                 })
@@ -482,6 +493,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 })
                 .end()
                 .on("click", "#change_confirm_button", function() {
+                    $.msg();
                     var calendar_client = me.modal_ext.data().calEvent;
                     $.post("/AM/ajax/calendar.php", {
                         action: "changeReservationResource",
@@ -490,7 +502,12 @@ var calendar = function(selector, data, modals, ext, client, user) {
                     },
                     function() {
                         me.calendar.fullCalendar('removeEvents', calendar_client.id);
-                    }, "json");
+                        $.msg('unblock');
+                    }, "json").fail(function(data) {
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tenta novamente.');
+                        $.msg('unblock', 5000);
+                    });
+                    ;
                     me.modal_ext.modal("hide").find(".popover").hide();
                 })
                 .on("hidden", function() {
@@ -503,6 +520,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 })
                 .find(".btn_trash")
                 .click(function() {
+                    $.msg();
                     me.modal_ext.modal("hide");
                     var data = me.modal_ext.data().calEvent;
                     $.post("/AM/ajax/calendar.php", {
@@ -514,7 +532,12 @@ var calendar = function(selector, data, modals, ext, client, user) {
                             me.calendar.fullCalendar('removeEvents', data.id);
                             dropOneConsult();
                         }
-                    }, "json");
+                        $.msg('unblock');
+                    }, "json").fail(function(data) {
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tenta novamente.');
+                        $.msg('unblock', 5000);
+                    });
+                    ;
                 })
                 .end()
                 .css({
@@ -534,6 +557,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
         me.modal_special
                 .find(".btn_trash")
                 .click(function() {
+                    $.msg();
                     me.modal_special.modal("hide");
                     var id = me.modal_special.data().calEvent.id;
                     $.post("/AM/ajax/calendar.php", {
@@ -544,7 +568,12 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         if (ok) {
                             me.calendar.fullCalendar('removeEvents', id);
                         }
-                    }, "json");
+                        $.msg('unblock');
+                    }, "json").fail(function(data) {
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tenta novamente.');
+                        $.msg('unblock', 5000);
+                    });
+                    ;
                 });
 
         me.modals.mkt
