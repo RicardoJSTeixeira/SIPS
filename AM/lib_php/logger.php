@@ -10,6 +10,7 @@
 class Logger {
 
     private $_db;
+    private $_username;
     const S_APMKT="Apoio Mkt";
     const S_CAL="Calendário";
     const S_ENC="Encomenda";
@@ -23,14 +24,15 @@ class Logger {
     const T_DEL="Delete";
     const T_RM="Remove";
 
-    public function __construct(PDO $db) {
+    public function __construct(PDO $db, $user) {
         $this->_db = $db;
+        $this->_username = $user->username;
     }
 
-    public function set($username, $id, $type, $section, $note) {
+    public function set($id, $type, $section, $note="") {
         $query = "INSERT INTO `spice_log` (`username`, `record_id`, `type`, `note`, `section`) VALUES (:username, :id, :type, :note, :section);";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":username" => $username, ":id" => $id, ":type" => $type, ":note" => $note, ":section" => $section));
+        return $stmt->execute(array(":username" => $this->_username, ":id" => $id, ":type" => $type, ":note" => $note, ":section" => $section));
     }
 
     public function get($id, $section) {
