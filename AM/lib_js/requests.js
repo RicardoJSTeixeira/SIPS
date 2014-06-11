@@ -152,7 +152,7 @@ var requests = function(basic_path, options_ext) {
                 var id = ~~$(this).data().apoio_marketing_id;
                 $.post("/AM/ajax/requests.php", {action: "get_locais_publicidade_from_apoio_marketing", id: id}, function(data) {
                     basic_path.find("#ver_local_publicidade_modal #tbody_ver_local_publicidade").empty();
-                    $.each(data, function()                    {
+                    $.each(data, function() {
                         basic_path.find("#ver_local_publicidade_modal #tbody_ver_local_publicidade").append("<tr><td>" + this.cp + "</td><td>" + this.freguesia + "</td></tr>");
                     });
                     basic_path.find("#ver_local_publicidade_modal").modal("show");
@@ -277,7 +277,7 @@ var requests = function(basic_path, options_ext) {
                 $.post("ajax/requests.php", {action: "get_ocorrencias_frota", id: id}, function(data) {
                     var tbody = basic_path.find("#ver_occorrencia_frota_modal #ver_occorrencia_frota_tbody");
                     tbody.empty();
-                    $.each(data, function()                    {
+                    $.each(data, function() {
                         tbody.append("<tr><td>" + this.data + "</td><td>" + this.km + "</td><td>" + this.ocorrencia + "</td></tr>");
                     });
                     basic_path.find("#ver_occorrencia_frota_modal").modal("show");
@@ -306,6 +306,10 @@ var requests = function(basic_path, options_ext) {
         init: function() {
             $.get("/AM/view/requests/relatorio_correio_modal.html", function(data) {
                 basic_path.append(data);
+                if (SpiceU.user_level <= 5)
+                    basic_path.find(".anexo_add_button").hide();
+
+
             }, 'html');
         },
         new : function(rc_zone) {
@@ -316,8 +320,8 @@ var requests = function(basic_path, options_ext) {
                 //SUBMIT
                 rc_zone.find("#relatorio_correio_form").submit(function(e) {
                     e.preventDefault();
-                    if (rc_zone.find("#relatorio_correio_form").validationEngine("validate"))                    {
-                        if (rc_zone.find("#doc_obj_table_tbody tr").length)                        {
+                    if (rc_zone.find("#relatorio_correio_form").validationEngine("validate")) {
+                        if (rc_zone.find("#doc_obj_table_tbody tr").length) {
                             var docs_objs = [];
                             $.each(rc_zone.find("#doc_obj_table_tbody tr"), function() {
                                 docs_objs.push({anexo: $(this).find(".input_anexo").val(), n_doc: $(this).find(".input_n_doc").val(), lead_id: $(this).find(".input_lead_id").val(), confirmed: false});
@@ -375,6 +379,44 @@ var requests = function(basic_path, options_ext) {
                 event.preventDefault();
                 table2csv(relatorio_correio_table, 'full', '#' + rc_zone[0].id);
             });
+            basic_path.on("click", ".anexo_add_button", function(e)
+            {
+                e.preventDefault();
+
+                $("#add_anexo_div").show();
+                $(".anexo_add_button").hide();
+                $(".anexo_exit_button").hide();
+            });
+
+            basic_path.on("click", "#add_anexo_yes_button", function(e)
+            {
+                e.preventDefault();
+                if ($("#add_anexo_div").validationEngine("validate"))
+                {
+                    var anexo_array = [], data_button = $(this).parents(".modal").find(".anexo_exit_button");
+                    anexo_array.push({anexo: $("#add_anexo_ficheiro"), n_doc: $("#add_anexo_documento"), lead_id: $("#add_anexo_lead_id"), confirmed: 0});
+                    $.each(data_button.parents("#ver_anexo_correio_modal").find("#tbody_ver_anexo_correio").find("tr"), function() {
+                        anexo_array.push({anexo: $(this).find(".input_anexo").text(), n_doc: $(this).find(".input_n_doc").text(), lead_id: $(this).find(".input_lead_id").text(), confirmed: ~~$(this).find(".checkbox_confirm_anexo").is(":checked")});
+
+                    });
+                    $.post("/AM/ajax/requests.php", {action: "save_anexo_correio", id: data_button.data().id_correio, anexos: anexo_array}, "json");
+                    $("#add_anexo_div").reset().hide();
+                    $("#ver_anexo_correio_modal").modal("hide");
+                    $(".ver_anexo_correio data[anexo_id=]")
+                }
+            });
+
+            basic_path.on("click", "#add_anexo_no_button", function(e)
+            {
+                e.preventDefault();
+                $("#add_anexo_div")[0].reset();
+                $("#add_anexo_div").hide();
+                 $(".anexo_add_button").show();
+                $(".anexo_exit_button").show();
+            });
+
+
+
             rc_zone.on("click", ".accept_report_correio", function() {
                 if ($(this).parents("td").prev().prev().prev().find("button").data().approved) {
                     var this_button = $(this);
@@ -398,12 +440,6 @@ var requests = function(basic_path, options_ext) {
                         }, "json");
                     }
                 });
-
-
-
-
-
-
             });
             rc_zone.on("click", ".ver_anexo_correio", function(e) {
                 e.preventDefault();
@@ -414,7 +450,7 @@ var requests = function(basic_path, options_ext) {
                 $.post("ajax/requests.php", {action: "get_anexo_correio", id: id_anexo},
                 function(data) {
                     var tbody = basic_path.find("#tbody_ver_anexo_correio").empty();
-                    $.each(data, function()                  {
+                    $.each(data, function() {
                         tbody.append("<tr><td class='chex-table'><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo ' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td class='input_anexo'>" + this.anexo + "</td><td class='input_n_doc'>" + this.n_doc + "</td><td class='input_lead_id'>" + this.lead_id + "</td></tr>");
                         anexo_number++;
                     });
@@ -456,17 +492,17 @@ var requests = function(basic_path, options_ext) {
                     e.preventDefault();
                     if (rms_zone.find("#relatorio_mensal_stock_form").validationEngine("validate")) {
                         var prdt_objs = [];
-                        if (rms_zone.find("#table_tbody_rfms tr").length)                        {
+                        if (rms_zone.find("#table_tbody_rfms tr").length) {
                             $.each(rms_zone.find("#table_tbody_rfms tr"), function() {
                                 prdt_objs.push({quantidade: $(this).find(".quant").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
                             });
                             $("#relatorio_mensal_stock_form :input").attr('readonly', true);
-                            $.post("ajax/requests.php",                                    {
-                                        action: "criar_relatorio_mensal_stock",
-                                        data: rms_zone.find("#input_data").val(),
-                                        produtos: prdt_objs
-                                    },
-                            function()                            {
+                            $.post("ajax/requests.php", {
+                                action: "criar_relatorio_mensal_stock",
+                                data: rms_zone.find("#input_data").val(),
+                                produtos: prdt_objs
+                            },
+                            function() {
                                 rms_zone.find("#relatorio_mensal_stock_form").get(0).reset();
                                 $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
                                 $("#relatorio_mensal_stock_form :input").attr('readonly', false);
@@ -511,7 +547,7 @@ var requests = function(basic_path, options_ext) {
                 event.preventDefault();
                 table2csv(relatorio_stock_table, 'full', '#' + rms_zone[0].id);
             });
-            rms_zone.on("click", ".accept_report_stock", function()            {
+            rms_zone.on("click", ".accept_report_stock", function() {
                 var this_button = $(this);
                 if ($(this).parents("td").prev().prev().find("button").data().approved) {
                     $.post('/AM/ajax/requests.php', {action: "accept_report_stock", id: $(this).val()}, function() {
@@ -522,7 +558,7 @@ var requests = function(basic_path, options_ext) {
                 else
                     $.jGrowl("Verifique os produtos 1º, antes de aprovar.");
             });
-            rms_zone.on("click", ".decline_report_stock", function()            {
+            rms_zone.on("click", ".decline_report_stock", function() {
                 var this_button = $(this);
                 bootbox.confirm("Tem a certeza?", function(result) {
                     if (result) {
@@ -535,7 +571,7 @@ var requests = function(basic_path, options_ext) {
                 });
             });
 
-            rms_zone.on("click", ".ver_produto_stock", function(e)            {
+            rms_zone.on("click", ".ver_produto_stock", function(e) {
                 e.preventDefault();
                 var
                         id_stock = ~~$(this).data().stock_id,
@@ -553,7 +589,7 @@ var requests = function(basic_path, options_ext) {
                     basic_path.find("#ver_anexo_mensal_stock_modal").modal("show");
                 }, "json");
             });
-            basic_path.on("click", ".stock_exit_button", function(e)            {
+            basic_path.on("click", ".stock_exit_button", function(e) {
                 var
                         anexo_array = [],
                         this_button = $(this),
@@ -699,7 +735,7 @@ var requests = function(basic_path, options_ext) {
                     return false;
 
                 data_ver_button.data().approved = 1;
-                $.each(this_button.parents("#ver_anexo_mov_stock_modal").find("#tbody_ver_produto_movimentacao_stock").find("tr"), function()                {
+                $.each(this_button.parents("#ver_anexo_mov_stock_modal").find("#tbody_ver_produto_movimentacao_stock").find("tr"), function() {
                     anexo_array.push({destinario: $(this).find(".td_helper_destinario").text(), quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked")});
                     if (!~~$(this).find("td").first().find(":checkbox").is(":checked"))
                         data_ver_button.data().approved = 0;

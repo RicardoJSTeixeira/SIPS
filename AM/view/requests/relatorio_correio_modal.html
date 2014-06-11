@@ -3,28 +3,53 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3 id="myModalLabel">Info de Anexos</h3>
     </div>
-        <table class="table table-mod table-striped">
-            <thead>
-                <tr>
-                    <th>
-                        #
-                    </th>
-                    <th>
-                        Anexo
-                    </th>
-                    <th>
-                        Documento
-                    </th>
-                    <th>
-                        Ref.Cliente
-                    </th>
-                </tr>
-            </thead>
-            <tbody id="tbody_ver_anexo_correio">
+    <table class="table table-mod table-striped">
+        <thead>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    Anexo
+                </th>
+                <th>
+                    Documento
+                </th>
+                <th>
+                    Ref.Cliente
+                </th>
+            </tr>
+        </thead>
+        <tbody id="tbody_ver_anexo_correio">
 
-            </tbody>
-        </table>
+        </tbody>
+    </table>
     <div class="modal-footer">
+        <form style="display:none" id="add_anexo_div">
+            <div class="formRow">
+                <span>Anexo</span>
+                <div class="formRight">
+                    <input placeholder="Nome do Anexo" id="add_anexo_ficheiro" class="validate[required]"/>
+                </div>    
+            </div>
+            <div class="formRow">
+                <span>Documento</span>
+                <div class="formRight">
+                    <input placeholder="Nº de Documento" id="add_anexo_documento" class="validate[required]"/>
+                </div>    
+            </div>
+            <div class="formRow">
+                <span>Ref. Cliente</span>
+                <div class="formRight">
+                    <input placeholder="Ref. Cliente" id="add_anexo_lead_id" class="validate[required]"/>
+                </div>    
+            </div>
+            <div class="formRow">
+                <button class="btn" id="add_anexo_no_button">Cancelar</button>
+                <button class="btn btn-primary" id="add_anexo_yes_button">Adicionar</button>
+            </div>
+        </form>
+        <button class="btn anexo_add_button" >Adicionar Documento</button>
         <button class="btn btn-success anexo_exit_button" data-dismiss="modal" aria-hidden="true">Gravar</button>
     </div>
 </div>
