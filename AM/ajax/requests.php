@@ -38,7 +38,7 @@ switch ($action) {
         break;
 
     case "criar_relatorio_correio":
-        echo json_encode($relatorio_correio->create($carta_porte, $data,  $input_doc_obj_assoc, $comments));
+        echo json_encode($relatorio_correio->create($carta_porte, $data, $input_doc_obj_assoc, $comments));
         break;
 
     case "criar_apoio_marketing":
@@ -63,7 +63,7 @@ switch ($action) {
                 $end = $horario["fim2"];
                 break;
         }
-                
+
         $apoioID = $apoio_marketing->create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade);
 
         while ($ref = array_pop($refs)) {
@@ -123,7 +123,7 @@ $comments
 <strong>Submetido por:</strong> $userID->username - $userID->name";
 //marketing@acusticamedica.pt
         send_email("marketing@acusticamedica.pt", "Marketing Acústica Médica", $msg, "RELATÓRIO DE RASTREIO - APOIO MKT - $userID->username - $ap->data_inicial");
-       
+
         echo json_encode($apoio_marketing->setReservation($apoioID, $id));
         break;
 
@@ -264,7 +264,7 @@ $comments
 
     case "accept_apoio_marketing":
         $result = $apoio_marketing->accept($id);
-            echo json_encode(true);
+        echo json_encode(true);
         break;
 
     case "decline_apoio_marketing":
@@ -287,6 +287,7 @@ $comments
 
     case "decline_report_correio":
         $result = $relatorio_correio->decline($id);
+            
         if ($result) {
             $alert->make($result->user, "Correio Recusado Motivo: $motivo");
         }
@@ -295,39 +296,39 @@ $comments
 
     case "accept_report_frota":
         $result = $relatorio_frota->accept($id);
-           echo json_encode(true);
+        echo json_encode(true);
         break;
 
     case "decline_report_frota":
         $result = $relatorio_frota->decline($id);
         if ($result) {
-            $alert->make($result->user, 'Frota Recusado');
+            $alert->make($result->user, "Frota Recusado: $motivo");
         }
         echo json_encode(true);
         break;
 
     case "accept_report_stock":
         $result = $relatorio_mensal_stock->accept($id);
-            echo json_encode(true);
+        echo json_encode(true);
         break;
 
     case "decline_report_stock":
         $result = $relatorio_mensal_stock->decline($id);
         if ($result) {
-            $alert->make($result->user, 'Mensal Recusado');
+            $alert->make($result->user, "Mensal Recusado: $motivo");
         }
         echo json_encode(true);
         break;
 
     case "accept_report_movimentacao":
         $result = $relatorio_movimentacao_stock->accept($id);
-            echo json_encode(true);
+        echo json_encode(true);
         break;
 
     case "decline_report_movimentacao":
         $result = $relatorio_movimentacao_stock->decline($id);
         if ($result) {
-            $alert->make($result->user, 'Movimentação Recusado');
+            $alert->make($result->user, "Movimentação Recusado: $motivo");
         }
         echo json_encode(true);
         break;
