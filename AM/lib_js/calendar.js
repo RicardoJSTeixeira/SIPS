@@ -54,6 +54,9 @@ var calendar = function(selector, data, modals, ext, client, user) {
         },
         eventClick: function(calEvent, jsEvent, view) {
             if (isBlocked() && calEvent.start > new Date().getTime()) {
+                $.jGrowl("Devido às consultas em atraso por fechar, esta funcionalidade não lhe permite qualquer tipo de acção com marcações posteriores a hoje.", {
+                    sticky: 4000
+                });
                 return false;
             }
             if (calEvent.bloqueio && calEvent.system) {

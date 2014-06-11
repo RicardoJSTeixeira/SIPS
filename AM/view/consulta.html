@@ -1,9 +1,13 @@
 <style>
     .tableradio_class table td:nth-child(1){width: 260px;}
     .tableradio_class table td:nth-child(2){width: 90px;}
-</style>
+    .label_geral {
+        font-weight: bold;
+        margin: 20px 15px 0px;
+        font-size: 13pt;}
+    </style>
 
-<div id="main_consulta_div">
+    <div id="main_consulta_div">
     <div id="encomenda_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true" >
         <div class="modal-header">
             <h3>Encomenda</h3>
@@ -148,7 +152,7 @@
                         <div class="formRow" id="validate_audio_script_save_div" style="display:none">
                             <button class="btn btn-primary btn-block" id="exit_save" ><i class="icon-save"></i>Gravar sem Concluir</button>
                         </div>
-                        <div class="alert alert-info" id="wconsulta-fechada"><i class="icon icon-warning-sign"></i><br/>Consulta Fechada</div>
+                        <div class="alert alert-info" id="wconsulta-fechada" style="display:none"><i class="icon icon-warning-sign"></i><br/>Consulta Fechada</div>
                     </div>
                     <div class="clear"></div>
                 </div>

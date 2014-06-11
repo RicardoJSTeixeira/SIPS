@@ -174,7 +174,9 @@ function init() {
             }
         }, oSettings);
     };
-
+    $.msg('overwriteGlobal', 'clickUnblock', false);
+    $.msg('overwriteGlobal', 'autoUnblock', false);
+    $.msg('overwriteGlobal', 'content', 'Por favor aguarde...');
 }
 function get_messages() {
     //GET NEW MESSAGES
