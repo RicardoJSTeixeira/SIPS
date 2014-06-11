@@ -124,8 +124,7 @@ var products = function(geral_path, options_ext)
                 geral_path.find("#remove_product_modal").modal("hide");
             }, "json");
         });
-        edit_product_modal.on("click", "#edit_product_add_promotion_toggle", function(e)
-        {
+        edit_product_modal.on("click", "#edit_product_add_promotion_toggle", function(e) {
             e.preventDefault();
             $(this).hide();
             edit_product_modal.find("#edit_product_new_promotion_div").show();
@@ -134,11 +133,9 @@ var products = function(geral_path, options_ext)
             edit_product_modal.find("#edit_product_data_promoçao1").val("");
             edit_product_modal.find("#edit_product_data_promoçao2").val("");
         });
-        edit_product_modal.on("click", "#edit_product_add_promotion_button", function(e)
-        {
+        edit_product_modal.on("click", "#edit_product_add_promotion_button", function(e) {
             e.preventDefault();
-            if (edit_product_modal.find("#edit_product_form").validationEngine("validate"))
-            {
+            if (edit_product_modal.find("#edit_product_form").validationEngine("validate")) {
                 $.post('/AM/ajax/products.php', {action: "add_promotion", "id": product_id,
                     active: edit_product_modal.find("#edit_product_promotion_active").is(":checked"),
                     highlight: edit_product_modal.find("#edit_product_promotion_highlight").is(":checked"),
@@ -151,20 +148,16 @@ var products = function(geral_path, options_ext)
                 }, "json");
             }
         });
-        edit_product_modal.on("change", "#edit_product_category", function()
-        {
-            if ($(this).val() === "Molde" || $(this).val() === "BTE" || $(this).val() === "RITE" || $(this).val() === "INTRA")
-            {
+        edit_product_modal.on("change", "#edit_product_category", function() {
+            if ($(this).val() === "Molde" || $(this).val() === "BTE" || $(this).val() === "RITE" || $(this).val() === "INTRA") {
                 edit_product_modal.find("#edit_product_color_div").show();
             }
-            else
-            {
+            else {
                 edit_product_modal.find("#edit_product_table_tbody_color").empty();
                 edit_product_modal.find("#edit_product_color_div").hide();
             }
         });
-        edit_product_modal.on("click", "#edit_product_button_color_add_line", function(e)
-        {
+        edit_product_modal.on("click", "#edit_product_button_color_add_line", function(e) {
             e.preventDefault();
             edit_product_modal.find("#edit_product_table_tbody_color").append("<tr><td><select class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]'></td><td><button class='btn remove_color icon-alone btn-danger'><i class='icon icon-trash'></i></button></td></tr>");
             $("#edit_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).colourPicker({
@@ -172,13 +165,11 @@ var products = function(geral_path, options_ext)
                 title: false
             });
         });
-        edit_product_modal.on("click", ".remove_color", function(e)
-        {
+        edit_product_modal.on("click", ".remove_color", function(e) {
             e.preventDefault();
             $(this).parent().parent().remove();
         });
-        edit_product_modal.on("click", ".remove_promotion_button", function(e)
-        {
+        edit_product_modal.on("click", ".remove_promotion_button", function(e) {
             e.preventDefault();
             var this_button = $(this);
             e.preventDefault();
@@ -191,8 +182,7 @@ var products = function(geral_path, options_ext)
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------NEW PRODUCT---------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    this.init_new_product = function(new_product_path1, callback)
-    {
+    this.init_new_product = function(new_product_path1, callback) {
         new_product_path1.append(geral_path.find("#new_product_form"));
         var new_product_path = new_product_path1;
         clear_new_product_area(new_product_path);
@@ -201,8 +191,7 @@ var products = function(geral_path, options_ext)
             new_product_path.find("#new_product_category").trigger("change");
         });
 
-        new_product_path.find("#create_new_product_button").click(function(e)
-        {
+        new_product_path.find("#create_new_product_button").click(function(e) {
             e.preventDefault();
             var types = [];
             $.each(new_product_path.find("input[name='new_product_tipo_user']:checked"), function()
@@ -247,8 +236,7 @@ var products = function(geral_path, options_ext)
                 }
         });
         new_product_path.off("change", "#new_product_category");
-        new_product_path.on("change", "#new_product_category", function()
-        {
+        new_product_path.on("change", "#new_product_category", function() {
             new_product_path.find("#new_product_table_tbody_color").empty();
             if ($(this).val() === "Molde" || $(this).val() === "BTE" || $(this).val() === "RITE" || $(this).val() === "INTRA")
             {
@@ -266,8 +254,7 @@ var products = function(geral_path, options_ext)
             }
         });
         new_product_path.off("click", "#new_product_button_color_add_line");
-        new_product_path.on("click", "#new_product_button_color_add_line", function(e)
-        {
+        new_product_path.on("click", "#new_product_button_color_add_line", function(e) {
             e.preventDefault();
             new_product_path.find("#new_product_table_tbody_color").append("<tr><td><select class=' input-small color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]'></td><td><button class='btn remove_color icon-alone btn-danger'><i class='icon icon-trash'></i></button></td></tr>");
             $("#new_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).colourPicker({
@@ -276,8 +263,7 @@ var products = function(geral_path, options_ext)
             });
         });
         new_product_path.off("click", ".remove_color");
-        new_product_path.on("click", ".remove_color", function(e)
-        {
+        new_product_path.on("click", ".remove_color", function(e) {
             e.preventDefault();
             $(this).parent().parent().remove();
         });
@@ -285,8 +271,7 @@ var products = function(geral_path, options_ext)
             callback();
     };
 
-    function clear_new_product_area(new_product_path)
-    {
+    function clear_new_product_area(new_product_path) {
         new_product_path.find("input:not(:checkbox)").val("");
         new_product_path.find("select").val("").trigger("chosen:updated");
         populate_parent(new_product_path.find("#new_product_parent"), null, null, null);
@@ -298,8 +283,7 @@ var products = function(geral_path, options_ext)
         new_product_path.find("#new_product_form").show();
     }
 
-    function update_products_datatable(datatable_path)
-    {
+    function update_products_datatable(datatable_path) {
         if (!me.Table_view_product) {
             me.Table_view_product = datatable_path.dataTable({
                 "bSortClasses": false,
@@ -335,8 +319,7 @@ var products = function(geral_path, options_ext)
         }
     }
 
-    function  populate_modal(modal, callback)
-    {
+    function  populate_modal(modal, callback) {
         $.post('/AM/ajax/products.php', {action: "get_produto_by_id", "id": product_id}, function(data) {
             populate_parent(geral_path.find("#edit_product_parent"), data.parent_level, get_children(data), function()
             {
@@ -394,8 +377,7 @@ var products = function(geral_path, options_ext)
         }, "json");
     }
 
-    function get_promocao(modal, callback)
-    {
+    function get_promocao(modal, callback) {
         $.post('/AM/ajax/products.php', {action: "get_promotion", "id": product_id}, function(data) {
             var tbody = modal.find("#edit_product_promotion_table_tbody");
             tbody.empty();
@@ -423,16 +405,14 @@ var products = function(geral_path, options_ext)
         }, "json");
     }
 
-    function populate_parent(select, level_out, children, callback)
-    {
+    function populate_parent(select, level_out, children, callback) {
 
         var out_level = level_out;
         var level = 0;
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
-        function(data)
-        {
-                        var option = "";
-            
+        function(data) {
+            var option = "";
+
             select.empty();
             var temp = "<optgroup value='1' label='BTE'></optgroup>\n\
                         <optgroup value='2' label='RITE'></optgroup>\n\
@@ -452,24 +432,20 @@ var products = function(geral_path, options_ext)
                     gama = [];
             select.append(temp);
 
-            $.each(data, function()
-            {
+            $.each(data, function() {
 
-                if (out_level)
-                {
+                if (out_level) {
                     level = level + out_level - 1;
                 }
 
                 option = "<option  id=" + this.id + "  value='" + this.id + "'>" + this.name + "</option>";
                 if (this.parent_level >= 4)
                     option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Max.Lvl. " + this.name + "</option>";
-                if (children) 
-                {
+                if (children) {
                     if (children.indexOf(this.id) !== -1)
                         option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Assoc. " + this.name + "</option>";
                 }
-                switch (this.category)
-                {
+                switch (this.category) {
                     case "BTE":
                         BTE.push(option);
                         break;
@@ -508,13 +484,10 @@ var products = function(geral_path, options_ext)
         }, "json");
     }
 
-    function get_children(element)
-    {
+    function get_children(element) {
         var children = [];
-        if (element.children)
-        {
-            $.each(element.children, function()
-            {
+        if (element.children) {
+            $.each(element.children, function() {
                 children.push(this.id);
                 get_children_extra(this, children);
             });
@@ -522,12 +495,9 @@ var products = function(geral_path, options_ext)
         return children;
     }
 
-    function get_children_extra(element, children)
-    {
-        if (element.children)
-        {
-            $.each(element.children, function()
-            {
+    function get_children_extra(element, children) {
+        if (element.children) {
+            $.each(element.children, function() {
                 children.push(this.id);
                 get_children_extra(this, children);
             });

@@ -174,7 +174,7 @@ class script {
                 $stmt = $this->db->prepare($query);
                 $stmt->execute(array($lead_id, $id_script));
             } else {
-                $query = "SELECT b.id_script,a.lead_id,a.tag_elemento,a.valor,b.type,a.param_1 FROM script_result a inner join script_dinamico b on a.tag_elemento=b.tag  where a.lead_id=? and b.id_script=? and a.unique_id= (select max(unique_id) from script_result where lead_id=?) ";
+                $query = "SELECT b.id_script,a.lead_id,a.tag_elemento,a.valor,b.type,a.param_1 FROM script_result a inner join script_dinamico b on a.tag_elemento=b.tag  where a.lead_id=? and b.id_script=? and a.unique_id= (select unique_id from script_result where lead_id=? order by date desc limit 1) ";
                 $stmt = $this->db->prepare($query);
                 $stmt->execute(array($lead_id, $id_script, $lead_id));
             }
@@ -198,7 +198,6 @@ class script {
     }
 
     public function get_data_render($id_script, $lead_id, $operador) {
-
         $js = array();
         $client_info = array();
         if (isset($lead_id)) {
@@ -210,12 +209,10 @@ class script {
                 $client_info = $row;
             }
         }
-
         $query = "SELECT sd.id,sd.tag,sd.id_script,id_page,type,ordem,dispo,texto,placeholder,max_length,values_text,default_value,required,hidden,param1 FROM script_dinamico sd inner join script_dinamico_pages sdp on sd.id_page=sdp.id  WHERE sd.id_script=:id_script  order by sdp.pos,sd.ordem asc";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(":id_script" => $id_script));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-
 // CAMPOS DINAMICOS -> §
             if (isset($lead_id)) {
                 $temp = "";
@@ -239,7 +236,6 @@ class script {
                 }
                 if ($row["type"] == "legend" || $row["type"] == "textfield") {
                     $values_text = json_decode($row["values_text"]);
-
                     if (preg_match_all("/\§[A-Za-z0-9\_]+\§/", $values_text, $temp)) {
                         $temp = $temp[0];
                         foreach ($temp as $value) {
@@ -253,7 +249,6 @@ class script {
             // TAGS -> @          
             $temp = "";
             if (preg_match_all("/\@(\d{1,5})\@/", $row["texto"], $temp)) {
-
                 $temp = $temp[0];
                 foreach ($temp as $value) {
                     $value1 = str_replace("@", "", $value);
@@ -273,7 +268,6 @@ class script {
             }
             $js[] = array("id" => $row["id"], "tag" => $row["tag"], "id_script" => $row["id_script"], "id_page" => $row["id_page"], "type" => $row["type"], "ordem" => $row["ordem"], "dispo" => $row["dispo"], "texto" => $row["texto"], "placeholder" => json_decode($row["placeholder"]), "max_length" => $row["max_length"], "values_text" => json_decode($row["values_text"]), "default_value" => json_decode($row["default_value"]), "required" => $row["required"] == 1, "hidden" => $row["hidden"] == 1, "param1" => $row["param1"]);
         }
-
         return $js;
     }
 
