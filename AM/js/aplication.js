@@ -209,7 +209,7 @@ function get_alerts(callback) {
         var msg = "";
         $.each(data, function() {
             if (SpiceU.user_level < 5) {
-                if (this.alert.search(/Apoio Mkt./i) != -1) {
+                if (this.alert.search(/Apoio Mkt./i) !== -1) {
                     alerts.add({id: this.id, message: "Á " + moment(this.entry_date).fromNow() + " - " + this.alert, callback: function() {
                             $.post("ajax/general_functions.php", {action: "set_readed", id_msg: this.id});
                         }});
@@ -255,7 +255,7 @@ function consultasMais() {
     }
 
     if (~~localStorage.v6 > 1) {
-        alerts.add({id: 0, message: "Devido a ter <i class='label label-important'>" + localStorage.v7 + "</i> consultas com mais de 7 dias de atraso, só poderá usar o <i>Spice</i> para consultar e fechar consultas.", callback: function() {
+        alerts.add({id: 0, message: "Devido a ter <i class='label label-important'>" + localStorage.v6 + "</i> consultas com mais de 6 dias de atraso, só poderá usar o <i>Spice</i> para consultar e fechar consultas.", callback: function() {
                 $(".menu-sidebar").find("li:not(:eq(0)):not(:eq(0))").addClass("disabled");
                 $(".criar_marcacao, .recomendacoes, .criar_encomenda").prop("disabled", true);
                 if ($(".menu-sidebar").find('.active').parent().index() > 1)
