@@ -3,28 +3,31 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3 id="myModalLabel">Info de Anexos</h3>
     </div>
-    <table class="table table-mod table-striped">
+    <table class="table table-mod ">
         <thead>
             <tr>
-                <th>
+                <th >
                     #
                 </th>
-                <th>
+                <th >
                     Anexo
                 </th>
-                <th>
+                <th style="width: 100px;">
                     Documento
                 </th>
-                <th>
+                <th style="width: 43px;">
                     Ref.Cliente
                 </th>
             </tr>
         </thead>
         <tbody id="tbody_ver_anexo_correio">
-
         </tbody>
     </table>
-    <div class="modal-footer">
+    <div class="well" id="anexo_modal_correio_warning">
+        <label >* Contactos adicionados pelo admin</label>
+    </div>
+
+    <div class="modal-footer " id="correio_modal_div">
         <form style="display:none" id="add_anexo_div">
             <div class="formRow">
                 <span>Anexo</span>
@@ -35,21 +38,21 @@
             <div class="formRow">
                 <span>Documento</span>
                 <div class="formRight">
-                    <input placeholder="Nº de Documento" id="add_anexo_documento" class="validate[required]"/>
+                    <input placeholder="Nº de Documento" id="add_anexo_documento" class="validate[required,custom[onlyNumberSp]]"/>
                 </div>    
             </div>
             <div class="formRow">
                 <span>Ref. Cliente</span>
                 <div class="formRight">
-                    <input placeholder="Ref. Cliente" id="add_anexo_lead_id" class="validate[required]"/>
+                    <input placeholder="Ref. Cliente" id="add_anexo_lead_id" class="validate[required,custom[onlyNumberSp]]"/>
                 </div>    
             </div>
             <div class="formRow">
-                <button class="btn" id="add_anexo_no_button">Cancelar</button>
-                <button class="btn btn-primary" id="add_anexo_yes_button">Adicionar</button>
+                <button class="btn add_anexo_button" id="add_anexo_no_button">Cancelar</button>
+                <button class="btn btn-primary add_anexo_button" id="add_anexo_yes_button">Adicionar</button>
             </div>
         </form>
-        <button class="btn anexo_add_button" >Adicionar Documento</button>
-        <button class="btn btn-success anexo_exit_button" data-dismiss="modal" aria-hidden="true">Gravar</button>
+        <button class="btn add_anexo_button_main" id="anexo_add_button">Adicionar Documento</button>
+        <button class="btn btn-success add_anexo_button_main" data-dismiss="modal" aria-hidden="true">Gravar</button>
     </div>
 </div>

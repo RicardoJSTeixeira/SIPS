@@ -307,7 +307,7 @@ var requests = function(basic_path, options_ext) {
             $.get("/AM/view/requests/relatorio_correio_modal.html", function(data) {
                 basic_path.append(data);
                 if (SpiceU.user_level <= 5)
-                    basic_path.find(".anexo_add_button").hide();
+                    basic_path.find("#correio_modal_div .anexo_add_button").hide();
 
 
             }, 'html');
@@ -324,7 +324,7 @@ var requests = function(basic_path, options_ext) {
                         if (rc_zone.find("#doc_obj_table_tbody tr").length) {
                             var docs_objs = [];
                             $.each(rc_zone.find("#doc_obj_table_tbody tr"), function() {
-                                docs_objs.push({anexo: $(this).find(".input_anexo").val(), n_doc: $(this).find(".input_n_doc").val(), lead_id: $(this).find(".input_lead_id").val(), confirmed: false});
+                                docs_objs.push({anexo: $(this).find(".input_anexo").val(), n_doc: $(this).find(".input_n_doc").val(), lead_id: $(this).find(".input_lead_id").val(), confirmed: false, admin: 0});
                             });
                             $("#relatorio_correio_form :input").attr('readonly', false);
                             $.post("ajax/requests.php", {action: "criar_relatorio_correio",
@@ -379,51 +379,39 @@ var requests = function(basic_path, options_ext) {
                 event.preventDefault();
                 table2csv(relatorio_correio_table, 'full', '#' + rc_zone[0].id);
             });
-            basic_path.on("click", ".anexo_add_button", function(e)
-            {
+            basic_path.on("click", "#anexo_add_button", function(e) {
                 e.preventDefault();
-
-                $("#add_anexo_div").show();
-                $(".anexo_add_button").hide();
-                $(".anexo_exit_button").hide();
+                $("#correio_modal_div #add_anexo_div").show();
+                $("#correio_modal_div .add_anexo_button_main").hide();
             });
 
-            basic_path.on("click", "#add_anexo_yes_button", function(e)
-            {
+            basic_path.on("click", "#correio_modal_div #add_anexo_yes_button", function(e) {
                 e.preventDefault();
-                if ($("#add_anexo_div").validationEngine("validate"))
-                {
-
+                if ($("#correio_modal_div #add_anexo_div").validationEngine("validate")) {
                     var anexo_array = [];
-                    var data_button = $(this).parents(".modal").find(".anexo_exit_button");
-                    var temp = {anexo: $("#add_anexo_ficheiro").val(), n_doc: $("#add_anexo_documento").val(), lead_id: $("#add_anexo_lead_id").val(), confirmed: 0};
+                    var data_button = $(this).parents(".modal").find("#correio_modal_div .add_anexo_button_main");
+                    var temp = {anexo: $("#correio_modal_div #add_anexo_ficheiro").val(), n_doc: $("#correio_modal_div #add_anexo_documento").val(), lead_id: $("#correio_modal_div #add_anexo_lead_id").val(), confirmed: 0, admin: 1};
                     anexo_array.push(temp);
                     $.each(data_button.parents("#ver_anexo_correio_modal").find("#tbody_ver_anexo_correio").find("tr"), function() {
-                        anexo_array.push({anexo: $(this).find(".input_anexo").text(), n_doc: $(this).find(".input_n_doc").text(), lead_id: $(this).find(".input_lead_id").text(), confirmed: ~~$(this).find(".checkbox_confirm_anexo").is(":checked")});
+                        anexo_array.push({anexo: $(this).find(".input_anexo").text(), n_doc: $(this).find(".input_n_doc").text(), lead_id: $(this).find(".input_lead_id").text(), confirmed: ~~$(this).find(".checkbox_confirm_anexo").is(":checked"), admin: ~~$(this).hasClass("warning")});
                     });
 
                     $.post('/AM/ajax/requests.php', {action: "save_anexo_correio", id: data_button.data().id_correio, anexos: anexo_array}, function() {
                         var id_anexo = ~~basic_path.find("#tbody_ver_anexo_correio").find("tr").last().find(".checkbox_confirm_anexo").val() + 1;
-
-                        basic_path.find("#tbody_ver_anexo_correio").append("<tr><td class='chex-table'><input " + ((SpiceU.user_level < 5) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo '  id='anexo" + id_anexo + "' name='cci'><label class='checkbox inline' for='anexo" + id_anexo + "'><span></span> </label></td><td class='input_anexo'>" + temp.anexo + "</td><td class='input_n_doc'>" + temp.n_doc + "</td><td class='input_lead_id'>" + temp.lead_id + "</td></tr>");
-                        $("#add_anexo_div")[0].reset();
-                        $("#add_anexo_div").hide();
-
-                        $(".anexo_add_button").show();
-                        $(".anexo_exit_button").show();
-
-
+                        basic_path.find("#tbody_ver_anexo_correio").append("<tr class='warning'><td class='chex-table'><input " + ((SpiceU.user_level < 5) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo '  id='anexo" + id_anexo + "' name='cci'><label class='checkbox inline' for='anexo" + id_anexo + "'><span></span> </label></td><td class='input_anexo'>" + temp.anexo + "</td><td class='input_n_doc'>" + temp.n_doc + "</td><td class='input_lead_id'>" + temp.lead_id + "</td></tr>");
+                        $("#correio_modal_div #add_anexo_div")[0].reset();
+                        $("#correio_modal_div #add_anexo_div").hide();
+                        $("#correio_modal_div .add_anexo_button_main").show();
+                        $("#anexo_modal_correio_warning").show();
                     }, "json");
                 }
             });
 
-            basic_path.on("click", "#add_anexo_no_button", function(e)
-            {
+            basic_path.on("click", "#correio_modal_div #add_anexo_no_button", function(e) {
                 e.preventDefault();
-                $("#add_anexo_div")[0].reset();
-                $("#add_anexo_div").hide();
-                $(".anexo_add_button").show();
-                $(".anexo_exit_button").show();
+                $("#correio_modal_div #add_anexo_div")[0].reset();
+                $("#correio_modal_div #add_anexo_div").hide();
+                $("#correio_modal_div .add_anexo_button_main").show();
             });
 
 
@@ -441,7 +429,6 @@ var requests = function(basic_path, options_ext) {
             });
             rc_zone.on("click", ".decline_report_correio", function() {
                 var this_button = $(this);
-
                 bootbox.prompt("Qual o motivo?", function(result) {
                     if (result !== null) {
                         $.post('/AM/ajax/requests.php', {action: "decline_report_correio", id: this_button.val(), motivo: result}, function() {
@@ -458,18 +445,33 @@ var requests = function(basic_path, options_ext) {
                         id_anexo = ~~$(this).data().anexo_id,
                         anexo_number = 1,
                         status = ~~$(this).data().approved;
+
+                if (SpiceU.user_level < 5)
+                    $("#anexo_add_button").hide();
+                else
+                    $("#anexo_add_button").show();
                 $.post("ajax/requests.php", {action: "get_anexo_correio", id: id_anexo},
                 function(data) {
                     var tbody = basic_path.find("#tbody_ver_anexo_correio").empty();
+                    var alert_class = "class='alert'";
+                    var alert_symbol = "*";
+                    $("#anexo_modal_correio_warning").hide();
                     $.each(data, function() {
-                        tbody.append("<tr><td class='chex-table'><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo ' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td class='input_anexo'>" + this.anexo + "</td><td class='input_n_doc'>" + this.n_doc + "</td><td class='input_lead_id'>" + this.lead_id + "</td></tr>");
+                        if (~~this.admin) {
+                            $("#anexo_modal_correio_warning").show();
+                            alert_class = "class='warning'";
+                        }
+                        else {
+                            alert_class = "";
+                        }
+                        tbody.append("<tr " + alert_class + " ><td class='chex-table'><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo ' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span></label></td><td class='input_anexo'>" + this.anexo + "</td><td class='input_n_doc'>" + this.n_doc + "</td><td class='input_lead_id'>" + this.lead_id + "</td></tr>");
                         anexo_number++;
                     });
-                    basic_path.find(".anexo_exit_button").data("id_correio", id_anexo);
+                    basic_path.find("#correio_modal_div .add_anexo_button_main").data("id_correio", id_anexo);
                     basic_path.find("#ver_anexo_correio_modal").modal("show");
                 }, "json");
             });
-            basic_path.on("click", ".anexo_exit_button", function(e) {
+            basic_path.on("click", "#correio_modal_div .add_anexo_button_main", function(e) {
                 var
                         anexo_array = [],
                         this_button = $(this),
