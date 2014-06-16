@@ -17,7 +17,37 @@
 
         </tbody>
     </table>
-    <div class="modal-footer">
+    <div class="modal-footer " id="stock_modal_div">
+        <form style="display:none" id="add_anexo_div">
+            <div class="formRow">
+                <span>Quantidade</span>
+                <div class="formRight">
+                    <input placeholder="Quantidade de produtos" id="add_anexo_quantidade" class="validate[required,custom[onlyNumberSp]]"/>
+                </div>    
+            </div>
+            <div class="formRow">
+                <span>Descrição</span>
+                <div class="formRight">
+                    <input placeholder="Descrição do produto" id="add_anexo_documento" class="validate[required]"/>
+                </div>    
+            </div>
+            <div class="formRow">
+                <span>Série</span>
+                <div class="formRight">
+                    <input placeholder="Nº de Série" id="add_anexo_lead_id" class="validate[required,custom[onlyNumberSp]]"/>
+                </div>    
+            </div>
+            <div class="formRow">
+                <span>Observação</span>
+                <div class="formRight">
+                    <textarea placeholder="Observações" id="add_anexo_obs"></textarea>
+                </div>    
+            </div>
+            <div class="formRow">
+                <button class="btn add_anexo_button" id="add_anexo_no_button">Cancelar</button>
+                <button class="btn btn-primary add_anexo_button" id="add_anexo_yes_button">Adicionar</button>
+            </div>
+        </form>
         <button class="btn btn-success stock_exit_button" data-dismiss="modal" aria-hidden="true">Gravar</button>
     </div>
 </div>
