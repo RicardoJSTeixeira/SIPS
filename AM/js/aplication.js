@@ -4,12 +4,17 @@ var alerts = new alerts_class();
 $(function() {
     $.post("ajax/user_info.php", function(user) {
         SpiceU = user;
+        types = {
+            "1": "branch",
+            "2": "dispenser",
+            "5": "asm",
+            "6": "sbo",
+            "7": "abo",
+            "8": "mkt",
+            "9": "admin"};
+
         $("#user-name").text(user.name);
-        if (user.user_level < 5) {
-            $("#sidebar li.role-dispenser").show();
-        } else {
-            $("#sidebar li.role-admin").show();
-        }
+        $("#sidebar li.role-" + types[user.user_level]).show();
         init();
         alerts.init();
     }, "json")
