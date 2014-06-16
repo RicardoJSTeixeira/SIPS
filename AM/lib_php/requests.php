@@ -175,7 +175,7 @@ class correio extends requests_class {
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             $approved = $row[6] == 1 ? 1 : 0;
-                      if ($row[4]) {
+            if ($row[4]) {
                 $row[4] = "<button data-anexo_id = '$row[0]' data-approved = '$approved' class = 'btn ver_anexo_correio icon-alone'><i class = 'icon-eye-open'></i></button>";
             } else {
                 $row[4] = "Sem anexo";
@@ -398,7 +398,7 @@ class mensal_stock extends requests_class {
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $_produtos = json_decode($row->produtos);
             foreach ($_produtos as $value) {
-                $produtos[] = array("quantidade" => $value->quantidade, "descricao" => $value->descricao, "serie" => $value->serie, "obs" => $value->obs, "confirmed" => $value->confirmed);
+                $produtos[] = array("quantidade" => $value->quantidade, "descricao" => $value->descricao, "serie" => $value->serie, "obs" => $value->obs, "confirmed" => $value->confirmed, "admin" => $value->admin);
             }
         }
 
@@ -489,7 +489,7 @@ class movimentacao_stock extends requests_class {
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $_produtos = json_decode($row->produtos);
             foreach ($_produtos as $value) {
-                $produtos[] = array("quantidade" => $value->quantidade, "destinario" => $value->destinario, "descricao" => $value->descricao, "serie" => $value->serie, "obs" => $value->obs, "confirmed" => $value->confirmed);
+                $produtos[] = array("quantidade" => $value->quantidade, "destinario" => $value->destinario, "descricao" => $value->descricao, "serie" => $value->serie, "obs" => $value->obs, "confirmed" => $value->confirmed, "admin"=>$value->admin);
             }
         }
 

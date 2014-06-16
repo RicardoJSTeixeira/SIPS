@@ -14,11 +14,51 @@
                 <th>Observ.</th>
             </tr>
         </thead>
-        <tbody id="tbody_ver_produto_movimentacao_stock">
+        <tbody id="tbody_ver_produto_movimentacao_mov">
 
         </tbody>
     </table>
-    <div class="modal-footer">
-        <button class="btn btn-success stock_mov_exit_button" data-dismiss="modal" aria-hidden="true">Gravar</button>
+    <div class="well" id="mov_modal_correio_warning">
+        <label >* Contactos adicionados pelo admin</label>
+    </div>
+    <div class="modal-footer " id="mov_modal_div">
+        <form style="display:none" id="add_mov_div">
+            <div class="formRow">
+                <span>Destinatário</span>
+                <div class="formRight">
+                    <input placeholder="Quantidade de produtos" id="add_mov_destin" class="validate[required]"/>
+                </div>    
+            </div>
+            <div class="formRow">
+                <span>Quantidade</span>
+                <div class="formRight">
+                    <input placeholder="Quantidade de produtos" id="add_mov_quantidade" class="validate[required,custom[onlyNumberSp]]"/>
+                </div>    
+            </div>
+            <div class="formRow"> 
+                <span>Descrição</span>
+                <div class="formRight">
+                    <input placeholder="Descrição do produto" id="add_mov_descricao" class="validate[required]"/>
+                </div>    
+            </div>
+            <div class="formRow">
+                <span>Série</span>
+                <div class="formRight">
+                    <input placeholder="Nº de Série" id="add_mov_serie" class="validate[required,custom[onlyNumberSp]]"/>
+                </div>    
+            </div>
+            <div class="formRow">
+                <span>Observação</span>
+                <div class="formRight">
+                    <textarea placeholder="Observações" id="add_mov_obs"></textarea>
+                </div>    
+            </div>
+            <div class="formRow">
+                <button class="btn add_mov_button" id="add_mov_no_button">Cancelar</button>
+                <button class="btn btn-primary add_mov_button" id="add_mov_yes_button">Adicionar</button>
+            </div>
+        </form>
+        <button class="btn mov_menu_button" id="mov_add_button">Adicionar Produto</button>
+        <button class="btn btn-success mov_menu_button" id="mov_save_button" data-dismiss="modal" aria-hidden="true">Gravar</button>
     </div>
 </div>

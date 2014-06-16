@@ -3,6 +3,9 @@ var requests = function(basic_path, options_ext) {
     var basic_path = basic_path;
     this.config = {};
     $.extend(true, this.config, options_ext);
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------RELATORIO APOIO MARKETING----------------------------RELATORIO APOIO MARKETING----------------------RELATORIO APOIO MARKETING------------------
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
     this.apoio_marketing = {
         init: function(callback) {
             $.get("/AM/view/requests/apoio_marketing_modal.html", function(data) {
@@ -71,7 +74,6 @@ var requests = function(basic_path, options_ext) {
                     }
                     am_zone.find(".form_datetime_hour").val("").datetimepicker('setStartDate').datetimepicker('setEndDate');
                 });
-
                 //SUBMIT
                 am_zone.find("#apoio_am_form").submit(function(e) {
                     e.preventDefault();
@@ -79,11 +81,12 @@ var requests = function(basic_path, options_ext) {
                     if (am_zone.find("#apoio_am_form").validationEngine("validate")) {
                         if (am_zone.find("#table_tbody_ldp tr").length) {
                             $("#apoio_am_form :input").attr('readonly', true);
-
                             var local_publicidade_array = [];
                             $.each(am_zone.find("#table_tbody_ldp").find("tr"), function() {
                                 local_publicidade_array.push({cp: $(this).find(".linha_cp").val(), freguesia: $(this).find(".linha_freg").val()});
                             });
+
+                            $.msg();
                             $.post("/AM/ajax/requests.php", {action: "criar_apoio_marketing",
                                 data_inicial: am_zone.find("#data_rastreio1").val(),
                                 data_final: am_zone.find("#data_rastreio2").val(),
@@ -104,7 +107,11 @@ var requests = function(basic_path, options_ext) {
                                 am_zone.find("#submit_am").prop('disabled', false);
                                 $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
                                 $("#apoio_am_form :input").attr('readonly', false);
-                            }, "json");
+                                $.msg('unblock');
+                            }, "json").fail(function(data) {
+                                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                                $.msg('unblock', 5000);
+                            });
                         }
                         else
                             $.jGrowl("Selecione pelo menos uma Freguesia/Código de Postal", {life: 4000});
@@ -133,6 +140,7 @@ var requests = function(basic_path, options_ext) {
             });
             am_zone.on("click", ".ver_horario", function() {
                 var id = ~~$(this).data().apoio_marketing_id;
+                $.msg();
                 $.post("ajax/requests.php", {action: "get_horario_from_apoio_marketing", id: id}, function(horario) {
                     basic_path.find("#ver_horario_modal .horario_all_master").hide();
                     if (~~horario.tipo === 1)
@@ -146,38 +154,60 @@ var requests = function(basic_path, options_ext) {
                     basic_path.find("#ver_horario_modal #tarde_inicio").text(horario.fim1);
                     basic_path.find("#ver_horario_modal #tarde_fim").text(horario.fim2);
                     basic_path.find("#ver_horario_modal").modal("show");
-                }, "json");
+                    $.msg('unblock');
+                }, "json").fail(function(data) {
+                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                    $.msg('unblock', 5000);
+                });
             });
             am_zone.on("click", ".ver_local_publicidade", function() {
                 var id = ~~$(this).data().apoio_marketing_id;
+                $.msg();
                 $.post("/AM/ajax/requests.php", {action: "get_locais_publicidade_from_apoio_marketing", id: id}, function(data) {
                     basic_path.find("#ver_local_publicidade_modal #tbody_ver_local_publicidade").empty();
                     $.each(data, function() {
                         basic_path.find("#ver_local_publicidade_modal #tbody_ver_local_publicidade").append("<tr><td>" + this.cp + "</td><td>" + this.freguesia + "</td></tr>");
                     });
                     basic_path.find("#ver_local_publicidade_modal").modal("show");
-                }, "json");
+                    $.msg('unblock');
+                }, "json").fail(function(data) {
+                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                    $.msg('unblock', 5000);
+                });
             });
             am_zone.on("click", ".accept_apoio_marketing", function() {
                 var this_button = $(this);
+                $.msg();
                 $.post('/AM/ajax/requests.php', {action: "accept_apoio_marketing", id: $(this).val()}, function() {
                     this_button.parent("td").prev().text("Aprovado");
                     apoio_markting_table.fnReloadAjax();
-                }, "json");
+                    $.msg('unblock');
+                }, "json").fail(function(data) {
+                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                    $.msg('unblock', 5000);
+                });
             });
             am_zone.on("click", ".decline_apoio_marketing", function() {
                 var this_button = $(this);
                 bootbox.prompt("Qual o motivo?", function(result) {
                     if (result !== null) {
+                        $.msg();
                         $.post('/AM/ajax/requests.php', {action: "decline_apoio_marketing", id: this_button.val(), motivo: result}, function() {
                             this_button.parent().prev().text("Rejeitado");
                             apoio_markting_table.fnReloadAjax();
-                        }, "json");
+                            $.msg('unblock');
+                        }, "json").fail(function(data) {
+                            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                            $.msg('unblock', 5000);
+                        });
                     }
                 });
             });
         }
     };
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------RELATORIO FROTA----------------------------RELATORIO FROTA----------------------RELATORIO FROTA------------------
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
     this.relatorio_frota = {
         init: function() {
             $.get("/AM/view/requests/relatorio_frota_modal.html", function(data) {
@@ -193,7 +223,6 @@ var requests = function(basic_path, options_ext) {
                 rf_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
                 rf_zone.find(".rf_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
                 rf_zone.find("#input_km").autoNumeric('init', {mDec: '0'});
-
                 //Adiciona Linhas
                 rf_zone.find("#button_rf_table_add_line").click(function(e) {
                     e.preventDefault();
@@ -233,6 +262,7 @@ var requests = function(basic_path, options_ext) {
                                         km: $(this).find(".linha_km").autoNumeric('get')});
                                 });
                                 $("#relatorio_frota_form :input").attr('readonly', true);
+                                $.msg();
                                 $.post("/AM/ajax/requests.php", {action: "criar_relatorio_frota",
                                     data: rf_zone.find("#input_data").val(),
                                     matricula: rf_zone.find("#input_matricula").val(),
@@ -244,7 +274,11 @@ var requests = function(basic_path, options_ext) {
                                     rf_zone.find("#relatorio_frota_form").get(0).reset();
                                     $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
                                     $("#relatorio_frota_form :input").attr('readonly', false);
-                                }, "json");
+                                    $.msg('unblock');
+                                }, "json").fail(function(data) {
+                                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                                    $.msg('unblock', 5000);
+                                });
                             }
                         }
                         else
@@ -274,6 +308,7 @@ var requests = function(basic_path, options_ext) {
             });
             rf_zone.on("click", ".ver_ocorrencias", function() {
                 var id = $(this).data().relatorio_frota_id;
+                $.msg();
                 $.post("ajax/requests.php", {action: "get_ocorrencias_frota", id: id}, function(data) {
                     var tbody = basic_path.find("#ver_occorrencia_frota_modal #ver_occorrencia_frota_tbody");
                     tbody.empty();
@@ -281,35 +316,50 @@ var requests = function(basic_path, options_ext) {
                         tbody.append("<tr><td>" + this.data + "</td><td>" + this.km + "</td><td>" + this.ocorrencia + "</td></tr>");
                     });
                     basic_path.find("#ver_occorrencia_frota_modal").modal("show");
-                }, "json");
+                    $.msg('unblock');
+                }, "json").fail(function(data) {
+                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                    $.msg('unblock', 5000);
+                });
             });
             rf_zone.on("click", ".accept_report_frota", function() {
                 var this_button = $(this);
+                $.msg();
                 $.post('/AM/ajax/requests.php', {action: "accept_report_frota", id: $(this).val()}, function() {
                     this_button.parent("td").prev().text("Aprovado");
                     relatorio_frota_table.fnReloadAjax();
-                }, "json");
+                    $.msg('unblock');
+                }, "json").fail(function(data) {
+                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                    $.msg('unblock', 5000);
+                });
             });
             rf_zone.on("click", ".decline_report_frota", function() {
                 var this_button = $(this);
                 bootbox.confirm("Tem a certeza?", function(result) {
                     if (result) {
+                        $.msg();
                         $.post('/AM/ajax/requests.php', {action: "decline_report_frota", id: this_button.val()}, function() {
                             this_button.parent("td").prev().text("Rejeitado");
                             relatorio_frota_table.fnReloadAjax();
-                        }, "json");
+                            $.msg('unblock');
+                        }, "json").fail(function(data) {
+                            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                            $.msg('unblock', 5000);
+                        });
                     }
                 });
             });
         }};
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------RELATORIO CORREIO----------------------------RELATORIO CORREIO----------------------RELATORIO CORREIO------------------
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
     this.relatorio_correio = {
         init: function() {
             $.get("/AM/view/requests/relatorio_correio_modal.html", function(data) {
                 basic_path.append(data);
                 if (SpiceU.user_level <= 5)
                     basic_path.find("#correio_modal_div .anexo_add_button").hide();
-
-
             }, 'html');
         },
         new : function(rc_zone) {
@@ -327,6 +377,7 @@ var requests = function(basic_path, options_ext) {
                                 docs_objs.push({anexo: $(this).find(".input_anexo").val(), n_doc: $(this).find(".input_n_doc").val(), lead_id: $(this).find(".input_lead_id").val(), confirmed: false, admin: 0});
                             });
                             $("#relatorio_correio_form :input").attr('readonly', false);
+                            $.msg();
                             $.post("ajax/requests.php", {action: "criar_relatorio_correio",
                                 carta_porte: rc_zone.find("#input_carta_porte").val(),
                                 data: rc_zone.find("#data_envio_datetime").val(),
@@ -338,13 +389,18 @@ var requests = function(basic_path, options_ext) {
                             function() {
                                 rc_zone.find("#relatorio_correio_form").get(0).reset();
                                 $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
-                            }, "json");
+                                $.msg('unblock');
+                            }, "json").fail(function(data) {
+                                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                                $.msg('unblock', 5000);
+                            });
                         }
                         else
                             $.jGrowl("Selecione pelo menos um ", {life: 4000});
                     }
 
                 });
+                //Criar e Remover Linhas (CRIAÇÂO)-----------------
                 rc_zone.find("#add_line_obj_doc").click(function(e) {
                     e.preventDefault();
                     rc_zone.find("#doc_obj_table_tbody").append("<tr>\n\
@@ -357,6 +413,7 @@ var requests = function(basic_path, options_ext) {
                     e.preventDefault();
                     $(this).parent().parent().remove();
                 });
+                //---------------------------------------------------
             });
         },
         get_to_datatable: function(rc_zone) {
@@ -379,50 +436,19 @@ var requests = function(basic_path, options_ext) {
                 event.preventDefault();
                 table2csv(relatorio_correio_table, 'full', '#' + rc_zone[0].id);
             });
-            basic_path.on("click", "#anexo_add_button", function(e) {
-                e.preventDefault();
-                $("#correio_modal_div #add_anexo_div").show();
-                $("#correio_modal_div .add_anexo_button_main").hide();
-            });
-
-            basic_path.on("click", "#correio_modal_div #add_anexo_yes_button", function(e) {
-                e.preventDefault();
-                if ($("#correio_modal_div #add_anexo_div").validationEngine("validate")) {
-                    var anexo_array = [];
-                    var data_button = $(this).parents(".modal").find("#correio_modal_div .add_anexo_button_main");
-                    var temp = {anexo: $("#correio_modal_div #add_anexo_ficheiro").val(), n_doc: $("#correio_modal_div #add_anexo_documento").val(), lead_id: $("#correio_modal_div #add_anexo_lead_id").val(), confirmed: 0, admin: 1};
-                    anexo_array.push(temp);
-                    $.each(data_button.parents("#ver_anexo_correio_modal").find("#tbody_ver_anexo_correio").find("tr"), function() {
-                        anexo_array.push({anexo: $(this).find(".input_anexo").text(), n_doc: $(this).find(".input_n_doc").text(), lead_id: $(this).find(".input_lead_id").text(), confirmed: ~~$(this).find(".checkbox_confirm_anexo").is(":checked"), admin: ~~$(this).hasClass("warning")});
-                    });
-
-                    $.post('/AM/ajax/requests.php', {action: "save_anexo_correio", id: data_button.data().id_correio, anexos: anexo_array}, function() {
-                        var id_anexo = ~~basic_path.find("#tbody_ver_anexo_correio").find("tr").last().find(".checkbox_confirm_anexo").val() + 1;
-                        basic_path.find("#tbody_ver_anexo_correio").append("<tr class='warning'><td class='chex-table'><input " + ((SpiceU.user_level < 5) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo '  id='anexo" + id_anexo + "' name='cci'><label class='checkbox inline' for='anexo" + id_anexo + "'><span></span> </label></td><td class='input_anexo'>" + temp.anexo + "</td><td class='input_n_doc'>" + temp.n_doc + "</td><td class='input_lead_id'>" + temp.lead_id + "</td></tr>");
-                        $("#correio_modal_div #add_anexo_div")[0].reset();
-                        $("#correio_modal_div #add_anexo_div").hide();
-                        $("#correio_modal_div .add_anexo_button_main").show();
-                        $("#anexo_modal_correio_warning").show();
-                    }, "json");
-                }
-            });
-
-            basic_path.on("click", "#correio_modal_div #add_anexo_no_button", function(e) {
-                e.preventDefault();
-                $("#correio_modal_div #add_anexo_div")[0].reset();
-                $("#correio_modal_div #add_anexo_div").hide();
-                $("#correio_modal_div .add_anexo_button_main").show();
-            });
-
-
-
             rc_zone.on("click", ".accept_report_correio", function() {
                 if ($(this).parents("td").prev().prev().prev().find("button").data().approved) {
                     var this_button = $(this);
+                    $.msg();
                     $.post('/AM/ajax/requests.php', {action: "accept_report_correio", id: $(this).val()}, function() {
                         this_button.parent("td").prev().text("Aprovado");
                         relatorio_correio_table.fnReloadAjax();
-                    }, "json");
+                        $.msg('unblock');
+                    }, "json")
+                            .fail(function(data) {
+                                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                                $.msg('unblock', 5000);
+                            });
                 }
                 else
                     $.jGrowl("Verifique os anexos 1º, antes de aprovar.");
@@ -431,13 +457,54 @@ var requests = function(basic_path, options_ext) {
                 var this_button = $(this);
                 bootbox.prompt("Qual o motivo?", function(result) {
                     if (result !== null) {
+                        $.msg();
                         $.post('/AM/ajax/requests.php', {action: "decline_report_correio", id: this_button.val(), motivo: result}, function() {
                             this_button.parent("td").prev().text("Rejeitado");
                             this_button.parent("tr").find(".ver_anexo_correio").data("aproved", 0);
                             relatorio_correio_table.fnReloadAjax();
-                        }, "json");
+                            $.msg('unblock');
+                        }, "json").fail(function(data) {
+                            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                            $.msg('unblock', 5000);
+                        });
                     }
                 });
+            });
+            basic_path.on("click", "#anexo_add_button", function(e) {
+                e.preventDefault();
+                $("#correio_modal_div #add_anexo_div").show();
+                $("#correio_modal_div .anexo_menu_button").hide();
+            });
+            basic_path.on("click", "#correio_modal_div #add_anexo_yes_button", function(e) {
+                e.preventDefault();
+                if ($("#correio_modal_div #add_anexo_div").validationEngine("validate")) {
+                    var anexo_array = [];
+                    var data_button = $(this).parents(".modal").find("#correio_modal_div #anexo_save_button");
+                    var temp = {anexo: $("#correio_modal_div #add_anexo_ficheiro").val(), n_doc: $("#correio_modal_div #add_anexo_documento").val(), lead_id: $("#correio_modal_div #add_anexo_lead_id").val(), confirmed: 0, admin: 1};
+                    anexo_array.push(temp);
+                    $.each($("#ver_anexo_correio_modal #tbody_ver_anexo_correio").find("tr"), function() {
+                        anexo_array.push({anexo: $(this).find(".input_anexo").text(), n_doc: $(this).find(".input_n_doc").text(), lead_id: $(this).find(".input_lead_id").text(), confirmed: ~~$(this).find(".checkbox_confirm_anexo").is(":checked"), admin: ~~$(this).hasClass("warning")});
+                    });
+                    $.msg();
+                    $.post('/AM/ajax/requests.php', {action: "save_anexo_correio", id: data_button.data().id_correio, anexos: anexo_array}, function() {
+                        var id_anexo = ~~basic_path.find("#tbody_ver_anexo_correio").find("tr").last().find(".checkbox_confirm_anexo").val() + 1;
+                        basic_path.find("#tbody_ver_anexo_correio").append("<tr class='warning'><td class='chex-table'><input " + ((SpiceU.user_level < 5) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo '  id='anexo" + id_anexo + "' name='cci'><label class='checkbox inline' for='anexo" + id_anexo + "'><span></span> </label></td><td class='input_anexo'>" + temp.anexo + "</td><td class='input_n_doc'>" + temp.n_doc + "</td><td class='input_lead_id'>" + temp.lead_id + "</td></tr>");
+                        $("#correio_modal_div #add_anexo_div")[0].reset();
+                        $("#correio_modal_div #add_anexo_div").hide();
+                        $("#correio_modal_div .anexo_menu_button").show();
+                        $("#anexo_modal_correio_warning").show();
+                        $.msg('unblock');
+                    }, "json").fail(function(data) {
+                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                        $.msg('unblock', 5000);
+                    });
+                }
+            });
+            basic_path.on("click", "#correio_modal_div #add_anexo_no_button", function(e) {
+                e.preventDefault();
+                $("#correio_modal_div #add_anexo_div")[0].reset();
+                $("#correio_modal_div #add_anexo_div").hide();
+                $("#correio_modal_div .anexo_menu_button").show();
             });
             rc_zone.on("click", ".ver_anexo_correio", function(e) {
                 e.preventDefault();
@@ -445,16 +512,12 @@ var requests = function(basic_path, options_ext) {
                         id_anexo = ~~$(this).data().anexo_id,
                         anexo_number = 1,
                         status = ~~$(this).data().approved;
-
-                if (SpiceU.user_level < 5)
-                    $("#anexo_add_button").hide();
-                else
-                    $("#anexo_add_button").show();
+                $("#anexo_add_button").toggle(SpiceU.user_level > 5 ? true : false);
+                $.msg();
                 $.post("ajax/requests.php", {action: "get_anexo_correio", id: id_anexo},
                 function(data) {
                     var tbody = basic_path.find("#tbody_ver_anexo_correio").empty();
                     var alert_class = "class='alert'";
-                    var alert_symbol = "*";
                     $("#anexo_modal_correio_warning").hide();
                     $.each(data, function() {
                         if (~~this.admin) {
@@ -467,11 +530,15 @@ var requests = function(basic_path, options_ext) {
                         tbody.append("<tr " + alert_class + " ><td class='chex-table'><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo ' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span></label></td><td class='input_anexo'>" + this.anexo + "</td><td class='input_n_doc'>" + this.n_doc + "</td><td class='input_lead_id'>" + this.lead_id + "</td></tr>");
                         anexo_number++;
                     });
-                    basic_path.find("#correio_modal_div .add_anexo_button_main").data("id_correio", id_anexo);
+                    basic_path.find("#correio_modal_div #anexo_save_button").data("id_correio", id_anexo);
                     basic_path.find("#ver_anexo_correio_modal").modal("show");
-                }, "json");
+                    $.msg('unblock');
+                }, "json").fail(function(data) {
+                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                    $.msg('unblock', 5000);
+                });
             });
-            basic_path.on("click", "#correio_modal_div .add_anexo_button_main", function(e) {
+            basic_path.on("click", "#correio_modal_div #anexo_save_button", function(e) {
                 var
                         anexo_array = [],
                         this_button = $(this),
@@ -480,15 +547,21 @@ var requests = function(basic_path, options_ext) {
                     return false;
                 data_ver_button.data().approved = 1;
                 $.each(this_button.parents("#ver_anexo_correio_modal").find("#tbody_ver_anexo_correio").find("tr"), function() {
-                    anexo_array.push({anexo: $(this).find(".input_anexo").text(), n_doc: $(this).find(".input_n_doc").text(), lead_id: $(this).find(".input_lead_id").text(), confirmed: ~~$(this).find(".checkbox_confirm_anexo").is(":checked")});
+                    anexo_array.push({anexo: $(this).find(".input_anexo").text(), n_doc: $(this).find(".input_n_doc").text(), lead_id: $(this).find(".input_lead_id").text(), confirmed: ~~$(this).find(".checkbox_confirm_anexo").is(":checked"), admin: ~~$(this).hasClass("warning")});
                     if (!~~$(this).find("td").first().find(":checkbox").is(":checked")) {
                         data_ver_button.data().approved = 0;
                     }
                 });
-                $.post("/AM/ajax/requests.php", {action: "save_anexo_correio", id: this_button.data().id_correio, anexos: anexo_array}, "json");
+                $.msg();
+                $.post("/AM/ajax/requests.php", {action: "save_anexo_correio", id: this_button.data().id_correio, anexos: anexo_array}, function(data) {
+                    $.msg('unblock');
+                }, "json");
             });
         }
     };
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------RELATORIO MENSAL STOCK----------------------------RELATORIO MENSAL STOCK----------------------RELATORIO MENSAL STOCK-----
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
     this.relatorio_mensal_stock = {
         init: function() {
             $.get("/AM/view/requests/relatorio_mensal_stock_modal.html", function(data) {
@@ -510,6 +583,7 @@ var requests = function(basic_path, options_ext) {
                                 prdt_objs.push({quantidade: $(this).find(".quant").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
                             });
                             $("#relatorio_mensal_stock_form :input").attr('readonly', true);
+                            $.msg();
                             $.post("ajax/requests.php", {
                                 action: "criar_relatorio_mensal_stock",
                                 data: rms_zone.find("#input_data").val(),
@@ -519,7 +593,11 @@ var requests = function(basic_path, options_ext) {
                                 rms_zone.find("#relatorio_mensal_stock_form").get(0).reset();
                                 $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
                                 $("#relatorio_mensal_stock_form :input").attr('readonly', false);
-                            }, "json");
+                                $.msg('unblock');
+                            }, "json").fail(function(data) {
+                                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                                $.msg('unblock', 5000);
+                            });
                         }
                         else
                             $.jGrowl("Preencha pelo menos uma linha.");
@@ -563,10 +641,15 @@ var requests = function(basic_path, options_ext) {
             rms_zone.on("click", ".accept_report_stock", function() {
                 var this_button = $(this);
                 if ($(this).parents("td").prev().prev().find("button").data().approved) {
+                    $.msg();
                     $.post('/AM/ajax/requests.php', {action: "accept_report_stock", id: $(this).val()}, function() {
                         this_button.parent("td").prev().text("Aprovado");
                         relatorio_stock_table.fnReloadAjax();
-                    }, "json");
+                        $.msg('unblock');
+                    }, "json").fail(function(data) {
+                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                        $.msg('unblock', 5000);
+                    });
                 }
                 else
                     $.jGrowl("Verifique os produtos 1º, antes de aprovar.");
@@ -575,34 +658,56 @@ var requests = function(basic_path, options_ext) {
                 var this_button = $(this);
                 bootbox.confirm("Tem a certeza?", function(result) {
                     if (result) {
+                        $.msg();
                         $.post('/AM/ajax/requests.php', {action: "decline_report_stock", id: this_button.val()}, function() {
                             this_button.parent("td").prev().text("Rejeitado");
                             this_button.parent("tr").find(".ver_produto_stock").data("aproved", 0);
                             relatorio_stock_table.fnReloadAjax();
-                        }, "json");
+                            $.msg('unblock');
+                        }, "json").fail(function(data) {
+                            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                            $.msg('unblock', 5000);
+                        });
                     }
                 });
             });
-
-            rms_zone.on("click", ".ver_produto_stock", function(e) {
+            basic_path.on("click", "#stock_add_button", function(e) {
                 e.preventDefault();
-                var
-                        id_stock = ~~$(this).data().stock_id,
-                        anexo_number = 1,
-                        status = ~~$(this).data().approved;
-
-                $.post("ajax/requests.php", {action: "get_itens_stock", id: id_stock},
-                function(data1) {
-                    var tbody = basic_path.find("#tbody_ver_produto_mensal_stock").empty();
-                    $.each(data1, function() {
-                        tbody.append("<tr><td><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_stock + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td class='td_helper_quantidade'>" + this.quantidade + "</td><td class='td_helper_descricao'>" + this.descricao + "</td><td class='td_helper_serie'>" + this.serie + "</td><td class='td_helper_obs'>" + this.obs + "</td></tr>");
-                        anexo_number++;
-                    });
-                    basic_path.find(".stock_exit_button").data("id_stock", id_stock);
-                    basic_path.find("#ver_anexo_mensal_stock_modal").modal("show");
-                }, "json");
+                $("#stock_modal_div #add_stock_div").show();
+                $("#stock_modal_div .stock_menu_button").hide();
             });
-            basic_path.on("click", ".stock_exit_button", function(e) {
+            basic_path.on("click", "#stock_modal_div #add_stock_yes_button", function(e) {
+                e.preventDefault();
+                if ($("#stock_modal_div #add_stock_div").validationEngine("validate")) {
+                    var prod_array = [];
+                    var data_button = $(this).parents(".modal").find("#stock_modal_div #stock_save_button");
+                    var temp = {quantidade: $("#add_stock_div #add_stock_quantidade").val(), descricao: $("#add_stock_div #add_stock_descricao").val(), serie: $("#add_stock_div #add_stock_serie").val(), obs: $("#add_stock_div #add_stock_obs").val(), confirmed: 0, admin: 1};
+                    prod_array.push(temp);
+                    $.each($("#ver_anexo_stock_modal #tbody_ver_produto_mensal_stock").find("tr"), function() {
+                        prod_array.push({quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked"), admin: ~~$(this).hasClass("warning")});
+                    });
+                    $.msg();
+                    $.post('/AM/ajax/requests.php', {action: "save_stock", id: data_button.data().id_stock, produtos: prod_array}, function() {
+                        var id_anexo = ~~basic_path.find("#tbody_ver_produto_mensal_stock").find("tr").last().find(".checkbox_confirm_anexo").val() + 1;
+                        basic_path.find("#tbody_ver_produto_mensal_stock").append("<tr class='warning'><td class='chex-table'><input " + ((SpiceU.user_level < 5) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo '  id='anexo" + id_anexo + "' name='cci'><label class='checkbox inline' for='anexo" + id_anexo + "'><span></span> </label></td><td class='td_helper_quantidade'>" + temp.quantidade + "</td><td class='td_helper_descricao'>" + temp.descricao + "</td><td class='td_helper_serie'>" + temp.serie + "</td><td class='td_helper_obs'>" + temp.obs + "</td></tr>");
+                        $("#stock_modal_div #add_stock_div")[0].reset();
+                        $("#stock_modal_div #add_stock_div").hide();
+                        $("#stock_modal_div .stock_menu_button").show();
+                        $("#stock_modal_correio_warning").show();
+                        $.msg('unblock');
+                    }, "json").fail(function(data) {
+                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                        $.msg('unblock', 5000);
+                    });
+                }
+            });
+            basic_path.on("click", "#stock_modal_div #add_stock_no_button", function(e) {
+                e.preventDefault();
+                $("#stock_modal_div #add_stock_div")[0].reset();
+                $("#stock_modal_div #add_stock_div").hide();
+                $("#stock_modal_div .stock_menu_button").show();
+            });
+            basic_path.on("click", "#stock_save_button", function(e) {
                 var
                         anexo_array = [],
                         this_button = $(this),
@@ -610,16 +715,54 @@ var requests = function(basic_path, options_ext) {
                 if (~~data_ver_button.data().approved)
                     return false;
                 data_ver_button.data().approved = 1;
-                $.each(this_button.parents("#ver_anexo_mensal_stock_modal").find("#tbody_ver_produto_mensal_stock").find("tr"), function()
+                $.each($("#ver_anexo_mensal_stock_modal #tbody_ver_produto_mensal_stock").find("tr"), function()
                 {
-                    anexo_array.push({quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked")});
+                    anexo_array.push({quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked"), admin: ~~$(this).hasClass("warning")});
                     if (!~~$(this).find("td").first().find(":checkbox").is(":checked"))
                         data_ver_button.data().approved = 0;
                 });
-                $.post("/AM/ajax/requests.php", {action: "save_stock", id: this_button.data().id_stock, produtos: anexo_array}, "json");
+                $.msg();
+                $.post("/AM/ajax/requests.php", {action: "save_stock", id: this_button.data().id_stock, produtos: anexo_array}, function(data) {
+                    $.msg('unblock');
+                }, "json");
+            });
+            rms_zone.on("click", ".ver_produto_stock", function(e) {
+                e.preventDefault();
+                var
+                        id_stock = ~~$(this).data().stock_id,
+                        anexo_number = 1,
+                        status = ~~$(this).data().approved;
+                $("#stock_add_button").toggle(SpiceU.user_level > 5 ? true : false);
+                $.msg();
+                $.post("ajax/requests.php", {action: "get_itens_stock", id: id_stock},
+                function(data1) {
+                    var tbody = basic_path.find("#tbody_ver_produto_mensal_stock").empty();
+                    var alert_class = "class='alert'";
+                    $("#stock_modal_correio_warning").hide();
+                    $.each(data1, function() {
+                        if (~~this.admin) {
+                            $("#stock_modal_correio_warning").show();
+                            alert_class = "class='warning'";
+                        }
+                        else {
+                            alert_class = "";
+                        }
+                        tbody.append("<tr " + alert_class + " ><td class='chex-table'><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_stock + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td class='td_helper_quantidade'>" + this.quantidade + "</td><td class='td_helper_descricao'>" + this.descricao + "</td><td class='td_helper_serie'>" + this.serie + "</td><td class='td_helper_obs'>" + this.obs + "</td></tr>");
+                        anexo_number++;
+                    });
+                    basic_path.find("#stock_save_button").data("id_stock", id_stock);
+                    basic_path.find("#ver_anexo_mensal_stock_modal").modal("show");
+                    $.msg('unblock');
+                }, "json").fail(function(data) {
+                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                    $.msg('unblock', 5000);
+                });
             });
         }
     };
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------RELATORIO MOVIMENTAÇAO STOCK----------------------------RELATORIO MOVIMENTAÇAO STOCK----------------------RELATORIO MOVIMENTAÇAO STOCK------------------
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
     this.relatorio_movimentacao_stock = {
         init: function() {
             $.get("/AM/view/requests/relatorio_movimentacao_stock_modal.html", function(data) {
@@ -641,6 +784,7 @@ var requests = function(basic_path, options_ext) {
                                 prdt_objs.push({quantidade: $(this).find(".quant").val(), destinario: $(this).find(".desc").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
                             });
                             $("#relatorio_movimentacao_stock_form :input").attr('readonly', true);
+                            $.msg();
                             $.post("ajax/requests.php", {
                                 action: "criar_relatorio_movimentacao_stock",
                                 data: rmovs.find("#input_data").val(),
@@ -650,12 +794,17 @@ var requests = function(basic_path, options_ext) {
                                 rmovs.find("#relatorio_movimentacao_stock_form").get(0).reset();
                                 $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
                                 $("#relatorio_movimentacao_stock_form :input").attr('readonly', false);
-                            }, "json");
+                                $.msg('unblock');
+                            }, "json").fail(function(data) {
+                                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                                $.msg('unblock', 5000);
+                            });
                         }
                         else
                             $.jGrowl("Preencha pelo menos uma linha.");
                     }
                 });
+                //Criar e Remover Linhas (CRIAÇÂO)-----------------
                 rmovs.find("#button_rfms_table_add_line").click(function(e) {
                     e.preventDefault();
                     rmovs
@@ -669,6 +818,7 @@ var requests = function(basic_path, options_ext) {
                     e.preventDefault();
                     $(this).parent().parent().remove();
                 });
+                //------------------------------------------------------
             });
         },
         get_to_datatable: function(rmovs) {
@@ -694,10 +844,15 @@ var requests = function(basic_path, options_ext) {
             rmovs.on("click", ".accept_report_movimentacao", function() {
                 var this_button = $(this);
                 if ($(this).parents("td").prev().prev().find("button").data().approved) {
+                    $.msg();
                     $.post('/AM/ajax/requests.php', {action: "accept_report_movimentacao", id: $(this).val()}, function() {
                         this_button.parent("td").prev().text("Aprovado");
                         relatorio_moviment_stock_table.fnReloadAjax();
-                    }, "json");
+                        $.msg('unblock');
+                    }, "json").fail(function(data) {
+                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                        $.msg('unblock', 5000);
+                    });
                 }
                 else
                     $.jGrowl("Verifique os anexos 1º, antes de aprovar.");
@@ -706,12 +861,72 @@ var requests = function(basic_path, options_ext) {
                 var this_button = $(this);
                 bootbox.confirm("Tem a certeza?", function(result) {
                     if (result) {
+                        $.msg();
                         $.post('/AM/ajax/requests.php', {action: "decline_report_movimentacao", id: this_button.val()}, function() {
                             this_button.parent("td").prev().text("Rejeitado");
                             relatorio_moviment_stock_table.fnReloadAjax();
-                        }, "json");
+                            $.msg('unblock');
+                        }, "json").fail(function(data) {
+                            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                            $.msg('unblock', 5000);
+                        });
                     }
                 });
+            });
+            basic_path.on("click", "#mov_add_button", function(e) {
+                e.preventDefault();
+                $("#mov_modal_div #add_mov_div").show();
+                $("#mov_modal_div .mov_menu_button").hide();
+            });
+            basic_path.on("click", "#mov_modal_div #add_mov_yes_button", function(e) {
+                e.preventDefault();
+                if ($("#mov_modal_div #add_mov_div").validationEngine("validate")) {
+                    var prod_array = [];
+                    var data_button = $(this).parents(".modal").find("#mov_modal_div #mov_save_button");
+                    var temp = {quantidade: $("#add_mov_div #add_mov_quantidade").val(), descricao: $("#add_mov_div #add_mov_descricao").val(), serie: $("#add_mov_div #add_mov_serie").val(), obs: $("#add_mov_div #add_mov_obs").val(), confirmed: 0, admin: 1};
+                    prod_array.push(temp);
+                    $.each($("#ver_anexo_mov_stock_modal #tbody_ver_produto_movimentacao_mov").find("tr"), function() {
+                        prod_array.push({quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked"), admin: ~~$(this).hasClass("warning")});
+                    });
+                    $.msg();
+                    $.post('/AM/ajax/requests.php', {action: "save_mov_stock", id: data_button.data().id_movimentacao, produtos: prod_array}, function() {
+                        var id_anexo = ~~basic_path.find("#tbody_ver_produto_mensal_mov").find("tr").last().find(".checkbox_confirm_anexo").val() + 1;
+                        basic_path.find("#tbody_ver_produto_mensal_mov").append("<tr class='warning'><td class='chex-table'><input " + ((SpiceU.user_level < 5) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo '  id='anexo" + id_anexo + "' name='cci'><label class='checkbox inline' for='anexo" + id_anexo + "'><span></span> </label></td><td class='td_helper_quantidade'>" + temp.quantidade + "</td><td class='td_helper_descricao'>" + temp.descricao + "</td><td class='td_helper_serie'>" + temp.serie + "</td><td class='td_helper_obs'>" + temp.obs + "</td></tr>");
+                        $("#mov_modal_div #add_mov_div")[0].reset();
+                        $("#mov_modal_div #add_mov_div").hide();
+                        $("#mov_modal_div .mov_menu_button").show();
+                        $("#mov_modal_correio_warning").show();
+                        $.msg('unblock');
+                    }, "json").fail(function(data) {
+                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                        $.msg('unblock', 5000);
+                    });
+                }
+            });
+            basic_path.on("click", "#mov_modal_div #add_mov_no_button", function(e) {
+                e.preventDefault();
+                $("#mov_modal_div #add_mov_div")[0].reset();
+                $("#mov_modal_div #add_mov_div").hide();
+                $("#mov_modal_div .mov_menu_button").show();
+            });
+            basic_path.on("click", "#mov_save_button", function(e) {
+                var
+                        anexo_array = [],
+                        this_button = $(this),
+                        data_ver_button = rmovs.find("[data-mov_id='" + this_button.data().id_movimentacao + "']");
+                if (~~data_ver_button.data().approved)
+                    return false;
+                data_ver_button.data().approved = 1;
+                $.each($("#ver_anexo_mensal_mov_modal #tbody_ver_produto_mensal_mov").find("tr"), function()
+                {
+                    anexo_array.push({quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked"), admin: ~~$(this).hasClass("warning")});
+                    if (!~~$(this).find("td").first().find(":checkbox").is(":checked"))
+                        data_ver_button.data().approved = 0;
+                });
+                $.msg();
+                $.post("/AM/ajax/requests.php", {action: "save_mov", id: this_button.data().id_movimentacao, produtos: anexo_array}, function(data) {
+                    $.msg('unblock');
+                }, "json");
             });
             rmovs.on("click", ".ver_produto_mov_stock", function(e) {
                 e.preventDefault();
@@ -719,12 +934,24 @@ var requests = function(basic_path, options_ext) {
                         id_movimentacao = ~~$(this).data().movimentacao_id,
                         anexo_number = 1,
                         status = ~~$(this).data().approved;
+
+                $("#mov_add_button").toggle(SpiceU.user_level > 5 ? true : false);
+                $.msg();
                 $.post("ajax/requests.php", {action: "get_itens_movimentacao", id: id_movimentacao},
                 function(data1) {
-                    var tbody = basic_path.find("#tbody_ver_produto_movimentacao_stock").empty();
+                    var tbody = basic_path.find("#tbody_ver_produto_movimentacao_mov").empty();
+                    var alert_class = "class='alert'";
+                    $("#mov_modal_correio_warning").hide();
                     $.each(data1, function() {
+                        if (~~this.admin) {
+                            $("#mov_modal_correio_warning").show();
+                            alert_class = "class='warning'";
+                        }
+                        else {
+                            alert_class = "";
+                        }
                         tbody.append("\
-                            <tr>\n\
+                            <tr class='" + alert_class + "'>\n\
                                 <td><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_movimentacao + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td>\n\
                                 <td class='td_helper_destinario'>" + this.destinario + "</td>\n\
                                 <td class='td_helper_quantidade'>" + this.quantidade + "</td>\n\
@@ -734,27 +961,15 @@ var requests = function(basic_path, options_ext) {
                             </tr>");
                         anexo_number++;
                     });
-                    basic_path.find(".stock_mov_exit_button").data("id_stock", id_movimentacao);
+                    basic_path.find("#mov_save_button").data("id_movimentacao", id_movimentacao);
                     basic_path.find("#ver_anexo_mov_stock_modal").modal("show");
-                }, "json");
-            });
-            basic_path.on("click", ".stock_mov_exit_button", function(e) {
-                var
-                        anexo_array = [],
-                        this_button = $(this),
-                        data_ver_button = rmovs.find("[data-movimentacao_id='" + this_button.data().id_stock + "']");
-
-                if (~~data_ver_button.data().approved)
-                    return false;
-
-                data_ver_button.data().approved = 1;
-                $.each(this_button.parents("#ver_anexo_mov_stock_modal").find("#tbody_ver_produto_movimentacao_stock").find("tr"), function() {
-                    anexo_array.push({destinario: $(this).find(".td_helper_destinario").text(), quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked")});
-                    if (!~~$(this).find("td").first().find(":checkbox").is(":checked"))
-                        data_ver_button.data().approved = 0;
+                    $.msg('unblock');
+                }, "json").fail(function(data) {
+                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                    $.msg('unblock', 5000);
                 });
-                $.post("/AM/ajax/requests.php", {action: "save_mov_stock", id: this_button.data().id_stock, produtos: anexo_array}, "json");
             });
+
         }
     };
 };
