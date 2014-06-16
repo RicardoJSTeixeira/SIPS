@@ -22,14 +22,26 @@ switch ($action) {
     case "populate_consults"://ALL MARCAÇOES
         $u = $user->getUser();
 
-        $query = "SELECT extra2 'cod cliente', '' as 'interaction log', a.lead_id 'sugar ref', id_reservation , a.entry_date, consulta_razao ,start_date,exame_razao,venda_razao, id_user, '' as 'salesperson code', extra1 'camp cod', IF(exame,'YES','NO') "
+        $query = "SELECT extra2 'cod cliente', '' as 'interaction log', a.lead_id 'sugar ref', id_reservation , a.entry_date, consulta_razao ,start_date,exame_razao,venda_razao, id_user, '' as 'salesperson code', extra1 'camp cod', IF(exame,'YES','NO'), terceira_pessoa "
                 . "FROM sips_sd_reservations a "
                 . "INNER JOIN vicidial_list d ON a.lead_id = d.lead_id "
                 . "INNER JOIN spice_consulta f ON a.id_reservation=f.reserva_id "
                 . "WHERE f.closed=1 limit 20000";
         $stmt = $db->prepare($query);
         $stmt->execute();
-        $output['aaData']= $stmt->fetchAll(PDO::FETCH_NUM);
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $terceira_pessoa = array_pop($row);
+            $terceira_pessoa = json_decode($terceira_pessoa);
+            if (count($terceira_pessoa)) {
+                $row[] = $terceira_pessoa->tipo;
+                $row[] = $terceira_pessoa->nome;
+            }else{
+                $row[]="";
+                $row[]="";
+            }
+
+            $output['aaData'][] = $row;
+        }
         echo json_encode($output);
         break;
 
