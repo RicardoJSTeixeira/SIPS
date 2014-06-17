@@ -11,6 +11,7 @@ var
         client_box;
 $(function()
 {
+    $.msg();
     rse = getUrlVars();
     lead_id = atob(decodeURIComponent(rse.id));
     reserva_id = atob(decodeURIComponent(rse.rs));
@@ -137,8 +138,13 @@ $(function()
 
         client_box = new clientBox({id: reserva_id, byReserv: true});
         client_box.init();
+        $.msg('unblock');
 
-    }, "json");
+    },
+            "json").fail(function(data) {
+        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+        $.msg('unblock', 5000);
+    });
 
     $("#main_consulta_div [name='ca']").change(function() {
         $("#3_pessoa_div").toggle(~~$(this).val());
@@ -229,10 +235,15 @@ $(function()
             if (consult_status === "no_exam") {//NÂO HA EXAME
                 if ($("#main_consulta_div #no_exam_div input[name='ne']:checked").length)
                 {
+                    $.msg();
                     $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: $("#main_consulta_div #no_exam_div input[name='ne']:checked").val(), venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", produtos: produtos, feedback: "STEST", terceira_pessoa: $("#ca_s").is(":checked") ? {tipo: $("[name='tp']").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
                         $.jGrowl('Consulta gravada sem exame', {life: 3000});
+                        $.msg('unblock');
                         $("#marcacao_modal").modal("show");
-                    }, "json");
+                    }, "json").fail(function(data) {
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                        $.msg('unblock', 5000);
+                    });
                 }
             }
             else {//HA EXAME
@@ -254,23 +265,38 @@ $(function()
                                         return false;
                                     }
                                     if ($("#main_consulta_div #venda_yes").is(":checked")) {//HA VENDA
+                                        $.msg();
                                         $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 1, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "TV", terceira_pessoa: $("#ca_s").is(":checked") ? {tipo: $("[name='tp']").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
                                             $.jGrowl('Consulta gravada com venda', {life: 3000});
+                                            $.msg('unblock');
                                             $("#encomenda_modal").modal("show");
-                                        }, "json");
+                                        }, "json").fail(function(data) {
+                                            $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                                            $.msg('unblock', 5000);
+                                        });
                                     }
                                     else {//NÂO HA VENDA
+                                        $.msg();
                                         $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: $("#main_consulta_div #no_venda_select option:selected").val(), left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "TNV", terceira_pessoa: $("#ca_s").is(":checked") ? {tipo: $("[name='tp']").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
                                             $.jGrowl('Consulta gravada sem venda', {life: 3000});
+                                            $.msg('unblock');
                                             $("#marcacao_modal").modal("show");
-                                        }, "json");
+                                        }, "json").fail(function(data) {
+                                            $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                                            $.msg('unblock', 5000);
+                                        });
                                     }
                                 }
                                 else {//NAO HA PERDA
+                                    $.msg();
                                     $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "SPERD", terceira_pessoa: $("#ca_s").is(":checked") ? {tipo: $("[name='tp']").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
                                         $.jGrowl('Consulta gravada sem perda', {life: 3000});
+                                        $.msg('unblock');
                                         $("#marcacao_modal").modal("show");
-                                    }, "json");
+                                    }, "json").fail(function(data) {
+                                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                                        $.msg('unblock', 5000);
+                                    });
                                 }
                             }, false);
                         }, false);
@@ -278,13 +304,14 @@ $(function()
 
         }
     });
-    
-    $("#dGama,#eGama").change(function(){
-        $("[name=tp_vd]").val(($("#eGama").val().length>0 &&  $("#dGama").val().length>0)?["Bilateral"]:["Unilateral"]);
+
+    $("#dGama,#eGama").change(function() {
+        $("[name=tp_vd]").val(($("#eGama").val().length > 0 && $("#dGama").val().length > 0) ? ["Bilateral"] : ["Unilateral"]);
     });
-    
+
     $("#main_consulta_div #exit_save").click(function() {
 
+        $.msg();
         var produtos = {
             direito: {marca: $("#main_consulta_div #dMarca").val(), gama: $("#main_consulta_div #dGama").val(), modelo: $("#main_consulta_div #dModelo").val()},
             esquerdo: {marca: $("#main_consulta_div #eMarca").val(), gama: $("#main_consulta_div #eGama").val(), modelo: $("#main_consulta_div #eModelo").val()},
@@ -295,7 +322,12 @@ $(function()
         consult_audiogra.save(lead_id, reserva_id, false);
         $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: ~~$("#main_consulta_div #venda_yes").is(":checked"), venda_razao: $("#main_consulta_div #no_venda_select option:selected").val(), left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "", terceira_pessoa: $("#ca_s").is(":checked") ? {tipo: $("[name='tp']").val(), nome: $("#3_pessoa_input").val()} : [], closed: 0}, function() {
             $.jGrowl('Consulta gravada', {life: 3000});
+            $.msg('unblock');
+        }, "json").fail(function(data) {
+            $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+            $.msg('unblock', 5000);
         });
+        ;
 
     });
 

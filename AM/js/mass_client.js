@@ -77,10 +77,15 @@ $(function() {
         zone.submit(function(e) {
             e.preventDefault();
             if (zone.validationEngine('validate') && zone[0].length > 2) {
+                $.msg();
                 $.post("ajax/mass_client.php", $(this).serialize(), function() {
                     $.jGrowl('Clientes Criados com Successo.', {life: 3000});
                     zone.find("#mass_client_table tbody").empty();
-                }, "json");
+                    $.msg('unblock');
+                }, "json").fail(function(data) {
+                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                    $.msg('unblock', 5000);
+                });
             }
         });
     };
