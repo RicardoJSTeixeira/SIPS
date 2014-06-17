@@ -23,6 +23,7 @@ $user->confirm_login();
 $userID = $user->getUser();
 
 $users = new UserControler($db, $userID);
+$log = new Logger($db, $userID);
 
 switch ($action) {
     case "getAllDT":
@@ -32,7 +33,7 @@ switch ($action) {
         }
         echo json_encode($js);
         break;
-        
+
     case "getActive":
         echo json_encode($users->getActive());
         break;
@@ -43,21 +44,25 @@ switch ($action) {
 
     case "create":
         try {
-            echo json_encode($users->set($username, $pass, $desc, $ulevel));
+            $users->set($username, $pass, $desc, $ulevel);
+            echo json_encode($id);
         } catch (PDOException $exc) {
             header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
             if ($exc->getCode() == 23000) {
                 echo "Operador: $username, já existe.";
             }
         }
+        $log->set($username, Logger::T_INS, Logger::S_USER, json_encode(array("username" => $username, "pass" => $pass, "desc" => $desc, "ulevel" => $ulevel)));
         break;
 
     case "active":
         echo json_encode($users->editActive($username, $active));
+        $log->set($username, Logger::T_UPD, Logger::S_USER, json_encode(array("username" => $username, "active" => $active)));
         break;
 
     case "edit":
         echo json_encode($users->edit($username, $pass, $desc, $ulevel, $active, $siblings));
+        $log->set($username, Logger::T_UPD, Logger::S_USER, json_encode(array("username" => $username, "pass" => $pass, "desc" => $desc, "ulevel" => $ulevel, "active" => $active, "siblings" => $siblings)));
         break;
 
     default:
