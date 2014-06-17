@@ -781,7 +781,7 @@ var requests = function(basic_path, options_ext) {
                         var prdt_objs = [];
                         if (rmovs.find("#table_tbody_rfms tr").length) {
                             $.each(rmovs.find("#table_tbody_rfms tr"), function() {
-                                prdt_objs.push({quantidade: $(this).find(".quant").val(), destinario: $(this).find(".desc").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
+                                prdt_objs.push({quantidade: $(this).find(".quant").val(), destinatario: $(this).find(".desc").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
                             });
                             $("#relatorio_movimentacao_stock_form :input").attr('readonly', true);
                             $.msg();
@@ -883,15 +883,15 @@ var requests = function(basic_path, options_ext) {
                 if ($("#mov_modal_div #add_mov_div").validationEngine("validate")) {
                     var prod_array = [];
                     var data_button = $(this).parents(".modal").find("#mov_modal_div #mov_save_button");
-                    var temp = {quantidade: $("#add_mov_div #add_mov_quantidade").val(), descricao: $("#add_mov_div #add_mov_descricao").val(), serie: $("#add_mov_div #add_mov_serie").val(), obs: $("#add_mov_div #add_mov_obs").val(), confirmed: 0, admin: 1};
+                    var temp = {destinatario: $("#add_mov_div #add_mov_destin").val(), quantidade: $("#add_mov_div #add_mov_quantidade").val(), descricao: $("#add_mov_div #add_mov_descricao").val(), serie: $("#add_mov_div #add_mov_serie").val(), obs: $("#add_mov_div #add_mov_obs").val(), confirmed: 0, admin: 1};
                     prod_array.push(temp);
                     $.each($("#ver_anexo_mov_stock_modal #tbody_ver_produto_movimentacao_mov").find("tr"), function() {
-                        prod_array.push({quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked"), admin: ~~$(this).hasClass("warning")});
+                        prod_array.push({destinatario: $(".td_helper_destinatario").val(), quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked"), admin: ~~$(this).hasClass("warning")});
                     });
                     $.msg();
                     $.post('/AM/ajax/requests.php', {action: "save_mov_stock", id: data_button.data().id_movimentacao, produtos: prod_array}, function() {
                         var id_anexo = ~~basic_path.find("#tbody_ver_produto_mensal_mov").find("tr").last().find(".checkbox_confirm_anexo").val() + 1;
-                        basic_path.find("#tbody_ver_produto_mensal_mov").append("<tr class='warning'><td class='chex-table'><input " + ((SpiceU.user_level < 5) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo '  id='anexo" + id_anexo + "' name='cci'><label class='checkbox inline' for='anexo" + id_anexo + "'><span></span> </label></td><td class='td_helper_quantidade'>" + temp.quantidade + "</td><td class='td_helper_descricao'>" + temp.descricao + "</td><td class='td_helper_serie'>" + temp.serie + "</td><td class='td_helper_obs'>" + temp.obs + "</td></tr>");
+                        basic_path.find("#tbody_ver_produto_movimentacao_mov").append("<tr class='warning'><td class='chex-table'><input " + ((SpiceU.user_level < 5) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo '  id='anexo" + id_anexo + "' name='cci'><label class='checkbox inline' for='anexo" + id_anexo + "'><span></span> </label></td><td class='td_helper_destinatario'>" + temp.destinatario + "</td><td class='td_helper_quantidade'>" + temp.quantidade + "</td><td class='td_helper_descricao'>" + temp.descricao + "</td><td class='td_helper_serie'>" + temp.serie + "</td><td class='td_helper_obs'>" + temp.obs + "</td></tr>");
                         $("#mov_modal_div #add_mov_div")[0].reset();
                         $("#mov_modal_div #add_mov_div").hide();
                         $("#mov_modal_div .mov_menu_button").show();
@@ -913,18 +913,18 @@ var requests = function(basic_path, options_ext) {
                 var
                         anexo_array = [],
                         this_button = $(this),
-                        data_ver_button = rmovs.find("[data-mov_id='" + this_button.data().id_movimentacao + "']");
+                        data_ver_button = rmovs.find("[data-movimentacao_id='" + this_button.data().id_movimentacao + "']");
                 if (~~data_ver_button.data().approved)
                     return false;
                 data_ver_button.data().approved = 1;
-                $.each($("#ver_anexo_mensal_mov_modal #tbody_ver_produto_mensal_mov").find("tr"), function()
+                $.each($("#ver_anexo_mov_stock_modal #tbody_ver_produto_movimentacao_mov").find("tr"), function()
                 {
-                    anexo_array.push({quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked"), admin: ~~$(this).hasClass("warning")});
+                    anexo_array.push({destinatario: $(this).find(".td_helper_destinatario").text(), quantidade: $(this).find(".td_helper_quantidade").text(), descricao: $(this).find(".td_helper_descricao").text(), serie: $(this).find(".td_helper_serie").text(), obs: $(this).find(".td_helper_obs").text(), confirmed: ~~$(this).find("td").first().find(":checkbox").is(":checked"), admin: ~~$(this).hasClass("warning")});
                     if (!~~$(this).find("td").first().find(":checkbox").is(":checked"))
                         data_ver_button.data().approved = 0;
                 });
                 $.msg();
-                $.post("/AM/ajax/requests.php", {action: "save_mov", id: this_button.data().id_movimentacao, produtos: anexo_array}, function(data) {
+                $.post("/AM/ajax/requests.php", {action: "save_mov_stock", id: this_button.data().id_movimentacao, produtos: anexo_array}, function(data) {
                     $.msg('unblock');
                 }, "json");
             });
@@ -943,9 +943,10 @@ var requests = function(basic_path, options_ext) {
                     var alert_class = "class='alert'";
                     $("#mov_modal_correio_warning").hide();
                     $.each(data1, function() {
+                        console.log(this.admin);
                         if (~~this.admin) {
                             $("#mov_modal_correio_warning").show();
-                            alert_class = "class='warning'";
+                            alert_class = "warning";
                         }
                         else {
                             alert_class = "";
@@ -953,7 +954,7 @@ var requests = function(basic_path, options_ext) {
                         tbody.append("\
                             <tr class='" + alert_class + "'>\n\
                                 <td><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_movimentacao + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td>\n\
-                                <td class='td_helper_destinario'>" + this.destinario + "</td>\n\
+                                <td class='td_helper_destinatario'>" + this.destinatario + "</td>\n\
                                 <td class='td_helper_quantidade'>" + this.quantidade + "</td>\n\
                                 <td class='td_helper_descricao'>" + this.descricao + "</td>\n\
                                 <td class='td_helper_serie'>" + this.serie + "</td>\n\

@@ -1,3 +1,10 @@
+<style>
+    .admin_label_info    {
+        padding:10px;
+        background-color: #fcf8e3;
+        box-shadow: 4px 4px 14px -5px #888888;
+    }
+</style>
 <div id="ver_anexo_mov_stock_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true"  >
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -18,15 +25,15 @@
 
         </tbody>
     </table>
-    <div class="well" id="mov_modal_correio_warning">
-        <label >* Contactos adicionados pelo admin</label>
-    </div>
+
+
+
     <div class="modal-footer " id="mov_modal_div">
         <form style="display:none" id="add_mov_div">
             <div class="formRow">
                 <span>Destinatário</span>
                 <div class="formRight">
-                    <input placeholder="Quantidade de produtos" id="add_mov_destin" class="validate[required]"/>
+                    <input placeholder="Destinatário" id="add_mov_destin" class="validate[required]"/>
                 </div>    
             </div>
             <div class="formRow">
@@ -58,6 +65,7 @@
                 <button class="btn btn-primary add_mov_button" id="add_mov_yes_button">Adicionar</button>
             </div>
         </form>
+        <span id="mov_modal_correio_warning" class="admin_label_info left ">* Contactos adicionados pelo admin</span>
         <button class="btn mov_menu_button" id="mov_add_button">Adicionar Produto</button>
         <button class="btn btn-success mov_menu_button" id="mov_save_button" data-dismiss="modal" aria-hidden="true">Gravar</button>
     </div>
