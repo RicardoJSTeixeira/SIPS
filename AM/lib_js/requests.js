@@ -177,14 +177,18 @@ var requests = function(basic_path, options_ext) {
             });
             am_zone.on("click", ".accept_apoio_marketing", function() {
                 var this_button = $(this);
-                $.msg();
-                $.post('/AM/ajax/requests.php', {action: "accept_apoio_marketing", id: $(this).val()}, function() {
-                    this_button.parent("td").prev().text("Aprovado");
-                    apoio_markting_table.fnReloadAjax();
-                    $.msg('unblock');
-                }, "json").fail(function(data) {
-                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-                    $.msg('unblock', 5000);
+                bootbox.prompt("Comentários?", function(result) {
+                    if (result !== null) {
+                        $.msg();
+                        $.post('/AM/ajax/requests.php', {action: "accept_apoio_marketing", id: this_button.val(), message: result}, function() {
+                            this_button.parent("td").prev().text("Aprovado");
+                            apoio_markting_table.fnReloadAjax();
+                            $.msg('unblock');
+                        }, "json").fail(function(data) {
+                            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                            $.msg('unblock', 5000);
+                        });
+                    }
                 });
             });
             am_zone.on("click", ".decline_apoio_marketing", function() {
@@ -192,7 +196,7 @@ var requests = function(basic_path, options_ext) {
                 bootbox.prompt("Qual o motivo?", function(result) {
                     if (result !== null) {
                         $.msg();
-                        $.post('/AM/ajax/requests.php', {action: "decline_apoio_marketing", id: this_button.val(), motivo: result}, function() {
+                        $.post('/AM/ajax/requests.php', {action: "decline_apoio_marketing", id: this_button.val(), message: result}, function() {
                             this_button.parent().prev().text("Rejeitado");
                             apoio_markting_table.fnReloadAjax();
                             $.msg('unblock');
@@ -324,14 +328,18 @@ var requests = function(basic_path, options_ext) {
             });
             rf_zone.on("click", ".accept_report_frota", function() {
                 var this_button = $(this);
-                $.msg();
-                $.post('/AM/ajax/requests.php', {action: "accept_report_frota", id: $(this).val()}, function() {
-                    this_button.parent("td").prev().text("Aprovado");
-                    relatorio_frota_table.fnReloadAjax();
-                    $.msg('unblock');
-                }, "json").fail(function(data) {
-                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-                    $.msg('unblock', 5000);
+                bootbox.prompt("Comentários?", function(result) {
+                    if (result !== null) {
+                        $.msg();
+                        $.post('/AM/ajax/requests.php', {action: "accept_report_frota", id: this_button.val(), message: result}, function() {
+                            this_button.parent("td").prev().text("Aprovado");
+                            relatorio_frota_table.fnReloadAjax();
+                            $.msg('unblock');
+                        }, "json").fail(function(data) {
+                            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                            $.msg('unblock', 5000);
+                        });
+                    }
                 });
             });
             rf_zone.on("click", ".decline_report_frota", function() {
@@ -437,18 +445,23 @@ var requests = function(basic_path, options_ext) {
                 table2csv(relatorio_correio_table, 'full', '#' + rc_zone[0].id);
             });
             rc_zone.on("click", ".accept_report_correio", function() {
+                var this_button = $(this);
                 if ($(this).parents("td").prev().prev().prev().find("button").data().approved) {
-                    var this_button = $(this);
-                    $.msg();
-                    $.post('/AM/ajax/requests.php', {action: "accept_report_correio", id: $(this).val()}, function() {
-                        this_button.parent("td").prev().text("Aprovado");
-                        relatorio_correio_table.fnReloadAjax();
-                        $.msg('unblock');
-                    }, "json")
-                            .fail(function(data) {
-                                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-                                $.msg('unblock', 5000);
-                            });
+                    bootbox.prompt("Comentários?", function(result) {
+                        if (result !== null) {
+                            $.msg();
+
+                            $.post('/AM/ajax/requests.php', {action: "accept_report_correio", id: this_button.val(), message: result}, function() {
+                                this_button.parent("td").prev().text("Aprovado");
+                                relatorio_correio_table.fnReloadAjax();
+                                $.msg('unblock');
+                            })
+                                    .fail(function(data) {
+                                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                                        $.msg('unblock', 5000);
+                                    });
+                        }
+                    });
                 }
                 else
                     $.jGrowl("Verifique os anexos 1º, antes de aprovar.");
@@ -458,12 +471,12 @@ var requests = function(basic_path, options_ext) {
                 bootbox.prompt("Qual o motivo?", function(result) {
                     if (result !== null) {
                         $.msg();
-                        $.post('/AM/ajax/requests.php', {action: "decline_report_correio", id: this_button.val(), motivo: result}, function() {
+                        $.post('/AM/ajax/requests.php', {action: "decline_report_correio", id: this_button.val(), message: result}, function() {
                             this_button.parent("td").prev().text("Rejeitado");
                             this_button.parent("tr").find(".ver_anexo_correio").data("aproved", 0);
                             relatorio_correio_table.fnReloadAjax();
                             $.msg('unblock');
-                        }, "json").fail(function(data) {
+                        }).fail(function(data) {
                             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                             $.msg('unblock', 5000);
                         });
@@ -640,19 +653,25 @@ var requests = function(basic_path, options_ext) {
             });
             rms_zone.on("click", ".accept_report_stock", function() {
                 var this_button = $(this);
-                if ($(this).parents("td").prev().prev().find("button").data().approved) {
-                    $.msg();
-                    $.post('/AM/ajax/requests.php', {action: "accept_report_stock", id: $(this).val()}, function() {
-                        this_button.parent("td").prev().text("Aprovado");
-                        relatorio_stock_table.fnReloadAjax();
-                        $.msg('unblock');
-                    }, "json").fail(function(data) {
-                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-                        $.msg('unblock', 5000);
+                if (this_button.parents("td").prev().prev().find("button").data().approved) {
+                    bootbox.prompt("Comentários?", function(result) {
+                        if (result !== null) {
+                            $.msg();
+
+                            $.post('/AM/ajax/requests.php', {action: "accept_report_stock", id: this_button.val(), message: result}, function() {
+                                this_button.parent("td").prev().text("Aprovado");
+                                relatorio_stock_table.fnReloadAjax();
+                                $.msg('unblock');
+                            })
+                                    .fail(function(data) {
+                                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                                        $.msg('unblock', 5000);
+                                    });
+                        }
                     });
                 }
                 else
-                    $.jGrowl("Verifique os produtos 1º, antes de aprovar.");
+                    $.jGrowl("Verifique os anexos 1º, antes de aprovar.");
             });
             rms_zone.on("click", ".decline_report_stock", function() {
                 var this_button = $(this);
@@ -843,15 +862,21 @@ var requests = function(basic_path, options_ext) {
             });
             rmovs.on("click", ".accept_report_movimentacao", function() {
                 var this_button = $(this);
-                if ($(this).parents("td").prev().prev().find("button").data().approved) {
-                    $.msg();
-                    $.post('/AM/ajax/requests.php', {action: "accept_report_movimentacao", id: $(this).val()}, function() {
-                        this_button.parent("td").prev().text("Aprovado");
-                        relatorio_moviment_stock_table.fnReloadAjax();
-                        $.msg('unblock');
-                    }, "json").fail(function(data) {
-                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-                        $.msg('unblock', 5000);
+                if (this_button.parents("td").prev().prev().find("button").data().approved) {
+                    bootbox.prompt("Comentários?", function(result) {
+                        if (result !== null) {
+                            $.msg();
+
+                            $.post('/AM/ajax/requests.php', {action: "accept_report_movimentacao", id: this_button.val(), message: result}, function() {
+                                this_button.parent("td").prev().text("Aprovado");
+                                relatorio_moviment_stock_table.fnReloadAjax();
+                                $.msg('unblock');
+                            })
+                                    .fail(function(data) {
+                                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                                        $.msg('unblock', 5000);
+                                    });
+                        }
                     });
                 }
                 else

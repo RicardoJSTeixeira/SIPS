@@ -9,6 +9,7 @@ require "$root/AM/lib_php/user.php";
 require "$root/AM/lib_php/products.php";
 require "$root/AM/lib_php/requisitions.php";
 require "$root/AM/lib_php/msg_alerts.php";
+require "$root/AM/lib_php/logger.php";
 
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
@@ -17,13 +18,14 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 
+
 $user = new UserLogin($db);
 $user->confirm_login();
 $userID = $user->getUser();
 $alert = new alerts($db, $userID->username);
 $products = new products($db);
 $requisitions = new requisitions($db, $userID->user_level, $userID->username, $userID->siblings);
-
+$log = new Logger($db, $user->getUser());
 switch ($action) {
     case "listar_produtos_to_datatable":
         echo json_encode($products->get_products_to_datatable());
