@@ -489,7 +489,7 @@ class movimentacao_stock extends requests_class {
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $_produtos = json_decode($row->produtos);
             foreach ($_produtos as $value) {
-                $produtos[] = array("quantidade" => $value->quantidade, "destinario" => $value->destinario, "descricao" => $value->descricao, "serie" => $value->serie, "obs" => $value->obs, "confirmed" => $value->confirmed, "admin"=>$value->admin);
+                $produtos[] = array("destinatario" => $value->destinatario,"quantidade" => $value->quantidade, "destinatario" => $value->destinatario, "descricao" => $value->descricao, "serie" => $value->serie, "obs" => $value->obs, "confirmed" => $value->confirmed, "admin"=>$value->admin);
             }
         }
 

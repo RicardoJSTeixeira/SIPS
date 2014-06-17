@@ -1,3 +1,10 @@
+<style>
+    .admin_label_info    {
+        padding:10px;
+        background-color: #fcf8e3;
+        box-shadow: 4px 4px 14px -5px #888888;
+    }
+</style>
 <div id="ver_anexo_mensal_stock_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true"  >
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -17,9 +24,7 @@
 
         </tbody>
     </table>
-      <div class="well" id="stock_modal_correio_warning">
-        <label >* Contactos adicionados pelo admin</label>
-    </div>
+     
     <div class="modal-footer " id="stock_modal_div">
         <form style="display:none" id="add_stock_div">
             <div class="formRow">
@@ -51,6 +56,7 @@
                 <button class="btn btn-primary add_stock_button" id="add_stock_yes_button">Adicionar</button>
             </div>
         </form>
+             <span id="stock_modal_correio_warning" class="admin_label_info left ">* Contactos adicionados pelo admin</span>
         <button class="btn stock_menu_button" id="stock_add_button">Adicionar Produto</button>
         <button class="btn btn-success stock_menu_button" id="stock_save_button" data-dismiss="modal" aria-hidden="true">Gravar</button>
     </div>

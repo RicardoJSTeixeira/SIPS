@@ -1,3 +1,10 @@
+<style>
+    .admin_label_info    {
+        padding:10px;
+        background-color: #fcf8e3;
+        box-shadow: 4px 4px 14px -5px #888888;
+    }
+</style>
 <div id="ver_anexo_correio_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true"  >
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -23,9 +30,7 @@
         <tbody id="tbody_ver_anexo_correio">
         </tbody>
     </table>
-    <div class="well" id="anexo_modal_correio_warning">
-        <label >* Contactos adicionados pelo admin</label>
-    </div>
+ 
 
     <div class="modal-footer " id="correio_modal_div">
         <form style="display:none" id="add_anexo_div">
@@ -52,6 +57,7 @@
                 <button class="btn btn-primary add_anexo_button" id="add_anexo_yes_button">Adicionar</button>
             </div>
         </form>
+          <span id="anexo_modal_correio_warning" class="admin_label_info left ">* Contactos adicionados pelo admin</span>
         <button class="btn anexo_menu_button" id="anexo_add_button">Adicionar Documento</button>
         <button class="btn btn-success anexo_menu_button" id="anexo_save_button" data-dismiss="modal" aria-hidden="true">Gravar</button>
     </div>
