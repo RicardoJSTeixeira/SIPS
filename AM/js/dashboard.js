@@ -17,15 +17,11 @@ $(function() {
 
         //LISTAR CONSULTAS ABERTAS,FECHADAS
         var
-                columns_allm = [{"sTitle": "ID", "sWidth": "50px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Referência", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "63px"}, {"sTitle": "Postal", "sWidth": "55px"}, {"sTitle": "Localidade", "sWidth": "70px"}, {"sTitle": "Telefone 1", "sWidth": "64px"}, {"sTitle": "Telefone 2", "sWidth": "64px"}, {"sTitle": "Morada"}, {"sTitle": "Estado", "sWidth": "50px"}, {"sTitle": "Data", "sWidth": "275px"}],
-                columns_ncsm = [{"sTitle": "ID", "sWidth": "50px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Referência", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "63px"}, {"sTitle": "Postal", "sWidth": "55px"}, {"sTitle": "Localidade", "sWidth": "70px"}, {"sTitle": "Telefone 1", "sWidth": "64px"}, {"sTitle": "Telefone 2", "sWidth": "64px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "240px"}],
-                columns_ncsm_r = [{"sTitle": "Nome Recomendador", "sWidth": "140px"}, {"sTitle": "Cod. Mkt. Rec.", "sWidth": "70px"}, {"sTitle": "ID", "sWidth": "50px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Referência", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "63px"}, {"sTitle": "Postal", "sWidth": "55px"}, {"sTitle": "Localidade", "sWidth": "70px"}, {"sTitle": "Telefone 1", "sWidth": "64px"}, {"sTitle": "Telefone 2", "sWidth": "64px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "240px"}];
+                columns_allm = [{"sTitle": "ID", "sWidth": "50px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Referência", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "63px"}, {"sTitle": "Postal", "sWidth": "55px"}, {"sTitle": "Localidade", "sWidth": "70px"}, {"sTitle": "Telefone 1", "sWidth": "64px"}, {"sTitle": "Telefone 2", "sWidth": "64px"}, {"sTitle": "Morada"}, {"sTitle": "Estado", "sWidth": "50px"}, {"sTitle": "Data", "sWidth": "275px"},{"sTitle": "Dispenser", "sWidth": "70px"}],
+                columns_ncsm = [{"sTitle": "ID", "sWidth": "50px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Referência", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "63px"}, {"sTitle": "Postal", "sWidth": "55px"}, {"sTitle": "Localidade", "sWidth": "70px"}, {"sTitle": "Telefone 1", "sWidth": "64px"}, {"sTitle": "Telefone 2", "sWidth": "64px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "240px"},{"sTitle": "Dispenser", "sWidth": "70px"}],
+                columns_ncsm_r = [{"sTitle": "Nome Recomendador", "sWidth": "140px"}, {"sTitle": "Cod. Mkt. Rec.", "sWidth": "70px"}, {"sTitle": "ID", "sWidth": "50px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Referência", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "63px"}, {"sTitle": "Postal", "sWidth": "55px"}, {"sTitle": "Localidade", "sWidth": "70px"}, {"sTitle": "Telefone 1", "sWidth": "64px"}, {"sTitle": "Telefone 2", "sWidth": "64px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "240px"},{"sTitle": "Dispenser", "sWidth": "70px"}];
 
-        if (user.user_level > 5) {
-            columns_allm.push({"sTitle": "Dispenser", "sWidth": "70px"});
-            columns_ncsm.push({"sTitle": "Dispenser", "sWidth": "70px"});
-            columns_ncsm_r.push({"sTitle": "Dispenser", "sWidth": "70px"});
-        }
+       
         $('#table_allm').dataTable({
             "bSortClasses": false,
             "bProcessing": true,

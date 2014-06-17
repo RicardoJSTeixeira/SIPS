@@ -47,7 +47,9 @@ class UserLogin {
         $stmt->execute(array(":id" => $camp));
         $lists = $stmt->fetchAll(PDO::FETCH_OBJ);
         $list = $lists[0]->list_id;
-        return (object) array("name" => $this->_user->full_name, "username" => $this->_user->user, "campaign" => $camp, "list_id" => $list, "user_level" => $this->_user->user_level, "user_group" => $this->_user->user_group, "siblings" => $this->_user->closer_campaigns);
+        $siblings=json_decode($this->_user->closer_campaigns);
+        $siblings[]=$this->_user->user;
+        return (object) array("name" => $this->_user->full_name, "username" => $this->_user->user, "campaign" => $camp, "list_id" => $list, "user_level" => $this->_user->user_level, "user_group" => $this->_user->user_group, "siblings" => $siblings);
     }
 
     public function logout() {
