@@ -295,7 +295,6 @@ var requisition = function(geral_path, options_ext) {
                     }
                 }
             }
-
         });
 
         $(new_requisition_zone).on("click", " .remove_produto_encomendado", function(e) {
@@ -464,7 +463,6 @@ var requisition = function(geral_path, options_ext) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                 $.msg('unblock', 5000);
             });
-            ;
         });
         table_path.on("click", ".ver_requisition_anexo", function() {
             modal_anexo.modal("show");
@@ -484,7 +482,6 @@ var requisition = function(geral_path, options_ext) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                 $.msg('unblock', 5000);
             });
-            ;
         });
         modal.on("click", "#print_requisition", function() {
             var doc = new jsPDF('p', 'pt', 'a4', true);
@@ -515,7 +512,6 @@ var requisition = function(geral_path, options_ext) {
                         $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                         $.msg('unblock', 5000);
                     });
-                    ;
                 }
             });
         });
@@ -535,7 +531,6 @@ var requisition = function(geral_path, options_ext) {
                         $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                         $.msg('unblock', 5000);
                     });
-                    ;
                 }
             });
         });
