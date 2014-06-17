@@ -19,6 +19,7 @@ class Logger {
     const S_MOVSTOCK="Mov. Stock";
     const S_PROD="Produto";
     const S_STOCK="Stock";
+    const S_USER="USER";
     const T_INS="Insert";
     const T_UPD="Update";
     const T_DEL="Delete";
