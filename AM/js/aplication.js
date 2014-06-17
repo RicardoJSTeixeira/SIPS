@@ -47,7 +47,7 @@ function init() {
     }).listen('hash');
 
     if (!window.location.hash.length) {
-        $.history.push("view/dashboard.html");
+        $(".menu-sidebar a:visible:eq(0)").click()
     }
 
     $('#sidebar a').click(function(e) {
