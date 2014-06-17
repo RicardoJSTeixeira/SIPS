@@ -17,6 +17,11 @@ $(function() {
         $("#sidebar li.role-" + types[user.user_level]).show();
         init();
         alerts.init();
+
+        if (!window.location.hash.length) {
+            $(".menu-sidebar a:visible:eq(0)").click();
+        }
+
     }, "json")
             .fail(function() {
                 window.location = "logout.php";
@@ -42,13 +47,9 @@ function init() {
             $("#principal").load(url);
             setFavicon();
         } else {
-            $(".menu-sidebar a:visible:eq(0)").click()
+            $(".menu-sidebar a:visible:eq(0)").click();
         }
     }).listen('hash');
-
-    if (!window.location.hash.length) {
-        $(".menu-sidebar a:visible:eq(0)").click()
-    }
 
     $('#sidebar a').click(function(e) {
         e.preventDefault();
