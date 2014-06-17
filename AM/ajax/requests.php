@@ -264,7 +264,10 @@ $comments
 
     case "accept_apoio_marketing":
         $result = $apoio_marketing->accept($id);
-        echo json_encode(true);
+        if ($result) {
+            if ($message)
+                $alert->make($result->user, "Apoio Mkt. Aceite  Obs. $message");
+        }
         break;
 
     case "decline_apoio_marketing":
@@ -275,62 +278,88 @@ $comments
         }
         $result = $apoio_marketing->decline($id);
         if ($result) {
-            $alert->make($result->user, "Apoio Mkt. Recusado Motivo: $motivo");
+            if ($message) {
+                $message = "Motivo: " . $message;
+            }
+            $alert->make($result->user, "Apoio Mkt. Recusado $message");
         }
-        echo json_encode(true);
         break;
 
     case "accept_report_correio":
         $result = $relatorio_correio->accept($id);
-        echo json_encode(true);
+        if ($result) {
+            if ($message) {
+                $alert->make($result->user, "Correio Aceite Obs. $message");
+            }
+        }
         break;
 
     case "decline_report_correio":
         $result = $relatorio_correio->decline($id);
-            
+
         if ($result) {
-            $alert->make($result->user, "Correio Recusado Motivo: $motivo");
+            if ($message) {
+                $message = "Motivo: " . $message;
+            }
+            $alert->make($result->user, "Correio Recusado Motivo: $message");
         }
-        echo json_encode(true);
+
         break;
 
     case "accept_report_frota":
         $result = $relatorio_frota->accept($id);
-        echo json_encode(true);
+        if ($result) {
+            if ($message)
+                $alert->make($result->user, "Frota Aceite Obs. $message");
+        }
         break;
 
     case "decline_report_frota":
         $result = $relatorio_frota->decline($id);
         if ($result) {
-            $alert->make($result->user, "Frota Recusado: $motivo");
+            if ($message) {
+                $message = "Motivo: " . $message;
+            }
+            $alert->make($result->user, "Frota Recusado Motivo: $message");
         }
-        echo json_encode(true);
+
         break;
 
     case "accept_report_stock":
         $result = $relatorio_mensal_stock->accept($id);
-        echo json_encode(true);
+        if ($result) {
+            if ($message)
+                $alert->make($result->user, "Stock Aceite Obs. $message");
+        }
         break;
 
     case "decline_report_stock":
         $result = $relatorio_mensal_stock->decline($id);
         if ($result) {
-            $alert->make($result->user, "Mensal Recusado: $motivo");
+            if ($message)
+                $message = "Motivo: " . $message;
+            $alert->make($result->user, "Mensal Recusado $message");
         }
-        echo json_encode(true);
+
         break;
 
     case "accept_report_movimentacao":
         $result = $relatorio_movimentacao_stock->accept($id);
-        echo json_encode(true);
+        if ($result) {
+            if ($message)
+                $alert->make($result->user, "Movimentação stock Aceite Obs. $message");
+        }
         break;
 
     case "decline_report_movimentacao":
         $result = $relatorio_movimentacao_stock->decline($id);
         if ($result) {
-            $alert->make($result->user, "Movimentação Recusado: $motivo");
+            if ($message) {
+                $message = "Motivo: " . $message;
+            }
+            $alert->make($result->user, "Movimentação Recusado: $message");
         }
-        echo json_encode(true);
+
         break;
 
     default:
