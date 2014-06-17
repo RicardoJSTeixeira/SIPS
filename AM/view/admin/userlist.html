@@ -1,0 +1,255 @@
+<style>
+    .input-xpecial{
+        width: calc( 100% - 40px ) !important;
+    }
+    select.input-xpecial{
+        width: calc( 100% - 26px ) !important;
+    }
+</style>
+<div class="content">
+    <div class="modal hide fade" id="Museredit">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Edição de User</h3>
+        </div>
+        <form id="FEcreateUser">
+            <div class="modal-body">
+                <div class="input-prepend">
+                    <span class="add-on"><i class="icon-user"></i></span>
+                    <input class="input-xpecial validate[required]" id="TEusername" readonly type="text" placeholder="Username">
+                </div>
+                <div class="input-prepend">
+                    <span class="add-on">@</span>
+                    <input class="input-xpecial validate[required]" id="TEdesc" type="text" placeholder="Descrição">
+                </div>
+                <div class="input-prepend">
+                    <span class="add-on"><i class="icon-user-md"></i></span>
+                    <select class="input-xpecial validate[required]" id="SEulevel" >
+                        <option value="">Seleccione um tipo</option>
+                        <option value="1">Assistente</option>
+                        <option value="2">Técnico</option>
+                        <option value="5">Supervisores Áreas</option>
+                        <option value="6">Supervisor Pedidos BackOfice</option>
+                        <option value="7">Administrador Pedidos do BackOffice</option>
+                        <option value="8">Administrador Pedidos do Marketing</option>
+                        <option value="9">Administradores Gerais</option>
+                    </select>
+                </div>
+                <div class="input-prepend">
+                    <span class="add-on"><i class="icon-key"></i></span>
+                    <input class="input-xpecial validate[required]" id="TEpassword" type="text" placeholder="Password">
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <input type="radio" id="REactiveY" name="REactive" value="Y"/><label for="REactiveY" class="checkbox inline"><span></span>Ativo</label>
+                        <input type="radio" id="REactiveN" name="REactive" value="N"/><label for="REactiveN" class="checkbox inline"><span></span>Inativo</label>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <select multiple class="chosen-select" id="REsiblings"></select>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" aria-hidden="true" class="btn btn-link">Fechar</button>
+                <button class="btn btn-primary">Gravar</button>
+            </div>
+        </form>
+    </div>
+    <div class="row-fluid">
+        <div class="span8">
+            <div  class="grid">
+                <div class="grid-title">
+                    <div class="pull-left">Utilizadores</div>
+                    <div class="pull-right">
+                    </div>
+                </div>
+                <div class="grid-content">
+                    <table id="tUtilizadores" class="table table-bordered table-mod-2">
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="span4">
+            <div  class="grid">
+                <div class="grid-title">
+                    <div class="pull-left">Novo utilizador</div>
+                    <div class="pull-right">
+                    </div>
+                </div>
+                <div class="grid-content">
+                    <form id="FcreateUser">
+                        <div class="input-prepend">
+                            <span class="add-on"><i class="icon-user"></i></span>
+                            <input class="input-xpecial validate[required]" id="Tusername" type="text" placeholder="Username">
+                        </div>
+                        <div class="input-prepend">
+                            <span class="add-on">@</span>
+                            <input class="input-xpecial validate[required]" id="Tdesc" type="text" placeholder="Descrição">
+                        </div>
+                        <div class="input-prepend">
+                            <span class="add-on"><i class="icon-user-md"></i></span>
+                            <select class="input-xpecial validate[required]" id="Sulevel" >
+                                <option value="">Seleccione um tipo</option>
+                                <option value="1">Assistente</option>
+                                <option value="2">Técnico</option>
+                                <option value="5">Supervisores Áreas</option>
+                                <option value="6">Supervisor Pedidos BackOfice</option>
+                                <option value="7">Administrador Pedidos do BackOffice</option>
+                                <option value="8">Administrador Pedidos do Marketing</option>
+                                <option value="9">Administradores Gerais</option>
+                            </select>
+                        </div>
+                        <div class="input-prepend">
+                            <span class="add-on"><i class="icon-key"></i></span>
+                            <input class="input-xpecial validate[required]" id="Tpassword" type="text" placeholder="Password">
+                        </div>
+                        <div class="form-footer">
+                            <button class="btn btn-success" type="submit"><i class="icon-plus-sign"></i>Adicionar</button>
+                        </div>
+                        <div class="clear"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        var tUtilizadores = $("#tUtilizadores").dataTable({
+            "bSortClasses": false,
+            "bProcessing": true,
+            "bDestroy": true,
+            "bAutoWidth": false,
+            "sPaginationType": "full_numbers",
+            "sAjaxSource": '/AM/ajax/users.php',
+            "fnServerParams": function(aoData) {
+                aoData.push({"name": "action", "value": "getAllDT"});
+            },
+            "aoColumns": [{"sTitle": "User"}, {"sTitle": "Descrição"}, {"sTitle": "Tipo"}],
+            "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
+        });
+
+        $.post("/AM/ajax/users.php", {action: "getActive"}, function(data) {
+            $options = data.map(function(a) {
+                return new Option(a.full_name, a.user);
+            });
+            $("#REsiblings")
+                    .append($options)
+                    .chosen({no_results_text: "Sem resultados", width: "100%"});
+        }, "json");
+
+        $("#FcreateUser").submit(function(e) {
+            e.preventDefault();
+            var $this = $(this);
+            if (!$this.validationEngine("validate")) {
+                return false;
+            }
+            $.msg();
+            $.post("/AM/ajax/users.php", {
+                action: "create",
+                username: $("#Tusername").val(),
+                desc: $("#Tdesc").val(),
+                ulevel: $("#Sulevel").val(),
+                pass: $("#Tpassword").val()
+            }, function() {
+                tUtilizadores.fnReloadAjax();
+                $this.get(0).reset();
+                $.msg('unblock');
+            }, "json").fail(function(data) {
+                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                $.msg('unblock', 5000);
+            });
+
+        });
+
+        $("#FEcreateUser").submit(function(e) {
+            e.preventDefault();
+            var $this = $(this);
+            if (!$this.validationEngine("validate")) {
+                return false;
+            }
+            $.msg();
+            $.post("/AM/ajax/users.php", {
+                action: "edit",
+                username: $("#TEusername").val(),
+                desc: $("#TEdesc").val(),
+                ulevel: $("#SEulevel").val(),
+                pass: $("#TEpassword").val(),
+                active: $("[name=REactive]:checked").val(),
+                siblings: $("#REsiblings").val()
+            }, function() {
+                tUtilizadores.fnReloadAjax();
+                $("#Museredit").modal("hide");
+                $.msg('unblock');
+            }, "json").fail(function(data) {
+                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                $.msg('unblock', 5000);
+            });
+
+        });
+
+        $("#tUtilizadores").on("click", ".activator", function(e) {
+            e.preventDefault();
+            var
+                    $this = $(this),
+                    active = ($this.data("active") === "Y") ? "N" : "Y",
+                    user = $this.data("user");
+            $.msg();
+            $.post("/AM/ajax/users.php", {
+                action: "active",
+                username: user,
+                active: active
+            }, function() {
+                $this.data("active", active)
+                        .find("i")
+                        .prop("class", "icon-check" + ((active === "N") ? "-empty" : ""))
+                        .end()
+                        .find("span")
+                        .text((active === "Y") ? "Activo" : "Inactivo");
+                $.msg('unblock');
+            }, "json").fail(function(data) {
+                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                $.msg('unblock', 5000);
+            });
+            return false;
+        });
+
+        $("#tUtilizadores").on("click", ".editor", function(e) {
+            e.preventDefault();
+            var
+                    $this = $(this),
+                    user = $this.data("user");
+            $.post("/AM/ajax/users.php", {
+                action: "get",
+                username: user
+            }, function(data) {
+                $("#Museredit").modal("show");
+                $("#TEusername").val(data.user);
+                $("#TEdesc").val(data.full_name);
+                $("#SEulevel").val(data.user_level);
+                $("#TEpassword").val(data.pass);
+                $("[name=REactive]").val([data.active]);
+                $("#REsiblings").val(data.siblings)
+                        .find(":not(:visible)").css("display","")
+                        .end()
+                        .find("[value=" + data.user + "]").hide()
+                        .end()
+                        .trigger("chosen:updated");
+                $.msg('unblock');
+            }, "json").fail(function(data) {
+                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                $.msg('unblock', 5000);
+            });
+
+        });
+    });
+
+</script>
