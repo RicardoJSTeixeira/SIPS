@@ -95,15 +95,18 @@ Class requisitions {
     }
 
     public function accept_requisition($id) {
+
         $query = "Update  spice_requisition set status=1 where id=:id";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array("id" => $id));
+        $stmt->execute(array("id" => $id));
+        return $this->getUser($id);
     }
 
     public function decline_requisition($id) {
         $query = "Update  spice_requisition set status=2 where id=:id";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array("id" => $id));
+        $stmt->execute(array("id" => $id));
+        return $this->getUser($id);
     }
 
     public function check_month_requisitions() {
@@ -112,6 +115,13 @@ Class requisitions {
         $stmt->execute(array(":user" => $this->_user_id, ":date_first" => date("Y-m-01") . " 00:00:00", ":date_last" => date("Y-m-t") . " 23:59:59"));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row["count"];
+    }
+
+    private function getUser($id) {
+        $query = "Select user FROM spice_requisition where id=:id";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":id" => $id));
+        return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
 }

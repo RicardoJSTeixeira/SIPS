@@ -11,6 +11,7 @@ require "$root/AM/lib_php/db.php";
 require "$root/AM/lib_php/user.php";
 require "$root/AM/lib_php/products.php";
 require "$root/AM/lib_php/requisitions.php";
+require "$root/AM/lib_php/msg_alerts.php";
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -21,7 +22,7 @@ foreach ($_GET as $key => $value) {
 $user = new UserLogin($db);
 $user->confirm_login();
 $userID = $user->getUser();
-
+$alert = new alerts($db, $userID->username);
 $products = new products($db);
 $requisitions = new requisitions($db, $userID->user_level, $userID->username);
 
@@ -51,11 +52,19 @@ switch ($action) {
         break;
 
     case "accept_requisition":
-        echo json_encode($requisitions->accept_requisition($id));
+        $result = $requisitions->accept_requisition($id);
+        if ($result) {
+            if ($message)
+                $alert->make($result->user, "Encomenda Aprovada Obs. $message");
+        }
         break;
 
     case "decline_requisition":
-        echo json_encode($requisitions->decline_requisition($id));
+        $result = $requisitions->decline_requisition($id);
+        if ($result) {
+            $alert->make($result->user, "Encomenda Rejeitada  Motivo: $message");
+        }
+
         break;
 
     case "check_month_requisitions":

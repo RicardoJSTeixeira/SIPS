@@ -218,7 +218,6 @@ var requisition = function(geral_path, options_ext) {
         //---------------------------------------------------------------------------------------------------------- SUBMITAR A ENCOMENDA------------------------------
         $(new_requisition_zone).on("click", "#new_requisition_submit_button", function() {
             var upload_complete = 1;
-
             $.each(me.config.uploader.files, function() {
                 if (this.percent !== 100) {
                     upload_complete = 0;
@@ -227,9 +226,7 @@ var requisition = function(geral_path, options_ext) {
                     });
                     return false;
                 }
-
             });
-
             if (upload_complete) {
                 var anexo_random_number = $(this).data().anexo_random_number;
                 var produtos_encomenda = [];
@@ -476,26 +473,32 @@ var requisition = function(geral_path, options_ext) {
             doc.save(moment().format());
         });
         table_path.on("click", ".accept_requisition", function() {
-            $.post('ajax/requisition.php', {
-                action: "accept_requisition",
-                id: $(this).val()
-            }, function() {
-                Table_view_requisition.fnReloadAjax();
-            }, "json");
+            var this_button = $(this);
+            bootbox.prompt("Comentários?", function(result) {
+                if (result !== null) {
+                    $.post('ajax/requisition.php', {
+                        action: "accept_requisition",
+                        id: this_button.val(),
+                        message: result
+                    }, function() {
+                        Table_view_requisition.fnReloadAjax();
+                    });
+                }
+            });
         });
         table_path.on("click", ".decline_requisition", function() {
             var this_button = $(this);
-            bootbox.confirm("Tem a certeza?", function(result) {
-                if (result) {
+            bootbox.prompt("Motivo?", function(result) {
+                if (result !== null) {
                     $.post('ajax/requisition.php', {
                         action: "decline_requisition",
-                        id: this_button.val()
+                        id: this_button.val(),
+                        message: result
                     }, function() {
                         Table_view_requisition.fnReloadAjax();
-                    }, "json");
+                    });
                 }
             });
         });
     }
-
 };
