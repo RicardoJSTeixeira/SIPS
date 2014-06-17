@@ -2,15 +2,16 @@
 
 Class requisitions {
 
-    public function __construct($db, $user_level, $user_id) {
+    public function __construct($db, $user_level, $user_id, $siblings) {
         $this->_user_level = $user_level;
         $this->_user_id = $user_id;
+        $this->_user_siblings = $siblings;
         $this->_db = $db;
     }
 
     public function get_requisitions_to_datatable() {
         $result['aaData'] = array();
-        $filter = ($this->_user_level < 5 ) ? ' where sr.user like "' . $this->_user_id . '" ' : '';
+        $filter = ($this->_user_level = 6 ) ? ' where sr.user in ("'.  implode('","', $this->_user_siblings).'")' : (($this->_user_level < 6)?' where sr.user like "' . $this->_user_id . '" ':'');
         $query = "SELECT sr.id,sr.user,sr.type,sr.lead_id,sr.date,sr.contract_number,vl.extra2,sr.attachment,'products',sr.status  from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id $filter";
 
         $stmt = $this->_db->prepare($query);

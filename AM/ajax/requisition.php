@@ -22,7 +22,7 @@ $user->confirm_login();
 $userID = $user->getUser();
 $alert = new alerts($db, $userID->username);
 $products = new products($db);
-$requisitions = new requisitions($db, $userID->user_level, $userID->username);
+$requisitions = new requisitions($db, $userID->user_level, $userID->username, $userID->siblings);
 
 switch ($action) {
     case "listar_produtos_to_datatable":
