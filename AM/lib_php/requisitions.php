@@ -68,12 +68,12 @@ Class requisitions {
     }
 
     public function create_requisition($type, $lead_id, $contract_number, $attachment, $products_list) {
-        $query = "INSERT INTO `spice_requisition`( `user`, `type`, `lead_id`, `date`, `contract_number`, `attachment`, `products`,`status`) VALUES ( :user,:type,:lead_id,:date,:contract_number,:attachment,:products,:status)";
+        $query = "INSERT INTO `spice_requisition`( `user`, `type`, `lead_id`, `date`, `contract_number`, `attachment`, `products`,`status`) VALUES ( :user, :type, :lead_id, :date, :contract_number, :attachment, :products, :status)";
         $stmt = $this->_db->prepare($query);
-        $data = date('Y-m-d H:i:s'); //GRAVAR NESTE FORMATO, so A ler é q se muda para d-m-Y
+        $data = date('Y-m-d H:i:s'); 
         $stmt->execute(array(":user" => $this->_user_id, ":type" => $type, ":lead_id" => $lead_id, ":date" => $data, ":contract_number" => $contract_number, ":attachment" => $attachment, ":products" => json_encode($products_list), ":status" => 0));
         $last_insert_id = $this->_db->lastInsertId();
-        return array($last_insert_id, $this->_user_id, $type, $lead_id, $data, $contract_number, $attachment, "<div> <button class='btn ver_requisition_products' value='" . $last_insert_id . "'><i class='icon-eye-open'></i>Ver</button></div>", "Pedido enviado");
+        return array($last_insert_id, $this->_user_id, $type, $lead_id, $data, $contract_number, $attachment, "<div><button class='btn ver_requisition_products' value='" . $last_insert_id . "'><i class='icon-eye-open'></i>Ver</button></div>", "Pedido enviado");
     }
 
     public function get_products_by_requisiton($id) {
