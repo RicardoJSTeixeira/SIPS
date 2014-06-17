@@ -46,6 +46,7 @@ var requisition = function(geral_path, options_ext) {
             me.tipo = "mensal";
             new_requisition_zone.find("#tipo_especial").hide();
         }
+        $.msg();
         $.post('/AM/ajax/products.php', {
             action: "get_produtos"
         },
@@ -114,7 +115,11 @@ var requisition = function(geral_path, options_ext) {
                     .find("optgroup[value='6']").append(molde).end()
                     .find("optgroup[value='7']").append(economato).end()
                     .find("optgroup[value='8']").append(gama).end().trigger("chosen:updated");
-        }, "json");
+            $.msg('unblock');
+        }, "json").fail(function(data) {
+            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+            $.msg('unblock', 5000);
+        });
         new_requisition_zone.off();
         new_requisition_zone.find('.fileupload').fileupload().end()
                 .find("#form_encomenda_especial").validationEngine().end()
@@ -256,6 +261,7 @@ var requisition = function(geral_path, options_ext) {
                         }
                         $("#form_encomenda_especial :input").attr('readonly', true);
                         $("#new_requisition_submit_button").prop("disabled", true);
+                        $.msg();
                         $.post('ajax/requisition.php', {
                             action: "criar_encomenda",
                             type: me.tipo,
@@ -265,13 +271,11 @@ var requisition = function(geral_path, options_ext) {
                             products_list: produtos_encomenda
                         },
                         function(data) {
-
                             $("#form_encomenda_especial :input").attr('readonly', false);
                             $("#new_requisition_submit_button").prop("disabled", false);
                             $.jGrowl('Encomenda realizada com sucesso', {
                                 life: 4000
                             });
-                            history.back();
                             $.post('/AM/ajax/upload_file.php', {
                                 action: "move_files_to_new_folder",
                                 old_id: anexo_random_number,
@@ -279,9 +283,15 @@ var requisition = function(geral_path, options_ext) {
                             },
                             function(data) {
                                 $.history.push("view/admin/pedidos.html?enc=0");
-                            }, "json");
-
-                        }, "json");
+                                $.msg('unblock');
+                            }, "json").fail(function(data) {
+                                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                                $.msg('unblock', 5000);
+                            });
+                        }, "json").fail(function(data) {
+                            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                            $.msg('unblock', 5000);
+                        });
                     }
                 }
             }
@@ -378,6 +388,7 @@ var requisition = function(geral_path, options_ext) {
                     if (that.val().length)
                         bootbox.confirm("Tem a certeza que pretende actualizar para o codigo:" + that.val() + "?", function(result) {
                             if (result) {
+                                $.msg();
                                 $.post('/AM/ajax/requisition.php', {
                                     action: "editar_encomenda",
                                     "clientID": that.data().clientid,
@@ -389,7 +400,11 @@ var requisition = function(geral_path, options_ext) {
                                             .end()
                                             .replaceWith(that.val());
                                     Table_view_requisition.fnReloadAjax();
-                                }, "json");
+                                    $.msg('unblock');
+                                }, "json").fail(function(data) {
+                                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                                    $.msg('unblock', 5000);
+                                });
                             }
                         });
                 }
@@ -407,6 +422,7 @@ var requisition = function(geral_path, options_ext) {
         //VER PRODUTOS DE ENCOMENDAS FEITAS
         table_path.on("click", ".ver_requisition_products", function() {
             var that = this;
+            $.msg();
             $.post('ajax/requisition.php', {
                 action: "listar_produtos_por_encomenda",
                 id: $(this).val()
@@ -443,11 +459,17 @@ var requisition = function(geral_path, options_ext) {
                     modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category.capitalize() + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td></tr>");
                 });
                 modal.modal("show");
-            }, "json");
+                $.msg('unblock');
+            }, "json").fail(function(data) {
+                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                $.msg('unblock', 5000);
+            });
+            ;
         });
         table_path.on("click", ".ver_requisition_anexo", function() {
             modal_anexo.modal("show");
             var this_folder = $(this).val() + "_encomenda";
+            $.msg();
             $.post('/AM/ajax/upload_file.php', {
                 action: "get_anexos",
                 folder: this_folder
@@ -457,7 +479,12 @@ var requisition = function(geral_path, options_ext) {
                     options += "<tr><td>" + this + "<div class='view-button'><a class='btn btn-mini' href='/AM/ajax/files/" + this_folder + "/" + this + "' download='" + this + "'><i class='icon-download'></i>Download</a></div></td></tr>";
                 });
                 modal_anexo.find("#show_requisition_anexos_tbody").html(options);
-            }, "json");
+                $.msg('unblock');
+            }, "json").fail(function(data) {
+                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                $.msg('unblock', 5000);
+            });
+            ;
         });
         modal.on("click", "#print_requisition", function() {
             var doc = new jsPDF('p', 'pt', 'a4', true);
@@ -476,13 +503,19 @@ var requisition = function(geral_path, options_ext) {
             var this_button = $(this);
             bootbox.prompt("Comentários?", function(result) {
                 if (result !== null) {
+                    $.msg();
                     $.post('ajax/requisition.php', {
                         action: "accept_requisition",
                         id: this_button.val(),
                         message: result
                     }, function() {
                         Table_view_requisition.fnReloadAjax();
+                        $.msg('unblock');
+                    }).fail(function(data) {
+                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                        $.msg('unblock', 5000);
                     });
+                    ;
                 }
             });
         });
@@ -490,13 +523,19 @@ var requisition = function(geral_path, options_ext) {
             var this_button = $(this);
             bootbox.prompt("Motivo?", function(result) {
                 if (result !== null) {
+                    $.msg();
                     $.post('ajax/requisition.php', {
                         action: "decline_requisition",
                         id: this_button.val(),
                         message: result
                     }, function() {
                         Table_view_requisition.fnReloadAjax();
+                        $.msg('unblock');
+                    }).fail(function(data) {
+                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                        $.msg('unblock', 5000);
                     });
+                    ;
                 }
             });
         });
