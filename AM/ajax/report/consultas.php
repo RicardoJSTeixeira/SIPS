@@ -22,7 +22,7 @@ switch ($action) {
     case "populate_consults"://ALL MARCAÇOES
         $u = $user->getUser();
 
-        $query = "SELECT extra2 'cod cliente', '' as 'interaction log', a.lead_id 'sugar ref', id_reservation , a.entry_date, consulta_razao ,start_date,exame_razao,venda_razao, id_user, '' as 'salesperson code', extra1 'camp cod', IF(exame,'YES','NO'), terceira_pessoa "
+        $query = "SELECT extra2 'cod cliente', '' as 'interaction log', a.lead_id 'sugar ref', id_reservation , a.entry_date, consulta_razao ,start_date,exame_razao,venda_razao, id_user, '' as 'salesperson code', extra1 'camp cod', IF(exame,'YES','NO'), feedback, terceira_pessoa "
                 . "FROM sips_sd_reservations a "
                 . "INNER JOIN vicidial_list d ON a.lead_id = d.lead_id "
                 . "INNER JOIN spice_consulta f ON a.id_reservation=f.reserva_id "

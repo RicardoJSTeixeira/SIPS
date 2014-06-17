@@ -1,5 +1,6 @@
 $(function() {
 
+    $.msg();
     $('#form_create_client').stepy(
             {
                 backLabel: "Anterior",
@@ -191,23 +192,32 @@ $(function() {
         $("#inputs_div3").append($("<div>", {class: "clear"}));
         $("#PHONE_NUMBER").autotab('numeric');
         $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, initialDate: new Date(moment().subtract('years', 65).format())}).attr('data-prompt-position', 'topRight:120');
-    }
-    , "json");
+        $.msg('unblock');
+    },
+            "json").fail(function(data) {
+        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+        $.msg('unblock', 5000);
+    });
 });
 $("#form_create_client").submit(function(e) {
     e.preventDefault();
     if ($("#form_create_client").validationEngine("validate"))
     {
+        $.msg();
         $.post("ajax/create_client.php", {action: "create_client", info: $("#form_create_client").serializeArray()},
         function(id)
         {
             $.jGrowl("Cliente '" + $("#FIRST_NAME").val() + "' criado com Sucesso", {sticky: 8000});
             $("#criar_marcacao").data("client_id", id).modal("show");
-        }
-        , "json");
+            $.msg('unblock');
+        },
+                "json").fail(function(data) {
+            $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+            $.msg('unblock', 5000);
+        });
     }
 });
-$("#btn_criar_marcacao").on("click", function() {
+$("#btn_criar_marcacao").click(function() {
     var en = btoa($("#criar_marcacao").modal("hide").data("client_id"));
     $.history.push("view/calendar.html?id=" + en);
 });
