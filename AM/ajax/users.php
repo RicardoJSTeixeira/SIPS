@@ -9,6 +9,7 @@ set_time_limit(1);
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require "$root/AM/lib_php/db.php";
 require "$root/AM/lib_php/user.php";
+require "$root/AM/lib_php/logger.php";
 
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
