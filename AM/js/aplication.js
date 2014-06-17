@@ -42,7 +42,7 @@ function init() {
             $("#principal").load(url);
             setFavicon();
         } else {
-            $.history.push("view/dashboard.html");
+            $(".menu-sidebar a:visible:eq(0)").click()
         }
     }).listen('hash');
 
