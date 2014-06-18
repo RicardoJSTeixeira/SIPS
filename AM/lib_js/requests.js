@@ -344,10 +344,10 @@ var requests = function(basic_path, options_ext) {
             });
             rf_zone.on("click", ".decline_report_frota", function() {
                 var this_button = $(this);
-                bootbox.confirm("Tem a certeza?", function(result) {
-                    if (result) {
+                bootbox.prompt("Qual o motivo?", function(result) {
+                    if (result !== null) {
                         $.msg();
-                        $.post('/AM/ajax/requests.php', {action: "decline_report_frota", id: this_button.val()}, function() {
+                        $.post('/AM/ajax/requests.php', {action: "decline_report_frota", id: this_button.val(), message: result}, function() {
                             this_button.parent("td").prev().text("Rejeitado");
                             relatorio_frota_table.fnReloadAjax();
                             $.msg('unblock');
@@ -675,14 +675,13 @@ var requests = function(basic_path, options_ext) {
             });
             rms_zone.on("click", ".decline_report_stock", function() {
                 var this_button = $(this);
-                bootbox.confirm("Tem a certeza?", function(result) {
-                    if (result) {
+                bootbox.prompt("Qual o motivo?", function(result) {
+                    if (result !== null) {
                         $.msg();
-                        $.post('/AM/ajax/requests.php', {action: "decline_report_stock", id: this_button.val()}, function() {
+                        $.post('/AM/ajax/requests.php', {action: "decline_report_stock", id: this_button.val(), message: result}, function() {
                             this_button.parent("td").prev().text("Rejeitado");
                             this_button.parent("tr").find(".ver_produto_stock").data("aproved", 0);
                             relatorio_stock_table.fnReloadAjax();
-                            $.msg('unblock');
                         }, "json").fail(function(data) {
                             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                             $.msg('unblock', 5000);
@@ -884,10 +883,10 @@ var requests = function(basic_path, options_ext) {
             });
             rmovs.on("click", ".decline_report_movimentacao", function() {
                 var this_button = $(this);
-                bootbox.confirm("Tem a certeza?", function(result) {
-                    if (result) {
+                bootbox.prompt("Qual o motivo?", function(result) {
+                    if (result !== null) {
                         $.msg();
-                        $.post('/AM/ajax/requests.php', {action: "decline_report_movimentacao", id: this_button.val()}, function() {
+                        $.post('/AM/ajax/requests.php', {action: "decline_report_movimentacao", id: this_button.val(), message: result}, function() {
                             this_button.parent("td").prev().text("Rejeitado");
                             relatorio_moviment_stock_table.fnReloadAjax();
                             $.msg('unblock');

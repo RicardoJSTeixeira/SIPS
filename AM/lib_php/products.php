@@ -8,7 +8,7 @@ Class products {
 
     public function get_products_to_datatable($product_editable) {
         $output['aaData'] = array();
-        $stmt = $this->_db->prepare("SELECT id,name,max_req_m,max_req_s,category,type,color,active,deleted from spice_product where deleted=0");
+        $stmt = $this->_db->prepare("SELECT id,name,max_req_m,max_req_s,category,type,color,active,deleted,size from spice_product where deleted=0");
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
 
@@ -45,11 +45,11 @@ Class products {
             $relations[$row["parent"]][] = $row["child"];
         }
 
-        $stmt = $this->_db->prepare("SELECT id, name,  max_req_m, max_req_s, category, type, color, active from spice_product where deleted=0");
+        $stmt = $this->_db->prepare("SELECT id, name,  max_req_m, max_req_s, category, type, color, active ,size from spice_product where deleted=0");
         $stmt->execute();
-        $output=array();
+        $output = array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
- 
+
             $row["parents_id"] = array();
             $row["children_id"] = array();
             foreach ($relations as $key => $value) {
@@ -68,7 +68,7 @@ Class products {
             $output[$row["id"]] = $row;
         }
 //ATRIBUIÇÂO DE CHILDS E PARENTS
-       
+
         foreach ($output as &$value) {
             $value["parent"] = $this->buildTree_parent($output, $value["id"]);
             $value["children"] = $this->buildTree_child($output, $value["id"]);
@@ -146,10 +146,10 @@ Class products {
         return $stmt->execute(array(":id" => $id));
     }
 
-    public function add_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active) {
+    public function add_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color, $size) {
 
-        $stmt = $this->_db->prepare("insert into spice_product ( `name`,`max_req_m`,`max_req_s`,`category`,`type`,`color`,`active`,`deleted`) values (:name, :max_req_m,:max_req_s,:category,:type,:color,:active,0) ");
-        $stmt->execute(array(":name" => $name, ":max_req_m" => $max_req_m, ":max_req_s" => $max_req_s, ":category" => $category, ":type" => json_encode($type), ":color" => json_encode($color), ":active" => 1));
+        $stmt = $this->_db->prepare("insert into spice_product ( `name`,`max_req_m`,`max_req_s`,`category`,`type`,`color`,`active`,`deleted`,`size`) values (:name, :max_req_m,:max_req_s,:category,:type,:color,1,0,:size) ");
+        $stmt->execute(array(":name" => $name, ":max_req_m" => $max_req_m, ":max_req_s" => $max_req_s, ":category" => $category, ":type" => json_encode($type), ":color" => json_encode($color)  , ":size" => $size));
         $last_id = $this->_db->lastInsertId();
 
         if (isset($parent)) {
@@ -180,10 +180,11 @@ class product extends products {
     protected $_type;
     protected $_color;
     protected $_active;
+    protected $_size;
 
     public function __construct(PDO $db, $id) {
         $this->_db = $db;
-        $stmt = $this->_db->prepare("SELECT id,name , max_req_m,max_req_s,category,type,color,active from spice_product where id=:id ");
+        $stmt = $this->_db->prepare("SELECT id,name , max_req_m,max_req_s,category,type,color,active,size from spice_product where id=:id ");
         $stmt->execute(array(":id" => $id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->_id = $row["id"];
@@ -195,15 +196,17 @@ class product extends products {
         $this->_type = $row["type"];
         $this->_color = $row["color"];
         $this->_active = $row["active"];
+        $this->_size = $row["size"];
     }
 
-    public function edit_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active) {
+    public function edit_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active, $size) {
         $this->_name = $name;
 
         $this->_max_req_m = $max_req_m;
         $this->_max_req_s = $max_req_s;
         $this->_category = $category;
         $this->_type = $type;
+        $this->_size = $size;
         $this->_color = isset($color) ? $color : array();
         $this->_active = $active == "true" ? 1 : 0;
         $stmt = $this->_db->prepare("delete from spice_product_assoc where child=:child");
@@ -218,8 +221,8 @@ class product extends products {
     }
 
     public function edit_product_save() {
-        $stmt = $this->_db->prepare("update spice_product set name=:name,  max_req_m=:max_req_m,max_req_s=:max_req_s,category=:category,type=:type,color=:color,active=:active where id=:id");
-        return $stmt->execute(array(":id" => $this->_id, ":name" => $this->_name, ":max_req_m" => $this->_max_req_m, ":max_req_s" => $this->_max_req_s, ":category" => $this->_category, ":type" => json_encode($this->_type), ":color" => json_encode($this->_color), ":active" => $this->_active));
+        $stmt = $this->_db->prepare("update spice_product set name=:name,  max_req_m=:max_req_m,max_req_s=:max_req_s,category=:category,type=:type,color=:color,active=:active,size=:size where id=:id");
+        return $stmt->execute(array(":id" => $this->_id, ":name" => $this->_name, ":max_req_m" => $this->_max_req_m, ":max_req_s" => $this->_max_req_s, ":category" => $this->_category, ":type" => json_encode($this->_type), ":color" => json_encode($this->_color), ":active" => $this->_active, ":size" => $this->_size));
     }
 
     public function add_promotion($active, $highlight, $data_inicio, $data_fim) {

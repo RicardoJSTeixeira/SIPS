@@ -50,6 +50,10 @@
                     <label class="checkbox inline" for="edit_product_active"><span></span>Sim</label>
                 </div> 
             </div>
+            <div class="formRow" id="edit_product_size_div" style="display:none">
+                <label for="edit_product_size">Tamanho aparelho</label>
+                <input type="number" min='0' max='100' id="edit_product_size" class=" input-mini validate[required,min[0],max[100]]">
+            </div>
             <div class="formRow">
                 <span><b>Max Requisições</b></span>
                 <div class="formRight">
@@ -170,14 +174,14 @@
         <select class="chosen-select" id="new_product_parent" multiple data-placeholder="Selecione um parent"></select>
         <label for="new_product_category">Categoria</label>
         <select id="new_product_category" class="span">
-                   <option value="BTE">BTE</option>
-                        <option value="RITE">RITE</option>
-                        <option value="INTRA">INTRA</option>
-                        <option value="Pilha" >Pilha</option>
-                        <option value="Acessório" >Acessórios</option>
-                        <option value="Molde" >Molde</option>
-                        <option value="Economato" >Economato</option>
-                        <option value="Gama" >Gama</option>
+            <option value="BTE">BTE</option>
+            <option value="RITE">RITE</option>
+            <option value="INTRA">INTRA</option>
+            <option value="Pilha" >Pilha</option>
+            <option value="Acessório" >Acessórios</option>
+            <option value="Molde" >Molde</option>
+            <option value="Economato" >Economato</option>
+            <option value="Gama" >Gama</option>
         </select>
 
         <label>Tipo</label>
@@ -185,6 +189,14 @@
         <label class="checkbox inline" for="new_product_check_branch"><span></span>Branch</label>
         <input type="checkbox" id="new_product_check_dispenser" name="new_product_tipo_user" value="dispenser" checked class="validate[minCheckbox[1]]">
         <label class="checkbox inline" for="new_product_check_dispenser"><span></span>Dispenser</label>
+
+        <div class="formRow" id="new_product_size_div" style="display:none">
+            <label for="new_product_size">Tamanho aparelho </label>
+            <div class='formRight'>
+                <input type="number" min='0' max='100' id="new_product_size" value='0'  class="input-mini validate[required,min[0],max[100]]">
+            </div>
+        </div>
+        <div class='clear'></div>
 
         <label><b>Max. Requisições</b></label>
         <table>
