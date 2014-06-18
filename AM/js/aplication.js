@@ -279,10 +279,18 @@ function consultasMais() {
 }
 
 function dropOneConsult() {
-    localStorage.v3 = ~~localStorage.v3 - 1;
-    localStorage.v6 = ~~localStorage.v6 - 1;
+    //localStorage.v3 = ~~localStorage.v3 - 1;
+    //localStorage.v6 = ~~localStorage.v6 - 1;
 }
 
 function isBlocked() {
     return localStorage.v6 > 0;
+}
+
+function scrollTop() {
+
+    $("html, body").animate({
+        scrollTop: 0
+    }, "fast");
+
 }
