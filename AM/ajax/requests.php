@@ -47,7 +47,6 @@ switch ($action) {
         $refs = $calendar->_getRefs($userID->username);
         $system_types = $calendar->getSystemTypes();
         $id = array();
-
         $start = "";
         $end = "";
         switch ($horario["tipo"]) {
@@ -379,15 +378,11 @@ function send_email($email_address, $email_name, $msg, $assunto) {
             ->setPassword('ccamemail1234');
 
     $mailer = Swift_Mailer::newInstance($transport);
-
     $message = Swift_Message::newInstance($assunto)
             ->setFrom(array('ccamemail@gmail.com' => 'Acústica Médica'))
             ->setTo(array($email_address => $email_name));
-
     $message->setBody($msg, 'text/html');
-
     $result = $mailer->send($message);
-
     return ($result >= 1);
 }
 
