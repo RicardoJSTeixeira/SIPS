@@ -267,7 +267,7 @@ $comments
         $result = $apoio_marketing->accept($id);
         if ($result) {
             if ($message)
-                $alert->make($result->user, "Apoio Mkt. Aceite  Obs. $message");
+                $alert->make($result->user, "Apoio Mkt. Aceite  Obs. $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_APMKT, json_encode(array("obs" => "Apoio Mkt. Aceite", "msg" => "$message")));
         break;
@@ -283,7 +283,7 @@ $comments
             if ($message) {
                 $message = "Motivo: " . $message;
             }
-            $alert->make($result->user, "Apoio Mkt. Recusado $message");
+            $alert->make($result->user, "Apoio Mkt. Recusado $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_APMKT, json_encode(array("obs" => "Apoio Mkt. Recusado", "msg" => "$message")));
         break;
@@ -292,7 +292,7 @@ $comments
         $result = $relatorio_correio->accept($id);
         if ($result) {
             if ($message) {
-                $alert->make($result->user, "Correio Aceite Obs. $message");
+                $alert->make($result->user, "Correio Aceite Obs. $message ID:$id");
             }
         }
         $log->set($id, Logger::T_UPD, Logger::S_MAIL, json_encode(array("obs" => "Correio Aceite", "msg" => "$message")));
@@ -305,7 +305,7 @@ $comments
             if ($message) {
                 $message = "Motivo: " . $message;
             }
-            $alert->make($result->user, "Correio Recusado Motivo: $message");
+            $alert->make($result->user, "Correio Recusado Motivo: $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_MAIL, json_encode(array("obs" => "Correio Recusado", "msg" => "$message")));
         break;
@@ -314,7 +314,7 @@ $comments
         $result = $relatorio_frota->accept($id);
         if ($result) {
             if ($message)
-                $alert->make($result->user, "Frota Aceite Obs. $message");
+                $alert->make($result->user, "Frota Aceite Obs. $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_FROTA, json_encode(array("obs" => "Frota Aceite", "msg" => "$message")));
         break;
@@ -325,7 +325,7 @@ $comments
             if ($message) {
                 $message = "Motivo: " . $message;
             }
-            $alert->make($result->user, "Frota Recusado Motivo: $message");
+            $alert->make($result->user, "Frota Recusado Motivo: $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_FROTA, json_encode(array("obs" => "Frota Recusado", "msg" => "$message")));
         break;
@@ -334,7 +334,7 @@ $comments
         $result = $relatorio_mensal_stock->accept($id);
         if ($result) {
             if ($message)
-                $alert->make($result->user, "Stock Aceite Obs. $message");
+                $alert->make($result->user, "Stock Aceite Obs. $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_STOCK, json_encode(array("obs" => "Stock Aceite", "msg" => "$message")));
         break;
@@ -344,7 +344,7 @@ $comments
         if ($result) {
             if ($message)
                 $message = "Motivo: " . $message;
-            $alert->make($result->user, "Stock Recusado $message");
+            $alert->make($result->user, "Stock Recusado $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_STOCK, json_encode(array("obs" => "Stock Recusado", "msg" => "$message")));
         break;
@@ -353,7 +353,7 @@ $comments
         $result = $relatorio_movimentacao_stock->accept($id);
         if ($result) {
             if ($message)
-                $alert->make($result->user, "Movimentação stock Aceite Obs. $message");
+                $alert->make($result->user, "Movimentação stock Aceite Obs. $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_MOVSTOCK, json_encode(array("obs" => "Movimentação stock Aceite", "msg" => "$message")));
         break;
@@ -364,7 +364,7 @@ $comments
             if ($message) {
                 $message = "Motivo: " . $message;
             }
-            $alert->make($result->user, "Movimentação Recusado: $message");
+            $alert->make($result->user, "Movimentação Recusado: $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_MOVSTOCK, json_encode(array("obs" => "Movimentação stock recusado", "msg" => "$message")));
         break;

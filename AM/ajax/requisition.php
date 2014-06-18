@@ -56,7 +56,7 @@ switch ($action) {
         $result = $requisitions->accept_requisition($id);
         if ($result) {
             if ($message) {
-                $alert->make($result->user, "Encomenda Aprovada Obs. $message");
+                $alert->make($result->user, "Encomenda Aprovada Obs. $message ID:$id");
             }
         }
         $log->set($id, Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Requesição aceitada", "msg" => "$message")));
@@ -66,7 +66,7 @@ switch ($action) {
     case "decline_requisition":
         $result = $requisitions->decline_requisition($id);
         if ($result) {
-            $alert->make($result->user, "Encomenda Rejeitada  Motivo: $message");
+            $alert->make($result->user, "Encomenda Rejeitada  Motivo: $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Requesição Rejeitada", "msg" => "$message")));
         echo json_encode($result);
