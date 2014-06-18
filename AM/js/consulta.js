@@ -28,9 +28,6 @@ $(function()
                 $("[name='tp'][value='" + data.terceira_pessoa.tipo + "']").prop(":checked", true);
                 $("#3_pessoa_input").val(data.terceira_pessoa.nome);
             }
-            else {
-                $("#ca_n").prop("checked", true);
-            }
 
             $("#main_consulta_div")
                     .find("#options_div")
@@ -249,9 +246,14 @@ $(function()
             else {//HA EXAME
                 if ($("#ca_s").is(":checked")) {
                     if (!$("#3_pessoa_input").val().length) {
-                        $.jGrowl("Certifique-se que preenche correctamente a caixa de 3ª pessoa no topo", {life: 4000});
+                        $.jGrowl("Certifique-se que preenche correctamente o nome da 3ª pessoa", {life: 4000});
+                        scrollTop();
                         return false;
                     }
+                }else if (!$("[name=ca]:checked").length){
+                        $.jGrowl("Preencha correctamente se há 3ª pessoa", {life: 4000});
+                        scrollTop();
+                        return false;
                 }
                 script.validate_manual(
                         function() {
