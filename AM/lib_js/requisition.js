@@ -357,14 +357,14 @@ var requisition = function(geral_path, options_ext) {
                 }, {
                     "sTitle": "Tipo"
                 }, {
-                    "sTitle": "Ref.ª de Cliente",
+                    "sTitle": "ClientID",
                     "sType": 'numeric'
                 }, {
                     "sTitle": "Data"
                 }, {
                     "sTitle": "Nº de contrato"
                 }, {
-                    "sTitle": "Referência"
+                    "sTitle": "Ref. Cliente"
                 }, {
                     "sTitle": "Anexo"
                 }, {

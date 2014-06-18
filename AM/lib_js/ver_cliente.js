@@ -17,7 +17,7 @@ var cliente_info = function(lead_id, options_ext)
             id: lead_id},
         function(data1)
         {
-            console.log(data1);
+ 
             $.each(data1, function()
             {
                 if (this.value)

@@ -97,7 +97,7 @@ switch ($action) {
         }
         break;
     default:
-        echo 'Are you an hacker? Or just a noob?';
+        echo 'Are you a noob hacker? Or just a noob?';
         break;
 }
 
