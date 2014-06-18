@@ -540,7 +540,7 @@ var requests = function(basic_path, options_ext) {
                         else {
                             alert_class = "";
                         }
-                        tbody.append("<tr " + alert_class + " ><td class='chex-table'><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo ' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span></label></td><td class='input_anexo'>" + this.anexo + "</td><td class='input_n_doc'>" + this.n_doc + "</td><td class='input_lead_id'>" + this.lead_id + "</td></tr>");
+                        tbody.append("<tr " + alert_class + " ><td class='chex-table'><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo ' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo_correio_" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo_correio_" + anexo_number + "'><span></span></label></td><td class='input_anexo'>" + this.anexo + "</td><td class='input_n_doc'>" + this.n_doc + "</td><td class='input_lead_id'>" + this.lead_id + "</td></tr>");
                         anexo_number++;
                     });
                     basic_path.find("#correio_modal_div #anexo_save_button").data("id_correio", id_anexo);
@@ -765,7 +765,7 @@ var requests = function(basic_path, options_ext) {
                         else {
                             alert_class = "";
                         }
-                        tbody.append("<tr " + alert_class + " ><td class='chex-table'><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_stock + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td><td class='td_helper_quantidade'>" + this.quantidade + "</td><td class='td_helper_descricao'>" + this.descricao + "</td><td class='td_helper_serie'>" + this.serie + "</td><td class='td_helper_obs'>" + this.obs + "</td></tr>");
+                        tbody.append("<tr " + alert_class + " ><td class='chex-table'><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_stock + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo_stock_" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo_stock_" + anexo_number + "'><span></span> </label></td><td class='td_helper_quantidade'>" + this.quantidade + "</td><td class='td_helper_descricao'>" + this.descricao + "</td><td class='td_helper_serie'>" + this.serie + "</td><td class='td_helper_obs'>" + this.obs + "</td></tr>");
                         anexo_number++;
                     });
                     basic_path.find("#stock_save_button").data("id_stock", id_stock);
@@ -977,7 +977,7 @@ var requests = function(basic_path, options_ext) {
                         }
                         tbody.append("\
                             <tr class='" + alert_class + "'>\n\
-                                <td><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_movimentacao + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo" + anexo_number + "'><span></span> </label></td>\n\
+                                <td><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_movimentacao + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo_mov_" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo_mov_" + anexo_number + "'><span></span> </label></td>\n\
                                 <td class='td_helper_destinatario'>" + this.destinatario + "</td>\n\
                                 <td class='td_helper_quantidade'>" + this.quantidade + "</td>\n\
                                 <td class='td_helper_descricao'>" + this.descricao + "</td>\n\
