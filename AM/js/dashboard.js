@@ -51,6 +51,7 @@ $(function() {
             "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 
+/*
         $('#table_ncsm_r').dataTable({
             "bSortClasses": false,
             "bProcessing": true,
@@ -63,7 +64,7 @@ $(function() {
             "aoColumns": columns_ncsm_r,
             "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
         });
-
+*/
 
     };
 
