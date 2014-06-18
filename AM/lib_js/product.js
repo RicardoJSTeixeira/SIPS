@@ -39,6 +39,7 @@ var products = function(geral_path, options_ext) {
             });
         });
         datatable_path.on("click", ".btn_editar_produto", function() {
+
             product_id = $(this).data("product_id");
             populate_modal(edit_product_modal, function() {
                 get_promocao(edit_product_modal, function() {
@@ -69,7 +70,8 @@ var products = function(geral_path, options_ext) {
                 {
                     if (types.length)
                     {
-                        $.post('/AM/ajax/products.php', {action: "edit_product", 
+                        $.msg();
+                        $.post('/AM/ajax/products.php', {action: "edit_product",
                             id: product_id,
                             name: edit_product_modal.find("#edit_product_name").val(),
                             max_req_m: edit_product_modal.find("#edit_product_mrm").val(),
@@ -84,7 +86,11 @@ var products = function(geral_path, options_ext) {
                             edit_product_modal.modal("hide");
                             update_products_datatable(datatable_path);
                             edit_product_modal.find("#edit_product_table_tbody_color tr").remove();
-                        }, "json");
+                            $.msg('unblock');
+                        }, "json").fail(function(data) {
+                            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                            $.msg('unblock', 5000);
+                        });
                     }
                     else
                     {
@@ -104,13 +110,18 @@ var products = function(geral_path, options_ext) {
         geral_path.on("click", "#remove_product_button", function() {
             var this_button = $(this).data("button");
             var product_id = $(this).data("product_id");
+            $.msg();
             $.post('/AM/ajax/products.php', {action: "apagar_produto_by_id", "id": product_id}, function(data) {
                 $.jGrowl("Produto apagado com sucesso", {life: 3500});
                 if ($("#new_product_parent").length)//actualizar a lista de parents do novo produto
                     populate_parent($("#new_product_parent"), null, null, null);
                 datatable_path.dataTable().fnDeleteRow(this_button.closest('tr')[0]);
                 geral_path.find("#remove_product_modal").modal("hide");
-            }, "json");
+                $.msg('unblock');
+            }, "json").fail(function(data) {
+                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                $.msg('unblock', 5000);
+            });
         });
         edit_product_modal.on("click", "#edit_product_add_promotion_toggle", function(e) {
             e.preventDefault();
@@ -124,6 +135,7 @@ var products = function(geral_path, options_ext) {
         edit_product_modal.on("click", "#edit_product_add_promotion_button", function(e) {
             e.preventDefault();
             if (edit_product_modal.find("#edit_product_form").validationEngine("validate")) {
+                $.msg();
                 $.post('/AM/ajax/products.php', {action: "add_promotion", "id": product_id,
                     active: edit_product_modal.find("#edit_product_promotion_active").is(":checked"),
                     highlight: edit_product_modal.find("#edit_product_promotion_highlight").is(":checked"),
@@ -133,7 +145,11 @@ var products = function(geral_path, options_ext) {
                     get_promocao(edit_product_modal);
                     edit_product_modal.find("#edit_product_add_promotion_toggle").show();
                     edit_product_modal.find("#edit_product_new_promotion_div").hide();
-                }, "json");
+                    $.msg('unblock');
+                }, "json").fail(function(data) {
+                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                    $.msg('unblock', 5000);
+                });
             }
         });
         edit_product_modal.on("change", "#edit_product_category", function() {
@@ -161,10 +177,15 @@ var products = function(geral_path, options_ext) {
             e.preventDefault();
             var this_button = $(this);
             e.preventDefault();
+            $.msg();
             $.post('/AM/ajax/products.php', {action: "remove_promotion", "id": product_id, "id_promotion": this_button.data("id_promotion")
             }, function() {
                 this_button.parent().parent().remove();
-            }, "json");
+                $.msg('unblock');
+            }, "json").fail(function(data) {
+                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                $.msg('unblock', 5000);
+            });
         });
     };
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -196,6 +217,7 @@ var products = function(geral_path, options_ext) {
 
             if (new_product_path.find("#new_product_form").validationEngine("validate"))
                 if (types.length) {
+                    $.msg();
                     $.post('/AM/ajax/products.php', {action: "criar_produto",
                         name: new_product_path.find("#new_product_name").val(),
                         max_req_m: new_product_path.find("#new_product_mrm").val(),
@@ -214,7 +236,11 @@ var products = function(geral_path, options_ext) {
                             $.jGrowl("Produto criado com sucesso", {life: 3500});
                             clear_new_product_area(new_product_path);
                         }
-                    }, "json");
+                        $.msg('unblock');
+                    }, "json").fail(function(data) {
+                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                        $.msg('unblock', 5000);
+                    });
                 }
                 else {
                     $.jGrowl("Escolha um tipo, Branch ou Dispenser", {life: 3500});
@@ -313,6 +339,7 @@ var products = function(geral_path, options_ext) {
     }
 
     function  populate_modal(modal, callback) {
+        $.msg();
         $.post('/AM/ajax/products.php', {action: "get_produto_by_id", "id": product_id}, function(data) {
             populate_parent(geral_path.find("#edit_product_parent"), data.parent_level, get_children(data), function()
             {
@@ -368,10 +395,15 @@ var products = function(geral_path, options_ext) {
                 if (typeof callback === "function")
                     callback();
             });
-        }, "json");
+            $.msg('unblock');
+        }, "json").fail(function(data) {
+            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+            $.msg('unblock', 5000);
+        });
     }
 
     function get_promocao(modal, callback) {
+        $.msg();
         $.post('/AM/ajax/products.php', {action: "get_promotion", "id": product_id}, function(data) {
             var tbody = modal.find("#edit_product_promotion_table_tbody");
             tbody.empty();
@@ -393,12 +425,17 @@ var products = function(geral_path, options_ext) {
             }
             if (typeof callback === "function")
                 callback();
-        }, "json");
+            $.msg('unblock');
+        }, "json").fail(function(data) {
+            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+            $.msg('unblock', 5000);
+        });
     }
 
     function populate_parent(select, level_out, children, callback) {
         var out_level = level_out;
         var level = 0;
+        $.msg();
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
         function(data) {
             var option = "";
@@ -467,7 +504,11 @@ var products = function(geral_path, options_ext) {
                     .find("optgroup[value='8']").append(gama).end().trigger("chosen:updated");
             if (typeof callback === "function")
                 callback();
-        }, "json");
+            $.msg('unblock');
+        }, "json").fail(function(data) {
+            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+            $.msg('unblock', 5000);
+        });
     }
 
     function get_children(element) {
