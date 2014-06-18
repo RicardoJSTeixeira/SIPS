@@ -43,7 +43,7 @@ switch ($action) {
                     . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[0]' title='Ver Cliente'><i class='icon-edit'></i></button>"
                     . "<button class='btn btn-mini icon-alone criar_encomenda" . (($row[10] !== 'Fechada') ? " hide" : "") . "' data-lead_id='$row[0]' title='Nova Encomenda'><i class='icon-shopping-cart'></i></button>"
                     . "<button class='btn btn-mini icon-alone criar_marcacao' data-lead_id='$row[0]' title='Marcar Consulta'><i class='icon-calendar'></i></button>"
-                    . "<button class='btn btn-mini icon-alone recomendacoes' data-lead_id='$row[0]' title='Recomendados'><i class='icon-plus-sign'></i></button>"
+                    //. "<button class='btn btn-mini icon-alone recomendacoes' data-lead_id='$row[0]' title='Recomendados'><i class='icon-plus-sign'></i></button>"
                     . "</div>";
             $output['aaData'][] = $row;
         }
@@ -72,7 +72,7 @@ switch ($action) {
             $row[10] = $row[10] . "<div class='view-button'>"
                     . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[0]' title='Ver Cliente'><i class='icon-edit'></i></button>"
                     . "<button class='btn btn-mini icon-alone criar_marcacao' data-lead_id='$row[0]' title='Marcar Consulta'><i class='icon-calendar'></i></button>"
-                    . "<button class='btn btn-mini icon-alone recomendacoes' data-lead_id='$row[0]' title='Recomendados'><i class='icon-plus-sign'></i></button>"
+                    //. "<button class='btn btn-mini icon-alone recomendacoes' data-lead_id='$row[0]' title='Recomendados'><i class='icon-plus-sign'></i></button>"
                     . "</div>";
             $output['aaData'][] = $row;
         }
@@ -104,7 +104,7 @@ switch ($action) {
             $row[12] = $row[12] . "<div class='view-button'>"
                     . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[2]' title='Ver Cliente'><i class='icon-edit'></i></button>"
                     . "<button class='btn btn-mini icon-alone criar_marcacao' data-lead_id='$row[2]' title='Marcar Consulta'><i class='icon-calendar'></i></button>"
-                    . "<button class='btn btn-mini icon-alone recomendacoes' data-lead_id='$row[2]' title='Recomendados'><i class='icon-plus-sign'></i></button>"
+                    //. "<button class='btn btn-mini icon-alone recomendacoes' data-lead_id='$row[2]' title='Recomendados'><i class='icon-plus-sign'></i></button>"
                     . "</div>";
             $output['aaData'][] = $row;
         }
