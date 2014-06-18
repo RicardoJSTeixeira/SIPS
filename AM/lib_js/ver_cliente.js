@@ -47,6 +47,7 @@ var cliente_info = function(lead_id, options_ext)
                         case "extra1":
                         case "extra2":
                         case "extra8":
+                              case "extra5":
                             client_extra.append(temp);
                             client_extra_count++;
                             break;
