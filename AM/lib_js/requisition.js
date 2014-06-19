@@ -276,7 +276,7 @@ var requisition = function(geral_path, options_ext) {
                             $.jGrowl('Encomenda realizada com sucesso', {
                                 life: 4000
                             });
-                            $.post('/AM/ajax/upload_file.php', {
+                                                     $.post('/AM/ajax/upload_file.php', {
                                 action: "move_files_to_new_folder",
                                 old_id: anexo_random_number,
                                 new_id: data[0]
@@ -323,8 +323,7 @@ var requisition = function(geral_path, options_ext) {
                 }
             });
         });
-        $(new_requisition_zone).on("submitw", " #form_encomenda_especial", function(e) {
-
+        $(new_requisition_zone).on("submit", " #form_encomenda_especial", function(e) {
             e.preventDefault();
         });
     };

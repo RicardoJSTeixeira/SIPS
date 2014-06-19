@@ -84,6 +84,7 @@ var products = function(geral_path, options_ext) {
                             update_products_datatable(datatable_path);
                             edit_product_modal.find("#edit_product_table_tbody_color tr").remove();
                         }, "json").fail(function(data) {
+                            $.msg();
                             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                             $.msg('unblock', 5000);
                         });
@@ -507,6 +508,7 @@ var products = function(geral_path, options_ext) {
                 callback();
 
         }, "json").fail(function(data) {
+                                $.msg();
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
             $.msg('unblock', 5000);
         });

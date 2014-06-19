@@ -49,7 +49,6 @@ Class products {
         $stmt->execute();
         $output = array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-
             $row["parents_id"] = array();
             $row["children_id"] = array();
             foreach ($relations as $key => $value) {

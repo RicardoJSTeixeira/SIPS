@@ -656,7 +656,6 @@ var requests = function(basic_path, options_ext) {
                     bootbox.prompt("Comentários?", function(result) {
                         if (result !== null) {
                             $.msg();
-
                             $.post('/AM/ajax/requests.php', {action: "accept_report_stock", id: this_button.val(), message: result}, function() {
                                 this_button.parent("td").prev().text("Aprovado");
                                 relatorio_stock_table.fnReloadAjax();
