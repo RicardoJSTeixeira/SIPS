@@ -63,9 +63,7 @@ function init() {
     get_messages();
     var messages_timeout = setInterval(get_messages, 1000 * 60);
     get_alerts();
-    var alerts_timeout = setInterval(function() {
-        get_alerts();
-    }, 1000 * 60);
+    var alerts_timeout = setInterval(get_alerts, 1000 * 60);
 
 
 
@@ -205,7 +203,6 @@ function init() {
 }
 function get_messages() {
     //GET NEW MESSAGES
-    $.msg();
     $.post("ajax/general_functions.php", {
         action: "get_unread_messages"
     }, function(data) {
@@ -223,31 +220,31 @@ function get_messages() {
         });
         $("#msg_count").text(data.length);
         $("#imessage_placeholder").append(msg);
-        $.msg('unblock');
     }, "json").fail(function(data) {
+        $.msg();
         $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
         $.msg('unblock', 5000);
     });
+}
 
-    function get_alerts(callback) {
-        $.msg();
+function get_alerts(callback) {
 
-        $.post("ajax/general_functions.php", {
-            action: "get_alerts"
-        }, function(data) {
-            $("#alerts-content").empty();
-            $("#alert_time").data("update", moment());
-            var msg = "";
-            $.each(data, function() {
-                if (SpiceU.user_level < 5) {
-                    if (this.alert.search(/Apoio Mkt./i) !== -1) {
-                        alerts.add({id: this.id, message: "Á " + moment(this.entry_date).fromNow() + " - " + this.alert, callback: function() {
-                                $.post("ajax/general_functions.php", {action: "set_readed", id_msg: this.id});
-                            }});
-                        return true;
-                    }
+    $.post("ajax/general_functions.php", {
+        action: "get_alerts"
+    }, function(data) {
+        $("#alerts-content").empty();
+        $("#alert_time").data("update", moment());
+        var msg = "";
+        $.each(data, function() {
+            if (SpiceU.user_level < 5) {
+                if (this.alert.search(/Apoio Mkt./i) !== -1) {
+                    alerts.add({id: this.id, message: "Á " + moment(this.entry_date).fromNow() + " - " + this.alert, callback: function() {
+                            $.post("ajax/general_functions.php", {action: "set_readed", id_msg: this.id});
+                        }});
+                    return true;
                 }
-                msg = "<div class='imessage'>\n\
+            }
+            msg = "<div class='imessage'>\n\
                         <div class='r_icon'><a href='javascript:void(0)' class='ok_alert' data-id='" + this.id + "'><i class='icon-comment'></i></a></div>\n\
                         <div class='r_info'>\n\
                             <div class='r_text'>" + this.alert + "</div>\n\
@@ -255,72 +252,71 @@ function get_messages() {
                         </div>\n\
                         <div class='clear'></div>\n\
                     </div>" + msg;
-            });
-            $("#alerts-count").text(data.length);
-            $("#alerts-content").append(msg);
-            if (typeof callback === "function") {
-                callback();
-            }
-            $.msg('unblock');
-        }, "json").fail(function(data) {
-            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-            $.msg('unblock', 5000);
         });
-    }
-
-
-    function getUrlVars() {
-        var vars = {};
-        window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
-            vars[key] = value;
-        });
-        return vars;
-    }
-
-
-    String.prototype.capitalize = function() {
-        return this.charAt(0).toUpperCase() + this.slice(1);
-    };
-    function consultasMais() {
-        if (!localStorage.length) {
-            return false;
+        $("#alerts-count").text(data.length);
+        $("#alerts-content").append(msg);
+        if (typeof callback === "function") {
+            callback();
         }
-        if (SpiceU.user_level > 1) {
-            return false;
-        }
+    }, "json").fail(function(data) {
+        $.msg();
+        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+        $.msg('unblock', 5000);
+    });
+}
 
-        if (~~localStorage.v6 > 1) {
-            alerts.add({id: 0, message: "Devido a ter <i class='label label-important'>" + localStorage.v6 + "</i> consultas com mais de 6 dias de atraso, só poderá usar o <i>Spice</i> para consultar e fechar consultas.", callback: function() {
-                    $(".menu-sidebar").find("li:not(:eq(0)):not(:eq(0))").addClass("disabled");
-                    $(".criar_marcacao, .recomendacoes, .criar_encomenda").prop("disabled", true);
-                    if ($(".menu-sidebar").find('.active').parent().index() > 1)
-                        $.history.push("view/dashboard.html");
-                }});
-            return false;
-        }
-        if (~~localStorage.v3 > 3) {
-            alerts.add({id: 0, message: "Cuidado que já tem <i class='label label-important'>" + localStorage.v3 + "</i> consultas com mais de 3 dias de atraso."});
-            return false;
-        }
-        $(".menu-sidebar").find("li:not(:eq(0)):not(:eq(0))").removeClass("disabled");
-        $(".criar_marcacao, .recomendacoes, .criar_encomenda").prop("disabled", false);
 
+function getUrlVars() {
+    var vars = {};
+    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+
+
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+};
+function consultasMais() {
+    if (!localStorage.length) {
+        return false;
+    }
+    if (SpiceU.user_level > 1) {
+        return false;
     }
 
-    function dropOneConsult() {
-        //localStorage.v3 = ~~localStorage.v3 - 1;
-        //localStorage.v6 = ~~localStorage.v6 - 1;
+    if (~~localStorage.v6 > 1) {
+        alerts.add({id: 0, message: "Devido a ter <i class='label label-important'>" + localStorage.v6 + "</i> consultas com mais de 6 dias de atraso, só poderá usar o <i>Spice</i> para consultar e fechar consultas.", callback: function() {
+                $(".menu-sidebar").find("li:not(:eq(0)):not(:eq(0))").addClass("disabled");
+                $(".criar_marcacao, .recomendacoes, .criar_encomenda").prop("disabled", true);
+                if ($(".menu-sidebar").find('.active').parent().index() > 1)
+                    $.history.push("view/dashboard.html");
+            }});
+        return false;
     }
-
-    function isBlocked() {
-        return localStorage.v6 > 0;
+    if (~~localStorage.v3 > 3) {
+        alerts.add({id: 0, message: "Cuidado que já tem <i class='label label-important'>" + localStorage.v3 + "</i> consultas com mais de 3 dias de atraso."});
+        return false;
     }
+    $(".menu-sidebar").find("li:not(:eq(0)):not(:eq(0))").removeClass("disabled");
+    $(".criar_marcacao, .recomendacoes, .criar_encomenda").prop("disabled", false);
 
-    function scrollTop() {
+}
 
-        $("html, body").animate({
-            scrollTop: 0
-        }, "fast");
+function dropOneConsult() {
+    //localStorage.v3 = ~~localStorage.v3 - 1;
+    //localStorage.v6 = ~~localStorage.v6 - 1;
+}
 
-    }
+function isBlocked() {
+    return localStorage.v6 > 0;
+}
+
+function scrollTop() {
+
+    $("html, body").animate({
+        scrollTop: 0
+    }, "fast");
+
 }
