@@ -49,7 +49,6 @@ Class products {
         $stmt->execute();
         $output = array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-
             $row["parents_id"] = array();
             $row["children_id"] = array();
             foreach ($relations as $key => $value) {
@@ -146,10 +145,10 @@ Class products {
         return $stmt->execute(array(":id" => $id));
     }
 
-    public function add_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color, $size) {
+    public function add_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active, $size) {
 
         $stmt = $this->_db->prepare("insert into spice_product ( `name`,`max_req_m`,`max_req_s`,`category`,`type`,`color`,`active`,`deleted`,`size`) values (:name, :max_req_m,:max_req_s,:category,:type,:color,1,0,:size) ");
-        $stmt->execute(array(":name" => $name, ":max_req_m" => $max_req_m, ":max_req_s" => $max_req_s, ":category" => $category, ":type" => json_encode($type), ":color" => json_encode($color)  , ":size" => $size));
+        $stmt->execute(array(":name" => $name, ":max_req_m" => $max_req_m, ":max_req_s" => $max_req_s, ":category" => $category, ":type" => json_encode($type), ":color" => $color ? json_encode($color) : json_encode(array()), ":size" => $size));
         $last_id = $this->_db->lastInsertId();
 
         if (isset($parent)) {
@@ -207,7 +206,7 @@ class product extends products {
         $this->_category = $category;
         $this->_type = $type;
         $this->_size = $size;
-        $this->_color = isset($color) ? $color : array();
+        $this->_color = $color ? $color : [];
         $this->_active = $active == "true" ? 1 : 0;
         $stmt = $this->_db->prepare("delete from spice_product_assoc where child=:child");
         $stmt->execute(array(":child" => $this->_id));

@@ -66,11 +66,8 @@ var products = function(geral_path, options_ext) {
                     color.push({color: $(this).find(".color_picker_select").val(), name: $(this).find(".color_name").val()});
                 });
 
-                if (edit_product_modal.find("#edit_product_form").validationEngine("validate"))
-                {
-                    if (types.length)
-                    {
-                        $.msg();
+                if (edit_product_modal.find("#edit_product_form").validationEngine("validate")) {
+                    if (types.length) {
                         $.post('/AM/ajax/products.php', {action: "edit_product",
                             id: product_id,
                             name: edit_product_modal.find("#edit_product_name").val(),
@@ -86,14 +83,13 @@ var products = function(geral_path, options_ext) {
                             edit_product_modal.modal("hide");
                             update_products_datatable(datatable_path);
                             edit_product_modal.find("#edit_product_table_tbody_color tr").remove();
-                            $.msg('unblock');
                         }, "json").fail(function(data) {
+                            $.msg();
                             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                             $.msg('unblock', 5000);
                         });
                     }
-                    else
-                    {
+                    else {
                         $.jGrowl("Escolha um tipo, Branch ou Dispenser", {life: 3500});
                     }
                 }
@@ -151,6 +147,12 @@ var products = function(geral_path, options_ext) {
                     $.msg('unblock', 5000);
                 });
             }
+        });
+
+        edit_product_modal.on("click", "#edit_product_cancel_promotion_button", function(e) {
+            e.preventDefault();
+            $("#edit_product_new_promotion_div").hide();
+            $("#edit_product_add_promotion_toggle").show();
         });
         edit_product_modal.on("change", "#edit_product_category", function() {
             if ($(this).val() === "Molde" || $(this).val() === "BTE" || $(this).val() === "RITE" || $(this).val() === "INTRA") {
@@ -435,7 +437,7 @@ var products = function(geral_path, options_ext) {
     function populate_parent(select, level_out, children, callback) {
         var out_level = level_out;
         var level = 0;
-        $.msg();
+
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
         function(data) {
             var option = "";
@@ -504,8 +506,9 @@ var products = function(geral_path, options_ext) {
                     .find("optgroup[value='8']").append(gama).end().trigger("chosen:updated");
             if (typeof callback === "function")
                 callback();
-            $.msg('unblock');
+
         }, "json").fail(function(data) {
+                                $.msg();
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
             $.msg('unblock', 5000);
         });

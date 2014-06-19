@@ -1,5 +1,4 @@
 var audiograma = function(lead_id) {
-
     var
             values_regex = /[^0-9 \-\+\<\>]+/g,
             contas_regex = /[^0-9\-]+/g,
@@ -7,22 +6,17 @@ var audiograma = function(lead_id) {
             me = this;
 
     this.adg = $("#main_audiograma_div");
-
-
     me.adg.find("#right_ear").text("Sem dados");
     me.adg.find("#left_ear").text("Sem dados");
-
     me.adg.find("#audiograma_form").submit(function(e) {
         e.preventDefault();
     });
 
     this.calculate = function(callback) {
-
-        var
-                right_ear = {
-                    "value": 0,
-                    "text": "Sem Perda"
-                },
+        var right_ear = {
+            "value": 0,
+            "text": "Sem Perda"
+        },
         left_ear = {
             "value": 0,
             "text": "Sem Perda"
@@ -34,8 +28,7 @@ var audiograma = function(lead_id) {
 
         //APRESENTA SO VALORES CALCULADOS DE CADA OUVIDO
 
-        var
-                ar500 = ((me.adg.find("#AR500").val().replace(contas_regex, ""))),
+        var ar500 = ((me.adg.find("#AR500").val().replace(contas_regex, ""))),
                 al500 = ((me.adg.find("#AL500").val().replace(contas_regex, ""))),
                 ar1000 = ((me.adg.find("#AR1000").val().replace(contas_regex, ""))),
                 al1000 = ((me.adg.find("#AL1000").val().replace(contas_regex, ""))),
@@ -74,9 +67,7 @@ var audiograma = function(lead_id) {
         if (typeof callback === "function") {
             callback();
         }
-
         return all_ear.value;
-
     };
 
     this.save = function(lead_id, reservation_id, callback) { //Grava na BASE DE DADOS

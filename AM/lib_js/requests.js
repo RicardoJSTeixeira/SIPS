@@ -184,7 +184,7 @@ var requests = function(basic_path, options_ext) {
                             this_button.parent("td").prev().text("Aprovado");
                             apoio_markting_table.fnReloadAjax();
                             $.msg('unblock');
-                        }).fail(function(data) {
+                        }, "json").fail(function(data) {
                             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                             $.msg('unblock', 5000);
                         });
@@ -200,7 +200,7 @@ var requests = function(basic_path, options_ext) {
                             this_button.parent().prev().text("Rejeitado");
                             apoio_markting_table.fnReloadAjax();
                             $.msg('unblock');
-                        }).fail(function(data) {
+                        }, "json").fail(function(data) {
                             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                             $.msg('unblock', 5000);
                         });
@@ -335,7 +335,7 @@ var requests = function(basic_path, options_ext) {
                             this_button.parent("td").prev().text("Aprovado");
                             relatorio_frota_table.fnReloadAjax();
                             $.msg('unblock');
-                        }).fail(function(data) {
+                        }, "json").fail(function(data) {
                             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                             $.msg('unblock', 5000);
                         });
@@ -351,7 +351,7 @@ var requests = function(basic_path, options_ext) {
                             this_button.parent("td").prev().text("Rejeitado");
                             relatorio_frota_table.fnReloadAjax();
                             $.msg('unblock');
-                        }).fail(function(data) {
+                        }, "json").fail(function(data) {
                             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                             $.msg('unblock', 5000);
                         });
@@ -455,7 +455,7 @@ var requests = function(basic_path, options_ext) {
                                 this_button.parent("td").prev().text("Aprovado");
                                 relatorio_correio_table.fnReloadAjax();
                                 $.msg('unblock');
-                            }).fail(function(data) {
+                            }, "json").fail(function(data) {
                                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                                 $.msg('unblock', 5000);
                             });
@@ -475,7 +475,7 @@ var requests = function(basic_path, options_ext) {
                             this_button.parent("tr").find(".ver_anexo_correio").data("aproved", 0);
                             relatorio_correio_table.fnReloadAjax();
                             $.msg('unblock');
-                        }).fail(function(data) {
+                        }, "json").fail(function(data) {
                             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                             $.msg('unblock', 5000);
                         });
@@ -656,12 +656,11 @@ var requests = function(basic_path, options_ext) {
                     bootbox.prompt("Comentários?", function(result) {
                         if (result !== null) {
                             $.msg();
-
                             $.post('/AM/ajax/requests.php', {action: "accept_report_stock", id: this_button.val(), message: result}, function() {
                                 this_button.parent("td").prev().text("Aprovado");
                                 relatorio_stock_table.fnReloadAjax();
                                 $.msg('unblock');
-                            }).fail(function(data) {
+                            }, "json").fail(function(data) {
                                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                                 $.msg('unblock', 5000);
                             });
@@ -681,7 +680,7 @@ var requests = function(basic_path, options_ext) {
                             this_button.parent("tr").find(".ver_produto_stock").data("aproved", 0);
                             relatorio_stock_table.fnReloadAjax();
                             $.msg('unblock');
-                        }).fail(function(data) {
+                        }, "json").fail(function(data) {
                             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                             $.msg('unblock', 5000);
                         });
@@ -868,7 +867,7 @@ var requests = function(basic_path, options_ext) {
                                 this_button.parent("td").prev().text("Aprovado");
                                 relatorio_moviment_stock_table.fnReloadAjax();
                                 $.msg('unblock');
-                            }).fail(function(data) {
+                            }, "json").fail(function(data) {
                                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                                 $.msg('unblock', 5000);
                             });
@@ -887,7 +886,7 @@ var requests = function(basic_path, options_ext) {
                             this_button.parent("td").prev().text("Rejeitado");
                             relatorio_moviment_stock_table.fnReloadAjax();
                             $.msg('unblock');
-                        }).fail(function(data) {
+                        }, "json").fail(function(data) {
                             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                             $.msg('unblock', 5000);
                         });

@@ -121,7 +121,7 @@ $comments
 <br>
 
 <strong>Submetido por:</strong> $userID->username - $userID->name";
-        
+
         send_email("marcacao@acusticamedica.pt", "Marketing Acústica Médica", $msg, "PEDIDO DE APOIO MKT - RASTREIOS - $userID->username - $ap->data_inicial");
 
         echo json_encode($apoio_marketing->setReservation($apoioID, $id));
@@ -235,7 +235,7 @@ $comments
 <br>
 <br>
     <strong>Submetido por:</strong> $userID->username - $userID->name";
-        
+
         send_email("marcacao@acusticamedica.pt", "Marketing Acústica Médica", $msg, "RELATÓRIO DE RASTREIO - APOIO MKT - $userID->username - $ap->data_inicial");
         echo json_encode($apoio_marketing->set_report($id, $cod, $total_rastreios, $rastreios_perda, $vendas, $valor));
         exit;
@@ -269,6 +269,7 @@ $comments
                 $alert->make($result->user, "Apoio Mkt. Aceite  Obs. $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_APMKT, json_encode(array("obs" => "Apoio Mkt. Aceite", "msg" => "$message")));
+        echo json_encode(true);
         break;
 
     case "decline_apoio_marketing":
@@ -285,6 +286,7 @@ $comments
             $alert->make($result->user, "Apoio Mkt. Recusado $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_APMKT, json_encode(array("obs" => "Apoio Mkt. Recusado", "msg" => "$message")));
+        echo json_encode(true);
         break;
 
     case "accept_report_correio":
@@ -295,6 +297,7 @@ $comments
             }
         }
         $log->set($id, Logger::T_UPD, Logger::S_MAIL, json_encode(array("obs" => "Correio Aceite", "msg" => "$message")));
+        echo json_encode(true);
         break;
 
     case "decline_report_correio":
@@ -307,6 +310,7 @@ $comments
             $alert->make($result->user, "Correio Recusado Motivo: $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_MAIL, json_encode(array("obs" => "Correio Recusado", "msg" => "$message")));
+        echo json_encode(true);
         break;
 
     case "accept_report_frota":
@@ -316,6 +320,7 @@ $comments
                 $alert->make($result->user, "Frota Aceite Obs. $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_FROTA, json_encode(array("obs" => "Frota Aceite", "msg" => "$message")));
+        echo json_encode(true);
         break;
 
     case "decline_report_frota":
@@ -327,6 +332,7 @@ $comments
             $alert->make($result->user, "Frota Recusado Motivo: $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_FROTA, json_encode(array("obs" => "Frota Recusado", "msg" => "$message")));
+        echo json_encode(true);
         break;
 
     case "accept_report_stock":
@@ -336,6 +342,7 @@ $comments
                 $alert->make($result->user, "Stock Aceite Obs. $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_STOCK, json_encode(array("obs" => "Stock Aceite", "msg" => "$message")));
+        echo json_encode(true);
         break;
 
     case "decline_report_stock":
@@ -346,6 +353,7 @@ $comments
             $alert->make($result->user, "Stock Recusado $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_STOCK, json_encode(array("obs" => "Stock Recusado", "msg" => "$message")));
+        echo json_encode(true);
         break;
 
     case "accept_report_movimentacao":
@@ -355,6 +363,7 @@ $comments
                 $alert->make($result->user, "Movimentação stock Aceite Obs. $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_MOVSTOCK, json_encode(array("obs" => "Movimentação stock Aceite", "msg" => "$message")));
+        echo json_encode(true);
         break;
 
     case "decline_report_movimentacao":
@@ -366,6 +375,7 @@ $comments
             $alert->make($result->user, "Movimentação Recusado: $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_MOVSTOCK, json_encode(array("obs" => "Movimentação stock recusado", "msg" => "$message")));
+        echo json_encode(true);
         break;
 
     default:
