@@ -153,8 +153,6 @@ var products = function(geral_path, options_ext) {
             $("#edit_product_new_promotion_div").hide();
             $("#edit_product_add_promotion_toggle").show();
         });
-
-
         edit_product_modal.on("change", "#edit_product_category", function() {
             if ($(this).val() === "Molde" || $(this).val() === "BTE" || $(this).val() === "RITE" || $(this).val() === "INTRA") {
                 edit_product_modal.find("#edit_product_color_div").show();
