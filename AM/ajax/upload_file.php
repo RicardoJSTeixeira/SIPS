@@ -8,6 +8,20 @@ foreach ($_POST as $key => $value) {
 foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
+
+
+
+require '../lib_php/db.php';
+
+require '../lib_php/user.php';
+$user = new UserLogin($db);
+$user->confirm_login();
+
+
+
+
+
+
 $destiny = getcwd() . "/files/";
 
 switch ($action) {
@@ -39,7 +53,7 @@ switch ($action) {
                                 if (is_file($srcDir . '/' . $file)) {
                                     if (strstr($file, $old_id . "_-_")) {
                                         $temp_file = str_replace($old_id . "_-_", "", $file);
-                                            rename($srcDir . '/' . $file, $destDir . '/' . $temp_file);
+                                        rename($srcDir . '/' . $file, $destDir . '/' . $temp_file);
                                     }
                                 }
                             }
@@ -79,5 +93,19 @@ switch ($action) {
 
         closedir($dh);
         echo json_encode($js);
+        break;
+
+
+    case "upload_report":
+        $fileName = $_FILES["file"]["name"];
+        if (file_exists($destiny . $fileName)) {
+            echo $fileName . " Já existe. ";
+            return false;
+        } else {
+            if (move_uploaded_file($_FILES["file"]["tmp_name"], $destiny . $fileName))
+                echo "$fileName Guardado";
+            else
+                echo "$fileName Não Guardado";
+        }
         break;
 }

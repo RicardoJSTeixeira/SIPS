@@ -253,7 +253,7 @@ var requisition = function(geral_path, options_ext) {
                 else {
                     if (new_requisition_zone.find(" #form_encomenda_especial").validationEngine("validate")) {
                         if (must_have_anexo) {
-                            if (!me.config.uploader.files.length) {
+                            if (!me.config.w.files.length) {
                                 bootbox.alert("Certifique-se de que envia pelo menos um anexo pelos produtos Molde/Intra");
                                 return false;
                             } else
