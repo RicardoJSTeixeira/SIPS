@@ -1,7 +1,7 @@
 <?php
 
 ini_set('display_errors', 1);
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -100,12 +100,12 @@ switch ($action) {
         $fileName = $_FILES["file"]["name"];
         if (file_exists($destiny . $fileName)) {
             echo $fileName . " Já existe. ";
-            return false;
         } else {
             if (move_uploaded_file($_FILES["file"]["tmp_name"], $destiny . $fileName))
-                echo "$fileName Guardado";
-            else
-                echo "$fileName Não Guardado";
+                echo 1;
+            else {
+                echo "$fileName não carregado";
+            }
         }
         break;
 }

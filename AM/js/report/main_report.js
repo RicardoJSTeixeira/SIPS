@@ -1,3 +1,4 @@
+var uploader;
 $(function() {
 
 
@@ -13,8 +14,27 @@ $(function() {
     $(".chosen-select").chosen(({
         no_results_text: "Sem resultados"
     }));
-    var uploader;
 
+
+    init_plupload()
+    $("#filelist").on("click", ".delete_anexo_line", function()
+    {
+        if (uploader.removeFile(uploader.getFile($(this).data().id))) {
+            $(this).closest("tr").remove();
+        }
+    })
+});
+$("#download_report").click(function() {
+    $.post("requests.php", {action: "upload_report"},
+    function(data) {
+        $("#download_report").prop("disabled", false);
+        $('#loading').hide();
+        document.location.href = "requests.php?action=get_report_file&file=" + data;
+    }, "json");
+});
+
+function init_plupload()
+{
     uploader = new plupload.Uploader({
         browse_button: 'browse', // this can be an id of a DOM element or the DOM element itself
         url: '/AM/ajax/upload_file.php?action=upload_report',
@@ -34,8 +54,9 @@ $(function() {
                 };
             },
             FilesAdded: function(up, files) {
-                plupload.each(files, function(file) {
-                    $('#filelist').append('\
+                if (up.files.length == 1) {
+                    plupload.each(files, function(file) {
+                        $('#filelist').append('\
                                             <tr id="' + file.id + '">\n\
                                                 <td>' + file.name + '</td>\n\
                                                 <td>\n\
@@ -49,9 +70,10 @@ $(function() {
                                                     </div>\n\
                                                 </td>\n\
                                             </tr>');
-                });
-                $("#start-upload").show();
+                    });
+                    $("#start-upload").show();
 
+                }
             },
             UploadProgress: function(up, file) {
                 document.getElementById(file.id).getElementsByClassName('bar')[0].style.width = file.percent + '%';
@@ -60,28 +82,26 @@ $(function() {
                 $.jGrowl(err.file.name + "&#8594;" + err.message, {life: 3000});
             },
             FileUploaded: function(up, file, info) {
-                $.msg();
-                $.post('/ajax/report/importNav.php', {
-                    file: file.name
-                }, function() {
-                    $.msg('unblock');
-                }, "json").fail(function(data) {
-                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-                    $.msg('unblock', 5000);
-                });
-                $.jGrowl(info.response, {life: 3000});
+                if (~~info.response) {
+                    $.msg();
+                    $.post('/AM/ajax/report/importNav.php', {
+                        file: file.name
+                    }, function() {
+                        $.msg('replace', "Relatório carregado com sucesso!");
+                        $.msg('unblock', 1000);
+                    }, "json").fail(function(data) {
+                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                        $.msg('unblock', 1000);
+                    });
+                }
+                else {
+                    uploader.destroy();
+                     init_plupload();
+                    $.msg({content: info.response, autoUnblock: true});
+                }
                 $("#filelist").find(".delete_anexo_line").prop("disabled", true);
             }
         }
     });
     uploader.init();
-});
-$("#download_report").click(function(){
-    $.post("requests.php", {action: "upload_report"},
-    function(data)    {
-        $("#download_report").prop("disabled", false);
-        $('#loading').hide();
-        document.location.href = "requests.php?action=get_report_file&file=" + data;
-    }, "json");
-});
-
+}
