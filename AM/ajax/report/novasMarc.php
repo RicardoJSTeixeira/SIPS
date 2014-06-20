@@ -1,7 +1,7 @@
 <?php
 
 $curTime = date("Y-m-d H:i:s");
-$filename = "marc_outbound_" . $curTime;
+$filename = "novas_marc_" . $curTime;
 header("Content-Disposition: attachment; filename=" . $filename . ".csv");
 $output = fopen('php://output', 'w');
 
