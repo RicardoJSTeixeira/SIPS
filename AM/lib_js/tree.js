@@ -48,8 +48,7 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
         }
         var color = "";
         if (data.color.length)
-            $.each(data.color, function()
-            {
+            $.each(data.color, function()            {
                 color += "<option style='background: #" + this.color + "'   value='" + this.color + "'>" + this.name + "</option>";
             })
 
@@ -70,25 +69,20 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
             quantity_temp = $("<div>", {class: " input-prepend quantity_div"})
                     .append($("<span>", {class: "add-on"}).text("Q."))
                     .append($("<input>", {class: "input_quantity input-mini", type: "number", min: 1, max: max_value, value: 1}).data("last_value", 1)
-                            .on("change", function()
-                            {
-                                if ($(this).val() > ~~$(this).prop('max'))
-                                {
+                            .on("change", function()                            {
+                                if ($(this).val() > ~~$(this).prop('max'))                                {
                                     $(this).val(~~$(this).prop('max'));
                                     return false;
                                 }
-                                if ($(this).val() < ~~$(this).prop('min'))
-                                {
+                                if ($(this).val() < ~~$(this).prop('min'))                                {
                                     $(this).val(~~$(this).prop('min'));
                                     return false;
                                 }
                                 var lastValue = ~~$(this).data().last_value,
                                         add = (lastValue < ~~$(this).val()) ? 1 : -1;
-
                                 $(this)
                                         .data()
                                         .last_value = $(this).val();
-
                                 $(this)
                                         .closest("li")
                                         .find(".input_quantity")
@@ -103,15 +97,12 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
         {
             quantity_temp = $("<div>", {class: " input-prepend quantity_div"})
                     .append($("<span>", {class: "add-on"}).text("Q."))
-                    .append($("<input>", {class: "input_quantity", type: "number", min: 1, max: max_value, value: 1}).on("change", function()
-                    {
-                        if ($(this).val() > ~~$(this).prop('max'))
-                        {
+                    .append($("<input>", {class: "input_quantity", type: "number", min: 1, max: max_value, value: 1}).on("change", function()                    {
+                        if ($(this).val() > ~~$(this).prop('max'))                        {
                             $(this).val(~~$(this).prop('max'));
                             return false;
                         }
-                        if ($(this).val() < ~~$(this).prop('min'))
-                        {
+                        if ($(this).val() < ~~$(this).prop('min'))                        {
                             $(this).val(~~$(this).prop('min'));
                             return false;
                         }
@@ -135,15 +126,13 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
 
                 .on("change", " > span > input[type=checkbox]", function(e) {
 
-                    if (this.checked)
-                    {
+                    if (this.checked)                    {
                         $(this).closest("li").parents("li").find(" > span > input").prop("checked", true).change();
                         $(this).closest("li").find(".quantity_div").first().show();
                         if (~~$(this).attr("color") > 0)
                             $(this).closest("li").find(".color_div").first().show();
                     }
-                    else
-                    {
+                    else                    {
                         $(this).closest("li").find("input[name=" + this.name + "]").not(this).prop("checked", this.checked).change();
                         $(this).closest("li").find(".quantity_div").first().hide();
                         $(this).closest("li").find(".color_div").first().hide();
@@ -152,8 +141,7 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
                             .closest("li")
                             .find("i")
                             .hasClass("icon-plus-sign");
-                    if (isClosed)
-                    {
+                    if (isClosed)                    {
                         $(this).closest("span").click();
                     }
                     $(this).closest("li").data()[this.name] = this.checked;
@@ -166,7 +154,6 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
     function startPlugin() {
         $('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
         $('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').attr('title', 'Collapse this branch').on('click', function(e) {
-
             var children = $(this).parent('li.parent_li').find(' > ul > li');
             if (children.is(':visible')) {
                 children.hide('fast');

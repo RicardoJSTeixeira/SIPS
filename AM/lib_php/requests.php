@@ -176,7 +176,7 @@ class correio extends requests_class {
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             $approved = $row[6] == 1 ? 1 : 0;
             if ($row[4]) {
-                $row[4] = "<button data-anexo_id = '$row[0]' data-approved = '$approved' class = 'btn ver_anexo_correio icon-alone'><i class = 'icon-eye-open'></i></button>";
+                $row[4] = "<button data-anexo_id = '$row[0]' data-approved = '$approved' class = 'btn ver_anexo_correio'><i class = 'icon-folder-close'></i>Doc.</button>";
             } else {
                 $row[4] = "Sem anexo";
             }
@@ -281,7 +281,7 @@ class frota extends requests_class {
                     break;
             }
 
-            $row[7] = "<div> <button class = 'btn ver_ocorrencias' data-relatorio_frota_id = '" . $row[0] . "'><i class = 'icon-eye-open'></i>Ver Ocorrências</button></div>";
+            $row[7] = "<div> <button class = 'btn ver_ocorrencias' data-relatorio_frota_id = '" . $row[0] . "'><i class = 'icon-list'></i>Ocorrências</button></div>";
 
 
             $result['aaData'][] = $row;

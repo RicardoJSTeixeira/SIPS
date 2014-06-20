@@ -13,7 +13,15 @@ var products = function(geral_path, options_ext) {
         $.get("/AM/view/products/product.html", function(data) {
             geral_path.empty().off().append(data);
             geral_path.find(".chosen-select").chosen({no_results_text: "Sem resultados", width: "100%"});
-            geral_path.find(".form_datetime_day").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2});
+            $("#edit_product_data_promoçao1").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, startDate: moment().format("YYYY-MM-DD")})
+                    .on('changeDate', function() {
+                        $("#edit_product_data_promoçao2").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
+                    });
+            $("#edit_product_data_promoçao2").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, startDate: moment().format("YYYY-MM-DD")})
+                    .on('changeDate', function() {
+                        $("#edit_product_data_promoçao1").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
+                    });
+
             if (typeof callback === "function")
                 callback();
         });
@@ -508,7 +516,7 @@ var products = function(geral_path, options_ext) {
                 callback();
 
         }, "json").fail(function(data) {
-                                $.msg();
+            $.msg();
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
             $.msg('unblock', 5000);
         });

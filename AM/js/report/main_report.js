@@ -1,7 +1,5 @@
 var uploader;
 $(function() {
-
-
     $("#input_data_inicio").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, endDate: moment().format("YYYY-MM-DD")})
             .on('changeDate', function() {
                 $("#input_data_fim").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
@@ -14,15 +12,13 @@ $(function() {
     $(".chosen-select").chosen(({
         no_results_text: "Sem resultados"
     }));
-
-
-    init_plupload()
+    init_plupload();
     $("#filelist").on("click", ".delete_anexo_line", function()
     {
         if (uploader.removeFile(uploader.getFile($(this).data().id))) {
             $(this).closest("tr").remove();
         }
-    })
+    });
 });
 $("#download_report").click(function() {
     $.post("requests.php", {action: "upload_report"},
@@ -33,8 +29,7 @@ $("#download_report").click(function() {
     }, "json");
 });
 
-function init_plupload()
-{
+function init_plupload(){
     uploader = new plupload.Uploader({
         browse_button: 'browse', // this can be an id of a DOM element or the DOM element itself
         url: '/AM/ajax/upload_file.php?action=upload_report',
@@ -48,7 +43,6 @@ function init_plupload()
             PostInit: function() {
                 document.getElementById('filelist').innerHTML = '';
                 document.getElementById('start-upload').onclick = function() {
-
                     uploader.start();
                     return false;
                 };
@@ -72,7 +66,6 @@ function init_plupload()
                                             </tr>');
                     });
                     $("#start-upload").show();
-
                 }
             },
             UploadProgress: function(up, file) {
@@ -89,6 +82,8 @@ function init_plupload()
                     }, function() {
                         $.msg('replace', "Relatório carregado com sucesso!");
                         $.msg('unblock', 1000);
+                        uploader.destroy();
+                        init_plupload();
                     }, "json").fail(function(data) {
                         $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                         $.msg('unblock', 1000);
@@ -96,7 +91,7 @@ function init_plupload()
                 }
                 else {
                     uploader.destroy();
-                     init_plupload();
+                    init_plupload();
                     $.msg({content: info.response, autoUnblock: true});
                 }
                 $("#filelist").find(".delete_anexo_line").prop("disabled", true);
