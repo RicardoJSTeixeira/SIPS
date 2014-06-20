@@ -21,7 +21,7 @@ $docRoot = $_SERVER[DOCUMENT_ROOT];
 $ConvertCommand = "$docRoot/sips-admin/campaigns/extras/upload/sheet2tab.pl $docRoot/AM/ajax/files/$UploadedFile $docRoot/AM/ajax/files/$UploadedFile";
 passthru($ConvertCommand);
 
-$file = fopen("/tmp/$ConvertedFile", "r");
+$file = fopen("$docRoot/AM/ajax/files/$ConvertedFile", "r");
 $headers = explode("\t", trim(fgets($file, 4096)));
 
 $stmt = $db->prepare("UPDATE sips_sd_reservations SET extra_id=:navid WHERE id_reservation=:id");
