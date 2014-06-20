@@ -20,7 +20,7 @@ $u=$user->getUser();
 
 switch ($action) {
     case "novasMarc":
-        include 'novasMarc.php';
+        include 'includes/novasMarc.php';
         break;
 
     default:
