@@ -7219,7 +7219,7 @@ if ($ACTION == 'updateDISPO') {
                 }
                 $row = mysql_fetch_row($rslt);
                 if ($row[0] > 0) {
-                    $stmt = "UPDATE vicidial_log set status='$log_dispo_choice' where lead_id='$lead_id' and user='$user' and call_date > \"$four_hours_ago\" order by uniqueid desc limit 1;";
+                    $stmt = "UPDATE vicidial_log set status='$log_dispo_choice', user='$user' where uniqueid='$uniqueid' limit 1;";
                     if ($format == 'debug') {
                         echo "\n<!-- $stmt -->";
                     }
