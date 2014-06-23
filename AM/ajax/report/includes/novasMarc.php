@@ -1,6 +1,6 @@
 <?php
 
-$curTime = date("Y-m-d H:i:s");
+$curTime = date("Y-m-d_H:i:s");
 $filename = "novas_marc_" . $curTime;
 header("Content-Disposition: attachment; filename=" . $filename . ".csv");
 $output = fopen('php://output', 'w');
@@ -59,7 +59,7 @@ $query_log = "SELECT "
         . "AND a.entry_date BETWEEN :data_inicial AND :data_final AND e.user_group=:user_group";
 
 $stmt = $db->prepare($query_log);
-$stmt->execute(array(":data_inicial" => "$data_inicial 00:59:59", ":data_final" => "$data_final 23:59:59", ":user_group"=>$u->user_group));
+$stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59", ":user_group" => $u->user_group));
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
@@ -88,7 +88,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "",
         "",
         "",
-        ((stripos($row['alias_code'],"B/")!==FALSE)?"Branch":((stripos($row['alias_code'],"C/")!==FALSE)?"Cato":"Casa")),
+        ((stripos($row['alias_code'], "B/") !== FALSE) ? "Branch" : ((stripos($row['alias_code'], "C/") !== FALSE) ? "Cato" : "Casa")),
         "",
         "",
         "",
@@ -102,5 +102,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "",
         $row['extra6'],
         $row['id_reservation']
-        ), ";");
-}
+            ), ";");
+};
+fclose($output);

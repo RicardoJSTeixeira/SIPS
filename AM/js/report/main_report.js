@@ -21,12 +21,9 @@ $(function() {
     });
 });
 $("#download_report").click(function() {
-    $.post("requests.php", {action: "upload_report"},
-    function(data) {
-        $("#download_report").prop("disabled", false);
-        $('#loading').hide();
-        document.location.href = "requests.php?action=get_report_file&file=" + data;
-    }, "json");
+    if ($("#report_form").validationEngine("validate"))
+      //  document.location.href = "/AM/ajax/report/reports.php?action=" + $("#report_selector option:selected").val() + "&data_inicial=" + $("#input_data_inicio").val() + "&data_fim=" + $("#input_data_fim").val();
+            document.location.href = "/AM/ajax/report/reports.php?action=" + $("#report_selector option:selected").val() + "&data_inicial=2014-01-01&data_fim=2014-12-12";
 });
 
 function init_plupload() {

@@ -22,7 +22,8 @@ switch ($action) {
     case "novasMarc":
         include 'includes/novasMarc.php';
         break;
-
+    case "lead_id_follow_up":
+         include 'includes/novasLeadsFollowUp.php';
     default:
         break;
 }
