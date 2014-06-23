@@ -142,20 +142,26 @@ var requisition = function(geral_path, options_ext) {
         //-------------------------------------------------------------------------------------------SAVE SINGLE PRODUCT--------------------------
         $(new_requisition_zone).on("click", '#save_single_product', function(e) {
             var produtos_single = [],
+                    duplicate_array = [],
                     has_products = 0;
             $.each($("#tree").find(".product_item"), function() {
                 if ($(this).find("input[type=checkbox]").is(":checked")) {
                     if ($(this).prop("category_product") === "Molde" || $(this).prop("category_product") === "INTRA")
                         must_have_anexo = true;
                     has_products++;
-                    produtos_single.push({
-                        id: $(this).prop("id_product"),
-                        name: $(this).prop("name_product"),
-                        category: $(this).prop("category_product"),
-                        quantity: ~~$(this).find(".input_quantity").val(),
-                        color_id: $(this).find(".color_select").val(),
-                        color_name: $(this).find(".color_select option:selected").text()
-                    });
+
+                    if (duplicate_array.indexOf(($(this).prop("id_product"))) === -1) {
+                        produtos_single.push({
+                            id: $(this).prop("id_product"),
+                            name: $(this).prop("name_product"),
+                            category: $(this).prop("category_product"),
+                            quantity: ~~$(this).find(".input_quantity").val(),
+                            color_id: $(this).find(".color_select").val(),
+                            color_name: $(this).find(".color_select option:selected").text()
+                        });
+                    }
+                    duplicate_array.push($(this).prop("id_product"));
+
                     if (me.tipo === "especial") {
                         produtos[$(this).prop("id_product")].max_req_s -= ~~$(this).find(".input_quantity").val();
                         if (produtos[$(this).prop("id_product")].max_req_s < 1)
@@ -188,32 +194,16 @@ var requisition = function(geral_path, options_ext) {
                                             .append($("<th>").text("Nome").css("width", "420px"))
                                             .append($("<th>").text("Categoria").css("width", "120px"))
                                             .append($("<th>").text("#").attr("title", "Quantidade").css("width", "50px"))
-                                            .append($("<th>").text("Cor").css("width", "150px").append($("<button>", {
-                                                class: "btn btn-danger btn-mini icon-alone right remove_produto_encomendado"
-                                            }).append($("<i>", {
-                                                class: "icon icon-trash"
-                                            }))))
-                                            ))
+                                            .append($("<th>").text("Cor").css("width", "150px").append($("<button>", {class: "btn btn-danger btn-mini icon-alone right remove_produto_encomendado"})
+                                                    .append($("<i>", {class: "icon icon-trash"}))))))
                             .append($("<tbody>")))
                     .find("tbody");
             $.each(produtos_single, function() {
-                produtos_in_text.append($("<tr>", {
-                    class: "product_line"
-                })
-                        .append($("<td>", {
-                            class: "td_name",
-                            id_product: this.id
-                        }).text(this.name))
-                        .append($("<td>", {
-                            class: "td_category"
-                        }).text(this.category.capitalize()))
-                        .append($("<td>", {
-                            class: "td_quantity"
-                        }).text(this.quantity))
-                        .append($("<td>", {
-                            class: "td_color",
-                            color: this.color_id
-                        }).text(this.color_name))
+                produtos_in_text.append($("<tr>", {class: "product_line"})
+                        .append($("<td>", {class: "td_name", id_product: this.id}).text(this.name))
+                        .append($("<td>", {class: "td_category"}).text(this.category.capitalize()))
+                        .append($("<td>", {class: "td_quantity"}).text(this.quantity))
+                        .append($("<td>", {class: "td_color", color: this.color_id}).text(this.color_name))
                         );
             });
             new_requisition_zone.find("#produtos_encomendados").append(new_product);
@@ -276,7 +266,7 @@ var requisition = function(geral_path, options_ext) {
                             $.jGrowl('Encomenda realizada com sucesso', {
                                 life: 4000
                             });
-                                                     $.post('/AM/ajax/upload_file.php', {
+                            $.post('/AM/ajax/upload_file.php', {
                                 action: "move_files_to_new_folder",
                                 old_id: anexo_random_number,
                                 new_id: data[0]
