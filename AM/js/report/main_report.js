@@ -29,7 +29,7 @@ $("#download_report").click(function() {
     }, "json");
 });
 
-function init_plupload(){
+function init_plupload() {
     uploader = new plupload.Uploader({
         browse_button: 'browse', // this can be an id of a DOM element or the DOM element itself
         url: '/AM/ajax/upload_file.php?action=upload_report',
