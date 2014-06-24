@@ -84,7 +84,7 @@ function init_plupload() {
                         file: file.name
                     }, function(data) {
                         if (data.notok) {
-                            var trs="";
+                            var trs = "";
                             $.each(data.notoklist, function() {
                                 trs += "<tr>\n\
                                         <td>" + this.line + "</td>\n\
@@ -92,7 +92,7 @@ function init_plupload() {
                                         <td>" + this.id + "</td>\n\
                                       </tr>";
                             });
-                            bootbox.alert("<div class='alert alert-warning'>Erro a importar o relatório.</div>\n\
+                            bootbox.alert("<div class='alert alert-info'>Total:" + data.total + ", Sucessos:" + data.ok + ", Insucessos:" + this.notok + "</div>\n\
                                         <table class='table table-mod table-bordered table-striped table-condensed'>\n\
                                             <thead>\n\
                                                 <tr>\n\
@@ -104,11 +104,12 @@ function init_plupload() {
                                             <tbody>\n\
                                             " + trs + "\n\
                                             </tbody>\n\
-                                        </table>");
+                                        </table>\n\
+<div class='alert alert-warning'>Os insucessos podem ser consultas importadas anteriormente</div>");
 
                         }
                         else {
-                            $.msg('replace', "Relatório carregado com sucesso!");
+                            $.msg('replace', "Relatório carregado com sucesso! Total:"+data.total);
                             $.msg('unblock', 1000);
                         }
                         uploader.destroy();

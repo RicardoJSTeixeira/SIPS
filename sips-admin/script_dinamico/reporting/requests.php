@@ -174,18 +174,18 @@ switch ($action) {
 
 
 
-// por filtros pra feedbacks e fazer inbound
+    // por filtros pra feedbacks e fazer inbound
     case "report_outbound":
         $name_script = "";
         $campaign_name = "";
-//GET ELEMENTS
+        //GET ELEMENTS
         $query = "SELECT elements from report_order where id=:id";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id" => $field_data));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $field_data = json_decode($row["elements"]);
 
-//GET ID SCRIPT
+        //GET ID SCRIPT
         $query = "SELECT a.id_script from script_assoc a where a.id_camp_linha=:campaign_id";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":campaign_id" => $campaign_id));
@@ -387,7 +387,7 @@ switch ($action) {
                 $stmt1 = $db->prepare($query1);
                 $stmt1->execute();
 
-                echo(json_encode($file)); 
+                echo(json_encode($file));
                 break;
             case 2:
                 try {
