@@ -398,7 +398,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 me.reserveConstruct(dat.tipo);
                 $.msg('unblock');
             }, "json").fail(function(data) {
-                $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tenta novamente.');
+                $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
                 $.msg('unblock', 5000);
             });
         });
@@ -462,7 +462,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                             dropOneConsult();
                             $.msg('unblock');
                         }, "json").fail(function(data) {
-                            $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tenta novamente.');
+                            $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
                             $.msg('unblock', 5000);
                         });
                         ;
@@ -504,7 +504,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         me.calendar.fullCalendar('removeEvents', calendar_client.id);
                         $.msg('unblock');
                     }, "json").fail(function(data) {
-                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tenta novamente.');
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
                         $.msg('unblock', 5000);
                     });
                     ;
@@ -534,7 +534,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         }
                         $.msg('unblock');
                     }, "json").fail(function(data) {
-                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tenta novamente.');
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
                         $.msg('unblock', 5000);
                     });
                     ;
@@ -570,7 +570,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         }
                         $.msg('unblock');
                     }, "json").fail(function(data) {
-                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tenta novamente.');
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
                         $.msg('unblock', 5000);
                     });
                     ;
