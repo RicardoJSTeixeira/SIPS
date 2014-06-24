@@ -17,9 +17,15 @@ $user = new UserLogin($db);
 $user->confirm_login();
 
 $docRoot = $_SERVER[DOCUMENT_ROOT];
+$uploadedfile=$file;
+$uploadedfile=  preg_replace("/[^-\.\_0-9a-zA-Z]/","_",$file);
+$ConvertedFile=$uploadedfile;
+$uploadedfile = preg_replace("/\.txt$/i", '.csv', $uploadedfile);
 
-$ConvertCommand = "$docRoot/sips-admin/campaigns/extras/upload/sheet2tab.pl $docRoot/AM/ajax/files/$UploadedFile $docRoot/AM/ajax/files/$UploadedFile";
-passthru($ConvertCommand);
+$ConvertCommand = "mv $docRoot/AM/ajax/files/$file $docRoot/AM/ajax/files/$uploadedfile";
+$a=passthru($ConvertCommand);
+$ConvertCommand = "$docRoot/sips-admin/campaigns/extras/upload/sheet2tab.pl $docRoot/AM/ajax/files/$uploadedfile $docRoot/AM/ajax/files/$ConvertedFile";
+$b=passthru($ConvertCommand);
 
 $file = fopen("$docRoot/AM/ajax/files/$ConvertedFile", "r");
 $headers = explode("\t", trim(fgets($file, 4096)));
@@ -40,4 +46,6 @@ while (!feof($file)) {
     }
     
 }
-echo json_encode(true);
+echo json_encode(array("code"=>$ConvertCommand,"resultA"=>$a,"resultB"=>$b));
+unlink("$docRoot/AM/ajax/files/$uploadedfile");
+unlink("$docRoot/AM/ajax/files/$ConvertedFile");
