@@ -16,14 +16,32 @@ foreach ($_GET as $key => $value) {
 $user = new UserLogin($db);
 $user->confirm_login();
 
-$u=$user->getUser();
+$u = $user->getUser();
 
 switch ($action) {
     case "novasMarc":
         include 'includes/novasMarc.php';
         break;
-    case "lead_id_follow_up":
-         include 'includes/novasLeadsFollowUp.php';
+    case "lead_id_follow_up_cc":
+        $type = "cc";
+        include 'includes/novasLeadsFollowUp.php';
+        break;
+    case "lead_id_follow_up_dispenser":
+        $type = "dispenser";
+        include 'includes/novasLeadsFollowUp.php';
+        break;
+
+    case 'get_agents':
+        $query = "SELECT user,full_name FROM vicidial_users where user_group='SPICE'";
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $js[] = array("user" => $row["user"], "full_name" => $row["full_name"]);
+        }
+        echo json_encode($js);
+        break;
+
+
     default:
         break;
 }
