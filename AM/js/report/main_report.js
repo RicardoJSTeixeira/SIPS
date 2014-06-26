@@ -29,8 +29,7 @@ $(function() {
 });
 $("#download_report").click(function() {
     if ($("#report_form").validationEngine("validate"))
-        //  document.location.href = "/AM/ajax/report/reports.php?action=" + $("#report_selector option:selected").val() + "&data_inicial=" + $("#input_data_inicio").val() + "&data_fim=" + $("#input_data_fim").val();
-        document.location.href = "/AM/ajax/report/reports.php?action=" + $("#report_selector option:selected").val() + "&data_inicial=2014-01-01&data_fim=2014-12-12";
+          document.location.href = "/AM/ajax/report/reports.php?action=" + $("#report_selector option:selected").val() + "&data_inicial=" + $("#input_data_inicio").val() + "&data_final=" + $("#input_data_fim").val();
 });
 function init_plupload() {
     uploader = new plupload.Uploader({
@@ -92,7 +91,8 @@ function init_plupload() {
                                         <td>" + this.id + "</td>\n\
                                       </tr>";
                             });
-                            bootbox.alert("<div class='alert alert-info'>Total:" + data.total + ", Sucessos:" + data.ok + ", Insucessos:" + this.notok + "</div>\n\
+                            bootbox.alert("<div class='alert alert-info'>Total:" + data.total + " Sucessos:" + data.ok + " Não Sucessos:" + data.notok + "</div>\n\
+                            <div class='alert alert-warning'>Os insucessos podem ser consultas importadas anteriormente</div>\n\
                                         <table class='table table-mod table-bordered table-striped table-condensed'>\n\
                                             <thead>\n\
                                                 <tr>\n\
@@ -105,11 +105,11 @@ function init_plupload() {
                                             " + trs + "\n\
                                             </tbody>\n\
                                         </table>\n\
-<div class='alert alert-warning'>Os insucessos podem ser consultas importadas anteriormente</div>");
-
+                                ");
+                            $.msg('unblock');
                         }
                         else {
-                            $.msg('replace', "Relatório carregado com sucesso! Total:"+data.total);
+                            $.msg('replace', "Relatório carregado com sucesso! Total:" + data.total);
                             $.msg('unblock', 1000);
                         }
                         uploader.destroy();
