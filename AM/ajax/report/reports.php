@@ -33,6 +33,9 @@ switch ($action) {
     case "consulta_ftpv":
         include 'includes/consulta_ftpv.php';
         break;
+    case "consulta_result_fecho":
+        include 'includes/consulta_result_fecho.php';
+        break;
 
 
 
