@@ -69,6 +69,7 @@ Class products {
 //ATRIBUIÇÂO DE CHILDS E PARENTS
 
         foreach ($output as &$value) {
+ 
             $value["parent"] = $this->buildTree_parent($output, $value["id"]);
             $value["children"] = $this->buildTree_child($output, $value["id"]);
         }
