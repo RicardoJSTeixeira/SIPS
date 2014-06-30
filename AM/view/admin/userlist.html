@@ -231,6 +231,7 @@
                 action: "get",
                 username: user
             }, function(data) {
+                console.log(data);
                 $("#Museredit").modal("show");
                 $("#TEusername").val(data.user);
                 $("#TEdesc").val(data.full_name);
@@ -240,7 +241,7 @@
                 $("#REsiblings").val(data.siblings)
                         .find(":not(:visible)").css("display","")
                         .end()
-                        .find("[value=" + data.user + "]").hide()
+                        .find("[value='" + data.user + "']").hide()
                         .end()
                         .trigger("chosen:updated");
                 $.msg('unblock');

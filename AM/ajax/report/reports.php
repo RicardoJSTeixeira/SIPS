@@ -30,17 +30,21 @@ switch ($action) {
         $type = "dispenser";
         include 'includes/novasLeadsFollowUp.php';
         break;
+    case "consulta_ftpv":
+        include 'includes/consulta_ftpv.php';
+        break;
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
     case 'get_agents':
         $query = "SELECT user,full_name FROM vicidial_users where user_group='SPICE'";
         $stmt = $db->prepare($query);
