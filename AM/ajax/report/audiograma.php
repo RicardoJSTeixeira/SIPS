@@ -21,7 +21,7 @@ switch ($action) {
 
     case "populate_consults"://ALL MARCAÇOES
         $u = $user->getUser();
-
+        $output['aaData'] = array();
         $query = "SELECT extra2 'codCliente', '' as 'itLogID', a.lead_id , id_reservation , a.entry_date, id_user, consulta_razao, '' as 'salespersonCode' , MAX(IF(g.name='AR',g.value,''))'AR',MAX(IF(g.name='AL',g.value,'')) 'AL',MAX(IF(g.name='BCR',g.value,'')) 'BCR',MAX(IF(g.name='BCL',g.value,'')) 'BCL',MAX(IF(g.name='ULLR',g.value,'')) 'ULLR',MAX(IF(g.name='ULLL',g.value,'')) 'ULLL' "
                 . "FROM sips_sd_reservations a "
                 . "INNER JOIN vicidial_list d ON a.lead_id = d.lead_id "
@@ -38,14 +38,14 @@ switch ($action) {
         function audioCalc($ar500, $al500, $ar1000, $al1000, $ar2000, $al2000, $ar4000, $al4000) {
             $right_ear = (object) array("value" => 0, "text" => "");
             $left_ear = (object) array("value" => 0, "text" => "");
-            
+
             $right_ear->value = (($ar500 * 4) + ($ar1000 * 3) + ($ar2000 * 2) + ($ar4000 * 1)) / 10;
             $left_ear->value = (($al500 * 4) + ($al1000 * 3) + ($al2000 * 2) + ($al4000 * 1)) / 10;
 
             if ($right_ear->value < 35 && $left_ear->value < 35) {
-                $result="Sem Perda";
+                $result = "Sem Perda";
             } else {
-                $result="Perda";
+                $result = "Perda";
                 if ($right_ear->value >= 35 && $right_ear->value < 65) {
                     $right_ear->text = "Perda";
                 } else if ($right_ear->value >= 65) {
@@ -57,7 +57,7 @@ switch ($action) {
                     $left_ear->text = "Perda Power";
                 }
             }
-            return (object) array("right" => $right_ear, "left" => $left_ear,"result"=>$result);
+            return (object) array("right" => $right_ear, "left" => $left_ear, "result" => $result);
         }
 
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
@@ -67,9 +67,9 @@ switch ($action) {
             $bcr = array_map($extractor, json_decode($row->BCR));
             $ulll = array_map($extractor, json_decode($row->ULLL));
             $ullr = array_map($extractor, json_decode($row->ULLR));
-            
-        $audioResult=audioCalc($ar[1], $al[1], $ar[2], $al[2], $ar[3], $al[3], $ar[5], $al[5]);
-            $output['aaData'][] = array_merge(array($row->codCliente, $row->itLogID, $row->id_reservation, $row->lead_id, $row->entry_date, $row->id_user), $al, $ar, $bcl, $bcr, $ulll, $ullr,array($audioResult->right->text,$audioResult->left->text,$audioResult->right->value,$audioResult->left->value,0,0,0,0,0,0,$audioResult->result,0));
+
+            $audioResult = audioCalc($ar[1], $al[1], $ar[2], $al[2], $ar[3], $al[3], $ar[5], $al[5]);
+            $output['aaData'][] = array_merge(array($row->codCliente, $row->itLogID, $row->id_reservation, $row->lead_id, $row->entry_date, $row->id_user), $al, $ar, $bcl, $bcr, $ulll, $ullr, array($audioResult->right->text, $audioResult->left->text, $audioResult->right->value, $audioResult->left->value, 0, 0, 0, 0, 0, 0, $audioResult->result, 0));
         }
         echo json_encode($output);
         break;

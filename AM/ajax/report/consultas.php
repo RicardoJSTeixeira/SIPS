@@ -21,7 +21,7 @@ switch ($action) {
 
     case "populate_consults"://ALL MARCAÇOES
         $u = $user->getUser();
-
+        $output['aaData'] = array();
         $query = "SELECT extra2 'cod cliente', '' as 'interaction log', a.lead_id 'sugar ref', id_reservation , a.entry_date, consulta_razao ,start_date,exame_razao,venda_razao, id_user, '' as 'salesperson code', extra1 'camp cod', IF(exame,'YES','NO'), feedback, terceira_pessoa "
                 . "FROM sips_sd_reservations a "
                 . "INNER JOIN vicidial_list d ON a.lead_id = d.lead_id "
@@ -35,9 +35,9 @@ switch ($action) {
             if (count($terceira_pessoa)) {
                 $row[] = $terceira_pessoa->tipo;
                 $row[] = $terceira_pessoa->nome;
-            }else{
-                $row[]="";
-                $row[]="";
+            } else {
+                $row[] = "";
+                $row[] = "";
             }
 
             $output['aaData'][] = $row;
