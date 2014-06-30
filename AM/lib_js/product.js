@@ -448,6 +448,7 @@ var products = function(geral_path, options_ext) {
 
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
         function(data) {
+
             var option = "";
             select.empty();
             var temp = "<optgroup value='1' label='BTE'></optgroup>\n\

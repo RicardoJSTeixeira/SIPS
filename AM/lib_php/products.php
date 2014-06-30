@@ -93,9 +93,7 @@ Class products {
     function buildTree_child(array $elements, $parentId) {
         $branch = array();
         foreach ($elements as $element) {
-
             if (in_array($parentId, $element["parents_id"])) {
-
                 $branch[] = $element + array("children" => $this->buildTree_child($elements, $element["id"]));
             }
         }
@@ -105,9 +103,7 @@ Class products {
     function buildTree_parent(array $elements, $childrentId) {
         $branch = array();
         foreach ($elements as $element) {
-
             if (in_array($childrentId, $element["children_id"])) {
-
                 $branch[] = $element + array("parent" => $this->buildTree_parent($elements, $element["id"]));
             }
         }
