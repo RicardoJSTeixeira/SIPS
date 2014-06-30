@@ -65,7 +65,7 @@
 
             if (!$user_loggin->id) {
                 $navigation = 'fail';
-            } elseif ($user_loggin->user_level > 5) {
+            } elseif ($user_loggin->user_level > 4) {
                 ?>
                 <form id='adminlogin' action='sips-admin/index.php' method='post'>
                     <input type='hidden' name='useradmin' value='<?= $username ?>' />
