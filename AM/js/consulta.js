@@ -144,7 +144,7 @@ $(function()
     });
 
     $("#main_consulta_div [name='ca']").change(function() {
-        $("#3_pessoa_div").toggle(~~$(this).val());
+        $("#3_pessoa_div").toggle(Boolean(~~$(this).val()));
     });
 
 //EXAME
