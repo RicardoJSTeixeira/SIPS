@@ -8,7 +8,7 @@ if (!$user->id) {
     header("location: ../index.php");
 }
 
-if ($user->user_level < 6) {
+if ($user->user_level < 4) {
     header("location: ../index.php?logout=yes");
 }
 
