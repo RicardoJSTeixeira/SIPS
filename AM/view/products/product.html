@@ -50,9 +50,14 @@
                     <label class="checkbox inline" for="edit_product_active"><span></span>Sim</label>
                 </div> 
             </div>
-            <div class="formRow" id="edit_product_size_div" style="display:none">
-                <label for="edit_product_size">Tamanho aparelho</label>
-                <input type="number" min='0' max='100' id="edit_product_size" class=" input-mini validate[required,min[0],max[100]]">
+            <label >Tamanhos aparelho &nbsp; </label>
+            <div class=" input-append">
+                <button class="btn btn-mini" id="edit_product_size_plus"><i class="icon-plus"></i></button>
+                <button class="btn btn-mini btn-danger" id="edit_product_size_minus"><i class="icon-minus"></i></button>
+            </div>
+            <div id="edit_product_size_subdiv" class="formRow">
+                Tamanhos Definidos
+
             </div>
             <div class="formRow">
                 <span><b>Max Requisições</b></span>
@@ -195,9 +200,16 @@
         <label class="checkbox inline" for="new_product_check_dispenser"><span></span>Dispenser</label>
 
         <div class="formRow" id="new_product_size_div" style="display:none">
-            <label for="new_product_size">Tamanho aparelho </label>
-            <div class='formRight'>
-                <input type="number" min='0' max='100' id="new_product_size" value='0'  class="input-mini validate[required,min[0],max[100]]">
+            <label for="new_product_size">Tamanhos aparelho &nbsp; </label>
+            <div class=" input-append">
+                <button class="btn btn-mini" id="new_product_size_plus"><i class="icon-plus"></i></button>
+                <button class="btn btn-mini btn-danger" id="new_product_size_minus"><i class="icon-minus"></i></button>
+            </div>
+            <div id="new_product_size_subdiv">
+                Tamanho
+                <div class='formRow'>
+                    <input type="number" min='0' max='100'   value='0'  class="new_product_size input-mini validate[required,min[0],max[100]]">
+                </div>
             </div>
         </div>
         <div class='clear'></div>

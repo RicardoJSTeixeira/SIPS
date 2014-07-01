@@ -157,7 +157,8 @@ var requisition = function(geral_path, options_ext) {
                             category: $(this).prop("category_product"),
                             quantity: ~~$(this).find(".input_quantity").val(),
                             color_id: $(this).find(".color_select").val(),
-                            color_name: $(this).find(".color_select option:selected").text()
+                            color_name: $(this).find(".color_select option:selected").text(),
+                            size: $(this).find(".input_size").val()
                         });
                     }
                     duplicate_array.push($(this).prop("id_product"));
@@ -193,7 +194,8 @@ var requisition = function(geral_path, options_ext) {
                                     .append($("<tr>")
                                             .append($("<th>").text("Nome").css("width", "420px"))
                                             .append($("<th>").text("Categoria").css("width", "120px"))
-                                            .append($("<th>").text("#").attr("title", "Quantidade").css("width", "50px"))
+                                            .append($("<th>").text("Q.").attr("title", "Quantidade").css("width", "50px"))
+                                            .append($("<th>").text("Size.").attr("title", "Tamanho").css("width", "50px"))
                                             .append($("<th>").text("Cor").css("width", "150px").append($("<button>", {class: "btn btn-danger btn-mini icon-alone right remove_produto_encomendado"})
                                                     .append($("<i>", {class: "icon icon-trash"}))))))
                             .append($("<tbody>")))
@@ -203,7 +205,9 @@ var requisition = function(geral_path, options_ext) {
                         .append($("<td>", {class: "td_name", id_product: this.id}).text(this.name))
                         .append($("<td>", {class: "td_category"}).text(this.category.capitalize()))
                         .append($("<td>", {class: "td_quantity"}).text(this.quantity))
+                        .append($("<td>", {class: "td_size"}).text(this.size))
                         .append($("<td>", {class: "td_color", color: this.color_id}).text(this.color_name))
+
                         );
             });
             new_requisition_zone.find("#produtos_encomendados").append(new_product);
@@ -232,7 +236,8 @@ var requisition = function(geral_path, options_ext) {
                         produtos_encomenda.push({
                             id: $(this).find(".td_name").attr("id_product"),
                             quantity: ~~$(this).find(".td_quantity").text(),
-                            color: $(this).find(".td_color").attr("color")
+                            color: $(this).find(".td_color").attr("color"),
+                             size:~~$(this).find(".td_size").text()
                         });
                     }
                 });
