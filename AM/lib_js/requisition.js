@@ -237,7 +237,7 @@ var requisition = function(geral_path, options_ext) {
                             id: $(this).find(".td_name").attr("id_product"),
                             quantity: ~~$(this).find(".td_quantity").text(),
                             color: $(this).find(".td_color").attr("color"),
-                             size:~~$(this).find(".td_size").text()
+                            size: ~~$(this).find(".td_size").text()
                         });
                     }
                 });
@@ -447,9 +447,11 @@ var requisition = function(geral_path, options_ext) {
                         Nome: this.name,
                         Categoria: this.category.capitalize(),
                         Cor: this.color_name,
-                        Qt: this.quantity
+                        Qt: this.quantity,
+                        size: this.size
                     });
-                    modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category.capitalize() + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td></tr>");
+                    console.log(this);
+                    modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category.capitalize() + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td><td>" + this.size + "</td></tr>");
                 });
                 modal.modal("show");
                 $.msg('unblock');
