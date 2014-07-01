@@ -113,9 +113,6 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
   color: black;
   font-family: monospace;
   height: <?php echo ceil($GLOBALS['cfg']['TextareaRows'] * 1.2); ?>em;
-  resize: vertical;
-  max-height: 600px;
-  min-height: 75px;
 }
 
 #inline_editor_outer .CodeMirror {
@@ -125,10 +122,11 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 .CodeMirror-scroll {
   /* 30px is the magic margin used to hide the element's real scrollbars */
   /* See overflow: hidden in .CodeMirror */
-  height: 85% !important;
+  margin-bottom: -30px; margin-right: -30px;
+  padding-bottom: 30px; padding-right: 30px;
+  height: 100%;
   outline: none; /* Prevent dragging from highlighting the element */
-  resize: none;
-  overflow-y: auto;
+  position: relative;
 }
 .CodeMirror-sizer {
   position: relative;
@@ -146,7 +144,6 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
   right: 0; top: 0;
   overflow-x: hidden;
   overflow-y: scroll;
-  display:none !important;
 }
 .CodeMirror-hscrollbar {
   bottom: 0; left: 0;
@@ -164,7 +161,6 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
   position: absolute; left: 0; top: 0;
   padding-bottom: 30px;
   z-index: 3;
-  height: 100% !important;
 }
 .CodeMirror-gutter {
   white-space: normal;

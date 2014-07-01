@@ -1,12 +1,17 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Common functions for Designer
- *
  * @package PhpMyAdmin-Designer
  */
 /**
- * Block attempts to directly run this script
+ * block attempts to directly run this script
+ */
+if (getcwd() == dirname(__FILE__)) {
+    die('Attack stopped');
+}
+
+/**
+ *
  */
 if (! defined('PHPMYADMIN')) {
     exit;
@@ -17,11 +22,11 @@ $GLOBALS['PMD']['STYLE']          = 'default';
 $cfgRelation = PMA_getRelationsParam();
 
 /**
- * Retrieves table info and stores it in $GLOBALS['PMD']
+ * retrieves table info and stores it in $GLOBALS['PMD']
  *
  * @return array with table info
  */
-function PMA_getTablesInfo()
+function get_tables_info()
 {
     $retval = array();
 
@@ -69,11 +74,11 @@ function PMA_getTablesInfo()
 }
 
 /**
- * Retrieves table column info
+ * retrieves table column info
  *
  * @return array   table column nfo
  */
-function PMA_getColumnsInfo()
+function get_columns_info()
 {
     $GLOBALS['dbi']->selectDb($GLOBALS['db']);
     $tab_column = array();
@@ -102,14 +107,13 @@ function PMA_getColumnsInfo()
 }
 
 /**
- * Returns JavaScript code for initializing vars
+ * returns JavaScript code for intializing vars
  *
  * @return string   JavaScript code
  */
-function PMA_getScriptContr()
+function get_script_contr()
 {
     $GLOBALS['dbi']->selectDb($GLOBALS['db']);
-    $con = array();
     $con["C_NAME"] = array();
     $i = 0;
     $alltab_rs = $GLOBALS['dbi']->query(
@@ -139,10 +143,10 @@ function PMA_getScriptContr()
         if ($row !== false) {
             foreach ($row as $field => $value) {
                 $con['C_NAME'][$i] = '';
-                $con['DTN'][$i]    = urlencode($GLOBALS['db'] . "." . $val[0]);
+                $con['DTN'][$i]    = urlencode($GLOBALS['db'].".".$val[0]);
                 $con['DCN'][$i]    = urlencode($field);
                 $con['STN'][$i]    = urlencode(
-                    $value['foreign_db'] . "." . $value['foreign_table']
+                    $value['foreign_db'].".".$value['foreign_table']
                 );
                 $con['SCN'][$i]    = urlencode($value['foreign_field']);
                 $i++;
@@ -176,19 +180,19 @@ function PMA_getScriptContr()
  *
  * @return array unique or primary indices
  */
-function PMA_getPKOrUniqueKeys()
+function get_pk_or_unique_keys()
 {
-    return PMA_getAllKeys(true);
+    return get_all_keys(true);
 }
 
 /**
- * Returns all indices
+ * returns all indices
  *
  * @param bool $unique_only whether to include only unique ones
  *
  * @return array indices
  */
-function PMA_getAllKeys($unique_only = false)
+function get_all_keys($unique_only = false)
 {
     include_once './libraries/Index.class.php';
 
@@ -203,7 +207,7 @@ function PMA_getAllKeys($unique_only = false)
             }
             $columns = $index->getColumns();
             foreach ($columns as $column_name => $dummy) {
-                $keys[$schema . '.' . $table . '.' . $column_name] = 1;
+                $keys[$schema . '.' .$table . '.' . $column_name] = 1;
             }
         }
     }
@@ -215,7 +219,7 @@ function PMA_getAllKeys($unique_only = false)
  *
  * @return string
  */
-function PMA_getScriptTabs()
+function get_script_tabs()
 {
     $retval = array(
         'j_tabs' => array(),
@@ -238,7 +242,7 @@ function PMA_getScriptTabs()
  *
  * @return array table positions and sizes
  */
-function PMA_getTabPos()
+function get_tab_pos()
 {
     $cfgRelation = PMA_getRelationsParam();
 
@@ -267,21 +271,14 @@ function PMA_getTabPos()
 /**
  * Prepares XML output for js/pmd/ajax.js to display a message
  *
- * @param string $b   b attribute value
- * @param string $ret Return attribute value
- *
- * @return void
  */
-function PMA_returnUpd($b, $ret)
+function PMD_return_upd($b, $ret)
 {
     // not sure where this was defined...
     global $K;
 
     header("Content-Type: text/xml; charset=utf-8");
     header("Cache-Control: no-cache");
-    die(
-        '<root act="relation_upd" return="' . $ret . '" b="'
-        . $b . '" K="' . $K . '"></root>'
-    );
+    die('<root act="relation_upd" return="'.$ret.'" b="'.$b.'" K="'.$K.'"></root>');
 }
 ?>

@@ -194,11 +194,11 @@ function displayPasswordGenerateButton()
  *
  * @param object  $this_element   a jQuery object pointing to the element
  */
-function PMA_addDatepicker($this_element, type, options)
+function PMA_addDatepicker($this_element, options)
 {
-    var showTimepicker = true;
-    if (type=="date") {
-        showTimepicker = false;
+    var showTimeOption = false;
+    if ($this_element.is('.datetimefield')) {
+        showTimeOption = true;
     }
 
     var defaultOptions = {
@@ -210,7 +210,7 @@ function PMA_addDatepicker($this_element, type, options)
         showSecond: true,
         showMillisec: true,
         showMicrosec: true,
-        showTimepicker: showTimepicker,
+        showTimepicker: showTimeOption,
         showButtonPanel: false,
         dateFormat: 'yy-mm-dd', // yy means year with four digits
         timeFormat: 'HH:mm:ss.lc',
@@ -232,14 +232,10 @@ function PMA_addDatepicker($this_element, type, options)
             $this_element.data('comes_from', '');
         }
     };
-    if (type == "datetime" || type == "timestamp") {
+    if (showTimeOption || (typeof(options) != 'undefined'  && options.showTimepicker)) {
         $this_element.datetimepicker($.extend(defaultOptions, options));
-    }
-    else if (type == "date") {
-        $this_element.datetimepicker($.extend(defaultOptions, options));
-    }
-    else if (type == "time") {
-        $this_element.timepicker($.extend(defaultOptions, options));
+    } else {
+        $this_element.datepicker($.extend(defaultOptions, options));
     }
 }
 
@@ -387,13 +383,13 @@ function confirmQuery(theForm1, sqlQuery1)
  */
 function checkSqlQuery(theForm)
 {
-    var sqlQuery;
     // get the textarea element containing the query
     if (codemirror_editor) {
         codemirror_editor.save();
-        sqlQuery = codemirror_editor.getValue();
+        var sqlQuery = codemirror_editor.display.input;
+        sqlQuery.value = codemirror_editor.getValue();
     } else {
-        sqlQuery = theForm.elements.sql_query.value;
+        var sqlQuery = theForm.elements['sql_query'];
     }
     var isEmpty  = 1;
     var space_re = new RegExp('\\s+');
@@ -411,7 +407,7 @@ function checkSqlQuery(theForm)
         return true;
     }
     // Checks for "DROP/DELETE/ALTER" statements
-    if (sqlQuery.replace(space_re, '') !== '') {
+    if (sqlQuery.value.replace(space_re, '') !== '') {
         if (confirmQuery(theForm, sqlQuery)) {
             return true;
         } else {
@@ -422,8 +418,9 @@ function checkSqlQuery(theForm)
     isEmpty = 1;
 
     if (isEmpty) {
+        sqlQuery.select();
         alert(PMA_messages.strFormEmpty);
-        codemirror_editor.focus();
+        sqlQuery.focus();
         return false;
     }
 
@@ -782,27 +779,27 @@ function insertQuery(queryType)
 
     if (myListBox.options.length > 0) {
         sql_box_locked = true;
-        var columnsList = "";
+        var chaineAj = "";
         var valDis = "";
         var editDis = "";
         var NbSelect = 0;
         for (var i = 0; i < myListBox.options.length; i++) {
             NbSelect++;
             if (NbSelect > 1) {
-                columnsList += ", ";
+                chaineAj += ", ";
                 valDis += ",";
                 editDis += ",";
             }
-            columnsList += myListBox.options[i].value;
+            chaineAj += myListBox.options[i].value;
             valDis += "[value-" + NbSelect + "]";
             editDis += myListBox.options[i].value + "=[value-" + NbSelect + "]";
         }
         if (queryType == "selectall") {
             query = "SELECT * FROM `" + table + "` WHERE 1";
         } else if (queryType == "select") {
-            query = "SELECT " + columnsList + " FROM `" + table + "` WHERE 1";
+            query = "SELECT " + chaineAj + " FROM `" + table + "` WHERE 1";
         } else if (queryType == "insert") {
-            query = "INSERT INTO `" + table + "`(" + columnsList + ") VALUES (" + valDis + ")";
+            query = "INSERT INTO `" + table + "`(" + chaineAj + ") VALUES (" + valDis + ")";
         } else if (queryType == "update") {
             query = "UPDATE `" + table + "` SET " + editDis + " WHERE 1";
         } else if (queryType == "delete") {
@@ -825,37 +822,37 @@ function insertValueQuery()
 
     if (myListBox.options.length > 0) {
         sql_box_locked = true;
-        var columnsList = "";
+        var chaineAj = "";
         var NbSelect = 0;
         for (var i = 0; i < myListBox.options.length; i++) {
             if (myListBox.options[i].selected) {
                 NbSelect++;
                 if (NbSelect > 1) {
-                    columnsList += ", ";
+                    chaineAj += ", ";
                 }
-                columnsList += myListBox.options[i].value;
+                chaineAj += myListBox.options[i].value;
             }
         }
 
         /* CodeMirror support */
         if (codemirror_editor) {
-            codemirror_editor.replaceSelection(columnsList);
+            codemirror_editor.replaceSelection(chaineAj);
         //IE support
         } else if (document.selection) {
             myQuery.focus();
             var sel = document.selection.createRange();
-            sel.text = columnsList;
+            sel.text = chaineAj;
             document.sqlform.insert.focus();
         }
         //MOZILLA/NETSCAPE support
         else if (document.sqlform.sql_query.selectionStart || document.sqlform.sql_query.selectionStart == "0") {
             var startPos = document.sqlform.sql_query.selectionStart;
             var endPos = document.sqlform.sql_query.selectionEnd;
-            var SqlString = document.sqlform.sql_query.value;
+            var chaineSql = document.sqlform.sql_query.value;
 
-            myQuery.value = SqlString.substring(0, startPos) + columnsList + SqlString.substring(endPos, SqlString.length);
+            myQuery.value = chaineSql.substring(0, startPos) + chaineAj + chaineSql.substring(endPos, chaineSql.length);
         } else {
-            myQuery.value += columnsList;
+            myQuery.value += chaineAj;
         }
         sql_box_locked = false;
     }
@@ -867,26 +864,26 @@ function insertValueQuery()
  */
 function addDateTimePicker() {
     if ($.timepicker !== undefined) {
-        $('input.timefield, input.datefield, input.datetimefield').each(function () {
+        $('input.datefield, input.datetimefield').each(function () {
 
-            no_decimals = $(this).parent().attr('data-decimals');
+            no_decimals = $(this).parent().data('decimals');
             var showMillisec = false;
             var showMicrosec = false;
             var timeFormat = 'HH:mm:ss';
             // check for decimal places of seconds
-            if (($(this).parent().attr('data-decimals') > 0) && ($(this).parent().attr('data-type').indexOf('time') != -1)){
+            if (($(this).parent().data('decimals') > 0) && ($(this).parent().data('type').indexOf('time') != -1)){
                 showMillisec = true;
                 timeFormat = 'HH:mm:ss.lc';
-                if ($(this).parent().attr('data-decimals') > 3) {
+                if ($(this).parent().data('decimals') > 3) {
                     showMicrosec = true;
                 }
             }
-            PMA_addDatepicker($(this), $(this).parent().attr('data-type'), {
+            PMA_addDatepicker($(this), {
                 showMillisec: showMillisec,
                 showMicrosec: showMicrosec,
                 timeFormat: timeFormat
             });
-        });
+         })
     }
 }
 
@@ -1379,7 +1376,7 @@ AJAX.registerOnload('functions.js', function () {
         }
 
         var $form = $(this).prev('form');
-        var sql_query  = $form.find("input[name='sql_query']").val().trim();
+        var sql_query  = $form.find("input[name='sql_query']").val();
         var $inner_sql = $(this).parent().prev().find('code.sql');
         var old_text   = $inner_sql.html();
 
@@ -1813,8 +1810,7 @@ function PMA_createProfilingChartJqplot(target, data)
             },
             legend: {
                 show: true,
-                location: 'e',
-                rendererOptions: {numberColumns: 2}
+                location: 'e'
             },
             // from http://tango.freedesktop.org/Tango_Icon_Theme_Guidelines#Color_Palette
             seriesColors: [
@@ -3000,8 +2996,6 @@ function indexEditorDialog(url, title, callback_success, callback_failure)
             .dialog({
                 title: title,
                 width: 450,
-                // increase the chance that the footer will be visible:
-                height: 450,
                 open: PMA_verifyColumnsProperties,
                 modal: true,
                 buttons: button_options,
@@ -3257,7 +3251,6 @@ AJAX.registerTeardown('functions.js', function () {
     $('#pageselector').die('change');
     $('a.formLinkSubmit').die('click');
     $('#update_recent_tables').unbind('ready');
-    $('#sync_favorite_tables').unbind('ready');
 });
 /**
  * Vertical pointer
@@ -3356,34 +3349,12 @@ AJAX.registerOnload('functions.js', function () {
             $('#update_recent_tables').attr('href'),
             function (data) {
                 if (data.success === true) {
-                    $('#pma_recent_list').html(data.list);
+                    $('#recentTable').html(data.options);
                 }
             }
         );
     }
 
-    // Sync favorite tables from localStorage to pmadb.
-    if ($('#sync_favorite_tables').length) {
-        $.ajax({
-            url: $('#sync_favorite_tables').attr("href"),
-            cache: false,
-            type: 'POST',
-            data: {
-                favorite_tables: (window.localStorage['favorite_tables']
-                    !== undefined)
-                    ? window.localStorage['favorite_tables']
-                    : ''
-            },
-            success: function (data) {
-                // Update localStorage.
-                if (window.localStorage !== undefined) {
-                    window.localStorage['favorite_tables']
-                        = data.favorite_tables;
-                }
-                $('#pma_favorite_list').html(data.list);
-            }
-        });
-    }
 }); // end of $()
 
 
@@ -3940,7 +3911,7 @@ function PMA_createViewDialog($this)
                     $(this).remove();
                 }
             });
-            // Attach syntax highlighted editor
+            // Attach syntax highlited editor
             if (typeof CodeMirror !== 'undefined') {
                 var $elm = $dialog.find('textarea');
                 var opts = {lineNumbers: true, matchBrackets: true, indentUnit: 4, mode: "text/x-mysql", lineWrapping: true};
@@ -4137,27 +4108,4 @@ function PMA_formatDateTime(date, seconds) {
             second: date.getSeconds()
         }
     );
-}
-
-/**
- * Check than forms have less fields than max allowed by PHP.
- */
-function checkNumberOfFields() {
-    if (typeof maxInputVars === 'undefined') {
-        return false;
-    }
-    if (false === maxInputVars) {
-        return false;
-    }
-    $('form').each(function() {
-        var nbInputs = $(this).find(':input').length;
-        if (nbInputs > maxInputVars) {
-            var warning = $.sprintf(PMA_messages.strTooManyInputs, maxInputVars);
-            PMA_ajaxShowMessage(warning);
-            return false;
-        }
-        return true;
-    });
-
-    return true;
 }

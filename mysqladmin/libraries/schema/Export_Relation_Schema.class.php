@@ -1,8 +1,6 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
- * Contains PMA_Export_Relation_Schema class which is inherited
- * by all schema classes.
  *
  * @package PhpMyAdmin
  */
@@ -29,7 +27,6 @@ class PMA_Export_Relation_Schema
     public $orientation;
     public $paper;
     public $pageNumber;
-    public $exportType;
 
     /**
      * Set Page Number

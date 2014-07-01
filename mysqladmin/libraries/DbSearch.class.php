@@ -175,7 +175,6 @@ class PMA_DbSearch
         // Gets where clause for the query
         $where_clause = $this->_getWhereClause($table);
         // Builds complete queries
-        $sql = array();
         $sql['select_columns'] = $sqlstr_select . ' * ' . $sqlstr_from
             . $where_clause;
         // here, I think we need to still use the COUNT clause, even for
@@ -362,7 +361,7 @@ class PMA_DbSearch
                 . __('Delete') . '</a></td>';
         } else {
             $html_output .= '<td>&nbsp;</td>'
-                . '<td>&nbsp;</td>';
+                .'<td>&nbsp;</td>';
         }// end if else
         $html_output .= '</tr>';
         return $html_output;
@@ -477,7 +476,7 @@ class PMA_DbSearch
      *
      * @return string div tags
      */
-    public function getResultDivs()
+    public function _getResultDivs()
     {
         $html_output = '<!-- These two table-image and table-link elements display'
             . ' the table name in browse search results  -->';

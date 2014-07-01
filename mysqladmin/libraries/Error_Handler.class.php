@@ -165,7 +165,7 @@ class PMA_Error_Handler
         case E_CORE_ERROR:
         case E_COMPILE_ERROR:
         default:
-            // FATAL error, display it and exit
+            // FATAL error, dislay it and exit
             $this->dispFatalError($error);
             exit;
             break;

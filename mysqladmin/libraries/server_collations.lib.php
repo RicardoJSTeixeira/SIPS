@@ -15,48 +15,57 @@ if (! defined('PHPMYADMIN')) {
 /**
  * Returns the html for server Character Sets and Collations.
  *
- * @param Array $mysqlCharsets      Mysql Charsets list
- * @param Array $mysqlCollations    Mysql Collations list
- * @param Array $mysqlCharsetsDesc  Charsets descriptions
- * @param Array $mysqlDftCollations Default Collations list
- * @param Array $mysqlCollAvailable Available Collations list
+ * @param Array $mysql_charsets              Mysql Charsets list
+ * @param Array $mysql_collations            Mysql Collations list
+ * @param Array $mysql_charsets_descriptions Charsets descriptions
+ * @param Array $mysql_default_collations    Default Collations list
+ * @param Array $mysql_collations_available  Available Collations list
  *
  * @return string
  */
-function PMA_getHtmlForCharsets($mysqlCharsets, $mysqlCollations,
-    $mysqlCharsetsDesc, $mysqlDftCollations,
-    $mysqlCollAvailable
+function PMA_getHtmlForCharsets($mysql_charsets, $mysql_collations,
+    $mysql_charsets_descriptions, $mysql_default_collations,
+    $mysql_collations_available
 ) {
     /**
      * Outputs the result
      */
     $html = '<div id="div_mysql_charset_collations">' . "\n"
         . '<table class="data noclick">' . "\n"
-        . '<tr><th id="collationHeader">' . __('Collation') . '</th>' . "\n"
+        . '<tr><th>' . __('Collation') . '</th>' . "\n"
         . '    <th>' . __('Description') . '</th>' . "\n"
         . '</tr>' . "\n";
 
-    $table_row_count = count($mysqlCharsets) + count($mysqlCollations);
+    $i = 0;
+    $table_row_count = count($mysql_charsets) + count($mysql_collations);
 
-    foreach ($mysqlCharsets as $current_charset) {
-
+    foreach ($mysql_charsets as $current_charset) {
+        if ($i >= $table_row_count / 2) {
+            $i = 0;
+            $html .= '</table>' . "\n"
+                . '<table class="data noclick">' . "\n"
+                . '<tr><th>' . __('Collation') . '</th>' . "\n"
+                . '    <th>' . __('Description') . '</th>' . "\n"
+                . '</tr>' . "\n";
+        }
+        $i++;
         $html .= '<tr><th colspan="2" class="right">' . "\n"
             . '        ' . htmlspecialchars($current_charset) . "\n"
-            . (empty($mysqlCharsetsDesc[$current_charset])
+            . (empty($mysql_charsets_descriptions[$current_charset])
                 ? ''
                 : '        (<i>' . htmlspecialchars(
-                    $mysqlCharsetsDesc[$current_charset]
+                    $mysql_charsets_descriptions[$current_charset]
                 ) . '</i>)' . "\n")
             . '    </th>' . "\n"
             . '</tr>' . "\n";
 
         $html .= PMA_getHtmlForCollationCurrentCharset(
             $current_charset,
-            $mysqlCollations,
-            $mysqlDftCollations,
-            $mysqlCollAvailable
+            $mysql_collations,
+            $i,
+            $mysql_default_collations,
+            $mysql_collations_available
         );
-
     }
     unset($table_row_count);
     $html .= '</table>' . "\n"
@@ -68,27 +77,28 @@ function PMA_getHtmlForCharsets($mysqlCharsets, $mysqlCollations,
 /**
  * Returns the html for Collations of Current Charset.
  *
- * @param String $currCharset        Current Charset
- * @param Array  $mysqlColl          Collations list
- * @param Array  $mysqlDefaultColl   Default Collations list
- * @param Array  $mysqlCollAvailable Available Collations list
+ * @param String $current_charset            Current Charset
+ * @param Array  $mysql_collations           Collations list
+ * @param int    &$i                         Display Index
+ * @param Array  $mysql_default_collations   Default Collations list
+ * @param Array  $mysql_collations_available Available Collations list
  *
  * @return string
  */
 function PMA_getHtmlForCollationCurrentCharset(
-    $currCharset, $mysqlColl,
-    $mysqlDefaultColl, $mysqlCollAvailable
+    $current_charset, $mysql_collations, &$i,
+    $mysql_default_collations, $mysql_collations_available
 ) {
     $odd_row = true;
     $html = '';
-    foreach ($mysqlColl[$currCharset] as $current_collation) {
-
+    foreach ($mysql_collations[$current_charset] as $current_collation) {
+        $i++;
         $html .= '<tr class="'
             . ($odd_row ? 'odd' : 'even')
-            . ($mysqlDefaultColl[$currCharset] == $current_collation
+            . ($mysql_default_collations[$current_charset] == $current_collation
                 ? ' marked'
                 : '')
-            . ($mysqlCollAvailable[$current_collation] ? '' : ' disabled')
+            . ($mysql_collations_available[$current_collation] ? '' : ' disabled')
             . '">' . "\n"
             . '    <td>' . htmlspecialchars($current_collation) . '</td>' . "\n"
             . '    <td>' . PMA_getCollationDescr($current_collation) . '</td>' . "\n"

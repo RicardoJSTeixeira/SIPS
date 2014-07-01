@@ -98,9 +98,7 @@ h3 {
 a,
 a:link,
 a:visited,
-a:active,
-button.mult_submit,
-.checkall_box+label {
+a:active {
     text-decoration: none;
     color: #235a81;
     cursor: pointer;
@@ -108,10 +106,7 @@ button.mult_submit,
 
 }
 
-a:hover,
-button.mult_submit:hover,
-button.mult_submit:focus,
-.checkall_box+label:hover {
+a:hover {
     text-decoration: underline;
     color: #235a81;
 }
@@ -136,13 +131,7 @@ button.mult_submit:focus,
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    <?php echo $_SESSION['PMA_Theme']->getCssGradient('ffffff', 'e0e0e0'); ?>
-}
-
-#initials_table a.active {
-    border: 1px solid #666;
-    box-shadow: 0 0 2px #999;
-    <?php echo $_SESSION['PMA_Theme']->getCssGradient('bbbbbb', 'ffffff'); ?>
+    <?php echo $_SESSION['PMA_Theme']->getCssGradient('ffffff', 'cccccc'); ?>
 }
 
 dfn {
@@ -178,13 +167,6 @@ form {
     display: inline;
 }
 
-
-input,
-select {
-    /* Fix outline in Chrome: */
-    outline: none;
-}
-
 input[type=text],
 input[type=password],
 input[type=number],
@@ -193,70 +175,16 @@ input[type=date] {
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
 
+    box-shadow: 0 1px 2px #ddd;
+    -moz-box-shadow: 0 1px 2px #ddd;
+    -webkit-box-shadow: 0 1px 2px #ddd;
 
     background: white;
     border: 1px solid #aaa;
     color: #555;
     padding: 4px;
     margin: 6px;
-}
 
-input[type=number] {
-    width: 50px;
-}
-
-input[type=text],
-input[type=password],
-input[type=number],
-input[type=date],
-select {
-    transition: all 0.2s;
-    -ms-transition: all 0.2s;
-    -webkit-transition: all 0.2s;
-    -moz-transition: all 0.2s;
-}
-
-input[type=text][disabled],
-input[type=text][disabled]:hover,
-input[type=password][disabled],
-input[type=password][disabled]:hover,
-input[type=number][disabled],
-input[type=number][disabled]:hover,
-input[type=date][disabled],
-input[type=date][disabled]:hover,
-select[disabled],
-select[disabled]:hover {
-    background: #e8e8e8;
-    box-shadow: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-}
-
-input[type=text]:hover,
-input[type=text]:focus,
-input[type=password]:hover,
-input[type=password]:focus,
-input[type=number]:hover,
-input[type=number]:focus,
-input[type=date]:hover,
-input[type=date]:focus,
-select:focus,
-select:hover {
-
-    border: 1px solid #7c7c7c;
-
-
-    background: #fff;
-}
-
-input[type=text]:hover,
-input[type=password]:hover,
-input[type=number]:hover,
-input[type=date]:hover,
-select:hover {
-    box-shadow: 0 1px 3px #aaa;
-    -webkit-box-shadow: 0 1px 3px #aaa;
-    -moz-box-shadow: 0 1px 3px #aaa;
 }
 
 input[type=submit],
@@ -282,7 +210,7 @@ input.button {
 
     text-shadow: 0 1px 0 #fff;
 
-    <?php echo $_SESSION['PMA_Theme']->getCssGradient('f8f8f8', 'd8d8d8'); ?>
+    <?php echo $_SESSION['PMA_Theme']->getCssGradient('ffffff', 'cccccc'); ?>
 }
 
 input[type=submit]:hover,
@@ -291,7 +219,7 @@ input[type=reset]:hover,
 input[name=submit_reset]:hover,
 input.button:hover {
     position: relative;
-    <?php echo $_SESSION['PMA_Theme']->getCssGradient('fff', 'ddd'); ?>
+    <?php echo $_SESSION['PMA_Theme']->getCssGradient('cccccc', 'dddddd'); ?>
     cursor: pointer;
 }
 
@@ -301,9 +229,8 @@ input[type=reset]:active,
 input[name=submit_reset]:active,
 input.button:active {
     position: relative;
-    <?php echo $_SESSION['PMA_Theme']->getCssGradient('eee', 'ddd'); ?>
-    box-shadow: 0 1px 6px -2px #333 inset;
-    text-shadow: none;
+    top: 1px;
+    left: 1px;
 }
 
 textarea {
@@ -398,7 +325,11 @@ select {
     -webkit-border-radius: 2px;
     border-radius: 2px;
 
-    border: 1px solid #bbb;
+    -moz-box-shadow: 0 1px 2px #ddd;
+    -webkit-box-shadow: 0 1px 2px #ddd;
+    box-shadow: 0 1px 2px #ddd;
+
+    border: 1px solid #aaa;
     color: #333;
     padding: 3px;
     background: white;
@@ -503,23 +434,6 @@ fieldset .formelement {
     margin-<?php echo $right; ?>: .5em;
     /* IE */
     white-space: nowrap;
-}
-
-@media all and (min-width: 1600px) {
-    fieldset .formelement {
-        clear: none;
-    }
-    #relationalTable td:first-child + td {
-        width: 25%;
-    }
-    #relationalTable td:first-child + td select {
-        width: 32%;
-        margin-right: 1%;
-    }
-    #relationalTable {
-        width: 100%;
-    }
-
 }
 
 /* revert for Gecko */
@@ -987,11 +901,6 @@ ul#topmenu ul.only {
 ul#topmenu > li {
     border-right: 1px solid #fff;
     border-left: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-}
-
-ul#topmenu > li:first-child {
-    border-left: 0;
 }
 
 /* default tab styles */
@@ -1040,7 +949,6 @@ ul#topmenu2 a.tabactive {
 ul#topmenu > li.active {
     /* border-bottom: 0pt solid <?php echo $GLOBALS['cfg']['MainBackground']; ?>; */
     border-right: 0;
-    border-bottom-color: #fff;
 }
 /* end topmenu */
 
@@ -1095,7 +1003,7 @@ div#tablestatistics table {
     min-width: 16em;
 }
 
-/* end table stats */
+/* END table stats */
 
 
 /* server privileges */
@@ -1104,7 +1012,7 @@ div#tablestatistics table {
 #tabledatabases td {
     vertical-align: middle;
 }
-/* end server privileges */
+/* END server privileges */
 
 
 /* Heading */
@@ -1114,6 +1022,7 @@ div#tablestatistics table {
 }
 
 #serverinfo {
+    border-bottom: 1px solid #fff;
     background: #888;
     padding: .3em .9em;
     padding-<?php echo $left; ?>: 2.2em;
@@ -1140,7 +1049,7 @@ div#tablestatistics table {
     font-weight: bold;
     font-style: italic;
     white-space: nowrap;
-    margin-left: 10px;
+    margin-left: 10px;  
     color: #D6D6D6;
     text-shadow: none;
 }
@@ -1241,7 +1150,7 @@ div#tablestatistics table {
 #fieldset_user_global_rights legend input {
     margin-<?php echo $left; ?>: 2em;
 }
-/* end user privileges */
+/* END user privileges */
 
 
 /* serverstatus */
@@ -1336,15 +1245,10 @@ div#chartVariableSettings {
     margin-left: 10px;
 }
 
-table#chartGrid td {
-    padding: 3px;
-    margin: 0;
-}
-
 table#chartGrid div.monitorChart {
     background: #EBEBEB;
-    overflow: hidden;
-    border: none;
+    width: 400px;
+    height: 300px;
 }
 
 div#serverstatus div.tabLinks {
@@ -1519,12 +1423,12 @@ div#querywindowcontainer {
 div#querywindowcontainer fieldset {
     margin-top: 0;
 }
-/* end querywindow */
+/* END querywindow */
 
 /* profiling */
 
 div#profilingchart {
-    width: 850px;
+    width: 550px;
     height: 370px;
     float: <?php echo $left; ?>;
 }
@@ -1557,7 +1461,7 @@ div#profilingchart {
     background-image: url(<?php echo $_SESSION['PMA_Theme']->getImgPath('s_asc.png');?>);
 }
 
-/* end profiling */
+/* END profiling */
 
 /* table charting */
 
@@ -1568,7 +1472,7 @@ div#profilingchart {
     padding: 10px;
 }
 
-/* end table charting */
+/* END table charting */
 
 /* querybox */
 
@@ -1684,19 +1588,7 @@ div#queryboxcontainer div#bookmarkoptions {
 #maincontainer li {
     margin-bottom: .3em;
 }
-
-#full_name_layer {
-    position: absolute;
-    padding: 2px;
-    margin-top: -3px;
-    z-index: 801;
-
-    border-radius: 3px;
-    border: solid 1px #888;
-    background: #fff;
-
-}
-/* end main page */
+/* END main page */
 
 
 /* iconic view for ul items */
@@ -1706,7 +1598,7 @@ li.no_bullets {
     margin-left: -25px !important;      //align with other list items which have bullets
 }
 
-/* end iconic view for ul items */
+/* END iconic view for ul items */
 
 #body_browse_foreigners {
     background: <?php echo $GLOBALS['cfg']['NaviBackground']; ?>;
@@ -1753,15 +1645,6 @@ li.no_bullets {
 
 #div_mysql_charset_collations table {
     float: <?php echo $left; ?>;
-}
-
-#div_mysql_charset_collations table th,
-#div_mysql_charset_collations table td {
-    padding: 0.4em;
-}
-
-#div_mysql_charset_collations table th#collationHeader {
-    width: 35%;
 }
 
 .operations_half_width {
@@ -1828,17 +1711,14 @@ div.sqlvalidate {
 
 #main_pane_left {
     width: 60%;
-    min-width: 260px;
     float: <?php echo $left; ?>;
     padding-top: 1em;
 }
 
 #main_pane_right {
-    overflow: hidden;
-    min-width: 160px;
+    margin-<?php echo $left; ?>: 60%;
     padding-top: 1em;
     padding-<?php echo $left; ?>: 1em;
-    padding-<?php echo $right; ?>: .5em;
 }
 
 .group {
@@ -2047,6 +1927,7 @@ input[type=date].invalid_value,
     padding: 5px 12px;
     color: #111;
     text-decoration: none;
+    background: #ddd;
 
     border-radius: 12px;
     -webkit-border-radius: 12px;
@@ -2056,6 +1937,9 @@ input[type=date].invalid_value,
 
     <?php echo $_SESSION['PMA_Theme']->getCssGradient('ffffff', 'cccccc'); ?>
     cursor: pointer;
+}
+#buttonGo:hover {
+    <?php echo $_SESSION['PMA_Theme']->getCssGradient('cccccc', 'dddddd'); ?>
 }
 
 .format_specific_options h3 {
@@ -2100,6 +1984,7 @@ select#table_select {
     margin-bottom: 0;
 }
 
+#quick_or_custom,
 #output_quick_export {
     display: none;
 }
@@ -2152,13 +2037,6 @@ input#input_import_file {
 #fieldsForm ul.table-structure-actions .submenu li span {
     padding: 0.3em;
     margin: 0.1em;
-}
-#structure-action-links a {
-    margin-<?php echo $right; ?>: 1em;
-}
-#addColumns input[type="radio"] {
-    margin: 3px 0 0;
-    margin-<?php echo $left; ?>: 1em;
 }
 /**
  * Indexes
@@ -2634,10 +2512,6 @@ fieldset .disabled-field td {
     overflow: hidden;
 }
 
-.pma_table th.draggable span {
-    margin-<?php echo $right; ?>: 10px;
-}
-
 .modal-copy input {
     display: block;
     width: 100%;
@@ -2885,7 +2759,7 @@ fieldset .disabled-field td {
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
 .ui-timepicker-div dl { text-align: <?php echo $left; ?>; }
 .ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
-.ui-timepicker-div dl dd { margin: 0 10px 10px 85px; }
+.ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
 .ui-timepicker-div td { font-size: 90%; }
 .ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
 .ui-timepicker-rtl { direction: rtl; }
@@ -2927,16 +2801,4 @@ body .ui-widget {
 .report-description {
     height:10em;
     width:570px;
-}
-
-div#page_content div#tableslistcontainer table.data {
-    border-top: 0.1px solid #EEEEEE;
-}
-
-div#page_content form#db_search_form.ajax fieldset {
-    margin-top: -0.3em;
-}
-
-div#page_content div#tableslistcontainer, div#page_content div.notice, div#page_content div#result_query {
-    margin-top: 1em;
 }

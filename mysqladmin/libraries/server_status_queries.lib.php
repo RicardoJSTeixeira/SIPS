@@ -15,7 +15,7 @@ if (! defined('PHPMYADMIN')) {
 /**
  * Returns the html content for the query statistics
  *
- * @param PMA_ServerStatusData $ServerStatusData Server status data
+ * @param object $ServerStatusData An instance of the PMA_ServerStatusData class
  *
  * @return string
  */
@@ -68,7 +68,7 @@ function PMA_getHtmlForQueryStatistics($ServerStatusData)
 /**
  * Returns the html content for the query details
  *
- * @param PMA_ServerStatusData $ServerStatusData Server status data
+ * @param object $ServerStatusData An instance of the PMA_ServerStatusData class
  *
  * @return string
  */

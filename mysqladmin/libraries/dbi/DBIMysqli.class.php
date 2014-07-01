@@ -218,32 +218,27 @@ class PMA_DBI_Mysqli implements PMA_DBI_Extension
             );
         }
 
-        if ($return_value != false) {
+        if ($return_value == false) {
+            if ($is_controluser) {
+                trigger_error(
+                    __('Connection for controluser as defined in your configuration failed.'),
+                    E_USER_WARNING
+                );
+                return false;
+            }
+            // we could be calling $GLOBALS['dbi']->connect() to connect to another
+            // server, for example in the Synchronize feature, so do not
+            // go back to main login if it fails
+            if (! $auxiliary_connection) {
+                PMA_logUser($user, 'mysql-denied');
+                global $auth_plugin;
+                $auth_plugin->authFails();
+            } else {
+                return false;
+            }
+        } else {
             $GLOBALS['dbi']->postConnect($link, $is_controluser);
-            return $link;
         }
-
-        if ($is_controluser) {
-            trigger_error(
-                __(
-                    'Connection for controluser as defined in your '
-                    . 'configuration failed.'
-                ),
-                E_USER_WARNING
-            );
-            return false;
-        }
-
-        // we could be calling $GLOBALS['dbi']->connect() to connect to another
-        // server, for example in the Synchronize feature, so do not
-        // go back to main login if it fails
-        if ($auxiliary_connection) {
-            return false;
-        }
-
-        PMA_logUser($user, 'mysql-denied');
-        global $auth_plugin;
-        $auth_plugin->authFails();
 
         return $link;
     }
@@ -517,11 +512,11 @@ class PMA_DBI_Mysqli implements PMA_DBI_Extension
     public function numRows($result)
     {
         // see the note for tryQuery();
-        if (is_bool($result)) {
+        if (!is_bool($result)) {
+            return @mysqli_num_rows($result);
+        } else {
             return 0;
         }
-
-        return @mysqli_num_rows($result);
     }
 
     /**

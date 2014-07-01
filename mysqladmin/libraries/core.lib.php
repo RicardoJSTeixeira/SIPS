@@ -300,16 +300,15 @@ function PMA_warnMissingExtension($extension, $fatal = false, $extra = '')
     }
     if ($fatal) {
         PMA_fatalError($message);
-        return;
+    } else {
+        $GLOBALS['error_handler']->addError(
+            $message,
+            E_USER_WARNING,
+            '',
+            '',
+            false
+        );
     }
-
-    $GLOBALS['error_handler']->addError(
-        $message,
-        E_USER_WARNING,
-        '',
-        '',
-        false
-    );
 }
 
 /**
@@ -341,7 +340,7 @@ function PMA_getTableCount($db)
  * (renamed with PMA prefix to avoid double definition when embedded
  * in Moodle)
  *
- * @param string|int $size size (Default = 0)
+ * @param string $size size
  *
  * @return integer $size
  */
@@ -351,7 +350,6 @@ function PMA_getRealSize($size = 0)
         return 0;
     }
 
-    $scan = array();
     $scan['gb'] = 1073741824; //1024 * 1024 * 1024;
     $scan['g']  = 1073741824; //1024 * 1024 * 1024;
     $scan['mb'] = 1048576;
@@ -444,17 +442,10 @@ function PMA_arrayMergeRecursive()
 function PMA_arrayWalkRecursive(&$array, $function, $apply_to_keys_also = false)
 {
     static $recursive_counter = 0;
-    $walked_keys = array();
-
     if (++$recursive_counter > 1000) {
         PMA_fatalError(__('possible deep recursion attack'));
     }
     foreach ($array as $key => $value) {
-        if (isset($walked_keys[$key])) {
-            continue;
-        }
-        $walked_keys[$key] = true;
-
         if (is_array($value)) {
             PMA_arrayWalkRecursive($array[$key], $function, $apply_to_keys_also);
         } else {
@@ -466,7 +457,6 @@ function PMA_arrayWalkRecursive(&$array, $function, $apply_to_keys_also = false)
             if ($new_key != $key) {
                 $array[$new_key] = $array[$key];
                 unset($array[$key]);
-                $walked_keys[$new_key] = true;
             }
         }
     }
@@ -492,17 +482,14 @@ function PMA_checkPageValidity(&$page, $whitelist)
 
     if (in_array($page, $whitelist)) {
         return true;
-    }
-
-    if (in_array(substr($page, 0, strpos($page . '?', '?')), $whitelist)) {
+    } elseif (in_array(substr($page, 0, strpos($page . '?', '?')), $whitelist)) {
         return true;
+    } else {
+        $_page = urldecode($page);
+        if (in_array(substr($_page, 0, strpos($_page . '?', '?')), $whitelist)) {
+            return true;
+        }
     }
-
-    $_page = urldecode($page);
-    if (in_array(substr($_page, 0, strpos($_page . '?', '?')), $whitelist)) {
-        return true;
-    }
-
     return false;
 }
 
@@ -520,17 +507,11 @@ function PMA_getenv($var_name)
 {
     if (isset($_SERVER[$var_name])) {
         return $_SERVER[$var_name];
-    }
-
-    if (isset($_ENV[$var_name])) {
+    } elseif (isset($_ENV[$var_name])) {
         return $_ENV[$var_name];
-    }
-
-    if (getenv($var_name)) {
+    } elseif (getenv($var_name)) {
         return getenv($var_name);
-    }
-
-    if (function_exists('apache_getenv')
+    } elseif (function_exists('apache_getenv')
         && apache_getenv($var_name, true)
     ) {
         return apache_getenv($var_name, true);
@@ -574,38 +555,36 @@ function PMA_sendHeaderLocation($uri, $use_refresh = false)
         echo '//]]>' . "\n";
         echo '</script></body></html>' . "\n";
 
-        return;
-    }
-
-    if (SID) {
-        if (strpos($uri, '?') === false) {
-            header('Location: ' . $uri . '?' . SID);
-        } else {
-            $separator = PMA_URL_getArgSeparator();
-            header('Location: ' . $uri . $separator . SID);
-        }
-        return;
-    }
-
-    session_write_close();
-    if (headers_sent()) {
-        if (function_exists('debug_print_backtrace')) {
-            echo '<pre>';
-            debug_print_backtrace();
-            echo '</pre>';
-        }
-        trigger_error(
-            'PMA_sendHeaderLocation called when headers are already sent!',
-            E_USER_ERROR
-        );
-    }
-    // bug #1523784: IE6 does not like 'Refresh: 0', it
-    // results in a blank page
-    // but we need it when coming from the cookie login panel)
-    if (PMA_IS_IIS && $use_refresh) {
-        header('Refresh: 0; ' . $uri);
     } else {
-        header('Location: ' . $uri);
+        if (SID) {
+            if (strpos($uri, '?') === false) {
+                header('Location: ' . $uri . '?' . SID);
+            } else {
+                $separator = PMA_URL_getArgSeparator();
+                header('Location: ' . $uri . $separator . SID);
+            }
+        } else {
+            session_write_close();
+            if (headers_sent()) {
+                if (function_exists('debug_print_backtrace')) {
+                    echo '<pre>';
+                    debug_print_backtrace();
+                    echo '</pre>';
+                }
+                trigger_error(
+                    'PMA_sendHeaderLocation called when headers are already sent!',
+                    E_USER_ERROR
+                );
+            }
+            // bug #1523784: IE6 does not like 'Refresh: 0', it
+            // results in a blank page
+            // but we need it when coming from the cookie login panel)
+            if (PMA_IS_IIS && $use_refresh) {
+                header('Refresh: 0; ' . $uri);
+            } else {
+                header('Location: ' . $uri);
+            }
+        }
     }
 }
 
@@ -636,14 +615,13 @@ function PMA_noCacheHeader()
          * Adding Pragma: public fixes this.
          */
         header('Pragma: public');
-        return;
+    } else {
+        header('Pragma: no-cache'); // HTTP/1.0
+        // test case: exporting a database into a .gz file with Safari
+        // would produce files not having the current time
+        // (added this header for Safari but should not harm other browsers)
+        header('Last-Modified: ' . date(DATE_RFC1123));
     }
-
-    header('Pragma: no-cache'); // HTTP/1.0
-    // test case: exporting a database into a .gz file with Safari
-    // would produce files not having the current time
-    // (added this header for Safari but should not harm other browsers)
-    header('Last-Modified: ' . date(DATE_RFC1123));
 }
 
 
@@ -804,58 +782,15 @@ function PMA_linkURL($url)
 {
     if (!preg_match('#^https?://#', $url) || defined('PMA_SETUP')) {
         return $url;
+    } else {
+        if (!function_exists('PMA_URL_getCommon')) {
+            include_once './libraries/url_generating.lib.php';
+        }
+        $params = array();
+        $params['url'] = $url;
+        return './url.php' . PMA_URL_getCommon($params);
     }
-
-    if (!function_exists('PMA_URL_getCommon')) {
-        include_once './libraries/url_generating.lib.php';
-    }
-    $params = array();
-    $params['url'] = $url;
-
-    $url = PMA_URL_getCommon($params);
-    //strip off token and such sensitive information. Just keep url.
-    $arr = parse_url($url);
-    parse_str($arr["query"], $vars);
-    $query = http_build_query(array("url" => $vars["url"]));
-    $url = './url.php?' . $query;
-
-    return $url;
 }
-
-/**
- * Checks whether domain of URL is whitelisted domain or not.
- * Use only for URLs of external sites.
- *
- * @param string $url URL of external site.
- *
- * @return boolean.True:if domain of $url is allowed domain, False:otherwise.
- */
-function PMA_isAllowedDomain($url)
-{
-    $arr = parse_url($url);
-    $domain = $arr["host"];
-    $domainWhiteList = array(
-        /* Include current domain */
-        $_SERVER['SERVER_NAME'],
-        /* phpMyAdmin domains */
-        'wiki.phpmyadmin.net', 'www.phpMyAdmin.net', 'phpmyadmin.net',
-        'docs.phpmyadmin.net',
-        /* mysql.com domains */
-        'dev.mysql.com','bugs.mysql.com',
-        /* php.net domains */
-        'php.net',
-        /* Github domains*/
-        'github.com','www.github.com',
-        /* Following are doubtful ones. */
-        'www.primebase.com','pbxt.blogspot.com'
-    );
-    if (in_array($domain, $domainWhiteList)) {
-        return true;
-    }
-
-    return false;
-}
-
 
 /**
  * Adds JS code snippets to be displayed by the PMA_Response class.

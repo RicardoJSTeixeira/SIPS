@@ -59,11 +59,11 @@ function PMA_getHtmlForCreateTable($db)
     $html .= '<div class="formelement">';
     $html .= __('Name') . ":";
     $html .= '  <input type="text" name="table" maxlength="64" '
-        . 'size="30" required="required" />';
+        . 'size="30" required />';
     $html .= ' </div>';
     $html .= '  <div class="formelement">';
     $html .= __('Number of columns') . ":";
-    $html .= '  <input type="number" min="1" name="num_fields" value="4" required="required" />';
+    $html .= '  <input type="number" min="1" name="num_fields" size="2" />';
     $html .= ' </div>';
     $html .= '  <div class="clearfloat"></div>';
     $html .= '</fieldset>';

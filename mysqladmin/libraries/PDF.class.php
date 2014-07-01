@@ -98,15 +98,15 @@ class PMA_PDF extends TCPDF
     }
 
     /**
-     * Improved with alias expanding.
+     * Improved with alias expading.
      *
      * @return void
      */
     function _putpages()
     {
         if (count($this->Alias) > 0) {
-            $nbPages = count($this->pages);
-            for ($n = 1; $n <= $nbPages; $n++) {
+            $nb = count($this->pages);
+            for ($n = 1;$n <= $nb;$n++) {
                 $this->pages[$n] = strtr($this->pages[$n], $this->Alias);
             }
         }

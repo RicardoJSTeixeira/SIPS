@@ -53,7 +53,12 @@ function PMA_queryChart(data, columnNames, settings) {
                 label : settings.yaxisLabel
             }
         },
-        stackSeries : settings.stackSeries
+        stackSeries : settings.stackSeries,
+        highlighter: {
+            show: true,
+            showTooltip: true,
+            tooltipAxes: 'xy'
+        }
     };
 
     // create the chart
@@ -64,8 +69,6 @@ function PMA_queryChart(data, columnNames, settings) {
     var dataTable = new DataTable();
     if (settings.type == 'timeline') {
         dataTable.addColumn(ColumnType.DATE, columnNames[settings.mainAxis]);
-    } else if (settings.type == 'scatter') {
-        dataTable.addColumn(ColumnType.NUMBER, columnNames[settings.mainAxis]);
     } else {
         dataTable.addColumn(ColumnType.STRING, columnNames[settings.mainAxis]);
     }
@@ -87,8 +90,6 @@ function PMA_queryChart(data, columnNames, settings) {
             if (j === 0) {
                 if (settings.type == 'timeline') { // first column is date type
                     newRow.push(extractDate(row[col]));
-                } else if (settings.type == 'scatter') {
-                    newRow.push(parseFloat(row[col]));
                 } else { // first column is string type
                     newRow.push(row[col]);
                 }
@@ -109,7 +110,7 @@ function drawChart() {
     currentSettings.width = $('#resizer').width() - 20;
     currentSettings.height = $('#resizer').height() - 20;
 
-    // TODO: a better way using .redraw() ?
+    // todo: a better way using .redraw() ?
     if (currentChart !== null) {
         currentChart.destroy();
     }
@@ -180,20 +181,21 @@ AJAX.registerOnload('tbl_chart.js', function () {
 
     // handle chart type changes
     $('input[name="chartType"]').click(function () {
-        var type = currentSettings.type = $(this).val();
-        if (type == 'bar' || type == 'column' || type == 'area') {
+        currentSettings.type = $(this).val();
+        drawChart();
+        if ($(this).val() == 'bar' || $(this).val() == 'column' ||
+            $(this).val() == 'line' || $(this).val() == 'area' ||
+            $(this).val() == 'timeline' || $(this).val() == 'spline'
+        ) {
             $('span.barStacked').show();
         } else {
-            $('input[name="barStacked"]').attr('checked', false);
-            $.extend(true, currentSettings, {stackSeries : false});
             $('span.barStacked').hide();
         }
-        drawChart();
     });
 
     // handle stacking for bar, column and area charts
     $('input[name="barStacked"]').click(function () {
-        if ($(this).is(':checked')) {
+        if (this.checked) {
             $.extend(true, currentSettings, {stackSeries : true});
         } else {
             $.extend(true, currentSettings, {stackSeries : false});
@@ -202,19 +204,16 @@ AJAX.registerOnload('tbl_chart.js', function () {
     });
 
     // handle changes in chart title
-    $('input[name="chartTitle"]')
-    .focus(function () {
+    $('input[name="chartTitle"]').focus(function () {
         temp_chart_title = $(this).val();
-    })
-    .keyup(function () {
+    }).keyup(function () {
         var title = $(this).val();
         if (title.length === 0) {
             title = ' ';
         }
         currentSettings.title = $('input[name="chartTitle"]').val();
         drawChart();
-    })
-    .blur(function () {
+    }).blur(function () {
         if ($(this).val() != temp_chart_title) {
             drawChart();
         }
@@ -226,12 +225,6 @@ AJAX.registerOnload('tbl_chart.js', function () {
         dateTimeCols.push(parseInt(v, 10));
     });
 
-    var numericCols = [];
-    var vals = $('input[name="numericCols"]').val().split(' ');
-    $.each(vals, function (i, v) {
-        numericCols.push(parseInt(v, 10));
-    });
-
     // handle changing the x-axis
     $('select[name="chartXAxis"]').change(function () {
         currentSettings.mainAxis = parseInt($(this).val(), 10);
@@ -240,15 +233,6 @@ AJAX.registerOnload('tbl_chart.js', function () {
         } else {
             $('span.span_timeline').hide();
             if (currentSettings.type == 'timeline') {
-                $('input#radio_line').prop('checked', true);
-                currentSettings.type = 'line';
-            }
-        }
-        if (numericCols.indexOf(currentSettings.mainAxis) != -1) {
-            $('span.span_scatter').show();
-        } else {
-            $('span.span_scatter').hide();
-            if (currentSettings.type == 'scatter') {
                 $('input#radio_line').prop('checked', true);
                 currentSettings.type = 'line';
             }
@@ -331,6 +315,8 @@ $("#tblchartform").live('submit', function (event) {
         } else {
             PMA_ajaxRemoveMessage($msgbox);
             PMA_ajaxShowMessage(data.error, false);
+            chart_data = null;
+            drawChart();
         }
         PMA_ajaxRemoveMessage($msgbox);
     }, "json"); // end $.post()

@@ -15,7 +15,7 @@ if (! defined('PHPMYADMIN')) {
 /**
  * Prints server status information: processes, connections and traffic
  *
- * @param PMA_ServerStatusData $ServerStatusData Server status data
+ * @param Object $ServerStatusData An instance of the PMA_ServerStatusData class
  *
  * @return string
  */
@@ -39,7 +39,7 @@ function PMA_getHtmlForServerStatus($ServerStatusData)
 /**
  * Prints server state General information
  *
- * @param PMA_ServerStatusData $ServerStatusData Server status data
+ * @param Object $ServerStatusData An instance of the PMA_ServerStatusData class
  *
  * @return string
  */
@@ -115,7 +115,7 @@ function PMA_getHtmlForServerStateGeneralInfo($ServerStatusData)
 /**
  * Prints server state traffic information
  *
- * @param PMA_ServerStatusData $ServerStatusData Server status data
+ * @param Object $ServerStatusData An instance of the PMA_ServerStatusData class
  *
  * @return string
  */
@@ -207,7 +207,7 @@ function PMA_getHtmlForServerStateTraffic($ServerStatusData)
 /**
  * Prints server state connections information
  *
- * @param PMA_ServerStatusData $ServerStatusData Server status data
+ * @param Object $ServerStatusData An instance of the PMA_ServerStatusData class
  *
  * @return string
  */
@@ -312,9 +312,11 @@ function PMA_getHtmlForServerStateConnections($ServerStatusData)
 /**
  * Prints Server Process list
  *
+ * @param Object $ServerStatusData An instance of the PMA_ServerStatusData class
+ *
  * @return string
  */
-function PMA_getHtmlForServerProcesslist()
+function PMA_getHtmlForServerProcesslist($ServerStatusData)
 {
     $url_params = array();
 
@@ -366,7 +368,7 @@ function PMA_getHtmlForServerProcesslist()
             'order_by_field' => 'Info'
         )
     );
-    $sortableColCount = count($sortable_columns);
+    $sortable_columns_count = count($sortable_columns);
 
     if (PMA_DRIZZLE) {
         $left_str = 'left(p.info, '
@@ -453,7 +455,7 @@ function PMA_getHtmlForServerProcesslist()
 
         $retval .= '</a>';
 
-        if (! PMA_DRIZZLE && (0 === --$sortableColCount)) {
+        if (! PMA_DRIZZLE && (0 === --$sortable_columns_count)) {
             $retval .= '<a href="' . $full_text_link . '">';
             if ($show_full_sql) {
                 $retval .= PMA_Util::getImage(
@@ -511,7 +513,6 @@ function PMA_getHtmlForServerProcessItem($process, $odd_row, $show_full_sql)
         }
     }
 
-    $url_params = array();
     $url_params['kill'] = $process['Id'];
     $kill_process = 'server_status.php' . PMA_URL_getCommon($url_params);
 
@@ -541,3 +542,5 @@ function PMA_getHtmlForServerProcessItem($process, $odd_row, $show_full_sql)
 }
 
 ?>
+
+

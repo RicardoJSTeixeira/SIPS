@@ -304,28 +304,6 @@ function PMA_getColumnNameInColumnDropSql($sql)
 }
 
 /**
- * Verify whether the result set has columns from just one table
- *
- * @param array $fields_meta meta fields
- *
- * @return boolean whether the result set has columns from just one table
- */
-function PMA_resultSetHasJustOneTable($fields_meta)
-{
-    $just_one_table = true;
-    $prev_table = $fields_meta[0]->table;
-    foreach ($fields_meta as $one_field_meta) {
-        if (! empty($one_field_meta->table)
-            && $one_field_meta->table != $prev_table
-        ) {
-            $just_one_table = false;
-            break;
-        }
-    }
-    return $just_one_table;
-}
-
-/**
  * Verify whether the result set contains all the columns
  * of at least one unique key
  *
@@ -374,6 +352,11 @@ function PMA_getHtmlForRelationalColumnDropdown($db, $table, $column, $curr_valu
 {
     $foreigners = PMA_getForeigners($db, $table, $column);
 
+    $display_field = PMA_getDisplayField(
+        $foreigners[$column]['foreign_db'],
+        $foreigners[$column]['foreign_table']
+    );
+
     $foreignData = PMA_getForeignData($foreigners, $column, false, '', '');
 
     if ($foreignData['disp_row'] == null) {
@@ -390,7 +373,7 @@ function PMA_getHtmlForRelationalColumnDropdown($db, $table, $column, $curr_valu
             . '</span>'
             . '<a href="browse_foreigners.php'
             . PMA_URL_getCommon($_url_params) . '"'
-            . ' target="_blank" class="browse_foreign" ' . '>'
+            . ' target="_blank" class="browse_foreign" ' .'>'
             . __('Browse foreign values')
             . '</a>';
     } else {
@@ -528,7 +511,6 @@ function PMA_getHtmlForProfilingChart($url_query, $db, $profiling_results)
 </script>
 EOT;
         $profiling_table .= "</div>";
-        $profiling_table .= "<div class='clearfloat'></div>";
 
         //require_once 'libraries/chart.lib.php';
         $profiling_table .= '<div id="profilingChartData" style="display:none;">';
@@ -818,7 +800,7 @@ function PMA_getHtmlForBookmark($disp_mode, $cfgBookmark, $sql_query, $db, $tabl
 /**
  * Function to check whether to remember the sorting order or not
  *
- * @param array $analyzed_sql_results the analyzed query and other variables set
+ * @param array $analyzed_sql_results the analyzed query and other varibles set
  *                                    after analyzing the query
  *
  * @return boolean
@@ -847,7 +829,7 @@ function PMA_isRememberSortingOrder($analyzed_sql_results)
 /**
  * Function to check whether the LIMIT clause should be appended or not
  *
- * @param array $analyzed_sql_results the analyzed query and other variables set
+ * @param array $analyzed_sql_results the analyzed query and other varibles set
  *                                    after analyzing the query
  *
  * @return boolean
@@ -873,7 +855,7 @@ function PMA_isAppendLimitClause($analyzed_sql_results)
 /**
  * Function to check whether this query is for just browsing
  *
- * @param array   $analyzed_sql_results the analyzed query and other variables set
+ * @param array   $analyzed_sql_results the analyzed query and other varibles set
  *                                      after analyzing the query
  * @param boolean $find_real_end        whether the real end should be found
  *
@@ -897,7 +879,6 @@ function PMA_isJustBrowsing($analyzed_sql_results, $find_real_end)
         && empty($analyzed_sql_results['analyzed_sql'][0]['group_by_clause'])
         && ! isset($find_real_end)
         && !$analyzed_sql_results['is_subquery']
-        && empty($analyzed_sql_results['analyzed_sql'][0]['having_clause'])
     ) {
         return true;
     } else {
@@ -908,7 +889,7 @@ function PMA_isJustBrowsing($analyzed_sql_results, $find_real_end)
 /**
  * Function to check whether the reated transformation information shoul be deleted
  *
- * @param array $analyzed_sql_results the analyzed query and other variables set
+ * @param array $analyzed_sql_results the analyzed query and other varibles set
  *                                    after analyzing the query
  *
  * @return boolean
@@ -928,7 +909,7 @@ function PMA_isDeleteTransformationInfo($analyzed_sql_results)
 /**
  * Function to check whether the user has rights to drop the database
  *
- * @param array   $analyzed_sql_results  the analyzed query and other variables set
+ * @param array   $analyzed_sql_results  the analyzed query and other varibles set
  *                                       after analyzing the query
  * @param boolean $allowUserDropDatabase whether the user is allowed to drop db
  * @param boolean $is_superuser          whether this user is a superuser
@@ -1045,11 +1026,11 @@ function PMA_addBookmark($pmaAbsoluteUri, $goto)
     $response = PMA_Response::getInstance();
     if ($response->isAjax()) {
         if ($result) {
-            $msg = PMA_message::success(__('Bookmark %s has been created.'));
+            $msg = PMA_message::success(__('Bookmark %s created'));
             $msg->addParam($_POST['bkm_fields']['bkm_label']);
             $response->addJSON('message', $msg);
         } else {
-            $msg = PMA_message::error(__('Bookmark not created!'));
+            $msg = PMA_message::error(__('Bookmark not created'));
             $response->isSuccess(false);
             $response->addJSON('message', $msg);
         }
@@ -1269,7 +1250,7 @@ function PMA_storeTheQueryAsBookmark($db, $bkm_user, $sql_query_for_bookmark,
         $bookmarks = PMA_Bookmark_getList($db);
         foreach ($bookmarks as $key => $val) {
             if ($val == $bkm_label) {
-                PMA_Bookmark_delete($key);
+                PMA_Bookmark_delete($db, $key);
             }
         }
     }
@@ -1382,8 +1363,10 @@ function PMA_cleanupRelations($db, $table, $dropped_column, $purge, $extra_data)
         && strlen($table)
     ) {
         PMA_relationsCleanupColumn($db, $table, $dropped_column);
-        // to refresh the list of indexes (Ajax mode)
-        $extra_data['indexes_list'] = PMA_Index::getView($table, $db);
+        if (isset($extra_data)) {
+            // to refresh the list of indexes (Ajax mode)
+            $extra_data['indexes_list'] = PMA_Index::getView($table, $db);
+        }
     }
 
     return $extra_data;
@@ -1399,7 +1382,7 @@ function PMA_cleanupRelations($db, $table, $dropped_column, $purge, $extra_data)
  * @param string $db                   the current database
  * @param string $table                the current table
  * @param array  $parsed_sql           parsed sql
- * @param array  $analyzed_sql_results the analyzed query and other variables set
+ * @param array  $analyzed_sql_results the analyzed query and other varibles set
  *                                     after analyzing the query
  *
  * @return int $unlim_num_rows unlimited number of rows
@@ -1514,7 +1497,7 @@ function PMA_executeTheQuery($analyzed_sql_results, $full_sql_query, $is_gotofil
     $db, $table, $find_real_end, $sql_query_for_bookmark, $extra_data
 ) {
     // Only if we ask to see the php code
-    if (isset($GLOBALS['show_as_php'])) {
+    if (isset($GLOBALS['show_as_php']) || ! empty($GLOBALS['validatequery'])) {
         $result = null;
         $num_rows = 0;
         $unlim_num_rows = 0;
@@ -1569,11 +1552,6 @@ function PMA_executeTheQuery($analyzed_sql_results, $full_sql_query, $is_gotofil
             isset($_REQUEST['purge']) ? $_REQUEST['purge'] : null,
             isset($extra_data) ? $extra_data : null
         );
-
-        // Update Indexes list.
-        if (isset($_REQUEST['index_change'])) {
-            $extra_data['indexes_list'] = PMA_Index::getView($table, $db);
-        }
     }
 
     return array($result, $num_rows, $unlim_num_rows,
@@ -1660,6 +1638,8 @@ function PMA_getMessageForNoRowsReturned($message_to_show, $analyzed_sql_results
     } elseif (isset($GLOBALS['show_as_php'])) {
         /* User disable showing as PHP, query is only displayed */
         $message = PMA_Message::notice(__('Showing SQL query'));
+    } elseif (! empty($GLOBALS['validatequery'])) {
+        $message = PMA_Message::notice(__('Validated SQL'));
     } else {
         $message = PMA_Message::success(
             __('MySQL returned an empty result set (i.e. zero rows).')
@@ -1667,9 +1647,7 @@ function PMA_getMessageForNoRowsReturned($message_to_show, $analyzed_sql_results
     }
 
     if (isset($GLOBALS['querytime'])) {
-        $_querytime = PMA_Message::notice(
-            '(' . __('Query took %01.4f seconds.') . ')'
-        );
+        $_querytime = PMA_Message::notice('(' . __('Query took %01.4f sec') . ')');
         $_querytime->addParam($GLOBALS['querytime']);
         $message->addMessage($_querytime);
     }
@@ -1714,7 +1692,7 @@ function PMA_sendAjaxResponseForNoResultsReturned($message, $analyzed_sql,
         $createViewHTML = $displayResultsObject->getCreateViewQueryResultOp(
             $analyzed_sql
         );
-        $response->addHTML($createViewHTML . '<br />');
+        $response->addHTML($createViewHTML.'<br />');
     }
 
     $response->addJSON(isset($extra_data) ? $extra_data : array());
@@ -1829,7 +1807,7 @@ function PMA_getHtmlForSqlQueryResults($previous_update_query_html,
 function PMA_getBookmarkCreatedMessage()
 {
     if (isset($_GET['label'])) {
-        $bookmark_created_msg = PMA_message::success(__('Bookmark %s has been created.'));
+        $bookmark_created_msg = PMA_message::success(__('Bookmark %s created'));
         $bookmark_created_msg->addParam($_GET['label']);
     } else {
         $bookmark_created_msg = null;
@@ -1972,7 +1950,7 @@ function PMA_getHtmlForIndexesProblems($query_type, $selected, $db)
         && is_array($selected)
     ) {
         $indexes_problems_html = '';
-        foreach ($selected as $tbl_name) {
+        foreach ($selected as $idx => $tbl_name) {
             $check = PMA_Index::findDuplicates($tbl_name, $db);
             if (! empty($check)) {
                 $indexes_problems_html .= sprintf(
@@ -2077,9 +2055,7 @@ function PMA_sendQueryResponseForResultsReturned($result, $justBrowsing,
         $db, $table, $fields_meta
     );
 
-    $just_one_table = PMA_resultSetHasJustOneTable($fields_meta);
-
-    $editable = ($has_unique || $updatableView) && $just_one_table;
+    $editable = $has_unique || $updatableView;
 
     // Displays the results in a table
     if (empty($disp_mode)) {
@@ -2257,29 +2233,29 @@ function PMA_sendQueryResponse($num_rows, $unlim_num_rows, $is_affected,
 /**
  * Function to execute the query and send the response
  *
- * @param array      $analyzed_sql_results   analysed sql results
- * @param bool       $is_gotofile            whether goto file or not
- * @param string     $db                     current database
- * @param string     $table                  current table
- * @param bool|null  $find_real_end          whether to find real end or not
- * @param string     $sql_query_for_bookmark the sql query to be stored as bookmark
- * @param array|null $extra_data             extra data
- * @param bool       $is_affected            whether affected or not
- * @param string     $message_to_show        message to show
- * @param string     $disp_mode              display mode
- * @param string     $message                message
- * @param array|null $sql_data               sql data
- * @param string     $goto                   goto page url
- * @param string     $pmaThemeImage          uri of the PMA theme image
- * @param string     $disp_query             display query
- * @param string     $disp_message           display message
- * @param string     $query_type             query type
- * @param string     $sql_query              sql query
- * @param bool|null  $selected               whether check table, optimize table,
- *                                           analyze table or repair table has been
- *                                           selected with respect to the selected
- *                                           tables from the database structure page
- * @param string     $complete_query         complete query
+ * @param array  $analyzed_sql_results   analysed sql results
+ * @param bool   $is_gotofile            whether goto file or not
+ * @param string $db                     current database
+ * @param string $table                  current table
+ * @param bool   $find_real_end          whether to find real end or not
+ * @param string $sql_query_for_bookmark the sql query to be stored as bookmark
+ * @param array  $extra_data             extra data
+ * @param bool   $is_affected            whether affected or not
+ * @param string $message_to_show        message to show
+ * @param string $disp_mode              display mode
+ * @param string $message                message
+ * @param array  $sql_data               sql data
+ * @param string $goto                   goto page url
+ * @param string $pmaThemeImage          uri of the PMA theme image
+ * @param string $disp_query             display query
+ * @param string $disp_message           display message
+ * @param string $query_type             query type
+ * @param string $sql_query              sql query
+ * @param bool   $selected               whether check table, optimize table,
+ *                                       analyze table or repair table has been
+ *                                       selected with respect to the selected
+ *                                       tables from the database structure page
+ * @param string $complete_query         complete query
  *
  * @return void
  */

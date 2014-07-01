@@ -10,7 +10,7 @@ if (! defined('PHPMYADMIN')) {
 }
 
 /**
- * This class renders the logo, links, server selection,
+ * This class renders the logo, links, server selection and recent tables,
  * which are then displayed at the top of the naviagtion panel
  *
  * @package PhpMyAdmin-Navigation
@@ -49,13 +49,11 @@ class PMA_NavigationHeader
         $buffer .= $this->_logo();
         $buffer .= $this->_links();
         $buffer .= $this->_serverChoice();
+        $buffer .= $this->_recent();
         $buffer .= PMA_Util::getImage(
             'ajax_clock_small.gif',
             __('Loading…'),
-            array(
-                'style' => 'visibility: hidden; display:none',
-                'class' => 'throbber'
-            )
+            array('style' => 'visibility: hidden; display:none', 'class' => 'throbber')
         );
         $buffer .= '</div>'; // pma_navigation_header
         $buffer .= '<div id="pma_navigation_tree"' . $class . '>';
@@ -174,7 +172,7 @@ class PMA_NavigationHeader
 
     /**
      * Creates the code for displaying the links
-     * at the top of the navigation panel
+     * at the top of the navigation panel 
      *
      * @return string HTML code for the links
      */
@@ -185,7 +183,7 @@ class PMA_NavigationHeader
         $showText = false;
 
         $retval  = '<!-- LINKS START -->';
-        $retval .= '<div id="navipanellinks">';
+        $retval .= '<div id="leftframelinks">';
         $retval .= $this->_getLink(
             'index.php?' . PMA_URL_getCommon(),
             $showText,
@@ -276,6 +274,35 @@ class PMA_NavigationHeader
             $retval .= PMA_selectServer(true, true);
             $retval .= '</div>';
             $retval .= '<!-- SERVER CHOICE END -->';
+        }
+        return $retval;
+    }
+
+    /**
+     * Displays a drop-down choice of most recently used tables
+     *
+     * @return string HTML code for the Recent tables
+     */
+    private function _recent()
+    {
+        $retval = '';
+        // display recently used tables
+        if ($GLOBALS['cfg']['NumRecentTables'] > 0) {
+            $retval .= '<!-- RECENT START -->';
+            $retval .= '<div id="recentTableList">';
+            $retval .= '<form method="post" ';
+            $retval .= 'action="' . $GLOBALS['cfg']['DefaultTabTable'] . '">';
+            $retval .= PMA_URL_getHiddenInputs(
+                array(
+                    'db' => '',
+                    'table' => '',
+                    'server' => $GLOBALS['server']
+                )
+            );
+            $retval .= PMA_RecentTable::getInstance()->getHtmlSelect();
+            $retval .= '</form>';
+            $retval .= '</div>';
+            $retval .= '<!-- RECENT END -->';
         }
         return $retval;
     }

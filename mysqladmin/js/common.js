@@ -11,8 +11,6 @@ $(function () {
         event.preventDefault();
         PMA_querywindow.focus();
     });
-
-    checkNumberOfFields();
 });
 
 /**

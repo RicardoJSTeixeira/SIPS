@@ -200,7 +200,6 @@ class ExportMediawiki extends ExportPlugin
         $do_mime = false,
         $dates = false
     ) {
-        $output = '';
         switch($export_mode) {
         case 'create_table':
             $columns = $GLOBALS['dbi']->getColumns($db, $table);
@@ -218,17 +217,17 @@ class ExportMediawiki extends ExportPlugin
                      . $this->_exportCRLF();
 
             // Add the table name
-            if (isset($GLOBALS['mediawiki_caption'])) {
+            if ($GLOBALS['mediawiki_caption']) {
                 $output .= "|+'''" . $table . "'''" . $this->_exportCRLF();
             }
 
             // Add the table headers
-            if (isset($GLOBALS['mediawiki_headers'])) {
+            if ($GLOBALS['mediawiki_headers']) {
                 $output .= "|- style=\"background:#ffdead;\"" . $this->_exportCRLF();
                 $output .= "! style=\"background:#ffffff\" | "
                     . $this->_exportCRLF();
                 for ($i = 0; $i < $row_cnt; ++$i) {
-                    $output .= " | " . $columns[$i]['Field'] . $this->_exportCRLF();
+                    $output .= " | " . $columns[$i]['Field']. $this->_exportCRLF();
                 }
             }
 
@@ -284,7 +283,7 @@ class ExportMediawiki extends ExportPlugin
     ) {
         // Print data comment
         $output = $this->_exportComment(
-            "Table data for " . PMA_Util::backquote($table)
+            "Table data for ". PMA_Util::backquote($table)
         );
 
         // Begin the table construction
@@ -294,12 +293,12 @@ class ExportMediawiki extends ExportPlugin
             . $this->_exportCRLF();
 
         // Add the table name
-        if (isset($GLOBALS['mediawiki_caption'])) {
+        if ($GLOBALS['mediawiki_caption']) {
             $output .= "|+'''" . $table . "'''" . $this->_exportCRLF();
         }
 
         // Add the table headers
-        if (isset($GLOBALS['mediawiki_headers'])) {
+        if ($GLOBALS['mediawiki_headers']) {
             // Get column names
             $column_names = $GLOBALS['dbi']->getColumnNames($db, $table);
 

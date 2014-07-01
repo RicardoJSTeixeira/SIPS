@@ -36,7 +36,7 @@ abstract class Node_DatabaseChild extends Node
                 . '&itemName=' . urlencode($item)
                 . '&dbName=' . urlencode($db) . '"'
                 . ' class="hideNavItem ajax">'
-                . PMA_Util::getImage('lightbulb_off.png', __('Hide'))
+                . PMA_Util::getImage('lightbulb_off', __('Hide'))
                 . '</a></span>';
         }
         return $ret;

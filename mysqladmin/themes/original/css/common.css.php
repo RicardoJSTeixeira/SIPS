@@ -66,18 +66,13 @@ h3 {
 
 a, a:link,
 a:visited,
-a:active,
-button.mult_submit,
-.checkall_box+label {
+a:active {
     text-decoration:    none;
     color:              #0000FF;
     cursor:             pointer;
 }
 
-a:hover,
-button.mult_submit:hover,
-button.mult_submit:focus,
-.checkall_box+label:hover {
+a:hover {
     text-decoration:    underline;
     color:              #FF0000;
 }
@@ -243,23 +238,6 @@ fieldset .formelement {
     white-space:        nowrap;
 }
 
-@media all and (min-width: 1600px) {
-    fieldset .formelement {
-        clear: none;
-    }
-    #relationalTable td:first-child + td {
-        width: 25%;
-    }
-    #relationalTable td:first-child + td select {
-        width: 32%;
-        margin-right: 1%;
-    }
-    #relationalTable {
-        width: 100%;
-    }
-
-}
-
 /* revert for Gecko */
 fieldset div[class=formelement] {
     white-space:        normal;
@@ -400,7 +378,8 @@ img.lightbulb {
 /* leave some space between icons and text */
 .icon {
     vertical-align:     middle;
-    margin-<?php echo $left; ?>:        0.3em;
+    margin-right:       0.3em;
+    margin-left:        0.3em;
 }
 
 /* no extra space in table cells */
@@ -780,7 +759,7 @@ div#tablestatistics table {
     margin-<?php echo $right; ?>: 0.5em;
     min-width: 16em;
 }
-/* end table stats */
+/* END table stats */
 
 
 /* server privileges */
@@ -789,7 +768,7 @@ div#tablestatistics table {
 #tabledatabases td {
     vertical-align: middle;
 }
-/* end server privileges */
+/* END server privileges */
 
 
 
@@ -825,7 +804,7 @@ div#tablestatistics table {
     font-weight: bold;
     font-style: italic;
     white-space: nowrap;
-    margin-left: 10px;
+    margin-left: 10px;  
     color: #D6D6D6;
     text-shadow: none;
 }
@@ -925,7 +904,7 @@ div#tablestatistics table {
 #fieldset_user_global_rights legend input {
     margin-<?php echo $left; ?>: 2em;
 }
-/* end user privileges */
+/* END user privileges */
 
 
 /* serverstatus */
@@ -1023,15 +1002,10 @@ div#chartVariableSettings {
     margin-left:10px;
 }
 
-table#chartGrid td {
-    padding: 3px;
-    margin: 0;
-}
-
 table#chartGrid div.monitorChart {
     background: #EBEBEB;
-    overflow: hidden;
-    border: none;
+    width: 400px;
+    height: 300px;
 }
 
 div#serverstatus div.tabLinks {
@@ -1153,12 +1127,12 @@ div#querywindowcontainer {
 div#querywindowcontainer fieldset {
     margin-top: 0;
 }
-/* end querywindow */
+/* END querywindow */
 
 /* profiling */
 
 div#profilingchart {
-    width: 850px;
+    width: 550px;
     height: 370px;
     float: left;
 }
@@ -1191,7 +1165,7 @@ div#profilingchart {
     background-image: url(<?php echo $_SESSION['PMA_Theme']->getImgPath('s_asc.png');?>);
 }
 
-/* end profiling */
+/* END profiling */
 
 /* querybox */
 
@@ -1247,18 +1221,7 @@ div#queryboxcontainer div#bookmarkoptions {
 #maincontainer li {
     margin:  0.2em 0em;
 }
-
-#full_name_layer {
-    position: absolute;
-    padding: 2px;
-    margin-top: -3px;
-    z-index: 801;
-
-    border: solid 1px #888;
-    background: #fff;
-
-}
-/* end main page */
+/* END main page */
 
 /* iconic view for ul items */
 
@@ -1267,7 +1230,7 @@ li.no_bullets {
     margin-left: -25px !important;      //align with other list items which have bullets
 }
 
-/* end iconic view for ul items */
+/* END iconic view for ul items */
 
 #body_browse_foreigners {
     background:         <?php echo $GLOBALS['cfg']['NaviBackground']; ?>;
@@ -1314,15 +1277,6 @@ li.no_bullets {
 
 #div_mysql_charset_collations table {
     float: <?php echo $left; ?>;
-}
-
-#div_mysql_charset_collations table th,
-#div_mysql_charset_collations table td {
-    padding: 0.4em;
-}
-
-#div_mysql_charset_collations table th#collationHeader {
-    width: 35%;
 }
 
 .operations_half_width {
@@ -1393,14 +1347,12 @@ div.sqlvalidate  {
 
 #main_pane_left {
     width:              60%;
-    min-width:          260px;
     float:              <?php echo $left; ?>;
     padding-top:        1em;
 }
 
 #main_pane_right {
-    overflow:           hidden;
-    min-width:          160px;
+    margin-<?php echo $left; ?>: 60%;
     padding-top: 1em;
     padding-<?php echo $left; ?>: 1em;
 }
@@ -1601,6 +1553,7 @@ select#table_select {
     margin-bottom: 0;
 }
 
+#quick_or_custom,
 #output_quick_export {
     display: none;
 }
@@ -1657,16 +1610,7 @@ input#input_import_file {
     padding: 0.3em;
     margin: 0.1em;
 }
-#structure-action-links a {
-    margin-<?php echo $right; ?>: 1em;
-}
-#addColumns input[type="radio"] {
-    margin: 0;
-    margin-<?php echo $left; ?>: 1em;
-}
-#addColumns input[type="submit"] {
-    margin-<?php echo $left; ?>: 1em;
-}
+
 .margin#change_column_dialog {
     margin: 0 .5em;
 }
@@ -2323,7 +2267,7 @@ fieldset .disabled-field td {
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
 .ui-timepicker-div dl { text-align: left; }
 .ui-timepicker-div dl dt { height: 25px; }
-.ui-timepicker-div dl dd { margin: -25px 0 10px 85px; }
+.ui-timepicker-div dl dd { margin: -25px 0 10px 65px; }
 .ui-timepicker-div td { font-size: 90%; }
 
 input.btn {
@@ -2341,8 +2285,7 @@ body .ui-widget {
 
 /* jqPlot */
 
-/*rules for the plot target div.  These will be cascaded down to all plot elements
-according to css rules*/
+/*rules for the plot target div.  These will be cascaded down to all plot elements according to css rules*/
 .jqplot-target {
     position: relative;
     color: #222222;
@@ -2369,17 +2312,13 @@ according to css rules*/
     margin-right: 10px;
 }
 
-.jqplot-y2axis, .jqplot-y3axis, .jqplot-y4axis, .jqplot-y5axis, .jqplot-y6axis,
-.jqplot-y7axis, .jqplot-y8axis, .jqplot-y9axis, .jqplot-yMidAxis {
+.jqplot-y2axis, .jqplot-y3axis, .jqplot-y4axis, .jqplot-y5axis, .jqplot-y6axis, .jqplot-y7axis, .jqplot-y8axis, .jqplot-y9axis, .jqplot-yMidAxis {
     margin-left: 10px;
     margin-right: 10px;
 }
 
 /*rules applied to all axis tick divs*/
-.jqplot-axis-tick, .jqplot-xaxis-tick, .jqplot-yaxis-tick, .jqplot-x2axis-tick,
-.jqplot-y2axis-tick, .jqplot-y3axis-tick, .jqplot-y4axis-tick, .jqplot-y5axis-tick,
-.jqplot-y6axis-tick, .jqplot-y7axis-tick, .jqplot-y8axis-tick, .jqplot-y9axis-tick,
-.jqplot-yMidAxis-tick {
+.jqplot-axis-tick, .jqplot-xaxis-tick, .jqplot-yaxis-tick, .jqplot-x2axis-tick, .jqplot-y2axis-tick, .jqplot-y3axis-tick, .jqplot-y4axis-tick, .jqplot-y5axis-tick, .jqplot-y6axis-tick, .jqplot-y7axis-tick, .jqplot-y8axis-tick, .jqplot-y9axis-tick, .jqplot-yMidAxis-tick {
     position: absolute;
     white-space: pre;
 }
@@ -2418,8 +2357,7 @@ according to css rules*/
     font-size: 1.5em;
 }
 
-.jqplot-y2axis-tick, .jqplot-y3axis-tick, .jqplot-y4axis-tick, .jqplot-y5axis-tick,
-.jqplot-y6axis-tick, .jqplot-y7axis-tick, .jqplot-y8axis-tick, .jqplot-y9axis-tick {
+.jqplot-y2axis-tick, .jqplot-y3axis-tick, .jqplot-y4axis-tick, .jqplot-y5axis-tick, .jqplot-y6axis-tick, .jqplot-y7axis-tick, .jqplot-y8axis-tick, .jqplot-y9axis-tick {
     left: 0px;
     /* initial position untill tick is drawn in proper place */
     top: 15px;
@@ -2457,9 +2395,7 @@ according to css rules*/
     position: absolute;
 }
 
-.jqplot-y2axis-label, .jqplot-y3axis-label, .jqplot-y4axis-label,
-.jqplot-y5axis-label, .jqplot-y6axis-label, .jqplot-y7axis-label,
-.jqplot-y8axis-label, .jqplot-y9axis-label {
+.jqplot-y2axis-label, .jqplot-y3axis-label, .jqplot-y4axis-label, .jqplot-y5axis-label, .jqplot-y6axis-label, .jqplot-y7axis-label, .jqplot-y8axis-label, .jqplot-y9axis-label {
 /*    text-align: center;*/
     font-size: 11pt;
     margin-left: 10px;
@@ -2626,16 +2562,4 @@ div.jqplot-noData-container {
 .report-description {
     height:10em;
     width:570px;
-}
-
-div#page_content div#tableslistcontainer table.data {
-    border-top: 0.1px solid #EEEEEE;
-}
-
-div#page_content form#db_search_form.ajax fieldset {
-    margin-top: -0.3em;
-}
-
-div#page_content div#tableslistcontainer, div#page_content div.notice, div#page_content div#result_query {
-    margin-top: 1em;
 }

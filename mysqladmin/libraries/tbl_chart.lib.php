@@ -58,12 +58,6 @@ function PMA_getHtmlForChartTypeOptions()
         . '<label for ="radio_timeline">' . _pgettext('Chart type', 'Timeline')
         . '</label>'
         . '</span>'
-        . '<span class="span_scatter" style="display:none;">'
-        . '<input type="radio" name="chartType" '
-        . 'value="scatter" id="radio_scatter" />'
-        . '<label for ="radio_scatter">' . _pgettext('Chart type', 'Scatter')
-        . '</label>'
-        . '</span>'
         . '<br /><br />';
 
     return $html;
@@ -76,7 +70,7 @@ function PMA_getHtmlForChartTypeOptions()
  */
 function PMA_getHtmlForStackedOption()
 {
-    $html = '<span class="barStacked" style="display:none;">'
+    $html = '<span class="barStacked">'
     . '<input type="checkbox" name="barStacked" value="1"'
     . ' id="checkbox_barStacked" />'
     . '<label for ="checkbox_barStacked">' . __('Stacked') . '</label>'
@@ -165,28 +159,6 @@ function PMA_getHtmlForDateTimeCols($keys, $fields_meta)
     $date_time_types = array('date', 'datetime', 'timestamp');
     foreach ($keys as $idx => $key) {
         if (in_array($fields_meta[$idx]->type, $date_time_types)) {
-            $htmlString .= $idx . " ";
-        }
-    }
-    $htmlString .= '" />';
-
-    return $htmlString;
-}
-
-/**
- * Function to get html for date time columns
- *
- * @param array $keys          keys
- * @param array $fields_meta   fields meta
- * @param array $numeric_types numeric types
- *
- * @return string
- */
-function PMA_getHtmlForNumericCols($keys, $fields_meta, $numeric_types)
-{
-    $htmlString = '<input type="hidden" name="numericCols" value="';
-    foreach ($keys as $idx => $key) {
-        if (in_array($fields_meta[$idx]->type, $numeric_types)) {
             $htmlString .= $idx . " ";
         }
     }
@@ -306,7 +278,6 @@ function PMA_getHtmlForTableChartDisplay($url_query, $url_params, $keys,
         $keys, $fields_meta, $numeric_types, $yaxis, $numeric_column_count
     );
     $htmlString .= PMA_getHtmlForDateTimeCols($keys, $fields_meta);
-    $htmlString .= PMA_getHtmlForNumericCols($keys, $fields_meta, $numeric_types);
     $htmlString .= '</div>';
 
     $htmlString .= PMA_getHtmlForTableAxisLabelOptions($yaxis, $keys);
@@ -321,3 +292,4 @@ function PMA_getHtmlForTableChartDisplay($url_query, $url_params, $keys,
     return $htmlString;
 }
 ?>
+

@@ -29,14 +29,10 @@ function PMA_getHtmlForChangePassword($username, $hostname)
                  ? 'onpropertychange'
                  : 'onchange';
 
-    $is_privileges = basename($_SERVER['SCRIPT_NAME']) === 'server_privileges.php';
-
     $html = '<form method="post" id="change_password_form" '
         . 'action="' . $GLOBALS['PMA_PHP_SELF'] . '" '
         . 'name="chgPassword" '
-        . 'class="ajax'
-        . ($is_privileges ? ' submenu-item' : '')
-        . '">';
+        . 'class="ajax" >';
 
     $html .= PMA_URL_getHiddenInputs();
 
@@ -47,9 +43,7 @@ function PMA_getHtmlForChangePassword($username, $hostname)
             . 'value="' . htmlspecialchars($hostname) . '" />';
     }
     $html .= '<fieldset id="fieldset_change_password">'
-        . '<legend'
-        . ($is_privileges ? ' data-submenu-label="' . __('Change password') . '"' : '')
-        . '>' . __('Change password') . '</legend>'
+        . '<legend>' . __('Change password') . '</legend>'
         . '<table class="data noclick">'
         . '<tr class="odd">'
         . '<td colspan="2">'

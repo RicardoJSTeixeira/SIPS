@@ -81,7 +81,10 @@ function PMD_errorSave()
 if (! empty($die_save_pos)) {
     header("Content-Type: text/xml; charset=utf-8");
     header("Cache-Control: no-cache");
-    echo '<root act="save_pos" return="'
-        . __('Modifications have been saved') . '"></root>';
+    ?>
+    <root
+        act='save_pos'
+        return='<?php echo __('Modifications have been saved'); ?>'></root>
+    <?php
 }
 ?>

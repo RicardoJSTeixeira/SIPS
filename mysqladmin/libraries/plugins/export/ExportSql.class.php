@@ -212,6 +212,7 @@ class ExportSql extends ExportPlugin
             // add the main group to the root group
             $exportSpecificOptions->addProperty($generalOptions);
 
+
             // structure options main group
             if (! $hide_structure) {
                 $structureOptions = new OptionsPropertyMainGroup();
@@ -251,30 +252,10 @@ class ExportSql extends ExportPlugin
                         }
                     }
                 }
-
-                $drop_clause .= '<code> / TRIGGER</code>';
-
                 $leaf = new BoolPropertyItem();
                 $leaf->setName('drop_table');
                 $leaf->setText(sprintf(__('Add %s statement'), $drop_clause));
                 $subgroup->addProperty($leaf);
-
-                // Add table structure option
-                $leaf = new BoolPropertyItem();
-                $leaf->setName('create_table');
-                $leaf->setText(
-                    sprintf(__('Add %s statement'), '<code>CREATE TABLE</code>')
-                );
-                $subgroup->addProperty($leaf);
-
-                // Add view option
-                $leaf = new BoolPropertyItem();
-                $leaf->setName('create_view');
-                $leaf->setText(
-                    sprintf(__('Add %s statement'), '<code>CREATE VIEW</code>')
-                );
-                $subgroup->addProperty($leaf);
-
                 // Drizzle doesn't support procedures and functions
                 if (! PMA_DRIZZLE) {
                     $leaf = new BoolPropertyItem();
@@ -289,14 +270,6 @@ class ExportSql extends ExportPlugin
                     );
                     $subgroup->addProperty($leaf);
                 }
-
-                // Add triggers option
-                $leaf = new BoolPropertyItem();
-                $leaf->setName('create_trigger');
-                $leaf->setText(
-                    sprintf(__('Add %s statement'), '<code>CREATE TRIGGER</code>')
-                );
-                $subgroup->addProperty($leaf);
 
                 // begin CREATE TABLE statements
                 $subgroup_create_table = new OptionsPropertySubgroup();
@@ -330,6 +303,7 @@ class ExportSql extends ExportPlugin
                 // add the main group to the root group
                 $exportSpecificOptions->addProperty($structureOptions);
             }
+
 
             // begin Data options
             $dataOptions = new OptionsPropertyMainGroup();
@@ -426,7 +400,7 @@ class ExportSql extends ExportPlugin
 
             // Dump binary columns in hexadecimal
             $leaf = new BoolPropertyItem();
-            $leaf->setName("hex_for_binary");
+            $leaf->setName("hex_for_blob");
             $leaf->setText(
                 __(
                     'Dump binary columns in hexadecimal notation'
@@ -719,7 +693,7 @@ class ExportSql extends ExportPlugin
                 . '/*!40101 SET @OLD_CHARACTER_SET_RESULTS='
                 . '@@CHARACTER_SET_RESULTS */;' . $crlf
                 . '/*!40101 SET @OLD_COLLATION_CONNECTION='
-                . '@@COLLATION_CONNECTION */;' . $crlf
+                . '@@COLLATION_CONNECTION */;'. $crlf
                 . '/*!40101 SET NAMES ' . $set_names . ' */;' . $crlf . $crlf;
         }
 
@@ -827,18 +801,6 @@ class ExportSql extends ExportPlugin
         global $crlf;
 
         $result = true;
-
-        //add indexes to the sql dump file
-        if (isset($GLOBALS['sql_indexes'])) {
-            $result = PMA_exportOutputHandler($GLOBALS['sql_indexes']);
-            unset($GLOBALS['sql_indexes']);
-        }
-        //add auto increments to the sql dump file
-        if (isset($GLOBALS['sql_auto_increments'])) {
-            $result = PMA_exportOutputHandler($GLOBALS['sql_auto_increments']);
-            unset($GLOBALS['sql_auto_increments']);
-        }
-        //add constraints to the sql dump file
         if (isset($GLOBALS['sql_constraints'])) {
             $result = PMA_exportOutputHandler($GLOBALS['sql_constraints']);
             unset($GLOBALS['sql_constraints']);
@@ -1000,18 +962,15 @@ class ExportSql extends ExportPlugin
     /**
      * Returns $table's CREATE definition
      *
-     * @param string $db                        the database name
-     * @param string $table                     the table name
-     * @param string $crlf                      the end of line sequence
-     * @param string $error_url                 the url to go back in case
-     *                                          of error
-     * @param bool   $show_dates                whether to include creation/
-     *                                          update/check dates
-     * @param bool   $add_semicolon             whether to add semicolon and
-     *                                          end-of-line at the end
-     * @param bool   $view                      whether we're handling a view
-     * @param bool   $update_indexes_increments whether we need to update
-     *                                          two global variables
+     * @param string $db            the database name
+     * @param string $table         the table name
+     * @param string $crlf          the end of line sequence
+     * @param string $error_url     the url to go back in case of error
+     * @param bool   $show_dates    whether to include creation/update/check
+     *                              dates
+     * @param bool   $add_semicolon whether to add semicolon and end-of-line at
+     *                              the end
+     * @param bool   $view          whether we're handling a view
      *
      * @return string resulting schema
      */
@@ -1022,12 +981,10 @@ class ExportSql extends ExportPlugin
         $error_url,
         $show_dates = false,
         $add_semicolon = true,
-        $view = false,
-        $update_indexes_increments = true
+        $view = false
     ) {
         global $sql_drop_table, $sql_backquotes, $sql_constraints,
-            $sql_constraints_query, $sql_indexes, $sql_indexes_query,
-            $sql_auto_increments,$sql_drop_foreign_keys;
+            $sql_constraints_query, $sql_drop_foreign_keys;
 
         $schema_create = '';
         $auto_increment = '';
@@ -1182,7 +1139,7 @@ class ExportSql extends ExportPlugin
              */
             if ($view) {
                 $create_query = preg_replace(
-                    '/' . preg_quote(PMA_Util::backquote($db)) . '\./',
+                    '/' . PMA_Util::backquote($db) . '\./',
                     '',
                     $create_query
                 );
@@ -1213,18 +1170,35 @@ class ExportSql extends ExportPlugin
                 );
             }
 
-            //are there any constraints to cut out?
-            if (preg_match('@CONSTRAINT|KEY@', $create_query)) {
-                $has_constraints = 0;
-                $has_indexes = 0;
+            // are there any constraints to cut out?
+            if (preg_match('@CONSTRAINT|FOREIGN[\s]+KEY@', $create_query)) {
 
-                //if there are constraints
-                if (preg_match(
-                    '@CONSTRAINT@',
-                    $create_query
-                )) {
-                    $has_constraints = 1;
-                    // comments -> constraints for dumped tables
+                // Split the query into lines, so we can easily handle it.
+                // We know lines are separated by $crlf (done few lines above).
+                $sql_lines = explode($crlf, $create_query);
+                $sql_count = count($sql_lines);
+
+                // lets find first line with constraints
+                for ($i = 0; $i < $sql_count; $i++) {
+                    if (preg_match(
+                        '@^[\s]*(CONSTRAINT|FOREIGN[\s]+KEY)@',
+                        $sql_lines[$i]
+                    )) {
+                        break;
+                    }
+                }
+
+                // If we really found a constraint
+                if ($i != $sql_count) {
+
+                    // remove, from the end of create statement
+                    $sql_lines[$i - 1] = preg_replace(
+                        '@,$@',
+                        '',
+                        $sql_lines[$i - 1]
+                    );
+
+                    // prepare variable for constraints
                     if (! isset($sql_constraints)) {
                         if (isset($GLOBALS['no_constraints_comments'])) {
                             $sql_constraints = '';
@@ -1237,7 +1211,8 @@ class ExportSql extends ExportPlugin
                                 . $this->_exportComment();
                         }
                     }
-                        // comments for current table
+
+                    // comments for current table
                     if (! isset($GLOBALS['no_constraints_comments'])) {
                         $sql_constraints .= $crlf
                         . $this->_exportComment()
@@ -1248,156 +1223,21 @@ class ExportSql extends ExportPlugin
                         )
                         . $this->_exportComment();
                     }
+
+                    // let's do the work
                     $sql_constraints_query .= 'ALTER TABLE '
-                    . PMA_Util::backquoteCompat($table, $compat)
-                    . $crlf;
+                        . PMA_Util::backquoteCompat($table, $compat)
+                        . $crlf;
                     $sql_constraints .= 'ALTER TABLE '
-                    . PMA_Util::backquoteCompat($table,  $compat)
-                    . $crlf;
+                        . PMA_Util::backquoteCompat($table,  $compat)
+                        . $crlf;
                     $sql_drop_foreign_keys .= 'ALTER TABLE '
-                    . PMA_Util::backquoteCompat($db, $compat) . '.'
-                    . PMA_Util::backquoteCompat($table, $compat)
-                    . $crlf;
-                }
-                //if there are indexes
-                // (look for KEY followed by whitespace to avoid matching
-                //  keyworks like PACK_KEYS)
-                if ($update_indexes_increments && preg_match(
-                    '@KEY[\s]+@',
-                    $create_query
-                )) {
-                    $has_indexes = 1;
-
-                    // comments -> indexes for dumped tables
-                    if (! isset($sql_indexes)) {
-                        if (isset($GLOBALS['no_constraints_comments'])) {
-                            $sql_indexes = '';
-                        } else {
-                            $sql_indexes = $crlf
-                                . $this->_exportComment()
-                                . $this->_exportComment(
-                                    __('Indexes for dumped tables')
-                                )
-                                . $this->_exportComment();
-                        }
-                    }
-                    // comments for current table
-                    if (! isset($GLOBALS['no_constraints_comments'])) {
-                        $sql_indexes .= $crlf
-                        . $this->_exportComment()
-                        . $this->_exportComment(
-                            __('Indexes for table')
-                            . ' '
-                            . PMA_Util::backquoteCompat($table, $compat)
-                        )
-                        . $this->_exportComment();
-                    }
-                    $sql_indexes_query .= 'ALTER TABLE '
-                    . PMA_Util::backquoteCompat($table, $compat)
-                    . $crlf;
-
-                    $sql_indexes .= 'ALTER TABLE '
-                    . PMA_Util::backquoteCompat($table,  $compat)
-                    . $crlf;
-                }
-                if ($update_indexes_increments && preg_match(
-                    '@AUTO_INCREMENT@',
-                    $create_query
-                )) {
-                    // comments -> auto increments for dumped tables
-                    if (! isset($sql_auto_increments)) {
-                        if (isset($GLOBALS['no_constraints_comments'])) {
-                            $sql_auto_increments = '';
-                        } else {
-                            $sql_auto_increments = $crlf
-                                . $this->_exportComment()
-                                . $this->_exportComment(
-                                    __('AUTO_INCREMENT for dumped tables')
-                                )
-                                . $this->_exportComment();
-                        }
-                    }
-                    // comments for current table
-                    if (! isset($GLOBALS['no_constraints_comments'])) {
-                        $sql_auto_increments .= $crlf
-                        . $this->_exportComment()
-                        . $this->_exportComment(
-                            __('AUTO_INCREMENT for table')
-                            . ' '
-                            . PMA_Util::backquoteCompat($table, $compat)
-                        )
-                        . $this->_exportComment();
-                    }
-                    $sql_auto_increments .= 'ALTER TABLE '
-                    . PMA_Util::backquoteCompat($table, $compat)
-                    . $crlf;
-                }
-
-                // Split the query into lines, so we can easily handle it.
-                // We know lines are separated by $crlf (done few lines above).
-                $sql_lines = explode($crlf, $create_query);
-                $sql_count = count($sql_lines);
-
-                // lets find first line with constraints
-                $first_occur = -1;
-                for ($i = 0; $i < $sql_count; $i++) {
-                    if (preg_match(
-                        '@[\s]+(CONSTRAINT|KEY)@',
-                        $sql_lines[$i]
-                    ) && $first_occur == -1) {
-                        $first_occur = $i;
-                    }
-                }
-
-                for ($k = 0; $k < $sql_count; $k++) {
-                    if ($update_indexes_increments && preg_match(
-                        '( AUTO_INCREMENT | AUTO_INCREMENT,| AUTO_INCREMENT$)',
-                        $sql_lines[$k]
-                    )) {
-                        //removes extra space at the beginning, if there is
-                        $sql_lines[$k] = ltrim($sql_lines[$k], ' ');
-                        //creates auto increment code
-                        $sql_auto_increments .= "MODIFY " . $sql_lines[$k];
-                        //removes auto increment code from table definition
-                        $sql_lines[$k] = str_replace(
-                            " AUTO_INCREMENT", "", $sql_lines[$k]
-                        );
-                    }
-                    if ($update_indexes_increments && preg_match(
-                        '@[\s]+(AUTO_INCREMENT=)@',
-                        $sql_lines[$k]
-                    )) {
-                        //adds auto increment value
-                        $increment_value = substr(
-                            $sql_lines[$k],
-                            strpos($sql_lines[$k], "AUTO_INCREMENT")
-                        );
-                        $increment_value_array = explode(' ', $increment_value);
-                        $sql_auto_increments .= $increment_value_array[0] . ";";
-
-                    }
-                }
-
-                if ($sql_auto_increments != '') {
-                    $sql_auto_increments = substr(
-                        $sql_auto_increments, 0, -1
-                    ) . ';';
-                }
-                // If we really found a constraint
-                if ($first_occur != $sql_count) {
-                    // lets find first line
-                    $sql_lines[$first_occur - 1] = preg_replace(
-                        '@,$@',
-                        '',
-                        $sql_lines[$first_occur - 1]
-                    );
+                        . PMA_Util::backquoteCompat($db, $compat) . '.'
+                        . PMA_Util::backquoteCompat($table, $compat)
+                        . $crlf;
 
                     $first = true;
-                    for ($j = $first_occur; $j < $sql_count; $j++) {
-                        //removes extra space at the beginning, if there is
-                        $sql_lines[$j]=ltrim($sql_lines[$j], ' ');
-
-                        //if it's a constraint
+                    for ($j = $i; $j < $sql_count; $j++) {
                         if (preg_match(
                             '@CONSTRAINT|FOREIGN[\s]+KEY@',
                             $sql_lines[$j]
@@ -1411,17 +1251,14 @@ class ExportSql extends ExportPlugin
                                     'ADD \1',
                                     $sql_lines[$j]
                                 );
-
                                 $sql_constraints_query .= $tmp_str;
                                 $sql_constraints .= $tmp_str;
-
                             } else {
                                 $tmp_str = preg_replace(
                                     '/(CONSTRAINT)/',
                                     'ADD \1',
                                     $sql_lines[$j]
                                 );
-
                                 $sql_constraints_query .= $tmp_str;
                                 $sql_constraints .= $tmp_str;
                                 preg_match(
@@ -1436,34 +1273,16 @@ class ExportSql extends ExportPlugin
                                     . $matches[3];
                             }
                             $first = false;
-                        } else if ($update_indexes_increments && preg_match(
-                            '@KEY[\s]+@',
-                            $sql_lines[$j]
-                        )) {
-                            //if it's a index
-                            $tmp_str = " ADD " . $sql_lines[$j];
-                            $sql_indexes_query .= $tmp_str;
-                            $sql_indexes .= $tmp_str;
                         } else {
                             break;
                         }
                     }
-                    //removes superfluous comma at the end
-                    $sql_indexes = rtrim($sql_indexes, ',');
-                    $sql_indexes_query = rtrim($sql_indexes_query, ',');
-                    //removes superfluous semicolon at the end
-                    if ($has_constraints == 1) {
-                        $sql_constraints .= ';' . $crlf;
-                        $sql_constraints_query .= ';';
-                    }
-                    if ($has_indexes == 1) {
-                        $sql_indexes .= ';' . $crlf;
-                        $sql_indexes_query .= ';';
-                    }
-                    //remove indexes and constraints from the $create_query
+                    $sql_constraints .= ';' . $crlf;
+                    $sql_constraints_query .= ';';
+
                     $create_query = implode(
                         $crlf,
-                        array_slice($sql_lines, 0, $first_occur)
+                        array_slice($sql_lines, 0, $i)
                     )
                     . $crlf
                     . implode(
@@ -1539,7 +1358,7 @@ class ExportSql extends ExportPlugin
             $schema_create .= $this->_possibleCRLF()
             . $this->_exportComment()
             . $this->_exportComment(
-                __('MIME TYPES FOR TABLE') . ' '
+                __('MIME TYPES FOR TABLE'). ' '
                 . PMA_Util::backquote($table, $sql_backquotes) . ':'
             );
             @reset($mime_map);
@@ -1645,7 +1464,7 @@ class ExportSql extends ExportPlugin
         switch($export_mode) {
         case 'create_table':
             $dump .= $this->_exportComment(
-                __('Table structure for table') . ' ' . $formatted_table_name
+                __('Table structure for table') . ' '. $formatted_table_name
             );
             $dump .= $this->_exportComment();
             $dump .= $this->getTableDef($db, $table, $crlf, $error_url, $dates);
@@ -1663,9 +1482,7 @@ class ExportSql extends ExportPlugin
                     . $this->_exportComment();
                 $delimiter = '//';
                 foreach ($triggers as $trigger) {
-                    if (! empty($GLOBALS['sql_drop_table'])) {
-                        $dump .= $trigger['drop'] . ';' . $crlf;
-                    }
+                    $dump .= $trigger['drop'] . ';' . $crlf;
                     $dump .= 'DELIMITER ' . $delimiter . $crlf;
                     $dump .= $trigger['create'];
                     $dump .= 'DELIMITER ;' . $crlf;
@@ -1796,7 +1613,6 @@ class ExportSql extends ExportPlugin
                 $field_flags[$j] = $GLOBALS['dbi']->fieldFlags($result, $j);
             }
 
-            $field_set = array();
             for ($j = 0; $j < $fields_cnt; $j++) {
                 if (isset($analyzed_sql[0]['select_expr'][$j]['column'])) {
                     $field_set[$j] = PMA_Util::backquoteCompat(
@@ -1881,7 +1697,7 @@ class ExportSql extends ExportPlugin
                     || $GLOBALS['sql_insert_syntax'] == 'both'
                 ) {
                     $fields        = implode(', ', $field_set);
-                    $schema_insert = $sql_command . $insert_delayed . ' INTO '
+                    $schema_insert = $sql_command . $insert_delayed .' INTO '
                         . PMA_Util::backquoteCompat(
                             $table,
                             $compat,
@@ -1890,7 +1706,7 @@ class ExportSql extends ExportPlugin
                         // avoid EOL blank
                         . ' (' . $fields . ') VALUES';
                 } else {
-                    $schema_insert = $sql_command . $insert_delayed . ' INTO '
+                    $schema_insert = $sql_command . $insert_delayed .' INTO '
                         . PMA_Util::backquoteCompat(
                             $table,
                             $compat,
@@ -1941,13 +1757,12 @@ class ExportSql extends ExportPlugin
                             $table,
                             $compat
                         )
-                        . ' ON ;' . $crlf
+                        . ' ON ;'.$crlf
                     )) {
                         return false;
                     }
                 }
                 $current_row++;
-                $values = array();
                 for ($j = 0; $j < $fields_cnt; $j++) {
                     // NULL
                     if (! isset($row[$j]) || is_null($row[$j])) {
@@ -1960,8 +1775,9 @@ class ExportSql extends ExportPlugin
                         // timestamp is numeric on some MySQL 4.1, BLOBs are
                         // sometimes numeric
                         $values[] = $row[$j];
-                    } elseif (stristr($field_flags[$j], 'BINARY') !== false
-                        && isset($GLOBALS['sql_hex_for_binary'])
+                    } elseif (stristr($field_flags[$j], 'BINARY')
+                        && $fields_meta[$j]->blob
+                        && isset($GLOBALS['sql_hex_for_blob'])
                     ) {
                         // a true BLOB
                         // - mysqldump only generates hex data when the --hex-blob
