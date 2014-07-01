@@ -63,12 +63,13 @@ Class products {
             }
             $row["type"] = json_decode($row["type"]);
             $row["color"] = json_decode($row["color"]);
-
+            $row["size"] = json_decode($row["size"]);
             $output[$row["id"]] = $row;
         }
 //ATRIBUIÇÂO DE CHILDS E PARENTS
 
         foreach ($output as &$value) {
+
             $value["parent"] = $this->buildTree_parent($output, $value["id"]);
             $value["children"] = $this->buildTree_child($output, $value["id"]);
         }
@@ -144,7 +145,7 @@ Class products {
     public function add_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active, $size) {
 
         $stmt = $this->_db->prepare("insert into spice_product ( `name`,`max_req_m`,`max_req_s`,`category`,`type`,`color`,`active`,`deleted`,`size`) values (:name, :max_req_m,:max_req_s,:category,:type,:color,1,0,:size) ");
-        $stmt->execute(array(":name" => $name, ":max_req_m" => $max_req_m, ":max_req_s" => $max_req_s, ":category" => $category, ":type" => json_encode($type), ":color" => $color ? json_encode($color) : json_encode(array()), ":size" => $size));
+        $stmt->execute(array(":name" => $name, ":max_req_m" => $max_req_m, ":max_req_s" => $max_req_s, ":category" => $category, ":type" => json_encode($type), ":color" => $color ? json_encode($color) : json_encode(array()), ":size" => json_encode($size)));
         $last_id = $this->_db->lastInsertId();
 
         if (isset($parent)) {
@@ -217,7 +218,7 @@ class product extends products {
 
     public function edit_product_save() {
         $stmt = $this->_db->prepare("update spice_product set name=:name,  max_req_m=:max_req_m,max_req_s=:max_req_s,category=:category,type=:type,color=:color,active=:active,size=:size where id=:id");
-        return $stmt->execute(array(":id" => $this->_id, ":name" => $this->_name, ":max_req_m" => $this->_max_req_m, ":max_req_s" => $this->_max_req_s, ":category" => $this->_category, ":type" => json_encode($this->_type), ":color" => json_encode($this->_color), ":active" => $this->_active, ":size" => $this->_size));
+        return $stmt->execute(array(":id" => $this->_id, ":name" => $this->_name, ":max_req_m" => $this->_max_req_m, ":max_req_s" => $this->_max_req_s, ":category" => $this->_category, ":type" => json_encode($this->_type), ":color" => json_encode($this->_color), ":active" => $this->_active, ":size" => json_encode($this->_size)));
     }
 
     public function add_promotion($active, $highlight, $data_inicio, $data_fim) {

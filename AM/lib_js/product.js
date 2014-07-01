@@ -74,6 +74,11 @@ var products = function(geral_path, options_ext) {
                     color.push({color: $(this).find(".color_picker_select").val(), name: $(this).find(".color_name").val()});
                 });
 
+                var size = [];
+                $.each(edit_product_modal.find("#edit_product_size_subdiv .formRow .edit_product_size"), function() {
+                    size.push($(this).val());
+                });
+
                 if (edit_product_modal.find("#edit_product_form").validationEngine("validate")) {
                     if (types.length) {
                         $.post('/AM/ajax/products.php', {action: "edit_product",
@@ -86,7 +91,7 @@ var products = function(geral_path, options_ext) {
                             type: types,
                             color: color,
                             active: edit_product_modal.find("#edit_product_active").is(":checked"),
-                            size: edit_product_modal.find("#edit_product_size").val()},
+                            size: size},
                         function(data) {
                             edit_product_modal.modal("hide");
                             update_products_datatable(datatable_path);
@@ -197,6 +202,17 @@ var products = function(geral_path, options_ext) {
                 $.msg('unblock', 5000);
             });
         });
+
+
+        edit_product_modal.on("click", "#edit_product_size_plus", function(e) {
+            e.preventDefault();
+            edit_product_modal.find("#edit_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0' max='100'   value='0'  class='new_product_size input-mini validate[required,min[0],max[100]]'></div>");
+        });
+        edit_product_modal.on("click", "#edit_product_size_minus", function(e) {
+            e.preventDefault();
+            if (edit_product_modal.find("#edit_product_size_subdiv").find(".formRow").length > 1)
+                edit_product_modal.find("#edit_product_size_subdiv").find(".formRow").last().remove();
+        });
     };
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------NEW PRODUCT---------------------------------------------------------------------------------------------------------------------------------------------
@@ -225,6 +241,11 @@ var products = function(geral_path, options_ext) {
                 color.push({color: $(this).find(".color_picker_select").val(), name: $(this).find(".color_name").val()});
             });
 
+            var size = [];
+            $.each(new_product_path.find("#new_product_size_subdiv .formRow .new_product_size"), function() {
+                size.push($(this).val());
+            });
+
             if (new_product_path.find("#new_product_form").validationEngine("validate"))
                 if (types.length) {
                     $.msg();
@@ -237,7 +258,7 @@ var products = function(geral_path, options_ext) {
                         type: types,
                         color: color,
                         active: 1,
-                        size: new_product_path.find("#new_product_size").val()
+                        size: size
                     }, function(data) {
                         new_product_path.modal("hide");
                         if (datatable_path)
@@ -295,6 +316,17 @@ var products = function(geral_path, options_ext) {
             e.preventDefault();
             $(this).parent().parent().remove();
         });
+
+        new_product_path.on("click", "#new_product_size_plus", function(e) {
+            e.preventDefault();
+            new_product_path.find("#new_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0' max='100'   value='0'  class='new_product_size input-mini validate[required,min[0],max[100]]'></div>");
+        });
+        new_product_path.on("click", "#new_product_size_minus", function(e) {
+            e.preventDefault();
+            if (new_product_path.find("#new_product_size_subdiv").find(".formRow").length > 1)
+                new_product_path.find("#new_product_size_subdiv").find(".formRow").last().remove();
+        });
+
         if (typeof callback === "function")
             callback();
     };
@@ -309,7 +341,7 @@ var products = function(geral_path, options_ext) {
         new_product_path.find(":checkbox").prop("checked", true);
         new_product_path.find(":radio").prop("checked", true);
         new_product_path.find("#new_product_form").show();
-        new_product_path.find("#new_product_size").val(0);
+        new_product_path.find("#new_product_size_subdiv").find(".formRow").remove().end().append("<div class='formRow'> <input type='number' min='0' max='100'   value='0'  class='new_product_size input-mini validate[required,min[0],max[100]]'></div>");
     }
 
     function update_products_datatable(datatable_path) {
@@ -358,9 +390,15 @@ var products = function(geral_path, options_ext) {
                 modal.find("#edit_product_parent option[value='" + product_id + "']").prop("disabled", true);
                 modal.find("#edit_product_parent").val(data.parents_id).trigger("chosen:updated");
                 modal.find("#edit_product_active").prop("checked", ~~data.active);
-                modal.find("#edit_product_size").val(data.size);
-                $.each(data.type, function()
-                {
+
+
+                $.each(data.size, function() {
+                    modal.find("#edit_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0' max='100'   value='" + this + "'  class='edit_product_size input-mini validate[required,min[0],max[100]]'></div>");
+                });
+
+
+
+                $.each(data.type, function() {
                     modal.find(":checkbox[name='edit_product_tipo_user'][value='" + this + "']").prop("checked", true);
                 });
                 modal.find("#edit_product_mrm").val(data.max_req_m);
