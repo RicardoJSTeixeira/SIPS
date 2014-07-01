@@ -68,8 +68,8 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
         {
             size_temp = $("<div>", {class: " input-prepend size_div"})
                     .append($("<span>", {class: "add-on"}).text("Size."))
-                    .append($("<input>", {class: "input_size input-mini size_" + data.id + "", type: "number", min: 1, max: 15, value: 1, data_id: data.id}).data("last_value", 1).data("data_id", data.id)).css("display", "inline").hide();
-            ;
+                    .append($("<select>", {class: "input_size input-mini size_" + data.id + "",  data_id: data.id}) .data("data_id", data.id)) ;
+             
         }
         if (data.id === parent_id) {
             quantity_temp = $("<div>", {class: " input-prepend quantity_div"})

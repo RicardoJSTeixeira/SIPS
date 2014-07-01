@@ -97,7 +97,7 @@ var products = function(geral_path, options_ext) {
                             update_products_datatable(datatable_path);
                             edit_product_modal.find("#edit_product_table_tbody_color tr").remove();
                         }, "json").fail(function(data) {
-                            $.msg();
+            $.msg();
                             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                             $.msg('unblock', 5000);
                         });
@@ -168,8 +168,14 @@ var products = function(geral_path, options_ext) {
             $("#edit_product_add_promotion_toggle").show();
         });
         edit_product_modal.on("change", "#edit_product_category", function() {
+            edit_product_modal.find("#edit_product_size_div").hide();
+            
+            edit_product_modal.find("#edit_product_size_subdiv").find(".formRow").remove();
             if ($(this).val() === "Molde" || $(this).val() === "BTE" || $(this).val() === "RITE" || $(this).val() === "INTRA") {
                 edit_product_modal.find("#edit_product_color_div").show();
+            }
+            else if ($(this).val() === "Acessório") {
+                edit_product_modal.find("#edit_product_size_div").show().end().find("#edit_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0' max='100'   value='0'  class='edit_product_size input-mini validate[required,min[0],max[100]]'></div>");;
             }
             else {
                 edit_product_modal.find("#edit_product_table_tbody_color").empty();
@@ -203,10 +209,9 @@ var products = function(geral_path, options_ext) {
             });
         });
 
-
         edit_product_modal.on("click", "#edit_product_size_plus", function(e) {
             e.preventDefault();
-            edit_product_modal.find("#edit_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0' max='100'   value='0'  class='new_product_size input-mini validate[required,min[0],max[100]]'></div>");
+            edit_product_modal.find("#edit_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0' max='100'   value='0'  class='edit_product_size input-mini validate[required,min[0],max[100]]'></div>");
         });
         edit_product_modal.on("click", "#edit_product_size_minus", function(e) {
             e.preventDefault();
@@ -383,15 +388,14 @@ var products = function(geral_path, options_ext) {
     function  populate_modal(modal, callback) {
         $.msg();
         $.post('/AM/ajax/products.php', {action: "get_produto_by_id", "id": product_id}, function(data) {
-            populate_parent(geral_path.find("#edit_product_parent"), data.parent_level, get_children(data), function()
-            {
+            populate_parent(geral_path.find("#edit_product_parent"), data.parent_level, get_children(data), function() {
                 modal.find("#edit_product_name").val(data.name);
                 modal.find("#edit_product_category").val(data.category);
                 modal.find("#edit_product_parent option[value='" + product_id + "']").prop("disabled", true);
                 modal.find("#edit_product_parent").val(data.parents_id).trigger("chosen:updated");
                 modal.find("#edit_product_active").prop("checked", ~~data.active);
 
-
+                modal.find("#edit_product_size_subdiv").find(".formRow").remove();
                 $.each(data.size, function() {
                     modal.find("#edit_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0' max='100'   value='" + this + "'  class='edit_product_size input-mini validate[required,min[0],max[100]]'></div>");
                 });
