@@ -77,8 +77,6 @@ Class products {
             $value["parent_level"] = $this->get_level_parent($value) - 1;
             $value["children_level"] = $this->get_level_child($value) - 1;
         }
-
-
  
         if ($id) {
             return $output[$id];
