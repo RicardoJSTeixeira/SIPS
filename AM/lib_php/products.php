@@ -70,7 +70,7 @@ Class products {
 
         foreach ($output as &$value) {
 
-            $value["parent"] = $this->buildTree_parent($output, $value["id"]);
+          //  $value["parent"] = $this->buildTree_parent($output, $value["id"]);
             $value["children"] = $this->buildTree_child($output, $value["id"]);
         }
         foreach ($output as &$value) {
