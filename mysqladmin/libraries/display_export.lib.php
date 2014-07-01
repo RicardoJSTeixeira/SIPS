@@ -254,7 +254,7 @@ function PMA_getHtmlForExportOptionsSelection($export_type, $multi_values)
 /**
  * Prints Html For Export Options Format
  *
- * @param String $export_list Export List
+ * @param array $export_list Export List
  *
  * @return string
  */
@@ -291,7 +291,15 @@ function PMA_getHtmlForExportOptionsFormat($export_list)
         __('SQL compatibility mode'), 'mysql', '50027', '14515'
     );
     global $cfg;
-    $html .= '<input type="submit" value="' . __('Go') . '" id="buttonGo" onclick="check_time_out('.$cfg['ExecTimeLimit'].')"/>';
+    if ($cfg['ExecTimeLimit'] > 0) {
+        $html .= '<input type="submit" value="' . __('Go')
+            . '" id="buttonGo" onclick="check_time_out('
+            . $cfg['ExecTimeLimit'] . ')"/>';
+    } else {
+        // if the time limit set is zero, then time out won't occur
+        // So no need to check for time out.
+        $html .= '<input type="submit" value="' . __('Go') . '" id="buttonGo" />';
+    }
     $html .= '</div>';
 
     return $html;
@@ -465,7 +473,7 @@ function PMA_getHtmlForExportOptionsOutputFormat($export_type)
     $msg->addParam($trans);
     $doc_url = PMA_Util::getDocuLink('faq', 'faq6-27');
     $msg->addParam(
-        '<a href="'. $doc_url . '" target="documentation">',
+        '<a href="' . $doc_url . '" target="documentation">',
         false
     );
     $msg->addParam('</a>', false);
@@ -560,11 +568,10 @@ function PMA_getHtmlForExportOptionsOutputCompression()
     }
 
     $html = "";
-    // zip, gzip and bzip2 encode features
+    // zip and gzip encode features
     $is_zip  = ($cfg['ZipDump']  && @function_exists('gzcompress'));
     $is_gzip = ($cfg['GZipDump'] && @function_exists('gzencode'));
-    $is_bzip2 = ($cfg['BZipDump'] && @function_exists('bzcompress'));
-    if ($is_zip || $is_gzip || $is_bzip2) {
+    if ($is_zip || $is_gzip) {
         $html .= '<li>';
         $html .= '<label for="compression" class="desc">'
             . __('Compression:') . '</label>';
@@ -583,13 +590,6 @@ function PMA_getHtmlForExportOptionsOutputCompression()
                 $html .= 'selected="selected"';
             }
             $html .= '>' . __('gzipped') . '</option>';
-        }
-        if ($is_bzip2) {
-            $html .= '<option value="bzip2" ';
-            if ($selected_compression == "bzip2") {
-                $html .= 'selected="selected"';
-            }
-            $html .= '>' . __('bzipped') . '</option>';
         }
         $html .= '</select>';
         $html .= '</li>';
@@ -662,6 +662,15 @@ function PMA_getHtmlForExportOptionsOutput($export_type)
     $html .= PMA_getHtmlForExportOptionsOutputRadio();
 
     $html .= '</ul>';
+
+    /*
+     * @todo use sprintf() for better translatability, while keeping the
+     *       <label></label> principle (for screen readers)
+     */
+    $html .= '<label for="maxsize">'
+        . __('Skip tables larger than') . '</label>';
+    $html .= '<input type="text" id="maxsize" name="maxsize" size="4">' . __('MiB');
+
     $html .= '</div>';
 
     return $html;
@@ -670,13 +679,13 @@ function PMA_getHtmlForExportOptionsOutput($export_type)
 /**
  * Prints Html For Export Options
  *
- * @param String $export_type    Selected Export Type
- * @param String $db             Selected DB
- * @param String $table          Selected Table
- * @param String $multi_values   Export selection
- * @param String $num_tables     number of tables
- * @param String $export_list    Export List
- * @param String $unlim_num_rows Number of Rows
+ * @param string $export_type    Selected Export Type
+ * @param string $db             Selected DB
+ * @param string $table          Selected Table
+ * @param string $multi_values   Export selection
+ * @param string $num_tables     number of tables
+ * @param array  $export_list    Export List
+ * @param string $unlim_num_rows Number of Rows
  *
  * @return string
  */

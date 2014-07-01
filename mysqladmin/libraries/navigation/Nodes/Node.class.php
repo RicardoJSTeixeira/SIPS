@@ -233,11 +233,11 @@ class Node
     public function realParent()
     {
         $retval = $this->parents();
-        if (count($retval) > 0) {
-            return $retval[0];
-        } else {
+        if (count($retval) <= 0) {
             return false;
         }
+
+        return $retval[0];
     }
 
     /**
@@ -281,14 +281,15 @@ class Node
         $paths  = $this->getPaths();
         if (count($paths['aPath_clean']) > 3) {
             $retval = true;
-        } else {
-            foreach ($this->parent->children as $child) {
-                if ($child !== $this
-                    && ($child->type == Node::OBJECT || $child->hasChildren(false))
-                ) {
-                    $retval = true;
-                    break;
-                }
+            return $retval;
+        }
+
+        foreach ($this->parent->children as $child) {
+            if ($child !== $this
+                && ($child->type == Node::OBJECT || $child->hasChildren(false))
+            ) {
+                $retval = true;
+                break;
             }
         }
         return $retval;
@@ -359,29 +360,27 @@ class Node
      */
     public function getData($type, $pos, $searchClause = '')
     {
-        if ($type == 'databases' 
-            && ! empty($GLOBALS['cfg']['Server']['only_db'])
-        ) {
-            $db_list = $GLOBALS['cfg']['Server']['only_db'];
-            $query = "SELECT * FROM ( SELECT '";
+        $query  = "SELECT `SCHEMA_NAME` ";
+        $query .= "FROM `INFORMATION_SCHEMA`.`SCHEMATA`, ";
+        $query .= "(";
+        $query .= "select DB_first_level ";
+        $query .= "from ( ";
+        $query .= "SELECT distinct SUBSTRING_INDEX(SCHEMA_NAME, ";
+        $query .= "'{$GLOBALS['cfg']['NavigationTreeDbSeparator']}', 1) ";
+        $query .= "DB_first_level ";
+        $query .= "FROM INFORMATION_SCHEMA.SCHEMATA ";
+        $query .= $this->_getWhereClause($searchClause);
+        $query .= ") t ";
+        $query .= "ORDER BY DB_first_level ASC ";
+        $query .= "LIMIT $pos, {$GLOBALS['cfg']['FirstLevelNavigationItems']}";
+        $query .= ") t2 ";
+        $query .= "where 1 = locate(concat(DB_first_level, ";
+        $query .= "'{$GLOBALS['cfg']['NavigationTreeDbSeparator']}'), ";
+        $query .= "concat(SCHEMA_NAME, ";
+        $query .= "'{$GLOBALS['cfg']['NavigationTreeDbSeparator']}')) ";
+        $query .= "order by SCHEMA_NAME ASC";
 
-            if (is_string($db_list)) {
-                $db_list = array($db_list);
-            }
-
-            if (count($db_list)) {
-                $query .= implode("' UNION ALL SELECT '", $db_list);
-                $query .= "' ";
-            }
-            return $GLOBALS['dbi']->fetchResult($query . ") as alias");
-        } else {
-            $query  = "SELECT `SCHEMA_NAME` ";
-            $query .= "FROM `INFORMATION_SCHEMA`.`SCHEMATA` ";
-            $query .= $this->_getWhereClause($searchClause);
-            $query .= "ORDER BY `SCHEMA_NAME` ASC ";
-            $query .= "LIMIT $pos, {$GLOBALS['cfg']['MaxNavigationItems']}";
-            return $GLOBALS['dbi']->fetchResult($query);
-        }
+        return $GLOBALS['dbi']->fetchResult($query);
     }
 
     /**
@@ -396,9 +395,14 @@ class Node
      */
     public function getPresence($type = '', $searchClause = '')
     {
-        $query  = "SELECT COUNT(*) ";
-        $query .= "FROM `INFORMATION_SCHEMA`.`SCHEMATA` ";
+        $query = "select COUNT(*) ";
+        $query .= "from ( ";
+        $query .= "SELECT distinct SUBSTRING_INDEX(SCHEMA_NAME, ";
+        $query .= "'{$GLOBALS['cfg']['NavigationTreeDbSeparator']}', 1) ";
+        $query .= "DB_first_level ";
+        $query .= "FROM INFORMATION_SCHEMA.SCHEMATA ";
         $query .= $this->_getWhereClause($searchClause);
+        $query .= ") t ";
         $retval = (int)$GLOBALS['dbi']->fetchValue($query);
         return $retval;
     }

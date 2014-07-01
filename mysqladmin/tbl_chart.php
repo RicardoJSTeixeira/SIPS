@@ -19,10 +19,6 @@ if (isset($_REQUEST['ajax_request'])
 
     if (strlen($GLOBALS['table']) && strlen($GLOBALS['db'])) {
         include './libraries/tbl_common.inc.php';
-    } else {
-        $response->isSuccess(false);
-        $response->addJSON('message', __('Error'));
-        exit;
     }
 
     $sql_with_limit = 'SELECT * FROM( ' . $sql_query . ' ) AS `temp_res` LIMIT '
@@ -76,10 +72,6 @@ $scripts->addFile('jqplot/plugins/jqplot.dateAxisRenderer.js');
 $scripts->addFile('jqplot/plugins/jqplot.pointLabels.js');
 $scripts->addFile('jqplot/plugins/jqplot.pieRenderer.js');
 $scripts->addFile('jqplot/plugins/jqplot.highlighter.js');
-/* < IE 9 doesn't support canvas natively */
-if (PMA_USR_BROWSER_AGENT == 'IE' && PMA_USR_BROWSER_VER < 9) {
-    $scripts->addFile('canvg/flashcanvas.js');
-}
 
 /**
  * Runs common work

@@ -5,7 +5,7 @@
  * tables if possible
  *
  * fills tooltip arrays and provides $tables, $num_tables, $is_show_stats
- * and $db_is_information_schema
+ * and $db_is_system_schema
  *
  * speedup view on locked tables
  *
@@ -39,11 +39,11 @@ $is_show_stats = $cfg['ShowStats'];
 /**
  * @global bool whether selected db is information_schema
  */
-$db_is_information_schema = false;
+$db_is_system_schema = false;
 
 if ($GLOBALS['dbi']->isSystemSchema($db)) {
     $is_show_stats = false;
-    $db_is_information_schema = true;
+    $db_is_system_schema = true;
 }
 
 /**
@@ -115,10 +115,10 @@ if (true === $cfg['SkipLockedTables'] && ! PMA_DRIZZLE) {
                         $GLOBALS['dbi']->freeResult($sts_result);
                         unset($sts_result);
 
-                        if (! isset($sts_tmp['Type']) && isset($sts_tmp['Engine'])) {
-                            $sts_tmp['Type'] =& $sts_tmp['Engine'];
-                        }
-                        $tables[$sts_tmp['Name']]    = $sts_tmp;
+                        $tableArray = $GLOBALS['dbi']->copyTableProperties(
+                            array($sts_tmp), $db
+                        );
+                        $tables[$sts_tmp['Name']] = $tableArray[0];
                     } else { // table in use
                         $tables[$tmp[0]] = array(
                             'TABLE_NAME' => $tmp[0],
