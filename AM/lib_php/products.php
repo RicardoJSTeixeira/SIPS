@@ -79,6 +79,7 @@ Class products {
         }
 
 
+ 
         if ($id) {
             return $output[$id];
         } else {
@@ -105,7 +106,7 @@ Class products {
         $branch = array();
         foreach ($elements as $element) {
             if (in_array($childrentId, $element["children_id"])) {
-                $branch[] = $element + array("parent" => $this->buildTree_parent($elements, $element["id"]));
+                $branch[] = array("id"=>$element["id"],"parent" => $this->buildTree_parent($elements, $element["id"]));
             }
         }
         return $branch;
