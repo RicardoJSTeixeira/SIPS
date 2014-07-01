@@ -149,7 +149,7 @@ var requisition = function(geral_path, options_ext) {
                     if ($(this).prop("category_product") === "Molde" || $(this).prop("category_product") === "INTRA")
                         must_have_anexo = true;
                     has_products++;
-
+                 
                     if (duplicate_array.indexOf(($(this).prop("id_product"))) === -1) {
                         produtos_single.push({
                             id: $(this).prop("id_product"),
@@ -158,9 +158,10 @@ var requisition = function(geral_path, options_ext) {
                             quantity: ~~$(this).find(".input_quantity").val(),
                             color_id: $(this).find(".color_select").val(),
                             color_name: $(this).find(".color_select option:selected").text(),
-                            size: $(this).find(".input_size").val()
+                            size: ~~$(this).find(".input_size").val() === 0 ? "" : $(this).find(".input_size").val()
                         });
                     }
+                       console.log(produtos_single);
                     duplicate_array.push($(this).prop("id_product"));
 
                     if (me.tipo === "especial") {
@@ -237,7 +238,7 @@ var requisition = function(geral_path, options_ext) {
                             id: $(this).find(".td_name").attr("id_product"),
                             quantity: ~~$(this).find(".td_quantity").text(),
                             color: $(this).find(".td_color").attr("color"),
-                             size:~~$(this).find(".td_size").text()
+                            size: ~~$(this).find(".td_size").text()
                         });
                     }
                 });
@@ -420,6 +421,7 @@ var requisition = function(geral_path, options_ext) {
                 action: "listar_produtos_por_encomenda",
                 id: $(this).val()
             }, function(data) {
+                console.log(data);
                 var
                         modal_tbody = modal.find("#show_requisition_products_tbody").empty(),
                         EInfotmp = [],
@@ -447,9 +449,11 @@ var requisition = function(geral_path, options_ext) {
                         Nome: this.name,
                         Categoria: this.category.capitalize(),
                         Cor: this.color_name,
-                        Qt: this.quantity
+                        Qt: this.quantity,
+                        size: this.size
                     });
-                    modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category.capitalize() + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td></tr>");
+
+                    modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category.capitalize() + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td><td>" + this.size + "</td></tr>");
                 });
                 modal.modal("show");
                 $.msg('unblock');

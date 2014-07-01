@@ -68,8 +68,11 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
         {
             size_temp = $("<div>", {class: " input-prepend size_div"})
                     .append($("<span>", {class: "add-on"}).text("Size."))
-                    .append($("<input>", {class: "input_size input-mini size_" + data.id + "", type: "number", min: 1, max: 15, value: 1, data_id: data.id}).data("last_value", 1).data("data_id", data.id)).css("display", "inline").hide();
-            ;
+                    .append($("<select>", {class: "input_size input-mini size_" + data.id + "", data_id: data.id}).data("data_id", data.id)).css("display", "inline").hide();
+
+            $.each(data.size, function() {
+                size_temp.find(".input_size").append("<option value='" + this + "'>" + this + "</option>");
+            });
         }
         if (data.id === parent_id) {
             quantity_temp = $("<div>", {class: " input-prepend quantity_div"})
@@ -133,14 +136,14 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
                     if (this.checked) {
                         $(this).closest("li").parents("li").find(" > span > input").prop("checked", true).change();
                         $(this).closest("li").find(".quantity_div").first().show();
-                        $(this).closest("li").find(".size_div").first().show();
+                        $(this).closest("li").find(" > span > .size_div") .show();
                         if (~~$(this).attr("color") > 0)
                             $(this).closest("li").find(".color_div").first().show();
                     }
                     else {
                         $(this).closest("li").find("input[name=" + this.name + "]").not(this).prop("checked", this.checked).change();
                         $(this).closest("li").find(".quantity_div").first().hide();
-                        $(this).closest("li").find(".size_div").first().hide();
+                        $(this).closest("li").find(" > span > .size_div") .hide();
                         $(this).closest("li").find(".color_div").first().hide();
                     }
                     var isClosed = $(this)
