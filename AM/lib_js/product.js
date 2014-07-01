@@ -178,7 +178,7 @@ var products = function(geral_path, options_ext) {
                 edit_product_modal.find("#edit_product_color_div").show();
             }
             else if ($(this).val() === "Acessório") {
-                edit_product_modal.find("#edit_product_size_div").show().end().find("#edit_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0' max='100'   value='0'  class='edit_product_size input-mini validate[required,min[0],max[100]]'></div>");
+                edit_product_modal.find("#edit_product_size_div").show().end().find("#edit_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0'    value='0'  class='edit_product_size input-mini validate[required,min[0]]'></div>");
                 ;
             }
             else {
@@ -215,7 +215,7 @@ var products = function(geral_path, options_ext) {
 
         edit_product_modal.on("click", "#edit_product_size_plus", function(e) {
             e.preventDefault();
-            edit_product_modal.find("#edit_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0' max='100'   value='0'  class='edit_product_size input-mini validate[required,min[0],max[100]]'></div>");
+            edit_product_modal.find("#edit_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0'    value='0'  class='edit_product_size input-mini validate[required,min[0] ]'></div>");
         });
         edit_product_modal.on("click", "#edit_product_size_minus", function(e) {
             e.preventDefault();
@@ -328,7 +328,7 @@ var products = function(geral_path, options_ext) {
 
         new_product_path.on("click", "#new_product_size_plus", function(e) {
             e.preventDefault();
-            new_product_path.find("#new_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0' max='100'   value='0'  class='new_product_size input-mini validate[required,min[0],max[100]]'></div>");
+            new_product_path.find("#new_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0'  value='0'  class='new_product_size input-mini validate[required,min[0]]'></div>");
         });
         new_product_path.on("click", "#new_product_size_minus", function(e) {
             e.preventDefault();
@@ -350,7 +350,7 @@ var products = function(geral_path, options_ext) {
         new_product_path.find(":checkbox").prop("checked", true);
         new_product_path.find(":radio").prop("checked", true);
         new_product_path.find("#new_product_form").show();
-        new_product_path.find("#new_product_size_subdiv").find(".formRow").remove().end().append("<div class='formRow'> <input type='number' min='0' max='100'   value='0'  class='new_product_size input-mini validate[required,min[0],max[100]]'></div>");
+        new_product_path.find("#new_product_size_subdiv").find(".formRow").remove().end().append("<div class='formRow'> <input type='number' min='0'   value='0'  class='new_product_size input-mini validate[required,min[0]]'></div>");
     }
 
     function update_products_datatable(datatable_path) {
@@ -401,7 +401,7 @@ var products = function(geral_path, options_ext) {
 
                 modal.find("#edit_product_size_subdiv").find(".formRow").remove();
                 $.each(data.size, function() {
-                    modal.find("#edit_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0' max='100'   value='" + this + "'  class='edit_product_size input-mini validate[required,min[0],max[100]]'></div>");
+                    modal.find("#edit_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0'    value='" + this + "'  class='edit_product_size input-mini validate[required,min[0] ]'></div>");
                 });
 
 
@@ -453,14 +453,14 @@ var products = function(geral_path, options_ext) {
             });
 
         }, "json").fail(function(data) {
-           
+
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
             $.msg('unblock', 5000);
         });
     }
 
     function get_promocao(modal, callback) {
- 
+
         $.post('/AM/ajax/products.php', {action: "get_promotion", "id": product_id}, function(data) {
             var tbody = modal.find("#edit_product_promotion_table_tbody");
             tbody.empty();
@@ -482,7 +482,7 @@ var products = function(geral_path, options_ext) {
             }
             if (typeof callback === "function")
                 callback();
-           
+
         }, "json").fail(function(data) {
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
             $.msg('unblock', 5000);
