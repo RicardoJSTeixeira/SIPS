@@ -114,7 +114,7 @@ class PMA_Config
      */
     function checkSystem()
     {
-        $this->set('PMA_VERSION', '4.1.4');
+        $this->set('PMA_VERSION', '4.1.14.1');
         /**
          * @deprecated
          */
@@ -753,7 +753,17 @@ class PMA_Config
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($ch, CURLOPT_USERAGENT, 'phpMyAdmin/' . PMA_VERSION);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        if (! defined('TESTSUITE')) {
+            session_write_close();
+        }
         $data = @curl_exec($ch);
+        if (! defined('TESTSUITE')) {
+            ini_set('session.use_only_cookies', false);
+            ini_set('session.use_cookies', false);
+            ini_set('session.use_trans_sid', false);
+            ini_set('session.cache_limiter', null);
+            session_start();
+        }
         if ($data === false) {
             return null;
         }
@@ -1880,7 +1890,7 @@ class PMA_Config
  */
 function PMA_Config_fatalErrorHandler()
 {
-    if ($GLOBALS['pma_config_loading']) {
+    if (isset($GLOBALS['pma_config_loading']) && $GLOBALS['pma_config_loading']) {
         $error = error_get_last();
         if ($error !== null) {
             PMA_fatalError(

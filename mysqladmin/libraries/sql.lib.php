@@ -224,8 +224,9 @@ function PMA_getTableHtmlForMultipleQueries(
  *
  * @return void
  */
-function PMA_handleSortOrder($db, $table, &$analyzed_sql_results, &$full_sql_query)
-{
+function PMA_handleSortOrder(
+    $db, $table, &$analyzed_sql_results, &$full_sql_query
+) {
     $pmatable = new PMA_Table($table, $db);
     if (empty($analyzed_sql_results['analyzed_sql'][0]['order_by_clause'])) {
         $sorted_col = $pmatable->getUiProp(PMA_Table::PROP_SORTED_COLUMN);
@@ -518,8 +519,10 @@ EOT;
         $profiling_table .= '<div id="profilingchart" style="display:none;">';
         $profiling_table .= '</div>';
         $profiling_table .= '<script type="text/javascript">';
+        $profiling_table .= "AJAX.registerOnload('sql.js', function () {";
         $profiling_table .= 'makeProfilingChart();';
         $profiling_table .= 'initProfilingTables();';
+        $profiling_table .= '});';
         $profiling_table .= '</script>';
         $profiling_table .= '</fieldset>' . "\n";
     } else {
@@ -837,11 +840,9 @@ function PMA_isAppendLimitClause($analyzed_sql_results)
         $analyzed_sql_results['analyzed_sql'][0]['queryflags']['select_from']
     );
     if (($_SESSION['tmpval']['max_rows'] != 'all')
-        && ! ($analyzed_sql_results['is_count']
-        || $analyzed_sql_results['is_export']
-        || $analyzed_sql_results['is_func']
+        && ! ($analyzed_sql_results['is_export']
         || $analyzed_sql_results['is_analyse'])
-        && $select_from
+        && ($select_from || $analyzed_sql_results['is_subquery'])
         && ! isset($analyzed_sql_results['analyzed_sql'][0]['queryflags']['offset'])
         && empty($analyzed_sql_results['analyzed_sql'][0]['limit_clause'])
     ) {
@@ -875,7 +876,9 @@ function PMA_isJustBrowsing($analyzed_sql_results, $find_real_end)
         && ! $table_name
         && (empty($analyzed_sql_results['analyzed_sql'][0]['where_clause'])
         || $analyzed_sql_results['analyzed_sql'][0]['where_clause'] == '1 ')
+        && empty($analyzed_sql_results['analyzed_sql'][0]['group_by_clause'])
         && ! isset($find_real_end)
+        && !$analyzed_sql_results['is_subquery']
     ) {
         return true;
     } else {
@@ -1393,7 +1396,7 @@ function PMA_countQueryResults(
         // "Showing rows..." message
         // $_SESSION['tmpval']['max_rows'] = 'all';
         $unlim_num_rows         = $num_rows;
-    } elseif ($is_select) {
+    } elseif ($is_select || $analyzed_sql_results['is_subquery']) {
         //    c o u n t    q u e r y
 
         // If we are "just browsing", there is only one table,
@@ -1733,7 +1736,7 @@ function PMA_sendQueryResponseForNoResultsReturned($analyzed_sql_results, $db,
         isset($message_to_show) ? $message_to_show : null, $analyzed_sql_results,
         $num_rows
     );
-    if ($GLOBALS['is_ajax_request'] == true && !isset($GLOBALS['show_as_php'])) {
+    if (!isset($GLOBALS['show_as_php'])) {
         PMA_sendAjaxResponseForNoResultsReturned(
             $message, $analyzed_sql_results['analyzed_sql'],
             $displayResultsObject,
@@ -2267,23 +2270,22 @@ function PMA_executeQueryAndSendQueryResponse($analyzed_sql_results,
 
     include 'libraries/DisplayResults.class.php';
 
-    $displayResultsObject = new PMA_DisplayResults(
-        $GLOBALS['db'], $GLOBALS['table'], $GLOBALS['goto'], $GLOBALS['sql_query']
-    );
-
-    $displayResultsObject->setConfigParamsForDisplayTable();
-
-    // assign default full_sql_query
-    $full_sql_query = $sql_query;
-
     // Handle remembered sorting order, only for single table query
     // Handling is not required when it's a union query
     // (the parser never sets the 'union' key to 0)
     if (PMA_isRememberSortingOrder($analyzed_sql_results)
         && ! isset($analyzed_sql_results['analyzed_sql'][0]['queryflags']['union'])
     ) {
-        PMA_handleSortOrder($db, $table, $analyzed_sql_results, $full_sql_query);
+        PMA_handleSortOrder($db, $table, $analyzed_sql_results, $sql_query);
     }
+
+    $displayResultsObject = new PMA_DisplayResults(
+        $GLOBALS['db'], $GLOBALS['table'], $GLOBALS['goto'], $sql_query
+    );
+    $displayResultsObject->setConfigParamsForDisplayTable();
+
+    // assign default full_sql_query
+    $full_sql_query = $sql_query;
 
     // Do append a "LIMIT" clause?
     if (PMA_isAppendLimitClause($analyzed_sql_results)) {

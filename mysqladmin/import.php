@@ -557,30 +557,20 @@ if (! empty($id_bookmark) && $action_bookmark == 2) {
     if ($import_type == 'query') {
         $message = PMA_Message::success();
     } else {
-        if ($import_notice) {
-            $message = PMA_Message::success(
-                '<em>'
-                . __('Import has been successfully finished, %d queries executed.')
-                . '</em>'
-            );
-            $message->addParam($executed_queries);
+        $message = PMA_Message::success(
+            '<em>'
+            . __('Import has been successfully finished, %d queries executed.')
+            . '</em>'
+        );
+        $message->addParam($executed_queries);
 
+        if ($import_notice) {
             $message->addString($import_notice);
-            if (isset($local_import_file)) {
-                $message->addString('(' . $local_import_file . ')');
-            } else {
-                $message->addString('(' . $_FILES['import_file']['name'] . ')');
-            }
+        }
+        if (isset($local_import_file)) {
+            $message->addString('(' . htmlspecialchars($local_import_file) . ')');
         } else {
-            $message = PMA_Message::success(
-                __('Import has been successfully finished, %d queries executed.')
-            );
-            $message->addParam($executed_queries);
-            if (isset($local_import_file)) {
-                $message->addString('(' . $local_import_file . ')');
-            } else {
-                $message->addString('(' . $_FILES['import_file']['name'] . ')');
-            }
+            $message->addString('(' . htmlspecialchars($_FILES['import_file']['name']) . ')');
         }
     }
 }
@@ -623,6 +613,10 @@ if ($go_sql) {
     // parse sql query
     include_once 'libraries/parse_analyze.inc.php';
 
+    if (isset($ajax_reload) && $ajax_reload['reload'] === true) {
+        $response = PMA_Response::getInstance();
+        $response->addJSON('ajax_reload', $ajax_reload);
+    }
     PMA_executeQueryAndSendQueryResponse(
         $analyzed_sql_results, false, $db, $table, null, $import_text, null,
         $analyzed_sql_results['is_affected'], null,
@@ -630,6 +624,15 @@ if ($go_sql) {
         null, null
     );
 } else if ($result) {
+    // Save a Bookmark with more than one queries (if Bookmark label given).
+    if (! empty($_POST['bkm_label']) && ! empty($import_text)) {
+        PMA_storeTheQueryAsBookmark(
+            $db, $GLOBALS['cfg']['Bookmark']['user'],
+            $import_text, $_POST['bkm_label'],
+            isset($_POST['bkm_replace']) ? $_POST['bkm_replace'] : null
+        );
+    }
+
     $response = PMA_Response::getInstance();
     $response->isSuccess(true);
     $response->addJSON('message', PMA_Message::success($msg));

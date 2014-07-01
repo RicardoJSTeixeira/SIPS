@@ -1184,15 +1184,15 @@ $cfg['ZipDump'] = true;
 $cfg['GZipDump'] = true;
 
 /**
- * Allow for the use of bzip2 compression (requires bz2 extension)
+ * Allow for the use of bzip2 decompression (requires bz2 extension)
  *
  * @global boolean $cfg['BZipDump']
  */
 $cfg['BZipDump'] = true;
 
 /**
- * Will compress gzip/bzip2 exports on the fly without the need for much memory.
- * If you encounter problems with created gzip/bzip2 files disable this feature.
+ * Will compress gzip exports on the fly without the need for much memory.
+ * If you encounter problems with created gzip files disable this feature.
  *
  * @global boolean $cfg['CompressOnFly']
  */
@@ -1281,7 +1281,7 @@ $cfg['Export']['format'] = 'sql';
 $cfg['Export']['method'] = 'quick';
 
 /**
- * none/zip/gzip/bzip2
+ * none/zip/gzip
  *
  * @global string $cfg['Export']['compression']
  */
@@ -1897,13 +1897,6 @@ $cfg['Export']['sql_type'] = 'INSERT';
  * @global integer $cfg['Export']['sql_max_query_size']
  */
 $cfg['Export']['sql_max_query_size'] = 50000;
-
-/**
- *
- *
- * @global boolean $cfg['Export']['sql_comments']
- */
-$cfg['Export']['sql_comments'] = false;
 
 /**
  *

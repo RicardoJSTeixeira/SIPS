@@ -801,9 +801,12 @@ div#tablestatistics table {
 }
 
 #span_table_comment {
-    font-weight:        normal;
-    font-style:         italic;
-    white-space:        nowrap;
+    font-weight: bold;
+    font-style: italic;
+    white-space: nowrap;
+    margin-left: 10px;  
+    color: #D6D6D6;
+    text-shadow: none;
 }
 
 #serverinfo img {
@@ -1001,6 +1004,8 @@ div#chartVariableSettings {
 
 table#chartGrid div.monitorChart {
     background: #EBEBEB;
+    width: 400px;
+    height: 300px;
 }
 
 div#serverstatus div.tabLinks {
@@ -1380,7 +1385,8 @@ textarea#partitiondefinition {
 }
 
 #list_server {
-    list-style-image: none;
+    list-style-type: none;
+    padding: 0;
 }
 
 /**

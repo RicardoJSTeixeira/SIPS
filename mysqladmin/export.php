@@ -20,13 +20,13 @@ if (!defined('TESTSUITE')) {
     include_once 'libraries/common.inc.php';
     include_once 'libraries/zip.lib.php';
     include_once 'libraries/plugin_interface.lib.php';
-    
+
     //check if it's the GET request to check export time out
     if (isset($_GET['check_time_out'])) {
         if (isset($_SESSION['pma_export_error'])) {
             $err = $_SESSION['pma_export_error'];
             unset($_SESSION['pma_export_error']);
-            echo $err;
+            echo "timeout";
         } else {
             echo "success";
         }
@@ -57,6 +57,8 @@ if (!defined('TESTSUITE')) {
             'charset_of_file',
             'compression',
             'what',
+            'knjenc',
+            'xkana',
             'htmlword_structure_or_data',
             'htmlword_null',
             'htmlword_columns',
@@ -117,6 +119,7 @@ if (!defined('TESTSUITE')) {
             'sql_max_query_size',
             'sql_hex_for_blob',
             'sql_utc_time',
+            'sql_drop_database',
             'csv_separator',
             'csv_enclosed',
             'csv_escaped',
@@ -176,8 +179,7 @@ if (!defined('TESTSUITE')) {
      */
     $compression_methods = array(
         'zip',
-        'gzip',
-        'bzip2',
+        'gzip'
     );
 
     /**
@@ -268,9 +270,9 @@ if (!defined('TESTSUITE')) {
 }
 
 /**
- * Sets a session variable upon a possible fatal error during export 
+ * Sets a session variable upon a possible fatal error during export
  *
- * @return void 
+ * @return void
  */
 function PMA_shutdown()
 {
@@ -354,12 +356,7 @@ function PMA_exportOutputHandler($line)
                         $dump_buffer
                     );
                 }
-                // as bzipped
-                if ($GLOBALS['compression'] == 'bzip2'
-                    && @function_exists('bzcompress')
-                ) {
-                    $dump_buffer = bzcompress($dump_buffer);
-                } elseif ($GLOBALS['compression'] == 'gzip'
+                if ($GLOBALS['compression'] == 'gzip'
                     && PMA_gzencodeNeeded()
                 ) {
                     // as a gzipped file
@@ -443,7 +440,7 @@ if (!defined('TESTSUITE')) {
 
     // Use on the fly compression?
     $onfly_compression = $GLOBALS['cfg']['CompressOnFly']
-        && ($compression == 'gzip' || $compression == 'bzip2');
+        && $compression == 'gzip';
     if ($onfly_compression) {
         $memory_limit = trim(@ini_get('memory_limit'));
         $memory_limit_num = (int)substr($memory_limit, 0, -1);
@@ -519,10 +516,7 @@ if (!defined('TESTSUITE')) {
 
         // If dump is going to be compressed, set correct mime_type and add
         // compression to extension
-        if ($compression == 'bzip2') {
-            $filename  .= '.bz2';
-            $mime_type = 'application/x-bzip2';
-        } elseif ($compression == 'gzip') {
+        if ($compression == 'gzip') {
             $filename  .= '.gz';
             $mime_type = 'application/x-gzip';
         } elseif ($compression == 'zip') {
@@ -661,7 +655,8 @@ if (!defined('TESTSUITE')) {
 
         // Will we need relation & co. setup?
         $do_relation = isset($GLOBALS[$what . '_relation']);
-        $do_comments = isset($GLOBALS[$what . '_include_comments']);
+        $do_comments = isset($GLOBALS[$what . '_include_comments'])
+            || isset($GLOBALS[$what . '_comments']) ;
         $do_mime     = isset($GLOBALS[$what . '_mime']);
         if ($do_relation || $do_comments || $do_mime) {
             $cfgRelation = PMA_getRelationsParam();
@@ -968,11 +963,6 @@ if (!defined('TESTSUITE')) {
                 $zipfile = new ZipFile();
                 $zipfile->addFile($dump_buffer, substr($filename, 0, -4));
                 $dump_buffer = $zipfile->file();
-            }
-        } elseif ($compression == 'bzip2') {
-            // 2. as a bzipped file
-            if (@function_exists('bzcompress')) {
-                $dump_buffer = bzcompress($dump_buffer);
             }
         } elseif ($compression == 'gzip' && PMA_gzencodeNeeded()) {
             // 3. as a gzipped file

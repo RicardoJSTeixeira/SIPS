@@ -440,15 +440,6 @@ AJAX.registerOnload('server_status_monitor.js', function () {
             row++;
         }
 
-        /* Apply new chart size to all charts */
-        $.each(runtime.charts, function (key, value) {
-            value.chart.setSize(
-                newSize.width,
-                newSize.height,
-                false
-            );
-        });
-
         if (monitorSettings.gridMaxPoints == 'auto') {
             runtime.gridMaxPoints = Math.round((newSize.width - 40) / 12);
         }
@@ -1032,16 +1023,6 @@ AJAX.registerOnload('server_status_monitor.js', function () {
 
         destroyGrid();
         initGrid();
-
-        if (oldData) {
-            $.each(runtime.charts, function (key, chartObj) {
-                for (var j = 0, l = chartObj.nodes.length; j < l; j++) {
-                    if (oldData[chartObj.nodes[j].dataPoint]) {
-                        chartObj.chart.series[j].setData(oldData[chartObj.nodes[j].dataPoint]);
-                    }
-                }
-            });
-        }
     }
 
     /* Calculactes the dynamic chart size that depends on the column width */

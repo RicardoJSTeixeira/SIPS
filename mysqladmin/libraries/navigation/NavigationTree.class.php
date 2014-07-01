@@ -557,6 +557,12 @@ class PMA_NavigationTree
                         }
                     }
                 }
+                //Bug #4375: Check if prefix is the name of a DB, to create a group.
+                foreach ($node->children as $child) {
+                    if (array_key_exists($child->name, $prefixes)) {
+                        $prefixes[$child->name]++;
+                    }
+                }
             }
             foreach ($prefixes as $key => $value) {
                 if ($value == 1) {
@@ -807,6 +813,7 @@ class PMA_NavigationTree
             }
             if ($node->is_group
                 || (! in_array($parentName, $sterile) && ! $node->isNew)
+                || (in_array($node->real_name, $sterile))    //if node name itself is in sterile, then allow
             ) {
                 $loaded = '';
                 if ($node->is_group) {

@@ -130,7 +130,7 @@ RTE.COMMON = {
                     buttons: button_options,
                     title: data.title
                 });
-                // Attach syntax highlited editor to export dialog
+                // Attach syntax highlighted editor to export dialog
                 /**
                  * @var $elm jQuery object containing the reference
                  *           to the Export textarea.
@@ -201,7 +201,7 @@ RTE.COMMON = {
                                 that.$ajaxDialog.dialog('close');
                                 // If we are in 'edit' mode, we must
                                 // remove the reference to the old row.
-                                if (mode === 'edit') {
+                                if (mode === 'edit' && $edit_row !== null ) {
                                     $edit_row.remove();
                                 }
                                 // Sometimes, like when moving a trigger from
@@ -320,7 +320,7 @@ RTE.COMMON = {
                 if ($('input[name=editor_process_edit]').length > 0) {
                     mode = 'edit';
                 }
-                // Attach syntax highlited editor to the definition
+                // Attach syntax highlighted editor to the definition
                 /**
                  * @var elm jQuery object containing the reference to
                  *                 the Definition textarea.
@@ -711,6 +711,33 @@ RTE.ROUTINE = {
                     $ajaxDialog.find('input.datefield, input.datetimefield').each(function () {
                         PMA_addDatepicker($(this).css('width', '95%'));
                     });
+                    /*
+                    * Define the function if the user presses enter
+                    */
+                    $('form.rte_form').on('keyup', function (event) {
+                        event.preventDefault();
+                        if (event.keyCode === 13) {
+                            /**
+                            * @var data Form data to be sent in the AJAX request
+                            */
+                            var data = $(this).serialize();
+                            $msg = PMA_ajaxShowMessage(
+                                PMA_messages.strProcessingRequest
+                            );
+                            var url = $(this).attr('action');
+                            $.post(url, data, function (data) {
+                                if (data.success === true) {
+                                    // Routine executed successfully
+                                    PMA_ajaxRemoveMessage($msg);
+                                    PMA_slidingMessage(data.message);
+                                    $('form.rte_form').off('keyup');
+                                    $ajaxDialog.remove();
+                                } else {
+                                    PMA_ajaxShowMessage(data.error, false);
+                                }
+                            });
+                        }
+                    });
                 } else {
                     // Routine executed successfully
                     PMA_slidingMessage(data.message);
@@ -724,8 +751,6 @@ RTE.ROUTINE = {
 
 /**
  * Attach Ajax event handlers for the Routines, Triggers and Events editor
- *
- * FIXME: submit on ENTER keypress in dialog
  */
 $(function () {
     /**
