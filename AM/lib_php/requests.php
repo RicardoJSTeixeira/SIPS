@@ -45,7 +45,7 @@ class apoio_marketing extends requests_class {
     public function get_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
-        $query = "SELECT id, user, data_criacao, data_inicial, data_final, 'horario', localidade, local, morada, comments, 'local_publicididade', cod, total_rastreios, rastreios_perda, vendas, valor, status from spice_apoio_marketing $filter";
+        $query = "SELECT id, user, data_criacao, data_inicial, data_final, 'horario', localidade, local, morada, comments, 'local_publicididade', cod, total_rastreios, rastreios_perda, vendas, valor, status, closed from spice_apoio_marketing $filter";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
 
@@ -53,19 +53,24 @@ class apoio_marketing extends requests_class {
 
             $row[5] = "<div> <button class='btn icon-alone ver_horario' data-apoio_marketing_id='" . $row[0] . "'><i class='icon-time'></i></button></div>";
             $row[10] = "<div> <button class='btn icon-alone ver_local_publicidade' data-apoio_marketing_id='" . $row[0] . "' ><i class='icon-home'></i></button></div>";
-            switch ($row[16]) {
+            if ($row[17] == '1') {
+                        $row[17] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
+                        $row[16] = "<span class='label label-success'>Fechado</span>";
+            } else {
+                switch ($row[16]) {
                 case "0":
                     $row[17] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
                     $row[16] = "Pedido enviado";
                     break;
-                case "1":
-                    $row[17] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
-                    $row[16] = "<span class='label label-success'>Aprovado</span>";
-                    break;
-                case "2":
-                    $row[17] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
-                    $row[16] = "<span class='label label-important'>Rejeitado</span>";
-                    break;
+                    case "1":
+                        $row[17] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
+                        $row[16] = "<span class='label label-success'>Aprovado</span>";
+                        break;
+                    case "2":
+                        $row[17] = "<div class='btn-group'> <button class='btn accept_apoio_marketing btn-success icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_apoio_marketing btn-warning icon-alone' disabled value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
+                        $row[16] = "<span class='label label-important'>Rejeitado</span>";
+                        break;
+                }
             }
 
             $result['aaData'][] = $row;
