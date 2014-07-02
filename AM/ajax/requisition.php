@@ -52,6 +52,10 @@ switch ($action) {
         echo json_encode($requisitions->get_products_by_requisiton($id));
         break;
 
+    case "listar_comments_por_encomenda":
+        echo json_encode($requisitions->get_comments_by_requisiton($id));
+        break;
+
     case "accept_requisition":
         $result = $requisitions->accept_requisition($id);
         if ($result) {

@@ -18,7 +18,6 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
         return temp;
     }
 
-
     this.init = function() {
         var UL;
         $.each(me.treeRaw, function() {
@@ -41,7 +40,6 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
     };
 
     function feed(data) {
-
         data = produtos[data.id];
         var hasChilds = false;
         if (typeof data.children === "object") {
@@ -58,7 +56,6 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
             max_value = data.max_req_m;
         else
             max_value = data.max_req_s;
-
 
 
 // METER COR NA OPTION DO SELECT BACKGROUND COLOR
