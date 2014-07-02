@@ -24,17 +24,25 @@ switch ($action) {
     case "populate_allm"://ALL MARCAÇOES
         $u = $user->getUser();
         if ($u->user_level > 6) {
-            $query = "SELECT a.lead_id,CONCAT(first_name, ' ', middle_initial, ' ', last_name), extra1, extra2, extra8 'nif', postal_code, b.city, b.phone_number, b.alt_phone, b.address1, IF(d.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, a.id_user from sips_sd_reservations a 
+            $query = "SELECT a.lead_id,CONCAT(first_name, ' ', middle_initial, ' ', last_name), extra1, extra2, extra8 'nif', postal_code, b.city, b.phone_number, b.alt_phone, b.address1, IF(d.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, a.id_user
+                from sips_sd_reservations a 
       inner join vicidial_list b on a.lead_id=b.lead_id 
       inner join vicidial_users c on b.user=c.user
       left join spice_consulta d on d.reserva_id=a.id_reservation
       where c.user_group=:user_group and DATE(a.start_date)>'2014-06-29' group by a.lead_id limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
-            $query = "SELECT a.lead_id, CONCAT(first_name, ' ', middle_initial, ' ', last_name), extra1, extra2, extra8 'nif', postal_code, b.city, b.phone_number, b.alt_phone, b.address1, IF(c.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, a.id_user from sips_sd_reservations a 
+            $calendar = new Calendars($db);
+            $refs = $calendar->_getRefs($u->username);
+            $refs = array_map(function($a) {
+                return $a->id;
+            }, $refs);
+
+            $query = "SELECT a.lead_id, CONCAT(first_name, ' ', middle_initial, ' ', last_name), extra1, extra2, extra8 'nif', postal_code, b.city, b.phone_number, b.alt_phone, b.address1, IF(c.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, a.id_user
+                from sips_sd_reservations a 
       inner join vicidial_list b on a.lead_id=b.lead_id 
       left join spice_consulta c on c.reserva_id=a.id_reservation
-      where a.id_user in ('".  implode("','", $u->siblings)."') and DATE(a.start_date)>'2014-06-29' group by a.lead_id limit 20000";
+      where a.id_resource in ('" . implode("','", $refs) . "') and DATE(a.start_date)>'2014-06-29' group by a.lead_id limit 20000";
         }
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
@@ -63,7 +71,7 @@ switch ($action) {
         } else {
             $query = "SELECT a.lead_id, CONCAT(first_name, ' ', middle_initial, ' ', last_name), extra1, extra2, extra8 'nif', postal_code, city, phone_number, alt_phone, address1, a.entry_date from vicidial_list a
         left join sips_sd_reservations b on a.lead_id=b.lead_id
-        where b.id_user in ('".  implode("','", $u->siblings)."')  and list_id=:list and b.lead_id is null and extra6='NO' limit 20000";
+        where b.id_user in ('" . implode("','", $u->siblings) . "')  and list_id=:list and b.lead_id is null and extra6='NO' limit 20000";
         }
 
         $stmt = $db->prepare($query);
@@ -95,7 +103,7 @@ switch ($action) {
         FROM `vicidial_list` a 
         inner join `vicidial_list` b on a.extra7=b.lead_id 
         left join sips_sd_reservations c on a.lead_id=c.lead_id
-        where c.id_user in ('".  implode("','", $u->siblings)."')  and a.list_id=:list and c.lead_id is null and a.extra6='NO' and DATE(c.start_date)>'2014-06-29' limit 20000";
+        where c.id_user in ('" . implode("','", $u->siblings) . "')  and a.list_id=:list and c.lead_id is null and a.extra6='NO' and DATE(c.start_date)>'2014-06-29' limit 20000";
         }
 
         $stmt = $db->prepare($query);
