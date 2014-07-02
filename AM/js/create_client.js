@@ -58,6 +58,8 @@ $(function() {
                 elmt = $("<select>", {id: this.name, name: this.name, class: "input-mini"}).attr('data-prompt-position', 'topRight:120').append([new Option("", ""), new Option("Sr.", "Sr."), new Option("Sra. D.", "Sra. D.")]);
             } else if (this.name === "extra6") {
                 elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "NO"});
+            } else if (this.name === "SECURITY_PHRASE") {
+                elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "SPICE"});
             } else {
                 elmt = $("<input>", {type: "text", id: this.name, name: this.name});
             }
@@ -169,7 +171,9 @@ $(function() {
                     break;
                 case "extra6":
                 case "extra7":
+                case "SECURITY_PHRASE":
                     hide = " hide";
+                    input = input3;
                     break;
                 case "extra1":
                     custom_class = "validate[required]";

@@ -377,6 +377,7 @@ if ($_POST['nc_flag'] == "nc_post") {
                                         <option value="B/BROE"> Consultório Oeiras </option> 
                                         <option value="B/OMT"> Consultório Lisboa - Avenidas Novas </option>
                                         <option value="B/OUR"> Consultório Lisboa - Campo de Ourique </option>
+                                        <option value="B/BPOV"> Consultório Ovar </option>
                                         <option value="B/PEN"> Consultório Penafiel </option>
                                         <option value="B/PMB"> Consultório Pombal </option>
                                         <option value="B/PTL"> Consultório Portalegre </option>
