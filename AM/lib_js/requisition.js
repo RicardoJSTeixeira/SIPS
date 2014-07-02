@@ -444,8 +444,11 @@ var requisition = function(geral_path, options_ext) {
                         EInfo = [];
                 EData = {
                     bInfo: [],
-                    products: []
+                    products: [],
+                    id_req: 0
                 };
+                EData.id_req = ~~$(that).parents("tr").find("td").first().text();
+
                 $(that).parents("tr").find('td:not(:eq(0)):not(:eq(6)):not(:eq(6)):not(:eq(7))').each(function(i) {
                     EInfotmp.push(this.innerText);
                 });
@@ -456,7 +459,7 @@ var requisition = function(geral_path, options_ext) {
                     'Data': EInfotmp[3] + "",
                     'Nr de contrato': EInfotmp[4] + "",
                     'Referencia': EInfotmp[5] + "",
-                    'Estado': EInfotmp[6] + ""
+                    'Estado': EInfotmp[6] + "",
                 };
                 EData.bInfo.push(EInfo);
                 $.each(data, function() {
@@ -499,17 +502,43 @@ var requisition = function(geral_path, options_ext) {
             });
         });
         modal.on("click", "#print_requisition", function() {
-            var doc = new jsPDF('p', 'pt', 'a4', true);
-            last = doc.table(20, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {
-                autoSize: true,
-                printHeaders: true,
-                fontSize: 10
+            $.msg();
+
+//Ir buscar os comentarios
+            $.post('ajax/requisition.php', {
+                action: "listar_comments_por_encomenda",
+                id: EData.id_req
+            }, function(data) {
+
+ 
+
+                var doc = new jsPDF('p', 'pt', 'a4', true);
+                last = doc.table(20, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {
+                    autoSize: true,
+                    printHeaders: true,
+                    fontSize: 10
+                });
+                doc.table(20, 80, EData.products, ['Nome', 'Categoria', 'Cor', 'Qt'], {
+                    autoSize: true,
+                    printHeaders: true
+                });
+
+
+
+                doc.text(35, doc.lastCellPos.x-10, data);
+                doc.save(moment().format());
+
+
+
+                $.msg('unblock');
+            }).fail(function(data) {
+                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                $.msg('unblock', 5000);
             });
-            doc.table(20, 80, EData.products, ['Nome', 'Categoria', 'Cor', 'Qt'], {
-                autoSize: true,
-                printHeaders: true
-            });
-            doc.save(moment().format());
+
+
+
+
         });
         table_path.on("click", ".accept_requisition", function() {
             var this_button = $(this);
