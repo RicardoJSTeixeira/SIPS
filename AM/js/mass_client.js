@@ -45,7 +45,7 @@ $(function() {
                             .append($("<input>", {type: "text", name: "ctlm[]", placeholder: "", class: "span"}))
                             )
                     .append($("<td>")
-                            .append($("<input>", {type: "text", name: "cbd[]", placeholder: "", readonly: true, class: "span " + ((!~~recomendado) ? "validate[required]" : "")})
+                            .append($("<input>", {type: "text", name: "cbd[]", placeholder: "", readonly: true, 'data-prompt-position': 'topRight:120', class: "span " + ((!~~recomendado) ? "validate[required]" : "")})
                                     .datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2, initialDate: new Date(moment().subtract('years', 65).format()), 'data-prompt-position': 'topRight:120'}))
                             )
                     .append($("<td>")
