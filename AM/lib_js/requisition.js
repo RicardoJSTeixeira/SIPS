@@ -149,7 +149,7 @@ var requisition = function(geral_path, options_ext) {
                     if ($(this).prop("category_product") === "Molde" || $(this).prop("category_product") === "INTRA")
                         must_have_anexo = true;
                     has_products++;
-                 
+
                     if (duplicate_array.indexOf(($(this).prop("id_product"))) === -1) {
                         produtos_single.push({
                             id: $(this).prop("id_product"),
@@ -158,10 +158,10 @@ var requisition = function(geral_path, options_ext) {
                             quantity: ~~$(this).find(".input_quantity").val(),
                             color_id: $(this).find(".color_select").val(),
                             color_name: $(this).find(".color_select option:selected").text(),
-                            size: ~~$(this).find(".input_size").val() === 0 ? "" : $(this).find(".input_size").val()
+                            size: $(this).find(".input_size").val()
                         });
                     }
-                       console.log(produtos_single);
+
                     duplicate_array.push($(this).prop("id_product"));
 
                     if (me.tipo === "especial") {
@@ -175,6 +175,7 @@ var requisition = function(geral_path, options_ext) {
                     }
                 }
             });
+
             if (!has_products) {
                 $.jGrowl('Selecione pelo menos 1 produto', {
                     life: 4000
@@ -206,7 +207,7 @@ var requisition = function(geral_path, options_ext) {
                         .append($("<td>", {class: "td_name", id_product: this.id}).text(this.name))
                         .append($("<td>", {class: "td_category"}).text(this.category.capitalize()))
                         .append($("<td>", {class: "td_quantity"}).text(this.quantity))
-                        .append($("<td>", {class: "td_size"}).text(this.size))
+                        .append($("<td>", {class: "td_size"}).text(this.size === 0))
                         .append($("<td>", {class: "td_color", color: this.color_id}).text(this.color_name))
 
                         );
@@ -217,6 +218,7 @@ var requisition = function(geral_path, options_ext) {
         //-------------------------------------------------------------------------------------------------------------------------------------------------------------
         //---------------------------------------------------------------------------------------------------------- SUBMITAR A ENCOMENDA------------------------------
         $(new_requisition_zone).on("click", "#new_requisition_submit_button", function() {
+
             var upload_complete = 1;
             $.each(me.config.uploader.files, function() {
                 if (this.percent !== 100) {
@@ -249,7 +251,8 @@ var requisition = function(geral_path, options_ext) {
                 else {
                     if (new_requisition_zone.find(" #form_encomenda_especial").validationEngine("validate")) {
                         if (must_have_anexo) {
-                            if (!me.config.w.files.length) {
+
+                            if (!me.config.uploader.files.length) {
                                 bootbox.alert("Certifique-se de que envia pelo menos um anexo pelos produtos Molde/Intra");
                                 return false;
                             } else
@@ -421,7 +424,7 @@ var requisition = function(geral_path, options_ext) {
                 action: "listar_produtos_por_encomenda",
                 id: $(this).val()
             }, function(data) {
-                console.log(data);
+
                 var
                         modal_tbody = modal.find("#show_requisition_products_tbody").empty(),
                         EInfotmp = [],
@@ -452,7 +455,8 @@ var requisition = function(geral_path, options_ext) {
                         Qt: this.quantity,
                         size: this.size
                     });
-
+                    if (this.category !== "Acessório")
+                        this.size = "";
                     modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category.capitalize() + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td><td>" + this.size + "</td></tr>");
                 });
                 modal.modal("show");
