@@ -78,7 +78,7 @@ var products = function(geral_path, options_ext) {
                 });
 
                 var size = [];
-                $.each(edit_product_modal.find("#edit_product_size_subdiv .formRow .edit_product_size"), function() {
+                $.each(edit_product_modal.find("#edit_product_size_subdiv .edit_product_size"), function() {
                     size.push($(this).val());
                 });
 
@@ -115,8 +115,6 @@ var products = function(geral_path, options_ext) {
             geral_path.find("#remove_product_modal").modal("show");
             geral_path.find("#remove_product_button").data("button", $(this));
             geral_path.find("#remove_product_button").data("product_id", $(this).data("product_id"));
-
-
         });
         geral_path.off("click", "#remove_product_button");
         geral_path.on("click", "#remove_product_button", function() {
@@ -173,12 +171,12 @@ var products = function(geral_path, options_ext) {
         edit_product_modal.on("change", "#edit_product_category", function() {
             edit_product_modal.find("#edit_product_size_div").hide();
 
-            edit_product_modal.find("#edit_product_size_subdiv").find(".formRow").remove();
+            edit_product_modal.find("#edit_product_size_subdiv").find(".edit_product_size").remove();
             if ($(this).val() === "Molde" || $(this).val() === "BTE" || $(this).val() === "RITE" || $(this).val() === "INTRA") {
                 edit_product_modal.find("#edit_product_color_div").show();
             }
             else if ($(this).val() === "Acessório") {
-                edit_product_modal.find("#edit_product_size_div").show().end().find("#edit_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0'    value='0'  class='edit_product_size input-mini validate[required,min[0]]'></div>");
+                edit_product_modal.find("#edit_product_size_div").show().end().find("#edit_product_size_subdiv").append("   <input type='number' min='0'    value='0'  class='edit_product_size input-mini validate[required,min[0]]'>");
                 ;
             }
             else {
@@ -215,12 +213,12 @@ var products = function(geral_path, options_ext) {
 
         edit_product_modal.on("click", "#edit_product_size_plus", function(e) {
             e.preventDefault();
-            edit_product_modal.find("#edit_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0'    value='0'  class='edit_product_size input-mini validate[required,min[0] ]'></div>");
+            edit_product_modal.find("#edit_product_size_subdiv").append("  <input type='number' min='0'    value='0'  class='edit_product_size input-mini validate[required,min[0] ]'> ");
         });
         edit_product_modal.on("click", "#edit_product_size_minus", function(e) {
             e.preventDefault();
-            if (edit_product_modal.find("#edit_product_size_subdiv").find(".formRow").length > 1)
-                edit_product_modal.find("#edit_product_size_subdiv").find(".formRow").last().remove();
+            if (edit_product_modal.find("#edit_product_size_subdiv").find(".edit_product_size").length > 1)
+                edit_product_modal.find("#edit_product_size_subdiv").find(".edit_product_size").last().remove();
         });
     };
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -251,7 +249,7 @@ var products = function(geral_path, options_ext) {
             });
 
             var size = [];
-            $.each(new_product_path.find("#new_product_size_subdiv .formRow .new_product_size"), function() {
+            $.each(new_product_path.find("#new_product_size_subdiv .new_product_size"), function() {
                 size.push($(this).val());
             });
 
@@ -296,6 +294,7 @@ var products = function(geral_path, options_ext) {
                 case "BTE":
                 case "RITE":
                 case "INTRA":
+
                     new_product_path.find("#new_product_color_div").show();
                     new_product_path.find("#new_product_table_tbody_color").append("<tr><td><select class=' input-small color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]' value='Beje'></td><td><button class='btn btn-danger remove_color icon-alone'><i class='icon icon-trash'></i></button></td></tr>");
                     $("#new_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).colourPicker({
@@ -303,6 +302,7 @@ var products = function(geral_path, options_ext) {
                         title: false
                     });
                     break;
+                case "Consumiveis":
                 case "Acessório":
                     new_product_path.find("#new_product_size_div").show();
                     break;
@@ -328,12 +328,12 @@ var products = function(geral_path, options_ext) {
 
         new_product_path.on("click", "#new_product_size_plus", function(e) {
             e.preventDefault();
-            new_product_path.find("#new_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0'  value='0'  class='new_product_size input-mini validate[required,min[0]]'></div>");
+            new_product_path.find("#new_product_size_subdiv").append("<input type='number' min='0'  value='0'  class='new_product_size input-mini validate[required,min[0]]'> ");
         });
         new_product_path.on("click", "#new_product_size_minus", function(e) {
             e.preventDefault();
-            if (new_product_path.find("#new_product_size_subdiv").find(".formRow").length > 1)
-                new_product_path.find("#new_product_size_subdiv").find(".formRow").last().remove();
+            if (new_product_path.find("#new_product_size_subdiv").find(".new_product_size").length > 1)
+                new_product_path.find("#new_product_size_subdiv").find(".new_product_size").last().remove();
         });
 
         if (typeof callback === "function")
@@ -350,7 +350,7 @@ var products = function(geral_path, options_ext) {
         new_product_path.find(":checkbox").prop("checked", true);
         new_product_path.find(":radio").prop("checked", true);
         new_product_path.find("#new_product_form").show();
-        new_product_path.find("#new_product_size_subdiv").find(".formRow").remove().end().append("<div class='formRow'> <input type='number' min='0'   value='0'  class='new_product_size input-mini validate[required,min[0]]'></div>");
+        new_product_path.find("#new_product_size_subdiv").find(".new_product_size").remove().end().append(" <input type='number' min='0'   value='0'  class='new_product_size input-mini validate[required,min[0]]'> ");
     }
 
     function update_products_datatable(datatable_path) {
@@ -399,9 +399,9 @@ var products = function(geral_path, options_ext) {
                 modal.find("#edit_product_parent").val(data.parents_id).trigger("chosen:updated");
                 modal.find("#edit_product_active").prop("checked", ~~data.active);
 
-                modal.find("#edit_product_size_subdiv").find(".formRow").remove();
+                modal.find("#edit_product_size_subdiv").find(".edit_product_size").remove();
                 $.each(data.size, function() {
-                    modal.find("#edit_product_size_subdiv").append("<div class='formRow'> <input type='number' min='0'    value='" + this + "'  class='edit_product_size input-mini validate[required,min[0] ]'></div>");
+                    modal.find("#edit_product_size_subdiv").append("  <input type='number' min='0'    value='" + this + "'  class='edit_product_size input-mini validate[required,min[0] ]'> ");
                 });
 
 
@@ -429,6 +429,7 @@ var products = function(geral_path, options_ext) {
                     case "BTE":
                     case "RITE":
                     case "INTRA":
+
                         modal.find("#edit_product_color_div").show();
                         if (data.color) {
                             modal.find("#edit_product_table_tbody_color").empty();
@@ -442,7 +443,9 @@ var products = function(geral_path, options_ext) {
                         }
                         break;
                     case "Acessório":
+                    case "Consumiveis":
                         modal.find("#edit_product_size_div").show();
+                        break;
                     default:
                         modal.find("#edit_product_color_div").hide();
                         break;
@@ -494,6 +497,7 @@ var products = function(geral_path, options_ext) {
         var level = 0;
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
         function(data) {
+
             var option = "";
             select.empty();
             var temp = "<optgroup value='1' label='BTE'></optgroup>\n\
@@ -503,7 +507,9 @@ var products = function(geral_path, options_ext) {
                         <optgroup value='5' label='Acessórios'></optgroup>\n\
                         <optgroup value='6' label='Moldes'></optgroup>\n\
                         <optgroup value='7' label='Economato'></optgroup>\n\
-                        <optgroup value='8' label='Gama'></optgroup>",
+                        <optgroup value='8' label='Gama'></optgroup>\n\
+                        <optgroup value='9' label='Consumiveis'></optgroup>\n\
+                        <optgroup value='10' label='Especificidades'></optgroup>",
                     BTE = [],
                     RITE = [],
                     INTRA = [],
@@ -511,7 +517,10 @@ var products = function(geral_path, options_ext) {
                     acessorio = [],
                     molde = [],
                     economato = [],
-                    gama = [];
+                    gama = [],
+                    consumiveis = [],
+                    especificidades = [];
+
             select.append(temp);
             $.each(data, function() {
                 if (out_level) {
@@ -545,8 +554,15 @@ var products = function(geral_path, options_ext) {
                         break;
                     case "Economato":
                         economato.push(option);
+                        break;
                     case "Gama":
                         gama.push(option);
+                        break;
+                    case "Consumiveis":
+                        consumiveis.push(option);
+                        break;
+                    case "Especificidades":
+                        especificidades.push(option);
                         break;
                 }
             });
@@ -557,10 +573,11 @@ var products = function(geral_path, options_ext) {
                     .find("optgroup[value='5']").append(acessorio).end()
                     .find("optgroup[value='6']").append(molde).end()
                     .find("optgroup[value='7']").append(economato).end()
-                    .find("optgroup[value='8']").append(gama).end().trigger("chosen:updated");
+                    .find("optgroup[value='8']").append(gama).end()
+                    .find("optgroup[value='9']").append(consumiveis).end()
+                    .find("optgroup[value='10']").append(especificidades).end().trigger("chosen:updated");
             if (typeof callback === "function")
                 callback();
-
         }, "json").fail(function(data) {
             $.msg();
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));

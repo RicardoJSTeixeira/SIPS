@@ -60,7 +60,9 @@ var requisition = function(geral_path, options_ext) {
                         <optgroup value='5' label='Acessórios'></optgroup>\n\
                         <optgroup value='6' label='Moldes'></optgroup>\n\
                         <optgroup value='7' label='Economato'></optgroup>\n\
-                        <optgroup value='8' label='Gama'></optgroup>",
+                                <optgroup value='8' label='Gama'></optgroup>\n\
+                        <optgroup value='9' label='Consumiveis'></optgroup>\n\
+                        <optgroup value='10' label='Especificidades'></optgroup>",
                     BTE = [],
                     RITE = [],
                     INTRA = [],
@@ -68,7 +70,9 @@ var requisition = function(geral_path, options_ext) {
                     acessorio = [],
                     molde = [],
                     economato = [],
-                    gama = [];
+                    gama = [],
+                    consumiveis = [],
+                    especificidades = [];
             $("#product_selector").append(temp);
 
             $.each(data, function() {
@@ -102,8 +106,15 @@ var requisition = function(geral_path, options_ext) {
                         break;
                     case "Economato":
                         economato.push(option);
+                        break;
                     case "Gama":
                         gama.push(option);
+                        break;
+                    case "Consumiveis":
+                        consumiveis.push(option);
+                        break;
+                    case "Especificidades":
+                        especificidades.push(option);
                         break;
                 }
             });
@@ -114,7 +125,9 @@ var requisition = function(geral_path, options_ext) {
                     .find("optgroup[value='5']").append(acessorio).end()
                     .find("optgroup[value='6']").append(molde).end()
                     .find("optgroup[value='7']").append(economato).end()
-                    .find("optgroup[value='8']").append(gama).end().trigger("chosen:updated");
+                    .find("optgroup[value='8']").append(gama).end()
+                    .find("optgroup[value='9']").append(consumiveis).end()
+                    .find("optgroup[value='10']").append(especificidades).end().trigger("chosen:updated");
             $.msg('unblock');
         }, "json").fail(function(data) {
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
@@ -207,7 +220,7 @@ var requisition = function(geral_path, options_ext) {
                         .append($("<td>", {class: "td_name", id_product: this.id}).text(this.name))
                         .append($("<td>", {class: "td_category"}).text(this.category.capitalize()))
                         .append($("<td>", {class: "td_quantity"}).text(this.quantity))
-                        .append($("<td>", {class: "td_size"}).text(this.size === 0))
+                        .append($("<td>", {class: "td_size"}).text(this.size === 0 ? "" : this.size))
                         .append($("<td>", {class: "td_color", color: this.color_id}).text(this.color_name))
 
                         );

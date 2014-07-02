@@ -367,7 +367,10 @@ var requests = function(basic_path, options_ext) {
             $.get("/AM/view/requests/relatorio_correio_modal.html", function(data) {
                 basic_path.append(data);
                 if (SpiceU.user_level <= 5)
+                {
                     basic_path.find("#correio_modal_div .anexo_add_button").hide();
+                    basic_path.find("#anexo_save_button").off().text("Sair").data("dismiss", "modal");
+                }
             }, 'html');
         },
         new : function(rc_zone) {
@@ -578,6 +581,10 @@ var requests = function(basic_path, options_ext) {
         init: function() {
             $.get("/AM/view/requests/relatorio_mensal_stock_modal.html", function(data) {
                 basic_path.append(data);
+
+                if (SpiceU.user_level <= 5) {
+                    basic_path.find("#stock_save_button").off().text("Sair").data("dismiss", "modal");
+                }
             }, 'html');
         },
         new : function(rms_zone) {
@@ -783,6 +790,9 @@ var requests = function(basic_path, options_ext) {
         init: function() {
             $.get("/AM/view/requests/relatorio_movimentacao_stock_modal.html", function(data) {
                 basic_path.append(data);
+                  if (SpiceU.user_level <= 5) {
+                    basic_path.find("#mov_save_button").off().text("Sair").data("dismiss", "modal");
+                }
             }, 'html');
         },
         new : function(rmovs) {

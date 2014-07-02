@@ -59,7 +59,7 @@
 
         $.validationEngineLanguage.allRules["spice_num_contrato"] = {
             // Good for database fields
-            "regex": /^[P]{1}[0-9]{6}$/,
+            "regex": /^[Pp]{1}[0-9]{6}$/,
             "alertText": "* Formato PXXXXXX."
         };
 
