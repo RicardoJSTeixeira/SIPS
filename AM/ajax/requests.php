@@ -307,7 +307,7 @@ $comments
             if ($message) {
                 $message = "Motivo: " . $message;
             }
-            $alert->make($result->user, "Correio Recusado Motivo: $message ID:$id");
+            $alert->make($result->user, "Correio Recusado $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_MAIL, json_encode(array("obs" => "Correio Recusado", "msg" => "$message")));
         echo json_encode(true);
@@ -329,7 +329,7 @@ $comments
             if ($message) {
                 $message = "Motivo: " . $message;
             }
-            $alert->make($result->user, "Frota Recusado Motivo: $message ID:$id");
+            $alert->make($result->user, "Frota Recusado $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_FROTA, json_encode(array("obs" => "Frota Recusado", "msg" => "$message")));
         echo json_encode(true);
@@ -379,7 +379,7 @@ $comments
         break;
 
     default:
-        echo 'Are you an hacker? if so, then please come to purosinonimo, where the company parties are full of alcohol and beautifull vanias';
+        echo 'Are you an hacker? if so, then please come to purosinonimo, where the company parties are full of alcohol and beautifull vanias!';
 }
 
 function send_email($email_address, $email_name, $msg, $assunto) {
