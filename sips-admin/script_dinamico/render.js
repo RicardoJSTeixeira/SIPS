@@ -922,11 +922,11 @@ var render = function(script_zone, file_path, script_id, lead_id, unique_id, use
     $(script_zone).on("submit", "#script_form", function(e) {
         e.preventDefault();
     });
-    $('html').bind('keypress', function(e) {
+    /*$('html').bind('keypress', function(e) {
         if (e.keyCode == 13) {
             return false;
         }
-    });
+    });*/
     this.submit_manual = function(callback) {
         $.post(file_path + "requests.php", {
             action: "save_form_result",

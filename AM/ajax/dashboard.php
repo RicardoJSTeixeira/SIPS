@@ -28,13 +28,13 @@ switch ($action) {
       inner join vicidial_list b on a.lead_id=b.lead_id 
       inner join vicidial_users c on b.user=c.user
       left join spice_consulta d on d.reserva_id=a.id_reservation
-      where c.user_group=:user_group and DATE(a.start_date)>'2014-07-02' group by a.lead_id limit 20000";
+      where c.user_group=:user_group and DATE(a.start_date)>'2014-06-29' group by a.lead_id limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
             $query = "SELECT a.lead_id, CONCAT(first_name, ' ', middle_initial, ' ', last_name), extra1, extra2, extra8 'nif', postal_code, b.city, b.phone_number, b.alt_phone, b.address1, IF(c.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, a.id_user from sips_sd_reservations a 
       inner join vicidial_list b on a.lead_id=b.lead_id 
       left join spice_consulta c on c.reserva_id=a.id_reservation
-      where a.id_user in ('".  implode("','", $u->siblings)."') and DATE(a.start_date)>'2014-07-02' group by a.lead_id limit 20000";
+      where a.id_user in ('".  implode("','", $u->siblings)."') and DATE(a.start_date)>'2014-06-29' group by a.lead_id limit 20000";
         }
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
@@ -88,14 +88,14 @@ switch ($action) {
         inner join `vicidial_list` b on a.extra7=b.lead_id 
         inner join vicidial_users c on a.user=c.user
         left join sips_sd_reservations d on a.lead_id=d.lead_id
-        where c.user_group=:user_group and a.list_id=:list and d.lead_id is null and a.extra6='NO' and DATE(d.start_date)>'2014-07-02' limit 20000";
+        where c.user_group=:user_group and a.list_id=:list and d.lead_id is null and a.extra6='NO' and DATE(d.start_date)>'2014-06-29' limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
             $query = "SELECT CONCAT(b.first_name, ' ', b.middle_initial, ' ', b.last_name), b.extra2, a.lead_id, CONCAT(a.first_name, ' ', a.middle_initial, ' ', a.last_name), a.extra1, a.extra2, a.extra8 'nif', a.postal_code, a.city, a.phone_number, a.alt_phone, a.address1, a.entry_date
         FROM `vicidial_list` a 
         inner join `vicidial_list` b on a.extra7=b.lead_id 
         left join sips_sd_reservations c on a.lead_id=c.lead_id
-        where c.id_user in ('".  implode("','", $u->siblings)."')  and a.list_id=:list and c.lead_id is null and a.extra6='NO' and DATE(c.start_date)>'2014-07-02' limit 20000";
+        where c.id_user in ('".  implode("','", $u->siblings)."')  and a.list_id=:list and c.lead_id is null and a.extra6='NO' and DATE(c.start_date)>'2014-06-29' limit 20000";
         }
 
         $stmt = $db->prepare($query);
@@ -122,12 +122,12 @@ switch ($action) {
         $query = "SELECT * FROM (SELECT  first_name, middle_initial, last_name, a.start_date, a.lead_id, a.id_reservation,a.end_date,'' closed from sips_sd_reservations a 
       inner join vicidial_list b on a.lead_id=b.lead_id 
       left join spice_consulta c on c.reserva_id=a.id_reservation
-      where a.id_resource in ($refs) and a.end_date<:date and c.id is NULL and DATE(a.start_date)>'2014-07-02'
+      where a.id_resource in ($refs) and a.end_date<:date and c.id is NULL and DATE(a.start_date)>'2014-06-29'
       UNION ALL
       SELECT  first_name, middle_initial, last_name, a.start_date, a.lead_id, a.id_reservation,a.end_date,'...por fechar' closed from sips_sd_reservations a 
       inner join vicidial_list b on a.lead_id=b.lead_id 
       left join spice_consulta c on c.reserva_id=a.id_reservation
-      where a.id_resource in ($refs) and a.end_date<:date1 and c.closed=0 and DATE(a.start_date)>'2014-07-02') a order by a.end_date asc";
+      where a.id_resource in ($refs) and a.end_date<:date1 and c.closed=0 and DATE(a.start_date)>'2014-06-29') a order by a.end_date asc";
         $variables[":date"] = date("Y-m-d");
         $variables[":date1"] = date("Y-m-d");
         $stmt = $db->prepare($query);
