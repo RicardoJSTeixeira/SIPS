@@ -807,7 +807,7 @@ var requests = function(basic_path, options_ext) {
                         var prdt_objs = [];
                         if (rmovs.find("#table_tbody_rfms tr").length) {
                             $.each(rmovs.find("#table_tbody_rfms tr"), function() {
-                                prdt_objs.push({quantidade: $(this).find(".quant").val(), destinatario: $(this).find(".dest").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
+                                prdt_objs.push({quantidade: $(this).find(".quant").val(), destinatario: $(this).find(".destinatario").val(), descricao: $(this).find(".descricao").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
                             });
                             $("#relatorio_movimentacao_stock_form :input").attr('readonly', true);
                             $.msg();
@@ -835,7 +835,7 @@ var requests = function(basic_path, options_ext) {
                     e.preventDefault();
                     rmovs
                             .find("#table_tbody_rfms")
-                            .append("<tr><td><input class='validate[required] span text-right quant' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span dest' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span desc' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span serie' type='text' data-prompt-position='topRight:120' /></td> <td><textarea class='span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>")
+                            .append("<tr><td><input class='validate[required] span text-right quant' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span destinatario' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span descricao' type='text' data-prompt-position='topRight:120' /></td> <td><input class='validate[required] span serie' type='text' data-prompt-position='topRight:120' /></td> <td><textarea class='span obs' ></textarea></td> <td><button class='btn btn-danger remove_doc_obj icon-alone'><i class='icon icon-minus'></i></button></td></tr>")
                             .end()
                             .find(".quant")
                             .autotab('number');
