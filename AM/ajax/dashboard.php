@@ -69,7 +69,7 @@ switch ($action) {
     where b.user_group=:user_group and list_id=:list and c.lead_id is null and extra6='NO' limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
-            $query = "SELECT a.lead_id, CONCAT(first_name, ' ', middle_initial, ' ', last_name), extra1, extra2, extra8 'nif', postal_code, city, phone_number, alt_phone, address1, a.entry_date from vicidial_list a
+            $query = "SELECT a.lead_id, CONCAT(first_name, ' ', middle_initial, ' ', last_name), extra1, extra2, extra8 'nif', postal_code, city, phone_number, alt_phone, address1, a.entry_date, a.user from vicidial_list a
     left join sips_sd_reservations b on a.lead_id=b.lead_id
     where a.user in ('" . implode("','", $u->siblings) . "') and list_id=:list and b.lead_id is null and extra6='NO' limit 20000";
         }
