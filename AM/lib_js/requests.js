@@ -790,7 +790,7 @@ var requests = function(basic_path, options_ext) {
         init: function() {
             $.get("/AM/view/requests/relatorio_movimentacao_stock_modal.html", function(data) {
                 basic_path.append(data);
-                  if (SpiceU.user_level <= 5) {
+                if (SpiceU.user_level <= 5) {
                     basic_path.find("#mov_save_button").off().text("Sair").data("dismiss", "modal");
                 }
             }, 'html');
@@ -807,7 +807,7 @@ var requests = function(basic_path, options_ext) {
                         var prdt_objs = [];
                         if (rmovs.find("#table_tbody_rfms tr").length) {
                             $.each(rmovs.find("#table_tbody_rfms tr"), function() {
-                                prdt_objs.push({quantidade: $(this).find(".quant").val(), destinatario: $(this).find(".desc").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
+                                prdt_objs.push({quantidade: $(this).find(".quant").val(), destinatario: $(this).find(".dest").val(), descricao: $(this).find(".desc").val(), serie: $(this).find(".serie").val(), obs: $(this).find(".obs").val()});
                             });
                             $("#relatorio_movimentacao_stock_form :input").attr('readonly', true);
                             $.msg();

@@ -510,9 +510,6 @@ var requisition = function(geral_path, options_ext) {
                 action: "listar_comments_por_encomenda",
                 id: EData.id_req
             }, function(data) {
-
-
-
                 var doc = new jsPDF('p', 'pt', 'a4', true);
                 doc.table(20, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {
                     autoSize: true,
@@ -527,11 +524,6 @@ var requisition = function(geral_path, options_ext) {
                         , size = 16, lines
                         , verticalOffset = 0.5 // inches on a 8.5 x 11 inch sheet.
                         , text = data;
-
-
-
-
-
                 lines = doc.setFont('Times', 'Roman')
                         .setFontSize(size)
                         .splitTextToSize(text, 550);
