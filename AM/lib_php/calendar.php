@@ -202,13 +202,13 @@ Class Calendars {
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":id" => $id));
     }
-    
+
     public function deleteReserva($id) {
         $query = "UPDATE `sips_sd_reservations` SET `del`=1 WHERE `id_reservation`=:id";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":id" => $id));
     }
-    
+
     public function closeMKT($id) {
         $query = "UPDATE `sips_sd_reservations` SET `has_accessories`=1 WHERE `id_reservation`=:id";
         $stmt = $this->_db->prepare($query);
@@ -274,7 +274,19 @@ class Calendar extends Calendars {
     }
 
     public function getConfigs() {
-        return (object) array("defaultEventMinutes" => (int) $this->_resources[0]->blocks, "events" => (object) array("data" => (object) array("resource" => $this->_id_ref)), "slotMinutes" => (int) $this->_resources[0]->blocks, "minTime" => $this->_resources[0]->begin_time / 60, "maxTime" => $this->_resources[0]->end_time / 60, "sch" => $this->_id_scheduler);
+        return (object) array(
+                    "defaultEventMinutes" => (int) $this->_resources[0]->blocks,
+                    "events" => (object) array(
+                        "data" => (object) array(
+                            "resource" => $this->_id_ref
+                        )
+                    ),
+                    #"slotMinutes" => (int) $this->_resources[0]->blocks,
+                    "slotMinutes" => 15,
+                    "minTime" => $this->_resources[0]->begin_time / 60,
+                    "maxTime" => $this->_resources[0]->end_time / 60,
+                    "sch" => $this->_id_scheduler
+        );
     }
 
     protected function _getSeries($id = "", $is_scheduler = "") {
