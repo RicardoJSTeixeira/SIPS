@@ -460,7 +460,7 @@ var requisition = function(geral_path, options_ext) {
                     'Data': EInfotmp[3] + "",
                     'Nr de contrato': EInfotmp[4] + "",
                     'Referencia': EInfotmp[5] + "",
-                    'Estado': EInfotmp[6] + "",
+                    'Estado': EInfotmp[6] + ""
                 };
                 EData.bInfo.push(EInfo);
                 $.each(data, function() {
@@ -505,15 +505,16 @@ var requisition = function(geral_path, options_ext) {
         modal.on("click", "#print_requisition", function() {
             $.msg();
 
-//Ir buscar os comentarios
+            //Ir buscar os comentarios
             $.post('ajax/requisition.php', {
                 action: "listar_comments_por_encomenda",
                 id: EData.id_req
             }, function(data) {
 
 
+
                 var doc = new jsPDF('p', 'pt', 'a4', true);
-                last = doc.table(20, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {
+                doc.table(20, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {
                     autoSize: true,
                     printHeaders: true,
                     fontSize: 10
@@ -522,16 +523,31 @@ var requisition = function(geral_path, options_ext) {
                     autoSize: true,
                     printHeaders: true
                 });
+                var fonts = [['Times', 'Roman']]
+                        , size = 16, lines
+                        , verticalOffset = 0.5 // inches on a 8.5 x 11 inch sheet.
+                        , text = data;
 
-                var y = doc.lastCellPos.y + 45;
-                doc.text(35, y, "Observações");
-                doc.text(35, y + 20, data);
+
+
+
+
+                lines = doc.setFont('Times', 'Roman')
+                        .setFontSize(size)
+                        .splitTextToSize(text, 550);
+
+                if (data.length)
+                {
+                    doc.text(18, doc.lastCellPos.y + 42, "Observações");
+                    doc.text(25, doc.lastCellPos.y + 65, lines);
+                }
+
+
                 doc.save(moment().format());
 
 
-
                 $.msg('unblock');
-            },"json").fail(function(data) {
+            }, "json").fail(function(data) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                 $.msg('unblock', 5000);
             });
