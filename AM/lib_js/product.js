@@ -399,11 +399,12 @@ var products = function(geral_path, options_ext) {
                 modal.find("#edit_product_active").prop("checked", ~~data.active);
 
                 modal.find("#edit_product_size_subdiv").find(".edit_product_size").remove();
-                if(data.size)
-                $.each(data.size, function() {
-                    modal.find("#edit_product_size_subdiv").append("  <input type='number' min='0'    value='" + this + "'  class='edit_product_size input-mini validate[required,min[0] ]'> ");
-                });
 
+                if (data.size) {
+                    $.each(data.size, function() {
+                        modal.find("#edit_product_size_subdiv").append("  <input type='number' min='0'    value='" + this + "'  class='edit_product_size input-mini validate[required,min[0] ]'> ");
+                    });
+                }
 
 
                 $.each(data.type, function() {

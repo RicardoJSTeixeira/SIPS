@@ -512,7 +512,6 @@ var requisition = function(geral_path, options_ext) {
             }, function(data) {
 
 
-
                 var doc = new jsPDF('p', 'pt', 'a4', true);
                 last = doc.table(20, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {
                     autoSize: true,
@@ -525,14 +524,14 @@ var requisition = function(geral_path, options_ext) {
                 });
 
                 var y = doc.lastCellPos.y + 45;
-                doc.text(35,y, "Observações");
+                doc.text(35, y, "Observações");
                 doc.text(35, y + 20, data);
                 doc.save(moment().format());
 
 
 
                 $.msg('unblock');
-            }).fail(function(data) {
+            },"json").fail(function(data) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                 $.msg('unblock', 5000);
             });
