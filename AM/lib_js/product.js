@@ -177,7 +177,6 @@ var products = function(geral_path, options_ext) {
             }
             else if ($(this).val() === "Acessório") {
                 edit_product_modal.find("#edit_product_size_div").show().end().find("#edit_product_size_subdiv").append("   <input type='number' min='0'    value='0'  class='edit_product_size input-mini validate[required,min[0]]'>");
-                ;
             }
             else {
                 edit_product_modal.find("#edit_product_table_tbody_color").empty();
@@ -400,6 +399,7 @@ var products = function(geral_path, options_ext) {
                 modal.find("#edit_product_active").prop("checked", ~~data.active);
 
                 modal.find("#edit_product_size_subdiv").find(".edit_product_size").remove();
+                if(data.size)
                 $.each(data.size, function() {
                     modal.find("#edit_product_size_subdiv").append("  <input type='number' min='0'    value='" + this + "'  class='edit_product_size input-mini validate[required,min[0] ]'> ");
                 });
@@ -429,7 +429,6 @@ var products = function(geral_path, options_ext) {
                     case "BTE":
                     case "RITE":
                     case "INTRA":
-
                         modal.find("#edit_product_color_div").show();
                         if (data.color) {
                             modal.find("#edit_product_table_tbody_color").empty();
@@ -456,7 +455,7 @@ var products = function(geral_path, options_ext) {
             });
 
         }, "json").fail(function(data) {
-
+            $.msg();
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
             $.msg('unblock', 5000);
         });
