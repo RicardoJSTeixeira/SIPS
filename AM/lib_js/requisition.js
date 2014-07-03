@@ -421,9 +421,8 @@ var requisition = function(geral_path, options_ext) {
                 }
             });
         }
-        else
-        {
-         $("#print_requisition").hide();   
+        else {
+            $("#print_requisition").hide();
         }
 
         $('#export_ENC').click(function(event) {

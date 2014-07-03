@@ -4,8 +4,6 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
     this.treeRaw = data;
     this.selector = selector;
 
-
-
     function construct(data) {
         var temp = $("<ul>");
         $.each(data.children, function() {
@@ -49,20 +47,16 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
         if (data.color.length)
             $.each(data.color, function() {
                 color += "<option style='background: #" + this.color + "'   value='" + this.color + "'>" + this.name + "</option>";
-            })
-
+            });
         var max_value = 1;
-        if (type_encomenda == "mensal")
+        if (type_encomenda === "mensal")
             max_value = data.max_req_m;
         else
             max_value = data.max_req_s;
-
-
 // METER COR NA OPTION DO SELECT BACKGROUND COLOR
         var quantity_temp = "";
         var size_temp = "";
-        if (data.category === "Acessório" || data.category === "Consumiveis")
-        {
+        if (data.category === "Acessório" || data.category === "Consumiveis") {
             size_temp = $("<div>", {class: " input-prepend size_div"})
                     .append($("<span>", {class: "add-on"}).text("T."))
                     .append($("<select>", {class: "input_size input-mini size_" + data.id + "", data_id: data.id}).data("data_id", data.id)).css("display", "inline").hide();
@@ -133,16 +127,16 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
                     if (this.checked) {
                         $(this).closest("li").parents("li").find(" > span > input").prop("checked", true).change();
                         $(this).closest("li").find(".quantity_div").first().show();
-                        $(this).closest("li").find(" > span > .size_div") .show();
+                        $(this).closest("li").find(" > span > .size_div").show();
                         if (~~$(this).attr("color") > 0)
                             $(this).closest("li").find(".color_div").first().show();
                     }
                     else {
                         $(this).closest("li").find("input[name=" + this.name + "]").not(this).prop("checked", this.checked).change();
                         $(this).closest("li").find(".quantity_div").first().hide();
-                        $(this).closest("li").find(" > span > .size_div") .hide();
+                        $(this).closest("li").find(" > span > .size_div").hide();
                         $(this).closest("li").find(".color_div").first().hide();
-                           
+
                     }
                     var isClosed = $(this)
                             .closest("li")
