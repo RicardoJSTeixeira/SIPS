@@ -68,8 +68,8 @@ Class requisitions {
         return $stmt->execute(array(":cod_cliente" => $cod_cliente, ":id" => $id));
     }
 
-    public function create_requisition($type, $lead_id, $contract_number, $attachment, $comments, $products_list) {
-        $query = "INSERT INTO `spice_requisition`( `user`, `type`, `lead_id`, `date`, `contract_number`, `attachment`, `products`,`comments`,`status`) VALUES ( :user, :type, :lead_id, :date, :contract_number, :attachment, :products,:comments :status)";
+    public function create_requisition($type, $lead_id, $contract_number, $attachment, $products_list, $comments) {
+        $query = "INSERT INTO `spice_requisition`( `user`, `type`, `lead_id`, `date`, `contract_number`, `attachment`, `products`,`comments`,`status`) VALUES ( :user, :type, :lead_id, :date, :contract_number, :attachment, :products,:comments, :status)";
         $stmt = $this->_db->prepare($query);
         $data = date('Y-m-d H:i:s');
         $stmt->execute(array(":user" => $this->_user_id, ":type" => $type, ":lead_id" => $lead_id, ":date" => $data, ":contract_number" => $contract_number, ":attachment" => $attachment, ":products" => json_encode($products_list), ":comments" => $comments, ":status" => 0));

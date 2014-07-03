@@ -210,7 +210,7 @@ var requisition = function(geral_path, options_ext) {
                                             .append($("<th>").text("Nome").css("width", "420px"))
                                             .append($("<th>").text("Categoria").css("width", "120px"))
                                             .append($("<th>").text("Q.").attr("title", "Quantidade").css("width", "50px"))
-                                            .append($("<th>").text("Size.").attr("title", "Tamanho").css("width", "50px"))
+                                            .append($("<th>").text("Tamanho").attr("title", "Tamanho").css("width", "60px"))
                                             .append($("<th>").text("Cor").css("width", "150px").append($("<button>", {class: "btn btn-danger btn-mini icon-alone right remove_produto_encomendado"})
                                                     .append($("<i>", {class: "icon icon-trash"}))))))
                             .append($("<tbody>")))
@@ -280,7 +280,8 @@ var requisition = function(geral_path, options_ext) {
                             lead_id: lead_id,
                             contract_number: new_requisition_zone.find("#new_requisition_contract").val(),
                             attachment: me.config.uploader.files.length,
-                            products_list: produtos_encomenda
+                            products_list: produtos_encomenda,
+                            comments: new_requisition_zone.find("#new_requisition_obs").val()
                         },
                         function(data) {
                             $("#form_encomenda_especial :input").attr('readonly', false);
@@ -510,7 +511,7 @@ var requisition = function(geral_path, options_ext) {
                 id: EData.id_req
             }, function(data) {
 
- 
+
 
                 var doc = new jsPDF('p', 'pt', 'a4', true);
                 last = doc.table(20, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {
@@ -523,9 +524,9 @@ var requisition = function(geral_path, options_ext) {
                     printHeaders: true
                 });
 
-
-
-                doc.text(35, doc.lastCellPos.x-10, data);
+                var y = doc.lastCellPos.y + 45;
+                doc.text(35,y, "Observações");
+                doc.text(35, y + 20, data);
                 doc.save(moment().format());
 
 
