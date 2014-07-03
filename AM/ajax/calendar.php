@@ -51,7 +51,7 @@ switch (filter_var($_POST["action"])) {
     case "change":
         $calendar = new Calendars($db);
         $return = $calendar->changeReserva($id, $start, $end);
-        $log->set($id, Logger::T_UPD, Logger::S_CAL, "Remarcação");
+        $log->set($id, Logger::T_UPD, Logger::S_CAL, json_encode(array("start_date" => $start, "end_date" => $end,"obs"=>"Remarcação")));
         echo json_encode($return);
         break;
     case "getRscContent":
