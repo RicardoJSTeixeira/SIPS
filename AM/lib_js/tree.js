@@ -124,6 +124,7 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
                                 .append($("<select>", {class: "input-small color_select"}).append(color)).css("display", "inline").hide()))
                 .on("change", " > span > input[type=checkbox]", function(e) {
 
+ 
                     if (this.checked) {
                         $(this).closest("li").parents("li").find(" > span > input").prop("checked", true).change();
                         $(this).closest("li").find(".quantity_div").first().show();
@@ -138,13 +139,16 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
                         $(this).closest("li").find(".color_div").first().hide();
 
                     }
+                    /*
                     var isClosed = $(this)
                             .closest("li")
                             .find("i")
                             .hasClass("icon-plus-sign");
                     if (isClosed) {
                         $(this).closest("span").click();
-                    }
+                    }*/
+
+
                     $(this).closest("li").data()[this.name] = this.checked;
                 })
                 .append($("<ul>", {"id": "jj"}));
@@ -163,6 +167,7 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
             }
             e.stopPropagation();
         });
+        $(".product_item").not($(".product_item").first()).click();
     }
 
 
