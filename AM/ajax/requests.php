@@ -347,9 +347,11 @@ $comments
 
     case "decline_report_stock":
         $result = $relatorio_mensal_stock->decline($id);
+
         if ($result) {
-            if ($message)
+            if (strlen($message))
                 $message = "Motivo: " . $message;
+
             $alert->make($result->user, "Stock Recusado $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_STOCK, json_encode(array("obs" => "Stock Recusado", "msg" => "$message")));
@@ -359,7 +361,7 @@ $comments
     case "accept_report_movimentacao":
         $result = $relatorio_movimentacao_stock->accept($id);
         if ($result) {
-            if ($message)
+            if (strlen($message))
                 $alert->make($result->user, "Movimentação stock Aceite Obs. $message ID:$id");
         }
         $log->set($id, Logger::T_UPD, Logger::S_MOVSTOCK, json_encode(array("obs" => "Movimentação stock Aceite", "msg" => "$message")));
@@ -368,6 +370,7 @@ $comments
 
     case "decline_report_movimentacao":
         $result = $relatorio_movimentacao_stock->decline($id);
+            
         if ($result) {
             if ($message) {
                 $message = "Motivo: " . $message;

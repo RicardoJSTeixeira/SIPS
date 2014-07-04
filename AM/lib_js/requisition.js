@@ -467,7 +467,7 @@ var requisition = function(geral_path, options_ext) {
                 };
                 EData.bInfo.push(EInfo);
                 $.each(data, function() {
-           
+
                     this.color_name = (!this.color_name) ? "Padrão" : this.color_name;
                     EData.products.push({
                         Name: this.name,
@@ -520,7 +520,7 @@ var requisition = function(geral_path, options_ext) {
                     printHeaders: true,
                     fontSize: 10
                 });
-                doc.table(20, 80, EData.products, ['Name', 'Category', 'Colour', 'Qt','Size'], {
+                doc.table(20, 80, EData.products, ['Name', 'Category', 'Colour', 'Qt', 'Size'], {
                     autoSize: true,
                     printHeaders: true
                 });
@@ -539,7 +539,52 @@ var requisition = function(geral_path, options_ext) {
                 }
 
 
-                doc.save(moment().format());
+
+                $.post('ajax/audiograma.php', {
+                    action: "populate",
+                    lead_id: ~~EData.bInfo[0]['Id Client']
+                }, function(data1) {
+                    if (data1) {
+                        var that = "";
+                        var titles = [], values = [];
+                        var temp_values = {};
+                        var temp = "";
+                        $.each(data1, function() {
+                            that = this;
+
+                            $.each(that.value, function() {
+
+                                temp = this.name.replace(that.name, '');
+
+                                titles.push(temp);
+                                temp_values[temp] = this.value;
+                            });
+                            values.push($.extend({}, temp_values));
+
+                            doc.text(18, doc.lastCellPos.y + 45, that.name);
+
+                            doc.table(20, doc.lastCellPos.y + 55, values, titles, {
+                                autoSize: true,
+                                printHeaders: true,
+                                fontSize: 10
+                            });
+
+                            titles = [];
+                            values = [];
+                            temp_values = {};
+
+                        });
+                    }
+                    doc.save(moment().format());
+                }, "json").fail(function(data1) {
+                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                    $.msg('unblock', 5000);
+                });
+
+
+
+
+
 
 
                 $.msg('unblock');
@@ -547,6 +592,17 @@ var requisition = function(geral_path, options_ext) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                 $.msg('unblock', 5000);
             });
+
+
+
+
+
+
+
+
+
+
+
 
 
 

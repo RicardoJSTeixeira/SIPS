@@ -326,7 +326,7 @@ class frota extends requests_class {
     }
 
     private function getUser($id) {
-        $query = "Select user FROM spice_report_correio where id = :id";
+        $query = "Select user FROM spice_report_frota where id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
@@ -502,7 +502,7 @@ class movimentacao_stock extends requests_class {
     }
 
     private function getUser($id) {
-        $query = "Select user FROM spice_report_stock where id = :id";
+        $query = "Select user FROM spice_report_movimentacao where id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
