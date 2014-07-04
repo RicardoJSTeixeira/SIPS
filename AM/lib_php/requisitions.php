@@ -69,7 +69,6 @@ Class requisitions {
     }
 
     public function create_requisition($type, $lead_id, $contract_number, $attachment, $products_list, $comments) {
-
         $query = "INSERT INTO `spice_requisition`( `user`, `type`, `lead_id`, `date`, `contract_number`, `attachment`, `products`,`comments`,`status`) VALUES ( :user, :type, :lead_id, :date, :contract_number, :attachment, :products,:comments, :status)";
         $stmt = $this->_db->prepare($query);
         $data = date('Y-m-d H:i:s');
@@ -97,7 +96,6 @@ Class requisitions {
     }
 
     public function get_comments_by_requisiton($id) {
-
         $query = "Select comments FROM spice_requisition where id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));

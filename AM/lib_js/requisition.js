@@ -459,21 +459,22 @@ var requisition = function(geral_path, options_ext) {
                 EInfo = {
                     'Dispenser': EInfotmp[0] + "",
                     'Tipo': EInfotmp[1] + "",
-                    'Id Cliente': EInfotmp[2] + "",
-                    'Data': EInfotmp[3] + "",
-                    'Nr de contrato': EInfotmp[4] + "",
-                    'Referencia': EInfotmp[5] + "",
+                    'Id Client': EInfotmp[2] + "",
+                    'Date': EInfotmp[3] + "",
+                    'Order Number': EInfotmp[4] + "",
+                    'Client Ref.': EInfotmp[5] + "",
                     'Estado': EInfotmp[6] + ""
                 };
                 EData.bInfo.push(EInfo);
                 $.each(data, function() {
+           
                     this.color_name = (!this.color_name) ? "Padrão" : this.color_name;
                     EData.products.push({
-                        Nome: this.name,
-                        Categoria: this.category.capitalize(),
-                        Cor: this.color_name,
+                        Name: this.name,
+                        Category: this.category.capitalize(),
+                        Colour: this.color_name,
                         Qt: this.quantity,
-                        size: this.size
+                        Size: this.size
                     });
                     if (this.category !== "Acessório")
                         this.size = "";
@@ -519,7 +520,7 @@ var requisition = function(geral_path, options_ext) {
                     printHeaders: true,
                     fontSize: 10
                 });
-                doc.table(20, 80, EData.products, ['Name', 'Category', 'Colour', 'Qt'], {
+                doc.table(20, 80, EData.products, ['Name', 'Category', 'Colour', 'Qt','Size'], {
                     autoSize: true,
                     printHeaders: true
                 });
