@@ -514,12 +514,12 @@ var requisition = function(geral_path, options_ext) {
                 id: EData.id_req
             }, function(data) {
                 var doc = new jsPDF('p', 'pt', 'a4', true);
-                doc.table(20, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Cliente', 'Data', 'Nr de contrato', 'Referencia', 'Estado'], {
+                doc.table(20, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Client', 'Date', 'Order Number', 'Client Ref.', 'Estado'], {
                     autoSize: true,
                     printHeaders: true,
                     fontSize: 10
                 });
-                doc.table(20, 80, EData.products, ['Nome', 'Categoria', 'Cor', 'Qt'], {
+                doc.table(20, 80, EData.products, ['Name', 'Category', 'Colour', 'Qt'], {
                     autoSize: true,
                     printHeaders: true
                 });
