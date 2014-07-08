@@ -8,14 +8,21 @@ var
         consult_audiogra = undefined,
         consult_status = "",
         consult_closed = false,
-        client_box;
+        client_box,
+        gama = ["", "AM 100 (swift 70+)", "AM 90 (swift 90+)", "AM Dual M5", "Acto", "Agil", "Alta", "Alta Pro", "Chili 5", "Chili 7", "Chili 9", "Dual M7", "Dual M9", "AM Hit (BTE)", "AM Hit (Intra, Rite, BTE PW)", "Ino", "Ino Pro", "Intiga 10", "Intiga 6", "Intiga 8", "Nera", "Nera Pro", "Sumo DM"],
+        modelo = ["", "IIC", "CIC", "CIC PW", "MIC", "MIC PW", "ITE", "ITE PW", "CE", "CE PW", "BTE", "MINI-BTE", "RITE", "RITE PW", "MINI-RITE", "MINI-RITE PW"];
 $(function()
 {
     $.msg();
     rse = getUrlVars();
     lead_id = atob(decodeURIComponent(rse.id));
     reserva_id = atob(decodeURIComponent(rse.rs));
-
+    $("#dModelo, #eModelo").html(modelo.map(function(a) {
+        return new Option(a, a);
+    }));
+    $("#dGama, #eGama, #p1modelo, #p2modelo, #p3modelo").html(gama.map(function(a) {
+        return new Option(a, a);
+    }));
     $("#dModelo, #dGama, #eModelo, #eGama, #p1modelo, #p2modelo, #p3modelo").chosen({no_results_text: "Sem resultados", width: "100%"});
     $('[data-toggle~="tooltip"]').tooltip({container: 'body'});
 
@@ -250,10 +257,10 @@ $(function()
                         scrollTop();
                         return false;
                     }
-                }else if (!$("[name=ca]:checked").length){
-                        $.jGrowl("Preencha correctamente se há 3ª pessoa", {life: 4000});
-                        scrollTop();
-                        return false;
+                } else if (!$("[name=ca]:checked").length) {
+                    $.jGrowl("Preencha correctamente se há 3ª pessoa", {life: 4000});
+                    scrollTop();
+                    return false;
                 }
                 script.validate_manual(
                         function() {
