@@ -87,7 +87,7 @@ $(function() {
                                         </td>\n\
                                    </tr>";
                         });
-                        bootbox.alert("<div class='alert alert-warning'>Foi encontrado um cliente com estes dados.</div>\n\
+                        bootbox.dialog("<div class='alert alert-warning'>Foi encontrado um cliente com estes dados.</div>\n\
                                         <table class='table table-mod table-bordered table-striped table-condensed'>\n\
                                             <thead>\n\
                                                 <tr>\n\
@@ -101,7 +101,7 @@ $(function() {
                                             <tbody>\n\
                                             " + trs + "\n\
                                             </tbody>\n\
-                                        </table>").on("click", ".criar_marcacao", function()
+                                        </table>",[{'OK':true,"label": "OK"}],{customClass:'container'}).on("click", ".criar_marcacao", function()
                         {
                             bootbox.hideAll();
                             var en = btoa($(this).data().lead_id);
