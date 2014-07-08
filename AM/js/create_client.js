@@ -78,6 +78,9 @@ $(function() {
                                         <td>" + this.phone + "</td>\n\
                                         <td>" + this.nif + "</td>\n\
                                         <td>" + this.refClient + "</td>\n\
+                                        <td>" + this.address1 + "</td>\n\
+                                        <td>" + this.postal_code + "</td>\n\
+                                        <td>" + this.city + "</td>\n\
                                         <td>" + this.date_of_birth + "\n\
                                             <div class='view-button'>\n\
                                                 <button class='btn btn-mini icon-alone ver_cliente' data-lead_id='" + this.id + "' title='Ver Cliente'><i class='icon-edit'></i></button>\n\
@@ -95,13 +98,16 @@ $(function() {
                                                     <td>Nº</td>\n\
                                                     <td>Nif</td>\n\
                                                     <td>Ref. Cliente</td>\n\
+                                                    <td>Rua</td>\n\
+                                                    <td>Cod. Postal</td>\n\
+                                                    <td>Localidade</td>\n\
                                                     <td style='width:170px';>Data de Nasc.</td>\n\
                                                </tr>\n\
                                             </thead>\n\
                                             <tbody>\n\
                                             " + trs + "\n\
                                             </tbody>\n\
-                                        </table>",[{'OK':true,"label": "OK"}],{customClass:'container'}).on("click", ".criar_marcacao", function()
+                                        </table>", [{'OK': true, "label": "OK"}], {customClass: 'container'}).on("click", ".criar_marcacao", function()
                         {
                             bootbox.hideAll();
                             var en = btoa($(this).data().lead_id);
