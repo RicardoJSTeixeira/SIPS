@@ -58,8 +58,6 @@ switch ($action) {
             $row["value"] = json_decode($row["value"]);
             $result[] = $row;
         }
-
-
         echo json_encode($result);
         break;
 }

@@ -222,7 +222,6 @@ var requisition = function(geral_path, options_ext) {
                         .append($("<td>", {class: "td_quantity"}).text(this.quantity))
                         .append($("<td>", {class: "td_size"}).text(this.size === 0 ? "" : this.size))
                         .append($("<td>", {class: "td_color", color: this.color_id}).text(this.color_name))
-
                         );
             });
             new_requisition_zone.find("#produtos_encomendados").append(new_product);
@@ -405,8 +404,7 @@ var requisition = function(geral_path, options_ext) {
                                     "clientID": that.data().clientid,
                                     "cod_cliente": that.val()
                                 }, function(data) {
-                                    that
-                                            .closest("tr")
+                                    that.closest("tr")
                                             .removeClass("error")
                                             .end()
                                             .replaceWith(that.val());
@@ -441,7 +439,6 @@ var requisition = function(geral_path, options_ext) {
                 action: "listar_produtos_por_encomenda",
                 id: $(this).val()
             }, function(data) {
-
                 var
                         modal_tbody = modal.find("#show_requisition_products_tbody").empty(),
                         EInfotmp = [],
@@ -508,7 +505,6 @@ var requisition = function(geral_path, options_ext) {
         });
         modal.on("click", "#print_requisition", function() {
             $.msg();
-
             //Ir buscar os comentarios
             $.post('ajax/requisition.php', {
                 action: "listar_comments_por_encomenda",
@@ -530,14 +526,7 @@ var requisition = function(geral_path, options_ext) {
                         , text = data;
                 lines = doc.setFont('Times', 'Roman')
                         .setFontSize(size)
-                        .splitTextToSize(text, 550);
-
-                if (data.length)
-                {
-                    doc.text(18, doc.lastCellPos.y + 42, "Observações");
-                    doc.text(25, doc.lastCellPos.y + 65, lines);
-                }
-
+                        .splitTextToSize(text, 850);
 
 
                 $.post('ajax/audiograma.php', {
@@ -548,63 +537,39 @@ var requisition = function(geral_path, options_ext) {
                         var that = "";
                         var titles = [], values = [];
                         var temp_values = {};
-                        var temp = "";
                         $.each(data1, function() {
                             that = this;
-
                             $.each(that.value, function() {
-
-                                temp = this.name.replace(that.name, '');
-
-                                titles.push(temp);
-                                temp_values[temp] = this.value;
+                                titles.push(this.name);
+                                temp_values[this.name] = this.value;
                             });
-                            values.push($.extend({}, temp_values));
+                            values.push(temp_values);
 
-                            doc.text(18, doc.lastCellPos.y + 45, that.name);
-
-                            doc.table(20, doc.lastCellPos.y + 55, values, titles, {
+                            doc.text(18, doc.lastCellPos.y + 52, that.name);
+                            doc.table(20, doc.lastCellPos.y + 60, values, titles, {
                                 autoSize: true,
                                 printHeaders: true,
                                 fontSize: 10
                             });
-
                             titles = [];
                             values = [];
                             temp_values = {};
-
                         });
+                    }
+                    if (data.length) {
+                        doc.text(18, doc.lastCellPos.y + 42, "Observações");
+                        doc.text(25, doc.lastCellPos.y + 65, lines);
                     }
                     doc.save(moment().format());
                 }, "json").fail(function(data1) {
                     $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                     $.msg('unblock', 5000);
                 });
-
-
-
-
-
-
-
                 $.msg('unblock');
             }, "json").fail(function(data) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                 $.msg('unblock', 5000);
             });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         });

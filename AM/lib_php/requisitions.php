@@ -18,15 +18,12 @@ Class requisitions {
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-
             $row[4] = date("d-m-Y H:i:s", strtotime($row[4]));
-
             if ($row[2] == "mensal") {
                 $row[2] = "Mensal";
                 $row[6] = "<i class='icon-ban-circle'></i>";
                 $row[5] = "<i class='icon-ban-circle'></i>";
             } else {
-
                 if ($this->_user_level > 5) {
                     if ($row[6])
                         $row[6] = "$row[6]";
@@ -58,7 +55,6 @@ Class requisitions {
 
             $result['aaData'][] = $row;
         }
-
         return $result;
     }
 
@@ -104,7 +100,6 @@ Class requisitions {
     }
 
     public function accept_requisition($id) {
-
         $query = "Update  spice_requisition set status=1 where id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array("id" => $id));

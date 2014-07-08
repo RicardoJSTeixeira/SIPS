@@ -31,8 +31,8 @@
                         <option value="Molde" >Molde</option>
                         <option value="Economato" >Economato</option>
                         <option value="Gama" >Gama</option>
-                         <option value="Consumiveis">Consumiveis</option>
-            <option value="Especificidades" >Especificidades</option>
+                        <option value="Consumiveis">Consumiveis</option>
+                        <option value="Especificidades" >Especificidades</option>
                     </select>
                 </div> 
             </div>
@@ -97,7 +97,7 @@
                     </tbody>
                 </table>
                 <div class="formRow pull-right">
-                    <button class="btn btn-primary right" id="edit_product_button_color_add_line"><i class="icon-plus-sign"></i>Adicionar Promo.</button>
+                    <button class="btn btn-primary right" id="edit_product_button_color_add_line"><i class="icon-plus-sign"></i>Adicionar Cor.</button>
                 </div>
             </div>
             <div class="formRow" id="edit_product_promotion_div">
@@ -180,11 +180,9 @@
 <!--Novo PRODUTOS-->
 
 <form id="new_product_form" class="check_form" style="display:none">
-
     <fieldset>
         <label for="new_product_name">Nome</label>
         <input type="text" id="new_product_name" class="span validate[required]">
-
         <label for="new_product_parent">Parente</label>
         <select class="chosen-select" id="new_product_parent" multiple data-placeholder="Selecione um parent"></select>
         <label for="new_product_category">Categoria</label>
@@ -200,13 +198,11 @@
             <option value="Consumiveis">Consumiveis</option>
             <option value="Especificidades" >Especificidades</option>
         </select>
-
         <label>Tipo</label>
         <input type="checkbox" id="new_product_check_branch" name="new_product_tipo_user" value="branch"  checked class="validate[minCheckbox[1]]">
         <label class="checkbox inline" for="new_product_check_branch"><span></span>Branch</label>
         <input type="checkbox" id="new_product_check_dispenser" name="new_product_tipo_user" value="dispenser" checked class="validate[minCheckbox[1]]">
         <label class="checkbox inline" for="new_product_check_dispenser"><span></span>Dispenser</label>
-
         <div class="formRow" id="new_product_size_div" style="display:none">
             <label for="new_product_size">Tamanhos de Aparelho &nbsp; </label>
             <div class=" input-append">
@@ -221,7 +217,6 @@
             </div>
         </div>
         <div class='clear'></div>
-
         <label><b>Max. Requisições</b></label>
         <table>
             <tbody>
@@ -244,7 +239,6 @@
             </tbody>
         </table>
     </fieldset>
-
     <div class="formRow" id="new_product_color_div" style="display:none">
         <table class="table table-bordered table-mod">
             <thead>
@@ -257,15 +251,11 @@
             <tbody id="new_product_table_tbody_color">
             </tbody>
         </table>
-
     </div>
-
     <div class="form-footer">
         <button class="right btn btn-success" id="create_new_product_button"><i class="icon-plus-sign"></i>Criar</button> 
         <div class="clear"></div>
     </div>
-
-
 </form>
 
 <!--REMOVER PRODUTO-->
