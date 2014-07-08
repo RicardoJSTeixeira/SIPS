@@ -88,8 +88,11 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
                                         .find(".input_quantity")
                                         .not(this)
                                         .map(function() {
-                                            if (~~$(this).prop("max") >= (~~$(this).val() + add))
-                                                $(this).val(~~$(this).val() + add);
+                                            if ((~~$(this).val() + add) <= ~~$(this).prop("max")) {
+                                                if ((~~$(this).val() + add) >= ~~$(this).prop("min")) {
+                                                    $(this).val(~~$(this).val() + add);
+                                                }
+                                            }
                                         });
                             })).css("display", "inline").hide();
         }
@@ -124,7 +127,7 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
                                 .append($("<select>", {class: "input-small color_select"}).append(color)).css("display", "inline").hide()))
                 .on("change", " > span > input[type=checkbox]", function(e) {
 
- 
+
                     if (this.checked) {
                         $(this).closest("li").parents("li").find(" > span > input").prop("checked", true).change();
                         $(this).closest("li").find(".quantity_div").first().show();
@@ -140,13 +143,13 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
 
                     }
                     /*
-                    var isClosed = $(this)
-                            .closest("li")
-                            .find("i")
-                            .hasClass("icon-plus-sign");
-                    if (isClosed) {
-                        $(this).closest("span").click();
-                    }*/
+                     var isClosed = $(this)
+                     .closest("li")
+                     .find("i")
+                     .hasClass("icon-plus-sign");
+                     if (isClosed) {
+                     $(this).closest("span").click();
+                     }*/
 
 
                     $(this).closest("li").data()[this.name] = this.checked;
