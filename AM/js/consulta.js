@@ -355,14 +355,7 @@ $(function()
                 .find("#exam_outcome_div").hide().end();
     });
 
-//AUDIOGRAMA VALIDATE AND SAVE
-    $("#main_consulta_div #validate_audiograma_button").click(function() {
-        consult_audiogra.validate(function() {
-            consult_audiogra.calculate();
-        }, function() {
-            $.jGrowl('AudioGrama validado com sucesso!', {life: 3000});
-        });
-    });
+ 
 
     $(".onlynumber").autotab("numeric");
 

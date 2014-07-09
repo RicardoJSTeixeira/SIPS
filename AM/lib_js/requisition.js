@@ -363,7 +363,7 @@ var requisition = function(geral_path, options_ext) {
             "aoColumns": [{
                     "sTitle": "Id"
                 }, {
-                    "sTitle": "Dispenser",
+                    "sTitle": "User",
                     "bVisible": SpiceU.user_level > 5
                 }, {
                     "sTitle": "Tipo"
@@ -454,7 +454,7 @@ var requisition = function(geral_path, options_ext) {
                     EInfotmp.push(this.innerText);
                 });
                 EInfo = {
-                    'Dispenser': EInfotmp[0] + "",
+                    'User': EInfotmp[0] + "",
                     'Tipo': EInfotmp[1] + "",
                     'Id Client': EInfotmp[2] + "",
                     'Date': EInfotmp[3] + "",
@@ -511,7 +511,7 @@ var requisition = function(geral_path, options_ext) {
                 id: EData.id_req
             }, function(data) {
                 var doc = new jsPDF('p', 'pt', 'a4', true);
-                doc.table(20, 20, EData.bInfo, ['Dispenser', 'Tipo', 'Id Client', 'Date', 'Order Number', 'Client Ref.', 'Estado'], {
+                doc.table(20, 20, EData.bInfo, ['User', 'Tipo', 'Id Client', 'Date', 'Order Number', 'Client Ref.', 'Estado'], {
                     autoSize: true,
                     printHeaders: true,
                     fontSize: 10
