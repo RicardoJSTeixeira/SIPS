@@ -4,7 +4,7 @@ var audiograma = function(lead_id) {
             contas_regex = /[^0-9\-]+/g,
             lead_id = lead_id,
             me = this;
-
+    var tooltip_to_validate = 1;
     this.adg = $("#main_audiograma_div");
     me.adg.find("#right_ear").text("Sem dados");
     me.adg.find("#left_ear").text("Sem dados");
@@ -28,7 +28,24 @@ var audiograma = function(lead_id) {
 
         //APRESENTA SO VALORES CALCULADOS DE CADA OUVIDO
 
-        var ar500 = ((me.adg.find("#AR500").val().replace(contas_regex, ""))),
+
+
+
+
+
+
+
+
+
+
+
+
+//FALTA TIRAR O TOOLTIP DO CO DIREITO E CO ESQUERDA
+
+
+
+        var
+                ar500 = ((me.adg.find("#AR500").val().replace(contas_regex, ""))),
                 al500 = ((me.adg.find("#AL500").val().replace(contas_regex, ""))),
                 ar1000 = ((me.adg.find("#AR1000").val().replace(contas_regex, ""))),
                 al1000 = ((me.adg.find("#AL1000").val().replace(contas_regex, ""))),
@@ -43,7 +60,11 @@ var audiograma = function(lead_id) {
         if (right_ear.value < 35 && left_ear.value < 35) {
             all_ear.text = "Resultado: Sem perda";
             all_ear.value = 0;
+            me.adg.find(".non_required_fields").removeClass("validate[required]");
+            tooltip_to_validate = 0;
         } else {
+            if (!me.adg.find(".non_required_fields").hasClass("validate[required]"))
+                me.adg.find(".non_required_fields").addClass("validate[required]");
             all_ear.text = "Resultado: Perda";
             all_ear.value = 1;
             if (right_ear.value >= 35 && right_ear.value < 65) {
@@ -56,6 +77,7 @@ var audiograma = function(lead_id) {
             } else if (left_ear.value >= 65) {
                 left_ear.text = "Perda Power";
             }
+            tooltip_to_validate = 1;
         }
 
         me.adg.find("#right_ear").text(right_ear.text);
@@ -100,7 +122,8 @@ var audiograma = function(lead_id) {
             if (!$(this).val())
                 bcl = 1;
         });
-        if (bcr && bcl) {
+ 
+        if ((bcr && bcl) && tooltip_to_validate) {
             bcstatus = false;
             $('#bc_tooltip').tooltip('show');
         } else
@@ -119,6 +142,21 @@ var audiograma = function(lead_id) {
         return false;
     };
 
+
+
+    me.adg.find(".perda_input").on("change", function() {
+        var ready = 1;
+        $.each(me.adg.find(".perda_input"), function() {
+            if (!$(this).val().length)
+            {
+                ready = 0;
+                return false;
+            }
+        })
+        if (ready)
+            me.calculate();
+    });
+
     //VALIDATE DOS MAX E MIN VALUES
     me.adg.find("#audiograma_table input").on("focusout", function() {
         var
@@ -131,7 +169,7 @@ var audiograma = function(lead_id) {
             return true;
 
         val = val.replace(values_regex, "");
-        val = round5(val);
+        val = Math.round(val / 5) * 5;
         element.val(val);
 
         if (+val > max) {
@@ -148,7 +186,8 @@ var audiograma = function(lead_id) {
                 return true;
             }
         }
-    });
+    }
+    );
     $.msg();
     $.post("ajax/audiograma.php", {
         action: "populate",
@@ -166,7 +205,5 @@ var audiograma = function(lead_id) {
         $.msg('unblock', 5000);
     });
 
-    function round5(x) {
-        return Math.round(x / 5) * 5;
-    }
+
 };
