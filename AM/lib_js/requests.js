@@ -131,7 +131,7 @@ var requests = function(basic_path, options_ext) {
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"});
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial", "sWidth": "65px"}, {"sTitle": "Data final", "sWidth": "65px"}, {"sTitle": "Horario", "sWidth": "46px"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Pub.", "sWidth": "1px"}, {"sTitle": "Cod."}, {"sTitle": "Total", "sWidth": "31px"}, {"sTitle": "c/ Perda", "sWidth": "36px"}, {"sTitle": "Vendas", "sWidth": "46px"}, {"sTitle": "Valor", "sWidth": "33px"}, {"sTitle": "Estado", "sWidth": "63px"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
+                "aoColumns": [{"sTitle": "ID","sWidth": "35px"}, {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial", "sWidth": "65px"}, {"sTitle": "Data final", "sWidth": "65px"}, {"sTitle": "Horario", "sWidth": "46px"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Pub.", "sWidth": "1px"}, {"sTitle": "Cod."}, {"sTitle": "Total", "sWidth": "31px"}, {"sTitle": "c/ Perda", "sWidth": "36px"}, {"sTitle": "Vendas", "sWidth": "46px"}, {"sTitle": "Valor", "sWidth": "33px"}, {"sTitle": "Estado", "sWidth": "63px"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_AM').click(function(event) {
@@ -303,7 +303,7 @@ var requests = function(basic_path, options_ext) {
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "get_relatorio_frota_to_datatable"});
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data"}, {"sTitle": "Matrícula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrências", "sWidth": "150px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
+                "aoColumns": [{"sTitle": "ID","sWidth": "35px"}, {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data"}, {"sTitle": "Matrícula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrências", "sWidth": "80px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_F').click(function(event) {
@@ -440,7 +440,7 @@ var requests = function(basic_path, options_ext) {
                     aoData.push({"name": "action", "value": "get_relatorio_correio_to_datatable"}
                     );
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento", "sWidth": "70px"}, {"sTitle": "Observações"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
+                "aoColumns": [{"sTitle": "ID","sWidth": "35px"}, {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento", "sWidth": "70px"}, {"sTitle": "Observações"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_C').click(function(event) {
@@ -650,7 +650,7 @@ var requests = function(basic_path, options_ext) {
                     aoData.push({"name": "action", "value": "get_relatorio_stock_to_datatable"}
                     );
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
+                "aoColumns": [{"sTitle": "ID","sWidth": "35px"}, {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_S').click(function(event) {
@@ -860,7 +860,7 @@ var requests = function(basic_path, options_ext) {
                     aoData.push({"name": "action", "value": "get_relatorio_movimentacao_to_datatable"}
                     );
                 },
-                "aoColumns": [{"sTitle": "ID"}, {"sTitle": "Dispenser", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
+                "aoColumns": [{"sTitle": "ID","sWidth": "35px"}, {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_MS').click(function(event) {

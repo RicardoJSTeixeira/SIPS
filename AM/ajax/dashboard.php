@@ -24,7 +24,7 @@ switch ($action) {
     case "populate_allm"://ALL MARCAÇOES
         $u = $user->getUser();
         if ($u->user_level > 6) {
-            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(b.address1, ' ', b.address2), postal_code, b.city, b.phone_number, b.alt_phone, IF(d.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, a.id_user
+            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(b.address1, ' ', b.address2), postal_code, b.city, b.phone_number, b.alt_phone, IF(d.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, a.id_user,d.consulta,d.venda
         from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
    inner join vicidial_users c on b.user=c.user
@@ -37,8 +37,7 @@ switch ($action) {
             $refs = array_map(function($a) {
                 return $a->id;
             }, $refs);
-
-            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(b.address1, ' ', b.address2), postal_code, b.city, b.phone_number, b.alt_phone, IF(c.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, a.id_user
+            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(b.address1, ' ', b.address2), postal_code, b.city, b.phone_number, b.alt_phone, IF(c.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, a.id_user,c.consulta,c.venda
         from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
    left join spice_consulta c on c.reserva_id=a.id_reservation
@@ -47,6 +46,8 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $row[13] = $row[13]==0?"Não":"Sim";
+            $row[14] = $row[14]==0?"Não":"Sim";
             $row[11] = $row[11] . "<div class='view-button'>"
                     . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[0]' title='Ver Cliente'><i class='icon-edit'></i></button>"
                     . "<button class='btn btn-mini icon-alone criar_encomenda" . (($row[10] !== 'Fechada') ? " hide" : "") . "' data-lead_id='$row[0]' title='Nova Encomenda'><i class='icon-shopping-cart'></i></button>"

@@ -50,8 +50,11 @@ Class requisitions {
                     $row[9] = "<span class='label label-important'>Pendente</span>";
                     break;
             }
-            $row[7] = "<button class='btn ver_requisition_anexo' value='" . $row[0] . "'><i class='icon-folder-open'></i>Abrir</button>";
-            $row[8] = "<div><button class='btn ver_requisition_products' value='" . $row[0] . "'><i class='icon-eye-open'></i>Ver</button></div>";
+            if ($row[7])
+                $row[7] = "<button class='btn ver_requisition_anexo' value='$row[0]'><i class='icon-folder-open'></i>$row[7]</button>";
+            else
+                $row[7] = "Sem Anexo";
+            $row[8] = "<div><button class='btn ver_requisition_products icon-alone' value='" . $row[0] . "'><i class='icon-eye-open'></i></button></div>";
 
             $result['aaData'][] = $row;
         }

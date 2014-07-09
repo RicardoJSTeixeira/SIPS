@@ -59,8 +59,23 @@ var cliente_info = function(lead_id, options_ext)
                     .append($("<div>", {class: "row-fluid"}).append($("<div>", {class: "span7 ", id: "extra_info_div"}).append($("<h4>", {class: "icon-star"}).text(" Info Extra")).append(client_extra)));
             if (!client_extra_count)
                 final.find("#extra_info_div").parent().remove();
+
+            bootbox.dialog(final,
+                    [{"label": "Nova Marcação",
+                            "icon": "icon-calendar",
+                            "callback": function(e) {
+                                bootbox.hideAll();
+                                var en = btoa(lead_id);
+                                $.history.push("view/calendar.html?id=" + en);
+                            }
+                        },
+                        {"label": "Fechar",
+                            "class": "btn-link"
+                        }
+                    ]);
+
             $.msg('unblock');
-            bootbox.alert(final);
+
         }, "json").fail(function(data) {
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
             $.msg('unblock', 5000);
