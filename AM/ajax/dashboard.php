@@ -37,7 +37,6 @@ switch ($action) {
             $refs = array_map(function($a) {
                 return $a->id;
             }, $refs);
-
             $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(b.address1, ' ', b.address2), postal_code, b.city, b.phone_number, b.alt_phone, IF(c.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, a.id_user,c.consulta,c.venda
         from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
