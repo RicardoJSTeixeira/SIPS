@@ -26,7 +26,7 @@ switch ($action) {
                 . "FROM sips_sd_reservations a "
                 . "INNER JOIN vicidial_list d ON a.lead_id = d.lead_id "
                 . "INNER JOIN spice_consulta f ON a.id_reservation=f.reserva_id "
-                . "WHERE f.closed=1 limit 20000";
+                . "WHERE f.closed=1 and d.security_phrase='SPICE' limit 20000";
         $stmt = $db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
