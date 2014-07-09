@@ -60,7 +60,7 @@ var cliente_info = function(lead_id, options_ext)
             if (!client_extra_count)
                 final.find("#extra_info_div").parent().remove();
             $.msg('unblock');
-            bootbox.dialog(final,[]);
+            bootbox.alert(final);
         }, "json").fail(function(data) {
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
             $.msg('unblock', 5000);
