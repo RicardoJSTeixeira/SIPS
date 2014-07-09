@@ -24,7 +24,7 @@ switch ($action) {
     case "populate_allm"://ALL MARCAÇOES
         $u = $user->getUser();
         if ($u->user_level > 6) {
-            $query = "SELECT a.lead_id,CONCAT(first_name, ' ', middle_initial, ' ', last_name), extra1, extra2, extra8 'nif', postal_code, b.city, b.phone_number, b.alt_phone, b.address1, IF(d.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, a.id_user,d.consulta,d.venda
+            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(b.address1, ' ', b.address2), postal_code, b.city, b.phone_number, b.alt_phone, IF(d.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, a.id_user
         from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
    inner join vicidial_users c on b.user=c.user
@@ -38,7 +38,7 @@ switch ($action) {
                 return $a->id;
             }, $refs);
 
-            $query = "SELECT a.lead_id, CONCAT(first_name, ' ', middle_initial, ' ', last_name), extra1, extra2, extra8 'nif', postal_code, b.city, b.phone_number, b.alt_phone, b.address1, IF(c.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, a.id_user,c.consulta,c.venda
+            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(b.address1, ' ', b.address2), postal_code, b.city, b.phone_number, b.alt_phone, IF(c.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, a.id_user
         from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
    left join spice_consulta c on c.reserva_id=a.id_reservation

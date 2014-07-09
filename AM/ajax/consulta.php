@@ -15,7 +15,8 @@ foreach ($_GET as $key => $value) {
 
 $user = new UserLogin($db);
 $calendar = new Calendars($db);
-
+$user->confirm_login();
+$u = $user->getUser();
 $variables = array();
 $unique_id = time() . "." . rand(1, 1000);
 switch ($action) {
@@ -25,12 +26,13 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute(array($reserva_id));
 
-        $query = "Insert into spice_consulta (data,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,produtos,feedback,terceira_pessoa,closed)
-            values (:data,:reserva_id,:lead_id,:campanha,:consulta,:consulta_razao,:exame,:exame_razao,:venda,:venda_razao,:left_ear,:right_ear,:produtos,:feedback,:terceira_pessoa,:closed)";
+        $query = "Insert into spice_consulta (data,user,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,produtos,feedback,terceira_pessoa,closed)
+            values (:data,:user,:reserva_id,:lead_id,:campanha,:consulta,:consulta_razao,:exame,:exame_razao,:venda,:venda_razao,:left_ear,:right_ear,:produtos,:feedback,:terceira_pessoa,:closed)";
 
         $stmt = $db->prepare($query);
         $stmt->execute(array(
             ":data" => date("Y-m-d H:i:s"),
+            ":user" => $u->username,
             ":reserva_id" => $reserva_id,
             ":lead_id" => $lead_id,
             ":campanha" => "campanha_spice",
