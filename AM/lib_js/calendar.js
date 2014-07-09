@@ -105,6 +105,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                                 ((moment(this.start).unix() <= cEO.start) && (moment(this.end).unix() >= cEO.end))
                                 ) {
                             exist = true;
+                            $.msg('unblock');
                             $.jGrowl("Não é permitido marcações concorrentes.", {
                                 sticky: 4000
                             });
@@ -362,6 +363,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         lead_id: me.client.id,
                         client_name: me.client.name,
                         codCamp: me.client.codCamp,
+                        //changed: 0,
                         closed: false
                     }, $(this).data().eventobject);
 
@@ -678,7 +680,6 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 })
                 .modal();
     };
-
     this.openMkt = function(calEvent) {
         $.msg();
         $.post("ajax/requests.php", {

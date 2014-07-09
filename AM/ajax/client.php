@@ -83,7 +83,7 @@ switch ($action) {
         $js=  array_values($js);
         break;
     case 'byWhat':
-        $query = "SELECT lead_id, first_name, middle_initial, last_name, phone_number, date_of_birth, extra2 'refClient', extra8 'nif' FROM vicidial_list where $what=:value";
+        $query = "SELECT lead_id, first_name, middle_initial, last_name, phone_number, date_of_birth, extra2 'refClient', address1, postal_code, city, extra8 'nif' FROM vicidial_list where $what=:value";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":value" => $value));
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
@@ -93,7 +93,10 @@ switch ($action) {
                 "nif" => (string) $row->nif,
                 "phone" => (string) $row->phone_number,
                 "date_of_birth" => (string) $row->date_of_birth,
-                "refClient" => (string) $row->refClient);
+                "refClient" => (string) $row->refClient,
+                "address1" => (string) $row->address1,
+                "postal_code" => (string) $row->postal_code,
+                "city" => (string) $row->city);
         }
         break;
     default:
