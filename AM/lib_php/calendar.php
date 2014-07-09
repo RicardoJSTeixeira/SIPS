@@ -41,7 +41,7 @@ Class Calendars {
                 'postal' => (string) $row->postal_code,
                 'start' => (string) $row->start_date,
                 'end' => (string) $row->end_date,
-                'editable' => (bool) !(((bool) $row->closed || $forceUneditable ) || ($system_types[$row->id_reservation_type]) || (($username) ? $username != $row->id_user : false)),
+                'editable' => (bool) !(((bool) $row->closed || $forceUneditable ) || ($system_types[$row->id_reservation_type])),
                 'closed' => (bool) $row->closed || $row->has_accessories,
                 'changed' => (int) $row->changed,
                 'className' => (string) "t" . $row->id_reservation_type . (((bool) $row->del) ? " del" : ""),
