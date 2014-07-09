@@ -22,13 +22,13 @@ switch ($action) {
     case "populate_consults"://ALL MARCAÇOES
         $u = $user->getUser();
         $output['aaData'] = array();
-        $query = "SELECT extra2 'codCliente', '' as 'itLogID', a.lead_id , id_reservation , a.entry_date, id_user, consulta_razao, '' as 'salespersonCode' , MAX(IF(g.name='AR',g.value,''))'AR',MAX(IF(g.name='AL',g.value,'')) 'AL',MAX(IF(g.name='BCR',g.value,'')) 'BCR',MAX(IF(g.name='BCL',g.value,'')) 'BCL',MAX(IF(g.name='ULLR',g.value,'')) 'ULLR',MAX(IF(g.name='ULLL',g.value,'')) 'ULLL' "
+        $query = "SELECT extra2 'codCliente', '' as 'itLogID', a.lead_id , id_reservation , a.entry_date, f.user, consulta_razao, '' as 'salespersonCode' , MAX(IF(g.name='AR',g.value,''))'AR',MAX(IF(g.name='AL',g.value,'')) 'AL',MAX(IF(g.name='BCR',g.value,'')) 'BCR',MAX(IF(g.name='BCL',g.value,'')) 'BCL',MAX(IF(g.name='ULLR',g.value,'')) 'ULLR',MAX(IF(g.name='ULLL',g.value,'')) 'ULLL' "
                 . "FROM sips_sd_reservations a "
                 . "INNER JOIN vicidial_list d ON a.lead_id = d.lead_id "
                 . "INNER JOIN spice_consulta f ON a.id_reservation=f.reserva_id "
                 . "INNER JOIN spice_audiograma g ON a.id_reservation=g.uniqueid "
-                . "WHERE f.closed=1 limit 20000";
-
+                . "WHERE f.closed=1 group by g.uniqueid limit 20000";
+        
         $stmt = $db->prepare($query);
         $stmt->execute();
         $extractor = function($a) {
@@ -69,7 +69,7 @@ switch ($action) {
             $ullr = array_map($extractor, json_decode($row->ULLR));
 
             $audioResult = audioCalc($ar[1], $al[1], $ar[2], $al[2], $ar[3], $al[3], $ar[5], $al[5]);
-            $output['aaData'][] = array_merge(array($row->codCliente, $row->itLogID, $row->id_reservation, $row->lead_id, $row->entry_date, $row->id_user), $al, $ar, $bcl, $bcr, $ulll, $ullr, array($audioResult->right->text, $audioResult->left->text, $audioResult->right->value, $audioResult->left->value, 0, 0, 0, 0, 0, 0, $audioResult->result, 0));
+            $output['aaData'][] = array_merge(array($row->codCliente, $row->itLogID, $row->id_reservation, $row->lead_id, $row->entry_date, $row->user), $al, $ar, $bcl, $bcr, $ulll, $ullr, array($audioResult->right->text, $audioResult->left->text, $audioResult->right->value, $audioResult->left->value, 0, 0, 0, 0, 0, 0, $audioResult->result, 0));
         }
         echo json_encode($output);
         break;
