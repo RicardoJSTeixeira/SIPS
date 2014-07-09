@@ -34,6 +34,7 @@ Class Calendars {
             $reservars[] = array(
                 'id' => (int) $row->id_reservation,
                 'title' => (string) $row->rsc_name . " " . $row->display_text . (((bool) $row->closed) ? " - Fechado" : ""),
+                'type_text'=>(string) $row->display_text,
                 'client_name' => (string) $row->client_name,
                 'lead_id' => (int) $row->lead_id,
                 'codCamp' => (string) $row->codCamp,
