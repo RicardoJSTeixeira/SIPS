@@ -34,7 +34,7 @@ Class Calendars {
             $reservars[] = array(
                 'id' => (int) $row->id_reservation,
                 'title' => (string) $row->rsc_name . " " . $row->display_text . (((bool) $row->closed) ? " - Fechado" : ""),
-                'type_text'=>(string) $row->display_text,
+                'type_text' => (string) $row->display_text,
                 'client_name' => (string) $row->client_name,
                 'lead_id' => (int) $row->lead_id,
                 'codCamp' => (string) $row->codCamp,
@@ -226,6 +226,12 @@ Class Calendars {
         $query = "UPDATE `sips_sd_reservations` SET `id_resource`=:rsc_id WHERE `id_reservation`=:id";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":id" => $id, ":rsc_id" => $rsc_id));
+    }
+
+    public function set_obs($obs, $id_reservation) {
+        $query = "Update sips_sd_reservations set obs = :obs, `has_accessories`=1 where id_reservation = :id_reservation";
+                    $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array(":obs" => $obs, ":id_reservation" => $id_reservation));
     }
 
 }
