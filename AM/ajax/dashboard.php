@@ -24,7 +24,7 @@ switch ($action) {
     case "populate_allm"://ALL MARCAÇOES
         $u = $user->getUser();
         if ($u->user_level > 6) {
-            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(b.address1, ' ', b.address2), postal_code, b.city, b.phone_number, b.alt_phone, IF(d.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, a.id_user,d.consulta_razao,d.venda_razao
+            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(b.address1, ' ', b.address2), postal_code, b.city, b.phone_number, b.alt_phone, IF(d.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, d.feedback, d.consulta_razao, d.venda_razao, d.user
         from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
    inner join vicidial_users c on b.user=c.user
@@ -46,7 +46,7 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-                $row[11] = $row[11] . "<div class='view-button'>"
+                $row[15] = $row[15] . "<div class='view-button'>"
                     . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[0]' title='Ver Cliente'><i class='icon-edit'></i></button>"
                     . "<button class='btn btn-mini icon-alone criar_encomenda" . (($row[10] !== 'Fechada') ? " hide" : "") . "' data-lead_id='$row[0]' title='Nova Encomenda'><i class='icon-shopping-cart'></i></button>"
                     . "<button class='btn btn-mini icon-alone criar_marcacao' data-lead_id='$row[0]' title='Marcar Consulta'><i class='icon-calendar'></i></button>"
