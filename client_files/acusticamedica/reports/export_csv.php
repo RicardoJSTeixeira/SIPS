@@ -19,14 +19,14 @@ foreach ($_GET as $key => $value) {
 
 function columnmakerwithtotal($array_head, $array, $total = false, $text = false, $i = 0) {
     $sum = 0;
-    $array_head=array_values($array_head);
-    $array=array_values($array);
-    
-    $plus=count($array_head);
-    
+    $array_head = array_values($array_head);
+    $array = array_values($array);
+
+    $plus = count($array_head);
+
     if (count($array) > 0) {
         foreach ($array as $key => $value) {
-            $array_head[$key+$plus] = $value;
+            $array_head[$key + $plus] = $value;
             if ($total) {
                 $sum+=$value;
             }
@@ -34,13 +34,12 @@ function columnmakerwithtotal($array_head, $array, $total = false, $text = false
     }
 //acrescentar os 0
     if ($i > 0) {
-        
-            for ($index = $plus; $index < $i+$plus; $index++) {
-                if (!array_key_exists($index, $array_head)) {
-                    $array_head[$index] = 0;
-                }
+
+        for ($index = $plus; $index < $i + $plus; $index++) {
+            if (!array_key_exists($index, $array_head)) {
+                $array_head[$index] = 0;
             }
-        
+        }
     }
     if ($total) {
         $array_head[] = $sum;
@@ -52,19 +51,19 @@ function columnmakerwithtotal($array_head, $array, $total = false, $text = false
 }
 
 function joinarray($arr1, $arr2) {
-    if (is_array($arr1) and !is_array($arr2)) {
+    if (is_array($arr1) and ! is_array($arr2)) {
         return $arr1;
     }
-    if (is_array($arr2) and !is_array($arr1)) {
+    if (is_array($arr2) and ! is_array($arr1)) {
         return $arr2;
     }
-    if (!is_array($arr2) and !is_array($arr1)) {
+    if (!is_array($arr2) and ! is_array($arr1)) {
         return array();
     }
 
     $add = function($a, $b) {
-                return $a + $b;
-            };
+        return $a + $b;
+    };
     return array_map($add, $arr1, $arr2);
 }
 
@@ -75,50 +74,58 @@ if (isset($report_marc_outbound)) {
     $output = fopen('php://output', 'w');
 
     fputcsv($output, array(
-        'Title',
-        'Campaign No.',
-        'First Name',
-        'Middle Name',
-        'Surname',
-        'Address 1',
-        'Address 2',
-        'Address 3',
-        'County',
-        'Post Code',
-        'Area Code',
-        'No. Porta',
-        'City',
-        'Concelho',
-        'Country Code',
-        'Phone No.',
-        'Mobile Phone No.',
-        'Work Phone No.',
-        'Email',
-        'Date of Birth',
-        'No.',
-        'Update contact',
-        'Service Request',
-        'Territory Code',
-        'Salesperson Code',
-        'On Hold',
-        'Exclude Reason Code',
-        'Pensionner',
-        'Want Info from other companies',
-        'Appointment time',
-        'Appointment date',
-        'Visit Location',
-        'Branch',
-        'Comments',
-        'Salesperson Team',
-        'Tipo Cliente',
-        'Operador',
-        'Feedback',
-        'Campanha',
-        'Data da Chamada',
-        'Avisos'), ";");
+    'Title',
+    'Campaign No.',
+    'First Name',
+    'Middle Name',
+    'Surname',
+    'Address 1',
+    'Address 2',
+    'Address 3',
+    'County',
+    'Post Code',
+    'Area Code',
+    'No. Porta',
+    'City',
+    'Concelho',
+    'Country Code',
+    'Phone No.',
+    'Mobile Phone No.',
+    'Work Phone No.',
+    'Email',
+    'Date of Birth',
+    'No.',
+    'Update contact',
+    'Service Request',
+    'Territory Code',
+    'Salesperson Code',
+    'On Hold',
+    'Exclude Reason Code',
+    'Pensionner',
+    'Want Info from other companies',
+    'Appointment time',
+    'Appointment date',
+    'Visit Location',
+    'Branch',
+    'Comments',
+    'Salesperson Team',
+    'Tipo Cliente',
+    'To be Issued',
+    'ID Consulta SPICE',
+    'Operador',
+    'Feedback',
+    'Campanha',
+    'Data da Chamada',
+    'Avisos'), ";");
 
     foreach ($camp_options as $currentCamp) {
-        $query_log = "SELECT a.lead_id,a.campaign_id,a.call_date AS data,a.status AS resultado, a.user as utilizador, b.*, c.*, d.campaign_name AS campanha FROM vicidial_log a JOIN custom_" . strtoupper($currentCamp) . " b ON a.lead_id = b.lead_id JOIN vicidial_list c ON a.lead_id = c.lead_id JOIN vicidial_campaigns d ON a.campaign_id = d.campaign_id where a.status IN ('MARC', 'NOVOCL','FL0001') AND a.campaign_id LIKE '$currentCamp' AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00'";
+        $query_log = "SELECT a.lead_id,a.campaign_id,a.call_date AS data,a.status AS resultado, a.user as utilizador, b.*, c.*, d.campaign_name AS campanha, e.id_reservation "
+                . "FROM vicidial_log a "
+                . "JOIN custom_" . strtoupper($currentCamp) . " b ON a.lead_id = b.lead_id "
+                . "JOIN vicidial_list c ON a.lead_id = c.lead_id "
+                . "Left JOIN sips_sd_reservations e ON a.lead_id = e.lead_id "
+                . "JOIN vicidial_campaigns d ON a.campaign_id = d.campaign_id "
+                . "where a.status IN ('MARC', 'NOVOCL','FL0001') AND a.campaign_id LIKE '$currentCamp' AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00'";
 
         $query_log = mysql_query($query_log, $link) or die(mysql_error());
 
@@ -181,6 +188,8 @@ if (isset($report_marc_outbound)) {
                 $row['obs'],
                 "",
                 "",
+                "YES",
+                $row['id_reservation'],
                 $row['utilizador'],
                 $row['resultado'],
                 $row['campanha'],
@@ -240,7 +249,7 @@ if (isset($report_feedback_outbound)) {
         'Avisos'), ";");
     $fbs = implode("','", $feedbacks);
 
-    $archive=(strtotime("2 month ago")>strtotime($data_final))?"_archive":"";
+    $archive = (strtotime("2 month ago") > strtotime($data_final)) ? "_archive" : "";
     foreach ($camp_options as $currentCamp) {
 
         $query_log = "SELECT a.lead_id,a.campaign_id,a.call_date AS data,a.status AS resultado, a.user as utilizador, b.*, c.*, d.campaign_name AS campanha FROM vicidial_log$archive a JOIN custom_" . strtoupper($currentCamp) . " b ON a.lead_id = b.lead_id JOIN vicidial_list c ON a.lead_id = c.lead_id JOIN vicidial_campaigns d ON a.campaign_id = d.campaign_id where a.status IN ('$fbs') AND a.campaign_id LIKE '$currentCamp' AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' group by a.lead_id";
@@ -919,7 +928,7 @@ if (isset($resumo_geral_camp)) {
     $output = fopen('php://output', 'w');
     $data_inicial = $_POST['data_inicial'];
     $data_final = $_POST['data_final'];
-    $archive=(strtotime("2 month ago")>strtotime($data_final))?"_archive":"";
+    $archive = (strtotime("2 month ago") > strtotime($data_final)) ? "_archive" : "";
     fputcsv($output, array(" "), ";");
     fputcsv($output, array(" ", "Report:", "Resumo Geral"), ";");
     fputcsv($output, array(" ", "De:", $data_inicial), ";");
@@ -1680,7 +1689,7 @@ if (isset($resumo_geral_db)) {
     $output = fopen('php://output', 'w');
     $data_inicial = $_POST['data_inicial'];
     $data_final = $_POST['data_final'];
-    $archive=(strtotime("2 month ago")>strtotime($data_final))?"_archive":"";
+    $archive = (strtotime("2 month ago") > strtotime($data_final)) ? "_archive" : "";
 
 
     $i = 0;
