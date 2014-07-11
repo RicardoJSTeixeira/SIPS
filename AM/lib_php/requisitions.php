@@ -12,12 +12,25 @@ Class requisitions {
     public function get_requisitions_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->_user_level == 6 ) ? ' where sr.user in ("' . implode('","', $this->_user_siblings) . '")' : (($this->_user_level < 6) ? ' where sr.user like "' . $this->_user_id . '" ' : '');
-        $query = "SELECT sr.id,sr.user,sr.type,sr.lead_id,sr.date,sr.contract_number,vl.extra2,sr.attachment,'products',sr.status  from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id $filter order by field(sr.status,0,2,1)";
+        $query = "SELECT sr.id,sr.user,sr.type,sr.lead_id,sr.date,sr.contract_number,vl.extra2,sr.attachment,'products',sr.status  from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id $filter  ";
 
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            
+            
+                        //sorting de colunas
+            if ($this->_user_level > 5) {
+                //Admin
+                $row[11] = ($row[9] == 0 ? 0 : ($row[9] == 1 ? 2 : 1));
+            } else {
+                //User
+                $row[11] = ($row[9] == 0 ? 1 : ($row[9] == 1 ? 2 : 0));
+            }
+            
+            
+            
             $row[4] = date("d-m-Y H:i:s", strtotime($row[4]));
             if ($row[2] == "mensal") {
                 $row[2] = "Mensal";
