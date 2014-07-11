@@ -9,22 +9,20 @@ $(function() {
             var inverted = 0;
             $.each(data, function()
             {
-console.log(this.note); 
+                console.log(this);
                 log = ($("<li>", {class: inverted ? "timeline-inverted" : ""})
                         .append($("<div>", {class: "timeline-badge info"})
                                 .append($("<i>", {class: "glyphicon glyphicon-hand-left"}))
                                 )
                         .append($("<div>", {class: "timeline-panel"})
                                 .append($("<div>", {class: "timeline-heading"})
-                                .append($("<h4>",{class:"timeline-title"}).text(  ))        
-                        )
-                                )
+                                        .append($("<h4>", {class: "timeline-title"}).text(this.type + "-" + this.section))
+                                        )
+                                .append($("<div>", {class: "timeline-body"})
+                                        .append($("<p>").text("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                                                )
+                                        ))
                         );
-
-
-
-
-
                 if (inverted)
                     inverted = 0;
                 else
@@ -43,7 +41,6 @@ console.log(this.note);
 
 
 })
-
 
 /*
  

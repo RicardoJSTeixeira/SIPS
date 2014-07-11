@@ -41,6 +41,6 @@ switch ($action) {
             $row["note"] = json_decode($row["note"]);
             $result[] = $row;
         }
-        echo $result;
+        echo json_encode($result);
         break;
 }
