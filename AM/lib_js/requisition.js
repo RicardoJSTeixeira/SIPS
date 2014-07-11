@@ -294,7 +294,10 @@ var requisition = function(geral_path, options_ext) {
                                 new_id: data[0]
                             },
                             function(data) {
-                                $.history.push("view/admin/pedidos.html?enc=0");
+                                if (me.tipo === "mensal")
+                                    $.history.push("view/new_requisition.html");
+                                else
+                                    $.history.push("view/admin/pedidos.html?enc=0");
                                 $.msg('unblock');
                             }, "json").fail(function(data) {
                                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
