@@ -155,8 +155,8 @@ $(function() {
                     }
                 })
                 .find('[data-toggle~="tooltip"]').tooltip({container: 'body'});
-        localStorage.v6 = v6;
-        localStorage.v3 = v3;
+        //localStorage.v6 = v6;
+        //localStorage.v3 = v3;
         consultasMais();
     }, "json");
 
