@@ -431,7 +431,7 @@ var requests = function(basic_path, options_ext) {
         get_to_datatable: function(rc_zone) {
             
             var relatorio_correio_table = rc_zone.dataTable({
-                 "aaSorting": [[7, "asc"]],
+                 "aaSorting": [[8, "asc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
