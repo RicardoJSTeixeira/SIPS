@@ -17,11 +17,11 @@ $(function() {
 
         //LISTAR CONSULTAS ABERTAS,FECHADAS
         var
-                columns_allm = [{"sTitle": "ID", "sWidth": "50px", bVisible: false}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Ref. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "63px"}, {"sTitle": "Nome"}, {"sTitle": "Morada"}, {"sTitle": "Cod. Postal", "sWidth": "55px"}, {"sTitle": "Localidade", "sWidth": "70px"}, {"sTitle": "Telefone 1", "sWidth": "64px"}, {"sTitle": "Telefone 2", "sWidth": "64px"}, {"sTitle": "Estado", "sWidth": "50px"}, {"sTitle": "Data", "sWidth": "120px"},{"sTitle": "Resultado Consulta", "sWidth": "65px"},{"sTitle": "Feedback sem Consulta", "sWidth": "65px"},{"sTitle": "Feedback sem venda", "sWidth": "65px"},{"sTitle": "User", "sWidth": "150px"}],
-                columns_ncsm = [{"sTitle": "ID", "sWidth": "50px", bVisible: false}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Ref. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "63px"}, {"sTitle": "Nome"}, {"sTitle": "Morada"}, {"sTitle": "Cod. Postal", "sWidth": "55px"}, {"sTitle": "Localidade", "sWidth": "70px"}, {"sTitle": "Telefone 1", "sWidth": "64px"}, {"sTitle": "Telefone 2", "sWidth": "64px"}, {"sTitle": "Data", "sWidth": "240px"},{"sTitle": "User", "sWidth": "70px"}];
-                //columns_ncsm_r = [{"sTitle": "Nome Recomendador", "sWidth": "140px", bVisible: false}, {"sTitle": "Cod. Mkt. Rec.", "sWidth": "70px"}, {"sTitle": "ID", "sWidth": "50px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Referência", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "63px"}, {"sTitle": "Postal", "sWidth": "55px"}, {"sTitle": "Localidade", "sWidth": "70px"}, {"sTitle": "Telefone 1", "sWidth": "64px"}, {"sTitle": "Telefone 2", "sWidth": "64px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "240px"},{"sTitle": "Dispenser", "sWidth": "70px"}];
+                columns_allm = [{"sTitle": "ID", "sWidth": "50px", bVisible: false}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Ref. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "63px"}, {"sTitle": "Nome"}, {"sTitle": "Morada"}, {"sTitle": "Cod. Postal", "sWidth": "55px"}, {"sTitle": "Localidade", "sWidth": "70px"}, {"sTitle": "Telefone 1", "sWidth": "64px"}, {"sTitle": "Telefone 2", "sWidth": "64px"}, {"sTitle": "Estado", "sWidth": "50px"}, {"sTitle": "Data", "sWidth": "120px"}, {"sTitle": "Resultado Consulta", "sWidth": "65px"}, {"sTitle": "Feedback sem Consulta", "sWidth": "65px"}, {"sTitle": "Feedback sem venda", "sWidth": "65px"}, {"sTitle": "User", "sWidth": "150px"}],
+                columns_ncsm = [{"sTitle": "ID", "sWidth": "50px", bVisible: false}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Ref. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "63px"}, {"sTitle": "Nome"}, {"sTitle": "Morada"}, {"sTitle": "Cod. Postal", "sWidth": "55px"}, {"sTitle": "Localidade", "sWidth": "70px"}, {"sTitle": "Telefone 1", "sWidth": "64px"}, {"sTitle": "Telefone 2", "sWidth": "64px"}, {"sTitle": "Data", "sWidth": "240px"}, {"sTitle": "User", "sWidth": "70px"}];
+        //columns_ncsm_r = [{"sTitle": "Nome Recomendador", "sWidth": "140px", bVisible: false}, {"sTitle": "Cod. Mkt. Rec.", "sWidth": "70px"}, {"sTitle": "ID", "sWidth": "50px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Referência", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "63px"}, {"sTitle": "Postal", "sWidth": "55px"}, {"sTitle": "Localidade", "sWidth": "70px"}, {"sTitle": "Telefone 1", "sWidth": "64px"}, {"sTitle": "Telefone 2", "sWidth": "64px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "240px"},{"sTitle": "Dispenser", "sWidth": "70px"}];
 
-       
+
         $('#table_allm').dataTable({
             "bSortClasses": false,
             "bProcessing": true,
@@ -51,20 +51,20 @@ $(function() {
             "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 
-/*
-        $('#table_ncsm_r').dataTable({
-            "bSortClasses": false,
-            "bProcessing": true,
-            "bDestroy": true,
-            "sPaginationType": "full_numbers",
-            "sAjaxSource": 'ajax/dashboard.php',
-            "fnServerParams": function(aoData) {
-                aoData.push({"name": "action", "value": "populate_ncsm_r"});
-            },
-            "aoColumns": columns_ncsm_r,
-            "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
-        });
-*/
+        /*
+         $('#table_ncsm_r').dataTable({
+         "bSortClasses": false,
+         "bProcessing": true,
+         "bDestroy": true,
+         "sPaginationType": "full_numbers",
+         "sAjaxSource": 'ajax/dashboard.php',
+         "fnServerParams": function(aoData) {
+         aoData.push({"name": "action", "value": "populate_ncsm_r"});
+         },
+         "aoColumns": columns_ncsm_r,
+         "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
+         });
+         */
 
     };
 
@@ -155,8 +155,8 @@ $(function() {
                     }
                 })
                 .find('[data-toggle~="tooltip"]').tooltip({container: 'body'});
-        localStorage.v6=v6;
-        localStorage.v3=v3;
+        localStorage.v6 = v6;
+        localStorage.v3 = v3;
         consultasMais();
     }, "json");
 
@@ -191,6 +191,7 @@ $(function() {
                 data = $(this).data(),
                 en = btoa(data.cid),
                 rs = btoa(data.rid);
+        $(this).tooltip('destroy');
         $.history.push("view/consulta.html?id=" + encodeURIComponent(en) + "&rs=" + encodeURIComponent(rs));
     });
 
