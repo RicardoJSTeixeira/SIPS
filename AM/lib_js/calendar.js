@@ -784,7 +784,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
     var config = $.extend(true, this.config, data.config);
     this.calendar = selector.fullCalendar(config);
 
-    if (me.user.user_level > 5) {
+    if (me.user.user_level > 4) {
         me.modal_ext.find("#btn_change").removeClass("hide");
     }
 };
