@@ -121,7 +121,7 @@ var requests = function(basic_path, options_ext) {
         },
         get_to_datatable: function(am_zone) {
             var apoio_markting_table = am_zone.dataTable({
-                "aaSorting": [[2, "desc"]],
+                 "aaSorting": [[18, "asc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -131,7 +131,7 @@ var requests = function(basic_path, options_ext) {
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"});
                 },
-                "aoColumns": [{"sTitle": "ID","sWidth": "35px"}, {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial", "sWidth": "65px"}, {"sTitle": "Data final", "sWidth": "65px"}, {"sTitle": "Horario", "sWidth": "46px"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Pub.", "sWidth": "1px"}, {"sTitle": "Cod."}, {"sTitle": "Total", "sWidth": "31px"}, {"sTitle": "c/ Perda", "sWidth": "36px"}, {"sTitle": "Vendas", "sWidth": "46px"}, {"sTitle": "Valor", "sWidth": "33px"}, {"sTitle": "Estado", "sWidth": "63px"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
+                "aoColumns": [{"sTitle": "ID", "sWidth": "35px"}, {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial", "sWidth": "65px"}, {"sTitle": "Data final", "sWidth": "65px"}, {"sTitle": "Horario", "sWidth": "46px"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Pub.", "sWidth": "1px"}, {"sTitle": "Cod."}, {"sTitle": "Total", "sWidth": "31px"}, {"sTitle": "c/ Perda", "sWidth": "36px"}, {"sTitle": "Vendas", "sWidth": "46px"}, {"sTitle": "Valor", "sWidth": "33px"}, {"sTitle": "Estado", "sWidth": "63px"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "sort", "bVisible": false}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_AM').click(function(event) {
@@ -230,7 +230,7 @@ var requests = function(basic_path, options_ext) {
                 //Adiciona Linhas
                 rf_zone.find("#button_rf_table_add_line").click(function(e) {
                     e.preventDefault();
-                    rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required] linha_data span' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'  data-prompt-position='topRight:120'></td><td><input class='validate[required] linha_ocorrencia span' type='text' name='rf_ocorr" + rfinput_count + "'></td><td><input class='validate[required] linha_km text-right ' type='text' value='0' maxlength='6' name='rf_km" + rfinput_count + "' size='16'/></td><td><button class='btn btn-danger button_rf_table_remove_line icon-alone'><i class='icon-minus'></i></button></td></tr>");
+                    rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime  linha_data span' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'  data-prompt-position='topRight:120'></td><td><input class='linha_ocorrencia span' type='text' name='rf_ocorr" + rfinput_count + "'></td><td><input class='linha_km text-right ' type='text' value='0' maxlength='6' name='rf_km" + rfinput_count + "' size='16'/></td><td><button class='btn btn-danger button_rf_table_remove_line icon-alone'><i class='icon-minus'></i></button></td></tr>");
                     rf_zone.find("#rf_datetime" + rfinput_count).datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
                     rf_zone.find("[name='rf_km" + rfinput_count + "']").autoNumeric('init', {mDec: '0'});
                     $("[name='rf_ocorr" + rfinput_count + "']").autocomplete({source: availableTags});
@@ -244,26 +244,26 @@ var requests = function(basic_path, options_ext) {
                 //SUBMIT
                 rf_zone.find("#relatorio_frota_form").submit(function(e) {
                     e.preventDefault();
+                    var can_submit = 1;
                     if (rf_zone.find("#relatorio_frota_form").validationEngine("validate")) {
                         if (rf_zone.find("#table_tbody_rf tr").length) {
-                            var soma = 0;
+
                             $.each(rf_zone.find("#table_tbody_rf").find(".linha_km"), function() {
-                                soma = soma + ~~$(this).autoNumeric('get');
+
+                                if (~~$(this).autoNumeric('get') > ~~rf_zone.find("#input_km").autoNumeric('get')) {
+                                    $.jGrowl("O número de Kms numa das ocorrências é superior aos Kms totais no relatório");
+                                    can_submit = 0;
+                                }
                             });
-                            if (!soma) {
-                                $.jGrowl("Insira pelo menos uma ocorrência ");
-                                return false;
-                            }
-                            if (soma > ~~rf_zone.find("#input_km").autoNumeric('get')) {
-                                $.jGrowl("O número de Kms nas ocorrência é superior aos Kms totais no relatório");
-                            }
-                            else {
+
+                            if (can_submit) {
                                 var ocorrencias_array = [];
                                 $.each(rf_zone.find("#table_tbody_rf").find("tr"), function() {
-                                    ocorrencias_array.push({
-                                        data: $(this).find(".linha_data").val(),
-                                        ocorrencia: $(this).find(".linha_ocorrencia").val(),
-                                        km: $(this).find(".linha_km").autoNumeric('get')});
+                                    if ($(this).find(".linha_data").val().length && $(this).find(".linha_ocorrencia").val().length && $(this).find(".linha_km").val().length)
+                                        ocorrencias_array.push({
+                                            data: $(this).find(".linha_data").val(),
+                                            ocorrencia: $(this).find(".linha_ocorrencia").val(),
+                                            km: $(this).find(".linha_km").autoNumeric('get')});
                                 });
                                 $("#relatorio_frota_form :input").attr('readonly', true);
                                 $.msg();
@@ -283,6 +283,7 @@ var requests = function(basic_path, options_ext) {
                                     $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                                     $.msg('unblock', 5000);
                                 });
+
                             }
                         }
                         else
@@ -293,7 +294,7 @@ var requests = function(basic_path, options_ext) {
         },
         get_to_datatable: function(rf_zone) {
             var relatorio_frota_table = rf_zone.dataTable({
-                "aaSorting": [[2, "desc"]],
+                "aaSorting": [[10, "asc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -303,7 +304,7 @@ var requests = function(basic_path, options_ext) {
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "get_relatorio_frota_to_datatable"});
                 },
-                "aoColumns": [{"sTitle": "ID","sWidth": "35px"}, {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data"}, {"sTitle": "Matrícula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrências", "sWidth": "80px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
+                "aoColumns": [{"sTitle": "ID", "sWidth": "35px"}, {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data"}, {"sTitle": "Matrícula"}, {"sTitle": "Km"}, {"sTitle": "Viatura"}, {"sTitle": "Observações"}, {"sTitle": "Ocorrências", "sWidth": "80px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "sort", "bVisible": false}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_F').click(function(event) {
@@ -428,8 +429,9 @@ var requests = function(basic_path, options_ext) {
             });
         },
         get_to_datatable: function(rc_zone) {
+            
             var relatorio_correio_table = rc_zone.dataTable({
-                "aaSorting": [[3, "desc"]],
+                 "aaSorting": [[7, "asc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -440,7 +442,7 @@ var requests = function(basic_path, options_ext) {
                     aoData.push({"name": "action", "value": "get_relatorio_correio_to_datatable"}
                     );
                 },
-                "aoColumns": [{"sTitle": "ID","sWidth": "35px"}, {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento", "sWidth": "70px"}, {"sTitle": "Observações"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
+                "aoColumns": [{"sTitle": "ID", "sWidth": "35px"}, {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Carta Porte"}, {"sTitle": "Data Envio"}, {"sTitle": "Documento", "sWidth": "70px"}, {"sTitle": "Observações"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "sort", "bVisible": false}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_C').click(function(event) {
@@ -639,7 +641,7 @@ var requests = function(basic_path, options_ext) {
         },
         get_to_datatable: function(rms_zone) {
             var relatorio_stock_table = rms_zone.dataTable({
-                "aaSorting": [[2, "desc"]],
+                 "aaSorting": [[6, "asc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -650,7 +652,7 @@ var requests = function(basic_path, options_ext) {
                     aoData.push({"name": "action", "value": "get_relatorio_stock_to_datatable"}
                     );
                 },
-                "aoColumns": [{"sTitle": "ID","sWidth": "35px"}, {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
+                "aoColumns": [{"sTitle": "ID", "sWidth": "35px"}, {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "sort", "bVisible": false}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_S').click(function(event) {
@@ -849,7 +851,7 @@ var requests = function(basic_path, options_ext) {
         },
         get_to_datatable: function(rmovs) {
             var relatorio_moviment_stock_table = rmovs.dataTable({
-                "aaSorting": [[2, "desc"]],
+                 "aaSorting": [[6, "asc"]],
                 "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
@@ -860,7 +862,7 @@ var requests = function(basic_path, options_ext) {
                     aoData.push({"name": "action", "value": "get_relatorio_movimentacao_to_datatable"}
                     );
                 },
-                "aoColumns": [{"sTitle": "ID","sWidth": "35px"}, {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}],
+                "aoColumns": [{"sTitle": "ID", "sWidth": "35px"}, {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data", "sWidth": "75px"}, {"sTitle": "Produtos", "sWidth": "75px"}, {"sTitle": "Estado"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "sort", "bVisible": false}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_MS').click(function(event) {

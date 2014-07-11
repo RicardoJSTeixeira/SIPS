@@ -50,6 +50,14 @@ class apoio_marketing extends requests_class {
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            //sorting de colunas
+            if ($this->user_level > 5) {
+                //Admin
+                $row[18] = ($row[16] == 0 ? 0 : ($row[16] == 1 ? 2 : 1));
+            } else {
+                //User
+                $row[18] = ($row[16] == 0 ? 1 : ($row[16] == 1 ? 2 : 0));
+            }
 
             $row[5] = "<div> <button class='btn icon-alone ver_horario' data-apoio_marketing_id='$row[0]'><i class='icon-time'></i></button></div>";
             $row[10] = "<div> <button class='btn icon-alone ver_local_publicidade' data-apoio_marketing_id='$row[0]' ><i class='icon-home'></i></button></div>";
@@ -179,6 +187,16 @@ class correio extends requests_class {
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+
+            //sorting de colunas
+            if ($this->user_level > 5) {
+                //Admin
+                $row[8] = ($row[6] == 0 ? 0 : ($row[6] == 1 ? 2 : 1));
+            } else {
+                //User
+                $row[8] = ($row[6] == 0 ? 1 : ($row[6] == 1 ? 2 : 0));
+            }
+
             $approved = $row[6] == 1 ? 1 : 0;
             if ($row[4]) {
                 $row[4] = "<button data-anexo_id = '$row[0]' data-approved = '$approved' class = 'btn ver_anexo_correio icon-alone'><i class = 'icon-folder-close'></i></button>";
@@ -230,7 +248,6 @@ class correio extends requests_class {
                 $anexos[] = $value;
             }
         }
-
         return $anexos;
     }
 
@@ -265,12 +282,19 @@ class frota extends requests_class {
     public function get_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
-        $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status from spice_report_frota $filter";
+        $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status from spice_report_frota $filter ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
 
+            if ($this->user_level > 5) {
+                //Admin
+                $row[10] = ($row[8] == 0 ? 0 : ($row[8] == 1 ? 2 : 1));
+            } else {
+                //User
+                $row[10] = ($row[8] == 0 ? 1 : ($row[8] == 1 ? 2 : 0));
+            }
             switch ($row[8]) {
                 case "0":
                     $row[9] = "<div class = 'btn-group'><button class = 'btn accept_report_frota btn-success icon-alone' value = '$row[0]'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_frota btn-warning icon-alone' value = '$row[0]'><i class = 'icon-remove'></i></button></div>";
@@ -351,11 +375,20 @@ class mensal_stock extends requests_class {
     public function get_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
-        $query = "SELECT id, user, data, produtos, status from spice_report_stock $filter";
+        $query = "SELECT id, user, data, produtos, status from spice_report_stock $filter  ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            //sorting de colunas
+            if ($this->user_level > 5) {
+                //Admin
+                $row[6] = ($row[4] == 0 ? 0 : ($row[4] == 1 ? 2 : 1));
+            } else {
+                //User
+                $row[6] = ($row[4] == 0 ? 1 : ($row[4] == 1 ? 2 : 0));
+            }
+
             $approved = $row[4] == "1" ? 1 : 0;
             switch ($row[4]) {
                 case "0":
@@ -442,11 +475,19 @@ class movimentacao_stock extends requests_class {
     public function get_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->user_level < 5 ) ? ' where user like "' . $this->user_id . '" ' : '';
-        $query = "SELECT id, user, data, produtos, status from spice_report_movimentacao $filter";
+        $query = "SELECT id, user, data, produtos, status from spice_report_movimentacao $filter ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            //sorting de colunas
+            if ($this->user_level > 5) {
+                //Admin
+                $row[6] = ($row[4] == 0 ? 0 : ($row[4] == 1 ? 2 : 1));
+            } else {
+                //User
+                $row[6] = ($row[4] == 0 ? 1 : ($row[4] == 1 ? 2 : 0));
+            }
             $approved = $row[4] == "1" ? 1 : 0;
             switch ($row[4]) {
                 case "0":

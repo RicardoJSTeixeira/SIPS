@@ -7,7 +7,7 @@ $(function() {
         modals.client = $("#calendar_client_modal");
         modals.special = $("#calendar_special_event");
         modals.mkt = $("#calendar_mkt");
-
+        modals.acf = $("#calendar_acf");
         data.config.height = "488";
 
         sch = new calendar($("#calendar_day"), data, modals, $('#ext-events'), {}, user);

@@ -7,6 +7,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
     this.resource = "all";
     this.modals = modals;
     this.modal_ext = modals.client;
+
     this.modal_special = modals.special;
     this.calendar = undefined;
     this.config = {
@@ -59,6 +60,34 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 });
                 return false;
             }
+            if (calEvent.type_text == "Fitting" || calEvent.type_text == "Assistência" || calEvent.type_text == "Consulta Q") {
+                me.modals.acf.find("#save_acf").data("reservation_data", calEvent);
+                $.msg();
+                $.post("/AM/ajax/calendar.php", {
+                    action: "get_reservation_obs",
+                    id_reservation: calEvent.id
+                },
+                function(data) {
+
+                    if (data.obs)                    {
+                        me.modals.acf.find("#obs_acf").prop("disabled", true).end().find("#save_acf").hide();
+                        me.modals.acf.find("#obs_acf").val(data.obs);
+                    }
+                    else                    {
+                        me.modals.acf.find("#obs_acf").val("").prop("disabled", false).end().find("#save_acf").show();
+                    }
+                    $.msg('unblock');
+                },
+                        "json").fail(function(data) {
+                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                    $.msg('unblock', 5000);
+                });
+
+
+                me.modals.acf.modal("show");
+                return false;
+            }
+
             if (calEvent.bloqueio && calEvent.system) {
                 me.openMkt(calEvent);
             }
@@ -169,19 +198,15 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         if (position.top < 110) {
                             return "bottom";
                         }
-
                         if (me.calendar.fullCalendar('getView').name === "agendaDay") {
                             return "top";
                         }
-
                         if (position.left > 515) {
                             return "left";
                         }
-
                         if (position.left < 515) {
                             return "right";
                         }
-
                         return "top";
                     },
                     html: true,
@@ -608,10 +633,31 @@ var calendar = function(selector, data, modals, ext, client, user) {
                     $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
                     $.msg('unblock', 5000);
                 });
-                ;
+
             }
         })
                 .find("input:not(:eq(0))").autotab('number');
+
+
+        me.modals.acf.find("#save_acf").click(function() {
+            var that = $(this);
+            $.msg();
+            $.post("ajax/calendar.php", {
+                action: 'set_reservation_obs',
+                obs: me.modals.acf.find("#obs_acf").val(),
+                id_reservation: ~~that.data("reservation_data").id
+            }, function() {
+                me.modals.acf.find("#obs_acf").val("");
+                me.modals.acf.modal("hide");
+                that.data("reservation_data").closed = 1;
+                me.calendar.fullCalendar('updateEvent', this);
+                $.msg('unblock');
+            }, 'json').fail(function(data) {
+                $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                $.msg('unblock', 5000);
+            });
+        })
+                .end();
 
     };
     this.openClient = function(calEvent) {

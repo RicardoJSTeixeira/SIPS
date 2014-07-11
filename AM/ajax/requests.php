@@ -33,6 +33,9 @@ $relatorio_movimentacao_stock = new movimentacao_stock($db, $userID->user_level,
 $alert = new alerts($db, $userID->username);
 $log = new Logger($db, $user->getUser());
 switch ($action) {
+
+
+
     //ADDs
     case "criar_relatorio_frota":
         echo json_encode($relatorio_frota->create($data, $matricula, $km, $viatura, $ocorrencias, $comments));
@@ -370,7 +373,7 @@ $comments
 
     case "decline_report_movimentacao":
         $result = $relatorio_movimentacao_stock->decline($id);
-            
+
         if ($result) {
             if ($message) {
                 $message = "Motivo: " . $message;

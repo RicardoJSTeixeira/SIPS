@@ -9,6 +9,7 @@ $(function() {
         modals.client = $("#calendar_client_modal");
         modals.special = $("#calendar_special_event");
         modals.mkt = $("#calendar_mkt");
+          modals.acf = $("#calendar_acf");
 
         function startC(data, client) {
             sch = new calendar($("#calendar"), data, modals, $('#external-events'), client, user);

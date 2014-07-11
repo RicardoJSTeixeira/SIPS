@@ -342,6 +342,7 @@ var requisition = function(geral_path, options_ext) {
 
     function get_encomendas_atuais(table_path) {
         var Table_view_requisition = table_path.dataTable({
+            "aaSorting": [[11, "asc"]],
             "bSortClasses": false,
             "bProcessing": true,
             "bDestroy": true,
@@ -386,6 +387,9 @@ var requisition = function(geral_path, options_ext) {
                     "sTitle": "Opções",
                     "sWidth": "60px",
                     "bVisible": SpiceU.user_level > 5
+                }, {
+                    "sTitle": "sort",
+                    "bVisible": false
                 }],
             "oLanguage": {
                 "sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"
