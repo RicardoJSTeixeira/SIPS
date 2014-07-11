@@ -74,13 +74,13 @@ $(function() {
                         var trs = "";
                         $.each(clients, function() {
                             trs += "<tr>\n\
-                                        <td>" + this.name + "</td>\n\
-                                        <td>" + this.phone + "</td>\n\
-                                        <td>" + this.nif + "</td>\n\
                                         <td>" + this.refClient + "</td>\n\
+                                        <td>" + this.nif + "</td>\n\
+                                        <td>" + this.name + "</td>\n\
                                         <td>" + this.address1 + "</td>\n\
                                         <td>" + this.postal_code + "</td>\n\
                                         <td>" + this.city + "</td>\n\
+                                        <td>" + this.phone + "</td>\n\
                                         <td>" + this.date_of_birth + "\n\
                                             <div class='view-button'>\n\
                                                 <button class='btn btn-mini icon-alone ver_cliente' data-lead_id='" + this.id + "' title='Ver Cliente'><i class='icon-edit'></i></button>\n\
@@ -94,13 +94,13 @@ $(function() {
                                         <table class='table table-mod table-bordered table-striped table-condensed'>\n\
                                             <thead>\n\
                                                 <tr>\n\
-                                                    <td>Nome</td>\n\
-                                                    <td>Nº</td>\n\
-                                                    <td>Nif</td>\n\
                                                     <td>Ref. Cliente</td>\n\
-                                                    <td>Rua</td>\n\
+                                                    <td>Nif</td>\n\
+                                                    <td>Nome</td>\n\
+                                                    <td>Morada</td>\n\
                                                     <td>Cod. Postal</td>\n\
                                                     <td>Localidade</td>\n\
+                                                    <td>Telefone</td>\n\
                                                     <td style='width:170px';>Data de Nasc.</td>\n\
                                                </tr>\n\
                                             </thead>\n\
