@@ -135,7 +135,7 @@ $(function()
                         .find("#3_pessoa_master_div")
                         .find(":input").prop("disabled", true).end().end()
                         .find("#options_div")
-                        .find("#terminar_consulta_no_exame").hide().end()
+                        .find("#actions_exame").hide().end()
                         .find("#wconsulta-fechada").show();
             }
         });
@@ -162,7 +162,7 @@ $(function()
                 .find("#no_exam_div").show().end()
                 .find("#terminar_consulta_div").show().end()
                 .find("#inicial_option_div").hide().end()
-                .find("#terminar_consulta_no_exame").hide();
+                .find("#actions_exame").hide();
     });
 
     $("#main_consulta_div #pa_yes").click(function() {
@@ -172,7 +172,7 @@ $(function()
                 .find("#audiograma_main_div").show().end()
                 .find("#script_main_div").show().end()
                 .find("#first_info_div").hide().end()
-                .find("#terminar_consulta_no_exame").show().end()
+                .find("#actions_exame").show().end()
                 .find("#validate_audio_script_div").show().end()
                 .find("#validate_audio_script_save_div").show().end()
                 .find("#first_info_div").hide();
@@ -346,7 +346,7 @@ $(function()
         $("#main_consulta_div")
                 .find("#validate_audio_script_save_div").hide().end()
                 .find("#validate_audio_script_div").hide().end()
-                .find("#terminar_consulta_no_exame").hide().end()
+                .find("#actions_exame").hide().end()
                 .find("#terminar_consulta_div").show().end()
                 .find("#script_main_div").hide().end()
                 .find("#audiograma_main_div").hide().end()
