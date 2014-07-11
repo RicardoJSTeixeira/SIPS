@@ -60,36 +60,14 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 });
                 return false;
             }
-            if (calEvent.type_text == "Fitting" || calEvent.type_text == "Assistência" || calEvent.type_text == "Consulta Q") {
-                me.modals.acf.find("#save_acf").data("reservation_data", calEvent);
-                $.msg();
-                $.post("/AM/ajax/calendar.php", {
-                    action: "get_reservation_obs",
-                    id_reservation: calEvent.id
-                },
-                function(data) {
-
-                    if (data.obs)                    {
-                        me.modals.acf.find("#obs_acf").prop("disabled", true).end().find("#save_acf").hide();
-                        me.modals.acf.find("#obs_acf").val(data.obs);
-                    }
-                    else                    {
-                        me.modals.acf.find("#obs_acf").val("").prop("disabled", false).end().find("#save_acf").show();
-                    }
-                    $.msg('unblock');
-                },
-                        "json").fail(function(data) {
-                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                    $.msg('unblock', 5000);
-                });
-
-
-                me.modals.acf.modal("show");
-                return false;
+            if (calEvent.type_text === "Fitting" || calEvent.type_text === "Assistência" || calEvent.type_text === "Consulta Q") {
+                me.openACF(calEvent);
+                return true;
             }
 
             if (calEvent.bloqueio && calEvent.system) {
                 me.openMkt(calEvent);
+                return true;
             }
             if (calEvent.bloqueio || calEvent.del) {
                 return false;
@@ -237,7 +215,14 @@ var calendar = function(selector, data, modals, ext, client, user) {
                                 }) : "";
                             }))
                     .append($("<span>", {
-                        text: " " + event.obs,
+                        text: (function(obs) {
+                            try {
+                                return JSON.parse(obs).obs;
+                            }
+                            catch (e) {
+                                return obs;
+                            }
+                        })(event.obs),
                         class: "fc-event-obs"
                     }));
 
@@ -604,8 +589,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                     ;
                 });
 
-        me.modals.mkt
-                .find("form").submit(function(e) {
+        me.modals.mkt.find("form").submit(function(e) {
             e.preventDefault();
             if (me.modals.mkt.find("form").validationEngine('validate')) {
                 $("#save_mkt").prop('disabled', true);
@@ -641,6 +625,9 @@ var calendar = function(selector, data, modals, ext, client, user) {
 
         me.modals.acf.find("#save_acf").click(function() {
             var that = $(this);
+            if (me.modals.acf.find("#obs_acf").validationEngine('validate'))
+                return false;
+
             $.msg();
             $.post("ajax/calendar.php", {
                 action: 'set_reservation_obs',
@@ -774,6 +761,39 @@ var calendar = function(selector, data, modals, ext, client, user) {
             $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
             $.msg('unblock', 5000);
         });
+    };
+    this.openACF = function(calEvent) {
+        me.modals.acf
+                .find("#save_acf")
+                .data("reservation_data", calEvent)
+                .end()
+                .find("h3")
+                .text(calEvent.type_text + ' ' + calEvent.client_name)
+                .end()
+                .find("#obs_acf")
+                .validationEngine('hide');
+
+        $.msg();
+        $.post("/AM/ajax/calendar.php", {
+            action: "get_reservation_obs",
+            id_reservation: calEvent.id
+        },
+        function(data) {
+            if (data.obs) {
+                me.modals.acf.find("#obs_acf").prop("disabled", true).end().find("#save_acf").hide();
+                me.modals.acf.find("#obs_acf").val(data.obs);
+            }
+            else {
+                me.modals.acf.find("#obs_acf").val("").prop("disabled", false).end().find("#save_acf").show();
+            }
+            $.msg('unblock');
+        },
+                "json").fail(function(data) {
+            $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+            $.msg('unblock', 5000);
+        });
+
+        me.modals.acf.modal("show");
     };
     this.destroy = function() {
         this.calendar.fullCalendar('destroy');
