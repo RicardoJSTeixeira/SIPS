@@ -62,6 +62,28 @@ var calendar = function(selector, data, modals, ext, client, user) {
             }
             if (calEvent.type_text == "Fitting" || calEvent.type_text == "Assistência" || calEvent.type_text == "Consulta Q") {
                 me.modals.acf.find("#save_acf").data("reservation_data", calEvent);
+                $.msg();
+                $.post("/AM/ajax/calendar.php", {
+                    action: "get_reservation_obs",
+                    id_reservation: calEvent.id
+                },
+                function(data) {
+
+                    if (data.obs)                    {
+                        me.modals.acf.find("#obs_acf").prop("disabled", true).end().find("#save_acf").hide();
+                        me.modals.acf.find("#obs_acf").val(data.obs);
+                    }
+                    else                    {
+                        me.modals.acf.find("#obs_acf").val("").prop("disabled", false).end().find("#save_acf").show();
+                    }
+                    $.msg('unblock');
+                },
+                        "json").fail(function(data) {
+                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                    $.msg('unblock', 5000);
+                });
+
+
                 me.modals.acf.modal("show");
                 return false;
             }

@@ -230,8 +230,18 @@ Class Calendars {
 
     public function set_obs($obs, $id_reservation) {
         $query = "Update sips_sd_reservations set obs = :obs, `has_accessories`=1 where id_reservation = :id_reservation";
-                    $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":obs" => $obs, ":id_reservation" => $id_reservation));
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array(":obs" => json_encode(array("date" => date('Y-m-d H:i:s'), "obs" => $obs)), ":id_reservation" => $id_reservation));
+    }
+
+    public function get_obs($id_reservation) {
+        $query = "Select obs from sips_sd_reservations  where id_reservation = :id_reservation";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":id_reservation" => $id_reservation));
+        $result = $stmt->fetch(PDO::FETCH_OBJ);
+        $result = json_decode($result->obs);
+        $obs = array("date" => $result->date, "obs" => $result->obs);
+        return $obs;
     }
 
 }

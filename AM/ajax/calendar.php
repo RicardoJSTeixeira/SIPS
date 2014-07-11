@@ -35,8 +35,14 @@ switch (filter_var($_POST["action"])) {
         $obs = filter_var($_POST["obs"]);
         $id_reservation = filter_var($_POST["id_reservation"]);
         $calendar = new Calendars($db);
-    
+
         echo json_encode($calendar->set_obs($obs, $id_reservation));
+        break;
+
+    case "get_reservation_obs":
+        $id_reservation = filter_var($_POST["id_reservation"]);
+        $calendar = new Calendars($db);
+        echo json_encode($calendar->get_obs($id_reservation));
         break;
 
     case "dashboardInit":
