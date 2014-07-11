@@ -236,6 +236,18 @@ $(function()
                 tipo: $("#main_consulta_div input[name=tp_vd]:checked").val()
             };
 
+            if ($("#ca_s").is(":checked")) {
+                if (!$("#3_pessoa_input").val().length) {
+                    $.jGrowl("Certifique-se que preenche correctamente o nome da 3ª pessoa", {life: 4000});
+                    scrollTop();
+                    return false;
+                }
+            } else if (!$("[name=ca]:checked").length) {
+                $.jGrowl("Preencha correctamente se há 3ª pessoa", {life: 4000});
+                scrollTop();
+                return false;
+            }
+
             if (consult_status === "no_exam") {//NÂO HA EXAME
                 if ($("#main_consulta_div #no_exam_div input[name='ne']:checked").length)
                 {
@@ -251,17 +263,6 @@ $(function()
                 }
             }
             else {//HA EXAME
-                if ($("#ca_s").is(":checked")) {
-                    if (!$("#3_pessoa_input").val().length) {
-                        $.jGrowl("Certifique-se que preenche correctamente o nome da 3ª pessoa", {life: 4000});
-                        scrollTop();
-                        return false;
-                    }
-                } else if (!$("[name=ca]:checked").length) {
-                    $.jGrowl("Preencha correctamente se há 3ª pessoa", {life: 4000});
-                    scrollTop();
-                    return false;
-                }
                 script.validate_manual(
                         function() {
                             consult_audiogra.validate(function() {
@@ -355,7 +356,7 @@ $(function()
                 .find("#exam_outcome_div").hide().end();
     });
 
- 
+
 
     $(".onlynumber").autotab("numeric");
 
