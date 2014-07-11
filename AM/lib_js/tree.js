@@ -25,13 +25,7 @@ var tree = function(selector, data, type_encomenda, parent_id, produtos) {
             }
             UL.appendTo(me.selector);
         });
-        $(me.selector + " label, " + me.selector + " label > span ," + me.selector + " input[type=checkbox]").click(function(e) {
-            e.stopPropagation();
-        });
-        $(me.selector + " label, " + me.selector + " label > span ," + me.selector + " input[type=number]").click(function(e) {
-            e.stopPropagation();
-        });
-        $(me.selector + " label, " + me.selector + " label > span ," + me.selector + " select").click(function(e) {
+        $(me.selector + " label, " + me.selector + " label > span ," + me.selector + " input[type=checkbox]," + me.selector + " input[type=number]," + me.selector + " select").click(function(e) {
             e.stopPropagation();
         });
         startPlugin();
