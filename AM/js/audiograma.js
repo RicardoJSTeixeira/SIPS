@@ -29,17 +29,6 @@ var audiograma = function(lead_id) {
         //APRESENTA SO VALORES CALCULADOS DE CADA OUVIDO
 
 
-
-
-
-
-
-
-
-
-
-
-
 //FALTA TIRAR O TOOLTIP DO CO DIREITO E CO ESQUERDA
 
 
@@ -199,6 +188,7 @@ var audiograma = function(lead_id) {
                 me.adg.find("#" + this.name).val(this.value);
             });
         });
+        me.calculate();
         $.msg('unblock');
     }, "json").fail(function(data) {
         $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
