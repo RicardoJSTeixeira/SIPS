@@ -1,32 +1,102 @@
 $(function() {
 
     $.msg();
-    $.post("ajax/timeline.php", {action: "get_log_history"}, function(data) {
+    $.post("ajax/timeline.php", {action: "get"}, function(data) {
 
         if (data)
         {
             var log = "";
             var inverted = 0;
-            $.each(data, function()
-            {
-                console.log(this);
+            var class_badge = "timeline-badge";
+            var class_badge_icon = "icon-asterisk";
+            var info = [];
+            $.each(data, function() {
+
+
+
+//fazer limite de tempo e sections
+//admin abo, que so ve produtos e stuff minor
+
+
+
+
+                class_badge = "timeline-badge";
+                class_badge_icon = "icon-asterisk";
+            
+
+                switch (this.type)
+                {
+                    case "Update":
+                        class_badge += "  info";
+                        class_badge_icon = "icon-edit";
+                        inverted = 1;
+                        break;
+
+                    case "Remove":
+                        class_badge += "  danger";
+                        class_badge_icon = "icon-remove";
+                        inverted = 0;
+                        break;
+
+                    case "Insert":
+                        class_badge += "  success";
+                        class_badge_icon = "icon-plus";
+                        inverted = 0;
+                        break;
+                    default:
+                        inverted = 1;
+                        break;
+                }
+
+
+
+
+                info = [];
+                try {
+                    var a = JSON.parse(this.note);
+                    createList(a);
+                }
+                catch (e) {
+                    info.push('<ul>');
+                    info.push('<li>' + this.note);
+                    info.push('</li>');
+                    info.push('</ul>');
+                }
+
+
+                function createList(arr) {
+                    info.push('<ul>');
+                    $.each(arr, function(i, val) {
+                        if (i !== "pass")
+                        {
+                            info.push('<li>' + i.toString().toUpperCase() + " &#x27a1; " + val);
+                        }
+                        if (typeof val === 'object') {
+                            createList(val);
+                        }
+                        info.push('</li>');
+                    });
+                    info.push('</ul>');
+                }
+
+
+
+
                 log = ($("<li>", {class: inverted ? "timeline-inverted" : ""})
-                        .append($("<div>", {class: "timeline-badge info"})
-                                .append($("<i>", {class: "glyphicon glyphicon-hand-left"}))
+                        .append($("<div>", {class: class_badge})
+                                .append($("<i>", {class: class_badge_icon}))
                                 )
                         .append($("<div>", {class: "timeline-panel"})
                                 .append($("<div>", {class: "timeline-heading"})
-                                        .append($("<h4>", {class: "timeline-title"}).text(this.type + "-" + this.section))
+                                        .append($("<h4>", {class: "timeline-title"}).text(this.type + " - " + this.section + " - " + this.record_id))
+                                        .append($("<h7>").text(" " + moment(this.event_date, "YYYY-MM-DD HH:mm:ss").fromNow() + " - " + this.event_date).prepend($("<i>", {class: "icon-time"})))
                                         )
                                 .append($("<div>", {class: "timeline-body"})
-                                        .append($("<p>").text("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                                        .append($("<p>").html(info)
                                                 )
                                         ))
                         );
-                if (inverted)
-                    inverted = 0;
-                else
-                    inverted = 1;
+
 
                 $("#timeline_main").append(log);
             })
@@ -41,6 +111,7 @@ $(function() {
 
 
 })
+
 
 /*
  

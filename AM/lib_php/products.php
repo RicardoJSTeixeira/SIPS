@@ -37,6 +37,12 @@ Class products {
         return $output;
     }
 
+    public function get_product_name($id) {
+        $stmt = $this->_db->prepare("select name  from spice_product where id=:id");
+        $stmt->execute(array(":id" => $id));
+        return $stmt->fetch(PDO::FETCH_OBJ)->name;
+    }
+
     public function get_products($id = null) {
         $relations = array();
         $stmt = $this->_db->prepare("select parent, child from spice_product_assoc");
@@ -70,14 +76,14 @@ Class products {
 
         foreach ($output as &$value) {
 
-          //  $value["parent"] = $this->buildTree_parent($output, $value["id"]);
+            //  $value["parent"] = $this->buildTree_parent($output, $value["id"]);
             $value["children"] = $this->buildTree_child($output, $value["id"]);
         }
         foreach ($output as &$value) {
             $value["parent_level"] = $this->get_level_parent($value) - 1;
             $value["children_level"] = $this->get_level_child($value) - 1;
         }
- 
+
         if ($id) {
             return $output[$id];
         } else {
@@ -104,7 +110,7 @@ Class products {
         $branch = array();
         foreach ($elements as $element) {
             if (in_array($childrentId, $element["children_id"])) {
-                $branch[] = array("id"=>$element["id"],"parent" => $this->buildTree_parent($elements, $element["id"]));
+                $branch[] = array("id" => $element["id"], "parent" => $this->buildTree_parent($elements, $element["id"]));
             }
         }
         return $branch;
@@ -222,7 +228,8 @@ class product extends products {
 
     public function add_promotion($active, $highlight, $data_inicio, $data_fim) {
         $stmt = $this->_db->prepare("insert into spice_promocao ( `product_id`,   `highlight`, `active`, `data_inicio`,`data_fim`) values (:product_id, :highlight,:active,:data_inicio,:data_fim) ");
-        return $stmt->execute(array(":product_id" => $this->_id, ":highlight" => $highlight == "true" ? 1 : 0, ":active" => $active == "true" ? 1 : 0, ":data_inicio" => $data_inicio, ":data_fim" => $data_fim));
+        $stmt->execute(array(":product_id" => $this->_id, ":highlight" => $highlight == "true" ? 1 : 0, ":active" => $active == "true" ? 1 : 0, ":data_inicio" => $data_inicio, ":data_fim" => $data_fim));
+        return $this->_db->lastInsertId();
     }
 
     public function remove_promotion($id_promotion) {
