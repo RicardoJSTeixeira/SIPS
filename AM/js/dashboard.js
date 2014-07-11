@@ -191,6 +191,7 @@ $(function() {
                 data = $(this).data(),
                 en = btoa(data.cid),
                 rs = btoa(data.rid);
+        $(this).tooltip('destroy');
         $.history.push("view/consulta.html?id=" + encodeURIComponent(en) + "&rs=" + encodeURIComponent(rs));
     });
 

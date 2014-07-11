@@ -117,9 +117,12 @@ var calendar = function(selector, data, modals, ext, client, user) {
             cEO.allDay = allDay;
 
             if (!me.calendar.fullCalendar('getView').name.match("agenda")) {
+                $.msg('unblock');
                 return false;
             }
             if (date < new Date().getTime()) {
+                $.msg('replace', 'Não é permitido marcar consultas anteriores ao dia actual.');
+                $.msg('unblock', 3000);
                 return false;
             }
             var exist = false;
@@ -134,10 +137,8 @@ var calendar = function(selector, data, modals, ext, client, user) {
                                 ((moment(this.start).unix() <= cEO.start) && (moment(this.end).unix() >= cEO.end))
                                 ) {
                             exist = true;
-                            $.msg('unblock');
-                            $.jGrowl("Não é permitido marcações concorrentes.", {
-                                sticky: 4000
-                            });
+                            $.msg('replace', 'Não é permitido marcações concorrentes.');
+                            $.msg('unblock', 3000);
                             return false;
                         }
                     });
