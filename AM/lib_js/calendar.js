@@ -426,13 +426,12 @@ var calendar = function(selector, data, modals, ext, client, user) {
                     content: '<form  id="no_consult_confirm">\n\
                                 <select id="select_no_consult" class="validate[required]">\n\
                                     <option value="">Seleccione um opção</option>\n\
+                                    <option value="NOSHOW">No Show</option>\n\
                                     <option value="DEST">Desistiu</option>\n\
                                     <option value="FAL">Faleceu</option>\n\
                                     <option value="TINV">Telefone Invalido</option>\n\
-                                    <option value="NOSHOW">No Show</option>\n\
                                     <option value="NAT">Ninguém em casa</option>\n\
                                     <option value="MOR">Morada Errada</option>\n\
-                                    <option value="NTEC">Técnico não foi</option>\n\
                                 </select>\n\
                                 <button class="btn btn-primary">Fechar</button>\n\
                             </form>',
