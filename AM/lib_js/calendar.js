@@ -374,6 +374,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         lead_id: me.client.id,
                         client_name: me.client.name,
                         codCamp: me.client.codCamp,
+                        type_text: $.trim($(this).text()),
                         //changed: 0,
                         closed: false
                     }, $(this).data().eventobject);
@@ -663,7 +664,8 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         $.msg('unblock', 5000);
                     });
                     ;
-                });;
+                });
+        ;
 
     };
     this.openClient = function(calEvent) {
