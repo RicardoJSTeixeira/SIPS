@@ -319,7 +319,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
         }
     };
     this.change = function(event, dayDelta, minuteDelta, revertFunc) {
-        if (!confirm("Pretende mesmo mudar a data?")) {
+        if (!confirm("Pretende mesmo mudar a data/hora?")) {
             revertFunc();
         } else {
             $.msg();
