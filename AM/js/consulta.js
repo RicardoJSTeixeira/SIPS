@@ -59,16 +59,16 @@ $(function()
                     .hide()
                     .end()
                     .find("#exam_outcome_div")
+                    .end()
+                    .find("[name=ne]")
+                    .val([data.exame_razao])
+                    .end()
                     .find("input")
                     .prop("disabled", data.closed)
                     .end()
                     .find("select")
-                    .prop("disabled", data.closed)
-                    .end()
-                    .find("[name=ne]")
-                    .val([data.exame_razao])
-                    .end();
-
+                    .prop("disabled", data.closed);
+            
             if (data.produtos) {
                 $("#main_consulta_div")
                         .find("#dGama")
