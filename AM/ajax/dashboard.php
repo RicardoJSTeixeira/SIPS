@@ -46,7 +46,7 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-                $row[15] = $row[15] . "<div class='view-button'>"
+            $row[15] = $row[15] . "<div class='view-button'>"
                     . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[0]' title='Ver Cliente'><i class='icon-edit'></i></button>"
                     . "<button class='btn btn-mini icon-alone criar_encomenda" . (($row[10] !== 'Fechada') ? " hide" : "") . "' data-lead_id='$row[0]' title='Nova Encomenda'><i class='icon-shopping-cart'></i></button>"
                     . "<button class='btn btn-mini icon-alone criar_marcacao' data-lead_id='$row[0]' title='Marcar Consulta'><i class='icon-calendar'></i></button>"
@@ -62,13 +62,13 @@ switch ($action) {
         $u = $user->getUser();
         $variables[":list"] = $u->list_id;
         if ($u->user_level > 6) {
-            $query = "SELECT a.lead_id, CONCAT(first_name, ' ', middle_initial, ' ', last_name), extra1, extra2, extra8 'nif', postal_code, city, phone_number, alt_phone, address1, a.entry_date, a.user from vicidial_list a
+            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(address1, ' ', address2), postal_code, city, phone_number, alt_phone, a.entry_date, a.user from vicidial_list a
     inner join vicidial_users b on a.user=b.user
     left join sips_sd_reservations c on a.lead_id=c.lead_id
     where b.user_group=:user_group and list_id=:list and c.lead_id is null and extra6='NO' limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
-            $query = "SELECT a.lead_id, CONCAT(first_name, ' ', middle_initial, ' ', last_name), extra1, extra2, extra8 'nif', postal_code, city, phone_number, alt_phone, address1, a.entry_date, a.user from vicidial_list a
+            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(address1, ' ', address2), postal_code, city, phone_number, alt_phone, a.entry_date, a.user from vicidial_list a
     left join sips_sd_reservations b on a.lead_id=b.lead_id
     where a.user in ('" . implode("','", $u->siblings) . "') and list_id=:list and b.lead_id is null and extra6='NO' limit 20000";
         }
