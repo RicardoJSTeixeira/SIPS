@@ -635,7 +635,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
             }, function() {
                 me.modals.acf.find("#obs_acf").val("");
                 me.modals.acf.modal("hide");
-                that.data("reservation_data").closed = 1;
+                me.modals.acf.data().calEvent.closed = 1;
                 me.calendar.fullCalendar('updateEvent', this);
                 $.msg('unblock');
             }, 'json').fail(function(data) {
@@ -643,7 +643,27 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 $.msg('unblock', 5000);
             });
         })
-                .end();
+                .end()
+                .find(".btn_trash")
+                .click(function() {
+                    $.msg();
+                    me.modals.acf.modal("hide");
+                    var id = me.modals.acf.data().calEvent.id;
+                    $.post("/AM/ajax/calendar.php", {
+                        id: id,
+                        action: "remove"
+                    },
+                    function(ok) {
+                        if (ok) {
+                            me.calendar.fullCalendar('removeEvents', id);
+                        }
+                        $.msg('unblock');
+                    }, "json").fail(function(data) {
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                        $.msg('unblock', 5000);
+                    });
+                    ;
+                });;
 
     };
     this.openClient = function(calEvent) {
@@ -763,8 +783,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
     };
     this.openACF = function(calEvent) {
         me.modals.acf
-                .find("#save_acf")
-                .data("reservation_data", calEvent)
+                .data("calEvent", calEvent)
                 .end()
                 .find("h3")
                 .text(calEvent.type_text + ' ' + calEvent.client_name)
