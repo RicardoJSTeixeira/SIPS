@@ -428,10 +428,10 @@ var calendar = function(selector, data, modals, ext, client, user) {
                                     <option value="">Seleccione um opção</option>\n\
                                     <option value="NOSHOW">No Show</option>\n\
                                     <option value="DEST">Desistiu</option>\n\
-                                    <option value="FAL">Faleceu</option>\n\
                                     <option value="TINV">Telefone Invalido</option>\n\
                                     <option value="NAT">Ninguém em casa</option>\n\
                                     <option value="MOR">Morada Errada</option>\n\
+                                    <option value="FAL">Faleceu</option>\n\
                                 </select>\n\
                                 <button class="btn btn-primary">Fechar</button>\n\
                             </form>',
