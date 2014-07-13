@@ -171,7 +171,7 @@ Class Calendars {
         }
         $resources = Array();
         $user_groups = Array();
-        $stmt = $this->_db->prepare("SELECT b.display_text,days_visible,blocks,begin_time,end_time,a.id_scheduler,b.id_resource,b.restrict_days,a.user_group FROM sips_sd_schedulers a INNER JOIN sips_sd_resources b ON a.id_scheduler=b.id_scheduler WHERE $where AND b.active=1 AND a.active=1");
+        $stmt = $this->_db->prepare("SELECT b.display_text, days_visible, blocks, begin_time, end_time, a.id_scheduler, b.id_resource, b.restrict_days, a.user_group FROM sips_sd_schedulers a INNER JOIN sips_sd_resources b ON a.id_scheduler=b.id_scheduler WHERE $where AND b.active=1 AND a.active=1");
         $stmt->execute(array(":id" => $id));
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $resources[] = $row;
@@ -255,6 +255,7 @@ class Calendar extends Calendars {
     protected $_id_scheduler = "";
     protected $_id_resource = "";
     protected $_is_scheduler = true;
+    protected $_is_restricted_days = true;
     protected $_user_groups = array();
     protected $_db;
 
@@ -266,6 +267,8 @@ class Calendar extends Calendars {
         $calendarios = parent::_getConfigs($id, $type);
         $this->_resources = $calendarios->resources;
         $this->_user_groups = $calendarios->user_groups;
+        $this->_is_restricted_days = $this->_resources[0]->restrict_days;
+
         if ($this->_type_ref == "cp" or $this->_type_ref == "ref" or $this->_type_ref == "rsc") {
             $this->_is_scheduler = false;
             $this->_id_resource = $this->_resources[0]->id_resource;
@@ -302,7 +305,8 @@ class Calendar extends Calendars {
                     "slotMinutes" => 15,
                     "minTime" => $this->_resources[0]->begin_time / 60,
                     "maxTime" => $this->_resources[0]->end_time / 60,
-                    "sch" => $this->_id_scheduler
+                    "sch" => $this->_id_scheduler,
+                    "lazyFetching" => (bool) !$this->_is_restricted_days,
         );
     }
 
@@ -341,6 +345,55 @@ class Calendar extends Calendars {
                 'className' => "bloqueado",
                 'bloqueio' => true
             );
+        }
+        if ($this->_is_restricted_days) {
+            return $this->inverter($beg, $this->_resources[0]->begin_time / 60, $this->_resources[0]->end_time / 60, $blocks);
+        }
+
+        return $blocks;
+    }
+
+    private function _inverteBloqueio($start, $end, array $events) {
+        $block = array();
+        $block[] = array(
+            'start' => \date('Y-m-d H:i:s', $start),
+            'end' => \date('Y-m-d H:i:s', $end),
+            'editable' => false,
+            'className' => "bloqueado",
+            'bloqueio' => true
+        );
+
+        while ($bl = array_pop($events)) {
+            foreach ($block as &$nbl) {
+                //var_dump($bl); desbloqueio programado
+                //var_dump($nbl); 
+                if ((strtotime($nbl['start']) < strtotime($bl['end'])) && (strtotime($nbl['start']) > strtotime($bl['start']))) {
+                    $nbl['start'] = $bl['end'];
+                } elseif ((strtotime($nbl['end']) > strtotime($bl['start'])) && (strtotime($nbl['end']) < strtotime($bl['end']))) {
+                    $nbl['end'] = $bl['start'];
+                } elseif ((strtotime($nbl['start']) >= strtotime($bl['start'])) && (strtotime($nbl['end']) <= strtotime($bl['end']))) {
+                    unset($nbl);
+                } elseif ((strtotime($nbl['start']) < strtotime($bl['start'])) && (strtotime($nbl['end']) > strtotime($bl['end']))) {
+                    $nbl['end'] = $bl['start'];
+                    $block[] = array(
+                        'start' => $bl['end'],
+                        'end' => $nbl['end'],
+                        'editable' => false,
+                        'className' => "bloqueado",
+                        'bloqueio' => true
+                    );
+                }
+            }
+        }
+        return $block;
+    }
+
+    public function inverter($start, $shour, $ehour, array $events) {
+        $aux = $start;
+        $blocks = array();
+        for ($index = 0; $index < 7; $index++) {
+            $blocks = array_merge($blocks, $this->_inverteBloqueio(strtotime("+ $shour hours", $aux), strtotime("+ $ehour hours", $aux), $events));
+            $aux = strtotime("+1 day", $aux);
         }
         return $blocks;
     }
