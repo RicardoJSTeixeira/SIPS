@@ -68,7 +68,7 @@ switch ($action) {
                 c.feedback, 
                 c.consulta_razao,
                 c.venda_razao,
-                d.exame_razao,
+                c.exame_razao,
                 c.user
         from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
