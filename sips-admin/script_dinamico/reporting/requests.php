@@ -524,10 +524,10 @@ switch ($action) {
                 try {
                     if (count($script_elements) > 0)
                         $script_elements_temp = ", " . implode(", ", $script_elements);
-                    $query = "CREATE TABLE $scriptoffset ENGINE = MYISAM select id_script,  campaign_id, unique_id, lead_id script_lead, date, param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id = ? and date between ? and ?    group by unique_id;";
+                    $query = "CREATE TABLE $scriptoffset ENGINE = MYISAM select id_script,  campaign_id, unique_id, lead_id script_lead, date, param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id = ? and date between ? and ?    group by  unique_id;";
                     $stmt = $db->prepare($query);
                     $stmt->execute(array($campaign_id, $data_inicio, $data_fim));
-                    $query = "create table $logsscriptgrouplead ENGINE = MYISAM select *, max(date) as MaxDate from $scriptoffset group by script_lead;";
+                    $query = "create table $logsscriptgrouplead ENGINE = MYISAM select * from (select * from $scriptoffset  order by date desc) a group by script_lead;";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $query = " create index script_lead on $logsscriptgrouplead (script_lead);";
@@ -590,7 +590,8 @@ switch ($action) {
                     $query = "CREATE TABLE $scriptoffset ENGINE = MYISAM select id_script,  campaign_id, unique_id, lead_id script_lead, date, param_1 $script_elements_temp from script_result FORCE INDEX (unique_id) WHERE campaign_id = ?  group by unique_id;";
                     $stmt = $db->prepare($query);
                     $stmt->execute(array($campaign_id));
-                    $query = "create table $logsscriptgrouplead ENGINE = MYISAM select *, max(date) as MaxDate from $scriptoffset group by script_lead;";
+                    $query = "create table $logsscriptgrouplead ENGINE = MYISAM select * from (select * from $scriptoffset  order by date desc) a group by script_lead;";
+            
                     $stmt = $db->prepare($query);
                     $stmt->execute();
                     $query = " create index script_lead on $logsscriptgrouplead (script_lead);";
