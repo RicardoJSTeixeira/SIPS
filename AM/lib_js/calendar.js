@@ -686,6 +686,13 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         .end()
                         .find("#btn_view_consult")
                         .show();
+            } else if (me.user.user_level === 1) {
+                me.modal_ext
+                        .find(".modal-footer span.left, .modal-footer span.right")
+                        .hide()
+                        .end()
+                        .find("#btn_view_consult")
+                        .hide();
             } else if (calEvent.user !== me.user.username && me.user.user_level < 5) {
                 me.modal_ext
                         .find(".modal-footer span.left")
