@@ -192,7 +192,7 @@
                 $resources[$i] = mysql_fetch_assoc($result);
                 $user_groups.="'" . $resources[$i]["user_group"] . "',";
             }
-            $user_groups = rtrim($user_groups, ",");
+                $user_groups.="'SYSTEM'";
 
             $query = "SELECT id_reservations_types, display_text, color,active FROM sips_sd_reservations_types where user_group in ($user_groups);";
             $result = mysql_query($query, $link);
